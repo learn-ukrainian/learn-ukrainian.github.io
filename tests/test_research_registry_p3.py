@@ -18,6 +18,8 @@ proof.
 from __future__ import annotations
 
 import json
+import os
+import urllib.error
 from pathlib import Path
 from typing import Any
 
@@ -161,9 +163,49 @@ def test_orient_role_adds_pointer_only_research(reg_root):
     body = _orient({"role": "quality"}).json()
     assert body["research"]["enabled"] is True
     assert [p["id"] for p in body["research"]["records"]] == ["r1"]
-    assert body["research"]["fetch"] == "/api/knowledge/record/{id}"
+    # No top-level `fetch` field: it is redundant with the documented, well-known
+    # GET /api/knowledge/record/{id} and would push the envelope over budget.
+    assert "fetch" not in body["research"]
+    assert set(body["research"]) == {"enabled", "records"}
     for ptr in body["research"]["records"]:
         assert set(ptr) == {"id", "state", "content_hash", "routing"}
+
+
+def test_orient_research_envelope_fits_budget_without_fetch_field(reg_root):
+    # 5 records (P1's per-role cold_start_roles cap) each padded with routing
+    # metadata to push the pointer set close to the byte budget — proves the
+    # *final emitted* envelope (no extra top-level `fetch` appended after
+    # capping) still respects MAX_FILTERED_BYTES end to end.
+    records = [
+        _make_record(
+            reg_root,
+            f"cs-{i}",
+            cold_start_roles=["quality"],
+            routing={
+                "roles": ["quality"],
+                "task_families": [f"family-{i}-{j}" for j in range(6)],
+                "owned_paths": [f"scripts/pkg-{i}/module-{j}/**" for j in range(6)],
+            },
+        )
+        for i in range(5)
+    ]
+    _write_registry(reg_root, records)
+    research = _orient({"role": "quality"}).json()["research"]
+    assert "fetch" not in research
+    envelope_bytes = len(json.dumps(research, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    assert envelope_bytes <= reg.MAX_FILTERED_BYTES
+
+
+def test_orient_fail_open_when_cold_start_selector_raises(reg_root, monkeypatch):
+    _write_registry(reg_root, [_make_record(reg_root, "r1", cold_start_roles=["quality"])])
+
+    def _boom(*_a, **_kw):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(reg, "select_cold_start_pointers", _boom)
+    resp = _orient({"role": "quality"})
+    assert resp.status_code == 200
+    assert "research" not in resp.json()
 
 
 def test_orient_roles_do_not_share_cache(reg_root):
@@ -196,6 +238,51 @@ def test_orient_role_never_calls_record_endpoint_body(reg_root):
 
 
 # --------------------------------------------------------------------------- #
+# 2b. /api/knowledge/cold-start: dedicated role-only endpoint (never the AND
+#     matcher) — the bootstrap routing-algebra bug reproduced against the HTTP
+#     surface, not just the pure selector.
+# --------------------------------------------------------------------------- #
+def test_cold_start_endpoint_uses_cold_start_roles_not_routing(reg_root):
+    # routing.roles-only, no cold_start_roles → must NOT announce.
+    routed_only = _make_record(reg_root, "routed-only", routing={"roles": ["quality"]}, cold_start_roles=[])
+    # cold_start_roles=["quality"] but routing requires a task_family the
+    # role-only request can never supply → must STILL announce (cold start is
+    # role-only algebra, never the AND matcher).
+    announced = _make_record(
+        reg_root,
+        "announced",
+        routing={"roles": ["pedagogy"], "task_families": ["difficulty-gate"]},
+        cold_start_roles=["quality"],
+    )
+    _write_registry(reg_root, [routed_only, announced])
+    resp = client.get("/api/knowledge/cold-start", params={"role": "quality"})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["enabled"] is True
+    assert [r["id"] for r in body["records"]] == ["announced"]
+
+
+def test_cold_start_endpoint_disabled_and_missing_role(tmp_path, monkeypatch):
+    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setenv(reg.ENV_FLAG, "false")
+    _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
+    assert client.get("/api/knowledge/cold-start", params={"role": "quality"}).json() == {
+        "enabled": False,
+        "records": [],
+    }
+
+
+def test_cold_start_endpoint_etag_304(reg_root):
+    _write_registry(reg_root, [_make_record(reg_root, "r1", cold_start_roles=["quality"])])
+    first = client.get("/api/knowledge/cold-start", params={"role": "quality"})
+    etag = first.headers["ETag"]
+    second = client.get(
+        "/api/knowledge/cold-start", params={"role": "quality"}, headers={"If-None-Match": etag}
+    )
+    assert second.status_code == 304
+
+
+# --------------------------------------------------------------------------- #
 # 3. Consumption telemetry: attribution vs surfacing, allowlist, validation
 # --------------------------------------------------------------------------- #
 @pytest.fixture
@@ -218,23 +305,42 @@ def task_store(tmp_path, monkeypatch):
 
 def test_valid_active_task_emits_consumption_on_200(reg_root, emit_sink, task_store):
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    task_store("job-1", status="spawning")
+    task_store("job-1", status="spawning", pid=os.getpid())
     resp = client.get("/api/knowledge/record/r1", params={"task": "job-1"})
     assert resp.status_code == 200
     consumed = [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
     assert consumed == [{"task_id": "job-1", "research_id": "r1", "surface": "record", "status": 200}]
 
 
-def test_cache_backed_304_emits_consumption(reg_root, emit_sink, task_store):
+def test_cache_backed_304_emits_consumption_after_prior_200(reg_root, emit_sink, task_store):
+    # ADR-011 P3: a 304 only counts as consumption when this task already has
+    # evidence of a matching prior 200 for this exact record.
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    task_store("job-1")
-    etag = client.get("/api/knowledge/record/r1").headers["ETag"]
+    task_store("job-1", pid=os.getpid())
+    first = client.get("/api/knowledge/record/r1", params={"task": "job-1"})
+    etag = first.headers["ETag"]
     resp = client.get(
         "/api/knowledge/record/r1", params={"task": "job-1"}, headers={"If-None-Match": etag}
     )
     assert resp.status_code == 304
     consumed = [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
-    assert consumed[0]["status"] == 304
+    assert [c["status"] for c in consumed] == [200, 304]
+
+
+def test_manufactured_304_without_prior_fetch_emits_nothing(reg_root, emit_sink, task_store):
+    # A caller can learn a record's content_hash/ETag from the public filtered
+    # manifest/pointer projection WITHOUT ever fetching the body. Replaying that
+    # publicly-known ETag as If-None-Match under an active task must not
+    # manufacture a consumption event — there is no proof the task ever consumed
+    # the body. The HTTP response (304) is unaffected regardless of attribution.
+    _write_registry(reg_root, [_make_record(reg_root, "r1")])
+    task_store("job-1", pid=os.getpid())
+    etag = client.get("/api/knowledge/record/r1").headers["ETag"]  # unattributed fetch
+    resp = client.get(
+        "/api/knowledge/record/r1", params={"task": "job-1"}, headers={"If-None-Match": etag}
+    )
+    assert resp.status_code == 304
+    assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
 def test_no_task_no_consumption_but_still_serves(reg_root, emit_sink, task_store):
@@ -246,7 +352,7 @@ def test_no_task_no_consumption_but_still_serves(reg_root, emit_sink, task_store
 
 def test_404_is_never_consumption(reg_root, emit_sink, task_store):
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    task_store("job-1")
+    task_store("job-1", pid=os.getpid())
     resp = client.get("/api/knowledge/record/does-not-exist", params={"task": "job-1"})
     assert resp.status_code == 404
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
@@ -254,7 +360,7 @@ def test_404_is_never_consumption(reg_root, emit_sink, task_store):
 
 def test_response_invariant_to_task_validity(reg_root, task_store):
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    task_store("live", status="running", pid=1)  # pid=1 always alive
+    task_store("live", status="running", pid=os.getpid())
     valid = client.get("/api/knowledge/record/r1", params={"task": "live"})
     invalid = client.get("/api/knowledge/record/r1", params={"task": "ghost"})
     assert valid.status_code == invalid.status_code == 200
@@ -269,6 +375,8 @@ def test_response_invariant_to_task_validity(reg_root, task_store):
         ("finished", "done", None),  # finished-task spoof
         ("zombie", "running", 999999),  # running status, dead pid → zombie
         ("a" * 129, "spawning", None),  # oversize
+        ("half-spawned", "spawning", None),  # spawning with no PID yet → no attribution
+        ("half-spawned-dead", "spawning", 999999),  # spawning with a dead PID
     ],
 )
 def test_invalid_or_inactive_task_no_consumption(reg_root, emit_sink, task_store, task_id, status, pid):
@@ -280,6 +388,24 @@ def test_invalid_or_inactive_task_no_consumption(reg_root, emit_sink, task_store
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
+def test_validate_active_task_requires_live_pid(task_store):
+    # ADR-011 P3: spawning AND running both require a live PID (mirrors the
+    # existing delegate zombie-detection semantics for "running", extended to
+    # "spawning" — the parent writes the real Popen PID into the state file
+    # immediately after spawn, so a genuinely active task always has one).
+    task_store("alive", status="running", pid=os.getpid())
+    assert consumption.validate_active_task("alive") == "alive"
+
+    task_store("spawning-alive", status="spawning", pid=os.getpid())
+    assert consumption.validate_active_task("spawning-alive") == "spawning-alive"
+
+    task_store("spawning-no-pid", status="spawning", pid=None)
+    assert consumption.validate_active_task("spawning-no-pid") is None
+
+    task_store("spawning-dead-pid", status="spawning", pid=999999)
+    assert consumption.validate_active_task("spawning-dead-pid") is None
+
+
 def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task_store):
     # A state file exists at a sanitized path, but its stored task_id differs from
     # the request → no attribution (defeats collisions via path sanitization).
@@ -287,7 +413,7 @@ def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task
     from scripts.api import delegate_router
 
     (delegate_router.TASKS_DIR / "collide.json").write_text(
-        json.dumps({"task_id": "other-id", "status": "running", "pid": 1}), "utf-8"
+        json.dumps({"task_id": "other-id", "status": "running", "pid": os.getpid()}), "utf-8"
     )
     resp = client.get("/api/knowledge/record/r1", params={"task": "collide"})
     assert resp.status_code == 200
@@ -303,7 +429,7 @@ def test_surface_event_is_distinct_from_consumption(emit_sink):
 
 def test_telemetry_payloads_carry_no_forbidden_fields(emit_sink):
     consumption.emit_consumption(task_id="job-1", research_id="r1", status=200)
-    consumption.emit_surface(research_id="r1", surface=consumption.SURFACE_COLD_START)
+    consumption.emit_surface(research_id="r1", surface=consumption.SURFACE_DISPATCH, task_id="job-1")
     forbidden = {"body", "title", "summary", "source", "source_url", "prompt", "role",
                  "task_family", "track", "owned_paths", "context", "context_fingerprint"}
     for _t, payload in emit_sink:
@@ -311,31 +437,60 @@ def test_telemetry_payloads_carry_no_forbidden_fields(emit_sink):
         assert not (set(payload) & forbidden)
 
 
+def test_surface_cold_start_constant_was_removed_not_fabricated():
+    # ADR-011 P3: cold-start orient has no trustworthy task id to attribute a
+    # surface event to, and never calls emit_surface. The old unused
+    # SURFACE_COLD_START constant implied telemetry that doesn't exist —
+    # removed rather than left dangling. Task-attributed surfacing begins at
+    # dispatch (SURFACE_DISPATCH), which IS wired to a real task id.
+    assert not hasattr(consumption, "SURFACE_COLD_START")
+    assert consumption.SURFACE_DISPATCH == "dispatch"
+
+
 # --------------------------------------------------------------------------- #
 # 4. Monitor client: filtered projection caching + bootstrap default compat
 # --------------------------------------------------------------------------- #
-def test_monitor_research_first_surfaces_then_304_reuses(tmp_path, monkeypatch):
+def test_monitor_research_first_all_then_304_empty_then_changed_only(tmp_path, monkeypatch):
+    # ADR-011 P3 changed-pointer semantics: the on-disk cache stores the complete
+    # latest projection, but research()/cold_start() return only added/changed
+    # pointers. [a, b] -> 304 (empty) -> only 'a' changes -> returns only 'a'.
     from scripts.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
-    calls: list[dict[str, str]] = []
+
+    full_ab = (
+        '{"enabled":true,"records":['
+        '{"id":"a","state":"active","content_hash":"sha256:aa","routing":{}},'
+        '{"id":"b","state":"active","content_hash":"sha256:bb","routing":{}}]}'
+    )
+    a_changed = (
+        '{"enabled":true,"records":['
+        '{"id":"a","state":"active","content_hash":"sha256:ZZ","routing":{}},'
+        '{"id":"b","state":"active","content_hash":"sha256:bb","routing":{}}]}'
+    )
+    state = {"body": full_ab, "etag": "e1"}
 
     def _fake_get(path, *, headers=None):
-        calls.append(headers or {})
-        if headers and "If-None-Match" in headers:
-            return 304, "", {"etag": '"abc"'}
-        return 200, '{"enabled":true,"records":[{"id":"r1"}]}', {"etag": '"abc"'}
+        if headers and headers.get("If-None-Match") == f'"{state["etag"]}"':
+            return 304, "", {"etag": f'"{state["etag"]}"'}
+        return 200, state["body"], {"etag": f'"{state["etag"]}"'}
 
     monkeypatch.setattr(cli, "_get", _fake_get)
 
     first = cli.research(role="quality")
     assert first.source == "network"
-    assert "r1" in first.body
+    assert {r["id"] for r in json.loads(first.body)["records"]} == {"a", "b"}
+
     second = cli.research(role="quality")
     assert second.source == "not-modified"
-    assert second.body == first.body  # warm reuse, zero changed pointers
-    assert "If-None-Match" in calls[1]
+    assert json.loads(second.body) == {"enabled": True, "records": []}  # valid, empty
+
+    state["body"] = a_changed
+    state["etag"] = "e2"
+    third = cli.research(role="quality")
+    assert third.source == "network"
+    assert [r["id"] for r in json.loads(third.body)["records"]] == ["a"]  # only 'a', never 'b'
 
 
 def test_monitor_research_context_isolation_by_fingerprint(tmp_path, monkeypatch):
@@ -352,23 +507,135 @@ def test_monitor_research_context_isolation_by_fingerprint(tmp_path, monkeypatch
     c = cli.research(role="quality", owned_paths=["scripts/secret/path.py"])
     assert "scripts/secret/path.py" not in c.key
     assert cache.peek(c.key) is not None
+    # different consumer -> different key, even for the identical context
+    d = cli.research(role="quality", consumer="a-different-consumer")
+    assert d.key != a.key
 
 
-def test_bootstrap_default_is_exactly_rules_and_session(monkeypatch):
+def test_monitor_cache_key_never_embeds_raw_consumer_and_is_full_sha256(tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import monitor_client as mc
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cli = mc.MonitorClient(base_url="http://test")
+    monkeypatch.setattr(cli, "_get", lambda path, headers=None: (200, '{"enabled":true,"records":[]}', {"etag": '"e"'}))
+
+    result = cli.research(role="quality", consumer="some-secret-consumer-name")
+    assert "some-secret-consumer-name" not in result.key
+    fingerprint = result.key.split("__", 1)[1]
+    assert len(fingerprint) == 64  # full sha256 hex, never the old 16-char truncation
+
+    # A 300-char consumer (over any reasonable bound) must not raise and must
+    # still be bounded before hashing, never embedded raw in the key.
+    long_consumer = "c" * 300
+    result2 = cli.research(role="quality", consumer=long_consumer)
+    assert long_consumer not in result2.key
+    assert len(result2.key.split("__", 1)[1]) == 64
+
+
+def test_monitor_research_fails_open_on_transport_urlerror(tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import monitor_client as mc
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cli = mc.MonitorClient(base_url="http://test")
+
+    def _raise(path, *, headers=None):
+        raise urllib.error.URLError("connection refused")
+
+    monkeypatch.setattr(cli, "_get", _raise)
+    result = cli.research(role="quality")
+    assert result.source.startswith("error:")
+    assert result.body == ""
+
+
+def test_monitor_research_fails_open_on_cache_oserror(tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import _monitor_cache as cache
+    from scripts.ai_agent_bridge import monitor_client as mc
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cli = mc.MonitorClient(base_url="http://test")
+    monkeypatch.setattr(cli, "_get", lambda path, headers=None: (200, '{"enabled":true,"records":[]}', {"etag": '"e"'}))
+
+    def _boom(_key):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(cache, "peek", _boom)
+    result = cli.research(role="quality")
+    assert result.source.startswith("error:")
+    assert result.body == ""
+
+
+def test_monitor_defensive_304_without_cache_degrades_safely(tmp_path, monkeypatch):
+    # Gemini review: the old "304 with no cached body -> re-fetch unconditionally"
+    # branch was unreachable (we only ever send If-None-Match when a cached
+    # snapshot exists, so the server has no ETag to 304 against otherwise).
+    # Removed in favor of an explicit, safe fallback for a rogue/buggy server.
+    from scripts.ai_agent_bridge import monitor_client as mc
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cli = mc.MonitorClient(base_url="http://test")
+    monkeypatch.setattr(cli, "_get", lambda path, headers=None: (304, "", {}))
+    result = cli.research(role="quality")
+    assert result.source == "error:304-no-cache"
+    assert result.body == ""
+
+
+# --------------------------------------------------------------------------- #
+# 4b. Monitor client: cold_start() dedicated role-only path + bootstrap routing
+# --------------------------------------------------------------------------- #
+def test_monitor_cold_start_hits_dedicated_endpoint_not_and_manifest(tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import monitor_client as mc
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cli = mc.MonitorClient(base_url="http://test")
+    seen_paths: list[str] = []
+
+    def _fake_get(path, *, headers=None):
+        seen_paths.append(path)
+        return (
+            200,
+            '{"enabled":true,"records":[{"id":"r1","state":"active","content_hash":"sha256:aa","routing":{}}]}',
+            {"etag": '"e1"'},
+        )
+
+    monkeypatch.setattr(cli, "_get", _fake_get)
+    result = cli.cold_start(role="quality")
+    assert result.source == "network"
+    assert seen_paths[0].startswith("/api/knowledge/cold-start")
+    assert "manifest" not in seen_paths[0]
+
+
+def test_bootstrap_role_only_routes_to_cold_start_never_and_manifest(monkeypatch):
     from scripts.ai_agent_bridge import monitor_client as mc
 
     cli = mc.MonitorClient(base_url="http://test")
     monkeypatch.setattr(cli, "manifest", lambda: {})
-    stub = mc.ComponentResult(key="x", body="b", hash="h", source="cache")
+    stub = mc.ComponentResult(key="x", body="{}", hash="h", source="cache")
     monkeypatch.setattr(cli, "rules", lambda *, manifest=None: stub)
     monkeypatch.setattr(cli, "session", lambda *, manifest=None: stub)
-    called = {"research": False}
-    monkeypatch.setattr(cli, "research", lambda **_kw: called.__setitem__("research", True) or stub)
+    calls = {"cold_start": 0, "research": 0}
+    monkeypatch.setattr(
+        cli, "cold_start", lambda **_kw: calls.__setitem__("cold_start", calls["cold_start"] + 1) or stub
+    )
+    monkeypatch.setattr(
+        cli, "research", lambda **_kw: calls.__setitem__("research", calls["research"] + 1) or stub
+    )
 
     assert set(cli.bootstrap()) == {"rules", "session"}
-    assert called["research"] is False
+    assert calls == {"cold_start": 0, "research": 0}
+
+    # role ALONE -> the dedicated cold-start path, never the AND manifest.
     assert set(cli.bootstrap(role="quality")) == {"rules", "session", "research"}
-    assert called["research"] is True
+    assert calls == {"cold_start": 1, "research": 0}
+
+    # role PLUS another dimension -> the full AND-matched context.
+    assert set(cli.bootstrap(role="quality", task_family="difficulty-gate")) == {
+        "rules", "session", "research",
+    }
+    assert calls == {"cold_start": 1, "research": 1}
+
+    # a dimension with no role -> still the AND-matched context (never cold-start).
+    assert set(cli.bootstrap(task_family="difficulty-gate")) == {"rules", "session", "research"}
+    assert calls == {"cold_start": 1, "research": 2}
 
 
 # --------------------------------------------------------------------------- #
@@ -397,6 +664,25 @@ def _args(**over):
 def test_delegate_no_flags_yields_no_context():
     delegate = _delegate()
     assert delegate._build_research_context(_args()) is None
+
+
+def test_delegate_state_never_persists_research_null():
+    # ADR-011 P3 default compatibility: a no-flags dispatch, a disabled registry,
+    # or a degraded injection all resolve research_state to None; the persisted
+    # state dict must OMIT the "research" key entirely — never "research": null.
+    delegate = _delegate()
+    base_state = {"task_id": "t", "status": "spawning"}
+
+    no_flags = delegate._with_optional_research_state(dict(base_state), None)
+    assert "research" not in no_flags
+    assert no_flags == base_state
+
+    with_context = delegate._with_optional_research_state(
+        dict(base_state), {"pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f"}
+    )
+    assert with_context["research"] == {
+        "pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f",
+    }
 
 
 def test_delegate_rejects_oversize_and_overcount():

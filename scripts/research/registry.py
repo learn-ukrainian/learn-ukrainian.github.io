@@ -513,6 +513,18 @@ def filtered_manifest(runtime: RegistryRuntime, ctx: Context) -> ManifestRespons
     return ManifestResponse(body=body, etag_hex=sha256(body).hexdigest(), dropped=tuple(dropped))
 
 
+def filtered_cold_start(runtime: RegistryRuntime, role: str | None) -> ManifestResponse:
+    """Build the exact response bytes + strong ETag for the role-only cold-start
+    pointer projection (:func:`select_cold_start_pointers` — ``cold_start_roles``
+    only, never the AND matcher). Mirrors :func:`filtered_manifest`'s shape and cap
+    semantics so the two surfaces stay byte-comparable, but routes through the
+    role-only selector so a record that only opts in via ``cold_start_roles`` (and
+    not ``routing.roles``/``task_families``/...) still announces at cold start."""
+    pointers, dropped = select_cold_start_pointers(runtime, role)
+    body = canonical_json_bytes(_manifest_payload(pointers))
+    return ManifestResponse(body=body, etag_hex=sha256(body).hexdigest(), dropped=tuple(dropped))
+
+
 def disabled_manifest_bytes() -> bytes:
     """The deterministic disabled projection ``{"enabled":false,"records":[]}``."""
     return canonical_json_bytes({"enabled": False, "records": []})

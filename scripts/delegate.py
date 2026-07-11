@@ -1422,6 +1422,22 @@ def _render_research_prompt_block(pointers: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _with_optional_research_state(
+    state: dict[str, Any], research_state: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Add ``"research"`` to ``state`` only when ``research_state`` is non-``None``.
+
+    ADR-011 P3 default-compatibility: a no-flags dispatch, a disabled registry, or
+    a degraded/failed injection must persist byte-identical pre-P3 state — the key
+    is OMITTED, never present as ``"research": null``. Pointer ids / filtered ETag
+    / dropped ids / context fingerprint only when present — never raw owned paths,
+    digest/source/prompt text, role, or task family.
+    """
+    if research_state is not None:
+        state["research"] = research_state
+    return state
+
+
 def _resolve_research_injection(ctx, task_id: str) -> tuple[str, dict[str, Any] | None]:
     """Fail-open pointer resolution for a dispatch context.
 
@@ -2098,11 +2114,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "returncode": None,
         "returncode_reason": None,
         "substitution": None,
-        # ADR-011 P3: pointer ids / filtered ETag / dropped ids / context
-        # fingerprint only — never raw owned paths, digest/source/prompt text,
-        # role, or task family. ``None`` when no --research-* context was given.
-        "research": research_state,
     }
+    initial_state = _with_optional_research_state(initial_state, research_state)
     _write_state_atomic(state_path, initial_state)
 
     # Fix 5 (#1476 AC 5) — dispatch-start telemetry.

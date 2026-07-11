@@ -1457,6 +1457,15 @@ record specifies must match; a task missing a required dimension does not match)
 Disabled → `{"enabled":false,"records":[]}`. Carries its own strong context-scoped
 `ETag`; `If-None-Match` gives a bodyless `304`. Top-5 / ≤1.5 KB; no digest bodies.
 
+### `GET /api/knowledge/cold-start?role=<role>`
+
+Role-only pointer projection from the opt-in `cold_start_roles` announce list —
+**never** the AND matcher above. A bare role has no `task_family`/`track`/
+`owned_path`, so the AND matcher would fail closed on those missing dimensions
+even for a record that explicitly opted in via `cold_start_roles`; this endpoint
+exists precisely so cold start/bootstrap has a role-only path that doesn't hit
+that trap. Same shape, caps, and ETag/304 semantics as `/manifest`.
+
 ### `GET /api/knowledge/record/{id}`
 
 One validated compact digest body as `text/markdown` with an honest per-record
@@ -1468,19 +1477,37 @@ id, an invalid/drifted/`private-local` record, or an over-budget body.
   one privacy-safe consumption telemetry event. Attribution is **response-invariant**:
   a missing/malformed/unknown/finished task changes nothing an unattributed caller
   sees and never reveals whether a task exists — it simply emits no event. A `404`
-  is never a consumption.
+  is never a consumption. A `304` only counts when the same task already has
+  evidence of a matching prior `200` for that record, persisted into the task's own
+  delegate state (no third store) — a caller can't manufacture a consumption event
+  by replaying the record's public `content_hash` as `If-None-Match` without ever
+  having fetched the body.
 
 ### Cold start / bootstrap
 
 - `GET /api/orient?role=<role>` — pointer-only `research` section from the role's
   opt-in `cold_start_roles` announcements (never the AND matcher, never a body).
+  No top-level `fetch` field — the fetch endpoint is the documented, well-known
+  `GET /api/knowledge/record/{id}` above, and omitting it keeps the whole envelope
+  inside the same ≤1.5 KB budget the selector already caps pointers to.
 - Monitor client SDK: `MonitorClient.bootstrap()` is unchanged (`rules` + `session`
-  only); `bootstrap(role=...)` adds a `research` component. `MonitorClient.research(
-  role=…, task_family=…, track=…, owned_paths=…, consumer=…)` fetches the filtered
-  projection, cached under the stable consumer plus a canonical context **fingerprint**
-  (never raw paths/role text) using the projection ETag: cold → first projection
-  surfaces; warm-unchanged → `304`, zero changed pointers, even after an unrelated
-  global registry edit.
+  only). `bootstrap(role=...)` with **no** other context dimension routes through
+  `MonitorClient.cold_start(role=..., consumer=...)` — the role-only
+  `/api/knowledge/cold-start` path, never the AND manifest. `bootstrap(role=...,
+  task_family=...)` (or `track=`/`owned_paths=`) routes through
+  `MonitorClient.research(role=…, task_family=…, track=…, owned_paths=…,
+  consumer=…)` — the full AND-matched `/api/knowledge/manifest` path. Both cache
+  under a fingerprint over the bounded `consumer` plus the canonical context (one
+  full, untruncated SHA-256; never a raw path/role/consumer string in the cache
+  filename) and return **only the added/changed pointers** since the last call for
+  that key — the on-disk cache still stores the complete latest projection so the
+  diff has something to compare against. cold (nothing cached) → the first `200`
+  returns everything; warm+unchanged → `304` returns a valid empty projection
+  (zero changed); warm+changed → the new `200` is diffed against the cached
+  snapshot by canonical pointer content (id/state/content_hash/routing) and only
+  the changed/new records come back. Both methods fail soft to an empty component
+  on any transport or cache read/write failure — an optional boundary that must
+  never crash `bootstrap()`.
 
 ### Dispatch injection
 
@@ -1642,15 +1669,19 @@ orient bundle blindly.
 
 ---
 
-## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2, #4982)
+## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2 #4982, P3 #4992)
 
 Task-scoped, pointer-only, hash-addressed access to the Project Research
 Registry (`docs/references/research-registry.yaml` + the compact digests
 under `docs/references/research-digests/`). Reuses the P1 validator
 primitives (`scripts/audit/check_research_registry.py`) for the schema,
 canonical digest projection/hash, drift, and path safety — it does not
-re-implement any of them. **P2 exposes the surface; it does not inject any
-research into cold start, orient, bootstrap, or dispatch (that is P3).**
+re-implement any of them. **P2 exposed the bare `/manifest` + `/record/{id}`
+surface with no automatic caller. P3 (this doc's *Research registry* section
+above) wired it into real task discovery: `GET /api/orient?role=`,
+`MonitorClient.bootstrap()`/`cold_start()`/`research()`, and
+`delegate.py dispatch --research-*` all surface pointers automatically now —
+record bodies remain strictly on-demand throughout.**
 
 ### Kill switch (default OFF, instant rollback)
 
@@ -1724,6 +1755,8 @@ before the route). No status or message leaks which of these applied.
 | Total `/api/state/manifest` | < 2048 bytes |
 | `research` manifest component | ≤ 512 bytes |
 | `/api/knowledge/manifest` filtered projection | ≤ 5 records and ≤ 1536 bytes |
+| `/api/knowledge/cold-start` role-only projection | ≤ 5 records and ≤ 1536 bytes |
+| `GET /api/orient?role=` `research` envelope (final emitted bytes) | ≤ 1536 bytes |
 | One `/api/knowledge/record/{id}` body | ≤ 4096 bytes |
 | Automatic selected-body fetch (P3 consumer) | ≤ 8192 bytes total |
 
@@ -1844,11 +1877,23 @@ boot = client.bootstrap()
 rules_md = boot["rules"].body       # ready to drop into a system prompt
 session_md = boot["session"].body   # current-task summary
 
+# Role-only cold start: routes through cold_start_roles, never the AND matcher.
+boot = client.bootstrap(role="quality")
+research_body = boot["research"].body   # changed/new pointers only (see below)
+
 # boot[...].source tells you why you have these bytes:
 #   "cache"         — no network call; local hash matched
-#   "not-modified"  — server replied 304, reused cached body
+#   "not-modified"  — server replied 304; research bodies are a valid EMPTY
+#                      pointer projection (zero changed), other components reuse
+#                      the cached body verbatim
 #   "network"       — first fetch or new ETag, body downloaded
+#   "error:*"       — degraded (transport/cache failure, disabled, or 4xx/5xx);
+#                      body is empty, never raises
 ```
+
+`MonitorClient.cold_start(role=...)` and `MonitorClient.research(role=..., task_family=..., track=..., owned_paths=...)`
+are also callable directly (`bootstrap()` picks between them based on which
+dimensions are given — see *Cold start / bootstrap* above).
 
 The SDK handles:
 

@@ -825,25 +825,34 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
     """Add the ADR-011 P3 pointer-only research section for an opt-in role.
 
     No-op (leaving the response byte-identical to the pre-P3 orient) when no role
-    is given, the kill switch is off, or the registry cannot be exposed — fail-open,
-    never a 500. POINTERS ONLY: it calls the role-only cold-start selector, never
-    ``select_bodies``; record bodies are fetched on demand from ``fetch``. Computed
-    inline, never cached at the orient layer, so role-specific pointers never share
-    a cache key.
+    is given, the kill switch is off, the registry cannot be exposed, or anything
+    in the selector/loader path raises unexpectedly — fail-open, never a 500 for
+    orient as a whole. POINTERS ONLY: it calls the role-only cold-start selector
+    (``cold_start_roles``, never the AND matcher), never ``select_bodies``; record
+    bodies are fetched on demand from the documented, well-known
+    ``GET /api/knowledge/record/{id}`` (see ``docs/MONITOR-API.md``) — omitted here
+    rather than repeated per response so the envelope stays inside the same
+    ``MAX_FILTERED_BYTES`` (1536 B) budget the selector already caps pointers to.
+    Computed inline, never cached at the orient layer, so role-specific pointers
+    never share a cache key.
     """
     if not role or not role.strip():
         return
-    if not reg.is_enabled():
-        return
-    runtime = reg.load_runtime_safe()
-    if runtime is None:
-        return
-    pointers, _dropped = reg.select_cold_start_pointers(runtime, role)
-    response["research"] = {
-        "enabled": True,
-        "records": pointers,
-        "fetch": "/api/knowledge/record/{id}",
-    }
+    try:
+        if not reg.is_enabled():
+            return
+        runtime = reg.load_runtime_safe()
+        if runtime is None:
+            return
+        pointers, _dropped = reg.select_cold_start_pointers(runtime, role)
+        response["research"] = {"enabled": True, "records": pointers}
+    except Exception:
+        logger.warning(
+            "orient: cold-start research selector failed unexpectedly for role %r; omitting research section",
+            role,
+            exc_info=True,
+        )
+        response.pop("research", None)
 
 
 @app.get("/api/config")

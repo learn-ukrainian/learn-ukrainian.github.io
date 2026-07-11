@@ -37,6 +37,10 @@ DEFAULT_BASE_URL = "http://localhost:8765"
 DEFAULT_TIMEOUT_S = 3.0
 
 _KNOWLEDGE_MANIFEST_PATH = "/api/knowledge/manifest"
+_KNOWLEDGE_COLD_START_PATH = "/api/knowledge/cold-start"
+
+# Bound the consumer label before it ever reaches a hash or a filesystem path.
+_MAX_CONSUMER_LEN = 128
 
 
 def _canonical_context(
@@ -67,11 +71,77 @@ def _canonical_context(
     }
 
 
-def _context_fingerprint(context: dict[str, Any]) -> str:
-    """Opaque digest of a canonical context — the cache-key component that keeps
-    raw owned paths / role text out of the on-disk cache filename."""
-    blob = json.dumps(context, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+def _bounded_consumer(consumer: str | None) -> str:
+    """Cap + sanitize the consumer label before it ever reaches a hash or a
+    filesystem path. Never used verbatim in a cache key/filename (ADR-011 P3)."""
+    if not isinstance(consumer, str):
+        return ""
+    return consumer.strip()[:_MAX_CONSUMER_LEN]
+
+
+def _context_fingerprint(consumer: str | None, context: dict[str, Any]) -> str:
+    """One full SHA-256 fingerprint over the bounded consumer + canonical context.
+
+    Folds ``consumer`` into the same digest as the context rather than splicing
+    the raw string into the cache key — a cache filename must never carry the raw
+    consumer, role, or owned paths (ADR-011 P3 privacy contract). Uses the full
+    64-hex digest, never a truncated prefix: a truncated digest is a needless
+    collision risk once enough distinct (consumer, context) pairs accumulate.
+    """
+    payload = {"consumer": _bounded_consumer(consumer), "context": context}
+    blob = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def _parse_projection(body: str) -> dict[str, Any]:
+    """Best-effort parse of a ``{"enabled":bool,"records":[...]}`` projection body.
+
+    Malformed/non-JSON/non-dict input degrades to the empty, disabled shape rather
+    than raising — this feeds a diff, not a validator.
+    """
+    try:
+        data = json.loads(body)
+    except (json.JSONDecodeError, TypeError):
+        return {"enabled": False, "records": []}
+    if not isinstance(data, dict):
+        return {"enabled": False, "records": []}
+    records = data.get("records")
+    return {
+        "enabled": bool(data.get("enabled")),
+        "records": [rec for rec in records if isinstance(rec, dict)] if isinstance(records, list) else [],
+    }
+
+
+def _serialize_projection(enabled: bool, records: list[dict[str, Any]]) -> str:
+    return json.dumps(
+        {"enabled": enabled, "records": records}, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+
+
+def _diff_changed_pointers(*, previous_body: str | None, new_body: str) -> str:
+    """New/changed pointers only, diffed by canonical pointer content (the only
+    fields a projection carries: id/state/content_hash/routing).
+
+    ``previous_body`` is ``None`` on a cold fetch (nothing cached yet) — every
+    pointer in the fresh projection counts as changed/new. A record present in
+    ``previous_body`` but absent from ``new_body`` (removed, or no longer matches
+    this context) is NOT surfaced as a change — ADR-011 P3 defines no tombstone
+    contract; the caller's cache write below still drops it from the stored
+    snapshot, so it simply stops appearing in future diffs.
+    """
+    new_proj = _parse_projection(new_body)
+    if previous_body is None:
+        changed = new_proj["records"]
+    else:
+        previous_by_id = {rec.get("id"): rec for rec in _parse_projection(previous_body)["records"]}
+        changed = [rec for rec in new_proj["records"] if previous_by_id.get(rec.get("id")) != rec]
+    return _serialize_projection(new_proj["enabled"], changed)
+
+
+def _empty_changed_projection(cached_body: str) -> str:
+    """Zero-changed-pointers projection for a warm, unchanged (``304``) fetch."""
+    proj = _parse_projection(cached_body)
+    return _serialize_projection(proj["enabled"], [])
 
 
 @dataclass
@@ -227,6 +297,65 @@ class MonitorClient:
 
     # -- ADR-011 P3 filtered research projection --------------------
 
+    def _fetch_changed_projection(self, *, key: str, url: str) -> ComponentResult:
+        """Shared fetch/diff/cache path for a filtered or cold-start pointer
+        projection. The on-disk cache stores the COMPLETE latest projection; the
+        returned ``ComponentResult.body`` carries only the added/changed pointers.
+
+        Contract (ADR-011 P3):
+
+        * cold (nothing cached for this key) → the first ``200`` returns every
+          pointer in the fresh projection (``source="network"``, all "changed").
+        * warm + unchanged → ``If-None-Match`` yields a bodyless ``304``; the
+          returned body is a valid EMPTY pointer projection (zero changed) —
+          even after an unrelated global registry edit, because the server's
+          filtered ETag only moves for contexts the edited record routes to.
+        * warm + changed → a fresh ``200`` diffs the new projection's pointers
+          against the previously cached full snapshot by canonical content
+          (id/state/content_hash/routing — the only fields a pointer carries) and
+          returns only the new/changed ones, then replaces the cached full
+          snapshot with the fresh one. A record that disappeared (removed, or no
+          longer matches) updates the cache but is NOT surfaced as a change — P3
+          defines no tombstone contract.
+
+        Fails soft to an empty component (``source="error:*"``) on any transport
+        failure (including unreachable-server ``URLError``, a superclass HTTPError
+        doesn't cover) or cache read/write failure — this is an optional boundary
+        and must never crash ``bootstrap()``.
+        """
+        try:
+            cached = cache.peek(key)
+            headers: dict[str, str] = {}
+            if cached is not None and cached.hash:
+                headers["If-None-Match"] = f'"{cached.hash}"'
+
+            status, body, resp_headers = self._get(url, headers=headers)
+            if status == 304:
+                if cached is None:
+                    # Defensive only — unreachable in practice: we only ever send
+                    # If-None-Match when `cached` is populated, so the server has
+                    # no ETag to 304 against otherwise (Gemini review, dead branch).
+                    return ComponentResult(key=key, body="", hash="", source="error:304-no-cache")
+                return ComponentResult(
+                    key=key,
+                    body=_empty_changed_projection(cached.body),
+                    hash=cached.hash,
+                    source="not-modified",
+                )
+
+            if status >= 400 or not body:
+                return ComponentResult(key=key, body="", hash="", source=f"error:{status}")
+
+            etag = (resp_headers.get("etag") or "").strip('"')
+            changed_body = _diff_changed_pointers(
+                previous_body=cached.body if cached is not None else None,
+                new_body=body,
+            )
+            cache.put(key, body, body_hash=etag, url=url)
+            return ComponentResult(key=key, body=changed_body, hash=etag, source="network")
+        except Exception as exc:
+            return ComponentResult(key=key, body="", hash="", source=f"error:{type(exc).__name__}")
+
     def research(
         self,
         *,
@@ -239,26 +368,20 @@ class MonitorClient:
         """Fetch the task-scoped, pointer-only filtered research projection.
 
         POINTERS ONLY — this never fetches record bodies; the projection carries
-        IDs/states/hashes/routing, and bodies are pulled on demand elsewhere.
+        IDs/states/hashes/routing, and bodies are pulled on demand elsewhere. This
+        is the full **AND**-matcher context (``/api/knowledge/manifest``) — use it
+        when at least one of ``task_family``/``track``/``owned_paths`` is known. A
+        ``role``-only context with none of those has no family/track/path for the
+        AND matcher to satisfy and belongs in :meth:`cold_start` instead.
 
-        Caching uses the projection's own strong ETag (there is no per-context hash
-        in the manifest), keyed on the stable ``consumer`` plus a canonical context
-        **fingerprint** — never the raw owned paths or role text. Consequences that
-        satisfy the P3 cache contract:
-
-        * cold (nothing cached for this key) → a plain GET returns the first
-          relevant projection (``source="network"``);
-        * warm + unchanged → ``If-None-Match`` yields a bodyless ``304`` and the
-          cached body is reused (``source="not-modified"``), zero changed pointers —
-          even after an unrelated global registry edit, because the server's
-          filtered ETag only moves for contexts the edited record routes to.
-
-        Fails soft to an empty component (``source="error:*"``) rather than raising,
-        so a cold-start caller never crashes on a degraded/disabled endpoint.
+        Caching is keyed on a fingerprint over the bounded ``consumer`` plus the
+        canonical context — never raw owned paths or role text — and returns only
+        the changed/new pointers since the last call for this exact key (see
+        :meth:`_fetch_changed_projection`).
         """
         context = _canonical_context(role, task_family, track, owned_paths)
-        fingerprint = _context_fingerprint(context)
-        key = f"research__{consumer}__{fingerprint}"
+        fingerprint = _context_fingerprint(consumer, context)
+        key = f"research__{fingerprint}"
 
         params: list[tuple[str, str]] = []
         if context["role"]:
@@ -272,27 +395,32 @@ class MonitorClient:
         if params:
             url = f"{url}?{urllib.parse.urlencode(params)}"
 
-        cached = cache.peek(key)
-        headers: dict[str, str] = {}
-        if cached is not None and cached.hash:
-            headers["If-None-Match"] = f'"{cached.hash}"'
+        return self._fetch_changed_projection(key=key, url=url)
 
-        status, body, resp_headers = self._get(url, headers=headers)
-        if status == 304 and cached is not None:
-            return ComponentResult(
-                key=key, body=cached.body, hash=cached.hash, source="not-modified"
-            )
-        if status == 304:
-            # 304 with no local body (cache evicted between peek and now):
-            # re-fetch unconditionally so we never return an empty projection.
-            status, body, resp_headers = self._get(url)
+    def cold_start(self, *, role: str, consumer: str = "orchestrator") -> ComponentResult:
+        """Fetch the role-only cold-start pointer projection (``cold_start_roles``).
 
-        if status >= 400 or not body:
-            return ComponentResult(key=key, body="", hash="", source=f"error:{status}")
+        Distinct from :meth:`research`: this NEVER runs the AND matcher. It hits
+        the dedicated ``GET /api/knowledge/cold-start`` announcer, which matches
+        solely on the role's opt-in ``cold_start_roles`` list — a record that only
+        declares ``cold_start_roles`` (and not ``routing.roles``/``task_families``/
+        ...) still announces here even though it would fail the AND matcher on the
+        missing family/track/path dimensions a bare role can't supply.
 
-        etag = (resp_headers.get("etag") or "").strip('"')
-        cache.put(key, body, body_hash=etag, url=url)
-        return ComponentResult(key=key, body=body, hash=etag, source="network")
+        Cached + diffed the same way as :meth:`research` (changed pointers only,
+        full snapshot cached) under its own key prefix so it never shares a cache
+        entry with an AND-matched ``research()`` call for the same role text.
+        """
+        normalized_role = (role or "").strip()
+        context = {"role": normalized_role, "task_family": None, "track": None, "owned_paths": []}
+        fingerprint = _context_fingerprint(consumer, context)
+        key = f"cold_start__{fingerprint}"
+
+        url = _KNOWLEDGE_COLD_START_PATH
+        if normalized_role:
+            url = f"{url}?{urllib.parse.urlencode([('role', normalized_role)])}"
+
+        return self._fetch_changed_projection(key=key, url=url)
 
     # -- convenience bootstrap -------------------------------------
 
@@ -308,21 +436,26 @@ class MonitorClient:
         """One-shot: manifest + every cached component.
 
         With no arguments this returns **exactly** ``{"rules", "session"}`` — the
-        pre-P3 shape, byte-for-byte. Passing any research context (``role`` or a
-        finer dimension) opts in an extra ``"research"`` key carrying the filtered,
-        pointer-only projection for that context. Absent a role, no research call is
-        made at all.
+        pre-P3 shape, byte-for-byte. Passing any research context opts in an extra
+        ``"research"`` key. A ``role`` given ALONE (no ``task_family``/``track``/
+        ``owned_paths``) routes through the role-only cold-start pointer path
+        (:meth:`cold_start` — ``cold_start_roles``, never the AND matcher, which
+        would silently under-match cold-start-only records given a bare role with
+        no other dimension). Any other combination routes through the full
+        AND-matched :meth:`research` context.
 
             client = MonitorClient()
             boot = client.bootstrap()                     # rules + session only
-            boot = client.bootstrap(role="quality")       # + research pointers
+            boot = client.bootstrap(role="quality")       # + cold-start pointers
         """
         man = self.manifest()
         result = {
             "rules": self.rules(manifest=man),
             "session": self.session(manifest=man),
         }
-        if role or task_family or track or owned_paths:
+        if role and not (task_family or track or owned_paths):
+            result["research"] = self.cold_start(role=role, consumer=consumer)
+        elif role or task_family or track or owned_paths:
             result["research"] = self.research(
                 role=role,
                 task_family=task_family,
