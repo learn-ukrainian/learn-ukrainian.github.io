@@ -1,10 +1,15 @@
-"""Knowledge API router — ADR-011 P2 bounded research discovery.
+"""Knowledge API router — ADR-011 P2/P3 bounded research discovery.
 
-Mounted at ``/api/knowledge`` in ``main.py``. Two endpoints, both gated behind the
+Mounted at ``/api/knowledge`` in ``main.py``. Three endpoints, all gated behind the
 default-off ``research_registry`` kill switch (``scripts/research/registry.py``):
 
     GET /api/knowledge/manifest             Filtered, task-scoped pointer list with
                                             its own strong ETag (no digest bodies).
+                                            Pure AND matcher over role/task_family/
+                                            track/owned_path.
+    GET /api/knowledge/cold-start           Role-only pointer list from the opt-in
+                                            ``cold_start_roles`` announce list —
+                                            NEVER the AND matcher (P3).
     GET /api/knowledge/record/{record_id}   One compact digest body as text/markdown
                                             with an honest per-record ETag.
 
@@ -18,6 +23,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 
+from scripts.research import consumption
 from scripts.research import registry as reg
 
 from .rules_router import _matches_etag
@@ -70,14 +76,55 @@ def knowledge_manifest(
     return _json_response(result.body, result.etag_hex)
 
 
+@router.get("/cold-start")
+def knowledge_cold_start(
+    request: Request,
+    role: str | None = Query(default=None, max_length=reg.MAX_QUERY_VALUE_LEN),
+):
+    """Role-only cold-start research pointers (ADR-011 P3 ``cold_start_roles``).
+
+    Distinct from ``/manifest``: this NEVER runs the AND matcher over
+    role/task_family/track/owned_path — a missing family/track/path context would
+    fail that matcher closed even for a record that explicitly opted in via
+    ``cold_start_roles``. Disabled → HTTP 200 ``{"enabled":false,"records":[]}``.
+    Enabled → pointers from ``cold_start_roles`` only, top-5 / ≤1.5 KB, sorted by
+    record id, strong ETag over the exact response bytes, ``If-None-Match`` gives a
+    bodyless 304.
+    """
+    if not reg.is_enabled():
+        return _json_response(reg.disabled_manifest_bytes())
+
+    runtime = reg.load_runtime_safe()
+    result = reg.empty_manifest_response() if runtime is None else reg.filtered_cold_start(runtime, role)
+
+    if _matches_etag(request.headers.get("If-None-Match"), result.etag_hex):
+        return Response(status_code=304, headers={"ETag": f'"{result.etag_hex}"'})
+    return _json_response(result.body, result.etag_hex)
+
+
 @router.get("/record/{record_id}")
-def knowledge_record(request: Request, record_id: str):
+def knowledge_record(
+    request: Request,
+    record_id: str,
+    task: str | None = Query(default=None),
+):
     """One validated compact digest body as ``text/markdown`` with an honest ETag.
 
     Returns a generic 404 for a disabled feature, an unknown/malformed/traversal
     id, an invalid/drifted/``private-local`` record, an unsafe digest path, or an
     over-budget body — never a leaking status. ``content_hash`` is the ETag for the
     exact normalized body; ``If-None-Match`` gives a bodyless 304.
+
+    ADR-011 P3 consumption telemetry: an optional ``task`` id attributes an actual
+    on-demand fetch (a served 200 or a cache-backed 304) to a validated, still-active
+    delegate task. Attribution is best-effort and **response-invariant** — a missing,
+    malformed, unknown, or finished task changes nothing an unattributed caller sees
+    and never reveals whether a task exists; it just emits no consumption event. A
+    404 (no record served) is never a consumption. A `304` only counts as
+    consumption when the same task already has evidence of a matching prior `200`
+    (see ``consumption.record_consumption``) — replaying the record's public
+    ``content_hash`` as ``If-None-Match`` without ever fetching the body does not
+    manufacture a consumption event.
     """
     if not reg.is_enabled():
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
@@ -90,5 +137,7 @@ def knowledge_record(request: Request, record_id: str):
     body, etag_hex = result
     etag = f'"{etag_hex}"'
     if _matches_etag(request.headers.get("If-None-Match"), etag_hex):
+        consumption.record_consumption(task, record_id, status=304, etag=etag_hex)
         return Response(status_code=304, headers={"ETag": etag})
+    consumption.record_consumption(task, record_id, status=200, etag=etag_hex)
     return Response(content=body, media_type=_MARKDOWN_MEDIA, headers={"ETag": etag})

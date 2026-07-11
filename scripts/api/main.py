@@ -27,6 +27,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from scripts.guardrails import worktree_containment
+from scripts.research import registry as reg
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
@@ -729,6 +730,11 @@ async def orient(
         None,
         description="Comma-separated subset of orient sections to collect.",
     ),
+    role: str | None = Query(
+        None,
+        max_length=reg.MAX_QUERY_VALUE_LEN,
+        description="Opt-in ADR-011 P3 cold-start research role. Adds pointer-only research.",
+    ),
 ):
     """One-shot agent orientation.
 
@@ -740,6 +746,13 @@ async def orient(
             120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
         sections: comma-separated list of section keys to collect. Unknown
             keys return 400. Omitted = full payload (back-compat).
+        role: ADR-011 P3 opt-in. Absent → the response is byte-identical to
+            the pre-P3 orient (no research key, no shared-cache contamination).
+            Present + registry enabled → a pointer-only ``research`` section of
+            the role's ``cold_start_roles`` announcements (≤5 / ≤1.5 KB, bodies
+            fetched on demand). Computed fresh per request and never stored in
+            the shared ``orient_*`` cache, so two roles can never contaminate
+            each other's pointers.
     """
     if fresh:
         cache_invalidate("orient_")
@@ -803,7 +816,43 @@ async def orient(
         issues_info = section_data["issues"]
         if isinstance(issues_info, dict) and issues_info.get("error"):
             response["issues_error"] = issues_info["error"]
+
+    _attach_cold_start_research(response, role)
     return add_json_telemetry(response, session_id=session_id_from_request(request))
+
+
+def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> None:
+    """Add the ADR-011 P3 pointer-only research section for an opt-in role.
+
+    No-op (leaving the response byte-identical to the pre-P3 orient) when no role
+    is given, the kill switch is off, the registry cannot be exposed, or anything
+    in the selector/loader path raises unexpectedly — fail-open, never a 500 for
+    orient as a whole. POINTERS ONLY: it calls the role-only cold-start selector
+    (``cold_start_roles``, never the AND matcher), never ``select_bodies``; record
+    bodies are fetched on demand from the documented, well-known
+    ``GET /api/knowledge/record/{id}`` (see ``docs/MONITOR-API.md``) — omitted here
+    rather than repeated per response so the envelope stays inside the same
+    ``MAX_FILTERED_BYTES`` (1536 B) budget the selector already caps pointers to.
+    Computed inline, never cached at the orient layer, so role-specific pointers
+    never share a cache key.
+    """
+    if not role or not role.strip():
+        return
+    try:
+        if not reg.is_enabled():
+            return
+        runtime = reg.load_runtime_safe()
+        if runtime is None:
+            return
+        pointers, _dropped = reg.select_cold_start_pointers(runtime, role)
+        response["research"] = {"enabled": True, "records": pointers}
+    except Exception:
+        logger.warning(
+            "orient: cold-start research selector failed unexpectedly for role %r; omitting research section",
+            role,
+            exc_info=True,
+        )
+        response.pop("research", None)
 
 
 @app.get("/api/config")

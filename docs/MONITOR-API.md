@@ -1440,6 +1440,94 @@ Modules with recent dispatch activity and unfinished publish state.
 }
 ```
 
+## Research registry — `/api/knowledge` (ADR-011)
+
+Bounded, task-scoped discovery of the Project Research Registry
+(`docs/references/research-registry.yaml`). Gated behind the default-off
+`research_registry` kill switch; while disabled every surface below reproduces
+exact pre-registry behavior. **Pointers are automatic; record bodies are strictly
+on demand** — no cold-start, orient, bootstrap, dispatch, or pipeline path ever
+fetches a digest body automatically.
+
+### `GET /api/knowledge/manifest`
+
+Filtered, pointer-only projection for a task context. Pure **AND** matcher over
+`role`, `task_family`, `track`, and repeatable `owned_path` (every dimension a
+record specifies must match; a task missing a required dimension does not match).
+Disabled → `{"enabled":false,"records":[]}`. Carries its own strong context-scoped
+`ETag`; `If-None-Match` gives a bodyless `304`. Top-5 / ≤1.5 KB; no digest bodies.
+
+### `GET /api/knowledge/cold-start?role=<role>`
+
+Role-only pointer projection from the opt-in `cold_start_roles` announce list —
+**never** the AND matcher above. A bare role has no `task_family`/`track`/
+`owned_path`, so the AND matcher would fail closed on those missing dimensions
+even for a record that explicitly opted in via `cold_start_roles`; this endpoint
+exists precisely so cold start/bootstrap has a role-only path that doesn't hit
+that trap. Same shape, caps, and ETag/304 semantics as `/manifest`.
+
+### `GET /api/knowledge/record/{id}`
+
+One validated compact digest body as `text/markdown` with an honest per-record
+`ETag` (its `content_hash`). Generic `404` for disabled/unknown/malformed/traversal
+id, an invalid/drifted/`private-local` record, or an over-budget body.
+
+- `task=<task-id>` — **optional** consumption attribution. A served `200` or a
+  cache-backed `304` fetched under a validated, still-active delegate task emits
+  one privacy-safe consumption telemetry event. Attribution is **response-invariant**:
+  a missing/malformed/unknown/finished task changes nothing an unattributed caller
+  sees and never reveals whether a task exists — it simply emits no event. A `404`
+  is never a consumption. A `304` only counts when the same task already has
+  evidence of a matching prior `200` for that record, persisted into the task's own
+  delegate state (no third store) — a caller can't manufacture a consumption event
+  by replaying the record's public `content_hash` as `If-None-Match` without ever
+  having fetched the body.
+
+### Cold start / bootstrap
+
+- `GET /api/orient?role=<role>` — pointer-only `research` section from the role's
+  opt-in `cold_start_roles` announcements (never the AND matcher, never a body).
+  No top-level `fetch` field — the fetch endpoint is the documented, well-known
+  `GET /api/knowledge/record/{id}` above, and omitting it keeps the whole envelope
+  inside the same ≤1.5 KB budget the selector already caps pointers to.
+- Monitor client SDK: `MonitorClient.bootstrap()` is unchanged (`rules` + `session`
+  only). `bootstrap(role=...)` with **no** other context dimension routes through
+  `MonitorClient.cold_start(role=..., consumer=...)` — the role-only
+  `/api/knowledge/cold-start` path, never the AND manifest. `bootstrap(role=...,
+  task_family=...)` (or `track=`/`owned_paths=`) routes through
+  `MonitorClient.research(role=…, task_family=…, track=…, owned_paths=…,
+  consumer=…)` — the full AND-matched `/api/knowledge/manifest` path. Both cache
+  under a fingerprint over the bounded `consumer` plus the canonical context (one
+  full, untruncated SHA-256; never a raw path/role/consumer string in the cache
+  filename) and return **only the added/changed pointers** since the last call for
+  that key — the on-disk cache still stores the complete latest projection so the
+  diff has something to compare against. cold (nothing cached) → the first `200`
+  returns everything; warm+unchanged → `304` returns a valid empty projection
+  (zero changed); warm+changed → the new `200` is diffed against the cached
+  snapshot by canonical pointer content (id/state/content_hash/routing) and only
+  the changed/new records come back. Both methods fail soft to an empty component
+  on any transport or cache read/write failure — an optional boundary that must
+  never crash `bootstrap()`.
+
+### Dispatch injection
+
+`delegate.py dispatch` accepts explicit, namespaced context flags — never inferred
+from the prompt, agent, provider, or branch: `--research-role`,
+`--research-task-family`, `--research-track`, and repeatable `--research-owned-path`.
+When set (and the registry is enabled) the dispatch prompt gains a bounded,
+pointer-only block plus an on-demand fetch instruction, and the task state persists
+**only** the pointer ids, filtered ETag, dropped ids, and context fingerprint (never
+raw owned paths, digest/source/prompt text, role, or task family).
+
+### Consumption telemetry (privacy contract)
+
+Two distinct central-emitter events (`scripts/telemetry/emit.py`; no new store):
+`research_pointer_surfaced` (a pointer was shown) and `research_record_consumed`
+(a body was actually fetched under a validated active task). Surfaced ≠ consumed.
+Payload allowlist is exactly `{task_id, research_id, surface, status}` on top of the
+emitter envelope — never a digest body, title, summary, source URL, prompt, role,
+task family, track, owned paths, or context fingerprint.
+
 ## Orientation — `/api/orient`
 
 ### `GET /api/orient`
@@ -1455,6 +1543,12 @@ Query params:
   `session_hints`. Unknown keys return `400`. Omitted = full payload
   (back-compat). Skipped sections are not collected and are omitted
   from both the top-level payload and `meta`.
+- `role=<role>` — **opt-in** ADR-011 P3 cold-start research (see
+  *Research registry* below). Absent → the response is byte-identical to
+  the pre-P3 orient (no `research` key). Present + registry enabled → a
+  pointer-only `research` section (≤5 records / ≤1.5 KB; bodies fetched
+  on demand, never here). Computed fresh per request and never stored in
+  the shared `orient_*` cache, so two roles cannot contaminate each other.
 - `session=<uuid>` or header `X-Session-Id` — per-session context
   telemetry when `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1` (query wins).
 
@@ -1575,15 +1669,19 @@ orient bundle blindly.
 
 ---
 
-## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2, #4982)
+## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2 #4982, P3 #4992)
 
 Task-scoped, pointer-only, hash-addressed access to the Project Research
 Registry (`docs/references/research-registry.yaml` + the compact digests
 under `docs/references/research-digests/`). Reuses the P1 validator
 primitives (`scripts/audit/check_research_registry.py`) for the schema,
 canonical digest projection/hash, drift, and path safety — it does not
-re-implement any of them. **P2 exposes the surface; it does not inject any
-research into cold start, orient, bootstrap, or dispatch (that is P3).**
+re-implement any of them. **P2 exposed the bare `/manifest` + `/record/{id}`
+surface with no automatic caller. P3 (this doc's *Research registry* section
+above) wired it into real task discovery: `GET /api/orient?role=`,
+`MonitorClient.bootstrap()`/`cold_start()`/`research()`, and
+`delegate.py dispatch --research-*` all surface pointers automatically now —
+record bodies remain strictly on-demand throughout.**
 
 ### Kill switch (default OFF, instant rollback)
 
@@ -1657,6 +1755,8 @@ before the route). No status or message leaks which of these applied.
 | Total `/api/state/manifest` | < 2048 bytes |
 | `research` manifest component | ≤ 512 bytes |
 | `/api/knowledge/manifest` filtered projection | ≤ 5 records and ≤ 1536 bytes |
+| `/api/knowledge/cold-start` role-only projection | ≤ 5 records and ≤ 1536 bytes |
+| `GET /api/orient?role=` `research` envelope (final emitted bytes) | ≤ 1536 bytes |
 | One `/api/knowledge/record/{id}` body | ≤ 4096 bytes |
 | Automatic selected-body fetch (P3 consumer) | ≤ 8192 bytes total |
 
@@ -1777,11 +1877,23 @@ boot = client.bootstrap()
 rules_md = boot["rules"].body       # ready to drop into a system prompt
 session_md = boot["session"].body   # current-task summary
 
+# Role-only cold start: routes through cold_start_roles, never the AND matcher.
+boot = client.bootstrap(role="quality")
+research_body = boot["research"].body   # changed/new pointers only (see below)
+
 # boot[...].source tells you why you have these bytes:
 #   "cache"         — no network call; local hash matched
-#   "not-modified"  — server replied 304, reused cached body
+#   "not-modified"  — server replied 304; research bodies are a valid EMPTY
+#                      pointer projection (zero changed), other components reuse
+#                      the cached body verbatim
 #   "network"       — first fetch or new ETag, body downloaded
+#   "error:*"       — degraded (transport/cache failure, disabled, or 4xx/5xx);
+#                      body is empty, never raises
 ```
+
+`MonitorClient.cold_start(role=...)` and `MonitorClient.research(role=..., task_family=..., track=..., owned_paths=...)`
+are also callable directly (`bootstrap()` picks between them based on which
+dimensions are given — see *Cold start / bootstrap* above).
 
 The SDK handles:
 

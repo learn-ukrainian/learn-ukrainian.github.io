@@ -94,6 +94,35 @@ def get(key: str, expected_hash: str) -> str | None:
         return None
 
 
+def peek(key: str) -> CacheEntry | None:
+    """Return the cached entry for ``key`` regardless of any expected hash.
+
+    ``get`` requires a manifest-advertised hash to validate against. The ADR-011
+    P3 filtered research projection has no such per-context hash in the manifest —
+    its freshness is carried by its own strong ETag. ``peek`` exposes the last body
+    and its stored ETag/``hash`` so the client can replay it as ``If-None-Match``
+    and reuse the body on a ``304``. Returns ``None`` when nothing is cached or the
+    entry is unreadable/corrupt.
+    """
+    body_path, meta_path = _paths(key)
+    if not body_path.is_file() or not meta_path.is_file():
+        return None
+    try:
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        body = body_path.read_text(encoding="utf-8")
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(meta, dict):
+        return None
+    return CacheEntry(
+        key=key,
+        body=body,
+        hash=str(meta.get("hash") or ""),
+        url=str(meta.get("url") or ""),
+        fetched_at=str(meta.get("fetched_at") or ""),
+    )
+
+
 def put(key: str, body: str, *, body_hash: str, url: str) -> CacheEntry:
     """Write ``body`` to the cache with its associated hash + URL.
 
