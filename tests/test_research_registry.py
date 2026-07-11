@@ -402,7 +402,14 @@ def test_digest_policy_oversized_overlong_and_unattributed(tmp_path: Path) -> No
     recs = [
         make_record("d-big"),
         make_record("d-quote"),
-        make_record("d-noprov"),
+        make_record(
+            "d-noprov",
+            provenance={
+                "digest": "docs/references/research-digests/d-noprov.md",
+                "digest_anchor": None,
+                "source_url": None,
+            },
+        ),
     ]
     root, data = build_project(
         tmp_path,
@@ -504,3 +511,286 @@ def test_no_forbidden_runtime_dependencies() -> None:
     for path in (Path(crr.__file__), Path(__file__)):
         for root in _imported_roots(path):
             assert not root.startswith(forbidden_prefixes), f"{path.name} imports forbidden module {root!r}"
+
+
+# --------------------------------------------------------------------------- #
+# 16. Review-fix: YAML alias content_hash is rejected, never silently resolved,
+#     never mutated by --reconcile (repro: content_hash: *h aliasing an anchor
+#     defined on another field, e.g. summary).
+# --------------------------------------------------------------------------- #
+def test_yaml_alias_content_hash_rejected_without_mutation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rid = "alias-rec"
+    digest_dir = tmp_path / "docs/references/research-digests"
+    digest_dir.mkdir(parents=True)
+    (digest_dir / f"{rid}.md").write_text(digest_body(rid), "utf-8")
+
+    registry_text = f"""schema_version: 1
+records:
+  - id: {rid}
+    title: Title {rid}
+    summary: &h "{PLACEHOLDER_HASH}"
+    content_hash: *h
+    state: deferred
+    provenance:
+      digest: docs/references/research-digests/{rid}.md
+      digest_anchor: null
+      source_url: https://example.org/{rid}
+    routing:
+      roles: [quality]
+    cold_start_roles: []
+    ownership: null
+    consumer: null
+    reason: Deliberately deferred for the test.
+    replacement: null
+    access_class: tracked-digest
+"""
+    reg_path = tmp_path / "docs/references/research-registry.yaml"
+    reg_path.write_text(registry_text, "utf-8")
+    before = reg_path.read_bytes()
+
+    check_code = crr.main(["--check"], project_root=tmp_path)
+    check_err = capsys.readouterr().err
+    assert check_code == 2
+    assert "alias" in check_err
+    assert reg_path.read_bytes() == before  # --check never mutates
+
+    reconcile_code = crr.main(["--reconcile"], project_root=tmp_path)
+    reconcile_err = capsys.readouterr().err
+    assert reconcile_code == 2
+    assert "alias" in reconcile_err
+    # Byte-for-byte: the anchor was NOT rewritten and no orphaned alias was left.
+    assert reg_path.read_bytes() == before
+
+
+# --------------------------------------------------------------------------- #
+# 17. Review-fix: digest copyright policy scoped to the record PROJECTION, not
+#     a whole shared file (cross-record false positives / borrowed provenance).
+# --------------------------------------------------------------------------- #
+def test_digest_policy_scoped_to_record_projection_in_shared_file(tmp_path: Path) -> None:
+    small_ok = (
+        "<!-- record:shared-a -->\n"
+        "Source: https://example.org/shared-a\n\n"
+        "Short paraphrase, no issues.\n"
+        "<!-- /record:shared-a -->\n"
+    )
+    unattributed_quote = (
+        "<!-- record:shared-b -->\n"
+        '"a short quote with no provenance of its own"\n'
+        "<!-- /record:shared-b -->\n"
+    )
+    oversized = (
+        "<!-- record:shared-c -->\n"
+        + ("filler line to blow past the per-record ceiling\n" * 120)
+        + "<!-- /record:shared-c -->\n"
+    )
+    filler_between = "unrelated filler padding out the shared file\n" * 100
+    shared_text = "\n".join([small_ok, filler_between, unattributed_quote, filler_between, oversized])
+    assert len(shared_text.encode("utf-8")) > crr.MAX_DIGEST_BYTES  # whole file IS oversized
+
+    def _rec(rid: str) -> dict[str, Any]:
+        return make_record(
+            rid,
+            provenance={
+                "digest": "docs/references/shared.md",
+                "digest_anchor": rid,
+                "source_url": None,
+            },
+        )
+
+    recs = [_rec("shared-a"), _rec("shared-b"), _rec("shared-c")]
+    root, data = build_project(
+        tmp_path, recs, extra_files={"docs/references/shared.md": shared_text}
+    )
+    errs = run(data, root).errors
+    # shared-a's own projection is small and clean, despite the file being huge.
+    assert not any("shared-a" in e for e in errs)
+    # shared-b cannot borrow shared-a's Source: URL from another section.
+    assert any("shared-b" in e and "provenance" in e for e in errs)
+    # shared-c's own projection (not the whole file) is what trips the ceiling.
+    assert any("shared-c" in e and "bytes" in e for e in errs)
+
+
+# --------------------------------------------------------------------------- #
+# 18. Review-fix: quotation guard closes multi-line / curly-quote / combined-
+#     blockquote bypasses.
+# --------------------------------------------------------------------------- #
+def test_quote_guard_multiline_straight_quote(tmp_path: Path) -> None:
+    body = (
+        "Source: https://example.org/ml-quote\n\n"
+        '"' + ("word " * 60) + "\n" + ("more " * 20) + '"\n'
+    )
+    rec = make_record(
+        "ml-quote",
+        provenance={
+            "digest": "docs/references/research-digests/ml-quote.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/ml-quote",
+        },
+    )
+    root, data = build_project(tmp_path, [rec], bodies={"ml-quote": body})
+    errs = run(data, root).errors
+    assert any("ml-quote" in e and "quoted span" in e for e in errs)
+
+
+def test_quote_guard_combines_contiguous_blockquote_lines(tmp_path: Path) -> None:
+    line_a = "> " + ("alpha " * 20)  # short on its own
+    line_b = "> " + ("beta " * 20)  # short on its own
+    body = f"Source: https://example.org/bq-combine\n\n{line_a}\n{line_b}\n"
+    assert len(line_a.strip()) < crr.MAX_QUOTE_CHARS
+    assert len(line_b.strip()) < crr.MAX_QUOTE_CHARS
+    rec = make_record(
+        "bq-combine",
+        provenance={
+            "digest": "docs/references/research-digests/bq-combine.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/bq-combine",
+        },
+    )
+    root, data = build_project(tmp_path, [rec], bodies={"bq-combine": body})
+    errs = run(data, root).errors
+    assert any("bq-combine" in e and "quoted span" in e for e in errs)
+
+
+def test_quote_guard_curly_quotes(tmp_path: Path) -> None:
+    body = (
+        "Source: https://example.org/curly\n\n"
+        "“" + ("x" * (crr.MAX_QUOTE_CHARS + 10)) + "”\n"
+    )
+    rec = make_record(
+        "curly-quote",
+        provenance={
+            "digest": "docs/references/research-digests/curly-quote.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/curly",
+        },
+    )
+    root, data = build_project(tmp_path, [rec], bodies={"curly-quote": body})
+    errs = run(data, root).errors
+    assert any("curly-quote" in e and "quoted span" in e for e in errs)
+
+
+# --------------------------------------------------------------------------- #
+# 19. Review-fix: digest path policy safe after resolution (symlinks, non-
+#     reference files, valid fenced shared references).
+# --------------------------------------------------------------------------- #
+def test_digest_path_rejects_symlink_to_private(tmp_path: Path) -> None:
+    private_dir = tmp_path / "docs/references/private"
+    private_dir.mkdir(parents=True)
+    secret = private_dir / "secret.md"
+    secret.write_text(digest_body("secret"), "utf-8")
+    digests_dir = tmp_path / "docs/references/research-digests"
+    digests_dir.mkdir(parents=True)
+    (digests_dir / "sym-private.md").symlink_to(secret)
+
+    rec = make_record(
+        "sym-private",
+        provenance={
+            "digest": "docs/references/research-digests/sym-private.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/sym-private",
+        },
+    )
+    data = {"schema_version": 1, "records": [rec]}
+    errs = run(data, tmp_path).errors
+    assert any("sym-private" in e and "symlink" in e for e in errs)
+
+
+def test_digest_path_rejects_symlink_to_nonprivate(tmp_path: Path) -> None:
+    digests_dir = tmp_path / "docs/references/research-digests"
+    digests_dir.mkdir(parents=True)
+    real = digests_dir / "real.md"
+    real.write_text(digest_body("real"), "utf-8")
+    (digests_dir / "sym-nonprivate.md").symlink_to(real)
+
+    rec = make_record(
+        "sym-nonprivate",
+        provenance={
+            "digest": "docs/references/research-digests/sym-nonprivate.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/sym-nonprivate",
+        },
+    )
+    data = {"schema_version": 1, "records": [rec]}
+    errs = run(data, tmp_path).errors
+    assert any("sym-nonprivate" in e and "symlink" in e for e in errs)
+
+
+def test_digest_path_rejects_non_reference_file(tmp_path: Path) -> None:
+    rec = make_record(
+        "nonref",
+        provenance={
+            "digest": "scripts/audit/not-a-reference.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/nonref",
+        },
+    )
+    root, data = build_project(tmp_path, [rec])
+    errs = run(data, root).errors
+    assert any("nonref" in e and "docs/references/" in e for e in errs)
+
+
+def test_digest_path_accepts_valid_fenced_shared_reference(tmp_path: Path) -> None:
+    shared_text = (
+        "# Shared reference doc\n\n"
+        "<!-- record:shared-ok -->\n"
+        "Source: https://example.org/shared-ok\n\n"
+        "Clean paraphrase, nothing borrowed.\n"
+        "<!-- /record:shared-ok -->\n"
+    )
+    rec = make_record(
+        "shared-ok",
+        provenance={
+            "digest": "docs/references/some-shared-notes.md",
+            "digest_anchor": "shared-ok",
+            "source_url": None,
+        },
+    )
+    root, data = build_project(
+        tmp_path, [rec], extra_files={"docs/references/some-shared-notes.md": shared_text}
+    )
+    assert run(data, root).errors == []
+
+
+# --------------------------------------------------------------------------- #
+# 20. Review-fix: invalid-UTF-8 digest is a record-scoped error, not a traceback.
+# --------------------------------------------------------------------------- #
+def test_invalid_utf8_digest_is_record_scoped_error(tmp_path: Path) -> None:
+    rec = make_record(
+        "bad-utf8",
+        provenance={
+            "digest": "docs/references/research-digests/bad-utf8.md",
+            "digest_anchor": None,
+            "source_url": "https://example.org/bad-utf8",
+        },
+    )
+    digest_path = tmp_path / "docs/references/research-digests/bad-utf8.md"
+    digest_path.parent.mkdir(parents=True, exist_ok=True)
+    digest_path.write_bytes(b"Source: https://example.org/bad-utf8\n\n\xff\xfe not valid utf-8\n")
+
+    data = {"schema_version": 1, "records": [rec]}
+    errs = run(data, tmp_path).errors
+    assert any("bad-utf8" in e and "UTF-8" in e for e in errs)
+
+
+# --------------------------------------------------------------------------- #
+# 21. Minor review-fixes: fence whitespace variant + module-level constant symbol.
+# --------------------------------------------------------------------------- #
+def test_extract_digest_projection_accepts_compact_fence_spacing() -> None:
+    text = "<!--record:foo-->\nkeep\n<!--/record:foo-->\n"
+    assert crr.extract_digest_projection(text, "foo", "foo") == "keep"
+
+
+def test_resolve_symbol_finds_module_level_constant(tmp_path: Path) -> None:
+    extra = {"scripts/constants.py": "MAX_FOO: int = 5\nOTHER = 1\n"}
+    recs = [
+        make_record(
+            "c-const", state="adopted", consumer={"kind": "path", "ref": "scripts/constants.py::MAX_FOO"}
+        ),
+        make_record(
+            "c-const2", state="adopted", consumer={"kind": "path", "ref": "scripts/constants.py::OTHER"}
+        ),
+    ]
+    root, data = build_project(tmp_path, recs, extra_files=extra)
+    assert run(data, root).errors == []

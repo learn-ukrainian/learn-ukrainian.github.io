@@ -51,7 +51,7 @@ records:
       Dictionary+POS beats neural on heteronym stress; released rule-based
       phonemizer. Deferred behind the user-gated #4696 audio decision and
       pending upstream license verification.
-    content_hash: "sha256:d025656ec576c5462cdfeb5e9987aa671f7d37ce64d19d98a6f774b356ae1eae"
+    content_hash: "sha256:fed7fa77de4fd2a63fac6bc2721115cfa9758d3482689d9fbe30df7ecb0a0ff1"
     state: deferred
     provenance:
       digest: docs/references/research-digests/unlp-2025-stress-tts.md
@@ -76,7 +76,7 @@ records:
     title: How Far Can Prompting Go for Minimal-Edit Ukrainian GEC? (Karpo & Chernodub)
     summary: >-
       Ukrainian minimal-edit prompting with a 16-category taxonomy and five
-      over-correction prohibitions; deferred until a stream-owned implementation
+      over-correction patterns/cautions; deferred until a stream-owned implementation
       issue and a validated reviewer-prompt consumer exist.
     content_hash: "sha256:fdf5a0b55492127e2c96873d380b67c0f8a2595f6465835785fa3eade2b883d6"
     state: deferred

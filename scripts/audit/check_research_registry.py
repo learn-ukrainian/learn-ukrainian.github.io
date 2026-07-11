@@ -45,6 +45,7 @@ Related:
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import re
@@ -67,12 +68,15 @@ DECISIONS_PATH = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
 # Digest copyright policy (ADR-011 §"Digest content policy"). These are a
 # repository fair-use / worktree-safety contract enforced where deterministic.
-MAX_DIGEST_BYTES = 8192  # a tracked digest is a compact paraphrase, not a paper
-MAX_QUOTE_CHARS = 200  # single quoted span (blockquote line or "…"/«…») ceiling
+# Ceiling applies to the per-record PROJECTION (the exact hashed body), not to a
+# whole shared file that may host several records' fenced sections.
+MAX_DIGEST_BYTES = 4096  # ADR-011 compact record-body contract
+MAX_QUOTE_CHARS = 200  # single quoted span (blockquote line or "…"/«…»/“…”) ceiling
 # Cold-start announce cap: at most this many records may declare any one role.
 MAX_COLD_START_PER_ROLE = 5
 
 _CONSUMER_FS_KINDS = frozenset({"path", "prompt", "rubric", "test"})
+_REFERENCES_PREFIX = "docs/references/"
 _PRIVATE_PREFIX = "docs/references/private/"
 _FENCE_LINE_RE = re.compile(r"^<!--\s*/?record:[a-z0-9][a-z0-9-]*\s*-->$")
 _URL_RE = re.compile(r"https?://")
@@ -141,6 +145,18 @@ def _safe_repo_path(rel: str, project_root: Path) -> Path:
     return resolved
 
 
+def _path_has_symlink(project_root: Path, rel: str) -> bool:
+    """True if any path component of ``rel`` (walked from ``project_root``) is a
+    symlink. Checked against the UNRESOLVED join so a symlinked component cannot
+    hide behind ``Path.resolve()`` before this test runs."""
+    current = project_root
+    for part in PurePosixPath(rel).parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+    return False
+
+
 # --------------------------------------------------------------------------- #
 # Digest projection + canonical content hash
 # --------------------------------------------------------------------------- #
@@ -159,10 +175,12 @@ def extract_digest_projection(text: str, record_id: str, anchor: str | None) -> 
         )
     norm = text.replace("\r\n", "\n").replace("\r", "\n")
     lines = norm.split("\n")
-    open_marker = f"<!-- record:{record_id} -->"
-    close_marker = f"<!-- /record:{record_id} -->"
-    opens = [i for i, line in enumerate(lines) if line.strip() == open_marker]
-    closes = [i for i, line in enumerate(lines) if line.strip() == close_marker]
+    # Same whitespace tolerance as _FENCE_LINE_RE / normalize_digest_projection:
+    # both `<!-- record:id -->` and `<!--record:id-->` (and any spacing in between).
+    open_re = re.compile(rf"^<!--\s*record:{re.escape(record_id)}\s*-->$")
+    close_re = re.compile(rf"^<!--\s*/record:{re.escape(record_id)}\s*-->$")
+    opens = [i for i, line in enumerate(lines) if open_re.match(line.strip())]
+    closes = [i for i, line in enumerate(lines) if close_re.match(line.strip())]
     if not opens or not closes:
         raise ProvenanceError(f"digest is missing the fence for record {record_id!r}")
     if len(opens) > 1 or len(closes) > 1:
@@ -174,8 +192,7 @@ def extract_digest_projection(text: str, record_id: str, anchor: str | None) -> 
         )
     section = lines[start + 1 : end]
     for line in section:
-        stripped = line.strip()
-        if stripped.startswith("<!-- record:") or stripped.startswith("<!-- /record:"):
+        if _FENCE_LINE_RE.match(line.strip()):
             raise ProvenanceError(
                 f"digest has a nested fence inside record {record_id!r}"
             )
@@ -202,13 +219,35 @@ def compute_content_hash(normalized: str) -> str:
 
 
 def _digest_path(record: dict[str, Any], project_root: Path) -> Path:
-    """Resolve and safety-check a record's digest path (raises ProvenanceError)."""
+    """Resolve and safety-check a record's digest path (raises ProvenanceError).
+
+    Allows both a dedicated per-record digest and an ADR-011-permitted shared
+    reference document (e.g. ``docs/references/unlp-reading-notes.md``) -- anything
+    tracked under ``docs/references/`` except ``docs/references/private/``. Rejects
+    symlinks outright (the simplest deterministic policy against a tracked-looking
+    path windowing into private/local data) and requires the resolved target to
+    stay under ``docs/references/`` too, not just the lexical spelling.
+    """
     digest = record["provenance"]["digest"]
-    if PurePosixPath(digest).as_posix().startswith(_PRIVATE_PREFIX):
+    digest_posix = PurePosixPath(digest).as_posix()
+    if not digest_posix.startswith(_REFERENCES_PREFIX):
+        raise ProvenanceError(
+            f"digest {digest!r} must be a tracked path under {_REFERENCES_PREFIX} "
+            f"(dedicated digest or ADR-011-permitted shared reference)"
+        )
+    if digest_posix.startswith(_PRIVATE_PREFIX):
         raise ProvenanceError(
             f"digest {digest!r} points under {_PRIVATE_PREFIX} (private-local, never tracked)"
         )
+    if _path_has_symlink(project_root, digest):
+        raise ProvenanceError(f"digest {digest!r} passes through a symlink — not allowed")
     resolved = _safe_repo_path(digest, project_root)
+    references_root = (project_root / "docs" / "references").resolve()
+    if resolved != references_root and not resolved.is_relative_to(references_root):
+        raise ProvenanceError(f"digest {digest!r} resolves outside {_REFERENCES_PREFIX}")
+    private_root = references_root / "private"
+    if resolved == private_root or resolved.is_relative_to(private_root):
+        raise ProvenanceError(f"digest {digest!r} resolves under {_PRIVATE_PREFIX}")
     if not resolved.exists():
         raise ProvenanceError(f"digest {digest!r} does not exist")
     if not resolved.is_file():
@@ -216,14 +255,32 @@ def _digest_path(record: dict[str, Any], project_root: Path) -> Path:
     return resolved
 
 
-def expected_content_hash(record: dict[str, Any], project_root: Path) -> str:
-    """Full pipeline: resolve digest -> project -> normalize -> hash."""
+def _read_digest_text(path: Path) -> str:
+    """Read a digest file as UTF-8, turning decode/IO failures into a record-scoped
+    ``ProvenanceError`` instead of an uncaught traceback."""
+    try:
+        return path.read_text("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ProvenanceError(f"{path} is not valid UTF-8: {exc}") from exc
+    except OSError as exc:
+        raise ProvenanceError(f"{path} could not be read: {exc}") from exc
+
+
+def _record_projection(record: dict[str, Any], project_root: Path) -> str:
+    """Resolve, read, and extract this record's raw digest projection (the exact
+    per-record body used for both hashing and the copyright/size policy)."""
     path = _digest_path(record, project_root)
-    text = path.read_text("utf-8")
-    projection = extract_digest_projection(
+    text = _read_digest_text(path)
+    return extract_digest_projection(
         text, record["id"], record["provenance"].get("digest_anchor")
     )
-    return compute_content_hash(normalize_digest_projection(projection))
+
+
+def expected_content_hash(record: dict[str, Any], project_root: Path) -> str:
+    """Full pipeline: resolve digest -> project -> normalize -> hash."""
+    return compute_content_hash(
+        normalize_digest_projection(_record_projection(record, project_root))
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -295,16 +352,31 @@ def validate_supersession_cycles(records: list[dict[str, Any]]) -> list[str]:
 
 def _resolve_symbol(path: Path, symbol: str) -> bool:
     text = path.read_text("utf-8", errors="replace")
-    if path.suffix == ".py":
-        return (
-            re.search(
-                rf"^\s*(?:async\s+def|def|class)\s+{re.escape(symbol)}\b",
-                text,
-                re.MULTILINE,
-            )
-            is not None
-        )
-    return symbol in text
+    if path.suffix != ".py":
+        return symbol in text
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return symbol in text  # unparsable file: fall back to a substring match
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+            and node.name == symbol
+        ):
+            return True
+    # Module-level constants: `SYMBOL = ...` / `SYMBOL: Type = ...` at top level only.
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == symbol for t in node.targets
+        ):
+            return True
+        if (
+            isinstance(node, ast.AnnAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id == symbol
+        ):
+            return True
+    return False
 
 
 def validate_consumer(
@@ -389,31 +461,55 @@ def validate_ownership(
     return []
 
 
-def _quoted_spans(text: str) -> list[str]:
+# Straight double quotes, Ukrainian guillemets, and curly English quotes -- all
+# allowed to span multiple lines, since a quote broken across lines is still one
+# quoted span for copyright purposes.
+_QUOTE_SPAN_PATTERNS = (
+    re.compile(r'"([^"]*)"'),
+    re.compile(r"«([^»]*)»"),
+    re.compile(r"“([^”]*)”"),  # “ … ”
+)
+
+
+def _quoted_spans(projection: str) -> list[str]:
+    """Extract quoted spans from a digest projection, combining contiguous Markdown
+    blockquote lines into one span (a blank or non-blockquote line ends a span) so
+    that a quote split across several short ``>`` lines cannot dodge the char cap."""
     spans: list[str] = []
-    spans += re.findall(r'"([^"\n]*)"', text)
-    spans += re.findall(r"«([^»\n]*)»", text)
-    for line in text.splitlines():
-        if line.lstrip().startswith(">"):
-            spans.append(line.lstrip()[1:].strip())
+    for pattern in _QUOTE_SPAN_PATTERNS:
+        spans.extend(pattern.findall(projection))
+    blockquote: list[str] = []
+    for line in projection.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith(">"):
+            blockquote.append(stripped[1:].strip())
+            continue
+        if blockquote:
+            spans.append(" ".join(blockquote))
+            blockquote = []
+    if blockquote:
+        spans.append(" ".join(blockquote))
     return spans
 
 
 def validate_digest_policy(record: dict[str, Any], project_root: Path) -> list[str]:
-    """Enforce the digest copyright policy on the committed digest file."""
+    """Enforce the digest copyright policy on this record's PROJECTION only (the
+    same fenced section used for hashing) -- never on a whole shared digest file,
+    so an anchored record can't be penalized for, or borrow attribution from,
+    another section."""
     rid = record["id"]
     try:
-        path = _digest_path(record, project_root)
+        projection = _record_projection(record, project_root)
     except ProvenanceError:
         return []  # provenance validation already reported this
-    raw = path.read_bytes()
     errors: list[str] = []
-    if len(raw) > MAX_DIGEST_BYTES:
+    projection_bytes = projection.encode("utf-8")
+    if len(projection_bytes) > MAX_DIGEST_BYTES:
         errors.append(
-            f"{rid}: digest is {len(raw)} bytes (max {MAX_DIGEST_BYTES}) — keep digests compact"
+            f"{rid}: digest record body is {len(projection_bytes)} bytes "
+            f"(max {MAX_DIGEST_BYTES}) — keep the per-record digest compact"
         )
-    text = raw.decode("utf-8", errors="replace")
-    spans = _quoted_spans(text)
+    spans = _quoted_spans(projection)
     for span in spans:
         if len(span) > MAX_QUOTE_CHARS:
             errors.append(
@@ -421,10 +517,11 @@ def validate_digest_policy(record: dict[str, Any], project_root: Path) -> list[s
                 f"(max {MAX_QUOTE_CHARS}) — paraphrase, do not copy"
             )
             break
-    if spans and not _URL_RE.search(text):
+    if spans and not (record["provenance"].get("source_url") or _URL_RE.search(projection)):
         errors.append(
-            f"{rid}: digest contains a quotation but no source URL — quotations "
-            f"require provenance"
+            f"{rid}: digest contains a quotation but no source URL in this record's "
+            f"provenance.source_url or its own projection — quotations require "
+            f"in-record provenance, not another section's URL"
         )
     return errors
 
@@ -479,9 +576,16 @@ def validate_registry(
     membership_resolver: MembershipResolver | None = None,
     issue_resolver: RefResolver | None = None,
     corpus_resolver: RefResolver | None = None,
+    raw_text: str | None = None,
 ) -> CheckResult:
     """Run the full P1 validation contract. Hash drift is tracked separately from
-    non-hash errors so that ``--reconcile`` can refuse mutation on the latter."""
+    non-hash errors so that ``--reconcile`` can refuse mutation on the latter.
+
+    ``raw_text`` (the registry's source bytes, decoded) is optional but should
+    always be supplied by the CLI: it lets us reject a ``content_hash`` written as
+    a YAML alias, which is invisible once ``data`` has gone through
+    ``yaml.safe_load``.
+    """
     result = CheckResult()
     schema = schema if schema is not None else load_schema()
 
@@ -494,6 +598,9 @@ def validate_registry(
     streams = streams if streams is not None else load_streams()
     decision_ids = decision_ids if decision_ids is not None else load_decision_ids()
     records = data["records"]
+
+    if raw_text is not None:
+        result.errors.extend(validate_content_hash_scalars(raw_text, records))
 
     ids = [rec["id"] for rec in records]
     seen: set[str] = set()
@@ -536,34 +643,103 @@ def validate_registry(
 # --------------------------------------------------------------------------- #
 # Reconciliation (the only mutation path)
 # --------------------------------------------------------------------------- #
-def _content_hash_nodes(raw_text: str) -> dict[str, yaml.ScalarNode]:
-    """Map record id -> its ``content_hash`` scalar node (with source marks)."""
-    root = yaml.compose(raw_text)
-    out: dict[str, yaml.ScalarNode] = {}
-    if not isinstance(root, yaml.MappingNode):
-        return out
-    records_node = None
-    for key, value in root.value:
-        if isinstance(key, yaml.ScalarNode) and key.value == "records":
-            records_node = value
-            break
-    if not isinstance(records_node, yaml.SequenceNode):
-        return out
-    for item in records_node.value:
-        if not isinstance(item, yaml.MappingNode):
-            continue
-        rid = None
-        hash_node = None
-        for key, value in item.value:
-            if not isinstance(key, yaml.ScalarNode):
-                continue
-            if key.value == "id" and isinstance(value, yaml.ScalarNode):
-                rid = value.value
-            elif key.value == "content_hash" and isinstance(value, yaml.ScalarNode):
-                hash_node = value
-        if rid is not None and hash_node is not None:
-            out[rid] = hash_node
+def _skip_event(events: list[yaml.Event], i: int) -> int:
+    """Advance past one complete node value starting at ``events[i]``."""
+    ev = events[i]
+    if isinstance(ev, (yaml.ScalarEvent, yaml.AliasEvent)):
+        return i + 1
+    if isinstance(ev, yaml.SequenceStartEvent):
+        i += 1
+        while not isinstance(events[i], yaml.SequenceEndEvent):
+            i = _skip_event(events, i)
+        return i + 1
+    if isinstance(ev, yaml.MappingStartEvent):
+        i += 1
+        while not isinstance(events[i], yaml.MappingEndEvent):
+            i = _skip_event(events, i)  # key
+            i = _skip_event(events, i)  # value
+        return i + 1
+    raise ValueError(f"unexpected YAML event while scanning for content_hash: {ev!r}")
+
+
+def _content_hash_events(raw_text: str) -> dict[str, yaml.Event]:
+    """Map record id -> the raw parser event for its ``content_hash`` value.
+
+    Walks ``yaml.parse()`` events directly instead of ``yaml.compose()``/
+    ``yaml.safe_load()``. Composing (and safe_load) resolve a YAML alias (``*h``)
+    to the SAME node object as its anchor definition -- so a ``content_hash: *h``
+    aliasing e.g. an anchor on ``summary`` would silently read back as if it were a
+    plain scalar written at the *anchor's* source position. Reconciling from that
+    resolved node then splices the new hash into the anchor's span (corrupting the
+    field it was borrowed from) and leaves the alias undefined, while reporting
+    success. Scanning events instead lets us see that this record's value was an
+    ``AliasEvent``, not a ``ScalarEvent``, at the exact position it was written.
+    """
+    events = list(yaml.parse(raw_text, Loader=yaml.SafeLoader))
+    idx = 0
+    while not isinstance(events[idx], yaml.MappingStartEvent):
+        idx += 1
+    idx += 1  # enter the root mapping
+    record_starts: list[int] = []
+    while not isinstance(events[idx], yaml.MappingEndEvent):
+        key_ev = events[idx]
+        idx += 1
+        if (
+            isinstance(key_ev, yaml.ScalarEvent)
+            and key_ev.value == "records"
+            and isinstance(events[idx], yaml.SequenceStartEvent)
+        ):
+            idx += 1
+            while not isinstance(events[idx], yaml.SequenceEndEvent):
+                if isinstance(events[idx], yaml.MappingStartEvent):
+                    record_starts.append(idx)
+                idx = _skip_event(events, idx)
+            idx += 1  # consume SequenceEndEvent
+        else:
+            idx = _skip_event(events, idx)
+
+    out: dict[str, yaml.Event] = {}
+    for start in record_starts:
+        i = start + 1
+        rid: str | None = None
+        hash_event: yaml.Event | None = None
+        while not isinstance(events[i], yaml.MappingEndEvent):
+            key_ev = events[i]
+            i += 1
+            if (
+                isinstance(key_ev, yaml.ScalarEvent)
+                and key_ev.value == "id"
+                and isinstance(events[i], yaml.ScalarEvent)
+            ):
+                rid = events[i].value
+                i = _skip_event(events, i)
+            elif isinstance(key_ev, yaml.ScalarEvent) and key_ev.value == "content_hash":
+                hash_event = events[i]
+                i = _skip_event(events, i)
+            else:
+                i = _skip_event(events, i)
+        if rid is not None and hash_event is not None:
+            out[rid] = hash_event
     return out
+
+
+def validate_content_hash_scalars(
+    raw_text: str, records: list[dict[str, Any]]
+) -> list[str]:
+    """Reject a ``content_hash`` written as a YAML alias (e.g. ``*h``) rather than a
+    literal scalar. This is a non-hash validation error: it must block both
+    ``--check`` and ``--reconcile`` (never silently resolved, never mutated)."""
+    events_by_id = _content_hash_events(raw_text)
+    errors: list[str] = []
+    for record in records:
+        rid = record["id"]
+        event = events_by_id.get(rid)
+        if event is not None and not isinstance(event, yaml.ScalarEvent):
+            errors.append(
+                f"{rid}: content_hash is a YAML alias (e.g. *anchor), not a literal "
+                f"plain/quoted scalar — write an explicit sha256:... value"
+            )
+    return errors
 
 
 def _render_scalar(new_value: str, style: str | None) -> str:
@@ -580,30 +756,35 @@ def reconcile_hashes(
     *,
     project_root: Path = PROJECT_ROOT,
     target_ids: set[str] | None = None,
-) -> tuple[str, list[str]]:
-    """Return (new_text, changed_ids). Replaces only drifted ``content_hash`` scalar
-    spans (targeted by ``target_ids`` if given), preserving all other bytes."""
-    nodes = _content_hash_nodes(raw_text)
+) -> tuple[str, list[str], list[str]]:
+    """Return (new_text, changed_ids, unresolved_ids). Replaces only drifted
+    ``content_hash`` scalar spans (targeted by ``target_ids`` if given), preserving
+    all other bytes. ``unresolved_ids`` lists in-scope, drifted records whose
+    ``content_hash`` could not be located as a literal scalar to rewrite (e.g. a
+    YAML alias) -- the caller must treat this as failure, never as success."""
+    events_by_id = _content_hash_events(raw_text)
     replacements: list[tuple[int, int, str]] = []
     changed: list[str] = []
+    unresolved: list[str] = []
     for record in data["records"]:
         rid = record["id"]
         if target_ids is not None and rid not in target_ids:
             continue
-        node = nodes.get(rid)
-        if node is None:
-            continue
         expected = expected_content_hash(record, project_root)
         if record["content_hash"] == expected:
+            continue  # not drifted -- nothing to reconcile for this record
+        event = events_by_id.get(rid)
+        if event is None or not isinstance(event, yaml.ScalarEvent):
+            unresolved.append(rid)
             continue
-        start = node.start_mark.index
-        end = node.end_mark.index
-        replacements.append((start, end, _render_scalar(expected, node.style)))
+        start = event.start_mark.index
+        end = event.end_mark.index
+        replacements.append((start, end, _render_scalar(expected, event.style)))
         changed.append(rid)
     new_text = raw_text
     for start, end, rendered in sorted(replacements, key=lambda r: r[0], reverse=True):
         new_text = new_text[:start] + rendered + new_text[end:]
-    return new_text, changed
+    return new_text, changed, unresolved
 
 
 def _atomic_write(path: Path, text: str) -> None:
@@ -651,7 +832,7 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
 
     registry_path = project_root / "docs" / "references" / "research-registry.yaml"
     raw_text, data = load_registry(registry_path)
-    result = validate_registry(data, project_root=project_root)
+    result = validate_registry(data, project_root=project_root, raw_text=raw_text)
 
     if args.reconcile:
         if result.errors:
@@ -669,14 +850,45 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
             if unknown:
                 print(f"Unknown record id(s): {', '.join(sorted(unknown))}", file=sys.stderr)
                 return 2
-        new_text, changed = reconcile_hashes(
+        new_text, changed, unresolved = reconcile_hashes(
             raw_text, data, project_root=project_root, target_ids=target_ids
         )
-        if changed:
-            _atomic_write(registry_path, new_text)
-            print(f"Reconciled content_hash for: {', '.join(changed)}")
-        else:
+        if unresolved:
+            print(
+                "Refusing to reconcile: content_hash for these drifted record(s) is "
+                "not a literal scalar (e.g. a YAML alias) and cannot be safely "
+                f"rewritten: {', '.join(sorted(unresolved))}",
+                file=sys.stderr,
+            )
+            return 2
+        if not changed:
             print("No content_hash drift — nothing to reconcile.")
+            return 0
+        # Never write an unvalidated candidate: parse + fully re-validate the new
+        # text with the same project root before touching the file, and confirm
+        # every record we meant to fix no longer drifts in the candidate.
+        candidate_data = yaml.safe_load(new_text)
+        candidate_result = validate_registry(
+            candidate_data, project_root=project_root, raw_text=new_text
+        )
+        if candidate_result.errors:
+            print(
+                "Refusing to write: the reconciled registry fails validation:",
+                file=sys.stderr,
+            )
+            for err in candidate_result.errors:
+                print(f"  - {err}", file=sys.stderr)
+            return 2
+        still_drifted = sorted(set(changed) & set(candidate_result.drift))
+        if still_drifted:
+            print(
+                "Refusing to write: these record(s) would still drift after "
+                f"reconciliation: {', '.join(still_drifted)}",
+                file=sys.stderr,
+            )
+            return 2
+        _atomic_write(registry_path, new_text)
+        print(f"Reconciled content_hash for: {', '.join(changed)}")
         return 0
 
     # --check (default): report-only, byte-for-byte read-only.

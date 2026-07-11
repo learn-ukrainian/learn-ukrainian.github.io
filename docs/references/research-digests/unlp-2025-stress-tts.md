@@ -39,7 +39,7 @@ from phonemization, which matches our need to mark stress first and phonemize se
 
 ## Adoption boundary (do not overclaim)
 
-Adopted as a **quality benchmark and method reference only**. Integration is
+Retained as a **quality benchmark and method reference only**. Integration is
 **deferred**: it is blocked by the user-gated #4696 engine-versus-recorded-audio
 decision, and the upstream repository's license must be verified before any code or
 data reuse — the paper body states public availability but prints no license string,
