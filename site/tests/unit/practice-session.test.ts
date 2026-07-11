@@ -215,7 +215,7 @@ describe('practice session helpers', () => {
     const history: SelectionHistoryItem[] = [
       { itemId: 'alpha:flashcards', lemmaId: 'alpha', mode: 'flashcards' },
     ];
-    writePracticeSessionSnapshot({
+    writePracticeSessionSnapshot('flashcards', {
       sessionSeed: 424242,
       history,
       budget: 10,
@@ -231,7 +231,7 @@ describe('practice session helpers', () => {
       extensionUsed: 0,
       unresolvedCardKeys: [],
     });
-    const snapshot = readPracticeSessionSnapshot();
+    const snapshot = readPracticeSessionSnapshot('flashcards');
     expect(snapshot).toMatchObject({
       sessionSeed: 424242,
       history,
@@ -283,7 +283,7 @@ describe('practice session helpers', () => {
   });
 
   test('expired snapshot is not resumable', () => {
-    writePracticeSessionSnapshot({
+    writePracticeSessionSnapshot('mixed', {
       sessionSeed: 1,
       history: [],
       budget: 10,
@@ -293,7 +293,7 @@ describe('practice session helpers', () => {
       startedAt: NOW.getTime() - 7 * 60 * 60_000,
       plannedTotal: 10,
     });
-    expect(isPracticeSessionResumable(readPracticeSessionSnapshot(), NOW)).toBe(false);
+    expect(isPracticeSessionResumable(readPracticeSessionSnapshot('mixed'), NOW)).toBe(false);
     localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
     localStorage.removeItem(SRS_STORAGE_KEY);
   });

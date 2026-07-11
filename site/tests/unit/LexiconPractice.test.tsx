@@ -885,8 +885,8 @@ describe('LexiconPractice', () => {
 
       const startedSnapshot = JSON.parse(snapshotWrites[0][1]);
       expect(startedSnapshot).not.toBeNull();
-      expect(startedSnapshot.modeFilter).toBe('mixed');
-      expect(startedSnapshot.budget).toBe(10);
+      expect(startedSnapshot.byMode.mixed.modeFilter).toBe('mixed');
+      expect(startedSnapshot.byMode.mixed.budget).toBe(10);
     } finally {
       window.location = new URL('http://localhost/') as any;
       vi.restoreAllMocks();
@@ -1402,10 +1402,10 @@ describe('LexiconPractice', () => {
     await user.click(await screen.findByTestId('practice-weak-chip-accusative'));
     await screen.findByTestId('practice-cloze');
 
-    // The persisted snapshot carries the mode but no focus weakness — transiency by design.
+    // The mode-indexed snapshot carries the mode but no focus weakness — transiency by design.
     const raw = localStorage.getItem('lu-practice-session');
     expect(raw).not.toBeNull();
-    const snapshot = JSON.parse(raw as string);
+    const snapshot = JSON.parse(raw as string).byMode.cloze;
     expect(snapshot.modeFilter).toBe('cloze');
     expect(snapshot).not.toHaveProperty('focusWeakness');
     expect(raw).not.toContain('focus');
@@ -1415,8 +1415,47 @@ describe('LexiconPractice', () => {
     // stranded focus-filtered one.
     first.unmount();
     render(<LexiconPractice initialDeck={sampleDeck()} />);
-    await user.click(await screen.findByTestId('practice-resume-session'));
+    await user.click(await screen.findByRole('button', { name: /Продовжити \(0\// }));
     expect(await screen.findByTestId('practice-cloze')).toBeInTheDocument();
+  });
+
+  test('switching modes starts a fresh selected session and preserves only its own continuation', async () => {
+    const deck = sampleDeck();
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes('practice-index.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, items: deck.index });
+      }
+      if (url.includes('practice-lexemes.A1.json')) {
+        return okJson({ deckVersion: deck.deckVersion, level: deck.level, lexemes: deck.lexemes });
+      }
+      return notFoundResponse();
+    });
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={deck} />);
+
+    // Leave a matching session unfinished, then return to the hub exactly as a learner does.
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="matching"]')!);
+    await screen.findByTestId('practice-matching');
+    await user.click(screen.getByRole('button', { name: /Додому/ }));
+
+    // The matching continuation belongs to matching, never to the next mode selected.
+    await screen.findByRole('button', { name: /Продовжити \(0\// });
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+
+    await waitFor(() =>
+      expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument(),
+    );
+    expect(screen.queryByTestId('practice-matching')).not.toBeInTheDocument();
+    expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/');
+
+    const snapshots = JSON.parse(localStorage.getItem('lu-practice-session')!);
+    expect(snapshots.byMode.matching).toMatchObject({ modeFilter: 'matching', completed: 0 });
+    expect(snapshots.byMode.flashcards).toMatchObject({
+      modeFilter: 'flashcards',
+      completed: 0,
+      history: [],
+    });
   });
 
   test('double-Enter during dwell advances exactly once (no double completion)', async () => {

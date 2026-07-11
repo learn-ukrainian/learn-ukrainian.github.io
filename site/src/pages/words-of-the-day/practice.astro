@@ -447,7 +447,13 @@ const frontmatter = {
     margin-top: 0.35rem;
   }
 
+  :global(.mode-card-stack) {
+    display: grid;
+    gap: 0.5rem;
+  }
+
   :global(.mode-card) {
+    width: 100%;
     position: relative;
     display: flex;
     min-height: 44px;
@@ -461,6 +467,10 @@ const frontmatter = {
     box-shadow: var(--lu-shadow);
     text-align: left;
     transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+  }
+
+  :global(.mode-card-resume) {
+    justify-self: start;
   }
 
   :global(.mode-card:hover),
