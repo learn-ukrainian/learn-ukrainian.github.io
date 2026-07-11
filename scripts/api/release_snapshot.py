@@ -20,13 +20,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import (
     LIVE_DATA_PATHS,
     MANIFEST_NAME,
     RELEASE_SHA_RE,
     RELEASES_RELATIVE_PATH,
 )
-from scripts.git_context import sanitized_git_env
 
 ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
 

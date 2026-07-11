@@ -25,7 +25,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from scripts.git_context import sanitized_git_env
+from scripts.common.git_context import sanitized_git_env
 
 from .config import LIVE_REPO_ROOT
 

@@ -40,7 +40,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-from scripts.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
+from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 
 __all__ = [
     "PROTECTED_BRANCHES",

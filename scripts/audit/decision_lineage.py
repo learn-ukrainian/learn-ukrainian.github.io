@@ -14,7 +14,7 @@ from typing import Any
 
 import yaml
 
-from scripts.git_context import sanitized_git_env
+from scripts.common.git_context import sanitized_git_env
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DECISIONS_DIR = Path("docs/decisions")
