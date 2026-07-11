@@ -3171,6 +3171,7 @@ def _definition_cards(
 
 _SYNONYM_ADDITION_CAP = 8
 _ANTONYM_ADDITION_CAP = 8
+_HOMONYM_ADDITION_CAP = 8
 _COATTESTATION_SUM_OR_GRINCHENKO = frozenset({"СУМ-11", "СУМ-20", "Грінченко"})
 _CONTENT_STEM_STOPWORDS = frozenset(
     {
@@ -3435,6 +3436,238 @@ def _definition_antonym_relations_by_headword(
             reciprocal["item"] = headwords[source_key]
             reciprocal["direction"] = "reciprocal"
             by_headword.setdefault(target_key, []).append(reciprocal)
+    return by_headword
+
+
+# СУМ-11 encodes lexical homonyms as consecutive, explicitly numbered heads in
+# one ``definition`` value (for example ``КОСА́¹ … КОСА́² …``), rather than as
+# separate database rows. The source data uses Unicode superscript digits.
+# Keep this separate from ordinary sense numbers (``1.``, ``2.``): only a
+# superscript immediately following an all-capital headword is a homonym marker.
+_HOMONYM_SUPERSCRIPT_TO_INT = {
+    "¹": 1,
+    "²": 2,
+    "³": 3,
+    "⁴": 4,
+    "⁵": 5,
+    "⁶": 6,
+    "⁷": 7,
+    "⁸": 8,
+    "⁹": 9,
+}
+HOMONYM_DIGIT_RE = re.compile(r"(?P<homonym_no>[¹²³⁴⁵⁶⁷⁸⁹])")
+_HOMONYM_HEADWORD_RE = re.compile(
+    rf"(?P<surface>(?:[А-ЯҐІЇЄ'’ʼ-][\u0300\u0301]?)+)\s*{HOMONYM_DIGIT_RE.pattern}"
+    r"(?=\s*(?:[,.;:—-]|$))"
+)
+_HOMONYM_NOUN_RE = re.compile(r",\s*(?P<gender>ч|ж|с|мн)\.(?P<body>.*)", flags=re.IGNORECASE | re.DOTALL)
+_HOMONYM_POS_RE = re.compile(
+    r"\b(?P<marker>прикм|присл|числ|займ|прийм|спол|част|виг|док|недок)\.(?P<body>.*)",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+_HOMONYM_POS_LABELS = {
+    "прикм": "прикметник",
+    "присл": "прислівник",
+    "числ": "числівник",
+    "займ": "займенник",
+    "прийм": "прийменник",
+    "спол": "сполучник",
+    "част": "частка",
+    "виг": "вигук",
+    "док": "дієслово",
+    "недок": "дієслово",
+}
+_HOMONYM_LEADING_QUALIFIERS_RE = re.compile(
+    r"^\s*(?:,\s*)?(?:(?:діал|заст|розм|рідко|спец|поет|перен|розмовне|мет)\.\s*)*",
+    flags=re.IGNORECASE,
+)
+_HOMONYM_LEADING_SENSE_NO_RE = re.compile(r"^\s*\d+\s*\.\s*")
+_HOMONYM_LEADING_GRAMMAR_RE = re.compile(
+    r"^\s*(?:род|дав|знах|ор|місц|клич)\.\s*[А-Яа-яЄєІіЇїҐґ\u0300\u0301]+\.\s*",
+    flags=re.IGNORECASE,
+)
+
+
+def _homonym_pos_and_gloss(fragment: str) -> tuple[str, str] | None:
+    """Extract a dictionary POS and short first-definition gloss from one block.
+
+    Membership is accepted only when both values are explicit. This deliberately
+    declines malformed number runs instead of turning an ordinary polysemous
+    sense list into a homonym relation.
+    """
+    pos = ""
+    body = ""
+    noun_match = _HOMONYM_NOUN_RE.search(fragment)
+    if noun_match:
+        gender = noun_match.group("gender").casefold()
+        if gender == "мн":
+            pos = "іменник, множина"
+        else:
+            gender_label = {"ч": "чол.", "ж": "жін.", "с": "сер."}[gender]
+            pos = f"іменник, {gender_label} р."
+        body = noun_match.group("body")
+    else:
+        pos_match = _HOMONYM_POS_RE.search(fragment)
+        if not pos_match:
+            # Adjective heads normally use the compact ``-ий, а, е.`` form.
+            adjective_match = re.match(r"\s*,\s*[^.]{0,48},\s*[аеєі]\.\s*(?P<body>.*)", fragment)
+            if adjective_match:
+                pos = "прикметник"
+                body = adjective_match.group("body")
+            else:
+                return None
+        else:
+            marker = pos_match.group("marker").casefold()
+            pos = _HOMONYM_POS_LABELS[marker]
+            body = pos_match.group("body")
+
+    # The source can place a register marker before its first sense number
+    # (``мет. 1. …``) or a case-government note after it (``1. род. а. …``).
+    # Peel only these header conventions, never prose inside the definition.
+    for _ in range(3):
+        body = _HOMONYM_LEADING_QUALIFIERS_RE.sub("", body)
+        body = _HOMONYM_LEADING_SENSE_NO_RE.sub("", body)
+        body = _HOMONYM_LEADING_GRAMMAR_RE.sub("", body)
+    if not body:
+        return None
+    gloss = re.split(r"(?<=[.!?])\s+(?=[А-ЯҐІЇЄ])", body, maxsplit=1)[0].strip()
+    gloss = _truncate_text(gloss, 180)
+    return (pos, gloss) if gloss else None
+
+
+def _numbered_homonym_members(text: str, surface: str) -> list[dict[str, Any]]:
+    """Parse one dictionary article's explicitly numbered same-surface heads."""
+    surface_key = _canonical_synonym_term(surface)
+    if not surface_key:
+        return []
+    matches = [
+        match
+        for match in _HOMONYM_HEADWORD_RE.finditer(text)
+        if _canonical_synonym_term(_strip_stress(match.group("surface"))) == surface_key
+    ]
+    members: list[dict[str, Any]] = []
+    seen_numbers: set[int] = set()
+    for index, match in enumerate(matches):
+        number = _HOMONYM_SUPERSCRIPT_TO_INT[match.group("homonym_no")]
+        if number in seen_numbers:
+            return []
+        seen_numbers.add(number)
+        block_end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        pos_and_gloss = _homonym_pos_and_gloss(text[match.end() : block_end])
+        if pos_and_gloss is None:
+            return []
+        pos, gloss = pos_and_gloss
+        members.append(
+            {
+                "word": surface_key,
+                "homonym_no": number,
+                "gloss": gloss,
+                "pos": pos,
+            }
+        )
+    return members if len(members) >= 2 else []
+
+
+def _homonym_dictionary_rows(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    cache: dict[str, Any] | None = None,
+) -> list[dict[str, str]]:
+    """Return full local СУМ rows; never fetch or mutate a slovnyk cache.
+
+    Unlike ordinary definition cards, a homonym set cannot be truncated at the
+    first 900 characters: later numbered heads are part of the same evidence.
+    """
+    cache = cache if cache is not None else _read_cached_slovnyk_rows(lemma)
+    rows: list[dict[str, str]] = []
+    sum20 = _cache_lookup(cache, "newsum")
+    if sum20 and sum20.get("text"):
+        rows.append(
+            {
+                "source": "СУМ-20",
+                "text": _definition_body(sum20["text"], limit=20_000),
+                "source_url": str(sum20.get("source_url") or ""),
+            }
+        )
+    try:
+        for variant in _split_lemma_variants(lemma):
+            for definition, text in conn.execute(
+                "SELECT definition, text FROM sum11 WHERE word = ? AND definition != ''",
+                (variant,),
+            ).fetchall():
+                raw = str(definition or text or "")
+                if raw:
+                    rows.append({"source": "СУМ-11", "text": raw, "source_url": ""})
+    except sqlite3.Error:
+        pass
+    return rows
+
+
+def _homonym_relations(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    cache: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Emit numbered lexical-homonym siblings, gated by dictionary and VESUM.
+
+    СУМ numbering establishes the semantic set. VESUM does not encode those
+    homonym indices, so it can honestly gate only the shared surface as a valid
+    lemma; an invented ``two VESUM lemmas`` threshold would reject the recorded
+    sets for ``ключ``, ``лист``, and ``стан``.
+    """
+    source_term = _canonical_synonym_term(lemma)
+    if not source_term:
+        return []
+    best_row: dict[str, str] | None = None
+    best_members: list[dict[str, Any]] = []
+    for row in _homonym_dictionary_rows(conn, lemma, cache=cache):
+        members = _numbered_homonym_members(row["text"], source_term)
+        if len(members) > len(best_members):
+            best_row = row
+            best_members = members
+    if not best_row:
+        return []
+    if not all(_vesum_valid_synonym(str(member["word"])) for member in best_members):
+        return []
+
+    # An unnumbered Atlas entry names the lead (lowest-numbered) dictionary
+    # head. The relation lists only the other numbered lexical headwords. Use
+    # the source with the most complete numbered run: a stale СУМ-20 cache can
+    # contain only the first two heads where local СУМ-11 records all of them.
+    lead_number = min(int(member["homonym_no"]) for member in best_members)
+    relations: list[dict[str, Any]] = []
+    for member in best_members:
+        if int(member["homonym_no"]) == lead_number:
+            continue
+        relation: dict[str, Any] = {
+            **member,
+            "source": best_row["source"],
+            "pattern": "numbered homonym headword",
+            "vein": 1,
+            "gate": {"vesum": "valid lemma"},
+        }
+        if best_row["source_url"]:
+            relation["source_url"] = best_row["source_url"]
+        relations.append(relation)
+    return relations
+
+
+def _homonym_relations_by_headword(
+    conn: sqlite3.Connection,
+    manifest: dict[str, Any],
+) -> dict[str, list[dict[str, Any]]]:
+    """Precompute each manifest headword's dictionary-numbered homonym set."""
+    by_headword: dict[str, list[dict[str, Any]]] = {}
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        source_key = _canonical_synonym_term(lemma)
+        if not source_key:
+            continue
+        relations = _homonym_relations(conn, lemma)
+        if relations:
+            by_headword[source_key] = relations
     return by_headword
 
 
@@ -3710,6 +3943,76 @@ def _merge_antonym_relations(
             items.append(item)
             additions += 1
         label = _relation_source_label(relation, item)
+        if label not in source_labels:
+            source_labels.append(label)
+        if relation.get("source_url") and relation["source_url"] not in source_urls:
+            source_urls.append(str(relation["source_url"]))
+
+    if not items:
+        return None
+    if source_labels:
+        original = str(merged.get("source") or "").strip()
+        merged["source"] = " + ".join(part for part in (original, *source_labels) if part)
+    elif not merged.get("source"):
+        merged["source"] = ""
+    merged["items"] = items
+    if source_urls:
+        merged["source_urls"] = list(dict.fromkeys(source_urls))
+    else:
+        merged.pop("source_urls", None)
+    return merged
+
+
+def _merge_homonym_relations(
+    existing: dict[str, Any] | None,
+    relations: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Merge numbered homonym siblings into the gloss-bearing rendered schema."""
+    merged = dict(existing or {})
+    items: list[dict[str, Any]] = []
+    seen: set[tuple[str, int]] = set()
+    for raw_item in merged.get("items", []):
+        if not isinstance(raw_item, dict):
+            continue
+        word = _canonical_synonym_term(raw_item.get("word"))
+        try:
+            number = int(raw_item.get("homonym_no"))
+        except (TypeError, ValueError):
+            continue
+        gloss = str(raw_item.get("gloss") or "").strip()
+        pos = str(raw_item.get("pos") or "").strip()
+        if not word or number < 1 or not gloss or not pos:
+            continue
+        key = (word, number)
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append({"word": word, "homonym_no": number, "gloss": gloss, "pos": pos})
+
+    source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
+    source_labels: list[str] = []
+    additions = 0
+    for relation in sorted(
+        relations,
+        key=lambda item: (int(item.get("vein") or 99), int(item.get("homonym_no") or 0)),
+    ):
+        word = _canonical_synonym_term(relation.get("word"))
+        try:
+            number = int(relation.get("homonym_no"))
+        except (TypeError, ValueError):
+            continue
+        gloss = str(relation.get("gloss") or "").strip()
+        pos = str(relation.get("pos") or "").strip()
+        if not word or number < 1 or not gloss or not pos:
+            continue
+        key = (word, number)
+        if key not in seen:
+            if additions >= _HOMONYM_ADDITION_CAP:
+                continue
+            seen.add(key)
+            items.append({"word": word, "homonym_no": number, "gloss": gloss, "pos": pos})
+            additions += 1
+        label = f"{relation['source']}: numbered homonym headwords"
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
@@ -4914,6 +5217,7 @@ def enrich_entry(
     has_sum11_flags,
     pointer_synonym_relations: list[dict[str, Any]] | None = None,
     pointer_antonym_relations: list[dict[str, Any]] | None = None,
+    pointer_homonym_relations: list[dict[str, Any]] | None = None,
 ) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
@@ -5010,6 +5314,18 @@ def enrich_entry(
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
     if antonyms:
         sections["antonyms"] = antonyms
+    homonym_relations = (
+        pointer_homonym_relations
+        if pointer_homonym_relations is not None
+        else _homonym_relations(
+            conn,
+            lemma,
+            cache=slovnyk_cache,
+        )
+    )
+    homonyms = _merge_homonym_relations(None, homonym_relations)
+    if homonyms:
+        sections["homonyms"] = homonyms
     idioms = _idioms(conn, lemma, slovnyk_cache)
     if idioms:
         sections["idioms"] = idioms
@@ -5125,6 +5441,7 @@ def enrich() -> tuple[int, int]:
             manifest,
             has_sum11_flags=has_sum11_flags,
         )
+        pointer_homonym_relations = _homonym_relations_by_headword(conn, manifest)
         for entry in manifest["entries"]:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
             if enrich_entry(
@@ -5134,6 +5451,7 @@ def enrich() -> tuple[int, int]:
                 has_sum11_flags=has_sum11_flags,
                 pointer_synonym_relations=pointer_synonym_relations.get(entry_key or "", []),
                 pointer_antonym_relations=pointer_antonym_relations.get(entry_key or "", []),
+                pointer_homonym_relations=pointer_homonym_relations.get(entry_key or "", []),
             ):
                 enriched += 1
     finally:

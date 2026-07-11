@@ -31,6 +31,8 @@ from scripts.lexicon.enrich_manifest import (
     _etymology,
     _etymology_lookup_variants,
     _gated_ukrajinet_relations,
+    _homonym_relations,
+    _homonym_relations_by_headword,
     _idioms,
     _idioms_frazeolohichnyi,
     _idioms_slovnyk,
@@ -41,10 +43,12 @@ from scripts.lexicon.enrich_manifest import (
     _literary_excerpt,
     _meaning,
     _merge_antonym_relations,
+    _merge_homonym_relations,
     _merge_slovnyk_warning,
     _merge_synonym_relations,
     _morphology,
     _normalize_manifest_entries,
+    _numbered_homonym_members,
     _parse_translations,
     _prepare_cefr_estimates,
     _proper_noun_wikipedia_meaning,
@@ -2704,6 +2708,207 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
 
     assert before_counts == {lemma: 0 for lemma in pairs}
     assert after_items == {lemma: [antonym] for lemma, antonym in pairs.items()}
+
+
+def test_numbered_homonym_members_extract_same_surface_glosses_and_pos() -> None:
+    members = _numbered_homonym_members(
+        "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
+        "коса",
+    )
+
+    assert members == [
+        {
+            "word": "коса",
+            "homonym_no": 1,
+            "gloss": "Заплетене волосся.",
+            "pos": "іменник, жін. р.",
+        },
+        {
+            "word": "коса",
+            "homonym_no": 2,
+            "gloss": "Сільськогосподарське знаряддя для косіння трави.",
+            "pos": "іменник, жін. р.",
+        },
+    ]
+    spaced = _numbered_homonym_members(
+        "ЛИСТ ¹ , ч. 1 . Орган рослини. ЛИСТ ² , а, ч. 1 . Шматок паперу.",
+        "лист",
+    )
+    assert [member["gloss"] for member in spaced] == ["Орган рослини.", "Шматок паперу."]
+    apostrophized = _numbered_homonym_members(
+        "В'ЯЗ¹, а, ч. В'язальний вузол. В'ЯЗ², а, ч. Низка дерев.",
+        "в'яз",
+    )
+    assert [member["word"] for member in apostrophized] == ["в'яз", "в'яз"]
+    plural_only = _numbered_homonym_members(
+        "НОЖИЦІ¹, мн. Інструмент для різання. НОЖИЦІ², мн. Форма орнаменту.",
+        "ножиці",
+    )
+    assert [member["pos"] for member in plural_only] == ["іменник, множина", "іменник, множина"]
+
+
+def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatch) -> None:
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        (
+            "коса",
+            "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
+        ),
+    )
+    _patch_synonym_vesum(monkeypatch, {"коса"})
+
+    relations = _homonym_relations(conn, "коса", cache={})
+
+    assert relations == [
+        {
+            "word": "коса",
+            "homonym_no": 2,
+            "gloss": "Сільськогосподарське знаряддя для косіння трави.",
+            "pos": "іменник, жін. р.",
+            "source": "СУМ-11",
+            "pattern": "numbered homonym headword",
+            "vein": 1,
+            "gate": {"vesum": "valid lemma"},
+        }
+    ]
+
+    _patch_synonym_vesum(monkeypatch, set())
+    assert _homonym_relations(conn, "коса", cache={}) == []
+
+    _patch_synonym_vesum(monkeypatch, {"коса"})
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        ("коса", "КОСА́¹, и, ж. Заплетене волосся."),
+    )
+    # A malformed source row must not supplement a complete, dictionary-numbered set.
+    assert _homonym_relations(conn, "коса", cache={}) == relations
+
+
+def test_homonym_relations_precompute_by_manifest_headword(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"коса"})
+    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        (
+            "коса",
+            "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
+        ),
+    )
+
+    relations = _homonym_relations_by_headword(conn, {"entries": [{"lemma": "коса"}]})
+
+    assert [(item["word"], item["homonym_no"]) for item in relations["коса"]] == [("коса", 2)]
+
+
+def test_homonym_relations_choose_the_most_complete_numbered_source(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"коса"})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        (
+            "коса",
+            "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Знаряддя для косіння. "
+            "КОСА́³, и, ж. Намивна смуга суходолу.",
+        ),
+    )
+    cache = {
+        "lookups": {
+            "newsum": {
+                "text": "КОСА́ ¹, и, ж. Заплетене волосся. КОСА́ ², и, ж. Знаряддя для косіння.",
+                "source_url": "https://example.invalid/sum20/kosa",
+            }
+        }
+    }
+
+    relations = _homonym_relations(conn, "коса", cache=cache)
+
+    assert [(item["source"], item["homonym_no"]) for item in relations] == [
+        ("СУМ-11", 2),
+        ("СУМ-11", 3),
+    ]
+
+
+def test_homonym_relation_merge_preserves_gloss_schema_and_source_urls() -> None:
+    relations = [
+        {
+            "word": "коса",
+            "homonym_no": 2,
+            "gloss": "Знаряддя для косіння.",
+            "pos": "іменник, жін. р.",
+            "source": "СУМ-20",
+            "pattern": "numbered homonym headword",
+            "vein": 1,
+            "source_url": "https://example.invalid/sum20/kosa",
+        },
+        {
+            "word": "коса",
+            "homonym_no": 3,
+            "gloss": "Намивна смуга суходолу.",
+            "pos": "іменник, жін. р.",
+            "source": "СУМ-20",
+            "pattern": "numbered homonym headword",
+            "vein": 1,
+            "source_url": "https://example.invalid/sum20/kosa",
+        },
+    ]
+
+    merged = _merge_homonym_relations(None, relations)
+
+    assert merged == {
+        "items": [
+            {
+                "word": "коса",
+                "homonym_no": 2,
+                "gloss": "Знаряддя для косіння.",
+                "pos": "іменник, жін. р.",
+            },
+            {
+                "word": "коса",
+                "homonym_no": 3,
+                "gloss": "Намивна смуга суходолу.",
+                "pos": "іменник, жін. р.",
+            },
+        ],
+        "source": "СУМ-20: numbered homonym headwords",
+        "source_urls": ["https://example.invalid/sum20/kosa"],
+    }
+
+
+def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
+    fixtures = {
+        "коса": (
+            "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
+            [2],
+        ),
+        "ключ": (
+            "КЛЮЧ¹, а, ч. Знаряддя для замикання. КЛЮЧ², а, ч. Джерело води.",
+            [2],
+        ),
+        "лист": (
+            "ЛИСТ¹, ч. Орган рослини. ЛИСТ², а, ч. Шматок паперу або металу.",
+            [2],
+        ),
+        "стан": (
+            "СТАН¹, у, ч. Тулуб людини. СТАН², у, ч. Тимчасовий табір. СТАН³, у, ч. Обставини існування.",
+            [2, 3],
+        ),
+    }
+    _patch_synonym_vesum(monkeypatch, set(fixtures))
+    conn = _conn()
+    conn.executemany(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        [(lemma, definition) for lemma, (definition, _numbers) in fixtures.items()],
+    )
+
+    before_counts = {lemma: 0 for lemma in fixtures}
+    after_numbers = {
+        lemma: [relation["homonym_no"] for relation in _homonym_relations(conn, lemma, cache={})] for lemma in fixtures
+    }
+
+    assert before_counts == {lemma: 0 for lemma in fixtures}
+    assert after_numbers == {lemma: expected_numbers for lemma, (_definition, expected_numbers) in fixtures.items()}
 
 
 def test_definition_synonym_targets_extracts_stressed_same_as_target() -> None:
