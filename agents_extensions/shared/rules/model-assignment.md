@@ -27,6 +27,24 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **CodexBar / routing-budget (live 2026-07-07):** `/api/state/routing-budget` + `delegate --check-budget` = the never-trip window check for SUBSCRIPTION lanes (claude/codex/gemini/cursor/**grok**) — consult before big fanouts. **grok is a SUBSCRIPTION lane (xAI sub, user-corrected 2026-07-07), NOT API-billed** — it appears in the CodexBar snapshot (5h window) and `grok-build` (native CLI) is the seat to use for coding + adversarial review; grok-4.* raw chat models have no measured niche here (no bakeoff/probe rows — deepseek/gemma already cover the cheap tiers). API-billed lanes (deepseek/openrouter) are absent from CodexBar BY DESIGN (the user tracks dollar spend himself): **absence from the snapshot ≠ unavailable** — route them freely by quality fit. Any ranked-headroom view must treat absent lanes as unmetered (constraint pinned on #4640). **Deficit routing (pace > 1× of the weekly window): shed work from the over-pace lanes to the FULL relief roster — agy / grok-build / cursor (coding dispatches) · deepseek (dirt-cheap API: execution via hermes + the default review seat) · glm (idle Zhipu sub — standing slice of off-seat deep/security review, LOCAL-ONLY guard unchanged) · gemma (cheap surface review). Don't forget the cheap lanes exist (user reminder 2026-07-07).**
 
+## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11)
+
+Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label):
+
+- **Orchestrator = the interactive Claude seat (`claude-infra`).** Owns the loop: prioritize, delegate,
+  decide, review in-the-loop, merge in-lane. Drive the high-judgment work in-context, but do **not** run
+  worker-level implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical,
+  fixtures, or anything parallelizable → a worker). "Make good use of them" (user).
+- **Advisor = `gpt-5.6-sol` @ `xhigh` (on-demand, NOT a standing worker).** Convene for the hard,
+  high-judgment calls only: architecture, high-stakes design/spec/ADR review, difficult debugging, final
+  synthesis. Consult BEFORE committing a substantive design; do not use for routine work.
+- **Workers = every other lane** — `gpt-5.6-terra` + `gpt-5.6-luna` (make active use of BOTH), `agy`,
+  `cursor`, `grok-build`, `deepseek`, `pool`, `gemma`, `glm` (LOCAL-ONLY). They do the build /
+  implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
+
+This names who orchestrates vs advises vs works. The cross-family review gate, the per-task routing rows
+above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the standing topology over them.
+
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
