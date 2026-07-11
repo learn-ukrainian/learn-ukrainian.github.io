@@ -39,7 +39,7 @@ _INTERNAL_TITLE_RE = re.compile(
 # A source_ref pointing back into the repo marks build provenance — EXCEPT
 # docs/references/, the reference corpus (school textbooks, style guides) whose
 # citations are url-less by nature. A role=textbook citation like source_ref
-# "docs/references/private/textbooks-txt/9-klas-…voron-2017.txt" is a real learner resource
+# "docs/references/textbooks-txt/9-klas-…voron-2017.txt" is a real learner resource
 # (its source_ref is load-bearing for the plan-reference gate), not junk — without this
 # carve-out the tool deleted 26 legitimate B1 textbook citations.
 # docs/resources/ (the external-resource catalog, e.g. ULP/DobraForma index) is NOT

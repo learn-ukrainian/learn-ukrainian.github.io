@@ -2,7 +2,7 @@
 """Stamp public read-online URLs onto `role: textbook` resource citations.
 
 Textbook resources cite a school textbook via ``source_ref:
-docs/references/private/textbooks-txt/<file>.txt`` (internal, load-bearing provenance) and,
+docs/references/textbooks-txt/<file>.txt`` (internal, load-bearing provenance) and,
 historically, carry no ``url`` — so the learner surface shows only a title. This tool
 adds a ``url:`` (from ``docs/references/textbook-urls.yaml``, keyed by the .txt filename
 stem) so the renderer emits a clickable citation. Idempotent: an entry that already has
@@ -25,7 +25,7 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 URL_MAP_PATH = PROJECT_ROOT / "docs" / "references" / "textbook-urls.yaml"
 
 _TEXTBOOK_REF_RE = re.compile(
-    r"^(?P<indent>\s+)source_ref:\s*[\"']?docs/references/private/textbooks-txt/(?P<stem>[^\"'\s]+?)\.txt[\"']?\s*$"
+    r"^(?P<indent>\s+)source_ref:\s*[\"']?docs/references/textbooks-txt/(?P<stem>[^\"'\s]+?)\.txt[\"']?\s*$"
 )
 _URL_LINE_RE = re.compile(r"^\s+url:\s*\S")
 _ENTRY_START_RE = re.compile(r"^-\s")

@@ -390,7 +390,7 @@ def _is_internal_ref_path(ref: str) -> bool:
     """True if a ``source_ref`` is an internal repo path/file rather than a citation.
 
     Textbook entries carry ``source_ref`` as build provenance — often a repo path such
-    as ``docs/references/private/textbooks-txt/9-klas-…voron-2017.txt`` (load-bearing for
+    as ``docs/references/textbooks-txt/9-klas-…voron-2017.txt`` (load-bearing for
     ``_plan_reference_match_gate``). Such a path must never render on a learner surface;
     a human citation string (e.g. ``"State Standard 2024, §4.2.4.1"``) may.
     """
