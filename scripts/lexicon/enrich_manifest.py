@@ -3803,6 +3803,88 @@ def _paronym_relations_by_headword(
     return by_headword
 
 
+def _corpus_relation_pairs_by_headword(
+    conn: sqlite3.Connection,
+    manifest: dict[str, Any],
+) -> dict[str, dict[str, list[dict[str, Any]]]]:
+    """Read VESUM-gated relation-pair corpus facts for Atlas headwords.
+
+    Candidate artifacts are deliberately permissive during the review period,
+    but both recorded lemmas are re-checked here. This makes the Atlas safe if
+    a stale or manually edited corpus row no longer satisfies the exact-lemma
+    contract. Corpus provenance stays separate from legacy dictionary veins.
+    """
+    headwords = _manifest_headwords(manifest)
+    by_headword: dict[str, dict[str, list[dict[str, Any]]]] = {}
+    try:
+        rows = conn.execute(
+            """
+            SELECT relation, word_a, word_b, gloss_a, gloss_b, source, source_url
+            FROM relation_pairs
+            WHERE review_status IN ('approved', 'candidate')
+            """
+        ).fetchall()
+    except sqlite3.Error:
+        return by_headword
+
+    for relation_raw, word_a_raw, word_b_raw, gloss_a_raw, gloss_b_raw, source_raw, source_url_raw in rows:
+        relation = str(relation_raw or "").strip().casefold()
+        if relation not in {"synonym", "antonym", "paronym", "homonym"}:
+            continue
+        word_a = _canonical_synonym_term(word_a_raw)
+        word_b = _canonical_synonym_term(word_b_raw)
+        if not word_a or not word_b or not (_vesum_valid_synonym(word_a) and _vesum_valid_synonym(word_b)):
+            continue
+        source = f"relation_pairs/{str(source_raw or '').strip()}"
+        if source == "relation_pairs/":
+            continue
+        source_url = str(source_url_raw or "").strip()
+        gloss_a = str(gloss_a_raw or "").strip()
+        gloss_b = str(gloss_b_raw or "").strip()
+
+        def append(
+            headword: str,
+            other: str,
+            other_gloss: str,
+            *,
+            corpus_relation: str = relation,
+            corpus_source: str = source,
+            corpus_source_url: str = source_url,
+        ) -> None:
+            if headword not in headwords:
+                return
+            relation_data: dict[str, Any] = {
+                "source": corpus_source,
+                "pattern": "corpus relation pair",
+                "vein": 3,
+                "gate": {"vesum": "both valid"},
+            }
+            if corpus_source_url:
+                relation_data["source_url"] = corpus_source_url
+            if corpus_relation in {"synonym", "antonym"}:
+                relation_data["item"] = other
+            elif corpus_relation == "paronym":
+                relation_data["word"] = other
+                if other_gloss:
+                    relation_data["distinction"] = other_gloss
+            elif not other_gloss:
+                # A homonym needs an independently authored gloss to be useful;
+                # do not manufacture a number or a part of speech for the UI.
+                return
+            else:
+                relation_data["word"] = other
+                relation_data["gloss"] = other_gloss
+            by_headword.setdefault(headword, {}).setdefault(corpus_relation, []).append(relation_data)
+
+        if relation == "homonym" and word_a == word_b:
+            for gloss in dict.fromkeys(gloss for gloss in (gloss_a, gloss_b) if gloss):
+                append(word_a, word_a, gloss)
+            continue
+        append(word_a, word_b, gloss_b)
+        append(word_b, word_a, gloss_a)
+    return by_headword
+
+
 def _ukrajinet_synsets(conn: sqlite3.Connection, lemma: str) -> list[dict[str, Any]]:
     """Read matching Ukrajinet synsets without creating the optional SQL index."""
     term = _canonical_synonym_term(lemma)
@@ -4099,10 +4181,10 @@ def _merge_homonym_relations(
     existing: dict[str, Any] | None,
     relations: list[dict[str, Any]],
 ) -> dict[str, Any] | None:
-    """Merge numbered homonym siblings into the gloss-bearing rendered schema."""
+    """Merge numbered and explicitly glossed corpus homonym relations."""
     merged = dict(existing or {})
     items: list[dict[str, Any]] = []
-    seen: set[tuple[str, int]] = set()
+    seen: set[tuple[str, int | None, str]] = set()
     for raw_item in merged.get("items", []):
         if not isinstance(raw_item, dict):
             continue
@@ -4110,41 +4192,57 @@ def _merge_homonym_relations(
         try:
             number = int(raw_item.get("homonym_no"))
         except (TypeError, ValueError):
-            continue
+            number = None
         gloss = str(raw_item.get("gloss") or "").strip()
         pos = str(raw_item.get("pos") or "").strip()
-        if not word or number < 1 or not gloss or not pos:
+        if not word or not gloss or (number is not None and (number < 1 or not pos)) or (number is None and pos):
             continue
-        key = (word, number)
+        key = (word, number, gloss)
         if key in seen:
             continue
         seen.add(key)
-        items.append({"word": word, "homonym_no": number, "gloss": gloss, "pos": pos})
+        item: dict[str, Any] = {"word": word, "gloss": gloss}
+        if number is not None:
+            item["homonym_no"] = number
+            item["pos"] = pos
+        items.append(item)
 
     source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
     source_labels: list[str] = []
     additions = 0
-    for relation in sorted(
-        relations,
-        key=lambda item: (int(item.get("vein") or 99), int(item.get("homonym_no") or 0)),
-    ):
+    def relation_order(item: dict[str, Any]) -> tuple[int, int]:
+        try:
+            number = int(item.get("homonym_no"))
+        except (TypeError, ValueError):
+            number = 0
+        return (int(item.get("vein") or 99), number)
+
+    for relation in sorted(relations, key=relation_order):
         word = _canonical_synonym_term(relation.get("word"))
         try:
             number = int(relation.get("homonym_no"))
         except (TypeError, ValueError):
-            continue
+            number = None
         gloss = str(relation.get("gloss") or "").strip()
         pos = str(relation.get("pos") or "").strip()
-        if not word or number < 1 or not gloss or not pos:
+        if not word or not gloss or (number is not None and (number < 1 or not pos)) or (number is None and pos):
             continue
-        key = (word, number)
+        key = (word, number, gloss)
         if key not in seen:
             if additions >= _HOMONYM_ADDITION_CAP:
                 continue
             seen.add(key)
-            items.append({"word": word, "homonym_no": number, "gloss": gloss, "pos": pos})
+            item = {"word": word, "gloss": gloss}
+            if number is not None:
+                item["homonym_no"] = number
+                item["pos"] = pos
+            items.append(item)
             additions += 1
-        label = f"{relation['source']}: numbered homonym headwords"
+        label = (
+            _relation_source_label(relation, word)
+            if relation.get("pattern") == "corpus relation pair"
+            else f"{relation['source']}: numbered homonym headwords"
+        )
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
@@ -5668,17 +5766,31 @@ def enrich() -> tuple[int, int]:
         )
         pointer_homonym_relations = _homonym_relations_by_headword(conn, manifest)
         pointer_paronym_relations = _paronym_relations_by_headword(conn, manifest)
+        corpus_relations = _corpus_relation_pairs_by_headword(conn, manifest)
         for entry in manifest["entries"]:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
+            corpus_for_entry = corpus_relations.get(entry_key or "", {})
             if enrich_entry(
                 entry,
                 conn,
                 kaikki_lookup,
                 has_sum11_flags=has_sum11_flags,
-                pointer_synonym_relations=pointer_synonym_relations.get(entry_key or "", []),
-                pointer_antonym_relations=pointer_antonym_relations.get(entry_key or "", []),
-                pointer_homonym_relations=pointer_homonym_relations.get(entry_key or "", []),
-                pointer_paronym_relations=pointer_paronym_relations.get(entry_key or "", []),
+                pointer_synonym_relations=[
+                    *pointer_synonym_relations.get(entry_key or "", []),
+                    *corpus_for_entry.get("synonym", []),
+                ],
+                pointer_antonym_relations=[
+                    *pointer_antonym_relations.get(entry_key or "", []),
+                    *corpus_for_entry.get("antonym", []),
+                ],
+                pointer_homonym_relations=[
+                    *pointer_homonym_relations.get(entry_key or "", []),
+                    *corpus_for_entry.get("homonym", []),
+                ],
+                pointer_paronym_relations=[
+                    *pointer_paronym_relations.get(entry_key or "", []),
+                    *corpus_for_entry.get("paronym", []),
+                ],
             ):
                 enriched += 1
     finally:

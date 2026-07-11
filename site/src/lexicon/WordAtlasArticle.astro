@@ -136,7 +136,7 @@ interface LexiconSections {
   synonyms?: { items: string[]; source: string; source_urls?: string[] };
   antonyms?: { items: string[]; source: string; source_urls?: string[] };
   homonyms?: {
-    items: Array<{ word: string; gloss: string; pos: string; homonym_no: number }>;
+    items: Array<{ word: string; gloss: string; pos?: string; homonym_no?: number }>;
     source: string;
     source_urls?: string[];
   };
@@ -954,7 +954,8 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           <div class="chip-row">
             {sections.homonyms.items.map((item) => (
               <span class="chip">
-                <strong>{item.word}<sup>{item.homonym_no}</sup></strong> ({item.pos}) — {item.gloss}
+                <strong>{item.word}{item.homonym_no ? <sup>{item.homonym_no}</sup> : null}</strong>
+                {item.pos ? ` (${item.pos})` : ""} — {item.gloss}
               </span>
             ))}
           </div>

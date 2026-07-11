@@ -1,5 +1,5 @@
 {
-  "fingerprint": "4bfdda88344a0cb5d3c764c5624458e242b9e0bf71e5a600775b7c2ca0a260e3",
+  "fingerprint": "0c9ca9ca1ff2a37b49aefef70a58437c6217b663db08add46523dfb26e5b870b",
   "inputs": {
     "lexicon_code": [
       {
@@ -52,7 +52,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "40dc9a32d3d498f4fb70638e7aac02336cd1888f81d4ca18840c2df03ba092ed"
+        "sha256": "492b0b006d1bbc69246579fed393a705883e5be4d09b1b8b930543cad15a3aa2"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -91,6 +91,10 @@
         "sha256": "d99d41aff8ffb52fc40ca9ac55a79a2eee8090dac4a57b32aabdcbdfc1374c7b"
       },
       {
+        "path": "scripts/lexicon/load_relation_candidates.py",
+        "sha256": "a970db4d2867a6fd182d186176058070b6d090c87a42f1368ef82642aa0d7f69"
+      },
+      {
         "path": "scripts/lexicon/manifest_fingerprint.py",
         "sha256": "06db0476943928e3440767172e3bb9f91718d4504580dc156867e66b5535b5fb"
       },
@@ -119,6 +123,10 @@
         "sha256": "28c72082c388ae5b301acc006eeed4e585c9fbbda48b805d1ff543d31862745d"
       },
       {
+        "path": "scripts/lexicon/relation_pairs.py",
+        "sha256": "24781db1d0078fd7e83c349477ff764cd409c11b202949a3c615dcf9654d2fa1"
+      },
+      {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",
         "sha256": "212d5d59061e2b3709e6f62b0861ccf0c98dfa4e1d63922efa8c5fce3d356416"
       },
@@ -135,6 +143,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 32
+    "lexicon_code_files": 34
   }
 }
