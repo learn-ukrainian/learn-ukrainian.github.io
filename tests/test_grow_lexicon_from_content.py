@@ -192,7 +192,11 @@ def test_enrich_entry_exists_and_enrich_delegates_to_it() -> None:
     assert callable(enrich_manifest_module.enrich_entry)
     enrich_source = inspect.getsource(enrich_manifest_module.enrich)
 
-    assert "enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags)" in enrich_source
+    # enrich() must delegate enrichment to enrich_entry() rather than reimplement it.
+    # Collapse whitespace so the assertion is robust to call formatting (single- vs
+    # multi-line) and to appended kwargs such as pointer_synonym_relations (#4950).
+    compact = "".join(enrich_source.split())
+    assert "enrich_entry(entry,conn,kaikki_lookup,has_sum11_flags=has_sum11_flags" in compact
 
 
 def _patch_enrich_entry_heavy_helpers(monkeypatch) -> None:

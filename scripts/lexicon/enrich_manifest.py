@@ -2799,15 +2799,54 @@ _DEFINITION_XREF_RE = re.compile(
     r"^(?P<pre>.*?)\bдив\.\s+(?P<targets>.+?)\s*\.?\s*$",
     flags=re.IGNORECASE | re.DOTALL,
 )
+_DEFINITION_SAME_AS_RE = re.compile(
+    r"\bте\s+саме\s*,?\s+що\s+(?P<target>[А-Яа-яЄєІіЇїҐґ'’ʼ-]+)(?=\s*(?:[.;]|$))",
+    flags=re.IGNORECASE,
+)
 # Grammar abbreviations that may sit between the headword echo and «див.» in a
 # cross-reference-only entry (e.g. «ЗАХОВАТИ, док. див. заховувати»); any other
 # word before «див.» means the card carries real definitional text → not xref-only.
 _XREF_STOPWORDS = frozenset(
-    {"док", "докон", "недок", "перех", "неперех", "безос", "розм", "заст", "діал", "і", "й", "та", "чи"}
+    {
+        "док",
+        "докон",
+        "недок",
+        "невідм",
+        "незм",
+        "перех",
+        "неперех",
+        "безос",
+        "розм",
+        "заст",
+        "діал",
+        "ім",
+        "прикм",
+        "присл",
+        "с",
+        "ч",
+        "ж",
+        "і",
+        "й",
+        "та",
+        "чи",
+    }
 )
 # A genuine cross-reference lists at most a few target lemmas; more word-tokens
 # after «див.» means a real definition that merely mentions «див.» → leave it.
 _XREF_MAX_TARGETS = 3
+
+
+def _normalise_xref_targets(raw_targets: str) -> list[str]:
+    """Normalize the lexical targets shared by the ``див.`` pointer parsers."""
+    targets: list[str] = []
+    seen: set[str] = set()
+    for raw in re.split(r"[,\s;/]+", raw_targets):
+        token = re.sub(r"[^А-Яа-яЄєІіЇїҐґ'’ʼ\-]", "", _strip_stress(raw)).strip("-'’ʼ").casefold()
+        if not token or token.rstrip(".") in _XREF_STOPWORDS or token in seen:
+            continue
+        seen.add(token)
+        targets.append(token)
+    return targets
 
 
 def _xref_target_lemmas(body: str, lemma: str) -> list[str]:
@@ -2832,15 +2871,24 @@ def _xref_target_lemmas(body: str, lemma: str) -> list[str]:
         if token in allowed_echo or token.rstrip(".") in _XREF_STOPWORDS:
             continue
         return []
-    targets: list[str] = []
-    seen: set[str] = set()
-    for raw in re.split(r"[,\s;/]+", match.group("targets")):
-        token = re.sub(r"[^А-Яа-яЄєІіЇїҐґ'’ʼ\-]", "", _strip_stress(raw)).strip("-'’ʼ").casefold()
-        if not token or token.rstrip(".") in _XREF_STOPWORDS or token in seen:
-            continue
-        seen.add(token)
-        targets.append(token)
+    targets = _normalise_xref_targets(match.group("targets"))
     return targets if 0 < len(targets) <= _XREF_MAX_TARGETS else []
+
+
+def _definition_synonym_targets(body: str, lemma: str) -> list[tuple[str, str]]:
+    """Extract high-precision synonym pointers from one definition row.
+
+    This deliberately reuses the #4903 bare-``див.`` parser rather than matching
+    every occurrence of that token in prose. ``Те саме, що X`` is likewise
+    limited to one lexical target ending at a definition boundary.
+    """
+    targets = [(target, "див.") for target in _xref_target_lemmas(body, lemma)]
+    match = _DEFINITION_SAME_AS_RE.search(_strip_stress(body))
+    if match:
+        same_as_targets = _normalise_xref_targets(match.group("target"))
+        if len(same_as_targets) == 1:
+            targets.append((same_as_targets[0], "Те саме, що"))
+    return list(dict.fromkeys(targets))
 
 
 def _verb_aspect(word: str) -> str | None:
@@ -3092,6 +3140,449 @@ def _definition_cards(
     vts = _vts_definition_card(lemma, cache)
     sum20 = _sum20_definition_card(lemma, cache)
     return [card for card in (vts, sum20) if card]
+
+
+_SYNONYM_ADDITION_CAP = 8
+_COATTESTATION_SUM_OR_GRINCHENKO = frozenset({"СУМ-11", "СУМ-20", "Грінченко"})
+_CONTENT_STEM_STOPWORDS = frozenset(
+    {
+        "бути",
+        "весь",
+        "інший",
+        "кожний",
+        "мати",
+        "один",
+        "особа",
+        "певний",
+        "предмет",
+        "річ",
+        "самий",
+        "такий",
+        "тільки",
+        "той",
+        "це",
+        "який",
+    }
+)
+
+
+def _canonical_synonym_term(value: object) -> str | None:
+    """Return a destressed, apostrophe-normalized Ukrainian synonym candidate."""
+    term = _lookup_key(_strip_stress(clean_html_entities(str(value or "")))).strip().casefold()
+    return term if term and _UKRAINIAN_WORD_RE.fullmatch(term) else None
+
+
+def _read_cached_slovnyk_rows(lemma: str) -> dict[str, Any]:
+    """Read a pre-existing slovnyk.me cache entry without fetching or writing."""
+    cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+    return cache if isinstance(cache, dict) else {}
+
+
+def _dictionary_definition_rows(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
+    include_grinchenko: bool = False,
+) -> list[dict[str, Any]]:
+    """Return local definition rows with the evidence metadata needed for gates.
+
+    Slovnyk.me entries come only from the cache supplied by the caller (or a
+    read-only cache read). This helper must never turn synonym extraction into a
+    network fetch or a cache/database write.
+    """
+    cache = cache if cache is not None else _read_cached_slovnyk_rows(lemma)
+    rows: list[dict[str, Any]] = []
+    for slug, source in (("newsum", "СУМ-20"), ("vts", "ВТС")):
+        row = _cache_lookup(cache, slug)
+        if not row:
+            continue
+        text = _definition_body(
+            row.get("text"),
+            headword=str(row.get("word") or lemma),
+            strip_leading_headword=True,
+        )
+        if text:
+            rows.append(
+                {
+                    "source": source,
+                    "text": text,
+                    "source_url": str(row.get("source_url") or ""),
+                    "sovietization_risk": 0,
+                }
+            )
+
+    sum11_fields = "definition, text"
+    if has_sum11_flags:
+        sum11_fields += ", sovietization_risk, sovietization_keywords"
+    try:
+        for variant in _split_lemma_variants(lemma):
+            for row in conn.execute(
+                f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != ''",
+                (variant,),
+            ).fetchall():
+                risk, _keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
+                text = _definition_body(row[0])
+                if text:
+                    rows.append(
+                        {
+                            "source": "СУМ-11",
+                            "text": text,
+                            "source_url": "",
+                            "sovietization_risk": risk,
+                        }
+                    )
+    except sqlite3.Error:
+        pass
+
+    if include_grinchenko:
+        try:
+            for variant in _split_lemma_variants(lemma):
+                for definition, _source in conn.execute(
+                    "SELECT definition, source FROM grinchenko WHERE word = ? AND definition != ''",
+                    (variant,),
+                ).fetchall():
+                    text = _definition_body(definition)
+                    if text:
+                        rows.append(
+                            {
+                                "source": "Грінченко",
+                                "text": text,
+                                "source_url": "",
+                                "sovietization_risk": 0,
+                            }
+                        )
+        except sqlite3.Error:
+            pass
+    return rows
+
+
+def _vesum_valid_synonym(term: str) -> bool:
+    """Fail closed unless VESUM recognizes the emitted synonym form."""
+    try:
+        return bool(verify_word(term))
+    except Exception:
+        return False
+
+
+def _definition_pointer_relations(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Vein 1: lexicographer-authored ``Те саме, що`` / ``див.`` relations."""
+    relations: list[dict[str, Any]] = []
+    for row in _dictionary_definition_rows(
+        conn,
+        lemma,
+        has_sum11_flags=has_sum11_flags,
+        cache=cache,
+    ):
+        for target, pattern in _definition_synonym_targets(str(row["text"]), lemma):
+            item = _canonical_synonym_term(target)
+            if not item or not _vesum_valid_synonym(item):
+                continue
+            relation: dict[str, Any] = {
+                "item": item,
+                "source": row["source"],
+                "pattern": pattern,
+                "vein": 1,
+            }
+            if row.get("source_url"):
+                relation["source_url"] = row["source_url"]
+            relations.append(relation)
+    return relations
+
+
+def _manifest_headwords(manifest: dict[str, Any]) -> dict[str, str]:
+    """Map canonical manifest headword variants to their display forms."""
+    headwords: dict[str, str] = {}
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        for variant in _split_lemma_variants(lemma):
+            term = _canonical_synonym_term(variant)
+            if term:
+                headwords.setdefault(term, term)
+    return headwords
+
+
+def _definition_pointer_relations_by_headword(
+    conn: sqlite3.Connection,
+    manifest: dict[str, Any],
+    *,
+    has_sum11_flags: bool,
+) -> dict[str, list[dict[str, Any]]]:
+    """Precompute pointer relations and safe reciprocal manifest-headword pairs."""
+    headwords = _manifest_headwords(manifest)
+    by_headword: dict[str, list[dict[str, Any]]] = {}
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        source_key = _canonical_synonym_term(lemma)
+        if not source_key:
+            continue
+        relations = _definition_pointer_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+        )
+        if relations:
+            by_headword.setdefault(source_key, []).extend(relations)
+        for relation in relations:
+            target_key = str(relation["item"])
+            if target_key not in headwords or not _vesum_valid_synonym(source_key):
+                continue
+            reciprocal = dict(relation)
+            reciprocal["item"] = headwords[source_key]
+            reciprocal["direction"] = "reciprocal"
+            by_headword.setdefault(target_key, []).append(reciprocal)
+    return by_headword
+
+
+def _ukrajinet_synsets(conn: sqlite3.Connection, lemma: str) -> list[dict[str, Any]]:
+    """Read matching Ukrajinet synsets without creating the optional SQL index."""
+    term = _canonical_synonym_term(lemma)
+    if not term:
+        return []
+    try:
+        columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ukrajinet)").fetchall()}
+        if "words" not in columns:
+            return []
+        synset_field = "synset_id" if "synset_id" in columns else "''"
+        source_field = "source" if "source" in columns else "''"
+        has_index = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet_word_index'"
+        ).fetchone()
+        if has_index:
+            rows = conn.execute(
+                f"SELECT {synset_field}, words, {source_field} FROM ukrajinet WHERE rowid IN ("
+                "SELECT rowid FROM ukrajinet_word_index WHERE word_key = ?"
+                ")",
+                (term,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                f"SELECT {synset_field}, words, {source_field} FROM ukrajinet WHERE words LIKE ?",
+                (f"%{term}%",),
+            ).fetchall()
+    except sqlite3.Error:
+        return []
+
+    synsets: list[dict[str, Any]] = []
+    for synset_id, words_json, source in rows:
+        try:
+            words = [_canonical_synonym_term(word) for word in json.loads(words_json or "[]")]
+        except (TypeError, ValueError):
+            continue
+        words = [word for word in words if word]
+        if term in words:
+            synsets.append(
+                {
+                    "synset_id": str(synset_id or ""),
+                    "words": list(dict.fromkeys(words)),
+                    "source": str(source or "Ukrajinet WordNet"),
+                }
+            )
+    return synsets
+
+
+def _definition_mentions(text: str, candidate: str) -> bool:
+    return _contains_whole_token(_lookup_key(_strip_stress(text)).casefold(), candidate)
+
+
+def _definition_content_stems(text: str, *, excluded: set[str] | None = None) -> set[str]:
+    """Return VESUM-lemmatized, non-generic content stems from a definition."""
+    excluded = excluded or set()
+    stems: set[str] = set()
+    for raw_token in re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", _strip_stress(text).casefold()):
+        token = _canonical_synonym_term(raw_token)
+        if not token or len(token) < 4 or token in _CONTENT_STEM_STOPWORDS or token in excluded:
+            continue
+        for lemma, _pos in _vesum_word_analyses(token):
+            stem = _canonical_synonym_term(lemma)
+            if stem and len(stem) >= 4 and stem not in _CONTENT_STEM_STOPWORDS and stem not in excluded:
+                stems.add(stem)
+    return stems
+
+
+def _coattestation_evidence(
+    conn: sqlite3.Connection,
+    lemma: str,
+    candidate: str,
+    *,
+    has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Return the required local lexicographic evidence, otherwise fail closed."""
+    lemma_rows = _dictionary_definition_rows(
+        conn,
+        lemma,
+        has_sum11_flags=has_sum11_flags,
+        cache=cache,
+        include_grinchenko=True,
+    )
+    candidate_rows = _dictionary_definition_rows(
+        conn,
+        candidate,
+        has_sum11_flags=has_sum11_flags,
+        include_grinchenko=True,
+    )
+    # Sovietized prose is unsafe as evidence for an auto-emitted WordNet pair.
+    # It remains eligible for vein 1: a lexicographer's pointer is safe even
+    # where the surrounding prose has sovietization_risk=2.
+    lemma_rows = [row for row in lemma_rows if int(row.get("sovietization_risk") or 0) != 2]
+    candidate_rows = [row for row in candidate_rows if int(row.get("sovietization_risk") or 0) != 2]
+
+    for direction, rows, mentioned in (
+        ("lemma→candidate", lemma_rows, candidate),
+        ("candidate→lemma", candidate_rows, _canonical_synonym_term(lemma) or lemma),
+    ):
+        for row in rows:
+            if _definition_mentions(str(row["text"]), mentioned):
+                return {
+                    "kind": "definition_mention",
+                    "dictionary": row["source"],
+                    "direction": direction,
+                }
+
+    excluded_stems = {
+        term
+        for term in (_canonical_synonym_term(lemma), _canonical_synonym_term(candidate))
+        if term
+    }
+    for lemma_row in lemma_rows:
+        if lemma_row["source"] not in _COATTESTATION_SUM_OR_GRINCHENKO:
+            continue
+        lemma_stems = _definition_content_stems(str(lemma_row["text"]), excluded=excluded_stems)
+        if not lemma_stems:
+            continue
+        for candidate_row in candidate_rows:
+            if candidate_row["source"] not in _COATTESTATION_SUM_OR_GRINCHENKO:
+                continue
+            shared = lemma_stems.intersection(
+                _definition_content_stems(str(candidate_row["text"]), excluded=excluded_stems)
+            )
+            if shared:
+                return {
+                    "kind": "shared_content_stem",
+                    "dictionaries": [lemma_row["source"], candidate_row["source"]],
+                    "stem": sorted(shared)[0],
+                }
+    return None
+
+
+def _gated_ukrajinet_relations(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Vein 2: WordNet synsets only after the fail-closed lexical gate."""
+    lemma_term = _canonical_synonym_term(lemma)
+    if not lemma_term or not _vesum_valid_synonym(lemma_term):
+        return []
+    relations: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for synset in _ukrajinet_synsets(conn, lemma_term):
+        for candidate in synset["words"]:
+            if candidate == lemma_term or candidate in seen or not _vesum_valid_synonym(candidate):
+                continue
+            evidence = _coattestation_evidence(
+                conn,
+                lemma_term,
+                candidate,
+                has_sum11_flags=has_sum11_flags,
+                cache=cache,
+            )
+            if not evidence:
+                continue
+            seen.add(candidate)
+            relations.append(
+                {
+                    "item": candidate,
+                    "source": synset["source"],
+                    "pattern": "gated synset",
+                    "vein": 2,
+                    "gate": {
+                        "vesum": "both valid",
+                        "co_attestation": evidence,
+                        "synset_id": synset["synset_id"],
+                    },
+                }
+            )
+    return relations
+
+
+def _relation_source_label(relation: dict[str, Any], item: str) -> str:
+    """Record pair-level provenance in the existing rendered ``source`` field."""
+    label = f"{relation['source']}: {relation['pattern']} → {item}"
+    if relation.get("direction"):
+        label += " (reciprocal)"
+    gate = relation.get("gate")
+    if not isinstance(gate, dict):
+        return label
+    co_attestation = gate.get("co_attestation")
+    if isinstance(co_attestation, dict):
+        if co_attestation.get("kind") == "definition_mention":
+            evidence = f"{co_attestation.get('dictionary')} {co_attestation.get('direction')}"
+        else:
+            dictionaries = "/".join(str(value) for value in co_attestation.get("dictionaries", []))
+            evidence = f"{dictionaries} stem={co_attestation.get('stem')}"
+        synset_id = str(gate.get("synset_id") or "")
+        synset_note = f"; synset={synset_id}" if synset_id else ""
+        label += f" [gate: VESUM both valid; {evidence}{synset_note}]"
+    return label
+
+
+def _merge_synonym_relations(
+    existing: dict[str, Any] | None,
+    relations: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Merge the two precision-ordered synonym veins into the rendered schema."""
+    merged = dict(existing or {})
+    items = [str(item) for item in merged.get("items", []) if str(item).strip()]
+    seen = {
+        key
+        for item in items
+        if (key := _canonical_synonym_term(_base_word(item))) is not None
+    }
+    source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
+    source_labels: list[str] = []
+    additions = 0
+
+    for relation in sorted(relations, key=lambda item: int(item.get("vein") or 99)):
+        item = _canonical_synonym_term(relation.get("item"))
+        if not item:
+            continue
+        item_was_present = item in seen
+        if not item_was_present:
+            if additions >= _SYNONYM_ADDITION_CAP:
+                continue
+            seen.add(item)
+            items.append(item)
+            additions += 1
+        label = _relation_source_label(relation, item)
+        if label not in source_labels:
+            source_labels.append(label)
+        if relation.get("source_url") and relation["source_url"] not in source_urls:
+            source_urls.append(str(relation["source_url"]))
+
+    if not items:
+        return None
+    if source_labels:
+        original = str(merged.get("source") or "").strip()
+        merged["source"] = " + ".join(part for part in (original, *source_labels) if part)
+    elif not merged.get("source"):
+        merged["source"] = ""
+    merged["items"] = items
+    if source_urls:
+        merged["source_urls"] = list(dict.fromkeys(source_urls))
+    else:
+        merged.pop("source_urls", None)
+    return merged
 
 
 def _lookup_key(value: str) -> str:
@@ -4270,7 +4761,14 @@ def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     return covered, len(entries)
 
 
-def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+def enrich_entry(
+    entry,
+    conn,
+    kaikki_lookup,
+    *,
+    has_sum11_flags,
+    pointer_synonym_relations: list[dict[str, Any]] | None = None,
+) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
     same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
@@ -4326,6 +4824,26 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         synonyms = _synonyms_slovnyk(fallback_base, entry_pos=entry_pos)
         if synonyms:
             synonyms = _with_base_source_label(synonyms, fallback_base)
+    pointer_relations = (
+        pointer_synonym_relations
+        if pointer_synonym_relations is not None
+        else _definition_pointer_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+            cache=slovnyk_cache,
+        )
+    )
+    synonym_relations = [*pointer_relations]
+    synonym_relations.extend(
+        _gated_ukrajinet_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+            cache=slovnyk_cache,
+        )
+    )
+    synonyms = _merge_synonym_relations(synonyms, synonym_relations)
     if synonyms:
         sections["synonyms"] = synonyms
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
@@ -4440,8 +4958,20 @@ def enrich() -> tuple[int, int]:
     try:
         has_sum11_flags = _sum11_has_flag_columns(conn)
         _prepare_cefr_estimates(conn, manifest)
+        pointer_synonym_relations = _definition_pointer_relations_by_headword(
+            conn,
+            manifest,
+            has_sum11_flags=has_sum11_flags,
+        )
         for entry in manifest["entries"]:
-            if enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags):
+            entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
+            if enrich_entry(
+                entry,
+                conn,
+                kaikki_lookup,
+                has_sum11_flags=has_sum11_flags,
+                pointer_synonym_relations=pointer_synonym_relations.get(entry_key or "", []),
+            ):
                 enriched += 1
     finally:
         conn.close()
