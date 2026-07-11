@@ -74,10 +74,9 @@ polynomial contrasts. The numbers to remember (A1 mean → B2 mean):
 1. **#4952** — build our own deterministic difficulty gate from their feature set
    (tree depth + lexical diversity core), calibrated on OUR corpus (orders of magnitude
    more tokens, and it extends to C1/C2 which they lack).
-2. Outreach (drafts local, `.agent/tmp/`): offer the openly licensed corpus (kills their
-   copyright constraint), ask about fluencymeter classifier state/license. Their Future
-   Work #2 (corpus expansion w/ professional instructors) = literally our offer incl.
-   teachers.
+2. The paper's Future Work items (corpus expansion; educator-facing analysis tooling)
+   are adjacent to our roadmap — our graded corpus is CC BY-SA 4.0 and our #4952 gate +
+   backend phase cover similar ground independently.
 3. Method hygiene we adopt: topic-bias validation for any difficulty classifier we train;
    interpretability argument for deterministic features in pedagogy tooling.
 
