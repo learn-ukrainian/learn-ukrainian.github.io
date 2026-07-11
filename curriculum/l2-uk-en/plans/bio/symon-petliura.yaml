@@ -76,23 +76,32 @@ persona:
   role: Модератор дискусії про складну постать, що вимагає розгляду з усіх боків, уникаючи як апології, так і безпідставного осуду
   voice: Critical-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Петлюра Симон Васильович"
-  source: "Енциклопедія історії України (ЕІУ)"
-  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Petliura_S"
-  language: uk
-  type: article
-  role: "Академічний погляд на постать Петлюри та його роль в історичному контексті."
-  hosting: link-only
-  task: "Прочитати та проаналізувати його діяльність як Голови Директорії та Головного Отамана УНР."
-- title: "Симон Петлюра"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович"
-  language: uk
-  type: article
-  role: "Загальна біографічна довідка, хронологія життя та оцінки діяльності."
-  hosting: link-only
-  task: "Ознайомитися з основними фактами біографії та різними поглядами на його роль в історії."
+  - title: "Петлюра Симон Васильович"
+    source_name: "Енциклопедія історії України (ЕІУ)"
+    source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Petliura_S"
+    language: uk
+    type: article
+    role: "Академічний погляд на постать Петлюри та його роль в історичному контексті."
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Petliura_S"
+      note: "Зовнішнє посилання; текст не відтворюється в курсі."
+    learner_task: "Прочитати та проаналізувати його діяльність як Голови Директорії та Головного Отамана УНР."
+  - title: "Симон Петлюра"
+    source_name: "Вікіпедія"
+    source_url: "https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович"
+    language: uk
+    type: article
+    role: "Загальна біографічна довідка, хронологія життя та оцінки діяльності."
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: "https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович"
+      note: "Зовнішнє посилання; текст не відтворюється в курсі."
+    learner_task: "Ознайомитися з основними фактами біографії та різними поглядами на його роль в історії."
 references:
 - title: Петлюра Симон Васильович
   note: Загальна біографічна довідка, хронологія, базові факти
