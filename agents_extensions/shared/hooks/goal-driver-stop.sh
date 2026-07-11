@@ -24,4 +24,10 @@ if [ ! -x "$PYTHON" ]; then
   exit 0
 fi
 
+# `python -m` resolves the module against the CURRENT working directory, so a
+# session whose cwd is not the repo root (worktree, other dir) hits
+# "ModuleNotFoundError: No module named 'scripts'". Anchor cwd to the project
+# root first; fail open if it is unreachable. (cwd-drift bug family: #4912/#4899.)
+cd "$PROJECT_DIR" || exit 0
+
 exec "$PYTHON" -m scripts.goal_driver.stop_hook
