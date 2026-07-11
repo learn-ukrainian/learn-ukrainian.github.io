@@ -48,6 +48,8 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+from scripts.research.registry import research_manifest_component
+
 from . import delegate_router as delegate_api
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
@@ -1828,34 +1830,38 @@ async def manifest(request: Request):
     state to one tiny call.
     """
     session_id = session_id_from_request(request)
-    return add_json_telemetry(
-        {
-            "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            "rules": {
-                "hash": rules_hash(),
-                "url": "/api/rules?format=markdown",
-                "format": "markdown",
-                "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
-            },
-            "session": {
-                "hash": session_hash(),
-                "url": "/api/session/current?agent=orchestrator&format=markdown",
-                "format": "markdown",
-                "note": "Current.md + recent session-state handoff filenames.",
-            },
-            "orient": {
-                "url": "/api/orient",
-                "fresh_param": "?fresh=true",
-                "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
-            },
-            "inbox": {
-                "url_template": "/api/comms/inbox?agent={name}",
-                "note": "Read-only view of unread channel deliveries for one agent.",
-            },
-            "activity": {
-                "url": "/api/comms/agent-activity",
-                "note": "Compact channel delivery/event snapshot for orchestration.",
-            },
+    body = {
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "rules": {
+            "hash": rules_hash(),
+            "url": "/api/rules?format=markdown",
+            "format": "markdown",
+            "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
         },
-        session_id=session_id,
-    )
+        "session": {
+            "hash": session_hash(),
+            "url": "/api/session/current?agent=orchestrator&format=markdown",
+            "format": "markdown",
+            "note": "Current.md + recent session-state handoff filenames.",
+        },
+        "orient": {
+            "url": "/api/orient",
+            "fresh_param": "?fresh=true",
+            "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
+        },
+        "inbox": {
+            "url_template": "/api/comms/inbox?agent={name}",
+            "note": "Read-only view of unread channel deliveries for one agent.",
+        },
+        "activity": {
+            "url": "/api/comms/agent-activity",
+            "note": "Compact channel delivery/event snapshot for orchestration.",
+        },
+    }
+    # ADR-011 P2: compact {hash, url} research pointer, present only when the
+    # research-registry kill switch is on and the registry is exposable. Absent
+    # otherwise, preserving the exact pre-P2 manifest for existing clients.
+    research = research_manifest_component()
+    if research is not None:
+        body["research"] = research
+    return add_json_telemetry(body, session_id=session_id)

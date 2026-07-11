@@ -10,6 +10,7 @@ Covered:
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 
 import pytest
@@ -286,6 +287,32 @@ def test_manifest_stays_small():
     assert len(resp.content) < 2048, (
         f"manifest grew to {len(resp.content)} bytes; keep it lean or agents will stop using it"
     )
+
+
+def test_manifest_omits_research_when_flag_off(monkeypatch):
+    """ADR-011 P2: with the kill switch off, the manifest is exactly the pre-P2
+    shape — no ``research`` key — so existing clients are untouched."""
+    monkeypatch.setenv("LEARN_UK_RESEARCH_REGISTRY_ENABLED", "false")
+    resp = client.get("/api/state/manifest")
+    assert resp.status_code == 200
+    assert "research" not in resp.json()
+
+
+@pytest.mark.parametrize("telemetry", ["0", "1"])
+def test_manifest_with_research_stays_within_budget(monkeypatch, telemetry):
+    """Enabled research component ≤ 512 bytes and total manifest < 2 KB, with and
+    without the telemetry footer. Uses the real committed 3-record registry."""
+    monkeypatch.setenv("LEARN_UK_RESEARCH_REGISTRY_ENABLED", "true")
+    monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", telemetry)
+    # Unresolvable session → bounded, deterministic telemetry block (no sidecar).
+    resp = client.get("/api/state/manifest?session=00000000-0000-0000-0000-000000000000")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["research"]["url"] == "/api/knowledge/manifest"
+    assert len(body["research"]["hash"]) == 64
+    component = json.dumps(body["research"], separators=(",", ":")).encode("utf-8")
+    assert len(component) <= 512, f"research component grew to {len(component)} bytes"
+    assert len(resp.content) < 2048, f"manifest grew to {len(resp.content)} bytes"
 
 
 # ---------------------------------------------------------------------

@@ -468,6 +468,21 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep cold-start source of truth",
     ),
     RouteContract(
+        "/api/knowledge", "prefix", "http",
+        "ADR-011 bounded Project Research Registry discovery: task-scoped pointer "
+        "manifest and per-record compact digest bodies.",
+        "docs/references/research-registry.yaml + docs/references/research-digests/** "
+        "via the P1 validator primitives (scripts/audit/check_research_registry.py).",
+        "No route cache; per-request deterministic registry load. Strong ETags: a "
+        "context-scoped ETag on /manifest and the P1 content_hash on /record/{id}. "
+        "Disabled by default behind the research_registry kill switch.",
+        ("agents", "dispatch", "cold-start tooling"),
+        "Pointer index for /api/state/manifest's research component; bodies never "
+        "enter cold start.",
+        "low; disabled or a failed load degrades to an empty/disabled projection",
+        "keep as the research discovery surface",
+    ),
+    RouteContract(
         "/api/state/manifest", "exact", "http",
         "Tiny cold-start manifest with hashes and URLs.",
         "Rules/session hash helpers plus static endpoint metadata.",
