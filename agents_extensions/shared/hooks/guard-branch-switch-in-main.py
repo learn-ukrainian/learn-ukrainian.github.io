@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""PreToolUse guard — block branch switches / force-deletes in the MAIN worktree.
+"""PreToolUse guard — keep protected primary checkouts on their main branch.
 
 Reads the Claude Code hook payload on stdin (JSON with `tool_name` +
 `tool_input.command`) and exits with code 2 if the command would switch
-branches or force-delete/force-rename a branch in the main worktree.
+branches or alters the checked-out branch in a protected primary checkout.
 Exit 0 in all other cases.
 
 Why Python and not bash? Distinguishing a literal `git checkout -b ...`
@@ -17,12 +17,13 @@ right place to switch branches). Detection: `git rev-parse --git-dir`
 returns `.git/worktrees/<name>` inside added worktrees and matches
 `--git-common-dir` only in the main worktree.
 
-Blocked in the MAIN worktree:
+Blocked in a protected PRIMARY checkout:
   - git checkout -b <name>
   - git switch -c <name>
   - git switch <non-main-branch>
   - git checkout <non-main-branch>          (when target is a branch, not a path)
-  - git branch -D / -M / -f <name>          (force-delete / force-rename a branch)
+  - git branch -D / -M <current-branch>     (force-delete / force-rename HEAD)
+  - git branch -f <name>                    (force-move a branch ref)
 
 Allowed in the MAIN worktree:
   - git checkout main / master / HEAD / HEAD~N
@@ -36,6 +37,7 @@ Allowed in the MAIN worktree:
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -48,6 +50,47 @@ SWITCH_VERBS = frozenset({"checkout", "switch"})
 # Branch names that are "safe" to switch to in the main worktree
 # (returning to the trunk). `master` kept for older repos; we use main here.
 SAFE_TARGETS = frozenset({"main", "master", "HEAD", "-", "--detach", "--orphan"})
+
+
+def _git_probe_env() -> dict[str, str]:
+    """Return an environment that lets git discover the requested repo."""
+    env = os.environ.copy()
+    for name in (
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_PREFIX",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    ):
+        env.pop(name, None)
+    return env
+
+
+def _public_primary_root() -> Path:
+    """Find this source tree's primary checkout, even when run from a worktree."""
+    source_root = Path(__file__).resolve().parents[2]
+    try:
+        common_dir = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=source_root,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=_git_probe_env(),
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return source_root
+    return Path(common_dir).resolve().parent
+
+
+# This deployed public hook is also the only branch guard for the private
+# infrastructure checkout. Resolve both roots so symlinked invocations compare
+# the actual checkout directories, not their textual spellings.
+PROTECTED_ROOTS = [
+    _public_primary_root(),
+    Path("~/projects/learn-ukrainian-infra-private").expanduser().resolve(),
+]
 
 
 def _read_payload() -> dict:
@@ -73,11 +116,11 @@ def _in_main_worktree(project_root: Path) -> bool:
     try:
         gd = subprocess.run(
             ["git", "rev-parse", "--git-dir"],
-            cwd=project_root, capture_output=True, text=True, check=True,
+            cwd=project_root, capture_output=True, text=True, check=True, env=_git_probe_env(),
         ).stdout.strip()
         cd = subprocess.run(
             ["git", "rev-parse", "--git-common-dir"],
-            cwd=project_root, capture_output=True, text=True, check=True,
+            cwd=project_root, capture_output=True, text=True, check=True, env=_git_probe_env(),
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Not a git repo or git missing → nothing to enforce.
@@ -239,12 +282,40 @@ def _segments(command: str) -> list[list[str]]:
     return segments
 
 
-def _branch_force_reason(args: list[str]) -> str | None:
+def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
+    """Tokenize commands and retain the separator after each segment.
+
+    The existing ``_segments`` helper deliberately exposes only argv lists for
+    its focused parser tests. Target resolution additionally needs to know
+    when ``cd <path> &&`` changes the effective cwd of the following command.
+    """
+    segments: list[tuple[list[str], str | None]] = []
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+        try:
+            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            continue
+        current: list[str] = []
+        for tok in tokens:
+            if tok and all(c in ";|&()<>" for c in tok):
+                if current:
+                    segments.append((current, tok))
+                    current = []
+            else:
+                current.append(tok)
+        if current:
+            segments.append((current, None))
+    return segments
+
+
+def _branch_force_reason(args: list[str], current_branch: str | None) -> str | None:
     """Reason string if a `git branch` invocation force-deletes/force-renames.
 
-    Blocks only the irreversible variants in the main worktree:
-      - `git branch -D <name>`        (force delete, == --delete --force)
-      - `git branch -M <old> <new>`   (force rename/move)
+    Blocks only force operations which affect the currently checked-out branch:
+      - `git branch -D <current>`     (force delete, == --delete --force)
+      - `git branch -M <current> <new>` / `git branch -M <new>`
       - `git branch -f <name> <ref>`  / `--force` (force-move a ref)
       - any combined short cluster carrying D/M/f (e.g. `-Df`)
 
@@ -254,13 +325,29 @@ def _branch_force_reason(args: list[str]) -> str | None:
     lowercase counterparts `d`/`m` are the safe ops, so a simple
     character-membership test discriminates correctly.
     """
+    force_delete = False
+    force_rename = False
+    positions: list[str] = []
     for a in args:
         if a == "--force":
             return "git branch --force rewrites/force-deletes a branch ref in the main worktree"
         # Single-dash short flag cluster (e.g. -D, -M, -f, -Df). Long flags
         # (`--`) other than --force are not force ops and fall through.
-        if len(a) >= 2 and a[0] == "-" and a[1] != "-" and any(c in a[1:] for c in ("D", "M", "f")):
-            return f"git branch {a} force-deletes/force-renames a branch in the main worktree"
+        if len(a) >= 2 and a[0] == "-" and a[1] != "-":
+            flags = a[1:]
+            if "f" in flags:
+                return f"git branch {a} force-moves a branch ref in the main worktree"
+            force_delete = force_delete or "D" in flags
+            force_rename = force_rename or "M" in flags
+        elif not a.startswith("-"):
+            positions.append(a)
+
+    if force_delete and current_branch and current_branch in positions:
+        return "git branch -D force-deletes the checked-out branch in the main worktree"
+    if force_rename and current_branch and (
+        len(positions) == 1 or positions[0] == current_branch
+    ):
+        return "git branch -M force-renames the checked-out branch in the main worktree"
     return None
 
 
@@ -286,34 +373,103 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     return i
 
 
-def _segment_is_dangerous(seg: list[str]) -> str | None:
-    """Return a human-readable reason string if seg is a dangerous git op,
-    else None."""
-    # Land on the command word past wrappers / env-assignments / brace open.
+def _git_invocation(
+    seg: list[str], effective_cwd: Path
+) -> tuple[str, list[str], Path] | None:
+    """Return ``(verb, args, git_cwd)`` for a direct git invocation.
+
+    Git applies repeated ``-C`` options from left to right, including relative
+    paths. Mirroring that behaviour prevents a command aimed at another repo
+    from being evaluated against the hook session's checkout.
+    """
     i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "git":
         return None
-    # Skip over `git -C <dir>` / `git -c k=v` flag pairs and other top-level
-    # git flags so we land on the verb.
     i += 1
+    git_cwd = effective_cwd
     while i < len(seg) and seg[i].startswith("-"):
-        # Verbs never start with `-`, so any `-x` here is a top-level git
-        # flag. Some take a value (`-C dir`, `-c key=val`); consume one
-        # extra token defensively when it doesn't look like a verb.
-        if seg[i] in {"-C", "-c", "--git-dir", "--work-tree"} and i + 1 < len(seg):
+        option = seg[i]
+        if option == "-C" and i + 1 < len(seg):
+            directory = Path(seg[i + 1]).expanduser()
+            git_cwd = (directory if directory.is_absolute() else git_cwd / directory).resolve()
+            i += 2
+        elif option.startswith("-C") and len(option) > 2:
+            directory = Path(option[2:]).expanduser()
+            git_cwd = (directory if directory.is_absolute() else git_cwd / directory).resolve()
+            i += 1
+        elif option in {"-c", "--git-dir", "--work-tree"} and i + 1 < len(seg):
+            # These do not change the cwd. ``--git-dir``/``--work-tree``
+            # override repository discovery, so do not infer a protected root
+            # from them; the guard remains deliberately non-blocking there.
+            if option in {"--git-dir", "--work-tree"}:
+                return None
             i += 2
         else:
             i += 1
     if i >= len(seg):
         return None
-    verb = seg[i]
-    args = seg[i + 1:]
+    return seg[i], seg[i + 1 :], git_cwd
+
+
+def _git_repo_root(git_cwd: Path) -> Path | None:
+    """Resolve the root of the repo a git invocation actually targets."""
+    try:
+        root = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--show-toplevel"],
+            cwd=git_cwd,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=_git_probe_env(),
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    return Path(root).resolve()
+
+
+def _checked_out_branch(repo_root: Path) -> str | None:
+    try:
+        return subprocess.run(
+            ["git", "symbolic-ref", "--quiet", "--short", "HEAD"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=_git_probe_env(),
+        ).stdout.strip() or None
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def _cd_target(seg: list[str], effective_cwd: Path) -> Path | None:
+    """Return the directory from a simple leading ``cd`` command, if any."""
+    i = _skip_command_prefix(seg, 0)
+    if i >= len(seg) or seg[i] != "cd":
+        return None
+    args = seg[i + 1 :]
+    if args[:1] == ["--"]:
+        args = args[1:]
+    if len(args) != 1 or args[0] == "-":
+        return None
+    directory = Path(args[0]).expanduser()
+    return (directory if directory.is_absolute() else effective_cwd / directory).resolve()
+
+
+def _segment_is_dangerous(
+    seg: list[str], current_branch: str | None = "main"
+) -> str | None:
+    """Return a human-readable reason string if seg is a dangerous git op,
+    else None."""
+    invocation = _git_invocation(seg, Path.cwd())
+    if invocation is None:
+        return None
+    verb, args, _ = invocation
 
     # `git branch -D/-M/-f` force-deletes or force-renames a branch ref —
     # destructive and irreversible in the MAIN worktree. Safe variants
     # (`-d` delete-if-merged, `-m` rename, plain list/create) are allowed.
     if verb == "branch":
-        return _branch_force_reason(args)
+        return _branch_force_reason(args, current_branch)
 
     if verb not in SWITCH_VERBS:
         return None
@@ -321,10 +477,9 @@ def _segment_is_dangerous(seg: list[str]) -> str | None:
     # Now we're on `git ... <checkout|switch> <args...>`. Decide if this
     # would switch the branch state of the current worktree.
 
-    # File-level checkout: `git checkout -- <path>` or `git checkout
-    # <treeish> -- <path>`. The presence of `--` means path-restoration,
-    # not branch switch.
-    if "--" in args:
+    # File-level checkout: `git checkout -- <path>`, `git checkout <treeish>
+    # -- <path>`, and conflict resolution `checkout --ours/--theirs <path>`.
+    if "--" in args or "--ours" in args or "--theirs" in args:
         return None
 
     # Flags we treat as "definitely creates / switches to a new branch":
@@ -366,29 +521,45 @@ def _segment_is_dangerous(seg: list[str]) -> str | None:
     return f"git {verb} {target} switches branch in the main worktree"
 
 
+def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str | None:
+    """Return a block reason only for a command targeting a protected root."""
+    effective_cwd = (session_cwd or Path.cwd()).resolve()
+    protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
+    for segment, following_operator in _segments_with_following_operator(command):
+        cd_target = _cd_target(segment, effective_cwd)
+        if cd_target is not None and following_operator == "&&":
+            effective_cwd = cd_target
+            continue
+
+        invocation = _git_invocation(segment, effective_cwd)
+        if invocation is None:
+            continue
+        _, _, git_cwd = invocation
+        repo_root = _git_repo_root(git_cwd)
+        if repo_root is None or repo_root not in protected_roots:
+            continue
+        # A target under */.worktrees/* may share this repo's common git dir,
+        # but it is deliberately an added worktree where branch operations are
+        # allowed. Ask git rather than relying only on the path spelling.
+        if not _in_main_worktree(repo_root):
+            continue
+        reason = _segment_is_dangerous(segment, _checked_out_branch(repo_root))
+        if reason:
+            return reason
+    return None
+
+
 def main() -> int:
     payload = _read_payload()
     command = _bash_command(payload)
     if not command:
         return 0
 
-    # If we can't determine project root, fall through to allowing the
-    # command — the hook is meant to be a safety net, not a chokepoint.
-    project_root = Path(__file__).resolve().parents[2]
-    if not (project_root / ".git").exists() and not (project_root / ".git").is_dir():
-        # `.git` may also be a file in worktrees. We check the containing
-        # repo regardless. If git isn't there at all, no-op.
-        return 0
-
-    if not _in_main_worktree(project_root):
-        return 0
-
-    for segment in _segments(command):
-        reason = _segment_is_dangerous(segment)
-        if reason:
+    reason = _command_danger_reason(command)
+    if reason:
             sys.stderr.write(
                 f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"
-                f"The MAIN worktree ({project_root}) must stay on `main`. "
+                "A protected PRIMARY worktree must stay on `main`. "
                 "All feature work happens in added worktrees so the main\n"
                 "tree is always reviewable.\n\n"
                 "Use this pattern instead (from the main project dir):\n\n"

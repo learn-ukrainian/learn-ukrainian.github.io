@@ -18,6 +18,8 @@ Only module-level defs/constants run on load (``main`` is guarded by
 from __future__ import annotations
 
 import importlib.util
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -46,6 +48,52 @@ def _dangerous(command: str) -> str | None:
         if reason:
             return reason
     return None
+
+
+def _git(cwd: Path, *args: str) -> None:
+    env = os.environ.copy()
+    for name in (
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_PREFIX",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    ):
+        env.pop(name, None)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", *args],
+        cwd=cwd,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+
+
+@pytest.fixture
+def repos(tmp_path, monkeypatch):
+    """Three independent primary repos plus an added public worktree."""
+    public = tmp_path / "public"
+    private = tmp_path / "private"
+    other = tmp_path / "other"
+    for root in (public, private, other):
+        root.mkdir()
+        _git(root, "init", "-b", "main")
+        _git(root, "config", "user.name", "Guard Test")
+        _git(root, "config", "user.email", "guard@example.invalid")
+        _git(root, "commit", "--allow-empty", "-m", "initial")
+
+    public_worktree = public / ".worktrees" / "topic"
+    public_worktree.parent.mkdir()
+    _git(public, "worktree", "add", "-b", "topic", str(public_worktree))
+    monkeypatch.setattr(guard, "PROTECTED_ROOTS", [public.resolve(), private.resolve()])
+    return {
+        "public": public.resolve(),
+        "private": private.resolve(),
+        "other": other.resolve(),
+        "public_worktree": public_worktree.resolve(),
+    }
 
 
 # --- Branch switches / creates (pre-existing behavior) ---------------------
@@ -90,15 +138,16 @@ def test_safe_ops_allowed(cmd):
 @pytest.mark.parametrize(
     "cmd",
     [
-        "git branch -D feature",
-        "git branch -M old new",
+        "git branch -D main",
+        "git branch -M main new",
+        "git branch -M new",
         "git branch -f feature origin/main",
         "git branch --force feature origin/main",
-        "git branch -d --force feature",
-        "git branch --delete --force feature",
-        "git branch -Df feature",
-        "git -C . branch -D feature",
-        "git status && git branch -D feature",
+        "git branch -d --force main",
+        "git branch --delete --force main",
+        "git branch -Df main",
+        "git -C . branch -D main",
+        "git status && git branch -D main",
     ],
 )
 def test_force_branch_ops_blocked(cmd):
@@ -142,14 +191,16 @@ def test_quoted_git_in_commit_message_not_blocked(cmd):
 
 
 def test_branch_force_reason_unit():
-    assert guard._branch_force_reason(["-D", "feature"]) is not None
-    assert guard._branch_force_reason(["-M", "old", "new"]) is not None
-    assert guard._branch_force_reason(["-f", "feature", "ref"]) is not None
-    assert guard._branch_force_reason(["--force", "feature", "ref"]) is not None
-    assert guard._branch_force_reason(["-d", "merged"]) is None
-    assert guard._branch_force_reason(["-m", "old", "new"]) is None
-    assert guard._branch_force_reason(["feature"]) is None
-    assert guard._branch_force_reason([]) is None
+    assert guard._branch_force_reason(["-D", "feature"], "feature") is not None
+    assert guard._branch_force_reason(["-D", "feature"], "main") is None
+    assert guard._branch_force_reason(["-M", "old", "new"], "old") is not None
+    assert guard._branch_force_reason(["-M", "new"], "main") is not None
+    assert guard._branch_force_reason(["-f", "feature", "ref"], "main") is not None
+    assert guard._branch_force_reason(["--force", "feature", "ref"], "main") is not None
+    assert guard._branch_force_reason(["-d", "merged"], "main") is None
+    assert guard._branch_force_reason(["-m", "old", "new"], "main") is None
+    assert guard._branch_force_reason(["feature"], "main") is None
+    assert guard._branch_force_reason([], "main") is None
 
 
 # --- #4876: glued-operator evasion class ------------------------------------
@@ -161,12 +212,12 @@ def test_branch_force_reason_unit():
 @pytest.mark.parametrize(
     "cmd",
     [
-        "true 2>&1 | head -1; git branch -D victim",
-        "gh pr view 9 --json s --jq '{state, mergedAt}'; git branch -D victim",
-        "cmd1\ngit branch -D victim",
+        "true 2>&1 | head -1; git branch -D main",
+        "gh pr view 9 --json s --jq '{state, mergedAt}'; git branch -D main",
+        "cmd1\ngit branch -D main",
         (
             "git worktree remove --force .worktrees/x 2>&1 | head -1; "
-            "git branch -D victim 2>/dev/null | head -1"
+            "git branch -D main 2>/dev/null | head -1"
         ),
         "true;git checkout -b feature",
         "true&&git switch -c feature",
@@ -195,7 +246,7 @@ def test_hardened_segments_no_false_positive(cmd):
 
 
 def test_heredoc_body_does_not_mask_following_command():
-    cmd = "cat > /tmp/x.md <<'EOF'\nbody text\nEOF\ngit branch -D victim"
+    cmd = "cat > /tmp/x.md <<'EOF'\nbody text\nEOF\ngit branch -D main"
     assert _dangerous(cmd) is not None
 
 
@@ -203,8 +254,8 @@ def test_backslash_line_continuation_still_inspected():
     # `\`-continuation is ONE logical command; the folded line must still be
     # scanned. Regression guard for the per-line refactor — the whole-command
     # tokenizer this replaced folded continuations implicitly (#4876).
-    assert _dangerous("git branch -D victim \\\n  --force-ish") is not None
-    assert _dangerous("git status \\\n  && git branch -D victim") is not None
+    assert _dangerous("git branch -D main \\\n  --force-ish") is not None
+    assert _dangerous("git status \\\n  && git branch -D main") is not None
 
 
 # --- #4877 adversarial round (grok-build msg 2334): env/brace/heredoc holes ---
@@ -213,11 +264,11 @@ def test_backslash_line_continuation_still_inspected():
 @pytest.mark.parametrize(
     "cmd",
     [
-        "env FOO=1 git branch -D victim",  # env + assignment before verb
-        "FOO=1 git branch -D victim",  # bare leading assignment
-        "{ git branch -D victim; }",  # compact brace group
-        "{ git branch -D victim",  # unterminated brace group
-        "command git branch -D victim",  # `command` wrapper
+        "env FOO=1 git branch -D main",  # env + assignment before verb
+        "FOO=1 git branch -D main",  # bare leading assignment
+        "{ git branch -D main; }",  # compact brace group
+        "{ git branch -D main",  # unterminated brace group
+        "command git branch -D main",  # `command` wrapper
     ],
 )
 def test_wrapper_and_assignment_prefixes_still_inspected(cmd):
@@ -227,16 +278,72 @@ def test_wrapper_and_assignment_prefixes_still_inspected(cmd):
 def test_unclosed_heredoc_does_not_hide_trailing_danger():
     # A never-closing marker must NOT drop the real command after it (#4877
     # fail-open): the buffered lines were not a real heredoc body.
-    assert _dangerous("cat <<'NOEND'\nbody > fake\ngit branch -D victim") is not None
+    assert _dangerous("cat <<'NOEND'\nbody > fake\ngit branch -D main") is not None
 
 
 def test_attached_dash_heredoc_closes_and_body_dropped():
     # `<<-EOF` with a tab-indented closer is a REAL heredoc: body dropped
     # (no false positive on body content), trailing command still scanned.
-    cmd = "cat <<-EOF\n\tgit branch -D fake\n\tEOF\ngit branch -D victim"
+    cmd = "cat <<-EOF\n\tgit branch -D fake\n\tEOF\ngit branch -D main"
     assert _dangerous(cmd) is not None  # the trailing real one
     # body-only (properly closed) must not trip:
     assert _dangerous("cat <<-EOF\n\tgit branch -D fake\n\tEOF") is None
+
+
+# --- #4899: target-repo-aware protected-root matching ----------------------
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git checkout --ours conflicted.py",
+        "git checkout --theirs conflicted.py",
+        "git checkout -- conflicted.py",
+        "git restore conflicted.py",
+    ],
+)
+def test_pathspec_and_restore_are_allowed_in_protected_primary(repos, command):
+    assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+def test_issue_4899_other_repo_git_c_is_allowed(repos):
+    command = f"git -C {repos['other']} branch -D stale-branch"
+    assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+def test_issue_4899_other_repo_cd_prefix_is_allowed(repos):
+    command = f"cd {repos['other']} && git branch -D stale-branch"
+    assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+@pytest.mark.parametrize("root_key", ["public", "private"])
+@pytest.mark.parametrize(
+    "operation",
+    ["switch topic", "checkout topic", "checkout -b topic"],
+)
+def test_protected_primary_switches_block_for_both_roots(repos, root_key, operation):
+    root = repos[root_key]
+    assert guard._command_danger_reason(f"git -C {root} {operation}", repos["other"]) is not None
+
+
+@pytest.mark.parametrize("root_key", ["public", "private"])
+@pytest.mark.parametrize(
+    "operation",
+    ["branch -D main", "branch -M main renamed-main"],
+)
+def test_protected_primary_current_branch_force_ops_block(repos, root_key, operation):
+    root = repos[root_key]
+    assert guard._command_danger_reason(f"git -C {root} {operation}", repos["other"]) is not None
+
+
+def test_private_non_current_branch_pruning_is_allowed(repos):
+    command = f"git -C {repos['private']} branch -D merged-feature"
+    assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+def test_operations_inside_added_worktrees_are_allowed(repos):
+    command = f"git -C {repos['public_worktree']} switch another-topic"
+    assert guard._command_danger_reason(command, repos["public"]) is None
 
 
 @pytest.mark.parametrize(
