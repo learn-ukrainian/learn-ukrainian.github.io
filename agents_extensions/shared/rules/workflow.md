@@ -110,10 +110,32 @@ hours). Every lane: the moment a PR's review gate passes (cross-family review ev
 requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
 when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
 (review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
-(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop — but ONLY for
-out-of-lane PRs that have sat green (CI passing + review gate passed) idle for MORE THAN
-1 HOUR (user directive 2026-07-07): a fresh PR belongs to its lane. Do not shepherd,
-review-route, or arm auto-merge on another lane's PR before that threshold.
+(#M-0.5 semantics unchanged).
+
+**Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
+2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
+session's start/end sweep is **OWN-STREAM ONLY**: it may review, review-route, arm auto-merge, or merge
+**only** PRs in its own stream.
+
+**Stream membership is AUTHORITATIVE + FAIL-CLOSED.** A PR is *in-stream* iff its linked issue resolves
+to the session's stream-epic in the issue→epic membership registry — `/api/issues/streams` (from
+`scripts.orchestration.issue_stream_audit`). **Branch prefixes (`codex/`, `claude/`, `agy/`) are AUTHOR
+lanes, NOT streams — never use them for membership.** If a PR does not resolve to exactly one
+stream-epic there (no link, multiple/conflicting `Closes/Refs`, or not yet indexed), it is
+**out-of-stream → hands-off** for every track session. Out-of-stream — another stream's PR, OR any PR
+with no / multiple / conflicting / not-yet-indexed stream-epic membership (the fail-closed default) —
+means do NOT shepherd, review-route, or arm auto-merge on it: **no time threshold, no exception.** Rationale: the old
+one-hour timer could not tell an *abandoned* PR from an *owner-paused* one, so with parallel streams it
+made two sessions grab the same PR, or one merge another live stream's paused PR.
+
+**The cross-stream abandoned-PR net has exactly ONE owner — the INTEGRATION-OWNER ROLE** (default
+holder: Codex-main; a ROLE, not a hardcoded session/model — the roster owns repo-wide queue +
+integration + final merge judgment). Only that role sweeps out-of-stream PRs, and only ones sat green
+(CI + review gate passed) idle for MORE THAN 1 HOUR. **To avoid a liveness gap** (a down role-holder
+stranding a green PR forever), this net MUST run as a **scheduled integration sweep** owned by the role
+— it must not depend on any interactive session being live. (Until that scheduled sweep is wired, the
+role-holder runs it at session start/end — see follow-up.) Per-lane `--auto` merge already keeps
+in-stream PRs from sitting, so this net is a rare safety valve, not the primary path.
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
