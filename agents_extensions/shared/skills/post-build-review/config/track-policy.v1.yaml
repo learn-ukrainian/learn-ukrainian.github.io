@@ -1,0 +1,72 @@
+review_protocol_version: 1.0.0
+deterministic_contract_version: 1.0.0
+semantic_prompt_version: 1.0.0
+track_policy_version: 1.0.0
+
+families:
+  core:
+    semantic_prompt: agents_extensions/shared/skills/post-build-review/prompts/core-semantic-review-prompt.md
+    semantic_requirements:
+      claim_coverage: not_applicable
+      verify_ukrainian_with_project_sources: true
+      review_plan_pedagogy_activities: true
+    size_policy_blocking_statuses: [invalid_size_policy, plan_review_needed]
+    mechanical_checks:
+      connects_to_sequence:
+        severity: high
+      forbidden_placeholders:
+        - path: portrait_fallback.license
+          values: [VERIFY, TODO, TBD, UNKNOWN]
+          category: unresolved_rights
+          severity: high
+          message: Public-media rights remain unresolved.
+    skip_policy:
+      llm_qg: superseded_by_semantic
+      mdx_generation_validate: accepted_read_only_omission
+      external_resource_liveness: advisory_external
+  seminar:
+    semantic_prompt: agents_extensions/shared/skills/post-build-review/prompts/seminar-semantic-review-prompt.md
+    semantic_requirements:
+      claim_coverage: exhaustive
+      verify_ukrainian_with_project_sources: true
+      verify_every_factual_claim: true
+      decolonization_review: required
+    size_policy_blocking_statuses: [invalid_size_policy, plan_review_needed, missing_research_dossier]
+    mechanical_checks:
+      connects_to_sequence:
+        severity: high
+      forbidden_placeholders:
+        - path: portrait_fallback.license
+          values: [VERIFY, TODO, TBD, UNKNOWN]
+          category: unresolved_rights
+          severity: high
+          message: Public-media rights remain unresolved; use text-only until cleared.
+    skip_policy:
+      llm_qg: superseded_by_semantic
+      mdx_generation_validate: accepted_read_only_omission
+      external_resource_liveness: advisory_external
+
+tracks:
+  a1: {family: core}
+  a2: {family: core}
+  b1: {family: core}
+  b2: {family: core}
+  c1: {family: core}
+  c2: {family: core}
+  folk: {family: seminar}
+  hist: {family: seminar}
+  history: {family: seminar}
+  bio: {family: seminar, semantic_mode: biography}
+  istorio: {family: seminar}
+  lit: {family: seminar}
+  lit-crimea: {family: seminar}
+  lit-doc: {family: seminar}
+  lit-drama: {family: seminar}
+  lit-essay: {family: seminar}
+  lit-fantastika: {family: seminar}
+  lit-hist-fic: {family: seminar}
+  lit-humor: {family: seminar}
+  lit-war: {family: seminar}
+  lit-youth: {family: seminar}
+  oes: {family: seminar}
+  ruth: {family: seminar}

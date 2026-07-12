@@ -1,0 +1,55 @@
+catalog_version: 1.0.0
+regressions:
+  - bug_id: bilash-evening-school-location-role
+    responsible_layer: semantic_prompt
+    fixed_in_version: 1.0.0
+    input: Poltava evening school together with the Mayboroda brothers
+    expected: Verify Kyiv evening school and teacher roles against sources; never infer peers.
+  - bug_id: bilash-stale-connects-to-sequences
+    responsible_layer: track_policy
+    fixed_in_version: 1.0.0
+    input:
+      - bio-137-dmytro-pavlychko
+      - bio-39-taras-shevchenko
+      - bio-149-volodymyr-ivasyuk
+    expected: Three high crosslink_integrity findings.
+  - bug_id: bilash-unresolved-portrait-license
+    responsible_layer: track_policy
+    fixed_in_version: 1.0.0
+    input: portrait_fallback.license=VERIFY
+    expected: One high unresolved_rights finding and text-only fallback.
+  - bug_id: bio-routed-to-core-spot-check
+    responsible_layer: orchestration
+    fixed_in_version: 1.0.0
+    input: bio/oleksandr-bilash
+    expected: Route to seminar prompt with exhaustive claim ledger.
+  - bug_id: mdx-validation-created-missing-output
+    responsible_layer: deterministic_code
+    fixed_in_version: 1.0.0
+    input: --run-mdx-generation-validate with initially missing MDX
+    expected: The canonical read-only command never enables the mutating opt-in.
+  - bug_id: semantic-pass-overrode-mechanical-blocker
+    responsible_layer: disposition
+    fixed_in_version: 1.0.0
+    input: semantic PASS plus deterministic high
+    expected: Combined disposition BLOCK.
+  - bug_id: missing-review-provenance
+    responsible_layer: schema
+    fixed_in_version: 1.0.0
+    input: Result without version, prompt hash, reviewer, or command provenance.
+    expected: JSON Schema validation failure.
+  - bug_id: generated-review-written-to-curriculum-audit
+    responsible_layer: orchestration
+    fixed_in_version: 1.0.0
+    input: curriculum/l2-uk-en/bio/audit/generated-review.md
+    expected: Reject repository output paths; use /tmp.
+  - bug_id: render-skip-silently-green
+    responsible_layer: track_policy
+    fixed_in_version: 1.0.0
+    input: mdx_generation_validate skipped
+    expected: Explicit accepted_read_only_omission assessment remains in the result.
+  - bug_id: bilash-size-policy-globalized
+    responsible_layer: semantic_prompt
+    fixed_in_version: 1.0.0
+    input: Bilash range 2200-2800 and ceiling 4000
+    expected: Values remain exemplar/plan evidence and are never BIO defaults.
