@@ -1,6 +1,6 @@
 # Deterministic audit contract
 
-Deterministic contract version: `1.0.0`
+Deterministic contract version: `1.0.1`
 
 The canonical deterministic stage composes, without reimplementing:
 
@@ -21,7 +21,7 @@ path, and configuration version. Never persist a machine-local interpreter
 path. Hash every resolved source file. A command error, malformed JSON, unknown skip, missing
 required evidence, or changed source hash fails closed as `INCOMPLETE`.
 
-Allowed deterministic skips must remain explicit in the result. Version 1.0.0
+Allowed deterministic skips must remain explicit in the result. Version 1.0.1
 accepts the read-only omission of MDX regeneration validation, supersedes the
 excluded legacy LLM-QG with the semantic stage, and records network liveness as
 an external advisory. None may disappear silently.

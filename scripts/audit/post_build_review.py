@@ -192,7 +192,9 @@ def hash_target_files(target: Mapping[str, Any], *, repo_root: Path = PROJECT_RO
 def resolve_venv_python(repo_root: Path = PROJECT_ROOT) -> Path:
     direct = repo_root / ".venv" / "bin" / "python"
     if direct.exists():
-        return direct.resolve()
+        # Preserve the venv entrypoint path. Resolving its interpreter symlink
+        # bypasses pyvenv.cfg on symlink-based Linux environments.
+        return direct
     result = subprocess.run(
         ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
         capture_output=True,
@@ -203,7 +205,7 @@ def resolve_venv_python(repo_root: Path = PROJECT_ROOT) -> Path:
         common_dir = Path(result.stdout.strip()).resolve()
         shared = common_dir.parent / ".venv" / "bin" / "python"
         if shared.exists():
-            return shared.resolve()
+            return shared
     raise ReviewProtocolError("Repository .venv/bin/python is unavailable")
 
 

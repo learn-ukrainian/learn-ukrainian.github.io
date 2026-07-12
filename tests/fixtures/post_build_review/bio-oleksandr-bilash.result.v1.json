@@ -70,7 +70,7 @@
           "json"
         ],
         "config_path": "agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md",
-        "config_version": "1.0.0",
+        "config_version": "1.0.1",
         "cwd": ".",
         "executed_argv": [
           ".venv/bin/python",
@@ -231,7 +231,7 @@
       "status": "complete"
     }
   },
-  "deterministic_contract_version": "1.0.0",
+  "deterministic_contract_version": "1.0.1",
   "findings": [
     {
       "category": "crosslink_integrity",
@@ -298,7 +298,7 @@
     }
   ],
   "prompt_sha256": "64ef1f69fa272995a545671ed03d092a9977e928a977cc3b4e9b1c88c8900aaa",
-  "reproducibility_key": "96f271179cf0ccb3b13a69c82689c187c0250ccd3dcb2f65187c66e85aa6f0f6",
+  "reproducibility_key": "cbcd2ef8546b6058ee14c8b5df9a35e61d5195d20e8dec1aa63f5f09e0940d4b",
   "review_protocol_version": "1.0.1",
   "reviewer": {
     "agent": "codex-subagent",

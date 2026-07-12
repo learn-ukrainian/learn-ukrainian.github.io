@@ -78,6 +78,20 @@ def test_track_resolution_covers_every_versioned_track() -> None:
         pbr.resolve_track_policy("unknown", policy)
 
 
+def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> None:
+    """The command path must stay inside .venv so Python loads pyvenv.cfg."""
+    runtime_python = tmp_path / "runtime-python"
+    runtime_python.write_text("runtime placeholder\n", encoding="utf-8")
+    venv_python = tmp_path / ".venv" / "bin" / "python"
+    venv_python.parent.mkdir(parents=True)
+    venv_python.symlink_to(runtime_python)
+
+    resolved = pbr.resolve_venv_python(tmp_path)
+
+    assert resolved == venv_python
+    assert resolved.is_symlink()
+
+
 def test_track_policy_covers_curriculum_manifest_and_api_registry() -> None:
     from scripts.api.config import SEMINAR_TRACK_IDS
 
@@ -364,8 +378,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "1.0.1"
-    assert len(rows) == 11
+    assert catalog["catalog_version"] == "1.0.2"
+    assert len(rows) == 12
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -379,3 +393,8 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
     assert null_result["fixed_in_version"] == "1.0.1"
+    assert null_result["version_field"] == "review_protocol_version"
+    venv_symlink = next(row for row in rows if row["bug_id"] == "venv-python-symlink-bypassed-environment")
+    assert venv_symlink["responsible_layer"] == "deterministic_code"
+    assert venv_symlink["fixed_in_version"] == "1.0.1"
+    assert venv_symlink["version_field"] == "deterministic_contract_version"
