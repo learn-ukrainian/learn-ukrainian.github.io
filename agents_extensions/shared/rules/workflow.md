@@ -110,10 +110,23 @@ hours). Every lane: the moment a PR's review gate passes (cross-family review ev
 requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
 when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
 (review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
-(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop — but ONLY for
-out-of-lane PRs that have sat green (CI passing + review gate passed) idle for MORE THAN
-1 HOUR (user directive 2026-07-07): a fresh PR belongs to its lane. Do not shepherd,
-review-route, or arm auto-merge on another lane's PR before that threshold.
+(#M-0.5 semantics unchanged).
+
+**Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
+2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
+session's start/end sweep is **OWN-STREAM ONLY**: it may review, review-route, arm auto-merge, or merge
+**only** PRs in its own stream. A PR is **in-stream** iff it matches the session's assigned stream
+(named in its handoff) by (a) branch prefix, (b) a `Closes/Refs #<epic>` link, or (c) a stream label.
+**Anything else is another stream's PR → hands-off: no exceptions, no time threshold** — do NOT
+shepherd, review-route, or arm auto-merge on it. Rationale: the old one-hour timer could not tell an
+*abandoned* PR from an *owner-paused* one, so with parallel streams it made two sessions grab the same
+PR, or one session merge another live stream's paused PR.
+
+The **cross-stream out-of-lane backstop belongs to exactly ONE owner: the repo-wide integration
+orchestrator (Codex-main — roster: owns the repo-wide queue, integration, and final merge judgment).**
+Only it runs a cross-stream sweep, and only on PRs that have sat green (CI passing + review gate passed)
+idle for MORE THAN 1 HOUR (the rare abandoned-PR net). No other session runs one. Per-lane `--auto`
+merge already keeps in-stream PRs from sitting, so this backstop is a safety net, not the primary path.
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
