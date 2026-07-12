@@ -1,0 +1,14 @@
+{
+  "target": "a1/sounds-letters-and-hello",
+  "expected_family": "core",
+  "semantic_result": {
+    "verdict": "PASS",
+    "summary": "Core exemplar with non-factual beginner content and no material semantic findings.",
+    "claim_coverage": {
+      "status": "not_applicable",
+      "claims_total": 0,
+      "claims_verified": 0
+    },
+    "findings": []
+  }
+}

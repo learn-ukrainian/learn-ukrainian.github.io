@@ -18,11 +18,17 @@ check_pair() {
     shift 2
 
     local diff_args=(-rq -x .DS_Store)
-    local orphan
+    local orphan normalized
     for orphan in "$@"; do
-        diff_args+=(-x "${orphan%/}")
-        if [[ "$orphan" == */* ]]; then
-            diff_args+=(-x "${orphan##*/}")
+        normalized="${orphan%/}"
+        # A subtree declaration such as skills/* must exclude the subtree
+        # root. Passing its basename ("*") to diff would mask every path.
+        if [[ "$normalized" == */\* ]]; then
+            normalized="${normalized%/\*}"
+        fi
+        diff_args+=(-x "$normalized")
+        if [[ "$normalized" == */* ]]; then
+            diff_args+=(-x "${normalized##*/}")
         fi
     done
 
@@ -85,6 +91,70 @@ check_overlay() {
     echo "OK: $src -> $dst"
 }
 
+check_shared_skill_pairs() {
+    local shared_skill skill_name failed=0
+    for shared_skill in agents_extensions/shared/skills/*; do
+        [[ -d "$shared_skill" ]] || continue
+        skill_name="$(basename "$shared_skill")"
+        check_pair "$shared_skill" ".gemini/skills/$skill_name" || failed=1
+    done
+    return "$failed"
+}
+
+check_gemini_provider_skill_pairs() {
+    local provider_skill skill_name failed=0
+    for provider_skill in gemini_extensions/skills/*; do
+        [[ -d "$provider_skill" ]] || continue
+        skill_name="$(basename "$provider_skill")"
+        check_pair "$provider_skill" ".gemini/skills/$skill_name" || failed=1
+    done
+    return "$failed"
+}
+
+check_gemini_skill_owners() {
+    local deployed_skill skill_name failed=0
+    [[ -d .gemini/skills ]] || return 0
+    for deployed_skill in .gemini/skills/*; do
+        [[ -d "$deployed_skill" ]] || continue
+        skill_name="$(basename "$deployed_skill")"
+        if [[ ! -d "agents_extensions/shared/skills/$skill_name" && ! -d "gemini_extensions/skills/$skill_name" ]]; then
+            echo "::error::Unowned deployed Gemini skill: .gemini/skills/$skill_name"
+            failed=1
+        fi
+    done
+    return "$failed"
+}
+
+gemini_path_is_declared_orphan() {
+    local relative="$1" orphan normalized
+    for orphan in $ORPHAN_PATHS_GEMINI; do
+        normalized="${orphan%/}"
+        if [[ "$relative" == "$normalized" || "$relative" == "$normalized/"* ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+check_gemini_file_owners() {
+    local deployed_file relative failed=0
+    [[ -d .gemini ]] || return 0
+    while IFS= read -r deployed_file; do
+        relative="${deployed_file#.gemini/}"
+        if [[ "$relative" == skills/* || "$relative" == rules/* ]]; then
+            continue
+        fi
+        if gemini_path_is_declared_orphan "$relative"; then
+            continue
+        fi
+        if [[ ! -e "gemini_extensions/$relative" ]]; then
+            echo "::error::Unowned deployed Gemini file: .gemini/$relative"
+            failed=1
+        fi
+    done < <(find .gemini \( -type f -o -type l \) -print | sort)
+    return "$failed"
+}
+
 drift=0
 
 # Orphan exclusions must stay in lock-step with scripts/deploy_orphan_paths.sh
@@ -110,7 +180,15 @@ check_overlay "agents_extensions/codex" ".codex" || drift=1
 # shellcheck disable=SC2086
 check_pair "agents_extensions/shared/skills" ".agents/skills" $ORPHAN_PATHS_AGENTS || drift=1
 # shellcheck disable=SC2086
-check_pair "gemini_extensions" ".gemini" $ORPHAN_PATHS_GEMINI || drift=1
+check_pair \
+    "gemini_extensions" \
+    ".gemini" \
+    $ORPHAN_PATHS_GEMINI \
+    $GEMINI_SHARED_SKILL_OVERLAY_PATHS || drift=1
+check_gemini_provider_skill_pairs || drift=1
+check_shared_skill_pairs || drift=1
+check_gemini_skill_owners || drift=1
+check_gemini_file_owners || drift=1
 check_pair "agents_extensions/shared/rules" ".gemini/rules" || drift=1
 
 exit "$drift"
