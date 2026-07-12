@@ -1,97 +1,101 @@
 ---
-- lemma: пісенна пам'ять
-  translation: song memory
+- lemma: атрибуція
+  translation: attribution
+  pos: noun
+  usage: Атрибуція «за оцінкою ЕСУ» відділяє позицію автора статті від довідкового факту.
+- lemma: ступінь певності
+  translation: degree of certainty
   pos: noun phrase
-  usage: Пісенна пам'ять пояснює, чому текст живе в голосах кількох поколінь.
-- lemma: рушник
-  translation: embroidered ritual towel
+  usage: Ступінь певності має відповідати силі й повноті джерельної опори.
+- lemma: хронологія
+  translation: chronology
   pos: noun
-  usage: Рушник у пісні є знаком дому, дороги і материнського благословення.
-- lemma: стежина
-  translation: path
-  pos: noun
-  usage: Стежина допомагає говорити про повернення до витоків.
-- lemma: офіційність
-  translation: official status
-  pos: noun
-  usage: Офіційність Малишка треба називати, але не робити єдиним поясненням.
-- lemma: кооптація
-  translation: co-optation
-  pos: noun
-  usage: Кооптація означає включення митця в систему з обмеженням автономії.
-- lemma: інституційна рамка
-  translation: institutional frame
+  usage: Хронологія відділяє 1930 рік першої публікації від пізніших посад і премій.
+- lemma: фронтовий кореспондент
+  translation: war correspondent
   pos: noun phrase
-  usage: Інституційна рамка визначала, де і як звучало публічне слово.
-- lemma: фольклоризм
-  translation: folklorism
+  usage: Під час війни Малишко працював як фронтовий кореспондент у кількох газетах.
+- lemma: відповідальний редактор
+  translation: responsible editor
+  pos: noun phrase
+  usage: У 1944–1947 роках Малишко був відповідальним редактором журналу «Дніпро».
+- lemma: пісенність
+  translation: song-like quality
   pos: noun
-  usage: Фольклоризм у Малишка не дорівнює простоті або наївності.
-- lemma: початок пісні
-  translation: song opening
-  pos: noun phrase
-  usage: Короткий початок пісні може відкрити ключовий образ без довгої цитати.
-- lemma: канонізація
-  translation: canonization
-  pos: noun
-  usage: Канонізація може допомогти пам'яті, але іноді робить читання гладким.
-- lemma: сентиментальність
-  translation: sentimentality
-  pos: noun
-  usage: Сентиментальність зводить складний образ до готової емоції.
-- lemma: фронтова преса
-  translation: front-line press
-  pos: noun phrase
-  usage: Фронтова преса вплинула на воєнну інтонацію поета.
-- lemma: редакторська праця
-  translation: editorial work
-  pos: noun phrase
-  usage: Редакторська праця показує Малишка як публічного літературного діяча.
-- lemma: депутатська діяльність
-  translation: deputy activity
-  pos: noun phrase
-  usage: Депутатська діяльність належить до офіційного контексту біографії.
-- lemma: мовна тяглість
-  translation: linguistic continuity
-  pos: noun phrase
-  usage: Мовна тяглість робить пісню частиною української пам'яті.
-- lemma: співавторство
-  translation: co-authorship
-  pos: noun
-  usage: Співавторство Малишка і Майбороди поєднало слово й мелодію.
+  usage: Пісенність треба доводити через синтаксис, повтор, інтонацію та конкретне виконання.
 - lemma: народнопісенна інтонація
   translation: folk-song intonation
   pos: noun phrase
-  usage: Народнопісенна інтонація допомагає рядку природно звучати.
-- lemma: культурна інфраструктура
-  translation: cultural infrastructure
+  usage: Народнопісенна інтонація може бути авторською художньою технікою, а не безіменним фольклором.
+- lemma: пряме звертання
+  translation: direct address
   pos: noun phrase
-  usage: Кіно, радіо і школа стали культурною інфраструктурою пісні.
-- lemma: публічна сцена
-  translation: public stage
-  pos: noun phrase
-  usage: Публічна сцена відкривала доступ до слухача і водночас мала правила.
-- lemma: межа доказу
-  translation: limit of evidence
-  pos: noun phrase
-  usage: Межа доказу не дозволяє вигадувати архівну драму.
-- lemma: редукція
-  translation: reduction
+  usage: Назва «Україно моя!» побудована як пряме звертання.
+- lemma: паралелізм
+  translation: parallelism
   pos: noun
-  usage: Редукція зменшує складну постать до одного ярлика.
-- lemma: виконавська традиція
-  translation: performance tradition
+  usage: Паралелізм організовує подібні синтаксичні частини й створює очікування повтору.
+- lemma: повтор
+  translation: repetition
+  pos: noun
+  usage: У записі повтор можна спершу описати, а вже потім тлумачити його функцію.
+- lemma: синтаксична межа
+  translation: syntactic boundary
   pos: noun phrase
-  usage: Виконавська традиція змінює пісню між поколіннями.
-- lemma: родинне повторення
-  translation: family repetition
+  usage: Синтаксична межа може збігатися із завершенням мелодійної фрази.
+- lemma: мелодійна фраза
+  translation: melodic phrase
   pos: noun phrase
-  usage: Родинне повторення переносить пісню за межі концертної сцени.
-- lemma: урбаністична лірика
-  translation: urban lyric poetry
+  usage: Мелодійна фраза у виконанні має конкретну тривалість і місце для вдиху.
+- lemma: співавторство
+  translation: co-authorship
+  pos: noun
+  usage: Співавторство Малишка й Майбороди поєднало поетичний рядок із музичною формою.
+- lemma: аранжування
+  translation: arrangement
+  pos: noun
+  usage: Аранжування впливає на звучання запису, але не змінює авторства слів і музики.
+- lemma: виконавська манера
+  translation: performance style
   pos: noun phrase
-  usage: Урбаністична лірика Малишка дозволяє співати Київ як український простір.
-- lemma: деколонізаційне читання
-  translation: decolonial reading
+  usage: Виконавська манера Дмитра Гнатюка помітна в дикції, диханні й фразуванні.
+- lemma: рецепція
+  translation: reception
+  pos: noun
+  usage: Рецепція описує, як твір читають, виконують і переосмислюють у різний час.
+- lemma: інституційна роль
+  translation: institutional role
   pos: noun phrase
-  usage: Деколонізаційне читання не дає радянській рамці поглинути українську мову.
+  usage: Інституційна роль пояснює службову функцію, але не є естетичною оцінкою.
+- lemma: депутатська діяльність
+  translation: legislative representative activity
+  pos: noun phrase
+  usage: Депутатська діяльність Малишка включала роботу зі зверненнями громадян та установ.
+- lemma: протест
+  translation: protest
+  pos: noun
+  usage: Повідомлення про протест 1966 року потребує точної атрибуції джерелу.
+- lemma: маркер поступки
+  translation: concessive marker
+  pos: noun phrase
+  usage: Маркер поступки «хоча» допомагає втримати два документовані аспекти біографії.
+- lemma: інтерпретація
+  translation: interpretation
+  pos: noun
+  usage: Інтерпретація пояснює значення повтору, але має спиратися на спостереження.
+- lemma: оцінка
+  translation: evaluation
+  pos: noun
+  usage: Оцінка стає переконливою, коли названо критерій і можливе заперечення.
+- lemma: спостереження
+  translation: observation
+  pos: noun
+  usage: Точне спостереження містить часову позначку й опис почутого.
+- lemma: художня деталь
+  translation: artistic detail
+  pos: noun phrase
+  usage: Художня деталь може відкрити тему, але не замінює аналізу всього твору.
+- lemma: доказовий висновок
+  translation: evidence-based conclusion
+  pos: noun phrase
+  usage: Доказовий висновок розрізняє факт, джерельну оцінку й власну інтерпретацію.
