@@ -79,12 +79,22 @@ persona:
   role: Модератор семінару, що ставить під сумнів романтичні міфи та змушує студентів аналізувати мотивацію історичних постатей
   voice: Scholarly-Skeptical
 phase: BIO
+readings_contract_version: 2
 readings:
-- author: Енциклопедія Сучасної України
-  description: Академічна біографія Василя Вишиваного (Вільгельма Габсбурга).
-  difficulty: B2
-  title: Габсбург Вільгельм
-  url: https://esu.com.ua/article-27931
+- title: фон Габсбурґ-Лотрінґен Вільгельм
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-27931
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-27931
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Зіставити академічну біографію Вільгельма Габсбурґа з романтизованим
+    образом «українського короля» та скласти перевірену хронологію його служби.
 references:
 - title: Vyshyvanyi Memoirs
   note: Фрагменти зі спогадів "Минають дні"

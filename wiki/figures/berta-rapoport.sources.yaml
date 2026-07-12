@@ -1,49 +1,22 @@
-# Source registry for wiki/figures/berta-rapoport.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/berta-rapoport_Біографія-Берта-Рапопорт-Лікарка-і-громадська-діячка-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка'
-  section_path: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка > Короткий
-    зміст'
+  file: https://odessa-memory.info/ua/index.php?id=87
+  type: external
+  title: Рапопорт Берта Яківна
+  url: https://odessa-memory.info/ua/index.php?id=87
 - id: S2
-  file: ukrainian_wiki/berta-rapoport_Біографія-Берта-Рапопорт-Лікарка-і-громадська-діячка-Основний-зміст-Ліберальний-фемінізм-та-індивідуалістичні-виклики-для-жіночої-професійної-реалізації
-  type: ukrainian_wiki
-  title: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка'
-  section_path: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка > Основний
-    зміст > Ліберальний фемінізм та індивідуалістичні виклики для жіночої професійної
-    реалізації'
+  file: https://odnb.odessa.ua/doc_file/zpdcln_pdf/2014.pdf
+  type: external
+  title: Знаменні і пам'ятні дати Одеси на 2014 рік
+  url: https://odnb.odessa.ua/doc_file/zpdcln_pdf/2014.pdf
 - id: S3
-  file: ukrainian_wiki/berta-rapoport_Біографія-Берта-Рапопорт-Лікарка-і-громадська-діячка-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка'
-  section_path: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка > Деколонізаційна
-    перспектива'
-- id: S4
-  file: ukrainian_wiki/berta-rapoport_Біографія-Берта-Рапопорт-Лікарка-і-громадська-діячка-Основний-зміст-Фемінізм-точки-зору-та-критика-традиційної-епістемології
-  type: ukrainian_wiki
-  title: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка'
-  section_path: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка > Основний
-    зміст > Фемінізм точки зору та критика традиційної епістемології'
-- id: S5
-  file: ukrainian_wiki/berta-rapoport_Біографія-Берта-Рапопорт-Лікарка-і-громадська-діячка-Основний-зміст-Культурний-фемінізм-і-фемінізм-відмінності-нові-погляди-на-жіночу-природу
-  type: ukrainian_wiki
-  title: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка'
-  section_path: 'Біографія: Берта Рапопорт: Лікарка і громадська діячка > Основний
-    зміст > Культурний фемінізм і фемінізм відмінності: нові погляди на жіночу природу'
-- id: S6
-  file: wikipedia/Гендерні дослідження (журнал)
-  type: wikipedia
-  title: Гендерні дослідження (журнал)
-  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%D0%BD%D1%96%20%D0%B4%D0%BE%D1%81%D0%BB%D1%96%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F%20%28%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%29
-- id: S7
-  file: wikipedia/Фемінізм
-  type: wikipedia
-  title: Фемінізм
-  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%B5%D0%BC%D1%96%D0%BD%D1%96%D0%B7%D0%BC
-- id: S8
-  file: wikipedia/Реформація
-  type: wikipedia
-  title: Реформація
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%B5%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D1%96%D1%8F
+  file: https://commons.wikimedia.org/wiki/File:Odesa_Sea_Port_(2014-04-09)_01.jpg
+  type: external
+  title: Odesa Sea Port (2014-04-09) 01 — CC BY-SA 4.0
+  url: https://commons.wikimedia.org/wiki/File:Odesa_Sea_Port_(2014-04-09)_01.jpg
+  rights:
+    basis: cc-by-sa-4.0
+    evidence_url: https://commons.wikimedia.org/wiki/File:Odesa_Sea_Port_(2014-04-09)_01.jpg
+    license: Creative Commons Attribution-Share Alike 4.0
+    license_url: https://creativecommons.org/licenses/by-sa/4.0
+    attribution: Oleh Kushch

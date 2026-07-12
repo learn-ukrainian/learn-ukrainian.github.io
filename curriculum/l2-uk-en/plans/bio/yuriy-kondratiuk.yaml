@@ -81,10 +81,36 @@ persona:
   role: Слідчий у справі «забутого генія», що ставить під сумнів офіційні версії та шукає приховані мотиви в історії науки.
   voice: Cold-War-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Кондратюк Юрій Васильович"
-  url: "https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович"
-  note: "Оглядова стаття у Вікіпедії про піонера світової космонавтики та розробника «траси Кондратюка»."
+- title: Кондратюк Юрій Васильович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-4787
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-4787
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Відтворити біографічну й наукову хронологію Олександра Шаргея — Юрія
+    Кондратюка та пояснити, які саме ідеї стосувалися польоту до Місяця.
+- title: '1897 — народився Юрій Кондратюк, винахідник'
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/21/1897-narodyvsya-yuriy-kondratyuk-vynahidnyk
+  language: uk
+  type: biography
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/21/1897-narodyvsya-yuriy-kondratyuk-vynahidnyk
+    note: Зовнішнє посилання; текст і зображення не відтворюються в курсі.
+  learner_task: >-
+    Зіставити інституційний меморіальний виклад з енциклопедичною статтею та
+    перевірити атрибуцію вислову Джона Губолта.
 references:
 - title: Yuriy Kondratiuk
   note: Compiled from Wikipedia, academic sources on history of science.

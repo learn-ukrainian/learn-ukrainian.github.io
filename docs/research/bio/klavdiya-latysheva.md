@@ -40,21 +40,13 @@ No source disagreements on the core dates. **Birthplace correction logged:** the
 - career-spanning — the **метод Фробеніуса–Латишевої** for constructing *normal (generalised power-series) solutions* of linear differential equations with polynomial coefficients near a singular point. [T3: uk.wikipedia; see §6 on the popular mis-description]
 - works on аналітична теорія диференціальних рівнянь, теорія крайових задач, electrodynamics, theory of oscillations, probability. [T1: ЕСУ; T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-> **Register caveat.** Personal letters/diaries are not readily available for Latysheva; her primary "voice" is her published mathematical work. Per the dossier rule, the two quotations below are her own dissertation titles — direct, datable products of her hand.
-
-### Quote 1 — candidate dissertation title (1936)
-
-> «Наближене розв'язування за допомогою способу моментів лінійних диференціальних рівнянь, що мають особливості в коефіцієнтах»
-
-*Source:* dissertation title, 1936 [T3: uk.wikipedia, cross-checked against the topic line in T1: ЕСУ]. *Why it matters pedagogically:* the title itself states her lifelong problem — differential equations *with singularities in their coefficients* — and marks the moment a woman first crossed the phys-math degree barrier in Ukraine.
-
-### Quote 2 — doctoral dissertation title (1952)
-
-> «Нормальні розв'язки лінійних диференціальних рівнянь з поліноміальними коефіцієнтами»
-
-*Source:* dissertation title, 1952 [T1: ЕСУ; T3: uk.wikipedia]. *Why it matters pedagogically:* "нормальні розв'язки … з поліноміальними коефіцієнтами" is precisely the Frobenius-type construction that bears her name — readable as the mathematical core of the figure, not legend.
+No personal quotation is approved for the module. The accessible sources give
+titles and summaries of Latysheva's mathematical works, not located personal
+speech. Dissertation titles are bibliographic data rather than quotations from
+her voice. Use the titles only as titles and add a quotation only after an exact
+edition and page have been directly checked.
 
 ## 5. Language register
 
@@ -99,9 +91,11 @@ No source disagreements on the core dates. **Birthplace correction logged:** the
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** the archival portrait reproduced on uk.wikipedia (Wikimedia Commons) and the STEM is FEM «Наука — це вона» project (2021) — **verify license tag** (likely PD-Ukraine / PD-old for a 1956 death).
-- **Backup candidates:** Kyiv University differential-equations chair history page; period photographs of the mech-math faculty.
-- **Era-appropriate context image:** cover/title page of *Елементи наближених обчислень* (1942) or the 1936 dissertation record.
+- **Approved context candidate:** `File:Могила Латишевої К. Я..JPG`,
+  CC BY-SA 4.0, attribution `Folkerman`:
+  <https://commons.wikimedia.org/wiki/File:Могила_Латишевої_К._Я..JPG>.
+- It is a memorial context image, not a portrait. No STEM illustration,
+  university photograph, book cover, or archival portrait is approved.
 
 ## 10. Sources used
 

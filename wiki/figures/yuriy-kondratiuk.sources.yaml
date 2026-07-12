@@ -1,39 +1,31 @@
-# Source registry for wiki/figures/yuriy-kondratiuk.md
-# Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: https://esu.com.ua/article-4787
+  type: external
+  title: Кондратюк Юрій Васильович
+  url: https://esu.com.ua/article-4787
 - id: S2
-  file: 9-klas-ukrajinska-mova-voron-2017_s5128
-  type: textbook
-  title: МОРФОЛОГІЯ. ОРФОГРАФІЯ. ІМЕННИК. ПРИКМЕТНИК
-  page: 177
-  grade: 9
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Kondratyuk_Yu&Z21ID=
+  type: external
+  title: Кондратюк Юрій Васильович
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Kondratyuk_Yu&Z21ID=
 - id: S3
-  file: ukrainian_wiki/yuriy-kondratiuk_Біографія-Юрій-Кондратюк-Пророк-космічних-трас-та-космічна-доля-України-Основний-зміст-Олександр-Шаргей-Життя-під-чужим-іменем
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля України'
-  section_path: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля
-    України > Основний зміст > Олександр Шаргей: Життя під чужим іменем'
+  file: https://uinp.gov.ua/istorychnyy-kalendar/cherven/21/1897-narodyvsya-yuriy-kondratyuk-vynahidnyk
+  type: external
+  title: '1897 — народився Юрій Кондратюк, винахідник'
+  url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/21/1897-narodyvsya-yuriy-kondratyuk-vynahidnyk
 - id: S4
-  file: ukrainian_wiki/yuriy-kondratiuk_Біографія-Юрій-Кондратюк-Пророк-космічних-трас-та-космічна-доля-України-Основний-зміст-Завоювання-міжпланетних-просторів-Тріумф-українського-генія
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля України'
-  section_path: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля
-    України > Основний зміст > «Завоювання міжпланетних просторів»: Тріумф українського
-    генія'
+  file: https://portal.pntu.edu.ua/page/muzey.html
+  type: external
+  title: Музей Національного університету «Полтавська політехніка імені Юрія Кондратюка»
+  url: https://portal.pntu.edu.ua/page/muzey.html
 - id: S5
-  file: ukrainian_wiki/yuriy-kondratiuk_Біографія-Юрій-Кондратюк-Пророк-космічних-трас-та-космічна-доля-України-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля України'
-  section_path: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля
-    України > Деколонізаційна перспектива'
-- id: S6
-  file: ukrainian_wiki/yuriy-kondratiuk_Біографія-Юрій-Кондратюк-Пророк-космічних-трас-та-космічна-доля-України-Основний-зміст-Трагедія-репресованого-генія-та-ціна-успіху
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля України'
-  section_path: 'Біографія: Юрій Кондратюк: Пророк космічних трас та космічна доля
-    України > Основний зміст > Трагедія репресованого генія та ціна успіху'
-- id: S7
-  file: wave7-popovych-narys-kultury_c1144
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
+  file: https://commons.wikimedia.org/wiki/File:Шаргей_Олександр.jpg
+  type: external
+  title: Шаргей Олександр — public domain
+  url: https://commons.wikimedia.org/wiki/File:Шаргей_Олександр.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Шаргей_Олександр.jpg
+    license: Public domain
+    attribution: Автор не зазначений; джерело наведене на сторінці Wikimedia Commons

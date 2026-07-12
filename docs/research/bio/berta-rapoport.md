@@ -50,22 +50,13 @@ A sea-captain leaves voyages, not books. Chronology of milestones (the "works" h
 - `1966` — documentary «В одній сім'ї» (dir. Рафаїл Голдін) features her. [T5: huxley.media]
 - `травень 2006` — commemorative bas-relief unveiled on the Odesa port building. [T5: odessa-memory.info]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-> **Register caveat (decolonial).** Rapoport's working language at sea was the Soviet-fleet Russian of 1930s Odesa, so her recorded utterances survive mainly in Russian-language memoir. Per the dossier rule, the first quote below is given in an attested **Ukrainian first-person** rendering; the second is flagged as surviving in Russophone memoir.
-
-### Quote 1 — first-person recollection of the 1938 captivity (Ukrainian rendering)
-
-> «У 1938 році під час подій в Іспанії разом з усім екіпажем пароплава «Катаяма» я потрапила у фашистський полон… Потім — у концтаборі.»
-
-*Source:* memoir recollection quoted in [T5: ukrainky.com.ua, "Берта Рапопорт: одеситка, яка стала першою у світі жінкою-капітаном корабля"]. *Why it matters pedagogically:* a rare first-person voice; anchors the 1938 captivity that the regime later used against her, in her own words.
-
-### Quote 2 — defiance of the Spanish fascist captors (survives in Russophone memoir)
-
-> «Поки ми лишаємося на борту, ви не посмієте торкнутися нашого прапора. Палуба пароплава — територія моєї Батьківщини.»
-> (Russophone memoir original: «Пока мы остаемся на борту, вы не посмеете дотронуться до нашего флага. Палуба парохода — территория моей Родины, СССР!»)
-
-*Source:* recounted in [T5: grad-ua.livejournal.com mirror of grad.ua, "Женщина на корабле: капитан дальнего плавания Берта Рапопорт"]. *Why it matters pedagogically:* shows both her courage and the Soviet frame she operated within — the same Homeland she invoked later sidelined her. Present the register honestly; do **not** launder it into a falsely "anti-Soviet" statement.
+No quotation is approved for the module. The available first-person language is
+reproduced through later editorial or memoir pages without an exact archival
+or published-edition locator. It must remain paraphrased until a primary record
+is directly inspected. The following former quotation block is intentionally
+retired from use.
 
 ## 5. Language register
 
@@ -110,9 +101,11 @@ A sea-captain leaves voyages, not books. Chronology of milestones (the "works" h
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** historic press photo of Rapoport in uniform reproduced on odessa-memory.info (id=87) and the Odesa-port bas-relief (2006) — **verify license before use**; press-photo PD status uncertain.
-- **Backup candidates:** stills from the 1966 documentary «В одній сім'ї»; period photos of the steamers «Катаяма» / «Туркменістан».
-- **If no PD/CC portrait exists:** use a period photograph of a Black-Sea steamer plus the memorial relief, with a "portrait rights unverified" note. Resolve under `docs/best-practices/bio-image-rights.md`.
+- **Approved context candidate:** `File:Odesa Sea Port (2014-04-09) 01.jpg`,
+  CC BY-SA 4.0, attribution `Oleh Kushch`:
+  <https://commons.wikimedia.org/wiki/File:Odesa_Sea_Port_(2014-04-09)_01.jpg>.
+- It is a port context image, not a portrait of Rapoport. No archival portrait,
+  documentary still, ship photograph, or memorial-relief image is approved.
 
 ## 10. Sources used
 

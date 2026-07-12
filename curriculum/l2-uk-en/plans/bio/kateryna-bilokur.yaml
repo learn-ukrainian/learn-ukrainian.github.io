@@ -80,10 +80,36 @@ persona:
   role: Куратор виставки, що ставить під сумнів офіційні біографії та шукає людську драму за іконічними образами
   voice: Art-Historian-Skeptic
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Білокур Катерина Василівна"
-  url: "https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна"
-  note: "Оглядова стаття у Вікіпедії про видатну українську художницю наївного мистецтва."
+- title: Білокур Катерина Василівна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-40828
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-40828
+    note: Зовнішнє посилання; текст і репродукції не відтворюються в курсі.
+  learner_task: >-
+    Скласти перевірену хронологію визнання Білокур і простежити, як ЕСУ описує
+    її техніку, жанри та основні твори.
+- title: Катерина Білокур
+  source_name: Національний музей декоративного мистецтва України
+  source_url: https://mdmu.emuseum.com.ua/collections/kateryna-bilokur/
+  language: uk
+  type: museum
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://mdmu.emuseum.com.ua/collections/kateryna-bilokur/
+    note: Зовнішнє посилання на музейну колекцію; текст і репродукції не відтворюються в курсі.
+  learner_task: >-
+    Проаналізувати опис музейної колекції та відрізнити документовані відомості
+    про твори від популярних легенд навколо художниці.
 references:
 - title: Білокур Катерина Василівна
   author: Вікіпедія

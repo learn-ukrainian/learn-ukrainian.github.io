@@ -51,23 +51,12 @@ Bilokur painted overwhelmingly **flowers** (often combining spring and autumn bl
 - `1954` — three works (**«Цар-Колос», «Берізка», «Колгоспне поле»**) entered the **Soviet section of the Paris International Exhibition** — the moment of her European recognition (and the Picasso legend — see §6). [T3: uk.wikipedia]
 - her **autobiography and letters** — collected and published by **Микола Кагарлицький** (who "opened Bilokur to the world") and in the Родовід editions (*Катерина Білокур*, 2 vols, 2010; *Я, Білокур Катерина Василівна*, 2012) — her primary written voice (§4). The **Національний музей українського народного декоративного мистецтва** holds the largest collection of her paintings. [T3: uk.wikipedia — Посилання; T2: museum]
 
-## 4. Primary-source quotes (≥2 required — genuinely attested)
+## 4. Quotations and primary-text limit
 
-> **Fabrication guard (load-bearing, per the batch ⚠).** A line circulated on her ghost-wiki — **«Мене звати Катерина Білокур…»** — is **NOT an attested utterance**; it appears to be invented (and may be a corruption of the **book title** *«Я, Білокур Катерина Василівна»*, a 2012 Родовід study of her archive — a title, not her speech). It is **excluded** here. The quotes below are genuinely attested from her **autobiography** (as transcribed in the published editions / uk.wikipedia).
-
-**Quote 1 — her childhood painting, in secret (verbatim, autobiography):**
-
-> «Украла у матері кусочок білого полотна та взяла вуглину… І я намалюю з одного боку полотнини що-небудь, надивлюсь-намилуюсь, переверну на другий бік — і там те саме… От мене на цьому вчинку і поймали батько та мати. Малюнок мій зірвали і кинули в піч…»
-
-The founding scene of her oppression and her vocation in one breath. [T3: uk.wikipedia, quoting her autobiography; verbatim]
-
-**Quote 2 — her lament at a talent denied its scope (verbatim, autobiography):**
-
-> «Обідно мені на природу, що так жорстоко зі мною обійшлася, наділивши мене такою великою любов'ю до того святого малювання, а тоді відібрала всі можливості, щоб я творила тую чудовую працю во всю шир мого таланту!»
-
-A self-taught peasant woman naming, in her own dialect, the tragedy of genius without means — pedagogically powerful and emotionally direct. [T3: uk.wikipedia, quoting her autobiography; verbatim]
-
-*(Both quotes preserve her authentic Poltava-dialect folk Ukrainian — «обідно», «во всю шир», «поймали», «тую чудовую» — which must NOT be "corrected"; see §5.)*
+No quotation is approved for the module. The fabricated «Мене звати…» line
+is excluded, and the autobiography passages available here are secondary
+transcriptions without a directly checked edition and page. They were removed
+rather than silently treated as primary-text verification.
 
 ## 5. Language register
 
@@ -118,11 +107,11 @@ A self-taught peasant woman naming, in her own dialect, the tragedy of genius wi
 
 ## 9. Image candidates
 
-- **Best portrait — RIGHTS CAUTION:** Bilokur died in 1961, so her **own works** (paintings) enter the public domain in Ukraine (life+70) only on **1 January 2032**; photographs *of* her depend on the photographer. Do **not** assume PD-by-age. Use the **Wikimedia Commons category "Kateryna Bilokur"** and verify each **file page** licence individually.
-- **Backup candidates:**
-  - The **2000 commemorative coin** and the **2020 state-anniversary** materials (120th birthday) — check issue rights.
-  - The **Музей-садиба Катерини Білокур** in Богданівка (1977) — a context photograph.
-- **Context image:** a reproduction of **«Цар-Колос»** or **«Колгоспне поле»** (the Paris-1954 works) — clear rights via the holding museum (Національний музей укр. народного декоративного мистецтва) before use.
+- **Approved candidate:** `File:Білокур Катерина Василівна художник 1954.jpg`,
+  CC BY 4.0, attribution `Я. Паволоцький`:
+  <https://commons.wikimedia.org/wiki/File:Білокур_Катерина_Василівна_художник_1954.jpg>.
+- The license applies only to that portrait. Her paintings, coins, museum
+  photographs, and other reproductions remain unapproved.
 
 ## 10. Sources used
 

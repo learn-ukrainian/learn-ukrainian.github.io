@@ -148,16 +148,36 @@ persona:
     неіснуючих репресій.
   voice: History-of-Science Scholar
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Латишева Клавдія Яківна"
-  url: "https://esu.com.ua/article-53414"
-  note: "Енциклопедія Сучасної України. Біографічна стаття про першу в Україні математикиню, яка захистила кандидатську дисертацію."
-- title: "Клавдія Латишева: Математикиня, що подолала систему"
-  url: "https://stemisfem.org/node/447"
-  note: "Проєкт «Наука — це вона» (STEM is FEM). Сучасна рецепція життєвого шляху вченої."
-- title: "Латишева Клавдія Яківна"
-  url: "https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна"
-  note: "Оглядова стаття у Вікіпедії з докладнішою бібліографією."
+- title: Латишева Клавдія Яківна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-53414
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-53414
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти хронологію наукової кар'єри Латишевої та виписати напрями її
+    досліджень без додавання не підтверджених джерелом біографічних деталей.
+- title: 'Клавдія Латишева: математикиня, що подолала систему'
+  source_name: STEM is FEM
+  source_url: https://stemisfem.org/node/447
+  language: uk
+  type: biography
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://stemisfem.org/node/447
+    note: Зовнішнє посилання; текст і проєктна ілюстрація не відтворюються в курсі.
+  learner_task: >-
+    Порівняти сучасну популярну біографію з академічною енциклопедичною статтею
+    й позначити, де автори переходять від факту до інтерпретації.
 references:
 - note: >-
     Авторитетна стаття: дати, ступені, деканство (1952–54), кафедра (1953–56),

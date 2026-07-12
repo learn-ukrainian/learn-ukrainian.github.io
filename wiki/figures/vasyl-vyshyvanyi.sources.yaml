@@ -1,45 +1,21 @@
-# Source registry for wiki/figures/vasyl-vyshyvanyi.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/vasyl-vyshyvanyi_Біографія-Василь-Вишиваний-Князь-українець-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Вишиваний: Князь-українець'
-  section_path: 'Біографія: Василь Вишиваний: Князь-українець > Деколонізаційна перспектива'
+  file: https://esu.com.ua/article-27931
+  type: external
+  title: фон Габсбурґ-Лотрінґен Вільгельм
+  url: https://esu.com.ua/article-27931
 - id: S2
-  file: ukrainian_wiki/vasyl-vyshyvanyi_Біографія-Василь-Вишиваний-Князь-українець-Основний-зміст-Національний-історичний-міф-і-легітимізація-державності
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Вишиваний: Князь-українець'
-  section_path: 'Біографія: Василь Вишиваний: Князь-українець > Основний зміст > Національний
-    історичний міф і легітимізація державності'
+  file: https://esu.com.ua/pdf/file/27931.pdf
+  type: external
+  title: фон Габсбурґ-Лотрінґен Вільгельм — академічна PDF-версія
+  url: https://esu.com.ua/pdf/file/27931.pdf
 - id: S3
-  file: ukrainian_wiki/vasyl-vyshyvanyi_Біографія-Василь-Вишиваний-Князь-українець-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Вишиваний: Князь-українець'
-  section_path: 'Біографія: Василь Вишиваний: Князь-українець > Короткий зміст'
-- id: S4
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0498
-  type: textbook
-  title: Ісмаїл Гаспринський. Арслан-киз (Дівчина-левиця)  233
-  page: 233
-  grade: 10
-- id: S5
-  file: ukrainian_wiki/sichovi-striltsi_Історія-України-Українські-січові-стрільці-та-відродження-національної-військової-традиції-Основний-зміст-Історіографічні-перспективи-на-військову-історію-України
-  type: ukrainian_wiki
-  title: 'Історія України: Українські січові стрільці та відродження національної
-    військової традиції'
-  section_path: 'Історія України: Українські січові стрільці та відродження національної
-    військової традиції > Основний зміст > Історіографічні перспективи на військову
-    історію України'
-- id: S6
-  file: ukrainian_wiki/vasyl-vyshyvanyi_Біографія-Василь-Вишиваний-Князь-українець-Основний-зміст-Шевченкова-візія-історії-та-феномен-Героя-оборонця
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Вишиваний: Князь-українець'
-  section_path: 'Біографія: Василь Вишиваний: Князь-українець > Основний зміст > Шевченкова
-    візія історії та феномен Героя-оборонця'
-- id: S7
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1107
-  type: textbook
-  title: «ПІД ЧУЖИМ НЕБОМ»
-  page: 152
-  grade: 11
+  file: https://commons.wikimedia.org/wiki/File:Archduke_Wilhelm_of_Austria_in_Ternopil,_1918.jpg
+  type: external
+  title: Archduke Wilhelm of Austria in Ternopil, 1918 — public domain
+  url: https://commons.wikimedia.org/wiki/File:Archduke_Wilhelm_of_Austria_in_Ternopil,_1918.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Archduke_Wilhelm_of_Austria_in_Ternopil,_1918.jpg
+    license: Public domain
+    attribution: Автор не зазначений; джерело наведене на сторінці Wikimedia Commons
