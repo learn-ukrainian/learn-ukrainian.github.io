@@ -1172,15 +1172,6 @@
   {
     "relation": "antonym",
     "word_a": "загадка",
-    "word_b": "адка",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/antonimi-antonimi-v-prisliv-iakh-i-prikazkakh-40142/re-06d1beb3-b924-41f3-90fd-3431d7e1710f",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "antonym",
-    "word_a": "загадка",
     "word_b": "відгадка",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/antonimi-antonimi-v-prisliv-iakh-i-prikazkakh-40142/re-06d1beb3-b924-41f3-90fd-3431d7e1710f",
@@ -1344,15 +1335,6 @@
     "relation": "antonym",
     "word_a": "карлик",
     "word_b": "велетень",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/antonimi-antonimi-v-prisliv-iakh-i-prikazkakh-40142/re-06d1beb3-b924-41f3-90fd-3431d7e1710f",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "antonym",
-    "word_a": "кволий",
-    "word_b": "ьний",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/antonimi-antonimi-v-prisliv-iakh-i-prikazkakh-40142/re-06d1beb3-b924-41f3-90fd-3431d7e1710f",
     "confidence": "high",
@@ -4889,15 +4871,6 @@
   {
     "relation": "synonym",
     "word_a": "автор",
-    "word_b": "зневаж",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "автор",
     "word_b": "проектувальник",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
@@ -5061,15 +5034,6 @@
     "relation": "synonym",
     "word_a": "адвокат",
     "word_b": "присяжний",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "адвокат",
-    "word_b": "упник",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
@@ -8119,15 +8083,6 @@
   },
   {
     "relation": "synonym",
-    "word_a": "дарунок",
-    "word_b": "уроч",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
     "word_a": "двигун",
     "word_b": "звір",
     "source": "miyklas.com.ua",
@@ -8535,15 +8490,6 @@
     "relation": "synonym",
     "word_a": "дійсно",
     "word_b": "достоту",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "дійсно",
-    "word_b": "инно",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
@@ -9991,15 +9937,6 @@
   },
   {
     "relation": "synonym",
-    "word_a": "застарілий",
-    "word_b": "ірон",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
     "word_a": "зі",
     "word_b": "зо",
     "source": "miyklas.com.ua",
@@ -10173,15 +10110,6 @@
     "relation": "synonym",
     "word_a": "каблучка",
     "word_b": "перстень",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "каблучка",
-    "word_b": "учка",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
@@ -11064,15 +10992,6 @@
     "relation": "synonym",
     "word_a": "логіка",
     "word_b": "закономірність",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "логіка",
-    "word_b": "поб",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
@@ -14582,15 +14501,6 @@
   {
     "relation": "synonym",
     "word_a": "фігура",
-    "word_b": "мат",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "фігура",
     "word_b": "постать",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
@@ -14700,15 +14610,6 @@
     "relation": "synonym",
     "word_a": "фінал",
     "word_b": "підсумок",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "фінал",
-    "word_b": "спрт",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
@@ -17390,15 +17291,6 @@
   {
     "relation": "synonym",
     "word_a": "їдкий",
-    "word_b": "тех",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "їдкий",
     "word_b": "ущипливий",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
@@ -17418,15 +17310,6 @@
     "relation": "synonym",
     "word_a": "їдкий",
     "word_b": "ядучий",
-    "source": "miyklas.com.ua",
-    "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
-    "confidence": "high",
-    "review_status": "approved"
-  },
-  {
-    "relation": "synonym",
-    "word_a": "їстівний",
-    "word_b": "суч",
     "source": "miyklas.com.ua",
     "source_url": "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/leksikologiia-40143/sinonimi-sinonimichnii-riad-rol-sinonimiv-u-movlenni-slovnik-sinonimiv-40151/re-e724787b-c4c0-4f51-b627-fe54f0a74fe8",
     "confidence": "high",
