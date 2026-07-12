@@ -1,24 +1,65 @@
-- title: "Кириченко Раїса Панасівна — Енциклопедія Сучасної України"
+---
+- title: Кириченко Раїса Панасівна — Енциклопедія Сучасної України
   role: reference
-  url: "https://esu.com.ua/article-6435"
-  notes: "Базовий біографічний контур, репертуарні акценти та роль у культурній пісенній сцені."
-- title: "Кириченко Раїса Опанасівна — Енциклопедія історії України"
+  url: https://esu.com.ua/article-6435
+  notes: >-
+    Основний довідковий контур: дата народження з паспортною приміткою,
+    професійні етапи, освіта, викладання, репертуар, видання, смерть і поховання.
+- title: Кириченко Раїса Опанасівна — Енциклопедія історії України
   role: reference
-  url: "https://www.history.org.ua/?termin=Kyrychenko_R"
-  notes: "Альтернативний запис патроніміки і біографічних деталей в енциклопедичній довідці."
-- title: "Кириченко Раїса Панасівна — Комітет з Національної премії України імені Тараса Шевченка"
-  role: secondary
-  url: "https://knpu.gov.ua/winners/kyrychenko-raisa-panasivna/"
-  notes: "Офіційне поле визнання, репертуарні позначення та статус."
-- title: "Концертний ансамбль Полтавської філармонії"
-  role: reference
-  url: "https://filarmonia-poltava.org.ua/partitions/collectives/koncertniy-ansambl-churayivna"
-  notes: "Сучасний інституційний зв'язок із репертуаром пісенного напряму."
-- title: "Публічна рецепція пісень Раїси Кириченко — АрміяInform"
+  url: https://www.history.org.ua/?termin=Kyrychenko_R
+  notes: >-
+    Альтернативні записи по батькові, року, дати й місця народження, дівоче
+    прізвище та стислий професійний маршрут.
+- title: Кириченко Раїса Панасівна — Комітет Шевченківської премії
+  role: institutional
+  url: https://knpu.gov.ua/winners/kyrychenko-raisa-panasivna/
+  notes: >-
+    Офіційна сторінка лауреатки для предмета премії 1986 року, кар'єрної
+    послідовності, репертуару й альтернативного датування альбому.
+- title: Про присвоєння Р. Кириченко звання Герой України
+  role: primary
+  url: https://zakon.rada.gov.ua/go/1236/2003
+  notes: >-
+    Первинний правовий запис звання, форми «Раїсі Опанасівні» й державної
+    мотивації; не використовується як музикознавча оцінка.
+- title: Концертний ансамбль «Чураївна» — Полтавська обласна філармонія
+  role: institutional
+  url: https://filarmonia-poltava.org.ua/partitions/collectives/koncertniy-ansambl-churayivna
+  notes: >-
+    Інституційна сторінка про створення ансамблю 1987 року та зв'язок із
+    поверненням Раїси Кириченко до Полтави.
+- title: Раїса Кириченко — «Мамина вишня», музичний фільм «Автограф»
+  role: performance
+  url: https://www.youtube.com/watch?v=q2PypqbLatM
+  notes: >-
+    Постановний фільмовий запис з ансамблем «Росава»; робочі відрізки
+    0:00–1:15 і 4:25–5:35. Link-only, без відтворення тексту пісні.
+- title: Раїса Кириченко і гурт «Краяни» — «Мамина вишня»
+  role: performance
+  url: https://www.youtube.com/watch?v=C-aLaXlV-L4
+  notes: >-
+    Концертний запис 25 березня 2001 року; робочі відрізки 0:00–1:10 і
+    4:15–5:25. Link-only, без відтворення аудіо, відео чи лірики.
+- title: Раїса Кириченко — «Ой гарна я, гарна»
+  role: performance
+  url: https://www.youtube.com/watch?v=zN_Wc5Vk6n8
+  notes: >-
+    Телевізійне постановне виконання 1986 року з інструментальним ансамблем
+    Черкаського народного хору; робочі відрізки 0:00–0:45 і 1:25–2:25.
+- title: Раїса Кириченко і гурт «Краяни» — «Я козачка твоя»
+  role: performance
+  url: https://www.youtube.com/watch?v=_Zs81NfvWgU
+  notes: >-
+    Концертний запис 25 березня 2001 року для аналізу сценічного образу;
+    назва пісні не використовується як доказ політичних переконань.
+- title: У Полтаві вшанували Раїсу Кириченко — Суспільне Полтава
   role: reception
-  url: "https://armyinform.com.ua/2020/10/15/ne-spivaj-pisni-yaki-ni-pro-shho-vybyraj-ti-shho-zapadayut-v-lyudsku-dushu/"
-  notes: "Популярно-просвітня рамка рецепції, використовується лише для контексту сучасного сприйняття."
-- title: "Бібліотечний огляд пісенної пам'яті — Полтавська обласна бібліотека"
-  role: reference
-  url: "https://libgonchar.org/index.php?catid=49&id=88%3Aq-----q&lang=uk&option=com_content&view=article"
-  notes: "Доступний огляд музейно-бібліотечної пам'яті та локальних матеріалів."
+  url: https://suspilne.media/poltava/857407-neocinennij-skarb-nasogo-narodu-u-poltavi-vsanuvali-raisu-kiricenko/
+  notes: Датований приклад локального вшанування 14 жовтня 2024 року.
+- title: Як жила у селі народна артистка Раїса Кириченко — Суспільне Полтава
+  role: reception
+  url: https://suspilne.media/poltava/1138100-tak-vse-bulo-pri-raisi-panasivni-ak-zila-u-seli-narodna-artistka-ukraini-raisa-kiricenko/
+  notes: >-
+    Репортаж 2025 року про музей-садибу в Корещині, місцеві свідчення й
+    збережені речі; не замінює енциклопедичної біографії.

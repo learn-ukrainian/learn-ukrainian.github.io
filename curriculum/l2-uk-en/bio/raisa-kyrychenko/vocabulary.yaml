@@ -1,96 +1,69 @@
+---
 - lemma: мецо-сопрано
   translation: mezzo-soprano
   pos: noun
-  usage: Мецо-сопрано поєднує гнучкість тембру й теплу середньо-низьку діапазонність.
-- lemma: філармонія
-  translation: philharmonic
+  usage: ЕСУ визначає голос Раїси Кириченко як мецо-сопрано.
+- lemma: тембр
+  translation: timbre
   pos: noun
-  usage: Філармонія дає професійні сцени, організаційну інфраструктуру й колективну платформу.
-- lemma: хоровий
-  translation: choral
-  pos: adjective
-  usage: Хоровий підхід впливає на дихання, зведення фраз і дисципліну ансамблю.
-- lemma: ансамбль
-  translation: ensemble
+  usage: Тембр описують за конкретним відрізком запису, а не за загальним враженням.
+- lemma: регістр
+  translation: vocal register
   pos: noun
-  usage: Ансамбль формує сценічну взаємодію між солістом і колективом.
+  usage: У наступній фразі голос переходить у вищий регістр.
+- lemma: дикція
+  translation: diction
+  pos: noun
+  usage: Порівняй дикцію й чутність кінцевих приголосних у двох виконаннях.
+- lemma: фразування
+  translation: phrasing
+  pos: noun
+  usage: Фразування можна простежити за паузами, вдихами й завершенням музичної думки.
+- lemma: словесний наголос
+  translation: word stress
+  pos: noun phrase
+  usage: Словесний наголос не завжди збігається з музичним акцентом.
+- lemma: аранжування
+  translation: arrangement
+  pos: noun
+  usage: Аранжування визначає склад супроводу й співвідношення голосів.
+- lemma: ансамблевий баланс
+  translation: ensemble balance
+  pos: noun phrase
+  usage: Ансамблевий баланс змінюється, коли супровід стає щільнішим.
 - lemma: репертуар
   translation: repertoire
   pos: noun
-  usage: Репертуар визначає, які твори регулярно повертаються в публічну пам'ять.
-- lemma: сценічна народність
-  translation: staged folk style
-  pos: noun phrase
-  usage: Сценічна народність поєднує локальну інтонацію з професійною подачею.
-- lemma: пісенна пам'ять
-  translation: song memory
-  pos: noun phrase
-  usage: Пісенна пам'ять пояснює, чому образи переходять між поколіннями.
-- lemma: локальна пам'ять
-  translation: local memory
-  pos: noun phrase
-  usage: Локальна пам'ять допомагає зберігати конкретні образи місця й родини.
-- lemma: мовна тяглість
-  translation: linguistic continuity
-  pos: noun phrase
-  usage: Мовна тяглість підтримує пісню в нових умовах її виконання.
-- lemma: по батькові
-  translation: patronymic form
-  pos: noun phrase
-  usage: Варіант по батькові важливий для джерельної точності й біографічної дисципліни.
-- lemma: спадщина
-  translation: heritage
+  usage: Репертуар Кириченко охоплював народні й авторські пісні.
+- lemma: філармонія
+  translation: philharmonic institution
   pos: noun
-  usage: Спадщина включає інституційні, репертуарні й рецептивні лінії.
-- lemma: державне визнання
-  translation: state recognition
+  usage: Філармонія організовує репетиції, програми, концерти й гастролі.
+- lemma: хорове диригування
+  translation: choral conducting
   pos: noun phrase
-  usage: Державне визнання фіксує статус, але не пояснює всю культурну тривалість.
-- lemma: музей-садиба
-  translation: house-museum
+  usage: 1989 року співачка завершила навчання з хорового диригування.
+- lemma: постановне виконання
+  translation: staged performance
+  pos: noun phrase
+  usage: Постановне виконання народної пісні не є польовим фольклорним записом.
+- lemma: сценічний жест
+  translation: stage gesture
+  pos: noun phrase
+  usage: Сценічний жест слід описувати окремо від припущення про намір виконавиці.
+- lemma: джерельна розбіжність
+  translation: discrepancy between sources
+  pos: noun phrase
+  usage: Джерельна розбіжність у даті народження залишається нерозв'язаною.
+- lemma: атрибуція
+  translation: attribution
   pos: noun
-  usage: Музей-садиба допомагає зберігати культурний контекст постаті у повсякденних формах.
-- lemma: гастролі
-  translation: tours
+  usage: Точна атрибуція показує, яке джерело подає кожну дату.
+- lemma: ступінь певності
+  translation: degree of certainty
+  pos: noun phrase
+  usage: Авторка есе назвала ступінь певності й запропонувала інше пояснення.
+- lemma: рецепція
+  translation: reception
   pos: noun
-  usage: Гастролі відкривають пісню різним регіонам і аудиторіям.
-- lemma: викладачка
-  translation: singing teacher
-  pos: noun
-  usage: Викладачка передає технічні та артистичні практики наступним поколінням.
-- lemma: інституційна рамка
-  translation: institutional frame
-  pos: noun phrase
-  usage: Інституційна рамка надає канали доступу, але визначає і правила присутності.
-- lemma: народна пісня
-  translation: folk song
-  pos: noun phrase
-  usage: Народна пісня в навчанні потребує розділення між джерелом і сценічною формою.
-- lemma: деколонізаційний
-  translation: decolonial
-  pos: adjective
-  usage: Деколонізаційний підхід знімає колоніальні стереотипи про «другорядність» локального голосу.
-- lemma: публічний простір
-  translation: public space
-  pos: noun phrase
-  usage: Публічний простір перетворює локальний матеріал на доступний суспільному слуханню.
-- lemma: ліричний образ
-  translation: lyrical image
-  pos: noun phrase
-  usage: Ліричний образ допомагає переносити особистий досвід у колективну інтерпретацію.
-- lemma: режисура інтерпретації
-  translation: interpretive directing
-  pos: noun phrase
-  usage: Режисура інтерпретації визначає, як пісня звучить на сцені та в пам'яті.
-- lemma: спадковість
-  translation: continuity
-  pos: noun
-  usage: Спадковість формується через передачу репертуару між поколіннями.
-- lemma: культурна інфраструктура
-  translation: cultural infrastructure
-  pos: noun phrase
-  usage: Культурна інфраструктура включає колективи, сцени, школи й медійну циркуляцію.
-- lemma: авторське право
-  translation: copyright
-  pos: noun phrase
-  usage: Авторське право визначає межі довгого використання текстів у навчанні.
+  usage: Репортаж 2024 року документує один датований випадок сучасної рецепції.
