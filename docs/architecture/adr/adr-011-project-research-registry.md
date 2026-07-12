@@ -127,6 +127,28 @@ Changing one registry record flips the global manifest hash and that record's pe
 
 **Runtime kill switch (rollout safety).** A single default-safe configuration flag — `research_registry.enabled` (config, env-overridable) — gates the entire feature. **Default during rollout: `false`** (manifest omits the research component; `/api/knowledge/*` returns an empty/disabled projection; the router surfaces zero pointers), reproducing exact current behavior. Flipping it `true` enables the feature without a code change; flipping it back `false` is an instant, in-place disable — **no revert PR and no redeploy required**. This makes rollback a config toggle, not a deploy, and lets the pilot run behind the flag while unrelated agents are wholly unaffected.
 
+### P6 pilot result and rollout decision
+
+The real three-record UNLP pilot is recorded in
+[`research-registry-pilot.md`](../../references/research-registry-pilot.md).
+It protects five explicit task contexts, exact canonical UTF-8 payload/body
+measurements, state-manifest delta, and endpoint-level warm-cache `304` reads in
+`scripts/audit/check_research_registry_pilot.py`. The result is **GO for a
+controlled local rollout when a task supplies explicit scoped context or a
+session already knows its assigned functional role**. `MonitorClient().bootstrap()`
+without a role remains generic and pointer-free; there is no hidden default role.
+
+The compiled feature default remains fail-safe disabled. The gitignored live flag
+is a local opt-in, and rollback is setting it false or removing it — no source
+revert, task-store rewrite, or telemetry deletion. This decision does not switch
+every environment on. New research ingestion remains schema/adoption-gated.
+
+**P5 remains NO-GO / condition not triggered.** The three bounded digests are
+sufficient, CEFR adoption shipped without raw transport, and deferred TTS/GEC
+work is blocked by ownership/product/licensing. Reopen only for a specific missing
+datum plus a blocked routed task, proof that digest/public manual access is
+insufficient, repeated need, and rights allowing automated caching.
+
 ### P4 — strict adoption gate: cache authority window and partial-metric semantics
 
 **Cache authority window.** `scripts/audit/check_research_registry.py --strict-adoption` and `GET /api/knowledge/monitor` both gate ownership/issue-consumer proof on a membership cache (`batch_state/issue_stream_audit.json`, gitignored, written by `scripts/orchestration/issue_stream_audit.py`), never the network directly. A cache is authoritative only when:

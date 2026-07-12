@@ -4,15 +4,26 @@
 
 ## Cold-start sequence (do this first every session)
 
-Use the Monitor API instead of reading files. One-shot bootstrap:
+Use the Monitor API instead of reading files. A session with a known assigned
+functional role opts into that role's bounded pointer-only cold start:
 
 ```python
-  # Python one-liner equivalent — see scripts/monitor_client.py
 from ai_agent_bridge.monitor_client import MonitorClient
-boot = MonitorClient().bootstrap()
-  # boot["rules"].body    — condensed rules markdown
-  # boot["session"].body  — condensed session summary
+boot = MonitorClient().bootstrap(role="quality")
+  # boot["rules"].body     — condensed rules markdown
+  # boot["session"].body   — condensed session summary
+  # boot["research"].body  — role-scoped pointers only, if enabled
 ```
+
+Generic or genuinely role-unknown startup stays pointer-free:
+
+```python
+boot = MonitorClient().bootstrap()
+```
+
+There is no hidden default role. `bootstrap()` remains the generic, silent
+path; add `role="..."` only when the session already has that known assigned
+functional role.
 
 Shell equivalent:
 
@@ -21,6 +32,9 @@ curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
 curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed
 curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+# Known functional role only: replace `quality` with the assigned role.
+curl -s 'http://localhost:8765/api/knowledge/cold-start?role=quality'  # role-scoped pointers
+# Generic or genuinely role-unknown session: skip the role-scoped request; remain pointer-free.
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 ```
 

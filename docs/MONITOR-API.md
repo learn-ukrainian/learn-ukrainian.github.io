@@ -1935,6 +1935,11 @@ research_body = boot["research"].body   # changed/new pointers only (see below)
 #                      body is empty, never raises
 ```
 
+Use `bootstrap(role="...")` only when the session already has a known assigned
+functional role. `bootstrap()` remains the generic or genuinely role-unknown
+startup path and deliberately has no hidden default role, so it remains
+pointer-free.
+
 `MonitorClient.cold_start(role=...)` and `MonitorClient.research(role=..., task_family=..., track=..., owned_paths=...)`
 are also callable directly (`bootstrap()` picks between them based on which
 dimensions are given — see *Cold start / bootstrap* above).
