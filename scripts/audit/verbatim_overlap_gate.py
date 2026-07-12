@@ -745,13 +745,19 @@ def compute_metrics(
     if not source_positions:
         max_raw = _chained_run_len(module_tokens, set(), index.k)
 
-    # DF-filtered positions for alternative max (still report both; DF-excluded not here)
-    df_filtered_positions: set[int] = set()
-    for sh, poss in sh_to_pos.items():
-        if sh not in df_excluded:
-            for p in poss:
-                df_filtered_positions.add(p)
-    max_df_filt = _chained_run_len(module_tokens, df_filtered_positions, index.k)
+    # DF-filtered max run: per source chunk (bug7, same as max_raw) and MATCHED only, with
+    # high-DF shingle positions removed so the run breaks on high-DF connectors.  It must NOT
+    # count non-matched or cross-chunk positions — doing so fabricated a run (incl. a full run
+    # on zero-match prose).  Empty source_positions (no matches) => 0.
+    df_excluded_positions: set[int] = set()
+    for sh in df_excluded:
+        for p in sh_to_pos.get(sh, ()):
+            df_excluded_positions.add(p)
+    max_df_filt = 0
+    for (_c, _cid), posset in source_positions.items():
+        run = _chained_run_len(module_tokens, posset - df_excluded_positions, index.k)
+        if run > max_df_filt:
+            max_df_filt = run
 
     # overlap tokens for ratio: ONLY shingles that actually matched postings (bug1), minus DF, minus verified (bug2)
     covered: set[int] = set()

@@ -492,6 +492,12 @@ def test_L686_max_contiguous_run_per_chunk_not_summed(tmp_path: Path):
     rpt = compute_metrics(toks, idx, conn, df_n=99)
     # buggy: hit pos 0(fromA),1(B),2(C),3(D) chained → run~6 ; fixed per-source: each 1 pos → run=3
     assert rpt.max_contiguous_run <= 4, f"separate chunks summed to fake long run={rpt.max_contiguous_run}"
+    # residual (codex re-review #2673): the DF-filtered alternative had the SAME bug — it
+    # summed non-matched / cross-chunk positions and fabricated a run (6). It must also be
+    # per-chunk + matched-only.
+    assert rpt.max_contiguous_run_df_filtered <= 4, (
+        f"df_filtered summed across chunks/non-matched={rpt.max_contiguous_run_df_filtered}"
+    )
     # genuine long from ONE chunk, including high-DF "і" connectors; must still flag long
     long_df = "раз два і три чотири і п ять шість і сім вісім і дев ять десять"
     conn2, _ = _tiny_sources_db()
