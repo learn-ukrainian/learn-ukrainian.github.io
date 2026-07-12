@@ -179,13 +179,19 @@ vocabulary_hints:
   pos: н.
   word: pas de deux
 word_target: 5000
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Лифар Серж
   source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Ознайомитися з фактами біографії та балетною кар'єрою Сержа Лифаря.
-  title: Лифар Серж
-  url: https://esu.com.ua/article-55275
+  source_url: https://esu.com.ua/article-55275
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-55275
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити київське походження, паризьку кар'єру та повоєнну рецепцію Сержа
+    Лифаря, окремо позначаючи перевірені факти й дискусійні оцінки.

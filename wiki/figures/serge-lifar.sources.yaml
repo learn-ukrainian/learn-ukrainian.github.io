@@ -1,54 +1,21 @@
-# Source registry for wiki/figures/serge-lifar.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Деколонізаційна перспектива'
+  file: https://esu.com.ua/article-55275
+  type: external
+  title: Лифар Серж
+  url: https://esu.com.ua/article-55275
 - id: S2
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Короткий зміст'
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Lifar_Serzh&Z21ID=
+  type: external
+  title: Лифар Серж — Енциклопедія історії України
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Lifar_Serzh&Z21ID=
 - id: S3
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Відродження-Паризької-опери-та-інтеграція-сучасного-танцю
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Відродження
-    Паризької опери та інтеграція сучасного танцю'
-- id: S4
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Хореографічна-спадщина-між-класикою-і-модерном
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Хореографічна
-    спадщина: між класикою і модерном'
-- id: S5
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Спадщина-та-вплив-на-сучасне-театральне-мистецтво
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Спадщина та
-    вплив на сучасне театральне мистецтво'
-- id: S6
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Ранні-роки-Київський-контекст-та-витоки-українського-балету
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Ранні роки:
-    Київський контекст та витоки українського балету'
-- id: S7
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Українська-ідентичність-в-екзилі
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Українська
-    ідентичність в екзилі'
-- id: S8
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Основний-зміст-Еміграція-та-становлення-на-тлі-європейського-модернізму
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Основний зміст > Еміграція
-    та становлення на тлі європейського модернізму'
-- id: S9
-  file: ukrainian_wiki/serge-lifar_Біографія-Серж-Лифар-Геній-і-тінь-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Серж Лифар: Геній і тінь'
-  section_path: 'Біографія: Серж Лифар: Геній і тінь > Мовні зразки'
+  file: https://commons.wikimedia.org/wiki/File:Alexandra_Danilova_and_Serge_Lifar_in_Apollon_Musagete.jpg
+  type: external
+  title: Alexandra Danilova and Serge Lifar in Apollon Musagete — public domain
+  url: https://commons.wikimedia.org/wiki/File:Alexandra_Danilova_and_Serge_Lifar_in_Apollon_Musagete.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Alexandra_Danilova_and_Serge_Lifar_in_Apollon_Musagete.jpg
+    license: Public domain
+    attribution: Автор не зазначений; джерело наведене на сторінці Wikimedia Commons

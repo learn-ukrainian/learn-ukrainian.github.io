@@ -129,7 +129,7 @@ references:
   type: primary
   url: https://uk.wikisource.org/wiki/Призначення_України
 - title: Червоне століття. Спогади
-  author: Мирослава Попович
+  author: Мирослав Попович
   note: Критичний погляд на український націоналізм XX століття, контекст ідей
     Липи.
   type: primary
@@ -177,14 +177,19 @@ vocabulary_hints:
   pos: ж.
   word: епістемологічна скромність
 word_target: 5200
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Липа Юрій Іванович
   source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Ознайомитися з фактами біографії та основними напрямами діяльності Юрія
-    Липи.
-  title: Липа Юрій Іванович
-  url: https://esu.com.ua/article-54710
+  source_url: https://esu.com.ua/article-54710
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-54710
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти перевірену хронологію життя Юрія Липи та відокремити біографічні
+    факти від пізніших оцінок його геополітичних ідей.

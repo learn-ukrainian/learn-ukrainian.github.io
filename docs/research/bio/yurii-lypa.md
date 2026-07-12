@@ -53,23 +53,13 @@ Lypa is a **Ukrainian liberation-movement figure murdered by the NKVD in 1944** 
 - `1941` — ***«Розподіл Росії»*** — the trilogy's closing volume, arguing the decomposition of the Russian empire-state. [T3: uk.wikipedia]
 - `1940` — co-founder (with Лев Биковський, Іван Шовгенів) of the **Український Чорноморський інститут**, Warsaw. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-Lypa's geopolitical prose is **not indexed in the project literary corpus**: a `verify_quote(author="Липа", text="Призначення України")` returned **`matched:false, best_confidence 0.0`** — corpus coverage, not absence. Both quotes below are drawn from the scholarly geopolitics literature that cites his works **with page references**.
-
-**Quote 1 — Ukraine is no backwater (page-cited from *Призначення України*):**
-
-> «Українські землі не є ніякою закутиною. Під оглядом торговельним і геополітичним — це одна з найважливіших земель світу. Це значення України тільки зростатиме в сучасному.»
-
-The core geopolitical claim of his life's project: Ukraine as a world-significant Black Sea space, not a periphery of any empire. Pedagogically valuable for contrasting an agency-centred Ukrainian geopolitics with the imperial "окраїна" framing. [T4: Салтовський О., "Геополітична складова державницької думки," citing **Липа Ю. *Призначення України.* Нью-Йорк, 1953. С. 118** — literary corpus `…derzhavnist`, accessed 2026-06-04 via `mcp__sources__get_full_text`]
-
-**Quote 2 — the East as "psychic aversion" (attested phrase, via Yakovenko):**
-
-> Lypa held that genuine cultural fusion with the East was impossible because of a mutual **«психічна відраза»** (psychic aversion).
-
-A telling, and contestable, formulation of his civilisational "Ukraine-as-bastion-of-the-West" thesis — useful precisely because §6 must weigh it critically. Historian Наталя Яковенко quotes the phrase directly and cites it to **Липа Ю. *Призначення України.* Львів, 1938. С. 140–145.** [T4: Яковенко, via literary corpus, accessed 2026-06-04]
-
-*(The verbatim text of the trilogy was otherwise not captured from a Tier-1/2 transcription this pass; the two quotes above are the page-cited lines available — reported with their scholarly intermediaries rather than invented.)*
+No quotation is approved for module use in this readiness pass. Earlier
+transcriptions were mediated through secondary scholarship rather than checked
+against a stable scan of the cited edition. The module may discuss the titles
+and arguments of Lypa's works in paraphrase, but must not reproduce a quotation
+until its wording, edition, and page are directly verified.
 
 ## 5. Language register
 
@@ -120,12 +110,10 @@ A telling, and contestable, formulation of his civilisational "Ukraine-as-bastio
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons holds 1930s–40s photographic portraits of Lypa (he died 1944); verify the **file page** for the specific license/PD-by-age status in Ukraine. [Commons: "Yurii Lypa" / "Юрій Липа"]
-- **Backup candidates:**
-  - The **title page of *Призначення України* (Львів, 1938)** — clearly PD; strong §3 illustration.
-  - A cover of *«Суворість»* (1931) — illustrates the poetry register (§5).
-- **Context image:** a UPA field-medicine photograph or a map from the Чорноморська доктрина — illustrates §2 (resistance physician) and §3 (geopolitics).
-- **If no rights-clear portrait clears review:** fall back to the 1938 *Призначення України* title page.
+- **Approved portrait:** Wikimedia Commons, `File:Юрій Липа.jpg`.
+- **Rights disposition:** Public domain, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Юрій_Липа.jpg
+- **Attribution:** author not identified; preserve the source statement from the Commons page.
 
 ## 10. Sources used
 

@@ -54,23 +54,12 @@ Antonov was **not** a victim of Soviet repression — he was a **decorated insid
 
 **Books (memoir/essay, in Russian):** *На крыльях из дерева и полотна* (1962); *Для всех и для себя* (1965); **«Десять раз сначала»** (1969); *Планеры и самолёты* (Київ, 1990). [T3: uk.wikipedia — Праці]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-Antonov's memoirs are in Russian; the Ukrainian forms below are attributed renderings — transmission flagged.
-
-**Quote 1 — on his student years (his own recollection):**
-
-> «[у Ленінградському політехнічному інституті] пік планери як млинці.»
-
-Pedagogically charming: the future builder of the world's largest aircraft remembering himself as a student "baking gliders like pancakes." [T3: uk.wikipedia — Життєпис, his recollection]
-
-**Quote 2 — his recorded reminiscence of the young Korolyov (cross-verified across two entries):**
-
-> «Ми, молоді конструктори (ніде правди діти), як до дивацтва ставилися до роботи Сергія Павловича з ракетними двигунами. Нам, планеристам, які мріяли про дуже маленькі, дуже економічні двигуни для наших планерів, здавалось жахливим ставити на планер ненажерливий реактивний двигун… Хіба могли ми тоді передбачити, у що виллються ці роботи через десятиліття?!»
-
-A first-hand voice on the 1930s glider-and-rocket milieu — and a direct human link to Korolyov. [T3: uk.wikipedia — both "Антонов Олег Костянтинович" and "Корольов Сергій Павлович" entries attribute this to Antonov; Ukrainian rendering of his Russian memoir]
-
-**Cross-reference (not his own words):** Borys Paton said of him that, through gliders, "**він став великим конструктором великої авіації**" ("he became a great designer of great aviation"). [T3: uk.wikipedia — quoting Paton]
+No quotation is approved for module use in this readiness pass. The earlier
+Ukrainian renderings were not checked against a specified edition and page of
+Antonov's Russian-language memoirs. The institutional biography may support a
+factual paraphrase, but not verbatim quotation without direct edition evidence.
 
 ## 5. Language register
 
@@ -117,12 +106,10 @@ A first-hand voice on the 1930s glider-and-rocket milieu — and a direct human 
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Oleg Antonov (aircraft designer)"** holds Soviet-era portraits; he died 1984, so most are **in copyright** — verify each **file page** license; do not assume PD. [Commons category: `Oleg Antonov (aircraft designer)`]
-- **Backup candidates:**
-  - NBU commemorative coin «Олег Антонов» (issued for the 100th anniversary, 2006) — Ukrainian-state image, check terms.
-  - ДП «Антонов» (Antonov Company) and the Державний музей авіації України ім. О. К. Антонова (Kyiv) — Tier 2 institutional photographs, request rights.
-- **Context image:** the **Ан-2** (PD-era reproductions exist) or the **Ан-225 «Мрія»** in flight (a powerful §2b image; check the photographer's license) — and, for the decolonial through-line, the destroyed Мрія at Hostomel (2022, news-image rights apply).
-- **If no rights-clear portrait clears review:** fall back to the 2006 NBU coin or a PD An-2 photograph.
+- **Approved portrait:** Wikimedia Commons, `File:Oleg Antonov.jpg`.
+- **Rights disposition:** CC BY-SA 3.0, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Oleg_Antonov.jpg
+- **Attribution:** MaryG90; retain the license and attribution with reuse.
 
 ## 10. Sources used
 

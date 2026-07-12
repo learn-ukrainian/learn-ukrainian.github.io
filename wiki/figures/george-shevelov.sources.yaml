@@ -1,26 +1,21 @@
-# Source registry for wiki/figures/george-shevelov.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/george-shevelov_Біографія-Юрій-Шевельов-Архітектор-української-лінгвістики-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики'
-  section_path: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики > Короткий
-    зміст'
-- id: S2
-  file: ukrainian_wiki/george-shevelov_Біографія-Юрій-Шевельов-Архітектор-української-лінгвістики-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики'
-  section_path: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики > Деколонізаційна
-    перспектива'
-- id: S3
-  file: ukrainian_wiki/george-shevelov_Біографія-Юрій-Шевельов-Архітектор-української-лінгвістики-Основний-зміст-Літературознавство-критика-та-есеїстика
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики'
-  section_path: 'Біографія: Юрій Шевельов: Архітектор української лінгвістики > Основний
-    зміст > Літературознавство, критика та есеїстика'
-- id: S4
-  file: wikipedia/Шевельов Юрій Володимирович
-  type: wikipedia
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
+  type: external
   title: Шевельов Юрій Володимирович
-  url: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2%20%D0%AE%D1%80%D1%96%D0%B9%20%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+  type: external
+  title: Shevelov, George Yurii
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+- id: S3
+  file: https://commons.wikimedia.org/wiki/File:Юрій_Шевельов_Мирослава_Знаєнко_Гундорова,_Нью_Йорк,_1998_(cropped).jpg
+  type: external
+  title: Юрій Шевельов, Нью-Йорк, 1998 — CC BY-SA 4.0
+  url: https://commons.wikimedia.org/wiki/File:Юрій_Шевельов_Мирослава_Знаєнко_Гундорова,_Нью_Йорк,_1998_(cropped).jpg
+  rights:
+    basis: cc-license
+    evidence_url: https://commons.wikimedia.org/wiki/File:Юрій_Шевельов_Мирослава_Знаєнко_Гундорова,_Нью_Йорк,_1998_(cropped).jpg
+    license: CC BY-SA 4.0
+    attribution: Tamara Hundorova

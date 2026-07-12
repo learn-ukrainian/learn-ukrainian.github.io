@@ -1,50 +1,21 @@
-# Source registry for wiki/figures/serhiy-korolyov.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/serhiy-korolyov_Біографія-Сергій-Корольов-Батько-космічної-ери-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Сергій Корольов: Батько космічної ери'
-  section_path: 'Біографія: Сергій Корольов: Батько космічної ери > Короткий зміст'
-- id: S2
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Деколонізаційна перспектива'
-- id: S3
-  file: https://www.youtube.com/watch?v=uiIIJ73VRWw
+  file: https://esu.com.ua/article-5104
   type: external
-  title: 'Сергій Корольов: як козаки моск@лів в космос запускали'
-  url: https://www.youtube.com/watch?v=uiIIJ73VRWw
-- id: S4
-  file: ukrainian_wiki/serhiy-korolyov_Біографія-Сергій-Корольов-Батько-космічної-ери-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Сергій Корольов: Батько космічної ери'
-  section_path: 'Біографія: Сергій Корольов: Батько космічної ери > Деколонізаційна
-    перспектива'
-- id: S5
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Основний-зміст-Тернистий-шлях-Сергія-Корольова-від-київського-студента-до-генерального-конструктора
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Основний зміст > Тернистий шлях Сергія Корольова: від київського студента до
-    генерального конструктора'
-- id: S6
-  file: ukrainian_wiki/serhiy-korolyov_Біографія-Сергій-Корольов-Батько-космічної-ери-Основний-зміст-Тріумф-космонавтики-та-український-контекст
-  type: ukrainian_wiki
-  title: 'Біографія: Сергій Корольов: Батько космічної ери'
-  section_path: 'Біографія: Сергій Корольов: Батько космічної ери > Основний зміст
-    > Тріумф космонавтики та український контекст'
-- id: S7
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1024
-  type: textbook
-  title: ОСОБЛИВОСТІ РОЗВИТКУ КУЛЬТУРИ
-  page: 101
-  grade: 11
-- id: S8
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0347
-  type: textbook
-  title: Орфоепічна норма
-  page: 74
-  grade: 10
+  title: Корольов Сергій Павлович
+  url: https://esu.com.ua/article-5104
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKorolovSerhii.htm
+  type: external
+  title: Korolov, Serhii
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKorolovSerhii.htm
+- id: S3
+  file: https://commons.wikimedia.org/wiki/File:Sergei_Korolev_portrait.jpg
+  type: external
+  title: Sergei Korolev portrait — NASA public domain
+  url: https://commons.wikimedia.org/wiki/File:Sergei_Korolev_portrait.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Sergei_Korolev_portrait.jpg
+    license: Public domain
+    attribution: NASA

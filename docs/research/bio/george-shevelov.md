@@ -43,17 +43,12 @@ His 1989 English-language study of Ukrainian in the first half of the 20th centu
 
 The Sherekh essays should not be treated as secondary decoration. Under the Sherekh name he intervened in debates over MUR, diaspora literature, provincialism, and cultural dependence. *Москва, Маросєйка* belongs to that essayistic mode: it is polemical, historically compressed, and deliberately unsentimental about both Russian imperial pressure and Ukrainian internal weaknesses. *Не для дітей* and later literary criticism show the same standard in another register: Ukrainian literature had to be judged as a full modern literature, not protected by patriotic indulgence. [T4: Масенко — *Юрій Шевельов — видатний український мовознавець*]; [T3: uk.wikipedia — Шевельов Юрій Володимирович].
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-**Quote 1:**
-> «Три страшні вороги українського відродження — Москва, український провінціалізм і комплекс Кочубеївщини... Усі вони живуть і сьогодні.»
-**Source:** *Москва, Маросєйка* (1954).
-**Context:** Essential C1 pedagogical quote explaining the internal and external threats to Ukrainian statehood, highly relevant to both the 17th and 21st centuries.
-
-**Quote 2:**
-> «Історія культурних зв’язків між Україною та Росією — це історія великої і ще не закінченої війни.»
-**Source:** *Москва, Маросєйка* (1954).
-**Context:** Highlights the ongoing nature of the cultural and linguistic frontline between Ukraine and the empire.
+No quotation is approved for module use in this readiness pass. The earlier
+lines were attributed only to an essay title, without an inspected edition and
+page. The module may name and summarize *Москва, Маросєйка*, but must not quote
+it until the exact wording is checked in a durable primary text.
 
 ## 5. Language register
 
@@ -95,9 +90,11 @@ The live controversy around his name also teaches a broader decolonization point
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Photos available via the Shevelov archive (Columbia University / UVAN).
-- **Backup candidates:** Photo of the restored 2022 memorial plaque in Kharkiv.
-- **Era-appropriate context:** Cover of *A Historical Phonology of the Ukrainian Language*.
+- **Approved portrait:** Wikimedia Commons,
+  `File:Юрій Шевельов Мирослава Знаєнко Гундорова, Нью Йорк, 1998 (cropped).jpg`.
+- **Rights disposition:** CC BY-SA 4.0, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Юрій_Шевельов_Мирослава_Знаєнко_Гундорова,_Нью_Йорк,_1998_(cropped).jpg
+- **Attribution:** Tamara Hundorova; retain license and attribution with reuse.
 
 ## 10. Sources used
 

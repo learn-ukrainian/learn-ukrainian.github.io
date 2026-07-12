@@ -56,29 +56,13 @@ A designer, not an author; "works" here are aircraft, rockets and spacecraft pro
 - `12 April 1961` — first crewed spaceflight, **«Восток»**, **Юрій Гагарін**. [T1: IEU — "the first astronauts in earth orbit"; T3]
 - `1964–1965` — **«Восход»** (first multi-seat craft) and the first spacewalk (Олексій Леонов, 18 March 1965); programmes **«Луна», «Венера», «Марс», «Зонд»** and the design of **«Союз»**. [T3]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-Korolyov's documentary "voice" is his letters and recorded statements; he left no literary corpus, so these are verified against the encyclopedic/archival record, not the literary corpus.
-
-**Quote 1 — student letter to his mother (mid-1920s, КПІ years), on working to pay his way:**
-
-> «Прокидаюсь рано — годині о п'ятій. Біжу до редакції, забираю газети, а потім мчу на Солом'янку, розношу. Так от і заробляю вісім карбованців.»
-
-Pedagogically useful: the future founder of practical cosmonautics as a Kyiv student delivering newspapers at dawn for eight karbovantsi — grounds the myth in a concrete Ukrainian-student life. [T3: uk.wikipedia, Освіта — quoted from family correspondence]
-
-**Quote 2 — second appeal to Stalin, 13 July 1940, from prison:**
-
-> «Метою і мрією мого життя було створення вперше в СРСР такої потужної зброї, як реактивні літаки. Я можу довести мою невинність і хочу працювати далі над ракетними літаками для оборони СРСР.»
-
-This is the voice of an imprisoned engineer bargaining for his life with the very state that broke his jaw — a primary document of how the GULAG extracted "useful" labour from those it had condemned. [T3: uk.wikipedia, Період ув'язнення]
-
-**Quote 3 (context) — after the launch of the second satellite:**
-
-> «Надійний міст із Землі в Космос уже перекинуто запуском штучних супутників, і дорога до зірок відкрита.»
-
-[T3: uk.wikipedia — attributed to Korolyov]
-
-**Note on the «українець» entry and the songs:** his daughter Наталія Корольова records that the family spoke the word *Україна* "trepidly, with great love," that his and his grandmother's favourite songs were **«Дивлюсь я на небо»** and **«Реве та стогне Дніпр широкий»**, and that the first Ukrainian cosmonaut Павло Попович sang «Дивлюсь я на небо» to him from orbit. This is family memoir (treat as such), but it corroborates the documentary «українець» self-entry on his КПІ form. [T3: uk.wikipedia, Цікавинки — daughter's recollection]
+No quotation is approved for module use in this readiness pass. The earlier
+letter and appeal transcriptions were reached through secondary reproduction,
+not a directly inspected archival image or critical documentary edition. Their
+historical circumstances may be paraphrased from authoritative sources, but the
+wording must not be presented as verified speech.
 
 ## 5. Language register
 
@@ -124,12 +108,10 @@ VESUM verification (run 2026-06-03): `ракета`, `супутник`, `кос
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Sergei Korolev"** holds Soviet-era portraits; many are post-1944 and may carry Soviet copyright terms — verify the individual **file page** license before use (do not assume PD by age, since he died 1966). [Commons category: `Sergei Korolev`]
-- **Backup candidates:**
-  - National Bank of Ukraine commemorative coin (12 Jan 2007, 100th anniversary) — Ukrainian-state image, check NBU image terms.
-  - Меморіальний будинок-музей / Музей космонавтики ім. С. П. Корольова (Zhytomyr) photographs — Tier 2 institutional, request rights.
-- **Context image:** the 1938 NKVD case materials or a Kolyma-era document facsimile (strong §2 illustration if a rights-clear scan is found); a Sputnik/Р-7 launch image (many NASA-hosted reproductions are PD-US).
-- **If no rights-clear portrait clears review:** fall back to the Zhytomyr museum exterior or the 2007 NBU coin.
+- **Approved portrait:** Wikimedia Commons, `File:Sergei Korolev portrait.jpg`.
+- **Rights disposition:** Public domain as a NASA image, as stated on the file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Sergei_Korolev_portrait.jpg
+- **Attribution:** NASA.
 
 ## 10. Sources used
 

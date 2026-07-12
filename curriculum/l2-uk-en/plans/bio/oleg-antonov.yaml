@@ -130,12 +130,6 @@ references:
   type: primary
   url: https://www.antonov.com
   work: Історія підприємства
-- title: 'Крила України: Олег Антонов'
-  author: Володимир Корольов
-  note: Біографічна праця, що містить аналіз технічних та політичних аспектів
-    діяльності КБ.
-  type: secondary
-  work: 'Крила України: Олег Антонов'
 sequence: 141
 slug: oleg-antonov
 subtitle: 'Oleh Antonov: The Wings of Ukraine and an Aviation Genius'
@@ -171,14 +165,19 @@ vocabulary_hints:
   pos: ж.
   word: суб''єктність
 word_target: 5200
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Антонов Олег Костянтинович
   source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Ознайомитися з життям та професійними досягненнями авіаконструктора
-    Олега Антонова.
-  title: Антонов Олег Костянтинович
-  url: https://esu.com.ua/article-42988
+  source_url: https://esu.com.ua/article-42988
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-42988
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Побудувати хронологію конструкторської праці Олега Антонова та розрізнити
+    його особисті проєкти, роботу київського бюро і пізніші літаки марки Ан.

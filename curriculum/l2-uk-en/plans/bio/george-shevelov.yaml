@@ -79,16 +79,22 @@ persona:
   role: Модератор семінару, який розглядає Шевельова не як ікону, а як складну фігуру в центрі наукових та ідеологічних битв XX століття.
   voice: Philologist-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Шевельов Юрій Володимирович
   source_name: Енциклопедія історії України
-  source_type: Енциклопедія
-  task: Ознайомитися з академічним викладом життя та наукової спадщини Юрія Шевельова.
-  title: Шевельов Юрій Володимирович
-  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
+  source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити академічний шлях Юрія Шевельова та пояснити, які його праці
+    безпосередньо змінили вивчення історії української мови.
 references:
 - title: Шевельов Юрій Володимирович
   note: Загальна біографія, наукова кар''єра, перелік праць

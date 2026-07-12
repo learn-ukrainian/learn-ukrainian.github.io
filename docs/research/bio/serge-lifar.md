@@ -49,27 +49,13 @@ A dancer, then **ballet-master and choreographer of the Paris Opéra Ballet**, c
 - `«Ромео і Джульєтта»` and others among **a large body of Opéra productions** (the often-cited "понад 200 балетних вистав" / "11 зірок" figures are popular-press totals — attribute, don't assert). [T3: uk.wikipedia — flagged]
 - writings: **«Спогади Ікара» (Ma Vie / Ma Vie: from Kiev to Kiev)** — his memoirs, and many dance-theory books. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-Lifar wrote memoirs (**«Спогади Ікара»**, fr. *Ma Vie*); he is **not in the project's literary corpus** (`ukrlib`), so `verify_quote` does not apply. Quotes are sourced from his memoirs / recorded speech.
-
-**Quote 1 — his reply to de Gaulle's offer of French citizenship (recorded):**
-
-> «Щиро вдячний, пане президенте, за вашу пропозицію. Але я ніколи не був і не буду французом, бо я українець і батьківщина моя Україна.»
-
-The decolonial core: at the height of his French career he refused the passport to keep his Ukrainian identity. [T3: uk.wikipedia; recorded speech / memoir tradition]
-
-**Quote 2 — on Kyiv and the Dnipro (recorded):**
-
-> «Навіть прекрасний блискучий Париж не зміг примусити мене, киянина, забути мій широкий, величавий Дніпро.»
-
-The lifelong homesickness that frames his whole exile. [T3: uk.wikipedia; recorded speech / memoir]
-
-**Quote 3 — on buying Diaghilev's archive (his own words):**
-
-> «Гроші на купівлю дягілевського архіву я заробив ногами.»
-
-A vivid self-characterisation — the dancer who funded a great collection "with his legs"; useful, human register. [T3: uk.wikipedia; memoir]
+No quotation is approved for module use in this readiness pass. The sayings
+previously listed here circulate through memoir and popular retellings, but the
+exact French or Ukrainian edition, page, and wording were not directly checked.
+Identity and exile should therefore be presented through verified biographical
+facts, not through an attributed quotation.
 
 ## 5. Language register
 
@@ -114,12 +100,11 @@ A vivid self-characterisation — the dancer who funded a great collection "with
 
 ## 9. Image candidates
 
-- **Best image:** period photographs of Lifar dancing (1920s–1930s) — many on Wikimedia Commons; **check each file page** (he died 1986, so author-life+70 keeps later photographs in copyright; prefer clearly-PD early Ballets-Russes-era images). [Commons category: `Serge Lifar`]
-- **Backup candidates:**
-  - НБУ commemorative coin **«Серж Лифар»** (2004, 100th anniversary, "Видатні особистості України") — issuer-rights check.
-  - The **Lausanne bronze monument** "Ікар" inscribed **"Serge Lifar de Kiev"** (2003, funded by Kyiv) — strong identity image (verify photographer rights).
-- **Context image:** the **Museum of the Ukrainian Diaspora** holdings, or his donated library in the Lesia Ukrainka Public Library, Kyiv.
-- **If no rights-clear portrait clears review:** use a PD early Ballets-Russes-era performance photograph.
+- **Approved performance image:** Wikimedia Commons,
+  `File:Alexandra Danilova and Serge Lifar in Apollon Musagete.jpg`.
+- **Rights disposition:** Public domain, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Alexandra_Danilova_and_Serge_Lifar_in_Apollon_Musagete.jpg
+- **Attribution:** author not identified on Commons; preserve the source statement.
 
 ## 10. Sources used
 
