@@ -298,8 +298,8 @@
     }
   ],
   "prompt_sha256": "64ef1f69fa272995a545671ed03d092a9977e928a977cc3b4e9b1c88c8900aaa",
-  "reproducibility_key": "1fd508cab122b105c044a4c065b72900618f4f16ca6fcddfa5587052c3b43e8a",
-  "review_protocol_version": "1.0.0",
+  "reproducibility_key": "96f271179cf0ccb3b13a69c82689c187c0250ccd3dcb2f65187c66e85aa6f0f6",
+  "review_protocol_version": "1.0.1",
   "reviewer": {
     "agent": "codex-subagent",
     "effort": "runtime-unreported",

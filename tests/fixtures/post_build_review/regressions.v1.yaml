@@ -1,4 +1,4 @@
-catalog_version: 1.0.0
+catalog_version: 1.0.1
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -53,3 +53,8 @@ regressions:
     fixed_in_version: 1.0.0
     input: Bilash range 2200-2800 and ceiling 4000
     expected: Values remain exemplar/plan evidence and are never BIO defaults.
+  - bug_id: deterministic-stage-null-result-crash
+    responsible_layer: orchestration
+    fixed_in_version: 1.0.1
+    input: Deterministic track audit status error with result null.
+    expected: Prompt assembly preserves null evidence and aggregate status INCOMPLETE without raising AttributeError.

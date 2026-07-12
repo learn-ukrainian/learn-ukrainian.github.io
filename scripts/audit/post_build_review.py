@@ -559,11 +559,12 @@ def assemble_semantic_prompt(
     family_rel = str(track_policy["semantic_prompt"])
     paths = [common_rel, family_rel]
     pieces = [(repo_root / path).read_text(encoding="utf-8").rstrip() for path in paths]
+    track_result = deterministic["track_audit"].get("result") or {}
     context = {
         "target": target,
         "source_hashes": source_hashes,
-        "deterministic_summary": deterministic["track_audit"].get("result", {}).get("summary"),
-        "deterministic_findings": deterministic["track_audit"].get("result", {}).get("findings"),
+        "deterministic_summary": track_result.get("summary"),
+        "deterministic_findings": track_result.get("findings"),
         "mechanical_policy_findings": deterministic.get("policy_findings"),
         "skip_assessments": deterministic.get("skip_assessments"),
         "size_policy": deterministic["size_policy"].get("result"),

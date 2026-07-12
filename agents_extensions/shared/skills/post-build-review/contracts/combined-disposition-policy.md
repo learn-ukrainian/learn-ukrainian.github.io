@@ -1,6 +1,6 @@
 # Combined disposition policy
 
-Review protocol version: `1.0.0`
+Review protocol version: `1.0.1`
 
 Apply disposition in this order:
 

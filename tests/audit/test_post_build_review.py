@@ -120,6 +120,36 @@ def test_effective_prompt_uses_common_plus_exactly_one_family(bilash_packet: dic
     assert pbr.sha256_text(changed) != bilash_packet["prompt_sha256"]
 
 
+def test_failed_deterministic_stage_renders_incomplete_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A null result from a failed audit must remain evidence, not crash prompt assembly."""
+    deterministic = {
+        "track_audit": {
+            "status": "error",
+            "result": None,
+            "error": "synthetic deterministic failure",
+            "provenance": {},
+        },
+        "size_policy": {
+            "status": "complete",
+            "result": None,
+            "error": None,
+            "provenance": {},
+        },
+    }
+    monkeypatch.setattr(
+        pbr,
+        "run_existing_deterministic_audits",
+        lambda *args, **kwargs: copy.deepcopy(deterministic),
+    )
+
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+
+    assert packet["deterministic"]["aggregate"]["status"] == "incomplete"
+    assert packet["deterministic"]["track_audit"]["result"] is None
+    assert '"deterministic_summary": null' in packet["semantic_prompt"]
+    assert '"deterministic_findings": null' in packet["semantic_prompt"]
+
+
 def test_prompt_versions_match_track_policy() -> None:
     policy = pbr.load_track_policy()
     marker = f"Semantic prompt version: `{policy['semantic_prompt_version']}`"
@@ -334,8 +364,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "1.0.0"
-    assert len(rows) == 10
+    assert catalog["catalog_version"] == "1.0.1"
+    assert len(rows) == 11
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -345,4 +375,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "schema",
         "orchestration",
     }
-    assert all(row["fixed_in_version"] == "1.0.0" for row in rows)
+    assert {row["fixed_in_version"] for row in rows} == {"1.0.0", "1.0.1"}
+    null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
+    assert null_result["responsible_layer"] == "orchestration"
+    assert null_result["fixed_in_version"] == "1.0.1"
