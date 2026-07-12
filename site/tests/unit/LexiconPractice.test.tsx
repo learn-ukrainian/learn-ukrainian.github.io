@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LexiconPractice from '@site/src/components/LexiconPractice';
+import LexiconPractice, { nextMatchingPromptIndex } from '@site/src/components/LexiconPractice';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
   SRS_STORAGE_KEY,
@@ -1619,6 +1619,36 @@ describe('LexiconPractice', () => {
       cloze: [],
     };
   }
+
+  test('matching prompt advances in board order and clears after the final match', async () => {
+    const user = userEvent.setup();
+    const deck = matchingDeck();
+    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+    const leftColumn = container.querySelector('[data-activity="match-left-column"]');
+    const rightColumn = container.querySelector('[data-activity="match-right-column"]');
+    expect(leftColumn).toBeInTheDocument();
+    expect(rightColumn).toBeInTheDocument();
+
+    const pairs = within(leftColumn as HTMLElement).getAllByRole('button').map((button, index) => {
+      const left = button.textContent?.trim() ?? '';
+      const right = within(rightColumn as HTMLElement)
+        .getAllByRole('button')
+        .find((candidate) => candidate.getAttribute('data-original-index') === String(index));
+      return { left, right };
+    });
+
+    const initialPrompt = screen.getByText(/Доберіть пару для/);
+    expect(initialPrompt).toHaveTextContent(`«${pairs[0].left}»`);
+
+    await user.click(within(leftColumn as HTMLElement).getByRole('button', { name: pairs[0].left }));
+    await user.click(pairs[0].right!);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Доберіть пару для/)).toHaveTextContent(`«${pairs[1].left}»`);
+    });
+
+    expect(nextMatchingPromptIndex(2, new Set([0, 1, 2]), 3)).toBeNull();
+  });
 
   test('matching mode rates every matched pair with proper ratings', async () => {
     const user = userEvent.setup();
