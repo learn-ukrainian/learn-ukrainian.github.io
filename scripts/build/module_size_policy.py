@@ -18,6 +18,7 @@ LEGACY_CORE_BAND = "legacy_core_floor_only"
 PLAN_FLOOR_ONLY = "plan_floor_only"
 PLAN_REVIEW_NEEDED = "plan_review_needed"
 MISSING_DOSSIER = "missing_dossier"
+INVALID_SIZE_POLICY = "invalid_size_policy"
 
 
 def _record_to_dict(record: audit.SizePolicyRecord) -> dict[str, Any]:
@@ -42,17 +43,55 @@ def build_size_policy_for_plan(
     if actual_words is None and module_path is not None and module_path.exists():
         actual_words = audit.word_count(module_path)
 
+    policy_uses_dossier_metrics = "size_policy" in plan or (
+        track in audit.SEMINAR_TRACKS or track in audit.CORE_RESEARCH_TRACKS
+    )
+    dossier_path = (
+        audit._dossier_path(track, slug, dict(plan))
+        if track and slug and policy_uses_dossier_metrics
+        else None
+    )
+    metrics = audit.dossier_metrics(dossier_path) if dossier_path else None
+    override, override_errors = audit.explicit_size_policy_override(plan)
+    displayed_plan_path = audit.display_path(plan_path) if plan_path else ""
+    displayed_dossier_path = audit.display_path(dossier_path) if dossier_path else None
+    displayed_module_path = (
+        audit.display_path(module_path) if module_path and module_path.exists() else None
+    )
+    if override is not None:
+        return audit.build_explicit_size_policy_record(
+            track=track,
+            slug=slug,
+            plan_path=displayed_plan_path,
+            dossier_path=displayed_dossier_path,
+            module_path=displayed_module_path,
+            plan_floor=plan_floor,
+            plan_outline_words=plan_outline_words,
+            actual_words=actual_words,
+            metrics=metrics,
+            override=override,
+        )
+
     if track not in audit.SEMINAR_TRACKS and track not in audit.CORE_RESEARCH_TRACKS:
         notes = [
             "A1-B2 released core tracks use the plan floor only; dossier-led ceilings apply to seminar tracks and C1-C2 evidence packets."
         ]
+        status = PLAN_FLOOR_ONLY
+        if override_errors:
+            status = INVALID_SIZE_POLICY
+            notes.extend(
+                [
+                    "Explicit size_policy is invalid and cannot replace the plan-floor policy.",
+                    *override_errors,
+                ]
+            )
         return audit.SizePolicyRecord(
             track=track,
             slug=slug,
             basis="plan_floor_fallback",
-            plan_path=audit.display_path(plan_path) if plan_path else "",
-            dossier_path=None,
-            module_path=audit.display_path(module_path) if module_path and module_path.exists() else None,
+            plan_path=displayed_plan_path,
+            dossier_path=displayed_dossier_path,
+            module_path=displayed_module_path,
             plan_floor=plan_floor,
             plan_outline_words=plan_outline_words,
             actual_words=actual_words,
@@ -61,13 +100,11 @@ def build_size_policy_for_plan(
             band_max=None,
             effective_min=plan_floor,
             advisory_ceiling=None,
-            status=PLAN_FLOOR_ONLY,
+            status=status,
             notes=notes,
-            metrics=None,
+            metrics=metrics,
         )
 
-    dossier_path = audit._dossier_path(track, slug, dict(plan)) if track and slug else None
-    metrics = audit.dossier_metrics(dossier_path) if dossier_path else None
     if metrics is not None:
         basis = "research_dossier"
         band = audit.classify_dossier(track, metrics)
@@ -91,14 +128,22 @@ def build_size_policy_for_plan(
         advisory_ceiling=advisory_ceiling,
         dossier_path=dossier_path,
     )
+    if override_errors:
+        status = INVALID_SIZE_POLICY
+        notes.extend(
+            [
+                "Explicit size_policy is invalid and cannot replace generic density-band limits.",
+                *override_errors,
+            ]
+        )
 
     return audit.SizePolicyRecord(
         track=track,
         slug=slug,
         basis=basis,
-        plan_path=audit.display_path(plan_path) if plan_path else "",
-        dossier_path=audit.display_path(dossier_path) if dossier_path else None,
-        module_path=audit.display_path(module_path) if module_path and module_path.exists() else None,
+        plan_path=displayed_plan_path,
+        dossier_path=displayed_dossier_path,
+        module_path=displayed_module_path,
         plan_floor=plan_floor,
         plan_outline_words=plan_outline_words,
         actual_words=actual_words,
@@ -115,7 +160,7 @@ def build_size_policy_for_plan(
 
 def size_policy_allows_auto_expansion(record: audit.SizePolicyRecord) -> bool:
     """Return whether build code may auto-request expansion for short drafts."""
-    return record.status not in {PLAN_REVIEW_NEEDED, MISSING_DOSSIER}
+    return record.status not in {PLAN_REVIEW_NEEDED, MISSING_DOSSIER, INVALID_SIZE_POLICY}
 
 
 def size_policy_padding_diagnostic(record: audit.SizePolicyRecord) -> dict[str, Any]:
@@ -160,6 +205,8 @@ def size_policy_summary(record: audit.SizePolicyRecord) -> dict[str, Any]:
         data["expansion_permission"] = "plan_policy_review_required"
     elif record.status == MISSING_DOSSIER:
         data["expansion_permission"] = "blocked_until_research_dossier"
+    elif record.status == INVALID_SIZE_POLICY:
+        data["expansion_permission"] = "blocked_until_size_policy_is_valid"
     elif record.status == PLAN_FLOOR_ONLY:
         data["expansion_permission"] = "plan_floor_only"
     else:

@@ -1,9 +1,9 @@
 # RFC 4801: Dossier-Led Module Size Policy
 
-Status: Proposed
+Status: Partially implemented
 Issue: #4801
 Owner: Codex orchestrator
-Date: 2026-07-09
+Date: 2026-07-12
 
 ## Purpose
 
@@ -12,12 +12,14 @@ writer to inflate prose until a fixed multiplier is reached.
 
 The governing rule is:
 
-> The dossier determines the ceiling; the plan determines the minimum; pedagogy
-> determines the shape.
+> The accepted evidence packet and learning work determine the range; the plan
+> records the reviewed minimum; pedagogy determines the shape.
 
-This RFC keeps the first implementation phase advisory. It adds a measure-only
-audit command and documents the policy. It does not change `scripts/audit/config.py`,
-writer prompts, released modules, plan files, or audit gates.
+The original measure-only audit remains advisory. Reviewed per-plan overrides
+now feed audit reporting and the writer-facing size-policy object, but they do
+not create a hard ceiling or change `scripts/audit/config.py`. This rollout
+touches only plans already undergoing accepted rebuild work; it does not bulk
+change released modules or promote the advisory ranges into audit gates.
 
 ## Decision
 
@@ -51,8 +53,9 @@ Core C1-C2 bands:
 | Core pedagogy standard | 3500-5000 | Grammar, skills, style, or workshop modules where practice and learner state drive the shape. |
 | Core research extended | 4500-6500 | Content-heavy core modules with a real evidence packet: references, primary examples, corpus work, textbook grounding, or source-comparison tasks. |
 
-The bands are intentionally advisory in Phase 1. They are designed to reveal
-pressure points before the build system changes behavior.
+The bands are intentionally advisory baselines. They are designed to reveal
+pressure points and never replace the content-derived review of an individual
+module.
 
 ## Algorithm
 
@@ -106,8 +109,10 @@ not permission to build short by default. It is a signal to either prove source
 saturation or improve the dossier.
 
 BIO is different. Some figures are genuinely documented by compact reference
-material, so many BIO modules should land in the normal 4800-6200 neighborhood
-unless the dossier shows rich conflict, reception, or primary-source depth.
+material, while others have rich conflict, reception, or primary-source depth.
+Each BIO module therefore receives its own reviewed range after the available
+evidence, learning work, and non-repetitive section map are established. No BIO
+track-wide range is a quota or default minimum.
 
 ## Core C1-C2
 
@@ -143,8 +148,24 @@ size_policy:
   ceiling_words: 6500
   basis: research_dossier
   saturation_evidence: required_when_sparse
-  exceptional_justification: required_above_8000
+  exceptional_justification: required_above_ceiling
 ```
+
+For a reviewed per-plan override, `word_target` remains the deterministic
+minimum and must equal `floor_words`. The recommended range describes the
+intended landing zone; `ceiling_words` is an advisory anti-padding boundary,
+not a second minimum. A module above that ceiling needs explicit source and
+pedagogical justification. Every override must record a nonempty review basis
+and saturation evidence; malformed or partial overrides do not bypass the
+track configuration floor.
+
+The override schema is deliberately track-generic: evidence-led review can
+occur during a scoped rebuild on any track, and the validator should not encode
+a second track allowlist. Generic support is not blanket permission to lower a
+track target. The plan must opt in with a complete reviewed policy, the floor
+must still equal `word_target`, and invalid overrides block automatic expansion.
+Released A1-B2 plans remain untouched unless a separately reviewed rebuild puts
+that plan in scope.
 
 Expected later consumers:
 
@@ -202,13 +223,16 @@ not rewrite modules just because the advisory band changes.
 
 ## Rollout Plan
 
-1. Phase 1: RFC plus measure-only command. No enforcement.
+1. Phase 1: RFC plus measure-only command. Complete; no hard enforcement.
 2. Phase 2: run the report over BIO/FOLK and unbuilt C1-C2 candidates; post
-   calibration summary to #4801.
+   calibration summary to #4801. In progress.
 3. Phase 3: add advisory `size_policy` metadata to new/rebuilt plans only.
-4. Phase 4: update writer prompts and expansion retries behind an explicit flag.
+   Implemented for reviewed exemplars, beginning with Bilash.
+4. Phase 4: let the writer-facing policy consume valid reviewed overrides and
+   block malformed overrides. Implemented at the policy-object layer; broader
+   prompt migration remains pending.
 5. Phase 5: promote selected advisory statuses into gates only after exemplar
-   modules validate the thresholds.
+   modules validate the thresholds. Not started.
 
 ## Measurement Command
 

@@ -146,6 +146,81 @@ def test_dense_folk_dossier_allows_dense_advisory_ceiling(
     assert row["actual_words"] >= 6100
 
 
+def test_reviewed_size_policy_override_replaces_generic_band_and_keeps_metrics(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    _patch_roots(monkeypatch, tmp_path)
+    _write_plan(
+        tmp_path,
+        "bio",
+        "reviewed-person",
+        {
+            "word_target": 4200,
+            "content_outline": [{"section": "Огляд", "words": 4200}],
+            "size_policy": {
+                "floor_words": 4200,
+                "recommended_range": [4200, 4600],
+                "ceiling_words": 4800,
+                "basis": "Bounded chronology with verified primary-source coverage.",
+                "saturation_evidence": "The dossier exhausts the available dated sources.",
+                "exceptional_justification": "required_above_ceiling",
+            },
+        },
+    )
+    _write_dossier(tmp_path, "bio", "reviewed-person", 900)
+
+    row = audit.build_report(tracks=["bio"])[0]
+
+    assert row["basis"] == "explicit_plan_size_policy"
+    assert row["density_band"] == "reviewed_plan_override"
+    assert row["effective_min"] == 4200
+    assert row["advisory_ceiling"] == 4800
+    assert row["status"] == "explicit_override"
+    assert row["metrics"]["words"] > 0
+    assert "Saturation evidence:" in " ".join(row["notes"])
+
+
+def test_size_policy_override_validation_reports_actionable_schema_errors() -> None:
+    plan = {
+        "word_target": 4200,
+        "size_policy": {
+            "floor_words": 4000,
+            "recommended_range": [4200, 4100],
+            "ceiling_words": 4050,
+            "basis": "",
+            "saturation_evidence": "",
+            "exceptional_justification": "optional",
+        },
+    }
+
+    errors = audit.validate_size_policy_override(plan)
+
+    assert errors == [
+        "size_policy.recommended_range must not be inverted.",
+        "size_policy.ceiling_words must be at least size_policy.recommended_range[1].",
+        "size_policy.floor_words (4000) must equal word_target (4200).",
+        "size_policy.basis must be a nonempty string.",
+        "size_policy.saturation_evidence must be a nonempty string.",
+        "size_policy.exceptional_justification must be required_above_ceiling.",
+    ]
+    assert audit.validate_size_policy_override(
+        {"word_target": 4200, "size_policy": "reviewed"}
+    ) == ["size_policy must be a mapping."]
+    assert "size_policy.floor_words must be a positive integer." in (
+        audit.validate_size_policy_override(
+            {
+                "word_target": 4200,
+                "size_policy": {
+                    **plan["size_policy"],
+                    "floor_words": 0,
+                    "recommended_range": [0, 4100],
+                },
+            }
+        )
+    )
+
+
 def test_folk_source_refs_count_corpus_chunks_and_verify_ledgers(
     tmp_path: Path,
     monkeypatch,

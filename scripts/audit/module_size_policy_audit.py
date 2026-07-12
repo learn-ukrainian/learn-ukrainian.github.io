@@ -12,6 +12,7 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -114,6 +115,18 @@ class SizePolicyRecord:
     status: str
     notes: list[str]
     metrics: DensityMetrics | None
+
+
+@dataclass(frozen=True)
+class SizePolicyOverride:
+    """A human-reviewed per-plan replacement for generic density-band limits."""
+
+    floor_words: int
+    recommended_min: int
+    recommended_max: int
+    ceiling_words: int
+    basis: str
+    saturation_evidence: str
 
 
 def display_path(path: Path | None) -> str | None:
@@ -254,6 +267,166 @@ def _as_int(value: Any) -> int | None:
     return None
 
 
+def _is_positive_integer(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def validate_size_policy_override(plan: Mapping[str, Any]) -> list[str]:
+    """Return deterministic schema errors for an explicit plan size override.
+
+    An absent ``size_policy`` is intentionally valid: generic dossier/evidence
+    bands remain the policy for legacy plans.  A present policy must be fully
+    reviewed and self-contained before it can replace those bands.
+    """
+    if "size_policy" not in plan:
+        return []
+
+    policy = plan["size_policy"]
+    if not isinstance(policy, Mapping):
+        return ["size_policy must be a mapping."]
+
+    errors: list[str] = []
+    floor = policy.get("floor_words")
+    recommended_range = policy.get("recommended_range")
+    ceiling = policy.get("ceiling_words")
+
+    if not _is_positive_integer(floor):
+        errors.append("size_policy.floor_words must be a positive integer.")
+
+    recommended_min: int | None = None
+    recommended_max: int | None = None
+    if (
+        not isinstance(recommended_range, list)
+        or len(recommended_range) != 2
+        or not all(_is_positive_integer(value) for value in recommended_range)
+    ):
+        errors.append(
+            "size_policy.recommended_range must be a two-item list of positive integers."
+        )
+    else:
+        recommended_min, recommended_max = recommended_range
+        if recommended_min > recommended_max:
+            errors.append("size_policy.recommended_range must not be inverted.")
+        if _is_positive_integer(floor) and recommended_min < floor:
+            errors.append(
+                "size_policy.recommended_range[0] must be at least size_policy.floor_words."
+            )
+
+    if not _is_positive_integer(ceiling):
+        errors.append("size_policy.ceiling_words must be a positive integer.")
+    else:
+        if _is_positive_integer(floor) and ceiling < floor:
+            errors.append(
+                "size_policy.ceiling_words must be at least size_policy.floor_words."
+            )
+        if recommended_max is not None and ceiling < recommended_max:
+            errors.append(
+                "size_policy.ceiling_words must be at least size_policy.recommended_range[1]."
+            )
+
+    word_target = _as_int(plan.get("word_target"))
+    if not _is_positive_integer(word_target):
+        errors.append("size_policy requires word_target to be a positive integer.")
+    elif _is_positive_integer(floor) and floor != word_target:
+        errors.append(
+            "size_policy.floor_words "
+            f"({floor}) must equal word_target ({word_target})."
+        )
+
+    for field in ("basis", "saturation_evidence"):
+        value = policy.get(field)
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"size_policy.{field} must be a nonempty string.")
+
+    if policy.get("exceptional_justification") != "required_above_ceiling":
+        errors.append(
+            "size_policy.exceptional_justification must be required_above_ceiling."
+        )
+
+    return errors
+
+
+def explicit_size_policy_override(
+    plan: Mapping[str, Any],
+) -> tuple[SizePolicyOverride | None, list[str]]:
+    """Return a parsed override or the actionable errors that reject it."""
+    errors = validate_size_policy_override(plan)
+    if errors or "size_policy" not in plan:
+        return None, errors
+
+    policy = plan["size_policy"]
+    assert isinstance(policy, Mapping)
+    recommended_range = policy["recommended_range"]
+    assert isinstance(recommended_range, list)
+    return (
+        SizePolicyOverride(
+            floor_words=policy["floor_words"],
+            recommended_min=recommended_range[0],
+            recommended_max=recommended_range[1],
+            ceiling_words=policy["ceiling_words"],
+            basis=policy["basis"].strip(),
+            saturation_evidence=policy["saturation_evidence"].strip(),
+        ),
+        [],
+    )
+
+
+def build_explicit_size_policy_record(
+    *,
+    track: str,
+    slug: str,
+    plan_path: str,
+    dossier_path: str | None,
+    module_path: str | None,
+    plan_floor: int | None,
+    plan_outline_words: int | None,
+    actual_words: int | None,
+    metrics: DensityMetrics | None,
+    override: SizePolicyOverride,
+) -> SizePolicyRecord:
+    """Build the effective record for a valid, reviewed plan override."""
+    notes = [
+        "A reviewed explicit plan size policy override replaces generic density-band limits.",
+        f"Review basis: {override.basis}",
+        f"Saturation evidence: {override.saturation_evidence}",
+        (
+            "Above the explicit advisory ceiling, exceptional justification is "
+            "required."
+        ),
+    ]
+    status = "explicit_override"
+    if actual_words is not None:
+        if actual_words < override.floor_words:
+            status = "below_plan_floor"
+            notes.append("Built module is below the current plan floor.")
+        elif actual_words > override.ceiling_words:
+            status = "exceptional_justification_required"
+            notes.append(
+                "Built module exceeds the explicit advisory ceiling and requires "
+                "exceptional justification."
+            )
+
+    return SizePolicyRecord(
+        track=track,
+        slug=slug,
+        basis="explicit_plan_size_policy",
+        plan_path=plan_path,
+        dossier_path=dossier_path,
+        module_path=module_path,
+        plan_floor=plan_floor,
+        plan_outline_words=plan_outline_words,
+        actual_words=actual_words,
+        density_band="reviewed_plan_override",
+        band_min=override.recommended_min,
+        band_max=override.recommended_max,
+        effective_min=override.floor_words,
+        advisory_ceiling=override.ceiling_words,
+        status=status,
+        notes=notes,
+        metrics=metrics,
+    )
+
+
 def _plan_paths_for_track(track: str) -> list[Path]:
     plans_dir = CURRICULUM_ROOT / "plans" / track
     if not plans_dir.exists():
@@ -365,6 +538,24 @@ def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
     dossier_path = _dossier_path(track, slug, plan)
 
     metrics = dossier_metrics(dossier_path) if dossier_path else None
+    override, override_errors = explicit_size_policy_override(plan)
+    displayed_plan_path = display_path(plan_path) or str(plan_path)
+    displayed_dossier_path = display_path(dossier_path)
+    displayed_module_path = display_path(module_path) if module_path.exists() else None
+    if override is not None:
+        return build_explicit_size_policy_record(
+            track=track,
+            slug=slug,
+            plan_path=displayed_plan_path,
+            dossier_path=displayed_dossier_path,
+            module_path=displayed_module_path,
+            plan_floor=plan_floor,
+            plan_outline_words=plan_outline_words,
+            actual_words=actual_words,
+            metrics=metrics,
+            override=override,
+        )
+
     if metrics is not None:
         basis = "research_dossier"
         band = classify_dossier(track, metrics)
@@ -390,14 +581,22 @@ def build_record(track: str, plan_path: Path) -> SizePolicyRecord:
         advisory_ceiling=advisory_ceiling,
         dossier_path=dossier_path,
     )
+    if override_errors:
+        status = "invalid_size_policy"
+        notes.extend(
+            [
+                "Explicit size_policy is invalid and cannot replace generic density-band limits.",
+                *override_errors,
+            ]
+        )
 
     return SizePolicyRecord(
         track=track,
         slug=slug,
         basis=basis,
-        plan_path=display_path(plan_path) or str(plan_path),
-        dossier_path=display_path(dossier_path),
-        module_path=display_path(module_path) if module_path.exists() else None,
+        plan_path=displayed_plan_path,
+        dossier_path=displayed_dossier_path,
+        module_path=displayed_module_path,
         plan_floor=plan_floor,
         plan_outline_words=plan_outline_words,
         actual_words=actual_words,
