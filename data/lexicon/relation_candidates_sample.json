@@ -1,0 +1,3358 @@
+{
+  "schema_version": 1,
+  "sample_cap": 200,
+  "relations": [
+    {
+      "word_a": "білити",
+      "word_b": "біліти",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "сильний",
+      "word_b": "силовий",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "громадський",
+      "word_b": "громадянський",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дружний",
+      "word_b": "дружній",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "земний",
+      "word_b": "земельний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "пов'язаний із землею, земною сушею",
+      "gloss_b": "пов'язаний із землекористуванням",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "земельний",
+      "word_b": "земляний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "пов'язаний із землекористуванням",
+      "gloss_b": "зроблений із землі» — землистий «з частками землі",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дільниця",
+      "word_b": "ділянка",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "адміністративно-територіальна або виробнича одиниця",
+      "gloss_b": "земельна площа",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "танк",
+      "word_b": "танкер",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "бойова машина",
+      "gloss_b": "судно",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ефектний",
+      "word_b": "ефективний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "вражаючий",
+      "gloss_b": "з позитивними наслідками",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ефективний",
+      "word_b": "дефектний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "з позитивними наслідками",
+      "gloss_b": "зіпсований, з дефектом",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дефектний",
+      "word_b": "дефективний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "зіпсований, з дефектом",
+      "gloss_b": "ненормальний», «із психічними або фізичними вадами",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "серцевий",
+      "word_b": "сердечний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "анатомічно пов'язаний із серцем",
+      "gloss_b": "пов'язаний із серцем», «щирий», «душевний",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "сердечний",
+      "word_b": "сердешний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "пов'язаний із серцем», «щирий», «душевний",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "компанія",
+      "word_b": "кампанія",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "товариство",
+      "gloss_b": "сукупність заходів",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ступінь",
+      "word_b": "степінь",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "міра інтенсивності», «вчене звання",
+      "gloss_b": "добуток однакових співмножників",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "промінь",
+      "word_b": "пломінь",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "смужка світла",
+      "gloss_b": "полум'я",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "талан",
+      "word_b": "талант",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "доля",
+      "gloss_b": "обдарування",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "розпещений",
+      "word_b": "розбещений",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "зіпсований надмірною увагою",
+      "gloss_b": "морально зіпсований",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "гучний",
+      "word_b": "бучний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "голосний",
+      "gloss_b": "пишний», «галасливий",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "веліти",
+      "word_b": "воліти",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "gloss_a": "наказати",
+      "gloss_b": "хотіти",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "гамувати",
+      "word_b": "тамувати",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "gloss_a": "заспокоювати, приборкувати",
+      "gloss_b": "задовольняти потребу в чомусь», «стримувати",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "повідь",
+      "word_b": "повінь",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "крапля",
+      "word_b": "капля",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "слимак",
+      "word_b": "слизняк",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "привабливий",
+      "word_b": "принадливий",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "хиткий",
+      "word_b": "хибкий",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "плоский",
+      "word_b": "плаский",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "барабанити",
+      "word_b": "тарабанити",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "линути",
+      "word_b": "ринути",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "притаїтися",
+      "word_b": "причаїтися",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "рипіти",
+      "word_b": "скрипіти",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "радити",
+      "word_b": "раяти",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "лепський",
+      "word_b": "кепський",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "прогрес",
+      "word_b": "регрес",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "експорт",
+      "word_b": "імпорт",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "еміграція",
+      "word_b": "імміграція",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "густо",
+      "word_b": "пусто",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "цегельний",
+      "word_b": "цегляний",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "пов'язаний з виробництвом цегли",
+      "gloss_b": "зроблений з цегли",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "газ",
+      "word_b": "гас",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "глуз",
+      "word_b": "глузд",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "орден",
+      "word_b": "ордер",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дипломат",
+      "word_b": "дипломант",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ефект",
+      "word_b": "афект",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "експорт",
+      "word_b": "імпорт",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "еміграція",
+      "word_b": "імміграція",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "густо",
+      "word_b": "пусто",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "крапля",
+      "word_b": "капля",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "компанія",
+      "word_b": "кампанія",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "привабливий",
+      "word_b": "принадливий",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "хиткий",
+      "word_b": "хибкий",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "притаїтися",
+      "word_b": "причаїтися",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "рипіти",
+      "word_b": "скрипіти",
+      "relation": "paronym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Пароніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "проживати",
+      "word_b": "мешкати",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "бажати",
+      "word_b": "хотіти",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "башта",
+      "word_b": "вежа",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "чорногуз",
+      "word_b": "бусол",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "експлуатація",
+      "word_b": "визиск",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "бібліотека",
+      "word_b": "книгозбірня",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "біографія",
+      "word_b": "життєпис",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "голкіпер",
+      "word_b": "воротар",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "горизонт",
+      "word_b": "обрій",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "аероплан",
+      "word_b": "літак",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "паралельний",
+      "word_b": "рівнобіжний",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "офіціальний",
+      "word_b": "у",
+      "relation": "synonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Синонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "любов",
+      "word_b": "ненависть",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "день",
+      "word_b": "ніч",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "тепло",
+      "word_b": "холод",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv",
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "добро",
+      "word_b": "зло",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "adv",
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "початок",
+      "word_b": "кінець",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun",
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "давній",
+      "word_b": "майбутній",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "хмарний",
+      "word_b": "день",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "сонячний",
+      "word_b": "хмарний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "веселий",
+      "word_b": "сумний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "гарячий",
+      "word_b": "холодний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "високий",
+      "word_b": "низький",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "білий",
+      "word_b": "чорний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj",
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "повний",
+      "word_b": "порожній",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "радість",
+      "word_b": "горе",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "світло",
+      "word_b": "темрява",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv",
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дружити",
+      "word_b": "ворогувати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "радіти",
+      "word_b": "сумувати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "хвилюватися",
+      "word_b": "заспокоюватися",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "добре",
+      "word_b": "погано",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "легко",
+      "word_b": "важко",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "корисно",
+      "word_b": "шкідливо",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "широкий",
+      "word_b": "вузький",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ранній",
+      "word_b": "пізній",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "схід",
+      "word_b": "захід",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "висота",
+      "word_b": "глибина",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ранок",
+      "word_b": "вечір",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "глибоко",
+      "word_b": "мілко",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "вдень",
+      "word_b": "уночі",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "дорожчати",
+      "word_b": "дешевшати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ширшати",
+      "word_b": "вужчати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "віддалятися",
+      "word_b": "наближатися",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "підніматися",
+      "word_b": "спускатися",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "давати",
+      "word_b": "брати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "вдихати",
+      "word_b": "видихати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "від",
+      "word_b": "до",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "prep"
+      ],
+      "vesum_pos_b": [
+        "noun",
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "над",
+      "word_b": "під",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "prep"
+      ],
+      "vesum_pos_b": [
+        "noun",
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "перед",
+      "word_b": "за",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun",
+        "prep"
+      ],
+      "vesum_pos_b": [
+        "adv",
+        "part",
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "у",
+      "word_b": "з",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "prep"
+      ],
+      "vesum_pos_b": [
+        "prep"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "тихий",
+      "word_b": "гучний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_b": "голос",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "тихий",
+      "word_b": "гучний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "сходження",
+      "word_b": "і",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "conj",
+        "part"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "позичати",
+      "word_b": "і",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "conj",
+        "part"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "колись",
+      "word_b": "і",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "conj",
+        "part"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "батько",
+      "word_b": "мати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun",
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "брат",
+      "word_b": "сестра",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "чоловік",
+      "word_b": "жінка",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "цап",
+      "word_b": "коза",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "баран",
+      "word_b": "вівця",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "стіл",
+      "word_b": "стілець",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "солодкий",
+      "word_b": "кислий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "іти",
+      "word_b": "їхати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "гаряченький",
+      "word_b": "теплий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "теплий",
+      "word_b": "тепленький",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "тепленький",
+      "word_b": "теплуватий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "теплуватий",
+      "word_b": "прохолодний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "прохолодний",
+      "word_b": "холоднуватий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "холоднуватий",
+      "word_b": "холодний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "холодний",
+      "word_b": "крижаний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "перемога",
+      "word_b": "поразка",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "присутній",
+      "word_b": "відсутній",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "лівий",
+      "word_b": "правий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "однаковий",
+      "word_b": "різний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "множити",
+      "word_b": "ділити",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ти",
+      "word_b": "відступати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "нападати",
+      "word_b": "захищатися",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "купувати",
+      "word_b": "продавати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "говорити",
+      "word_b": "мовчати",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "всередині",
+      "word_b": "зовні",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "вгору",
+      "word_b": "вниз",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adv"
+      ],
+      "vesum_pos_b": [
+        "adv"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "легкий",
+      "word_b": "важкий",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "спека",
+      "word_b": "мороз",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "мужність",
+      "word_b": "боягузтво",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "любити",
+      "word_b": "ненавидіти",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "спокій",
+      "word_b": "неспокій",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "орієнтація",
+      "word_b": "дезорієнтація",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "логічний",
+      "word_b": "алогічний",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "увійти",
+      "word_b": "вийти",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "навантажити",
+      "word_b": "розвантажити",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "недосолити",
+      "word_b": "пересолити",
+      "relation": "antonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC",
+      "article": "Антонім",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "ключ",
+      "word_b": "ключ",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "від замка́",
+      "gloss_b": "джерело",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "рукав",
+      "word_b": "рукав",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "елемент одягу",
+      "gloss_b": "річки",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "віз",
+      "word_b": "віз",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "поле",
+      "word_b": "поле",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "бал",
+      "word_b": "бал",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "оцінка",
+      "gloss_b": "вечір із танцями",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "стан",
+      "word_b": "стан",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "корпус людини",
+      "gloss_b": "становище",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "стан",
+      "word_b": "стан",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "стоянка",
+      "gloss_b": "механізм, прокатний стан",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "балка",
+      "word_b": "балка",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "дерев'яний чи металевий брус",
+      "gloss_b": "яр",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "точити",
+      "word_b": "точити",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "gloss_a": "робити гострим",
+      "gloss_b": "цідити",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "моторний",
+      "word_b": "моторний",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "adj"
+      ],
+      "vesum_pos_b": [
+        "adj"
+      ],
+      "gloss_a": "швидкий",
+      "gloss_b": "пов'язаний із мотором",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "кран",
+      "word_b": "кран",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "noun"
+      ],
+      "vesum_pos_b": [
+        "noun"
+      ],
+      "gloss_a": "для підіймання і переміщення вантажів",
+      "gloss_b": "для перекривання води, газу тощо",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "злити",
+      "word_b": "злити",
+      "relation": "homonym",
+      "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8",
+      "article": "Омоніми",
+      "confidence": "high",
+      "vesum_pos_a": [
+        "verb"
+      ],
+      "vesum_pos_b": [
+        "verb"
+      ],
+      "gloss_a": "викликати злість",
+      "gloss_b": "полити",
+      "generator": "wikipedia"
+    },
+    {
+      "word_a": "абелів",
+      "word_b": "неабелів",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "апаратний",
+      "word_b": "безапаратний",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "бортовий",
+      "word_b": "протибортовий",
+      "relation": "antonym",
+      "prefix": "проти-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "вередливо",
+      "word_b": "невередливо",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adv",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adv:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "винесення",
+      "word_b": "невинесення",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:n:v_kly",
+          "noun:inanim:n:v_naz",
+          "noun:inanim:n:v_rod",
+          "noun:inanim:n:v_zna",
+          "noun:inanim:p:v_kly",
+          "noun:inanim:p:v_naz",
+          "noun:inanim:p:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "вловимо",
+      "word_b": "невловимо",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adv",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adv:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "відбір",
+      "word_b": "невідбір",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:m:v_naz",
+          "noun:inanim:m:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "вісточка",
+      "word_b": "невісточка",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "градієнтний",
+      "word_b": "безградієнтний",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "детонаторний",
+      "word_b": "антидетонаторний",
+      "relation": "antonym",
+      "prefix": "анти-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "договорювання",
+      "word_b": "недоговорювання",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:n:v_kly",
+          "noun:inanim:n:v_naz",
+          "noun:inanim:n:v_rod",
+          "noun:inanim:n:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "дорослий",
+      "word_b": "недорослий",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "дієвий",
+      "word_b": "протидієвий",
+      "relation": "antonym",
+      "prefix": "проти-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "заборонований",
+      "word_b": "незаборонований",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:adjp:pasv:perf",
+          "adj:m:v_naz:adjp:pasv:perf",
+          "adj:m:v_zna:rinanim:adjp:pasv:perf"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "заповнення",
+      "word_b": "незаповнення",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:n:v_kly",
+          "noun:inanim:n:v_naz",
+          "noun:inanim:n:v_rod",
+          "noun:inanim:n:v_zna",
+          "noun:inanim:p:v_kly",
+          "noun:inanim:p:v_naz",
+          "noun:inanim:p:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "зв'язувальний",
+      "word_b": "антизв'язувальний",
+      "relation": "antonym",
+      "prefix": "анти-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "змістовність",
+      "word_b": "беззмістовність",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "карно",
+      "word_b": "безкарно",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adv",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adv"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "компромісний",
+      "word_b": "безкомпромісний",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "космічний",
+      "word_b": "некосмічний",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "львів'янка",
+      "word_b": "нельвів'янка",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:anim:f:v_naz"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "металевий",
+      "word_b": "неметалевий",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "міт",
+      "word_b": "антиміт",
+      "relation": "antonym",
+      "prefix": "анти-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:anim:m:v_naz:prop:fname",
+          "noun:inanim:m:v_dav:nv:abbr:prop",
+          "noun:inanim:m:v_mis:nv:abbr:prop",
+          "noun:inanim:m:v_naz:nv:abbr:prop",
+          "noun:inanim:m:v_naz:up19",
+          "noun:inanim:m:v_oru:nv:abbr:prop",
+          "noun:inanim:m:v_rod:nv:abbr:prop",
+          "noun:inanim:m:v_zna:nv:abbr:prop",
+          "noun:inanim:m:v_zna:up19"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "наявність",
+      "word_b": "ненаявність",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "однорідний",
+      "word_b": "неоднорідний",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "особовий",
+      "word_b": "неособовий",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "пафосний",
+      "word_b": "безпафосний",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "плодючий",
+      "word_b": "неплодючий",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "поляризувальний",
+      "word_b": "неполяризувальний",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "поєднаність",
+      "word_b": "непоєднаність",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "припустимий",
+      "word_b": "неприпустимий",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "промовлений",
+      "word_b": "непромовлений",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:adjp:pasv:perf",
+          "adj:m:v_naz:adjp:pasv:perf",
+          "adj:m:v_zna:rinanim:adjp:pasv:perf"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "підстрижений",
+      "word_b": "непідстрижений",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:adjp:pasv:perf",
+          "adj:m:v_naz:adjp:pasv:perf",
+          "adj:m:v_zna:rinanim:adjp:pasv:perf"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "рентабельно",
+      "word_b": "нерентабельно",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adv",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adv:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "розпечатаний",
+      "word_b": "нерозпечатаний",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:adjp:pasv:perf",
+          "adj:m:v_naz:adjp:pasv:perf",
+          "adj:m:v_zna:rinanim:adjp:pasv:perf"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "самодостатній",
+      "word_b": "несамодостатній",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:f:v_dav:compb",
+          "adj:f:v_mis:compb",
+          "adj:m:v_kly:compb",
+          "adj:m:v_naz:compb",
+          "adj:m:v_zna:rinanim:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "скоротність",
+      "word_b": "нескоротність",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "сполучуваність",
+      "word_b": "несполучуваність",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "страшніший",
+      "word_b": "безстрашніший",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:compc",
+          "adj:m:v_naz:compc",
+          "adj:m:v_zna:rinanim:compc"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "табельний",
+      "word_b": "нетабельний",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "трепетність",
+      "word_b": "безтрепетність",
+      "relation": "antonym",
+      "prefix": "без-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "урівноважений",
+      "word_b": "неурівноважений",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly:adjp:pasv:perf:compb",
+          "adj:m:v_naz:adjp:pasv:perf:compb",
+          "adj:m:v_zna:rinanim:adjp:pasv:perf:compb"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "фіскальність",
+      "word_b": "нефіскальність",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "честь",
+      "word_b": "нечесть",
+      "relation": "antonym",
+      "prefix": "не-",
+      "pos": "noun",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "noun:inanim:f:v_naz",
+          "noun:inanim:f:v_zna"
+        ]
+      },
+      "generator": "morphological_antonym"
+    },
+    {
+      "word_a": "євромайданівський",
+      "word_b": "антиєвромайданівський",
+      "relation": "antonym",
+      "prefix": "анти-",
+      "pos": "adj",
+      "confidence": "high",
+      "source": "VESUM exact lemmas + morphological prefix gate",
+      "evidence": {
+        "base_exact_lemma": true,
+        "negated_exact_lemma": true,
+        "same_pos": true,
+        "base_tags": [
+          "adj:m:v_kly",
+          "adj:m:v_naz",
+          "adj:m:v_zna:rinanim"
+        ]
+      },
+      "generator": "morphological_antonym"
+    }
+  ],
+  "evidence": {
+    "wikipedia_report": {
+      "articles": {
+        "Пароніми": {
+          "status": "ok",
+          "canonical_title": "Пароніми",
+          "parsed_pairs": 57,
+          "vesum_passed": 52,
+          "source_url": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%BE%D0%BD%D1%96%D0%BC%D0%B8"
+        },
+        "Синоніми": {
+          "status": "ok",
+          "canonical_title": "Синонім",
+          "parsed_pairs": 13,
+          "vesum_passed": 12,
+          "source_url": "https://uk.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%BD%D1%96%D0%BC"
+        },
+        "Антоніми": {
+          "status": "ok",
+          "canonical_title": "Антонім",
+          "parsed_pairs": 89,
+          "vesum_passed": 79,
+          "source_url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D1%96%D0%BC"
+        },
+        "Омоніми": {
+          "status": "ok",
+          "canonical_title": "Омоніми",
+          "parsed_pairs": 12,
+          "vesum_passed": 12,
+          "source_url": "https://uk.wikipedia.org/wiki/%D0%9E%D0%BC%D0%BE%D0%BD%D1%96%D0%BC%D0%B8"
+        }
+      },
+      "unreachable_articles": []
+    },
+    "morphological_summary": {
+      "candidate_count": 10059,
+      "base_lemma_gate_dropped": 4338,
+      "base_lemma_gate_dropped_by_reason": {
+        "already_prefixed_base": 103,
+        "base_absent_or_wrong_pos": 4129,
+        "base_rare": 106
+      },
+      "prefix_counts": {
+        "не-": 7372,
+        "без-": 1435,
+        "анти-": 943,
+        "проти-": 309
+      },
+      "pos_counts": {
+        "adj": 6063,
+        "adv": 1217,
+        "noun": 2779
+      }
+    },
+    "full_output_paths": [
+      "data/lexicon/cache/wikipedia_relation_candidates.json",
+      "data/lexicon/cache/morphological_antonym_candidates.json"
+    ],
+    "full_outputs_gitignored": true,
+    "selection": "all 155 Wikipedia rows plus 45 deterministic evenly-spaced morphological rows"
+  }
+}
