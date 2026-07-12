@@ -47,21 +47,12 @@
 - Unfinished — *На тому березі*; *Довбуш* libretto. [T2: wiki S3]
 - `folklore` — «Народився Бог на санях» — later popular **колядка** (wiki S5); teach reception separately from high modernism.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-**Quote 1 — fiancée on learning Ukrainian (second-hand memoir, attested in wiki figure):**
-
-> «Поета підсвідомо відстрашували труднощі, які треба було подолати при вивченні мови, проте він їх успішно здолав, ставши одним із найвидатніших майстрів українського слова.»
-
-[T2: wiki figure S1 — Ольга Олійник; **verify_quote** N/A]
-
-**Quote 2 — self-reflection on creative trance:**
-
-> «Значна частина поезій поставала в напівсні.»
-
-[T2: wiki figure S4 — poet's self-characterization; **verify_quote** N/A]
-
-**Quote 3 (pedagogical — use classroom edition, not invented here):** opening movement of *Зелена Євангелія* — assign an excerpt from **ПЗТ** with line numbers; do **not** fabricate a stanza in the dossier.
+No quotation is approved for module use in this readiness pass. The earlier
+wording depended on memoir or textbook mediation rather than a directly checked
+edition with stable page evidence. Discuss the works in paraphrase unless a
+future build verifies the exact text, edition, and page.
 
 ## 5. Language register
 
@@ -104,8 +95,10 @@
 
 ## 9. Image candidates
 
-- Commons: **«Богдан-Ігор Антонич»** — 1930s photos (PD-check per file).
-- Context: cover *Зелена Євангелія* (1938); Lemko landscape PD photos.
+- **Approved portrait:** Wikimedia Commons, `File:AntonychBI.jpg`.
+- **Rights disposition:** Public domain, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:AntonychBI.jpg
+- **Attribution:** author not identified; preserve the source statement on Commons.
 
 ## 10. Sources used
 

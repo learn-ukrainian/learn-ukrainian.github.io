@@ -80,14 +80,22 @@ persona:
   voice: Poet-Philosopher-Skeptic
 phase: BIO.4
 readings:
-- clearance: public
-  language: uk
-  rationale: Базовий життєпис для розуміння формування поета та його місця в українській літературі
-  role: Primary biography
+- title: Антонич Богдан-Ігор
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-42956
-  title: Антонич Богдан-Ігор
-  type: biography
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-42956
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти перевірену хронологію життя Богдана-Ігоря Антонича та пояснити,
+    як лемківське походження, навчання у Львові й міжвоєнне середовище
+    позначилися на його українськомовній творчості.
+readings_contract_version: 2
 references:
 - title: Антонич Богдан Ігор
   note: Comprehensive biography of the Lemko-born modernist poet

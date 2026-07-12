@@ -1,52 +1,21 @@
-# Source registry for wiki/figures/mykhailo-yangel.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Короткий зміст'
-- id: S2
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Деколонізаційна перспектива'
-- id: S3
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Основний-зміст-Діяльність-Михайла-Янгеля-розбудова-ядерного-паритету-в-період-відлиги
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Основний зміст > Діяльність Михайла Янгеля: розбудова ядерного паритету в період
-    «відлиги»'
-- id: S4
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Основний-зміст-Теоретичні-витоки-космонавтики-українське-коріння-та-езотеричний-пантеїзм-Костянтина-Ціолковського
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Основний зміст > Теоретичні витоки космонавтики: українське коріння та езотеричний
-    пантеїзм Костянтина Ціолковського'
-- id: S5
-  file: ukrainian_wiki/mykhailo-yangel_Біографія-Михайло-Янгель-Творець-ракетного-щита-та-космічної-міці-Основний-зміст-Дидактична-роль-наукової-фантастики-у-підготовці-ракетної-ери
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці'
-  section_path: 'Біографія: Михайло Янгель: Творець ракетного щита та космічної міці
-    > Основний зміст > Дидактична роль наукової фантастики у підготовці ракетної ери'
-- id: S6
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1024
-  type: textbook
-  title: ОСОБЛИВОСТІ РОЗВИТКУ КУЛЬТУРИ
-  page: 101
-  grade: 11
-- id: S7
-  file: https://www.youtube.com/watch?v=p9PLGl2LDP4
+  file: https://esu.com.ua/article-77810
   type: external
-  title: Найбільша Загроза 20 Століття | Історія України від імені Т.Г. Шевченка
-  url: https://www.youtube.com/watch?v=p9PLGl2LDP4
-- id: S8
-  file: 11-klas-istoriya-ukr-galimov-2024_s0813
-  type: textbook
-  title: Розділ ІІ. Україна в умовах десталінізації
-  page: 58
-  grade: 11
+  title: Янгель Михайло Кузьмич
+  url: https://esu.com.ua/article-77810
+- id: S2
+  file: https://esu.com.ua/pdf/file/77810.pdf
+  type: external
+  title: Янгель Михайло Кузьмич — академічна PDF-версія
+  url: https://esu.com.ua/pdf/file/77810.pdf
+- id: S3
+  file: https://commons.wikimedia.org/wiki/File:Yangel.jpg
+  type: external
+  title: Михайло Янгель — portrait
+  url: https://commons.wikimedia.org/wiki/File:Yangel.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Yangel.jpg
+    license: CC BY-SA 4.0
+    attribution: Viktoria Skachko

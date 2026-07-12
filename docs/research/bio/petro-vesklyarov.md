@@ -51,33 +51,12 @@ The oppression mechanism, then, is not a prison file. It is a layered system of 
 
 The practical curriculum value lies less in a single authored work and more in **performance practice**: address, pacing, memory, improvisation, child-directed register, and the conversion of a domestic storytelling ritual into a mass-media ritual.
 
-## 4. Primary-source quotes and verification status
+## 4. Primary-source quotations
 
-> **Corpus warning:** `verify_quote` is a literary-corpus tool, not a comprehensive television-archive verifier. All direct quotations below were checked anyway, as required. Every check returned `matched:false` and `best_confidence: 0.0`. Therefore these quotations are cited only from named web/institutional sources or presented as contested memory, never as corpus-confirmed text.
-
-**Quote 1 — opening formula, web-attested but not corpus-confirmed:**
-
-> «Добрий вечір вам, малятка, любі хлопчики й дівчатка. Це я, дід Панас...»
-
-**Source/context:** Укрінформ gives this as his usual programme opening; Суспільне and Вісті Черкащини give close variants with `малята` / `малятка`. This is the safest cultural-code quote, but the exact wording varies by source and no full broadcast archive was verified. `verify_quote(author="Петро Вескляров")`: `matched=false`, `best_confidence=0.0`.
-
-**Quote 2 — bedtime closing formula, source-attributed but not corpus-confirmed:**
-
-> «А ви, любі малята, мийте ручки та ніжки і вкладайтеся спати. На добраніч, діти!»
-
-**Source/context:** Укрінформ presents this as the expected traditional closing before introducing the later obscene-anecdote tradition. It should be treated as a source-reported formula, not a recovered transcript. `verify_quote(author="Петро Вескляров")`: `matched=false`, `best_confidence=0.0`.
-
-**Quote 3 — Ukrainian-language self-irony, recollection only:**
-
-> «Російську я не можу вивчити».
-
-**Source/context:** Укрінформ attributes the line to a recollection by Talne local Valentyn Hordieiev. It is useful for discussing his remembered language identity, but it is not a corpus-attested primary quote. `verify_quote(author="Петро Вескляров")`: `matched=false`, `best_confidence=0.0`.
-
-**Quote 4 — contested obscene signoff; DO NOT teach as established fact:**
-
-> «Отака хуйня, малята».
-
-**Source/context:** This phrase is a famous media-memory legend. Суспільне explicitly states that no video proof exists, that broadcasts were live, and that colleagues' testimony conflicts; Вечірній Київ likewise says confirmation is absent and divides testimony into denial vs. after-air versions. The phrase may be taught as folklore about Дід Панас, not as a verified broadcast event. `verify_quote(author="Петро Вескляров")`: `matched=false`, `best_confidence=0.0`.
+No quotation is approved for module use in this readiness pass. The remembered
+opening and closing formulas vary among secondary accounts, and the notorious
+sign-off story has no verified recording. Teach that episode as an unverified
+media legend, without reproducing the alleged wording as fact.
 
 ## 5. Language register
 
@@ -123,10 +102,10 @@ For learners, the point is that "simple" speech can be culturally dense. Дід 
 
 ## 9. Image candidates
 
-- **Best candidate:** a rights-clear still or institutional image from the Museum of Television / Suspilne archive if licensing clears; this would show the actual television persona rather than a generic portrait.
-- **Public-memory candidate:** the Talne memorial plaque opened in 2018 at the school site associated with his birthplace; local-government page documents the plaque and setting. [T4: Тальнівська РДА]
-- **Context candidates:** a photograph of the Dovzhenko film studio, a still from one of the ESU-listed films if rights can be cleared, or a museum photograph of the embroidered shirt associated with the programme.
-- **Avoid:** unsourced meme images built around the obscene phrase; they overfit the least verified part of the biography.
+- **Approved photograph:** Wikimedia Commons, `File:Дід Панас та внук Андрій.jpg`.
+- **Rights disposition:** CC BY-SA 4.0 on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Дід_Панас_та_внук_Андрій.jpg
+- **Attribution:** Traid1984; retain the license and share-alike terms.
 
 ## 10. Sources used
 

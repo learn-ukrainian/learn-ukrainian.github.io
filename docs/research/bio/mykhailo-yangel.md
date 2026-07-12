@@ -48,23 +48,12 @@ In chronological order (the products are missiles and the launchers derived from
 - `1950s–1970s` — derived **space launch vehicles**: «Космос», «Інтеркосмос», «Циклон» (basis of the later «Січ» programme), and the high-precision **«Зеніт»**. [T3: uk.wikipedia]
 - `legacy` — the **«школа М. К. Янгеля»**: designers Конюхов, Уткін, Ковтуненко and others who completed the 3rd–4th-generation complexes after his death. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-> **Anti-fabrication + decolonization note (load-bearing).** Yangel's working language was **Russian** — the language of the Soviet military-industrial complex he served. The dossier does **NOT** fabricate a Ukrainian "original" of his Russophone statements. Quote 1 is his **own documented reflection, recorded in Ukrainian sources**, on his Ukrainian heritage; Quote 2 is his most-attested **recorded speech**, explicitly flagged as recorded in Russian and rendered (not laundered) into Ukrainian.
-
-**Quote 1 — his own reflection on the Ukrainian roots of his surname:**
-
-> Янгель досліджував походження свого прізвища і пов'язував його зі словом **«янга»** — ківш, у якому запорожці варили їжу (так звали й людину, яка черпала і роздавала їжу), а також зі словом **«янгол», «янгелик»**.
-
-Pedagogically: a classified Soviet weapons designer privately tracing his name to **Zaporozhian-Cossack** vocabulary is a quiet act of Ukrainian self-identification — useful for an etymology-and-identity lesson. (Documented as his own reflection.) [T3: uk.wikipedia — Походження; via Стражева, «Тюльпани з космодрому», укр. вид.]
-
-**Quote 2 — recorded speech after the Nedelin catastrophe (flagged: attested in Russian):**
-
-> Asked by Khrushchev's commission why he, the chief designer, had survived while dozens died, Yangel answered — in Russian, the only attested form — that he had **«відійшов покурити»** (stepped away to smoke) and that **«в усьому винен я»** (it is all my fault).
-
-Pedagogically: a rare documented moment of personal responsibility from inside the secret rocket programme. The dossier presents the **substance** of the attested statement (well-documented across sources) in honest Ukrainian rendering, **flagging** that the record is Russian rather than inventing a Ukrainian quotation. [T2: documented; corroborated across multiple accounts of 24.10.1960]
-
-**Documentary context (not counted as his quote):** his widow **Ірина Стражева**, in the preface to the **Ukrainian** edition of «Тюльпани з космодрому», wrote: «Я щаслива, що цю книгу багато українців зможуть прочитати рідною мовою. Михайло Кузьмич був тісно пов'язаний з Україною…» — a direct documentary tie to Ukraine, in Ukrainian. [T3: uk.wikipedia]
+No quotation is approved for module use in this readiness pass. The former
+material survived only through secondary recollection or Russian-language
+retelling without a directly verified archival transcript. The Nedelin episode
+and surname tradition may be discussed only as attributed, cautious paraphrase.
 
 ## 5. Language register
 
@@ -106,12 +95,10 @@ Pedagogically: a rare documented moment of personal responsibility from inside t
 
 ## 9. Image candidates
 
-- **Best candidate:** an official **ДП «КБ „Південне“ ім. М. К. Янгеля»** (Dnipro) institutional portrait — the bureau that bears his name is the rights-appropriate Ukrainian source. [T2: yuzhnoye.com]
-- **Backup candidates:**
-  - The **меморіальна дошка** on the КБ «Південне» building in Dnipro (commemorative context).
-  - The **АН УРСР премія ім. М. Янгеля** (1977) / Памірський пік / lunar crater materials — context only.
-  - A **«Зеніт»** or **«Циклон»** launch-vehicle image (the dual-use space side) — check launch-provider image terms.
-- **If no rights-clear portrait clears review:** use the КБ «Південне» building/мемор. дошка context image; avoid Russian-state (Roskosmos/RAN) image sources per source-tier policy.
+- **Approved portrait:** Wikimedia Commons, `File:Yangel.jpg`.
+- **Rights disposition:** CC BY-SA 4.0 on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Yangel.jpg
+- **Attribution:** Viktoria Skachko; retain the license and share-alike terms.
 
 ## 10. Sources used
 

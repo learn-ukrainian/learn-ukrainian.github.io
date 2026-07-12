@@ -78,14 +78,21 @@ persona:
   voice: Bioethics-Committee-Chair
 phase: BIO
 readings:
-- clearance: public
-  language: uk
-  rationale: Базова біографія для вивчення внеску Амосова в кардіохірургію та науку
-  role: Primary biography
+- title: Амосов Микола Михайлович
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-44017
-  title: Амосов Микола Михайлович
-  type: biography
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-44017
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити київський етап кардіохірургічної праці Миколи Амосова та
+    критично зіставити його медичні здобутки, наукові інтереси й публічний образ.
+readings_contract_version: 2
 references:
 - title: Mykola Amosov
   note: Compiled research notes on Amosov's life, work, and philosophical ideas.

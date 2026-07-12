@@ -1,52 +1,26 @@
-# Source registry for wiki/figures/mykola-amosov.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/mykola-amosov_Біографія-Микола-Амосов-Хірург-і-філософ-здоров-я-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Амосов: Хірург і філософ здоров''я'
-  section_path: 'Біографія: Микола Амосов: Хірург і філософ здоров''я > Короткий зміст'
+  file: https://esu.com.ua/article-44017
+  type: external
+  title: Амосов Микола Михайлович
+  url: https://esu.com.ua/article-44017
 - id: S2
-  file: wave7-heroes-ukr-kultura_c0362
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: https://amosovinstitute.org.ua/amosov/
+  type: external
+  title: Микола Михайлович Амосов
+  url: https://amosovinstitute.org.ua/amosov/
 - id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s5138
-  type: textbook
-  title: СПОСОБИ ПЕРЕДАЧІ ЧУЖОГО МОВЛЕННЯ
-  page: 214
-  grade: 9
-- id: S4
-  file: wave7-heroes-ukr-kultura_c0365
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
-- id: S5
-  file: wave7-heroes-ukr-kultura_c0364
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: https://commons.wikimedia.org/wiki/File:Nikolai_Amosov_-_Soviet_Life,_October_1984.jpg
+  type: external
+  title: Микола Амосов — public domain portrait
+  url: https://commons.wikimedia.org/wiki/File:Nikolai_Amosov_-_Soviet_Life,_October_1984.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Nikolai_Amosov_-_Soviet_Life,_October_1984.jpg
+    license: Public domain
+    attribution: USSR Embassy publication; photographer uncredited
 - id: S6
-  file: ukrainian_wiki/mykola-amosov_Біографія-Микола-Амосов-Хірург-і-філософ-здоров-я-Основний-зміст-Кібернетика-та-віра-в-раціональне-моделювання-суспільства
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Амосов: Хірург і філософ здоров''я'
-  section_path: 'Біографія: Микола Амосов: Хірург і філософ здоров''я > Основний зміст
-    > Кібернетика та віра в раціональне моделювання суспільства'
-- id: S7
-  file: ukrainian_wiki/mykola-amosov_Біографія-Микола-Амосов-Хірург-і-філософ-здоров-я-Основний-зміст-Київський-Фауст-філософія-здоров-я-та-експеримент-із-часом
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Амосов: Хірург і філософ здоров''я'
-  section_path: 'Біографія: Микола Амосов: Хірург і філософ здоров''я > Основний зміст
-    > «Київський Фауст»: філософія здоров''я та експеримент із часом'
-- id: S8
-  file: ukrainian_wiki/borys-paton_Біографія-Борис-Патон-та-епоха-української-науки-Основний-зміст-Фундаментальні-дослідження-Всесвіту-кібернетика-та-медицина
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Патон та епоха української науки'
-  section_path: 'Біографія: Борис Патон та епоха української науки > Основний зміст
-    > Фундаментальні дослідження Всесвіту, кібернетика та медицина'
-- id: S9
-  file: wave7-heroes-ukr-kultura_c0372
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: https://amosovinstitute.org.ua/wp-content/uploads/2024/03/Putivnik-po-muzeyu-Amosova.pdf
+  type: external
+  title: Путівник по музею Миколи Амосова
+  url: https://amosovinstitute.org.ua/wp-content/uploads/2024/03/Putivnik-po-muzeyu-Amosova.pdf

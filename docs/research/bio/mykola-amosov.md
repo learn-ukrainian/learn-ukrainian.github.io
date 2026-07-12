@@ -54,29 +54,12 @@ Amosov was **not** a victim of Soviet repression — he was one of the regime's 
 
 **Books (writer):** «Думки та серце» / «Мысли и сердце» (1964); «Записки з майбутнього» (1965); «ППГ-2266 (Записки полевого хирурга)» (1975); **«Роздуми про здоров'я» / «Раздумья о здоровье»** (1977; UA ed. 1990); «Книга про щастя та нещастя» (1983); «Моя система здоров'я» (1997); «Голоса времён» (1998). [T3: uk.wikipedia — Книги]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotations
 
-Amosov wrote **in Russian**; the Ukrainian forms below are attributed renderings — transmission flagged per template.
-
-**Quote 1 — his own statement of his life's research directions (his words, per the main entry):**
-
-> «Регулюючі системи організму — від хімії крові, через ендокринну і нервову системи до кори мозку; механізми розуму і штучний інтелект; психологія і моделі особистості; соціологія і моделі суспільства; глобальні проблеми людства.»
-
-Pedagogically useful: a heart surgeon defining his arc as one continuous system — body → mind → society → planet; the integrative "Amosov" worldview. [T3: uk.wikipedia — Біографія, "за його власними словами"]
-
-**Quote 2 — aphorism on surgery (Ukrainian rendering, widely attributed):**
-
-> «Хірургія всіх зрівнює — простого лікаря та академіка.»
-
-The egalitarian humility of a man at the literal edge of life and death. [T5/wikiquote: uk.wikiquote «Микола Амосов» — Ukrainian rendering of his Russian aphorism; sourcing caveat noted in §10]
-
-**Quote 3 — aphorism on life and medicine (Ukrainian rendering):**
-
-> «У житті є два міцних якоря — робота і діти.» / «Тільки через сумний досвід відстоюється золотий фонд медицини.»
-
-[T5/wikiquote: uk.wikiquote «Микола Амосов»; Ukrainian renderings of Russian originals — see §10 caveat]
-
-**Honesty note:** the strongest single-source quote is Quote 1 (the main encyclopedic entry, his own framing); Quotes 2–3 come from uk.wikiquote (a weak source) and are presented as **widely-attributed Ukrainian renderings**, not as verified sentence-level autograph.
+No quotation is approved for module use in this readiness pass. Earlier entries
+were Ukrainian renderings of Russian-language material mediated through weak
+quotation aggregators. The module may paraphrase the documented research themes,
+but must not present those renderings as Amosov's Ukrainian words.
 
 ## 5. Language register
 
@@ -120,12 +103,10 @@ The egalitarian humility of a man at the literal edge of life and death. [T5/wik
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Mykola Amosov"** holds Soviet-era portraits; he died 2002, so most are **in copyright** — verify each **file page** license; do not assume PD. [Commons category: `Mykola Amosov`]
-- **Backup candidates:**
-  - NBU silver commemorative coin «Микола Амосов» (5 ₴, series «Видатні особистості України», issued 26 Nov 2013, 100th anniversary) — Ukrainian-state image, check terms.
-  - Меморіальна дошка, Київ, вул. Богдана Хмельницького 42 (where he lived/worked 1971–2002), and the Інститут серцево-судинної хірургії ім. М. М. Амосова — Tier 2 institutional, request rights.
-- **Context image:** an early Soviet heart-lung-machine of his design, or the Старий Крим district hospital / museum-room (opened 2013) — context for §2/§3 if rights-clear.
-- **If no rights-clear portrait clears review:** fall back to the 2013 NBU coin.
+- **Approved portrait:** Wikimedia Commons, `File:Nikolai Amosov - Soviet Life, October 1984.jpg`.
+- **Rights disposition:** Public domain, as stated on the individual file page.
+- **Evidence:** https://commons.wikimedia.org/wiki/File:Nikolai_Amosov_-_Soviet_Life,_October_1984.jpg
+- **Attribution:** USSR Embassy publication; photographer uncredited.
 
 ## 10. Sources used
 

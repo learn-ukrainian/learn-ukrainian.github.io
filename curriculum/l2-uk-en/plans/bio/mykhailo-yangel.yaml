@@ -81,14 +81,21 @@ persona:
   voice: Critical-Historian
 phase: BIO
 readings:
-- clearance: public
-  language: uk
-  rationale: Життєпис видатного конструктора ракетно-космічної техніки
-  role: Primary biography
+- title: Янгель Михайло Кузьмич
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-77810
-  title: Янгель Михайло Кузьмич
-  type: biography
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-77810
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Побудувати перевірену хронологію інженерної праці Михайла Янгеля та
+    пояснити роль дніпровського конструкторського бюро в його біографії.
+readings_contract_version: 2
 references:
 - title: КБ «Південне» — Історія
   name: КБ «Південне» — Історія

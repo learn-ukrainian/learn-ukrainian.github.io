@@ -81,14 +81,21 @@ persona:
   voice: TV Historian & Cultural Anthropologist
 phase: BIO.12
 readings:
-- clearance: public
-  language: uk
-  rationale: Огляд життя та творчості культового українського актора та телеведучого
-  role: Primary biography
+- title: Вескляров Петро Юхимович
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-33779
-  title: Вескляров Петро Юхимович
-  type: biography
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-33779
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Відтворити перевірену біографію Петра Весклярова й пояснити, як образ
+    Діда Панаса став частиною історії українського телебачення.
+readings_contract_version: 2
 references:
 - title: Вескляров Петро Юхимович
   note: Основна біографічна довідка
