@@ -912,6 +912,9 @@ levels:
       - label: Ukrainian literary and civic culture additions
         start: bohdan-lepkyi
         end: artem-chekh
+      - label: Ukrainian legend, song attribution, and contested memory additions
+        start: marusia-churai
+        end: marusia-churai
     modules:
       - knyahynia-olha
       - kniaz-sviatoslav
@@ -1322,6 +1325,7 @@ levels:
       - iryna-tsilyk
       - nataliia-vorozhbyt
       - artem-chekh
+      - marusia-churai
   lit:
     type: track
     groups:
