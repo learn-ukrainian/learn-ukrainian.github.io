@@ -499,7 +499,8 @@ def test_apply_adjudications_unverified_corpus_status_affects_eligibility_and_cu
     override_case = next(c for c in final["cases"] if c["case_id"] == "synth-override")
     assert override_case["corpus_verification_status"] == "NOT_APPLICABLE"
     assert override_case["adjudication"]["status"] == "ADJUDICATED"
-    assert "NOT_APPLICABLE" in override_case["adjudication"]["note"] or True  # rationale carried
+    assert "Synthetic fixture only" in override_case["adjudication"]["note"]
+
 
     agreed_uv = next(c for c in final["cases"] if c["case_id"] == "uv-agreed")
     assert agreed_uv["corpus_verification_status"] == "UNVERIFIED"
