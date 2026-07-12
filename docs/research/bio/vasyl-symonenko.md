@@ -123,10 +123,8 @@ The opening of his great address to Ukraine — pedagogically gentle, lexically 
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Vasyl Symonenko"** holds 1950s–60s photographs; he died in 1963, so pre-1963 photos are public domain by age in Ukraine and the US. Confirm on the individual **file page**. [Commons category: `Vasyl Symonenko`]
-- **Backup candidates:** the **Біївці house-museum** (his birthplace); the Черкаси monument (2010); the NBU 2008 2-грн coin; the 2015 commemorative stamp.
-- **Context image:** a samvydav/«Берег чекань» (1965) page, or a Биківня memorial photo — strong §2 illustration if rights-clear.
-- **If no rights-clear portrait clears review:** fall back to the PD «Тиша і грім» (1962) cover.
+- **Approved candidate:** `File:Stamp of Ukraine s1421.jpg` — 2015 Ukrainian postage stamp commemorating Vasyl Symonenko. Wikimedia Commons records `Public domain (PD-UA-exempt)` and attribution to Укрпошта: <https://commons.wikimedia.org/wiki/File:Stamp_of_Ukraine_s1421.jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, stamp, or institutional image is approved.
 
 ## 10. Sources used
 

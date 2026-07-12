@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ т.10; Інститут історії НАНУ; Політична енциклопедія 2011)
 - [x] Oppression mechanism is specific (dated court sentences, named camps, article of the Criminal Code, hunger-strike length)
-- [x] ≥2 primary-source quotes (1966 court last word; 1997 published warning — provenance flagged)
+- [N/A] No personal quotation is approved; see §4.
 - [x] Cross-track links: every "Existing" path verified against `origin/main` plan inventory on 2026-06-04
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -40,7 +40,7 @@ This is the load-bearing section. Chornovil's persecution was sustained, judicia
   - **15 November 1967:** the Lviv oblast court sentenced him to **3 years in strict-regime camps**, triggered by his compiling «Лихо з розуму» (Портрети двадцяти «злочинців»), a dossier on the 1965–66 arrests of the шістдесятники. Released 1969.
   - **1972:** arrested in the all-Ukraine «зачистка» (general purge of the Ukrainian intelligentsia); sentenced to **6 years of camps plus 3 years of exile**. Served in the Mordovian political-prisoner camps **ЖХ-385/17-А (с. Озерне)** and **ЖХ-385/3 (с. Барашево)**; spent over half the term in the punishment isolator (ШІЗО) and cell-type premises (ПКТ); then exiled to **с. Чаппанда, Якутія**.
   - **April 1980:** re-arrested at exile on a fabricated charge (in reality for his Helsinki-Group activity and opposition statements); held a **120-day protest hunger strike**; sentenced to 5 years. In his last word he accused the КДБ and police of fabrication and called on the court to refuse complicity. Released 1983 by a prosecutor's protest, but without the right to return to Ukraine; worked as a boiler-stoker.
-- **Document references (quoted, not paraphrased):** the title of «Лихо з розуму» itself records the regime's intent — Chornovil related that the Lviv КДБ captain Клименко told him he was «дуже розумний і що мені цей розум трохи збавлять» («very clever, and that this cleverness of mine would be cut down a little»), which the author turned into the book's ironic title. [T3: uk.wikipedia / diasporiana.org.ua — «Лихо з розуму»]
+- **Title-origin account:** secondary sources connect the ironic title «Лихо з розуму» with a КДБ officer's threat to punish Chornovil for being «too clever». Because the exact wording was not checked in a primary edition, the module may paraphrase the episode but may not reproduce the attributed speech. [T3: uk.wikipedia / diasporiana.org.ua — «Лихо з розуму»]
 - **What survived / what was destroyed:** his samvydav and camp manuscripts were smuggled abroad and survive — «Хроніка таборових буднів» (1975) was published in «Сучасність» (1976); fragments of «Тільки один рік» were reconstructed from a smuggled manuscript; the ten-volume collected works (Смолоскип, 2002–2015) preserve the corpus. **In April 2022 Russian occupying forces destroyed В'ячеслав Чорновіл's archive in Bucha** — a posthumous extension of the same imperial assault on Ukrainian memory. [T3: uk.wikipedia, citing Львівський портал, 20.04.2022]
 
 ## 3. Major works
@@ -55,23 +55,9 @@ Chornovil's «works» are documentary journalism, samvydav editing, and politica
 - `1977–1978` — *Тільки один рік*, brochure on the camp struggle for political-prisoner status; survives only in fragments. [T3: uk.wikipedia]
 - `2002–2015` — *Твори у 10 томах* (К.: Смолоскип; голова редколегії Атена Пашко), the posthumous collected works. [T3: uk.wikipedia — «Зібрання творів»]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-> Chornovil is a **documentary publicist and orator**, not a belletrist, so the project's `verify_quote` literary-corpus check returned no match (confirmed: `verify_quote(author="Чорновіл", text="Лихо з розуму") → matched:false` on 2026-06-04 — expected, his corpus is journalism, not in the literary index). Both quotes below are therefore given **with explicit provenance flags**.
-
-**Quote 1 — last word at the Lviv trial, 8 July 1966 (court statement, transmitted via the rehabilitative/biographical record):**
-
-> «…немає страшнішої кари за муки нечистого сумління, бо немає вищого судді за правду.»
-
-Spoken in his final statement to the court, after he declared he had no illusions about the verdict yet would say the same even under threat of prison or hard labour. It is the moral keynote of the entire dissident generation — conscience above the state's law — and the pedagogical anchor for the шістдесятники theme. [Court last word, 8.07.1966; attested via T5: NV / uk.wikiquote, family-transmitted; flagged court-statement provenance]
-
-**Quote 2 — published warning on Russian imperialism, 1997 (his own statement, prescient):**
-
-> «Над Україною нависає зловісна двоголова тінь російського імперіалізму, який тільки й чекає остаточного колапсу нашого суспільства…»
-
-Written years before 2014 and 2022, this names the threat Chornovil spent his life resisting and the danger he saw outliving the USSR. Pedagogically it lets learners connect the dissident generation directly to the present war. [1997; attested via T3: uk.wikiquote, citing pivnich.org.ua; flagged secondary-attested — verbatim form to be re-confirmed against the Смолоскип collected works before any learner-facing use]
-
-**Honest gap (§4 + §10):** both quotations are attested through reliable secondary transmission (NV, uk.wikiquote citing named outlets) rather than from a direct read of the Смолоскип ten-volume edition this pass; they are labelled accordingly, and the 1997 wording should be checked against Т. 9–10 of the collected works before publication.
+No personal quotation is approved for learner-facing use. The accessible dossier sources transmit attributed wording but do not provide a directly inspected edition, page, recording timestamp, or archival locator. Events, works, and documented positions may be paraphrased; verbatim wording requires direct primary-text verification.
 
 ## 5. Language register
 
@@ -126,12 +112,8 @@ Written years before 2014 and 2022, this names the threat Chornovil spent his li
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **«Viacheslav Chornovil»** holds late-Soviet/independence-era photographs; license must be checked on each **file page** (several press and Rukh-era photos require a specific tag). [Commons category: `Viacheslav Chornovil`]
-- **Backup candidates:**
-  - Укрпошта commemorative stamp(s) and the 2002 Золочів monument — verify stamp/monument-photo rights before use.
-  - The Музей-садиба Героя України В. М. Чорновола in с. Вільхівець — context image, verify rights.
-- **Context image (use with care):** a facsimile page of «Український вісник» самвидав, or the cover of «Лихо з розуму» (Diasporiana digitisation), would strongly illustrate §3.
-- **If no rights-clear portrait clears review:** fall back to a PD parliamentary/Rukh-rally photo with clear licensing.
+- **Approved candidate:** `File:Viacheslav Chornovil.jpg` — 1995 portrait of Viacheslav Chornovil. Wikimedia Commons records `CC BY-SA 3.0` and attribution to Щербинин Юрий: <https://commons.wikimedia.org/wiki/File:Viacheslav_Chornovil.jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, stamp, or institutional image is approved.
 
 ## 10. Sources used
 
@@ -148,7 +130,7 @@ Written years before 2014 and 2022, this names the threat Chornovil spent his li
 - NV. «Як у 1966 році 29-річний журналіст Чорновіл отримав свій перший вирок». — context for the 8.07.1966 last word (§4 quote 1).
 - Diasporiana digitisations of «Лихо з розуму» — primary-text leads (cited, not fully read this pass).
 
-**Primary-source documents accessed (in transcription only):** the 8 July 1966 court last word and the title-origin anecdote of «Лихо з розуму», accessed in transcription via the above; the КДБ case files and the full Смолоскип collected works were not opened this pass (honest gap, §4).
+**Primary-source leads, not approved quotations:** the 8 July 1966 court last word and the title-origin anecdote of «Лихо з розуму» were encountered only through secondary transmission. The КДБ case files and the full Смолоскип collected works were not opened this pass; §4 therefore permits paraphrase only.
 
 ---
 

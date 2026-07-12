@@ -119,11 +119,8 @@ Kyiv. [U3]
 
 ## 9. Image candidates
 
-- **Best candidate:** UGCC / UCU portrait only after license verification.
-- **Context image:** Patriarchal Cathedral of the Resurrection of Christ in
-  Kyiv, only after license verification.
-- **Sensitivity note:** use public-teacher / church-leader imagery rather than
-  sentimental saint-card framing.
+- **Approved candidate:** `File:Lubomyr Husar (His Eminent Beatitude).jpg` — 2010 portrait of Lubomyr Husar. Wikimedia Commons records `CC BY-SA 3.0` and attribution to Водник: <https://commons.wikimedia.org/wiki/File:Lubomyr_Husar_(His_Eminent_Beatitude).jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, stamp, or institutional image is approved.
 
 ## 10. Sources used / tool evidence ledger
 
@@ -154,6 +151,36 @@ URL: https://archives.ugcc.ua/news/spetspogashennya_lyubomir_guzar_19332017_moie
 **U5 — `web.open`, official UGCC beatification-process item:**
 raw output included `beatification and canonization of Patriarch Lubomyr`.
 URL: https://ugcc.ua/en/data/patriarch-lubomyr-husar-may-soon-become-blessed-head-of-the-ugcc-commences-beatification-process-940/
+
+### Source boundaries and triangulation
+
+The U-series pages are official UGCC publications. They are appropriate
+evidence for institutional chronology, the church's description of its own
+leadership, and wording that the church itself published. They are not an
+independent assessment of Huzar's public authority, the reception of the 2005
+transfer to Kyiv, or the merits of a beatification cause. The seminar must
+therefore attribute evaluative phrases such as «моральний авторитет» to the
+institutional source instead of silently adopting them as a neutral verdict.
+[U2; U3; U5]
+
+U1 and U2 independently support the sequence of wartime departure, diaspora
+formation, episcopal consecration, return after the Soviet collapse, and later
+church leadership, but they belong to the same institutional source family.
+This is enough for a bounded source packet, not broad historical triangulation.
+The plan should use the pages to establish chronology and then invite learners
+to distinguish institutional memory from public reception. Claims about
+Orthodox responses, party politics, private motives, or a society-wide
+consensus are outside the evidence gathered here and must not be inferred.
+
+U4 supplies the exact phrase «Моє велике бажання - бути людиною» through an
+official commemorative item. Its evidentiary reach is narrow: it verifies the
+wording and the church's use of that wording in commemoration. It does not by
+itself establish the provenance of a longer speech, a publication history, or
+the representativeness of the phrase across Huzar's full body of teaching.
+Likewise, U3 supports the published formulation about an all-Ukrainian church
+and the dated return to Kyiv, but the English wording should not be expanded
+into an uncited Ukrainian quotation. These limits keep paraphrase, direct
+quotation, and institutional interpretation visibly separate.
 
 **P1 — `sed -n '1,135p' curriculum/l2-uk-en/plans/bio/liubomyr-huzar.yaml`:**
 raw output included `slug: liubomyr-huzar`,

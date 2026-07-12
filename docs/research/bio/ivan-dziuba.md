@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ Желєзняк T1; his memoirs «На трьох континентах» T2; Частакова monograph T4; + the primary treatise in the corpus)
 - [x] Oppression mechanism is specific (commission 15.02.1972; arrest 13.01.1972; 1973 sentence 5+5 years; recantation under TB/КГБ duress)
-- [x] ≥2 primary-source quotes — two corpus-verified treatise passages (conf 1.0) + his 1965 recorded stage speech
+- [x] ≥2 primary-source quotes — two corpus-verified treatise passages (confidence 1.0); secondary-transmitted stage wording is not retained
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -72,17 +72,6 @@ Dziuba's method in one line: turn the regime's own canon (Marx/Engels/Lenin) aga
 
 The astonishing premise — a citizen mailing a dissident treatise *to Shelest and Shcherbytsky themselves*, demanding the policy "виправиться." [Primary: cover letter to П. Шелест / В. Щербицький, 1965; verify_quote conf. 1.0, work `wave7-dzyuba-internatsionalizm`]
 
-**Quote 2b — the demand for free debate (corpus-attested, partial match).** The treatise's answer to coercion: `verify_quote` surfaced the verbatim line at conf 0.76 —
-
-> «…[я можу] протиставити одне: свободу — свободу публічного і чесного обговорення [національного питання].»
-
-[Primary: same work; verify_quote partial conf. 0.76 — reported honestly, the matched line is the real text]
-
-**Quote 3 — his 1965 stage statement (recorded speech, labelled):**
-
-> «У нас велике свято. Але й велике горе. В Україні почалися арешти творчої молоді.»
-
-The public act that opened the шістдесятники's open confrontation with the regime. [T3: uk.wikipedia — recorded; not corpus-verified verbatim]
 
 ## 5. Language register
 
@@ -130,10 +119,8 @@ The public act that opened the шістдесятники's open confrontation w
 
 ## 9. Image candidates
 
-- **Best portrait (note: recent figure — PD-by-age does NOT apply):** Dziuba died in **2022**, so most photographs are **in copyright**. Use a **CC-BY / CC-BY-SA** licensed press or Wikimedia portrait, or seek permission; do not assume public domain. [check Wikimedia Commons `Ivan Dziuba` file-page licenses individually]
-- **Backup candidates:** stills from the 2023 documentary **«Іван і Марта»** (rights-cleared only); his Байкове кладовище grave (ділянка № 47а); a samvydav/«Вітчизна» 1990 page of «Інтернаціоналізм чи русифікація?».
-- **Context image:** a facsimile of the treatise's first London 1968 edition cover — strong §3 illustration if rights-clear.
-- **If no rights-clear portrait clears review:** use the treatise title-page / an official state-award ceremony photo released under a compatible licence.
+- **Approved candidate:** `File:Ivan Dziuba (2004).jpg` — 2004 portrait of Ivan Dziuba. Wikimedia Commons records `CC BY-SA 3.0` and attribution to Encyclopedia of History of Ukraine: <https://commons.wikimedia.org/wiki/File:Ivan_Dziuba_(2004).jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, stamp, or institutional image is approved.
 
 ## 10. Sources used
 

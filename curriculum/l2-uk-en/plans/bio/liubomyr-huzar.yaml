@@ -79,21 +79,25 @@ persona:
   role: Модератор семінару, що аналізує суспільний вплив релігійного діяча, розрізняючи його теологічний, політичний та культурний внесок.
   voice: Secular-Historian-of-Religion
 phase: BIO.1
+readings_contract_version: 2
 readings:
-- source_name: "«Бути людиною» (вибрані есеї/проповіді)"
-  source_url: ""
-  source_type: "primary-source"
-  role: "text-analysis"
-  learner_task: "Читання та обговорення морально-етичних концепцій Любомира Гузара"
-  license: "copyright"
-  rights_note: "Захищено авторським правом. Тільки цитування в навчальних цілях"
-  hosting: "reading-needed"
-  language: "uk"
-  cefr_min: C1
+- title: Спецпогашення «Любомир Гузар 1933-2017 «Моє велике бажання – бути людиною»
+  source_name: Офіційний сайт Української греко-католицької церкви
+  source_url: https://archives.ugcc.ua/news/spetspogashennya_lyubomir_guzar_19332017_moie_velike_bazhannya__buti_lyudinoyu_79632.html
+  language: uk
+  type: institutional
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://archives.ugcc.ua/news/spetspogashennya_lyubomir_guzar_19332017_moie_velike_bazhannya__buti_lyudinoyu_79632.html
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Визначити, як формула «бути людиною» подає громадянську етику Любомира Гузара, не перетворюючи церковне вшанування на незалежну біографічну оцінку.
 references:
 - title: Liubomyr Huzar
   note: Базова біографія, дати, ключові події. Скомпільовано з Wikipedia та офіційних джерел УГКЦ.
-  path: wiki/bio/liubomyr-huzar.md
+  path: wiki/figures/liubomyr-huzar.md
   type: wiki
 - title: Бути Людиною (аудіокнига, есеї)
   author: Любомир Гузар

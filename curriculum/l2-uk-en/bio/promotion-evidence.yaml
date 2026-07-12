@@ -1631,6 +1631,106 @@ entries:
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
       active: false
       reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  lina-kostenko:
+    dossier_grounding: &cohort3_review
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      disposition: link-only-approved
+    wiki_grounding: *cohort3_review
+    wiki_quote_verification: *cohort3_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Lina_Kostenko.jpg
+      disposition: approved
+    cohort_promotion: *cohort3_review
+    hold: &cohort3_hold
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  ivan-dziuba:
+    dossier_grounding: *cohort3_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      disposition: link-only-approved
+    wiki_grounding: *cohort3_review
+    wiki_quote_verification: *cohort3_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Ivan_Dziuba_(2004).jpg
+      disposition: approved
+    cohort_promotion: *cohort3_review
+    hold: *cohort3_hold
+  liubomyr-huzar:
+    dossier_grounding: *cohort3_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      disposition: link-only-approved
+    wiki_grounding: *cohort3_review
+    wiki_quote_verification: *cohort3_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Lubomyr_Husar_(His_Eminent_Beatitude).jpg
+      disposition: approved
+    cohort_promotion: *cohort3_review
+    hold: *cohort3_hold
+  vasyl-symonenko:
+    dossier_grounding: *cohort3_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      disposition: link-only-approved
+    wiki_grounding: *cohort3_review
+    wiki_quote_verification: *cohort3_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Stamp_of_Ukraine_s1421.jpg
+      disposition: approved
+    cohort_promotion: *cohort3_review
+    hold: *cohort3_hold
+  viacheslav-chornovil:
+    dossier_grounding: *cohort3_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953155976
+      disposition: link-only-approved
+    wiki_grounding: *cohort3_review
+    wiki_quote_verification: *cohort3_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Viacheslav_Chornovil.jpg
+      disposition: approved
+    cohort_promotion: *cohort3_review
+    hold: *cohort3_hold
   borys-paton:
     dossier_grounding: *cohort1_review
     reading_rights:

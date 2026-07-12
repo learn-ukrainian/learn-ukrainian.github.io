@@ -1,50 +1,21 @@
-# Source registry for wiki/figures/lina-kostenko.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
-  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Короткий зміст'
+  file: https://esu.com.ua/article-3960
+  type: external
+  title: Костенко Ліна Василівна
+  url: https://esu.com.ua/article-3960
 - id: S2
-  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Основний-зміст-1-Формування-особистості-та-конфлікт-із-тоталітарною-системою
-  type: ukrainian_wiki
-  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
-  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Основний зміст
-    > 1. Формування особистості та конфлікт із тоталітарною системою'
+  file: ukrlib-kostenko
+  type: literary
+  title: Ліна Костенко — корпус перевірених поезій
+  author: Костенко Л.
 - id: S3
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1380
-  type: textbook
-  title: Літературне «шістдесятництво» . Ліна Костенко . «Маруся Чурай»  193
-  page: 193
-  grade: 11
-- id: S4
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1377
-  type: textbook
-  title: Літературне «шістдесятництво». Ліна Костенко  187
-  page: 187
-  grade: 11
-- id: S5
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1374
-  type: textbook
-  title: Літературне «шістдесятництво» . Ліна Костенко  181
-  page: 181
-  grade: 11
-- id: S6
-  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Основний-зміст-5-Рецепція-творчості-від-підпільного-спротиву-до-національного-канону
-  type: ukrainian_wiki
-  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
-  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Основний зміст
-    > 5. Рецепція творчості: від підпільного спротиву до національного канону'
-- id: S7
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1373
-  type: textbook
-  title: Літературне «шістдесятництво» . Ліна Костенко  179
-  page: 179
-  grade: 11
-- id: S8
-  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
-  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Деколонізаційна
-    перспектива'
+  file: https://commons.wikimedia.org/wiki/File:Lina_Kostenko.jpg
+  type: external
+  title: File:Lina Kostenko.jpg — GFDL 1.2+
+  url: https://commons.wikimedia.org/wiki/File:Lina_Kostenko.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Lina_Kostenko.jpg
+    license: GFDL 1.2+
+    attribution: keymaster

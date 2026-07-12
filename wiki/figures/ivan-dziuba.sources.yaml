@@ -1,59 +1,16 @@
-# Source registry for wiki/figures/ivan-dziuba.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrlib-dziuba_c0004
-  type: literary
-  title: Іван Дзюба. Біографія Івана Дзюби
-  author: Дзюба І.
+  file: https://resource.history.org.ua/book/en/11041
+  type: external
+  title: Інтернаціоналізм чи русифікація?
+  url: https://resource.history.org.ua/book/en/11041
 - id: S2
-  file: wave7-dzyuba-internatsionalizm_c0000
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S3
-  file: ukrainian_wiki/ivan-dziuba_Біографія-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація?'
-  section_path: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація? > Короткий
-    зміст'
-- id: S4
-  file: ukrainian_wiki/dziuba-literature_Українська-література-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?'
-  section_path: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?
-    > Короткий зміст'
-- id: S5
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1027
-  type: textbook
-  title: ДИСИДЕНТСЬКИЙ РУХ ДРУГОЇ ПОЛОВИНИ 1960-Х – ПЕРШОЇ ПОЛОВИНИ 1970-Х РОКІВ
-  page: 125
-  grade: 11
-- id: S6
-  file: ukrainian_wiki/ivan-dziuba_Біографія-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Основний-зміст-Спадщина-та-діяльність-у-незалежній-Україні
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація?'
-  section_path: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація? > Основний
-    зміст > Спадщина та діяльність у незалежній Україні'
-- id: S7
-  file: wave7-dzyuba-internatsionalizm_c0364
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S8
-  file: ukrainian_wiki/ivan-dziuba_Біографія-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація?'
-  section_path: 'Біографія: Іван Дзюба: Інтернаціоналізм чи русифікація? > Деколонізаційна
-    перспектива'
-- id: S9
-  file: ukrlib-dziuba_c0003
-  type: literary
-  title: Іван Дзюба. Біографія Івана Дзюби
-  author: Дзюба І.
-- id: S10
-  file: ukrainian_wiki/dziuba-literature_Українська-література-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?'
-  section_path: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?
-    > Деколонізаційна перспектива'
+  file: https://commons.wikimedia.org/wiki/File:Ivan_Dziuba_(2004).jpg
+  type: external
+  title: File:Ivan Dziuba (2004).jpg — CC BY-SA 3.0
+  url: https://commons.wikimedia.org/wiki/File:Ivan_Dziuba_(2004).jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Ivan_Dziuba_(2004).jpg
+    license: CC BY-SA 3.0
+    attribution: Encyclopedia of History of Ukraine

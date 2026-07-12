@@ -79,21 +79,25 @@ persona:
   role: Проводить семінар про складні моральні вибори в українській історії, змушуючи студентів уникати чорно-білих оцінок
   voice: Senior Biographer
 phase: BIO
+readings_contract_version: 2
 readings:
-- source_name: "«Інтернаціоналізм чи русифікація?» (вибрані розділи)"
-  source_url: ""
-  source_type: "primary-source"
-  role: "text-analysis"
-  learner_task: "Аналіз публіцистичної аргументації та політичного контексту твору"
-  license: "unknown"
-  rights_note: "Самвидав; перевірити сучасний статус авторських прав для легального розміщення уривків"
-  hosting: "reading-needed"
-  language: "uk"
-  cefr_min: C1
+- title: Інтернаціоналізм чи русифікація?
+  source_name: Електронна бібліотека Інституту історії України НАН України
+  source_url: https://resource.history.org.ua/book/en/11041
+  language: uk
+  type: primary-source
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/book/en/11041
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Проаналізувати спосіб, у який Іван Дзюба викриває русифікацію через суперечності між проголошеною та реальною радянською національною політикою.
 references:
 - title: Ivan Dziuba
   note: Compiled from uk.wikipedia.org, dissertation abstracts, and critical reviews
-  path: wiki/bio/ivan-dziuba.md
+  path: wiki/figures/ivan-dziuba.md
   type: wiki
 - title: «Інтернаціоналізм чи русифікація?»
   author: Іван Дзюба

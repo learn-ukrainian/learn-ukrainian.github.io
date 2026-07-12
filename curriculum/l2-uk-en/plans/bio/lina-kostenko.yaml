@@ -80,27 +80,21 @@ persona:
   role: Модератор семінару, що ставить складні питання. Замість поклоніння іконі — пропонує глибокий аналіз її творчості та життєвого шляху, включно з суперечливими моментами.
   voice: Literary-Critic
 phase: BIO.13
+readings_contract_version: 2
 readings:
-- source_name: "Ліна Костенко: Біографія"
-  source_url: ""
-  source_type: "biography"
-  role: "background"
-  learner_task: "Читання життєпису, фокус на періоді 'шістдесятників' та творчому мовчанні"
-  license: "unknown"
-  rights_note: "Знайти надійне джерело (наприклад, Інститут національної пам'яті)"
-  hosting: "reading-needed"
-  language: "uk"
-  cefr_min: C1
-- source_name: "«Маруся Чурай» (уривки)"
-  source_url: ""
-  source_type: "primary-source"
-  role: "text-analysis"
-  learner_task: "Аналіз поетичних фрагментів, визначення історичного та культурного контексту"
-  license: "copyright"
-  rights_note: "Захищено авторським правом. Тільки навчальне цитування"
-  hosting: "reading-needed"
-  language: "uk"
-  cefr_min: C1
+- title: Костенко Ліна Василівна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-3960
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-3960
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити творчий шлях Ліни Костенко, механізми радянського замовчування та повернення до друку, відділяючи факти від канонізувальних оцінок.
 references:
 - title: Маруся Чурай
   author: Ліна Костенко
@@ -119,7 +113,7 @@ references:
   work: 'З криниці літ: У 3 т.'
 - title: Lina Kostenko
   note: Додаткові біографічні дані, повний список творів, хронологія.
-  path: wiki/bio/lina-kostenko.md
+  path: wiki/figures/lina-kostenko.md
   type: wiki
 sequence: 160
 slug: lina-kostenko

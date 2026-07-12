@@ -83,7 +83,6 @@ All quotes verified against the **`ukrlib-kostenko`** corpus via `verify_quote` 
 
 `verify_quote` matched the first line at **confidence 0.9846** (`ukrlib-kostenko`). [Primary: ukrlib-kostenko; verify_quote 0.9846]
 
-**Recorded-speech specimen (not from a literary work — register sample, §5):** declining the title Hero of Ukraine, she answered **«Політичної біжутерії не ношу!»** ("I don't wear political costume jewellery"). This is reported speech in the press, not a verse line, and is labelled as such. [T3: uk.wikipedia]
 
 ## 5. Language register
 
@@ -134,10 +133,8 @@ All quotes verified against the **`ukrlib-kostenko`** corpus via `verify_quote` 
 
 ## 9. Image candidates
 
-- **Living-person rights caveat (load-bearing):** Kostenko is alive, so **no portrait is public-domain by age**. Any photo needs an explicit free licence — do **not** assume Wikimedia Commons presence equals reuse rights.
-- **Best free-licence candidate:** search Wikimedia Commons category **"Lina Kostenko"** for images released **CC BY / CC BY-SA** (e.g. event photos uploaded by Ukrainian institutions); verify the **individual file page** licence, not the category.
-- **Backup candidates:** a CC-licensed press photo from a state ceremony (e.g. the 2022 Légion d'honneur award, or 2024 honorary-citizen-of-Kyiv events) — confirm licence at source.
-- **If no free-licence portrait clears review:** fall back to a rights-cleared cover scan of «Маруся Чурай» or the minor planet 290127 Лінакостенко context image; flag for the image-rights reviewer.
+- **Approved candidate:** `File:Lina Kostenko.jpg` — portrait of Lina Kostenko. Wikimedia Commons records `GFDL 1.2+` and attribution to keymaster: <https://commons.wikimedia.org/wiki/File:Lina_Kostenko.jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, stamp, or institutional image is approved.
 
 ## 10. Sources used
 

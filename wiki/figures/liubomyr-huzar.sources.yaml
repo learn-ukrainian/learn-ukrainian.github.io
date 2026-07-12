@@ -1,54 +1,31 @@
-# Source registry for wiki/figures/liubomyr-huzar.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/liubomyr-huzar_Біографія-Любомир-Гузар-Моральний-авторитет-нації-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Любомир Гузар: Моральний авторитет нації'
-  section_path: 'Біографія: Любомир Гузар: Моральний авторитет нації > Короткий зміст'
+  file: https://archives.ugcc.ua/en/news/cardinal_lubomyr_husar_dies_aged_85_79609.html
+  type: external
+  title: Cardinal Lubomyr Husar passed into eternity
+  url: https://archives.ugcc.ua/en/news/cardinal_lubomyr_husar_dies_aged_85_79609.html
 - id: S2
-  file: 10-klas-ukrmova-glazova-2018_s0515
-  type: textbook
-  title: § 8. Лексичні й фразеологічні антоніми
-  page: 41
-  grade: 10
+  file: https://archives.ugcc.ua/en/articles/patriarch_lubomyr_husar__a_true_moral_authority_79663.html
+  type: external
+  title: Patriarch Lubomyr Husar – a true moral authority
+  url: https://archives.ugcc.ua/en/articles/patriarch_lubomyr_husar__a_true_moral_authority_79663.html
 - id: S3
-  file: ukrainian_wiki/liubomyr-huzar_Біографія-Любомир-Гузар-Моральний-авторитет-нації-Основний-зміст-2-Аскетизм-і-самоізоляція-уроки-полемічної-епохи
-  type: ukrainian_wiki
-  title: 'Біографія: Любомир Гузар: Моральний авторитет нації'
-  section_path: 'Біографія: Любомир Гузар: Моральний авторитет нації > Основний зміст
-    > 2. Аскетизм і самоізоляція: уроки полемічної епохи'
+  file: https://ugcc.ua/en/church/history/return-to-kyiv/
+  type: external
+  title: Return to Kyiv 2005
+  url: https://ugcc.ua/en/church/history/return-to-kyiv/
 - id: S4
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1061
-  type: textbook
-  title: Ан-225 «Мрія». Світлина
-  page: 265
-  grade: 11
+  file: https://archives.ugcc.ua/news/spetspogashennya_lyubomir_guzar_19332017_moie_velike_bazhannya__buti_lyudinoyu_79632.html
+  type: external
+  title: Спецпогашення «Любомир Гузар. 1933–2017. Моє велике бажання – бути людиною»
+  url: https://archives.ugcc.ua/news/spetspogashennya_lyubomir_guzar_19332017_moie_velike_bazhannya__buti_lyudinoyu_79632.html
 - id: S5
-  file: ukrainian_wiki/liubomyr-huzar_Біографія-Любомир-Гузар-Моральний-авторитет-нації-Основний-зміст-5-Соборність-і-боротьба-проти-тоталітарного-безпам-ятства
-  type: ukrainian_wiki
-  title: 'Біографія: Любомир Гузар: Моральний авторитет нації'
-  section_path: 'Біографія: Любомир Гузар: Моральний авторитет нації > Основний зміст
-    > 5. Соборність і боротьба проти тоталітарного безпам''ятства'
-- id: S6
-  file: wave7-lytvynov-renesans-humanizm_c0107
-  type: literary
-  title: Литвинов — Ренесансний гуманізм в Україні
-  author: Литвинов В.
-- id: S7
-  file: wave7-shcherbak-kozatstvo_c0285
-  type: literary
-  title: 'Щербак — Українське козацтво: формування соціального стану'
-  author: Щербак В.
-- id: S8
-  file: 11-klas-istoriya-ukr-galimov-2024_s0873
-  type: textbook
-  title: § 28. Культурне та релігійне життя
-  page: 207
-  grade: 11
-- id: S9
-  file: 11-klas-istoriya-ukr-gisem-2024_s0971
-  type: textbook
-  title: У 2014 р. митрополитом УПЦ МП став єпископ Онуфрій
-  page: 239
-  grade: 11
+  file: https://commons.wikimedia.org/wiki/File:Lubomyr_Husar_(His_Eminent_Beatitude).jpg
+  type: external
+  title: File:Lubomyr Husar (His Eminent Beatitude).jpg — CC BY-SA 3.0
+  url: https://commons.wikimedia.org/wiki/File:Lubomyr_Husar_(His_Eminent_Beatitude).jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Lubomyr_Husar_(His_Eminent_Beatitude).jpg
+    license: CC BY-SA 3.0
+    attribution: Водник
