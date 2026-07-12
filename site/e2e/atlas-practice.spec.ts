@@ -58,6 +58,22 @@ test('practice matching renders a real round (>=3 pairs) for a fresh learner', a
   await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
 });
 
+test('practice mode switch starts the selected mode without inheriting the unfinished one', async ({ page }) => {
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.locator('button[data-mode="matching"]').click();
+  await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
+  await page.getByRole('button', { name: /Додому/ }).click();
+
+  // An unfinished matching session remains available only through its matching control.
+  await expect(page.locator('button[data-resume-mode="matching"]')).toBeVisible();
+  await page.locator('button[data-mode="flashcards"]').click();
+
+  await expect(page.locator('[data-activity="flashcard"]')).toBeVisible();
+  await expect(page.locator('[data-testid="practice-matching"]')).toBeHidden();
+  await expect(page.locator('[data-testid="practice-session-progress"]')).toContainText('0/');
+});
+
 for (const [path, label] of [
   ['/words-of-the-day/practice/', 'plain practice page'],
   ['/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D0%B2%D0%B0', 'deep-link practice page'],
