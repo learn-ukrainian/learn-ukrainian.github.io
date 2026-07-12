@@ -60,6 +60,22 @@ def _write_candidates(directory: Path) -> None:
         ),
         encoding="utf-8",
     )
+    (directory / "relation_candidates_sample.json").write_text(
+        json.dumps(
+            {
+                "source": "sample.invalid",
+                "pairs": [
+                    {
+                        "relation": "synonym",
+                        "word_a": "гарний",
+                        "word_b": "чудовий",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_loader_upserts_normalized_pairs_and_discards_source_prose(tmp_path, monkeypatch) -> None:
@@ -130,3 +146,15 @@ def test_loader_dry_run_is_read_only_and_source_filter_is_precise(tmp_path, monk
     assert summary.inserted == 0
     assert counts == {("ukr-mova.in.ua", "paronym"): 1}
     assert not db_path.exists()
+
+
+def test_loader_excludes_relation_candidate_sample_artifact(tmp_path, monkeypatch) -> None:
+    candidates_dir = tmp_path / "candidates"
+    candidates_dir.mkdir()
+    _write_candidates(candidates_dir)
+    monkeypatch.setattr(loader, "is_exact_vesum_lemma", lambda word: True)
+
+    summary, counts = loader.load_candidates(tmp_path / "sources.db", candidates_dir, dry_run=True)
+
+    assert summary.accepted == 5
+    assert ("sample.invalid", "synonym") not in counts
