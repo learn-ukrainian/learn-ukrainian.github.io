@@ -148,12 +148,22 @@ persona:
     радянської маргіналізації.
   voice: Maritime Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- author: Одеський мартиролог
-  description: Інституційний меморіальний запис про життя та кар'єру капітанки Берти Рапопорт.
-  difficulty: B2
-  title: Рапопорт Берта Яківна (1914–1967)
-  url: https://odessa-memory.info/ua/index.php?id=87
+- title: Рапопорт Берта Яківна
+  source_name: Одеський мартиролог
+  source_url: https://odessa-memory.info/ua/index.php?id=87
+  language: uk
+  type: biography
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://odessa-memory.info/ua/index.php?id=87
+    note: Зовнішнє посилання; текст і зображення не відтворюються в курсі.
+  learner_task: >-
+    Відновити документовану кар'єрну послідовність Рапопорт від штурманки до
+    капітанки та відокремити її від пізніших меморіальних узагальнень.
 references:
 - note: >-
     Інституційний меморіальний запис (Одеський мартиролог) — найсильніше доступне

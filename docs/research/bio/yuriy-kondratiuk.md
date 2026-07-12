@@ -49,21 +49,12 @@ This is the load-bearing section. Kondratiuk's repression is unusual: the threat
 - `1932–1934` — design of a **12,000-kW Crimean wind power station** (Novosibirsk, then Kharkiv) — far beyond contemporary foreign analogues. [T3]
 - `1939` — headed the wind-power design-experimental establishment in Moscow. [T3]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-Kondratiuk's surviving documentary voice is **mostly Russian-language** (the Soviet scientific milieu) — itself part of the colonial story; he nonetheless declared Ukrainian as his native language. Quotes are flagged for language/transmission.
-
-**Quote 1 — recorded recollection of the spark (Ukrainian, memoir transmission):** on how a sci-fi novel (Kellermann's *Der Tunnel*, 1913) set his life's two themes:
-
-> «…заходився обробляти, наскільки дозволяли мої сили, майже одночасно дві теми: пробивання глибокої шахти для дослідження надр Землі й утилізації теплоти ядра та політ за межі Землі.»
-
-Pedagogically vivid: a Poltava gymnasium pupil, c. 1914, setting himself the problem of leaving the Earth. [T3: uk.wikipedia — Життєпис, quoted from his recollections]
-
-**Quote 2 — autobiographical questionnaire line (language flagged):** on his upbringing:
-
-> «…меня вырастил неродной дедушка.» ("I was raised by my non-blood grandfather.")
-
-This survives **in Russian** — the language of the Soviet anketa — and is presented here **with that flag**: the gap between his declared Ukrainian identity and his Russian-language paperwork is exactly the colonial pressure this dossier documents, not a sign that he "was Russian." [T3: uk.wikipedia — Життєпис, quoting his autobiographical анкета]
+No quotation is approved for the module. The accessible recollection and
+questionnaire phrases are transmitted through a secondary encyclopedia rather
+than a directly checked manuscript or edition. They were removed instead of
+being normalized or translated without a locator.
 
 **Documented self-identification (not a quote but a primary fact):** in official documents, including through the repressive 1930s, Kondratiuk-Shargei listed his nationality as **українець** and his native language as **українська**. [T3: uk.wikipedia — lead]
 
@@ -108,12 +99,11 @@ This survives **in Russian** — the language of the Soviet anketa — and is pr
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Yuri Kondratyuk"** holds early-20th-c. photographs; pre-1929 portraits are likely PD by age — verify the individual **file page** license. [Commons category: `Yuri Kondratyuk`]
-- **Backup candidates:**
-  - National Bank of Ukraine commemorative coin «Юрій Кондратюк» (1997) and the 1997/2002 Ukrposhta stamps — Ukrainian-state images, check terms.
-  - Полтавський музей авіації та космонавтики ім. Ю. В. Кондратюка (Poltava) — Tier 2 institutional photographs, request rights.
-- **Context image:** the title page of **«Завоювання міжпланетних просторів»** (1929) or a diagram of the lunar-orbit-rendezvous "траса Кондратюка" — strong §3 illustration if rights-clear.
-- **If no rights-clear portrait clears review:** fall back to the 1997 NBU coin or the Poltava monument.
+- **Approved candidate:** `File:Шаргей Олександр.jpg`. Wikimedia Commons
+  marks this exact portrait Public domain:
+  <https://commons.wikimedia.org/wiki/File:Шаргей_Олександр.jpg>.
+- The disposition applies only to that file. No coin, stamp, monument, museum
+  image, book scan, or trajectory diagram is approved by this evidence.
 
 ## 10. Sources used
 
