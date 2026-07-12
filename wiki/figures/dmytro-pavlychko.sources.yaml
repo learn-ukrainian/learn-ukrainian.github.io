@@ -1,43 +1,16 @@
-# Source registry for wiki/figures/dmytro-pavlychko.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/dmytro-pavlychko_Біографія-Дмитро-Павличко-Поет-і-дипломат-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро Павличко: Поет і дипломат'
-  section_path: 'Біографія: Дмитро Павличко: Поет і дипломат > Короткий зміст'
-- id: S2
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1360
-  type: textbook
-  title: Літературне «шістдесятництво» . Василь Симоненко  157
-  page: 157
-  grade: 11
-- id: S3
-  file: https://www.youtube.com/watch?v=-8IOi6Dcjzc
+  file: https://osvita.ua/school/biography/91335/
   type: external
-  title: ULP 6-228 | Українська поезія. Дмитро Павличко «Два кольори» | Ukrainian
-    Lessons Podcast Season 6
-  url: https://www.youtube.com/watch?v=-8IOi6Dcjzc
-- id: S4
-  file: ukrainian_wiki/dmytro-pavlychko_Біографія-Дмитро-Павличко-Поет-і-дипломат-Основний-зміст-Політична-діяльність-у-незалежній-Україні-та-інтелектуальна-спадщина-родини
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро Павличко: Поет і дипломат'
-  section_path: 'Біографія: Дмитро Павличко: Поет і дипломат > Основний зміст > Політична
-    діяльність у незалежній Україні та інтелектуальна спадщина родини'
-- id: S5
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1361
-  type: textbook
-  title: Літературне «шістдесятництво» . Дмитро Павличко  159
-  page: 159
-  grade: 11
-- id: S6
-  file: ukrainian_wiki/dmytro-pavlychko_Біографія-Дмитро-Павличко-Поет-і-дипломат-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро Павличко: Поет і дипломат'
-  section_path: 'Біографія: Дмитро Павличко: Поет і дипломат > Деколонізаційна перспектива'
-- id: S7
-  file: ukrainian_wiki/dmytro-pavlychko_Біографія-Дмитро-Павличко-Поет-і-дипломат-Основний-зміст-Біографічний-контекст-ранні-роки-та-формування-світогляду
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро Павличко: Поет і дипломат'
-  section_path: 'Біографія: Дмитро Павличко: Поет і дипломат > Основний зміст > Біографічний
-    контекст, ранні роки та формування світогляду'
+  title: 'Дмитро Павличко: коротка біографія'
+  url: https://osvita.ua/school/biography/91335/
+- id: S2
+  file: https://commons.wikimedia.org/wiki/File:Дмитро_Васильович_Павличко.JPG
+  type: external
+  title: File:Дмитро Васильович Павличко.JPG — CC BY-SA 4.0
+  url: https://commons.wikimedia.org/wiki/File:Дмитро_Васильович_Павличко.JPG
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Дмитро_Васильович_Павличко.JPG
+    license: CC BY-SA 4.0
+    attribution: Melnikov v n

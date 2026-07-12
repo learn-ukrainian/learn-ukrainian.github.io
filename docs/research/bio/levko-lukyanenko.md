@@ -61,12 +61,9 @@ After the first fifteen-year term he did not move into private silence. He signe
 - `2010` — *До історії Української гельсинської спілки*, history/memoir of the UHG-UHA transition. [T1: ESU; T2: KHPG]
 - `2014-2015` — *Шлях до відродження*, 13-volume collected works; KNPU describes the set as a biographical-documentary collection covering political writing, memoirs, UHG history, Holodomor and Soviet-terror reflections, and late publicistics. [T2: KNPU]
 
-## 4. Primary-source quote / text anchors
+## 4. Quotations and primary-text limit
 
-- **Independence Act anchor:** `незалежність України та створення самостійної української держави - УКРАЇНИ`. Source: official Verkhovna Rada text of the Act, 24 August 1991. Pedagogical use: a B2/C1 legal-language anchor for sovereignty, self-determination, and statehood vocabulary. Caution: this is the adopted parliamentary text; lessons should not turn it into a solitary-author myth. [T2: Rada; T1: EIU Act article]
-- **Unverified memoir lead, not a classroom anchor yet:** `Я дав обітницю небу — здобути Україні волю`. Source lead: Lukyanenko memoir/recollection excerpt quoted in the local 11th-grade history text packet and repeated by LH. Pedagogical potential: strong B2/C1 phrase for personal vocation and political commitment. Caution: this is **not** a verified primary-source anchor in this dossier; retrieve the printed memoir page, full interview transcript, or other page-level source before any lesson uses it verbatim. [T5: LH; local textbook packet as classroom lead only]
-- **Unverified legal-entry lead, not a classroom anchor yet:** `Влада в СРСР зосереджена в партії`. Source lead: *Сповідь у камері смертників*, quoted by LH. Pedagogical potential: explains why he entered party/legal structures before moving into open resistance; useful for avoiding a naive "party member versus dissident" binary. Caution: this dossier did not access the memoir page scan, so treat the line as a textual lead, not as a ready quote. [T5: LH]
-- **Late civic-identity anchor:** `Українець - це не за кров'ю, а це за переконаннями`. Source: NV transcript of a 2016 public speech. Pedagogical use: compact discussion prompt on civic identity. Caution: do not isolate one attractive line as representative of the whole late ideology; any module using late polemical material should source specific claims directly and add a minority-perspective discussion frame. [T5: NV]
+No personal quotation is approved for the module. The accessible excerpts do not supply a directly checked edition, page, recording timestamp, or archival locator. Works, events, and documented positions may be paraphrased from the listed sources; verbatim wording requires direct primary-text inspection.
 
 ## 5. Language register
 
@@ -122,11 +119,8 @@ After the first fifteen-year term he did not move into private silence. He signe
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category `Levko Lukianenko`; file `Levko Lukyanenko.JPG` is listed as CC BY-SA 2.5/2.0/1.0 Generic and shows him on Sofiivska Square, Kyiv, 14 October 2006. Verify the individual file page before embedding.
-- **Backup candidates:** Commons files from public events, including forum and parliamentary-era photographs; verify each file page because category membership alone is not a license check.
-- **Rights-managed candidates:** UNIAN, NV, OPORA, UINP, and museum photographs are useful identification/context leads but should not be treated as reusable without explicit license or permission.
-- **Era-appropriate context image:** official image/facsimile of the Act of Declaration of Independence or the school-notebook draft if a museum page provides rights metadata; otherwise use a text excerpt rather than an uncleared facsimile.
-- **Caption caution:** avoid a triumph-only image sequence. A strong module can pair a rights-cleared portrait with a document image or a prison/UHG context image to keep the legalist-dissident chronology visible.
+- **Approved candidate:** `File:Levko Lukyanenko.JPG` — portrait of Levko Lukianenko. Wikimedia Commons records `CC BY-SA 3.0 / GFDL 1.2+` and attribution to Yakudza: <https://commons.wikimedia.org/wiki/File:Levko_Lukyanenko.JPG>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, or institutional image is approved.
 
 ## 10. Sources used
 

@@ -85,7 +85,7 @@ phase: BIO
 references:
 - title: Yevhen Sverstiuk
   note: Базова біографія, дати, ключові події. Основа для семінару.
-  path: wiki/bio/yevhen-sverstiuk.md
+  path: wiki/figures/yevhen-sverstiuk.md
   type: wiki
 - title: Собор у риштованні
   author: Сверстюк Є.
@@ -106,17 +106,21 @@ slug: yevhen-sverstiuk
 subtitle: 'Yevhen Sverstiuk: The Moral Authority of a Nation'
 title: 'Євген Сверстюк: Моральний авторитет нації'
 version: '4.1'
+readings_contract_version: 2
 readings:
-- source: "Віртуальний музей Дисидентський рух в Україні"
-  source_url: "https://museum.khpg.org/1113995148"
-  source_type: "biography"
-  role: "primary-reading"
-  learner_task: "Читати про дисидентську діяльність та переконання Євгена Сверстюка."
-  cefr_min: "C1"
-  language: "uk"
-  license: "unknown"
-  rights_note: "Посилання для освітніх цілей (добропорядне використання)."
-  hosting: "link-only"
+- title: Сверстюк Євген Олександрович
+  source_name: Віртуальний музей «Дисидентський рух в Україні»
+  source_url: https://museum.khpg.org/1113995148
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113995148
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити переслідування, ув’язнення й інтелектуальну діяльність Євгена Сверстюка, розрізняючи документований факт і моральну оцінку.
 vocabulary_hints:
 - definition: особа або інституція, чиї думки та оцінки мають незаперечну вагу в суспільстві
   pos: ч.

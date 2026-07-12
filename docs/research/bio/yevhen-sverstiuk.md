@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ — Бажан T1; Шевченківська енциклопедія T1; УІНП / КХПГ-автобіографія T2)
 - [x] Oppression mechanism specific (арешт 14.01.1972; ст. 62 ч. I КК УРСР; 7 р. таборів ВС-389/36 + 5 р. заслання)
-- [x] ≥2 primary-source quotes (його афоризми, задокументовані; + есеїстика)
+- [N/A] No primary-source quotation is approved; see §4.
 - [x] Cross-track links verified present via `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -53,7 +53,7 @@
 
 Засновник і незмінний (з 1989) редактор православної газети «Наша віра»; президент Українського ПЕН-клубу; співзасновник Українського культурологічного клубу (1987) та ініціативної групи «Першого грудня» (2011).
 
-## 4. Primary-source quotes (≥2 required)
+- [N/A] No primary-source quotation is approved; see §4.
 
 **Quote 1 — авторський афоризм (задокументований у розділі «Висловлювання» статті про Сверстюка):**
 
@@ -111,10 +111,8 @@
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** є фотопортрети Сверстюка пізнього періоду (публічна діяльність 1990–2010-х) на Wikimedia Commons / у матеріалах УІНП, Радіо Свобода — ліцензію треба підтвердити на Commons (точну назву файлу не звірено; не вигадую).
-- **Backup candidates:** обкладинки «Блудні сини України» (1993, ілюстрації Опанаса Заливахи), «На полі чести»; кадри церемонії Шевченківської премії 1995.
-- **If no PD/CC portrait exists:** контекстне зображення — меморіал «Перм-36» (зона ВС-389/36) або обкладинка самвидавного «Собору у риштованні».
-- **Era-appropriate context image:** самвидавна машинопис-сторінка; будівля табору «Перм-36».
+- **Approved candidate:** `File:Вп евгений сверстюк.jpg` — portrait of Yevhen Sverstiuk. Wikimedia Commons records `CC BY-SA 3.0` and attribution to Russianname: <https://commons.wikimedia.org/wiki/File:Вп_евгений_сверстюк.jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, or institutional image is approved.
 
 ## 10. Sources used
 

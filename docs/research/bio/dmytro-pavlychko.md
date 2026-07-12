@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ T1; Шевченківська енциклопедія T1; Українська музична енциклопедія T1)
 - [x] Oppression mechanism specific (ув'язнення 1945–46 за справою УПА; знищення тиражу «Правди кличе» 1958)
-- [x] ≥2 primary-source quotes (тексти звірені із літературних архівів; не з пам'яті)
+- [x] Two short primary-text excerpts are approved in §4 after external source comparison; neither is represented as project-corpus verified.
 - [x] Cross-track links verified present via `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -53,7 +53,7 @@
 - `2007` — *Літературознавство. Критика* у 2 томах (вид. «Основи»). [T3]
 - Переклади з англійської, іспанської, італійської, французької, португальської, їдишу та слов'янських мов: Данте, Петрарка, Мікеланджело, Лорка, Хосе Марті, Рільке, Гайне та ін. [T3]
 
-## 4. Primary-source quotes (≥2 required)
+- [x] Two short primary-text excerpts follow; both were compared against external literary sources and remain explicitly outside project-corpus verification.
 
 > Тексти **звірено з літературними архівами цієї сесії** (ukrlib.com.ua, ukrlit.net, virshi.top), а НЕ відтворено з пам'яті (Павличка немає в проєктному літ-корпусі, тож `verify_quote` повернув `matched:false` — це очікувано; джерельна перевірка — зовнішня). Цитую лише фрагменти зі стабільним, багатоджерельно підтвердженим текстом.
 
@@ -123,10 +123,8 @@
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** офіційні фото Павличка (народний депутат / дипломат / ювілеї) є на Wikimedia Commons та в матеріалах ВР/некрологів — ліцензію підтвердити на Commons (точну назву файлу не звірено; не вигадую).
-- **Backup candidates:** обкладинки «Два кольори», «Гранослов»; кадри з врученням звання Героя України (2004).
-- **If no PD/CC portrait exists:** контекстне зображення — нотний аркуш/платівка пісні «Два кольори» (О. Білаш) або обкладинка 6-томника Шекспіра (1986).
-- **Era-appropriate context image:** пам'ятник Шевченкові у Варшаві (2002), споруджений за його клопотанням як посла.
+- **Approved candidate:** `File:Дмитро Васильович Павличко.JPG` — portrait of Dmytro Pavlychko. Wikimedia Commons records `CC BY-SA 4.0` and attribution to Melnikov v n: <https://commons.wikimedia.org/wiki/File:Дмитро_Васильович_Павличко.JPG>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, or institutional image is approved.
 
 ## 10. Sources used
 

@@ -97,17 +97,21 @@ slug: dmytro-pavlychko
 subtitle: 'Два кольори душі: між компромісом та боротьбою'
 title: 'Дмитро Павличко: Поет і дипломат'
 version: '4.2'
+readings_contract_version: 2
 readings:
-- source: "Освіта.ua"
-  source_url: "https://osvita.ua/school/biography/91335/"
-  source_type: "biography"
-  role: "primary-reading"
-  learner_task: "Проаналізувати біографічну довідку про політичну та літературну діяльність Дмитра Павличка."
-  cefr_min: "C1"
-  language: "uk"
-  license: "copyrighted"
-  rights_note: "Текст захищено авторським правом; використовувати як зовнішнє посилання для освітнього читання, не хостити повну статтю."
-  hosting: "link-only"
+- title: 'Дмитро Павличко: коротка біографія'
+  source_name: Освіта.UA
+  source_url: https://osvita.ua/school/biography/91335/
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://osvita.ua/school/biography/91335/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити літературну, політичну й дипломатичну діяльність Дмитра Павличка, не підміняючи біографію оцінкою його політичної еволюції.
 vocabulary_hints:
 - definition: генерація української інтелігенції 1960-х, що виступала за оновлення радянського ладу та захист національної культури
   pos: с.

@@ -1,53 +1,16 @@
-# Source registry for wiki/figures/levko-lukyanenko.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/levko-lukyanenko_Біографія-Левко-Лук-яненко-Автор-Акту-незалежності-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Левко Лук''яненко: Автор Акту незалежності'
-  section_path: 'Біографія: Левко Лук''яненко: Автор Акту незалежності > Короткий
-    зміст'
+  file: https://esu.com.ua/article-59216
+  type: external
+  title: Лук’яненко Левко Григорович
+  url: https://esu.com.ua/article-59216
 - id: S2
-  file: ukrainian_wiki/levko-lukyanenko_Біографія-Левко-Лук-яненко-Автор-Акту-незалежності-Основний-зміст-Теоретична-спадщина-та-значення-для-державотворення
-  type: ukrainian_wiki
-  title: 'Біографія: Левко Лук''яненко: Автор Акту незалежності'
-  section_path: 'Біографія: Левко Лук''яненко: Автор Акту незалежності > Основний
-    зміст > Теоретична спадщина та значення для державотворення'
-- id: S3
-  file: ukrainian_wiki/levko-lukyanenko_Біографія-Левко-Лук-яненко-Автор-Акту-незалежності-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Левко Лук''яненко: Автор Акту незалежності'
-  section_path: 'Біографія: Левко Лук''яненко: Автор Акту незалежності > Деколонізаційна
-    перспектива'
-- id: S4
-  file: ukrainian_wiki/levko-lukyanenko_Біографія-Левко-Лук-яненко-Автор-Акту-незалежності-Основний-зміст-Тріумф-ідеї-Проголошення-незалежності-України
-  type: ukrainian_wiki
-  title: 'Біографія: Левко Лук''яненко: Автор Акту незалежності'
-  section_path: 'Біографія: Левко Лук''яненко: Автор Акту незалежності > Основний
-    зміст > Тріумф ідеї: Проголошення незалежності України'
-- id: S5
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1023
-  type: textbook
-  title: Олександр Довженко. Світлина
-  page: 94
-  grade: 11
-- id: S6
-  file: ukrainian_wiki/levko-lukyanenko_Біографія-Левко-Лук-яненко-Автор-Акту-незалежності-Основний-зміст-Історичне-тло-та-передумови-формування-світогляду
-  type: ukrainian_wiki
-  title: 'Біографія: Левко Лук''яненко: Автор Акту незалежності'
-  section_path: 'Біографія: Левко Лук''яненко: Автор Акту незалежності > Основний
-    зміст > Історичне тло та передумови формування світогляду'
-- id: S7
-  file: ukrainian_wiki/unr-vybory_Історіографія-УНР-1917-1921-Стратегічні-помилки-та-спадкоємність-державотворення-Основний-зміст-1-Історіографічна-тяглість-від-Центральної-Ради-до-сучасної-України
-  type: ukrainian_wiki
-  title: 'Історіографія: УНР 1917–1921: Стратегічні помилки та спадкоємність державотворення'
-  section_path: 'Історіографія: УНР 1917–1921: Стратегічні помилки та спадкоємність
-    державотворення > Основний зміст > 1. Історіографічна тяглість: від Центральної
-    Ради до сучасної України'
-- id: S8
-  file: 11-klas-istoriya-ukr-gisem-2024_s0944
-  type: textbook
-  title: Розділ IV. Відновлення державної незалежності України, її роль у розпаді
-    СРСР. Запитання і завдання
-  page: 172
-  grade: 11
+  file: https://commons.wikimedia.org/wiki/File:Levko_Lukyanenko.JPG
+  type: external
+  title: File:Levko Lukyanenko.JPG — CC BY-SA 3.0 / GFDL 1.2+
+  url: https://commons.wikimedia.org/wiki/File:Levko_Lukyanenko.JPG
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Levko_Lukyanenko.JPG
+    license: CC BY-SA 3.0 / GFDL 1.2+
+    attribution: Yakudza

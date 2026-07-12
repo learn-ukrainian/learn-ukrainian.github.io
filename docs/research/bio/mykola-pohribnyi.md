@@ -11,7 +11,7 @@
 - [x] All 10 sections completed (several marked as genuine source gaps — see below)
 - [x] ≥3 Tier 1/Tier 2 sources cited
 - [~] Oppression mechanism — **honestly limited**: no direct personal repression documented; §2 frames the contextual Russification pressure and states the gap explicitly
-- [~] Primary-source quotes — see §4: authentic authorial artifacts provided; verbatim prose from prefaces/recordings was NOT retrievable this session and is flagged
+- [N/A] No primary-source quotation is approved; see §4.
 - [x] Cross-track links verified present via `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -52,7 +52,7 @@
 
 > **Anti-conflation note:** академічний словник-довідник *Українська літературна вимова і наголос* (Київ: Наукова думка, 1973, 724 с., відп. ред. **М. А. Жовтобрюх**) — це **інше** видання іншого редакторського авторства; його НЕ слід приписувати Погрібному, попри схожу назву. [T2: бібліокаталог НТШ Америки, biblionumber 26203 — author = Жовтобрюх, не Погрібний]
 
-## 4. Primary-source quotes
+- [N/A] No primary-source quotation is approved; see §4.
 
 **Чесне застереження:** Погрібний — нормативний лексикограф і диктор, а не есеїст; його первинна спадщина — це **кодифіковані норми** й **записаний голос**, а не дискурсивна проза. Вербатимні уривки з передмов чи аудіозаписів **цієї сесії звірити не вдалося** (chtyvo.org.ua закрито; повний текст посібника недоступний). Нижче — автентичні первинні артефакти, які вдалося атрибутувати, з прямим маркуванням меж.
 
@@ -111,10 +111,8 @@
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** «Фото Миколи Погрібного» згадане у джерелах статті Вікіпедії — ліцензію треба підтвердити на Wikimedia Commons (точну назву файлу не звірено; не вигадую).
-- **Backup candidates:** конверт вінілового релізу *Українська літературна вимова* (1992, Discogs) — обкладинка з його зображенням/іменем (перевірити права).
-- **If no PD/CC portrait exists:** контекстне зображення — обкладинка *Орфоепічного словника* (1983) або кадр студії Українського радіо доби.
-- **Era-appropriate context image:** мікрофон/студія Українського радіо радянської доби.
+- **Approved candidate:** `File:Kyiv - Radio entrance.jpg` — context image of the Ukrainian Radio building. Wikimedia Commons records `CC BY-SA 4.0` and attribution to Віктор Полянко: <https://commons.wikimedia.org/wiki/File:Kyiv_-_Radio_entrance.jpg>.
+- The disposition applies only to this exact file; no other portrait, artwork, book cover, or institutional image is approved.
 
 ## 10. Sources used
 

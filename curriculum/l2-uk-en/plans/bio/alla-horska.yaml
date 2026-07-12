@@ -101,17 +101,21 @@ slug: alla-horska
 subtitle: 'Alla Horska: The Soul of a Broken Stained-Glass Window'
 title: 'Алла Горська: Душа розбитого вітража'
 version: '4.2'
+readings_contract_version: 2
 readings:
-- source: "Віртуальний музей Дисидентський рух в Україні"
-  source_url: "https://museum.khpg.org/1113894362"
-  source_type: "biography"
-  role: "primary-reading"
-  learner_task: "Ознайомитися з біографією Алли Горської та її роллю в русі шістдесятників."
-  cefr_min: "C1"
-  language: "uk"
-  license: "unknown"
-  rights_note: "Посилання для освітніх цілей (добропорядне використання)."
-  hosting: "link-only"
+- title: Горська Алла Олександрівна
+  source_name: Віртуальний музей «Дисидентський рух в Україні»
+  source_url: https://museum.khpg.org/1113894362
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113894362
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти перевірену хронологію мистецької та правозахисної діяльності Алли Горської й окремо позначити встановлені та спірні обставини її смерті.
 vocabulary_hints:
 - definition: вид образотворчого мистецтва, твори якого створюються для конкретного архітектурного середовища (мозаїки, вітражі, фрески).
   pos: с.

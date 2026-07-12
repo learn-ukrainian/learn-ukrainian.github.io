@@ -1727,3 +1727,127 @@ entries:
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
       active: false
       reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  mykola-pohribnyi:
+    dossier_grounding: &cohort2_review
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      disposition: link-only-approved
+    wiki_grounding: *cohort2_review
+    wiki_quote_verification: *cohort2_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Kyiv_-_Radio_entrance.jpg
+      disposition: approved
+    cohort_promotion: *cohort2_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  levko-lukyanenko:
+    dossier_grounding: *cohort2_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      disposition: link-only-approved
+    wiki_grounding: *cohort2_review
+    wiki_quote_verification: *cohort2_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Levko_Lukyanenko.JPG
+      disposition: approved
+    cohort_promotion: *cohort2_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  yevhen-sverstiuk:
+    dossier_grounding: *cohort2_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      disposition: link-only-approved
+    wiki_grounding: *cohort2_review
+    wiki_quote_verification: *cohort2_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Вп_евгений_сверстюк.jpg
+      disposition: approved
+    cohort_promotion: *cohort2_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  alla-horska:
+    dossier_grounding: *cohort2_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      disposition: link-only-approved
+    wiki_grounding: *cohort2_review
+    wiki_quote_verification: *cohort2_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Алла_Горська.jpg
+      disposition: approved
+    cohort_promotion: *cohort2_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  dmytro-pavlychko:
+    dossier_grounding: *cohort2_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      disposition: link-only-approved
+    wiki_grounding: *cohort2_review
+    wiki_quote_verification: *cohort2_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Дмитро_Васильович_Павличко.JPG
+      disposition: approved
+    cohort_promotion: *cohort2_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
