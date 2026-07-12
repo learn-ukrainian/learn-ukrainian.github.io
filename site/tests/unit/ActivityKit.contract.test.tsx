@@ -7,6 +7,7 @@ import fixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1
 import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson.v1.fixture.json';
 import { ActivityPlayer } from '../../../packages/activity-kit/src/ActivityPlayer';
 import type { ActivityEditOperation, LuActivityV1, LuLessonV1 } from '../../../packages/activity-kit/src';
+import type { ActivitySourceActivity } from '../../../packages/activity-kit/src/ActivityPlayer';
 
 const repoRoot = resolve(process.cwd(), '..');
 const kitRoot = join(repoRoot, 'packages/activity-kit');
@@ -83,6 +84,45 @@ function sourceFiles(directory: string): string[] {
   });
 }
 
+const sourceActivities: ActivitySourceActivity[] = [
+  {
+    id: 'quiz-render',
+    type: 'quiz',
+    title: 'Тест',
+    instruction: 'Оберіть правильну відповідь.',
+    items: [{ question: 'Яке слово правильне?', options: ['книга', 'книгу'], correct: 0 }],
+  },
+  {
+    id: 'mark-the-words-render',
+    type: 'mark-the-words',
+    title: 'Позначте слова',
+    instruction: 'Позначте іменники.',
+    text: 'Книга лежить на столі.',
+    target_words: ['Книга', 'столі'],
+    criteria: 'Називний або місцевий відмінок.',
+  },
+  {
+    id: 'error-correction-render',
+    type: 'error-correction',
+    title: 'Виправте помилку',
+    instruction: 'Знайдіть помилку.',
+    items: [{
+      sentence: 'Це моя стіл.',
+      error: 'моя',
+      correction: 'мій',
+      options: ['мій', 'моє'],
+      explanation: 'Стіл — чоловічого роду.',
+    }],
+  },
+  {
+    id: 'fill-in-render',
+    type: 'fill-in',
+    title: 'Вставте слово',
+    instruction: 'Оберіть форму.',
+    items: [{ sentence: 'Це {правильна форма}.', answer: 'книга', options: ['книга', 'книгу'] }],
+  },
+];
+
 describe('activity-kit contract', () => {
   test('generates the TypeScript discriminated union from the v1 schema', () => {
     execFileSync('node', ['scripts/generate-types.mjs'], { cwd: kitRoot });
@@ -133,16 +173,32 @@ describe('activity-kit contract', () => {
     });
   });
 
-  test('shows the editor placeholder for a valid type without a widget', () => {
-    const activity = lessonFixture.blocks.find((block) => block.type === 'text-questions')?.activity;
+  test.each([
+    ...sourceActivities.map((activity) => ({ activity, type: activity.type })),
+    ...(['text-questions', 'short-writing'] as const).map((type) => ({
+      activity: lessonFixture.blocks.find((block) => block.type === type)?.activity as LuActivityV1,
+      type,
+    })),
+  ])('renders $type through its existing widget instead of the placeholder', ({ activity, type }) => {
     expect(activity).toBeDefined();
 
-    const { container } = render(<ActivityPlayer activity={activity as LuActivityV1} isUkrainian />);
+    const { container } = render(<ActivityPlayer activity={activity} isUkrainian />);
 
-    expect(container.querySelector('[data-activity-placeholder="text-questions"]')).toHaveTextContent(
-      'тип поки без віджета',
-    );
+    expect(container.querySelector(`[data-activity="${type}"]`)).toBeInTheDocument();
+    expect(container.querySelector(`[data-activity-placeholder="${type}"]`)).not.toBeInTheDocument();
   });
+
+  test.each(['text-questions', 'short-writing'] as const)(
+    '%s renders its teacher-facing discuss/grade guidance without auto-grading',
+    (type) => {
+      const activity = lessonFixture.blocks.find((block) => block.type === type)?.activity;
+      expect(activity).toBeDefined();
+
+      render(<ActivityPlayer activity={activity as LuActivityV1} isUkrainian />);
+
+      expect(screen.getByText('Для обговорення / оцінювання:')).toBeInTheDocument();
+    },
+  );
 
   test('publishes the structured edit-operation contract', () => {
     const operation: ActivityEditOperation = {
