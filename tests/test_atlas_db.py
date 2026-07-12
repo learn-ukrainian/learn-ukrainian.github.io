@@ -6,6 +6,7 @@ import json
 import sqlite3
 
 import pytest
+import yaml
 
 from scripts.atlas import atlas_db
 
@@ -82,6 +83,94 @@ def test_alias_helpers():
     assert atlas_db.transliterate("розвідка") == "rozvidka"
     assert atlas_db.classify_entry_type({"lemma": "сліпа зона"}) == "multiword_term"
     assert atlas_db.classify_entry_type({"lemma": "розвідка"}) == "lemma"
+
+
+def test_verified_synonym_relations_are_symmetric_and_resolved_through_aliases(tmp_path):
+    entries = [
+        {"lemma": "краєвид", "url_slug": "landscape", "pos": "noun"},
+        {"lemma": "пейзаж", "url_slug": "scenery", "pos": "noun"},
+        {"lemma": "родина", "url_slug": "family", "pos": "noun"},
+        {"lemma": "сім'я", "url_slug": "family-uk", "pos": "noun"},
+        {"lemma": "кафе", "url_slug": "cafe", "pos": "noun"},
+        {"lemma": "кав'ярня", "url_slug": "coffeehouse", "pos": "noun"},
+    ]
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"entries": entries}, ensure_ascii=False), encoding="utf-8")
+    verdicts = tmp_path / "synonym_pair_verdicts.yaml"
+    verdicts.write_text(
+        """approved:
+- a: краєвид
+  b: пейзаж
+  polarity: synonym
+  sources: [synonyms]
+- a: родина
+  b: сім'я
+  polarity: synonym
+  sources: [synonyms_karavansky]
+- a: кафе
+  b: кав'ярня
+  polarity: synonym
+  sources: [sum20, vts, synonyms]
+- a: self
+  b: self
+  polarity: synonym
+  sources: [synonyms]
+- a: відсутній
+  b: пейзаж
+  polarity: synonym
+  sources: [synonyms]
+- a: холодний
+  b: гарячий
+  polarity: antonym
+  sources: [synonyms]
+rejected:
+- a: кафе
+  b: ресторан
+  polarity: synonym
+  reason: Different establishments.
+""",
+        encoding="utf-8",
+    )
+    db = tmp_path / "atlas.db"
+
+    counts = atlas_db.migrate_manifest(manifest, db, verdicts)
+
+    conn = sqlite3.connect(db)
+    rows = set(
+        conn.execute(
+            "SELECT slug, related_slug, relation, provenance FROM related_entries ORDER BY slug, related_slug"
+        ).fetchall()
+    )
+    assert rows == {
+        ("cafe", "coffeehouse", "synonym", "verified"),
+        ("coffeehouse", "cafe", "synonym", "verified"),
+        ("family", "family-uk", "synonym", "verified"),
+        ("family-uk", "family", "synonym", "verified"),
+        ("landscape", "scenery", "synonym", "verified"),
+        ("scenery", "landscape", "synonym", "verified"),
+    }
+    assert all(slug != related_slug for slug, related_slug, _, _ in rows)
+    assert all(provenance == "verified" for _, _, _, provenance in rows)
+    assert counts["verified_synonym_pairs"] == 4
+    assert counts["verified_synonym_pairs_unresolved"] == 1
+    assert counts["verified_synonym_self_pairs_skipped"] == 1
+    assert counts["related_entries"] == 6
+    conn.close()
+
+
+def test_cafe_verdict_is_an_approved_synonym_with_attested_sources():
+    verdicts = yaml.safe_load(atlas_db.DEFAULT_SYNONYM_VERDICTS.read_text(encoding="utf-8"))
+    cafe = next(
+        item
+        for item in verdicts["approved"]
+        if item.get("a") == "кафе" and item.get("b") == "кав'ярня"
+    )
+    assert cafe == {
+        "a": "кафе",
+        "b": "кав'ярня",
+        "polarity": "synonym",
+        "sources": ["sum20", "vts", "synonyms"],
+    }
 
 
 def test_alias_validator_reports_actionable_failures(tmp_path, capsys):
