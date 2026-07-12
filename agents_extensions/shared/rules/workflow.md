@@ -4,15 +4,26 @@
 
 ## Cold-start sequence (do this first every session)
 
-Use the Monitor API instead of reading files. One-shot bootstrap:
+Use the Monitor API instead of reading files. A session with a known assigned
+functional role opts into that role's bounded pointer-only cold start:
 
 ```python
-  # Python one-liner equivalent — see scripts/monitor_client.py
 from ai_agent_bridge.monitor_client import MonitorClient
-boot = MonitorClient().bootstrap()
-  # boot["rules"].body    — condensed rules markdown
-  # boot["session"].body  — condensed session summary
+boot = MonitorClient().bootstrap(role="quality")
+  # boot["rules"].body     — condensed rules markdown
+  # boot["session"].body   — condensed session summary
+  # boot["research"].body  — role-scoped pointers only, if enabled
 ```
+
+Generic or genuinely role-unknown startup stays pointer-free:
+
+```python
+boot = MonitorClient().bootstrap()
+```
+
+There is no hidden default role. `bootstrap()` remains the generic, silent
+path; add `role="..."` only when the session already has that known assigned
+functional role.
 
 Shell equivalent:
 
