@@ -19,6 +19,7 @@ from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
     _cefr,
     _clean_synonym_candidate,
+    _corpus_relation_pairs_by_headword,
     _curated_calque,
     _definition_antonym_relations,
     _definition_antonym_relations_by_headword,
@@ -166,6 +167,19 @@ def _conn() -> sqlite3.Connection:
             word_a TEXT NOT NULL,
             word_b TEXT NOT NULL,
             definition TEXT NOT NULL
+        );
+        CREATE TABLE relation_pairs (
+            id INTEGER PRIMARY KEY,
+            relation TEXT NOT NULL,
+            word_a TEXT NOT NULL,
+            word_b TEXT NOT NULL,
+            gloss_a TEXT DEFAULT '',
+            gloss_b TEXT DEFAULT '',
+            source TEXT NOT NULL,
+            source_url TEXT DEFAULT '',
+            confidence TEXT DEFAULT 'medium',
+            review_status TEXT DEFAULT 'candidate',
+            added_at TEXT
         );
         """
     )
@@ -2896,6 +2910,45 @@ def test_homonym_relation_merge_preserves_gloss_schema_and_source_urls() -> None
         "source": "СУМ-20: numbered homonym headwords",
         "source_urls": ["https://example.invalid/sum20/kosa"],
     }
+
+
+def test_corpus_relation_pairs_are_vesum_gated_and_attributed(monkeypatch) -> None:
+    conn = _conn()
+    conn.executemany(
+        """
+        INSERT INTO relation_pairs(
+            relation, word_a, word_b, gloss_a, gloss_b, source, source_url, review_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            ("synonym", "гарний", "вродливий", "", "", "miyklas.com.ua", "https://example.invalid/syn", "candidate"),
+            ("antonym", "гарний", "поганий", "", "", "uk.wikipedia", "", "approved"),
+            ("paronym", "адрес", "адреса", "привітальний лист", "місце проживання", "ukr-mova.in.ua", "", "candidate"),
+            ("homonym", "ключ", "ключ", "знаряддя для замикання", "джерело води", "uk.wikipedia", "", "candidate"),
+            ("synonym", "гарний", "вигадка", "", "", "miyklas.com.ua", "", "rejected"),
+        ],
+    )
+    _patch_synonym_vesum(monkeypatch, {"гарний", "вродливий", "поганий", "адрес", "адреса", "ключ"})
+
+    relations = _corpus_relation_pairs_by_headword(
+        conn,
+        {"entries": [{"lemma": "гарний"}, {"lemma": "адрес"}, {"lemma": "ключ"}]},
+    )
+
+    assert relations["гарний"]["synonym"][0]["item"] == "вродливий"
+    assert relations["гарний"]["synonym"][0]["source"] == "relation_pairs/miyklas.com.ua"
+    assert relations["гарний"]["antonym"][0]["item"] == "поганий"
+    assert relations["адрес"]["paronym"][0]["distinction"] == "місце проживання"
+    assert [item["gloss"] for item in relations["ключ"]["homonym"]] == [
+        "знаряддя для замикання",
+        "джерело води",
+    ]
+    merged = _merge_homonym_relations(None, relations["ключ"]["homonym"])
+    assert merged is not None
+    assert merged["items"] == [
+        {"word": "ключ", "gloss": "знаряддя для замикання"},
+        {"word": "ключ", "gloss": "джерело води"},
+    ]
 
 
 def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:

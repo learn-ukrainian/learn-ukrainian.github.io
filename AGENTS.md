@@ -27,6 +27,21 @@ bind as part of this contract.
 
 ---
 
+## Project Research Registry — Orchestrator Duty (binding)
+
+Before every delegated task, the accountable orchestrator must deliberately classify
+its functional role, task family, track, and owned paths. For scoped work, pass every
+known dimension through `--research-role`, `--research-task-family`,
+`--research-track`, and repeatable `--research-owned-path`; never infer them from the
+provider or agent name. A genuinely generic or unknown task omits all research flags
+and remains pointer-free. A surfaced pointer is not proof of consumption: research
+claimed as used requires an attributed record fetch while the task is active. Registry
+delivery remains fail-open, but forgetting this classification is not an acceptable
+generic-task classification. Full contract and examples:
+`agents_extensions/shared/rules/workflow.md` § Project Research Registry.
+
+---
+
 ## Work Intake — Stream Epics (binding for ALL orchestrators; #4708)
 
 Every open GH issue belongs to **exactly one stream epic** — registry:

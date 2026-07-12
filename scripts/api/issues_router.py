@@ -199,13 +199,13 @@ async def issues_streams(
     def _load() -> dict[str, Any]:
         try:
             if fresh:
-                return audit.run_audit()
+                return _strip_private_index(audit.run_audit())
             # Default path is CACHE-ONLY (codex F3): a live audit is many gh
             # calls and must never block a cold-start consumer. Serve a stale
             # cache with a flag, or report no-cache + kick a background refresh.
             report = audit.read_cache(max_age_s=3600)
             if report is not None:
-                return report
+                return _strip_private_index(report)
             stale = audit.read_cache(max_age_s=7 * 24 * 3600)
             subprocess.Popen(
                 [str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
@@ -214,9 +214,20 @@ async def issues_streams(
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
             if stale is not None:
-                return {**stale, "stale": True, "refreshing": True}
+                return {**_strip_private_index(stale), "stale": True, "refreshing": True}
             return {"status": "no-cache", "refreshing": True, "ok": None}
         except Exception as exc:  # degrade, never 500 a state endpoint
             return {"error": str(exc)[:300], "ok": False}
 
     return await asyncio.to_thread(_load)
+
+
+def _strip_private_index(report: dict[str, Any]) -> dict[str, Any]:
+    """Drop the ADR-011 P4 private membership index from a public response.
+
+    The effective issue→epic index (and the raw open-issue set) exist for the
+    strict adoption gate/observability; they are never part of the public
+    issue-stream hygiene report. Returns a shallow copy so the cached dict is
+    untouched.
+    """
+    return {k: v for k, v in report.items() if k not in audit.PRIVATE_CACHE_KEYS}

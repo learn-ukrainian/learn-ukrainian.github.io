@@ -8,6 +8,7 @@ import {
   PUBLISHED_PRACTICE_LEVELS,
   SRS_STORAGE_FULL_WARNING,
   buildSessionPoolConstraintState,
+  clearPracticeSessionSnapshots,
   combinePracticeShards,
   extendWithLowerDecks,
   itemIdPresentInDeck,
@@ -26,7 +27,7 @@ import {
   rateCard,
   resolveSessionCompletion,
   readNewCardsDailyState,
-  readPracticeSessionSnapshot,
+  readPracticeSessionSnapshots,
   selectNextPracticeItem,
   seededAnswerIndex,
   sessionPoolAllowsCandidate,
@@ -47,6 +48,7 @@ import {
   type PracticeRating,
   type PracticeSelection,
   type PracticeSessionSnapshot,
+  type PracticeSessionSnapshots,
   type ReviewLogEntry,
   type SelectionHistoryItem,
   type SessionBudget,
@@ -888,7 +890,7 @@ function LexiconPracticeIsland({
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionLapsed, setSessionLapsed] = useState(0);
   const [advancedToReview, setAdvancedToReview] = useState<string[]>([]);
-  const [resumeSnapshot, setResumeSnapshot] = useState<PracticeSessionSnapshot | null>(null);
+  const [resumeSnapshots, setResumeSnapshots] = useState<PracticeSessionSnapshots>({});
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
   );
@@ -985,12 +987,15 @@ function LexiconPracticeIsland({
       if (target) {
         // Keep #4744's single reactive auto-start path: initialize the resolved focus,
         // then let the focusedLemmaId effect below create the session exactly once.
-        writePracticeSessionSnapshot(null);
-        setResumeSnapshot(null);
+        clearPracticeSessionSnapshots();
+        setResumeSnapshots({});
         void initializeFocusedPractice(target);
       } else {
-        const snapshot = readPracticeSessionSnapshot();
-        setResumeSnapshot(isPracticeSessionResumable(snapshot) ? snapshot : null);
+        const snapshots = readPracticeSessionSnapshots();
+        const resumableSnapshots = Object.fromEntries(
+          Object.entries(snapshots).filter(([, snapshot]) => isPracticeSessionResumable(snapshot)),
+        ) as PracticeSessionSnapshots;
+        setResumeSnapshots(resumableSnapshots);
       }
     }
   }, []);
@@ -1027,7 +1032,7 @@ function LexiconPracticeIsland({
     sessionStartedAtRef.current = Date.now();
     setHistory([]);
     const reviewSlots = sessionBudget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, sessionBudget);
-    writePracticeSessionSnapshot({
+    const snapshot: PracticeSessionSnapshot = {
       sessionSeed: nextSeed,
       history: [],
       budget: sessionBudget,
@@ -1042,7 +1047,9 @@ function LexiconPracticeIsland({
       plannedTotal: plan.plannedTotal,
       reviewsCompleted: 0,
       unresolvedCardKeys: [],
-    });
+    };
+    writePracticeSessionSnapshot(mode, snapshot);
+    setResumeSnapshots((snapshots) => ({ ...snapshots, [mode]: snapshot }));
   }, [autoStart, focusedLemmaId, dailyNewCount, deck, mode, plannedTotal, sessionBudget, learnerLevel]);
 
   useEffect(() => {
@@ -1524,12 +1531,28 @@ function LexiconPracticeIsland({
     };
   }
 
+  function clearResumeSnapshot(nextMode: PracticeModeFilter) {
+    writePracticeSessionSnapshot(nextMode, null);
+    setResumeSnapshots((snapshots) => {
+      const nextSnapshots = { ...snapshots };
+      delete nextSnapshots[nextMode];
+      return nextSnapshots;
+    });
+  }
+
+  function clearResumeSnapshots() {
+    clearPracticeSessionSnapshots();
+    setResumeSnapshots({});
+  }
+
   function persistSessionSnapshot(
     overrides: Partial<PracticeSessionSnapshot> = {},
     options: { force?: boolean } = {},
   ) {
     if (!options.force && sessionPhase !== 'active') return;
-    writePracticeSessionSnapshot(buildSessionSnapshot(overrides));
+    const snapshot = buildSessionSnapshot(overrides);
+    writePracticeSessionSnapshot(mode, snapshot);
+    setResumeSnapshots((snapshots) => ({ ...snapshots, [mode]: snapshot }));
   }
 
   function effectiveSessionTarget(): number {
@@ -1538,8 +1561,7 @@ function LexiconPracticeIsland({
 
   function openSummary(deferred: PracticeLexeme[] = deferredLemmas) {
     if (deferred.length) setDeferredLemmas(deferred);
-    writePracticeSessionSnapshot(null);
-    setResumeSnapshot(null);
+    clearResumeSnapshot(mode);
     setSessionPhase('summary');
   }
 
@@ -1554,6 +1576,10 @@ function LexiconPracticeIsland({
     // design and is intentionally NOT persisted to `PracticeSessionSnapshot`.
     focus: WeakArea | null = null,
   ) {
+    // A pinned selection is only valid within the session that created it. Without this
+    // reset, returning home with an empty history lets the selector reuse the previous
+    // mode's card when the learner starts a different mode.
+    committedSelectionRef.current = null;
     setMode(nextMode);
     setSessionBudget(budget);
     setError(null);
@@ -1584,8 +1610,7 @@ function LexiconPracticeIsland({
     ) {
       setFocusWeakness(null);
       setFeedback('Немає вправ для цього фокуса — колода оновиться після практики');
-      writePracticeSessionSnapshot(null);
-      setResumeSnapshot(null);
+      clearResumeSnapshot(nextMode);
       setSessionPhase('idle');
       return;
     }
@@ -1616,7 +1641,7 @@ function LexiconPracticeIsland({
     }
     setSessionPhase('active');
     const reviewSlots = budget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, budget);
-    writePracticeSessionSnapshot({
+    const snapshot: PracticeSessionSnapshot = {
       sessionSeed: nextSeed,
       history: resume?.history ?? [],
       budget,
@@ -1631,7 +1656,9 @@ function LexiconPracticeIsland({
       plannedTotal: resume?.plannedTotal ?? plan.plannedTotal,
       reviewsCompleted: resume?.reviewsCompleted ?? 0,
       unresolvedCardKeys: resume?.unresolvedCardKeys ?? [],
-    });
+    };
+    writePracticeSessionSnapshot(nextMode, snapshot);
+    setResumeSnapshots((snapshots) => ({ ...snapshots, [nextMode]: snapshot }));
   }
 
   async function startSession(
@@ -1639,16 +1666,16 @@ function LexiconPracticeIsland({
     nextMode: PracticeModeFilter = 'mixed',
     focus: WeakArea | null = null,
   ) {
-    writePracticeSessionSnapshot(null);
-    setResumeSnapshot(null);
+    clearResumeSnapshot(nextMode);
     await beginSession(nextMode, budget, undefined, focus);
   }
 
-  async function resumeSession() {
-    if (!resumeSnapshot) return;
+  async function resumeSession(nextMode: PracticeModeFilter) {
+    const snapshot = resumeSnapshots[nextMode];
+    if (!snapshot || snapshot.modeFilter !== nextMode || !isPracticeSessionResumable(snapshot)) return;
     // A resumed session starts with NO focus: the weakness is session-transient (never
     // persisted to the snapshot), so `beginSession(..., focus=null)` clears `focusWeakness`.
-    await beginSession(resumeSnapshot.modeFilter, resumeSnapshot.budget, resumeSnapshot, null);
+    await beginSession(nextMode, snapshot.budget, snapshot, null);
   }
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
@@ -1672,8 +1699,7 @@ function LexiconPracticeIsland({
     setDeck(null);
     setDueIndex(null);
     committedSelectionRef.current = null;
-    writePracticeSessionSnapshot(null);
-    setResumeSnapshot(null);
+    clearResumeSnapshots();
     setSessionPhase('idle');
   }
 
@@ -1684,8 +1710,7 @@ function LexiconPracticeIsland({
     setClozeLoaded(false);
     setHistory([]);
     committedSelectionRef.current = null;
-    writePracticeSessionSnapshot(null);
-    setResumeSnapshot(null);
+    clearResumeSnapshots();
     if (sessionPhase === 'active') {
       await ensureDeck(shouldLoadCloze(mode), { level: nextLevel, force: true });
     } else {
@@ -1942,7 +1967,6 @@ function LexiconPracticeIsland({
     setHistory([]);
     setDeck(null);
     setClozeLoaded(false);
-    writePracticeSessionSnapshot(null);
   }
 
   return (
@@ -2084,14 +2108,16 @@ function LexiconPracticeIsland({
                 <span className="btn-sub">{SESSION_LABELS_A1.startSession}</span>
               ) : null}
             </button>
-            {resumeSnapshot ? (
+            {resumeSnapshots.mixed ? (
               <button
                 type="button"
                 className="btn lexicon-session-resume"
                 data-testid="practice-resume-session"
-                onClick={() => void resumeSession()}
+                data-resume-mode="mixed"
+                onClick={() => void resumeSession('mixed')}
               >
-                Продовжити сесію ({resumeSnapshot.completed}/{resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                Продовжити сесію «Мікс» ({resumeSnapshots.mixed.completed}/
+                {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
                 {showEnglishSubtitles ? (
                   <span className="btn-sub">{SESSION_LABELS_A1.continueSession}</span>
                 ) : null}
@@ -2166,26 +2192,42 @@ function LexiconPracticeIsland({
                   shouldShowFocusModeCard(practiceMode, deck, indexForStats),
               ).map((practiceMode) => {
                 const meta = MODE_META[practiceMode];
+                const resumeSnapshot = resumeSnapshots[practiceMode];
                 return (
-                  <button
-                    type="button"
-                    key={practiceMode}
-                    className="mode-card"
-                    data-mode={practiceMode}
-                    data-accent={meta.accent}
-                    onClick={() => void startFocusMode(practiceMode)}
-                  >
-                    <div className="mc-top">
-                      <span className="mc-ico">
-                        <ModeIcon mode={practiceMode} />
-                      </span>
-                      <span>
-                        <span className="mc-title">{meta.title}</span>
-                        {showEnglishSubtitles ? <span className="mc-en">{meta.en}</span> : null}
-                      </span>
-                    </div>
-                    <span className="mc-desc">{meta.description}</span>
-                  </button>
+                  <div className="mode-card-stack" key={practiceMode}>
+                    <button
+                      type="button"
+                      className="mode-card"
+                      data-mode={practiceMode}
+                      data-accent={meta.accent}
+                      onClick={() => void startFocusMode(practiceMode)}
+                    >
+                      <div className="mc-top">
+                        <span className="mc-ico">
+                          <ModeIcon mode={practiceMode} />
+                        </span>
+                        <span>
+                          <span className="mc-title">{meta.title}</span>
+                          {showEnglishSubtitles ? <span className="mc-en">{meta.en}</span> : null}
+                        </span>
+                      </div>
+                      <span className="mc-desc">{meta.description}</span>
+                    </button>
+                    {resumeSnapshot ? (
+                      <button
+                        type="button"
+                        className="btn mode-card-resume"
+                        data-resume-mode={practiceMode}
+                        onClick={() => void resumeSession(practiceMode)}
+                      >
+                        Продовжити ({resumeSnapshot.completed}/
+                        {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                        {showEnglishSubtitles ? (
+                          <span className="btn-sub">{SESSION_LABELS_A1.continueSession}</span>
+                        ) : null}
+                      </button>
+                    ) : null}
+                  </div>
                 );
               })}
             </div>
