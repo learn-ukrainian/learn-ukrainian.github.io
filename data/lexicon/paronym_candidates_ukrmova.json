@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "source": "ukr-mova.in.ua",
+  "retrieved_at": "2026-07-11",
+  "index_pages": [
+    "https://ukr-mova.in.ua/library/paronimu/",
+    "https://ukr-mova.in.ua/library/paronimu/?page=2",
+    "https://ukr-mova.in.ua/library/paronimu/?page=3"
+  ],
+  "copyright_note": "Contains source-attributed word-pair facts only. Site definitions and examples were not copied.",
+  "extraction_summary": {
+    "index_entries": 42,
+    "source_pair_occurrences": 48,
+    "vesum_passed_source_pair_occurrences": 43,
+    "distinct_normalized_pairs": 41,
+    "dropped_source_pair_occurrences": 5,
+    "vesum_gate": "Each emitted word is accepted only when verify_word returns a row whose lemma exactly equals the normalized word.",
+    "normalization": "NFC; remove acute/grave stress marks; convert U+2019 apostrophe to the VESUM apostrophe; lowercase."
+  },
+  "pairs": [
+    {
+      "word_a": "усмішка",
+      "word_b": "посмішка",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/usmishka-i-posmishka",
+      "source_form_pairs": [
+        {
+          "word_a": "Усмішка",
+          "word_b": "посмішка"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "туристичний",
+      "word_b": "туристський",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/turustuchnuj-i-turustskuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Туристичний",
+          "word_b": "туристський"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "богатир",
+      "word_b": "багатир",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/bogatur-i-bagatur",
+      "source_form_pairs": [
+        {
+          "word_a": "Богатир",
+          "word_b": "багатир"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "музичний",
+      "word_b": "музикальний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/muzychnyj-muzykalnyj",
+      "source_form_pairs": [
+        {
+          "word_a": "Музичний",
+          "word_b": "музикальний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "задача",
+      "word_b": "завдання",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/zadacha-i-zavdannya",
+      "source_form_pairs": [
+        {
+          "word_a": "Задача",
+          "word_b": "завдання"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "паливо",
+      "word_b": "пальне",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/paluvo-i-palne",
+      "source_form_pairs": [
+        {
+          "word_a": "Паливо",
+          "word_b": "пальне"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "сніговий",
+      "word_b": "сніжний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/snigovuj-i-snizhnuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Сніговий",
+          "word_b": "сніжний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "виголошувати",
+      "word_b": "оголошувати",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vugoloshuvatu,-ogoloshuvatu,-progoloshuvatu",
+      "source_form_pairs": [
+        {
+          "word_a": "Виголошувати",
+          "word_b": "оголошувати"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "виголошувати",
+      "word_b": "проголошувати",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vugoloshuvatu,-ogoloshuvatu,-progoloshuvatu",
+      "source_form_pairs": [
+        {
+          "word_a": "Виголошувати",
+          "word_b": "проголошувати"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "оголошувати",
+      "word_b": "проголошувати",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vugoloshuvatu,-ogoloshuvatu,-progoloshuvatu",
+      "source_form_pairs": [
+        {
+          "word_a": "оголошувати",
+          "word_b": "проголошувати"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "лікарський",
+      "word_b": "лікарняний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/likarskuj,-likarskuj,-likarnyanuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Лі́карський",
+          "word_b": "лікарня́ний"
+        },
+        {
+          "word_a": "ліка́рський",
+          "word_b": "лікарня́ний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "писемність",
+      "word_b": "письменність",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/pusemnist-i-pusmennist",
+      "source_form_pairs": [
+        {
+          "word_a": "Писемність",
+          "word_b": "письменність"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "корисний",
+      "word_b": "корисливий",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/korusnuj-i-korusluvuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Корисний",
+          "word_b": "корисливий"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "нервувати",
+      "word_b": "нервуватися",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/nervuvatu-j-nervuvatusya",
+      "source_form_pairs": [
+        {
+          "word_a": "Нервувати",
+          "word_b": "нервуватися"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "вітровий",
+      "word_b": "вітряний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vitrovuj,-vitryanuj,-vitryanuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Вітрови́й",
+          "word_b": "ві́тряний"
+        },
+        {
+          "word_a": "Вітрови́й",
+          "word_b": "вітряни́й"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "хрещений",
+      "word_b": "хресний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/xreshhenuj-i-xresnuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Хрещений",
+          "word_b": "хресний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "змерзнути",
+      "word_b": "замерзнути",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/zmerznutu-j-zamerznutu",
+      "source_form_pairs": [
+        {
+          "word_a": "Змерзнути",
+          "word_b": "замерзнути"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "хутровий",
+      "word_b": "хутряний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/xutrovuj-i-xutryanuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Хутровий",
+          "word_b": "хутряний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "ожеледь",
+      "word_b": "ожеледиця",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/ozheled-i-ozheleduczya",
+      "source_form_pairs": [
+        {
+          "word_a": "Ожеледь",
+          "word_b": "ожеледиця"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "дощовитий",
+      "word_b": "дощовий",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/doshhovutuj-i-doshhovuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Дощовитий",
+          "word_b": "дощовий"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "військовий",
+      "word_b": "воєнний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vijskovuj-i-voennuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Військовий",
+          "word_b": "воєнний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "удача",
+      "word_b": "вдача",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/udacha-j-vdacha",
+      "source_form_pairs": [
+        {
+          "word_a": "Удача",
+          "word_b": "вдача"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "громадський",
+      "word_b": "громадянський",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/gromadskuj-i-gromadyanskuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Громадський",
+          "word_b": "громадянський"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "дружний",
+      "word_b": "дружній",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/druzhnuj-i-druzhnij",
+      "source_form_pairs": [
+        {
+          "word_a": "Дружний",
+          "word_b": "дружній"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "обумовлювати",
+      "word_b": "зумовлювати",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/obumovlyuvatu-j-zumovlyuvatu",
+      "source_form_pairs": [
+        {
+          "word_a": "Обумовлювати",
+          "word_b": "зумовлювати"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "книжковий",
+      "word_b": "книжний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/knuzhkovuj-i-knuzhnuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Книжковий",
+          "word_b": "книжний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "виборний",
+      "word_b": "виборчий",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vubornuj-i-vuborchuj",
+      "source_form_pairs": [
+        {
+          "word_a": "Виборний",
+          "word_b": "виборчий"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "гривня",
+      "word_b": "гривна",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/gruvnya-j-gruvna",
+      "source_form_pairs": [
+        {
+          "word_a": "Гривня",
+          "word_b": "гривна"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "адреса",
+      "word_b": "адрес",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/adresa-j-adres",
+      "source_form_pairs": [
+        {
+          "word_a": "Адреса",
+          "word_b": "адрес"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "уява",
+      "word_b": "уявлення",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/uyava-j-uyavlennya",
+      "source_form_pairs": [
+        {
+          "word_a": "Уява",
+          "word_b": "уявлення"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "сідати",
+      "word_b": "присідати",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/sidatu-j-prusidatu",
+      "source_form_pairs": [
+        {
+          "word_a": "Сідати",
+          "word_b": "присідати"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "поверховий",
+      "word_b": "поверхневий",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/poverhoviy-i-poverhneviy",
+      "source_form_pairs": [
+        {
+          "word_a": "Поверховий",
+          "word_b": "поверхневий"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "тепер",
+      "word_b": "зараз",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/teper-i-zaraz",
+      "source_form_pairs": [
+        {
+          "word_a": "Тепер",
+          "word_b": "зараз"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "вислів",
+      "word_b": "вираз",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/visliv-i-viraz",
+      "source_form_pairs": [
+        {
+          "word_a": "Вислів",
+          "word_b": "вираз"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "мимохіть",
+      "word_b": "мимохідь",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/mimohit-i-mimohid",
+      "source_form_pairs": [
+        {
+          "word_a": "Мимохіть",
+          "word_b": "мимохідь"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "вклад",
+      "word_b": "внесок",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vklad-i-vnesok",
+      "source_form_pairs": [
+        {
+          "word_a": "Вклад",
+          "word_b": "внесок"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "барва",
+      "word_b": "фарба",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/barva-y-farba",
+      "source_form_pairs": [
+        {
+          "word_a": "Барва",
+          "word_b": "фарба"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "об'єм",
+      "word_b": "обсяг",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/ob%E2%80%99em-i-obsyag",
+      "source_form_pairs": [
+        {
+          "word_a": "Об’єм",
+          "word_b": "обсяг"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "нагода",
+      "word_b": "пригода",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/nagoda-y-prigoda",
+      "source_form_pairs": [
+        {
+          "word_a": "Нагода",
+          "word_b": "пригода"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "запитання",
+      "word_b": "питання",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/zapitannya-y-pitannya",
+      "source_form_pairs": [
+        {
+          "word_a": "Запитання",
+          "word_b": "питання"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    },
+    {
+      "word_a": "чисельний",
+      "word_b": "численний",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/chiselniy-i-chislenniy",
+      "source_form_pairs": [
+        {
+          "word_a": "Чисельний",
+          "word_b": "численний"
+        }
+      ],
+      "site_distinction": null,
+      "site_distinction_note": "Not retained to avoid reproducing source glossary prose; add independently sourced glosses during adjudication.",
+      "vesum_exact_lemma": {
+        "word_a": true,
+        "word_b": true
+      }
+    }
+  ],
+  "dropped": [
+    {
+      "word_a": "лікарський",
+      "word_b": "лікарський",
+      "source_word_a": "Лі́карський",
+      "source_word_b": "ліка́рський",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/likarskuj,-likarskuj,-likarnyanuj",
+      "reason": "stress-only homograph is not representable as a distinct unaccented lemma pair"
+    },
+    {
+      "word_a": "грати",
+      "word_b": "відігравати роль",
+      "source_word_a": "Грати",
+      "source_word_b": "відігравати роль",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/gratu-i-vidigravatu-rol",
+      "reason": "not an exact VESUM lemma: відігравати роль"
+    },
+    {
+      "word_a": "вітряний",
+      "word_b": "вітряний",
+      "source_word_a": "ві́тряний",
+      "source_word_b": "вітряни́й",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/vitrovuj,-vitryanuj,-vitryanuj",
+      "reason": "stress-only homograph is not representable as a distinct unaccented lemma pair"
+    },
+    {
+      "word_a": "атлас",
+      "word_b": "атлас",
+      "source_word_a": "А́тлас",
+      "source_word_b": "атла́с",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/atlas-i-atlas",
+      "reason": "stress-only homograph is not representable as a distinct unaccented lemma pair"
+    },
+    {
+      "word_a": "закордон",
+      "word_b": "за кордон",
+      "source_word_a": "Закордон",
+      "source_word_b": "за кордон",
+      "source": "ukr-mova.in.ua",
+      "source_page": "https://ukr-mova.in.ua/library/paronimu/zakordon-i-za-kordon",
+      "reason": "not an exact VESUM lemma: за кордон"
+    }
+  ]
+}

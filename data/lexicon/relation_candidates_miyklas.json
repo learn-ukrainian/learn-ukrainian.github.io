@@ -1,0 +1,1787 @@
+[
+  {
+    "word_a": "доля",
+    "word_b": "воля",
+    "relation": "paronym",
+    "distinction": "доля (збіг обставин, частина чогось) vs. воля (свобода, сила прагнення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "уява",
+    "word_b": "уявлення",
+    "relation": "paronym",
+    "distinction": "уява (здатність фантазувати) vs. уявлення (знання, розуміння чогось)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "блискучий",
+    "word_b": "лискучий",
+    "relation": "paronym",
+    "distinction": "блискучий (що випромінює світло, відмінний) vs. лискучий (що глянцево відблискує)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "блукати",
+    "word_b": "блудити",
+    "relation": "paronym",
+    "distinction": "блукати (ходити без мети, мандрувати) vs. блудити (збиватися з дороги, вести розпусне життя)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "повноваження",
+    "word_b": "уповноваження",
+    "relation": "paronym",
+    "distinction": "повноваження (право, надане комусь) vs. уповноваження (дія за значенням уповноважити)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "особистий",
+    "word_b": "особовий",
+    "relation": "paronym",
+    "distinction": "особистий (що стосується окремої особи, приватний) vs. особовий (пов'язаний з особою або особовим складом, граматичною особою)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "прогресивний",
+    "word_b": "регресивний",
+    "relation": "paronym",
+    "distinction": "прогресивний (передовий, пов'язаний із прогресом) vs. регресивний (зворотний, який занепадає)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "густо",
+    "word_b": "пусто",
+    "relation": "paronym",
+    "distinction": "густо (щільно, часто) vs. пусто (порожньо)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "іммігрант",
+    "word_b": "емігрант",
+    "relation": "paronym",
+    "distinction": "іммігрант (іноземець, який оселився в країні) vs. емігрант (хто виїхав зі своєї батьківщини)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "корифей",
+    "word_b": "Орфей",
+    "relation": "paronym",
+    "distinction": "корифей (провідний діяч, найвидатніший представник) vs. Орфей (міфічний співак)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спілка",
+    "word_b": "сопілка",
+    "relation": "paronym",
+    "distinction": "спілка (об'єднання, союз) vs. сопілка (музичний інструмент)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лікувати",
+    "word_b": "лічити",
+    "relation": "paronym",
+    "distinction": "лікувати (повертати здоров'я) vs. лічити (рахувати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ставитися",
+    "word_b": "відноситися",
+    "relation": "paronym",
+    "distinction": "ставитися (виявляти певне ставлення) vs. відноситися (перебувати в певному співвідношенні)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "адреса",
+    "word_b": "адрес",
+    "relation": "paronym",
+    "distinction": "адреса (місце проживання) vs. адрес (вітальний лист)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "дружний",
+    "word_b": "дружній",
+    "relation": "paronym",
+    "distinction": "дружний (одностайний, згуртований) vs. дружній (прихильний, дружелюбний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "кричати",
+    "word_b": "гримати",
+    "relation": "synonym",
+    "distinction": "кричати (видавати голосні звуки) vs. гримати (кричати з погрозою, гнівно сердитися)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "верещати",
+    "word_b": "лементувати",
+    "relation": "synonym",
+    "distinction": "верещати (пронизливо кричати) vs. лементувати (голосно плакати, репетувати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "горланити",
+    "word_b": "горлопанити",
+    "relation": "synonym",
+    "distinction": "горланити (дуже голосно кричати або співати) vs. горлопанити (кричати грубо, безцеремонно)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вищати",
+    "word_b": "галасувати",
+    "relation": "synonym",
+    "distinction": "вищати (пронизливо кричати від болю, радості) vs. галасувати (робити шум, голосно кричати колективно)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "йойкати",
+    "word_b": "галакати",
+    "relation": "synonym",
+    "distinction": "йойкати (вигукувати «йой», стогнати) vs. галакати (голосно розмовляти, кричати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "йойкати",
+    "word_b": "фукати",
+    "relation": "synonym",
+    "distinction": "йойкати (вигукувати «йой») vs. фукати (виявляти незадоволення вигуком «фу»)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коричневий",
+    "word_b": "каштановий",
+    "relation": "synonym",
+    "distinction": "коричневий (колір спеченої кави) vs. каштановий (колір каштана, зазвичай про волосся)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коричневий",
+    "word_b": "гнідий",
+    "relation": "synonym",
+    "distinction": "коричневий (загальний колір) vs. гнідий (червоно-коричнева масть коня)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коричневий",
+    "word_b": "карий",
+    "relation": "synonym",
+    "distinction": "коричневий (загальний колір) vs. карий (темно-коричневий, про очі)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коричневий",
+    "word_b": "бронзовий",
+    "relation": "synonym",
+    "distinction": "коричневий (загальний колір) vs. бронзовий (колір бронзи, золотаво-коричневий, про медаль або засмагу)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коричневий",
+    "word_b": "шоколадний",
+    "relation": "synonym",
+    "distinction": "коричневий (загальний колір) vs. шоколадний (колір шоколаду, про торт або засмагу)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "безтурботний",
+    "word_b": "безжурний",
+    "relation": "synonym",
+    "distinction": "безтурботний (вільний від турбот) vs. безжурний (який не знає журби, веселий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "безтурботний",
+    "word_b": "безклопітний",
+    "relation": "synonym",
+    "distinction": "безтурботний (вільний від турбот) vs. безклопітний (який не завдає клопоту)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "безтурботний",
+    "word_b": "безпечальний",
+    "relation": "synonym",
+    "distinction": "безтурботний (вільний від турбот) vs. безпечальний (поетичне, без печалі)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "безтурботний",
+    "word_b": "безпечний",
+    "relation": "synonym",
+    "distinction": "безтурботний (вільний від турбот) vs. безпечний (у значенні вільного від небезпеки або безтурботного)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "кавер",
+    "word_b": "переспів",
+    "relation": "synonym",
+    "distinction": "кавер (переробка пісні) vs. переспів (нової версії твору)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "голкіпер",
+    "word_b": "воротар",
+    "relation": "synonym",
+    "distinction": "голкіпер (запозичене) vs. воротар (власне українське)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ОК",
+    "word_b": "гаразд",
+    "relation": "synonym",
+    "distinction": "ОК (розмовне запозичення) vs. гаразд (нормативне)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "авангардний",
+    "word_b": "передовий",
+    "relation": "synonym",
+    "distinction": "авангардний (який іде попереду, експериментальний) vs. передовий (провідний, прогресивний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "симптом",
+    "word_b": "ознака",
+    "relation": "synonym",
+    "distinction": "симптом (медична або наукова ознака) vs. ознака (загальна риса)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фон",
+    "word_b": "звук",
+    "relation": "synonym",
+    "distinction": "фон (фонетична одиниця) vs. звук (загальне поняття)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пресинг",
+    "word_b": "тиск",
+    "relation": "synonym",
+    "distinction": "пресинг (активний тиск у спорті чи суспільстві) vs. тиск (загальне поняття)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вокзал",
+    "word_b": "двірець",
+    "relation": "synonym",
+    "distinction": "вокзал (сучасне слово) vs. двірець (застаріле або діалектне означення вокзалу)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "чинник",
+    "word_b": "фактор",
+    "relation": "synonym",
+    "distinction": "чинник (питоме слово, побут/наука) vs. фактор (запозичене слово, наука/документи)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "друг",
+    "word_b": "друзяка",
+    "relation": "synonym",
+    "distinction": "друг (нейтральне) vs. друзяка (розмовне, збільшено-пестливе)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "друг",
+    "word_b": "брат",
+    "relation": "synonym",
+    "distinction": "друг (товариш) vs. брат (близький товариш, розмовне)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "друг",
+    "word_b": "братан",
+    "relation": "synonym",
+    "distinction": "друг (товариш) vs. братан (розмовне, вульгарне)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "друг",
+    "word_b": "кент",
+    "relation": "synonym",
+    "distinction": "друг (товариш) vs. кент (жаргонне)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "уже",
+    "word_b": "вже",
+    "relation": "synonym",
+    "distinction": "уже (фонетичний варіант після приголосного) vs. вже (варіант після голосного)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "учитель",
+    "word_b": "вчитель",
+    "relation": "synonym",
+    "distinction": "учитель (фонетичний варіант на початку речення чи після приголосного) vs. вчитель (після голосного)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "йти",
+    "word_b": "іти",
+    "relation": "synonym",
+    "distinction": "йти (після голосного) vs. іти (після приголосного)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "імовірно",
+    "word_b": "ймовірно",
+    "relation": "synonym",
+    "distinction": "імовірно (початок речення або після приголосного) vs. ймовірно (після голосного)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "абсолютний",
+    "word_b": "цілковитий",
+    "relation": "synonym",
+    "distinction": "абсолютний (цілковитий, повний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "абсолютний",
+    "word_b": "повний",
+    "relation": "synonym",
+    "distinction": "абсолютний (цілковитий, повний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "аграрний",
+    "word_b": "земельний",
+    "relation": "synonym",
+    "distinction": "аграрний (земельний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "адекватний",
+    "word_b": "прирівняний",
+    "relation": "synonym",
+    "distinction": "адекватний (рівний, прирівняний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "азарт",
+    "word_b": "запал",
+    "relation": "synonym",
+    "distinction": "азарт (запал)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "акомпанувати",
+    "word_b": "пригравати",
+    "relation": "synonym",
+    "distinction": "акомпанувати (пригравати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "аналіз",
+    "word_b": "розбір",
+    "relation": "synonym",
+    "distinction": "аналіз (розбір, розчленування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "аргумент",
+    "word_b": "доказ",
+    "relation": "synonym",
+    "distinction": "аргумент (доказ)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "асиміляція",
+    "word_b": "уподібнення",
+    "relation": "synonym",
+    "distinction": "асиміляція (уподібнення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "бізнес",
+    "word_b": "заняття",
+    "relation": "synonym",
+    "distinction": "бізнес (заняття, діяльність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "бізнес",
+    "word_b": "діяльність",
+    "relation": "synonym",
+    "distinction": "бізнес (заняття, діяльність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "браузер",
+    "word_b": "провідник",
+    "relation": "synonym",
+    "distinction": "браузер (провідник у мережі)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "варваризм",
+    "word_b": "запозичення",
+    "relation": "synonym",
+    "distinction": "варваризм (запозичення, іншомовне слово)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вівісекція",
+    "word_b": "розтин",
+    "relation": "synonym",
+    "distinction": "вівісекція (розтин живих тварин)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "воркаут",
+    "word_b": "тренування",
+    "relation": "synonym",
+    "distinction": "воркаут (вуличне тренування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "геймер",
+    "word_b": "гравець",
+    "relation": "synonym",
+    "distinction": "геймер (гравець у відеоігри)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "герметизація",
+    "word_b": "непроникність",
+    "relation": "synonym",
+    "distinction": "герметизація (забезпечення непроникності)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "гіпотеза",
+    "word_b": "здогад",
+    "relation": "synonym",
+    "distinction": "гіпотеза (здогад, наукове припущення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "голкіпер",
+    "word_b": "воротар",
+    "relation": "synonym",
+    "distinction": "голкіпер (воротар у спорті)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "гуманність",
+    "word_b": "людяність",
+    "relation": "synonym",
+    "distinction": "гуманність (людяність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "деградація",
+    "word_b": "занепад",
+    "relation": "synonym",
+    "distinction": "деградація (занепад)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "деструктивний",
+    "word_b": "руйнівний",
+    "relation": "synonym",
+    "distinction": "деструктивний (руйнівний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "дистилювати",
+    "word_b": "очищувати",
+    "relation": "synonym",
+    "distinction": "дистилювати (очищувати випаровуванням)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "дистриб'ютор",
+    "word_b": "розповсюджувач",
+    "relation": "synonym",
+    "distinction": "дистриб'ютор (розповсюджувач товарів)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "диференціація",
+    "word_b": "розподіл",
+    "relation": "synonym",
+    "distinction": "диференціація (розподіл, розшарування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "домінувати",
+    "word_b": "панувати",
+    "relation": "synonym",
+    "distinction": "домінувати (панувати, переважати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "домінувати",
+    "word_b": "переважати",
+    "relation": "synonym",
+    "distinction": "домінувати (панувати, переважати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "еквівалент",
+    "word_b": "відповідник",
+    "relation": "synonym",
+    "distinction": "еквівалент (відповідник, рівноцінне)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "експлуатація",
+    "word_b": "визиск",
+    "relation": "synonym",
+    "distinction": "експлуатація (визиск, використання)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "електорат",
+    "word_b": "виборці",
+    "relation": "synonym",
+    "distinction": "електорат (виборці)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ігнорувати",
+    "word_b": "нехтувати",
+    "relation": "synonym",
+    "distinction": "ігнорувати (нехтувати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ігнорувати",
+    "word_b": "легковажити",
+    "relation": "synonym",
+    "distinction": "ігнорувати (легковажити)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ілюмінація",
+    "word_b": "освітлення",
+    "relation": "synonym",
+    "distinction": "ілюмінація (декоративне освітлення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "імідж",
+    "word_b": "образ",
+    "relation": "synonym",
+    "distinction": "імідж (образ, вигляд)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "імітація",
+    "word_b": "наслідування",
+    "relation": "synonym",
+    "distinction": "імітація (наслідування, відтворення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "імпорт",
+    "word_b": "ввезення",
+    "relation": "synonym",
+    "distinction": "імпорт (ввезення товарів)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "інвестиція",
+    "word_b": "вкладення",
+    "relation": "synonym",
+    "distinction": "інвестиція (вкладення капіталу)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "індиферентність",
+    "word_b": "байдужість",
+    "relation": "synonym",
+    "distinction": "індиферентність (байдужість)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "інертний",
+    "word_b": "млявий",
+    "relation": "synonym",
+    "distinction": "інертний (млявий, бездіяльний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "інертний",
+    "word_b": "байдужий",
+    "relation": "synonym",
+    "distinction": "інертний (млявий, байдужий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "інтервенція",
+    "word_b": "втручання",
+    "relation": "synonym",
+    "distinction": "інтервенція (втручання, вторгнення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "інтервенція",
+    "word_b": "вторгнення",
+    "relation": "synonym",
+    "distinction": "інтервенція (втручання, вторгнення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "коаліція",
+    "word_b": "об'єднання",
+    "relation": "synonym",
+    "distinction": "коаліція (об'єднання, союз)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "комерційний",
+    "word_b": "торгівельний",
+    "relation": "synonym",
+    "distinction": "комерційний (торгівельний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "компенсація",
+    "word_b": "відшкодування",
+    "relation": "synonym",
+    "distinction": "компенсація (відшкодування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "контракт",
+    "word_b": "договір",
+    "relation": "synonym",
+    "distinction": "контракт (договір, угода)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "контрастний",
+    "word_b": "протилежний",
+    "relation": "synonym",
+    "distinction": "контрастний (протилежний за ознаками)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "конфронтація",
+    "word_b": "протистояння",
+    "relation": "synonym",
+    "distinction": "конфронтація (протистояння)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "кредитор",
+    "word_b": "позикодавець",
+    "relation": "synonym",
+    "distinction": "кредитор (позикодавець)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "кулінарія",
+    "word_b": "куховарство",
+    "relation": "synonym",
+    "distinction": "кулінарія (куховарство)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "легітимний",
+    "word_b": "законний",
+    "relation": "synonym",
+    "distinction": "легітимний (законний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "летальний",
+    "word_b": "смертельний",
+    "relation": "synonym",
+    "distinction": "летальний (смертельний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лімітувати",
+    "word_b": "обмежувати",
+    "relation": "synonym",
+    "distinction": "лімітувати (обмежувати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лінгвіст",
+    "word_b": "мовознавець",
+    "relation": "synonym",
+    "distinction": "лінгвіст (мовознавець)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лук",
+    "word_b": "вигляд",
+    "relation": "synonym",
+    "distinction": "лук (вигляд, образ)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "маклер",
+    "word_b": "посередник",
+    "relation": "synonym",
+    "distinction": "маклер (торговий посередник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "маркетинг",
+    "word_b": "торгівля",
+    "relation": "synonym",
+    "distinction": "маркетинг (торгівля, збут)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "метод",
+    "word_b": "спосіб",
+    "relation": "synonym",
+    "distinction": "метод (спосіб дії)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "мобільність",
+    "word_b": "рухомість",
+    "relation": "synonym",
+    "distinction": "мобільність (рухомість)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "модель",
+    "word_b": "зразок",
+    "relation": "synonym",
+    "distinction": "модель (зразок, взірець)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "модель",
+    "word_b": "взірець",
+    "relation": "synonym",
+    "distinction": "модель (зразок, взірець)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "модернізація",
+    "word_b": "оновлення",
+    "relation": "synonym",
+    "distinction": "модернізація (оновлення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "момент",
+    "word_b": "мить",
+    "relation": "synonym",
+    "distinction": "момент (мить, короткий час)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "монумент",
+    "word_b": "пам'ятник",
+    "relation": "synonym",
+    "distinction": "монумент (пам'ятник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "натуральний",
+    "word_b": "природний",
+    "relation": "synonym",
+    "distinction": "натуральний (природний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "негативний",
+    "word_b": "заперечний",
+    "relation": "synonym",
+    "distinction": "негативний (заперечний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "нівелювати",
+    "word_b": "вирівнювати",
+    "relation": "synonym",
+    "distinction": "нівелювати (вирівнювати відмінності)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "нюанс",
+    "word_b": "відтінок",
+    "relation": "synonym",
+    "distinction": "нюанс (відтінок, ледь помітна відмінність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "об'єктивний",
+    "word_b": "безсторонній",
+    "relation": "synonym",
+    "distinction": "об'єктивний (безсторонній, неупереджений)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "онлайн",
+    "word_b": "наживо",
+    "relation": "synonym",
+    "distinction": "онлайн (наживо)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "оригінал",
+    "word_b": "першотвір",
+    "relation": "synonym",
+    "distinction": "оригінал (першотвір)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "паритет",
+    "word_b": "рівність",
+    "relation": "synonym",
+    "distinction": "паритет (рівність сторін)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пасивний",
+    "word_b": "бездіяльний",
+    "relation": "synonym",
+    "distinction": "пасивний (бездіяльний, неактивний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "плюралізм",
+    "word_b": "множинність",
+    "relation": "synonym",
+    "distinction": "плюралізм (множинність думок чи поглядів)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "потенційний",
+    "word_b": "можливий",
+    "relation": "synonym",
+    "distinction": "потенційний (можливий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "прайс-лист",
+    "word_b": "цінник",
+    "relation": "synonym",
+    "distinction": "прайс-лист (цінник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "провайдер",
+    "word_b": "постачальник",
+    "relation": "synonym",
+    "distinction": "провайдер (постачальник послуг)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "прогноз",
+    "word_b": "передбачення",
+    "relation": "synonym",
+    "distinction": "прогноз (передбачення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пролонгований",
+    "word_b": "продовжений",
+    "relation": "synonym",
+    "distinction": "пролонгований (продовжений термін)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ротація",
+    "word_b": "зміна",
+    "relation": "synonym",
+    "distinction": "ротація (зміна, чергування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ротація",
+    "word_b": "чергування",
+    "relation": "synonym",
+    "distinction": "ротація (зміна, чергування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "сервіс",
+    "word_b": "обслуговування",
+    "relation": "synonym",
+    "distinction": "сервіс (обслуговування)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "симпозіум",
+    "word_b": "засідання",
+    "relation": "synonym",
+    "distinction": "симпозіум (наукове засідання)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "симптом",
+    "word_b": "ознака",
+    "relation": "synonym",
+    "distinction": "симптом (ознака)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "синхронно",
+    "word_b": "одночасно",
+    "relation": "synonym",
+    "distinction": "синхронно (одночасно)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "соціальний",
+    "word_b": "суспільний",
+    "relation": "synonym",
+    "distinction": "соціальний (суспільний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "соціологія",
+    "word_b": "суспільствознавство",
+    "relation": "synonym",
+    "distinction": "соціологія (суспільствознавство)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спікер",
+    "word_b": "речник",
+    "relation": "synonym",
+    "distinction": "спікер (речник, голова парламенту)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спойлер",
+    "word_b": "зіпсуття",
+    "relation": "synonym",
+    "distinction": "спойлер (зіпсуття враження передчасним розкриттям сюжету)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спонсор",
+    "word_b": "доброчинець",
+    "relation": "synonym",
+    "distinction": "спонсор (доброчинець, благодійник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спонсор",
+    "word_b": "благодій",
+    "relation": "synonym",
+    "distinction": "спонсор (доброчинець, благодійник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "стабільність",
+    "word_b": "сталість",
+    "relation": "synonym",
+    "distinction": "стабільність (сталість, постійність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "стабільність",
+    "word_b": "постійність",
+    "relation": "synonym",
+    "distinction": "стабільність (сталість, постійність)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "стагнація",
+    "word_b": "застій",
+    "relation": "synonym",
+    "distinction": "стагнація (застій в економіці чи розвитку)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "структура",
+    "word_b": "будова",
+    "relation": "synonym",
+    "distinction": "структура (будова, устрій)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "суб'єктивний",
+    "word_b": "особистий",
+    "relation": "synonym",
+    "distinction": "суб'єктивний (особистий, упереджений)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "сфера",
+    "word_b": "царина",
+    "relation": "synonym",
+    "distinction": "сфера (область, царина діяльності)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "толерантність",
+    "word_b": "терпимість",
+    "relation": "synonym",
+    "distinction": "толерантність (терпимість)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "трансформація",
+    "word_b": "перетворення",
+    "relation": "synonym",
+    "distinction": "трансформація (перетворення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "тротуар",
+    "word_b": "хідник",
+    "relation": "synonym",
+    "distinction": "тротуар (хідник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фактичний",
+    "word_b": "справжній",
+    "relation": "synonym",
+    "distinction": "фактичний (справжній, дійсний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фактичний",
+    "word_b": "дійсний",
+    "relation": "synonym",
+    "distinction": "фактичний (справжній, дійсний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "форум",
+    "word_b": "зібрання",
+    "relation": "synonym",
+    "distinction": "форум (представницьке зібрання)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фундаментальний",
+    "word_b": "ґрунтовний",
+    "relation": "synonym",
+    "distinction": "фундаментальний (ґрунтовний, докладний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "хобі",
+    "word_b": "захоплення",
+    "relation": "synonym",
+    "distinction": "хобі (захоплення, улюблена справа)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "шанс",
+    "word_b": "можливість",
+    "relation": "synonym",
+    "distinction": "шанс (можливість, нагода)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "шок",
+    "word_b": "удар",
+    "relation": "synonym",
+    "distinction": "шок (гострий удар, потрясіння)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "шоу",
+    "word_b": "видовище",
+    "relation": "synonym",
+    "distinction": "шоу (публічне видовище)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пательня",
+    "word_b": "сковорода",
+    "relation": "synonym",
+    "distinction": "пательня (нормативне) vs. сковорода (нормативне, сковородка — суржик)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "самостійний",
+    "word_b": "автономний",
+    "relation": "synonym",
+    "distinction": "самостійний (власне українське) vs. автономний (запозичене)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "справа",
+    "word_b": "бізнес",
+    "relation": "synonym",
+    "distinction": "справа (власне українське) vs. бізнес (запозичене)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "особливий",
+    "word_b": "ексклюзивний",
+    "relation": "synonym",
+    "distinction": "особливий (власне українське) vs. ексклюзивний (запозичене)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вихідні",
+    "word_b": "вікенд",
+    "relation": "synonym",
+    "distinction": "вихідні (власне українське) vs. вікенд (запозичене)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "гостинний",
+    "word_b": "непривітний",
+    "relation": "antonym",
+    "distinction": "гостинний (радий гостям) vs. непривітний (нелюб'язний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "жорстокий",
+    "word_b": "лагідний",
+    "relation": "antonym",
+    "distinction": "жорстокий (безжальний) vs. лагідний (м'який, добрий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "рівно",
+    "word_b": "криво",
+    "relation": "antonym",
+    "distinction": "рівно (прямо) vs. криво (під кутом, косо)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "розкіш",
+    "word_b": "бідність",
+    "relation": "antonym",
+    "distinction": "розкіш (багатство) vs. бідність (нестача засобів)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "над",
+    "word_b": "під",
+    "relation": "antonym",
+    "distinction": "над (вище чогось) vs. під (нижче чогось)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "безтурботний",
+    "word_b": "заклопотаний",
+    "relation": "antonym",
+    "distinction": "безтурботний (без клопоту) vs. заклопотаний (повний турбот)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "спекотний",
+    "word_b": "холодний",
+    "relation": "antonym",
+    "distinction": "спекотний (дуже гарячий) vs. холодний (низької температури)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "недозрілий",
+    "word_b": "стиглий",
+    "relation": "antonym",
+    "distinction": "недозрілий (зелений) vs. стиглий (готовий до вживання)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "глибокий",
+    "word_b": "мілкий",
+    "relation": "antonym",
+    "distinction": "глибокий (великої глибини) vs. мілкий (неглибокий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "глибокий",
+    "word_b": "поверховий",
+    "relation": "antonym",
+    "distinction": "глибокий (досконалий, розумний) vs. поверховий (неглибокий, про знання чи дослідження)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "чистий",
+    "word_b": "брудний",
+    "relation": "antonym",
+    "distinction": "чистий (без бруду) vs. брудний (забруднений)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "чистий",
+    "word_b": "незаплямований",
+    "relation": "antonym",
+    "distinction": "чистий (без плям) vs. незаплямований (безгрішний, про совість)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "постійний",
+    "word_b": "тимчасовий",
+    "relation": "antonym",
+    "distinction": "постійний (тривалий, незмінний) vs. тимчасовий (на певний строк)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "туман",
+    "word_b": "сонце",
+    "relation": "antonym",
+    "distinction": "туман (похмурість, невідомість) vs. сонце (світло, радість) — контекстуальні антоніми",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "маска",
+    "word_b": "лице",
+    "relation": "antonym",
+    "distinction": "маска (фальшивість) vs. лице (щирість) — контекстуальні антоніми",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "цукор",
+    "word_b": "сіль",
+    "relation": "antonym",
+    "distinction": "цукор (солодке) vs. соль (солоне) — контекстуальні антоніми",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вмерти",
+    "word_b": "жити",
+    "relation": "antonym",
+    "distinction": "вмерти (припинити існування) vs. жити (існувати)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "правда",
+    "word_b": "кривда",
+    "relation": "antonym",
+    "distinction": "правда (істина) vs. кривда (брехня, несправедливість)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "мир",
+    "word_b": "війна",
+    "relation": "antonym",
+    "distinction": "мир (відсутність ворожнечі) vs. війна (збройний конфлікт)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "великий",
+    "word_b": "малий",
+    "relation": "antonym",
+    "distinction": "великий (значного розміру) vs. малий (невеликий)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "хворий",
+    "word_b": "здоровий",
+    "relation": "antonym",
+    "distinction": "хворий (який має недугу) vs. здоровий (без хвороб)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "друг",
+    "word_b": "ворог",
+    "relation": "antonym",
+    "distinction": "друг (приятель) vs. ворог (супротивник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вранці",
+    "word_b": "ввечері",
+    "relation": "antonym",
+    "distinction": "вранці (на початку дня) vs. ввечері (наприкінці дня)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "початок",
+    "word_b": "кінець",
+    "relation": "antonym",
+    "distinction": "початок (вихідна точка) vs. кінець (завершення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "живий",
+    "word_b": "труп",
+    "relation": "antonym",
+    "distinction": "живий (існуючий) vs. труп (мертве тіло)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "убогий",
+    "word_b": "розкішний",
+    "relation": "antonym",
+    "distinction": "убогий (бідний) vs. розкішний (багатий, пишний)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "сльози",
+    "word_b": "радість",
+    "relation": "antonym",
+    "distinction": "сльози (прояв гори або радості) vs. радість (веселий настрій)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пекучий",
+    "word_b": "холод",
+    "relation": "antonym",
+    "distinction": "пекучий (дуже гарячий або гострий) vs. холод (низька температура)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "агент",
+    "word_b": "агент",
+    "relation": "homonym",
+    "distinction": "агент (розвідник або представник) vs. агент (природний чинник)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "акція",
+    "word_b": "акція",
+    "relation": "homonym",
+    "distinction": "акція (цінний папір) vs. акція (громадський чи рекламний захід)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "апорт",
+    "word_b": "апорт",
+    "relation": "homonym",
+    "distinction": "апорт (сорт яблук) vs. апорт (команда для собаки)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "баба",
+    "word_b": "баба",
+    "relation": "homonym",
+    "distinction": "баба (літня жінка або виріб із тіста) vs. баба (копер для забивання паль)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "байка",
+    "word_b": "байка",
+    "relation": "homonym",
+    "distinction": "байка (бавовняна тканина) vs. байка (повчальний художній твір)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "бар",
+    "word_b": "бар",
+    "relation": "homonym",
+    "distinction": "бар (питний заклад або одиниця тиску) vs. бар (деталь врубової машини або піщана мілина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "бокс",
+    "word_b": "бокс",
+    "relation": "homonym",
+    "distinction": "бокс (вид спорту) vs. бокс (медичний ізолятор або чоловіча зачіска)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вал",
+    "word_b": "вал",
+    "relation": "homonym",
+    "distinction": "вал (земляний насип або висока хвиля) vs. вал (деталь механізму для передачі руху)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вибиратися",
+    "word_b": "вибиратися",
+    "relation": "homonym",
+    "distinction": "вибиратися (вилазити, виходити звідкись) vs. вибиратися (обиратися голосуванням)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "вид",
+    "word_b": "вид",
+    "relation": "homonym",
+    "distinction": "вид (краєвид або обличчя) vs. вид (граматична категорія або різновид)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "глава",
+    "word_b": "глава",
+    "relation": "homonym",
+    "distinction": "глава (розділ книги) vs. глава (керівник держави чи церкви)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "гранат",
+    "word_b": "гранат",
+    "relation": "homonym",
+    "distinction": "гранат (плодове дерево та його плід) vs. гранат (дорогоцінний мінерал)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "графік",
+    "word_b": "графік",
+    "relation": "homonym",
+    "distinction": "графік (план роботи або розклад) vs. графік (художник, що працює в стилі графіки)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "грибок",
+    "word_b": "грибок",
+    "relation": "homonym",
+    "distinction": "грибок (маленький гриб) vs. грибок (хвороботворний мікроорганизм)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "двір",
+    "word_b": "двір",
+    "relation": "homonym",
+    "distinction": "двір (подвір'я біля хати) vs. двір (оточення монарха)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "дисципліна",
+    "word_b": "дисципліна",
+    "relation": "homonym",
+    "distinction": "дисципліна (дотримання правил, порядок) vs. дисципліна (науковий предмет)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "доля",
+    "word_b": "доля",
+    "relation": "homonym",
+    "distinction": "доля (життєвий шлях, талан) vs. доля (частина чого-небудь)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "емісія",
+    "word_b": "емісія",
+    "relation": "homonym",
+    "distinction": "емісія (випуск грошей чи цінних паперів) vs. емісія (випромінювання часток)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "жаба",
+    "word_b": "жаба",
+    "relation": "homonym",
+    "distinction": "жаба (земноводна тварина) vs. жаба (стенокардія, хвороба серця)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "жати",
+    "word_b": "жати",
+    "relation": "homonym",
+    "distinction": "жати (тиснути, здавлювати) vs. жати (зрізати колоски серпом чи комбайном)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "забій",
+    "word_b": "забій",
+    "relation": "homonym",
+    "distinction": "забій (тупий удар, травма) vs. забій (місце видобутку в шахті або різання худоби)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "загін",
+    "word_b": "загін",
+    "relation": "homonym",
+    "distinction": "загін (військове формування або група людей) vs. загін (огорожа для худоби)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "захід",
+    "word_b": "захід",
+    "relation": "homonym",
+    "distinction": "захід (сторона світу чи спуск сонця) vs. захід (організована дія, захід безпеки)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "карбункул",
+    "word_b": "карбункул",
+    "relation": "homonym",
+    "distinction": "карбункул (коштовний камінь червоного кольору) vs. карбункул (гостре гнійне запалення шкіри)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "карабін",
+    "word_b": "карабін",
+    "relation": "homonym",
+    "distinction": "карабін (коротка гвинтівка) vs. карабін (зачіпний пристрій з пружинним замком)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "клуб",
+    "word_b": "клуб",
+    "relation": "homonym",
+    "distinction": "клуб (маса диму чи пилу) vs. клуб (громадська організація, будівля або суглоб стегна)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лава",
+    "word_b": "лава",
+    "relation": "homonym",
+    "distinction": "лава (лава для сидіння або розплавлений вулканічний матеріал) vs. лава (військовий стрій або вибій у шахті)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ласка",
+    "word_b": "ласка",
+    "relation": "homonym",
+    "distinction": "ласка (прояв ніжності) vs. ласка (маленька хижа тварина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "лисичка",
+    "word_b": "лисичка",
+    "relation": "homonym",
+    "distinction": "лисичка (пестлива назва лисиці) vs. лисичка (їстівний гриб жовтого кольору)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "магазин",
+    "word_b": "магазин",
+    "relation": "homonym",
+    "distinction": "магазин (крамниця) vs. магазин (склад патронів у зброї)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "мандарин",
+    "word_b": "мандарин",
+    "relation": "homonym",
+    "distinction": "мандарин (цитрусовий фрукт) vs. мандарин (чиновник у феодальному Китаї)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "мило",
+    "word_b": "мило",
+    "relation": "homonym",
+    "distinction": "мило (гігієнічний засіб) vs. мило (приємно, любо)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "набір",
+    "word_b": "набір",
+    "relation": "homonym",
+    "distinction": "набір (комплект речей) vs. набір (прийом людей або друк тексту)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "нота",
+    "word_b": "нота",
+    "relation": "homonym",
+    "distinction": "нота (графічне зображення звуку) vs. нота (офіційне дипломатичне звернення)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "наліт",
+    "word_b": "наліт",
+    "relation": "homonym",
+    "distinction": "наліт (раптовий напад, штурм) vs. наліт (тонкий шар на поверхні)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "образ",
+    "word_b": "образ",
+    "relation": "homonym",
+    "distinction": "образ (ікона) vs. образ (художній персонаж або вигляд)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "орден",
+    "word_b": "орден",
+    "relation": "homonym",
+    "distinction": "орден (державна нагорода) vs. орден (таємна або релігійна організація)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "оригінал",
+    "word_b": "оригінал",
+    "relation": "homonym",
+    "distinction": "оригінал (першоджерело, не копія) vs. оригінал (дивакувата людина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "палата",
+    "word_b": "палата",
+    "relation": "homonym",
+    "distinction": "палата (лікарняна кімната) vs. палата (державна чи громадська установа)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "пара",
+    "word_b": "пара",
+    "relation": "homonym",
+    "distinction": "пара (два предмети разом) vs. пара (газоподібний стан води)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "партія",
+    "word_b": "партія",
+    "relation": "homonym",
+    "distinction": "партія (політичне об'єднання) vs. партія (поодинока гра або музична роль)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "рація",
+    "word_b": "рація",
+    "relation": "homonym",
+    "distinction": "рація (переносна радіостанція) vs. рація (слушність, обґрунтування думки)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "рейд",
+    "word_b": "рейд",
+    "relation": "homonym",
+    "distinction": "рейд (водний простір біля порту) vs. рейд (військовий напад або перевірка)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "рись",
+    "word_b": "рись",
+    "relation": "homonym",
+    "distinction": "рись (хижа лісова тварина) vs. рись (швидкий біг коня)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "садити",
+    "word_b": "садити",
+    "relation": "homonym",
+    "distinction": "садити (саджати рослини в землю) vs. садити (здійснювати посадку літака)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "секрет",
+    "word_b": "секрет",
+    "relation": "homonym",
+    "distinction": "секрет (таємниця) vs. секрет (речовина, яку виділяють залози)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "склад",
+    "word_b": "склад",
+    "relation": "homonym",
+    "distinction": "склад (приміщення для товарів) vs. склад (характер розуму чи будова тіла, також частина слова)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "таз",
+    "word_b": "таз",
+    "relation": "homonym",
+    "distinction": "таз (металева чи пластикова миска) vs. таз (частина скелета людини)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "такса",
+    "word_b": "такса",
+    "relation": "homonym",
+    "distinction": "такса (встановлений тариф розцінок) vs. такса (порода коротконогих собак)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "такт",
+    "word_b": "такт",
+    "relation": "homonym",
+    "distinction": "такт (почуття міри, ввічливість) vs. такт (ритмічна одиниця у музиці чи роботі двигуна)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "термін",
+    "word_b": "термін",
+    "relation": "homonym",
+    "distinction": "термін (визначений строк, час) vs. термін (наукове поняття, дефініція)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "тур",
+    "word_b": "тур",
+    "relation": "homonym",
+    "distinction": "тур (частина змагання або коло танцю) vs. тур (дикий бик, вимерла тварина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "туш",
+    "word_b": "туш",
+    "relation": "homonym",
+    "distinction": "туш (ж.р., чорна фарба для малювання) vs. туш (ч.р., коротке музичне вітання)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ударник",
+    "word_b": "ударник",
+    "relation": "homonym",
+    "distinction": "ударник (музикант на барабанах) vs. ударник (деталь затвора у зброї або передовик виробництва)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "утримання",
+    "word_b": "утримання",
+    "relation": "homonym",
+    "distinction": "утримання (фінансове забезпечення) vs. утримання (стримування від чогось)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фаланга",
+    "word_b": "фаланга",
+    "relation": "homonym",
+    "distinction": "фаланга (кістка пальця або військовий стрій) vs. фаланга (павукоподібна тварина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фокус",
+    "word_b": "фокус",
+    "relation": "homonym",
+    "distinction": "фокус (оптична точка концентрації променів) vs. фокус (трюк, ілюзіоністичний номер)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "фунт",
+    "word_b": "фунт",
+    "relation": "homonym",
+    "distinction": "фунт (одиниця ваги) vs. фунт (грошова одиниця)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "храп",
+    "word_b": "храп",
+    "relation": "homonym",
+    "distinction": "храп (хропіння під час сну) vs. храп (перенісся тварин або елемент механізму)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "хронограф",
+    "word_b": "хронограф",
+    "relation": "homonym",
+    "distinction": "хронограф (прилад реєстрації часу) vs. хронограф (давній літопис)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "череда",
+    "word_b": "череда",
+    "relation": "homonym",
+    "distinction": "череда (стадо корів) vs. череда (лікарська трав'яниста рослина)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "шах",
+    "word_b": "шах",
+    "relation": "homonym",
+    "distinction": "шах (східний правитель) vs. шах (загроза королю в шахах)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "штат",
+    "word_b": "штат",
+    "relation": "homonym",
+    "distinction": "штат (адміністративна область) vs. штат (особовий склад установи)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "штучний",
+    "word_b": "штучний",
+    "relation": "homonym",
+    "distinction": "штучний (виготовлений людиною, не природний) vs. штучний (поштучний, який рахується одиницями)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "як",
+    "word_b": "як",
+    "relation": "homonym",
+    "distinction": "як (прислівник / сполучник) vs. як (великий тибетський бик)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "яріти",
+    "word_b": "яріти",
+    "relation": "homonym",
+    "distinction": "яріти (світитися, яскраво горіти) vs. яріти (гніватися, яритися)",
+    "source": "miyklas.com.ua"
+  },
+  {
+    "word_a": "ячмінь",
+    "word_b": "ячмінь",
+    "relation": "homonym",
+    "distinction": "ячмінь (злак) vs. ячмінь (запалення на оці)",
+    "source": "miyklas.com.ua"
+  }
+]

@@ -127,6 +127,50 @@ Changing one registry record flips the global manifest hash and that record's pe
 
 **Runtime kill switch (rollout safety).** A single default-safe configuration flag — `research_registry.enabled` (config, env-overridable) — gates the entire feature. **Default during rollout: `false`** (manifest omits the research component; `/api/knowledge/*` returns an empty/disabled projection; the router surfaces zero pointers), reproducing exact current behavior. Flipping it `true` enables the feature without a code change; flipping it back `false` is an instant, in-place disable — **no revert PR and no redeploy required**. This makes rollback a config toggle, not a deploy, and lets the pilot run behind the flag while unrelated agents are wholly unaffected.
 
+### P6 pilot result and rollout decision
+
+The real three-record UNLP pilot is recorded in
+[`research-registry-pilot.md`](../../references/research-registry-pilot.md).
+It protects five explicit task contexts, exact canonical UTF-8 payload/body
+measurements, state-manifest delta, and endpoint-level warm-cache `304` reads in
+`scripts/audit/check_research_registry_pilot.py`. The result is **GO for a
+controlled local rollout when a task supplies explicit scoped context or a
+session already knows its assigned functional role**. `MonitorClient().bootstrap()`
+without a role remains generic and pointer-free; there is no hidden default role.
+
+The compiled feature default remains fail-safe disabled. The gitignored live flag
+is a local opt-in, and rollback is setting it false or removing it — no source
+revert, task-store rewrite, or telemetry deletion. This decision does not switch
+every environment on. New research ingestion remains schema/adoption-gated.
+
+**P5 remains NO-GO / condition not triggered.** The three bounded digests are
+sufficient, CEFR adoption shipped without raw transport, and deferred TTS/GEC
+work is blocked by ownership/product/licensing. Reopen only for a specific missing
+datum plus a blocked routed task, proof that digest/public manual access is
+insufficient, repeated need, and rights allowing automated caching.
+
+### P4 — strict adoption gate: cache authority window and partial-metric semantics
+
+**Cache authority window.** `scripts/audit/check_research_registry.py --strict-adoption` and `GET /api/knowledge/monitor` both gate ownership/issue-consumer proof on a membership cache (`batch_state/issue_stream_audit.json`, gitignored, written by `scripts/orchestration/issue_stream_audit.py`), never the network directly. A cache is authoritative only when:
+
+- `generated_at` is a finite, non-boolean numeric timestamp;
+- its age is **≤ `max_age_s`** (default **3600s** — matches the auditor's own session-setup refresh cadence);
+- its age is **not more than 300s (`CACHE_FUTURE_SKEW_S`) in the future** — clock skew or a corrupted/hand-edited timestamp must not read as "fresh forever" just because the age computes negative;
+- every `effective_membership` entry is structurally + semantically valid: positive-int epics, non-empty stream names, a known `via` (`native`/`body`), and a `unique_stream` bool **consistent with the epic count** — exactly one effective epic, not merely one stream name (two epics sharing a stream are still ambiguous);
+- `open_issue_numbers`, if present, is a list of positive ints.
+
+Any violation fails the whole cache **closed** (`read_membership_index` → `None`) — never a partial/best-effort read, never a raised exception. The `corpus` resolver (`scripts.audit.atlas_intake_registry.is_registered_source_family`) needs no cache at all: it is a static, offline, always-available table, injected unconditionally into the strict gate, the monitor, **and** ordinary `--check`/`--reconcile` (PR #4998 final review) — unlike the `issue` resolver, which stays uninjected under ordinary `--check` because it genuinely needs a fresh, live cache. `validate_registry(..., corpus_resolver=None)` itself is unchanged and still fails closed for any caller that omits authority.
+
+**Ownership is historical; issue-consumer liveness is not.** `effective_membership` indexes every native/body-linked child a stream epic returns, open or closed — record *ownership* (`ownership.issue` on a `proposed` record) proves the epic uniquely tracked that issue and does not un-prove itself when the issue is later closed (implementation done). Issue *consumer* health (`consumer: {kind: issue, ...}` on an `adopted` record) is a stricter, separate proof: it additionally requires the ref to appear in `open_issue_numbers`, because a consumer names ongoing work, not a completed one. `make_membership_resolver` checks only `effective_membership`; `make_issue_resolver` checks `effective_membership` **and** `open_issue_numbers`. A closed, uniquely-owned issue therefore passes ownership and fails as a consumer — this is by design, not a bug (PR #4998 corrective pass).
+
+**Partial-metric semantics (consumption telemetry).** The monitor's telemetry scan (`scripts/research/observability.py::_scan_telemetry`) is bounded (`MAX_SCAN_BYTES` = 64 MiB total, `MAX_LINE_CHARS` = 1 MiB per line) and scans **newest day first** — so a byte cap drops older, less-actionable days rather than hiding today's activity behind history. Any partial coverage (byte cap, an unreadable file, or an oversized/no-newline line) sets `partial: true` and a `cap_reason` (`byte_cap`/`unreadable_file`/`oversized_line`), plus `files_in_window`/`files_scanned`/`files_skipped` so the gap itself is visible — no silent truncation.
+
+Under `partial: true`, `surfaced_never_consumed` (a **definitive negative** claim — "genuinely never consumed") is reported **`null`**, never a number: a consumption event could exist outside what was actually scanned, so asserting it would be dishonest. This applies at **every** level the field appears — the top-level aggregate, each `per_record[id]` bucket, and the `unknown_research_ids` bucket — not only the top level; a hidden consuming event could be hiding behind an unreadable file or a discarded oversized line for exactly one record, so a per-record `null` is required too (PR #4998 final review). The raw observed count is still available as `surfaced_never_consumed_observed` (mirrored per-record as well) — a **lower bound**, like every other positive/raw count in the payload (`surfaced_events`, `consumed_events`, `surfaced_pairs`, `consumed_pairs`, `distinct_pairs`): missing data can only under-count these, never manufacture a false positive, so they are safe to report even when coverage is incomplete.
+
+Every P3 event row (`research_pointer_surfaced` / `research_record_consumed`) is validated against its field contract — bounded `task_id`/`research_id`, a surface matching the event type, and (for consumption) `status ∈ {200, 304}` — **before** it can affect any aggregate; a row of the right type that fails this contract counts as `malformed_lines`, never silently as noise from "some other event type."
+
+The `MAX_SCAN_BYTES` cap bounds **total bytes returned by the telemetry file reader**, not just bytes that make it into a parsed event: every binary read request is limited by the shared budget before it occurs, and bytes discarded while draining an oversized (no-newline) line are included in that same exact total. A pathological multi-GB no-newline file therefore cannot be read past the cap while `bytes_scanned` stays near zero — the scan stops mid-drain, safely, the moment the budget is exhausted. Separately, the oversized check compares physical line *content* length against `MAX_LINE_CHARS`, not a raw read length: a line whose content is exactly `MAX_LINE_CHARS` chars plus its own trailing newline is never treated as needing a drain (PR #4998 final review).
+
 ### Privacy / worktree policy
 
 - **Tracked digests are the default and only auto-provisioned surface.** They are committed, so they already reach every worktree with no new symlink.

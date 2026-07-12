@@ -430,6 +430,17 @@ export interface PracticeSessionSnapshot {
   unresolvedCardKeys?: string[];
 }
 
+/**
+ * Unfinished sessions are isolated by mode. This prevents the selection, history, and
+ * progress of one drill from being restored into another drill's session.
+ */
+export type PracticeSessionSnapshots = Partial<Record<PracticeModeFilter, PracticeSessionSnapshot>>;
+
+interface PersistedPracticeSessionSnapshots {
+  version: 1;
+  byMode: PracticeSessionSnapshots;
+}
+
 export interface NewCardsDailyState {
   date: string;
   count: number;
@@ -2053,19 +2064,21 @@ export function previewRatingIntervals(
   return previews;
 }
 
-export function readPracticeSessionSnapshot(
-  storage: StorageLike = resolveStorage(),
-): PracticeSessionSnapshot | null {
+function isPracticeModeFilter(value: unknown): value is PracticeModeFilter {
+  return value === 'mixed' || isPracticeMode(value);
+}
+
+function parsePracticeSessionSnapshot(value: unknown): PracticeSessionSnapshot | null {
   try {
-    const raw = storage.getItem(PRACTICE_SESSION_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<PracticeSessionSnapshot>;
+    const parsed = value as Partial<PracticeSessionSnapshot>;
     if (
+      !parsed ||
+      typeof parsed !== 'object' ||
       typeof parsed.sessionSeed !== 'number' ||
       !Array.isArray(parsed.history) ||
       (typeof parsed.budget !== 'number' && parsed.budget !== 'until-zero') ||
       typeof parsed.completed !== 'number' ||
-      typeof parsed.modeFilter !== 'string' ||
+      !isPracticeModeFilter(parsed.modeFilter) ||
       typeof parsed.level !== 'string' ||
       typeof parsed.startedAt !== 'number'
     ) {
@@ -2077,16 +2090,78 @@ export function readPracticeSessionSnapshot(
   }
 }
 
+/**
+ * Read the mode-indexed session store. A pre-mode-scoping legacy snapshot is accepted
+ * and placed under its own stored mode; the next write upgrades it to the v1 envelope.
+ */
+export function readPracticeSessionSnapshots(
+  storage: StorageLike = resolveStorage(),
+): PracticeSessionSnapshots {
+  try {
+    const raw = storage.getItem(PRACTICE_SESSION_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    const legacySnapshot = parsePracticeSessionSnapshot(parsed);
+    if (legacySnapshot) return { [legacySnapshot.modeFilter]: legacySnapshot };
+
+    const persisted = parsed as Partial<PersistedPracticeSessionSnapshots>;
+    if (
+      !persisted ||
+      typeof persisted !== 'object' ||
+      persisted.version !== 1 ||
+      !persisted.byMode ||
+      typeof persisted.byMode !== 'object' ||
+      Array.isArray(persisted.byMode)
+    ) {
+      return {};
+    }
+
+    const snapshots: PracticeSessionSnapshots = {};
+    for (const [mode, candidate] of Object.entries(persisted.byMode)) {
+      if (!isPracticeModeFilter(mode)) continue;
+      const snapshot = parsePracticeSessionSnapshot(candidate);
+      if (snapshot?.modeFilter === mode) snapshots[mode] = snapshot;
+    }
+    return snapshots;
+  } catch {
+    return {};
+  }
+}
+
+export function readPracticeSessionSnapshot(
+  mode: PracticeModeFilter,
+  storage: StorageLike = resolveStorage(),
+): PracticeSessionSnapshot | null {
+  return readPracticeSessionSnapshots(storage)[mode] ?? null;
+}
+
 export function writePracticeSessionSnapshot(
+  mode: PracticeModeFilter,
   snapshot: PracticeSessionSnapshot | null,
   storage: StorageLike = resolveStorage(),
 ): void {
   try {
-    if (!snapshot) {
+    const snapshots = readPracticeSessionSnapshots(storage);
+    if (snapshot && snapshot.modeFilter !== mode) return;
+    if (snapshot) {
+      snapshots[mode] = snapshot;
+    } else {
+      delete snapshots[mode];
+    }
+    if (Object.keys(snapshots).length === 0) {
       storage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
       return;
     }
-    storage.setItem(PRACTICE_SESSION_STORAGE_KEY, JSON.stringify(snapshot));
+    const persisted: PersistedPracticeSessionSnapshots = { version: 1, byMode: snapshots };
+    storage.setItem(PRACTICE_SESSION_STORAGE_KEY, JSON.stringify(persisted));
+  } catch {
+    // Best-effort persistence.
+  }
+}
+
+export function clearPracticeSessionSnapshots(storage: StorageLike = resolveStorage()): void {
+  try {
+    storage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
   } catch {
     // Best-effort persistence.
   }

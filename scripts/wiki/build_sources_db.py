@@ -246,6 +246,33 @@ CREATE TABLE IF NOT EXISTS style_guide (
 );
 CREATE INDEX IF NOT EXISTS idx_style_word ON style_guide(word COLLATE NOCASE);
 
+-- === Lexical relation corpus (populated by scripts/lexicon/load_relation_candidates.py) ===
+--
+-- This durable fact corpus is rebuilt from versioned/mined candidate artifacts
+-- after a full source build, just as ZNO task tables are re-ingested separately.
+-- One row is retained per normalized pair and provenance source so source URLs
+-- and confidence remain attributable without serializing a source list.
+
+CREATE TABLE IF NOT EXISTS relation_pairs (
+    id INTEGER PRIMARY KEY,
+    relation TEXT NOT NULL CHECK (relation IN ('synonym', 'antonym', 'paronym', 'homonym')),
+    word_a TEXT NOT NULL,
+    word_b TEXT NOT NULL,
+    gloss_a TEXT DEFAULT '',
+    gloss_b TEXT DEFAULT '',
+    source TEXT NOT NULL,
+    source_url TEXT DEFAULT '',
+    confidence TEXT DEFAULT 'medium' CHECK (confidence IN ('high', 'medium', 'low')),
+    review_status TEXT DEFAULT 'candidate' CHECK (review_status IN ('candidate', 'approved', 'rejected')),
+    added_at TEXT
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_relation_pairs_pair_source
+    ON relation_pairs(relation, word_a, word_b, source);
+CREATE INDEX IF NOT EXISTS idx_relation_pairs_relation_word_a
+    ON relation_pairs(relation, word_a);
+CREATE INDEX IF NOT EXISTS idx_relation_pairs_relation_word_b
+    ON relation_pairs(relation, word_b);
+
 -- === Wikipedia passthrough (populated by scripts/wiki/fetch_wikipedia.py) ===
 --
 -- These tables own the Wikipedia cache that the MCP sources server queries

@@ -45,6 +45,21 @@ Standing role assignment for orchestrated sessions (names rotate; route by the r
 This names who orchestrates vs advises vs works. The cross-family review gate, the per-task routing rows
 above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the standing topology over them.
 
+### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)
+
+Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/routing-budget` (+ `delegate --check-budget`) before any fanout. Live 2026-07-11: **claude 82% HOT (~1d to reset) → push load off the orchestrator seat to codex (89% free) + the cheap lanes.** Each lane's full strengths/caveats live in the per-task table + panel notes; this is the consolidated ranking.
+
+| Work type | 1st pick | 2nd | 3rd | gate / never |
+|---|---|---|---|---|
+| **Coding / impl / fixtures** | **codex** — `terra` default · `luna` = fast-bounded | **agy** — bounded scripts, docs-near-code | cursor · grok-build | claude seat = only ≤5-LOC CI-fix-I-caused; luna never sole authority |
+| **Code review** (cross-family = outside author's family) | **deepseek-v4-flash** — cheap, A+ fast (ALWAYS `--silence-timeout`) | **grok-build** — sharpest gate + deepseek stall-failover | pool (FREE) · glm (LOCAL: security + big-context coherence) | codex = same family as Sol/terra/luna; claude seat = prefer inline |
+| **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | — | NO deepseek for FOLK; cursor apostrophe/russicism gate; never pool/glm/gemma-sole |
+| **Content / factual / CEFR review** (VESUM-gated) | **deepseek-v4-pro** (+ `sources` MCP) | **agy** (pedagogy/CEFR) | **gemma** (cheap surface: russicism/calque/Latin-leak/decolonization) | NO deepseek for FOLK; gemma not sole factual/seminar reviewer |
+| **Research / recon / triage** | **luna** (fast bounded) | Explore-haiku (grep/find) | terra (deeper) | luna never sole authority on consequential calls |
+| **Live web fact-check** (pricing/URL/citation currency) | any opencode model — pool (FREE) · glm (LOCAL) · deepseek | — | — | browsing = harness property, not a model trait |
+
+**Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high–max`** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis. Convene BEFORE committing a substantive design; never for routine. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
+
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
