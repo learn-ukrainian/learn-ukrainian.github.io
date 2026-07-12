@@ -11,11 +11,12 @@ prints task identifiers, digest bodies, or runtime flag contents.
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import sys
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stdout
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -91,7 +92,10 @@ def _isolated_api(root: Path) -> Iterator[TestClient]:
     state_router.datetime = _FrozenDateTime  # type: ignore[assignment]
     os.environ["LEARN_UKRAINIAN_TELEMETRY_FOOTER"] = "0"
     try:
-        with TestClient(api_main.app, raise_server_exceptions=False) as client:
+        # The in-process app emits preload diagnostics while TestClient enters.
+        # They are incidental to this checker's API harness and would corrupt
+        # the machine-readable output produced by ``main(--json)``.
+        with redirect_stdout(io.StringIO()), TestClient(api_main.app, raise_server_exceptions=False) as client:
             yield client
     finally:
         reg._ROOT_OVERRIDE = prior_root
