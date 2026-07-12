@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Load VESUM-gated relation candidate artifacts into ``relation_pairs``.
+"""Load relation candidate artifacts into ``relation_pairs``.
 
 Candidate artifacts contain relation facts and provenance only.  Miner-provided
 ``distinction`` prose is intentionally not imported: source glosses may be
 copyrighted.  Only explicitly supplied project-authored ``gloss_a`` and
 ``gloss_b`` fields may enter the corpus.
+
+Untrusted mined candidates remain VESUM-gated. A VESUM gap can be retained
+only through an exact local dictionary attestation, or through a deliberately
+small set of source-vetted candidate registers.
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ import json
 import sqlite3
 import sys
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -25,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup
 from scripts.lexicon.relation_pairs import (
     RELATION_TYPES,
     ensure_relation_pairs_schema,
@@ -36,9 +41,27 @@ DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_CANDIDATES_DIR = ROOT / "data" / "lexicon"
 DEFAULT_SYNONYM_VERDICTS = DEFAULT_CANDIDATES_DIR / "synonym_pair_verdicts.yaml"
 SYNONYM_VERDICTS_SOURCE = "synonym_verdicts"
-_CURATED_SOURCE_MARKERS = ("wikipedia", "wiktionary", "miyklas", "ukr-mova", "словник", "dictionary", "zno", "grinchyshyn")
+_CURATED_SOURCE_MARKERS = (
+    "wikipedia",
+    "wiktionary",
+    "miyklas",
+    "ukr-mova",
+    "словник",
+    "dictionary",
+    "zno",
+    "grinchyshyn",
+)
 _GENERATED_SOURCE_MARKERS = ("generated", "llm", "model")
 _EXCLUDED_CANDIDATE_FILENAMES = frozenset({"relation_candidates_sample.json"})
+# These registers are teacher- or dictionary-vetted rather than mined guesses.
+# Keep this explicit: every other source remains VESUM- and heritage-gated.
+TRUSTED_CANDIDATE_SOURCES = frozenset(
+    {
+        "miyklas.com.ua",
+        "grinchyshyn-1986",
+        "ukr-mova.in.ua",
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,9 +82,93 @@ class LoadSummary:
     accepted: int = 0
     skipped_invalid: int = 0
     skipped_vesum: int = 0
+    kept_via_heritage: int = 0
+    kept_via_trusted_source: int = 0
+    still_dropped: int = 0
+    dropped_lemmas: Counter[str] = field(default_factory=Counter)
     inserted: int = 0
     updated: int = 0
     unchanged: int = 0
+
+
+class RelationHeritageLookup(HeritageLemmaLookup):
+    """Exact heritage/dictionary lookup for relation-candidate VESUM gaps.
+
+    This reuses #3211's ``HeritageLemmaLookup`` for exact Грінченко and ЕСУМ
+    headwords. Relation candidates also need the canonical СУМ-20 snapshot used
+    by ``sources.search_heritage``. When that snapshot is not cached locally,
+    the project СУМ dictionary table remains a compatible exact-headword
+    fallback. No prefix or body matches are accepted.
+    """
+
+    _SUM_TABLES = (("sum20", "word"), ("sum11", "word"))
+
+    def __init__(self, db_path: Path = DEFAULT_DB):
+        super().__init__(db_path)
+        self._dictionary_tables: frozenset[str] | None = None
+        self._dictionary_columns: dict[str, frozenset[str]] = {}
+        self._dictionary_cache: dict[str, bool] = {}
+
+    def has_attestation(self, lemma: str) -> bool:
+        normalized = normalize_relation_word(lemma)
+        if not normalized:
+            return False
+        if normalized in self._dictionary_cache:
+            return self._dictionary_cache[normalized]
+
+        try:
+            if super().has_attestation(normalized):
+                self._dictionary_cache[normalized] = True
+                return True
+        except sqlite3.DatabaseError:
+            # A deliberately small fixture or a partial sources database can
+            # lack a #3211 table. Continue to the available exact dictionary
+            # tables; missing evidence must still fail closed.
+            pass
+
+        self._dictionary_cache[normalized] = self._has_dictionary_headword(normalized)
+        return self._dictionary_cache[normalized]
+
+    def _has_dictionary_headword(self, lemma: str) -> bool:
+        self.open()
+        assert self._conn is not None
+        if self._dictionary_tables is None:
+            self._dictionary_tables = frozenset(
+                str(row[0]) for row in self._conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+            )
+
+        slovnyk_columns = self._columns_for("slovnyk_me_entries")
+        if {"normalized_word", "dictionary_slug"} <= slovnyk_columns:
+            row = self._conn.execute(
+                """
+                SELECT 1 FROM slovnyk_me_entries
+                WHERE normalized_word = ? AND dictionary_slug = 'newsum'
+                LIMIT 1
+                """,
+                (lemma,),
+            ).fetchone()
+            if row:
+                return True
+
+        for table, column in self._SUM_TABLES:
+            if column not in self._columns_for(table):
+                continue
+            row = self._conn.execute(
+                f"SELECT 1 FROM {table} WHERE {column} = ? LIMIT 1",
+                (lemma,),
+            ).fetchone()
+            if row:
+                return True
+        return False
+
+    def _columns_for(self, table: str) -> frozenset[str]:
+        if self._dictionary_tables is None or table not in self._dictionary_tables:
+            return frozenset()
+        if table not in self._dictionary_columns:
+            self._dictionary_columns[table] = frozenset(
+                str(row[1]) for row in self._conn.execute(f"PRAGMA table_info({table})")
+            )
+        return self._dictionary_columns[table]
 
 
 def _infer_relation(path: Path, payload: object) -> str | None:
@@ -127,13 +234,24 @@ def _normalise_candidate(path: Path, root: dict[str, Any], raw: dict[str, Any]) 
         gloss_a=gloss_a,
         gloss_b=gloss_b,
         source=source,
-        source_url=str(raw.get("source_url") or raw.get("source_page") or raw.get("url") or root.get("source_url") or "").strip(),
+        source_url=str(
+            raw.get("source_url") or raw.get("source_page") or raw.get("url") or root.get("source_url") or ""
+        ).strip(),
         confidence=_confidence_for(source, raw.get("confidence") or root.get("confidence")),
         review_status=status,
     )
 
 
-def _iter_candidates(candidates_dir: Path, source_filter: str | None, summary: LoadSummary):
+def _is_trusted_candidate_source(source: str) -> bool:
+    return source.strip().casefold() in TRUSTED_CANDIDATE_SOURCES
+
+
+def _iter_candidates(
+    candidates_dir: Path,
+    source_filter: str | None,
+    summary: LoadSummary,
+    heritage: RelationHeritageLookup | None,
+):
     for path in sorted(candidates_dir.glob("*_candidates_*.json")):
         if path.name in _EXCLUDED_CANDIDATE_FILENAMES:
             continue
@@ -145,11 +263,27 @@ def _iter_candidates(candidates_dir: Path, source_filter: str | None, summary: L
                 continue
             if source_filter and candidate.source != source_filter:
                 continue
-            if not (is_exact_vesum_lemma(candidate.word_a) and is_exact_vesum_lemma(candidate.word_b)):
-                summary.skipped_vesum += 1
+            missing_vesum = [word for word in (candidate.word_a, candidate.word_b) if not is_exact_vesum_lemma(word)]
+            if not missing_vesum:
+                summary.accepted += 1
+                yield candidate
                 continue
-            summary.accepted += 1
-            yield candidate
+            if heritage is not None and all(heritage.has_attestation(word) for word in missing_vesum):
+                summary.kept_via_heritage += 1
+                summary.accepted += 1
+                yield candidate
+                continue
+            if _is_trusted_candidate_source(candidate.source):
+                summary.kept_via_trusted_source += 1
+                summary.accepted += 1
+                yield candidate
+                continue
+
+            # Retain the legacy field for downstream callers while exposing a
+            # more accurate name and the exact missing lemmas in the CLI report.
+            summary.still_dropped += 1
+            summary.dropped_lemmas.update(missing_vesum)
+            summary.skipped_vesum += 1
 
 
 def _approved_synonym_verdict_candidates(verdicts_path: Path) -> list[Candidate]:
@@ -250,11 +384,23 @@ def load_candidates(
     *,
     source_filter: str | None = None,
     dry_run: bool = False,
+    heritage_db_path: Path | None = DEFAULT_DB,
 ) -> tuple[LoadSummary, Counter[tuple[str, str]]]:
     """Load all matching candidates and return result counts by source/relation."""
     summary = LoadSummary()
     by_source_relation: Counter[tuple[str, str]] = Counter()
-    candidates = list(_iter_candidates(candidates_dir, source_filter, summary))
+    heritage: RelationHeritageLookup | None = None
+    if heritage_db_path is not None:
+        try:
+            heritage = RelationHeritageLookup(heritage_db_path)
+            heritage.open()
+        except FileNotFoundError:
+            heritage = None
+    try:
+        candidates = list(_iter_candidates(candidates_dir, source_filter, summary, heritage))
+    finally:
+        if heritage is not None:
+            heritage.close()
     for candidate in candidates:
         by_source_relation[(candidate.source, candidate.relation)] += 1
     if dry_run:
@@ -338,29 +484,51 @@ def load_approved_synonym_verdicts(
 
 
 def _print_summary(summary: LoadSummary, by_source_relation: Counter[tuple[str, str]]) -> None:
+    dropped_lemmas = ",".join(sorted(summary.dropped_lemmas)) or "none"
     print(
         "relation candidates: "
         f"accepted={summary.accepted} inserted={summary.inserted} updated={summary.updated} "
         f"unchanged={summary.unchanged} skipped_invalid={summary.skipped_invalid} "
-        f"skipped_vesum={summary.skipped_vesum}"
+        f"skipped_vesum={summary.skipped_vesum} "
+        f"kept_via_heritage={summary.kept_via_heritage} "
+        f"kept_via_trusted_source={summary.kept_via_trusted_source} "
+        f"still_dropped={summary.still_dropped} dropped_lemmas={dropped_lemmas}"
     )
     for (source, relation), count in sorted(by_source_relation.items()):
         print(f"  {source} | {relation}: {count}")
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Load VESUM-gated relation candidate JSON into sources.db.")
+    parser = argparse.ArgumentParser(
+        description="Load VESUM- or source-attested relation candidate JSON into sources.db."
+    )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB, help="SQLite sources database path.")
-    parser.add_argument("--candidates-dir", type=Path, default=DEFAULT_CANDIDATES_DIR, help="Directory containing *_candidates_*.json artifacts.")
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Reviewed synonym verdict YAML.")
+    parser.add_argument(
+        "--candidates-dir",
+        type=Path,
+        default=DEFAULT_CANDIDATES_DIR,
+        help="Directory containing *_candidates_*.json artifacts.",
+    )
+    parser.add_argument(
+        "--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Reviewed synonym verdict YAML."
+    )
+    parser.add_argument(
+        "--heritage-db",
+        type=Path,
+        default=DEFAULT_DB,
+        help="sources.db for the exact Грінченко/ЕСУМ/СУМ heritage fallback.",
+    )
     parser.add_argument("--source", dest="source_filter", help="Load only records attributed to this source.")
-    parser.add_argument("--dry-run", action="store_true", help="Validate and summarize without creating or changing the database.")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Validate and summarize without creating or changing the database."
+    )
     args = parser.parse_args()
     summary, by_source_relation = load_candidates(
         args.db,
         args.candidates_dir,
         source_filter=args.source_filter,
         dry_run=args.dry_run,
+        heritage_db_path=args.heritage_db,
     )
     _print_summary(summary, by_source_relation)
     verdict_summary = load_approved_synonym_verdicts(
