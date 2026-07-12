@@ -1,5 +1,5 @@
 {
-  "fingerprint": "fca5903a01831f3fa731e3034d064219864b84e1f83efc14f4d351dff59dca33",
+  "fingerprint": "fcd9d835253fdf3bba83cd2897be1583e1133e663552b9a337f975671e24611e",
   "inputs": {
     "lexicon_code": [
       {
@@ -65,6 +65,10 @@
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
         "sha256": "1cfb88507ea8792d81b7ab539110cf014317ca4c5197dc15102fe32eb8a1de1d"
+      },
+      {
+        "path": "scripts/lexicon/extract_grinchyshyn_paronym_candidates.py",
+        "sha256": "3801153cf530992f44354a31ac724377cdee33bc2977dc79bac41099016b677e"
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
@@ -151,6 +155,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 36
+    "lexicon_code_files": 37
   }
 }
