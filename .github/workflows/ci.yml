@@ -876,7 +876,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install jsonschema
+          .venv/bin/python -m pip install jsonschema PyYAML
 
       - name: Restore Atlas lexicon manifest cache
         id: atlas-manifest-cache
@@ -935,6 +935,7 @@ jobs:
       run: |
         python -m venv .venv
         .venv/bin/python -m pip install --upgrade pip
+        .venv/bin/python -m pip install PyYAML
 
     - name: Restore Atlas lexicon manifest cache
       id: atlas-manifest-cache

@@ -2,6 +2,8 @@ import './components/Activities.module.css';
 
 export { ActivityPlayer } from './ActivityPlayer';
 export type {
+  ActivityPlayerActivity,
+  ActivitySourceActivity,
   ActivityCompletionEvent,
   ActivityEditOperation,
   ActivityPlayerProps,
