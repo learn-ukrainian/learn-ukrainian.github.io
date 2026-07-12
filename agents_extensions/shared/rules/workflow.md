@@ -38,6 +38,49 @@ curl -s 'http://localhost:8765/api/knowledge/cold-start?role=quality'  # role-sc
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 ```
 
+### Project Research Registry — orchestrator dispatch duty
+
+Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
+accountable orchestrator must classify the task from its issue/brief and record
+one of these outcomes in the brief or orchestration note:
+
+- **Scoped:** pass every known task dimension with `--research-role`,
+  `--research-task-family`, `--research-track`, and repeatable
+  `--research-owned-path`. These describe the task's functional context, never
+  the provider or agent identity. The registry matcher is conjunctive: a missing
+  dimension required by a record safely produces no match. Never invent a value
+  to force a pointer; split a dispatch that spans incompatible single-value
+  roles, families, or tracks.
+- **Genuinely generic or unknown:** omit all `--research-*` flags and keep the
+  dispatch pointer-free. This must be a deliberate classification, not the
+  accidental result of forgetting the registry.
+
+Example scoped dispatch fragment:
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex --task-id quality-4952 \
+  --prompt-file docs/dispatch-briefs/quality-4952.md --worktree \
+  --mode danger \
+  --research-role quality \
+  --research-task-family difficulty-gate \
+  --research-track core \
+  --research-owned-path scripts/audit/text_difficulty.py
+```
+
+The injected block contains pointers only. A worker that relies on a record must
+fetch it while the task is active with
+`GET /api/knowledge/record/{id}?task=<task-id>`. A surfaced pointer is not proof
+of consumption: do not claim research was used without attributed fetch evidence,
+and do not fetch an irrelevant record merely to manufacture adoption. Before
+final disposition, the orchestrator checks the task's consumption evidence and
+the privacy-safe aggregate `/api/knowledge/monitor`; any relevant surfaced but
+unconsumed pointer must be explained, not silently counted as adopted.
+
+Classification is mandatory; delivery remains fail-open. A disabled or degraded
+registry must not block the delegated task, and it does not justify fabricating
+context or weakening the generic pointer-free contract.
+
 **Do NOT read `CLAUDE.md`, `agents_extensions/shared/rules/*.md`, or
 `docs/session-state/current.md` directly on cold start.** Those are
 the source of truth the endpoints above serve. Reading them separately
