@@ -4,3408 +4,3895 @@
     "word_a": "абонемент",
     "word_b": "абонент",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "автоматизований",
     "word_b": "автоматичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "автоматизований",
     "word_b": "автоматний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "автоматичний",
     "word_b": "автоматний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "авторизований",
     "word_b": "авторський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "авторитарний",
     "word_b": "авторитетний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "аграрний",
     "word_b": "агрономічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "адрес",
     "word_b": "адреса",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "адресант",
     "word_b": "адресат",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "активація",
     "word_b": "активність",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "активація",
     "word_b": "активізація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "активність",
     "word_b": "активізація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "анотація",
     "word_b": "нотація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "апендикс",
     "word_b": "апендицит",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ароматизований",
     "word_b": "ароматичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ароматизований",
     "word_b": "ароматний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ароматичний",
     "word_b": "ароматний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "афект",
     "word_b": "ефект",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "бавовна",
     "word_b": "бавовник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "багатир",
     "word_b": "богатир",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "база",
     "word_b": "базис",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "батьків",
     "word_b": "батьківський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "бойовий",
     "word_b": "бійцівський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "болотистий",
     "word_b": "болотний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "болотистий",
     "word_b": "болотяний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "болотний",
     "word_b": "болотяний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "болючий",
     "word_b": "болісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "боцман",
     "word_b": "лоцман",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівельний",
     "word_b": "будівний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівельний",
     "word_b": "будівничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівельник",
     "word_b": "будівник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівельник",
     "word_b": "будівничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівний",
     "word_b": "будівничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "будівник",
     "word_b": "будівничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "буланий",
     "word_b": "булатний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "буран",
     "word_b": "бурун",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "бювет",
     "word_b": "кювет",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "білити",
     "word_b": "біліти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "варта",
     "word_b": "вахта",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вегетативний",
     "word_b": "вегетаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "веліти",
     "word_b": "воліти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виборний",
     "word_b": "виборчий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вивільняти",
     "word_b": "визволяти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вивільняти",
     "word_b": "звільняти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вигляд",
     "word_b": "вид",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виголошувати",
     "word_b": "оголошувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виголошувати",
     "word_b": "проголошувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виділяти",
     "word_b": "приділяти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "визволений",
     "word_b": "визвольний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "визволяти",
     "word_b": "звільняти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "визначальний",
     "word_b": "визначний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "визначати",
     "word_b": "відзначати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "визначати",
     "word_b": "зазначати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виклад",
     "word_b": "викладання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виклик",
     "word_b": "заклик",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виклик",
     "word_b": "поклик",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виконавський",
     "word_b": "виконавчий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "викривати",
     "word_b": "розкривати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "винахідливий",
     "word_b": "винахідницький",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виноградарський",
     "word_b": "виноградний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виноградарський",
     "word_b": "виноградовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виноградний",
     "word_b": "виноградовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виплата",
     "word_b": "оплата",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "виплата",
     "word_b": "плата",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вирізнятися",
     "word_b": "відрізнятися",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вирізнятися",
     "word_b": "розрізнятися",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вирішальний",
     "word_b": "рішучий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "висвітлювати",
     "word_b": "освітлювати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вистава",
     "word_b": "виставка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вистояний",
     "word_b": "відстояний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вихований",
     "word_b": "виховний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "водневий",
     "word_b": "водний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "водневий",
     "word_b": "водяний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "водний",
     "word_b": "водяний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вожак",
     "word_b": "вожатий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "воєнний",
     "word_b": "військовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "враховувати",
     "word_b": "підраховувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відзначати",
     "word_b": "зазначати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відмінний",
     "word_b": "відмітний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відносини",
     "word_b": "відношення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відповідальний",
     "word_b": "відповідний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відпуск",
     "word_b": "відпустка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відрізнятися",
     "word_b": "розрізнятися",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відтинок",
     "word_b": "відтінок",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "відчуття",
     "word_b": "почуття",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "віршований",
     "word_b": "віршовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "вітровий",
     "word_b": "вітряний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "газований",
     "word_b": "газовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гамувати",
     "word_b": "тамувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гарантований",
     "word_b": "гарантійний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гармонійний",
     "word_b": "гармонічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "генеральний",
     "word_b": "генеральський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "глибинний",
     "word_b": "глибокий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "глуз",
     "word_b": "глузд",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гнівливий",
     "word_b": "гнівний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "говіркий",
     "word_b": "говірковий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "голосистий",
     "word_b": "голосний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "голосистий",
     "word_b": "голосовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "голосний",
     "word_b": "голосовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гончарний",
     "word_b": "гончарський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гористий",
     "word_b": "гірський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "громадський",
     "word_b": "громадянський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "група",
     "word_b": "трупа",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гуманність",
     "word_b": "гуманізм",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "гірницький",
     "word_b": "гірничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дальше",
     "word_b": "далі",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "декваліфікація",
     "word_b": "дискваліфікація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "декоративний",
     "word_b": "декораційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "демонстративний",
     "word_b": "демонстраційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "демонстрація",
     "word_b": "демонстрування",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "депресивний",
     "word_b": "депресійний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "депресія",
     "word_b": "репресія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дерев'яний",
     "word_b": "дерев'янистий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дерев'яний",
     "word_b": "деревинний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дерев'яний",
     "word_b": "деревний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дерев'янистий",
     "word_b": "деревинний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дерев'янистий",
     "word_b": "деревний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "деревинний",
     "word_b": "деревний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дефективний",
     "word_b": "дефектний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "диктант",
     "word_b": "диктат",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дипломант",
     "word_b": "дипломат",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дипломант",
     "word_b": "дипломник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дипломат",
     "word_b": "дипломник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дипломатичний",
     "word_b": "дипломатський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дипломний",
     "word_b": "дипломований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дистанція",
     "word_b": "інстанція",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дистильований",
     "word_b": "дистиляційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дисциплінарний",
     "word_b": "дисциплінований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "допускати",
     "word_b": "припускати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "досвід",
     "word_b": "дослід",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "досвідчений",
     "word_b": "освічений",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дослідний",
     "word_b": "дослідницький",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "драматичний",
     "word_b": "драматургічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дружний",
     "word_b": "дружній",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "духовий",
     "word_b": "духовний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "духовий",
     "word_b": "душевний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "духовний",
     "word_b": "душевний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "діалект",
     "word_b": "діалектика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "діалектний",
     "word_b": "діалектологічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дійовий",
     "word_b": "діяльний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "діловий",
     "word_b": "діловитий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "дільниця",
     "word_b": "ділянка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "економ",
     "word_b": "економіст",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "економний",
     "word_b": "економічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "економіка",
     "word_b": "економія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "експлуататорський",
     "word_b": "експлуатаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "експонат",
     "word_b": "експонент",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "еміграція",
     "word_b": "міграція",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "еміграція",
     "word_b": "імміграція",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "естетика",
     "word_b": "етика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "етикет",
     "word_b": "етикетка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ефективний",
     "word_b": "ефектний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "жирний",
     "word_b": "жировий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "жорсткий",
     "word_b": "жорстокий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "забудова",
     "word_b": "побудова",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "завдання",
     "word_b": "задача",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "завершувати",
     "word_b": "звершувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "загрожувати",
     "word_b": "погрожувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "заклик",
     "word_b": "поклик",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "замір",
     "word_b": "намір",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "замітка",
     "word_b": "помітка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "замітка",
     "word_b": "примітка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "запит",
     "word_b": "попит",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "запитання",
     "word_b": "питання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "запорука",
     "word_b": "порука",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "зарозумілий",
     "word_b": "зрозумілий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "засвоювати",
     "word_b": "освоювати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "заснований",
     "word_b": "оснований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "засуджувати",
     "word_b": "осуджувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "затверджувати",
     "word_b": "утверджувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "зачин",
     "word_b": "почин",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "зачин",
     "word_b": "починання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "збіднити",
     "word_b": "збідніти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "збірка",
     "word_b": "збірник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "збірка",
     "word_b": "зібрання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "збірник",
     "word_b": "зібрання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "зв'язаний",
     "word_b": "зв'язний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "звичайний",
     "word_b": "звичаєвий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "звичайний",
     "word_b": "звичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "звичаєвий",
     "word_b": "звичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "звичка",
     "word_b": "навичка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "здравиця",
     "word_b": "здравниця",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "земельний",
     "word_b": "земляний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "земний",
     "word_b": "земський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "змушувати",
     "word_b": "примушувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "змістовий",
     "word_b": "змістовний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "знаменитий",
     "word_b": "знаменний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "зумовлювати",
     "word_b": "обумовлювати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кампанія",
     "word_b": "компанія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кваліфікаційний",
     "word_b": "кваліфікований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "керування",
     "word_b": "керівництво",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "класичний",
     "word_b": "класний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "класичний",
     "word_b": "класовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "класний",
     "word_b": "класовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "книжковий",
     "word_b": "книжний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "коледж",
     "word_b": "котедж",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "колективність",
     "word_b": "колективізм",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "колоніальний",
     "word_b": "колонізаторський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "колоніальний",
     "word_b": "колонізаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "колонізаторський",
     "word_b": "колонізаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "колористичний",
     "word_b": "колоритний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кольоровий",
     "word_b": "колірний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "комплекс",
     "word_b": "комплект",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "комунальний",
     "word_b": "комуністичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "комунікативний",
     "word_b": "комунікаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кон'юнктура",
     "word_b": "кон'єктура",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "консервація",
     "word_b": "консервування",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "консервний",
     "word_b": "консервований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "конструктивний",
     "word_b": "конструкційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "консультативний",
     "word_b": "консультаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "контакт",
     "word_b": "контракт",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "контингент",
     "word_b": "континент",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кооперація",
     "word_b": "кооперування",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кореневий",
     "word_b": "корінний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "корисливий",
     "word_b": "корисний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "краса",
     "word_b": "окраса",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "краса",
     "word_b": "прикраса",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кривавий",
     "word_b": "кров'яний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кривавий",
     "word_b": "кровний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кристал",
     "word_b": "кришталь",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "кров'яний",
     "word_b": "кровний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ківш",
     "word_b": "кіш",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латвійський",
     "word_b": "латинський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латвійський",
     "word_b": "латиський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латвійський",
     "word_b": "литовський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латинський",
     "word_b": "латиський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латинський",
     "word_b": "литовський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "латиський",
     "word_b": "литовський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "легіон",
     "word_b": "регіон",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "людний",
     "word_b": "людяний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лікарняний",
     "word_b": "лікарський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лікарняний",
     "word_b": "лікувальний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лікарський",
     "word_b": "лікувальний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лікувати",
     "word_b": "лічити",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лірик",
     "word_b": "лірник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лісник",
     "word_b": "лісничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лісник",
     "word_b": "лісівник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "лісничий",
     "word_b": "лісівник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "материн",
     "word_b": "материнський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "матеріал",
     "word_b": "матерія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "матеріальний",
     "word_b": "матеріалізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "матеріальний",
     "word_b": "матеріалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "матеріалізований",
     "word_b": "матеріалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "мелодика",
     "word_b": "мелодія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "меліоративний",
     "word_b": "меліорований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "метеорологія",
     "word_b": "метрологія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "метод",
     "word_b": "методика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "метод",
     "word_b": "методологія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "методика",
     "word_b": "методологія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "методичний",
     "word_b": "методологічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "механізований",
     "word_b": "механічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "мимохідь",
     "word_b": "мимохіть",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "мова",
     "word_b": "мовлення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "модерний",
     "word_b": "модерністський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "молодецький",
     "word_b": "молодечий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "монопольний",
     "word_b": "монополістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "морфемний",
     "word_b": "морфологічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "музикальний",
     "word_b": "музичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "міграція",
     "word_b": "імміграція",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "містика",
     "word_b": "містицизм",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "міфологічний",
     "word_b": "міфічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "навчальний",
     "word_b": "повчальний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "нагода",
     "word_b": "пригода",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "нажива",
     "word_b": "пожива",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "народний",
     "word_b": "народницький",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "населення",
     "word_b": "поселення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "настанова",
     "word_b": "постанова",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "настанова",
     "word_b": "постановка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "настанова",
     "word_b": "установка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "наступальний",
     "word_b": "наступний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "настійливий",
     "word_b": "настійний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "настільний",
     "word_b": "настінний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "насінний",
     "word_b": "насінницький",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "насінний",
     "word_b": "насіннєвий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "насінницький",
     "word_b": "насіннєвий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "натуральний",
     "word_b": "натуралістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "норма",
     "word_b": "норматив",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "нормалізувати",
     "word_b": "нормувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "об'єктивний",
     "word_b": "об'єктивістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "об'єктивний",
     "word_b": "об'єктний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "об'єктивістський",
     "word_b": "об'єктний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "обробка",
     "word_b": "обробіток",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "обшукувати",
     "word_b": "ошукувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "оголошувати",
     "word_b": "проголошувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "одиничний",
     "word_b": "одинокий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ожеледиця",
     "word_b": "ожеледь",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ознайомити",
     "word_b": "познайомити",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "окраса",
     "word_b": "прикраса",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "оленярський",
     "word_b": "оленячий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "опинатися",
     "word_b": "опинятися",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "оплата",
     "word_b": "плата",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "організаційний",
     "word_b": "організований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "орден",
     "word_b": "ордер",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "освідчення",
     "word_b": "освічення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "освітлений",
     "word_b": "освічений",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ославлювати",
     "word_b": "уславлювати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "особистий",
     "word_b": "особовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "паливо",
     "word_b": "пальне",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "пам'ятка",
     "word_b": "пам'ятник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "парний",
     "word_b": "паровий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "первинний",
     "word_b": "первісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "передній",
     "word_b": "передовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "перекладацький",
     "word_b": "перекладний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "переконаний",
     "word_b": "переконливий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "переможений",
     "word_b": "переможний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "писемний",
     "word_b": "письменний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "писемний",
     "word_b": "письмовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "писемність",
     "word_b": "письменність",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "писемність",
     "word_b": "письменство",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "письменний",
     "word_b": "письмовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "письменність",
     "word_b": "письменство",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "пломінь",
     "word_b": "промінь",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поверхневий",
     "word_b": "поверховий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "повставати",
     "word_b": "поставати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поезія",
     "word_b": "поетика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "покажчик",
     "word_b": "показник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "показний",
     "word_b": "показовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "помножувати",
     "word_b": "примножувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "помітка",
     "word_b": "примітка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "порівняльний",
     "word_b": "порівнянний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поріднений",
     "word_b": "споріднений",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "посмішка",
     "word_b": "усмішка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "постанова",
     "word_b": "постановка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "постанова",
     "word_b": "установка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "постановка",
     "word_b": "установка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поступальний",
     "word_b": "поступливий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поступальний",
     "word_b": "поступовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "поступливий",
     "word_b": "поступовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "потовий",
     "word_b": "пітний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "потоковий",
     "word_b": "поточний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "почин",
     "word_b": "починання",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "практик",
     "word_b": "практикант",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "приводити",
     "word_b": "призводити",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "привітальний",
     "word_b": "привітний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "припис",
     "word_b": "пропис",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "приписка",
     "word_b": "прописка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "проблема",
     "word_b": "проблематика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "програмний",
     "word_b": "програмований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "програмний",
     "word_b": "програмовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "програмований",
     "word_b": "програмовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "прозаїчний",
     "word_b": "прозовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "професійний",
     "word_b": "професіональний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "психологічний",
     "word_b": "психіатричний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "психологічний",
     "word_b": "психічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "психіатричний",
     "word_b": "психічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "публіцистичний",
     "word_b": "публічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "підсумовувати",
     "word_b": "сумувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "расистський",
     "word_b": "расовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реальний",
     "word_b": "реалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "редакторський",
     "word_b": "редакційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "рейд",
     "word_b": "рейс",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "рекомендаційний",
     "word_b": "рекомендований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "рекордист",
     "word_b": "рекордсмен",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформаторський",
     "word_b": "реформатський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформаторський",
     "word_b": "реформаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформаторський",
     "word_b": "реформістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформатський",
     "word_b": "реформаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформатський",
     "word_b": "реформістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "реформаційний",
     "word_b": "реформістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "риб'ячий",
     "word_b": "рибний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "роботящий",
     "word_b": "робочий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "роботящий",
     "word_b": "робітничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "робочий",
     "word_b": "робітничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "розбещений",
     "word_b": "розпещений",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "розумний",
     "word_b": "розумовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "рятувальник",
     "word_b": "рятівник",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "рідкий",
     "word_b": "рідкісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "свідоцтво",
     "word_b": "свідчення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "свійський",
     "word_b": "світський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "світило",
     "word_b": "світоч",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "селянський",
     "word_b": "сільський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сервіз",
     "word_b": "сервіс",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сердечний",
     "word_b": "сердешний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "систематизований",
     "word_b": "систематичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "систематизований",
     "word_b": "системний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "систематичний",
     "word_b": "системний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "скальпель",
     "word_b": "скарпель",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складаний",
     "word_b": "складений",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складаний",
     "word_b": "складний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складаний",
     "word_b": "складовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складений",
     "word_b": "складний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складений",
     "word_b": "складовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "складний",
     "word_b": "складовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "смаковий",
     "word_b": "смачний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сніговий",
     "word_b": "сніжний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "солярний",
     "word_b": "соляровий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "спеціальний",
     "word_b": "спеціалізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "спинатися",
     "word_b": "спинятися",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "споживацький",
     "word_b": "споживний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "спостережливий",
     "word_b": "спостережний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "співак",
     "word_b": "співець",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "стан",
     "word_b": "становище",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "становлення",
     "word_b": "установлення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "старити",
     "word_b": "старіти",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "статус",
     "word_b": "статут",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "степінь",
     "word_b": "ступінь",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "стильовий",
     "word_b": "стилізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "стильовий",
     "word_b": "стилістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "стилізований",
     "word_b": "стилістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "стрес",
     "word_b": "струс",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "суб'єктивний",
     "word_b": "суб'єктивістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "суб'єктивний",
     "word_b": "суб'єктний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "суб'єктивістський",
     "word_b": "суб'єктний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "суворий",
     "word_b": "суровий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сусідній",
     "word_b": "сусідський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сусідній",
     "word_b": "сусідів",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "сусідський",
     "word_b": "сусідів",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "тактичний",
     "word_b": "тактовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "тактичний",
     "word_b": "тактовний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "тактовий",
     "word_b": "тактовний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "талан",
     "word_b": "талант",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "тафта",
     "word_b": "тахта",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "таємний",
     "word_b": "таємничий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "театральний",
     "word_b": "театралізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "текст",
     "word_b": "тест",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "телевізорний",
     "word_b": "телевізійний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "тема",
     "word_b": "тематика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "титулований",
     "word_b": "титульний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "трав'яний",
     "word_b": "трав'янистий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "трагедійний",
     "word_b": "трагічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "трудовий",
     "word_b": "трудящий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "туристичний",
     "word_b": "туристський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "україніка",
     "word_b": "україністика",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "уява",
     "word_b": "уявлення",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фабрикант",
     "word_b": "фабрикат",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "факт",
     "word_b": "фактор",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фамільний",
     "word_b": "фамільярний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фанатичний",
     "word_b": "фантастичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "флот",
     "word_b": "флотилія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фольклористичний",
     "word_b": "фольклорний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "формальний",
     "word_b": "формалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "формувати",
     "word_b": "формулювати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "форсити",
     "word_b": "форсувати",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фронтальний",
     "word_b": "фронтовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "фігуральний",
     "word_b": "фігурний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хворобливий",
     "word_b": "хворовитий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хижацький",
     "word_b": "хижий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "холодильний",
     "word_b": "холодний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "холодильний",
     "word_b": "холодовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "холодний",
     "word_b": "холодовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хронологічний",
     "word_b": "хронікальний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хронологічний",
     "word_b": "хронічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хронікальний",
     "word_b": "хронічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "художницький",
     "word_b": "художній",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хуторянський",
     "word_b": "хутірський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "хутровий",
     "word_b": "хутряний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цезура",
     "word_b": "цензура",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "центральний",
     "word_b": "централізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "церемоніал",
     "word_b": "церемонія",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цивільний",
     "word_b": "цивілізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цикловий",
     "word_b": "циклічний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цитатний",
     "word_b": "цитований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цукристий",
     "word_b": "цукровий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цілий",
     "word_b": "цільний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цілий",
     "word_b": "цілісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "цільний",
     "word_b": "цілісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "частина",
     "word_b": "частка",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "черепаховий",
     "word_b": "черепашачий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чисельний",
     "word_b": "численний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чисельний",
     "word_b": "числовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "численний",
     "word_b": "числовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чуйний",
     "word_b": "чулий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чуйний",
     "word_b": "чуткий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чуйний",
     "word_b": "чутливий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чулий",
     "word_b": "чуткий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чулий",
     "word_b": "чутливий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "чуткий",
     "word_b": "чутливий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "швидкий",
     "word_b": "швидкісний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "шкірний",
     "word_b": "шкіряний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "шторм",
     "word_b": "штурм",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "шумний",
     "word_b": "шумовий",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ізоляторний",
     "word_b": "ізоляційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ілюстративний",
     "word_b": "ілюстрований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "ілюстрація",
     "word_b": "ілюстрування",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "індивідуальний",
     "word_b": "індивідуалізований",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "індивідуальний",
     "word_b": "індивідуалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "індивідуальність",
     "word_b": "індивідуалізм",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "індивідуалізований",
     "word_b": "індивідуалістичний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інженерний",
     "word_b": "інженерський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інкубатор",
     "word_b": "інкубація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інструктивний",
     "word_b": "інструкційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інтернаціональний",
     "word_b": "інтернаціоналістський",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інтерпеляція",
     "word_b": "інтерполяція",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інформативний",
     "word_b": "інформаційний",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інформативність",
     "word_b": "інформація",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інформативність",
     "word_b": "інформованість",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   },
   {
     "relation": "paronym",
     "word_a": "інформація",
     "word_b": "інформованість",
     "source": "grinchyshyn-1986",
-    "confidence": "high"
+    "confidence": "high",
+    "review_status": "approved"
   }
 ]
