@@ -242,11 +242,14 @@ decisions:
     depends_on: []
 
   - id: dec-011
-    status: active
+    status: superseded
     date: 2026-07-11
     expires: 2027-07-11
     scope: architecture
     title: "Static-first forever: github.io site is canonical; backend is progressive enhancement; serverless stays the maintained fallback"
+    superseded_note: >-
+      The product invariant of static delivery survives, while current operational
+      details have moved to a non-public control-plane record.
     reasoning: >-
       User decision 2026-07-11 (continuity requirement: the site must keep working at
       github.io even if the maintainer becomes unavailable). (1) The static GitHub Pages
@@ -264,3 +267,27 @@ decisions:
       remains backend-only - never attempted statically.
     review_signal: >-
       Revisit at backend design kickoff (#4920) or when the #4966 size report crosses 600MB.
+    superseded_by: dec-012
+    depends_on: []
+
+  - id: dec-012
+    status: active
+    date: 2026-07-12
+    expires: 2027-07-12
+    scope: architecture
+    title: "Static delivery is canonical; learning works without dynamic services"
+    reasoning: >-
+      (1) Static delivery is canonical; learning works without dynamic services. (2) Content
+      may be partitioned behind versioned provider-neutral static-origin manifests.
+      (3) Dynamic services implement the same public JSON contracts as optional
+      progressive enhancement. (4) Backend absence cannot break learning. (5) Implementation
+      topology, capacity, providers, budgets, and operational triggers are intentionally
+      outside the public decision.
+    evidence: "User direction 2026-07-12; issue #5015"
+    alternatives:
+      - option: "Require centralized backend servers for core features"
+        rejected_because: "Contradicts the core requirement that learning capability must run off static pages"
+    review_signal: >-
+      Revisit only when a public schema or learner-visible continuity contract changes.
+    superseded_by: null
+    depends_on: []
