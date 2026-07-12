@@ -122,8 +122,9 @@ to the session's stream-epic in the issue→epic membership registry — `/api/i
 `scripts.orchestration.issue_stream_audit`). **Branch prefixes (`codex/`, `claude/`, `agy/`) are AUTHOR
 lanes, NOT streams — never use them for membership.** If a PR does not resolve to exactly one
 stream-epic there (no link, multiple/conflicting `Closes/Refs`, or not yet indexed), it is
-**out-of-stream → hands-off** for every track session. Out-of-stream = another stream's PR → do NOT
-shepherd, review-route, or arm auto-merge on it: **no time threshold, no exception.** Rationale: the old
+**out-of-stream → hands-off** for every track session. Out-of-stream — another stream's PR, OR any PR
+with no / multiple / conflicting / not-yet-indexed stream-epic membership (the fail-closed default) —
+means do NOT shepherd, review-route, or arm auto-merge on it: **no time threshold, no exception.** Rationale: the old
 one-hour timer could not tell an *abandoned* PR from an *owner-paused* one, so with parallel streams it
 made two sessions grab the same PR, or one merge another live stream's paused PR.
 

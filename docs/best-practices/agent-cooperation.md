@@ -82,8 +82,9 @@ an out-of-stream PR (or one that doesn't resolve to exactly one stream-epic) is
 hands-off with **no time threshold**. The one cross-stream exception is the
 abandoned-PR net, owned by the **INTEGRATION-OWNER ROLE alone** (default:
 Codex-main; a role, NOT any orchestrator), for a green+reviewed out-of-stream PR
-idle >1h — ideally run as a scheduled integration sweep so a down role-holder
-cannot strand it (user directive 2026-07-13, supersedes the 2026-07-07
+idle >1h — which MUST run as a scheduled integration sweep (not gated on any
+live session) so a down role-holder cannot strand it (user directive
+2026-07-13, supersedes the 2026-07-07
 any-orchestrator backstop). See workflow.md § Merge policy for the full rule.
 
 ### Track ↔ main communication protocol
