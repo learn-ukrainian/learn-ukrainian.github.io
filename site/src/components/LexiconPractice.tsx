@@ -629,6 +629,20 @@ function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
   }));
 }
 
+export function nextMatchingPromptIndex(
+  currentPromptIndex: number | null,
+  matchedPairIndexes: ReadonlySet<number>,
+  pairCount: number,
+): number | null {
+  if (currentPromptIndex === null || !matchedPairIndexes.has(currentPromptIndex)) {
+    return currentPromptIndex;
+  }
+  for (let index = 0; index < pairCount; index += 1) {
+    if (!matchedPairIndexes.has(index)) return index;
+  }
+  return null;
+}
+
 function choicePrompt(selection: PracticeSelection): string {
   if (selection.choicePolarity === 'word-to-meaning') {
     return `Що означає «${selection.lemma.lemma}»?`;
@@ -2282,6 +2296,7 @@ function LexiconPracticeIsland({
               {selection ? (
                 <>
                   <PracticeItem
+                    key={selection.cardKey}
                     selection={selection}
                     deck={deck}
                     pairs={pairs}
@@ -2379,6 +2394,9 @@ function PracticeItem({
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
 }) {
+  const [matchingPromptIndex, setMatchingPromptIndex] = useState<number | null>(0);
+  const matchedPairIndexesRef = useRef<Set<number>>(new Set());
+
   if (selection.mode === 'flashcards') {
     const intervalPreviews = previewRatingIntervals(
       selection.lemma.lemmaId,
@@ -2449,14 +2467,25 @@ function PracticeItem({
     if (!pairs.length) {
       return <p className="lexicon-practice-muted">Зараз немає карток для добору пар.</p>;
     }
+    const promptedPair = matchingPromptIndex === null ? null : pairs[matchingPromptIndex] ?? null;
     return (
       <div data-testid="practice-matching">
         <MatchUp
           key={selection.cardKey}
           pairs={pairs}
-          instruction={`Доберіть пару для «${selection.lemma.lemma}»`}
+          instruction={promptedPair ? `Доберіть пару для «${promptedPair.left}»` : undefined}
           onComplete={onMatchingComplete}
-          onMatch={onMatchingMatch}
+          onMatch={(pairIndex, rating) => {
+            matchedPairIndexesRef.current.add(pairIndex);
+            setMatchingPromptIndex((currentPromptIndex) => {
+              return nextMatchingPromptIndex(
+                currentPromptIndex,
+                matchedPairIndexesRef.current,
+                pairs.length,
+              );
+            });
+            onMatchingMatch?.(pairIndex, rating);
+          }}
         />
       </div>
     );
