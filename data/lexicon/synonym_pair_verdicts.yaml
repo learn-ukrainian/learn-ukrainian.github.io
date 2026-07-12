@@ -1700,6 +1700,13 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: кафе
+  b: кав'ярня
+  polarity: synonym
+  sources:
+  - sum20
+  - vts
+  - synonyms
 - a: каштановий
   b: коричневий
   polarity: synonym
