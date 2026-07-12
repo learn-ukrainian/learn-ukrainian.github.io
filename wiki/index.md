@@ -221,6 +221,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Марія Заньковецька: Перша леді сцени](figures/mariya-zankovetska.md) (2,219 words)
 - [Марко Кропивницький: Батько чи диктатор українського театру?](figures/marko-kropyvnytskyi.md) (2,106 words)
 - [Біографія: Марко Вовчок: Голос пригноблених](figures/marko-vovchok.md) (1,951 words)
+- [Маруся Чурай: Біографія легенди](figures/marusia-churai.md) (1,712 words)
 - [Біографія: Мелетій Смотрицький: Творець граматики](figures/meletii-smotrytskyi.md) (1,808 words)
 - [Біографія: Мілена Рудницька: Голос українського фемінізму та інтелектуальне тло епохи](figures/milena-rudnytska.md) (1,816 words)
 - [Біографія: Мойсей Фішбейн: Пророк українською](figures/moisei-fishbein.md) (2,220 words)

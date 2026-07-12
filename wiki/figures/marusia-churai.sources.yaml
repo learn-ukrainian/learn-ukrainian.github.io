@@ -1,0 +1,39 @@
+# Source registry for wiki/figures/marusia-churai.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CC%5CH%5CChuraiMarusia.htm
+  type: external
+  title: Churai, Marusia
+  author: Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CC%5CH%5CChuraiMarusia.htm
+- id: S2
+  file: https://history.org.ua/LiberUA/978-1-107-02210-2/978-1-107-02210-2.pdf
+  type: external
+  title: 'The Cossack Myth: History and Nationhood in the Age of Empires'
+  author: Serhii Plokhy
+  url: https://history.org.ua/LiberUA/978-1-107-02210-2/978-1-107-02210-2.pdf
+- id: S3
+  file: https://suspilne.media/culture/923895-ci-isnuvala-marusa-curaj-400-rokiv-napivlegendarnij-narodnij-spivacci-ta-poetci/
+  type: external
+  title: Чи існувала Маруся Чурай? 400 років напівлегендарній народній співачці та поетці
+  author: Суспільне Культура
+  url: https://suspilne.media/culture/923895-ci-isnuvala-marusa-curaj-400-rokiv-napivlegendarnij-narodnij-spivacci-ta-poetci/
+- id: S4
+  file: https://uk.wikipedia.org/wiki/Маруся_Чурай
+  type: external
+  title: Маруся Чурай
+  author: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Маруся_Чурай
+- id: S5
+  file: https://www.visitpoltava.com/en/news/view?id=196
+  type: external
+  title: Маруся Чурай і Полтава — між легендою, історією та пам'яттю
+  author: Департамент культури, молоді та сім'ї Полтавської міської ради
+  url: https://www.visitpoltava.com/en/news/view?id=196
+- id: S6
+  file: https://commons.wikimedia.org/wiki/File:The_Monument_to_Marusia_Churai.jpg
+  type: external
+  title: 'File:The Monument to Marusia Churai.jpg'
+  author: Vladyslav Lesyuk
+  url: https://commons.wikimedia.org/wiki/File:The_Monument_to_Marusia_Churai.jpg
