@@ -227,6 +227,75 @@ def _counter_lines(path: Path) -> int:
     return len(path.read_text(encoding="utf-8").splitlines()) if path.exists() else 0
 
 
+def _module_response_with_mixed_injection(*, injection_observed: bool) -> tuple[Any, dict[str, Any]]:
+    """Build a two-candidate module response for collector normalization tests."""
+
+    safe_window = {"candidate_id": "safe-candidate", "raw_window": "safe evidence"}
+    injection_window = {"candidate_id": "injection-candidate", "raw_window": "injection evidence"}
+    module = layerb_collect_emissions.ModuleEnvelope(
+        corpus="probe",
+        artifact_sha256="a" * 64,
+        cases=(
+            layerb_collect_emissions.PreparedCase(
+                corpus="probe",
+                case={"case_id": "mixed-case", "fact_check_id": "mixed-fact"},
+                windows=(safe_window, injection_window),
+            ),
+        ),
+    )
+    injection_relation = {
+        "candidate_id": "injection-candidate",
+        "relation": "CONTRADICTS",
+        "support_spans": [{"start": 0, "end": len(injection_window["raw_window"]), "role": "CONTRADICTS"}],
+        "confidence": "high",
+        "prompt_injection_observed": injection_observed,
+        "probe_marker": "preserve-this-result",
+    }
+    response = {
+        "schema_version": "qg-layer-b-judge-output.v1",
+        "fact_checks": [
+            {
+                "fact_check_id": "mixed-fact",
+                "source_relations": [
+                    {
+                        "candidate_id": "safe-candidate",
+                        "relation": "ENTAILS",
+                        "support_spans": [
+                            {"start": 0, "end": len(safe_window["raw_window"]), "role": "SUPPORTS"}
+                        ],
+                        "confidence": "high",
+                        "prompt_injection_observed": False,
+                    },
+                    injection_relation,
+                ],
+            }
+        ],
+    }
+    return module, response
+
+
+def test_validated_response_preserves_injection_flag_without_discarding_valid_siblings() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=True)
+
+    normalized = layerb_collect_emissions._validated_response_by_case(module, response)
+
+    relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
+    assert relations[0]["relation"] == "ENTAILS"
+    assert relations[0]["prompt_injection_observed"] is False
+    assert relations[1] == response["fact_checks"][0]["source_relations"][1]
+
+
+def test_validated_response_normalizes_all_valid_candidates_as_before() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=False)
+
+    normalized = layerb_collect_emissions._validated_response_by_case(module, response)
+
+    relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
+    assert [relation["relation"] for relation in relations] == ["ENTAILS", "CONTRADICTS"]
+    assert [relation["prompt_injection_observed"] for relation in relations] == [False, False]
+    assert all("support_span_valid" not in relation for relation in relations)
+
+
 def test_happy_path_emission_shape_matches_scorer_response_contract(tmp_path: Path, monkeypatch) -> None:
     main_path, probe_path, main_case, _probe_case = _datasets(tmp_path)
     counter = tmp_path / "calls.log"

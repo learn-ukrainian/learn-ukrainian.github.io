@@ -445,7 +445,7 @@ def _module_request(module: ModuleEnvelope) -> tuple[dict[str, Any], dict[str, s
 
 
 def _validated_response_by_case(module: ModuleEnvelope, response: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
-    """Validate module output by slicing every result through the shared validator."""
+    """Validate each ordinary result while preserving scorer-audited injection flags."""
 
     if response.get("schema_version") != layerb_shadow.JUDGE_OUTPUT_VERSION:
         raise layerb_shadow.JudgeValidationError("judge output schema_version is invalid")
@@ -485,17 +485,26 @@ def _validated_response_by_case(module: ModuleEnvelope, response: Mapping[str, A
         normalized_relations: list[dict[str, Any]] = []
         for window in prepared.windows:
             candidate_id = str(window["candidate_id"])
-            one_result = layerb_shadow._validate_judge_response(
-                {
-                    "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
-                    "fact_checks": [
-                        {"fact_check_id": fact_check_id, "source_relations": [dict(by_candidate[candidate_id])]}
-                    ],
-                },
-                fact_check_id=fact_check_id,
-                window=window,
-            )
-            one_result.pop("support_span_valid", None)
+            candidate_result = dict(by_candidate[candidate_id])
+            if candidate_result.get("prompt_injection_observed") is not False:
+                # Preserve injection-flagged candidates for the scorer, which
+                # records INJECTION_FLAG_FAILURE as a mandatory AUDIT.  The
+                # strict shadow validator correctly rejects these for the
+                # live gate, but rejecting them here would discard every
+                # sibling result in the module envelope.
+                one_result = candidate_result
+            else:
+                one_result = layerb_shadow._validate_judge_response(
+                    {
+                        "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
+                        "fact_checks": [
+                            {"fact_check_id": fact_check_id, "source_relations": [candidate_result]}
+                        ],
+                    },
+                    fact_check_id=fact_check_id,
+                    window=window,
+                )
+                one_result.pop("support_span_valid", None)
             normalized_relations.append(one_result)
         normalized[prepared.case_id] = {
             "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
