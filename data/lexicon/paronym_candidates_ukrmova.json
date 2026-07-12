@@ -34,7 +34,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "туристичний",
@@ -52,7 +53,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "богатир",
@@ -70,7 +72,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "музичний",
@@ -88,7 +91,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "задача",
@@ -106,7 +110,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "паливо",
@@ -124,7 +129,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "сніговий",
@@ -142,7 +148,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "виголошувати",
@@ -160,7 +167,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "виголошувати",
@@ -178,7 +186,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "оголошувати",
@@ -196,7 +205,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "лікарський",
@@ -218,7 +228,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "писемність",
@@ -236,7 +247,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "корисний",
@@ -254,7 +266,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "нервувати",
@@ -272,7 +285,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "вітровий",
@@ -294,7 +308,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "хрещений",
@@ -312,7 +327,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "змерзнути",
@@ -330,7 +346,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "хутровий",
@@ -348,7 +365,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "ожеледь",
@@ -366,7 +384,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "дощовитий",
@@ -384,7 +403,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "військовий",
@@ -402,7 +422,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "удача",
@@ -420,7 +441,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "громадський",
@@ -438,7 +460,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "дружний",
@@ -456,7 +479,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "обумовлювати",
@@ -474,7 +498,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "книжковий",
@@ -492,7 +517,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "виборний",
@@ -510,7 +536,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "гривня",
@@ -528,7 +555,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "адреса",
@@ -546,7 +574,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "уява",
@@ -564,7 +593,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "сідати",
@@ -582,7 +612,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "поверховий",
@@ -600,7 +631,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "тепер",
@@ -618,7 +650,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "вислів",
@@ -636,7 +669,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "мимохіть",
@@ -654,7 +688,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "вклад",
@@ -672,7 +707,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "барва",
@@ -690,7 +726,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "об'єм",
@@ -708,7 +745,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "нагода",
@@ -726,7 +764,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "запитання",
@@ -744,7 +783,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     },
     {
       "word_a": "чисельний",
@@ -762,7 +802,8 @@
       "vesum_exact_lemma": {
         "word_a": true,
         "word_b": true
-      }
+      },
+      "review_status": "approved"
     }
   ],
   "dropped": [
