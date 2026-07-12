@@ -1,31 +1,25 @@
-# Source registry for wiki/figures/borys-liatoshynskyi.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/borys-liatoshynskyi_Біографія-Борис-Лятошинський-Симфоніст-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Лятошинський: Симфоніст'
-  section_path: 'Біографія: Борис Лятошинський: Симфоніст > Короткий зміст'
+  file: https://esu.com.ua/article-60072
+  type: external
+  title: Лятошинський Борис Миколайович
+  url: https://esu.com.ua/article-60072
 - id: S2
-  file: ukrainian_wiki/borys-liatoshynskyi_Біографія-Борис-Лятошинський-Симфоніст-Основний-зміст-Спадщина-Лятошинського-та-його-вплив-на-український-симфонізм
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Лятошинський: Симфоніст'
-  section_path: 'Біографія: Борис Лятошинський: Симфоніст > Основний зміст > Спадщина
-    Лятошинського та його вплив на український симфонізм'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLiatoshynskyBorys.htm
+  type: external
+  title: Liatoshynsky, Borys
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLiatoshynskyBorys.htm
 - id: S3
-  file: ukrainian_wiki/borys-liatoshynskyi_Біографія-Борис-Лятошинський-Симфоніст-Основний-зміст-Творчий-профіль-Бориса-Лятошинського-радикальний-модернізм
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Лятошинський: Симфоніст'
-  section_path: 'Біографія: Борис Лятошинський: Симфоніст > Основний зміст > Творчий
-    профіль Бориса Лятошинського: радикальний модернізм'
+  file: https://journals.lnma.lviv.ua/index.php/ukrmuzyka/article/view/804
+  type: external
+  title: Перша редакція Третьої симфонії Бориса Лятошинського — шлях до прем'єри
+  url: https://journals.lnma.lviv.ua/index.php/ukrmuzyka/article/view/804
 - id: S4
-  file: ukrainian_wiki/borys-liatoshynskyi_Біографія-Борис-Лятошинський-Симфоніст-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Лятошинський: Симфоніст'
-  section_path: 'Біографія: Борис Лятошинський: Симфоніст > Деколонізаційна перспектива'
-- id: S5
-  file: ukrainian_wiki/borys-liatoshynskyi_Біографія-Борис-Лятошинський-Симфоніст-Основний-зміст-Знецінення-національного-та-наслідки-постанови-1948-року
-  type: ukrainian_wiki
-  title: 'Біографія: Борис Лятошинський: Симфоніст'
-  section_path: 'Біографія: Борис Лятошинський: Симфоніст > Основний зміст > Знецінення
-    національного та наслідки постанови 1948 року'
+  file: https://commons.wikimedia.org/wiki/File:Borys_Lyatoshynsky.png
+  type: external
+  title: Borys Lyatoshynsky.png — public domain
+  url: https://commons.wikimedia.org/wiki/File:Borys_Lyatoshynsky.png
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Borys_Lyatoshynsky.png
+    license: Public domain

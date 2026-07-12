@@ -39,20 +39,20 @@ This mechanism is cultural coercion rather than prison. The state did not need t
 - `1937-1938` — *Щорс*, opera. Pedagogically useful as a compromised Soviet commission rather than a free nationalist work.
 - `1942` — *Український квінтет*, chamber ensemble. The plan anchor says 1945, but ESU lists 1942; use ESU as the stronger source and flag the mismatch in downstream lesson writing.
 - `1943` — String Quartet No. 4.
-- `1951-1954` — Symphony No. 3, with the epigraph "Мир переможе війну." Central oppression-mechanism work.
+- `1951-1954` — Symphony No. 3, whose early version carried an antiwar epigraph. Central oppression-mechanism work; the exact wording is not approved without a score locator.
 - `1953` — *Слов'янський концерт*, piano and orchestra.
 - `1955` — *Ґражина*, symphonic ballad; *Ромео і Джульєта*, suite.
 - `1963` — Symphony No. 4.
 - `1965-1966` — Symphony No. 5 "Слов'янська."
 
-## 4. Primary-source quotes (>=2 required)
+## 4. Primary-source quotation disposition
 
-The project quote verifier did not match Liatoshynskyi's best-known personal sentence. Therefore the wording below is page-cited and explicitly marked as non-corpus evidence.
-
-- "Як композитор я вже мертвий і коли воскресну — не знаю" (не в корпусі проєкту; quoted in Н. Набокова, *Науковий вісник НМАУ*, вип. 114, 2016, с. 331, from one of Liatoshynskyi's letters; the article's bibliography points to *Борис Лятошинський. Епістолярна спадщина*, т. 1, 2002). Pedagogically, this is a high-impact line for explaining how cultural repression feels from inside a composer's working life.
-- "Мир переможе війну" (не в корпусі проєкту; epigraph to the first version of Symphony No. 3, discussed in Fareniuk 2024 and related scholarship on the first edition). This should be taught as a score/program epigraph, not as a casual slogan. It matters because Soviet critics treated the antiwar tragic concept as ideologically suspect.
-
-Secondary historiography also preserves Dmitро Антонович's assessment that Liatoshynskyi was "найрадикальніше модерний," but that is not Liatoshynskyi's own voice. Use it in interpretation, not in the primary-quote slot.
+No verbatim quotation is approved in this packet. The personal sentence
+previously carried here was mediated through a scholarly article rather than
+checked in the cited volume of correspondence. The short program text attached
+to the first version of Symphony No. 3 must likewise be checked against the
+score or an edition that reproduces it exactly. The wiki describes both items
+without reproducing their wording.
 
 ## 5. Language register
 
@@ -84,7 +84,7 @@ The anti-hagiographic point is essential. Liatoshynskyi was not outside the Sovi
   - `curriculum/l2-uk-en/plans/bio/maksym-berezovskyy.yaml` — Ukrainian classical-composer canon.
   - `curriculum/l2-uk-en/plans/bio/borys-liatoshynskyi.yaml` — source bio plan exists on origin/main.
 - **Potential LIT additions surfaced by this research:**
-  - C1 reading/listening lesson on "Мир переможе війну" and the politics of musical endings.
+  - C1 reading/listening lesson on the Third Symphony's antiwar program and the politics of musical endings.
 
 ## 8. Naming-canonical
 
@@ -96,9 +96,12 @@ The anti-hagiographic point is essential. Liatoshynskyi was not outside the Sovi
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons, `Borys_Lyatoshynsky_(composer).png`, marked PD-old/expired; verify final license before packaging.
-- **Backup candidates:** Wikimedia Commons portrait `Borys_Mykolayovych_Lyatoshynsky.jpg`; IEU multimedia images if reuse terms allow.
-- **Era-appropriate context image:** Manuscript or program material for Symphony No. 3 from ЦДАМЛМ fonds would be ideal, but rights must be checked.
+- **Approved individual file:** Wikimedia Commons
+  `File:Borys_Lyatoshynsky.png`, an early-1930s portrait by an unknown author.
+  The individual file page reports `Public domain`:
+  https://commons.wikimedia.org/wiki/File:Borys_Lyatoshynsky.png
+- Other portraits, manuscript images, and concert programs remain unapproved
+  until their own file pages or archival reuse terms are checked.
 
 ## 10. Sources used
 
@@ -119,7 +122,7 @@ The anti-hagiographic point is essential. Liatoshynskyi was not outside the Sovi
 - М. Копиця, ed., *Борис Лятошинський. Епістолярна спадщина*, т. 1, Київ: НМАУ, 2002.
 
 **Primary-source documents accessed:**
-- Liatoshynskyi letter excerpt and Symphony No. 3 epigraph through page-cited scholarly publications; not matched by project quote corpus.
+- Liatoshynskyi letter and Symphony No. 3 epigraph are candidate primary evidence discussed through scholarly publications; neither is approved as verbatim text without checking the underlying letter or score.
 
 ## Decolonization self-check
 

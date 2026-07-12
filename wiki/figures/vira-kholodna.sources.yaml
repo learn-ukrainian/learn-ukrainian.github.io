@@ -1,35 +1,20 @@
-# Source registry for wiki/figures/vira-kholodna.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-istoriya-schupak-2022_s1937
-  type: textbook
-  title: § 16. Розтлумачте значення слів істо
-  page: 92
-  grade: 5
+  file: https://history.org.ua/?termin=Kholodna_V
+  type: external
+  title: Холодна Віра Василівна
+  url: https://history.org.ua/?termin=Kholodna_V
 - id: S2
-  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Віра Холодна: Королева німого кіно'
-  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Короткий зміст'
+  file: https://usfa.gov.ua/press-center/narodzheni-ukrainoyu-vira-kholodna-i12167
+  type: external
+  title: Народжені Україною. Віра Холодна
+  url: https://usfa.gov.ua/press-center/narodzheni-ukrainoyu-vira-kholodna-i12167
 - id: S3
-  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Основний-зміст-Відсутність-біографічних-даних-та-концепція-кінематографічного-міфу
-  type: ukrainian_wiki
-  title: 'Біографія: Віра Холодна: Королева німого кіно'
-  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Основний зміст >
-    Відсутність біографічних даних та концепція кінематографічного міфу'
-- id: S4
-  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Віра Холодна: Королева німого кіно'
-  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Деколонізаційна перспектива'
-- id: S5
-  file: wikipedia/Російський світ
-  type: wikipedia
-  title: Російський світ
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82
-- id: S6
-  file: wikipedia/Історичний міф
-  type: wikipedia
-  title: Історичний міф
-  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84
+  file: https://commons.wikimedia.org/wiki/File:VeraKholodna.jpg
+  type: external
+  title: VeraKholodna.jpg — public domain
+  url: https://commons.wikimedia.org/wiki/File:VeraKholodna.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:VeraKholodna.jpg
+    license: Public domain

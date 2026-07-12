@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ; IEU; Національний центр Довженка; Carynnyk/MIT)
 - [x] Oppression mechanism is specific (the «Україна в огні» ban — Stalin, 30.01.1944, the named charge; the «Земля» suppression; the Moscow internal exile)
-- [x] ≥2 primary-source quotes (verbatim from his diary «Щоденник» and autobiography)
+- [x] quotation review completed — no verbatim excerpt is approved without an edition-locked page locator (§4)
 - [x] Cross-track links: every "Existing" path verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -24,32 +24,32 @@
 
 - **Full name (UA, canonical):** Олександр Петрович Довженко. [T1: ЕІУ — Довженко Олександр Петрович; T1: IEU — Dovzhenko, Oleksander; T3: uk.wikipedia, cross-checked]
 - **Pseudonyms / aliases:** "Сашко" (caricaturist pen-name in 1920s Kharkiv). Russified forms (forbidden in body text, listed only in §8): Александр Петрович Довженко; Alexander Dovzhenko.
-- **Born:** **29 August (10 September) 1894** | хутір **В'юнище**, near містечко **Сосниця**, Чернігівська губернія, Російська імперія | now within смт Сосниця, Корюківський район, Чернігівська область, Україна. (Some sources give 11 or 12 September; the **metric book** of the Соборно-Троїцька church gives 29 August O.S. = **10 September N.S.**) Father Петро Семенович Довженко was of the **Cossack estate (козацький стан)**, of chumak ancestry; the family had 14 children, most of whom died young. [T3: uk.wikipedia — Дитинство; T1: IEU — "10 September 1894 … Sosnytsia"]
-- **Died:** **25 November 1956** (aged 62) | дача in **Передєлкіно (Peredelkino), Московська область, РРФСР, СРСР** | heart attack, on the **first shooting day** of «Поема про море»; buried at the **Novodevichy cemetery, Moscow** at state expense (he had 32 rubles in his account). [T3: uk.wikipedia — Повоєнний період; T1: IEU — "died … in Moscow"]
+- **Born:** **29 August (10 September) 1894** | хутір **В'юнище**, near містечко **Сосниця**, Чернігівська губернія, Російська імперія | now within смт Сосниця, Корюківський район, Чернігівська область, Україна. (Some sources give 11 or 12 September; the **metric book** of the Соборно-Троїцька church gives 29 August O.S. = **10 September N.S.**) Father Петро Семенович Довженко was of the **Cossack estate (козацький стан)**, of chumak ancestry; the family had 14 children, most of whom died young. [T3: uk.wikipedia — Дитинство; T1: IEU]
+- **Died:** **25 November 1956** (aged 62) | дача in **Передєлкіно (Peredelkino), Московська область, РРФСР, СРСР** | heart attack; buried at the **Novodevichy cemetery, Moscow**. [T3: uk.wikipedia — Повоєнний період; T1: IEU]
 - **Family / education key facts:** Studied at the **Глухівський учительський інститут (1911–1914)**, then taught; attended the **Київський комерційний інститут** (economics) and was a слухач of the **Українська академія мистецтв (1917)**, finishing neither. Married Варвара Крилова (1917/1923); his lifelong de-facto partner and artistic collaborator was the actress-director **Юлія Солнцева**, who completed several of his films posthumously. [T3: uk.wikipedia — Юні роки / Сім'я]
 
-**Source disagreement note (flagged, not smoothed):** The **birth day** is given as 10, 11 or 12 September across sources; the **metric-book** date (29 August O.S. = 10 September N.S.) is the documentary anchor and is used here. IEU gives the **birthplace** as "Sosnytsia," uk.wikipedia as the **хутір В'юнище within Sosnytsia** — the same locality at finer resolution, not a conflict.
+**Source disagreement note (flagged, not smoothed):** The **birth day** is given as 10, 11 or 12 September across sources; the **metric-book** date (29 August O.S. = 10 September N.S.) is the documentary anchor and is used here. IEU gives the broader locality Sosnytsia, while uk.wikipedia gives the **хутір В'юнище within Sosnytsia** — the same locality at finer resolution, not a conflict.
 
 ## 2. Oppression mechanism
 
 This is the load-bearing section. Dovzhenko's repression was **career-long censorship, professional destruction, and internal exile** — a world-class artist kept from his own country and forbidden his masterworks.
 
-- **«Україна в огні» — banned personally by Stalin.** The film-scenario (written 1941–1943; excerpts published September 1943) provoked agitprop outrage; Dovzhenko was accused of doubting "collective guilt" and the Red Army's fitness, and was ordered to **Russify the Ukrainian hero Кравчина**. On **30 January 1944 he was summoned to Stalin**, who banned the work for **«антиленінізм, пораженство, ревізування національної політики й заохочення українського замість радянського патріотизму»**. **That same day Dovzhenko burned three of the "most seditious" notebooks of his diary.** A censorship directive ordered that no work of his be published "without special permission in each case." He was removed as artistic director of the Kyiv film studio and struck from the Stalin-Prize committee. [T1: IEU — "prohibited … by Joseph Stalin because of its nationalism"; T3: uk.wikipedia — У роки війни]
+- **«Україна в огні» — banned personally by Stalin.** The film-scenario (written 1941–1943; excerpts published September 1943) provoked agitprop outrage; Dovzhenko was accused of privileging Ukrainian rather than Soviet patriotism and was ordered to Russify the Ukrainian hero Кравчина. On **30 January 1944 he was summoned to Stalin**, who banned the work. Dovzhenko destroyed three diary notebooks, was removed as artistic director of the Kyiv film studio, and was struck from the Stalin-Prize committee. [T1: IEU; T3: uk.wikipedia — У роки війни]
 - **«Земля» — suppressed at home, acclaimed abroad.** His 1930 masterpiece was pulled from Ukrainian screens **after a few days** (released 8 April 1930, withdrawn 17 April) following Дем'ян Бєдний's attack feuilleton «Философы» in *Известия*; it was officially rehabilitated in the USSR only in **1958**, after a 1958 Brussels international poll named it one of the **12 best films in world history**. [T3: uk.wikipedia — Трилогія]
-- **"Bourgeois nationalism" as a career-long charge.** From «Звенигора» and «Земля» onward he was repeatedly accused of **«буржуазний націоналізм»**; after «Іван» his **parents were expelled from the kolkhoz** and surveillance of him intensified; the DPU reported (20 May 1932) his remark that the Moscow leadership "feasted" while villages in Ukraine **died of famine** (the Holodomor). [T3: uk.wikipedia — Ранні радянські роки / Москва]
-- **Internal exile to Moscow.** From 1934 he was effectively **confined to Moscow** — permitted only work trips to Ukraine, never residence. He died there in 1956, his remains still in Moscow today. [T1: IEU — "forced to move to Moscow, where he lived as if in exile until his death"; T3: uk.wikipedia]
-- **By whom / documents:** the perpetrating agencies were Stalin personally, the **ЦК agitprop apparatus**, the censorship organs (Главліт), and the **ДПУ/НКВС** (surveillance, the 1932 reports, the destruction of the AРМУ art association). The earliest blow came in **1919**, when the **Волинська ЧК** arrested him as a "ворог робітничо-селянського уряду" and held him three months in a concentration camp (he was saved by writer Василь Еллан-Блакитний). [T3: uk.wikipedia — Доба національно-визвольних змагань]
+- **Bourgeois nationalism as a career-long charge.** From «Звенигора» and «Земля» onward he was repeatedly accused of **буржуазний націоналізм**; after «Іван» his **parents were expelled from the kolkhoz** and surveillance of him intensified. A 1932 DPU report recorded his criticism of Moscow leaders amid village starvation during the Holodomor. [T3: uk.wikipedia — Ранні радянські роки / Москва]
+- **Internal exile to Moscow.** From 1934 he was effectively **confined to Moscow** — permitted only work trips to Ukraine, never residence. He died there in 1956, his remains still in Moscow today. [T1: IEU; T3: uk.wikipedia]
+- **By whom / documents:** the perpetrating agencies were Stalin personally, the **ЦК agitprop apparatus**, the censorship organs (Главліт), and the **ДПУ/НКВС**. The earliest blow came in **1919**, when the **Волинська ЧК** arrested and held him for three months; writer Василь Еллан-Блакитний helped secure his release. [T3: uk.wikipedia — Доба національно-визвольних змагань]
 - **What survived / what was destroyed:** the three diary notebooks he burned in 1944 are lost; his surviving **«Щоденник» (1939–1956)** was sealed in archives by his widow until 2009 and published in full only in **2013**. Most films survive but were withheld from Ukrainian audiences for decades.
 
 ## 3. Major works
 
 - `1927` — **«Сумка дипкур'єра»** (the film he counted as his first). [T3: uk.wikipedia — Фільмографія]
-- `1927/1928` — **«Звенигора»** — his breakthrough; "his own *Iliad*," widely seen as the **beginning of Ukrainian national cinema**, and the start of the "bourgeois nationalism" accusations. [T1: IEU; T3: uk.wikipedia]
+- `1927/1928` — **«Звенигора»** — his breakthrough, widely treated as a beginning of Ukrainian national cinema, and the start of accusations of bourgeois nationalism. [T1: IEU; T3: uk.wikipedia]
 - `1929` — **«Арсенал»** — the 1918 Kyiv Arsenal uprising shown **from the Bolshevik side** (he had fought it from the other; see §6). [T1: IEU; T3: uk.wikipedia]
-- `1930` — **«Земля»** — his masterpiece; banned at home, named one of the 12 greatest films of all time at Brussels (1958). [T1: IEU — "a masterpiece"]
+- `1930` — **«Земля»** — his internationally recognized masterpiece; banned at home and named one of the 12 greatest films of all time at Brussels (1958). [T1: IEU]
 - `1932` — **«Іван»** — his first **sound** film (the Dniprohes dam). [T3: uk.wikipedia]
 - `1935` — **«Аероград»** — made on Stalin's commission. [T3: uk.wikipedia]
-- `1939` — **«Щорс»** — the "Ukrainian Chapaev," demanded by Stalin; Stalin Prize I (1941). [T1: IEU; T3: uk.wikipedia]
+- `1939` — **«Щорс»** — a Stalin-demanded Ukrainian counterpart to the official Chapaev film; Stalin Prize I (1941). [T1: IEU; T3: uk.wikipedia]
 - `1940` — documentaries **«Визволення»** and **«Буковина — земля українська»**. [T3: uk.wikipedia]
 - `1943` — **«Україна в огні»** (kinopovist / scenario) — **banned by Stalin** (§2); published posthumously in excerpts. [T1: IEU]
 - `1948` — **«Мічурін»** (after his own play «Життя в цвіту») — his **last completed film**; Stalin Prize II (1949). [T3: uk.wikipedia]
@@ -59,46 +59,29 @@ This is the load-bearing section. Dovzhenko's repression was **career-long censo
 
 **Suppression note:** «Україна в огні» was banned and «Земля» withdrawn; the diary was archive-sealed until 2009 / published 2013; the **«Тарас Бульба»** he dreamed of (five scenario versions exist, drafted with Дмитро Яворницький's help) was never realised.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotation disposition
 
-**Quote 1 — the diary, on the «Україна в огні» charge of nationalism (verbatim):**
-
-> «…невже любов до свого народу є націоналізм? Чи націоналізм… в невмінні художника стримати сльози, коли народу боляче?..»
-
-The single most quotable line of his dissent — a colonised artist refusing the regime's equation of *love of one's people* with *nationalism*. [T3: uk.wikipedia, quoting the «Щоденник»; verbatim]
-
-**Quote 2 — the diary, on dying in exile (verbatim):**
-
-> «Я вмру в Москві, так і не побачивши України! Перед смертю попрошу Сталіна, аби, перед тим, як спалити мене в крематорії, з грудей моїх вийняли серце і закопали його в рідну землю, у Києві, десь над Дніпром, на горі.»
-
-His prophecy of exile-death (he did die in Moscow, 1956, and remains buried there) — the emotional core of any module on him. [T3: uk.wikipedia, quoting the «Щоденник»; verbatim]
-
-**Quote 3 — autobiography, on the «Земля» attack (verbatim):**
-
-> «Радість творчого успіху була жорстоко пригнічена страховинним двопідвальним фейлетоном Дем'яна Бєдного під назвою „Философы“ в газеті „Известия“. Я буквально посивів і постарів за кілька днів… Спочатку я хотів був умерти.»
-
-Shows the bodily cost of the censorship (he went grey in days). [T3: uk.wikipedia, quoting his «Автобіографія» (written 1939, pub. «Дніпро», 1957)]
-
-**Quote 4 — recorded statement, on Russification at the Hlukhiv institute (verbatim):**
-
-> «Заборонено було в нашому середовищі розмовляти українською мовою. З нас готували учителів–обрусителів краю.»
-
-A primary-source memory of imperial Russification of teacher-training — pedagogically vivid. [T3: uk.wikipedia — Юні роки]
+No verbatim excerpt is approved in this packet. Earlier diary and
+autobiography passages were mediated through an encyclopedia transcription and
+were not pinned to a named edition and page. The sources remain useful for
+locating candidate passages, but a future quotation must record the edition,
+page, and exact text before reuse. The wiki therefore paraphrases the diary and
+autobiographical evidence without quotation marks.
 
 ## 5. Language register
 
 - **Register:** **high lyric-poetic Ukrainian** — the prose of «Зачарована Десна» and «Україна в огні» is the literary face of "poetic cinema," dense with folk imagery, apostrophe, and the Desna landscape; the **«Щоденник»** is more direct and confessional.
 - **CEFR readiness:** excerpts of «Зачарована Десна» are school-curriculum staples at **B1–B2**; «Україна в огні» and the diary at **B2–C1**; the §6 debates (collaboration vs victimhood, the UNR question) at **C1**.
 - **Lexicon notes (terms to pre-teach — all VESUM-verified):** кінорежисер, кінодраматург, кіноповість, сценарій, екранізація, кіностудія, щоденник, поетичне (кіно), націоналізм, русифікація. [verified via `verify_words` 2026-06-03]
-- **Stylistic features:** the **кадр-плакат / кадр-скетч** montage idea he theorised against the передвижники-realism imposed from Moscow; the fusion of folk-poetic vision with the moving image — "the Homer of cinema" (Venice).
+- **Stylistic features:** the **кадр-плакат / кадр-скетч** montage idea he theorised against the передвижники-realism imposed from Moscow; the fusion of folk-poetic vision with the moving image.
 
 ## 6. Contested points
 
-- **UNR-army service — responsibly HEDGED.** uk.wikipedia states that **in 1918–1919 Dovzhenko fought against the Bolsheviks in the army of the UNR**, attested by his émigré countryman, engineer **Петро Шох** (who placed him in the 3rd Сердюцький полк and the курінь Чорних гайдамаків that stormed the Kyiv Arsenal), and by the sister of his first wife. **But the documentary base is thin and was self-purged:** Dovzhenko's own **1939 autobiography (published posthumously 1957) sanitised his biography "як було найбільш безпечно"** — obscuring both the UNR service and his Borotbist past — and **IEU does not mention the UNR service at all.** Honest verdict: **well-attested by émigré/family testimony, unprovable from his own deliberately-falsified record** — assert neither flatly that he served nor that he didn't; present the testimony and the purge together. [T3: uk.wikipedia — Доба національно-визвольних змагань; T1: IEU silence]
-- **The tragic compromise (collaboration vs victimhood).** Dovzhenko made **"concession films"** — «Арсенал», «Аероград», «Щорс», «Мічурін» — for the regime that destroyed his masterworks and exiled him; «Арсенал» depicts **from the Bolshevik side** the very UNR struggle he had fought in. The Dovzhenko-scholar **Сергій Тримбач** frames it: he, like many 1920s Ukrainian intellectuals, believed Bolshevik force could "resurrect Ukraine and Ukrainian culture — **he was wrong**." Tell both directions: victim *and* compromised servant. [T3: uk.wikipedia — quoting Тримбач]
+- **UNR-army service — responsibly HEDGED.** uk.wikipedia reports testimony that **in 1918–1919 Dovzhenko fought against the Bolsheviks in the army of the UNR**, including accounts by émigré engineer **Петро Шох** and by the sister of his first wife. **But the documentary base is thin and was self-purged:** Dovzhenko's 1939 autobiography obscured both possible UNR service and his Borotbist past, while **IEU does not mention the UNR service at all.** Honest verdict: the testimony is significant but not independently proved by his own record; present the testimony and the silence together. [T3: uk.wikipedia — Доба національно-визвольних змагань; T1: IEU silence]
+- **The tragic compromise (collaboration vs victimhood).** Dovzhenko made politically concessive films — «Арсенал», «Аероград», «Щорс», «Мічурін» — for the regime that destroyed his masterworks and exiled him; «Арсенал» depicts **from the Bolshevik side** the UNR struggle to which the testimony above connects him. Scholar Сергій Тримбач interprets this as a failed belief that Bolshevik power could revive Ukrainian culture. Tell both directions: victim *and* compromised servant. [T3: uk.wikipedia — Тримбач attribution]
 - **Praising Stalin while condemning him.** His diary condemns the **conscious destruction of the Ukrainian people, serfdom, and Russification**, yet he also repeatedly praised Stalin and Khrushchev — the doublethink of a colonised artist surviving under terror. Do not smooth either half. [T3: uk.wikipedia — Повоєнний період]
-- **The Kakhovka prophecy.** Writing «Поема про море» about the Каховська ГЕС, Dovzhenko grieved that the dam would **flood the historic lands of the Запорізька Січ and the Великий Луг** ("наше нове море — наше нове горе") — a line that reads as prophetic after Russia's **destruction of the Kakhovka dam in 2023**. [T3: uk.wikipedia; cross-ref `kakhovska-hes`]
-- **Russian/Soviet appropriation.** Titled "Народний артист РРФСР," buried at Novodevichy, his name on a still-operating Kyiv studio — Russia claims him as "Soviet cinema." Ukrainian campaigns since 2006 to **repatriate his remains and archives** remain unresolved ("хресна дорога Довженка до своєї Землі ще не закінчилась"). [T3: uk.wikipedia — Вшанування пам'яті]
+- **The Kakhovka theme.** Writing «Поема про море» about the Каховська ГЕС, Dovzhenko grieved over flooding the historic lands of the Запорізька Січ and the Великий Луг. The theme acquired new resonance after Russia destroyed the Kakhovka dam in 2023. [T3: uk.wikipedia; cross-ref `kakhovska-hes`]
+- **Russian/Soviet appropriation.** He received the title Народний артист РРФСР, was buried at Novodevichy, and is often absorbed into an undifferentiated Soviet cinema canon. Ukrainian campaigns since 2006 to **repatriate his remains and archives** remain unresolved. [T3: uk.wikipedia — Вшанування пам'яті]
 
 ## 7. Cross-track links
 
@@ -135,11 +118,12 @@ A primary-source memory of imperial Russification of teacher-training — pedago
 
 ## 9. Image candidates
 
-- **Best portrait — RIGHTS CAUTION:** Dovzhenko died in 1956, so his **own works** enter the public domain in Ukraine (life+70) only on **1 January 2027**; photographic portraits *of* him depend on the photographer's dates. Do **not** assume PD-by-age yet. Use the **Wikimedia Commons category "Oleksandr Dovzhenko"** and verify each **file page** licence individually.
-- **Backup candidates:**
-  - Укрпошта **1994 stamp block (centenary)** with stills from «Земля» / «Повість полум'яних літ»; NBU coins (2 ₴, 2004; 20 ₴ silver, 2014) — check issue rights.
-  - A still from **«Земля» (1930)** — a VUFKU silent film; clear its status before use.
-- **Context image:** the **«Мотор» sculptural composition** at the Dovzhenko Film Studio (2024, sculptor В. Щур), honouring Dovzhenko and cameraman Демуцький — freedom-of-panorama candidate.
+- **Approved individual file:** Wikimedia Commons
+  `File:Oleksandr_Dovzhenko.jpg`, credited to cinematographer Danylo Demutskyi.
+  The individual file page reports `Public domain` and supplies the applicable
+  rights templates: https://commons.wikimedia.org/wiki/File:Oleksandr_Dovzhenko.jpg
+- Film stills, stamps, coins, and modern monuments remain unapproved until the
+  exact item and its own reuse terms are checked.
 
 ## 10. Sources used
 
@@ -160,11 +144,14 @@ A primary-source memory of imperial Russification of teacher-training — pedago
 - Тримбач С. — Dovzhenko scholarship (cited via uk.wikipedia for the "he was wrong" thesis, §6).
 
 **Primary-source documents accessed (in transcription):**
-- Довженко О. **«Щоденник» («Щоденникові записи, 1939–1956»)**, Харків: Фоліо, 2013 — Quotes 1, 2 (verbatim via T3 transcription).
-- Довженко О. **«Автобіографія»** (written 1939; pub. «Дніпро», грудень 1957) — Quote 3; deliberately self-censored, see §6.
+- Довженко О. **«Щоденник» («Щоденникові записи, 1939–1956»)**, Харків: Фоліо, 2013 — candidate primary edition; no excerpt approved without a checked page.
+- Довженко О. **«Автобіографія»** (written 1939; pub. «Дніпро», грудень 1957) — candidate primary text; no excerpt approved without a checked page.
 - Довженко О. **«Україна в огні»** (1943) — the banned kinopovist (§2/§3).
 
-**Honest gaps:** (1) the ЕІУ entry was referenced via bibliography, not directly opened; (2) the UNR-army service rests on émigré/family **testimony** and is **unprovable from his own purged record** — presented as hedged, not resolved (§6); (3) the diary quotes were accessed in T3 transcription, not from the 2013 Folio edition directly.
+**Honest gaps:** (1) the ЕІУ entry was referenced via bibliography, not directly
+opened; (2) the UNR-army service rests on émigré/family **testimony** and is
+**unprovable from his own purged record** — presented as hedged, not resolved
+(§6); (3) no diary quotation is approved without an edition-locked page.
 
 ---
 

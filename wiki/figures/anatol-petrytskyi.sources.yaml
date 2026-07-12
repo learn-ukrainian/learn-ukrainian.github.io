@@ -1,23 +1,32 @@
-# Source registry for wiki/figures/anatol-petrytskyi.md
-# Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: https://esu.com.ua/article-884765
+  type: external
+  title: Петрицький Анатоль
+  url: https://esu.com.ua/article-884765
 - id: S2
-  file: ukrlib-vyshnya_c0001
-  type: literary
-  title: Остап Вишня. Мистецькі силуети
-  author: Вишня О.
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPetrytskyAnatol.htm
+  type: external
+  title: Petrytsky, Anatol
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPetrytskyAnatol.htm
 - id: S3
-  file: ukrlib-vyshnya_c0002
-  type: literary
-  title: Остап Вишня. Мистецькі силуети
-  author: Вишня О.
+  file: https://nibu.kyiv.ua/news/429/
+  type: external
+  title: Український художник Анатоль Петрицький
+  url: https://nibu.kyiv.ua/news/429/
 - id: S4
-  file: ukrlib-vyshnya_c0000
-  type: literary
-  title: Остап Вишня. Мистецькі силуети
-  author: Вишня О.
+  file: https://localhistory.org.ua/rubrics/painting/anatol-petritskii-zhivopisets-bozhoiu-milistiu/
+  type: external
+  title: Анатоль Петрицький — живописець Божою милістю
+  url: https://localhistory.org.ua/rubrics/painting/anatol-petritskii-zhivopisets-bozhoiu-milistiu/
 - id: S5
-  file: wikipedia/Розстріляне відродження
-  type: wikipedia
-  title: Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B7%D1%81%D1%82%D1%80%D1%96%D0%BB%D1%8F%D0%BD%D0%B5%20%D0%B2%D1%96%D0%B4%D1%80%D0%BE%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
+  file: https://commons.wikimedia.org/wiki/File:Мемориальная_доска,_посвященная_художнику_Петрицкому_на_ул._Золотоворотская.JPG
+  type: external
+  title: Меморіальна дошка Анатолю Петрицькому — CC BY-SA 3.0
+  url: https://commons.wikimedia.org/wiki/File:Мемориальная_доска,_посвященная_художнику_Петрицкому_на_ул._Золотоворотская.JPG
+  rights:
+    basis: cc-by-sa-3.0
+    evidence_url: https://commons.wikimedia.org/wiki/File:Мемориальная_доска,_посвященная_художнику_Петрицкому_на_ул._Золотоворотская.JPG
+    license: Creative Commons Attribution-Share Alike 3.0
+    license_url: https://creativecommons.org/licenses/by-sa/3.0
+    attribution: Мижаню

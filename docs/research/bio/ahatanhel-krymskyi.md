@@ -42,14 +42,14 @@ This is a classic case of Soviet academic decapitation. Kримський was no
 - `1927` — *Історія Туреччини та її письменства*. Major late synthesis.
 - `1930` — *Студії з Криму* material and related Crimean Tatar studies, as cited by ESU. Important for a decolonized understanding of Crimea before and after Russian imperial annexation.
 
-## 4. Primary-source quotes (>=2 required)
+## 4. Primary-source quotation disposition
 
-Kримський's direct literary quotations in the project corpus did not verify cleanly under `mcp__sources.verify_quote` in the earlier checks, so the following are deliberately marked as page-cited, non-corpus excerpts rather than corpus-verified quotations.
-
-- "поет Лаговський, як усі поети, скидався трохи на Еолову арфу" (не в корпусі проєкту; за виданням А. Ю. Кримський, *Твори: у 5 т.*, т. 2, Київ: Наукова думка, 1972, с. 111; page cited in Людмила Скорина, 2022). Pedagogically, this short image lets learners see how Kримський makes a learned allusion serve psychological self-description.
-- "Почутлива людина на льодову висульку скидається" (не в корпусі проєкту; за виданням А. Ю. Кримський, *Твори: у 5 т.*, т. 2, 1972, с. 272; page cited in Скорина, 2022). This is useful for advanced learners because it combines everyday metaphor with reflective, modernist characterization.
-
-Do not use the attractive but unverified slogans "Я зроду-віку українофіл" or any altered Ohienko-style triad. They were not verified for this dossier. The point for writers is exactly that Kримський's voice is available, but it must be edition-locked before being quoted.
+No verbatim quotation is approved in this packet. Two literary excerpts were
+previously carried through a scholarly article that cited volume 2 of the 1972
+five-volume edition, but the underlying pages were not inspected directly.
+They were removed rather than represented as independently verified. Future
+reuse requires the named edition, volume, page, and an exact check of the
+printed text. Popular slogans attributed to Krymskyi remain excluded.
 
 ## 5. Language register
 
@@ -92,9 +92,12 @@ The safest pedagogical framing is anti-hagiographic: Kримський was a tow
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait of Ahatanhel Krymskyi, public-domain/old photograph category; verify license before final image packaging.
-- **Backup candidates:** NАН України profile image; ESU article image; NBU "Україніка" collection images, subject to institutional reuse terms.
-- **Era-appropriate context image:** NBU electronic collection for Кримський's library and manuscripts; useful for scholarship-focused UI rather than a repression-focused page.
+- **Approved individual file:** Wikimedia Commons
+  `File:Agatangel_Krymskyi.jpg`, a 1900s photograph by an unknown author. The
+  individual file page reports `Public domain`:
+  https://commons.wikimedia.org/wiki/File:Agatangel_Krymskyi.jpg
+- NAS, ESU, NBUV, library, and manuscript images remain unapproved until their
+  individual reuse terms are recorded.
 
 ## 10. Sources used
 

@@ -1,59 +1,30 @@
-# Source registry for wiki/figures/ahatanhel-krymskyi.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/ahatanhel-krymskyi_Біографія-Агатангел-Кримський-Поліглот-і-мученик-науки-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Агатангел Кримський: Поліглот і мученик науки'
-  section_path: 'Біографія: Агатангел Кримський: Поліглот і мученик науки > Короткий
-    зміст'
+  file: https://esu.com.ua/article-1082
+  type: external
+  title: Кримський Агатангел Юхимович
+  url: https://esu.com.ua/article-1082
 - id: S2
-  file: ukrainian_wiki/ahatanhel-krymskyi_Біографія-Агатангел-Кримський-Поліглот-і-мученик-науки-Основний-зміст-Фундатор-української-та-світової-орієнталістики
-  type: ukrainian_wiki
-  title: 'Біографія: Агатангел Кримський: Поліглот і мученик науки'
-  section_path: 'Біографія: Агатангел Кримський: Поліглот і мученик науки > Основний
-    зміст > Фундатор української та світової орієнталістики'
+  file: https://www.history.org.ua/?termin=Krimskii_A
+  type: external
+  title: Кримський Агатангел Юхимович
+  url: https://www.history.org.ua/?termin=Krimskii_A
 - id: S3
-  file: wave8-ukr-lit-entsyklopediia_c3946
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: https://www.old.nas.gov.ua/UA/PersonalSite/Pages/Biography.aspx?PersonID=0000006818
+  type: external
+  title: Кримський Агатангел Юхимович — НАН України
+  url: https://www.old.nas.gov.ua/UA/PersonalSite/Pages/Biography.aspx?PersonID=0000006818
 - id: S4
-  file: ukrainian_wiki/ahatanhel-krymskyi_Біографія-Агатангел-Кримський-Поліглот-і-мученик-науки-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Агатангел Кримський: Поліглот і мученик науки'
-  section_path: 'Біографія: Агатангел Кримський: Поліглот і мученик науки > Деколонізаційна
-    перспектива'
+  file: https://irbis-nbuv.gov.ua/ulib/col/col0000017523
+  type: external
+  title: Кримський Агатангел Юхимович — НБУВ
+  url: https://irbis-nbuv.gov.ua/ulib/col/col0000017523
 - id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0638
-  type: textbook
-  title: § 39. Наукова лексика. Терміни. Канцеляризми. Штампи
-  page: 107
-  grade: 10
-- id: S6
-  file: wave12-yakovenko-skhid-zakhid_c0017
-  type: literary
-  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
-  author: Яковенко Н.
-- id: S7
-  file: 9-klas-ukrajinska-mova-voron-2017_s5109
-  type: textbook
-  title: Відновіть прислів’я, опускаючи підрядні сполучники. Перероблені
-  page: 115
-  grade: 9
-- id: S8
-  file: ukrainian_wiki/ahatanhel-krymskyi_Біографія-Агатангел-Кримський-Поліглот-і-мученик-науки-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Агатангел Кримський: Поліглот і мученик науки'
-  section_path: 'Біографія: Агатангел Кримський: Поліглот і мученик науки > Мовні
-    зразки'
-- id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0010
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S10
-  file: wikipedia/Українське мовознавство
-  type: wikipedia
-  title: Українське мовознавство
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B5%20%D0%BC%D0%BE%D0%B2%D0%BE%D0%B7%D0%BD%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D0%BE
+  file: https://commons.wikimedia.org/wiki/File:Agatangel_Krymskyi.jpg
+  type: external
+  title: Agatangel Krymskyi.jpg — public domain
+  url: https://commons.wikimedia.org/wiki/File:Agatangel_Krymskyi.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Agatangel_Krymskyi.jpg
+    license: Public domain

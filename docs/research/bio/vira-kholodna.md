@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ, ЕУ/Сарсель, IEU + Mystetstvo Ukrainy dovidnyk)
 - [x] Oppression mechanism is specific — and **honest**: this is primarily **posthumous** (1937 grave destruction + appropriation), not documented life-persecution; the death-rumours are named as unverified myth
-- [~] ≥2 primary-source quotes — **partially met / honest gap**: one attributed self-statement + the surviving films named as her primary "voice" (a silent star left almost no written record — documented why in §4)
+- [x] quotation review completed — no first-person quotation is approved; the surviving films are the direct primary record (§4)
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -25,15 +25,15 @@
 
 - **Full name (UA, canonical):** Віра Василівна Левченко, у шлюбі **Холодна**. [T1: ЕІУ, т. 10, с. 407 — Холодна Віра Василівна (М. Юр); T1: ЕУ (Сарсель), Словникова частина; T1: IEU — Kholodna, Vira]
 - **Pseudonyms / aliases:** maiden name **Левченко**; stage/press epithet **«королева екрана»** ("queen of the screen"). Russified rendering (forbidden in body text, §8): Вера Васильевна Холодная; "Vera Kholodnaya" as a *Russian* star.
-- **Born:** **9 August 1893** (a variant gives 5 August) | Полтава | the Російська імперія then held Полтавщина. Father **Василь Андрійович Левченко**, a Poltava-born teacher (philology, Moscow University); mother Катерина Сергіївна. [T1: ЕІУ; T3: uk.wikipedia — "9 серпня 1893, Полтава"]
-- **Died:** **16 February 1919** (aged 25) | Одеса | the **Українська Народна Республіка** then held Odesa | of the **Spanish flu (іспанка)**, complicated to pneumonia. Buried **19 February 1919** at the **Перший християнський цвинтар** of Odesa. [T1: ЕІУ; T3: uk.wikipedia — "16 лютого 1919, Одеса"]
+- **Born:** **9 August 1893** (a variant gives 5 August) | Полтава | the Російська імперія then held Полтавщина. Father **Василь Андрійович Левченко**, a Poltava-born teacher (philology, Moscow University); mother Катерина Сергіївна. [T1: ЕІУ; T3: uk.wikipedia]
+- **Died:** **16 February 1919** (aged 25) | Одеса | the **Українська Народна Республіка** then held Odesa | of the **Spanish flu (іспанка)**, complicated to pneumonia. Buried **19 February 1919** at the **Перший християнський цвинтар** of Odesa. [T1: ЕІУ; T3: uk.wikipedia]
 - **Family / education key facts:** family moved to Moscow; she studied at the Перепьолкіна private gymnasium and briefly at the **Bolshoi ballet school** (withdrawn at her grandmother's insistence). Married the jurist **Володимир Холодний** (1910); daughters Євгенія (1912) and adopted Нонна (1913). Her brother-in-law **Микола Холодний** became the world-renowned Ukrainian botanist after whom the **Інститут ботаніки ім. М. Г. Холодного НАН України** is named. [T3: uk.wikipedia]
 
 ## 2. Oppression mechanism
 
 > **Honesty first.** Kholodna is **not a documented case of life-persecution by Russia**: she died of the Spanish-flu pandemic in 1919, aged 25. The defensible "Russia-oppressed" mechanism is **posthumous**: Soviet **grave-erasure**, near-total **loss of her films**, and Russian **appropriation** of a Poltava-born Ukrainian as a "Russian" star. The sensational "executed as a French spy" stories are **unverified rumour** (named as such), not the mechanism.
 
-- **What happened (posthumous, documented):** in **1937 the Soviet authorities destroyed the First Christian Cemetery of Odesa** where she was buried, replacing it with a "Парк Ілліча" amusement park and a zoo; **no record of her reburial survives** — her grave was effectively erased. [T3: uk.wikipedia — "1937 року комуністичною владою цвинтар було зруйновано"]
+- **What happened (posthumous, documented):** in **1937 the Soviet authorities destroyed the First Christian Cemetery of Odesa** where she was buried, replacing it with an amusement park and a zoo; **no record of her reburial survives** — her grave was effectively erased. [T3: uk.wikipedia — cemetery section]
 - **What happened (cultural erasure/appropriation):** of her **~50–100 films, only 5 survive**; she is marketed in Russian cultural memory as a **"Russian"** star (e.g. Mikhalkov's 1975 film *Раба любові* fictionalises her), erasing her **Poltava-Ukrainian origin** and her **death in UNR-era Odesa**. [T3: uk.wikipedia]
 - **By whom:** the **Soviet municipal authorities** (1937 cemetery destruction); the broader Soviet/Russian film-historical canon (appropriation). [T3: uk.wikipedia]
 - **The death-rumours — named as myth, not mechanism:** because a 25-year-old superstar's death from flu seemed too "prosaic," legends multiplied — that she was **shot as a French spy**, poisoned by lilies from the French consul Enno, or strangled by a jealous lover. **The family and close circle confirmed the official cause (іспанка).** No version has any confirmation. There is a **documented discrepancy** about her husband: some accounts say **Володимир Холодний was arrested and shot**, while uk.wikipedia states he **died of typhus a few months later** — flagged, not resolved. [T3: uk.wikipedia — both versions present]
@@ -52,30 +52,21 @@ She worked **1914–1919** in the silent-film industry of the late Russian Empir
 
 **Survival note:** the overwhelming majority are **lost**; only **5** films with her survive (titles uncertain across sources).
 
-## 4. Primary-source quotes (≥2 required — partially met; honest gap documented)
+## 4. Primary-source quotation disposition
 
-> **Why this section is thin (documented, not skipped):** Kholodna was a **silent-film actress** who left **almost no written record** — no published letters or essays are readily available, and her on-screen "voice" is wordless. Her primary *artistic* testimony is the **surviving films themselves**. The template's ≥2-quote bar is therefore only **partially** met; this is disclosed rather than padded with invented or Russian-mediated text.
-
-**Quote 1 — her own statement on cinema (attributed):**
-
-> «Майбутнє екрана велике й неосяжне. І я щаслива, якщо хоч трішки можу брати участь у цій великій справі творчого розвитку кінематографа, якщо мої тіні на екрані дають хоч трішки радості людям.»
-
-A rare first-person credo — modest, about giving "joy" through "shadows on the screen." **Flag:** circulated in Ukrainian popular biography; exact archival provenance not pinned this pass — treat as **attributed**, not verbatim-verified. [T5: ukrainky.com.ua / velykiukrainci — attributed]
-
-**Quote 2 — her sister Софія's recorded recollection (secondary witness, not Kholodna's own words):**
-
-> «Я росла без батька, Віра замінила мені його. Вона зайнялась моїм вихованням і, коли помітила, що я теж люблю сцену, люблю балет, допомогла вступити до балетної школи.»
-
-Offered as the closest reliable **documentary voice around her** (family memoir), explicitly **not** a quote *by* Kholodna. [T3: uk.wikipedia, quoting Софія Левченко]
-
-**Her primary "voice" (in lieu of text):** the **5 surviving films** are the authentic primary record; a module should screen a surviving reel rather than rely on apocryphal quotations.
+No verbatim first-person quotation is approved for reuse. The popular cinema
+statement previously carried here had no pinned archival source, and the
+recollection attributed to her sister was not Kholodna's own voice. Both were
+removed rather than treated as verified evidence. Her surviving films are the
+direct primary record; a future excerpt must identify the film, surviving copy,
+and exact timecode before reuse.
 
 ## 5. Language register
 
 - **Register:** N/A in the usual sense — a **silent**-cinema performer; her medium is **wordless screen acting** ("драма жіночої душі"). Biographical/critical prose about her is the teachable text.
 - **CEFR readiness:** the biographical arc (німе кіно, кінозірка, мелодрама, епідемія іспанки) is **B1–B2**; the §2/§6 material (посмертне знищення могили, апропріація, дерусифікація) is **C1**.
 - **Lexicon notes (pre-teach):** німе кіно, кінозірка, кіноактриса/кіноакторка, мелодрама, екран, «королева екрана», епідемія, іспанка, дерусифікація — all VESUM-valid (verified). Gloss **«драма жіночої душі»** (the period melodrama genre).
-- **Stylistic features (her art):** the large, sorrowful eyes; restraint ("навіть майже не граючи"); the silent-melodrama heroine type she defined. Pedagogical entry: a surviving clip + a period postcard, set against the lost-films fact.
+- **Stylistic features (her art):** expressive eyes, restrained gesture, and the silent-melodrama heroine type associated with her screen image. Pedagogical entry: a surviving clip + a period postcard, set against the lost-films fact.
 
 ## 6. Contested points
 
@@ -113,12 +104,12 @@ Offered as the closest reliable **documentary voice around her** (family memoir)
 
 ## 9. Image candidates
 
-- **Best PD portrait:** Wikimedia Commons category **"Vera Kholodnaya"** holds many **pre-1919** studio portraits and the mass-printed period **postcards**; she died 1919, so these are public domain by age in Ukraine and the US (pre-1929). Confirm on the individual **file page**. [Commons category: `Vera Kholodnaya`]
-- **Backup candidates:**
-  - Film stills/frames from the **5 surviving films** (PD by age) — strong §3 illustration.
-  - The Odesa **memorial** (2003) at the house where she lived/died — context image (verify rights).
-- **Context image:** a period film poster or the «Аполло» cinema advertising — early-cinema texture; or a present-day photo of the former cemetery site (the erasure made visible).
-- **If no rights-clear portrait clears review:** any of the abundant PD pre-1919 postcards.
+- **Approved individual file:** Wikimedia Commons
+  `File:VeraKholodna.jpg`, a 1910s portrait by an unknown author. The individual
+  file page reports `Public domain`; this is the evidence URL, not the Commons
+  category: https://commons.wikimedia.org/wiki/File:VeraKholodna.jpg
+- Film stills, posters, postcards, and memorial photographs remain unapproved
+  until their own file pages and licenses are checked individually.
 
 ## 10. Sources used
 
@@ -137,14 +128,17 @@ Offered as the closest reliable **documentary voice around her** (family memoir)
 - (Sparse for this figure; the dossier flags under-documentation rather than citing weak academic PDFs.)
 
 **Tier 5 (general web — used only with T1–T3 corroboration):**
-- "Віра Холодна: коротке і яскраве життя німої королеви «драм жіночої душі»." *ukrainky.com.ua* — source of the attributed cinema quote (§4, flagged).
+- *ukrainky.com.ua.* «Віра Холодна: коротке і яскраве життя німої королеви “драм жіночої душі”» — navigation source for the removed attributed statement; no quotation approved from it.
 - "Віра Холодна." *Великі Українці* (velykiukrainci.livejournal) — biographical color, corroborated against ЕІУ/uk.wikipedia.
 
 **Primary-source documents accessed (in transcription):**
 - The 5 surviving films (her primary artistic record, named in §3/§4 — not individually screened this pass).
 - Family recollection (sister Софія) via uk.wikipedia.
 
-**Honest gaps:** (1) **No reliable first-person written record** was located — §4 is partially met and flagged; the cinema quote is **attributed**, not verbatim-verified. (2) The **husband's fate** (execution vs typhus) and the **film count/titles** are contradictory across sources — left open. (3) Tier-4 scholarship is thin; tier marked **2/provisional**.
+**Honest gaps:** (1) **No reliable first-person written record** was located, so
+§4 approves no quotation. (2) The **husband's fate** (execution vs typhus) and
+the **film count/titles** are contradictory across sources — left open. (3)
+Tier-4 scholarship is thin; tier marked **2/provisional**.
 
 ---
 

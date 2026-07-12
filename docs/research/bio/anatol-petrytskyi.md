@@ -46,36 +46,27 @@ This is the load-bearing section. Петрицький survived the Terror physi
 
 > **Source disagreement (flagged, not smoothed).** The scale of the portrait series is reported variously: НІБУ documents "понад двадцять" portraits made 1927–30 (Яновський, Рильський, Хвильовий, Курбас, Іван Падалка…); SupportYourArt and uartlib call it a "стопортретна" (~100) series of which "не більше десятку" survived; IEU states "over 150 portraits … most destroyed in the 1930s by the Soviet authorities." The dating of «Інваліди» is given as 1924 (uk.wikipedia) or 1926 (НІБУ). Prefer the ranged, sourced wording in prose; do not invent a single exact figure.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotation disposition
 
-1. **Petrytskyi defending Picasso under the formalism campaign:**
-   > «Щодо картин Пікассо, то це не дурниця, це велика майстерність, але майстерність і світогляд не нашого класу».
-   Source: quoted in [T5: Localhistory — «Анатоль Петрицький — живописець Божою милістю»]. Pedagogically priceless: the sentence itself enacts the survival-grammar of the 1930s — genuine praise, then the obligatory ideological disclaimer («не нашого класу»). It is the verbal fingerprint of co-optation.
-
-2. **Petrytskyi on how he worked with portrait sitters:**
-   > «Якого чорта ви сидите як істукан?! Робіть, що вам треба і не заважайте мені бачити, який ви є в натурі».
-   Source: [T5: Localhistory]. Shows his method for the portrait gallery — catching the living person, not a pose; the very vitality the regime later erased.
-
-3. **Petrytskyi on his first childhood theatre work (autobiography):**
-   > «Намалював декорації: ліс, замок, кімнату принца. Сам грав принца».
-   Source: [T2: НІБУ — Марченко 2023], drawing on «Самі про себе. Автобіографії українських митців 1920-х років» (Київ: Кліо, 2015).
-
-**On the figure (not his own words, but load-bearing):**
-- Лесь Курбас: «Художник в українському театрі з'явився тоді, коли в "Молодий театр" прийшов Анатоль Петрицький. (…) Він проробив в "Молодому театрі" всі ті віхи формальної революції, що були тоді на часі» [T5: Localhistory].
-- Федір Кричевський: «Анатоль — живописець Божою милістю, рідкісний дар незбагненного чуття кольору!» [T5: Localhistory].
+No verbatim quotation is approved in this packet. Earlier statements by
+Petrytskyi, Les Kurbas, and Fedir Krychevskyi were carried through later
+articles rather than checked against a named primary edition and page. They
+were removed instead of being promoted as exact speech. The NIBU and
+Localhistory articles may guide a later search in the published autobiography,
+but future reuse requires the edition, page, and exact text.
 
 ## 5. Language register
 
-- **Register:** mixed — energetic colloquial Ukrainian in his recorded speech/autobiography («якого чорта… як істукан»), alongside the formal art-critical and ideological vocabulary of the period (формалізм, конструктивізм, соцреалізм).
-- **CEFR readiness for full reading:** C1 for the module's art-history + repression vocabulary; his direct quotes sit around B2–C1.
+- **Register:** mixed — energetic colloquial Ukrainian in recorded speech and autobiography, alongside the formal art-critical and ideological vocabulary of the period (формалізм, конструктивізм, соцреалізм). No exact personal wording is approved here.
+- **CEFR readiness for full reading:** C1 for the module's art-history and repression vocabulary; first-person prose candidates require separate edition checks.
 - **Lexicon notes:** art-history terms (сценографія, авангард, футуризм, конструктивізм, формалізм, соцреалізм); the period euphemism «спецфонд» (a destruction/restricted fund); watch the Soviet propaganda label «формалізм» — present it as an accusation, not a neutral descriptor.
 - **Stylistic features:** N/A (visual artist), but his stage costumes are described as a synthesis of avant-garde construction with Ukrainian народна орнаментика — a useful decolonial hook.
 
 ## 6. Contested points
 
 - **What's debated in modern UA scholarship:** the exact size and contents of the destroyed portrait gallery (20+ documented vs ~100 planned vs 150+ per IEU); the dating of «Інваліди»; how far his late socialist-realist work (the Stalin-Prize commissions) should be read as cynical survival, sincere belief, or the only space left to a co-opted artist.
-- **What gets simplified in popular memory:** the "геній українського авангарду" (Горбачов) framing can flatten the harder story — that he survived by conforming, joined the party, and accepted Stalin Prizes. The myth of the artist who "quietly preserved the avant-garde inside theatre work" must be tested against the documented compromises.
-- **Where modern Russian disinformation attacks:** the appropriation of Ukrainian avant-garde artists as "Russian/Soviet avant-garde," erasing the Ukrainian context (Kyiv, Kharkiv, the «Нова генерація», Kurbas's «Молодий театр») in which Petrytskyi worked.
+- **What gets simplified in popular memory:** celebratory genius framing can flatten the harder story — that he survived by conforming, joined the party, and accepted Stalin Prizes. Claims that he quietly preserved the avant-garde inside theatre work must be tested against the documented compromises.
+- **Where modern Russian disinformation attacks:** the appropriation of Ukrainian avant-garde artists into a Russian/Soviet avant-garde category, erasing the Ukrainian context (Kyiv, Kharkiv, the «Нова генерація», Kurbas's «Молодий театр») in which Petrytskyi worked.
 
 ## 7. Cross-track links
 
@@ -110,10 +101,14 @@ This is the load-bearing section. Петрицький survived the Terror physi
 
 ## 9. Image candidates
 
-- **Rights caveat:** Petrytskyi died in 1964, so his **artworks remain under copyright in Ukraine until 1 Jan 2035** (life + 70). Do NOT treat his paintings/designs as PD.
-- **Best candidate:** a pre-1929 photographic portrait of the artist (potentially PD by age) — verify on Wikimedia Commons category "Anatol Petrytsky" before use; confirm the specific file's license, do not assume.
-- **Backup candidates:** institutional reproductions credited to the Музей театрального, музичного та кіномистецтва України (with permission); the 1932 Kharkiv exhibition context.
-- **If no PD/CC portrait exists:** use a licensed museum reproduction with attribution, or an era-context image (the empty/destroyed-gallery motif) rather than an unlicensed artwork scan.
+- **Rights caveat:** Petrytskyi died in 1964, so his paintings and designs must
+  not be assumed public domain.
+- **Approved individual context file:** Wikimedia Commons photograph of the
+  memorial plaque to Petrytskyi on Zolotovoritska Street, licensed
+  `CC BY-SA 3.0` on its own file page:
+  https://commons.wikimedia.org/wiki/File:Мемориальная_доска,_посвященная_художнику_Петрицкому_на_ул._Золотоворотская.JPG
+- No portrait or artwork reproduction is approved without an individual-file
+  license or direct permission from the rights holder.
 
 ## 10. Sources used
 
@@ -131,14 +126,14 @@ This is the load-bearing section. Петрицький survived the Terror physi
 - English Wikipedia. "Anatol Petrytsky." Accessed 2026-06-01.
 
 **Tier 5 (general web — color/quotes, corroborated by T1/T2):**
-- Localhistory. "Анатоль Петрицький — «живописець Божою милістю»." https://localhistory.org.ua/rubrics/painting/anatol-petritskii-zhivopisets-bozhoiu-milistiu/. Accessed 2026-06-01. (Primary quotes; corroborated by НІБУ.)
+- Localhistory. «Анатоль Петрицький — “живописець Божою милістю”». https://localhistory.org.ua/rubrics/painting/anatol-petritskii-zhivopisets-bozhoiu-milistiu/. Accessed 2026-06-01. Navigation source for statements removed from §4; no quotation approved.
 - SupportYourArt. "Портрет: Анатоль Петрицький. Про ритми майбутнього та привиди минулого." https://supportyourart.com/stories/petrytskij/. Accessed 2026-06-01. (Portrait series + destruction.)
 - Бібліотека українського мистецтва (uartlib). "Анатоль Петрицький. Портрети сучасників. Альбом." https://uartlib.org/knygy-pro-hudozhnykiv/anatol-petritskiy-portreti-suchasnikiv-albom/. Accessed 2026-06-01.
 
 **Specialist monograph (use with care — note 1971 Soviet-era):**
-- Д. О. Горбачов. «Анатоль Петрицький. Нарис творчості». Київ: Знання, 1971. (Horbachov's "геній українського авангарду" framing.)
+- Д. О. Горбачов. «Анатоль Петрицький. Нарис творчості». Київ: Знання, 1971. Later interpretive framing, not a source of approved quotation.
 
-**Primary-source documents accessed:** None directly (no NKVD file — Petrytskyi was not arrested). Autobiography reproduced in «Самі про себе. Автобіографії українських митців 1920-х років» (Київ: Кліо, 2015), quoted via НІБУ.
+**Primary-source documents accessed:** None directly (no NKVD file — Petrytskyi was not arrested). NIBU identifies the autobiography reproduced in «Самі про себе. Автобіографії українських митців 1920-х років» (Київ: Кліо, 2015), but the edition was not directly inspected.
 
 ---
 
