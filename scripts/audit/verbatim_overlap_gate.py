@@ -68,16 +68,24 @@ OPTIONAL_CORPORA: list[tuple[str, str, str, str]] = [
 
 
 def normalize_text(text: str) -> str:
-    """Ukrainian-aware normalization for shingling (must be identical on both sides)."""
+    """Ukrainian-aware normalization for shingling (must be identical on both sides).
+
+    Strips ONLY stress combining marks (U+0301 acute, U+0300 grave). Other combining
+    marks (e.g. diaeresis U+0308 on ї, breve U+0306 on й) are preserved so that
+    distinct UA letters are not collapsed (ї≠і, й≠и). Always round-trips via NFC.
+    """
     if not text:
         return ""
-    # NFC
+    # NFC first for canonical
     text = unicodedata.normalize("NFC", text)
     # lower
     text = text.lower()
-    # strip combining stress/accent marks (U+0301 etc.)
+    # NFD to separate marks, then drop ONLY stress codepoints (keep diaeresis/breve etc.)
     text = unicodedata.normalize("NFD", text)
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    STRESS_MARKS = {0x0300, 0x0301}
+    text = "".join(ch for ch in text if not (unicodedata.combining(ch) and ord(ch) in STRESS_MARKS))
+    # restore NFC so precomposed letters are canonical (ї, й etc. recompose)
+    text = unicodedata.normalize("NFC", text)
     # apostrophe variant fold (’ ' ` ′ ‘ ’ etc. -> ')
     text = re.sub(r"['’ʼ`′‘’]", "'", text)
     # collapse punctuation + runs of ws/hyphen to single space (keep ' inside words)
@@ -284,7 +292,7 @@ def extract_from_activities_yaml(yaml_path: Path) -> list[ExtractedSpan]:
 
     for act in acts:
         act_id = _get_str(act, "id", "act")
-        for fld in ("title", "instruction", "question", "passage", "text"):
+        for fld in ("title", "instruction", "question", "passage", "text", "prompt"):
             val = _get_str(act, fld)
             if val and has_cyrillic(val) and len(val) >= 4:
                 s, e = _find_offsets(raw_text, val)
@@ -304,7 +312,7 @@ def extract_from_activities_yaml(yaml_path: Path) -> list[ExtractedSpan]:
         for item in _get_list(act, "items"):
             if not isinstance(item, dict):
                 continue
-            for fld in ("sentence", "question", "text", "passage", "explanation"):
+            for fld in ("sentence", "question", "text", "passage", "explanation", "prompt"):
                 val = _get_str(item, fld)
                 if val and has_cyrillic(val) and len(val) >= 4:
                     s, e = _find_offsets(raw_text, val)
@@ -321,7 +329,7 @@ def extract_from_activities_yaml(yaml_path: Path) -> list[ExtractedSpan]:
                         )
                     )
             for opt in _get_list(item, "options"):
-                val = str(opt)
+                val = _get_str(opt, "text") if isinstance(opt, dict) else str(opt)
                 if val and has_cyrillic(val) and len(val) >= 3:
                     s, e = _find_offsets(raw_text, val)
                     norm = normalize_text(val)
@@ -541,7 +549,9 @@ class ShingleIndex:
 
         for table, id_col, text_col, corpus_label in corpora:
             try:
-                rows = sources_conn.execute(f"SELECT {id_col} AS cid, {text_col} AS txt FROM {table}").fetchall()
+                rows = sources_conn.execute(
+                    f"SELECT {id_col} AS cid, {text_col} AS txt FROM {table} ORDER BY {id_col}"
+                ).fetchall()
             except sqlite3.OperationalError:
                 continue
             for row in rows:
@@ -578,16 +588,25 @@ class ShingleIndex:
         return fp
 
     def _compute_fingerprint(self, conn: sqlite3.Connection, corpora: list) -> str:
+        """Content-based fingerprint: hash (label, id, norm(text)) per row in deterministic ID order.
+        Ensures text mutations (same ID) cause rebuild. Uses full rows, not just count+sample IDs.
+        """
         h = hashlib.sha256()
         h.update(EXTRACTION_SPEC_VERSION.encode())
         h.update(f"k={self.k}".encode())
-        for table, id_col, _, label in corpora:
+        for table, id_col, text_col, label in corpora:
             try:
-                cnt = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                h.update(f"{label}:{table}:{cnt}".encode())
-                sample = conn.execute(f"SELECT {id_col} FROM {table} ORDER BY {id_col} LIMIT 3").fetchall()
-                for r in sample:
-                    h.update(str(r[0]).encode())
+                # ORDER BY guarantees stable order for hashing across runs/insert orders
+                rows = conn.execute(
+                    f"SELECT {id_col} AS cid, {text_col} AS txt FROM {table} ORDER BY {id_col}"
+                ).fetchall()
+                h.update(f"{label}:{table}:n={len(rows)}".encode())
+                for r in rows:
+                    cid = str(r["cid"] or "")
+                    txt = r["txt"] or ""
+                    ntxt = normalize_text(txt)
+                    # hash the actual content too
+                    h.update(f"{label}|{cid}|{ntxt}".encode())
             except Exception:
                 h.update(f"missing:{label}".encode())
         return h.hexdigest()[:28]
@@ -597,8 +616,10 @@ class ShingleIndex:
         return int(row[0]) if row else 0
 
     def postings_for(self, shingle_key: str) -> list[tuple[str, str]]:
+        # Deterministic order so reports and [0] picks are stable regardless of insert history
         rows = self.conn.execute(
-            "SELECT corpus, chunk_id FROM postings WHERE shingle_key = ? LIMIT 50", (shingle_key,)
+            "SELECT corpus, chunk_id FROM postings WHERE shingle_key = ? ORDER BY corpus, chunk_id LIMIT 50",
+            (shingle_key,),
         ).fetchall()
         return [(r["corpus"], r["chunk_id"]) for r in rows]
 
@@ -661,31 +682,70 @@ def compute_metrics(
     for pos, sh in enumerate(mod_shingles):
         sh_to_pos[sh].append(pos)
 
-    # Collect hits
-    hit_positions: set[int] = set()
+    # Collect hits — now with per-source tracking for correct max_run and verify exclusion
     hit_shingles: set[str] = set()
     df_excluded: set[str] = set()
     verified_excludes: list[dict] = []
     candidate_sources: list[tuple[str, str, str]] = []  # (corpus, chunk, sh)
 
+    # (corpus, chunk_id) -> set of module shingle-start positions matched from *that* source chunk
+    source_positions: dict[tuple[str, str], set[int]] = defaultdict(set)
+    # token positions to exclude from ratio due to verified attributed quote
+    verified_token_positions: set[int] = set()
+
     for sh in mod_shingles:
         df = index.df_for(sh)
         if df >= df_n:
             df_excluded.add(sh)
-            # still consider for raw max_run
+            # DF excluded still participate in per-source max_run (retain high-DF for genuine runs)
         posts = index.postings_for(sh)
         if posts:
             hit_shingles.add(sh)
-            for pos in sh_to_pos[sh]:
-                hit_positions.add(pos)
-            # pick first for LCS candidates
+            modposs = sh_to_pos[sh]
+            # pick first (now stable due to ORDER BY in postings) for legacy LCS
             c, cid = posts[0]
             candidate_sources.append((c, cid, sh))
+            for (c2, cid2) in posts:
+                source_positions[(c2, cid2)].update(modposs)
+            # verify using real source author (not empty) + shingle text for attribution
+            # require matched source author for a real attribution
+            for c2, cid2 in posts:
+                author = ""
+                try:
+                    tbl = "textbooks" if c2 == "textbooks" else ("literary_texts" if c2 == "literary" else None)
+                    idc = "chunk_id"
+                    if tbl:
+                        row = sources_conn.execute(f"SELECT author FROM {tbl} WHERE {idc} = ? LIMIT 1", (cid2,)).fetchone()
+                        author = str(row[0] or "") if row else ""
+                except Exception:
+                    author = ""
+                conf = verify_quote_fn(author or "", sh)
+                if conf >= 0.85 and author:
+                    # mark the k-tokens of this sh for exclusion from ratio only
+                    for p in modposs:
+                        for t in range(p, min(p + index.k, total)):
+                            verified_token_positions.add(t)
+                    verified_excludes.append({
+                        "text": sh,
+                        "author": author,
+                        "corpus": c2,
+                        "chunk_id": cid2,
+                        "conf": conf,
+                        "excluded_from_ratio": True,
+                    })
+                    # do not break: allow all matching shingles of the quote to be recorded/excluded
 
-    # raw max run (never suppressed)
-    max_raw = _chained_run_len(module_tokens, hit_positions, index.k)
 
-    # DF-filtered positions for alternative max (still report both)
+    # raw max run: per source chunk (bug7), high-DF retained via source_positions
+    max_raw = 0
+    for (_c, _cid), posset in source_positions.items():
+        run = _chained_run_len(module_tokens, posset, index.k)
+        if run > max_raw:
+            max_raw = run
+    if not source_positions:
+        max_raw = _chained_run_len(module_tokens, set(), index.k)
+
+    # DF-filtered positions for alternative max (still report both; DF-excluded not here)
     df_filtered_positions: set[int] = set()
     for sh, poss in sh_to_pos.items():
         if sh not in df_excluded:
@@ -693,19 +753,15 @@ def compute_metrics(
                 df_filtered_positions.add(p)
     max_df_filt = _chained_run_len(module_tokens, df_filtered_positions, index.k)
 
-    # overlap tokens (covered positions, allowlist applied)
+    # overlap tokens for ratio: ONLY shingles that actually matched postings (bug1), minus DF, minus verified (bug2)
     covered: set[int] = set()
-    for sh, poss in sh_to_pos.items():
-        if sh in df_excluded:
-            continue
-        # verify allowlist check would be per matched span; for now DF only for ratio
-        for p in poss:
-            # mark the k tokens starting at p
+    for sh in (hit_shingles - df_excluded):
+        for p in sh_to_pos[sh]:
             for t in range(p, min(p + index.k, total)):
-                covered.add(t)
+                if t not in verified_token_positions:
+                    covered.add(t)
+    covered -= verified_token_positions
 
-    # Apply verify_quote excludes where possible (for top offenses we will refine)
-    # For ratio, if caller supplied verify hits, they can be pre-removed; we simulate by re-scanning top.
     overlap_count = len(covered)
     ratio = overlap_count / total if total else 0.0
 
@@ -738,12 +794,9 @@ def compute_metrics(
     if top:
         top["effective_run"] = effective_max
 
-    # Try verify on the top offense text if we have one (best effort; needs author for full)
-    if top and verify_quote_fn:
-        # We don't always have author; pass empty to get 0 unless test supplies smarter fn
-        conf = verify_quote_fn("", top.get("matched_shingle", ""))
-        if conf >= 0.85:
-            verified_excludes.append({"text": top.get("matched_shingle"), "conf": conf, "excluded_from_ratio": True})
+    # Note: verified excludes for ratio are populated during hit collection (with real author + provenance).
+    # The legacy top-offense verify (empty author) is intentionally not used to mutate ratio here;
+    # max_contiguous_run is left unchanged by design (even for verified quotes).
 
     report = VerbatimReport(
         module="",
