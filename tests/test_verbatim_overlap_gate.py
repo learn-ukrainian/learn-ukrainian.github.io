@@ -344,3 +344,24 @@ def test_chained_run_and_lcs_recovery(tmp_path: Path):
     assert rpt.top_offense is None or rpt.top_offense.get("lcs_run", 0) >= 5
     conn.close()
     idx.close()
+
+
+def test_multiline_html_comment_not_leaked_into_extraction(tmp_path: Path):
+    """Regression (CodeQL py/bad-tag-filter, high): multi-line ``<!-- ... -->``
+    comments — including multi-line INJECT_ACTIVITY markers — must be stripped
+    document-wide, so their Cyrillic content never leaks into extracted prose.
+    The previous per-line ``<!--.*?-->`` in strip_md_inline silently leaked them."""
+    md = tmp_path / "module.md"
+    md.write_text(
+        "---\ntitle: t\n---\n"
+        "Це справжня навчальна проза для аудиту.\n"
+        "<!-- INJECT_ACTIVITY: act-1\n"
+        "ЦЕЙ ТЕКСТ У БАГАТОРЯДКОВОМУ КОМЕНТАРІ НЕ ПОВИНЕН ВИТІКАТИ\n"
+        "-->\n"
+        "Ще одна навчальна проза для аудиту.\n",
+        encoding="utf-8",
+    )
+    spans = extract_from_module_md(md)
+    blob = " ".join(s.text for s in spans) + " " + " ".join(s.norm for s in spans)
+    assert "ВИТІКАТИ" not in blob and "витікати" not in blob.lower()
+    assert any("навчальна проза" in s.text.lower() for s in spans)

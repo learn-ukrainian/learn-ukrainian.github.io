@@ -121,7 +121,6 @@ def strip_md_inline(line: str) -> str:
     line = re.sub(r"\*([^*]+)\*", r"\1", line)
     line = re.sub(r"`([^`]+)`", r"\1", line)
     line = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", line)
-    line = re.sub(r"<!--.*?-->", "", line)
     return line.strip()
 
 
@@ -159,6 +158,12 @@ def extract_from_module_md(md_path: Path) -> list[ExtractedSpan]:
 
     # Strip YAML frontmatter
     content = re.sub(r"^---\s*\n[\s\S]*?\n---\s*\n?", "", raw, count=1)
+    # Strip HTML comments document-wide with a newline-aware pattern.  A per-line
+    # `<!--.*?-->` (the previous approach in strip_md_inline) silently leaked
+    # MULTI-LINE comments — including multi-line `<!-- INJECT_ACTIVITY: ... -->`
+    # markers — into the extracted prose, skewing overlap results.
+    # (CodeQL py/bad-tag-filter, high severity: "does not match comments with newlines".)
+    content = re.sub(r"<!--[\s\S]*?-->", "", content)
 
     # Fenced UA example blocks (dialogues, examples)
     fence_re = re.compile(r"```(?:text|uk|ua|)\s*\n([\s\S]*?)\n```", re.IGNORECASE)
