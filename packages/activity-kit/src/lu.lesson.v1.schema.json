@@ -122,6 +122,9 @@
         "match-up",
         "text-questions",
         "multiple-choice",
+        "quiz",
+        "mark-the-words",
+        "fill-in",
         "glossary",
         "form-build",
         "error-correction",
@@ -154,6 +157,8 @@
               "cloze",
               "match-up",
               "multiple-choice",
+              "quiz",
+              "fill-in",
               "form-build",
               "error-correction",
               "paraphrase"
@@ -194,6 +199,18 @@
         {
           "if": { "properties": { "type": { "const": "multiple-choice" } } },
           "then": { "properties": { "activity": { "properties": { "type": { "const": "multiple-choice" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "quiz" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "quiz" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "mark-the-words" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "mark-the-words" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "fill-in" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "fill-in" } } } } }
         },
         {
           "if": { "properties": { "type": { "const": "glossary" } } },

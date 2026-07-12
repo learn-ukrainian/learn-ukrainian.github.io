@@ -3,20 +3,14 @@ import { URL } from 'node:url';
 
 const activitySchemaUrl = new URL('../src/lu.activity.v1.schema.json', import.meta.url);
 const lessonSchemaUrl = new URL('../src/lu.lesson.v1.schema.json', import.meta.url);
-const upstreamSchemaUrl = new URL('../../../schemas/activity-v2.schema.json', import.meta.url);
 const activityOutputUrl = new URL('../src/lu.activity.v1.generated.ts', import.meta.url);
 const lessonOutputUrl = new URL('../src/lu.lesson.v1.generated.ts', import.meta.url);
 const activitySchema = JSON.parse(await readFile(activitySchemaUrl, 'utf8'));
 const lessonSchema = JSON.parse(await readFile(lessonSchemaUrl, 'utf8'));
-const upstreamSchema = JSON.parse(await readFile(upstreamSchemaUrl, 'utf8'));
 
 function dereferenceActivity(reference) {
   const [url, fragment = ''] = reference.split('#');
-  const document = !url || url === activitySchema.$id
-    ? activitySchema
-    : url === upstreamSchema.$id
-      ? upstreamSchema
-      : null;
+  const document = !url || url === activitySchema.$id ? activitySchema : null;
 
   if (!document || !fragment.startsWith('/')) {
     throw new Error(`Unsupported activity schema reference: ${reference}`);
