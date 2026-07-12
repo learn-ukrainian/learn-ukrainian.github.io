@@ -9,52 +9,7 @@ import ReadingActivity from './components/ReadingActivity';
 import TrueFalse from './components/TrueFalse';
 import type { LuActivityV1 } from './lu.activity.v1.generated';
 
-/**
- * Activity shapes emitted by the activities-b1/activity-v2 pipeline.
- *
- * The public lesson-document envelope has a separately versioned schema, so
- * these source activities intentionally remain a small, explicit union rather
- * than widening LuActivityV1 with unvalidated `unknown` payloads.
- */
-export type ActivitySourceActivity =
-  | {
-    id?: string;
-    type: 'quiz';
-    title?: string;
-    instruction: string;
-    items: Array<{ question: string; options: string[]; correct: number; explanation?: string }>;
-  }
-  | {
-    id?: string;
-    type: 'mark-the-words';
-    title?: string;
-    instruction: string;
-    text: string;
-    target_words: string[];
-    criteria?: string;
-  }
-  | {
-    id?: string;
-    type: 'error-correction';
-    title?: string;
-    instruction: string;
-    items: Array<{
-      sentence: string;
-      error: string;
-      correction: string;
-      options?: string[];
-      explanation?: string;
-    }>;
-  }
-  | {
-    id?: string;
-    type: 'fill-in';
-    title?: string;
-    instruction: string;
-    items: Array<{ sentence: string; answer: string; options?: string[] }>;
-  };
-
-export type ActivityPlayerActivity = LuActivityV1 | ActivitySourceActivity;
+export type ActivityPlayerActivity = LuActivityV1;
 type ActivityPlayerActivityType = ActivityPlayerActivity['type'];
 
 export interface ActivityCompletionEvent {
@@ -125,39 +80,26 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
       )}
       {activity.type === 'quiz' && (
         <Quiz
-          questions={activity.items.map(({ question, options, correct, explanation }) => ({
+          questions={activity.payload.items.map(({ question, options, correct, explanation }) => ({
             question,
             options: options.map((text, index) => ({ text, correct: index === correct })),
             explanation,
           }))}
-          instruction={activity.instruction}
+          instruction={activity.payload.instruction}
           isUkrainian={isUkrainian}
         />
       )}
       {activity.type === 'mark-the-words' && (
         <MarkTheWords isUkrainian={isUkrainian}>
           <MarkTheWordsActivity
-            text={activity.text}
-            correctWords={activity.target_words.flatMap((word) => word.split(/\s+/).filter(Boolean))}
-            instruction={[activity.instruction, activity.criteria].filter(Boolean).join(' ')}
+            text={activity.payload.text}
+            correctWords={activity.payload.target_words.flatMap((word) => word.split(/\s+/).filter(Boolean))}
+            instruction={[activity.payload.instruction, activity.payload.criteria].filter(Boolean).join(' ')}
             isUkrainian={isUkrainian}
           />
         </MarkTheWords>
       )}
-      {activity.type === 'error-correction' && 'items' in activity && (
-        <ErrorCorrection
-          items={activity.items.map(({ sentence, error, correction, options, explanation }) => ({
-            sentence,
-            errorWord: error,
-            correctForm: correction,
-            options: options ?? [],
-            explanation: explanation ?? '',
-          }))}
-          instruction={activity.instruction}
-          isUkrainian={isUkrainian}
-        />
-      )}
-      {activity.type === 'error-correction' && 'payload' in activity && (
+      {activity.type === 'error-correction' && (
         <ErrorCorrection
           items={activity.payload.items.map((sentence, index) => ({
             sentence,
@@ -172,12 +114,12 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
       )}
       {activity.type === 'fill-in' && (
         <FillIn
-          items={activity.items.map(({ sentence, answer, options }) => ({
+          items={activity.payload.items.map(({ sentence, answer, options }) => ({
             sentence: sentence.replace(/\{[^{}]+\}/g, '___'),
             answer,
             options: options ?? [answer],
           }))}
-          instruction={activity.instruction}
+          instruction={activity.payload.instruction}
           isUkrainian={isUkrainian}
         />
       )}
@@ -209,6 +151,20 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
           <aside data-activity-teacher-guidance="text-questions">
             <strong>{isUkrainian ? 'Для обговорення / оцінювання:' : 'For discussion / grading:'}</strong>{' '}
             {activity.answer_key.guidance}
+            {'model_answers' in activity.answer_key && activity.answer_key.model_answers?.length ? (
+              <>
+                {' '}
+                <span data-activity-model-answers="text-questions">
+                  {activity.answer_key.model_answers.join(' · ')}
+                </span>
+              </>
+            ) : null}
+            {'rubric' in activity.answer_key && activity.answer_key.rubric ? (
+              <>
+                {' '}
+                <span data-activity-rubric="text-questions">{activity.answer_key.rubric}</span>
+              </>
+            ) : null}
           </aside>
         </>
       )}
@@ -217,6 +173,8 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
           <EssayResponse
             title={title}
             prompt={activity.payload.prompt}
+            modelAnswer={'model_answer' in activity.answer_key ? activity.answer_key.model_answer : undefined}
+            rubric={'rubric' in activity.answer_key ? activity.answer_key.rubric : undefined}
             activityType="short-writing"
             isUkrainian={isUkrainian}
           />

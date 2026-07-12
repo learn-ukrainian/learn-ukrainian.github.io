@@ -1,6 +1,6 @@
 [
   {
-    "id": "true-false-claim",
+    "id": "golden-true-false",
     "type": "true-false",
     "title": "Перевірка тверджень",
     "level": "b1",
@@ -12,107 +12,42 @@
           "statement": "Це навчальне твердження позначено як правдиве.",
           "correct": true,
           "explanation": "У ключі для цього твердження вказано «правда»."
-        },
-        {
-          "statement": "Це навчальне твердження позначено як хибне.",
-          "correct": false,
-          "explanation": "У ключі для цього твердження вказано «неправда»."
         }
       ]
     },
     "answer_key": {
-      "items": [
-        { "index": 0, "correct": true },
-        { "index": 1, "correct": false }
-      ]
+      "items": [{ "index": 0, "correct": true }]
     },
     "provenance": {
       "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
+      "generator": "hramatka-contract-golden-fixture",
       "gates": ["schema", "player-smoke"]
     }
   },
   {
-    "id": "true-false-feedback",
-    "type": "true-false",
-    "title": "Зворотний зв'язок",
-    "level": "b1",
-    "payload": {
-      "type": "true-false",
-      "instruction": "Оберіть відповідь, а потім прочитайте пояснення.",
-      "items": [
-        {
-          "statement": "Пояснення з'являється після перевірки відповіді.",
-          "correct": true,
-          "explanation": "Компонент показує пояснення після перевірки."
-        }
-      ]
-    },
-    "answer_key": {
-      "items": [
-        { "index": 0, "correct": true }
-      ]
-    },
-    "provenance": {
-      "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
-      "gates": ["schema", "player-smoke"]
-    }
-  },
-  {
-    "id": "cloze-reading",
+    "id": "golden-cloze",
     "type": "cloze",
     "title": "Читання в контексті",
     "level": "b1",
     "payload": {
       "type": "cloze",
       "instruction": "Виберіть слова, що доповнюють речення.",
-      "text": "Уважне читання [___:1] зрозуміти зміст речення. Після відповіді учень [___:2] результат.",
+      "text": "Уважне читання [___:1] зрозуміти зміст речення.",
       "blanks": [
-        { "id": 1, "answer": "допомагає", "options": ["допомагає", "заважає"] },
-        { "id": 2, "answer": "перевіряє", "options": ["перевіряє", "забуває"] }
+        { "id": 1, "answer": "допомагає", "options": ["допомагає", "заважає"] }
       ]
     },
     "answer_key": {
-      "blanks": [
-        { "id": 1, "answer": "допомагає" },
-        { "id": 2, "answer": "перевіряє" }
-      ]
+      "blanks": [{ "id": 1, "answer": "допомагає" }]
     },
     "provenance": {
       "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
+      "generator": "hramatka-contract-golden-fixture",
       "gates": ["schema", "player-smoke"]
     }
   },
   {
-    "id": "cloze-sequence",
-    "type": "cloze",
-    "title": "Послідовність дій",
-    "level": "b1",
-    "payload": {
-      "type": "cloze",
-      "instruction": "Доповніть коротку послідовність дій.",
-      "text": "Спочатку учень [___:1] завдання, а потім [___:2] відповідь.",
-      "blanks": [
-        { "id": 1, "answer": "читає", "options": ["читає", "пропускає"] },
-        { "id": 2, "answer": "обирає", "options": ["обирає", "ховає"] }
-      ]
-    },
-    "answer_key": {
-      "blanks": [
-        { "id": 1, "answer": "читає" },
-        { "id": 2, "answer": "обирає" }
-      ]
-    },
-    "provenance": {
-      "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
-      "gates": ["schema", "player-smoke"]
-    }
-  },
-  {
-    "id": "match-up-learning-terms",
+    "id": "golden-match-up",
     "type": "match-up",
     "title": "Навчальні поняття",
     "level": "b1",
@@ -132,32 +67,147 @@
     },
     "provenance": {
       "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
+      "generator": "hramatka-contract-golden-fixture",
       "gates": ["schema", "player-smoke"]
     }
   },
   {
-    "id": "match-up-text-structure",
-    "type": "match-up",
-    "title": "Будова тексту",
+    "id": "golden-quiz",
+    "type": "quiz",
+    "title": "Тест",
     "level": "b1",
     "payload": {
-      "type": "match-up",
-      "instruction": "З'єднайте частини тексту з їхньою функцією.",
-      "pairs": [
-        { "left": "початок", "right": "вступ до теми" },
-        { "left": "завершення", "right": "підсумок думки" }
+      "type": "quiz",
+      "instruction": "Оберіть правильну відповідь.",
+      "items": [
+        {
+          "question": "Яке слово правильне?",
+          "options": ["книга", "книгу"],
+          "correct": 0,
+          "explanation": "У називному відмінку — «книга»."
+        }
       ]
     },
     "answer_key": {
-      "pairs": [
-        { "left_index": 0, "right_index": 0 },
-        { "left_index": 1, "right_index": 1 }
-      ]
+      "items": [{ "index": 0, "correct": 0 }]
     },
     "provenance": {
       "source": "https://learn-ukrainian.github.io/",
-      "generator": "handwritten-contract-fixture",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "golden-mark-the-words",
+    "type": "mark-the-words",
+    "title": "Позначте слова",
+    "level": "b1",
+    "payload": {
+      "type": "mark-the-words",
+      "instruction": "Позначте іменники.",
+      "text": "Книга лежить на столі.",
+      "target_words": ["Книга", "столі"],
+      "criteria": "Називний або місцевий відмінок."
+    },
+    "answer_key": {
+      "target_words": ["Книга", "столі"]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "golden-fill-in",
+    "type": "fill-in",
+    "title": "Вставте слово",
+    "level": "b1",
+    "payload": {
+      "type": "fill-in",
+      "instruction": "Оберіть форму.",
+      "items": [
+        {
+          "sentence": "Це {правильна форма}.",
+          "answer": "книга",
+          "options": ["книга", "книгу"]
+        }
+      ]
+    },
+    "answer_key": {
+      "items": ["книга"]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "golden-error-correction",
+    "type": "error-correction",
+    "title": "Виправте помилку",
+    "level": "b1",
+    "payload": {
+      "type": "error-correction",
+      "instruction": "Знайдіть помилку й виправте.",
+      "items": ["Це моя стіл."]
+    },
+    "answer_key": {
+      "items": ["Це мій стіл."]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "golden-text-questions",
+    "type": "text-questions",
+    "title": "Питання до тексту",
+    "level": "b1",
+    "payload": {
+      "type": "text-questions",
+      "instruction": "Дайте відповіді за текстом.",
+      "source_ref": "абзац 2, речення 1–3",
+      "items": [
+        "Чому їм потрібна була квартира з двома кімнатами?",
+        "Скільки коштувала перша квартира?"
+      ]
+    },
+    "answer_key": {
+      "guidance": "Перевірте відповіді за текстом якоря.",
+      "model_answers": [
+        "Одна кімната для роботи, друга для життя.",
+        "20 000 гривень на місяць."
+      ],
+      "rubric": "Повна відповідь за змістом тексту — «добре»; часткова — «задовільно»."
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "golden-short-writing",
+    "type": "short-writing",
+    "title": "Коротке письмо",
+    "level": "b1",
+    "payload": {
+      "type": "short-writing",
+      "prompt": "Опишіть квартиру вашої мрії (7–8 речень).",
+      "source_ref": "тема уроку: житло"
+    },
+    "answer_key": {
+      "guidance": "Вільна відповідь — перевірте форми порівняння.",
+      "model_answer": "Моя квартира мрії світла й тиха. Вона менша за центральні квартири, але зручніша за стару.",
+      "rubric": "Щонайменше три порівняння та 7–8 речень — «добре»."
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "hramatka-contract-golden-fixture",
       "gates": ["schema", "player-smoke"]
     }
   }

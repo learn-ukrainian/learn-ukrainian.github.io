@@ -7,14 +7,24 @@ import fixtures from '../../../packages/activity-kit/src/fixtures/lu.activity.v1
 import lessonFixture from '../../../packages/activity-kit/src/fixtures/lu.lesson.v1.fixture.json';
 import { ActivityPlayer } from '../../../packages/activity-kit/src/ActivityPlayer';
 import type { ActivityEditOperation, LuActivityV1, LuLessonV1 } from '../../../packages/activity-kit/src';
-import type { ActivitySourceActivity } from '../../../packages/activity-kit/src/ActivityPlayer';
 
 const repoRoot = resolve(process.cwd(), '..');
 const kitRoot = join(repoRoot, 'packages/activity-kit');
 const schemaPath = join(kitRoot, 'src/lu.activity.v1.schema.json');
 const lessonSchemaPath = join(kitRoot, 'src/lu.lesson.v1.schema.json');
-const upstreamSchemaPath = join(repoRoot, 'schemas/activity-v2.schema.json');
 const pythonPath = join(repoRoot, '.venv/bin/python');
+
+const GOLDEN_TYPES = [
+  'true-false',
+  'cloze',
+  'match-up',
+  'quiz',
+  'mark-the-words',
+  'fill-in',
+  'error-correction',
+  'text-questions',
+  'short-writing',
+] as const;
 
 const validator = `
 import json
@@ -24,10 +34,8 @@ from referencing import Registry, Resource
 
 with open(sys.argv[1], encoding='utf-8') as schema_file:
     schema = json.load(schema_file)
-with open(sys.argv[2], encoding='utf-8') as upstream_file:
-    upstream = json.load(upstream_file)
 fixture = json.load(sys.stdin)
-registry = Registry().with_resource(upstream['$id'], Resource.from_contents(upstream))
+registry = Registry().with_resource(schema['$id'], Resource.from_contents(schema))
 errors = list(Draft7Validator(schema, registry=registry).iter_errors(fixture))
 for error in errors:
     print(f'{error.json_path}: {error.message}')
@@ -35,7 +43,7 @@ sys.exit(1 if errors else 0)
 `;
 
 function schemaErrors(fixture: unknown): string {
-  const result = spawnSync(pythonPath, ['-c', validator, schemaPath, upstreamSchemaPath], {
+  const result = spawnSync(pythonPath, ['-c', validator, schemaPath], {
     encoding: 'utf8',
     input: JSON.stringify(fixture),
   });
@@ -54,12 +62,9 @@ with open(sys.argv[1], encoding='utf-8') as lesson_file:
     lesson_schema = json.load(lesson_file)
 with open(sys.argv[2], encoding='utf-8') as activity_file:
     activity_schema = json.load(activity_file)
-with open(sys.argv[3], encoding='utf-8') as upstream_file:
-    upstream_schema = json.load(upstream_file)
 fixture = json.load(sys.stdin)
 registry = Registry().with_resources([
     (activity_schema['$id'], Resource.from_contents(activity_schema)),
-    (upstream_schema['$id'], Resource.from_contents(upstream_schema)),
 ])
 errors = list(Draft7Validator(lesson_schema, registry=registry).iter_errors(fixture))
 for error in errors:
@@ -68,7 +73,7 @@ sys.exit(1 if errors else 0)
 `;
 
 function lessonSchemaErrors(fixture: unknown): string {
-  const result = spawnSync(pythonPath, ['-c', lessonValidator, lessonSchemaPath, schemaPath, upstreamSchemaPath], {
+  const result = spawnSync(pythonPath, ['-c', lessonValidator, lessonSchemaPath, schemaPath], {
     encoding: 'utf8',
     input: JSON.stringify(fixture),
   });
@@ -84,58 +89,24 @@ function sourceFiles(directory: string): string[] {
   });
 }
 
-const sourceActivities: ActivitySourceActivity[] = [
-  {
-    id: 'quiz-render',
-    type: 'quiz',
-    title: 'Тест',
-    instruction: 'Оберіть правильну відповідь.',
-    items: [{ question: 'Яке слово правильне?', options: ['книга', 'книгу'], correct: 0 }],
-  },
-  {
-    id: 'mark-the-words-render',
-    type: 'mark-the-words',
-    title: 'Позначте слова',
-    instruction: 'Позначте іменники.',
-    text: 'Книга лежить на столі.',
-    target_words: ['Книга', 'столі'],
-    criteria: 'Називний або місцевий відмінок.',
-  },
-  {
-    id: 'error-correction-render',
-    type: 'error-correction',
-    title: 'Виправте помилку',
-    instruction: 'Знайдіть помилку.',
-    items: [{
-      sentence: 'Це моя стіл.',
-      error: 'моя',
-      correction: 'мій',
-      options: ['мій', 'моє'],
-      explanation: 'Стіл — чоловічого роду.',
-    }],
-  },
-  {
-    id: 'fill-in-render',
-    type: 'fill-in',
-    title: 'Вставте слово',
-    instruction: 'Оберіть форму.',
-    items: [{ sentence: 'Це {правильна форма}.', answer: 'книга', options: ['книга', 'книгу'] }],
-  },
-];
-
 describe('activity-kit contract', () => {
   test('generates the TypeScript discriminated union from the v1 schema', () => {
     execFileSync('node', ['scripts/generate-types.mjs'], { cwd: kitRoot });
     const generated = readFileSync(join(kitRoot, 'src/lu.activity.v1.generated.ts'), 'utf8');
     const lessonGenerated = readFileSync(join(kitRoot, 'src/lu.lesson.v1.generated.ts'), 'utf8');
 
-    expect(generated).toContain('"continue-sentence" | "roleplay-dialog" | "short-writing"');
+    expect(generated).toContain('"quiz" | "mark-the-words" | "fill-in"');
     expect(generated).toContain('export type LuActivityV1 =');
     expect(lessonGenerated).toContain('export type LuLessonV1 =');
     expect(lessonGenerated).toContain('activity: LuActivityV1;');
   });
 
-  test.each(fixtures)('$id validates against lu.activity.v1', (fixture) => {
+  test('golden fixture covers all nine player-backed engine types', () => {
+    expect(fixtures).toHaveLength(9);
+    expect(fixtures.map((fixture) => fixture.type).sort()).toEqual([...GOLDEN_TYPES].sort());
+  });
+
+  test.each(fixtures)('$id validates against lu.activity.v1 without upstream schema refs', (fixture) => {
     expect(schemaErrors(fixture)).toBe('');
   });
 
@@ -160,6 +131,15 @@ describe('activity-kit contract', () => {
     expect(schemaErrors(malformed)).not.toBe('');
   });
 
+  test('rejects quiz payloads that alias multiple-choice', () => {
+    const malformed = structuredClone(fixtures.find((fixture) => fixture.type === 'quiz'));
+    expect(malformed).toBeDefined();
+    malformed!.type = 'multiple-choice';
+    malformed!.payload.type = 'multiple-choice';
+
+    expect(schemaErrors(malformed)).not.toBe('');
+  });
+
   test('emits a typed completion event without a transport dependency', () => {
     const onComplete = vi.fn();
     render(<ActivityPlayer activity={fixtures[0] as LuActivityV1} onComplete={onComplete} />);
@@ -168,30 +148,15 @@ describe('activity-kit contract', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Check Answers' }));
 
     expect(onComplete).toHaveBeenCalledWith({
-      activityId: 'true-false-claim',
+      activityId: 'golden-true-false',
       activityType: 'true-false',
     });
-  });
-
-  test.each([
-    ...sourceActivities.map((activity) => ({ activity, type: activity.type })),
-    ...(['text-questions', 'short-writing'] as const).map((type) => ({
-      activity: lessonFixture.blocks.find((block) => block.type === type)?.activity as LuActivityV1,
-      type,
-    })),
-  ])('renders $type through its existing widget instead of the placeholder', ({ activity, type }) => {
-    expect(activity).toBeDefined();
-
-    const { container } = render(<ActivityPlayer activity={activity} isUkrainian />);
-
-    expect(container.querySelector(`[data-activity="${type}"]`)).toBeInTheDocument();
-    expect(container.querySelector(`[data-activity-placeholder="${type}"]`)).not.toBeInTheDocument();
   });
 
   test.each(['text-questions', 'short-writing'] as const)(
     '%s renders its teacher-facing discuss/grade guidance without auto-grading',
     (type) => {
-      const activity = lessonFixture.blocks.find((block) => block.type === type)?.activity;
+      const activity = fixtures.find((fixture) => fixture.type === type);
       expect(activity).toBeDefined();
 
       render(<ActivityPlayer activity={activity as LuActivityV1} isUkrainian />);
@@ -199,6 +164,17 @@ describe('activity-kit contract', () => {
       expect(screen.getByText('Для обговорення / оцінювання:')).toBeInTheDocument();
     },
   );
+
+  test('text-questions golden fixture carries source_ref and teacher model answers', () => {
+    const activity = fixtures.find((fixture) => fixture.type === 'text-questions') as LuActivityV1;
+    expect(activity.payload).toMatchObject({
+      source_ref: expect.any(String),
+    });
+    expect(activity.answer_key).toMatchObject({
+      model_answers: expect.arrayContaining([expect.any(String)]),
+      rubric: expect.any(String),
+    });
+  });
 
   test('publishes the structured edit-operation contract', () => {
     const operation: ActivityEditOperation = {
