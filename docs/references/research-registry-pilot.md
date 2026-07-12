@@ -72,9 +72,10 @@ full-coverage 30-day monitor sample, lifecycle was 3 total records: 1 adopted,
 was 1 of 3 (0.3333); dead consumers were 0. Discovery status was enabled for this
 local operational measurement.
 
-The separate live surfaced-to-consumed measurement was complete (`partial:
-false`): 1 surfaced pair, 1 consumed pair, 2 consumed events, 0 pending, and
-0 surfaced-but-never-consumed pairs. The sole observed record ID was
+The separate live surfaced-to-consumed measurement was a point-in-time
+`2026-07-12` measurement and was complete (`partial: false`): 1 surfaced pair,
+1 consumed pair, 2 consumed events, 0 pending, and 0 surfaced-but-never-consumed
+pairs. The sole observed record ID was
 `unlp-2026-cefr-assessment`. This report intentionally excludes task IDs, event
 rows, prompts, paths, source contents, and raw telemetry.
 

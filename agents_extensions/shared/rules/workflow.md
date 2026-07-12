@@ -32,6 +32,9 @@ curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
 curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed
 curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+# Known functional role only: replace `quality` with the assigned role.
+curl -s 'http://localhost:8765/api/knowledge/cold-start?role=quality'  # role-scoped pointers
+# Generic or genuinely role-unknown session: skip the role-scoped request; remain pointer-free.
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 ```
 
