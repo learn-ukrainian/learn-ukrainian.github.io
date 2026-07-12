@@ -1,5 +1,5 @@
 {
-  "fingerprint": "cd721446ea6fd42ee75d3b4b0e462e4c4e380f082de82e0080859cbea365a69d",
+  "fingerprint": "2a237972606346211ea918f4c124bfe3e5499168d0f42d7b9e930d39a0395275",
   "inputs": {
     "lexicon_code": [
       {
@@ -119,6 +119,10 @@
         "sha256": "637382e13911a75e82b1c737ae734234838dc157f4416dabc6663a7bd90c859a"
       },
       {
+        "path": "scripts/lexicon/miyklas_relation_miner.py",
+        "sha256": "e3d459ad56d03e8821a46d5de26f8245501ae13ad536442c6734965107ffbae7"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },
@@ -159,6 +163,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 38
+    "lexicon_code_files": 39
   }
 }
