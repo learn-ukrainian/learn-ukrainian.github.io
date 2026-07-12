@@ -44,6 +44,14 @@ build_excludes() {
     echo "$args"
 }
 
+build_shared_skill_overlay_excludes() {
+    local shared_skill
+    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+        [[ -d "$shared_skill" ]] || continue
+        echo "--exclude=/skills/$(basename "$shared_skill")/"
+    done
+}
+
 remove_claude_autoload_rules() {
     local p
     for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
@@ -81,6 +89,20 @@ check_orphans() {
     return 0
 }
 
+check_shared_skill_collisions() {
+    local shared_skill skill_name
+    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+        [[ -d "$shared_skill" ]] || continue
+        skill_name="$(basename "$shared_skill")"
+        if [[ -e "gemini_extensions/skills/$skill_name" ]]; then
+            echo "  ⚠️  shared/Gemini skill collision: $skill_name"
+            echo "     Keep one canonical source; rename or remove the provider-specific duplicate."
+            return 1
+        fi
+    done
+    return 0
+}
+
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
@@ -90,8 +112,9 @@ check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXT
 # is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
-check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
+check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS" "gemini_extensions → .gemini" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
+check_shared_skill_collisions || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
     echo "❌ Deploy aborted: undeclared orphan paths would be deleted."
@@ -127,11 +150,18 @@ diff_dirs() {
     # Use diff -rq for a brief summary; ignore .DS_Store and declared orphan
     # paths (they'd always show as "Only in <dst>..." noise)
     local diff_args=(-rq --exclude='.DS_Store')
+    local normalized
     for p in $orphans; do
         # Strip trailing slash for diff --exclude
-        diff_args+=(--exclude="${p%/}")
-        if [[ "$p" == */* ]]; then
-            diff_args+=(--exclude="${p##*/}")
+        normalized="${p%/}"
+        # A subtree declaration such as skills/* must exclude the subtree
+        # root. Passing its basename ("*") to diff would mask every path.
+        if [[ "$normalized" == */\* ]]; then
+            normalized="${normalized%/\*}"
+        fi
+        diff_args+=(--exclude="$normalized")
+        if [[ "$normalized" == */* ]]; then
+            diff_args+=(--exclude="${normalized##*/}")
         fi
     done
     local diff_out
@@ -182,6 +212,32 @@ diff_overlay_files() {
     fi
 }
 
+diff_shared_skill_overlays() {
+    local shared_skill skill_name
+    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+        [[ -d "$shared_skill" ]] || continue
+        skill_name="$(basename "$shared_skill")"
+        diff_dirs \
+            "$shared_skill" \
+            ".gemini/skills/$skill_name" \
+            "$shared_skill → .gemini/skills/$skill_name" \
+            ""
+    done
+}
+
+diff_gemini_skill_owners() {
+    local deployed_skill skill_name
+    [[ -d .gemini/skills ]] || return 0
+    for deployed_skill in .gemini/skills/*; do
+        [[ -d "$deployed_skill" ]] || continue
+        skill_name="$(basename "$deployed_skill")"
+        if [[ ! -d "$SHARED_EXTENSIONS/skills/$skill_name" && ! -d "gemini_extensions/skills/$skill_name" ]]; then
+            echo "  .gemini/skills: stale unowned skill '$skill_name' (will be removed)"
+            has_changes=true
+        fi
+    done
+}
+
 diff_dirs \
     "$SHARED_EXTENSIONS" \
     ".claude" \
@@ -194,7 +250,9 @@ diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
 fi
-diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini" "$ORPHAN_PATHS_GEMINI"
+diff_overlay_files "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
+diff_shared_skill_overlays
+diff_gemini_skill_owners
 diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules → .gemini/rules" ""
 echo ""
 
@@ -230,7 +288,16 @@ fi
 mkdir -p .agents
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_GEMINI") gemini_extensions/ .gemini/
+rsync -av --delete \
+    $(build_excludes "$ORPHAN_PATHS_GEMINI") \
+    $(build_shared_skill_overlay_excludes) \
+    gemini_extensions/ .gemini/
+for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+    [[ -d "$shared_skill" ]] || continue
+    skill_name="$(basename "$shared_skill")"
+    mkdir -p ".gemini/skills/$skill_name"
+    rsync -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
+done
 rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 echo "Deploy complete."

@@ -61,8 +61,7 @@ def _copy_repo_subset(target: Path) -> None:
     bin_dir.mkdir(parents=True, exist_ok=True)
     python_wrapper = bin_dir / "python"
     python_wrapper.write_text(
-        "#!/usr/bin/env bash\n"
-        f"exec {shlex.quote(str(PROJECT_PYTHON))} \"$@\"\n",
+        f'#!/usr/bin/env bash\nexec {shlex.quote(str(PROJECT_PYTHON))} "$@"\n',
         encoding="utf-8",
     )
     python_wrapper.chmod(0o755)
@@ -107,8 +106,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
 
     check_result = _run(repo, CHECK_SCRIPT)
     assert check_result.returncode == 0, (
-        "drift check failed after fresh deploy:\n"
-        f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
+        f"drift check failed after fresh deploy:\nstdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
     assert (repo / CODEX_HOOK_TARGET).exists()
     assert (repo / CODEX_HOOKS_CONFIG).exists()
@@ -117,9 +115,9 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     ).read_text(encoding="utf-8")
     assert (repo / ".codex" / "memory" / "MEMORY.md").exists()
     assert (repo / ".gemini/config.yaml").exists()
-    deployed_claude_rules = sorted(
-        path.name for path in (repo / ".claude" / "rules").glob("*.md")
-    )
+    assert (repo / ".gemini/skills/final-review/SKILL.md").exists()
+    assert (repo / ".gemini/skills/post-build-review/SKILL.md").exists()
+    deployed_claude_rules = sorted(path.name for path in (repo / ".claude" / "rules").glob("*.md"))
     assert deployed_claude_rules == sorted(CLAUDE_RULE_FILES)
     for filename in UNSCOPED_RULE_FILES:
         assert not (repo / ".claude" / "rules" / filename).exists()
@@ -132,8 +130,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         ["diff", "-rq", "agents_extensions/shared/hooks", ".codex/hooks"],
     )
     assert codex_hooks_diff.returncode == 0, (
-        "Codex hooks drift after fresh deploy:\n"
-        f"stdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
+        f"Codex hooks drift after fresh deploy:\nstdout: {codex_hooks_diff.stdout}\nstderr: {codex_hooks_diff.stderr}"
     )
 
 
@@ -258,6 +255,102 @@ def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
     assert check_result.returncode != 0
     assert "Deploy-script drift between agents_extensions/codex and .codex" in combined_output
     assert "Missing deployed overlay file: .codex/hooks.json" in combined_output
+
+
+def test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills(
+    tmp_path: Path,
+) -> None:
+    """Shared skills overlay into Gemini without replacing Gemini-only skills."""
+    repo = _init_checkout(tmp_path)
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, deploy_result.stderr
+
+    shared = repo / ".gemini" / "skills" / "post-build-review" / "SKILL.md"
+    provider = repo / ".gemini" / "skills" / "final-review" / "SKILL.md"
+    assert shared.exists()
+    assert provider.exists()
+
+    unauthorized = repo / ".gemini" / "unauthorized-target-file.txt"
+    unauthorized.write_text("not source-owned\n", encoding="utf-8")
+    unauthorized_check = _run(repo, CHECK_SCRIPT)
+    unauthorized_output = f"{unauthorized_check.stdout}\n{unauthorized_check.stderr}"
+    assert unauthorized_check.returncode != 0
+    assert "Unowned deployed Gemini file" in unauthorized_output
+    assert "unauthorized-target-file.txt" in unauthorized_output
+    unauthorized.unlink()
+
+    shared.write_text(shared.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
+    check_result = _run(repo, CHECK_SCRIPT)
+    combined_output = f"{check_result.stdout}\n{check_result.stderr}"
+    assert check_result.returncode != 0
+    assert ("agents_extensions/shared/skills/post-build-review and .gemini/skills/post-build-review") in combined_output
+
+    shutil.copy2(
+        repo / "agents_extensions" / "shared" / "skills" / "post-build-review" / "SKILL.md",
+        shared,
+    )
+    provider.write_text(provider.read_text(encoding="utf-8") + "\n# provider drift\n", encoding="utf-8")
+    provider_check = _run(repo, CHECK_SCRIPT)
+    provider_output = f"{provider_check.stdout}\n{provider_check.stderr}"
+    assert provider_check.returncode != 0
+    assert ("gemini_extensions/skills/final-review and .gemini/skills/final-review") in provider_output
+    assert "SKILL.md" in provider_output
+
+    provider_source = repo / "gemini_extensions" / "skills" / "final-review" / "SKILL.md"
+    provider_source.write_text(
+        provider_source.read_text(encoding="utf-8") + "\n# provider source update\n",
+        encoding="utf-8",
+    )
+    redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert redeploy.returncode == 0, redeploy.stderr
+    assert "deleting skills/post-build-review" not in redeploy.stdout
+    assert shared.exists()
+
+    stale = shared.parent / "stale-resource.txt"
+    stale.write_text("stale shared mirror file\n", encoding="utf-8")
+    stale_redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert stale_redeploy.returncode == 0, stale_redeploy.stderr
+    assert not stale.exists()
+
+    shutil.rmtree(repo / "agents_extensions" / "shared" / "skills" / "post-build-review")
+    for mirror in (".claude/skills", ".agent/skills", ".agents/skills", ".codex/skills"):
+        shutil.rmtree(repo / mirror / "post-build-review", ignore_errors=True)
+    removed_redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert removed_redeploy.returncode == 0, removed_redeploy.stderr
+    assert not shared.parent.exists()
+    assert provider.exists()
+
+
+def test_gemini_shared_skill_exclusion_does_not_mask_root_drift(tmp_path: Path) -> None:
+    """The skills/* overlay exclusion must not become diff's match-all '*'."""
+    repo = _init_checkout(tmp_path)
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, deploy_result.stderr
+
+    settings = repo / ".gemini" / "settings.json"
+    settings.write_text(
+        settings.read_text(encoding="utf-8") + "\n",
+        encoding="utf-8",
+    )
+
+    check_result = _run(repo, CHECK_SCRIPT)
+    combined_output = f"{check_result.stdout}\n{check_result.stderr}"
+    assert check_result.returncode != 0
+    assert "Deploy-script drift between gemini_extensions and .gemini" in combined_output
+    assert "settings.json" in combined_output
+
+
+def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None:
+    """A provider-specific duplicate cannot shadow the canonical shared skill."""
+    repo = _init_checkout(tmp_path)
+    duplicate = repo / "gemini_extensions" / "skills" / "post-build-review" / "SKILL.md"
+    duplicate.parent.mkdir(parents=True)
+    duplicate.write_text("provider duplicate\n", encoding="utf-8")
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
+    assert deploy_result.returncode != 0
+    assert "shared/Gemini skill collision: post-build-review" in combined_output
 
 
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:

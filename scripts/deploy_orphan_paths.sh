@@ -58,6 +58,12 @@ CODEX_OVERLAY_PATHS="hooks.json memory"
 #        It disables GitHub PR reviews while preserving local Gemini CLI tooling.
 ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/"
 
+# Shared skills overlay into .gemini/skills. Gemini-specific skills remain
+# sourced from gemini_extensions/skills; shared skill names are overlaid after
+# that sync. The glob is a preflight/diff exclusion only and MUST NOT be passed
+# to the gemini_extensions rsync --exclude list.
+GEMINI_SHARED_SKILL_OVERLAY_PATHS="skills/*"
+
 # --- deploy-owned: Claude autoload excludes (checker mirrors for .claude drift) ---
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into the system
 # prompt. These always-load rules are served by the Monitor API and must not be
