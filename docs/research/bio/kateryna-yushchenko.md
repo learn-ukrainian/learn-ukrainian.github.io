@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ T1; uacomputing.com T2; + corroboration)
 - [x] Oppression mechanism is specific (1937 НКВС arrest of both parents; 1965 publication ban)
-- [x] ≥2 primary-source quotes (memoir «Дочка "ворога народу"»)
+- [N/A] No primary-source quotation is approved; see §4.
 - [x] Cross-track links verified present via `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -54,21 +54,13 @@
 
 **Примітка про мову видань:** значну частину наукових праць опубліковано російською — нормативна вимога радянського академічного видавництва, а не вибір авторки; це сам по собі є слідом русифікації науки.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-**Quote 1 — мемуари «Дочка "ворога народу". Спогади»:**
-
-> Мені було 17 років, і я свято вірила словам Сталіна — «син за батька не відповідає».
-
-Контекст: фраза фіксує момент, коли державний терор зруйнував родину дитини, яка ще вірила офіційним гаслам. Педагогічно безцінна для теми «розрив між пропагандою й репресивною практикою». [Primary: мемуари К. Ющенко; доступ через ukrainky.com.ua — пряму архівну сторінку оригіналу не звірено]
-
-**Quote 2 — мемуари «Дочка "ворога народу". Спогади» (про роки в Самарканді):**
-
-> Я не пропускала жодної лекції, читала і перечитувала підручники, розв'язувала всі задачі… І так було всі три роки… Але я завжди пам'ятала своїх батьків і таку далеку від Самарканда Україну.
-
-Контекст: показує, як інтелектуальна дисципліна стала формою виживання й внутрішнього спротиву для «дочки ворога народу», і водночас — її свідому прив'язаність до України на засланні-евакуації. [Primary: мемуари К. Ющенко; доступ через ukrainky.com.ua — пряму архівну сторінку оригіналу не звірено]
-
-> Verify-нотатка: `mcp__sources__verify_quote` охоплює лише літературний корпус (Шевченко й ін.), тож цитати науковиці перевірити цим інструментом неможливо. Подаю їх із прямим посиланням на джерело й чесним маркуванням, що оригінальну архівну URL мемуарів не звірено цієї сесії.
+No personal quotation is approved for the module. The memoir excerpts were
+available only through a secondary popular article, without a directly checked
+edition, page, or archive locator. The repression of the family and the study
+years may be paraphrased from the authoritative and institutional sources;
+verbatim memoir language requires the primary text.
 
 ## 5. Language register
 
@@ -110,10 +102,13 @@
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** портрет К. Л. Ющенко використано в інфобоксі україномовної Вікіпедії та на сторінці uacomputing.com — ліцензію слід підтвердити на Wikimedia Commons перед використанням (точну назву файлу не звірено, тому не вигадую її тут).
-- **Backup candidates:** ілюстрації Інституту кібернетики ім. В. М. Глушкова НАН України; кадри з науково-популярних матеріалів (24 Канал, dou.ua) — лише як ліди, з перевіркою прав.
-- **If no PD/CC portrait exists:** запасний варіант — фото ЕОМ «Київ» / МЕСМ (історична обчислювальна техніка) як контекстне зображення.
-- **Era-appropriate context image:** обкладинка підручника «Елементи програмування» (1957); світлина МЕСМ у Феофанії.
+- **Approved candidate:** `File:Kateryna Lohvynivna Yushchenko.jpg` on
+  Wikimedia Commons. The exact file depicts the computer scientist, credits
+  Samoylen, and is licensed CC BY-SA 3.0:
+  <https://commons.wikimedia.org/wiki/File:Kateryna_Lohvynivna_Yushchenko.jpg>.
+- The approval applies only to that file with attribution and share-alike
+  compliance. It does not apply to photographs of the former first lady with
+  the same name, book covers, machines, or institutional illustrations.
 
 ## 10. Sources used
 

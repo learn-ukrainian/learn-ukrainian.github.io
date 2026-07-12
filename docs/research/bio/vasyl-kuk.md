@@ -13,7 +13,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ т.5; ЕСУ т.16; Українська музична енциклопедія; Політична енциклопедія)
 - [x] Oppression mechanism is specific (dated capture, named recruited agent, prison number, family repression)
-- [x] ≥2 primary-source quotes (1960 «Відкритий лист» closing — contested; 2007 last-interview statement — authentic)
+- [N/A] No primary-source quotation is approved; see §4.
 - [x] Cross-track links: every "Existing" path verified against `origin/main` plan inventory on 2026-06-04
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -59,23 +59,13 @@ Kuk was a military-political organiser and an underground publicist/historian. S
 - `1970s–1980s` — essays on the composer **Артем Ведель**; `1990s` — biographical essays on Bandera and Shukhevych. [T3: uk.wikipedia; T2: Українська музична енциклопедія, т. 2]
 - `2001` — *Українське державотворення. Акт 30 червня 1941 року*, a fundamental document collection. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-> Kuk is not a literary author; his documentary voice is in OUN/UPA documents, his publicism, the 1960 letter, and his late interviews. The two quotes below are deliberately paired to expose the central tension of his life, with provenance flagged. (The literary-corpus `verify_quote` check does not apply.)
-
-**Quote 1 — closing of the «Відкритий лист» (1960), CONTESTED document:**
-
-> «Друзі! Не зв'язуйтеся ні з якою діяльністю проти нашого народу, не дозволяйте себе далі обманювати і використовувати в чужих для вас самих і вашого народу інтересах. Усю свою діяльність в еміграції спрямовуйте на те, щоб не закривати собі шлях на батьківщину.»
-
-The end of the open letter in which Kuk — while a Soviet prisoner — recognised Soviet power in Ukraine, renounced and condemned OUN/UPA aims and methods, and urged the émigré organisations to stop the struggle. **This is presented as a contested, possibly coerced document, not as a settled confession** (§6). Pedagogically it is the hardest, most important Kuk text: it forces learners to weigh capitulation, coercion, and survival. [Primary document, 1960; text via T3: uk.wikipedia; status contested — read with §6]
-
-**Quote 2 — last interview (2007), AUTHENTIC late-life voice:**
-
-> «Ми перемогли, в нас з'явилася держава, тепер треба її будувати, а не партизанити.»
-
-Spoken in his final interview, in independent Ukraine — he frames the entire armed struggle as having reached its goal in the 1991 statehood, which now must be *built*, not continued by force. Set against Quote 1, it shows a man whose lodestar was statehood over perpetual insurgency. (In the same interview: «УПА — єдина з усіх сил європейського антифашистського опору, яка вела бойові дії проти нацистів без іноземної допомоги», and the title line «У мене немає орденів».) [Last interview, 2007 («Газета по-київськи»), via T5: Історична правда / rozmova reprint; authentic, attested]
-
-**Honest gap (§4 + §10):** the «Відкритий лист» is quoted from the uk.wikipedia transcription, not from the archival original; the 2007 interview lines are from a reputable reprint of a since-defunct newspaper. Both are labelled accordingly.
+No personal quotation is approved for the module. The accessible versions of
+the 1960 open letter and the 2007 interview are mediated transcriptions without
+an archival file-and-folio or directly checked original publication. Their
+existence, date, audience, and contested reception may be discussed as facts;
+verbatim wording requires direct inspection of the primary document.
 
 ## 5. Language register
 
@@ -139,12 +129,12 @@ Spoken in his final interview, in independent Ukraine — he frames the entire a
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **«Vasyl Kuk»** holds underground-era and late-life photographs; verify the license on each **file page** (wartime photos may be PD-by-age; 2000s photos need a specific tag). [Commons category: `Vasyl Kuk`]
-- **Backup candidates:**
-  - The Красне monument (unveiled 12 September 2010) — context image, verify rights.
-  - Укрпошта/commemorative materials marking his anniversary — verify PD/rights.
-- **Context image (use with care):** a rights-clear facsimile page of the 1960 «Відкритий лист» would powerfully illustrate §6 and the source-criticism lesson.
-- **If no rights-clear portrait clears review:** fall back to a PD interwar OUN-era group photo with clear licensing.
+- **Approved candidate:** `File:Vasyl Kuk.jpg` on Wikimedia Commons.
+  The file page identifies the subject and licenses the photograph under the
+  GNU Free Documentation License 1.2 or later:
+  <https://commons.wikimedia.org/wiki/File:Vasyl_Kuk.jpg>.
+- The approval applies only to this file and requires the attribution and
+  licence notice stated on its Commons page. No other portrait is approved.
 
 ## 10. Sources used
 

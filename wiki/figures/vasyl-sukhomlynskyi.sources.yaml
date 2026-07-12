@@ -1,56 +1,16 @@
-# Source registry for wiki/figures/vasyl-sukhomlynskyi.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Короткий зміст'
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID=
+  type: external
+  title: Сухомлинський Василь Олександрович
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID=
 - id: S2
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Основний-зміст-Психологічний-фундамент-гуманістичної-педагогіки
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Основний зміст > Психологічний фундамент гуманістичної педагогіки'
-- id: S3
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Основний-зміст-Подолання-однобічності-та-складність-психіки-дитини
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Основний зміст > Подолання однобічності та складність психіки дитини'
-- id: S4
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Основний-зміст-Задачний-підхід-та-суб-єктність-учня
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Основний зміст > Задачний підхід та суб''єктність учня'
-- id: S5
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1008
-  type: textbook
-  title: Освіта. Наука. Література
-  page: 43
-  grade: 11
-- id: S6
-  file: wikipedia/Костюк Григорій Силович
-  type: wikipedia
-  title: Костюк Григорій Силович
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D1%81%D1%82%D1%8E%D0%BA%20%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%96%D0%B9%20%D0%A1%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87
-- id: S7
-  file: 9-klas-ukrajinska-mova-voron-2017_s5113
-  type: textbook
-  title: І. Ознайомтесь із пам’яткою «Як працювати над переказом із творчим
-  page: 125
-  grade: 9
-- id: S8
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Деколонізаційна перспектива'
-- id: S9
-  file: ukrainian_wiki/vasyl-sukhomlynskyi_Біографія-Василь-Сухомлинський-та-психологічні-основи-педагогіки-серця-Основний-зміст-Педагогічний-такт-як-етичний-імператив
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки серця»'
-  section_path: 'Біографія: Василь Сухомлинський та психологічні основи «педагогіки
-    серця» > Основний зміст > Педагогічний такт як етичний імператив'
+  file: https://commons.wikimedia.org/wiki/File:Sukhomlinsky-grave.jpg
+  type: external
+  title: Sukhomlynskyi grave memorial — attribution-only image
+  url: https://commons.wikimedia.org/wiki/File:Sukhomlinsky-grave.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Sukhomlinsky-grave.jpg
+    license: Attribution only
+    attribution: Anna Loboda

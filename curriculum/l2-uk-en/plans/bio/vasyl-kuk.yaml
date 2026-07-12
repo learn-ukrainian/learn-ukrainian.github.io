@@ -78,15 +78,23 @@ persona:
   role: Прокурор на суді історії, що ставить незручні питання і вимагає доказів, а не віри.
   voice: Inquisitorial Analyst
 phase: BIO.4
+readings_contract_version: 2
 readings:
-- clearance: public
-  language: uk
-  rationale: Енциклопедичний життєпис останнього Головнокомандувача УПА
-  role: Primary biography
+- title: Кук Василь Степанович
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-51093
-  title: Кук Василь Степанович
-  type: biography
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-51093
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти перевірену хронологію підпільної діяльності, арешту й пізнього
+    життя Василя Кука та відокремити факти від радянських і героїзувальних
+    інтерпретацій.
 references:
 - title: '"Останній командир УПА. Життя і боротьба Василя Кука"'
   author: Аліна Понипаляк

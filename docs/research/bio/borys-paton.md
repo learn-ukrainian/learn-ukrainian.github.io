@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (НАН України некролог; Інститут електрозварювання; Українська дипломатична енциклопедія; ВУЕ)
 - [N/A → reframed] "Oppression mechanism" — Paton was the **scientific establishment**, decorated by the USSR and independent Ukraine alike, not a repression victim. §2 is reframed as an honest anti-hagiography (the brief's explicit ask: gerontocracy, the Sakharov letter, post-1991 brain drain), NOT a "celebratory read."
-- [x] ≥2 primary-source quotes (recorded speech / interviews of the figure — two pro-science statements + one anti-decommunisation statement, the last load-bearing for §6)
+- [N/A] No primary-source quotation is approved; see §4.
 - [x] Cross-track links: every "Existing" path verified with `test -e`
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -52,21 +52,13 @@
 - **The "Патонівський маневр" (1960s).** As academy president he built NANU's **own instrument-manufacturing base**, partly insulating it from import shocks; associated big-science projects include the **УТР-2 radio telescope**, the **У-240 isochronous cyclotron**, and the research vessel **«Михайло Ломоносов»**. [T3: uk.wikipedia]
 - **Scale of output:** **over 1000 publications, ~20 monographs, 400+ inventions/patents**; chief editor of «Автоматическая сварка» and the «Вісник НАН України». [T3: uk.wikipedia — Наукова і адміністративна діяльність]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-**Quote 1 — his scientific-organisational credo (recorded interview):**
-
-> «У науково-технічній, науково-організаційній і громадсько-політичній діяльності я завжди прагнув бути активним, творчим і конструктивним.»
-
-A compact self-summary of the organiser-of-science identity. [T5: Урядовий кур'єр — interview "Борис Патон: «Я завжди прагнув бути активним, творчим і конструктивним»"]
-
-**Quote 2 — on the value and fragility of Ukrainian science (recorded statement):**
-
-> «Україні після багатьох років економічної стагнації та соціального занепаду знов буде потрібна сильна власна наука.»
-
-Pedagogically valuable *and* quietly damning: in his own words Paton concedes the "years of economic stagnation and social decline" that coincided with his own long presidency — useful for teaching the gap between prestige and outcomes. [T3: uk.wikipedia, attributing the statement to Paton]
-
-**Quote 3 (load-bearing for §6 — recorded speech, the anti-hagiographic register):** asked in 2019 about decommunisation, Paton said he viewed it **«повністю негативно»** and insisted **«це дійсно Велика вітчизняна війна.»** This is his own voice endorsing the Soviet memory frame against Ukraine's decommunisation laws — essential context for any honest module. [T3: uk.wikipedia, quoting the 2019 Inter documentary «Борис Патон. Людина майбутнього»]
+No personal quotation is approved for the module. Interview headlines,
+Wikipedia attributions, and documentary transcriptions do not provide a stable
+timestamped or paginated primary locator. Paton's documented positions may be
+paraphrased with attribution; verbatim language requires the original recording
+or publication.
 
 ## 5. Language register
 
@@ -112,11 +104,12 @@ Pedagogically valuable *and* quietly damning: in his own words Paton concedes th
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Borys Paton"** holds official portraits; many are state-issued (NANU/government) — verify the specific **file page** licence (Ukrainian government works and freedom-of-panorama for the bust may apply; do not assume PD-by-age, as he died in 2020).
-- **Backup candidates:**
-  - Укрпошта stamp **«100 років Борису Патону» (27 November 2018)** — check postal-issue rights.
-  - The **bronze bust of Paton in Kyiv (1982, sculptor О. Скобліков)** beside the National Museum of Natural History — freedom-of-panorama candidate.
-- **Context image:** a photo of the **«Вулкан»** space-welding apparatus / Союз-6 (1969) — strong §3 illustration if rights-clear.
+- **Approved candidate:** `File:Boris_Paton.jpg` on Wikimedia Commons.
+  The file page identifies Borys Paton, credits Kremlin.ru, and records
+  CC BY 3.0 / CC BY 4.0 licensing:
+  <https://commons.wikimedia.org/wiki/File:Boris_Paton.jpg>.
+- The approval applies only to this file with the stated attribution. No stamp,
+  sculpture, apparatus photograph, or other portrait is approved here.
 
 ## 10. Sources used
 

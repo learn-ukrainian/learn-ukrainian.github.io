@@ -86,16 +86,22 @@ persona:
   role: Модератор дискусії про складну спадщину радянської епохи, що уникає чорно-білих оцінок та показує еволюцію митця
   voice: Nuanced-Literary-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: "Довідкове гасло ЕСУ; воно не замінює читання роману «Собор», але дає стабільну біографічну рамку для розмови про фронтовий досвід, офіційну кар'єру і пізню моральну позицію письменника."
-  clearance: "link-only"
+- title: Гончар Олесь
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-30828
   language: uk
-  learner_task: "Ознайомитися з біографією, звернувши особливу увагу на історію написання та заборони роману «Собор»."
-  role: "primary_bio"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/article-30828"
-  title: "Гончар Олесь Терентійович"
-  type: "biography"
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-30828
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Простежити біографічну й творчу еволюцію Олеся Гончара та виписати окремо
+    факти про роман «Собор», офіційні посади й пізню громадянську діяльність.
 references:
 - title: Гончар Олесь Терентійович
   note: Загальна біографія, ключові дати та події

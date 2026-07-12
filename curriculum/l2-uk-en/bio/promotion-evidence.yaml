@@ -1591,3 +1591,139 @@ entries:
       reviewer_family: mixed
       date: 2026-07-09
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
+  vasyl-kuk:
+    dossier_grounding: &cohort1_review
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://commons.wikimedia.org/wiki/File:Vasyl_Kuk.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  borys-paton:
+    dossier_grounding: *cohort1_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      disposition: link-only-approved
+    wiki_grounding: *cohort1_review
+    wiki_quote_verification: *cohort1_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://commons.wikimedia.org/wiki/File:Boris_Paton.jpg
+      disposition: approved
+    cohort_promotion: *cohort1_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  oles-honchar:
+    dossier_grounding: *cohort1_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      disposition: link-only-approved
+    wiki_grounding: *cohort1_review
+    wiki_quote_verification: *cohort1_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://commons.wikimedia.org/wiki/File:Олесь_Гончар.jpg
+      disposition: approved
+    cohort_promotion: *cohort1_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  vasyl-sukhomlynskyi:
+    dossier_grounding: *cohort1_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      disposition: link-only-approved
+    wiki_grounding: *cohort1_review
+    wiki_quote_verification: *cohort1_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://commons.wikimedia.org/wiki/File:Sukhomlinsky-grave.jpg
+      disposition: approved
+    cohort_promotion: *cohort1_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  kateryna-yushchenko:
+    dossier_grounding: *cohort1_review
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      disposition: link-only-approved
+    wiki_grounding: *cohort1_review
+    wiki_quote_verification: *cohort1_review
+    image_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://commons.wikimedia.org/wiki/File:Kateryna_Lohvynivna_Yushchenko.jpg
+      disposition: approved
+    cohort_promotion: *cohort1_review
+    hold:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-12
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4952897970
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.

@@ -79,16 +79,22 @@ persona:
   role: Колишній співробітник Інституту електрозварювання, що бачив і розквіт, і застій, і намагається об'єктивно оцінити спадщину свого керівника
   voice: Paton-Era-Insider
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: "Довідкове гасло ЕСУ; для семінару потрібно зіставити інституційну спадщину Патона з питаннями радянської науки та пострадянської трансформації НАН України."
-  clearance: "link-only"
+- title: Патон Борис Євгенович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-878439
   language: uk
-  learner_task: "Прочитати розділи про наукову діяльність та керівництво Академією наук, звернути увагу на період після 1991 року."
-  role: "primary_bio"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/article-878439"
-  title: "Патон Борис Євгенович"
-  type: "biography"
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-878439
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Зіставити наукові досягнення Бориса Патона з його тривалим керівництвом
+    Академією та позначити, де джерело подає факт, а де потрібна окрема оцінка.
 references:
 - title: Borys Paton
   note: Compiled biography from NAS of Ukraine sources, interviews, and academic publications

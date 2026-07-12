@@ -43,15 +43,17 @@ This is an indirect-oppression dossier: unlike Block E prisoners, Honchar was no
 - `1987` — *Далекі вогнища*, novella; ESU says it reflects the Holodomor theme.
 - `1991` — *Чим живемо*, publicistic/literary-critical collection.
 
-## 4. Primary-source quotes
+## 4. Quotations and primary-text limit
 
-> "Собори душ своїх бережіть, друзі..."
+No quotation is approved for this module packet. The dossier does not preserve
+the corpus record, edition, page, or diary-volume locator needed to audit the
+earlier excerpts. The novel and diaries may be discussed by title and theme;
+verbatim text requires a fresh, durable source-verification record.
 
-Source: *Собор* (1968), verified through `mcp__sources.verify_quote` and `mcp__sources.search_literary` against `ukrlib-honchar`. This line is the novel's teachable ethical formula: historical architecture becomes inner moral architecture.
-
-> "Мова - це всі глибинні пласти..."
-
-Source: Honchar diary/publicistic quote as reproduced by Vogue UA from *Щоденники*. The wording is used here only as a short excerpt; it anchors Honchar's later cultural defense of language.
+This restriction is intentionally narrow: it does not erase the documented
+publication history or critical reception of *Собор*. It only prevents a
+secondary transmission from being presented as an exact, located primary-text
+quotation in learner-facing material.
 
 ## 5. Language register
 
@@ -95,10 +97,11 @@ Source: Honchar diary/publicistic quote as reproduced by Vogue UA from *Щоде
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** IEU "Image - Oles Honchar"; verify license and donor terms.
-- **Backup candidates:** Wikimedia Commons Honchar portraits; ESU article image; permissions required.
-- **If no PD/CC portrait exists:** Use no portrait until rights are verified; avoid recent copyrighted press portraits.
-- **Era-appropriate context image:** Rights-cleared image of a Ukrainian cathedral/industrial-steppe setting only if tied to *Собор* pedagogy and not misleadingly presented as the novel's cathedral.
+- **Approved candidate:** `File:Олесь Гончар.jpg` on Wikimedia Commons.
+  The exact file page identifies Honchar and carries the `PD-Ukraine` status:
+  <https://commons.wikimedia.org/wiki/File:Олесь_Гончар.jpg>.
+- The approval applies only to that file. No recent press portrait, monument,
+  building photograph, or book cover is approved by this evidence.
 
 ## 10. Sources used
 

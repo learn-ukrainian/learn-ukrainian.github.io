@@ -42,17 +42,12 @@ The "Pavlysh method" should therefore be described as a school culture rather th
 
 His children's stories are not incidental either. The short tales made the method portable: a teacher could use a brief story about nature, kindness, shame, or responsibility as a language exercise and a moral prompt at the same time. Ukrainian primary textbooks still include Sukhomlynskyi texts, which shows how his literary miniature became part of classroom practice rather than remaining only in pedagogical theory. [T3: 2-klas-ukrmova-bolshakova-2019-1]; [T3: 3-klas-ukrainska-mova-savchenko-2020-2].
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotations and primary-text limit
 
-**Quote 1:**
-> «Що було найголовнішим у моєму житті? Не роздумуючи, відповідаю: Любов до дітей.»
-**Source:** *Серце віддаю дітям* (1969).
-**Context:** The defining thesis of his entire life's work, prioritizing empathy over state ideology.
-
-**Quote 2:**
-> «Стан здоров’я у мене зараз такий, що через деякий час два шматочки металу, що залишилися у мене в грудях від війни, просунуться на кілька міліметрів до якоїсь судини недалеко від серця... За час, відпущений мені цими невеликими осколочками, я хочу зробити якомога більше.»
-**Source:** Letters / Autobiographical notes near the end of his life.
-**Context:** Essential for understanding the physical suffering and urgency that drove his prolific output.
+No quotation is approved for the module. The earlier excerpts named a book or
+an unspecified set of letters but supplied neither a checked edition and page
+nor an archival locator. The ideas may be paraphrased from authoritative
+scholarship; verbatim wording requires direct inspection of the source.
 
 ## 5. Language register
 
@@ -95,9 +90,12 @@ For decolonized NPOV, avoid calling him "Russian" because he wrote in a Soviet s
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** State Scientific and Pedagogical Library of Ukraine named after V. Sukhomlynskyi (various CC/PD portraits of him with children in Pavlysh).
-- **Backup candidates:** 2003 commemorative coin by the National Bank of Ukraine.
-- **Era-appropriate context:** Photos of the Pavlysh school during the 1960s.
+- **Approved candidate:** `File:Sukhomlinsky-grave.jpg` on Wikimedia Commons.
+  The exact page identifies the memorial at Sukhomlynskyi's grave and permits
+  reuse for any purpose with attribution to Anna Loboda:
+  <https://commons.wikimedia.org/wiki/File:Sukhomlinsky-grave.jpg>.
+- This is a memorial image, not a lifetime portrait. No portrait, coin, school
+  photograph, or book cover is approved by this evidence.
 
 ## 10. Sources used
 

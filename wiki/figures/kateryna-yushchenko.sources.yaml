@@ -1,54 +1,21 @@
-# Source registry for wiki/figures/kateryna-yushchenko.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Основний-зміст-Вступне-зауваження-щодо-джерельної-бази
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Основний зміст
-    > Вступне зауваження щодо джерельної бази'
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID=
+  type: external
+  title: Ющенко Катерина Логвинівна
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID=
 - id: S2
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Короткий зміст'
+  file: https://uacomputing.com/persons/yushenko/
+  type: external
+  title: Ющенко Катерина Логвинівна
+  url: https://uacomputing.com/persons/yushenko/
 - id: S3
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Деколонізаційна
-    перспектива'
-- id: S4
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Основний-зміст-Повернення-пам-яті-крізь-літературний-простір
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Основний зміст
-    > Повернення пам''яті крізь літературний простір'
-- id: S5
-  file: wikipedia/Жінки в науці
-  type: wikipedia
-  title: Жінки в науці
-  url: https://uk.wikipedia.org/wiki/%D0%96%D1%96%D0%BD%D0%BA%D0%B8%20%D0%B2%20%D0%BD%D0%B0%D1%83%D1%86%D1%96
-- id: S6
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Основний-зміст-Українська-наука-за-межами-імперії-еміграційний-досвід
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Основний зміст
-    > Українська наука за межами імперії: еміграційний досвід'
-- id: S7
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Основний-зміст-Доба-привласнених-геніїв-історичний-фон-української-науки
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Основний зміст
-    > Доба привласнених геніїв: історичний фон української науки'
-- id: S8
-  file: 5-klas-istoriya-schupak-2022_s1941
-  type: textbook
-  title: § 32. На основі вашого життєвого досвіду,
-  page: 184
-  grade: 5
-- id: S9
-  file: wikipedia/Забужко Оксана Стефанівна
-  type: wikipedia
-  title: Забужко Оксана Стефанівна
-  url: https://uk.wikipedia.org/wiki/%D0%97%D0%B0%D0%B1%D1%83%D0%B6%D0%BA%D0%BE%20%D0%9E%D0%BA%D1%81%D0%B0%D0%BD%D0%B0%20%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%D1%96%D0%B2%D0%BD%D0%B0
+  file: https://commons.wikimedia.org/wiki/File:Kateryna_Lohvynivna_Yushchenko.jpg
+  type: external
+  title: Kateryna Lohvynivna Yushchenko — licensed portrait
+  url: https://commons.wikimedia.org/wiki/File:Kateryna_Lohvynivna_Yushchenko.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Kateryna_Lohvynivna_Yushchenko.jpg
+    license: CC BY-SA 3.0
+    attribution: Samoylen

@@ -80,16 +80,22 @@ persona:
   role: 'Модератор дискусії, який ставить питання: Чи можливо було реалізувати гуманістичну педагогіку в СРСР, і якою ціною?'
   voice: Pedagogical-Realist
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: "Довідка ЕІУ дає стислу біографічну рамку; семінар має окремо тримати питання радянського освітнього контексту й гуманістичної педагогіки Сухомлинського."
-  clearance: "link-only"
+- title: Сухомлинський Василь Олександрович
+  source_name: Енциклопедія історії України
+  source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID=
   language: uk
-  learner_task: "Прочитати про створення Павлиської школи та основні принципи гуманістичної педагогіки Сухомлинського."
-  role: "primary_bio"
-  source_name: "Енциклопедія історії України"
-  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID="
-  title: "Сухомлинський Василь Олександрович"
-  type: "biography"
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID=
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Виписати перевірені етапи біографії та праці у Павлиській школі, а потім
+    відокремити педагогічні принципи Сухомлинського від пізніших узагальнень.
 references:
 - title: Vasyl Sukhomlynskyi
   note: Compiled from Wikipedia, educational encyclopedias, and critical analyses of his work.

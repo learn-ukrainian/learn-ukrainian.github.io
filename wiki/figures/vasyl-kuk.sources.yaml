@@ -1,36 +1,16 @@
-# Source registry for wiki/figures/vasyl-kuk.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/vasyl-kuk_Біографія-Василь-Кук-Останній-командир-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Кук: Останній командир'
-  section_path: 'Біографія: Василь Кук: Останній командир > Короткий зміст'
+  file: https://esu.com.ua/article-51093
+  type: external
+  title: Кук Василь Степанович
+  url: https://esu.com.ua/article-51093
 - id: S2
-  file: ukrainian_wiki/vasyl-kuk_Біографія-Василь-Кук-Останній-командир-Основний-зміст-Формування-опору-на-тлі-радянського-терору
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Кук: Останній командир'
-  section_path: 'Біографія: Василь Кук: Останній командир > Основний зміст > Формування
-    опору на тлі радянського терору'
-- id: S3
-  file: 11-klas-istoriya-ukr-galimov-2024_s0798
-  type: textbook
-  title: Розділ І. Україна в повоєнний період
-  page: 14
-  grade: 11
-- id: S4
-  file: ukrainian_wiki/vasyl-kuk_Біографія-Василь-Кук-Останній-командир-Основний-зміст-Постать-Василя-Кука-стратегія-та-тактика-виживання
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Кук: Останній командир'
-  section_path: 'Біографія: Василь Кук: Останній командир > Основний зміст > Постать
-    Василя Кука: стратегія та тактика виживання'
-- id: S5
-  file: ukrainian_wiki/vasyl-kuk_Біографія-Василь-Кук-Останній-командир-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Кук: Останній командир'
-  section_path: 'Біографія: Василь Кук: Останній командир > Деколонізаційна перспектива'
-- id: S6
-  file: wikipedia/Українська повстанська армія
-  type: wikipedia
-  title: Українська повстанська армія
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D1%80%D0%BC%D1%96%D1%8F
+  file: https://commons.wikimedia.org/wiki/File:Vasyl_Kuk.jpg
+  type: external
+  title: Vasyl Kuk — licensed portrait
+  url: https://commons.wikimedia.org/wiki/File:Vasyl_Kuk.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Vasyl_Kuk.jpg
+    license: GNU Free Documentation License 1.2 or later
+    attribution: keymaster; source and licence notice on Wikimedia Commons

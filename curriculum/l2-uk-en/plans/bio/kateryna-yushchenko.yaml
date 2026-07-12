@@ -79,16 +79,22 @@ persona:
   role: Модератор семінару, який розглядає історію технологій не як лінійний прогрес, а як складну мережу ідей, інституцій та політичних контекстів.
   voice: Historian-of-Science
 phase: BIO.13
+readings_contract_version: 2
 readings:
-- caveats: "Довідка ЕІУ фіксує біографічну й наукову рамку; для технічних деталей Адресної мови варто давати додаткове пояснення, а не вимагати фахового читання з програмування."
-  clearance: "link-only"
+- title: Ющенко Катерина Логвинівна
+  source_name: Енциклопедія історії України
+  source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID=
   language: uk
-  learner_task: "Прочитати про життєвий шлях вченої та її ключовий винахід — першу високорівневу мову програмування."
-  role: "primary_bio"
-  source_name: "Енциклопедія історії України"
-  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID="
-  title: "Ющенко Катерина Логвинівна"
-  type: "biography"
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID=
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: >-
+    Скласти хронологію освіти й наукової праці Катерини Ющенко та пояснити
+    значення Адресної мови без перебільшення її місця у світовій історії мов.
 references:
 - title: Kateryna Yushchenko
   note: Compiled research notes on Yushchenko's life, work on Address Language, and context of Soviet cybernetics
