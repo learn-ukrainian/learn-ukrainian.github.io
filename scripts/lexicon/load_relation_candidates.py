@@ -19,6 +19,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -32,8 +34,11 @@ from scripts.lexicon.relation_pairs import (
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_CANDIDATES_DIR = ROOT / "data" / "lexicon"
+DEFAULT_SYNONYM_VERDICTS = DEFAULT_CANDIDATES_DIR / "synonym_pair_verdicts.yaml"
+SYNONYM_VERDICTS_SOURCE = "synonym_verdicts"
 _CURATED_SOURCE_MARKERS = ("wikipedia", "wiktionary", "miyklas", "ukr-mova", "словник", "dictionary", "zno", "grinchyshyn")
 _GENERATED_SOURCE_MARKERS = ("generated", "llm", "model")
+_EXCLUDED_CANDIDATE_FILENAMES = frozenset({"relation_candidates_sample.json"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,6 +135,8 @@ def _normalise_candidate(path: Path, root: dict[str, Any], raw: dict[str, Any]) 
 
 def _iter_candidates(candidates_dir: Path, source_filter: str | None, summary: LoadSummary):
     for path in sorted(candidates_dir.glob("*_candidates_*.json")):
+        if path.name in _EXCLUDED_CANDIDATE_FILENAMES:
+            continue
         root, records = _candidate_records(path)
         for raw in records:
             candidate = _normalise_candidate(path, root, raw)
@@ -143,6 +150,53 @@ def _iter_candidates(candidates_dir: Path, source_filter: str | None, summary: L
                 continue
             summary.accepted += 1
             yield candidate
+
+
+def _approved_synonym_verdict_candidates(verdicts_path: Path) -> list[Candidate]:
+    """Return deterministic corpus rows from reviewed synonym verdicts only.
+
+    The verdict artifact is a human-reviewed approval register, unlike mined
+    ``*_candidates_*.json`` artifacts.  Its rows therefore enter the corpus
+    with an explicit, dedicated provenance rather than inheriting any mining
+    source or candidate status.
+    """
+    try:
+        payload = yaml.safe_load(verdicts_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        raise ValueError(f"Cannot load synonym verdicts: {verdicts_path}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError(f"Synonym verdicts must be a mapping: {verdicts_path}")
+    approved = payload.get("approved")
+    if not isinstance(approved, list):
+        raise ValueError(f"Synonym verdicts approved section must be a list: {verdicts_path}")
+
+    pairs: set[tuple[str, str]] = set()
+    for index, verdict in enumerate(approved):
+        if not isinstance(verdict, dict):
+            raise ValueError(f"Approved synonym verdict {index} must be a mapping: {verdicts_path}")
+        if str(verdict.get("polarity") or "").strip().casefold() != "synonym":
+            continue
+        word_a = normalize_relation_word(verdict.get("a"))
+        word_b = normalize_relation_word(verdict.get("b"))
+        if not word_a or not word_b:
+            raise ValueError(f"Approved synonym verdict {index} lacks a valid lemma: {verdicts_path}")
+        if word_a != word_b:
+            pairs.add(tuple(sorted((word_a, word_b))))
+
+    return [
+        Candidate(
+            relation="synonym",
+            word_a=word_a,
+            word_b=word_b,
+            gloss_a="",
+            gloss_b="",
+            source=SYNONYM_VERDICTS_SOURCE,
+            source_url="",
+            confidence="high",
+            review_status="approved",
+        )
+        for word_a, word_b in sorted(pairs)
+    ]
 
 
 def _existing_row(conn: sqlite3.Connection, candidate: Candidate) -> tuple[str, str, str, str, str] | None:
@@ -236,6 +290,53 @@ def load_candidates(
     return summary, by_source_relation
 
 
+def load_approved_synonym_verdicts(
+    db_path: Path,
+    verdicts_path: Path = DEFAULT_SYNONYM_VERDICTS,
+    *,
+    dry_run: bool = False,
+) -> LoadSummary:
+    """Import only approved synonym verdicts as durable approved corpus rows.
+
+    This is deliberately separate from mined-candidate ingestion: no candidate
+    row is promoted here, and verdict rows use ``synonym_verdicts`` provenance
+    so their review origin remains visible in rendered manifest sections.
+    """
+    summary = LoadSummary()
+    candidates: list[Candidate] = []
+    for candidate in _approved_synonym_verdict_candidates(verdicts_path):
+        if not (is_exact_vesum_lemma(candidate.word_a) and is_exact_vesum_lemma(candidate.word_b)):
+            summary.skipped_vesum += 1
+            continue
+        summary.accepted += 1
+        candidates.append(candidate)
+    if dry_run:
+        return summary
+
+    conn = sqlite3.connect(db_path)
+    try:
+        ensure_relation_pairs_schema(conn)
+        for candidate in candidates:
+            before = _existing_row(conn, candidate)
+            _upsert(conn, candidate)
+            if before is None:
+                summary.inserted += 1
+            elif before == (
+                candidate.gloss_a,
+                candidate.gloss_b,
+                candidate.source_url,
+                candidate.confidence,
+                candidate.review_status,
+            ):
+                summary.unchanged += 1
+            else:
+                summary.updated += 1
+        conn.commit()
+    finally:
+        conn.close()
+    return summary
+
+
 def _print_summary(summary: LoadSummary, by_source_relation: Counter[tuple[str, str]]) -> None:
     print(
         "relation candidates: "
@@ -251,6 +352,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Load VESUM-gated relation candidate JSON into sources.db.")
     parser.add_argument("--db", type=Path, default=DEFAULT_DB, help="SQLite sources database path.")
     parser.add_argument("--candidates-dir", type=Path, default=DEFAULT_CANDIDATES_DIR, help="Directory containing *_candidates_*.json artifacts.")
+    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Reviewed synonym verdict YAML.")
     parser.add_argument("--source", dest="source_filter", help="Load only records attributed to this source.")
     parser.add_argument("--dry-run", action="store_true", help="Validate and summarize without creating or changing the database.")
     args = parser.parse_args()
@@ -261,6 +363,17 @@ def main() -> int:
         dry_run=args.dry_run,
     )
     _print_summary(summary, by_source_relation)
+    verdict_summary = load_approved_synonym_verdicts(
+        args.db,
+        args.synonym_verdicts,
+        dry_run=args.dry_run,
+    )
+    print(
+        "approved synonym verdicts: "
+        f"accepted={verdict_summary.accepted} inserted={verdict_summary.inserted} "
+        f"updated={verdict_summary.updated} unchanged={verdict_summary.unchanged} "
+        f"skipped_vesum={verdict_summary.skipped_vesum}"
+    )
     return 0
 
 
