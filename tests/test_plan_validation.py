@@ -101,6 +101,74 @@ class TestValidatePlan:
         errors = validate_plan(path, 'b1')
         assert any('word_target under config' in e for e in errors)
 
+    def test_valid_reviewed_size_policy_allows_bio_target_below_config(self, tmp_path):
+        plan = {
+            'module': 'test-module',
+            'level': 'BIO',
+            'title': 'Test Module',
+            'objectives': ['Learn something'],
+            'word_target': 4200,
+            'content_outline': [{'section': 'Intro', 'words': 4200}],
+            'size_policy': {
+                'floor_words': 4200,
+                'recommended_range': [4200, 4600],
+                'ceiling_words': 4800,
+                'basis': 'Bounded chronology with verified primary-source coverage.',
+                'saturation_evidence': 'The dossier exhausts the available dated sources.',
+                'exceptional_justification': 'required_above_ceiling',
+            },
+        }
+
+        errors = validate_plan(self._write_plan(tmp_path, plan), 'bio')
+
+        assert not any('word_target under config' in error for error in errors)
+
+    def test_valid_reviewed_size_policy_is_track_generic(self, tmp_path):
+        plan = {
+            'module': 'test-module',
+            'level': 'B1',
+            'title': 'Test Module',
+            'objectives': ['Learn something'],
+            'word_target': 1000,
+            'content_outline': [{'section': 'Intro', 'words': 1000}],
+            'size_policy': {
+                'floor_words': 1000,
+                'recommended_range': [1000, 1200],
+                'ceiling_words': 1400,
+                'basis': 'Reviewed rebuild with bounded learning work.',
+                'saturation_evidence': 'The accepted examples and practice map are complete.',
+                'exceptional_justification': 'required_above_ceiling',
+            },
+        }
+
+        errors = validate_plan(self._write_plan(tmp_path, plan), 'b1')
+
+        assert not any('word_target under config' in error for error in errors)
+
+    def test_invalid_size_policy_keeps_bio_config_floor_check(self, tmp_path):
+        plan = {
+            'module': 'test-module',
+            'level': 'BIO',
+            'title': 'Test Module',
+            'objectives': ['Learn something'],
+            'word_target': 4200,
+            'content_outline': [{'section': 'Intro', 'words': 4200}],
+            'size_policy': {
+                'floor_words': 4100,
+                'recommended_range': [4100, 4600],
+                'ceiling_words': 4800,
+                'basis': '',
+                'saturation_evidence': '',
+                'exceptional_justification': 'optional',
+            },
+        }
+
+        errors = validate_plan(self._write_plan(tmp_path, plan), 'bio')
+
+        assert 'size_policy.floor_words (4100) must equal word_target (4200).' in errors
+        assert 'size_policy.basis must be a nonempty string.' in errors
+        assert any('word_target under config' in error for error in errors)
+
     def test_missing_outline(self, tmp_path):
         target = get_config_target('b1')
         plan = {

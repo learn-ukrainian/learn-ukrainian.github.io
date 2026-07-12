@@ -29,6 +29,7 @@ import yaml
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from audit.config import get_word_target
+from audit.module_size_policy_audit import validate_size_policy_override
 
 # Tolerance for word_target mismatch
 # Under-target: 5% (plans should not be significantly under)
@@ -100,11 +101,17 @@ def validate_plan(plan_path: Path, level: str) -> list:
     focus = plan.get('focus')
     slug = plan.get('slug', plan_path.stem)
     config_target = get_config_target(level, sequence, focus, slug=slug)
+    size_policy_errors = validate_size_policy_override(plan)
+    errors.extend(size_policy_errors)
+    has_valid_size_policy_override = 'size_policy' in plan and not size_policy_errors
 
     # Check word_target matches config
     if plan_target == 0:
         errors.append(f"Missing word_target (config expects {config_target})")
-    elif plan_target < config_target * (1 - WORD_TARGET_UNDER_TOLERANCE):
+    elif (
+        plan_target < config_target * (1 - WORD_TARGET_UNDER_TOLERANCE)
+        and not has_valid_size_policy_override
+    ):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
         errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 

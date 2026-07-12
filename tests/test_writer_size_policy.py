@@ -109,6 +109,66 @@ def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceilin
     assert "Expansion permission: plan_policy_review_required" in block
 
 
+def test_reviewed_size_policy_override_allows_expansion_below_generic_track_floor(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_size_policy_roots(monkeypatch, tmp_path)
+    plan = {
+        "level": "BIO",
+        "slug": "reviewed-person",
+        "word_target": 4200,
+        "content_outline": [{"section": "Огляд", "words": 4200}],
+        "references": [{"type": "dossier", "path": "docs/research/bio/reviewed-person.md"}],
+        "size_policy": {
+            "floor_words": 4200,
+            "recommended_range": [4200, 4600],
+            "ceiling_words": 4800,
+            "basis": "Bounded chronology with verified primary-source coverage.",
+            "saturation_evidence": "The dossier exhausts the available dated sources.",
+            "exceptional_justification": "required_above_ceiling",
+        },
+    }
+    _write_dossier(tmp_path, "bio", "reviewed-person", 900)
+
+    record = build_size_policy_for_plan(plan, actual_words=4300)
+
+    assert record.status == "explicit_override"
+    assert record.advisory_ceiling == 4800
+    assert record.metrics is not None
+    assert size_policy_allows_auto_expansion(record) is True
+    assert "Review basis:" in render_writer_size_policy(record)
+
+
+def test_invalid_size_policy_override_blocks_writer_expansion(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_size_policy_roots(monkeypatch, tmp_path)
+    plan = {
+        "level": "BIO",
+        "slug": "unreviewed-person",
+        "word_target": 2200,
+        "content_outline": [{"section": "Огляд", "words": 2200}],
+        "size_policy": {
+            "floor_words": 2100,
+            "recommended_range": [2200, 2800],
+            "ceiling_words": 4000,
+            "basis": "",
+            "saturation_evidence": "",
+            "exceptional_justification": "optional",
+        },
+    }
+
+    record = build_size_policy_for_plan(plan, actual_words=2100)
+
+    assert record.status == "invalid_size_policy"
+    assert size_policy_allows_auto_expansion(record) is False
+    block = render_writer_size_policy(record)
+    assert "Expansion permission: blocked_until_size_policy_is_valid" in block
+    assert "must equal word_target" in block
+
+
 def test_size_policy_reports_advisory_padding_diagnostic(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

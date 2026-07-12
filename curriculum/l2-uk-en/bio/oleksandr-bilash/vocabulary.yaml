@@ -1,97 +1,41 @@
 ---
-- lemma: пісенний канон
-  translation: song canon
+- lemma: мелодійна фраза
+  translation: melodic phrase
   pos: noun phrase
-  usage: Пісенний канон складається з творів, які багато разів повертаються до слухача.
-- lemma: культурна пам'ять
-  translation: cultural memory
+  usage: У цьому записі мелодійна фраза завершується разом із синтаксичною межею.
+- lemma: словесний наголос
+  translation: word stress
   pos: noun phrase
-  usage: Культурна пам'ять пояснює, чому пісня живе після своєї епохи.
-- lemma: народнопісенна традиція
-  translation: folk-song tradition
+  usage: Порівняйте словесний наголос із музичним акцентом у двох виконаннях.
+- lemma: виконавська манера
+  translation: performance style
   pos: noun phrase
-  usage: Народнопісенна традиція дала Білашеві інтонаційний ґрунт.
-- lemma: пісенність
-  translation: songfulness
-  pos: noun
-  usage: Пісенність означає природну здатність слова входити в мелодію.
-- lemma: співаність
-  translation: singability
-  pos: noun
-  usage: Співаність робить пісню близькою для голосу, а не лише для нотного тексту.
-- lemma: інтонація
-  translation: intonation
-  pos: noun
-  usage: Інтонація допомагає почути, як слово стає музикою.
-- lemma: композиторська школа
-  translation: compositional training
-  pos: noun phrase
-  usage: Композиторська школа дала Білашеві техніку для роботи з голосом і сценою.
-- lemma: співавторство
-  translation: co-authorship
-  pos: noun
-  usage: Співавторство поета і композитора створює цілісну пісню.
-- lemma: поетична інтонація
-  translation: poetic intonation
-  pos: noun phrase
-  usage: Поетична інтонація визначає, як рядок звучить у мелодії.
-- lemma: велика форма
-  translation: large form
-  pos: noun phrase
-  usage: Велика форма показує Білаша як автора опери й сценічної музики.
-- lemma: радянський контекст
-  translation: Soviet context
-  pos: noun phrase
-  usage: Радянський контекст треба називати прямо, але не зводити до нього всю творчість.
-- lemma: інституційна кар'єра
-  translation: institutional career
-  pos: noun phrase
-  usage: Інституційна кар'єра Білаша пояснює умови сцени, але не замінює аналізу пісень.
-- lemma: переосмислення
-  translation: reinterpretation
-  pos: noun
-  usage: Переосмислення дозволяє сучасній Україні слухати складну спадщину уважно.
-- lemma: тяглість
-  translation: continuity
-  pos: noun
-  usage: Тяглість української пісні видима тоді, коли твір переживає політичну систему.
-- lemma: родинна пам'ять
-  translation: family memory
-  pos: noun phrase
-  usage: Родинна пам'ять робить ліричну пісню близькою багатьом слухачам.
-- lemma: публічне виконання
-  translation: public performance
-  pos: noun phrase
-  usage: Публічне виконання переносить пісню з приватного слуху на сцену.
-- lemma: сентиментальність
-  translation: sentimentality
-  pos: noun
-  usage: Сентиментальність з'являється тоді, коли емоція замінює форму.
-- lemma: гідність
-  translation: dignity
-  pos: noun
-  usage: Українська лірична гідність може бути способом культурної тяглості.
+  usage: Виконавська манера впливає на сприйняття пісні, але не тотожна задуму композитора.
 - lemma: аранжування
   translation: arrangement
   pos: noun
-  usage: Нове аранжування може відкрити слово, яке раніше губилося в пафосі.
-- lemma: виконавська традиція
-  translation: performance tradition
-  pos: noun phrase
-  usage: Виконавська традиція показує, як пісня змінюється між поколіннями.
-- lemma: ювілейний концерт
-  translation: anniversary concert
-  pos: noun phrase
-  usage: Ювілейний концерт може повернути ім'я композитора до сучасної сцени.
-- lemma: шевченківська тема
-  translation: Shevchenko theme
-  pos: noun phrase
-  usage: Шевченківська тема вимагає від композитора історичної відповідальності.
-- lemma: ліричний образ
-  translation: lyrical image
-  pos: noun phrase
-  usage: Ліричний образ у пісні може перейти з приватної пам'яті в спільну.
-- lemma: слухач
-  translation: listener
+  usage: Сучасне аранжування змінює склад супроводу й динаміку, не змінюючи авторства твору.
+- lemma: співавтор
+  translation: co-author
   pos: noun
-  usage: Слухач щоразу вирішує, чи пісня залишається живою.
+  usage: Дмитро Павличко був співавтором «Двох кольорів» і пізніше згадував про рецепцію пісні.
+- lemma: ретроспективний спогад
+  translation: retrospective recollection
+  pos: noun phrase
+  usage: Ретроспективний спогад є цінним джерелом, однак потребує чіткої атрибуції.
+- lemma: межа певності
+  translation: limit of certainty
+  pos: noun phrase
+  usage: Автор назвав межу певності й не переніс висновок про одну пісню на всю біографію.
+- lemma: маркер поступки
+  translation: concessive marker
+  pos: noun phrase
+  usage: Маркер поступки «утім» допомагає врахувати альтернативне пояснення.
+- lemma: атрибуція
+  translation: attribution
+  pos: noun
+  usage: Точна атрибуція «за спогадом Павличка» відділяє свідчення від редакційного висновку.
+- lemma: доказовий висновок
+  translation: evidence-based conclusion
+  pos: noun phrase
+  usage: Доказовий висновок спирається на джерело, слухацьке спостереження та названу межу.
