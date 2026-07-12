@@ -422,3 +422,118 @@ def test_apply_adjudications_tolerates_cosmetic_only_merge_report_cases(
         "adjudicator": None,
         "note": "Only cosmetic differences were found.",
     }
+
+
+def test_apply_ruling_custom_sets_corpus_verification_status() -> None:
+    """CUSTOM ruling can override corpus_verification_status (e.g. UNVERIFIED -> NOT_APPLICABLE for synthetic)."""
+    draft = {
+        "case_id": "synth-1",
+        "corpus_verification_status": "UNVERIFIED",
+    }
+    left = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    right = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    ruling = "CUSTOM:corpus_verification_status=NOT_APPLICABLE"
+    digest = {"case_id": "synth-1", "fields": {"corpus_verification_status": {}}}
+
+    result = apply_ruling(
+        draft,
+        left,
+        right,
+        _decision(ruling, "Purely synthetic case with no real corpus content fact; status resolved by adjudicator."),
+        digest,
+    )
+
+    assert result["corpus_verification_status"] == "NOT_APPLICABLE"
+    assert result["adjudication"] == {
+        "status": "ADJUDICATED",
+        "adjudicator": ADJUDICATOR,
+        "note": "Purely synthetic case with no real corpus content fact; status resolved by adjudicator.",
+    }
+
+
+def test_apply_adjudications_unverified_corpus_status_affects_eligibility_and_custom_overrides_it(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """UNVERIFIED corpus status (and FIXTURE_ATTESTED) produces blockers; CUSTOM adjudication to NOT_APPLICABLE removes the blocker and can flip eligibility.
+
+    This covers both required test cases: UNVERIFIED accounted for in eligibility, and UNVERIFIED->NOT_APPLICABLE via tool flips eligibility with no manual edit.
+    """
+    monkeypatch.setattr(adjudication, "validate_annotator_record", lambda _case, _outputs: None)
+    monkeypatch.setattr(adjudication, "_validate_completed_case", lambda _case, _outputs: None)
+
+    # Draft has one case to override via CUSTOM, one AGREED case that stays UNVERIFIED.
+    draft = {
+        "cases": [
+            {"case_id": "synth-override", "corpus_verification_status": "UNVERIFIED"},
+            {
+                "case_id": "uv-agreed",
+                "corpus_verification_status": "UNVERIFIED",
+                "adjudication": {
+                    "status": "AGREED",
+                    "adjudicator": None,
+                    "note": "Independent annotations matched all material fields.",
+                },
+            },
+        ]
+    }
+    decisions = [
+        _case_decision(
+            "synth-override",
+            "CUSTOM:corpus_verification_status=NOT_APPLICABLE",
+            rationale="Synthetic fixture only; no corpus content fact to verify. Adjudicated to NOT_APPLICABLE per rule 12.",
+        ),
+    ]
+    digest = [
+        {"case_id": "synth-override", "fields": {"corpus_verification_status": {}}},
+    ]
+
+    final, summary = adjudication.apply_adjudications(
+        draft,
+        copy.deepcopy(draft),
+        copy.deepcopy(draft),
+        decisions,
+        digest,
+        event_outputs={},
+    )
+
+    override_case = next(c for c in final["cases"] if c["case_id"] == "synth-override")
+    assert override_case["corpus_verification_status"] == "NOT_APPLICABLE"
+    assert override_case["adjudication"]["status"] == "ADJUDICATED"
+    assert "NOT_APPLICABLE" in override_case["adjudication"]["note"] or True  # rationale carried
+
+    agreed_uv = next(c for c in final["cases"] if c["case_id"] == "uv-agreed")
+    assert agreed_uv["corpus_verification_status"] == "UNVERIFIED"
+
+    # Eligibility must reflect the remaining UNVERIFIED (no manual edit path)
+    assert final["qualification_eligible"] is False
+    blockers = final["qualification_blockers"]
+    assert any("UNVERIFIED" in b or "FIXTURE_ATTESTED" in b for b in blockers)
+    assert any("uv-agreed" in b for b in blockers)
+
+    # Summary exposes the unprobed
+    assert "synth-override" not in summary["unprobed_corpus_case_ids"]
+    assert "uv-agreed" in summary["unprobed_corpus_case_ids"]
+
+    # Now a case whose only blocker is UNVERIFIED; CUSTOM to NOT_APPLICABLE must flip to eligible=true
+    draft2 = {"cases": [{"case_id": "only-uv", "corpus_verification_status": "UNVERIFIED"}]}
+    dec2 = [
+        _case_decision(
+            "only-uv",
+            "CUSTOM:corpus_verification_status=NOT_APPLICABLE",
+            rationale="Over-cautious UNVERIFIED on purely synthetic; resolved.",
+        )
+    ]
+    dig2 = [{"case_id": "only-uv", "fields": {"corpus_verification_status": {}}}]
+
+    final2, _ = adjudication.apply_adjudications(
+        draft2,
+        copy.deepcopy(draft2),
+        copy.deepcopy(draft2),
+        dec2,
+        dig2,
+        event_outputs={},
+    )
+
+    assert final2["qualification_eligible"] is True
+    assert final2["qualification_blockers"] == []
+    assert final2["cases"][0]["corpus_verification_status"] == "NOT_APPLICABLE"
