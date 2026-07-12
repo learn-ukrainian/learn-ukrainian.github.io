@@ -37,6 +37,20 @@ repo hard gates bind.
 
 ---
 
+## Project Research Registry — Orchestrator Duty (binding)
+
+Before every delegated task, classify its functional role, task family, track, and
+owned paths. Pass every known dimension through `--research-role`,
+`--research-task-family`, `--research-track`, and repeatable
+`--research-owned-path`; never infer context from the provider or agent name. A
+genuinely generic or unknown task omits all research flags and remains pointer-free.
+A surfaced pointer is not proof of consumption, so research claimed as used requires
+an attributed record fetch while the task is active. Registry delivery remains
+fail-open, but the classification duty is mandatory. Canonical contract and examples:
+`agents_extensions/shared/rules/workflow.md` § Project Research Registry.
+
+---
+
 ## Best Practices Reference
 
 Detailed standards in `docs/best-practices/`. Read the relevant doc before working in that area.

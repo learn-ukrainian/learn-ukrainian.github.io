@@ -457,22 +457,63 @@ Additional audit guardrails:
 
 ### Agent runtime
 
-`scripts/agent_runtime/` is the universal adapter layer for Claude, Gemini, and Codex CLI invocations. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md).
+`scripts/agent_runtime/` is the universal adapter layer for the dispatchable agent
+lanes. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md). Gemini-family
+work uses AGY; the legacy Gemini CLI route is unsupported.
 
 ### Delegate to background workers
 
 ```bash
 .venv/bin/python scripts/delegate.py dispatch \
-  --agent {codex|gemini|claude} \
+  --agent {codex|claude|agy|grok|grok-build|deepseek|cursor} \
   --task-id <id> \
   --prompt-file <file> \
-  --worktree .worktrees/<agent>-<task-id> \
+  --worktree \
   --mode danger
 ```
 
 Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ai_agent_bridge` channel bridge, `ask-*`).
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
+
+#### Project Research Registry — orchestrator dispatch duty
+
+Before every dispatch, the orchestrator classifies the task by functional role,
+task family, track, and owned paths. Pass every known dimension explicitly; the
+dispatcher never infers research context from the prompt, provider, agent, branch,
+or task ID:
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex \
+  --task-id quality-4952 \
+  --prompt-file docs/dispatch-briefs/quality-4952.md \
+  --worktree \
+  --mode danger \
+  --research-role quality \
+  --research-task-family difficulty-gate \
+  --research-track core \
+  --research-owned-path scripts/audit/text_difficulty.py
+```
+
+`--research-role`, `--research-task-family`, and `--research-track` are
+single-valued; repeat `--research-owned-path` when the task owns multiple paths.
+Matching is conjunctive, so omitting a dimension required by a registry record
+safely produces no pointer. Never invent a value to force a match. If the task is
+genuinely generic or unknown, omit all `--research-*` flags and record that
+classification in the brief or orchestration note.
+
+The worker receives bounded pointers, not record bodies. When it relies on one,
+it fetches `GET /api/knowledge/record/{id}?task=<task-id>` while the delegated
+task is active. This creates attributed consumption evidence in the task state;
+`GET /api/knowledge/monitor?window_days=30` exposes only privacy-safe aggregate
+surface/consumption health. A surfaced pointer is not proof of consumption, and
+workers must not fetch irrelevant records merely to inflate adoption metrics.
+Registry delivery is fail-open when disabled or degraded; task classification
+remains an orchestrator responsibility.
+
+Gemini-family work routes through `--agent agy`; the legacy `gemini` dispatcher
+choice remains compatibility-only and should not be used for new work.
 
 ---
 
@@ -1208,7 +1249,7 @@ When the delegated task may edit files or run git commands:
   --agent codex \
   --task-id issue-1383-smoke \
   --prompt-file /tmp/prompt.md \
-  --worktree .worktrees/codex-issue-1383-smoke \
+  --worktree \
   --mode danger
 ```
 
