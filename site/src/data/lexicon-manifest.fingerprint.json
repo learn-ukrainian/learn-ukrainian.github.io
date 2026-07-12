@@ -1,5 +1,5 @@
 {
-  "fingerprint": "036aabae5f944d3451dceba79ce00299391c6834de9578ae775451aa87c3d9f6",
+  "fingerprint": "cd721446ea6fd42ee75d3b4b0e462e4c4e380f082de82e0080859cbea365a69d",
   "inputs": {
     "lexicon_code": [
       {
@@ -100,7 +100,7 @@
       },
       {
         "path": "scripts/lexicon/load_relation_candidates.py",
-        "sha256": "a5c441ecd45ff470f001c6d430f2968113f94f2ed8465350df444a86d915f5a0"
+        "sha256": "8692cef68914bf9a4c0aa1b5ea5dc65863634f8d5c6039122de4a26f5b803c25"
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
