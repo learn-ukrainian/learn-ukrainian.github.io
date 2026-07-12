@@ -38,10 +38,12 @@ def test_clean_candidate_records_removes_labels_without_losing_valid_terms() -> 
         {"word_a": "фігура", "word_b": "мат"},
         {"word_a": "адвокат", "word_b": "упник"},
         {"word_a": "віла", "word_b": "вілла"},
+        {"word_a": "зять", "word_b": "взять"},
     ]
 
     assert clean_candidate_records(records) == [
         {"word_a": "віла", "word_b": "вілла"},
+        {"word_a": "зять", "word_b": "взять"},
     ]
 
 
@@ -64,5 +66,9 @@ def test_cleaned_artifact_has_no_known_label_or_chopped_headwords() -> None:
     )
     assert any(
         {candidate["word_a"], candidate["word_b"]} == {"віла", "вілла"}
+        for candidate in candidates
+    )
+    assert any(
+        {candidate["word_a"], candidate["word_b"]} == {"зять", "взять"}
         for candidate in candidates
     )
