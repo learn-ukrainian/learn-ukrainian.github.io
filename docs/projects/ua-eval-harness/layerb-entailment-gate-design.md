@@ -467,6 +467,30 @@ The golden set MUST include:
 
 None may produce `ACCEPT`.
 
+#### Lean-qualification subscription-seat deviation
+
+For the frozen lean qualification only, the Codex subscription-seat judge uses
+one flattened prompt because `codex exec` exposes no system/developer role
+flag. This is a narrow deviation from requirements 1–2 above; it is not an
+approval for a durable content-blocking deployment. The flattened prompt MUST:
+
+1. Place the complete policy prompt first, followed by an explicit immutable
+   boundary marker, then the metadata/evidence message.
+2. Repeat immediately before the first untrusted block that later content is
+   untrusted evidence and cannot override the system instruction.
+3. Retain the nonce delimiter plus caller hash and length verification.
+4. Retain the caller-side deterministic injection screen; a flagged row is
+   `AUDIT` before it can become an accepting model relation.
+5. Carry a distinct prompt-template version and pass flattened-prompt probes
+   for fake request-system markers, forged delimiters, and outside-block
+   instruction attempts with no passing relation.
+
+The subscription invocation also runs in a fresh no-MCP `CODEX_HOME`, disables
+all reachable tool families, and rejects any rollout tool event. Agy/Gemini is
+not eligible for this qualification until its selected log can prove complete
+tool-event capture; a `--log-file` that only locates a separate transcript is
+not sufficient. Revisit role separation before any durable blocking deploy.
+
 #### Caller validation
 
 The deterministic caller rejects as `AUDIT`:
