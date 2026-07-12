@@ -77,6 +77,7 @@ from scripts.lexicon.esum_garbled import (
 )
 from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
@@ -1802,8 +1803,6 @@ def _phraseology_definition_body(definition: str, phrase: str) -> str:
 _FRAZEOLOHICHNYI_FTS_AVAILABLE: dict[str, bool] = {}
 _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = False
 
-_ASCII_LOWER_TABLE = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
-
 
 def _db_cache_key(conn: sqlite3.Connection) -> str | None:
     """Stable per-database cache key: the main DB file path, or ``None`` for
@@ -1831,13 +1830,6 @@ def _cache_verdict(cache: dict[str, bool], key: str | None, verdict: bool) -> bo
     if key is not None:
         cache[key] = verdict
     return verdict
-
-
-def _ascii_lower_contains(text: str, needle: str) -> bool:
-    """Replicate SQLite's ASCII-only ``lower()`` + ``LIKE '%needle%'``
-    semantics — the parity predicate for index-accelerated paths (SQLite's
-    ``lower()`` does not fold Cyrillic)."""
-    return needle in text.translate(_ASCII_LOWER_TABLE)
 
 
 def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
@@ -1917,91 +1909,6 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             print(f"Warning: Failed to create/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
         return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
-
-
-_UKRAJINET_INDEX_AVAILABLE: dict[str, bool] = {}
-_UKRAJINET_INDEX_WARN_LOGGED = False
-
-def _populate_ukrajinet_word_index(conn: sqlite3.Connection) -> None:
-    cursor = conn.execute("SELECT id, words FROM ukrajinet")
-    inserts = []
-    for rowid, words_json in cursor:
-        try:
-            words = json.loads(words_json or "[]")
-        except (TypeError, ValueError):
-            continue
-        for candidate in words:
-            normalized = _normalise_synonym(candidate)
-            tokens = re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", normalized)
-            for token in tokens:
-                inserts.append((token, rowid))
-
-    if inserts:
-        conn.executemany(
-            "INSERT INTO ukrajinet_word_index (word_key, rowid) VALUES (?, ?)",
-            inserts
-        )
-
-def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
-    global _UKRAJINET_INDEX_WARN_LOGGED
-    key = _db_cache_key(conn)
-    cached = _UKRAJINET_INDEX_AVAILABLE.get(key)
-    if cached is not None:
-        return cached
-
-    try:
-        cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet'")
-        if not cur.fetchone():
-            return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
-    except sqlite3.Error:
-        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
-
-    try:
-        cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet_word_index'")
-        exists = cur.fetchone() is not None
-    except sqlite3.Error:
-        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
-
-    if exists:
-        try:
-            row = conn.execute("SELECT COUNT(*) FROM ukrajinet_word_index").fetchone()
-            if row and row[0] == 0:
-                if _is_connection_readonly(conn):
-                    if not _UKRAJINET_INDEX_WARN_LOGGED:
-                        print("Warning: ukrajinet_word_index table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
-                        _UKRAJINET_INDEX_WARN_LOGGED = True
-                    return False
-
-                _populate_ukrajinet_word_index(conn)
-            return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, True)
-        except sqlite3.Error as e:
-            if not _UKRAJINET_INDEX_WARN_LOGGED:
-                print(f"Warning: Failed to verify/populate ukrajinet_word_index ({e}). Falling back to LIKE.", file=sys.stderr)
-                _UKRAJINET_INDEX_WARN_LOGGED = True
-            return False
-
-    if _is_connection_readonly(conn):
-        if not _UKRAJINET_INDEX_WARN_LOGGED:
-            print("Warning: ukrajinet_word_index table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
-            _UKRAJINET_INDEX_WARN_LOGGED = True
-        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
-
-    try:
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS ukrajinet_word_index ("
-            "word_key TEXT, rowid INTEGER"
-            ")"
-        )
-        conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_ukrajinet_word_index_key ON ukrajinet_word_index(word_key)"
-        )
-        _populate_ukrajinet_word_index(conn)
-        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, True)
-    except sqlite3.Error as e:
-        if not _UKRAJINET_INDEX_WARN_LOGGED:
-            print(f"Warning: Failed to create/populate ukrajinet_word_index ({e}). Falling back to LIKE.", file=sys.stderr)
-            _UKRAJINET_INDEX_WARN_LOGGED = True
-        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
 
 
 def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int = 3) -> dict[str, Any] | None:
@@ -2629,54 +2536,6 @@ def _synonyms_from_wiktionary(conn: sqlite3.Connection, lemma: str, out: list[st
             _add_candidate(out, seen, lemma, str(candidate))
 
 
-def _synonyms_from_ukrajinet(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
-    use_idx = _ensure_ukrajinet_word_index(conn)
-    for variant in _split_lemma_variants(lemma):
-        needle = variant.casefold()
-        indexed = False
-        cursor = None
-        if use_idx:
-            # Derive the lookup token with the SAME normalizer the index was
-            # built with, so build-time and lookup-time keys can never drift.
-            tokens = re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", _normalise_synonym(variant))
-            if tokens:
-                try:
-                    cursor = conn.execute(
-                        "SELECT words FROM ukrajinet WHERE rowid IN ("
-                        "  SELECT rowid FROM ukrajinet_word_index WHERE word_key = ?"
-                        ")",
-                        (tokens[0],),
-                    )
-                    indexed = True
-                except sqlite3.Error:
-                    cursor = None
-                    indexed = False
-
-        if cursor is None:
-            cursor = conn.execute(
-                "SELECT words FROM ukrajinet WHERE lower(words) LIKE ?",
-                (f"%{needle}%",),
-            )
-
-        rows = cursor.fetchall()
-        for (words_json,) in rows:
-            raw_text = str(words_json or "")
-            # Parity guard: the index folds Cyrillic case (casefold at build
-            # time) but SQLite's lower()+LIKE does not, so the indexed path
-            # can surface rows the fallback never matched. Re-apply the exact
-            # LIKE predicate so both paths emit identical sets.
-            if indexed and not _ascii_lower_contains(raw_text, needle):
-                continue
-            try:
-                words = [str(w).strip() for w in json.loads(words_json or "[]")]
-            except (TypeError, ValueError):
-                continue
-            if not any(_contains_whole_token(_normalise_synonym(word), needle) for word in words):
-                continue
-            for candidate in words:
-                _add_candidate(out, seen, lemma, candidate)
-
-
 def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
     allowed = _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())
     lookup_words = _BALLA_LOOKUPS.get(_lookup_key(lemma), ())
@@ -3173,27 +3032,6 @@ _SYNONYM_ADDITION_CAP = 8
 _ANTONYM_ADDITION_CAP = 8
 _HOMONYM_ADDITION_CAP = 8
 _PARONYM_ADDITION_CAP = 8
-_COATTESTATION_SUM_OR_GRINCHENKO = frozenset({"СУМ-11", "СУМ-20", "Грінченко"})
-_CONTENT_STEM_STOPWORDS = frozenset(
-    {
-        "бути",
-        "весь",
-        "інший",
-        "кожний",
-        "мати",
-        "один",
-        "особа",
-        "певний",
-        "предмет",
-        "річ",
-        "самий",
-        "такий",
-        "тільки",
-        "той",
-        "це",
-        "який",
-    }
-)
 
 
 def _canonical_synonym_term(value: object) -> str | None:
@@ -3338,6 +3176,42 @@ def _manifest_headwords(manifest: dict[str, Any]) -> dict[str, str]:
             if term:
                 headwords.setdefault(term, term)
     return headwords
+
+
+def _manifest_relation_aliases(manifest: dict[str, Any]) -> dict[str, str]:
+    """Resolve manifest form aliases to their canonical lemma via route slugs.
+
+    Relation-pair rows retain their source lemmas, while the rendered manifest
+    must attach them to canonical Atlas pages.  Form entries carry their target
+    route in ``form_of.url_slug``; resolving through that route keeps relation
+    rendering aligned with the Atlas alias contract rather than guessing from
+    a display string.
+    """
+    canonical_by_slug: dict[str, str] = {}
+    entries = [entry for entry in manifest.get("entries", []) if isinstance(entry, dict)]
+    for entry in entries:
+        if entry.get("form_of"):
+            continue
+        lemma = _canonical_synonym_term(entry.get("lemma"))
+        slug = str(entry.get("url_slug") or "").strip()
+        if lemma and slug:
+            canonical_by_slug[slug] = lemma
+
+    aliases: dict[str, str] = {}
+    for entry in entries:
+        alias = _canonical_synonym_term(entry.get("lemma"))
+        if not alias:
+            continue
+        form_of = entry.get("form_of")
+        target: str | None = None
+        if isinstance(form_of, dict):
+            target = canonical_by_slug.get(str(form_of.get("url_slug") or "").strip())
+            target = target or _canonical_synonym_term(form_of.get("lemma"))
+        if target is None:
+            target = _canonical_synonym_term(entry.get("lemma"))
+        if target:
+            aliases[alias] = target
+    return aliases
 
 
 def _definition_pointer_relations_by_headword(
@@ -3809,19 +3683,20 @@ def _corpus_relation_pairs_by_headword(
 ) -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Read VESUM-gated relation-pair corpus facts for Atlas headwords.
 
-    Candidate artifacts are deliberately permissive during the review period,
-    but both recorded lemmas are re-checked here. This makes the Atlas safe if
-    a stale or manually edited corpus row no longer satisfies the exact-lemma
-    contract. Corpus provenance stays separate from legacy dictionary veins.
+    Only explicitly approved corpus rows are eligible for rendering, and both
+    recorded lemmas are re-checked here. This makes the Atlas safe if a stale
+    or manually edited row no longer satisfies the exact-lemma contract.
+    Corpus provenance stays separate from legacy dictionary veins.
     """
     headwords = _manifest_headwords(manifest)
+    aliases = _manifest_relation_aliases(manifest)
     by_headword: dict[str, dict[str, list[dict[str, Any]]]] = {}
     try:
         rows = conn.execute(
             """
             SELECT relation, word_a, word_b, gloss_a, gloss_b, source, source_url
             FROM relation_pairs
-            WHERE review_status IN ('approved', 'candidate')
+            WHERE review_status = 'approved'
             """
         ).fetchall()
     except sqlite3.Error:
@@ -3835,6 +3710,8 @@ def _corpus_relation_pairs_by_headword(
         word_b = _canonical_synonym_term(word_b_raw)
         if not word_a or not word_b or not (_vesum_valid_synonym(word_a) and _vesum_valid_synonym(word_b)):
             continue
+        word_a = aliases.get(word_a, word_a)
+        word_b = aliases.get(word_b, word_b)
         source = f"relation_pairs/{str(source_raw or '').strip()}"
         if source == "relation_pairs/":
             continue
@@ -3880,184 +3757,11 @@ def _corpus_relation_pairs_by_headword(
             for gloss in dict.fromkeys(gloss for gloss in (gloss_a, gloss_b) if gloss):
                 append(word_a, word_a, gloss)
             continue
+        if word_a == word_b:
+            continue
         append(word_a, word_b, gloss_b)
         append(word_b, word_a, gloss_a)
     return by_headword
-
-
-def _ukrajinet_synsets(conn: sqlite3.Connection, lemma: str) -> list[dict[str, Any]]:
-    """Read matching Ukrajinet synsets without creating the optional SQL index."""
-    term = _canonical_synonym_term(lemma)
-    if not term:
-        return []
-    try:
-        columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ukrajinet)").fetchall()}
-        if "words" not in columns:
-            return []
-        synset_field = "synset_id" if "synset_id" in columns else "''"
-        source_field = "source" if "source" in columns else "''"
-        has_index = conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet_word_index'"
-        ).fetchone()
-        if has_index:
-            rows = conn.execute(
-                f"SELECT {synset_field}, words, {source_field} FROM ukrajinet WHERE rowid IN ("
-                "SELECT rowid FROM ukrajinet_word_index WHERE word_key = ?"
-                ")",
-                (term,),
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                f"SELECT {synset_field}, words, {source_field} FROM ukrajinet WHERE words LIKE ?",
-                (f"%{term}%",),
-            ).fetchall()
-    except sqlite3.Error:
-        return []
-
-    synsets: list[dict[str, Any]] = []
-    for synset_id, words_json, source in rows:
-        try:
-            words = [_canonical_synonym_term(word) for word in json.loads(words_json or "[]")]
-        except (TypeError, ValueError):
-            continue
-        words = [word for word in words if word]
-        if term in words:
-            synsets.append(
-                {
-                    "synset_id": str(synset_id or ""),
-                    "words": list(dict.fromkeys(words)),
-                    "source": str(source or "Ukrajinet WordNet"),
-                }
-            )
-    return synsets
-
-
-def _definition_mentions(text: str, candidate: str) -> bool:
-    return _contains_whole_token(_lookup_key(_strip_stress(text)).casefold(), candidate)
-
-
-def _definition_content_stems(text: str, *, excluded: set[str] | None = None) -> set[str]:
-    """Return VESUM-lemmatized, non-generic content stems from a definition."""
-    excluded = excluded or set()
-    stems: set[str] = set()
-    for raw_token in re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", _strip_stress(text).casefold()):
-        token = _canonical_synonym_term(raw_token)
-        if not token or len(token) < 4 or token in _CONTENT_STEM_STOPWORDS or token in excluded:
-            continue
-        for lemma, _pos in _vesum_word_analyses(token):
-            stem = _canonical_synonym_term(lemma)
-            if stem and len(stem) >= 4 and stem not in _CONTENT_STEM_STOPWORDS and stem not in excluded:
-                stems.add(stem)
-    return stems
-
-
-def _coattestation_evidence(
-    conn: sqlite3.Connection,
-    lemma: str,
-    candidate: str,
-    *,
-    has_sum11_flags: bool,
-    cache: dict[str, Any] | None = None,
-) -> dict[str, Any] | None:
-    """Return the required local lexicographic evidence, otherwise fail closed."""
-    lemma_rows = _dictionary_definition_rows(
-        conn,
-        lemma,
-        has_sum11_flags=has_sum11_flags,
-        cache=cache,
-        include_grinchenko=True,
-    )
-    candidate_rows = _dictionary_definition_rows(
-        conn,
-        candidate,
-        has_sum11_flags=has_sum11_flags,
-        include_grinchenko=True,
-    )
-    # Sovietized prose is unsafe as evidence for an auto-emitted WordNet pair.
-    # It remains eligible for vein 1: a lexicographer's pointer is safe even
-    # where the surrounding prose has sovietization_risk=2.
-    lemma_rows = [row for row in lemma_rows if int(row.get("sovietization_risk") or 0) != 2]
-    candidate_rows = [row for row in candidate_rows if int(row.get("sovietization_risk") or 0) != 2]
-
-    for direction, rows, mentioned in (
-        ("lemma→candidate", lemma_rows, candidate),
-        ("candidate→lemma", candidate_rows, _canonical_synonym_term(lemma) or lemma),
-    ):
-        for row in rows:
-            if _definition_mentions(str(row["text"]), mentioned):
-                return {
-                    "kind": "definition_mention",
-                    "dictionary": row["source"],
-                    "direction": direction,
-                }
-
-    excluded_stems = {
-        term
-        for term in (_canonical_synonym_term(lemma), _canonical_synonym_term(candidate))
-        if term
-    }
-    for lemma_row in lemma_rows:
-        if lemma_row["source"] not in _COATTESTATION_SUM_OR_GRINCHENKO:
-            continue
-        lemma_stems = _definition_content_stems(str(lemma_row["text"]), excluded=excluded_stems)
-        if not lemma_stems:
-            continue
-        for candidate_row in candidate_rows:
-            if candidate_row["source"] not in _COATTESTATION_SUM_OR_GRINCHENKO:
-                continue
-            shared = lemma_stems.intersection(
-                _definition_content_stems(str(candidate_row["text"]), excluded=excluded_stems)
-            )
-            if shared:
-                return {
-                    "kind": "shared_content_stem",
-                    "dictionaries": [lemma_row["source"], candidate_row["source"]],
-                    "stem": sorted(shared)[0],
-                }
-    return None
-
-
-def _gated_ukrajinet_relations(
-    conn: sqlite3.Connection,
-    lemma: str,
-    *,
-    has_sum11_flags: bool,
-    cache: dict[str, Any] | None = None,
-) -> list[dict[str, Any]]:
-    """Vein 2: WordNet synsets only after the fail-closed lexical gate."""
-    lemma_term = _canonical_synonym_term(lemma)
-    if not lemma_term or not _vesum_valid_synonym(lemma_term):
-        return []
-    relations: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for synset in _ukrajinet_synsets(conn, lemma_term):
-        for candidate in synset["words"]:
-            if candidate == lemma_term or candidate in seen or not _vesum_valid_synonym(candidate):
-                continue
-            evidence = _coattestation_evidence(
-                conn,
-                lemma_term,
-                candidate,
-                has_sum11_flags=has_sum11_flags,
-                cache=cache,
-            )
-            if not evidence:
-                continue
-            seen.add(candidate)
-            relations.append(
-                {
-                    "item": candidate,
-                    "source": synset["source"],
-                    "pattern": "gated synset",
-                    "vein": 2,
-                    "gate": {
-                        "vesum": "both valid",
-                        "co_attestation": evidence,
-                        "synset_id": synset["synset_id"],
-                    },
-                }
-            )
-    return relations
 
 
 def _relation_source_label(relation: dict[str, Any], item: str) -> str:
@@ -5599,16 +5303,7 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
-    synonym_relations = [*pointer_relations]
-    synonym_relations.extend(
-        _gated_ukrajinet_relations(
-            conn,
-            lemma,
-            has_sum11_flags=has_sum11_flags,
-            cache=slovnyk_cache,
-        )
-    )
-    synonyms = _merge_synonym_relations(synonyms, synonym_relations)
+    synonyms = _merge_synonym_relations(synonyms, pointer_relations)
     if synonyms:
         sections["synonyms"] = synonyms
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
@@ -5749,6 +5444,11 @@ def enrich() -> tuple[int, int]:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     _normalize_manifest_entries(manifest)
     kaikki_lookup = _load_kaikki_lookup()
+    # Reviewed synonym verdicts are first-class corpus facts for the manifest,
+    # not an atlas.db-only projection. This import never promotes mined
+    # candidates: it writes only YAML ``approved`` verdict rows with dedicated
+    # provenance before the read-only enrichment pass.
+    load_approved_synonym_verdicts(SOURCES_DB)
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
     try:
