@@ -91,13 +91,15 @@ interface ChoiceOption {
 
 interface HeritageFeedback {
   kind: 'correct' | 'calque' | 'wrong';
-  text: string;
+  textUk: string;
+  textEn?: string;
   citations?: string[];
 }
 
 interface ClozeFeedback {
   kind: 'correct' | 'case-miss' | 'wrong-word';
-  text: string;
+  textUk: string;
+  textEn?: string;
 }
 
 /** Result of scoring an item, carried until the learner completes/advances it. */
@@ -132,11 +134,102 @@ function makePracticeSessionSeed(): number {
   return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
 }
 
-const RATING_LABELS: Record<PracticeRating, string> = {
-  again: 'Ще раз',
-  hard: 'Важко',
-  good: 'Добре',
-  easy: 'Легко',
+const CASE_GLOSSES: Record<string, string> = {
+  'називний': 'nominative',
+  'родовий': 'genitive',
+  'давальний': 'dative',
+  'знахідний': 'accusative',
+  'орудний': 'instrumental',
+  'місцевий': 'locative',
+  'кличний': 'vocative',
+  'однина': 'singular',
+  'множина': 'plural',
+  'чоловічий': 'masculine',
+  'жіночий': 'feminine',
+  'середній': 'neuter',
+  'рід': 'gender',
+  'відмінок': 'case',
+};
+
+function translateGrammarTerm(ukLabel: string): string {
+  if (!ukLabel) return '';
+  const norm = ukLabel.toLowerCase().trim();
+  const parts = norm.split(/[\s,]+/);
+  
+  if (norm.includes('відмінок')) {
+    const caseName = parts.find(p => p !== 'відмінок' && p !== 'і' && CASE_GLOSSES[p]);
+    const caseEn = caseName ? CASE_GLOSSES[caseName] : '';
+    const otherParts = parts.filter(p => p !== 'відмінок' && p !== caseName).map(p => CASE_GLOSSES[p] || p);
+    if (caseEn) {
+      const caseStr = `${caseEn} case`;
+      return otherParts.length > 0 ? `${caseStr}, ${otherParts.join(', ')}` : caseStr;
+    }
+  }
+
+  if (norm.includes('рід')) {
+    const genderName = parts.find(p => p !== 'рід' && CASE_GLOSSES[p]);
+    const genderEn = genderName ? CASE_GLOSSES[genderName] : '';
+    const otherParts = parts.filter(p => p !== 'рід' && p !== genderName).map(p => CASE_GLOSSES[p] || p);
+    if (genderEn) {
+      const genderStr = `${genderEn} gender`;
+      return otherParts.length > 0 ? `${genderStr}, ${otherParts.join(', ')}` : genderStr;
+    }
+  }
+
+  const translatedParts = parts.map(part => {
+    if (CASE_GLOSSES[part]) return CASE_GLOSSES[part];
+    for (const [uk, en] of Object.entries(CASE_GLOSSES)) {
+      if (part.includes(uk)) return en;
+    }
+    return part;
+  });
+
+  return translatedParts.join(', ');
+}
+
+function translateWeaknessLabel(weakness: WeakArea): string {
+  if (weakness.dimension === 'case') {
+    return translateGrammarTerm(weakness.label);
+  }
+  if (weakness.dimension === 'mode') {
+    const modeMeta = MODE_META[weakness.key as VisiblePracticeModeFilter];
+    return modeMeta ? modeMeta.en : weakness.key;
+  }
+  if (weakness.dimension === 'heritage') {
+    if (weakness.key === 'lexical') return 'lexical heritage';
+    if (weakness.key === 'sense_restricted') return 'sense-restricted';
+  }
+  return weakness.key;
+}
+
+function translateStorageWarning(warning: string | null): { uk: string; en: string } | null {
+  if (!warning) return null;
+  if (warning.includes('переповнене') || warning.includes('SRS_STORAGE_FULL_WARNING')) {
+    return {
+      uk: 'Прогрес не зберігається — сховище переповнене',
+      en: 'Progress not saved — storage is full',
+    };
+  }
+  if (warning.includes('сховище браузера')) {
+    return {
+      uk: 'Прогрес призупинено, доки сховище браузера не стане доступним.',
+      en: 'Progress suspended until browser storage becomes available.',
+    };
+  }
+  if (warning.includes('годинник пристрою')) {
+    return {
+      uk: 'Час повторення може бути неточним: змінився годинник пристрою.',
+      en: 'Review schedule may be inaccurate: device clock changed.',
+    };
+  }
+  return { uk: warning, en: warning };
+}
+
+const RATING_LABELS: Record<PracticeRating, { uk: string; en: string }> = {
+  again: { uk: 'Ще раз', en: 'Again' },
+  hard: { uk: 'Важко', en: 'Hard' },
+  good: { uk: 'Добре', en: 'Good' },
+  easy: { uk: 'Легко', en: 'Easy' },
 };
 
 type VisiblePracticeModeFilter = Extract<
@@ -185,7 +278,9 @@ const MODE_META: Record<
     title: string;
     en: string;
     description: string;
+    descriptionEn: string;
     step: string;
+    stepEn: string;
     accent: 'blue' | 'teal' | 'purple' | 'orange';
   }
 > = {
@@ -193,70 +288,90 @@ const MODE_META: Record<
     title: 'Мікс',
     en: 'Mixed',
     description: 'Чергуйте картки, добір, вибір і пропуски, щоб не звикати до одного типу підказки.',
+    descriptionEn: 'Rotate flashcards, matching, choice, and fill-in-the-blank options to avoid getting used to a single prompt type.',
     step: 'Змішана сесія',
+    stepEn: 'Mixed session',
     accent: 'orange',
   },
   flashcards: {
     title: 'Флешкартки',
     en: 'Flashcards',
     description: 'Картка за карткою з інтервальним повторенням. Згадайте значення, тоді оцініть відповідь.',
+    descriptionEn: 'Card by card with spaced repetition. Recall the meaning, then rate your response.',
     step: 'Розпізнавання',
+    stepEn: 'Recognition',
     accent: 'blue',
   },
   matching: {
     title: 'Добір пар',
     en: 'Matching',
     description: 'З’єднайте українські слова з їхніми значеннями для швидкого закріплення зв’язків.',
+    descriptionEn: 'Connect Ukrainian words with their meanings to quickly reinforce associations.',
     step: 'Зіставлення',
+    stepEn: 'Matching',
     accent: 'teal',
   },
   choice: {
     title: 'Вибір',
     en: 'Choice',
     description: 'Оберіть правильне значення або слово серед близьких варіантів з цієї ж колоди.',
+    descriptionEn: 'Select the correct meaning or word from close alternatives within the same deck.',
     step: 'Перевірка',
+    stepEn: 'Verification',
     accent: 'purple',
   },
   cloze: {
     title: 'Пропуск',
     en: 'Cloze',
     description: 'Впишіть слово у потрібній формі. Відмінок має збігатися з реченням.',
+    descriptionEn: 'Write the word in the correct form. The case must match the sentence.',
     step: 'Відмінювання',
+    stepEn: 'Declension',
     accent: 'orange',
   },
   stress: {
     title: 'Наголос',
     en: 'Stress',
     description: 'Оберіть голосну, на яку падає наголос у слові.',
+    descriptionEn: 'Select the vowel that carries the stress in the word.',
     step: 'Форма слова',
+    stepEn: 'Word Form',
     accent: 'teal',
   },
   classify: {
     title: 'Група',
     en: 'Classify',
     description: 'Визначте граматичну групу слова за даними VESUM.',
+    descriptionEn: 'Determine the grammatical group of the word based on VESUM data.',
     step: 'Морфологія',
+    stepEn: 'Morphology',
     accent: 'purple',
   },
   paradigm: {
     title: 'Форма',
     en: 'Paradigm',
     description: 'Оберіть форму слова для потрібного відмінка й числа.',
+    descriptionEn: 'Select the correct word form for the required case and number.',
     step: 'Парадигма',
+    stepEn: 'Paradigm',
     accent: 'blue',
   },
   synonym: {
     title: 'Синоніми',
     en: 'Synonyms',
     description: 'Доберіть синонім або антонім до українського слова.',
+    descriptionEn: 'Match a synonym or antonym for the Ukrainian word.',
     step: 'Лексика',
+    stepEn: 'Vocabulary',
     accent: 'orange',
   },
   heritage: {
     title: 'Спадщина',
     en: 'Heritage',
     description: 'Оберіть питоме українське слово.',
+    descriptionEn: 'Choose the native Ukrainian word.',
     step: 'Питома лексика',
+    stepEn: 'Native vocabulary',
     accent: 'teal',
   },
 };
@@ -643,11 +758,17 @@ export function nextMatchingPromptIndex(
   return null;
 }
 
-function choicePrompt(selection: PracticeSelection): string {
+function choicePrompt(selection: PracticeSelection): { uk: string; en: string } {
   if (selection.choicePolarity === 'word-to-meaning') {
-    return `Що означає «${selection.lemma.lemma}»?`;
+    return {
+      uk: `Що означає «${selection.lemma.lemma}»?`,
+      en: `What does «${selection.lemma.lemma}» mean?`,
+    };
   }
-  return `Яке слово означає «${glossLabel(selection.lemma)}»?`;
+  return {
+    uk: `Яке слово означає «${glossLabel(selection.lemma)}»?`,
+    en: `Which word means «${glossLabel(selection.lemma)}»?`,
+  };
 }
 
 function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
@@ -656,7 +777,7 @@ function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
   return sets.find((set) => set.setId === selection.classifySetId) ?? sets[0] ?? null;
 }
 
-function drillChoiceOptions(selection: PracticeSelection): ChoiceOption[] | null {
+function drillChoiceOptions(selection: PracticeSelection, showEnglishSubtitles: boolean): ChoiceOption[] | null {
   if (selection.stress) {
     return selection.stress.nuclei.map((nucleus) => ({
       label: nucleus.label,
@@ -666,7 +787,13 @@ function drillChoiceOptions(selection: PracticeSelection): ChoiceOption[] | null
   const selectedSet = classifySet(selection);
   if (selectedSet) {
     return selectedSet.options.map((option) => ({
-      label: option.labelEn ? `${option.labelUk} (${option.labelEn})` : option.labelUk,
+      label: showEnglishSubtitles
+        ? (option.labelEn
+           ? `${option.labelUk} (${option.labelEn})`
+           : (translateGrammarTerm(option.labelUk) !== option.labelUk
+              ? `${option.labelUk} (${translateGrammarTerm(option.labelUk)})`
+              : option.labelUk))
+        : option.labelUk,
       correct: option.value === selectedSet.answer,
     }));
   }
@@ -703,55 +830,66 @@ function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): 
   if (option.correct) {
     return {
       kind: 'correct',
-      text: 'Правильно',
+      textUk: 'Правильно',
+      textEn: 'Correct',
     };
   }
   if (option.kind === 'calque') {
     return {
       kind: 'calque',
-      text: item.rationaleUk ? `⚠️ калька; ${item.rationaleUk}` : '⚠️ калька',
+      textUk: item.rationaleUk ? `⚠️ калька; ${item.rationaleUk}` : '⚠️ калька',
+      textEn: item.rationaleUk && item.rationale ? `⚠️ calque; ${item.rationale}` : '⚠️ calque',
       citations: item.citations,
     };
   }
   return {
     kind: 'wrong',
-    text: 'Ще раз',
+    textUk: 'Ще раз',
+    textEn: 'Again',
   };
 }
 
-function drillChoicePrompt(selection: PracticeSelection): { prompt: string; subtitle: string } | null {
+function drillChoicePrompt(selection: PracticeSelection): { promptUk: string; promptEn: string; subtitleUk: string; subtitleEn?: string } | null {
   if (selection.stress) {
     return {
-      prompt: `Де наголос у слові «${selection.stress.unstressed}»?`,
-      subtitle: 'Оберіть наголошену голосну',
+      promptUk: `Де наголос у слові «${selection.stress.unstressed}»?`,
+      promptEn: `Where is the stress in the word «${selection.stress.unstressed}»?`,
+      subtitleUk: 'Оберіть наголошену голосну',
+      subtitleEn: 'Select the stressed vowel',
     };
   }
   const selectedSet = classifySet(selection);
   if (selectedSet) {
-    const setLabel = selectedSet.setLabelEn
-      ? `${selectedSet.setLabelUk} (${selectedSet.setLabelEn})`
-      : selectedSet.setLabelUk;
+    const setLabelUk = selectedSet.setLabelUk;
+    const setLabelEn = selectedSet.setLabelEn || translateGrammarTerm(setLabelUk);
     return {
-      prompt: `До якої групи належить «${selection.lemma.lemma}»?`,
-      subtitle: setLabel,
+      promptUk: `До якої групи належить «${selection.lemma.lemma}»?`,
+      promptEn: `Which group does «${selection.lemma.lemma}» belong to?`,
+      subtitleUk: setLabelUk,
+      subtitleEn: setLabelEn,
     };
   }
   if (selection.paradigm) {
-    const slot = selection.paradigm.slot.labelEn
-      ? `${selection.paradigm.slot.labelUk} (${selection.paradigm.slot.labelEn})`
-      : selection.paradigm.slot.labelUk;
+    const slotUk = selection.paradigm.slot.labelUk;
+    const slotEn = selection.paradigm.slot.labelEn || translateGrammarTerm(slotUk);
     return {
-      prompt: `Яка форма від «${selection.lemma.lemma}»?`,
-      subtitle: slot,
+      promptUk: `Яка форма від «${selection.lemma.lemma}»?`,
+      promptEn: `Which form is from «${selection.lemma.lemma}»?`,
+      subtitleUk: slotUk,
+      subtitleEn: slotEn,
     };
   }
   if (selection.synonym) {
+    const isAntonym = selection.synonym.polarity === 'antonym';
     return {
-      prompt:
-        selection.synonym.polarity === 'antonym'
-          ? `Оберіть антонім до «${selection.synonym.prompt}»`
-          : `Оберіть синонім до «${selection.synonym.prompt}»`,
-      subtitle: 'Оберіть правильну відповідь',
+      promptUk: isAntonym
+        ? `Оберіть антонім до «${selection.synonym.prompt}»`
+        : `Оберіть синонім до «${selection.synonym.prompt}»`,
+      promptEn: isAntonym
+        ? `Choose an antonym for «${selection.synonym.prompt}»`
+        : `Choose a synonym for «${selection.synonym.prompt}»`,
+      subtitleUk: 'Оберіть правильну відповідь',
+      subtitleEn: 'Select the correct answer',
     };
   }
   return null;
@@ -915,7 +1053,7 @@ function LexiconPracticeIsland({
   const [reviewLog, setReviewLog] = useState<ReviewLogEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState<{ uk: string; en?: string } | null>(null);
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
   const [answerLocked, setAnswerLocked] = useState(false);
@@ -1623,7 +1761,10 @@ function LexiconPracticeIsland({
       })
     ) {
       setFocusWeakness(null);
-      setFeedback('Немає вправ для цього фокуса — колода оновиться після практики');
+      setFeedback({
+        uk: 'Немає вправ для цього фокуса — колода оновиться після практики',
+        en: 'No exercises for this focus — the deck will refresh after practice',
+      });
       clearResumeSnapshot(nextMode);
       setSessionPhase('idle');
       return;
@@ -1631,7 +1772,7 @@ function LexiconPracticeIsland({
     setFocusWeakness(focus);
     // A session is starting for real — drop any stale idle notice (e.g. the empty-focus
     // message) so the active status line reads «Сесія …» cleanly.
-    setFeedback('');
+    setFeedback(null);
     const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
@@ -1793,7 +1934,10 @@ function LexiconPracticeIsland({
       }
       setUnresolvedCardKeys(nextUnresolved);
       setDeferredLemmas(nextDeferred);
-      setFeedback(`${current.lemma.lemma}: ${RATING_LABELS[rating]}`);
+      setFeedback({
+        uk: `${current.lemma.lemma}: ${RATING_LABELS[rating].uk}`,
+        en: `${current.lemma.lemma}: ${RATING_LABELS[rating].en}`,
+      });
     } catch {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     }
@@ -1854,9 +1998,10 @@ function LexiconPracticeIsland({
       : null;
     setAnswerLocked(true);
     setHeritageFeedback(nextHeritageFeedback);
-    setFeedback(
-      option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
-    );
+    setFeedback({
+      uk: option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
+      en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
+    });
     if (option.correct) {
       window.setTimeout(() => {
         setAnswerLocked(false);
@@ -1885,7 +2030,8 @@ function LexiconPracticeIsland({
         : recordReview(selection, 'good');
       setClozeFeedback({
         kind: 'correct',
-        text: `✓ ${cloze.form} (${cloze.caseRule.caseLabel})`,
+        textUk: `✓ ${cloze.form} (${cloze.caseRule.caseLabel})`,
+        textEn: `✓ ${cloze.form} (${translateGrammarTerm(cloze.caseRule.caseLabel)})`,
       });
       setAnswerLocked(true);
       window.setTimeout(() => {
@@ -1903,7 +2049,8 @@ function LexiconPracticeIsland({
       setClozeInput('');
       setClozeFeedback({
         kind: 'case-miss',
-        text: `→ Правильне слово. Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
+        textUk: `→ Правильне слово. Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
+        textEn: `→ Correct word. Now put it in the ${translateGrammarTerm(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
       });
       return;
     }
@@ -1911,7 +2058,11 @@ function LexiconPracticeIsland({
     if (!clozeAttemptRecorded) {
       const outcome = recordReview(selection, 'again');
       setClozeAttemptRecorded(true);
-      setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
+      setClozeFeedback({
+        kind: 'wrong-word',
+        textUk: '✗ Не те слово',
+        textEn: '✗ Not that word',
+      });
       if (source === 'chip') {
         // Wrong chip pick is a wrong answer: dwell rather than auto-advance so the
         // learner can read the correction before «Далі →» / Enter.
@@ -1922,7 +2073,11 @@ function LexiconPracticeIsland({
       return;
     }
 
-    setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
+    setClozeFeedback({
+      kind: 'wrong-word',
+      textUk: '✗ Не те слово',
+      textEn: '✗ Not that word',
+    });
     if (source === 'chip') {
       setAnswerLocked(true);
       const outcome = {
@@ -1961,10 +2116,14 @@ function LexiconPracticeIsland({
   const todayRingStyle = { '--pct': String(todayPct) } as CSSProperties;
   const stageMode: PracticeModeFilter = selection?.mode ?? mode;
   const visibleStageMode = visiblePracticeMode(stageMode);
-  const stageTitle =
+  const stageTitleUk =
     mode === 'mixed' && selection && visibleStageMode !== 'mixed'
       ? `Мікс · ${MODE_META[visibleStageMode].title}`
       : MODE_META[visibleStageMode].title;
+  const stageTitleEn =
+    mode === 'mixed' && selection && visibleStageMode !== 'mixed'
+      ? `Mixed · ${MODE_META[visibleStageMode].en}`
+      : MODE_META[visibleStageMode].en;
   const progressLabel = `${sessionCompleted}/${effectiveSessionTarget()}`;
   const summaryStats: SessionSummaryStats = {
     correct: sessionCorrect,
@@ -1984,17 +2143,50 @@ function LexiconPracticeIsland({
   }
 
   return (
-    <section className="lexicon-practice" aria-label="Практика слів дня">
+    <section className="lexicon-practice" aria-label={showEnglishSubtitles ? "Практика слів дня / Words of the Day Practice" : "Практика слів дня"}>
       <p className="lexicon-practice-status" aria-live="polite">
-        {feedback ||
-          (sessionPhase === 'active'
-            ? `Сесія ${progressLabel}`
-            : sessionPhase === 'summary'
-              ? 'Сесію завершено'
-              : 'Оберіть сесію практики')}
+        {feedback ? (
+          <>
+            <span lang="uk">{feedback.uk}</span>
+            {showEnglishSubtitles && feedback.en ? (
+              <span className="btn-sub" lang="en">/ {feedback.en}</span>
+            ) : null}
+          </>
+        ) : sessionPhase === 'active' ? (
+          <>
+            <span lang="uk">Сесія {progressLabel}</span>
+            {showEnglishSubtitles ? (
+              <span className="btn-sub" lang="en">/ Session {progressLabel}</span>
+            ) : null}
+          </>
+        ) : sessionPhase === 'summary' ? (
+          <>
+            <span lang="uk">Сесію завершено</span>
+            {showEnglishSubtitles ? (
+              <span className="btn-sub" lang="en">/ Session complete</span>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <span lang="uk">Оберіть сесію практики</span>
+            {showEnglishSubtitles ? (
+              <span className="btn-sub" lang="en">/ Select a practice session</span>
+            ) : null}
+          </>
+        )}
       </p>
 
-      {storageWarning && <p className="lexicon-practice-warning">{storageWarning}</p>}
+      {storageWarning && (() => {
+        const warn = translateStorageWarning(storageWarning);
+        return warn ? (
+          <p className="lexicon-practice-warning">
+            <span lang="uk">{warn.uk}</span>
+            {showEnglishSubtitles && warn.en ? (
+              <span className="btn-sub" lang="en">/ {warn.en}</span>
+            ) : null}
+          </p>
+        ) : null;
+      })()}
 
       {focusLookupMiss && (
         <p className="lexicon-practice-warning" role="status" data-testid="practice-lemma-missing">
@@ -2020,16 +2212,18 @@ function LexiconPracticeIsland({
               }}
             >
               <span>
-                🎯 <strong>Фокусне тренування:</strong> «{focusedLemmaId}»
+                🎯 <strong>
+                  <span lang="uk">Фокусне тренування:</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en">/ Focus Practice:</span>
+                  ) : null}
+                </strong> «{focusedLemmaId}»
               </span>
               <button
                 type="button"
                 onClick={clearFocus}
                 style={{
-                  minHeight: '24px',
-                  height: '24px',
-                  lineHeight: '24px',
-                  padding: '0 8px',
+                  padding: '4px 8px',
                   fontSize: '0.8rem',
                   border: '1px solid var(--lu-border)',
                   borderRadius: '4px',
@@ -2038,43 +2232,59 @@ function LexiconPracticeIsland({
                   cursor: 'pointer'
                 }}
               >
-                Скинути фокус ×
+                <span lang="uk">Скинути фокус ×</span>
+                {showEnglishSubtitles ? (
+                  <span lang="en" style={{ marginLeft: '4px', fontSize: '0.9em', opacity: 0.85 }}>
+                    / Clear focus ×
+                  </span>
+                ) : null}
               </button>
             </div>
           )}
-          <div className="lexicon-practice-progress" role="group" aria-label="Сьогоднішній прогрес">
+          <div className="lexicon-practice-progress" role="group" aria-label={showEnglishSubtitles ? "Сьогоднішній прогрес / Today's progress" : "Сьогоднішній прогрес"}>
             <div
               className="pstat streak"
-              aria-label={`${streak.current} ${uaPlural(streak.current, {
-                one: 'день',
-                few: 'дні',
-                many: 'днів',
-              })} поспіль`}
+              aria-label={showEnglishSubtitles ? `${streak.current} поспіль / ${streak.current} day streak` : `${streak.current} поспіль`}
             >
               <span className="val">🔥 {streak.current}</span>
-              <span className="lab">Днів поспіль</span>
+              <span className="lab">
+                <span lang="uk">Днів поспіль</span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en">/ Days streak</span>
+                ) : null}
+              </span>
             </div>
-            <div className="pstat" aria-label={`${dueReviews} до повторення`}>
+            <div className="pstat" aria-label={showEnglishSubtitles ? `${dueReviews} до повторення / ${dueReviews} due for review` : `${dueReviews} до повторення`}>
               <span className="val">{indexForStats.length ? dueReviews : '—'}</span>
-              <span className="lab">До повторення</span>
+              <span className="lab">
+                <span lang="uk">До повторення</span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en">/ Due for review</span>
+                ) : null}
+              </span>
               {showEnglishSubtitles ? (
-                <span className="lab-sub">{SESSION_LABELS_A1.dueReviews}</span>
+                <span className="lab-sub" lang="en">{SESSION_LABELS_A1.dueReviews}</span>
               ) : null}
             </div>
-            <div className="pstat" aria-label={`Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}`}>
+            <div className="pstat" aria-label={showEnglishSubtitles ? `Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY} / New today ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}` : `Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}`}>
               <span className="val">
                 {dailyNewCount}/{DEFAULT_NEW_PER_DAY}
               </span>
-              <span className="lab">Нові сьогодні</span>
+              <span className="lab">
+                <span lang="uk">Нові сьогодні</span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en">/ New today</span>
+                ) : null}
+              </span>
               {showEnglishSubtitles ? (
-                <span className="lab-sub">{SESSION_LABELS_A1.newToday}</span>
+                <span className="lab-sub" lang="en">{SESSION_LABELS_A1.newToday}</span>
               ) : null}
             </div>
             <div className="pstat today">
               <div
                 className="ring"
                 role="img"
-                aria-label={`Сьогодні виконано ${completedToday} із ${todayDenominator}`}
+                aria-label={showEnglishSubtitles ? `Сьогодні виконано ${completedToday} із ${todayDenominator} / Completed today ${completedToday} of ${todayDenominator}` : `Сьогодні виконано ${completedToday} із ${todayDenominator}`}
                 style={todayRingStyle}
                 data-testid="practice-today-ring"
               >
@@ -2083,7 +2293,12 @@ function LexiconPracticeIsland({
                 </b>
               </div>
               <div>
-                <span className="lab">Сьогодні</span>
+                <span className="lab">
+                  <span lang="uk">Сьогодні</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en">/ Today</span>
+                  ) : null}
+                </span>
               </div>
             </div>
           </div>
@@ -2091,11 +2306,18 @@ function LexiconPracticeIsland({
           <div className="lexicon-practice-session-start">
             {homeScope ? (
               <p className="lexicon-session-scope" data-testid="practice-session-scope">
-                {homeScope.dueReviews} до повторення + {homeScope.plannedNew} нових ≈{' '}
-                {homeScope.estimatedMinutes} хв
+                <span lang="uk">
+                  {homeScope.dueReviews} до повторення + {homeScope.plannedNew} нових ≈{' '}
+                  {homeScope.estimatedMinutes} хв
+                </span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                    / {homeScope.dueReviews} due + {homeScope.plannedNew} new ≈ {homeScope.estimatedMinutes} min
+                  </span>
+                ) : null}
               </p>
             ) : null}
-            <div className="lexicon-session-budgets" role="group" aria-label="Розмір сесії">
+            <div className="lexicon-session-budgets" role="group" aria-label={showEnglishSubtitles ? "Розмір сесії / Session size" : "Розмір сесії"}>
               {([10, 20, 'until-zero'] as const).map((budget) => (
                 <button
                   key={String(budget)}
@@ -2104,7 +2326,14 @@ function LexiconPracticeIsland({
                   aria-pressed={sessionBudget === budget}
                   onClick={() => setSessionBudget(budget)}
                 >
-                  {budget === 10 ? '10' : budget === 20 ? '20' : 'до нуля'}
+                  {budget === 10 ? '10' : budget === 20 ? '20' : (
+                    <>
+                      <span lang="uk">до нуля</span>
+                      {showEnglishSubtitles ? (
+                        <span className="btn-sub" lang="en">/ clear</span>
+                      ) : null}
+                    </>
+                  )}
                 </button>
               ))}
             </div>
@@ -2117,9 +2346,9 @@ function LexiconPracticeIsland({
                 void startSession(sessionBudget, 'mixed');
               }}
             >
-              Почати сесію
+              <span lang="uk">Почати сесію</span>
               {showEnglishSubtitles ? (
-                <span className="btn-sub">{SESSION_LABELS_A1.startSession}</span>
+                <span className="btn-sub" lang="en">{SESSION_LABELS_A1.startSession}</span>
               ) : null}
             </button>
             {resumeSnapshots.mixed ? (
@@ -2130,10 +2359,15 @@ function LexiconPracticeIsland({
                 data-resume-mode="mixed"
                 onClick={() => void resumeSession('mixed')}
               >
-                Продовжити сесію «Мікс» ({resumeSnapshots.mixed.completed}/
-                {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
+                <span lang="uk">
+                  Продовжити сесію «Мікс» ({resumeSnapshots.mixed.completed}/
+                  {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
+                </span>
                 {showEnglishSubtitles ? (
-                  <span className="btn-sub">{SESSION_LABELS_A1.continueSession}</span>
+                  <span className="btn-sub" lang="en">
+                    {SESSION_LABELS_A1.continueSession} "Mixed" ({resumeSnapshots.mixed.completed}/
+                    {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
+                  </span>
                 ) : null}
               </button>
             ) : null}
@@ -2143,9 +2377,14 @@ function LexiconPracticeIsland({
             <div
               className="lexicon-practice-levels-row"
               role="group"
-              aria-label="Рівень учня — практика охоплює цей рівень і нижчі"
+              aria-label={showEnglishSubtitles ? "Рівень учня — практика охоплює цей рівень і нижчі / Learner level — practice covers this level and lower" : "Рівень учня — практика охоплює цей рівень і нижчі"}
             >
-              <span className="lexicon-practice-levels-label">Рівень</span>
+              <span className="lexicon-practice-levels-label">
+                <span lang="uk">Рівень</span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en">/ Level</span>
+                ) : null}
+              </span>
               {CEFR_LEVELS.map((level) => {
                 const published = publishedLevels.has(level);
                 return (
@@ -2155,27 +2394,46 @@ function LexiconPracticeIsland({
                     className={learnerLevel === level ? 'active' : ''}
                     aria-pressed={learnerLevel === level}
                     disabled={!published}
-                    title={published ? undefined : 'скоро'}
+                    title={published ? undefined : (showEnglishSubtitles ? 'скоро / coming soon' : 'скоро')}
                     onClick={() => void changeLevel(level)}
                   >
                     {level}
-                    {!published ? <span className="level-soon">скоро</span> : null}
+                    {!published ? (
+                      <span className="level-soon">
+                        <span lang="uk">скоро</span>
+                        {showEnglishSubtitles ? (
+                          <span className="btn-sub" lang="en">/ soon</span>
+                        ) : null}
+                      </span>
+                    ) : null}
                   </button>
                 );
               })}
             </div>
             <p className="lexicon-practice-muted lexicon-practice-levels-hint">
-              Практика обмежена вашим рівнем і нижчими (накопичувально).
+              <span lang="uk">Практика обмежена вашим рівнем і нижчими (накопичувально).</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                  / Practice is limited to your level and lower (cumulative).
+                </span>
+              ) : null}
             </p>
           </div>
 
           {weakChips.length > 0 ? (
             <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
-              <h3>Ваші слабкі відмінки</h3>
+              <h3>
+                <span lang="uk">Ваші слабкі відмінки</span>
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.7em', fontWeight: 'normal', color: 'var(--lu-text-muted)', marginTop: '2px' }}>
+                    / Your weak cases
+                  </span>
+                ) : null}
+              </h3>
               <div
                 className="lexicon-weak-chips"
                 role="group"
-                aria-label="Ваші слабкі відмінки — почати фокусне тренування"
+                aria-label={showEnglishSubtitles ? "Ваші слабкі відмінки — почати фокусне тренування / Your weak cases — start focus practice" : "Ваші слабкі відмінки — почати фокусне тренування"}
               >
                 {weakChips.map((weakness) => (
                   <button
@@ -2185,7 +2443,12 @@ function LexiconPracticeIsland({
                     data-testid={`practice-weak-chip-${weakness.key}`}
                     onClick={() => void startWeakAreaFocus(weakness)}
                   >
-                    {weakness.label}
+                    <span lang="uk">{weakness.label}</span>
+                    {showEnglishSubtitles ? (
+                      <span className="btn-sub" lang="en">
+                        / {translateWeaknessLabel(weakness)}
+                      </span>
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -2194,9 +2457,9 @@ function LexiconPracticeIsland({
 
           <div className="lexicon-focus-practice">
             <h3>
-              Фокус-практика
+              <span lang="uk">Фокус-практика</span>
               {showEnglishSubtitles ? (
-                <span className="heading-sub">{SESSION_LABELS_A1.focusPractice}</span>
+                <span className="heading-sub" lang="en">{SESSION_LABELS_A1.focusPractice}</span>
               ) : null}
             </h3>
             <div className="mode-grid mode-grid-focus">
@@ -2222,10 +2485,17 @@ function LexiconPracticeIsland({
                         </span>
                         <span>
                           <span className="mc-title">{meta.title}</span>
-                          {showEnglishSubtitles ? <span className="mc-en">{meta.en}</span> : null}
+                          {showEnglishSubtitles ? <span className="mc-en" lang="en">{meta.en}</span> : null}
                         </span>
                       </div>
-                      <span className="mc-desc">{meta.description}</span>
+                      <span className="mc-desc">
+                        <span lang="uk" style={{ display: 'block' }}>{meta.description}</span>
+                        {showEnglishSubtitles && meta.descriptionEn ? (
+                          <span lang="en" style={{ display: 'block', color: 'var(--lu-text-muted)', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                            {meta.descriptionEn}
+                          </span>
+                        ) : null}
+                      </span>
                     </button>
                     {resumeSnapshot ? (
                       <button
@@ -2234,10 +2504,15 @@ function LexiconPracticeIsland({
                         data-resume-mode={practiceMode}
                         onClick={() => void resumeSession(practiceMode)}
                       >
-                        Продовжити ({resumeSnapshot.completed}/
-                        {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                        <span lang="uk">
+                          Продовжити ({resumeSnapshot.completed}/
+                          {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                        </span>
                         {showEnglishSubtitles ? (
-                          <span className="btn-sub">{SESSION_LABELS_A1.continueSession}</span>
+                          <span className="btn-sub" lang="en">
+                            {SESSION_LABELS_A1.continueSession} ({resumeSnapshot.completed}/
+                            {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                          </span>
                         ) : null}
                       </button>
                     ) : null}
@@ -2249,7 +2524,14 @@ function LexiconPracticeIsland({
         </div>
       )}
 
-      {loading && <p className="lexicon-practice-muted">Завантажуємо…</p>}
+      {loading && (
+        <p className="lexicon-practice-muted">
+          <span lang="uk">Завантажуємо…</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en">/ Loading…</span>
+          ) : null}
+        </p>
+      )}
       {error && !selection && (
         <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
           <p className="lexicon-practice-warning">
@@ -2279,16 +2561,33 @@ function LexiconPracticeIsland({
         <div className="lexicon-practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
             <button type="button" className="stage-back" onClick={finishPractice}>
-              ← Додому
+              <span lang="uk">← Додому</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ ← Home</span>
+              ) : null}
             </button>
-            <h2>{stageTitle}</h2>
-            <span className="queue-pill" aria-label={`Прогрес ${progressLabel}`} data-testid="practice-session-progress">
+            <h2>
+              <span lang="uk">{stageTitleUk}</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en" style={{ fontSize: '0.65em', marginLeft: '8px' }}>/ {stageTitleEn}</span>
+              ) : null}
+            </h2>
+            <span
+              className="queue-pill"
+              aria-label={showEnglishSubtitles ? `Прогрес ${progressLabel} / Progress ${progressLabel}` : `Прогрес ${progressLabel}`}
+              data-testid="practice-session-progress"
+            >
               {progressLabel}
             </span>
           </div>
 
           {deck && deck.index.length === 0 && (
-            <p className="lexicon-practice-muted">Поки що немає карток для практики.</p>
+            <p className="lexicon-practice-muted">
+              <span lang="uk">Поки що немає карток для практики.</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ There are no cards for practice yet.</span>
+              ) : null}
+            </p>
           )}
 
           {deck && deck.index.length > 0 && (
@@ -2321,6 +2620,7 @@ function LexiconPracticeIsland({
                     }}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
+                    showEnglishSubtitles={showEnglishSubtitles}
                   />
                   {pendingOutcome ? (
                     <div className="lexicon-practice-advance" data-testid="practice-advance">
@@ -2330,21 +2630,41 @@ function LexiconPracticeIsland({
                         data-testid="practice-advance-button"
                         onClick={advancePending}
                       >
-                        Далі →
+                        <span lang="uk">Далі →</span>
+                        {showEnglishSubtitles ? (
+                          <span className="btn-sub" lang="en">/ Next →</span>
+                        ) : null}
                       </button>
                     </div>
                   ) : null}
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                  Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.
+                  <span lang="uk">Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                      / Fill-in-the-blank exercises for this level are still being prepared. Try flashcards, matching, or choice.
+                    </span>
+                  ) : null}
                 </p>
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
-                  Вправи зі спадщини для цього рівня ще готуються.
+                  <span lang="uk">Вправи зі спадщини для цього рівня ще готуються.</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                      / Heritage exercises for this level are still being prepared.
+                    </span>
+                  ) : null}
                 </p>
               ) : (
-                <p className="lexicon-practice-muted">Усі картки на зараз повторено.</p>
+                <p className="lexicon-practice-muted">
+                  <span lang="uk">Усі картки на зараз повторено.</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                      / All cards have been reviewed for now.
+                    </span>
+                  ) : null}
+                </p>
               )}
             </div>
           )}
@@ -2354,13 +2674,16 @@ function LexiconPracticeIsland({
   );
 }
 
-function formatNextDueLabel(nextDue: Date | null): string | null {
+function formatNextDueLabel(nextDue: Date | null): { uk: string; en: string } | null {
   if (!nextDue) return null;
   const hours = nextDue.getHours().toString().padStart(2, '0');
   const minutes = nextDue.getMinutes().toString().padStart(2, '0');
   const remainingMs = nextDue.getTime() - Date.now();
   const remaining = Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1000)));
-  return `ще ${remaining} о ${hours}:${minutes}`;
+  return {
+    uk: `ще ${remaining} о ${hours}:${minutes}`,
+    en: `in ${remaining}h at ${hours}:${minutes}`,
+  };
 }
 
 function PracticeItem({
@@ -2378,6 +2701,7 @@ function PracticeItem({
   onMatchingComplete,
   onMatchingMatch,
   onClozeSubmit,
+  showEnglishSubtitles,
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
@@ -2393,6 +2717,7 @@ function PracticeItem({
   onMatchingComplete(): void;
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
+  showEnglishSubtitles: boolean;
 }) {
   const [matchingPromptIndex, setMatchingPromptIndex] = useState<number | null>(0);
   const matchedPairIndexesRef = useRef<Set<number>>(new Set());
@@ -2409,6 +2734,7 @@ function PracticeItem({
         ratingLabels={RATING_LABELS}
         intervalPreviews={intervalPreviews}
         onRate={onFlashcardRating}
+        showEnglishSubtitles={showEnglishSubtitles}
       />
     );
   }
@@ -2422,6 +2748,7 @@ function PracticeItem({
         answerLocked={answerLocked}
         onInput={onClozeInput}
         onSubmit={onClozeSubmit}
+        showEnglishSubtitles={showEnglishSubtitles}
       />
     );
   }
@@ -2433,17 +2760,30 @@ function PracticeItem({
         feedback={heritageFeedback}
         answerLocked={answerLocked}
         onChoice={onChoice}
+        showEnglishSubtitles={showEnglishSubtitles}
       />
     );
   }
 
-  const drillOptions = drillChoiceOptions(selection);
+  const drillOptions = drillChoiceOptions(selection, showEnglishSubtitles);
   const drillPrompt = drillChoicePrompt(selection);
   if (drillOptions && drillPrompt) {
     return (
       <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
-        <p className="lexicon-choice-prompt mc-q">{drillPrompt.prompt}</p>
-        <p className="mc-sub">{drillPrompt.subtitle}</p>
+        <p className="lexicon-choice-prompt mc-q">
+          <span lang="uk">{drillPrompt.promptUk}</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', fontWeight: 'normal', color: 'var(--lu-text-muted)', marginTop: '0.25rem' }}>
+              / {drillPrompt.promptEn}
+            </span>
+          ) : null}
+        </p>
+        <p className="mc-sub">
+          <span lang="uk">{drillPrompt.subtitleUk}</span>
+          {showEnglishSubtitles && drillPrompt.subtitleEn ? (
+            <span className="btn-sub" lang="en">/ {drillPrompt.subtitleEn}</span>
+          ) : null}
+        </p>
         <ul className="lexicon-option-list mc-options">
           {drillOptions.map((option, index) => (
             <li key={`${option.label}-${index}`}>
@@ -2465,7 +2805,14 @@ function PracticeItem({
 
   if (selection.mode === 'matching') {
     if (!pairs.length) {
-      return <p className="lexicon-practice-muted">Зараз немає карток для добору пар.</p>;
+      return (
+        <p className="lexicon-practice-muted">
+          <span lang="uk">Зараз немає карток для добору пар.</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en">/ There are currently no cards for matching pairs.</span>
+          ) : null}
+        </p>
+      );
     }
     const promptedPair = matchingPromptIndex === null ? null : pairs[matchingPromptIndex] ?? null;
     return (
@@ -2473,7 +2820,12 @@ function PracticeItem({
         <MatchUp
           key={selection.cardKey}
           pairs={pairs}
-          instruction={promptedPair ? `Доберіть пару для «${promptedPair.left}»` : undefined}
+          instruction={promptedPair ? (
+            showEnglishSubtitles
+              ? `Доберіть пару для «${promptedPair.left}» / Match the pair for «${promptedPair.left}»`
+              : `Доберіть пару для «${promptedPair.left}»`
+          ) : undefined}
+          isUkrainian={!showEnglishSubtitles}
           onComplete={onMatchingComplete}
           onMatch={(pairIndex, rating) => {
             matchedPairIndexesRef.current.add(pairIndex);
@@ -2493,13 +2845,32 @@ function PracticeItem({
 
   const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed);
   if (!options.length) {
-    return <p className="lexicon-practice-muted">Зараз немає карток для вибору відповіді.</p>;
+    return (
+      <p className="lexicon-practice-muted">
+        <span lang="uk">Зараз немає карток для вибору відповіді.</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en">/ There are currently no cards for selecting an answer.</span>
+        ) : null}
+      </p>
+    );
   }
   const prompt = choicePrompt(selection);
   return (
     <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
-      <p className="lexicon-choice-prompt mc-q">{prompt}</p>
-      <p className="mc-sub">Оберіть правильну відповідь</p>
+      <p className="lexicon-choice-prompt mc-q">
+        <span lang="uk">{prompt.uk}</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', fontWeight: 'normal', color: 'var(--lu-text-muted)', marginTop: '0.25rem' }}>
+            / {prompt.en}
+          </span>
+        ) : null}
+      </p>
+      <p className="mc-sub">
+        <span lang="uk">Оберіть правильну відповідь</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en">/ Select the correct answer</span>
+        ) : null}
+      </p>
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
@@ -2524,18 +2895,25 @@ function PracticeHeritage({
   feedback,
   answerLocked,
   onChoice,
+  showEnglishSubtitles,
 }: {
   item: PracticeHeritageItem;
   feedback: HeritageFeedback | null;
   answerLocked: boolean;
   onChoice(option: ChoiceOption): void;
+  showEnglishSubtitles: boolean;
 }) {
   const [before, after] = slotPromptParts(item.prompt);
   const options = heritageOptions(item);
   const slotText = feedback?.kind === 'correct' ? item.answer : '___';
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
-      <p className="heritage-task">Оберіть питоме українське слово.</p>
+      <p className="heritage-task">
+        <span lang="uk">Оберіть питоме українське слово.</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en">/ Choose the native Ukrainian word.</span>
+        ) : null}
+      </p>
       <p className="heritage-sentence">
         <span>{before}</span>
         <span className={feedback?.kind === 'correct' ? 'heritage-slot filled' : 'heritage-slot'}>
@@ -2564,9 +2942,19 @@ function PracticeHeritage({
           aria-live="polite"
           data-testid="practice-heritage-feedback"
         >
-          <p>{feedback.text}</p>
+          <p>
+            <span lang="uk">{feedback.textUk}</span>
+            {showEnglishSubtitles && feedback.textEn ? (
+              <span className="btn-sub" lang="en">/ {feedback.textEn}</span>
+            ) : null}
+          </p>
           {feedback.kind === 'calque' && feedback.citations?.length ? (
-            <p className="heritage-citation">Джерело: {feedback.citations.join('; ')}</p>
+            <p className="heritage-citation">
+              <span lang="uk">Джерело: {feedback.citations.join('; ')}</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ Source: {feedback.citations.join('; ')}</span>
+              ) : null}
+            </p>
           ) : null}
           <div style={{ marginTop: '0.4rem' }}>
             <a
@@ -2575,7 +2963,10 @@ function PracticeHeritage({
               rel="noopener noreferrer"
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              Відкрити в Атласі →
+              <span lang="uk">Відкрити в Атласі →</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
+              ) : null}
             </a>
           </div>
         </div>
@@ -2591,6 +2982,7 @@ function PracticeCloze({
   answerLocked,
   onInput,
   onSubmit,
+  showEnglishSubtitles,
 }: {
   selection: PracticeSelection;
   input: string;
@@ -2598,6 +2990,7 @@ function PracticeCloze({
   answerLocked: boolean;
   onInput(value: string): void;
   onSubmit(value: string, source: 'typed' | 'chip'): void;
+  showEnglishSubtitles: boolean;
 }) {
   const cloze = selection.cloze;
   if (!cloze) return null;
@@ -2614,7 +3007,12 @@ function PracticeCloze({
     .join(' ');
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
-      <p className="cz-task">Поставте пропущене слово у правильному відмінку.</p>
+      <p className="cz-task">
+        <span lang="uk">Поставте пропущене слово у правильному відмінку.</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en">/ Put the missing word in the correct case.</span>
+        ) : null}
+      </p>
       <p className="cz-sentence">
         <span>{before}</span>
         <span className={blankClass}>{blankText}</span>
@@ -2644,20 +3042,33 @@ function PracticeCloze({
           className="cz-input"
           value={input}
           disabled={answerLocked}
-          placeholder="наберіть слово у потрібній формі…"
+          placeholder={showEnglishSubtitles ? "наберіть слово у потрібній формі… / type the word in the correct form…" : "наберіть слово у потрібній формі…"}
           autoComplete="off"
-          aria-label={`Відповідь у ${cloze.caseRule.caseLabel}`}
+          aria-label={showEnglishSubtitles ? `Відповідь у ${cloze.caseRule.caseLabel} / Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}` : `Відповідь у ${cloze.caseRule.caseLabel}`}
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>
-          Перевірити
+          <span lang="uk">Перевірити</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en">/ Check</span>
+          ) : null}
         </button>
       </form>
       {optionErrors.length > 0 ? (
-        <p className="lexicon-practice-warning">Варіанти для пропуску не пройшли перевірку.</p>
+        <p className="lexicon-practice-warning">
+          <span lang="uk">Варіанти для пропуску не пройшли перевірку.</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en">/ Options for cloze failed validation.</span>
+          ) : null}
+        </p>
       ) : (
         <>
-          <div className="cz-or">Або оберіть</div>
+          <div className="cz-or">
+            <span lang="uk">Або оберіть</span>
+            {showEnglishSubtitles ? (
+              <span className="btn-sub" lang="en">/ Or choose</span>
+            ) : null}
+          </div>
           <ul className="lexicon-option-list lexicon-cloze-options cz-options">
           {cloze.options.map((option) => (
             <li key={option.optionId}>
@@ -2681,7 +3092,10 @@ function PracticeCloze({
             role={feedback.kind === 'wrong-word' ? 'alert' : 'status'}
             aria-live="polite"
           >
-            {feedback.text}
+            <span lang="uk">{feedback.textUk}</span>
+            {showEnglishSubtitles && feedback.textEn ? (
+              <span className="btn-sub" lang="en">/ {feedback.textEn}</span>
+            ) : null}
           </p>
           <div style={{ marginTop: '0.4rem' }}>
             <a
@@ -2690,7 +3104,10 @@ function PracticeCloze({
               rel="noopener noreferrer"
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
-              Відкрити в Атласі →
+              <span lang="uk">Відкрити в Атласі →</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
+              ) : null}
             </a>
           </div>
         </div>

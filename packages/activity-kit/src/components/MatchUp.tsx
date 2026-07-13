@@ -120,8 +120,24 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
     }
     if (!allMatched) completedRef.current = false;
   }, [allMatched, onComplete]);
-  const headerLabel = isUkrainian ? 'Знайдіть пару' : 'Match Up';
-  const successLabel = isUkrainian ? '✓ Все з’єднано правильно!' : '✓ All matched correctly!';
+  const headerLabel = isUkrainian ? (
+    <span lang="uk">Знайдіть пару</span>
+  ) : (
+    <>
+      <span lang="uk">Знайдіть пару</span>
+      {' / '}
+      <span style={{ fontSize: '0.8rem', opacity: 0.8 }} lang="en">Match Up</span>
+    </>
+  );
+  const successLabel = isUkrainian ? (
+    <span lang="uk">✓ Все з’єднано правильно!</span>
+  ) : (
+    <>
+      <span lang="uk">✓ Все з’єднано правильно!</span>
+      {' / '}
+      <span style={{ fontSize: '0.9rem', opacity: 0.8 }} lang="en">All matched correctly!</span>
+    </>
+  );
 
   return (
     <div className={styles.activityContainer} data-activity="match-up">
