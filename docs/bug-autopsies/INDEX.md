@@ -4,7 +4,8 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 
 <!-- INDEX-START -->
 | Date | Issue | Category | Summary |
-|------|-------|----------|---------|
+| --- | --- | --- | --- |
+| 2026-07-13 | #4975 | atlas-build / source-split | `make atlas` starts with the course-vocabulary builder, but the 8,552-entry live Atlas also contains 3,376 promoted grow/source-inventory entries. A relation-only run therefore replaces the full release with a smaller, non-equivalent set. Hydrate the pointer asset and re-enrich in place; `make atlas-publish` is unsafe for this path. Detail in [atlas-manifest-source-split.md](atlas-manifest-source-split.md). |
 | 2026-07-10 | #4857 | git-discipline | Read-only review delegate ran `gh pr checkout 4849` at repo root → primary checkout left on `pr-4849` (~7 min, silently wrong code for all repo-root readers). delegate.py neither prevents nor detects children moving primary HEAD; guard hook covers interactive shells only. Prior fossils: `pr-4397/4556/4557`. Fix = runtime enforcement (worktree-default reviews + branch assert-on-exit), tracked #4857. Detail in `git-discipline.md`. |
 | 2026-07-09 | #4797 | gate-false-accept | QG grounding gate v2 false-accepted near-copy fabrications (real «1722» → fabricated «1900» anchored at default τ=0.75) despite green CI + 153 tests + solo review. Fuzzy char-similarity + `any()` guard can't ground swapped factual tokens; a test pinned τ=0.9 masking the shipped behavior; edit-distance can't separate UK inflection (Львова/Львів dist 2) from name-swap (Мирко/Марко dist 1) — only lemma can; a perf-cap then introduced a truncation false-accept. Fixed via positional opcode-`equal` alignment of salient tokens (dep-free) + truncation-fails-closed. 5 cross-family review rounds. Detail in `qg-grounding-gate-fuzzy-false-accept.md`. |
 | 2026-04-05 | #1150 | score-parsing | Wiki review loop stuck at 8/10 — regex `(\d+)` can't match decimal scores like `8.8/10` |
