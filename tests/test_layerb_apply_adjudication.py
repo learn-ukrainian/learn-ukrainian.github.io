@@ -451,6 +451,27 @@ def test_apply_ruling_custom_sets_corpus_verification_status() -> None:
     }
 
 
+def test_apply_ruling_custom_rejects_invalid_corpus_verification_status() -> None:
+    """A CUSTOM ruling with a value outside the registered enum must be rejected."""
+    draft = {
+        "case_id": "synth-1",
+        "corpus_verification_status": "UNVERIFIED",
+    }
+    left = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    right = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    ruling = "CUSTOM:corpus_verification_status=BOGUS_STATUS"
+    digest = {"case_id": "synth-1", "fields": {"corpus_verification_status": {}}}
+
+    with pytest.raises(LabelJoinError, match="must be a registered enum"):
+        apply_ruling(
+            draft,
+            left,
+            right,
+            _decision(ruling),
+            digest,
+        )
+
+
 def test_apply_adjudications_unverified_corpus_status_affects_eligibility_and_custom_overrides_it(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
