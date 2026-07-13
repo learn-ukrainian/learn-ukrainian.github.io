@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_COMMON_DIR GIT_DIR GIT_INDEX_FILE
+unset GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_WORK_TREE
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 HOOK="$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh"
 POST_COMPACT_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/post-compact.sh"
@@ -44,7 +47,7 @@ setup_fixture() {
   local root="$1"
 
   rm -rf "$root"
-  mkdir -p "$root/docs/session-state" "$root/.venv/bin" "$root/.mcp/servers/message-broker" "$TMP_ROOT/home" "$root/.git"
+  mkdir -p "$root/docs/session-state" "$root/.venv/bin" "$root/.mcp/servers/message-broker" "$TMP_ROOT/home"
   # Dispatching stub: most tests just need a python-version banner, but the
   # strict-adoption-gate fixtures (below) need a controllable
   # `check_research_registry.py --strict-adoption` response without a real
@@ -61,6 +64,13 @@ PYEOF
   chmod +x "$root/.venv/bin/python"
   mkdir -p "$root/scripts/orchestration"
   touch "$root/scripts/orchestration/thread_handoff.py"
+  git -C "$root" init -q
+  git -C "$root" config user.email "session-setup@example.invalid"
+  git -C "$root" config user.name "Session Setup Fixture"
+  printf 'fixture\n' > "$root/.git-fixture"
+  git -C "$root" add .git-fixture
+  git -C "$root" -c commit.gpgsign=false commit -q -m "fixture"
+  printf '*\n' > "$root/.git/info/exclude"
 }
 
 run_hook() {

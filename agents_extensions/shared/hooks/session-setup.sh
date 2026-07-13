@@ -313,7 +313,17 @@ else
     HANDOFF_AGENT="claude"
 fi
 
-CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
+if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+else
+  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+  else
+    # Non-Git fixtures and partially initialized checkouts remain isolated.
+    CANONICAL_ROOT="$PROJECT_DIR"
+  fi
+fi
 CURRENT_THREAD_ID="${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}"
 ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"

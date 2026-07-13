@@ -26,9 +26,7 @@ def sample_snapshot(tmp_path: Path) -> dict:
                 {"sha": "abc123def0", "subject": "docs(session): handoff"},
                 {"sha": "1111111111", "subject": "feat(api): monitor"},
             ],
-            "modified_files": [
-                {"status": "M", "path": "docs/session-state/current.md"},
-            ],
+            "modified_files": [],
         },
         "monitor": {
             "base_url": "http://127.0.0.1:8765",
@@ -57,8 +55,14 @@ def sample_snapshot(tmp_path: Path) -> dict:
     }
 
 
+@pytest.fixture(autouse=True)
+def clean_invoking_checkout(monkeypatch):
+    """Unit CLI fixtures run outside Git; model the clean bound checkout."""
+    monkeypatch.setattr(th, "gather_git_state", lambda root: sample_snapshot(root)["git"])
+
+
 def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> dict:
-    return th.prepare_state(
+    state = th.prepare_state(
         {"schema_version": th.SCHEMA_VERSION},
         agent=agent,
         now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
@@ -67,6 +71,11 @@ def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> d
         context_percent=86.0,
         force_new_replacement=False,
     )
+    state["replacement"]["source_checkout"] = {
+        "full_head": sample_snapshot(Path("."))["git"]["full_head"],
+        "clean": True,
+    }
+    return state
 
 
 def resumed_with_proof(tmp_path: Path, state: dict, thread_id: str = "new-thread") -> tuple[dict, Path]:
@@ -228,6 +237,7 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "git worktree list" in prompt
     assert "confirm-started --agent orchestrator --lineage-id" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
+    assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789" in prompt
     assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
     assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
 
@@ -248,6 +258,7 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     assert "confirm-started --agent orchestrator --lineage-id" in rendered
     assert "orchestrator_control.py inbox --recent 20 --include-results" in rendered
     assert "Durable role handoff: `docs/session-state/codex-orchestrator-handoff.md`" in rendered
+    assert "Source checkout HEAD: `abc123def0456789`" in rendered
 
 
 def test_render_bootstrap_prompt_for_codex_uses_orchestrator_pointer(tmp_path: Path):
@@ -310,6 +321,130 @@ def test_default_agent_paths_are_agent_specific():
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
+def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head():
+    clean = sample_snapshot(Path("."))["git"]
+    assert th.parse_status("M tracked.txt\n?? untracked.txt") == [
+        {"status": "M", "path": "tracked.txt"},
+        {"status": "??", "path": "untracked.txt"},
+    ]
+    binding = th.source_checkout_binding(clean)
+    replacement = {"source_checkout": binding}
+
+    assert th.checkout_continuity_error(replacement, clean) is None
+    assert "missing its source checkout binding" in th.checkout_continuity_error({}, clean)
+
+    wrong_head = {**clean, "full_head": "different-head"}
+    assert "does not match prepared HEAD" in th.checkout_continuity_error(replacement, wrong_head)
+
+    dirty = {**clean, "modified_files": [{"status": "M", "path": "tracked.txt"}]}
+    assert "invoking checkout must be clean" in th.checkout_continuity_error(replacement, dirty)
+    with pytest.raises(ValueError, match="source checkout must be clean before prepare"):
+        th.source_checkout_binding(dirty)
+
+
+def test_live_lease_requires_binding_but_started_history_remains_compatible():
+    state = prepared(agent="codex")
+    state["replacement"].pop("source_checkout")
+    state_path = th.default_state_path("codex", state["lineage_id"])
+
+    replacement, error = th.validate_live_lease(state, agent="codex", state_path=state_path)
+    assert replacement is None
+    assert "missing its source checkout binding" in error
+
+    state["replacement"]["status"] = "started"
+    state["replacement"]["thread_id"] = "historical-thread"
+    replacement, error = th.validate_live_lease(state, agent="codex", state_path=state_path)
+    assert error is None
+    assert replacement is not None
+    assert replacement["status"] == "started"
+
+
+def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: Path, capsys, monkeypatch):
+    dirty_snapshot = sample_snapshot(tmp_path)
+    dirty_snapshot["git"]["modified_files"] = [{"status": "??", "path": "untracked.txt"}]
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: dirty_snapshot)
+    monkeypatch.setattr(th, "gather_git_state", lambda root: dirty_snapshot["git"])
+
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert "source checkout must be clean before prepare" in payload["error"]
+    assert payload["old_automation_ready_to_delete"] is False
+    assert not (tmp_path / ".agent/thread-rollovers").exists()
+
+
+def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: Path, capsys, monkeypatch):
+    clean = sample_snapshot(tmp_path)["git"]
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    state_path = tmp_path / packet["state_file"]
+
+    monkeypatch.setattr(th, "gather_git_state", lambda root: {**clean, "full_head": "wrong-head"})
+    resume_command = [
+        "--repo-root",
+        str(tmp_path),
+        "resume",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+    ]
+    assert th.main(resume_command) == 2
+    assert "does not match prepared HEAD" in json.loads(capsys.readouterr().out)["error"]
+    assert json.loads(state_path.read_text(encoding="utf-8"))["replacement"]["status"] == "pending_start"
+
+    monkeypatch.setattr(th, "gather_git_state", lambda root: clean)
+    assert th.main(resume_command) == 0
+    capsys.readouterr()
+    resumed = json.loads(state_path.read_text(encoding="utf-8"))
+    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
+    capsys.readouterr()
+    proof = tmp_path / resumed["replacement"]["canary_proof_path"]
+    canary.write_json_atomic(
+        proof,
+        canary.build_pass_proof(
+            rollover_id=packet["rollover_id"],
+            replacement_thread_id="new-thread",
+            challenge=resumed["replacement"]["canary_challenge"],
+            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
+        ),
+    )
+
+    monkeypatch.setattr(
+        th,
+        "gather_git_state",
+        lambda root: {**clean, "modified_files": [{"status": "M", "path": "tracked.txt"}]},
+    )
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "confirm-started",
+                "--lineage-id",
+                packet["lineage_id"],
+                "--rollover-id",
+                packet["rollover_id"],
+                "--new-thread-id",
+                "new-thread",
+                "--canary-proof",
+                str(proof),
+                "--strict-probe",
+                str(strict_probe),
+                "--strict-verdict",
+                str(strict_verdict),
+            ]
+        )
+        == 2
+    )
+    assert "invoking checkout must be clean" in json.loads(capsys.readouterr().out)["error"]
+    final_state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert final_state["replacement"]["status"] == "resumed"
+    assert final_state["cleanup"]["old_automation_ready_to_delete"] is False
+
+
 def test_prepare_orchestrator_writes_only_local_thread_handoff_by_default(
     tmp_path: Path,
     capsys,
@@ -342,6 +477,8 @@ def test_prepare_orchestrator_writes_only_local_thread_handoff_by_default(
     assert payload["router_file"] is None
     assert not (tmp_path / "docs/session-state/current.md").exists()
     assert "## Thread Lease" in (tmp_path / payload["handoff_file"]).read_text(encoding="utf-8")
+    lease = json.loads((tmp_path / payload["state_file"]).read_text(encoding="utf-8"))
+    assert lease["replacement"]["source_checkout"] == {"full_head": "abc123def0456789", "clean": True}
 
 
 def test_prepare_rejects_write_current_without_explicit_router_unlock(

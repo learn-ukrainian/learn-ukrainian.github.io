@@ -353,10 +353,21 @@ def parse_status(raw: str) -> list[dict[str, str]]:
     for line in raw.splitlines():
         if not line:
             continue
+        if len(line) > 2 and line[2] == " ":
+            status = line[:2].strip() or line[:2]
+            path = line[3:]
+        elif len(line) > 1 and line[1] == " ":
+            # run_command strips the porcelain line's leading worktree-status
+            # column when the index is clean (for example `` M file``).
+            status = line[0]
+            path = line[2:]
+        else:
+            status = line[:2].strip() or line[:2]
+            path = line[3:] if len(line) > 3 else ""
         files.append(
             {
-                "status": line[:2].strip() or line[:2],
-                "path": line[3:] if len(line) > 3 else "",
+                "status": status,
+                "path": path,
             }
         )
     return files
@@ -395,6 +406,68 @@ def gather_git_state(repo_root: Path) -> dict[str, Any]:
         "last_commits": parse_git_log(git_output(repo_root, "log", "-5", "--pretty=format:%h%x09%s")),
         "modified_files": parse_status(git_output(repo_root, "status", "--short")),
     }
+
+
+def source_checkout_binding(git_state: Mapping[str, Any]) -> dict[str, Any]:
+    """Bind a rollover to one clean source revision.
+
+    ``git status --short`` includes tracked and untracked files but excludes
+    ignored runtime state, which is exactly the continuity boundary required
+    for local rollover packets.
+    """
+    full_head = git_state.get("full_head")
+    modified_files = git_state.get("modified_files")
+    if not isinstance(full_head, str) or not full_head.strip():
+        raise ValueError("source checkout HEAD could not be determined")
+    if not isinstance(modified_files, list):
+        raise ValueError("source checkout status could not be determined")
+    if modified_files:
+        paths = ", ".join(
+            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown" for item in modified_files[:5]
+        )
+        raise ValueError(f"source checkout must be clean before prepare; dirty paths: {paths}")
+    return {"full_head": full_head, "clean": True}
+
+
+def source_checkout_binding_error(replacement: Mapping[str, Any]) -> str | None:
+    binding = replacement.get("source_checkout")
+    if not isinstance(binding, dict):
+        return "live rollover is missing its source checkout binding"
+    if set(binding) != {"full_head", "clean"}:
+        return "live rollover source checkout binding is malformed"
+    if binding.get("clean") is not True:
+        return "live rollover source checkout binding is not clean"
+    full_head = binding.get("full_head")
+    if not isinstance(full_head, str) or not full_head.strip():
+        return "live rollover source checkout HEAD is malformed"
+    return None
+
+
+def checkout_continuity_error(replacement: Mapping[str, Any], current_git_state: Mapping[str, Any]) -> str | None:
+    binding_error = source_checkout_binding_error(replacement)
+    if binding_error:
+        return binding_error
+    current_head = current_git_state.get("full_head")
+    if not isinstance(current_head, str) or not current_head.strip():
+        return "invoking checkout HEAD could not be determined"
+    expected_head = replacement["source_checkout"]["full_head"]
+    if current_head != expected_head:
+        return f"invoking checkout HEAD {current_head} does not match prepared HEAD {expected_head}"
+    modified_files = current_git_state.get("modified_files")
+    if not isinstance(modified_files, list):
+        return "invoking checkout status could not be determined"
+    if modified_files:
+        paths = ", ".join(
+            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown" for item in modified_files[:5]
+        )
+        return f"invoking checkout must be clean; dirty paths: {paths}"
+    return None
+
+
+def require_checkout_continuity(replacement: Mapping[str, Any], repo_root: Path) -> None:
+    error = checkout_continuity_error(replacement, gather_git_state(repo_root))
+    if error:
+        raise ValueError(f"checkout continuity failed: {error}")
 
 
 def gather_monitor_state(base_url: str) -> dict[str, Any]:
@@ -681,6 +754,9 @@ def validate_live_lease(
     ):
         return None, "resumed replacement has no valid replacement thread identity"
     if replacement.get("status") in {"pending_start", "resumed"}:
+        binding_error = source_checkout_binding_error(replacement)
+        if binding_error:
+            return None, binding_error
         expected_paths = replacement_packet_paths(agent, lineage_id, generation, rollover_id)
         for key, expected in expected_paths.items():
             if replacement.get(key) != expected:
@@ -1009,6 +1085,7 @@ def render_bootstrap_prompt(
                 "",
                 "Rules:",
                 "- Continue from the durable packet exactly; do not fork, continue, or resume provider conversation history.",
+                f"- Keep the invoking checkout clean at prepared HEAD {replacement.get('source_checkout', {}).get('full_head', 'unknown')} through resume and confirmation.",
                 "- Keep the main checkout read-only; thread rollover state belongs in gitignored .agent/ files.",
                 "- Use dispatch worktrees for implementation work: .worktrees/dispatch/<agent>/<task>/.",
                 "- Do not edit generated status/audit/review artifacts, linter configs, or .python-version.",
@@ -1104,6 +1181,7 @@ def render_current_markdown(
         f"- Replacement runtime path: `{replacement.get('runtime_path', 'unknown')}`",
         f"- Replacement status: `{replacement.get('status', 'unknown')}`",
         f"- Replacement thread id: `{replacement.get('thread_id') or 'not-confirmed'}`",
+        f"- Source checkout HEAD: `{replacement.get('source_checkout', {}).get('full_head', 'unknown')}`",
         f"- Old automation ready to delete: `{cleanup.get('old_automation_ready_to_delete', False)}`",
         f"- Bootstrap prompt: `{prompt_path}`",
         f"- Durable role handoff: `{role_handoff}`",
@@ -1409,6 +1487,23 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     bootstrap_path = repo_local_path(state_root, Path(replacement["bootstrap_prompt_path"]))
     handoff_path = repo_local_path(state_root, Path(replacement["handoff_path"]))
     snapshot = gather_snapshot(repo_root, args.monitor_base_url)
+    # Recompute after the slower Monitor/GitHub reads so the lease binds the
+    # checkout as close as possible to the atomic packet write below.
+    snapshot["git"] = gather_git_state(repo_root)
+    try:
+        replacement["source_checkout"] = source_checkout_binding(snapshot["git"])
+    except ValueError as exc:
+        print(
+            json.dumps(
+                {
+                    "error": f"checkout continuity failed: {exc}",
+                    "state_file": rel(state_path, state_root),
+                    "old_automation_ready_to_delete": False,
+                },
+                indent=2,
+            )
+        )
+        return 2
     prompt = render_bootstrap_prompt(
         snapshot,
         prepared_state,
@@ -1527,6 +1622,11 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
     if args.rollover_id != replacement.get("rollover_id"):
         print(json.dumps({"error": "--rollover-id does not match the isolated pending rollover"}, indent=2))
         return 2
+    try:
+        require_checkout_continuity(replacement, repo_root)
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc)}, indent=2))
+        return 2
     expected_proof = repo_local_path(state_root, Path(state["replacement"]["canary_proof_path"]))
     try:
         supplied_proof = repo_local_path(state_root, args.canary_proof)
@@ -1597,6 +1697,11 @@ def cmd_resume(args: argparse.Namespace) -> int:
     state_error = state_error_payload(state, state_path, state_root)
     if state_error:
         print(json.dumps(state_error, indent=2))
+        return 2
+    try:
+        require_checkout_continuity(state.get("replacement") or {}, repo_root)
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
         return 2
     try:
         resumed = resume_state(

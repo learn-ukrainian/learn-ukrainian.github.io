@@ -130,12 +130,6 @@ if [ "$CODEX_TARGET" = "worktree" ]; then
         echo "Worktree updated to latest."
     fi
 
-    # Symlink .venv into the worktree so Codex has the same Python env
-    if [ ! -e "$WORKTREE_DIR/.venv" ]; then
-        ln -s "$PROJECT_DIR/.venv" "$WORKTREE_DIR/.venv"
-        echo "Symlinked .venv into worktree"
-    fi
-
     # Symlink node_modules so npm/vitest work
     if [ -d "$PROJECT_DIR/site/node_modules" ] && [ ! -e "$WORKTREE_DIR/site/node_modules" ]; then
         mkdir -p "$WORKTREE_DIR/site"
@@ -149,22 +143,15 @@ if [ "$CODEX_TARGET" = "worktree" ]; then
         echo "Symlinked data/ into worktree"
     fi
 
-    # Bridge only the canonical rollover directory, never the whole .agent tree.
-    ensure_thread_rollover_link "$PROJECT_DIR" "$WORKTREE_DIR"
-    echo "Verified .agent/thread-rollovers canonical bridge"
-
     TARGET_DIR="$WORKTREE_DIR"
 fi
 
-# Deploy shared agent extensions into ignored runtime dirs for the checkout
-# Codex will actually use. This keeps .codex/.agents generated while
-# agents_extensions/ remains the tracked source of truth. Fail-honest: a
-# failing deploy prints a loud banner + the real output instead of the old
-# silent `|| true` that claimed success over stale deploy targets.
-# shellcheck source=scripts/lib/deploy_extensions.sh
-source "$PROJECT_DIR/scripts/lib/deploy_extensions.sh"
-deploy_agent_extensions "$TARGET_DIR" agents:deploy \
-    || echo "Continuing launch despite deploy failure (see banner above)."
+# Bootstrap the checkout Codex will actually use. The helper shares only the
+# canonical virtualenv and gitignored rollover directory, then deploys the
+# generated hook/config targets. It is also the supported seam for app-created
+# fresh worktrees, which do not inherit ignored .codex files.
+bootstrap_codex_checkout "$PROJECT_DIR" "$TARGET_DIR" continue
+echo "Verified Codex runtime bootstrap in $TARGET_DIR"
 
 echo ""
 echo "LEARN UKRAINIAN - Ukrainian Language Learning"
