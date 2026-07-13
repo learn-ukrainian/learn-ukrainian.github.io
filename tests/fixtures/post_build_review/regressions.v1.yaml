@@ -1,4 +1,4 @@
-catalog_version: 2.0.0
+catalog_version: 2.0.1
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -131,3 +131,9 @@ regressions:
     version_field: semantic_prompt_version
     input: Catalog metadata plus exact auditory timestamps, breaths, contour, stress, accompaniment, and cadence.
     expected: Metadata supports catalog facts only; absent audio-capable verification the result is INCOMPLETE.
+  - bug_id: concurrent-review-global-tmp-collision
+    responsible_layer: orchestration
+    fixed_in_version: 2.0.1
+    version_field: review_protocol_version
+    input: Two reviews prepare and finalize concurrently for different module targets.
+    expected: Each invocation receives a distinct run directory whose packet, exact semantic response, and result cannot cross targets.
