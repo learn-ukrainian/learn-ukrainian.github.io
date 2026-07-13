@@ -236,6 +236,8 @@ def test_prepare_orchestrator_writes_only_local_thread_handoff_by_default(
             "prepare",
             "--agent",
             "orchestrator",
+            "--active-thread-id",
+            "old-thread",
             "--context-percent",
             "86",
         ]
