@@ -251,7 +251,9 @@ only to run the helper. That first SessionStart is not acceptance evidence.
 
 ```bash
 fresh=<absolute-app-worktree-path>
-replacement_task_id=<fresh-task-id>
+initial_replacement_task_id=<fresh-task-id>
+printf '%s\n' "$initial_replacement_task_id" \
+  > "$evidence/initial-replacement-task-id.txt"
 bash "$fresh/scripts/lib/thread_rollover_link.sh" "$canonical" "$fresh" \
   | tee "$evidence/fresh-bootstrap.txt"
 git -C "$canonical" worktree list | tee "$evidence/worktrees.txt"
@@ -310,12 +312,12 @@ verdict_rel=$(jq -r .replacement.strict_verdict_path "$lease")
 proof_rel=$(jq -r .replacement.canary_proof_path "$lease")
 challenge=$(jq -r .replacement.canary_challenge "$lease")
 
-# The fresh task writes "$canonical/$snapshot_rel" from the restored packet.
+# The canonical destination writes "$canonical/$snapshot_rel" from the packet.
 .venv/bin/python scripts/context_canary.py mint \
   --snapshot "$canonical/$snapshot_rel" --out "$canonical/$probe_rel"
 .venv/bin/python scripts/context_canary.py questions \
   --probe "$canonical/$probe_rel" --out "$canonical/$questions_rel"
-# The fresh task now writes {"<question-id>": "<recalled-answer>"} to
+# The canonical destination now writes {"<question-id>": "<recalled-answer>"} to
 # "$canonical/$answers_rel" without opening the probe.
 .venv/bin/python scripts/context_canary.py score \
   --probe "$canonical/$probe_rel" \
@@ -350,7 +352,13 @@ fresh task id, canonical claim task id, title, both checkout paths, and every
 automatic SessionStart result. After confirmation, use the app handoff
 operation to return the logical task to its app worktree; verify the canonical
 checkout is back on `main`, both checkouts are clean, and all tracked files are
-unchanged. Archive the smoke tasks and remove only their clean app worktrees.
+unchanged. If the return handoff fails, do not force it or delete either
+worktree. First require both checkouts to remain clean and at `source_head`, then
+restore the canonical checkout with `git -C "$canonical" switch main`. Treat an
+index lock as live unless `lsof` proves no process owns it; remove only a proven
+stale lock before switching. Stop for manual recovery if either checkout is
+dirty or any Git process still owns the lock. Archive the smoke tasks and remove
+only their clean app worktrees.
 
 Keep all captured evidence under `/tmp/rollover-smoke-*`; the packet itself
 stays under gitignored `.agent/thread-rollovers/`. Delete or pause the
