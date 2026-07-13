@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from scripts.audit import layerb_candidates, layerb_collect_emissions, layerb_qualify
+from scripts.audit import layerb_candidates, layerb_collect_emissions, layerb_judge_bridge, layerb_qualify
 
 ROOT = Path(__file__).resolve().parents[1]
 VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
@@ -238,7 +238,7 @@ def _module_response_with_mixed_injection(*, injection_observed: bool) -> tuple[
         cases=(
             layerb_collect_emissions.PreparedCase(
                 corpus="probe",
-                case={"case_id": "mixed-case", "fact_check_id": "mixed-fact"},
+                case={"case_id": "mixed-case", "fact_check_id": "mixed-fact", "fixture_id": "mixed-fixture"},
                 windows=(safe_window, injection_window),
             ),
         ),
@@ -260,9 +260,7 @@ def _module_response_with_mixed_injection(*, injection_observed: bool) -> tuple[
                     {
                         "candidate_id": "safe-candidate",
                         "relation": "ENTAILS",
-                        "support_spans": [
-                            {"start": 0, "end": len(safe_window["raw_window"]), "role": "SUPPORTS"}
-                        ],
+                        "support_spans": [{"start": 0, "end": len(safe_window["raw_window"]), "role": "SUPPORTS"}],
                         "confidence": "high",
                         "prompt_injection_observed": False,
                     },
@@ -277,23 +275,101 @@ def _module_response_with_mixed_injection(*, injection_observed: bool) -> tuple[
 def test_validated_response_preserves_injection_flag_without_discarding_valid_siblings() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=True)
 
-    normalized = layerb_collect_emissions._validated_response_by_case(module, response)
+    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
 
     relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
     assert relations[0]["relation"] == "ENTAILS"
     assert relations[0]["prompt_injection_observed"] is False
     assert relations[1] == response["fact_checks"][0]["source_relations"][1]
+    assert substitutions == {}
 
 
 def test_validated_response_normalizes_all_valid_candidates_as_before() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
 
-    normalized = layerb_collect_emissions._validated_response_by_case(module, response)
+    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
 
     relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
     assert [relation["relation"] for relation in relations] == ["ENTAILS", "CONTRADICTS"]
     assert [relation["prompt_injection_observed"] for relation in relations] == [False, False]
     assert all("support_span_valid" not in relation for relation in relations)
+    assert substitutions == {}
+
+
+def test_collector_substitutes_bad_candidate_without_losing_valid_sibling() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=False)
+    response["fact_checks"][0]["source_relations"][1]["support_spans"][0]["end"] = 999
+
+    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
+
+    relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
+    assert relations[0]["relation"] == "ENTAILS"
+    assert relations[1] == layerb_collect_emissions.layerb_shadow.conservative_candidate_response("injection-candidate")
+    assert substitutions["mixed-case"][0]["candidate_id"] == "injection-candidate"
+
+
+def test_collector_extracts_bridge_sidecar_without_polluting_response() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=False)
+    response["_bridge_substituted"] = [
+        {
+            "fact_check_id": "mixed-fact",
+            "candidate_id": "injection-candidate",
+            "reason": "judge support span is empty or out of bounds",
+        }
+    ]
+    response["fact_checks"][0]["source_relations"][1] = (
+        layerb_collect_emissions.layerb_shadow.conservative_candidate_response("injection-candidate")
+    )
+
+    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
+
+    assert "_bridge_substituted" not in normalized["mixed-case"]
+    assert substitutions == {
+        "mixed-case": [
+            {
+                "fact_check_id": "mixed-fact",
+                "candidate_id": "injection-candidate",
+                "reason": "judge support span is empty or out of bounds",
+            }
+        ]
+    }
+    emission = layerb_collect_emissions._emission(
+        module.cases[0],
+        call_id="bridge-call",
+        observed={"prompt_tokens": 1.0, "completion_tokens": 1.0, "cost_usd": 0.0},
+        response=normalized["mixed-case"],
+        status="completed",
+        validation_substituted=substitutions["mixed-case"],
+    )
+    assert emission["validation_substituted"] == substitutions["mixed-case"]
+    assert "_bridge_substituted" not in emission["response"]
+
+
+def test_collector_keeps_envelope_mismatches_module_fatal() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=False)
+    response["fact_checks"][0]["fact_check_id"] = "unexpected-fact"
+
+    with pytest.raises(layerb_collect_emissions.layerb_shadow.JudgeValidationError, match="fact-check set"):
+        layerb_collect_emissions._validated_response_by_case(module, response)
+
+
+def test_route_identity_hashes_bridge_version(tmp_path: Path) -> None:
+    args = layerb_collect_emissions.parse_args(
+        _collector_args(tmp_path / "main.json", tmp_path / "probe.json", tmp_path / "output", calls=1)
+    )
+
+    effective_route, _route, _seat_key, _seat_metadata = layerb_collect_emissions._route_metadata(args)
+
+    assert effective_route.bridge_config_sha256 == layerb_collect_emissions._sha256_json(
+        {
+            "argv": [str(VENV_PYTHON), str(STUB)],
+            "bridge_version": layerb_judge_bridge.BRIDGE_VERSION,
+            "judge_input_version": layerb_collect_emissions.layerb_shadow.JUDGE_INPUT_VERSION,
+            "prompt_version": layerb_collect_emissions.layerb_shadow.PROMPT_VERSION,
+            "tools": [],
+            "tool_access": {"enabled": False, "mcp": False},
+        }
+    )
 
 
 def test_happy_path_emission_shape_matches_scorer_response_contract(tmp_path: Path, monkeypatch) -> None:

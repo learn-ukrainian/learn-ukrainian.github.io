@@ -647,6 +647,99 @@ def _validate_judge_response(
     return result
 
 
+def conservative_candidate_response(candidate_id: str) -> dict[str, Any]:
+    """Return the canonical non-passing result for one requested candidate."""
+
+    return {
+        "candidate_id": candidate_id,
+        "relation": "ABSTAIN",
+        "support_spans": [],
+        "confidence": "high",
+        "prompt_injection_observed": False,
+    }
+
+
+def normalize_judge_module_response(
+    response: Mapping[str, Any], *, expected_windows_by_fact: Mapping[str, Sequence[Mapping[str, Any]]]
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """Normalize a module response without discarding valid sibling candidates.
+
+    Envelope alignment is inseparable from the request and therefore remains
+    module-fatal.  Once it is established, each candidate's content is
+    validated independently: a malformed ordinary result becomes a canonical
+    ABSTAIN for the expected candidate id, while a literal ``True`` injection
+    observation remains verbatim for the scorer's mandatory AUDIT path.
+    """
+
+    if response.get("schema_version") != JUDGE_OUTPUT_VERSION:
+        raise JudgeValidationError("judge output schema_version is invalid")
+    facts = response.get("fact_checks")
+    if not isinstance(facts, list):
+        raise JudgeValidationError("judge output fact_checks is malformed")
+
+    actual_by_fact: dict[str, Mapping[str, Any]] = {}
+    for fact in facts:
+        if not isinstance(fact, Mapping) or not isinstance(fact.get("fact_check_id"), str):
+            raise JudgeValidationError("judge output contains a malformed fact-check result")
+        fact_check_id = str(fact["fact_check_id"])
+        if fact_check_id in actual_by_fact:
+            raise JudgeValidationError("judge output contains a duplicate fact-check result")
+        actual_by_fact[fact_check_id] = fact
+    if set(actual_by_fact) != set(expected_windows_by_fact):
+        raise JudgeValidationError("judge output fact-check set differs from the module request")
+
+    normalized_facts: list[dict[str, Any]] = []
+    substitutions: list[dict[str, str]] = []
+    for fact_check_id, expected_windows in expected_windows_by_fact.items():
+        fact = actual_by_fact[fact_check_id]
+        source_relations = fact.get("source_relations")
+        if not isinstance(source_relations, list):
+            raise JudgeValidationError("judge output source_relations is malformed")
+        actual_by_candidate: dict[str, Mapping[str, Any]] = {}
+        for relation in source_relations:
+            if not isinstance(relation, Mapping) or not isinstance(relation.get("candidate_id"), str):
+                raise JudgeValidationError("judge output has a malformed candidate relation")
+            candidate_id = str(relation["candidate_id"])
+            if candidate_id in actual_by_candidate:
+                raise JudgeValidationError("judge output has a duplicate candidate relation")
+            actual_by_candidate[candidate_id] = relation
+
+        expected_by_candidate: dict[str, Mapping[str, Any]] = {}
+        for window in expected_windows:
+            candidate_id = window.get("candidate_id")
+            if not isinstance(candidate_id, str) or not candidate_id:
+                raise JudgeValidationError("requested candidate window has an invalid candidate_id")
+            if candidate_id in expected_by_candidate:
+                raise JudgeValidationError("request contains a duplicate candidate_id")
+            expected_by_candidate[candidate_id] = window
+        if set(actual_by_candidate) != set(expected_by_candidate):
+            raise JudgeValidationError("judge output candidate set differs from the module request")
+
+        normalized_relations: list[dict[str, Any]] = []
+        for candidate_id, window in expected_by_candidate.items():
+            candidate_result = dict(actual_by_candidate[candidate_id])
+            if candidate_result.get("prompt_injection_observed") is True:
+                normalized_relations.append(candidate_result)
+                continue
+            try:
+                normalized = _validate_judge_response(
+                    {
+                        "schema_version": JUDGE_OUTPUT_VERSION,
+                        "fact_checks": [{"fact_check_id": fact_check_id, "source_relations": [candidate_result]}],
+                    },
+                    fact_check_id=fact_check_id,
+                    window=window,
+                )
+            except JudgeValidationError as exc:
+                normalized_relations.append(conservative_candidate_response(candidate_id))
+                substitutions.append({"fact_check_id": fact_check_id, "candidate_id": candidate_id, "reason": str(exc)})
+            else:
+                normalized.pop("support_span_valid", None)
+                normalized_relations.append(normalized)
+        normalized_facts.append({"fact_check_id": fact_check_id, "source_relations": normalized_relations})
+    return {"schema_version": JUDGE_OUTPUT_VERSION, "fact_checks": normalized_facts}, substitutions
+
+
 def _select_route(
     routes: Sequence[JudgeRoute], writer_family: str | None, reviewer_family: str | None
 ) -> JudgeRoute | None:

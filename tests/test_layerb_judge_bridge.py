@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from scripts.audit import layerb_judge_bridge, layerb_shadow
+from scripts.audit import layerb_collect_emissions, layerb_judge_bridge, layerb_shadow
 
 PINNED_CODEX_MODEL = "gpt-5.6-terra"
 
@@ -120,11 +120,88 @@ def _relation(response: dict[str, Any]) -> dict[str, Any]:
 def _validate_single(response: dict[str, Any], raw: str) -> dict[str, Any]:
     returned = dict(response)
     returned.pop("_shadow_observed", None)
+    returned.pop("_bridge_substituted", None)
     return layerb_shadow._validate_judge_response(
         returned,
         fact_check_id="fact-1",
         window={"candidate_id": "candidate-1", "raw_window": raw},
     )
+
+
+def _two_candidate_request(
+    first_raw: str = "The expedition took 17 days.", second_raw: str = "A sibling source has malformed spans."
+) -> dict[str, Any]:
+    windows = (_window("candidate-1", first_raw), _window("candidate-2", second_raw))
+    sources: list[dict[str, Any]] = []
+    untrusted_data: list[dict[str, Any]] = []
+    for window in windows:
+        nonce, block = layerb_shadow._serialize_untrusted_window(window, prompt_version=layerb_shadow.PROMPT_VERSION)
+        source = {key: value for key, value in window.items() if key != "raw_window"}
+        source["untrusted_window_sha256"] = window["raw_window_sha256"]
+        sources.append(source)
+        untrusted_data.append(
+            {
+                "window_sha256": window["raw_window_sha256"],
+                "candidate_ids": [window["candidate_id"]],
+                "nonce": nonce,
+                "block": block,
+            }
+        )
+    return {
+        "schema_version": layerb_shadow.JUDGE_INPUT_VERSION,
+        "prompt_version": layerb_shadow.PROMPT_VERSION,
+        "system_instruction": "Apply the Layer-B contract exactly.",
+        "fact_checks": [
+            {"fact_check_id": "fact-1", "claim": "The expedition took 18 days.", "candidate_sources": sources}
+        ],
+        "untrusted_data": untrusted_data,
+    }
+
+
+def _two_candidate_result(
+    *, first_injection: bool = False, first_bad_span: bool = False, second_bad_span: bool = False
+) -> dict[str, Any]:
+    first_raw = "The expedition took 17 days."
+    second_raw = "A sibling source has malformed spans."
+    return {
+        "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
+        "fact_checks": [
+            {
+                "fact_check_id": "fact-1",
+                "source_relations": [
+                    {
+                        "candidate_id": "candidate-1",
+                        "relation": "NO_RELATION" if first_injection else "CONTRADICTS",
+                        "support_spans": []
+                        if first_injection
+                        else [
+                            {
+                                "start": 0,
+                                "end": len(first_raw) + int(first_bad_span),
+                                "role": "CONTRADICTS",
+                            }
+                        ],
+                        "confidence": "high",
+                        "prompt_injection_observed": first_injection,
+                        "probe_marker": "preserve-injection" if first_injection else None,
+                    },
+                    {
+                        "candidate_id": "candidate-2",
+                        "relation": "ENTAILS",
+                        "support_spans": [
+                            {
+                                "start": 0,
+                                "end": len(second_raw) + int(second_bad_span),
+                                "role": "SUPPORTS",
+                            }
+                        ],
+                        "confidence": "high",
+                        "prompt_injection_observed": False,
+                    },
+                ],
+            }
+        ],
+    }
 
 
 def test_parse_request_decodes_unicode_window_and_rejects_wrong_schema() -> None:
@@ -244,6 +321,152 @@ def test_collector_module_envelope_multiple_candidates_uses_each_decoded_window(
             fact_check_id="fact-1",
             window={"candidate_id": candidate_id, "raw_window": raw},
         )
+
+
+def test_bridge_preserves_valid_contradiction_with_one_bad_span_sibling(monkeypatch: pytest.MonkeyPatch) -> None:
+    request = _two_candidate_request()
+    _stub_codex(monkeypatch, output=_two_candidate_result(second_bad_span=True), events=_model_trace())
+
+    response = layerb_judge_bridge.run_bridge(request, _config())
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0] == {
+        "candidate_id": "candidate-1",
+        "relation": "CONTRADICTS",
+        "support_spans": [{"start": 0, "end": 28, "role": "CONTRADICTS"}],
+        "confidence": "high",
+        "prompt_injection_observed": False,
+        "probe_marker": None,
+    }
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert response["_bridge_substituted"] == [
+        {
+            "fact_check_id": "fact-1",
+            "candidate_id": "candidate-2",
+            "reason": "judge support span is empty or out of bounds",
+        }
+    ]
+
+
+def test_bridge_preserves_injection_while_substituting_bad_span_sibling(monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_codex(
+        monkeypatch,
+        output=_two_candidate_result(first_injection=True, second_bad_span=True),
+        events=_model_trace(),
+    )
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0]["prompt_injection_observed"] is True
+    assert relations[0]["probe_marker"] == "preserve-injection"
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-2"
+
+
+def test_bridge_substitutes_non_boolean_injection_flag_per_candidate(monkeypatch: pytest.MonkeyPatch) -> None:
+    model_output = _two_candidate_result()
+    model_output["fact_checks"][0]["source_relations"][0]["prompt_injection_observed"] = "true"
+    _stub_codex(monkeypatch, output=model_output, events=_model_trace())
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0] == layerb_shadow.conservative_candidate_response("candidate-1")
+    assert relations[1]["relation"] == "ENTAILS"
+    assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-1"
+
+
+def test_bridge_substitutes_every_invalid_candidate_without_losing_the_envelope(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_codex(
+        monkeypatch,
+        output=_two_candidate_result(first_bad_span=True, second_bad_span=True),
+        events=_model_trace(),
+    )
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
+
+    assert response["fact_checks"][0]["source_relations"] == [
+        layerb_shadow.conservative_candidate_response("candidate-1"),
+        layerb_shadow.conservative_candidate_response("candidate-2"),
+    ]
+    assert [record["candidate_id"] for record in response["_bridge_substituted"]] == [
+        "candidate-1",
+        "candidate-2",
+    ]
+
+
+@pytest.mark.parametrize(
+    "envelope_failure",
+    (
+        "wrong_schema",
+        "wrong_fact_id",
+        "duplicate_fact_id",
+        "source_relations_not_list",
+        "duplicate_candidate_id",
+        "candidate_set_mismatch",
+        "candidate_relation_not_mapping",
+    ),
+)
+def test_bridge_envelope_failures_remain_module_fatal(monkeypatch: pytest.MonkeyPatch, envelope_failure: str) -> None:
+    model_output = _two_candidate_result()
+    fact = model_output["fact_checks"][0]
+    relations = fact["source_relations"]
+    if envelope_failure == "wrong_schema":
+        model_output["schema_version"] = "wrong-schema"
+    elif envelope_failure == "wrong_fact_id":
+        fact["fact_check_id"] = "unexpected-fact"
+    elif envelope_failure == "duplicate_fact_id":
+        model_output["fact_checks"].append(dict(fact))
+    elif envelope_failure == "source_relations_not_list":
+        fact["source_relations"] = {"candidate-1": relations[0]}
+    elif envelope_failure == "duplicate_candidate_id":
+        relations[1]["candidate_id"] = "candidate-1"
+    elif envelope_failure == "candidate_set_mismatch":
+        relations[1]["candidate_id"] = "unexpected-candidate"
+    elif envelope_failure == "candidate_relation_not_mapping":
+        relations[1] = "not-an-object"
+    _stub_codex(monkeypatch, output=model_output, events=_model_trace())
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
+
+    assert response["fact_checks"][0]["source_relations"] == [
+        layerb_shadow.conservative_candidate_response("candidate-1"),
+        layerb_shadow.conservative_candidate_response("candidate-2"),
+    ]
+    assert "_bridge_substituted" not in response
+
+
+def test_digit_17_not_18_round_trips_bridge_and_collector_with_contradiction_intact(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _two_candidate_request()
+    _stub_codex(monkeypatch, output=_two_candidate_result(second_bad_span=True), events=_model_trace())
+    bridge_response = layerb_judge_bridge.run_bridge(request, _config())
+    parsed = layerb_judge_bridge.parse_request(request)
+    module = layerb_collect_emissions.ModuleEnvelope(
+        corpus="probe",
+        artifact_sha256="a" * 64,
+        cases=(
+            layerb_collect_emissions.PreparedCase(
+                corpus="probe",
+                case={"case_id": "digit-17-not-18", "fact_check_id": "fact-1"},
+                windows=tuple(
+                    parsed.windows_by_fact_candidate[("fact-1", candidate_id)]
+                    for candidate_id in ("candidate-1", "candidate-2")
+                ),
+            ),
+        ),
+    )
+
+    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, bridge_response)
+
+    relations = normalized["digit-17-not-18"]["fact_checks"][0]["source_relations"]
+    assert relations[0]["relation"] == "CONTRADICTS"
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert substitutions["digit-17-not-18"] == bridge_response["_bridge_substituted"]
 
 
 @pytest.mark.parametrize(
