@@ -16,6 +16,11 @@ while [ "$DIR" != "/" ] && [ ! -f "$DIR/package.json" ]; do
 done
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$DIR}"
 PYTHON="$PROJECT_DIR/.venv/bin/python"
+# The embedded parser is pure stdlib — any python3 works. Without this fallback
+# the PostToolUseFailure path silently no-ops wherever the project venv is not
+# resolvable (e.g. worktrees without a linked .venv), which made the compound-
+# failure fix environment-dependent.
+[ -x "$PYTHON" ] || PYTHON="$(command -v python3 || true)"
 
 HAS_PYTEST=1
 if [ -x "$PYTHON" ]; then
@@ -129,7 +134,9 @@ matches = list(pytest_summary_pattern.finditer(output_str))
 if matches:
     last_match = matches[-1]
     counts = last_match.group("counts")
-    if "failed" not in counts and "error" not in counts:
+    # Require a positive "passed" signal: "no tests ran in 0.12s" and stray
+    # "<word> in N.Ns" lines from other tools must NOT count as a green run.
+    if "passed" in counts and "failed" not in counts and "error" not in counts:
         sys.exit(0)
 
 sys.exit(1)

@@ -290,6 +290,28 @@ def test_stamp_pytest_compound_command_segment_success(tmp_path):
     assert result.returncode == 0
     assert not marker.exists()
 
+    # 3. "no tests ran" must NOT stamp: a wrong test path in a failing compound
+    # produces a summary with no positive "passed" signal.
+    payload_no_tests = json.dumps({
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/nonexistent && exit 1"
+        },
+        "tool_output": "============================= no tests ran in 0.12s ==============================",
+    })
+
+    result = subprocess.run(
+        [str(STAMP_PATH)],
+        cwd=repo,
+        input=payload_no_tests,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert not marker.exists()
+
 
 def test_inline_skip_allows(monkeypatch):
     assert _run(monkeypatch, "SKIP_PYTEST_HOOK=1 git push origin main") == 0
