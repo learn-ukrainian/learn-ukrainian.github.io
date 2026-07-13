@@ -37,7 +37,7 @@
     "rehype-mermaid": "^3.0.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "^0.35.2",
+    "sharp": "^0.35.3",
     "ts-fsrs": "^5.4.1",
     "typescript": "^6.0.3"
   },
