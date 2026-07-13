@@ -27,7 +27,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import thread_handoff_canary
+try:
+    from scripts.orchestration import thread_handoff_canary
+except ModuleNotFoundError as exc:
+    if __package__ or exc.name != "scripts":
+        raise
+    import thread_handoff_canary
 
 SCHEMA_VERSION = 2
 DEFAULT_MONITOR_BASE_URL = "http://127.0.0.1:8765"

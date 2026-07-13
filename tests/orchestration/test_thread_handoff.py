@@ -90,6 +90,27 @@ def resumed_with_proof(tmp_path: Path, state: dict, thread_id: str = "new-thread
     return resumed, proof_path
 
 
+def test_direct_script_help_from_repository_root():
+    repo_root = Path(__file__).resolve().parents[2]
+    env = os.environ.copy()
+    env.pop("CODEX_THREAD_ID", None)
+    env.pop("CODEX_SESSION_ID", None)
+
+    completed = subprocess.run(
+        [".venv/bin/python", "scripts/orchestration/thread_handoff.py", "--help"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert "Prepare and guard agent-specific thread handoffs." in completed.stdout
+    for command in ("prepare", "confirm-started", "resume", "check", "audit"):
+        assert command in completed.stdout
+
+
 def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
     now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
     state = prepared()
