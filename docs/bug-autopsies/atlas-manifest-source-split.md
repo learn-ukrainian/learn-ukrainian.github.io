@@ -8,8 +8,12 @@ relation workflow
 
 ## Outcome
 
-The 8,552-entry released manifest is an intentional superset of the
-course-vocabulary builder's output. It contains promoted content and source
+**Symptom:** running `make atlas` before a relation-only publication rebuilds
+only the course layer (≈6.8K entries) and replaces the released 8,552-entry
+manifest — the release silently shrinks by ~1,700 entries.
+
+**Root cause:** the 8,552-entry released manifest is an intentional superset of
+the course-vocabulary builder's output. It contains promoted content and source
 inventory entries that `scripts.lexicon.build_data_manifest` never reads.
 Running `make atlas` before a relation-only publication replaces that superset
 with the course-only layer; it is not a reproducing release build.
@@ -94,8 +98,9 @@ covers that behavior. The safety outcome is correct, but it is not a direct
 
 ## Correct publish preparation
 
-Do not run `make atlas-publish` for relation-only work: it first runs the
-course-only builder. In a primary checkout with the required local data, use:
+**Prevention:** never run `make atlas-publish` for relation-only work: it first
+runs the course-only builder. Hydrate the pointer asset first and follow the
+sequence below. In a primary checkout with the required local data, use:
 
 ```bash
 .venv/bin/python -c \

@@ -4,6 +4,7 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 
 <!-- INDEX-START -->
 | Date | Issue | Category | Summary |
+|------|-------|----------|---------|
 | --- | --- | --- | --- |
 | 2026-07-13 | #4975 | atlas-build / source-split | `make atlas` starts with the course-vocabulary builder, but the 8,552-entry live Atlas also contains 3,376 promoted grow/source-inventory entries. A relation-only run therefore replaces the full release with a smaller, non-equivalent set. Hydrate the pointer asset and re-enrich in place; `make atlas-publish` is unsafe for this path. Detail in [atlas-manifest-source-split.md](atlas-manifest-source-split.md). |
 | 2026-07-10 | #4857 | git-discipline | Read-only review delegate ran `gh pr checkout 4849` at repo root → primary checkout left on `pr-4849` (~7 min, silently wrong code for all repo-root readers). delegate.py neither prevents nor detects children moving primary HEAD; guard hook covers interactive shells only. Prior fossils: `pr-4397/4556/4557`. Fix = runtime enforcement (worktree-default reviews + branch assert-on-exit), tracked #4857. Detail in `git-discipline.md`. |
