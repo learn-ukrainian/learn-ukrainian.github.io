@@ -339,12 +339,33 @@ const isActive = (href: string) => {
       {sidebar && (
         <script is:inline>
           {/* Desktop keeps the lesson sidebar open (sticky column); collapse it
-              by default on narrow screens so it doesn't push content down. */}
+              by default on narrow screens so it doesn't push content down.
+              On desktop, center the current lesson in the sidebar's own scroll
+              container so long tracks don't reset navigation back to module 1. */}
           (() => {
-            const details = document.querySelector('.lu-sidebar');
-            if (details && window.matchMedia('(max-width: 899px)').matches) {
-              details.open = false;
+            const sidebar = document.querySelector('.lu-sidebar');
+            if (!(sidebar instanceof HTMLElement)) return;
+            if (window.matchMedia('(max-width: 899px)').matches) {
+              sidebar.open = false;
+              return;
             }
+
+            const activeLink = sidebar.querySelector('.lu-sidebar-link[aria-current="page"]');
+            if (!(activeLink instanceof HTMLElement)) return;
+
+            const centerActiveLink = () => {
+              const sidebarRect = sidebar.getBoundingClientRect();
+              const activeRect = activeLink.getBoundingClientRect();
+              const targetTop =
+                sidebar.scrollTop +
+                activeRect.top -
+                sidebarRect.top -
+                sidebar.clientHeight / 2 +
+                activeRect.height / 2;
+              sidebar.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+            };
+
+            requestAnimationFrame(centerActiveLink);
           })();
         </script>
       )}

@@ -409,7 +409,8 @@ body {
 .lu-sidebar-link:hover {
   background: var(--lu-surface-muted);
 }
-.lu-sidebar-link.active {
+.lu-sidebar-link.active,
+.lu-sidebar-link[aria-current='page'] {
   background: var(--lu-blue-light);
   color: var(--lu-blue-dark);
   font-weight: 600;
@@ -421,7 +422,8 @@ body {
   font-variant-numeric: tabular-nums;
   color: var(--lu-text-muted);
 }
-.lu-sidebar-link.active .lu-sidebar-num {
+.lu-sidebar-link.active .lu-sidebar-num,
+.lu-sidebar-link[aria-current='page'] .lu-sidebar-num {
   color: var(--lu-blue);
 }
 .lu-sidebar-text {
@@ -451,6 +453,9 @@ body {
     border: none;
     padding: 0;
     background: none;
+  }
+  .lu-sidebar-nav {
+    padding-bottom: max(32px, calc((100vh - 100px) / 2));
   }
 }
 
