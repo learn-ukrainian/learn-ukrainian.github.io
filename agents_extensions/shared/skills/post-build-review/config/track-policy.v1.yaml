@@ -1,7 +1,33 @@
-review_protocol_version: 1.0.1
-deterministic_contract_version: 1.1.0
-semantic_prompt_version: 1.1.0
-track_policy_version: 1.1.0
+review_protocol_version: 2.0.0
+deterministic_contract_version: 1.2.0
+semantic_prompt_version: 2.0.0
+track_policy_version: 1.2.0
+
+defaults:
+  semantic_requirements:
+    learner_evidence_ledger: required_when_applicable
+    workflow_leakage_review: required
+    modality_capability_provenance: required
+  mechanical_checks:
+    learner_workflow_leakage:
+      severity: medium
+      patterns:
+        - id: accepted-dossier-or-package
+          regex: '(?:доступн\w*|прийнят\w*)\s+(?:дослідницьк\w*\s+)?(?:пакет\w*|досьє\w*)'
+        - id: project-corpus
+          regex: 'проєктн\w*\s+(?:літературн\w*\s+)?корпус\w*'
+        - id: internal-search-result
+          regex: 'у\s+цьому\s+пошуку\s+не\s+знайдено'
+    evidence_requirements:
+      - id: audio-dependent-task
+        modality: audio
+        regex: '(?:слух\w*|чує\w*|почут\w*|прослух\w*|аудіо\w*|часов\w*\s+позначк\w*)'
+      - id: video-dependent-task
+        modality: video
+        regex: '(?:дивіться|переглян\w*|відео\w*|екранн\w*\s+момент\w*)'
+      - id: image-dependent-task
+        modality: image
+        regex: '(?:розгляньте|проаналізуйте)\s+(?:зображенн\w*|фотограф\w*|портрет\w*)'
 
 families:
   core:

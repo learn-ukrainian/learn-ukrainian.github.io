@@ -26,7 +26,7 @@ write curriculum audit/status/review files or telemetry.
 | Mechanically verifiable track rules | `post-build-review/config/track-policy.v1.yaml` |
 | Semantic judgment | `post-build-review/prompts/*.md` |
 | Orchestration order | `post-build-review/SKILL.md` |
-| Output shape | `post-build-review/schema/review-result.v1.schema.json` |
+| Output shape | `post-build-review/schema/review-result.v2.schema.json` |
 | Operator maintenance | This runbook |
 
 The evidence-derived size contract consumes the existing size-policy audit. It
@@ -43,6 +43,9 @@ Every result records:
 - `track_policy_version`
 - effective `prompt_sha256`
 - reviewer agent, family, exact model, and effort
+- reviewer evidence capabilities and learner-evidence access ledger
+- exact raw semantic-response SHA-256, byte count, parser status, and contract status
+- atomic claim ledger with count-consistency enforcement
 - deterministic argv/cwd/exit/output hashes/config provenance
 - source-file hashes and a normalized reproducibility key
 
@@ -56,7 +59,8 @@ Bump the version responsible for a behavior change:
 | Track mapping, mechanical rule, skip classification | `track_policy_version` |
 
 Use semantic versioning. A breaking schema change requires a new schema id/file
-and review protocol major version. Prompt hashes change automatically from the
+and review protocol major version. Schema v1 remains available for historical
+validation; new reviews emit v2. Prompt hashes change automatically from the
 exact assembled common + family + resolved context.
 
 ## Bug-fix workflow
@@ -78,6 +82,19 @@ For every review defect:
    all material findings; internal same-family helpers do not satisfy the gate.
 9. Commit with an `X-Agent` trailer and merge through one scoped PR. Close the
    linked stream issue with command/output evidence and clean the worktree.
+
+For semantic-response defects, preserve the exact reviewer output. Never copy
+selected fields into a new JSON object, strip a Markdown wrapper, choose one of
+multiple objects, adjust counts, or reconcile retries. Finalize the raw response
+to a structured `INCOMPLETE` result. A retry starts a distinct review and cannot
+erase the failed result.
+
+For learner-evidence defects, separate catalog metadata from content evidence.
+Metadata may verify identity/date labels; it cannot verify what a recording,
+video, image, or source passage contains. Record the reviewer's direct modality
+capabilities during `prepare`. If a required modality cannot be inspected,
+return `INCOMPLETE`; if evidence is definitively metadata-only, inaccessible,
+or absent for the learner task, record a material grounding/pedagogy finding.
 
 `.agent/` is preserve-by-default because it contains runtime state. A skill
 rename/removal therefore requires an explicit post-deploy check for the old
@@ -116,8 +133,9 @@ independent agents.
 
 - Outputs inside the repository are rejected.
 - Unknown tracks, ambiguous/missing targets, malformed audit JSON, incomplete
-  seminar claim coverage, source drift, required skips, and missing provenance
-  fail closed.
+  seminar claim coverage, claim-ledger/count mismatch, malformed or duplicated
+  semantic JSON, uncovered learner-evidence modalities, source drift, required
+  skips, and missing provenance fail closed.
 - `finalize` exits zero only for `PASS`; `BLOCK`, `REVISE`, and `INCOMPLETE`
   return non-zero after writing a valid structured result.
 - Never use the legacy module audit/shell wrapper or opt into MDX regeneration

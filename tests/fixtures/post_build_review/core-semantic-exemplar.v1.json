@@ -7,8 +7,11 @@
     "claim_coverage": {
       "status": "not_applicable",
       "claims_total": 0,
-      "claims_verified": 0
+      "claims_checked": 0,
+      "claims_supported": 0
     },
+    "claim_ledger": [],
+    "learner_evidence_ledger": [],
     "findings": []
   }
 }
