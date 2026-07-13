@@ -148,7 +148,7 @@ def _good_v2_snapshot() -> dict:
     """
     return {
         "generated_at": "2026-07-13T12:00:00Z",
-        "lineage_id": "grok-build/5055-canary-gate:5055-semantic-fix",
+        "lineage_id": "lineage-grok-build-5055-canary-gate-5055-semantic-fix",
         "rollover_id": "rollover-5055-20260713-01",
         "seed": 987654321,
         "goals": [
@@ -812,3 +812,259 @@ def test_all_prior_strictness_determinism_and_origin_legacy_tests_still_pass(tmp
     d2 = json.loads(p2.read_text(encoding="utf-8"))
     assert [a["id"] for a in d1["anchors"]] == [a["id"] for a in d2["anchors"]]
     assert d1["lineage_id"] == d2["lineage_id"] and d1["rollover_id"] == d2["rollover_id"]
+
+
+# --- Centralized identity validator regression tests (must cover the blocker cases at all three boundaries) ---
+# All prior/origin-main tests preserved; only added at end. Valid engine-shaped examples continue to pass.
+
+
+def test_identity_validator_rejects_bad_values_at_mint(tmp_path: Path):
+    """!!!, ../../lineage, embedded newline/control, uppercase, wrong prefix, empty suffix, overlong fail at mint."""
+    bad_lineage_values = [
+        "!!!",
+        "../../lineage",
+        "lineage-foo\nbar",
+        "lineage-foo\x00bar",
+        "lineage-FOO-BAR",
+        "Lineage-abc",
+        "foo-bar-baz",
+        "lineage-",
+        "lineage-" + "x" * 57,  # 8 + 57 = 65 > 64
+        "lineage--double",
+        "lineage-foo.",
+        "lineage-foo/bar",
+    ]
+    for i, bad in enumerate(bad_lineage_values):
+        snap = _good_v2_snapshot()
+        snap["lineage_id"] = bad
+        s = tmp_path / f"badlid{i}.json"
+        s.write_text(json.dumps(snap), encoding="utf-8")
+        rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(tmp_path / f"plid{i}.json")])
+        assert rc == 1, f"mint must reject bad lineage_id at input: {bad!r}"
+
+    bad_rollover_values = [
+        "!!!",
+        "../../rollover",
+        "rollover-foo\nbar",
+        "rollover-foo\x1bbar",  # ESC control
+        "Rollover-123",
+        "rollover-",
+        "rollover-" + "y" * 57,
+        "rollover--hyphen",
+        "rollover-abc.def",
+        "rollover-abc\\def",
+        "wrongprefix-123",
+    ]
+    for i, bad in enumerate(bad_rollover_values):
+        snap = _good_v2_snapshot()
+        snap["rollover_id"] = bad
+        s = tmp_path / f"badrid{i}.json"
+        s.write_text(json.dumps(snap), encoding="utf-8")
+        rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(tmp_path / f"prid{i}.json")])
+        assert rc == 1, f"mint must reject bad rollover_id at input: {bad!r}"
+
+
+def test_identity_validator_rejects_bad_values_in_forged_probes_at_score(tmp_path: Path):
+    """Bad lineage/rollover in forged production probe fail at score (probe validation gate)."""
+    probe = _mint_v2(tmp_path)
+    pdata = json.loads(probe.read_text(encoding="utf-8"))
+    lid, rid = pdata["lineage_id"], pdata["rollover_id"]
+    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+
+    bads = [
+        "!!!",
+        "../../lineage",
+        "lineage-foo\nx",
+        "lineage-foo\x00x",
+        "LINEAGE-abc",
+        "lineage-",
+        "lineage-" + "z" * 57,
+        "lineage-foo--bar",
+        "lineage-foo.",
+    ]
+    for i, bad in enumerate(bads):
+        pdata_bad = json.loads(probe.read_text(encoding="utf-8"))
+        pdata_bad["lineage_id"] = bad
+        badp = tmp_path / f"forged_l_{i}.json"
+        badp.write_text(json.dumps(pdata_bad), encoding="utf-8")
+        rc = context_canary.main(
+            [
+                "score",
+                "--probe",
+                str(badp),
+                "--answers",
+                str(ans),
+                "--expected-lineage-id",
+                lid,
+                "--expected-rollover-id",
+                rid,
+            ]
+        )
+        assert rc == 2, f"forged probe lineage must be rejected in score validation: {bad!r}"
+
+    bads_r = [
+        "!!!",
+        "../../roll",
+        "rollover-foo\nx",
+        "rollover-foo\x0bx",
+        "ROLLOVER-x",
+        "rollover-",
+        "rollover-" + "a" * 57,
+        "wrong-1",
+        "rollover-abc.def",
+    ]
+    for i, bad in enumerate(bads_r):
+        pdata_bad = json.loads(probe.read_text(encoding="utf-8"))
+        pdata_bad["rollover_id"] = bad
+        badp = tmp_path / f"forged_r_{i}.json"
+        badp.write_text(json.dumps(pdata_bad), encoding="utf-8")
+        rc = context_canary.main(
+            [
+                "score",
+                "--probe",
+                str(badp),
+                "--answers",
+                str(ans),
+                "--expected-lineage-id",
+                lid,
+                "--expected-rollover-id",
+                rid,
+            ]
+        )
+        assert rc == 2, f"forged probe rollover must be rejected in score validation: {bad!r}"
+
+
+def test_identity_validator_rejects_bad_expected_cli_at_score_boundaries(tmp_path: Path):
+    """--expected-lineage-id / --expected-rollover-id bad values fail at expected-CLI boundary (validated before ==)."""
+    probe = _mint_v2(tmp_path)
+    pdata = json.loads(probe.read_text(encoding="utf-8"))
+    good_lid, good_rid = pdata["lineage_id"], pdata["rollover_id"]
+    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+
+    bad_expected_l = [
+        "!!!",
+        "../../lineage",
+        "lineage-foo\nbar",
+        "lineage-FOO",
+        "foo-bar",
+        "lineage-",
+        "lineage-" + "x" * 57,
+        "lineage-foo..bar",
+        "lineage-abc-",
+    ]
+    for bad in bad_expected_l:
+        rc = context_canary.main(
+            [
+                "score",
+                "--probe",
+                str(probe),
+                "--answers",
+                str(ans),
+                "--expected-lineage-id",
+                bad,
+                "--expected-rollover-id",
+                good_rid,
+            ]
+        )
+        assert rc == 2, f"bad --expected-lineage-id must fail at CLI validation boundary: {bad!r}"
+
+    bad_expected_r = [
+        "!!!",
+        "rollover-foo\n",
+        "rollover-UPPER",
+        "rollover",
+        "rollover-",
+        "rollover-" + "y" * 57,
+        "../../roll",
+        "rollover-foo/bar",
+        "rollover--x",
+    ]
+    for bad in bad_expected_r:
+        rc = context_canary.main(
+            [
+                "score",
+                "--probe",
+                str(probe),
+                "--answers",
+                str(ans),
+                "--expected-lineage-id",
+                good_lid,
+                "--expected-rollover-id",
+                bad,
+            ]
+        )
+        assert rc == 2, f"bad --expected-rollover-id must fail at CLI validation boundary: {bad!r}"
+
+    # both bad also fails
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            "!!!",
+            "--expected-rollover-id",
+            "!!!",
+        ]
+    )
+    assert rc == 2
+
+
+def test_valid_engine_shaped_identities_continue_to_pass_mint_score_and_expected(tmp_path: Path):
+    """Valid engine-shaped (lineage-... rollover-...) examples must keep passing at mint, probe, and expected-CLI."""
+    # mint
+    snap = _good_v2_snapshot()
+    s = tmp_path / "sval.json"
+    s.write_text(json.dumps(snap), encoding="utf-8")
+    p = tmp_path / "pval.json"
+    rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p)])
+    assert rc == 0
+    data = json.loads(p.read_text(encoding="utf-8"))
+    assert data["lineage_id"] == snap["lineage_id"]
+    assert data["rollover_id"] == snap["rollover_id"]
+
+    # score with expected exact raw
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    ans = tmp_path / "aval.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(p),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            data["lineage_id"],
+            "--expected-rollover-id",
+            data["rollover_id"],
+        ]
+    )
+    assert rc == 0
+
+    # also via the original _mint_v2 path + expected
+    probe2 = _mint_v2(tmp_path)
+    d2 = json.loads(probe2.read_text(encoding="utf-8"))
+    a2 = {a["id"]: a["a"] for a in d2["anchors"]}
+    aa2 = tmp_path / "a2.json"
+    aa2.write_text(json.dumps(a2), encoding="utf-8")
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe2),
+            "--answers",
+            str(aa2),
+            "--expected-lineage-id",
+            d2["lineage_id"],
+            "--expected-rollover-id",
+            d2["rollover_id"],
+        ]
+    )
+    assert rc == 0

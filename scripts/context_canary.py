@@ -63,6 +63,7 @@ import difflib
 import hashlib
 import json
 import random
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -171,6 +172,42 @@ def _validate_utc_timestamp(v: object) -> bool:
         return d.utcoffset() == dt.timedelta(0)
     except Exception:
         return False
+
+
+def _validate_identity(val: object, kind: str) -> bool:
+    """Centralized, closed identity validator aligned with the handoff engine.
+
+    - lineage_id: prefix 'lineage-' + 1+ lowercase alnum/hyphen, total len <=64
+    - rollover_id: prefix 'rollover-' + 1+ lowercase alnum/hyphen, total len <=64
+    - Full-string match only. Exact raw strings (NO normalization, NO strip, NO casefold).
+    - Rejects leading/trailing ws, any ws/control/newline, uppercase, wrong prefix,
+      punctuation (except hyphen), / \\ . .. traversal, empty suffix, overlong (>64).
+    - Also rejects consecutive path syntax (e.g. '--', '//').
+    Applied uniformly to: snapshot mint input, production probe validation at score,
+    and --expected-lineage-id/--expected-rollover-id (before any exact == comparison).
+    """
+    if not isinstance(val, str):
+        return False
+    # Reject leading/trailing whitespace on the raw value (no normalization performed)
+    if val != val.strip():
+        return False
+    # Reject embedded control chars, newlines, tabs, DEL etc.
+    if any(ord(c) < 32 or ord(c) == 127 for c in val):
+        return False
+    if not val or _has_unknowns(val):
+        return False
+    if len(val) > 64:
+        return False
+    if kind == "lineage":
+        if not re.fullmatch(r"lineage-[a-z0-9-]+", val):
+            return False
+    elif kind == "rollover":
+        if not re.fullmatch(r"rollover-[a-z0-9-]+", val):
+            return False
+    else:
+        return False
+    # Reject consecutive path syntax
+    return not ("--" in val or "//" in val or "\\\\" in val or ".." in val or val.endswith("-"))
 
 
 def _is_exact_legacy_anchors_only(probe: object) -> bool:
@@ -285,17 +322,19 @@ def cmd_mint(args: argparse.Namespace) -> int:
                     file=sys.stderr,
                 )
                 return 1
-            # Require explicit complete identity; never synthesize unknown
+            # Require explicit complete identity; never synthesize unknown.
+            # Use centralized closed validator (exact raw, no normalization) for both.
             lineage_id = snap.get("lineage_id")
             rollover_id = snap.get("rollover_id")
-            if not (isinstance(lineage_id, str) and lineage_id.strip() and not _has_unknowns(lineage_id)):
+            if not _validate_identity(lineage_id, "lineage"):
                 print(
-                    "error: --snapshot requires nonempty well-formed lineage_id (no UNKNOWN/synthesis)", file=sys.stderr
+                    "error: --snapshot requires well-formed lineage_id (prefix lineage-[a-z0-9-]+ <=64 chars, exact no ws/upper/punct/slash/control/empty-suffix/overlong)",
+                    file=sys.stderr,
                 )
                 return 1
-            if not (isinstance(rollover_id, str) and rollover_id.strip() and not _has_unknowns(rollover_id)):
+            if not _validate_identity(rollover_id, "rollover"):
                 print(
-                    "error: --snapshot requires nonempty well-formed rollover_id (no UNKNOWN/synthesis)",
+                    "error: --snapshot requires well-formed rollover_id (prefix rollover-[a-z0-9-]+ <=64 chars, exact no ws/upper/punct/slash/control/empty-suffix/overlong)",
                     file=sys.stderr,
                 )
                 return 1
@@ -376,8 +415,8 @@ def cmd_mint(args: argparse.Namespace) -> int:
                 "version": "2",
                 "schema": "production-handoff-v2",
                 "source": "snapshot",
-                "lineage_id": lineage_id.strip(),
-                "rollover_id": rollover_id.strip(),
+                "lineage_id": lineage_id,
+                "rollover_id": rollover_id,
                 "seed": seed,
                 "generated_at": snap.get("generated_at").strip(),
                 "anchor_counts": expected,
@@ -591,24 +630,25 @@ def cmd_score(args: argparse.Namespace) -> int:
             )
             return 2
 
-        # Require explicit lineage_id + rollover_id (no unknown)
+        # Require explicit lineage_id + rollover_id (no unknown). Use centralized validator, exact raw.
         lid = probe.get("lineage_id")
         rid = probe.get("rollover_id")
-        if not (isinstance(lid, str) and lid.strip() and not _has_unknowns(lid)):
-            print("error: v2 probe requires nonempty well-formed lineage_id", file=sys.stderr)
+        if not _validate_identity(lid, "lineage"):
+            print("error: v2 probe requires well-formed lineage_id (exact identity)", file=sys.stderr)
             return 2
-        if not (isinstance(rid, str) and rid.strip() and not _has_unknowns(rid)):
-            print("error: v2 probe requires nonempty well-formed rollover_id", file=sys.stderr)
+        if not _validate_identity(rid, "rollover"):
+            print("error: v2 probe requires well-formed rollover_id (exact identity)", file=sys.stderr)
             return 2
 
-        # Production score REQUIRES caller-supplied expected ids and exact match before any scoring
+        # Production score REQUIRES caller-supplied expected ids and exact match before any scoring.
+        # Validate with same centralized closed validator (exact raw) BEFORE the == comparison.
         exp_lid = getattr(args, "expected_lineage_id", None)
         exp_rid = getattr(args, "expected_rollover_id", None)
-        if not (isinstance(exp_lid, str) and exp_lid.strip() and not _has_unknowns(exp_lid)):
-            print("error: production score requires --expected-lineage-id (nonempty, well-formed)", file=sys.stderr)
+        if not _validate_identity(exp_lid, "lineage"):
+            print("error: production score requires --expected-lineage-id (well-formed identity)", file=sys.stderr)
             return 2
-        if not (isinstance(exp_rid, str) and exp_rid.strip() and not _has_unknowns(exp_rid)):
-            print("error: production score requires --expected-rollover-id (nonempty, well-formed)", file=sys.stderr)
+        if not _validate_identity(exp_rid, "rollover"):
+            print("error: production score requires --expected-rollover-id (well-formed identity)", file=sys.stderr)
             return 2
         if exp_lid != lid or exp_rid != rid:
             print(
