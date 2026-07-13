@@ -1,21 +1,21 @@
 {
-  "assembled_mdx_sha256": "f81e5ebb8e23e2dab9a24ac55d0f9c2f6a360c728a624d679eb85ad089423e4c",
+  "assembled_mdx_sha256": "f38578958465c5d26cbce71a2a03af8e9bc4cbefbcb481cb227af678b2e1287f",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "dfcb0f45b85ad272fd3827155690c5b137f42d2fac6e035b2bb810215fb9383f",
+    "digest": "ec1b50326990ebd276a3a8145e5b60a621caa98f142cb8d8e00376f7b2410a07",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-kultura-yak-systema.yaml",
-        "sha256": "e94306a85100bd643bf3d2149a41dd7deb8e67f6257b57374eb79f2c805787a5"
+        "sha256": "78a127469da440d5d3b13edf50f87957df77d444f37f2538743d73174aff6f1e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/module.md",
-        "sha256": "0f01467dd89868d9b246ee9a5b303704d0a89aa0cc5f679e3352edabaac6c6d9"
+        "sha256": "948e9dcd552a20a917c49878820ce371ef83ea07d8b10379e2786820d8925307"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/activities.yaml",
-        "sha256": "7ea217488f05fe2f9dfd0951202ee0b5685f8d364ddff0597fff29b430ddd186"
+        "sha256": "2de98b4d25ffb94df56888fd7234ae3ef59799d342a0028b958a0e14c1e59b2b"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/vocabulary.yaml",
@@ -23,17 +23,17 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/resources.yaml",
-        "sha256": "5756cde9124d3f152ddcae7880a78b1a32ca35007553cfb9b1dbd1fc2d73e9eb"
+        "sha256": "51f3a585de3ea09f64977525c8eecefe6cd399d0adb40dcb34ec17578880773a"
       }
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High APPROVE: decolonization framing remains source-grounded and rejects decorative-ethnography reduction.",
-    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
-    "pedagogy": "C1+ academic framework teaches six-layer reading method plus seminar answer structure grounded in public source evidence.",
-    "quote_integrity": "Public source pages cite public Ukrlib article text; shortened lesson excerpts keep source-safe ellipses and avoid unsupported forms.",
-    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
-    "source_hygiene": "Student-facing content is clean of internal IDs and uses public ukrlib.com.ua source URLs and джерельна сторінка language."
+    "engagement": "The final reviewer found distinct pedagogical value in the four-text matrix and analytical evidence limits rather than repeated framing or padding.",
+    "framing": "The final reviewer confirmed that the module centers Ukrainian intellectual agency, rejects decorative-ethnography reduction, and handles Christian heritage without unsupported overclaiming.",
+    "naturalness": "The final reviewer found an excellent Ukrainian academic seminar register and specifically approved the VESUM-backed wording and activity alignment.",
+    "pedagogy": "AGY Gemini 3.1 Pro High independently verified the final six-file diff, including the six-layer method, four-mode comparison, five-column matrix, activity behavior, and source boundaries.",
+    "review": "AGY tasks review-5090-agy-final and review-5090-agy-hash-challenge; the sole apparent hash finding was withdrawn after inspection of lesson_sources_v2 canonical plan hashing; final disposition PASS with no actionable defects.",
+    "source_grounding": "The final reviewer verified the public Institute of History and UINP bridge sources, four reading sources, quotation alignment, and rights/source hygiene."
   },
   "floors": {
     "beauty": 8.5,
@@ -51,14 +51,14 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-13T23:18:50Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 10.0,
     "engagement": 9.0,
-    "naturalness": 9.0,
-    "pedagogical": 10.0,
-    "tone": 9.0
+    "naturalness": 9.5,
+    "pedagogical": 9.5,
+    "tone": 9.5
   },
   "slug": "narodna-kultura-yak-systema",
   "track": "folk",
@@ -66,6 +66,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5.6-sol"
   }
 }
