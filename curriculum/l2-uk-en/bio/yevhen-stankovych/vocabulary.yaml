@@ -1,96 +1,80 @@
 - lemma: неофольклоризм
   translation: neofolklorism
   pos: noun
-  usage: Сучасна композиторська мова, яка осучаснює фольклорні інтонації й ритуальні жести.
-- lemma: фольк-опера
+  usage: Неофольклоризм перетворює народний матеріал модерними композиційними засобами.
+- lemma: фольклорна опера
   translation: folk opera
-  pos: noun
-  usage: Жанр, у якому поєднуються оперний простір, ритуальна символіка й народна інтонація.
+  pos: noun phrase
+  usage: Фольклорна опера поєднує сценічну дію, хор, оркестр і обрядовий матеріал.
 - lemma: камерна симфонія
   translation: chamber symphony
   pos: noun phrase
-  usage: Різновид симфонічної думки в менших формах, що зберігає масштабність і детальність.
-- lemma: вокально-симфонічний стиль
-  translation: vocal-symphonic style
+  usage: Камерна симфонія розгортає симфонічну логіку в невеликому виконавському складі.
+- lemma: оркестрування
+  translation: orchestration
+  pos: noun
+  usage: Оркестрування розподіляє музичний матеріал між інструментами й групами.
+- lemma: тембр
+  translation: timbre
+  pos: noun
+  usage: Тембр флейти змінюється залежно від регістру, артикуляції та оточення.
+- lemma: фактура
+  translation: texture
+  pos: noun
+  usage: Фактура ущільнюється, коли збільшується кількість одночасних голосів.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Високий регістр є акустичною ознакою, а не готовою емоційною оцінкою.
+- lemma: остинато
+  translation: ostinato
+  pos: noun
+  usage: Остинато може підтримувати ритмічну пульсацію сценічного епізоду.
+- lemma: ритмічна пульсація
+  translation: rhythmic pulse
   pos: noun phrase
-  usage: З’єднання голосу, оркестру й літературного тексту в єдиному драматичному жесті.
-- lemma: музика пам'яті
-  translation: music of memory
+  usage: Ритмічна пульсація стає переривчастою після оркестрового зламу.
+- lemma: динамічний контраст
+  translation: dynamic contrast
   pos: noun phrase
-  usage: Твори, що працюють із колективною травмою й громадською рефлексією.
-- lemma: культурно-інституційний тиск
-  translation: cultural-institutional pressure
+  usage: Динамічний контраст треба підтвердити двома точними моментами запису.
+- lemma: кульмінація
+  translation: culmination
+  pos: noun
+  usage: Кульмінація може виникати через щільність, регістр і повтор, а не лише через гучність.
+- lemma: партитура
+  translation: score
+  pos: noun
+  usage: Партитура потрібна для точного визначення складу, гармонії та редакційних змін.
+- lemma: вокально-симфонічний твір
+  translation: vocal-symphonic work
   pos: noun phrase
-  usage: Умови доступу, контролю й сценічного оформлення, які впливають на репертуарну історію.
-- lemma: межа доказу
-  translation: boundary of evidence
+  usage: Вокально-симфонічний твір поєднує слово, голоси й оркестрову форму.
+- lemma: сценічна версія
+  translation: stage version
   pos: noun phrase
-  usage: Межа між доведеними фактами й припущеннями у біографічному описі.
-- lemma: жива постать
-  translation: living figure
+  usage: Сценічна версія 2017 року є новим режисерським прочитанням твору.
+- lemma: атрибутоване свідчення
+  translation: attributed testimony
   pos: noun phrase
-  usage: Постаті, для якої важливо працювати лише з завершеними фактами та підтвердженими ролями.
-- lemma: інституційна рамка
-  translation: institutional frame
+  usage: Атрибутоване свідчення не слід подавати як безособовий архівний факт.
+- lemma: поминальний жанр
+  translation: commemorative genre
   pos: noun phrase
-  usage: Соціокультурне оточення, яке дає публічні умови й водночас задає межі.
-- lemma: жанрова різноманітність
-  translation: genre diversity
+  usage: Поминальний жанр має конкретну історичну й релігійну рамку.
+- lemma: хоровий пласт
+  translation: choral layer
   pos: noun phrase
-  usage: Різновиди творів, через які показується масштаб композитора.
-- lemma: деколонізаційне читання
-  translation: decolonial reading
+  usage: Хоровий пласт може діяти в унісоні або поділятися на окремі групи.
+- lemma: сольний інструмент
+  translation: solo instrument
   pos: noun phrase
-  usage: Підхід, що повертає українську логіку тлумачення без редукції до колоніальних ярликів.
-- lemma: педагогічна лінія
-  translation: pedagogical lineage
+  usage: Флейта є сольним інструментом у Камерній симфонії № 3.
+- lemma: виконавський склад
+  translation: performing forces
   pos: noun phrase
-  usage: Передавання школи через учителів, послідовників і інституційну практику.
-- lemma: композиторська школа
-  translation: compositional school
+  usage: Виконавський склад треба називати за метаданими конкретного запису.
+- lemma: звукова щільність
+  translation: sonic density
   pos: noun phrase
-  usage: Традиція навчання й трансферу прийомів між поколіннями музикантів.
-- lemma: Лятошинський–Скорик–Станкович
-  translation: Lyatoshynsky-Skoryk-Stankovych
-  pos: proper noun chain
-  usage: Лінія спадкоємності, через яку простежується безперервність українського симфонізму.
-- lemma: редакційна робота
-  translation: editorial work
-  pos: noun phrase
-  usage: Праця з музичною публікацією та редакційними практиками, яка формує професійний контур.
-- lemma: Київська консерваторія
-  translation: Kyiv Conservatory
-  pos: proper noun
-  usage: Місце формування музичної освіти й подальшої педагогічної діяльності митця.
-- lemma: Національна спілка композиторів України
-  translation: Union of Composers of Ukraine
-  pos: proper noun
-  usage: Інституція, що фіксує професійні ролі й публічну присутність композиторів.
-- lemma: Національна музична академія України
-  translation: National Music Academy of Ukraine
-  pos: proper noun
-  usage: Освітня і професійна ланка, де розгорталася викладацька діяльність митця.
-- lemma: сценічна рецепція
-  translation: stage reception
-  pos: noun phrase
-  usage: Поступове прийняття та представлення твору в публічному просторі.
-- lemma: ритуальний пласт
-  translation: ritual layer
-  pos: noun phrase
-  usage: Елемент, через який фольк-опера пов’язує сюжет із традиційними формами.
-- lemma: політична нейтралізація
-  translation: political neutralization
-  pos: noun phrase
-  usage: Помилковий прийом, коли складний культурний контекст зводять до одного політичного ярлика.
-- lemma: символічна етика
-  translation: symbolic ethics
-  pos: noun phrase
-  usage: Здатність говорити про травматичні теми без сенсаційності й без маніпуляції.
-- lemma: офіційне визнання
-  translation: official recognition
-  pos: noun phrase
-  usage: Нагороди та посади як історичний факт, що потребує окремої інтерпретації.
-- lemma: джерельна обережність
-  translation: evidentiary caution
-  pos: noun phrase
-  usage: Постійна перевірка того, що справді доведено в джерелах, а що є припущенням.
+  usage: Звукова щільність може зростати без прямого збільшення гучності.

@@ -1,32 +1,52 @@
-- title: "Станкович Євген Федорович — Енциклопедія історії України"
+- title: Станкович Євген Федорович — Енциклопедія історії України
   role: reference
-  url: "https://www.history.org.ua/?termin=Stankovych_Y"
-  notes: "Основний довідник для біографічного каркасу: дата народження, освіта, навчання, творчість, загальні віхи."
-- title: "Станкович Євген Федорович — Національна спілка композиторів України"
+  url: https://www.history.org.ua/?termin=Stankovych_Y
+  notes: Авторитетний каркас для дати й місця народження, освіти, професійних ролей і творів.
+- title: Станкович Євген Федорович — Національна спілка композиторів України
   role: reference
-  url: "https://composersukraine.org/index.php?id=675"
-  notes: "Інституційна біографія: участь, ролі, напрями творчої діяльності."
-- title: "Станкович Євген Федорович — Національна премія України імені Тараса Шевченка"
+  url: https://composersukraine.org/index.php?id=675
+  notes: Інституційна біографія; використано для зіставлення меж навчання та вже здійснених ролей у Спілці.
+- title: Станкович Євген Федорович — Комітет з Національної премії України імені Тараса Шевченка
   role: reference
-  url: "https://knpu.gov.ua/winners/stankovych-ievhen-fedorovych/"
-  notes: "Офіційна інформація про почесні відзнаки та суспільне визнання."
-- title: "Євген Федорович Станкович — Національна академія мистецтв України"
+  url: https://knpu.gov.ua/winners/stankovych-ievhen-fedorovych/
+  notes: Офіційне підтвердження премії 1977 року за Симфонію № 3 «Я стверджуюсь» 1976 року.
+- title: Євген Станкович — Національна академія мистецтв України
   role: reference
-  url: "https://academyart.org.ua/academicians/stankovych-yevhen"
-  notes: "Профільний огляд академічної діяльності, статусу та напрямів за публічними даними."
-- title: "«Коли цвіте папороть» Є. Станковича: міфологема національного театру"
-  role: tertiary
-  url: "https://doi.org/10.32461/2226-0285.2.2019.190597"
-  notes: "Фахова стаття про сценічну й міфологічну рамку фольк-опери, без ототожнення з персональною судовою справою."
-- title: "Євген Станкович / Yevhen Stankovych — Ukrainian Live Classic"
-  role: reference
-  url: "https://ukrainianlive.org/stankovych-yevhen"
-  notes: "Публічна музична довідка про репертуар і виконання для контексту сучасної рецепції."
-- title: "Соломія Івахів, Євген Станкович — Wikimedia Commons"
+  url: https://academyart.org.ua/academicians/stankovych-yevhen
+  notes: Інституційний профіль академічної й педагогічної діяльності; поточні формули слід читати з урахуванням дати сторінки.
+- title: «Коли цвіте папороть» — сторінка постановки Львівської національної опери
+  role: performance-context
+  url: https://opera.lviv.ua/shows/koly-tsvite-paporot/
+  notes: Постановчий склад і контекст цілісної сценічної версії 2017 року; не є архівним наказом про радянське блокування.
+- title: «Коли цвіте папороть» Є. Станковича — міфологема національного театру
+  role: scholarship
+  url: https://doi.org/10.32461/2226-0285.2.2019.190597
+  notes: Фахова стаття про сценічну й міфологічну рамку твору та його історію.
+- title: 360 LIVE — «Коли цвіте папороть»
+  role: performance
+  url: https://www.youtube.com/watch?v=ksnZppeInv0
+  notes: Офіційний запис Львівської національної опери; слухацький відтинок 03:00–06:00, диригент Володимир Сіренко, режисер Василь Вовкун.
+- title: Yevhen Stankovych — Chamber Symphony No. 3 for flute and 12 strings
+  role: performance
+  url: https://www.youtube.com/watch?v=UF2mkue4AfQ
+  notes: Андрій Карп'як, камерний оркестр «Віртуози Львова», диригент Войцех Чепель; слухацький відтинок 00:00–02:30.
+- title: Yevhen Stankovych — Symphony No. 2 «Dramatic», 2023 second edition
+  role: performance
+  url: https://www.youtube.com/watch?v=hZ0GKn5oo50
+  notes: Kyiv Symphony Orchestra, диригент Christian Blex; живий запис у Єні 14 жовтня 2023 року, відтинок 00:00–03:00. Не ототожнювати другу редакцію з первісною.
+- title: «Панахида за померлими з голоду»
+  role: performance
+  url: https://www.youtube.com/watch?v=LoT-V4uhcJ4
+  notes: Kyiv Camerata, оркестр Національної філармонії, хор «Думка», Keri-Lynn Wilson; відтинок 01:00–04:30.
+- title: Memorial Concert Commemorating Babyn Yar
+  role: memory-context
+  url: https://ukrainianjewishencounter.org/en/memorial-concert-commemorating-babyn-yar/
+  notes: Українсько-єврейська зустріч документує виконання «Каддиш-реквієму» на текст Дмитра Павличка у програмі вшанування Бабиного Яру 2016 року.
+- title: Слово о полку Ігоревім — Енциклопедія історії України
+  role: historical-context
+  url: http://www.history.org.ua/?termin=Slovo_o_polku
+  notes: Контекст середньовічної пам'ятки Русі; використовується без виключної російської рамки.
+- title: Соломія Івахів, Євген Станкович — Wikimedia Commons
   role: media
-  url: "https://commons.wikimedia.org/wiki/File:%D0%A1%D0%BE%D0%BB%D0%BE%D0%BC%D1%96%D1%8F_%D0%86%D0%B2%D0%B0%D1%85%D1%96%D0%B2,_%D0%84%D0%B2%D0%B3%D0%B5%D0%BD_%D0%A1%D1%82%D0%B0%D0%BD%D0%BA%D0%BE%D0%B2%D0%B8%D1%87.jpg"
-  notes: "Можливе ілюстративне джерело портрета за відкритою ліцензією."
-- title: "Lviv Opera: Wiederauferstehung nach Verbot und Vergessenheit..."
-  role: tertiary
-  url: "https://opera.lviv.ua/wiederauferstehung-nach-verbot-und-vergessenheit-die-erste-szenische-premiere-der-ukrainischen-folk-oper-wenn-der-farn-bluht-von-yevhen-stankovych-an-der-lemberger-staatsoper-lwiw-ukraine-2017/"
-  notes: "Короткий документарний контекст про складну сценічну долю фольк-опери."
+  url: https://commons.wikimedia.org/wiki/File:%D0%A1%D0%BE%D0%BB%D0%BE%D0%BC%D1%96%D1%8F_%D0%86%D0%B2%D0%B0%D1%85%D1%96%D0%B2,_%D0%84%D0%B2%D0%B3%D0%B5%D0%BD_%D0%A1%D1%82%D0%B0%D0%BD%D0%BA%D0%BE%D0%B2%D0%B8%D1%87.jpg
+  notes: CC BY-SA 4.0; credit «Файли надані Соломією Івахів», дата зйомки 19 березня 2017 року. Не використовується без атрибуції.
