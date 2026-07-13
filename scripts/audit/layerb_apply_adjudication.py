@@ -27,6 +27,7 @@ from scripts.audit.layerb_keys import _build_event_index
 from scripts.audit.layerb_label_common import LabelJoinError, atomic_write_json, read_json, sha256_file
 from scripts.audit.layerb_label_scaffold import (
     AGGREGATE_RELATIONS,
+    CORPUS_STATUSES,
     FACT_CHECK_DECISIONS,
     LAYER_A_DECISIONS,
     LAYER_A_REASONS,
@@ -42,6 +43,7 @@ CASE_JUDGMENT_FIELDS = {
     "expected_fact_check_decision",
     "expected_layer_a_decision",
     "expected_layer_a_reason",
+    "corpus_verification_status",
 }
 CANDIDATE_JUDGMENT_FIELDS = {"expected_source_relation", "expected_support_spans"}
 CUSTOM_CASE_FIELD_NAMES = {
@@ -49,12 +51,14 @@ CUSTOM_CASE_FIELD_NAMES = {
     "fact_check_decision": "expected_fact_check_decision",
     "layer_a_decision": "expected_layer_a_decision",
     "layer_a_reason": "expected_layer_a_reason",
+    "corpus_verification_status": "corpus_verification_status",
 }
 CUSTOM_CASE_ENUMS = {
     "expected_aggregate_relation": AGGREGATE_RELATIONS,
     "expected_fact_check_decision": FACT_CHECK_DECISIONS,
     "expected_layer_a_decision": LAYER_A_DECISIONS,
     "expected_layer_a_reason": LAYER_A_REASONS,
+    "corpus_verification_status": CORPUS_STATUSES,
 }
 CUSTOM_CANDIDATE_FIELD_NAMES = {
     "candidate.expected_source_relation": "expected_source_relation",
@@ -461,6 +465,7 @@ def apply_adjudications(
 
     final_cases: list[dict[str, Any]] = []
     unresolved_case_ids: list[str] = []
+    unprobed_case_ids: list[str] = []
     agreed = 0
     for case in draft.get("cases", []):
         case_id = str(case["case_id"])
@@ -470,11 +475,17 @@ def apply_adjudications(
             )
             if final_case["adjudication"]["status"] == "UNRESOLVED":
                 unresolved_case_ids.append(case_id)
+            cstat = final_case.get("corpus_verification_status")
+            if cstat in {"UNVERIFIED", "FIXTURE_ATTESTED"}:
+                unprobed_case_ids.append(case_id)
         else:
             final_case = copy.deepcopy(dict(case))
             adjudication = final_case.get("adjudication")
             if not isinstance(adjudication, Mapping) or adjudication.get("status") != "AGREED":
                 raise LabelJoinError(f"non-adjudicated case {case_id} is not already AGREED")
+            cstat = final_case.get("corpus_verification_status")
+            if cstat in {"UNVERIFIED", "FIXTURE_ATTESTED"}:
+                unprobed_case_ids.append(case_id)
             agreed += 1
         final_case.pop("notes", None)
         final_case["annotators"] = list(ANNOTATORS)
@@ -496,21 +507,29 @@ def apply_adjudications(
         raise LabelJoinError(f"unexpected adjudication status counts: {dict(sorted(statuses.items()))}")
 
     final = copy.deepcopy(dict(draft))
-    final["qualification_eligible"] = not unresolved_case_ids
-    final["qualification_blockers"] = (
-        []
-        if not unresolved_case_ids
-        else [
-            f"{len(unresolved_case_ids)} UNRESOLVED cases pending re-adjudication",
-            *[UNRESOLVED_BLOCKER_PREFIX + case_id for case_id in sorted(unresolved_case_ids)],
-        ]
-    )
+    final["qualification_eligible"] = not unresolved_case_ids and not unprobed_case_ids
+    blockers: list[str] = []
+    if unresolved_case_ids:
+        blockers.append(f"{len(unresolved_case_ids)} UNRESOLVED cases pending re-adjudication")
+        blockers.extend(
+            UNRESOLVED_BLOCKER_PREFIX + case_id for case_id in sorted(unresolved_case_ids)
+        )
+    if unprobed_case_ids:
+        n = len(unprobed_case_ids)
+        blockers.append(
+            f"{n} cases with FIXTURE_ATTESTED or UNVERIFIED corpus_verification_status pending re-probe"
+        )
+        blockers.extend(
+            f"corpus_verification_status pending re-probe: {case_id}" for case_id in sorted(unprobed_case_ids)
+        )
+    final["qualification_blockers"] = blockers
     final["cases"] = final_cases
     summary = {
         "cases": len(final_cases),
         "rulings": dict(sorted(Counter(str(decision["ruling"]) for decision in decision_cases.values()).items())),
         "adjudication_statuses": dict(sorted(statuses.items())),
         "unresolved_case_ids": sorted(unresolved_case_ids),
+        "unprobed_corpus_case_ids": sorted(unprobed_case_ids),
     }
     return final, summary
 
