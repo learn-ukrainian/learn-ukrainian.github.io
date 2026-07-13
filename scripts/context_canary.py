@@ -108,12 +108,14 @@ def _derive_probe_anchors(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
         else:
             raw = len(mod_files)
         if _is_available(raw) or raw == 0:
-            anchors.append({
-                "id": cid,
-                "category": "fact",
-                "q": q,
-                "a": str(raw).strip(),
-            })
+            anchors.append(
+                {
+                    "id": cid,
+                    "category": "fact",
+                    "q": q,
+                    "a": str(raw).strip(),
+                }
+            )
 
     # 3 DECISION/RATIONALE (commit subjects = captured decisions/rationale)
     for i in range(3):
@@ -123,17 +125,30 @@ def _derive_probe_anchors(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
             entry = last_commits[i] if isinstance(last_commits[i], dict) else {}
             raw = entry.get("subject") if isinstance(entry, dict) else None
             if _is_available(raw):
-                anchors.append({
-                    "id": f"commit_{i}_subject",
-                    "category": "decision/rationale",
-                    "q": f"What is the subject of commit index {i} (0=most recent) in the tool-backed snapshot (captures decision/rationale)?",
-                    "a": str(raw).strip(),
-                })
+                anchors.append(
+                    {
+                        "id": f"commit_{i}_subject",
+                        "category": "decision/rationale",
+                        "q": f"What is the subject of commit index {i} (0=most recent) in the tool-backed snapshot (captures decision/rationale)?",
+                        "a": str(raw).strip(),
+                    }
+                )
 
     # 2 NEGATIVE-CONSTRAINT
     neg_specs = [
-        ("git_modified_status", "The git status --short summary from the snapshot (''/clean encodes negative constraint: no uncommitted changes at mint)?", lambda: ";".join(f"{m.get('status','')}{m.get('path','')}" for m in mod_files if isinstance(m, dict)) or "clean"),
-        ("ahead_count", "The 'ahead' count vs upstream from snapshot (0 encodes negative constraint of no pending divergence)?", lambda: get(ahead_behind, "ahead")),
+        (
+            "git_modified_status",
+            "The git status --short summary from the snapshot (''/clean encodes negative constraint: no uncommitted changes at mint)?",
+            lambda: (
+                ";".join(f"{m.get('status', '')}{m.get('path', '')}" for m in mod_files if isinstance(m, dict))
+                or "clean"
+            ),
+        ),
+        (
+            "ahead_count",
+            "The 'ahead' count vs upstream from snapshot (0 encodes negative constraint of no pending divergence)?",
+            lambda: get(ahead_behind, "ahead"),
+        ),
     ]
     for cid, q, getter in neg_specs:
         if sum(1 for a in anchors if a.get("category") == "negative-constraint") >= 2:
@@ -142,29 +157,41 @@ def _derive_probe_anchors(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
         if _is_available(raw) or raw in (0, "0"):
             av = "0" if raw in (0, "0") else str(raw).strip()
             if _is_available(av) or av == "0":
-                anchors.append({
-                    "id": cid,
-                    "category": "negative-constraint",
-                    "q": q,
-                    "a": av,
-                })
+                anchors.append(
+                    {
+                        "id": cid,
+                        "category": "negative-constraint",
+                        "q": q,
+                        "a": av,
+                    }
+                )
 
     # 2 GOAL/NEXT-ACTION
     goal_specs = [
-        ("head_sha_next_ref", "HEAD SHA from snapshot (base reference for goal/next-action state at mint)?", lambda: get(git, "head") or get(git, "full_head")),
-        ("recent_commit_sha_goal", "Most recent commit SHA from snapshot (advancement reference for goals)?", lambda: (last_commits[0].get("sha") if last_commits and isinstance(last_commits[0], dict) else None)),
+        (
+            "head_sha_next_ref",
+            "HEAD SHA from snapshot (base reference for goal/next-action state at mint)?",
+            lambda: get(git, "head") or get(git, "full_head"),
+        ),
+        (
+            "recent_commit_sha_goal",
+            "Most recent commit SHA from snapshot (advancement reference for goals)?",
+            lambda: last_commits[0].get("sha") if last_commits and isinstance(last_commits[0], dict) else None,
+        ),
     ]
     for cid, q, getter in goal_specs:
         if sum(1 for a in anchors if a.get("category") == "goal/next-action") >= 2:
             break
         raw = getter()
         if _is_available(raw):
-            anchors.append({
-                "id": cid,
-                "category": "goal/next-action",
-                "q": q,
-                "a": str(raw).strip(),
-            })
+            anchors.append(
+                {
+                    "id": cid,
+                    "category": "goal/next-action",
+                    "q": q,
+                    "a": str(raw).strip(),
+                }
+            )
 
     return anchors
 
@@ -186,10 +213,20 @@ def cmd_mint(args: argparse.Namespace) -> int:
                 print("error: --snapshot must be a JSON object", file=sys.stderr)
                 return 1
             anchors = _derive_probe_anchors(snap)
-            counts = {c: sum(1 for a in anchors if a.get("category") == c)
-                      for c in ("fact", "decision/rationale", "negative-constraint", "goal/next-action")}
-            if len(anchors) != 10 or counts != {"fact": 3, "decision/rationale": 3, "negative-constraint": 2, "goal/next-action": 2}:
-                print("error: insufficient evidence from tool-backed snapshot (UNKNOWN/unavailable/non-tool-backed excluded; need validated 3 fact, 3 decision/rationale, 2 negative-constraint, 2 goal/next-action)", file=sys.stderr)
+            counts = {
+                c: sum(1 for a in anchors if a.get("category") == c)
+                for c in ("fact", "decision/rationale", "negative-constraint", "goal/next-action")
+            }
+            if len(anchors) != 10 or counts != {
+                "fact": 3,
+                "decision/rationale": 3,
+                "negative-constraint": 2,
+                "goal/next-action": 2,
+            }:
+                print(
+                    "error: insufficient evidence from tool-backed snapshot (UNKNOWN/unavailable/non-tool-backed excluded; need validated 3 fact, 3 decision/rationale, 2 negative-constraint, 2 goal/next-action)",
+                    file=sys.stderr,
+                )
                 return 1
             probe = {
                 "version": "1",
@@ -237,7 +274,10 @@ def cmd_score(args: argparse.Namespace) -> int:
 
     anchors = probe.get("anchors", [])
     if not isinstance(anchors, list) or len(anchors) != 10:
-        print(f"error: probe must have exactly 10 anchors (got {len(anchors) if isinstance(anchors, list) else 0}); derive via --snapshot for production canary", file=sys.stderr)
+        print(
+            f"error: probe must have exactly 10 anchors (got {len(anchors) if isinstance(anchors, list) else 0}); derive via --snapshot for production canary",
+            file=sys.stderr,
+        )
         return 1
 
     # exact normalized matching for identifiers
@@ -267,7 +307,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 
     k = len(anchors)
     # strict 10/10 production scoring
-    is_pass = (correct == 10 and k == 10)
+    is_pass = correct == 10 and k == 10
     verdict = "PASS" if is_pass else "FAIL-HANDOFF"
 
     for aid, ok, q, truth, got in rows:
@@ -286,14 +326,16 @@ def cmd_score(args: argparse.Namespace) -> int:
             writer = csv.writer(handle)
             if is_new:
                 writer.writerow(["context_tokens", "model", "k", "correct", "score", "verdict"])
-            writer.writerow([
-                getattr(args, "context_tokens", 0),
-                getattr(args, "model", "unknown"),
-                k,
-                correct,
-                f"{(correct / k):.3f}",
-                verdict,
-            ])
+            writer.writerow(
+                [
+                    getattr(args, "context_tokens", 0),
+                    getattr(args, "model", "unknown"),
+                    k,
+                    correct,
+                    f"{(correct / k):.3f}",
+                    verdict,
+                ]
+            )
 
     if getattr(args, "verdict", None):
         vpath = Path(args.verdict)
@@ -317,19 +359,31 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    mint = sub.add_parser("mint", help="Derive deterministic 10-anchor probe from tool-backed snapshot (or legacy facts).")
-    mint.add_argument("--snapshot", help="Path to tool-backed snapshot JSON (git/monitor/github); derives exactly 10 anchors with categories")
+    mint = sub.add_parser(
+        "mint", help="Derive deterministic 10-anchor probe from tool-backed snapshot (or legacy facts)."
+    )
+    mint.add_argument(
+        "--snapshot",
+        help="Path to tool-backed snapshot JSON (git/monitor/github); derives exactly 10 anchors with categories",
+    )
     mint.add_argument("--facts", help="Legacy inline JSON list or path to [{id,q,a},...] (for non-production)")
     mint.add_argument("--out", required=True, help="Probe output path")
     mint.set_defaults(func=cmd_mint)
 
-    score = sub.add_parser("score", help="Diff answers vs probe (normalized id match + configurable text match). Strict 10/10 rc=2.")
+    score = sub.add_parser(
+        "score", help="Diff answers vs probe (normalized id match + configurable text match). Strict 10/10 rc=2."
+    )
     score.add_argument("--probe", required=True)
     score.add_argument("--answers", required=True, help="JSON object {id: recalled-answer}")
     score.add_argument("--context-tokens", type=int, default=0, help="Context size for the log row")
     score.add_argument("--model", default="unknown")
     score.add_argument("--log", help="Append deterministic row to this CSV")
-    score.add_argument("--text-match", choices=["normalized", "exact"], default="normalized", help="normalized (default): ignore ws/case; exact: strict string")
+    score.add_argument(
+        "--text-match",
+        choices=["normalized", "exact"],
+        default="normalized",
+        help="normalized (default): ignore ws/case; exact: strict string",
+    )
     score.add_argument("--verdict", help="Write machine-readable JSON verdict to this path")
     score.set_defaults(func=cmd_score)
 

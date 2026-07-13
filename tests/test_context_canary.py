@@ -119,10 +119,21 @@ def test_perfect_10_10_recall_passes_and_logs(tmp_path: Path):
     ans_path = tmp_path / "ans.json"
     ans_path.write_text(json.dumps(answers), encoding="utf-8")
     log = tmp_path / "log.csv"
-    rc = context_canary.main([
-        "score", "--probe", str(probe), "--answers", str(ans_path),
-        "--context-tokens", "600000", "--model", "claude-opus-4-8", "--log", str(log)
-    ])
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans_path),
+            "--context-tokens",
+            "600000",
+            "--model",
+            "claude-opus-4-8",
+            "--log",
+            str(log),
+        ]
+    )
     assert rc == 0
     body = log.read_text(encoding="utf-8").splitlines()
     assert body[0].startswith("context_tokens,model,k,correct,score,verdict")
@@ -182,9 +193,7 @@ def test_machine_readable_json_verdict(tmp_path: Path):
     ans = tmp_path / "ans.json"
     ans.write_text(json.dumps(answers), encoding="utf-8")
     vpath = tmp_path / "verdict.json"
-    rc = context_canary.main([
-        "score", "--probe", str(probe), "--answers", str(ans), "--verdict", str(vpath)
-    ])
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--verdict", str(vpath)])
     assert rc == 0
     v = json.loads(vpath.read_text(encoding="utf-8"))
     assert v["version"] == "1"
@@ -202,8 +211,36 @@ def test_deterministic_logging_same_inputs_same_rows(tmp_path: Path):
     ans = tmp_path / "ans.json"
     ans.write_text(json.dumps(answers), encoding="utf-8")
     log = tmp_path / "det.csv"
-    rc1 = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--context-tokens", "123", "--model", "test-m", "--log", str(log)])
-    rc2 = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--context-tokens", "123", "--model", "test-m", "--log", str(log)])
+    rc1 = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--context-tokens",
+            "123",
+            "--model",
+            "test-m",
+            "--log",
+            str(log),
+        ]
+    )
+    rc2 = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--context-tokens",
+            "123",
+            "--model",
+            "test-m",
+            "--log",
+            str(log),
+        ]
+    )
     assert rc1 == 0 and rc2 == 0
     lines = log.read_text(encoding="utf-8").strip().splitlines()
     # header + 2 identical data rows
