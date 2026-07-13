@@ -105,6 +105,71 @@ def test_redact_text_redacts_unquoted_passphrase_but_not_code():
     assert redact_text(code) == code
 
 
+# --- Decision-boundary pins (PR #5047 rework) ------------------------------
+#
+# The unquoted-assignment gate was inverted from a secret-shape ALLOWLIST (which
+# leaked real env secrets carrying @ $ ! or comments) to a code-shape VETO with a
+# spacing signal:
+#   * tight `KEY=value`  (env/shell/.env/compose) -> ALWAYS redact
+#   * spaced `key = value` (code/INI)             -> redact unless the value is
+#                                                    unambiguously a code
+#                                                    expression (() [] {} or ,)
+# The three tests below pin that boundary in BOTH directions plus the accepted
+# fail-closed over-redaction. All secrets here are throwaway fakes.
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        # Findings 1-3: tight env secrets with @ / $ / ! that the old shape
+        # allowlist let leak — must be redacted again.
+        "POSTGRES_PASSWORD=p@ssw0rdwithat123456",
+        "DB_PASS=my$uper$ecretlongvalue1234",
+        "FOO_TOKEN=verylongwith!exclaim12345",
+        # Finding: tight passphrase with a trailing comment / double spaces.
+        "PASSWORD=correct horse battery staple # production",
+        "MY_SECRET=word1  word2 word3",
+        # Finding 6-ish: spaced INI-style bare value (no code punctuation) stays
+        # redacted — correct side of the trade for a security control.
+        "password = hunter2captain",
+    ],
+)
+def test_redact_text_still_redacts_secret_assignments(line):
+    redacted = redact_text(line)
+    assert REDACTION in redacted, line
+    # The secret material must be gone.
+    for leak in ("p@ssw0rd", "my$uper", "!exclaim", "correct horse", "word1", "hunter2"):
+        assert leak not in redacted, line
+
+
+@pytest.mark.parametrize(
+    "code",
+    [
+        # The three original burn lines (regression) ...
+        "token_verdicts = vesum_gate.check_tokens(sentence)",
+        "tokens = [t for t in words if len(t) > 1]",
+        "secret_keys = set(pairwise(parts))",
+        # ... plus mixed-operator and dict-comprehension forms.
+        "secret = compute(a, b) + other[0]",
+        "tokens = {t: 1 for t in words}",
+    ],
+)
+def test_redact_text_leaves_spaced_code_expressions_byte_identical(code):
+    assert redact_text(code) == code, code
+    assert REDACTION not in redact_text(code), code
+
+
+def test_redact_text_expected_fail_closed_over_redacts_spaced_dotted_ref():
+    # EXPECTED FAIL-CLOSED: a spaced bare dotted reference assigned to a
+    # secret-named key has no code punctuation (() [] {} ,), so it cannot be told
+    # apart from an INI-style secret value. We accept the over-redaction — a rare
+    # mangled code line beats a leaked secret.
+    line = "token_fn = vesum_gate.check_tokens"
+    redacted = redact_text(line)
+    assert REDACTION in redacted
+    assert "vesum_gate" not in redacted
+
+
 def test_redact_value_recursively_redacts_secret_keys_and_values():
     value = {
         "nested": {

@@ -1,13 +1,26 @@
 """Best-effort secret redaction for agent egress paths.
 
-Accepted gap: an *unquoted* assignment to a secret-named key whose value is a
-whitespace-separated passphrase with no code punctuation (e.g.
-``PASSWORD=correct horse battery staple``) is redacted, but one that cannot be
-told apart from prose is not the concern here — quoted and JSON forms are always
-covered. The unquoted value-shape gate (see ``_value_is_secret_shaped``)
-deliberately errs toward passing code through, because corrupting a reviewed
-diff is the failure mode we are fixing; real single-token secrets in env dumps
-(``FOO_TOKEN=ghp_...``) still pass the shape gate and remain redacted.
+This is a security control, so the unquoted-assignment gate fails CLOSED: a
+secret-named key is redacted unless the value is *unambiguously* a code
+expression. The only pass-through is a *spaced* assignment (``key = value``,
+code / INI style) whose value carries call/subscript/collection punctuation
+(``( ) [ ] { }`` or a comma) — exactly what corrupted reviewed diffs in the
+2026-07-12 burn (function calls, comprehensions, set/list literals). A *tight*
+assignment (``KEY=value`` with no whitespace around ``=`` — env / shell / .env /
+docker-compose style) is ALWAYS redacted, because env dumps are the canonical
+place real secrets leak and are virtually never PEP8-spaced.
+
+Two accepted, deliberate gaps (both err toward NOT leaking secrets):
+
+- Spaced bare identifiers / dotted refs assigned to a secret-named key
+  (``token_fn = vesum_gate.check_tokens``) stay REDACTED — they lack code
+  punctuation, so they fail closed. A rare mangled code line is acceptable; a
+  leaked secret is not.
+- Spaced INI-style secret values (``password = hunter2``) are redacted. That is
+  the correct side of the trade for a security control.
+
+Quoted (``key = 'secret'``) and JSON (``{"key": "secret"}``) forms are always
+covered, unconditionally.
 """
 
 from __future__ import annotations
@@ -43,18 +56,18 @@ _BLOCK_PATTERNS = (
     ),
 )
 
-# Value-shape gate for the UNQUOTED assignment pattern only. `_ASSIGNMENT_PATTERNS[1]`
+# Code-shape VETO for the UNQUOTED assignment pattern only. `_ASSIGNMENT_PATTERNS[1]`
 # matches any `key = <rest of line>`, so a secret-*named* LHS identifier
-# (token_verdicts, secret_keys, tokens, ...) used to nuke a benign RHS such as
+# (token_verdicts, secret_keys, ...) used to nuke a benign RHS such as
 # `vesum_gate.check_tokens(sentence)` or `[t for t in words if len(t) > 1]`,
 # corrupting reviewed diffs and producing bogus "blocking" review findings
-# (2026-07-12 burn). Best practice (gitleaks/trufflehog): require a secret-*shaped*
-# value, not just a secret-named key. We accept either a single opaque token or a
-# bare whitespace-separated passphrase, and reject anything containing code
-# punctuation — ()[]{}, . operators — which is exactly what function calls,
-# attribute-access-with-call, comprehensions, and literals carry.
-_SECRET_VALUE_TOKEN = re.compile(r"^[A-Za-z0-9_\-+/=.~:]{8,}$")
-_SECRET_VALUE_PASSPHRASE = re.compile(r"^[A-Za-z0-9]+(?: [A-Za-z0-9]+)+$")
+# (2026-07-12 burn). We do NOT allowlist secret-*shaped* values — that under-
+# redacted real env secrets carrying `@`, `$`, `!`, or trailing comments (the
+# PR #5047 regression). Instead we redact by default and veto only a *spaced*
+# assignment whose value carries these call/subscript/collection characters,
+# which is exactly what function calls, comprehensions, and set/list/dict
+# literals — and virtually no env-dump secret value — contain.
+_CODE_EXPRESSION_CHARS = frozenset("()[]{},")
 
 _TOKEN_PATTERNS = (
     re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
@@ -122,13 +135,9 @@ def _is_secret_key(key: str) -> bool:
     return bool(parts and parts[-1] == "APIKEY")
 
 
-def _value_is_secret_shaped(value: str) -> bool:
-    """True when an unquoted RHS looks like a credential, not a code expression."""
-    candidate = value.strip()
-    return bool(
-        _SECRET_VALUE_TOKEN.match(candidate)
-        or _SECRET_VALUE_PASSPHRASE.match(candidate)
-    )
+def _is_code_expression(value: str) -> bool:
+    """True when an unquoted RHS carries call/subscript/collection punctuation."""
+    return any(char in _CODE_EXPRESSION_CHARS for char in value)
 
 
 def _redact_assignment_match(match: re.Match[str]) -> str:
@@ -136,10 +145,14 @@ def _redact_assignment_match(match: re.Match[str]) -> str:
         return match.group(0)
 
     quote = match.groupdict().get("quote") or ""
-    # Quoted / JSON forms (quote present) stay fail-closed: a literal assigned to a
-    # secret-named key is plausibly a secret. The unquoted pattern (no quote) must
-    # clear the value-shape gate, else benign code expressions get mangled.
-    if not quote and not _value_is_secret_shaped(match.group("value")):
-        return match.group(0)
+    if not quote:
+        # Unquoted assignment. Read the spacing around `=` off the prefix group,
+        # which captured `key\s*=\s*` — no line re-scan needed. A tight `KEY=value`
+        # (no surrounding whitespace) is env / shell / .env / compose style and is
+        # ALWAYS redacted. A spaced `key = value` is code / INI style: redact by
+        # default, veto only when the value is unambiguously a code expression.
+        spaced = bool(re.search(r"\s", match.group("prefix")))
+        if spaced and _is_code_expression(match.group("value")):
+            return match.group(0)
 
     return f"{match.group('prefix')}{quote}{REDACTION}{quote}"
