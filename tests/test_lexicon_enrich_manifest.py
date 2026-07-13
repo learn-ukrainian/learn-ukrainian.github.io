@@ -2930,6 +2930,112 @@ def test_corpus_relation_pairs_render_only_approved_rows(monkeypatch) -> None:
     ]
 
 
+def test_corpus_homonym_renders_fixture(monkeypatch) -> None:
+    conn = _conn()
+    conn.executemany(
+        """
+        INSERT INTO relation_pairs(
+            relation, word_a, word_b, gloss_a, gloss_b, source, source_url, review_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            ("homonym", "атлас", "атлас", "атлас - satin fabric", "атлас - map-book", "miyklas.com.ua", "https://example.invalid/atlas", "approved"),
+        ],
+    )
+    _patch_synonym_vesum(monkeypatch, {"атлас"})
+
+    relations = _corpus_relation_pairs_by_headword(
+        conn,
+        {"entries": [{"lemma": "атлас"}]},
+    )
+
+    assert relations["атлас"]["homonym"] == [
+        {
+            "word": "атлас",
+            "gloss": "атлас - satin fabric",
+            "source": "relation_pairs/miyklas.com.ua",
+            "pattern": "corpus relation pair",
+            "vein": 3,
+            "gate": {"vesum": "both valid"},
+            "source_url": "https://example.invalid/atlas",
+        },
+        {
+            "word": "атлас",
+            "gloss": "атлас - map-book",
+            "source": "relation_pairs/miyklas.com.ua",
+            "pattern": "corpus relation pair",
+            "vein": 3,
+            "gate": {"vesum": "both valid"},
+            "source_url": "https://example.invalid/atlas",
+        },
+    ]
+
+    merged = _merge_homonym_relations(None, relations["атлас"]["homonym"])
+    assert merged is not None
+    assert merged["items"] == [
+        {"word": "атлас", "gloss": "атлас - satin fabric"},
+        {"word": "атлас", "gloss": "атлас - map-book"},
+    ]
+    assert merged["source"] == "relation_pairs/miyklas.com.ua: corpus relation pair → атлас"
+    assert merged["source_urls"] == ["https://example.invalid/atlas"]
+
+
+def test_corpus_homonym_deduplication(monkeypatch) -> None:
+    existing_relations = [
+        {
+            "word": "атлас",
+            "homonym_no": 2,
+            "gloss": "Збірник географічних карт.",
+            "pos": "іменник, чол. р.",
+            "source": "СУМ-11",
+            "pattern": "numbered homonym headword",
+            "vein": 1,
+            "source_url": "https://example.invalid/sum11/atlas",
+        }
+    ]
+
+    corpus_relations = [
+        {
+            "word": "атлас",
+            "gloss": "Збірник географічних карт",
+            "source": "relation_pairs/miyklas.com.ua",
+            "pattern": "corpus relation pair",
+            "vein": 3,
+            "source_url": "https://example.invalid/atlas",
+        },
+        {
+            "word": "атлас",
+            "gloss": "атлас - satin fabric",
+            "source": "relation_pairs/miyklas.com.ua",
+            "pattern": "corpus relation pair",
+            "vein": 3,
+            "source_url": "https://example.invalid/atlas",
+        }
+    ]
+
+    merged = _merge_homonym_relations(None, existing_relations + corpus_relations)
+
+    assert merged is not None
+    assert merged["items"] == [
+        {
+            "word": "атлас",
+            "homonym_no": 2,
+            "gloss": "Збірник географічних карт.",
+            "pos": "іменник, чол. р.",
+        },
+        {
+            "word": "атлас",
+            "gloss": "атлас - satin fabric",
+        }
+    ]
+    assert "СУМ-11: numbered homonym headwords" in merged["source"]
+    assert "relation_pairs/miyklas.com.ua: corpus relation pair → атлас" in merged["source"]
+    assert sorted(merged["source_urls"]) == [
+        "https://example.invalid/atlas",
+        "https://example.invalid/sum11/atlas",
+    ]
+
+
 def test_approved_cafe_verdict_renders_on_both_lemmas_and_resolves_form_aliases(tmp_path, monkeypatch) -> None:
     verdicts_path = tmp_path / "synonym_pair_verdicts.yaml"
     verdicts_path.write_text(

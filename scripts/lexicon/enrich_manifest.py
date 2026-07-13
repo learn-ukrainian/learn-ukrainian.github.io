@@ -3881,6 +3881,24 @@ def _merge_antonym_relations(
     return merged
 
 
+def _are_glosses_similar(g1: str, g2: str) -> bool:
+    """Compare two glosses using case-insensitive SequenceMatcher ratio on normalized text."""
+    def clean(s: str) -> str:
+        s = _strip_stress(s).lower()
+        # Keep only alphanumeric characters and spaces
+        s = "".join(c for c in s if c.isalnum() or c.isspace())
+        return " ".join(s.split())
+
+    c1 = clean(g1)
+    c2 = clean(g2)
+    if not c1 or not c2:
+        return False
+    if c1 == c2:
+        return True
+    from difflib import SequenceMatcher
+    return SequenceMatcher(None, c1, c2).ratio() >= 0.70
+
+
 def _merge_homonym_relations(
     existing: dict[str, Any] | None,
     relations: list[dict[str, Any]],
@@ -3932,7 +3950,15 @@ def _merge_homonym_relations(
         if not word or not gloss or (number is not None and (number < 1 or not pos)) or (number is None and pos):
             continue
         key = (word, number, gloss)
-        if key not in seen:
+
+        # Check if we have already seen a similar gloss for this homonym word
+        is_duplicate = False
+        for seen_word, _, seen_gloss in seen:
+            if seen_word == word and _are_glosses_similar(seen_gloss, gloss):
+                is_duplicate = True
+                break
+
+        if not is_duplicate:
             if additions >= _HOMONYM_ADDITION_CAP:
                 continue
             seen.add(key)
