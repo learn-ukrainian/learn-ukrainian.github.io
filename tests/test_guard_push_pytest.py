@@ -184,3 +184,121 @@ def test_wrapper_assignment_brace_push_detected(cmd):
 
 def test_unclosed_heredoc_does_not_hide_push():
     assert guard._contains_git_push("cat <<'NOEND'\nnote\ngit push origin main")
+
+
+# --- Tests for 4945 defects ---
+
+def test_stamp_pytest_absolute_path_venv(tmp_path):
+    branch = "testbranch"
+    git_env = os.environ.copy()
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        git_env.pop(key, None)
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    (repo / "README.md").write_text("test repo\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+
+    marker = tmp_path / f"learn-uk-pytest.{branch}.stamp"
+
+    # Test absolute path /abs/path/.venv/bin/python -m pytest
+    payload = json.dumps({
+        "tool_input": {
+            "command": "/abs/path/.venv/bin/python -m pytest tests/test_guard_push_pytest.py -q"
+        }
+    })
+    env = git_env.copy()
+    env["TMPDIR"] = str(tmp_path)
+
+    result = subprocess.run(
+        [str(STAMP_PATH)],
+        cwd=repo,
+        input=payload,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert marker.exists()
+
+
+def test_stamp_pytest_compound_command_segment_success(tmp_path):
+    branch = "testbranch"
+    git_env = os.environ.copy()
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        git_env.pop(key, None)
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    (repo / "README.md").write_text("test repo\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+
+    env = git_env.copy()
+    env["TMPDIR"] = str(tmp_path)
+
+    # 1. Success case: pytest segment succeeds, compound fails (PostToolUseFailure)
+    marker = tmp_path / f"learn-uk-pytest.{branch}.stamp"
+    payload_success = json.dumps({
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/ -v && exit 1"
+        },
+        "tool_output": "============================= 20 passed in 0.65s =============================="
+    })
+
+    result = subprocess.run(
+        [str(STAMP_PATH)],
+        cwd=repo,
+        input=payload_success,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert marker.exists()
+
+    # 2. Failure case: pytest segment fails, compound fails (PostToolUseFailure)
+    marker.unlink()
+    payload_fail = json.dumps({
+        "hook_event_name": "PostToolUseFailure",
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/ -v && exit 1"
+        },
+        "tool_output": "============================= 1 failed, 19 passed in 0.65s =============================="
+    })
+
+    result = subprocess.run(
+        [str(STAMP_PATH)],
+        cwd=repo,
+        input=payload_fail,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert not marker.exists()
+
+
+def test_inline_skip_allows(monkeypatch):
+    assert _run(monkeypatch, "SKIP_PYTEST_HOOK=1 git push origin main") == 0
+    assert _run(monkeypatch, "SKIP_PYTEST_HOOK=\"1\" git push origin main") == 0
+    assert _run(monkeypatch, "SKIP_PYTEST_HOOK='1' git push origin main") == 0
+
+
+def test_block_msg_interpolates_actual_branch():
+    msg = guard._block_msg("some-feature-branch", Path("/tmp/marker"))
+    assert "direct push from `some-feature-branch`" in msg
+    assert "from `main`" not in msg
+

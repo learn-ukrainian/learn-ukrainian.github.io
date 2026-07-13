@@ -98,6 +98,25 @@
         ]
       }
     ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "^(Bash|apply_patch|Edit|Write)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/tool-timing.sh\"",
+            "timeout": 1,
+            "statusMessage": "Recording tool timing"
+          },
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/stamp-pytest.sh\"",
+            "timeout": 3,
+            "statusMessage": "Stamping pytest telemetry"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
