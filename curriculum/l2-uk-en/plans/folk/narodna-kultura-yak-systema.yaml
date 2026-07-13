@@ -4,7 +4,7 @@ sequence: 1
 slug: narodna-kultura-yak-systema
 title: "Народна культура як система"
 subtitle: "Oral tradition as the foundation of written Ukrainian literature"
-version: 3
+version: 4
 status: locked
 phase: base-first
 cefr_min: C1
@@ -154,12 +154,15 @@ do_not_quote:
   - line: "Any standalone reconstruction of folk belief as the organizing thesis of this overview."
     reason: "M01 teaches oral tradition as the foundation of written literature; source-grounded genre and poetics lead."
 connects_to:
-  - kalendarna-obriadovist-zvychai
-  - koliadky-shchedrivky
-  - vesnianky-hayivky
-  - dumy-nevilnytski-lytsarski
-  - istorychni-pisni
+  - folk-002-kalendarna-obriadovist-zvychai
+  - folk-003-koliadky-shchedrivky
+  - folk-004-vesnianky-hayivky
+  - folk-010-dumy-nevilnytski-lytsarski
+  - folk-014-istorychni-pisni
 changelog:
+  - version: 4
+    date: "2026-07-14"
+    note: "Post-build repair: replace five bare sequence links with canonical FOLK module IDs."
   - version: 3
     date: "2026-06-27"
     note: "Module build: mark Grade 8 genre-boundary textbook reference topical-only to avoid long learner-facing textbook quotation while keeping public primary readings authoritative."
