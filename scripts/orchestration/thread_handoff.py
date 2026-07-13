@@ -423,8 +423,7 @@ def source_checkout_binding(git_state: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("source checkout status could not be determined")
     if modified_files:
         paths = ", ".join(
-            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown"
-            for item in modified_files[:5]
+            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown" for item in modified_files[:5]
         )
         raise ValueError(f"source checkout must be clean before prepare; dirty paths: {paths}")
     return {"full_head": full_head, "clean": True}
@@ -444,9 +443,7 @@ def source_checkout_binding_error(replacement: Mapping[str, Any]) -> str | None:
     return None
 
 
-def checkout_continuity_error(
-    replacement: Mapping[str, Any], current_git_state: Mapping[str, Any]
-) -> str | None:
+def checkout_continuity_error(replacement: Mapping[str, Any], current_git_state: Mapping[str, Any]) -> str | None:
     binding_error = source_checkout_binding_error(replacement)
     if binding_error:
         return binding_error
@@ -461,8 +458,7 @@ def checkout_continuity_error(
         return "invoking checkout status could not be determined"
     if modified_files:
         paths = ", ".join(
-            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown"
-            for item in modified_files[:5]
+            str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown" for item in modified_files[:5]
         )
         return f"invoking checkout must be clean; dirty paths: {paths}"
     return None
