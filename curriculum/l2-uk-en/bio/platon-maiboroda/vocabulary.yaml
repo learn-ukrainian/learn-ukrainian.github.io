@@ -1,97 +1,65 @@
 ---
-- lemma: кантилена
-  translation: cantilena
-  pos: noun
-  usage: Кантилена Майбороди допомагає українському рядку природно звучати.
 - lemma: композиторське авторство
   translation: compositional authorship
   pos: noun phrase
-  usage: Композиторське авторство треба відрізняти від авторства слів.
-- lemma: фольклорне слухання
-  translation: folklore-informed listening
+  usage: Композиторське авторство стосується музичної форми, а не слів Малишка.
+- lemma: мелодичний контур
+  translation: melodic contour
   pos: noun phrase
-  usage: Фольклорне слухання вчить чути форму народної пісні.
-- lemma: мелодична форма
-  translation: melodic form
-  pos: noun phrase
-  usage: Мелодична форма робить пісню придатною для повторення.
-- lemma: пісенний канон
-  translation: song canon
-  pos: noun phrase
-  usage: Пісенний канон складається з творів, які повертаються між поколіннями.
-- lemma: публічна пам'ять
-  translation: public memory
-  pos: noun phrase
-  usage: Публічна пам'ять виникає через виконання, медіа і повторення.
-- lemma: медійна циркуляція
-  translation: media circulation
-  pos: noun phrase
-  usage: Медійна циркуляція допомогла пісням вийти за межі нотного аркуша.
-- lemma: репертуар
-  translation: repertoire
-  pos: noun
-  usage: Репертуар показує, які пісні регулярно повертаються до виконавця.
-- lemma: аранжування
-  translation: arrangement
-  pos: noun
-  usage: Аранжування може змінити звучання пісні без зміни її ядра.
-- lemma: музична інституція
-  translation: musical institution
-  pos: noun phrase
-  usage: Музична інституція може бути каналом і обмеженням водночас.
-- lemma: родинна травма
-  translation: family trauma
-  pos: noun phrase
-  usage: Родинна травма не є автоматично персональною справою композитора.
-- lemma: воєнна біографія
-  translation: wartime biography
-  pos: noun phrase
-  usage: Воєнна біографія пояснює розриви й післявоєнне повернення до праці.
-- lemma: інтернування
-  translation: internment
-  pos: noun
-  usage: Інтернування треба називати обережно і тільки в межах джерел.
-- lemma: композиторська школа
-  translation: compositional school
-  pos: noun phrase
-  usage: Композиторська школа дала Майбороді професійну техніку.
-- lemma: поетичний рядок
-  translation: poetic line
-  pos: noun phrase
-  usage: Мелодія має чути поетичний рядок, а не ламати його.
-- lemma: виконавська традиція
-  translation: performance tradition
-  pos: noun phrase
-  usage: Виконавська традиція переносить пісню між сценами і поколіннями.
-- lemma: народна впізнаваність
-  translation: folk-like recognizability
-  pos: noun phrase
-  usage: Народна впізнаваність не скасовує авторського походження пісні.
-- lemma: офіційна культура
-  translation: official culture
-  pos: noun phrase
-  usage: Офіційна культура дала сцену, але не пояснює всю пам'ять.
+  usage: Студент позначив мелодичний контур стрілками піднесення й спаду.
 - lemma: фразування
   translation: phrasing
   pos: noun
-  usage: Фразування визначає, де голос дихає і як завершує думку.
+  usage: Фразування треба описувати з часовими позначками й місцями подиху.
+- lemma: словесний наголос
+  translation: word stress
+  pos: noun phrase
+  usage: Словесний наголос перевіряють окремо від музичного акценту.
+- lemma: дикція
+  translation: diction
+  pos: noun
+  usage: Дикція виконавця впливає на розбірливість поетичного тексту.
+- lemma: аранжування
+  translation: arrangement
+  pos: noun
+  usage: Аранжування визначає склад і функції інструментального супроводу.
+- lemma: інструментальний супровід
+  translation: instrumental accompaniment
+  pos: noun phrase
+  usage: Інструментальний супровід може підтримувати пульс або відповідати між вокальними фразами.
+- lemma: кантилена
+  translation: cantilena
+  pos: noun
+  usage: ЕСУ характеризує кілька пісень Майбороди через кантилену.
 - lemma: каденція
   translation: cadence
   pos: noun
-  usage: Каденція дає слухачеві відчуття завершення мелодичної фрази.
-- lemma: слухацька пам'ять
-  translation: listener memory
+  usage: Завершальна каденція дає матеріал для порівняння ранньої й фінальної фраз.
+- lemma: фольклорна експедиція
+  translation: folklore field expedition
   pos: noun phrase
-  usage: Слухацька пам'ять вирішує, чи пісня повернеться після першого виконання.
-- lemma: українська мелодика
-  translation: Ukrainian melodic language
+  usage: Фольклорна експедиція документує польову працю, але не пояснює автоматично кожну мелодію.
+- lemma: вокально-симфонічний твір
+  translation: vocal-symphonic work
   pos: noun phrase
-  usage: Українська мелодика в Майбороди поєднує школу і народнопісенний слух.
-- lemma: культурна інфраструктура
-  translation: cultural infrastructure
+  usage: «Дума про Дніпро» належить до вокально-симфонічних творів Майбороди.
+- lemma: джерельна суперечність
+  translation: source discrepancy
   pos: noun phrase
-  usage: Культурна інфраструктура пісні складається з авторів, медіа, виконавців і слухачів.
+  usage: Джерельна суперечність щодо дати арешту залишається відкритою.
+- lemma: атрибуція
+  translation: attribution
+  pos: noun
+  usage: Атрибуція показує, якому джерелу належить повідомлення про 1936 рік.
+- lemma: виконавська версія
+  translation: performance version
+  pos: noun phrase
+  usage: Запис Олександра Таранця є однією виконавською версією твору.
 - lemma: межа доказу
   translation: limit of evidence
   pos: noun phrase
-  usage: Межа доказу не дозволяє вигадувати персональну репресивну справу.
+  usage: Межа доказу не дозволяє виводити особисті мотиви з переліку нагород.
+- lemma: жанровий діапазон
+  translation: range of genres
+  pos: noun phrase
+  usage: Театр, кіно й вокально-симфонічна музика показують жанровий діапазон композитора.
