@@ -7,7 +7,7 @@ pyyaml>=6.0
 jsonschema>=4.20
 
 # API server
-fastapi>=0.136.3
+fastapi>=0.139.0
 uvicorn>=0.48.0
 httpx>=0.28
 

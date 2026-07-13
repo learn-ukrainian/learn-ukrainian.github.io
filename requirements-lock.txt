@@ -40,7 +40,7 @@ ecdsa==0.19.2
 einops==0.8.2
 emoji==2.15.0
 execnet==2.1.2
-fastapi==0.136.3
+fastapi==0.139.0
 filelock==3.29.4
 filetype==1.2.0
 FlagEmbedding==1.4.0
