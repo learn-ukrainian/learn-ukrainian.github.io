@@ -316,12 +316,16 @@ data/corpus_audit/*
 
 .gemini/
 
-# SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
+# SQLite WAL/SHM/rollback-journal sidecars — same exclusion as the .db files themselves.
+# (-journal appears while a rollback-mode writer, e.g. verbatim_overlap_gate
+# baseline-sweep, holds a transaction — it must not dirty the primary checkout.)
 data/*.db-shm
 data/*.db-wal
-# Test-only SQLite WAL/SHM sidecars (e.g. test_wal.db-* from pytest fixtures)
+data/*.db-journal
+# Test-only SQLite WAL/SHM/rollback-journal sidecars (e.g. test_wal.db-* from pytest fixtures)
 test_*.db-shm
 test_*.db-wal
+test_*.db-journal
 
 # Session-state handoffs that authors marked KEEP_UNTRACKED_UNTIL_PUBLIC_OK
 # (e.g. eval results pending validation) live under a `private/` subdir,
