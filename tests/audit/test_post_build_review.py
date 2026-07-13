@@ -113,6 +113,20 @@ def test_track_resolution_covers_every_versioned_track() -> None:
         pbr.resolve_track_policy("unknown", policy)
 
 
+def test_every_track_inherits_the_family_size_signal_policy() -> None:
+    policy = pbr.load_track_policy()
+
+    for track, config in policy["tracks"].items():
+        resolved = pbr.resolve_track_policy(track, policy)
+        expected = policy["families"][config["family"]][
+            "size_policy_signal_severities"
+        ]
+        assert resolved["size_policy_signal_severities"] == expected
+
+    assert set(policy["tracks"]) >= {"a1", "a2", "b1", "b2", "c1", "c2"}
+    assert "lit-essay" in policy["tracks"]
+
+
 def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> None:
     """The command path must stay inside .venv so Python loads pyvenv.cfg."""
     runtime_python = tmp_path / "runtime-python"
@@ -278,6 +292,91 @@ def test_bilash_size_policy_is_exemplar_only(bilash_packet: dict) -> None:
     policy_text = (SKILL / "config" / "track-policy.v1.yaml").read_text(encoding="utf-8")
     assert "2200" not in policy_text
     assert "4000" not in policy_text
+
+
+@pytest.mark.parametrize(
+    ("signal", "expected_severity", "expected_disposition"),
+    [
+        ("below_plan_floor", "high", "BLOCK"),
+        ("repetitive_authored_prose", "medium", "REVISE"),
+        ("over_advisory_ceiling", "info", "PASS"),
+    ],
+)
+def test_size_policy_signals_drive_fail_closed_post_build_disposition(
+    signal: str,
+    expected_severity: str,
+    expected_disposition: str,
+) -> None:
+    policy = pbr.load_track_policy()
+    track_policy = pbr.resolve_track_policy("bio", policy)
+    target = {
+        "files": {
+            "plan": "curriculum/l2-uk-en/plans/bio/subject.yaml",
+            "content": "curriculum/l2-uk-en/bio/subject/module.md",
+        }
+    }
+    findings = pbr._check_size_policy_status(
+        target,
+        track_policy,
+        {
+            "status": signal,
+            "decision_signals": [signal],
+            "notes": ["synthetic regression evidence"],
+            "repetition": {
+                "matches": [{"first_start_line": 10, "second_start_line": 40}]
+                if signal == "repetitive_authored_prose"
+                else []
+            },
+        },
+    )
+    deterministic = {
+        "track_audit": {"status": "complete"},
+        "size_policy": {"status": "complete"},
+        "policy_findings": findings,
+        "skip_assessments": [],
+    }
+    deterministic["aggregate"] = pbr.aggregate_deterministic(deterministic)
+    semantic = {
+        "verdict": "PASS",
+        "claim_coverage": {
+            "status": "complete",
+            "claims_total": 1,
+            "claims_verified": 1,
+        },
+    }
+
+    assert [finding["severity"] for finding in findings] == [expected_severity]
+    assert (
+        pbr.combine_disposition(deterministic, semantic, findings)["status"]
+        == expected_disposition
+    )
+
+
+def test_multiple_size_policy_signals_are_not_hidden_by_status_priority() -> None:
+    track_policy = pbr.resolve_track_policy("a1", pbr.load_track_policy())
+    target = {
+        "files": {
+            "plan": "curriculum/l2-uk-en/plans/a1/subject.yaml",
+            "content": "curriculum/l2-uk-en/a1/subject/module.md",
+        }
+    }
+
+    findings = pbr._check_size_policy_status(
+        target,
+        track_policy,
+        {
+            "status": "plan_review_needed",
+            "decision_signals": ["plan_review_needed", "below_plan_floor"],
+            "notes": ["SIZE_POLICY_MISMATCH"],
+            "repetition": None,
+        },
+    )
+
+    assert [finding["id"] for finding in findings] == [
+        "size-policy-plan_review_needed",
+        "size-policy-below_plan_floor",
+    ]
+    assert {finding["severity"] for finding in findings} == {"high"}
 
 
 def test_semantic_pass_cannot_override_mechanical_high(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -461,8 +560,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "1.0.2"
-    assert len(rows) == 12
+    assert catalog["catalog_version"] == "1.1.0"
+    assert len(rows) == 16
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -472,7 +571,11 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "schema",
         "orchestration",
     }
-    assert {row["fixed_in_version"] for row in rows} == {"1.0.0", "1.0.1"}
+    assert {row["fixed_in_version"] for row in rows} == {
+        "1.0.0",
+        "1.0.1",
+        "1.1.0",
+    }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
     assert null_result["fixed_in_version"] == "1.0.1"

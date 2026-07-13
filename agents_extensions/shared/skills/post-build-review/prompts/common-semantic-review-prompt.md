@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `1.0.0`
+Semantic prompt version: `1.1.0`
 
 Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
@@ -23,6 +23,12 @@ that code cannot decide.
 - Inspect pedagogy, plan adherence, coherence, learner register, cognitive
   load, naturalness, engagement, and source-backed density. Do not turn a word
   count or Bilash-specific structure into a universal rule.
+- Inspect deterministic paragraph-repetition locations and the marginal
+  pedagogical value of authored prose throughout the full size band, not only
+  above the advisory ceiling. Repeated framing, conclusions, transitions, or
+  definitions require revision even when total length is nominally in range.
+- Treat long source-dense material and necessary pedagogy as acceptable.
+  Advisory-ceiling excess alone is never a semantic failure.
 
 ## Severity and verdict
 

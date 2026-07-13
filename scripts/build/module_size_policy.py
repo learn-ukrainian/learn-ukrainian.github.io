@@ -33,6 +33,7 @@ def build_size_policy_for_plan(
     *,
     plan_path: Path | None = None,
     actual_words: int | None = None,
+    module_text: str | None = None,
 ) -> audit.SizePolicyRecord:
     """Resolve the effective advisory size policy for an already-loaded plan."""
     track = str(plan.get("level") or "").strip().lower()
@@ -40,8 +41,19 @@ def build_size_policy_for_plan(
     plan_floor = audit._as_int(plan.get("word_target"))
     plan_outline_words = audit._sum_outline_words(plan.get("content_outline"))
     module_path = audit._module_path(track, slug) if track and slug else None
-    if actual_words is None and module_path is not None and module_path.exists():
-        actual_words = audit.word_count(module_path)
+    content_metrics: audit.MarkdownWordMetrics | None = None
+    repetition: audit.RepetitionEvidence | None = None
+    size_policy_mismatch = False
+    if module_text is not None:
+        content_metrics, repetition, size_policy_mismatch = (
+            audit.markdown_module_evidence(module_text)
+        )
+    elif module_path is not None and module_path.exists():
+        content_metrics, repetition, size_policy_mismatch = audit.module_content_evidence(
+            module_path
+        )
+    if content_metrics is not None:
+        actual_words = content_metrics.authored_instructional_words
 
     policy_uses_dossier_metrics = "size_policy" in plan or (
         track in audit.SEMINAR_TRACKS or track in audit.CORE_RESEARCH_TRACKS
@@ -70,6 +82,9 @@ def build_size_policy_for_plan(
             actual_words=actual_words,
             metrics=metrics,
             override=override,
+            content_metrics=content_metrics,
+            repetition=repetition,
+            size_policy_mismatch=size_policy_mismatch,
         )
 
     if track not in audit.SEMINAR_TRACKS and track not in audit.CORE_RESEARCH_TRACKS:
@@ -103,6 +118,13 @@ def build_size_policy_for_plan(
             status=status,
             notes=notes,
             metrics=metrics,
+            content_metrics=content_metrics,
+            repetition=repetition,
+            size_policy_mismatch=size_policy_mismatch,
+            legacy_raw_whitespace_words=(
+                content_metrics.raw_whitespace_tokens if content_metrics else None
+            ),
+            decision_signals=(status,) if status != PLAN_FLOOR_ONLY else (),
         )
 
     if metrics is not None:
@@ -119,7 +141,7 @@ def build_size_policy_for_plan(
     advisory_ceiling = None
     if plan_floor is not None:
         advisory_ceiling = max(plan_floor, band_max) if band_max is not None else None
-    status, notes = audit._status_and_notes(
+    status, notes, decision_signals = audit._status_and_notes(
         track=track,
         plan_floor=plan_floor,
         actual_words=actual_words,
@@ -127,9 +149,12 @@ def build_size_policy_for_plan(
         band_max=band_max,
         advisory_ceiling=advisory_ceiling,
         dossier_path=dossier_path,
+        repetition=repetition,
+        size_policy_mismatch=size_policy_mismatch,
     )
     if override_errors:
         status = INVALID_SIZE_POLICY
+        decision_signals = (INVALID_SIZE_POLICY, *decision_signals)
         notes.extend(
             [
                 "Explicit size_policy is invalid and cannot replace generic density-band limits.",
@@ -155,12 +180,31 @@ def build_size_policy_for_plan(
         status=status,
         notes=notes,
         metrics=metrics,
+        content_metrics=content_metrics,
+        repetition=repetition,
+        size_policy_mismatch=size_policy_mismatch,
+        legacy_raw_whitespace_words=(
+            content_metrics.raw_whitespace_tokens if content_metrics else None
+        ),
+        decision_signals=tuple(dict.fromkeys(decision_signals)),
     )
 
 
 def size_policy_allows_auto_expansion(record: audit.SizePolicyRecord) -> bool:
     """Return whether build code may auto-request expansion for short drafts."""
-    return record.status not in {PLAN_REVIEW_NEEDED, MISSING_DOSSIER, INVALID_SIZE_POLICY}
+    blocking_signals = {
+        PLAN_REVIEW_NEEDED,
+        MISSING_DOSSIER,
+        INVALID_SIZE_POLICY,
+        "missing_plan_word_target",
+        "repetitive_authored_prose",
+    }
+    if set(record.decision_signals).intersection(blocking_signals):
+        return False
+    return not (
+        record.density_band == "sparse"
+        and record.basis != "explicit_plan_size_policy"
+    )
 
 
 def size_policy_padding_diagnostic(record: audit.SizePolicyRecord) -> dict[str, Any]:
@@ -169,13 +213,25 @@ def size_policy_padding_diagnostic(record: audit.SizePolicyRecord) -> dict[str, 
         "status": "not_evaluated",
         "review_action": "no_count_available",
         "over_advisory_ceiling_words": 0,
+        "repetition_status": "clear",
+        "repetition_match_count": 0,
     }
+    if record.repetition is not None and record.repetition.matches:
+        diagnostic["repetition_status"] = "revision_needed"
+        diagnostic["repetition_match_count"] = len(record.repetition.matches)
     if record.actual_words is None:
         return diagnostic
 
     if record.actual_words < (record.plan_floor or 0):
         diagnostic["status"] = "below_plan_floor"
         diagnostic["review_action"] = "do_not_pad; check whether plan floor exceeds sourced evidence"
+        return diagnostic
+
+    if diagnostic["repetition_match_count"]:
+        diagnostic["status"] = "repetitive_authored_prose"
+        diagnostic["review_action"] = (
+            "revise exact/near-duplicate authored paragraphs; do not add more prose"
+        )
         return diagnostic
 
     if record.advisory_ceiling is None:
@@ -207,6 +263,10 @@ def size_policy_summary(record: audit.SizePolicyRecord) -> dict[str, Any]:
         data["expansion_permission"] = "blocked_until_research_dossier"
     elif record.status == INVALID_SIZE_POLICY:
         data["expansion_permission"] = "blocked_until_size_policy_is_valid"
+    elif "repetitive_authored_prose" in record.decision_signals:
+        data["expansion_permission"] = "revision_required_before_expansion"
+    elif record.density_band == "sparse" and record.basis != "explicit_plan_size_policy":
+        data["expansion_permission"] = "blocked_until_source_saturation_or_plan_review"
     elif record.status == PLAN_FLOOR_ONLY:
         data["expansion_permission"] = "plan_floor_only"
     else:
@@ -235,9 +295,10 @@ def render_writer_size_policy(record: audit.SizePolicyRecord) -> str:
             f"- Advisory ceiling words: {ceiling}",
             f"- Expansion permission: {summary['expansion_permission']}",
             f"- Status: {record.status}",
-            "- Rule: meet the plan floor with complete coverage, but expand only when the added material is source-backed and pedagogically useful.",
+            "- Rule: satisfy objectives and evidence coverage, not a token target; the reviewed plan floor still binds.",
+            "- Rule: expand only when added material is source-backed and pedagogically necessary.",
             "- Rule: if grounded material runs out before the floor, emit `<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->` instead of inventing depth.",
-            "- Rule: do not add repeated framing, generic exposition, uncited interpretation, or filler to chase old fixed multipliers.",
+            "- Rule: do not repeat framing, conclusions, transitions, definitions, generic exposition, or uncited interpretation to reach the floor.",
             "Notes:",
             note_lines,
         ]
@@ -253,11 +314,14 @@ def render_reviewer_size_policy(record: audit.SizePolicyRecord) -> str:
         [
             base,
             "- Reviewer rule: do not fail or pass a module on word count alone; deterministic gates handled the floor.",
-            "- Reviewer rule: if the padding diagnostic is `over_advisory_ceiling`, inspect whether the extra length is source-backed density, necessary pedagogy, or filler/padding.",
+            "- Reviewer rule: inspect deterministic repetition evidence and marginal pedagogical value throughout the full size band, not only above the advisory ceiling.",
+            "- Reviewer rule: if the module is over the advisory ceiling, decide whether the extra length is source-backed density, necessary pedagogy, or filler/padding; length alone is not a failure.",
             "- Reviewer rule: source-backed density is acceptable evidence; repeated framing, generic exposition, uncited interpretation, and inflated transitions are padding evidence.",
             "Padding diagnostic:",
             f"- Status: {padding['status']}",
             f"- Over advisory ceiling words: {padding['over_advisory_ceiling_words']}",
+            f"- Repetition status: {padding['repetition_status']}",
+            f"- Repetition matches: {padding['repetition_match_count']}",
             f"- Review action: {padding['review_action']}",
         ]
     )

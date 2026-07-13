@@ -1,4 +1,4 @@
-"""Tests for PR-B band widening: word_count tolerance + callout_min (2026-05-23)."""
+"""Tests for exact authored-word floors plus the retained callout minimum."""
 
 import pytest
 
@@ -24,21 +24,20 @@ def test_word_count_above_target_passes() -> None:
     assert report["passed"] is True
 
 
-def test_word_count_within_8pct_tolerance_passes() -> None:
-    """Regression: deepseek-pro 1197 vs A1 target 1200 (0.25% short) now passes."""
+def test_word_count_below_exact_floor_fails() -> None:
+    """A reviewed plan floor is exact; even a small shortfall remains blocked."""
     text = "word " * 1197
     report = _word_count_gate(text, 1200)
-    assert report["passed"] is True
+    assert report["passed"] is False
     assert report["count"] == 1197
-    assert report["min_with_tolerance"] == 1104  # int(1200 * 0.92)
+    assert report["min_with_tolerance"] == 1200
 
 
-def test_word_count_at_band_edge_passes() -> None:
-    """count == min_with_tolerance (target * 0.92) passes."""
-    text = "word " * 1104  # int(1200 * 0.92)
+def test_retired_tolerance_band_no_longer_passes() -> None:
+    text = "word " * 1104
     report = _word_count_gate(text, 1200)
-    assert report["passed"] is True
-    assert report["min_with_tolerance"] == 1104
+    assert report["passed"] is False
+    assert report["min_with_tolerance"] == 1200
 
 
 def test_word_count_just_below_band_fails() -> None:
@@ -57,11 +56,10 @@ def test_word_count_14pct_below_target_fails() -> None:
     assert report["count"] == 1031
 
 
-def test_word_count_reports_tolerance_metadata() -> None:
-    """The gate report includes min_with_tolerance + tolerance_below_pct."""
+def test_word_count_reports_exact_floor_metadata() -> None:
     report = _word_count_gate("word " * 1200, 1200)
-    assert report["min_with_tolerance"] == 1104
-    assert report["tolerance_below_pct"] == 8.0
+    assert report["min_with_tolerance"] == 1200
+    assert report["tolerance_below_pct"] == 0.0
     assert report["target"] == 1200
 
 
