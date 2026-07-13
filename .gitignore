@@ -448,3 +448,6 @@ docs/outreach/
 # (a stray circuit file was swept into PR #4743 by git add -A).
 data/telemetry/*
 !data/telemetry/.gitkeep
+
+# Local enrichment scratch (3-byte lemma-frequency cruft class, atlas handoff 2026-07-13)
+.cache/
