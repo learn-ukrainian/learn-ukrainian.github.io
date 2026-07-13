@@ -150,9 +150,14 @@ if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
 
     _selected_epic="$(handoff_epic_from_argv "$@")"
     if [ -n "$_selected_epic" ]; then
+        if ! epic_name_valid "$_selected_epic"; then
+            echo "Error: invalid --epic name '$_selected_epic' (allowed: lowercase alnum + inner hyphens, e.g. atlas, lit-war)."
+            echo "   Refusing to launch with an ambiguous lane — fix the flag and retry."
+            exit 1
+        fi
         export SESSION_EPIC="$_selected_epic"
         _forward_args=()
-        while IFS= read -r _fwd_arg; do
+        while IFS= read -r -d '' _fwd_arg; do
             _forward_args+=("$_fwd_arg")
         done < <(strip_epic_from_argv "$@")
         unset _fwd_arg

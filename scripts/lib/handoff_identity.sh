@@ -72,8 +72,9 @@ handoff_epic_from_argv() {
 }
 
 # strip_epic_from_argv "$@"
-# Print the argv list minus `--epic <v>` / `--epic=<v>`, one arg per line
-# (consume with: while IFS= read -r a; do argv+=("$a"); done < <(strip_epic_from_argv "$@")).
+# Print the argv list minus `--epic <v>` / `--epic=<v>`, NUL-delimited so args
+# containing spaces or even newlines survive the round-trip (consume with:
+# while IFS= read -r -d '' a; do argv+=("$a"); done < <(strip_epic_from_argv "$@")).
 # Needed because the claude CLI does not know `--epic` and would reject it.
 strip_epic_from_argv() {
   local skip_next=0 arg=''
@@ -86,8 +87,23 @@ strip_epic_from_argv() {
       --epic) skip_next=1; continue ;;
       --epic=*) continue ;;
     esac
-    printf '%s\n' "$arg"
+    printf '%s\0' "$arg"
   done
+}
+
+# epic_name_valid "<epic-name>"
+# Succeed only for sane epic names: lowercase alnum + inner hyphens (atlas,
+# hramatka, lit-war). Anything else — path chars, spaces, uppercase — is
+# refused so a malformed --epic can never traverse into the handoff-slot path
+# (.agent/claude-<epic>-thread-handoff.md) or the .claude/<epic>-epic/ pointer.
+epic_name_valid() {
+  # LC_ALL=C: under macOS system bash 3.2 the [a-z] range is locale-collated
+  # and matches uppercase too — pin the C locale so the class is literal.
+  local LC_ALL=C
+  case "${1:-}" in
+    ''|*[!a-z0-9-]*|-*|*-) return 1 ;;
+    *) return 0 ;;
+  esac
 }
 
 # handoff_identity_for_epic "<epic-name>"
