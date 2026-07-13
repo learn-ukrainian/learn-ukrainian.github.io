@@ -244,11 +244,10 @@ lease="$canonical/$lease_rel"
 ```
 
 Create one genuinely fresh Codex app project task and record its new task id
-and app-created worktree path. If the app supports a worktree setup command,
-configure the bootstrap helper below to run before the task first opens. If it
-does not, the first SessionStart is not acceptance evidence: run the helper,
-close the new task, and reopen/restart that same fresh task so the deployed
-SessionStart hook actually runs.
+and app-created worktree path. Do not fork or continue the predecessor task.
+If the app supports a worktree setup command, configure the bootstrap helper
+below to run before the task first opens. Otherwise use the task's first turn
+only to run the helper. That first SessionStart is not acceptance evidence.
 
 ```bash
 fresh=<absolute-app-worktree-path>
@@ -267,16 +266,33 @@ test -z "$(git -C "$fresh" status --porcelain)"
 
 For this smoke, do not pre-export `CODEX_CANONICAL_REPO_ROOT`. The reopened
 task's automatic SessionStart output must name the prepared `lineage_id` and
-`rollover_id` and show `PENDING THREAD ROLLOVER DETECTED`. Then, from the fresh
-worktree, claim only that packet:
+`rollover_id` and show `PENDING THREAD ROLLOVER DETECTED` without the prompt
+pre-supplying either id. Sending another message or archiving and unarchiving
+the task does not restart its agent session and is not acceptance evidence.
+
+With the Codex app's managed worktree sandbox, the fresh worktree can read the
+canonical packet through the link above but cannot update the canonical lease;
+`resume` fails closed with `Operation not permitted`. Use the app's task handoff
+operation to move that same logical fresh task to the canonical checkout and
+send a bootstrap-only follow-up. Record both the initial fresh task id and the
+handoff destination task id because the app may allocate a new id at this
+boundary. The destination's automatic SessionStart output is the restart
+evidence. It must show the prepared pending packet before any claim command.
+
+The canonical checkout must still be clean and at `source_head`; the app may
+temporarily place it on the fresh task's dedicated branch. From that canonical
+destination, claim only the automatically detected packet:
 
 ```bash
-cd "$fresh"
+claim_task_id=<handoff-destination-task-id>
+cd "$canonical"
+test "$(git rev-parse HEAD)" = "$source_head"
+test -z "$(git status --porcelain)"
 .venv/bin/python scripts/orchestration/thread_handoff.py resume \
   --agent codex \
   --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
-  --replacement-thread-id "$replacement_task_id" \
+  --replacement-thread-id "$claim_task_id" \
   | tee "$evidence/resume.json"
 ```
 
@@ -310,7 +326,7 @@ challenge=$(jq -r .replacement.canary_challenge "$lease")
   | tee "$evidence/strict-score.txt"
 .venv/bin/python scripts/orchestration/thread_handoff_canary.py \
   --rollover-id "$rollover_id" \
-  --replacement-thread-id "$replacement_task_id" \
+  --replacement-thread-id "$claim_task_id" \
   --challenge "$challenge" \
   --proof-file "$canonical/$proof_rel" \
   | tee "$evidence/canary.json"
@@ -320,7 +336,7 @@ test -z "$(git status --porcelain)"
   --agent codex \
   --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
-  --new-thread-id "$replacement_task_id" \
+  --new-thread-id "$claim_task_id" \
   --canary-proof "$canonical/$proof_rel" \
   --strict-probe "$canonical/$probe_rel" \
   --strict-verdict "$canonical/$verdict_rel" \
@@ -328,13 +344,20 @@ test -z "$(git status --porcelain)"
 ```
 
 The smoke passes only when the score says `10/10`, the canary says `PASS`, the
-fresh task id differs from the predecessor, and `confirm.json` says
-`"old_automation_ready_to_delete": true`. Keep all captured evidence under
-`/tmp/rollover-smoke-*`; the packet itself stays under gitignored
-`.agent/thread-rollovers/`. Delete or pause the predecessor automation only
-after all four checks pass. `prepare`, `resume`, and `confirm-started` fail
-closed if their invoking checkout is dirty, is at a different HEAD, or if a
-live pending/resumed lease lacks the source-checkout binding.
+logical fresh task differs from the predecessor, and `confirm.json` says
+`"old_automation_ready_to_delete": true`. Record the predecessor id, initial
+fresh task id, canonical claim task id, title, both checkout paths, and every
+automatic SessionStart result. After confirmation, use the app handoff
+operation to return the logical task to its app worktree; verify the canonical
+checkout is back on `main`, both checkouts are clean, and all tracked files are
+unchanged. Archive the smoke tasks and remove only their clean app worktrees.
+
+Keep all captured evidence under `/tmp/rollover-smoke-*`; the packet itself
+stays under gitignored `.agent/thread-rollovers/`. Delete or pause the
+predecessor automation only after all four checks pass. `prepare`, `resume`,
+and `confirm-started` fail closed if their invoking checkout is dirty, is at a
+different HEAD, or if a live pending/resumed lease lacks the source-checkout
+binding.
 
 ## Worker Run Inbox
 
