@@ -45,7 +45,7 @@ if __package__ in {None, ""}:
 from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
 from scripts.audit import layerb_shadow
 
-BRIDGE_VERSION = "qg-layer-b-judge-bridge.v3"
+BRIDGE_VERSION = "qg-layer-b-judge-bridge.v4"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
@@ -75,6 +75,19 @@ _TRACE_METADATA_KEYS = frozenset(
     {"type", "event", "kind", "name", "namespace", "tool", "toolname", "function", "category", "operation"}
 )
 _LOGGER = logging.getLogger(__name__)
+CONSERVATIVE_REASONS = frozenset(
+    {
+        "metadata_screen",
+        "system_instruction_mismatch",
+        "transport_exit",
+        "timeout",
+        "output_missing",
+        "output_decode",
+        "rollout_tool_activity",
+        "model_pin",
+        "envelope_alignment",
+    }
+)
 
 # This template is intentionally static. Raw tool output is inserted only in
 # the untrusted block portion of ``build_user_message`` below.
@@ -161,6 +174,12 @@ class BridgeInputError(ValueError):
 
 class BridgeInvocationError(RuntimeError):
     """The provider transport could not return a usable structured response."""
+
+    def __init__(self, reason: str):
+        if reason not in CONSERVATIVE_REASONS:
+            raise ValueError(f"unknown conservative reason {reason!r}")
+        self.reason = reason
+        super().__init__(reason)
 
 
 @dataclass(frozen=True, slots=True)
@@ -413,16 +432,37 @@ def build_codex_prompt(parsed: ParsedRequest) -> str:
 
 
 def _flattened_injection_screen(parsed: ParsedRequest) -> bool:
-    """Reject injection-shaped metadata or evidence before a flattened prompt runs."""
+    """Reject only injection-shaped canonical metadata before a flattened prompt runs."""
 
     metadata = {
         "schema_version": parsed.request["schema_version"],
         "prompt_version": parsed.request.get("prompt_version"),
         "fact_checks": parsed.request["fact_checks"],
     }
-    return layerb_shadow._injection_screen(_canonical_json(metadata)) or any(
-        layerb_shadow._injection_screen(raw) for raw in parsed.blocks_by_hash.values()
-    )
+    return layerb_shadow._injection_screen(_canonical_json(metadata))
+
+
+def _evidence_pattern_hits(parsed: ParsedRequest) -> list[dict[str, str]]:
+    """Record deterministic injection-pattern signals for each candidate window.
+
+    Evidence is always supplied inside a collision-checked untrusted-data
+    envelope, so these signals inform scoring but must not suppress the judge
+    invocation or erase sibling judgments.
+    """
+
+    hits: list[dict[str, str]] = []
+    for (fact_check_id, candidate_id), window in parsed.windows_by_fact_candidate.items():
+        raw = str(window["raw_window"])
+        for pattern in layerb_shadow.INJECTION_PATTERNS:
+            if pattern.search(raw) is not None:
+                hits.append(
+                    {
+                        "fact_check_id": fact_check_id,
+                        "candidate_id": candidate_id,
+                        "pattern": pattern.pattern,
+                    }
+                )
+    return hits
 
 
 def output_json_schema() -> dict[str, Any]:
@@ -516,11 +556,11 @@ def _rollout_trace(scoped_home: Path) -> str:
 
     rollouts = sorted((scoped_home / "sessions").glob("**/rollout-*.jsonl"))
     if not rollouts:
-        raise BridgeInvocationError("codex exec produced no rollout transcript for the mandatory tool screen")
+        raise BridgeInvocationError("transport_exit")
     try:
         return "\n".join(path.read_text(encoding="utf-8", errors="replace") for path in rollouts)
     except OSError as exc:
-        raise BridgeInvocationError(f"cannot read Codex rollout transcript: {exc}") from exc
+        raise BridgeInvocationError("transport_exit") from exc
 
 
 def _strict_rollout_events(trace: str) -> list[dict[str, Any]]:
@@ -532,12 +572,12 @@ def _strict_rollout_events(trace: str) -> list[dict[str, Any]]:
         try:
             value = json.loads(line)
         except json.JSONDecodeError as exc:
-            raise BridgeInvocationError("Codex rollout transcript contains malformed JSONL") from exc
+            raise BridgeInvocationError("transport_exit") from exc
         if not isinstance(value, Mapping):
-            raise BridgeInvocationError("Codex rollout transcript contains a non-object event")
+            raise BridgeInvocationError("transport_exit")
     events = parse_json_events(trace, source="layerb-codex-judge", logger=_LOGGER)
     if not events:
-        raise BridgeInvocationError("Codex rollout transcript contained no parseable events")
+        raise BridgeInvocationError("transport_exit")
     return events
 
 
@@ -620,25 +660,28 @@ def invoke_codex(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
             env=environment,
         )
         if completed.returncode != 0:
-            raise BridgeInvocationError(f"codex exec exited {completed.returncode}")
+            raise BridgeInvocationError("transport_exit")
         if not output_path.is_file():
-            raise BridgeInvocationError("codex exec did not write --output-last-message")
+            raise BridgeInvocationError("output_missing")
         text = output_path.read_text(encoding="utf-8")
         if not text.strip():
-            raise BridgeInvocationError("codex exec wrote an empty --output-last-message")
+            raise BridgeInvocationError("output_missing")
         events = _strict_rollout_events(_rollout_trace(scoped_home))
         if _trace_has_tool_activity(events):
-            raise BridgeInvocationError("Codex rollout recorded a tool, function, web, MCP, or browser event")
+            raise BridgeInvocationError("rollout_tool_activity")
         models = _resolved_models(events)
         if models != {config.model_version}:
-            raise BridgeInvocationError(
-                f"Codex rollout resolved models {sorted(models)!r}, not pinned {config.model_version!r}"
-            )
+            raise BridgeInvocationError("model_pin")
         return ModelResult(text=text)
 
 
-def conservative_response(parsed: ParsedRequest) -> dict[str, Any]:
-    """Emit an auditable non-passing result for every requested candidate."""
+def conservative_response(
+    parsed: ParsedRequest, *, reason: str, evidence_pattern_hits: Sequence[Mapping[str, str]] = ()
+) -> dict[str, Any]:
+    """Emit an auditable non-passing result with one stable conservative reason."""
+
+    if reason not in CONSERVATIVE_REASONS:
+        raise ValueError(f"unknown conservative reason {reason!r}")
 
     facts: list[dict[str, Any]] = []
     for fact in parsed.request["fact_checks"]:
@@ -647,7 +690,14 @@ def conservative_response(parsed: ParsedRequest) -> dict[str, Any]:
             for source in fact["candidate_sources"]
         ]
         facts.append({"fact_check_id": fact["fact_check_id"], "source_relations": source_relations})
-    return {"schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION, "fact_checks": facts}
+    response: dict[str, Any] = {
+        "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
+        "fact_checks": facts,
+        "_bridge_conservative_reason": reason,
+    }
+    if evidence_pattern_hits:
+        response["_evidence_pattern_hits"] = [dict(hit) for hit in evidence_pattern_hits]
+    return response
 
 
 def _expected_windows_by_fact(parsed: ParsedRequest) -> dict[str, tuple[Mapping[str, Any], ...]]:
@@ -666,36 +716,50 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
     """Run one request and always make transport or format failures conservative."""
 
     parsed = parse_request(request)
+    evidence_pattern_hits = _evidence_pattern_hits(parsed)
     try:
         if _flattened_injection_screen(parsed):
-            return conservative_response(parsed)
+            return conservative_response(parsed, reason="metadata_screen", evidence_pattern_hits=evidence_pattern_hits)
+        if parsed.request["system_instruction"] != layerb_shadow.SYSTEM_INSTRUCTION:
+            return conservative_response(
+                parsed, reason="system_instruction_mismatch", evidence_pattern_hits=evidence_pattern_hits
+            )
         if config.family == "codex":
             model_result = invoke_codex(parsed, config)
         elif config.family == "gemini":
             # TODO: qualify an agy trace source that records every tool event,
             # then add the agy subscription transport in the immediate follow-up.
-            raise BridgeInvocationError(
-                "agy subscription judge is unqualified: --log-file cannot prove complete tool-event capture"
-            )
+            raise BridgeInvocationError("transport_exit")
         else:
-            raise BridgeInvocationError(f"unknown judge family {config.family!r}")
-        decoded = json.loads(model_result.text)
+            raise BridgeInvocationError("transport_exit")
+        try:
+            decoded = json.loads(model_result.text)
+        except json.JSONDecodeError as exc:
+            raise BridgeInvocationError("output_decode") from exc
         if not isinstance(decoded, Mapping):
-            raise BridgeInvocationError("model structured output is not a JSON object")
+            raise BridgeInvocationError("output_decode")
         try:
             response, substitutions = layerb_shadow.normalize_judge_module_response(
                 decoded, expected_windows_by_fact=_expected_windows_by_fact(parsed)
             )
         except layerb_shadow.JudgeValidationError:
-            response = conservative_response(parsed)
+            response = conservative_response(
+                parsed, reason="envelope_alignment", evidence_pattern_hits=evidence_pattern_hits
+            )
         else:
             if substitutions:
                 response["_bridge_substituted"] = substitutions
+            if evidence_pattern_hits:
+                response["_evidence_pattern_hits"] = evidence_pattern_hits
         if model_result.observed:
             response["_shadow_observed"] = model_result.observed
         return response
-    except (BridgeInvocationError, json.JSONDecodeError, OSError, ValueError, subprocess.TimeoutExpired):
-        return conservative_response(parsed)
+    except subprocess.TimeoutExpired:
+        return conservative_response(parsed, reason="timeout", evidence_pattern_hits=evidence_pattern_hits)
+    except BridgeInvocationError as exc:
+        return conservative_response(parsed, reason=exc.reason, evidence_pattern_hits=evidence_pattern_hits)
+    except (OSError, ValueError):
+        return conservative_response(parsed, reason="transport_exit", evidence_pattern_hits=evidence_pattern_hits)
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:

@@ -1,8 +1,8 @@
 # All-or-nothing validation silently discards good answers when batched
 
 **Date:** 2026-07-12/13 · **Components:** `scripts/audit/layerb_judge_bridge.py`,
-`scripts/audit/layerb_collect_emissions.py` · **PRs:** #5021 (collector instance), bridge fix (this
-autopsy rides in its PR) · **Epic:** judge qualification (Layer B).
+`scripts/audit/layerb_collect_emissions.py`, `scripts/audit/layerb_qualify.py` · **PRs:** #5021
+(collector instance), #4913 (third and fourth instances) · **Epic:** judge qualification (Layer B).
 
 ## What broke
 
@@ -29,13 +29,23 @@ Two independent components implemented the same defective shape:
    non-injection candidate failing strict validation raised, the caller caught it as module-level
    `status="failure"`, and EVERY case in the module got `_failure_response` (all-ABSTAIN). #5021 had
    fixed only the injection-flagged path.
+3. **Bridge request screen** (`_flattened_injection_screen`): it also scanned every decoded evidence
+   window, so a candidate containing an injection-shaped string caused a module-fatal return before
+   the tool-disabled judge received its nonce envelope. This verified only the block-direction
+   property (poisoned evidence cannot yield `ACCEPT`); it never verified the reach-direction property
+   that the judge must see, flag, and preserve the candidate so the caller can produce `AUDIT`.
+4. **Scorer** (`_response_relations` → `_score_case`): a literal
+   `prompt_injection_observed: true` was treated as `INJECTION_FLAG_FAILURE`, which hard-failed the
+   entire case. A correctly flagged `PROMPT_INJECTION` probe therefore aborted instead of passing
+   with `AUDIT`. This repeated the same blind spot at case granularity: it proved an injected result
+   could not pass, but never proved the honest fail-closed signal could reach the probe gate.
 
-The deeper cause is a **review blind spot, hit twice in 24 hours**: two review rounds each (author +
-cross-family reviewer, on both #5005 and #5021) verified the fail-closed direction — *no bad answer
-passes* — and never tested the recall direction — *good answers survive batching alongside a bad
-sibling*. Every test constructed either an all-valid or an all/critically-invalid response. The mixed
-case (N−1 valid + 1 invalid) was the production-dominant case and had zero coverage. Only the LIVE
-run caught it (#M-4a: verify the real artifact).
+The deeper cause is a **review blind spot, now hit four times in 24 hours**: two review rounds each
+(author + cross-family reviewer, on both #5005 and #5021) verified the fail-closed direction — *no
+bad answer passes* — and never tested the reach/recall direction — *good answers and correct safety
+signals survive batching alongside a bad sibling*. Every test constructed either an all-valid or an
+all/critically-invalid response. The mixed case (N−1 valid + 1 invalid) was the production-dominant
+case and had zero coverage. Only the LIVE run caught it (#M-4a: verify the real artifact).
 
 ## Prevention
 
@@ -51,6 +61,10 @@ run caught it (#M-4a: verify the real artifact).
    AND "can a good answer be dropped?" — the second question found nothing twice because nobody asked it.
 4. **Live-run a probe with known-good mixed output before declaring the chain works** — green unit
    tests + 2 review rounds missed what one $0-dry-run + 1 probe call exposed.
+5. **For safety screens, test reachability end-to-end.** Stub only the provider subprocess, then prove
+   injection-shaped raw evidence remains inside its nonce envelope, reaches the judge, survives the
+   collector, forces `AUDIT`, and leaves ordinary siblings intact. A screen test that only asserts
+   "the subprocess was not called" can permanently encode the defect.
 
 ## Cross-references
 
