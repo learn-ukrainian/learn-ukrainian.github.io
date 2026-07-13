@@ -16,7 +16,7 @@ activity_hints:
   - focus: Оцінка меж ретроспективного спогаду про рецепцію «Двох кольорів»
     placement: workbook
     type: authorial-intent
-  - focus: Дебат - пісняр чи композитор великої форми?
+  - focus: 'Дебати: пісняр чи композитор великої форми?'
     placement: workbook
     type: essay-response
   - focus: >-
@@ -29,9 +29,9 @@ aliases:
   - Oleksandr Bilash
 cefr_min: C1
 connects_to:
-  - bio-137-dmytro-pavlychko
-  - bio-39-taras-shevchenko
-  - bio-149-volodymyr-ivasyuk
+  - bio-159-dmytro-pavlychko
+  - bio-61-taras-shevchenko
+  - bio-171-volodymyr-ivasyuk
 content_outline:
   - annotations:
       - '[!biography]'
@@ -129,17 +129,6 @@ persona:
     уважного читання й слухання конкретного твору
   voice: Music-and-Language-Seminar-Moderator
 phase: BIO.4
-portrait_fallback:
-  caption_en: Monument to Oleksandr Bilash in Hradyzk
-  caption_uk: Пам'ятник Олександрові Білашу в Градизьку
-  license: VERIFY
-  reason: >-
-    No PD/CC portrait of Bilash located (d. 2003; all portraits presumptively
-    in copyright). Wikimedia Commons Category:Oleksandr Bilash contains no
-    portrait. Monument photo licence AND Ukrainian freedom-of-panorama status
-    must be verified before use; otherwise ship text-only.
-  type: monument
-  url: https://commons.wikimedia.org/wiki/File:Пам%27ятник_Білашу_(Градизьк)_-_01.jpg
 readings:
   - title: «Два кольори» (поетичний текст пісні)
     language: uk
@@ -205,7 +194,7 @@ readings:
     hosting: link-only
     cefr_min: C1
     learner_task: Ознайомитися з хронологією життя, здобутою освітою та повним переліком творів композитора для загального ознайомлення.
-    caveats: Матеріал з Вікіпедії може містити неточності та потребує критичного співставлення з академічними джерелами (такими як ЕСУ).
+    caveats: Матеріал з Вікіпедії може містити неточності та потребує критичного зіставлення з академічними джерелами (такими як ЕСУ).
 references:
   - note: Академічна енциклопедична основа для біографічних фактів і списку творів.
     title: Білаш Олександр Іванович
@@ -244,7 +233,7 @@ size_policy:
 slug: oleksandr-bilash
 subtitle: 'Oleksandr Bilash: Between Word and Melody'
 title: "Олександр Білаш: Між словом і мелодією"
-version: '4.4'
+version: '4.5'
 vocabulary_hints:
   - definition: людина, що створює музику; автор музичних творів
     pos: ч.
