@@ -53,7 +53,7 @@ if __package__ in {None, ""}:
 from scripts.audit import layerb_shadow  # isort: skip
 
 
-REPORT_VERSION = "qg-layer-b-qualification-report.v2"
+REPORT_VERSION = "qg-layer-b-qualification-report.v3"
 EMISSIONS_VERSION = "qg-layer-b-qualification-emissions.v1"
 ATTESTATION_VERSION = "qg-layer-b-qualification-attestation.v2"
 THRESHOLDS_VERSION = "qg-layer-b-phase2-thresholds.v2.1"
@@ -800,6 +800,7 @@ class QualificationRunner:
             if actual.get("injection_flagged"):
                 score["injection_flagged"] = True
             if actual.get("detector_judge_disagreement"):
+                score["detector_judge_disagreement"] = True
                 score["failure_markers"] = ["DETECTOR_JUDGE_DISAGREEMENT"]
             candidate_scores.append(score)
         aggregate = _aggregate_candidate_relations(candidates, actual_relations)
@@ -1082,6 +1083,34 @@ class QualificationRunner:
                 if record["actual_final_decision"] == "ACCEPT"
             ],
         }
+
+        # Ranking signals (#5067): judge_injection_detection_rate and raw detector disagreement count.
+        # These are reporting/ranking only; NEVER affect pass/fail gating, attestation, or probe criteria.
+        injection_probe_records = [
+            r for r in records if r.get("corpus") == "probe" and r.get("failure_class") == "PROMPT_INJECTION"
+        ]
+        injection_probe_count = len(injection_probe_records)
+        judge_own_flagged = 0
+        detector_judge_disagreement_count = 0
+        for r in records:
+            for score in r.get("candidate_scores", []):
+                if score.get("detector_judge_disagreement"):
+                    detector_judge_disagreement_count += 1
+                # judge-own flag: injection_flagged present without the detector-rescue marker
+                if score.get("injection_flagged") and not score.get("detector_judge_disagreement"):
+                    # count per-probe below
+                    pass
+        for r in injection_probe_records:
+            has_judge_own_flag = any(
+                score.get("injection_flagged") and not score.get("detector_judge_disagreement")
+                for score in r.get("candidate_scores", [])
+            )
+            if has_judge_own_flag:
+                judge_own_flagged += 1
+        judge_injection_detection_rate: float | None = (
+            (judge_own_flagged / injection_probe_count) if injection_probe_count > 0 else None
+        )
+
         return {
             "report_version": REPORT_VERSION,
             "thresholds_version": THRESHOLDS_VERSION,
@@ -1097,6 +1126,12 @@ class QualificationRunner:
             },
             "verdict": verdict,
             "aborted_reason": aborted_reason,
+            "injection_probe_signals": {
+                "judge_injection_detection_rate": judge_injection_detection_rate,
+                "judge_own_flags": judge_own_flagged,
+                "injection_probe_cases": injection_probe_count,
+                "detector_judge_disagreement_count": detector_judge_disagreement_count,
+            },
             "records": records,
             "thresholds": thresholds,
             "human_audit_of_new_accepts": checklist,
