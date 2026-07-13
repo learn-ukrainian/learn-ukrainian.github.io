@@ -74,7 +74,7 @@ out="$(deploy_agent_extensions "$WORK_DIR/empty" agents:deploy)" \
 contains "$out" "not found" "missing package.json warns instead of failing"
 
 # --- launchers actually use the helper (regression guard on the wiring) ---
-for launcher in start-claude.sh start-codex.sh; do
+for launcher in start-claude.sh; do
   grep -q 'deploy_extensions.sh' "$REPO_ROOT/$launcher" \
     || fail "$launcher no longer sources deploy_extensions.sh"
   grep -q 'deploy_agent_extensions' "$REPO_ROOT/$launcher" \
@@ -85,5 +85,10 @@ for launcher in start-claude.sh start-codex.sh; do
     fail "$launcher reintroduced a fail-silent npm deploy"
   fi
 done
+
+grep -q 'thread_rollover_link.sh' "$REPO_ROOT/start-codex.sh" \
+  || fail "start-codex.sh no longer sources the Codex checkout bootstrap"
+grep -q 'bootstrap_codex_checkout' "$REPO_ROOT/start-codex.sh" \
+  || fail "start-codex.sh no longer bootstraps the target checkout"
 
 echo "ok - deploy extensions fixtures passed"

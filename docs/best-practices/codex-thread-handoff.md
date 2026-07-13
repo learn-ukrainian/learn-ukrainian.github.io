@@ -212,6 +212,122 @@ Dry-run without writing files:
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
 ```
 
+## Fresh Codex App Task/Restart Smoke
+
+The repository E2E suite exercises the process, hook, and real-worktree seams,
+but it cannot create a Codex app task. Run this smoke from the app before
+calling a restart change accepted. A fresh replacement is a new task identity;
+do not fork, continue, or run `codex exec resume` on provider conversation
+history.
+
+Before opening the fresh project task, deploy the canonical checkout and
+prepare the packet:
+
+```bash
+set -euo pipefail
+canonical=$(git rev-parse --show-toplevel)
+evidence="/tmp/rollover-smoke-$(date +%Y%m%dT%H%M%S)"
+mkdir -p "$evidence"
+cd "$canonical"
+npm run agents:deploy | tee "$evidence/canonical-deploy.txt"
+.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+  --agent codex \
+  --active-thread-id <predecessor-task-id> \
+  --active-automation-id <predecessor-automation-id> \
+  | tee "$evidence/prepare.json"
+lineage_id=$(jq -r .lineage_id "$evidence/prepare.json")
+rollover_id=$(jq -r .rollover_id "$evidence/prepare.json")
+lease_rel=$(jq -r .state_file "$evidence/prepare.json")
+lease="$canonical/$lease_rel"
+```
+
+Create one genuinely fresh Codex app project task and record its new task id
+and app-created worktree path. If the app supports a worktree setup command,
+configure the bootstrap helper below to run before the task first opens. If it
+does not, the first SessionStart is not acceptance evidence: run the helper,
+close the new task, and reopen/restart that same fresh task so the deployed
+SessionStart hook actually runs.
+
+```bash
+fresh=<absolute-app-worktree-path>
+replacement_task_id=<fresh-task-id>
+bash "$fresh/scripts/lib/thread_rollover_link.sh" "$canonical" "$fresh" \
+  | tee "$evidence/fresh-bootstrap.txt"
+git -C "$canonical" worktree list | tee "$evidence/worktrees.txt"
+readlink "$fresh/.agent/thread-rollovers" | tee "$evidence/rollover-link.txt"
+test -f "$fresh/.codex/hooks.json"
+test -x "$fresh/.codex/hooks/session-setup.sh"
+test "$(readlink "$fresh/.agent/thread-rollovers")" = \
+  "$canonical/.agent/thread-rollovers"
+```
+
+For this smoke, do not pre-export `CODEX_CANONICAL_REPO_ROOT`. The reopened
+task's automatic SessionStart output must name the prepared `lineage_id` and
+`rollover_id` and show `PENDING THREAD ROLLOVER DETECTED`. Then, from the fresh
+worktree, claim only that packet:
+
+```bash
+cd "$fresh"
+.venv/bin/python scripts/orchestration/thread_handoff.py resume \
+  --agent codex \
+  --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" \
+  --replacement-thread-id "$replacement_task_id" \
+  | tee "$evidence/resume.json"
+```
+
+Read the packet and durable role handoff named by SessionStart. Write the ten
+truthful semantic anchors to the lease's reserved snapshot path. Answer the
+generated questions from restored context; do not read the answer-bearing
+probe to manufacture recall answers.
+
+```bash
+snapshot_rel=$(jq -r .replacement.semantic_snapshot_path "$lease")
+probe_rel=$(jq -r .replacement.strict_probe_path "$lease")
+questions_rel=$(jq -r .replacement.strict_questions_path "$lease")
+answers_rel=$(jq -r .replacement.strict_answers_path "$lease")
+verdict_rel=$(jq -r .replacement.strict_verdict_path "$lease")
+proof_rel=$(jq -r .replacement.canary_proof_path "$lease")
+challenge=$(jq -r .replacement.canary_challenge "$lease")
+
+# The fresh task writes "$canonical/$snapshot_rel" from the restored packet.
+.venv/bin/python scripts/context_canary.py mint \
+  --snapshot "$canonical/$snapshot_rel" --out "$canonical/$probe_rel"
+.venv/bin/python scripts/context_canary.py questions \
+  --probe "$canonical/$probe_rel" --out "$canonical/$questions_rel"
+# The fresh task now writes {"<question-id>": "<recalled-answer>"} to
+# "$canonical/$answers_rel" without opening the probe.
+.venv/bin/python scripts/context_canary.py score \
+  --probe "$canonical/$probe_rel" \
+  --answers "$canonical/$answers_rel" \
+  --expected-lineage-id "$lineage_id" \
+  --expected-rollover-id "$rollover_id" \
+  --verdict "$canonical/$verdict_rel" \
+  | tee "$evidence/strict-score.txt"
+.venv/bin/python scripts/orchestration/thread_handoff_canary.py \
+  --rollover-id "$rollover_id" \
+  --replacement-thread-id "$replacement_task_id" \
+  --challenge "$challenge" \
+  --proof-file "$canonical/$proof_rel" \
+  | tee "$evidence/canary.json"
+.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+  --agent codex \
+  --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" \
+  --new-thread-id "$replacement_task_id" \
+  --canary-proof "$canonical/$proof_rel" \
+  --strict-probe "$canonical/$probe_rel" \
+  --strict-verdict "$canonical/$verdict_rel" \
+  | tee "$evidence/confirm.json"
+```
+
+The smoke passes only when the score says `10/10`, the canary says `PASS`, the
+fresh task id differs from the predecessor, and `confirm.json` says
+`"old_automation_ready_to_delete": true`. Keep all captured evidence under
+`/tmp/rollover-smoke-*`; the packet itself stays under gitignored
+`.agent/thread-rollovers/`. Delete or pause the predecessor automation only
+after all four checks pass.
+
 ## Worker Run Inbox
 
 Use `scripts/orchestration/orchestrator_control.py` when worker dispatch state
