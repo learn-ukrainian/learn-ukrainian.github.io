@@ -95,6 +95,18 @@ npm-debug.log*
 *.db
 *.sqlite
 *.sqlite3
+# SQLite transient sidecars — without these, any in-repo sqlite writer (e.g. the
+# verbatim-overlap shingle index) shows an untracked *-journal mid-transaction,
+# dirtying the primary checkout and blocking write-capable dispatches (#4444 guard).
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
 
 # Temporary files
 tmp/
