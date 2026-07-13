@@ -368,3 +368,33 @@ def test_committed_browse_records_remain_distinct_from_article_search_entries() 
         shard_total += len(rows)
 
     assert shard_total == meta["total"]
+
+
+def test_legacy_run_refuses_to_overwrite_article_index(tmp_path, monkeypatch) -> None:
+    """A plain (manifest-lemma) run must not clobber the DB-derived articles index (#5080)."""
+    import scripts.audit.generate_search_index as gsi
+
+    article_out = tmp_path / "lexicon-search-index.json"
+    article_out.write_text(json.dumps([{"t": "Стаття", "l": "стаття"}]), encoding="utf-8")
+    monkeypatch.setattr(gsi, "DEFAULT_SEARCH_OUT", article_out)
+
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"entries": []}), encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="refusing legacy manifest-lemma run"):
+        gsi.main(["--manifest", str(manifest)])
+
+    # Lemma-format existing file (no "t") does NOT trip the guard.
+    article_out.write_text(json.dumps([{"l": "стаття", "s": "стаття"}]), encoding="utf-8")
+    rc = gsi.main(
+        [
+            "--manifest", str(manifest),
+            "--aliases-out", str(tmp_path / "aliases.json"),
+            "--search-shards-out", str(tmp_path / "shards.json"),
+            "--search-shard-dir", str(tmp_path / "shard-dir"),
+            "--browse-meta-out", str(tmp_path / "browse-meta.json"),
+            "--browse-flagged-out", str(tmp_path / "browse-flagged.json"),
+            "--browse-dir", str(tmp_path / "browse"),
+        ]
+    )
+    assert rc == 0
