@@ -66,7 +66,10 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
     git(primary, "init", "-b", "main")
     git(primary, "config", "user.email", "e2e@example.invalid")
     git(primary, "config", "user.name", "Thread Restart E2E")
-    (primary / ".gitignore").write_text(".agent/\n.codex/\n.claude/\n.agents/\n.gemini/\n.venv\n", encoding="utf-8")
+    (primary / ".gitignore").write_text(
+        ".agent/\n.codex/\n.claude/\n.agents/\n.gemini/\n.venv\n__pycache__/\n",
+        encoding="utf-8",
+    )
     (primary / "tracked.txt").write_text("canonical\n", encoding="utf-8")
     sources = [
         "scripts/__init__.py",
