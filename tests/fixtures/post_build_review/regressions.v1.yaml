@@ -1,4 +1,4 @@
-catalog_version: 1.1.0
+catalog_version: 2.0.0
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -89,3 +89,45 @@ regressions:
     version_field: deterministic_contract_version
     input: Draft contains SIZE_POLICY_MISMATCH because grounded evidence is exhausted below the plan floor.
     expected: Writer precheck preserves plan-review and below-floor signals and never invokes automatic expansion.
+  - bug_id: semantic-duplicate-json-manually-normalized
+    responsible_layer: orchestration
+    fixed_in_version: 2.0.0
+    version_field: review_protocol_version
+    input: Two JSON objects or a Markdown-wrapped reviewer response followed by a hand-cleaned PASS object.
+    expected: Hash and parse the exact raw response; emit schema-valid INCOMPLETE without selecting or repairing an object.
+  - bug_id: semantic-claim-count-without-ledger
+    responsible_layer: schema
+    fixed_in_version: 2.0.0
+    version_field: review_protocol_version
+    input: A reviewer declares 65 checked claims but supplies only 28 atomic ledger entries.
+    expected: Contract-invalid response and structured INCOMPLETE; counts must derive from the ledger.
+  - bug_id: semantic-response-provenance-discarded
+    responsible_layer: schema
+    fixed_in_version: 2.0.0
+    version_field: review_protocol_version
+    input: A result lacks the SHA-256, byte count, parser status, and contract status of the raw response.
+    expected: Schema validation failure.
+  - bug_id: malyshko-learner-workflow-leakage
+    responsible_layer: track_policy
+    fixed_in_version: 1.2.0
+    version_field: track_policy_version
+    input: Learner prose refers to an accepted research dossier, available package, or project corpus.
+    expected: Generic mechanical learner_workflow_leakage finding; no person-specific heading or conclusion is global policy.
+  - bug_id: plan-adherence-excused-workflow-leakage
+    responsible_layer: semantic_prompt
+    fixed_in_version: 2.0.0
+    version_field: semantic_prompt_version
+    input: A plan rewards source evaluation and the built lesson turns into an internal source-audit tutorial.
+    expected: High pedagogy finding and REVISE; plan adherence cannot excuse learner-facing workflow leakage.
+  - bug_id: maiboroda-media-dependency-not-inventoried
+    responsible_layer: deterministic_code
+    fixed_in_version: 1.2.0
+    version_field: deterministic_contract_version
+    input: Listening tasks and timestamped model answers are present in learner content and activities.
+    expected: Deterministic preparation inventories the audio modality and exact learner-surface locations for semantic review.
+  - bug_id: maiboroda-perceptual-claims-without-modality-proof
+    responsible_layer: semantic_prompt
+    fixed_in_version: 2.0.0
+    version_field: semantic_prompt_version
+    input: Catalog metadata plus exact auditory timestamps, breaths, contour, stress, accompaniment, and cadence.
+    expected: Metadata supports catalog facts only; absent audio-capable verification the result is INCOMPLETE.

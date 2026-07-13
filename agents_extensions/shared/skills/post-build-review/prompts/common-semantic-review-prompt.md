@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `1.1.0`
+Semantic prompt version: `2.0.0`
 
 Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
@@ -17,6 +17,17 @@ that code cannot decide.
   authoritative project sources. Plausible but unattested is not supported.
 - Treat missing tools, missing source support, or incomplete review coverage as
   `INCOMPLETE`, not `PASS`.
+- Distinguish evidence modalities. Metadata can support catalog facts such as
+  title, creator, date label, or performer; it cannot verify what is heard,
+  seen, or read in the underlying object. Verify perceptual model answers only
+  with direct access through a declared reviewer capability. If the reviewer
+  cannot inspect required audio, video, image, text, or interactive evidence,
+  record `reviewer_unverified` and return `INCOMPLETE`.
+- Inventory every learner task that depends on an external or embedded evidence
+  object. The task must give learners usable access to that object or a
+  sufficient excerpt/transcript. `metadata_only`, `inaccessible`, and
+  `not_provided` require a high or blocker grounding/pedagogy finding; they are
+  not acceptable substitutes for the evidence.
 - Inspect activities for actual learner behavior: answer correctness,
   distractor validity, task clarity, progression, and whether they test the
   intended language or analysis rather than trivia.
@@ -29,6 +40,11 @@ that code cannot decide.
   definitions require revision even when total length is nominally in range.
 - Treat long source-dense material and necessary pedagogy as acceptable.
   Advisory-ceiling excess alone is never a semantic failure.
+- Detect internal production workflow on learner surfaces. References to an
+  accepted dossier, available package, project corpus, hidden search result,
+  source packet, or reviewer process are not source literacy. Treat actual
+  workflow leakage as a high pedagogy finding even when the plan asks for
+  epistemic humility or source evaluation; plan adherence does not excuse it.
 
 ## Severity and verdict
 
@@ -45,7 +61,9 @@ low/info findings and complete required coverage.
 
 ## Semantic result shape
 
-Return one JSON object and no Markdown wrapper:
+Return exactly one JSON object and no Markdown wrapper, preface, duplicate
+object, or trailing commentary. The orchestrator hashes and parses the exact
+response bytes. It must not repair, merge, reconcile, or normalize this output.
 
 ```json
 {
@@ -54,8 +72,31 @@ Return one JSON object and no Markdown wrapper:
   "claim_coverage": {
     "status": "complete|incomplete|not_applicable",
     "claims_total": 0,
-    "claims_verified": 0
+    "claims_checked": 0,
+    "claims_supported": 0
   },
+  "claim_ledger": [
+    {
+      "id": "stable-atomic-claim-id",
+      "claim": "one checkable claim",
+      "location": "repo-relative path and locator",
+      "status": "supported|contradicted|imprecise|unattested|unverifiable",
+      "evidence": "attributable source/tool evidence or why it is unverifiable",
+      "finding_id": null
+    }
+  ],
+  "learner_evidence_ledger": [
+    {
+      "id": "stable-evidence-object-id",
+      "location": "repo-relative task/model-answer locator",
+      "task": "what the learner must inspect",
+      "modality": "text|audio|video|image|interactive",
+      "source": "provided object, excerpt, transcript, or URL",
+      "access_status": "verified_access|metadata_only|inaccessible|not_provided|reviewer_unverified",
+      "verification_method": "how access and relevant content were checked",
+      "finding_id": null
+    }
+  ],
   "findings": [
     {
       "id": "stable-kebab-id",
@@ -68,3 +109,9 @@ Return one JSON object and no Markdown wrapper:
   ]
 }
 ```
+
+Counts must be derived from `claim_ledger`: total equals its length, checked
+excludes only `unverifiable`, and supported counts only `supported`. IDs are
+unique. Every non-supported claim and every learner-evidence entry other than
+`verified_access` references a finding. `PASS` requires complete coverage and
+only supported claims.

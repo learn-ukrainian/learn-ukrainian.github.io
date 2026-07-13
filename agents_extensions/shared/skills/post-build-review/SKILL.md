@@ -12,7 +12,10 @@ artifacts. Report findings; do not fix the module during this invocation.
 ## Workflow
 
 1. Parse the argument as `track/slug`. Do not infer an unknown track.
-2. Record the current reviewer agent, model family, exact model id, and effort.
+2. Record the current reviewer agent, model family, exact model id, effort, and
+   every evidence modality it can directly inspect: `text`, `audio`, `video`,
+   `image`, or `interactive`. Do not declare a capability merely because page
+   metadata is readable.
 3. Run deterministic preparation:
 
    ```bash
@@ -22,6 +25,7 @@ artifacts. Report findings; do not fix the module during this invocation.
      --reviewer-family <family> \
      --reviewer-model <model> \
      --reviewer-effort <effort> \
+     --reviewer-capability text \
      --output /tmp/post-build-review-packet.json
    ```
 
@@ -30,14 +34,18 @@ artifacts. Report findings; do not fix the module during this invocation.
    Ukrainian, factual, attribution, and quotation claims. Never guess a
    Ukrainian fact. If required tools or evidence are unavailable, return
    `INCOMPLETE`.
-5. Create `/tmp/post-build-review-semantic.json` with the shape required at the
-   end of the effective prompt. Use `apply_patch`, not a shell heredoc.
+5. Preserve the reviewer's exact response bytes at
+   `/tmp/post-build-review-semantic-response.json`. Do not extract, repair,
+   normalize, merge, or reconcile malformed output. A malformed response ends
+   this review as `INCOMPLETE`; any retry is a distinct review with a new
+   packet/result and cannot replace the failed artifact. Use `apply_patch`, not
+   a shell heredoc, when the current agent is the reviewer.
 6. Finalize and validate:
 
    ```bash
    .venv/bin/python scripts/audit/post_build_review.py finalize \
      --packet /tmp/post-build-review-packet.json \
-     --semantic-result /tmp/post-build-review-semantic.json \
+     --semantic-response /tmp/post-build-review-semantic-response.json \
      --output /tmp/post-build-review-result.json
    ```
 
@@ -52,7 +60,8 @@ artifacts. Report findings; do not fix the module during this invocation.
 - Disposition policy: [contracts/combined-disposition-policy.md](contracts/combined-disposition-policy.md)
 - Size policy: [contracts/evidence-derived-size-policy-contract.md](contracts/evidence-derived-size-policy-contract.md)
 - Track configuration: [config/track-policy.v1.yaml](config/track-policy.v1.yaml)
-- Output schema: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json)
+- Current output schema: [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json)
+- Historical v1 schema: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json)
 
 The runner assembles the common prompt plus exactly one family prompt. Do not
 manually concatenate or substitute other review prompts.
@@ -63,6 +72,9 @@ manually concatenate or substitute other review prompts.
   the track audit, or `--run-mdx-generation-validate`; those paths may write to
   the repository.
 - Never let semantic `PASS` override a deterministic blocker/high finding.
+- Never infer audio, video, image, text, or interactive content from metadata.
+  If the reviewer cannot inspect evidence required by a learner task, record it
+  as `reviewer_unverified` and return `INCOMPLETE`.
 - Never reuse a result after any `source_hashes` value changes.
 - Maintain this skill only through the bug-fix workflow in
   `docs/runbooks/post-build-review.md`; bump the responsible version and deploy

@@ -1,0 +1,33 @@
+{
+  "verdict": "INCOMPLETE",
+  "summary": "The deterministic review found learner-facing workflow register, and this fixture reviewer did not inspect the audio required by learner tasks. No readiness claim is made.",
+  "claim_coverage": {
+    "status": "incomplete",
+    "claims_total": 0,
+    "claims_checked": 0,
+    "claims_supported": 0
+  },
+  "claim_ledger": [],
+  "learner_evidence_ledger": [
+    {
+      "id": "bilash-recording-access",
+      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
+      "task": "Inspect the recording used by the listening and timestamped model-answer tasks.",
+      "modality": "audio",
+      "source": "The performance URL resolved from the module resources.",
+      "access_status": "reviewer_unverified",
+      "verification_method": "The fixture intentionally records that no audio-capable verification was completed.",
+      "finding_id": "bilash-audio-not-reviewed"
+    }
+  ],
+  "findings": [
+    {
+      "id": "bilash-audio-not-reviewed",
+      "category": "grounding",
+      "severity": "high",
+      "message": "Required learner audio evidence was not directly inspected by this review.",
+      "evidence": "Catalog or page metadata cannot verify audible content or timestamped model answers.",
+      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml"
+    }
+  ]
+}

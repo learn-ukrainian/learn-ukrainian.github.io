@@ -1,0 +1,557 @@
+{
+  "combined_disposition": {
+    "reasons": [
+      "semantic claim coverage is incomplete",
+      "reviewer could not verify required learner evidence",
+      "semantic reviewer reported incomplete"
+    ],
+    "status": "INCOMPLETE"
+  },
+  "deterministic": {
+    "aggregate": {
+      "findings_by_severity": {
+        "blocker": 0,
+        "high": 0,
+        "info": 0,
+        "low": 0,
+        "medium": 2
+      },
+      "reasons": [],
+      "status": "review"
+    },
+    "evidence_requirements": [
+      {
+        "evidence": "слухання",
+        "id": "audio-dependent-task-1",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:5",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слух",
+        "id": "audio-dependent-task-2",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:11",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слуховий",
+        "id": "audio-dependent-task-3",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слуху",
+        "id": "audio-dependent-task-4",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:15",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слуху",
+        "id": "audio-dependent-task-5",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:17",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухом",
+        "id": "audio-dependent-task-6",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:21",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слух",
+        "id": "audio-dependent-task-7",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:23",
+        "modality": "audio"
+      },
+      {
+        "evidence": "чує",
+        "id": "audio-dependent-task-8",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:33",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухайте",
+        "id": "audio-dependent-task-9",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:41",
+        "modality": "audio"
+      },
+      {
+        "evidence": "Слухач",
+        "id": "audio-dependent-task-10",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:43",
+        "modality": "audio"
+      },
+      {
+        "evidence": "почуте",
+        "id": "audio-dependent-task-11",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:47",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухача",
+        "id": "audio-dependent-task-12",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:51",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухаєте",
+        "id": "audio-dependent-task-13",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:55",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухання",
+        "id": "audio-dependent-task-14",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:57",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухацької",
+        "id": "audio-dependent-task-15",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:59",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухачів",
+        "id": "audio-dependent-task-16",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:73",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухання",
+        "id": "audio-dependent-task-17",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:77",
+        "modality": "audio"
+      },
+      {
+        "evidence": "почуття",
+        "id": "audio-dependent-task-18",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:79",
+        "modality": "audio"
+      },
+      {
+        "evidence": "Часова позначка",
+        "id": "audio-dependent-task-19",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:87",
+        "modality": "audio"
+      },
+      {
+        "evidence": "почути",
+        "id": "audio-dependent-task-20",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:91",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухацьких",
+        "id": "audio-dependent-task-21",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:93",
+        "modality": "audio"
+      },
+      {
+        "evidence": "часовими позначками",
+        "id": "audio-dependent-task-22",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:95",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухач",
+        "id": "audio-dependent-task-23",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:97",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухацьке",
+        "id": "audio-dependent-task-24",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:100",
+        "modality": "audio"
+      },
+      {
+        "evidence": "часову позначку",
+        "id": "audio-dependent-task-25",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:19",
+        "modality": "audio"
+      },
+      {
+        "evidence": "чує",
+        "id": "audio-dependent-task-26",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:20",
+        "modality": "audio"
+      },
+      {
+        "evidence": "почуте",
+        "id": "audio-dependent-task-27",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:30",
+        "modality": "audio"
+      },
+      {
+        "evidence": "часовими позначками",
+        "id": "audio-dependent-task-28",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:43",
+        "modality": "audio"
+      },
+      {
+        "evidence": "часові позначки",
+        "id": "audio-dependent-task-29",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:49",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слух",
+        "id": "audio-dependent-task-30",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:58",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухання",
+        "id": "audio-dependent-task-31",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:59",
+        "modality": "audio"
+      },
+      {
+        "evidence": "чує",
+        "id": "audio-dependent-task-32",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:87",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухачів",
+        "id": "audio-dependent-task-33",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:114",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухачів",
+        "id": "audio-dependent-task-34",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:123",
+        "modality": "audio"
+      },
+      {
+        "evidence": "слухацьке",
+        "id": "audio-dependent-task-35",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml:41",
+        "modality": "audio"
+      }
+    ],
+    "policy_findings": [
+      {
+        "category": "learner_workflow_leakage",
+        "evidence": "доступному пакеті",
+        "id": "learner-workflow-leakage-accepted-dossier-or-package-1",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:75",
+        "message": "Internal research/build workflow language leaked to a learner surface.",
+        "severity": "medium",
+        "source": "track_policy"
+      },
+      {
+        "category": "learner_workflow_leakage",
+        "evidence": "Доступний пакет",
+        "id": "learner-workflow-leakage-accepted-dossier-or-package-2",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81",
+        "message": "Internal research/build workflow language leaked to a learner surface.",
+        "severity": "medium",
+        "source": "track_policy"
+      }
+    ],
+    "size_policy": {
+      "error": null,
+      "provenance": {
+        "argv": [
+          ".venv/bin/python",
+          "scripts/audit/module_size_policy_audit.py",
+          "--tracks",
+          "bio",
+          "--slugs",
+          "oleksandr-bilash",
+          "--built-only",
+          "--format",
+          "json"
+        ],
+        "config_path": "agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md",
+        "config_version": "1.2.0",
+        "cwd": ".",
+        "executed_argv": [
+          ".venv/bin/python",
+          "scripts/audit/module_size_policy_audit.py",
+          "--tracks",
+          "bio",
+          "--slugs",
+          "oleksandr-bilash",
+          "--built-only",
+          "--format",
+          "json"
+        ],
+        "exit_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "33218425f5749b60947938a6cedb3673fcfdce61da3d38a7adda51a5f651eeea"
+      },
+      "result": {
+        "actual_words": 2401,
+        "advisory_ceiling": 4000,
+        "band_max": 2800,
+        "band_min": 2200,
+        "basis": "explicit_plan_size_policy",
+        "content_metrics": {
+          "authored_instructional_words": 2401,
+          "excluded_markup_directive_url_tokens": 25,
+          "learner_visible_words": 2401,
+          "quoted_primary_source_words": 0,
+          "raw_whitespace_tokens": 2497
+        },
+        "decision_signals": [],
+        "density_band": "reviewed_plan_override",
+        "dossier_path": "docs/research/bio/oleksandr-bilash.md",
+        "effective_min": 2200,
+        "legacy_raw_whitespace_words": 2497,
+        "metrics": {
+          "contested_markers": 6,
+          "headings": 12,
+          "primary_markers": 14,
+          "source_refs": 13,
+          "variant_markers": 3,
+          "words": 1846
+        },
+        "module_path": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md",
+        "notes": [
+          "A reviewed explicit plan size policy override replaces generic density-band limits.",
+          "Review basis: human_reviewed_rebuild_plus_research_dossier",
+          "Saturation evidence: current_module_padding_review_and_bounded_primary_packet",
+          "Above the explicit advisory ceiling, exceptional justification is required."
+        ],
+        "plan_floor": 2200,
+        "plan_outline_words": 2200,
+        "plan_path": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
+        "repetition": {
+          "algorithm": "paragraph_5_word_shingles_v1:jaccard>=0.55_or_containment>=0.82,length_ratio>=0.70,min_shared=8,min_words=40",
+          "eligible_paragraphs": 32,
+          "matches": []
+        },
+        "size_policy_mismatch": false,
+        "slug": "oleksandr-bilash",
+        "status": "explicit_override",
+        "track": "bio"
+      },
+      "status": "complete"
+    },
+    "skip_assessments": [
+      {
+        "category": "llm_qg",
+        "disposition": "superseded_by_semantic",
+        "reason": "excluded pending issue #2156; old LLM-QG rows are not read or recreated"
+      },
+      {
+        "category": "mdx_generation_validate",
+        "disposition": "accepted_read_only_omission",
+        "reason": "skipped by default because generate_mdx.py rewrites site MDX before validating"
+      },
+      {
+        "category": "external_resource_liveness",
+        "disposition": "advisory_external",
+        "reason": "skipped by default because live URL checks are network-dependent"
+      }
+    ],
+    "track_audit": {
+      "error": null,
+      "provenance": {
+        "argv": [
+          ".venv/bin/python",
+          "scripts/audit/track_deterministic_audit.py",
+          "--track",
+          "bio",
+          "--slugs",
+          "oleksandr-bilash",
+          "--format",
+          "json",
+          "--fail-on",
+          "never"
+        ],
+        "config_path": "scripts/audit/track_deterministic_audit_config.yaml",
+        "config_version": "1",
+        "cwd": ".",
+        "executed_argv": [
+          ".venv/bin/python",
+          "scripts/audit/track_deterministic_audit.py",
+          "--track",
+          "bio",
+          "--slugs",
+          "oleksandr-bilash",
+          "--format",
+          "json",
+          "--fail-on",
+          "never"
+        ],
+        "exit_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "d4861b77259214b20f938c9142bb56323b5282afba14a928c59263be4ed8d3da"
+      },
+      "result": {
+        "findings": [],
+        "modules": [
+          {
+            "built": true,
+            "module_dir": "curriculum/l2-uk-en/bio/oleksandr-bilash",
+            "module_num": 374,
+            "slug": "oleksandr-bilash",
+            "title": "Олександр Білаш: Між словом і мелодією"
+          }
+        ],
+        "skipped": [
+          {
+            "category": "llm_qg",
+            "module_num": null,
+            "reason": "excluded pending issue #2156; old LLM-QG rows are not read or recreated",
+            "slug": null,
+            "track": "bio"
+          },
+          {
+            "category": "mdx_generation_validate",
+            "module_num": 374,
+            "reason": "skipped by default because generate_mdx.py rewrites site MDX before validating",
+            "slug": "oleksandr-bilash",
+            "track": "bio"
+          },
+          {
+            "category": "external_resource_liveness",
+            "module_num": 374,
+            "reason": "skipped by default because live URL checks are network-dependent",
+            "slug": "oleksandr-bilash",
+            "track": "bio"
+          }
+        ],
+        "summary": {
+          "auto_fixable_findings": 0,
+          "deterministic_failures": 0,
+          "findings_by_category": {},
+          "findings_by_severity": {
+            "blocker": 0,
+            "high": 0,
+            "info": 0,
+            "low": 0,
+            "medium": 0
+          },
+          "findings_total": 0,
+          "judgement_required_content_work": 0,
+          "llm_qg_excluded_pending_2156": true,
+          "modules_built": 1,
+          "modules_not_built": 0,
+          "modules_selected": 1,
+          "modules_with_findings": 0,
+          "remediation_only_findings": 0,
+          "skipped_checks": 3
+        },
+        "track": "bio"
+      },
+      "status": "complete"
+    }
+  },
+  "deterministic_contract_version": "1.2.0",
+  "findings": [
+    {
+      "category": "learner_workflow_leakage",
+      "evidence": "доступному пакеті",
+      "id": "learner-workflow-leakage-accepted-dossier-or-package-1",
+      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:75",
+      "message": "Internal research/build workflow language leaked to a learner surface.",
+      "severity": "medium",
+      "source": "track_policy"
+    },
+    {
+      "category": "learner_workflow_leakage",
+      "evidence": "Доступний пакет",
+      "id": "learner-workflow-leakage-accepted-dossier-or-package-2",
+      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81",
+      "message": "Internal research/build workflow language leaked to a learner surface.",
+      "severity": "medium",
+      "source": "track_policy"
+    },
+    {
+      "category": "grounding",
+      "evidence": "Catalog or page metadata cannot verify audible content or timestamped model answers.",
+      "id": "bilash-audio-not-reviewed",
+      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
+      "message": "Required learner audio evidence was not directly inspected by this review.",
+      "severity": "high",
+      "source": "semantic"
+    }
+  ],
+  "prompt_sha256": "f48057421a91997fd9408d3d2ddf1467c5cf611f551b4ff7f61251eca87ba7cb",
+  "reproducibility_key": "0a891f4a4bd499bc7476c428f7564ed746fbc751b6a08dcd29dabccd77222d35",
+  "review_protocol_version": "2.0.0",
+  "reviewer": {
+    "agent": "fixture",
+    "capabilities": [
+      "audio",
+      "image",
+      "interactive",
+      "text",
+      "video"
+    ],
+    "effort": "high",
+    "family": "fixture",
+    "model": "fixture-model"
+  },
+  "schema_version": "post-build-review.result.v2",
+  "semantic": {
+    "claim_coverage": {
+      "claims_checked": 0,
+      "claims_supported": 0,
+      "claims_total": 0,
+      "status": "incomplete"
+    },
+    "claim_ledger": [],
+    "family": "seminar",
+    "findings": [
+      {
+        "category": "grounding",
+        "evidence": "Catalog or page metadata cannot verify audible content or timestamped model answers.",
+        "id": "bilash-audio-not-reviewed",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
+        "message": "Required learner audio evidence was not directly inspected by this review.",
+        "severity": "high",
+        "source": "semantic"
+      }
+    ],
+    "learner_evidence_ledger": [
+      {
+        "access_status": "reviewer_unverified",
+        "finding_id": "bilash-audio-not-reviewed",
+        "id": "bilash-recording-access",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
+        "modality": "audio",
+        "source": "The performance URL resolved from the module resources.",
+        "task": "Inspect the recording used by the listening and timestamped model-answer tasks.",
+        "verification_method": "The fixture intentionally records that no audio-capable verification was completed."
+      }
+    ],
+    "summary": "The deterministic review found learner-facing workflow register, and this fixture reviewer did not inspect the audio required by learner tasks. No readiness claim is made.",
+    "verdict": "INCOMPLETE"
+  },
+  "semantic_prompt_version": "2.0.0",
+  "semantic_response": {
+    "byte_count": 1352,
+    "contract_status": "valid",
+    "error": null,
+    "parse_status": "valid",
+    "parser": "strict-json-object-v1",
+    "raw_sha256": "7a1ba946feea71dda34bbcff988607537ece5c293354ddedff1328d206b7c728"
+  },
+  "source_hashes": {
+    "activities": "20fcad8f33a05631aa5c917e1a89915d456e5407af12e370a4abd141c2bec095",
+    "content": "65d5da02915983a4b54a67d0d3bf2682ecaa33451d21013b5b4782c2b1cb02b8",
+    "plan": "3596ab011261897f4bf318731f402eb85a658103eae420e621db61ab56c6b347",
+    "resources": "9b1019e953df44a8522e61e4b4de860d0904c17f6fc792178e061ff5389e40af",
+    "vocabulary": "50c20da1c4216d2353ec752fad78092f3e959d7f8af718643d3ee362ef6d761e"
+  },
+  "target": {
+    "files": {
+      "activities": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
+      "content": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md",
+      "plan": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
+      "resources": "curriculum/l2-uk-en/bio/oleksandr-bilash/resources.yaml",
+      "vocabulary": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml"
+    },
+    "layout": "directory",
+    "semantic_family": "seminar",
+    "slug": "oleksandr-bilash",
+    "track": "bio"
+  },
+  "track_policy_version": "1.2.0"
+}

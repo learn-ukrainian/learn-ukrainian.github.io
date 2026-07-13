@@ -1,20 +1,22 @@
 # Seminar semantic post-build review prompt
 
-Semantic prompt version: `1.1.0`
+Semantic prompt version: `2.0.0`
 
 Apply this only to FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, or RUTH,
 after the common prompt.
 
 ## Exhaustive claim ledger
 
-Extract every checkable factual claim as an atomic item: people, dates, places,
-events, works, categories, typologies, periods, etymologies, quotations,
+Extract every checkable factual claim into `claim_ledger` as an atomic item:
+people, dates, places, events, works, categories, typologies, periods,
+etymologies, quotations,
 attributions, causal claims presented as fact, image/rights claims, and source
-claims. Verify every item. Record total and verified counts. Any unchecked item
-makes claim coverage incomplete.
+claims. Verify every item. Derive total, checked, and supported counts from the
+ledger. Any unchecked item makes claim coverage incomplete.
 
-Classify evidence internally as supported, contradicted, imprecise, unattested,
-or unverifiable. A contradicted teaching claim is a blocker. Confidently
+Classify every ledger item as supported, contradicted, imprecise, unattested,
+or unverifiable and give attributable evidence. Do not emit aggregate counts
+without the ledger that proves them. A contradicted teaching claim is a blocker. Confidently
 specific but unattested material is at least high and may be a blocker when a
 named source/person/event should be findable.
 
@@ -37,3 +39,8 @@ named source/person/event should be findable.
   framing, conclusions, transitions, or definitions without new evidence are.
 - Set `claim_coverage.status` to `complete` only when every extracted claim was
   checked with attributable evidence.
+- Build `learner_evidence_ledger` for every reading, listening, viewing, image,
+  or interactive task. Exact auditory/visual timestamps, transcriptions,
+  perceptual descriptions, and model answers require direct modality-capable
+  verification. A page title or catalog metadata never verifies the media
+  content behind it.

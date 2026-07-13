@@ -26,7 +26,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SKILL_ROOT = PROJECT_ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
 POLICY_PATH = SKILL_ROOT / "config" / "track-policy.v1.yaml"
-SCHEMA_PATH = SKILL_ROOT / "schema" / "review-result.v1.schema.json"
+SCHEMA_PATHS = {
+    "post-build-review.result.v1": SKILL_ROOT / "schema" / "review-result.v1.schema.json",
+    "post-build-review.result.v2": SKILL_ROOT / "schema" / "review-result.v2.schema.json",
+}
 TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
@@ -38,6 +41,7 @@ SEVERITY_ALIASES = {
     "nit": "low",
 }
 CONNECTS_TO_RE = re.compile(r"^(?P<track>[a-z0-9-]+)-(?P<sequence>\d+)-(?P<slug>[a-z0-9-]+)$")
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 
 
 class ReviewProtocolError(RuntimeError):
@@ -50,6 +54,10 @@ def _stable_json(value: object) -> str:
 
 def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
 
 
 def sha256_file(path: Path) -> str:
@@ -99,6 +107,16 @@ def load_track_policy(path: Path = POLICY_PATH) -> dict[str, Any]:
     return policy
 
 
+def _deep_merge(base: Mapping[str, Any], override: Mapping[str, Any]) -> dict[str, Any]:
+    merged = deepcopy(dict(base))
+    for key, value in override.items():
+        if isinstance(value, Mapping) and isinstance(merged.get(key), Mapping):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = deepcopy(value)
+    return merged
+
+
 def resolve_track_policy(track: str, policy: Mapping[str, Any]) -> dict[str, Any]:
     normalized = track.strip().lower()
     tracks = policy.get("tracks")
@@ -114,10 +132,11 @@ def resolve_track_policy(track: str, policy: Mapping[str, Any]) -> dict[str, Any
     family_config = families[family_name]
     if not isinstance(family_config, Mapping):
         raise ReviewProtocolError(f"Family policy must be a mapping: {family_name}")
-    merged = deepcopy(dict(family_config))
-    for key, value in track_config.items():
-        if key != "family":
-            merged[key] = deepcopy(value)
+    defaults = policy.get("defaults")
+    if defaults is not None and not isinstance(defaults, Mapping):
+        raise ReviewProtocolError("Track policy defaults must be a mapping")
+    merged = _deep_merge(defaults or {}, family_config)
+    merged = _deep_merge(merged, {key: value for key, value in track_config.items() if key != "family"})
     merged["family"] = family_name
     merged["track"] = normalized
     return merged
@@ -502,6 +521,96 @@ def _check_forbidden_placeholders(
     return findings
 
 
+def _learner_surface_texts(
+    target: Mapping[str, Any], *, repo_root: Path = PROJECT_ROOT
+) -> dict[str, str]:
+    files = target.get("files")
+    if not isinstance(files, Mapping):
+        raise ReviewProtocolError("Target files must be a mapping")
+    texts: dict[str, str] = {}
+    for name in ("content", "activities", "vocabulary", "resources"):
+        if name not in files:
+            continue
+        path = resolve_repo_path(str(files[name]), repo_root=repo_root)
+        text = path.read_text(encoding="utf-8")
+        texts[display_path(path, repo_root)] = HTML_COMMENT_RE.sub(
+            lambda match: re.sub(r"[^\n]", " ", match.group(0)), text
+        )
+    return texts
+
+
+def _configured_pattern(spec: Mapping[str, Any]) -> re.Pattern[str]:
+    pattern = spec.get("regex")
+    if not isinstance(pattern, str) or not pattern:
+        raise ReviewProtocolError("Mechanical learner-surface pattern requires a regex")
+    try:
+        return re.compile(pattern, re.IGNORECASE)
+    except re.error as exc:
+        raise ReviewProtocolError(f"Invalid learner-surface regex {pattern!r}: {exc}") from exc
+
+
+def scan_learner_workflow_leakage(
+    texts: Mapping[str, str], spec: object
+) -> list[dict[str, Any]]:
+    if not spec:
+        return []
+    if not isinstance(spec, Mapping):
+        raise ReviewProtocolError("learner_workflow_leakage must be a mapping")
+    severity = str(spec.get("severity") or "medium")
+    findings: list[dict[str, Any]] = []
+    occurrence = 0
+    for raw_pattern in spec.get("patterns") or []:
+        if not isinstance(raw_pattern, Mapping):
+            raise ReviewProtocolError("learner_workflow_leakage patterns must be mappings")
+        pattern_id = str(raw_pattern.get("id") or "workflow-register")
+        pattern = _configured_pattern(raw_pattern)
+        for path, text in texts.items():
+            for line_no, line in enumerate(text.splitlines(), start=1):
+                for match in pattern.finditer(line):
+                    occurrence += 1
+                    findings.append(
+                        _policy_finding(
+                            f"learner-workflow-leakage-{pattern_id}-{occurrence}",
+                            "learner_workflow_leakage",
+                            severity,
+                            "Internal research/build workflow language leaked to a learner surface.",
+                            evidence=match.group(0),
+                            location=f"{path}:{line_no}",
+                        )
+                    )
+    return findings
+
+
+def inventory_evidence_requirements(
+    texts: Mapping[str, str], specs: object
+) -> list[dict[str, Any]]:
+    requirements: list[dict[str, Any]] = []
+    for raw_spec in specs or []:
+        if not isinstance(raw_spec, Mapping):
+            raise ReviewProtocolError("evidence_requirements entries must be mappings")
+        pattern_id = str(raw_spec.get("id") or "evidence")
+        modality = str(raw_spec.get("modality") or "")
+        if modality not in {"text", "audio", "video", "image", "interactive"}:
+            raise ReviewProtocolError(f"Invalid evidence modality: {modality!r}")
+        pattern = _configured_pattern(raw_spec)
+        occurrence = 0
+        for path, text in texts.items():
+            for line_no, line in enumerate(text.splitlines(), start=1):
+                match = pattern.search(line)
+                if match is None:
+                    continue
+                occurrence += 1
+                requirements.append(
+                    {
+                        "id": f"{pattern_id}-{occurrence}",
+                        "modality": modality,
+                        "location": f"{path}:{line_no}",
+                        "evidence": match.group(0),
+                    }
+                )
+    return requirements
+
+
 def evaluate_mechanical_track_policy(
     target: Mapping[str, Any],
     track_policy: Mapping[str, Any],
@@ -514,6 +623,7 @@ def evaluate_mechanical_track_policy(
     checks = track_policy.get("mechanical_checks")
     if not isinstance(checks, Mapping):
         return []
+    learner_texts = _learner_surface_texts(target, repo_root=repo_root)
     return [
         *_check_size_policy_status(target, track_policy, size_record),
         *_check_connects_to(plan, plan_path, checks.get("connects_to_sequence"), repo_root=repo_root),
@@ -523,6 +633,7 @@ def evaluate_mechanical_track_policy(
             checks.get("forbidden_placeholders"),
             repo_root=repo_root,
         ),
+        *scan_learner_workflow_leakage(learner_texts, checks.get("learner_workflow_leakage")),
     ]
 
 
@@ -600,6 +711,7 @@ def assemble_semantic_prompt(
         "deterministic_summary": track_result.get("summary"),
         "deterministic_findings": track_result.get("findings"),
         "mechanical_policy_findings": deterministic.get("policy_findings"),
+        "learner_evidence_requirements": deterministic.get("evidence_requirements"),
         "skip_assessments": deterministic.get("skip_assessments"),
         "size_policy": deterministic["size_policy"].get("result"),
         "resolved_track_policy": {
@@ -607,7 +719,7 @@ def assemble_semantic_prompt(
             "track": track_policy.get("track"),
             "semantic_requirements": track_policy.get("semantic_requirements"),
             "mechanical_checks": track_policy.get("mechanical_checks"),
-            "size_policy_blocking_statuses": track_policy.get("size_policy_blocking_statuses"),
+            "size_policy_signal_severities": track_policy.get("size_policy_signal_severities"),
             "skip_policy": track_policy.get("skip_policy"),
         },
     }
@@ -639,13 +751,18 @@ def prepare_review(
         repo_root=repo_root,
         size_record=deterministic["size_policy"].get("result"),
     )
+    checks = track_policy.get("mechanical_checks")
+    deterministic["evidence_requirements"] = inventory_evidence_requirements(
+        _learner_surface_texts(target, repo_root=repo_root),
+        checks.get("evidence_requirements") if isinstance(checks, Mapping) else None,
+    )
     deterministic["skip_assessments"] = assess_skips(track_result, track_policy)
     deterministic["aggregate"] = aggregate_deterministic(deterministic)
     prompt_text, prompt_paths = assemble_semantic_prompt(
         target, track_policy, deterministic, source_hashes, repo_root=repo_root
     )
     return {
-        "packet_version": "post-build-review.packet.v1",
+        "packet_version": "post-build-review.packet.v2",
         "review_protocol_version": str(policy["review_protocol_version"]),
         "deterministic_contract_version": str(policy["deterministic_contract_version"]),
         "semantic_prompt_version": str(policy["semantic_prompt_version"]),
@@ -715,50 +832,309 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
     ]
 
 
-def normalize_semantic_result(value: Mapping[str, Any], family: str) -> dict[str, Any]:
-    verdict = str(value.get("verdict") or "").upper()
+def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ReviewProtocolError(f"Duplicate JSON key: {key!r}")
+        value[key] = item
+    return value
+
+
+def _reject_json_constant(value: str) -> None:
+    raise ReviewProtocolError(f"Non-standard JSON constant: {value}")
+
+
+def parse_semantic_response(raw: bytes) -> tuple[Mapping[str, Any] | None, dict[str, Any]]:
+    provenance: dict[str, Any] = {
+        "raw_sha256": sha256_bytes(raw),
+        "byte_count": len(raw),
+        "parser": "strict-json-object-v1",
+        "parse_status": "invalid",
+        "contract_status": "not_evaluated",
+        "error": None,
+    }
+    try:
+        text = raw.decode("utf-8", errors="strict")
+        parsed = json.loads(
+            text,
+            object_pairs_hook=_reject_duplicate_keys,
+            parse_constant=_reject_json_constant,
+        )
+        if not isinstance(parsed, Mapping):
+            raise ReviewProtocolError("Semantic response root must be one JSON object")
+    except (UnicodeDecodeError, json.JSONDecodeError, ReviewProtocolError) as exc:
+        provenance["error"] = str(exc)
+        return None, provenance
+    provenance["parse_status"] = "valid"
+    return parsed, provenance
+
+
+def _require_exact_keys(value: Mapping[str, Any], expected: set[str], label: str) -> None:
+    missing = sorted(expected - set(value))
+    extra = sorted(set(value) - expected)
+    if missing or extra:
+        details = []
+        if missing:
+            details.append("missing=" + ",".join(missing))
+        if extra:
+            details.append("extra=" + ",".join(extra))
+        raise ReviewProtocolError(f"{label} fields are invalid: {'; '.join(details)}")
+
+
+def _nonempty_string(value: object, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ReviewProtocolError(f"{label} must be a non-empty string")
+    return value
+
+
+def _nonnegative_int(value: object, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ReviewProtocolError(f"{label} must be a non-negative integer")
+    return value
+
+
+def normalize_semantic_result(
+    value: Mapping[str, Any],
+    family: str,
+    reviewer: Mapping[str, Any],
+    evidence_requirements: Sequence[Mapping[str, Any]] = (),
+) -> dict[str, Any]:
+    _require_exact_keys(
+        value,
+        {
+            "verdict",
+            "summary",
+            "claim_coverage",
+            "claim_ledger",
+            "learner_evidence_ledger",
+            "findings",
+        },
+        "semantic response",
+    )
+    verdict = value["verdict"]
     if verdict not in {"PASS", "REVISE", "BLOCK", "INCOMPLETE"}:
         raise ReviewProtocolError(f"Invalid semantic verdict: {verdict!r}")
-    findings = []
-    for index, raw in enumerate(value.get("findings") or []):
+    summary = value["summary"]
+    if not isinstance(summary, str):
+        raise ReviewProtocolError("semantic summary must be a string")
+
+    raw_findings = value["findings"]
+    if not isinstance(raw_findings, list):
+        raise ReviewProtocolError("Semantic findings must be a list")
+    findings: list[dict[str, Any]] = []
+    finding_ids: set[str] = set()
+    expected_finding_keys = {"id", "category", "severity", "message", "evidence", "location"}
+    for raw in raw_findings:
         if not isinstance(raw, Mapping):
             raise ReviewProtocolError("Semantic findings must be mappings")
+        _require_exact_keys(raw, expected_finding_keys, "semantic finding")
+        finding_id = _nonempty_string(raw["id"], "semantic finding id")
+        if finding_id in finding_ids:
+            raise ReviewProtocolError(f"Duplicate semantic finding id: {finding_id}")
+        finding_ids.add(finding_id)
+        location = raw["location"]
+        if location is not None and not isinstance(location, str):
+            raise ReviewProtocolError("semantic finding location must be a string or null")
+        semantic_severity = _nonempty_string(raw["severity"], "semantic finding severity")
+        if semantic_severity not in CANONICAL_SEVERITIES:
+            raise ReviewProtocolError(f"Invalid semantic finding severity: {semantic_severity!r}")
         findings.append(
             {
-                "id": str(raw.get("id") or f"semantic-{index + 1}"),
+                "id": finding_id,
                 "source": "semantic",
-                "category": str(raw.get("category") or "other"),
-                "severity": normalize_severity(str(raw.get("severity") or "")),
-                "message": str(raw.get("message") or ""),
-                "evidence": str(raw.get("evidence") or ""),
-                "location": str(raw["location"]) if raw.get("location") is not None else None,
+                "category": _nonempty_string(raw["category"], "semantic finding category"),
+                "severity": semantic_severity,
+                "message": _nonempty_string(raw["message"], "semantic finding message"),
+                "evidence": _nonempty_string(raw["evidence"], "semantic finding evidence"),
+                "location": location,
             }
         )
-    coverage = value.get("claim_coverage")
+
+    coverage = value["claim_coverage"]
     if not isinstance(coverage, Mapping):
         raise ReviewProtocolError("semantic claim_coverage is required")
-    status = str(coverage.get("status") or "")
-    allowed_status = {"complete", "incomplete", "not_applicable"}
-    if status not in allowed_status:
+    _require_exact_keys(
+        coverage,
+        {"status", "claims_total", "claims_checked", "claims_supported"},
+        "claim coverage",
+    )
+    status = coverage["status"]
+    if status not in {"complete", "incomplete", "not_applicable"}:
         raise ReviewProtocolError(f"Invalid claim coverage status: {status!r}")
+    claims_total = _nonnegative_int(coverage["claims_total"], "claims_total")
+    claims_checked = _nonnegative_int(coverage["claims_checked"], "claims_checked")
+    claims_supported = _nonnegative_int(coverage["claims_supported"], "claims_supported")
+
+    raw_claims = value["claim_ledger"]
+    if not isinstance(raw_claims, list):
+        raise ReviewProtocolError("claim_ledger must be a list")
+    claims: list[dict[str, Any]] = []
+    claim_ids: set[str] = set()
+    claim_statuses = {"supported", "contradicted", "imprecise", "unattested", "unverifiable"}
+    expected_claim_keys = {"id", "claim", "location", "status", "evidence", "finding_id"}
+    for raw in raw_claims:
+        if not isinstance(raw, Mapping):
+            raise ReviewProtocolError("claim_ledger entries must be mappings")
+        _require_exact_keys(raw, expected_claim_keys, "claim ledger entry")
+        claim_id = _nonempty_string(raw["id"], "claim id")
+        if claim_id in claim_ids:
+            raise ReviewProtocolError(f"Duplicate claim id: {claim_id}")
+        claim_ids.add(claim_id)
+        claim_status = raw["status"]
+        if claim_status not in claim_statuses:
+            raise ReviewProtocolError(f"Invalid claim status: {claim_status!r}")
+        finding_id = raw["finding_id"]
+        if claim_status == "supported" and finding_id is not None:
+            raise ReviewProtocolError(f"Supported claim {claim_id} cannot reference a finding")
+        if claim_status != "supported":
+            finding_id = _nonempty_string(finding_id, f"finding_id for claim {claim_id}")
+            if finding_id not in finding_ids:
+                raise ReviewProtocolError(f"Claim {claim_id} references unknown finding {finding_id}")
+        claims.append(
+            {
+                "id": claim_id,
+                "claim": _nonempty_string(raw["claim"], f"claim text for {claim_id}"),
+                "location": _nonempty_string(raw["location"], f"claim location for {claim_id}"),
+                "status": claim_status,
+                "evidence": _nonempty_string(raw["evidence"], f"claim evidence for {claim_id}"),
+                "finding_id": finding_id,
+            }
+        )
+    actual_checked = sum(claim["status"] != "unverifiable" for claim in claims)
+    actual_supported = sum(claim["status"] == "supported" for claim in claims)
+    if claims_total != len(claims):
+        raise ReviewProtocolError(f"claims_total={claims_total} does not match ledger length={len(claims)}")
+    if claims_checked != actual_checked:
+        raise ReviewProtocolError(f"claims_checked={claims_checked} does not match ledger={actual_checked}")
+    if claims_supported != actual_supported:
+        raise ReviewProtocolError(f"claims_supported={claims_supported} does not match ledger={actual_supported}")
     if family == "seminar" and status == "not_applicable":
         raise ReviewProtocolError("Seminar review requires exhaustive claim coverage")
-    claims_total = int(coverage.get("claims_total") or 0)
-    claims_verified = int(coverage.get("claims_verified") or 0)
-    if claims_verified > claims_total:
-        raise ReviewProtocolError("claims_verified cannot exceed claims_total")
     if family == "seminar" and status == "complete" and claims_total == 0:
         raise ReviewProtocolError("Complete seminar review must enumerate factual claims")
+    if status == "complete" and claims_checked != claims_total:
+        raise ReviewProtocolError("Complete claim coverage requires every claim to be checked")
+    if status == "not_applicable" and (claims_total or claims_checked or claims_supported):
+        raise ReviewProtocolError("not_applicable claim coverage requires an empty ledger")
+
+    raw_evidence = value["learner_evidence_ledger"]
+    if not isinstance(raw_evidence, list):
+        raise ReviewProtocolError("learner_evidence_ledger must be a list")
+    evidence_ledger: list[dict[str, Any]] = []
+    evidence_ids: set[str] = set()
+    expected_evidence_keys = {
+        "id",
+        "location",
+        "task",
+        "modality",
+        "source",
+        "access_status",
+        "verification_method",
+        "finding_id",
+    }
+    modalities = {"text", "audio", "video", "image", "interactive"}
+    access_statuses = {"verified_access", "metadata_only", "inaccessible", "not_provided", "reviewer_unverified"}
+    capabilities = set(reviewer.get("capabilities") or [])
+    finding_severities = {finding["id"]: finding["severity"] for finding in findings}
+    for raw in raw_evidence:
+        if not isinstance(raw, Mapping):
+            raise ReviewProtocolError("learner_evidence_ledger entries must be mappings")
+        _require_exact_keys(raw, expected_evidence_keys, "learner evidence entry")
+        evidence_id = _nonempty_string(raw["id"], "learner evidence id")
+        if evidence_id in evidence_ids:
+            raise ReviewProtocolError(f"Duplicate learner evidence id: {evidence_id}")
+        evidence_ids.add(evidence_id)
+        modality = raw["modality"]
+        if modality not in modalities:
+            raise ReviewProtocolError(f"Invalid learner evidence modality: {modality!r}")
+        access_status = raw["access_status"]
+        if access_status not in access_statuses:
+            raise ReviewProtocolError(f"Invalid learner evidence access status: {access_status!r}")
+        finding_id = raw["finding_id"]
+        if access_status == "verified_access":
+            if modality not in capabilities:
+                raise ReviewProtocolError(
+                    f"Reviewer lacks declared {modality} capability for verified learner evidence {evidence_id}"
+                )
+            if finding_id is not None:
+                raise ReviewProtocolError(f"Verified learner evidence {evidence_id} cannot reference a finding")
+        else:
+            finding_id = _nonempty_string(finding_id, f"finding_id for learner evidence {evidence_id}")
+            if finding_id not in finding_ids:
+                raise ReviewProtocolError(
+                    f"Learner evidence {evidence_id} references unknown finding {finding_id}"
+                )
+            if (
+                access_status in {"metadata_only", "inaccessible", "not_provided"}
+                and finding_severities[finding_id] not in {"blocker", "high"}
+            ):
+                raise ReviewProtocolError(
+                    f"Learner evidence {evidence_id} with {access_status} requires a high or blocker finding"
+                )
+        evidence_ledger.append(
+            {
+                "id": evidence_id,
+                "location": _nonempty_string(raw["location"], f"learner evidence location for {evidence_id}"),
+                "task": _nonempty_string(raw["task"], f"learner evidence task for {evidence_id}"),
+                "modality": modality,
+                "source": _nonempty_string(raw["source"], f"learner evidence source for {evidence_id}"),
+                "access_status": access_status,
+                "verification_method": _nonempty_string(
+                    raw["verification_method"], f"verification method for {evidence_id}"
+                ),
+                "finding_id": finding_id,
+            }
+        )
+    required_modalities = {str(item.get("modality")) for item in evidence_requirements}
+    covered_modalities = {item["modality"] for item in evidence_ledger}
+    missing_modalities = sorted(required_modalities - covered_modalities)
+    if missing_modalities:
+        raise ReviewProtocolError(
+            "learner_evidence_ledger does not cover detected modalities: " + ", ".join(missing_modalities)
+        )
+    if verdict == "PASS" and any(claim["status"] != "supported" for claim in claims):
+        raise ReviewProtocolError("Semantic PASS is inconsistent with a non-supported claim ledger entry")
+
     return {
         "family": family,
         "verdict": verdict,
-        "summary": str(value.get("summary") or ""),
+        "summary": summary,
         "claim_coverage": {
             "status": status,
             "claims_total": claims_total,
-            "claims_verified": claims_verified,
+            "claims_checked": claims_checked,
+            "claims_supported": claims_supported,
         },
+        "claim_ledger": claims,
+        "learner_evidence_ledger": evidence_ledger,
         "findings": findings,
+    }
+
+
+def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
+    finding = {
+        "id": "semantic-response-integrity",
+        "source": "semantic",
+        "category": "semantic_response_integrity",
+        "severity": "high",
+        "message": "The reviewer response could not be accepted without repair or normalization.",
+        "evidence": error,
+        "location": None,
+    }
+    return {
+        "family": family,
+        "verdict": "INCOMPLETE",
+        "summary": "Semantic review output was malformed or violated the response contract.",
+        "claim_coverage": {
+            "status": "incomplete",
+            "claims_total": 0,
+            "claims_checked": 0,
+            "claims_supported": 0,
+        },
+        "claim_ledger": [],
+        "learner_evidence_ledger": [],
+        "findings": [finding],
     }
 
 
@@ -791,8 +1167,13 @@ def combine_disposition(
     aggregate = deterministic.get("aggregate") or aggregate_deterministic(deterministic)
     reasons.extend(str(reason) for reason in aggregate.get("reasons") or [])
     coverage = semantic["claim_coverage"]
-    if coverage["status"] == "incomplete" or coverage["claims_verified"] < coverage["claims_total"]:
+    if coverage["status"] == "incomplete" or coverage["claims_checked"] < coverage["claims_total"]:
         reasons.append("semantic claim coverage is incomplete")
+    if any(
+        item.get("access_status") == "reviewer_unverified"
+        for item in semantic.get("learner_evidence_ledger") or []
+    ):
+        reasons.append("reviewer could not verify required learner evidence")
     if semantic["verdict"] == "INCOMPLETE":
         reasons.append("semantic reviewer reported incomplete")
     integrity_categories = {item.get("category") for item in findings}
@@ -816,19 +1197,46 @@ def combine_disposition(
     return {"status": "PASS", "reasons": ["deterministic and semantic review passed"]}
 
 
-def validate_result(result: Mapping[str, Any], *, schema_path: Path = SCHEMA_PATH) -> None:
+def validate_result(
+    result: Mapping[str, Any], *, schema_path: Path | None = None, repo_root: Path = PROJECT_ROOT
+) -> None:
+    if schema_path is None:
+        schema_version = str(result.get("schema_version") or "")
+        relative = SCHEMA_PATHS.get(schema_version)
+        if relative is None:
+            raise ReviewProtocolError(f"Unknown result schema version: {schema_version!r}")
+        schema_path = repo_root / relative.relative_to(PROJECT_ROOT)
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(result)
 
 
 def finalize_review(
     packet: Mapping[str, Any],
-    semantic_input: Mapping[str, Any],
+    semantic_response: bytes,
     *,
     repo_root: Path = PROJECT_ROOT,
 ) -> dict[str, Any]:
     family = str(packet["target"]["semantic_family"])
-    semantic = normalize_semantic_result(semantic_input, family)
+    semantic_input, response_provenance = parse_semantic_response(semantic_response)
+    if semantic_input is None:
+        error = str(response_provenance["error"] or "invalid semantic response")
+        semantic = _incomplete_semantic(family, error)
+        response_provenance["contract_status"] = "not_evaluated"
+    else:
+        try:
+            semantic = normalize_semantic_result(
+                semantic_input,
+                family,
+                packet["reviewer"],
+                packet["deterministic"].get("evidence_requirements") or [],
+            )
+        except ReviewProtocolError as exc:
+            error = str(exc)
+            semantic = _incomplete_semantic(family, error)
+            response_provenance["contract_status"] = "invalid"
+            response_provenance["error"] = error
+        else:
+            response_provenance["contract_status"] = "valid"
     drift = source_drift_findings(packet, repo_root=repo_root)
     integrity = packet_integrity_findings(packet, repo_root=repo_root)
     deterministic = deepcopy(packet["deterministic"])
@@ -842,7 +1250,7 @@ def finalize_review(
     findings = [*_deterministic_findings(normalized_packet), *semantic["findings"]]
     disposition = combine_disposition(deterministic, semantic, findings)
     result: dict[str, Any] = {
-        "schema_version": "post-build-review.result.v1",
+        "schema_version": "post-build-review.result.v2",
         "review_protocol_version": str(packet["review_protocol_version"]),
         "deterministic_contract_version": str(packet["deterministic_contract_version"]),
         "semantic_prompt_version": str(packet["semantic_prompt_version"]),
@@ -851,6 +1259,7 @@ def finalize_review(
         "target": deepcopy(packet["target"]),
         "source_hashes": deepcopy(packet["source_hashes"]),
         "reviewer": deepcopy(packet["reviewer"]),
+        "semantic_response": response_provenance,
         "deterministic": deterministic,
         "semantic": semantic,
         "findings": findings,
@@ -867,6 +1276,8 @@ def finalize_review(
             "prompt_sha256",
             "target",
             "source_hashes",
+            "reviewer",
+            "semantic_response",
             "deterministic",
             "semantic",
             "findings",
@@ -874,7 +1285,7 @@ def finalize_review(
         )
     }
     result["reproducibility_key"] = sha256_text(_stable_json(reproducible))
-    validate_result(result, schema_path=repo_root / SCHEMA_PATH.relative_to(PROJECT_ROOT))
+    validate_result(result, repo_root=repo_root)
     return result
 
 
@@ -906,11 +1317,18 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("--reviewer-family", required=True)
     prepare.add_argument("--reviewer-model", required=True)
     prepare.add_argument("--reviewer-effort", required=True)
+    prepare.add_argument(
+        "--reviewer-capability",
+        action="append",
+        required=True,
+        choices=("text", "audio", "video", "image", "interactive"),
+        help="Repeat for every evidence modality the reviewer can directly inspect.",
+    )
     prepare.add_argument("--output", type=Path)
 
-    finalize = subparsers.add_parser("finalize", help="Combine semantic JSON with a prepared packet.")
+    finalize = subparsers.add_parser("finalize", help="Combine an exact raw semantic response with a prepared packet.")
     finalize.add_argument("--packet", type=Path, required=True)
-    finalize.add_argument("--semantic-result", type=Path, required=True)
+    finalize.add_argument("--semantic-response", type=Path, required=True)
     finalize.add_argument("--output", type=Path)
 
     validate = subparsers.add_parser("validate", help="Validate an existing canonical result.")
@@ -926,14 +1344,14 @@ def main(argv: list[str] | None = None) -> int:
             "family": args.reviewer_family,
             "model": args.reviewer_model,
             "effort": args.reviewer_effort,
+            "capabilities": sorted(set(args.reviewer_capability)),
         }
         packet = prepare_review(args.target, reviewer)
         _write_or_print(packet, args.output, repo_root=PROJECT_ROOT)
         return 0
     if args.command == "finalize":
         packet = json.loads(args.packet.read_text(encoding="utf-8"))
-        semantic = json.loads(args.semantic_result.read_text(encoding="utf-8"))
-        result = finalize_review(packet, semantic)
+        result = finalize_review(packet, args.semantic_response.read_bytes())
         _write_or_print(result, args.output, repo_root=PROJECT_ROOT)
         return 0 if result["combined_disposition"]["status"] == "PASS" else 1
     result = json.loads(args.result.read_text(encoding="utf-8"))
