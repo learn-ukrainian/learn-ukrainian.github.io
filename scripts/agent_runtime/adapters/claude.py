@@ -1,4 +1,4 @@
-"""ClaudeAdapter — wraps ``npx @anthropic-ai/claude-code@latest`` for the runtime.
+"""ClaudeAdapter — wraps the local ``claude`` CLI for the runtime.
 
 Third production adapter. Phase 5 of #1184. Claude is the LAST adapter
 to land because it has the most special-case logic:
@@ -44,11 +44,13 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
 import shutil
 import subprocess
+from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -64,6 +66,7 @@ _RATE_LIMIT_PATTERNS = (
     r"rate limit",
     r"rate_limit",
     r"usage limit",
+    r"session limit",
     r"quota exceeded",
     r"too many requests",
     r"\bHTTP 429\b",
@@ -83,6 +86,13 @@ _MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
+
+
+@dataclass(frozen=True)
+class _TranscriptError:
+    message: str
+    rate_limited: bool
+    session_id: str | None = None
 
 
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
@@ -173,39 +183,26 @@ class ClaudeAdapter:
         if discussion_readonly and mode != "read-only":
             raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
 
-        # Command prefix — match start-claude.sh:120's invariant: prefer
-        # ``npx @anthropic-ai/claude-code@latest`` so dispatched runs ride
-        # the same version as the interactive launcher and inherit npm's
-        # cache semantics (avoids stale-binary cache bugs and dropped
-        # prompt caching). The local ``claude`` binary on PATH is the
-        # last-resort fallback only — used when ``npx`` is unavailable
-        # (e.g. air-gapped CI without npm registry access).
-        #
-        # Pre-#1684 history: the order was inverted (local binary first,
-        # npx fallback). On 2026-05-05 that was empirically diagnosed —
-        # ``which claude`` resolved to ~/.local/bin/claude at 2.1.126
-        # while ``npx @latest`` resolved to 2.1.128, so every dispatched
-        # Claude run silently missed the 2.1.128 fixes (subagent
-        # prompt-cache reuse ~3× cache_creation reduction; 1M-context
-        # autocompact false-block fix; --bare >10MB stdin crash fix).
-        #
-        # Callers can still override by passing
-        # ``tool_config={"cmd_prefix": [...]}`` (preserved unchanged).
+        # Command prefix. Prefer the user's installed `claude` binary: it is
+        # the authenticated native CLI lane, avoids npm network/cache variance,
+        # and matches the operator's current dispatch policy. `npx @latest`
+        # remains a fallback for machines that have Node but no local Claude
+        # binary. Callers can still override with `tool_config={"cmd_prefix": [...]}`.
         cmd_prefix = tc.get("cmd_prefix")
         if cmd_prefix:
             cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
-        elif shutil.which("npx"):
-            cmd = ["npx", "@anthropic-ai/claude-code@latest"]
         else:
             claude_bin = shutil.which("claude")
-            if not claude_bin:
+            if claude_bin:
+                cmd = [claude_bin]
+            elif shutil.which("npx"):
+                cmd = ["npx", "@anthropic-ai/claude-code@latest"]
+            else:
                 raise RuntimeError(
-                    "Cannot dispatch Claude Code: neither `npx` nor a "
-                    "`claude` binary was found on PATH. Install Node.js "
-                    "(provides npx) or run "
-                    "`npm install -g @anthropic-ai/claude-code`."
+                    "Cannot dispatch Claude Code: neither a `claude` binary "
+                    "nor `npx` was found on PATH. Install the local Claude "
+                    "CLI or Node.js (provides npx)."
                 )
-            cmd = [claude_bin]
 
         probe_prefix = tuple(cmd)
         cli_version = _ensure_supported_claude_cli_version(probe_prefix)
@@ -338,12 +335,10 @@ class ClaudeAdapter:
         Claude Code writes the response to stdout. On success, stdout is
         the clean output; on failure, stderr carries the diagnostic.
         """
-        # plan / call_start_time unused — Claude doesn't need session-file
-        # recovery because the Claude CLI flushes stdout before exit.
-        # Kept in the signature to match the uniform protocol (see
-        # adapters/base.py).
+        # call_start_time unused. Claude API errors can be written only to the
+        # per-project transcript while stderr contains spinner frames, so we use
+        # `plan` below as a fallback diagnostic source.
         _ = output_file  # Unused — Claude doesn't use -o file
-        _ = plan
         _ = call_start_time
 
         events = parse_json_events(stdout, source="claude", logger=_logger)
@@ -358,7 +353,11 @@ class ClaudeAdapter:
         # legitimately discuss "rate limited" without the task being blocked.
         usable_response = bool(effective_stdout)
         failed_call = returncode != 0 or not usable_response
-        rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
+        transcript_error = _extract_transcript_error(plan) if failed_call else None
+        rate_limited = failed_call and (
+            bool(_RATE_LIMIT_RE.search(stderr or ""))
+            or bool(transcript_error and transcript_error.rate_limited)
+        )
 
         # Success classification
         ok = returncode == 0 and usable_response and not rate_limited
@@ -367,11 +366,15 @@ class ClaudeAdapter:
         # Stderr excerpt on failure
         stderr_excerpt: str | None = None
         if not ok:
-            excerpt_source = stderr.strip() or effective_stdout or stdout.strip() or ""
+            excerpt_source = (
+                transcript_error.message
+                if transcript_error
+                else stderr.strip() or effective_stdout or stdout.strip() or ""
+            )
             stderr_excerpt = excerpt_source[:500] or None
 
         # Session ID extraction (rare — caller usually passes it IN)
-        session_id: str | None = None
+        session_id: str | None = transcript_error.session_id if transcript_error else None
         sid_match = _SESSION_ID_RE.search(stdout or "")
         if sid_match:
             session_id = sid_match.group(1)
@@ -399,37 +402,11 @@ class ClaudeAdapter:
         directory. The runner's mtime poller watches the dir itself, which
         bumps on any child file write — good enough for liveness signal.
         """
-        # Caller provided cwd; use it to derive the Claude project dir.
-        # The dir is ~/.claude/projects/<project-slug>/ where project-slug
-        # is the cwd with special chars replaced.
-        _ = plan  # Plan has no cwd; we stored it as env_overrides isn't enough
-        # Fall back to the project-wide directory — any recent activity
-        # across Claude sessions counts as liveness.
-        claude_projects_dir = Path.home() / ".claude" / "projects"
-        if claude_projects_dir.exists():
-            # Find the most recent project subdir as a best-effort signal
-            try:
-                subdirs = [p for p in claude_projects_dir.iterdir() if p.is_dir()]
-                if subdirs:
-                    most_recent = max(subdirs, key=lambda p: p.stat().st_mtime)
-                    return (most_recent,)
-            except OSError:
-                pass
-        return ()
+        return tuple(plan.liveness_paths)
 
     def _resolve_liveness_paths(self, cwd: Path) -> tuple[Path, ...]:
         """Same as liveness_signal_paths but computable at build_invocation time."""
-        _ = cwd
-        claude_projects_dir = Path.home() / ".claude" / "projects"
-        if claude_projects_dir.exists():
-            try:
-                subdirs = [p for p in claude_projects_dir.iterdir() if p.is_dir()]
-                if subdirs:
-                    most_recent = max(subdirs, key=lambda p: p.stat().st_mtime)
-                    return (most_recent,)
-            except OSError:
-                pass
-        return ()
+        return (_claude_project_dir_for_cwd(cwd),)
 
 
 def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
@@ -463,3 +440,88 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
     if result_text:
         return result_text
     return "\n".join(part.strip() for part in text_parts if part.strip()).strip()
+
+
+def _claude_project_dir_for_cwd(cwd: Path) -> Path:
+    """Return Claude Code's project transcript directory for a cwd."""
+    slug = re.sub(r"[^A-Za-z0-9_-]", "-", str(cwd.resolve()))
+    return Path.home() / ".claude" / "projects" / slug
+
+
+def _extract_transcript_error(plan: InvocationPlan | None) -> _TranscriptError | None:
+    if plan is None:
+        return None
+    for directory in plan.liveness_paths:
+        if not directory.is_dir():
+            continue
+        try:
+            transcripts = sorted(
+                directory.glob("*.jsonl"),
+                key=lambda path: path.stat().st_mtime,
+                reverse=True,
+            )
+        except OSError:
+            continue
+        for transcript in transcripts[:3]:
+            error = _extract_transcript_error_from_file(transcript)
+            if error is not None:
+                return error
+    return None
+
+
+def _extract_transcript_error_from_file(path: Path) -> _TranscriptError | None:
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return None
+
+    for line in reversed(lines[-80:]):
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue
+        if not (event.get("isApiErrorMessage") or event.get("error") or event.get("apiErrorStatus")):
+            continue
+        text = _extract_event_text(event)
+        error = str(event.get("error") or "").strip()
+        status = event.get("apiErrorStatus")
+        parts = ["Claude API error"]
+        if status is not None:
+            parts.append(str(status))
+        if error:
+            parts.append(error)
+        if text:
+            parts.append(text)
+        message = ": ".join((" ".join(parts[:3]), " ".join(parts[3:]))) if len(parts) > 3 else " ".join(parts)
+        rate_limited = (
+            status == 429
+            or error == "rate_limit"
+            or bool(_RATE_LIMIT_RE.search(message))
+        )
+        session_id = event.get("sessionId")
+        return _TranscriptError(
+            message=message,
+            rate_limited=rate_limited,
+            session_id=session_id if isinstance(session_id, str) else None,
+        )
+    return None
+
+
+def _extract_event_text(event: dict[str, Any]) -> str:
+    message = event.get("message")
+    if isinstance(message, dict):
+        content = message.get("content")
+        if isinstance(content, list):
+            parts = [
+                str(item.get("text"))
+                for item in content
+                if isinstance(item, dict) and isinstance(item.get("text"), str)
+            ]
+            if parts:
+                return " ".join(part.strip() for part in parts if part.strip())
+    content = event.get("content")
+    if isinstance(content, str):
+        return content.strip()
+    return ""

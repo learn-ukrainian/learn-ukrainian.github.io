@@ -17,6 +17,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import subprocess
@@ -3198,20 +3199,11 @@ def test_claude_adapter_rejects_old_cli_version(tmp_path):
     claude_adapter_mod._probe_claude_cli_version.cache_clear()
 
 
-def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, monkeypatch):
-    """Regression for #1684: default cmd_prefix MUST be npx@latest, not local
-    `claude` binary.
-
-    Pre-#1684, ``shutil.which("claude")`` was preferred. Empirically this
-    let dispatched runs silently drift behind the launcher's npx-managed
-    version (observed 2026-05-05: ~/.local/bin/claude at 2.1.126 vs
-    ``npx @latest`` at 2.1.128). The fix flips the order to match
-    start-claude.sh:120's invariant.
-    """
+def test_claude_adapter_default_prefix_prefers_local_binary_over_npx(tmp_path, monkeypatch):
+    """Default native Claude dispatch uses the installed authenticated CLI."""
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
-        # Both npx and a local claude exist. The bug was preferring claude.
         return {
             "npx": "/usr/local/bin/npx",
             "claude": "/Users/test/.local/bin/claude",
@@ -3230,24 +3222,18 @@ def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, m
         tool_config=None,
     )
 
-    # First two argv tokens MUST be the npx invocation, not the local binary.
-    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"], (
-        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). "
-        f"Got: {plan.cmd[0:2]}"
-    )
-    # And specifically: must NOT be the local claude binary path.
-    assert "/Users/test/.local/bin/claude" not in plan.cmd
+    assert plan.cmd[0] == "/Users/test/.local/bin/claude"
+    assert plan.cmd[0:2] != ["npx", "@anthropic-ai/claude-code@latest"]
 
 
-def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
+def test_claude_adapter_default_prefix_falls_back_to_npx_when_local_missing(
     tmp_path, monkeypatch
 ):
-    """When npx is unavailable (e.g. air-gapped CI), the local `claude` binary
-    is the documented last-resort fallback. #1684."""
+    """npx remains a fallback for hosts without a local `claude` binary."""
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
-        return {"claude": "/Users/test/.local/bin/claude"}.get(name)
+        return {"npx": "/usr/local/bin/npx"}.get(name)
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
 
@@ -3262,8 +3248,7 @@ def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
         tool_config=None,
     )
 
-    assert plan.cmd[0] == "/Users/test/.local/bin/claude"
-    assert "npx" not in plan.cmd
+    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"]
 
 
 def test_claude_adapter_default_prefix_raises_when_neither_present(
@@ -3278,7 +3263,7 @@ def test_claude_adapter_default_prefix_raises_when_neither_present(
     )
 
     adapter = ClaudeAdapter()
-    with pytest.raises(RuntimeError, match=r"neither `npx` nor a `claude` binary"):
+    with pytest.raises(RuntimeError, match=r"neither a `claude` binary nor `npx`"):
         adapter.build_invocation(
             prompt="hello",
             mode="read-only",
@@ -3314,6 +3299,61 @@ def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeyp
 
     assert plan.cmd[0] == "/explicit/path/to/claude"
     assert "npx" not in plan.cmd
+
+
+def test_claude_adapter_surfaces_transcript_rate_limit_error(tmp_path, monkeypatch):
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    home = tmp_path / "home"
+    cwd = tmp_path / "repo" / ".worktrees" / "dispatch" / "claude" / "rate-limit"
+    cwd.mkdir(parents=True)
+    monkeypatch.setenv("HOME", str(home))
+
+    project_dir = claude_adapter_mod._claude_project_dir_for_cwd(cwd)
+    project_dir.mkdir(parents=True)
+    transcript = project_dir / "session.jsonl"
+    transcript.write_text(
+        json.dumps(
+            {
+                "type": "assistant",
+                "sessionId": "session-123",
+                "isApiErrorMessage": True,
+                "apiErrorStatus": 429,
+                "error": "rate_limit",
+                "message": {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "You've hit your session limit",
+                        }
+                    ]
+                },
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    adapter = ClaudeAdapter()
+    plan = InvocationPlan(
+        cmd=["claude"],
+        cwd=cwd,
+        liveness_paths=(project_dir,),
+    )
+    parsed = adapter.parse_response(
+        stdout="",
+        stderr="spinner",
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert parsed.ok is False
+    assert parsed.rate_limited is True
+    assert parsed.session_id == "session-123"
+    assert parsed.stderr_excerpt is not None
+    assert "Claude API error 429 rate_limit" in parsed.stderr_excerpt
+    assert "session limit" in parsed.stderr_excerpt
 
 
 def test_claude_parse_response_success():
