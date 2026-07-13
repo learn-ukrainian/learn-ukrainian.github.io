@@ -85,6 +85,38 @@ jobs:
       - name: Build Site
         run: npm run build:full
 
+      # #4966: published-site size tracking — report MB used vs the 1 GiB GitHub
+      # Pages budget + projected headroom at full-vision scale (20k Atlas words),
+      # on every release, in the job summary. Warns at >=70% budget.
+      - name: Report published-site size + headroom
+        run: |
+          set -euo pipefail
+          SIZE_KB=$(du -sk dist | cut -f1)
+          SIZE_MB=$(( SIZE_KB / 1024 ))
+          BUDGET_MB=1024
+          PCT=$(( SIZE_MB * 100 / BUDGET_MB ))
+          ENTRIES=$(node -e "console.log(require('./src/data/lexicon-browse-meta.json').total ?? 0)" 2>/dev/null || echo 0)
+          {
+            echo "## Published-site size (#4966)"
+            echo ""
+            echo "| Metric | Value |"
+            echo "| --- | --- |"
+            echo "| dist size | **${SIZE_MB} MB** |"
+            echo "| Pages budget used | **${PCT}%** of ${BUDGET_MB} MB |"
+            echo "| Atlas entries | ${ENTRIES} |"
+            if [ "${ENTRIES}" -gt 0 ]; then
+              KB_PER_ENTRY=$(( SIZE_KB / ENTRIES ))
+              PROJ_MB=$(( (SIZE_KB + (20000 - ENTRIES) * KB_PER_ENTRY) / 1024 ))
+              PROJ_PCT=$(( PROJ_MB * 100 / BUDGET_MB ))
+              echo "| all-in KB/entry | ${KB_PER_ENTRY} |"
+              echo "| projected @ 20k entries | ~${PROJ_MB} MB (${PROJ_PCT}% of budget) |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "site size: ${SIZE_MB} MB (${PCT}% of ${BUDGET_MB} MB Pages budget), entries=${ENTRIES}"
+          if [ "$PCT" -ge 70 ]; then
+            echo "::warning title=Pages budget::Published site is at ${PCT}% of the ${BUDGET_MB} MB budget (${SIZE_MB} MB)."
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
