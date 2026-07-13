@@ -230,10 +230,16 @@ class TestDashboardOverviewEndpoint:
 
 
 class TestRouterMounting:
-    """All routers are properly mounted in the app."""
+    """All routers are properly mounted in the app.
+
+    Uses the generated OpenAPI spec to reliably detect mounted paths
+    (app.routes introspection misses prefixed sub-router paths).
+    """
 
     def _route_paths(self) -> set[str]:
-        return {r.path for r in app.routes if hasattr(r, "path")}
+        # OpenAPI paths are the source of truth for what the app actually serves.
+        spec = app.openapi()
+        return set(spec.get("paths", {}).keys())
 
     def test_dashboard_router_mounted(self):
         paths = self._route_paths()
