@@ -129,7 +129,7 @@ pycookiecheat==0.8.0
 pycparser==3.0
 pydantic-settings==2.14.2
 pydantic==2.13.4
-pydantic_core==2.41.5
+pydantic_core==2.46.4
 pyee==13.0.1
 Pygments==2.20.0
 PyJWT==2.13.0
