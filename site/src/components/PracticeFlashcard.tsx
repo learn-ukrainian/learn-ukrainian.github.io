@@ -11,9 +11,10 @@ export interface PracticeFlashcardData {
 
 interface PracticeFlashcardProps {
   card: PracticeFlashcardData;
-  ratingLabels: Record<PracticeRating, string>;
+  ratingLabels: Record<PracticeRating, { uk: string; en: string }>;
   intervalPreviews: Record<PracticeRating, string>;
   onRate(rating: PracticeRating): void;
+  showEnglishSubtitles: boolean;
 }
 
 const RATING_ORDER: PracticeRating[] = ['again', 'hard', 'good', 'easy'];
@@ -23,6 +24,7 @@ export default function PracticeFlashcard({
   ratingLabels,
   intervalPreviews,
   onRate,
+  showEnglishSubtitles,
 }: PracticeFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   const ratingBarRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +84,15 @@ export default function PracticeFlashcard({
         }}
         role="button"
         tabIndex={0}
-        aria-label={flipped ? `${card.back} — натисніть, щоб перевернути` : `${card.front} — натисніть, щоб перевернути`}
+        aria-label={flipped ? (
+          showEnglishSubtitles
+            ? `${card.back} — натисніть, щоб перевернути / click to flip`
+            : `${card.back} — натисніть, щоб перевернути`
+        ) : (
+          showEnglishSubtitles
+            ? `${card.front} — натисніть, щоб перевернути / click to flip`
+            : `${card.front} — натисніть, щоб перевернути`
+        )}
       >
         <div className="flashcard-inner">
           <div className="flashcard-front">
@@ -107,7 +117,7 @@ export default function PracticeFlashcard({
         className="lexicon-rating-bar rating-bar"
         ref={ratingBarRef}
         role="group"
-        aria-label="Оцініть, наскільки легко згадалось"
+        aria-label={showEnglishSubtitles ? "Оцініть, наскільки легко згадалось / Rate how easy it was to recall" : "Оцініть, наскільки легко згадалось"}
         data-revealed={flipped ? 'true' : 'false'}
       >
         {RATING_ORDER.map((rating, index) => (
@@ -125,7 +135,12 @@ export default function PracticeFlashcard({
             }}
           >
             <span className="rk">{index + 1}</span>
-            <span className="rt">{ratingLabels[rating]}</span>
+            <span className="rt">
+              <span lang="uk">{ratingLabels[rating].uk}</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">{ratingLabels[rating].en}</span>
+              ) : null}
+            </span>
             {flipped ? <span className="ri">‹{intervalPreviews[rating]}›</span> : null}
           </button>
         ))}

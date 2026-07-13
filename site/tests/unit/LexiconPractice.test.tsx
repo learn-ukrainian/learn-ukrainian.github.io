@@ -519,7 +519,7 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice />);
 
     await waitFor(() =>
-      expect(screen.getByLabelText('1 до повторення')).toBeInTheDocument(),
+      expect(screen.getByLabelText(/1 до повторення/)).toBeInTheDocument(),
     );
   });
 
@@ -777,6 +777,7 @@ describe('LexiconPractice', () => {
   });
 
   test('heritage feedback renders rationaleUk when present and OMITS the detail line when absent', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
     const user = userEvent.setup();
 
     // 1. With rationaleUk present
@@ -846,7 +847,7 @@ describe('LexiconPractice', () => {
       within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
     );
 
-    const link = screen.getByRole('link', { name: 'Відкрити в Атласі →' });
+    const link = screen.getByRole('link', { name: /Відкрити в Атласі/ });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/lexicon/dim/');
   });
@@ -1108,7 +1109,7 @@ describe('LexiconPractice', () => {
     const status = screen.getByRole('status');
     expect(status).toHaveTextContent('Правильне слово');
     expect(status).toHaveClass('case-miss');
-    expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
+    expect(screen.getByLabelText(/Відповідь у знахідний/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
 
     await waitFor(() => {
@@ -1321,7 +1322,7 @@ describe('LexiconPractice', () => {
       expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
     );
     expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
-    expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
+    expect(screen.getByLabelText(/Відповідь у знахідний/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
     expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
   });
@@ -1362,7 +1363,7 @@ describe('LexiconPractice', () => {
     // Focus session is active and serving the accusative cloze — no other case leaks in.
     const cloze = await screen.findByTestId('practice-cloze');
     expect(cloze).toBeInTheDocument();
-    expect(screen.getByLabelText('Відповідь у знахідний')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Відповідь у знахідний/)).toBeInTheDocument();
   });
 
   test('weak-area chip whose weakness yields no items shows a UA notice, clears focus, and never strands the learner', async () => {
