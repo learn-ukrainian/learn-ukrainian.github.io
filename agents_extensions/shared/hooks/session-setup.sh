@@ -300,12 +300,7 @@ if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
   fi
 fi
 
-# 13. Session handoff — prefer gitignored local thread rollover packets.
-# Do not read/dump docs/session-state/current.md by default. That router is
-# git-tracked and has repeatedly dirtied the shared main checkout. Rollover
-# state belongs in .agent/<agent>-thread-handoff.md, produced by
-# scripts/orchestration/thread_handoff.py prepare.
-HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
+# 13. Session handoff — engine-first, legacy-compatible fallback.
 if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
     HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
 elif [[ "${0:-}" == *"/.codex/"* ]]; then
@@ -317,7 +312,11 @@ elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
 else
     HANDOFF_AGENT="claude"
 fi
-LOCAL_THREAD_HANDOFF="$PROJECT_DIR/.agent/${HANDOFF_AGENT}-thread-handoff.md"
+
+CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
+CURRENT_THREAD_ID="${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}"
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
@@ -336,13 +335,12 @@ EOF
 
 build_local_handoff_pointer() {
   local handoff_path="$1"
-  local bootstrap_path=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
   cat <<EOF
 PREVIOUS-SESSION HANDOFF — read the local thread rollover packet first.
 
 Agent: $HANDOFF_AGENT
 Thread handoff: $handoff_path
-Bootstrap prompt: $bootstrap_path
+Bootstrap prompt: .agent/${HANDOFF_AGENT}-thread-bootstrap.md
 Read with: Read tool. These files are gitignored local state and must not be committed.
 Cold-start protocol: docs/best-practices/codex-thread-handoff.md
 
@@ -370,52 +368,88 @@ Do not dump or rewrite docs/session-state/current.md. For thread rollover, run:
 EOF
 }
 
-if [ -f "$LOCAL_THREAD_HANDOFF" ]; then
-  HANDOFF_CONTEXT=$(build_local_handoff_pointer ".agent/${HANDOFF_AGENT}-thread-handoff.md")
-elif [ "${SESSION_HANDOFF_ALLOW_GIT_ROUTER:-0}" = "1" ] && [ -f "$HANDOFF_FILE" ]; then
-  AGENT_HANDOFF=$(sed -n "s/^[[:space:]]*-[[:space:]]*${HANDOFF_AGENT}:[[:space:]]*//p" "$HANDOFF_FILE" 2>/dev/null | head -1 | sed 's/[[:space:]]*$//')
-  if [ -n "$AGENT_HANDOFF" ]; then
-    if [ -f "$PROJECT_DIR/$AGENT_HANDOFF" ]; then
-      HANDOFF_CONTEXT=$(build_handoff_pointer "$AGENT_HANDOFF")
-    else
-      HANDOFF_WARNINGS="WARN: Agent-Handoff for $HANDOFF_AGENT pointed to $AGENT_HANDOFF but file missing on disk."
-    fi
+if ! DETECT_OUTPUT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+  --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+  --current-thread-id "$CURRENT_THREAD_ID" --format json 2>&1); then
+  HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
+Output:
+$DETECT_OUTPUT"
+elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys; print(json.loads(sys.stdin.read()).get("status", ""), end="")'); then
+  HANDOFF_CONTEXT="ERROR: thread_handoff.py detect output could not be parsed. Stop.
+Output:
+$DETECT_OUTPUT"
+elif [ "$DETECT_STATUS" = "pending_start" ] || [ "$DETECT_STATUS" = "resumed" ]; then
+  if ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+    --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
+    HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
+Output:
+$HANDOFF_CONTEXT"
   fi
+elif [ "$DETECT_STATUS" = "none" ]; then
+  # Legacy compatibility remains if no v2 live packet is active.
+  HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
 
-  MARKER_BRIEF=$(grep -m1 '^Latest-Brief:' "$HANDOFF_FILE" 2>/dev/null | sed 's/^Latest-Brief:[[:space:]]*//; s/[[:space:]]*$//')
+  if [ -f "$PROJECT_DIR/.agent/${HANDOFF_AGENT}-thread-handoff.md" ]; then
+    HANDOFF_CONTEXT=$(build_local_handoff_pointer ".agent/${HANDOFF_AGENT}-thread-handoff.md")
+  elif [ "${SESSION_HANDOFF_ALLOW_GIT_ROUTER:-0}" = "1" ] && [ -f "$HANDOFF_FILE" ]; then
+    AGENT_HANDOFF=$(sed -n "s/^[[:space:]]*-[[:space:]]*${HANDOFF_AGENT}:[[:space:]]*//p" "$HANDOFF_FILE" 2>/dev/null | head -1 | sed 's/[[:space:]]*$//')
 
-  if [ -z "$HANDOFF_CONTEXT" ] && [ -n "$MARKER_BRIEF" ]; then
-    if [ -f "$PROJECT_DIR/$MARKER_BRIEF" ]; then
-      HANDOFF_CONTEXT=$(build_handoff_pointer "$MARKER_BRIEF")
-    else
-      HANDOFF_WARNINGS="WARN: Latest-Brief pointed to $MARKER_BRIEF but file missing on disk."
-    fi
-  fi
-
-  if [ -z "$HANDOFF_CONTEXT" ]; then
-    TABLE_BRIEF=$(sed -n 's/.*\*\*Brief (read first):\*\* `\([^`]*\)`.*/\1/p' "$HANDOFF_FILE" 2>/dev/null | head -1)
-
-    if [ -n "$TABLE_BRIEF" ]; then
-      if [ -f "$PROJECT_DIR/$TABLE_BRIEF" ]; then
-        if [ -z "$MARKER_BRIEF" ]; then
-          HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
-}WARN: Latest-Brief marker missing in current.md — fell back to table regex. Add the marker to fix."
-        fi
-        HANDOFF_CONTEXT="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
-
-}$(build_handoff_pointer "$TABLE_BRIEF")"
+    if [ -n "$AGENT_HANDOFF" ]; then
+      if [ -f "$PROJECT_DIR/$AGENT_HANDOFF" ]; then
+        HANDOFF_CONTEXT=$(build_handoff_pointer "$AGENT_HANDOFF")
       else
-        HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
-}WARN: Latest-Brief pointed to $TABLE_BRIEF but file missing on disk."
+        HANDOFF_WARNINGS="WARN: Agent-Handoff for $HANDOFF_AGENT pointed to $AGENT_HANDOFF but file missing on disk."
       fi
     fi
+
+    MARKER_BRIEF=$(grep -m1 '^Latest-Brief:' "$HANDOFF_FILE" 2>/dev/null | sed 's/^Latest-Brief:[[:space:]]*//; s/[[:space:]]*$//')
+
+    if [ -z "$HANDOFF_CONTEXT" ] && [ -n "$MARKER_BRIEF" ]; then
+      if [ -f "$PROJECT_DIR/$MARKER_BRIEF" ]; then
+        HANDOFF_CONTEXT=$(build_handoff_pointer "$MARKER_BRIEF")
+      else
+        HANDOFF_WARNINGS="WARN: Latest-Brief pointed to $MARKER_BRIEF but file missing on disk."
+      fi
+    fi
+
+    if [ -z "$HANDOFF_CONTEXT" ]; then
+      TABLE_BRIEF=$(sed -n 's/.*\*\*Brief (read first):\*\* `\([^`]*\)`.*/\1/p' "$HANDOFF_FILE" 2>/dev/null | head -1)
+
+      if [ -n "$TABLE_BRIEF" ]; then
+        if [ -f "$PROJECT_DIR/$TABLE_BRIEF" ]; then
+          if [ -z "$MARKER_BRIEF" ]; then
+            HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Latest-Brief marker missing in current.md — fell back to table regex. Add the marker to fix."
+          fi
+          HANDOFF_CONTEXT="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+
+}$(build_handoff_pointer "$TABLE_BRIEF")"
+        else
+          HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Latest-Brief pointed to $TABLE_BRIEF but file missing on disk."
+        fi
+      fi
+    fi
+
+    if [ -z "$HANDOFF_CONTEXT" ]; then
+      HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
+}WARN: Could not locate latest brief in current.md under legacy router opt-in. Not dumping git-tracked router contents."
+      HANDOFF_CONTEXT=$(build_handoff_fallback "$HANDOFF_WARNINGS")
+    fi
   fi
 
   if [ -z "$HANDOFF_CONTEXT" ]; then
-    HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
-}WARN: Could not locate latest brief in current.md under legacy router opt-in. Not dumping git-tracked router contents."
-    HANDOFF_CONTEXT=$(build_handoff_fallback "$HANDOFF_WARNINGS")
+    if ! HANDOFF_CONTEXT=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+      --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
+      --current-thread-id "$CURRENT_THREAD_ID" --format session-start 2>&1); then
+      HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
+Output:
+$HANDOFF_CONTEXT"
+    fi
   fi
+else
+  HANDOFF_CONTEXT="ERROR: Unexpected detect status: $DETECT_STATUS"
 fi
 
 # Epic assignment banner — the FIRST thing the session reads. SESSION_EPIC is

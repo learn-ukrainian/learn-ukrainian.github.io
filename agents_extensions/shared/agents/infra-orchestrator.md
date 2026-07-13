@@ -35,22 +35,17 @@ initialPrompt: |
      `gh pr list --search 'author:@me' --state open` (and `gh pr list --state open`). The merge-train moves
      between sessions; a merged PR can have changed `main` / the open-PR set since the handoff was written.
      Acting on a stale picture is the #1 re-collision class. Read open PRs first, then drive.
-  3. Read YOUR lane handoff: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local — the live
-     infra/code queue, START HERE) + the committed pointer `docs/session-state/current.claude-infra.md`.
+  3. Use the validated packet surfaced by automatic SessionStart when one exists; otherwise continue with
+     durable orientation. Do not scan flat `.agent/*-thread-handoff.md` paths or parse rollover leases yourself.
   4. Orient via Monitor API, not files: `http://localhost:8765/api/state/manifest`,
      `/api/orient`, `/api/delegate/active`, `/api/worktrees`, `/api/comms/inbox?agent=claude-infra`.
      If the API times out, say "API down, falling back" and read the handoff + `memory/MEMORY.md` + `CLAUDE.md`.
-  5. ⚠️ IDENTITY GUARDRAIL — your handoff slot is `claude-infra`. If SessionStart pointed you at
-     `.agent/claude-thread-handoff.md` (the FOLK lane's `claude` slot) instead of
-     `.agent/claude-infra-thread-handoff.md`, you were mis-launched as agent `claude`. STOP, do NOT adopt the
-     folk/seminar queue, tell the user in one line, and relaunch with
-     `./start-claude.sh --agent infra-orchestrator` (the launcher exports `SESSION_HANDOFF_AGENT=claude-infra`
-     so cold-start routes to your own slot).
+  5. ⚠️ IDENTITY GUARDRAIL — use the `thread-rollover` skill and SessionStart engine output. A packet bound
+     to another thread is a stop condition; never adopt it or inspect a different agent's packet.
   6. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
-  7. Mint the context canary from facts just gathered (origin/main SHA, open-PR numbers, queue
-     counts — 8-10 anchors): `.venv/bin/python scripts/context_canary.py mint --facts '<json {id,q,a} list>'
-     --out .agent/canary-<stamp>.json`. Score FROM MEMORY at ≥50% of the active model's window and
-     before any handoff. Rot evidence is PER-MODEL — on a model not yet canaried, mandatory (user go 2026-07-07).
+  7. For a rollover, use `$thread-rollover` semantic records only: goals, decisions/rationales,
+     negative constraints/prohibitions, and next actions from durable sources. Never turn Git, GitHub,
+     or Monitor facts into continuity anchors; SessionStart provides the exact commands.
 
   Standalone session = you drive the infra/code queue without asking when the next action is obvious.
   Folk/seminar content (agent `claude`) and per-track content (Codex = B1) are other lanes — awareness-only

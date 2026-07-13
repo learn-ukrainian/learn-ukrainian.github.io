@@ -35,11 +35,9 @@ initialPrompt: |
      - `curl -s --max-time 2 'http://localhost:8765/api/session/current?agent=orchestrator'` only if session hash changed
      - `curl -s --max-time 2 http://localhost:8765/api/orient`
      - `curl -s --max-time 2 'http://localhost:8765/api/comms/inbox?agent=claude'`
-  3. **Load the session from `.agent/claude-thread-handoff.md` FIRST** — the gitignored local
-   driver handoff is the freshest session state (done/in-flight/queue/hygiene; driver handoffs
-   are out of git per user policy 2026-06-23). Then read `docs/session-state/current.orchestrator.md`
-   for the durable cross-agent handoff; `current.md` is only the router. If the thread handoff is
-   missing or stale (older than current.orchestrator.md), say so and use the durable one.
+  3. **Use automatic SessionStart first.** If it surfaces a validated rollover packet, follow the
+   `thread-rollover` workflow exactly; otherwise orient from durable project state. Do not scan flat
+   `.agent/*-thread-handoff.md` files or parse lease JSON yourself.
   4. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
   5. Then begin work. If Monitor API times out, say "API down, falling back" and read
      `docs/session-state/current.md` router -> matching `current.<agent>.md` -> `memory/MEMORY.md` -> `CLAUDE.md`.
@@ -48,12 +46,9 @@ initialPrompt: |
      on the queue or merge-train. The merge-train moves between sessions; a merged PR can have already
      changed `main` / the open-PR set since the handoff was written. Acting on a stale picture is the
      #01 re-collision class (2026-06-14). Read open PRs first, then drive.
-  7. Mint the context canary from facts just gathered in steps 2-6 (origin/main SHA, open-PR
-     numbers, corpus/queue counts — 8-10 anchors):
-     `.venv/bin/python scripts/context_canary.py mint --facts '<json {id,q,a} list>' --out .agent/canary-<stamp>.json`
-     Score FROM MEMORY (no scrolling back) at ≥50% of the active model's window and again before
-     any handoff: `context_canary.py score --probe <file> --answers <my-answers.json>`. Rot
-     evidence is PER-MODEL — on a model not yet canaried, this is mandatory (user go 2026-07-07).
+  7. For a rollover, use `$thread-rollover` semantic records only: goals, decisions/rationales,
+     negative constraints/prohibitions, and next actions from durable sources. Never turn Git, GitHub,
+     or Monitor facts into continuity anchors; SessionStart provides the exact commands.
 
   Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints
   (from the launcher's `--epic` flag) — that binding beats everything below. Without a
@@ -151,9 +146,8 @@ review, orchestration, precise dispatch briefs.
   driver's machine, e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` (user policy 2026-06-23 — driver
   handoffs are out of git/PRs). You (main) do NOT read it; track drivers report to you via TRACK-UPDATE
   pings + their PR descriptions.
-- Main orchestrator source of truth: session layer = `.agent/claude-thread-handoff.md`
-  (gitignored LOCAL driver handoff — load first, write at session end); durable cross-agent
-  layer = `docs/session-state/current.md` router plus `docs/session-state/current.orchestrator.md`.
+- Main orchestrator rollover source of truth is the validated `.agent/thread-rollovers/<agent>/<lineage-id>/`
+  packet surfaced by automatic SessionStart; durable cross-agent state remains the documented router/brief layer.
 - Track pings use:
   `TRACK-UPDATE track=<track> pr=<number|none> state=<blocked|ready|in-flight>
   owner=<agent> needs=<main-review|merge|codex-help|decision|none>

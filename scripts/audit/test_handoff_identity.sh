@@ -8,6 +8,8 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 # shellcheck source=scripts/lib/handoff_identity.sh
 source "$REPO_ROOT/scripts/lib/handoff_identity.sh"
+# shellcheck source=scripts/lib/thread_rollover_link.sh
+source "$REPO_ROOT/scripts/lib/thread_rollover_link.sh"
 
 fail() {
   printf 'FAIL: %s\n' "$1" >&2
@@ -97,6 +99,28 @@ epic_a="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic atlas)"
 epic_b="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic hramatka)"
 if [[ "$(handoff_identity_for_epic "$epic_a")" == "$(handoff_identity_for_epic "$epic_b")" ]]; then
   fail "same-agent different-epic launches must not share a handoff slot"
+fi
+
+# --- Codex launcher rollover bridge: narrow, canonical, and fail-loud ---
+tmp_root="$(mktemp -d)"
+trap 'rm -rf "$tmp_root"' EXIT
+canonical="$tmp_root/canonical"
+worktree="$tmp_root/worktree"
+mkdir -p "$canonical" "$worktree"
+ensure_thread_rollover_link "$canonical" "$worktree"
+[[ -d "$canonical/.agent/thread-rollovers" ]] || fail "first launch creates canonical rollover directory"
+[[ -L "$worktree/.agent/thread-rollovers" ]] || fail "first launch creates narrow rollover symlink"
+eq "$(readlink "$worktree/.agent/thread-rollovers")" "$canonical/.agent/thread-rollovers" "rollover symlink target"
+ensure_thread_rollover_link "$canonical" "$worktree"
+rm "$worktree/.agent/thread-rollovers"
+mkdir "$worktree/.agent/thread-rollovers"
+if ensure_thread_rollover_link "$canonical" "$worktree"; then
+  fail "real rollover directory collision must fail"
+fi
+rm -rf "$worktree/.agent/thread-rollovers"
+ln -s "$tmp_root/wrong" "$worktree/.agent/thread-rollovers"
+if ensure_thread_rollover_link "$canonical" "$worktree"; then
+  fail "wrong or broken rollover symlink must fail"
 fi
 
 printf 'ok - handoff identity fixtures passed\n'
