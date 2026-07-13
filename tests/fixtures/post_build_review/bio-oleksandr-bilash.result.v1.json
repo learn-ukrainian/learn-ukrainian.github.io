@@ -33,7 +33,7 @@
           "json"
         ],
         "config_path": "agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md",
-        "config_version": "1.0.1",
+        "config_version": "1.1.0",
         "cwd": ".",
         "executed_argv": [
           ".venv/bin/python",
@@ -48,17 +48,26 @@
         ],
         "exit_code": 0,
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stdout_sha256": "fe74233e41557022ec77c64d37de861f5c5e291b9811fa3d453d686337a5b4f6"
+        "stdout_sha256": "33218425f5749b60947938a6cedb3673fcfdce61da3d38a7adda51a5f651eeea"
       },
       "result": {
-        "actual_words": 2497,
+        "actual_words": 2401,
         "advisory_ceiling": 4000,
         "band_max": 2800,
         "band_min": 2200,
         "basis": "explicit_plan_size_policy",
+        "content_metrics": {
+          "authored_instructional_words": 2401,
+          "excluded_markup_directive_url_tokens": 25,
+          "learner_visible_words": 2401,
+          "quoted_primary_source_words": 0,
+          "raw_whitespace_tokens": 2497
+        },
+        "decision_signals": [],
         "density_band": "reviewed_plan_override",
         "dossier_path": "docs/research/bio/oleksandr-bilash.md",
         "effective_min": 2200,
+        "legacy_raw_whitespace_words": 2497,
         "metrics": {
           "contested_markers": 6,
           "headings": 12,
@@ -77,6 +86,12 @@
         "plan_floor": 2200,
         "plan_outline_words": 2200,
         "plan_path": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
+        "repetition": {
+          "algorithm": "paragraph_5_word_shingles_v1:jaccard>=0.55_or_containment>=0.82,length_ratio>=0.70,min_shared=8,min_words=40",
+          "eligible_paragraphs": 32,
+          "matches": []
+        },
+        "size_policy_mismatch": false,
         "slug": "oleksandr-bilash",
         "status": "explicit_override",
         "track": "bio"
@@ -194,10 +209,10 @@
       "status": "complete"
     }
   },
-  "deterministic_contract_version": "1.0.1",
+  "deterministic_contract_version": "1.1.0",
   "findings": [],
-  "prompt_sha256": "eb163248e6c61c1d7cab9407636d5ba88b109bc49c281637946abb5cfb27ffda",
-  "reproducibility_key": "8efb250d4fed5ab45a30e06442a8eb780d76ad8e4f2c4593d93c59531bbf693c",
+  "prompt_sha256": "85254a48351797a3d42207bf3b203df64750e3962296c21b201eecb641fd4897",
+  "reproducibility_key": "536f49e6f9869d1fe0f553b11cd41b100894f2194894c7e895a2424b1012328e",
   "review_protocol_version": "1.0.1",
   "reviewer": {
     "agent": "agy",
@@ -217,7 +232,7 @@
     "summary": "Exhaustive BIO review verified 275 atomic factual, attribution, quotation, language, activity, plan-adherence, decolonization, rights, and media claim instances across all five resolved target files. All previous findings, including crosslinks, rights placeholders, reassigned Suspilne URLs, unbound recordings, broadcast claims, and nonstandard language, have been definitively resolved. The module effectively executes the seminar prompt with accurate claims, clear attribution, precise source framing, and rigorous, plan-adherent activities.",
     "verdict": "PASS"
   },
-  "semantic_prompt_version": "1.0.0",
+  "semantic_prompt_version": "1.1.0",
   "source_hashes": {
     "activities": "20fcad8f33a05631aa5c917e1a89915d456e5407af12e370a4abd141c2bec095",
     "content": "65d5da02915983a4b54a67d0d3bf2682ecaa33451d21013b5b4782c2b1cb02b8",
@@ -238,5 +253,5 @@
     "slug": "oleksandr-bilash",
     "track": "bio"
   },
-  "track_policy_version": "1.0.0"
+  "track_policy_version": "1.1.0"
 }

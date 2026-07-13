@@ -48,6 +48,7 @@ CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-w
 
 from scripts.audit.content_surface_gates import scan_module_surface, scan_surface_text
 from scripts.audit.failure_classes import FailureClass, FailureRecord
+from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build.citation_matcher import (
     CitationKey,
@@ -10292,13 +10293,10 @@ def _word_count(text: str) -> int:
     return len(_WORD_RE.findall(text))
 
 
-# Word-target tolerance: 8% lower band. User direction 2026-05-23
-# (handoff docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
-# decision row B): word targets stay as MINIMUMS for the writer prompt
-# guidance, but the gate tolerates ±8% below target to avoid 0.25%-short
-# rejections like deepseek-pro 1197/1200. Empirically the 8% band still
-# rejects gemini-tools 1031/1200 (14% short).
-_WORD_COUNT_TOLERANCE_BELOW = 0.08
+# Reviewed plan word targets are exact minimums. A short draft is revised with
+# grounded material or routed to plan review through SIZE_POLICY_MISMATCH; the
+# gate never lowers the floor by a percentage tolerance.
+_WORD_COUNT_TOLERANCE_BELOW = 0.0
 _PRIMARY_READING_BLOCK_RE = re.compile(
     r"(?:<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->|^:::primary-reading(?:\s*\{[^\n]*\})?\s*\n.*?\n:::\s*$)",
     re.IGNORECASE | re.DOTALL | re.MULTILINE,
@@ -10310,7 +10308,7 @@ def _strip_primary_reading_blocks(text: str) -> str:
 
 
 def _word_count_gate(text: str, target: int) -> dict[str, Any]:
-    count = _word_count(_strip_comments(_strip_primary_reading_blocks(text)))
+    count = markdown_module_evidence(text)[0].authored_instructional_words
     min_with_tolerance = int(target * (1 - _WORD_COUNT_TOLERANCE_BELOW))
     return {
         "passed": count >= min_with_tolerance,
@@ -10325,7 +10323,7 @@ _WRITER_DRAFT_SECTION_FLOOR_RATIO = 0.85
 
 
 def _writer_draft_countable_words(text: str) -> int:
-    return _word_count(_strip_comments(_strip_primary_reading_blocks(text)))
+    return markdown_module_evidence(text)[0].authored_instructional_words
 
 
 def _writer_draft_section_length_report(
@@ -10384,6 +10382,7 @@ def writer_draft_length_report(
         plan,
         plan_path=plan_path,
         actual_words=count,
+        module_text=module_text,
     )
     section_reports = _writer_draft_section_length_report(
         plan,
@@ -10438,13 +10437,14 @@ def render_writer_draft_length_expansion_prompt(
         plan,
         plan_path=plan_path,
         actual_words=int(length_report.get("count") or 0),
+        module_text=module_text,
     )
     return "\n".join(
         [
             "# Writer Draft Length Pre-check",
             "",
             "The deterministic first-draft length pre-check failed before the full Python QG loop.",
-            "Gate-counted words exclude markdown comments and `:::primary-reading` blocks.",
+            "Gate-counted authored words exclude Markdown comments, directive/component syntax, URLs, and `:::primary-reading` source text.",
             "",
             "## Size policy",
             render_writer_size_policy(size_policy),
@@ -10506,6 +10506,7 @@ def run_writer_draft_length_precheck(
         plan,
         plan_path=plan_path,
         actual_words=int(before["count"]),
+        module_text=before_text,
     )
     if not size_policy_allows_auto_expansion(size_policy):
         _emit(

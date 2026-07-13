@@ -207,17 +207,17 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 - Slug: {MODULE_SLUG}
 - Topic: {TOPIC_TITLE}
 - Phase: {PHASE}
-- Word **minimum**: {WORD_TARGET} — this is a FLOOR. The gate hard-rejects below 92% of this number. Plan section budgets around **~1.20× the minimum** because the strict gate tokenization excludes markdown comments, JSX tag/attribute syntax, punctuation tokens, numbers, and page refs; self-counted `wc -w` usually runs 15-16% high.
+- Authored-word **minimum**: {WORD_TARGET} — this is an exact reviewed FLOOR. The Markdown-aware gate counts learner-facing authored instructional/expository words, including heading text, while reporting primary-source quotations separately and excluding comments, directive/component syntax, and URLs.
 
 ## Module Size Policy — dossier/evidence-led expansion control (#4801)
 
 {SIZE_POLICY}
 
-This policy does not lower the plan floor on its own. It controls expansion permission: never invent depth to satisfy a fixed word count, and never treat old 150% multiplier thinking as a target. If the policy reports `plan_policy_review_required` or `blocked_until_research_dossier`, complete the verifiable coverage and emit the required `SIZE_POLICY_MISMATCH` marker instead of padding.
+Satisfy the objectives and evidence coverage, not a token target; retire the old 150% multiplier thinking. The policy never lowers the plan floor. Expansion must be source-backed and pedagogically useful; do not repeat framing, conclusions, transitions, or definitions to reach the floor. If grounded material is exhausted or the policy blocks expansion, emit the required `SIZE_POLICY_MISMATCH` marker and stop for plan review instead of padding.
 
 ## Section Word Budgets — policy-aware first-draft requirements
 
-The first draft must meet or exceed `{WORD_TARGET}` and must hit every section `words:` budget below when the size policy permits source-backed expansion. If the first draft is short, the pipeline may request targeted expansion before Python QG continues; that expansion is allowed only with substantive, cited exposition, examples, close-reading, source comparison, and cultural/grammar analysis. `:::primary-reading` quoted text is excluded from counted words; surrounding explanation must carry the budget.
+The first draft must meet or exceed `{WORD_TARGET}` when the evidence can responsibly support the reviewed plan. Section `words:` values guide coverage; they are not quotas to fill with repeated prose. Targeted expansion is allowed only with substantive, cited exposition, examples, close-reading, source comparison, and necessary cultural/grammar analysis. `:::primary-reading` quoted text is reported separately; surrounding authored explanation carries the floor.
 
 {SECTION_WORD_BUDGETS}
 

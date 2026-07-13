@@ -353,19 +353,51 @@ def _check_size_policy_status(
     track_policy: Mapping[str, Any],
     size_record: Mapping[str, Any] | None,
 ) -> list[dict[str, Any]]:
-    blocking_size_statuses = {str(value) for value in track_policy.get("size_policy_blocking_statuses") or []}
-    if size_record is None or str(size_record.get("status")) not in blocking_size_statuses:
+    if size_record is None:
         return []
-    return [
-        _policy_finding(
-            "size-policy-blocking-status",
-            "size_policy",
-            "high",
-            "Evidence-derived size policy is not ready for module approval.",
-            evidence=f"status={size_record.get('status')}; notes={size_record.get('notes')}",
-            location=str(target["files"]["plan"]),
+    severities = track_policy.get("size_policy_signal_severities")
+    if not isinstance(severities, Mapping):
+        return []
+    raw_signals = size_record.get("decision_signals") or [size_record.get("status")]
+    signals = [str(signal) for signal in raw_signals if str(signal) in severities]
+    messages = {
+        "missing_plan_word_target": "Plan has no enforceable word floor.",
+        "invalid_size_policy": "Explicit size-policy override is invalid.",
+        "missing_dossier": "Required seminar research dossier is missing.",
+        "plan_review_needed": "Grounded material and the reviewed plan floor require plan review; automatic expansion is forbidden.",
+        "below_plan_floor": "Authored instructional prose is below the reviewed plan floor.",
+        "repetitive_authored_prose": "Deterministic paragraph evidence found repetitive authored exposition requiring revision.",
+        "over_advisory_ceiling": "Module exceeds the advisory ceiling; inspect source density and marginal pedagogical value without failing on length alone.",
+        "exceptional_justification_required": "Exceptional length requires explicit source-backed pedagogical justification.",
+    }
+    findings: list[dict[str, Any]] = []
+    content_path = str(target["files"].get("content") or target["files"]["plan"])
+    for signal in dict.fromkeys(signals):
+        location = (
+            str(target["files"]["plan"])
+            if signal in {
+                "missing_plan_word_target",
+                "invalid_size_policy",
+                "missing_dossier",
+                "plan_review_needed",
+            }
+            else content_path
         )
-    ]
+        findings.append(
+            _policy_finding(
+                f"size-policy-{signal}",
+                "size_policy",
+                str(severities[signal]),
+                messages.get(signal, "Evidence-derived size policy requires review."),
+                evidence=(
+                    f"signal={signal}; status={size_record.get('status')}; "
+                    f"notes={size_record.get('notes')}; "
+                    f"repetition={size_record.get('repetition')}"
+                ),
+                location=location,
+            )
+        )
+    return findings
 
 
 def _check_connects_to(

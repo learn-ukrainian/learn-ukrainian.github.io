@@ -17,6 +17,10 @@ from scripts.build.module_size_policy import (
 from scripts.build.phases.implementation_map import seed_implementation_map
 
 PROMPT_FIXTURES: tuple[tuple[str, str], ...] = (
+    ("a1", "sounds-letters-and-hello"),
+    ("a2", "a2-bridge"),
+    ("b1", "adjectives-comparative"),
+    ("b2", "academic-writing"),
     ("bio", "andrii-malyshko"),
     ("folk", "kolomyiky"),
     ("c1", "abstract-writing"),
@@ -82,9 +86,9 @@ def test_claude_and_codex_writer_prompts_include_size_policy(
 
     assert "## Module Size Policy — dossier/evidence-led expansion control (#4801)" in prompt
     assert "- Expansion permission:" in prompt
-    assert "never invent depth to satisfy a fixed word count" in prompt
+    assert "satisfy objectives and evidence coverage, not a token target" in prompt.lower()
     assert "SIZE_POLICY_MISMATCH" in prompt
-    assert "old 150% multiplier thinking as a target" in prompt
+    assert "do not repeat framing, conclusions, transitions, or definitions" in prompt.lower()
 
 
 def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceiling(
@@ -107,6 +111,36 @@ def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceilin
     assert size_policy_allows_auto_expansion(record) is False
     block = render_writer_size_policy(record)
     assert "Expansion permission: plan_policy_review_required" in block
+
+
+def test_sparse_dossier_blocks_auto_expansion_even_when_floor_is_in_band(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_size_policy_roots(monkeypatch, tmp_path)
+    plan = {
+        "level": "BIO",
+        "slug": "thin-in-band-person",
+        "word_target": 4500,
+        "content_outline": [{"section": "Огляд", "words": 4500}],
+        "references": [
+            {
+                "type": "dossier",
+                "path": "docs/research/bio/thin-in-band-person.md",
+            }
+        ],
+    }
+    _write_dossier(tmp_path, "bio", "thin-in-band-person", 900)
+
+    record = build_size_policy_for_plan(plan, actual_words=4000)
+
+    assert record.density_band == "sparse"
+    assert record.status == "below_plan_floor"
+    assert size_policy_allows_auto_expansion(record) is False
+    assert (
+        "Expansion permission: blocked_until_source_saturation_or_plan_review"
+        in render_writer_size_policy(record)
+    )
 
 
 def test_reviewed_size_policy_override_allows_expansion_below_generic_track_floor(
@@ -192,6 +226,7 @@ def test_size_policy_reports_advisory_padding_diagnostic(
     assert "source-backed density from filler/padding" in diagnostic["review_action"]
     reviewer_block = render_reviewer_size_policy(record)
     assert "do not fail or pass a module on word count alone" in reviewer_block
+    assert "throughout the full size band" in reviewer_block
     assert "source-backed density" in reviewer_block
 
 
@@ -287,3 +322,47 @@ def test_writer_length_precheck_returns_policy_mismatch_without_invoking_writer(
             "size_policy_status": "plan_review_needed",
         }
     ]
+
+
+def test_writer_precheck_honors_embedded_mismatch_marker_without_invocation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_size_policy_roots(monkeypatch, tmp_path)
+    plan = {
+        "level": "A1",
+        "sequence": 1,
+        "slug": "exhausted-core",
+        "word_target": 100,
+        "content_outline": [{"section": "Огляд", "words": 100}],
+    }
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text(
+        "<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->\n"
+        "# Огляд\n\n"
+        + " ".join(["слово"] * 50),
+        encoding="utf-8",
+    )
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
+
+    def fail_if_invoked(*_args, **_kwargs):
+        raise AssertionError("writer must not auto-expand a mismatch-marked draft")
+
+    result = linear_pipeline.run_writer_draft_length_precheck(
+        plan=plan,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        writer="claude-tools",
+        invoker=fail_if_invoked,
+    )
+
+    assert result["applied"] is False
+    assert result["patch_status"] == "policy_mismatch"
+    assert result["policy_mismatch"] is True
+    assert result["size_policy"]["size_policy_mismatch"] is True
+    assert result["size_policy"]["decision_signals"] == (
+        "plan_review_needed",
+        "below_plan_floor",
+    )

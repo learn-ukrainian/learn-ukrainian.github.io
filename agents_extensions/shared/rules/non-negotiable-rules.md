@@ -9,7 +9,7 @@ All rules are hard requirements. Partial compliance = failure.
 | When... | Do this |
 |---|---|
 | Building content | Check `config.py` target_words FIRST — never hardcode from memory |
-| Module under word target | Expand content to meet target. Never lower the target |
+| Module under word target | Add only source-backed necessary pedagogy; if grounded material is exhausted, emit `SIZE_POLICY_MISMATCH` and route to plan review. Never lower the target or auto-pad |
 | Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
 | Fixing a module | Reviewer provides `<fixes>` — apply deterministically (rule 4) |
 | Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
@@ -26,7 +26,9 @@ All rules are hard requirements. Partial compliance = failure.
 
 <critical>
 
-Expand content to meet targets. Never lower targets to match content.
+Meet reviewed targets with source-backed necessary pedagogy. Never lower targets
+to match content, repeat exposition to reach them, or auto-pad. If grounded
+material is exhausted, emit `SIZE_POLICY_MISMATCH` and route to plan review.
 
 **Always read config.py** before generating content_outline or word budgets: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
 
@@ -64,7 +66,9 @@ Section targets are guidance, not hard limits.
 
 **Flexible:** Redistribute words between sections freely. One section 20% over is fine if no section is >10% under.
 
-**Priority:** Total word count first → fix sections >10% under → don't worry about over-target sections.
+**Priority:** Objectives and evidence coverage first → repair genuine section
+gaps with sourced pedagogy → route plan-policy mismatch instead of filling a
+section quota with repeated prose.
 
 ---
 

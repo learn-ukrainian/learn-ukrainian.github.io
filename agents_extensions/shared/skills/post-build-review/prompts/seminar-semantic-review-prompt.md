@@ -1,6 +1,6 @@
 # Seminar semantic post-build review prompt
 
-Semantic prompt version: `1.0.0`
+Semantic prompt version: `1.1.0`
 
 Apply this only to FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, or RUTH,
 after the common prompt.
@@ -32,5 +32,8 @@ named source/person/event should be findable.
   edition/source identity, dating, genre, and anachronism risks.
 - For FOLK, enforce decolonized framing and distinguish documented practice
   from occult belief claims or demonizing ethnographic language.
+- Distinguish source-backed exposition and necessary primary readings from
+  authored padding. Quoted refrains are not repetition; repeated authorial
+  framing, conclusions, transitions, or definitions without new evidence are.
 - Set `claim_coverage.status` to `complete` only when every extracted claim was
   checked with attributable evidence.

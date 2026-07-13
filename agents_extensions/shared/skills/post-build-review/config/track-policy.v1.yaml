@@ -1,7 +1,7 @@
 review_protocol_version: 1.0.1
-deterministic_contract_version: 1.0.1
-semantic_prompt_version: 1.0.0
-track_policy_version: 1.0.0
+deterministic_contract_version: 1.1.0
+semantic_prompt_version: 1.1.0
+track_policy_version: 1.1.0
 
 families:
   core:
@@ -10,7 +10,14 @@ families:
       claim_coverage: not_applicable
       verify_ukrainian_with_project_sources: true
       review_plan_pedagogy_activities: true
-    size_policy_blocking_statuses: [invalid_size_policy, plan_review_needed]
+    size_policy_signal_severities:
+      missing_plan_word_target: high
+      invalid_size_policy: high
+      plan_review_needed: high
+      below_plan_floor: high
+      repetitive_authored_prose: medium
+      over_advisory_ceiling: info
+      exceptional_justification_required: info
     mechanical_checks:
       connects_to_sequence:
         severity: high
@@ -31,7 +38,15 @@ families:
       verify_ukrainian_with_project_sources: true
       verify_every_factual_claim: true
       decolonization_review: required
-    size_policy_blocking_statuses: [invalid_size_policy, plan_review_needed, missing_research_dossier]
+    size_policy_signal_severities:
+      missing_plan_word_target: high
+      invalid_size_policy: high
+      missing_dossier: high
+      plan_review_needed: high
+      below_plan_floor: high
+      repetitive_authored_prose: medium
+      over_advisory_ceiling: info
+      exceptional_justification_required: info
     mechanical_checks:
       connects_to_sequence:
         severity: high

@@ -490,11 +490,12 @@ them to know what to fix on retry.
 
 {SIZE_POLICY}
 
-Use this as review context, not as a mechanical word-count gate. If the module
-is over the advisory ceiling, decide whether the extra length is source-backed
-density and necessary pedagogy, or filler/padding. Source-backed density is not
-a defect; repeated framing, generic exposition, uncited interpretation, and
-inflated transitions are defects when they affect `{DIM}`.
+Use this as review context, not as a mechanical word-count gate. Inspect the
+deterministic paragraph matches and marginal pedagogical value throughout the
+full size band, not only above the advisory ceiling. Source-backed density and
+necessary pedagogy remain acceptable even when long. Repeated framing,
+conclusions, transitions, definitions, generic exposition, or uncited
+interpretation are filler/padding defects when they affect `{DIM}`.
 
 ## Immersion Rule
 
