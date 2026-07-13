@@ -32,7 +32,6 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Mapping, Sequence
-from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -46,7 +45,7 @@ if __package__ in {None, ""}:
 from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
 from scripts.audit import layerb_shadow
 
-BRIDGE_VERSION = "qg-layer-b-judge-bridge.v2"
+BRIDGE_VERSION = "qg-layer-b-judge-bridge.v3"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
@@ -644,103 +643,23 @@ def conservative_response(parsed: ParsedRequest) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     for fact in parsed.request["fact_checks"]:
         source_relations = [
-            {
-                "candidate_id": source["candidate_id"],
-                "relation": "ABSTAIN",
-                "support_spans": [],
-                "confidence": "high",
-                "prompt_injection_observed": False,
-            }
+            layerb_shadow.conservative_candidate_response(str(source["candidate_id"]))
             for source in fact["candidate_sources"]
         ]
         facts.append({"fact_check_id": fact["fact_check_id"], "source_relations": source_relations})
     return {"schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION, "fact_checks": facts}
 
 
-def _validate_full_response(parsed: ParsedRequest, response: Mapping[str, Any]) -> dict[str, Any]:
-    """Use the shared single-candidate validator for every module result."""
+def _expected_windows_by_fact(parsed: ParsedRequest) -> dict[str, tuple[Mapping[str, Any], ...]]:
+    """Bind normalizer expectations to the request's immutable candidate ids."""
 
-    if response.get("schema_version") != layerb_shadow.JUDGE_OUTPUT_VERSION:
-        raise layerb_shadow.JudgeValidationError("judge output schema_version is invalid")
-    facts = response.get("fact_checks")
-    if not isinstance(facts, list):
-        raise layerb_shadow.JudgeValidationError("judge output fact_checks is malformed")
-    expected_facts = {str(fact["fact_check_id"]): fact for fact in parsed.request["fact_checks"]}
-    actual_facts: dict[str, Mapping[str, Any]] = {}
-    for fact in facts:
-        if not isinstance(fact, Mapping) or not isinstance(fact.get("fact_check_id"), str):
-            raise layerb_shadow.JudgeValidationError("judge output contains a malformed fact-check result")
-        fact_check_id = str(fact["fact_check_id"])
-        if fact_check_id in actual_facts:
-            raise layerb_shadow.JudgeValidationError("judge output contains a duplicate fact-check result")
-        actual_facts[fact_check_id] = fact
-    if set(actual_facts) != set(expected_facts):
-        raise layerb_shadow.JudgeValidationError("judge output fact-check set differs from request")
-    normalized_facts: list[dict[str, Any]] = []
-    for fact_check_id, expected_fact in expected_facts.items():
-        actual = actual_facts[fact_check_id]
-        source_relations = actual.get("source_relations")
-        if not isinstance(source_relations, list):
-            raise layerb_shadow.JudgeValidationError("judge output source_relations is malformed")
-        by_candidate: dict[str, Mapping[str, Any]] = {}
-        for result in source_relations:
-            if not isinstance(result, Mapping) or not isinstance(result.get("candidate_id"), str):
-                raise layerb_shadow.JudgeValidationError("judge output has a malformed candidate relation")
-            candidate_id = str(result["candidate_id"])
-            if candidate_id in by_candidate:
-                raise layerb_shadow.JudgeValidationError("judge output has a duplicate candidate relation")
-            by_candidate[candidate_id] = result
-        expected_ids = {str(source["candidate_id"]) for source in expected_fact["candidate_sources"]}
-        if set(by_candidate) != expected_ids:
-            raise layerb_shadow.JudgeValidationError("judge output candidate set differs from request")
-        normalized_relations: list[dict[str, Any]] = []
-        for source in expected_fact["candidate_sources"]:
-            candidate_id = str(source["candidate_id"])
-            normalized = layerb_shadow._validate_judge_response(
-                {
-                    "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
-                    "fact_checks": [
-                        {"fact_check_id": fact_check_id, "source_relations": [dict(by_candidate[candidate_id])]}
-                    ],
-                },
-                fact_check_id=fact_check_id,
-                window=parsed.windows_by_fact_candidate[(fact_check_id, candidate_id)],
-            )
-            normalized.pop("support_span_valid", None)
-            normalized_relations.append(normalized)
-        normalized_facts.append({"fact_check_id": fact_check_id, "source_relations": normalized_relations})
-    return {"schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION, "fact_checks": normalized_facts}
-
-
-def _complete_injection_observation(parsed: ParsedRequest, response: Mapping[str, Any]) -> bool:
-    """Preserve a complete true injection flag so the collector can audit it."""
-
-    facts = response.get("fact_checks")
-    if not isinstance(facts, list):
-        return False
-    observed = False
-    normalized = deepcopy(dict(response))
-    normalized_facts = normalized.get("fact_checks")
-    if not isinstance(normalized_facts, list):
-        return False
-    for fact in normalized_facts:
-        if not isinstance(fact, dict):
-            return False
-        relations = fact.get("source_relations")
-        if not isinstance(relations, list):
-            return False
-        for relation in relations:
-            if not isinstance(relation, dict) or not isinstance(relation.get("prompt_injection_observed"), bool):
-                return False
-            observed = observed or relation["prompt_injection_observed"]
-            relation["prompt_injection_observed"] = False
-    if not observed:
-        return False
-    try:
-        _validate_full_response(parsed, normalized)
-    except layerb_shadow.JudgeValidationError:
-        return False
-    return observed
+    return {
+        str(fact["fact_check_id"]): tuple(
+            parsed.windows_by_fact_candidate[(str(fact["fact_check_id"]), str(source["candidate_id"]))]
+            for source in fact["candidate_sources"]
+        )
+        for fact in parsed.request["fact_checks"]
+    }
 
 
 def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, Any]:
@@ -764,15 +683,14 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
         if not isinstance(decoded, Mapping):
             raise BridgeInvocationError("model structured output is not a JSON object")
         try:
-            response = _validate_full_response(parsed, decoded)
+            response, substitutions = layerb_shadow.normalize_judge_module_response(
+                decoded, expected_windows_by_fact=_expected_windows_by_fact(parsed)
+            )
         except layerb_shadow.JudgeValidationError:
-            # A true flag is a material safety observation, not a fabricated
-            # passing relation.  Preserve a complete result so the collector's
-            # shared validator records an AUDIT for the flagged candidate.
-            if _complete_injection_observation(parsed, decoded):
-                response = dict(decoded)
-            else:
-                response = conservative_response(parsed)
+            response = conservative_response(parsed)
+        else:
+            if substitutions:
+                response["_bridge_substituted"] = substitutions
         if model_result.observed:
             response["_shadow_observed"] = model_result.observed
         return response

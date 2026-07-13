@@ -53,7 +53,9 @@ def _candidate(
         "canonical_source_id": canonical_source_id,
         "raw_output_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(),
         "expected_source_relation": relation,
-        "expected_support_spans": [{"start": start, "end": end, "role": role}] if relation in layerb_qualify.DECISIVE_RELATIONS else [],
+        "expected_support_spans": [{"start": start, "end": end, "role": role}]
+        if relation in layerb_qualify.DECISIVE_RELATIONS
+        else [],
         "eligibility": "ELIGIBLE",
         "error_status": "NONE",
     }
@@ -99,7 +101,9 @@ def _emission(
     observed: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     candidates = [candidate for values in case["candidates_by_event_output_id"].values() for candidate in values]
-    relations = relations or {candidate["candidate_id"]: candidate["expected_source_relation"] for candidate in candidates}
+    relations = relations or {
+        candidate["candidate_id"]: candidate["expected_source_relation"] for candidate in candidates
+    }
     source_relations = []
     for candidate in candidates:
         candidate_id = candidate["candidate_id"]
@@ -126,7 +130,9 @@ def _emission(
         "module_id": module_id,
         "call_id": call_id,
         "observed": observed or {"prompt_tokens": 120.0, "completion_tokens": 30.0, "cost_usd": 0.01},
-        "windows": [{"candidate_id": candidate_id, "raw_window": raw} for candidate_id, raw in raw_by_candidate.items()],
+        "windows": [
+            {"candidate_id": candidate_id, "raw_window": raw} for candidate_id, raw in raw_by_candidate.items()
+        ],
         "response": {
             "schema_version": "qg-layer-b-judge-output.v1",
             "fact_checks": [{"fact_check_id": case["case_id"], "source_relations": source_relations}],
@@ -189,6 +195,27 @@ def test_unsafe_accept_is_decision_level_not_relation_level() -> None:
     assert unsafe["observed_unsafe_accepts"] == 1
     assert unsafe["unsafe_eligible_denominator"] == 1
     assert unsafe["status"] == "FAIL"
+
+
+def test_substituted_abstain_counts_against_judge_while_sidecar_remains_tolerated() -> None:
+    raw = "The expedition took 17 days."
+    case = _case("substituted-abstain", raw)
+    emission = _emission(case, {"candidate-1": raw}, relations={"candidate-1": "ABSTAIN"})
+    emission["validation_substituted"] = [
+        {
+            "fact_check_id": "substituted-abstain",
+            "candidate_id": "candidate-1",
+            "reason": "judge support span is empty or out of bounds",
+        }
+    ]
+
+    report = _run([], [case], {case["case_id"]: emission})
+
+    record = report["records"][0]
+    assert record["candidate_scores"][0]["actual_source_relation"] == "ABSTAIN"
+    assert record["candidate_scores"][0]["agreement"] is False
+    assert record["actual_final_decision"] == "AUDIT"
+    assert report["thresholds"]["relation_agreement"]["status"] == "FAIL"
 
 
 def test_zero_unsafe_accepts_reports_exact_ucb_and_pending_supplement() -> None:
@@ -383,14 +410,17 @@ def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> 
     attestation_path = tmp_path / "qualification-attestation.json"
     attestation_path.write_text(json.dumps(attestation, sort_keys=True), encoding="utf-8")
 
-    assert layerb_qualify.verify_attestation(
-        attestation_path=attestation_path,
-        report_path=report_path,
-        raw_call_manifest_path=raw_manifest_path,
-        labels_path=labels,
-        corpus_manifests=[corpus_manifest],
-        fixture_manifests=[fixture_manifest],
-    )["verified"] is True
+    assert (
+        layerb_qualify.verify_attestation(
+            attestation_path=attestation_path,
+            report_path=report_path,
+            raw_call_manifest_path=raw_manifest_path,
+            labels_path=labels,
+            corpus_manifests=[corpus_manifest],
+            fixture_manifests=[fixture_manifest],
+        )["verified"]
+        is True
+    )
 
     attestation["production_logic_hashes"]["serializer_logic_sha256"] = "0" * 64
     attestation_path.write_text(json.dumps(attestation, sort_keys=True), encoding="utf-8")
