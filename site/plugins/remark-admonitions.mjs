@@ -10,6 +10,23 @@ const DEFAULT_TITLES = {
   danger: 'Небезпека',
   warning: 'Застереження',
 };
+const TIMECODE_TEXT_DIRECTIVE_RE = /^\d+$/;
+
+function isNumericTextDirective(node) {
+  return node?.type === 'textDirective' && TIMECODE_TEXT_DIRECTIVE_RE.test(node.name || '');
+}
+
+function hasNoChildren(node) {
+  return !Array.isArray(node.children) || node.children.length === 0;
+}
+
+function hasNoAttributes(node) {
+  return !node.attributes || Object.keys(node.attributes).length === 0;
+}
+
+function isPlainNumericTimecodeSuffix(node) {
+  return isNumericTextDirective(node) && hasNoChildren(node) && hasNoAttributes(node);
+}
 
 function visit(node, callback) {
   if (!node || typeof node !== 'object') return;
@@ -43,6 +60,21 @@ function splitLabel(children) {
   };
 }
 
+function normalizeNumericTextDirectives(tree) {
+  visit(tree, (node) => {
+    if (!isPlainNumericTimecodeSuffix(node)) return;
+
+    // Convert accidental numeric directives like ":57" back into literal text.
+    // Keep real admonition/other non-numeric directives intact.
+    const value = `:${node.name}`;
+    node.type = 'text';
+    node.value = value;
+    delete node.name;
+    delete node.children;
+    delete node.attributes;
+  });
+}
+
 function titleNode(name, label) {
   const hasLabel = label && nodeText(label).trim().length > 0;
 
@@ -61,6 +93,8 @@ function titleNode(name, label) {
 
 export default function remarkAdmonitions() {
   return function transformAdmonitions(tree) {
+    normalizeNumericTextDirectives(tree);
+
     visit(tree, (node) => {
       if (node.type !== 'containerDirective' || !ADMONITION_TYPES.has(node.name)) return;
 
