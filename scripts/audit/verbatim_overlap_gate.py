@@ -66,6 +66,61 @@ OPTIONAL_CORPORA: list[tuple[str, str, str, str]] = [
     ("wikipedia", "title", "text", "wikipedia"),
 ]
 
+ALL_POSSIBLE_CORPORA: dict[str, tuple[str, str, str, str]] = {
+    "textbooks": ("textbooks", "chunk_id", "text", "textbooks"),
+    "literary": ("literary_texts", "chunk_id", "text", "literary"),
+    "external": ("external_articles", "chunk_id", "text", "external"),
+    "ukrainian_wiki": ("ukrainian_wiki", "passage_id", "text", "ukrainian_wiki"),
+    "wikipedia": ("wikipedia", "title", "text", "wikipedia"),
+}
+
+
+def get_default_index_db_path(
+    sources_db: Path | str,
+    k: int,
+    corpora: list[tuple[str, str, str, str]] | None = None,
+) -> Path:
+    sources_db = Path(sources_db)
+    parent_dir = Path(".") if str(sources_db) == ":memory:" else sources_db.parent
+
+    default_corpora = FULL_CORPORA + SELF_CORPORA
+    is_default = False
+    if corpora is None:
+        is_default = True
+    else:
+        default_labels = {c[3] for c in default_corpora}
+        current_labels = {c[3] for c in corpora}
+        if default_labels == current_labels:
+            is_default = True
+
+    if is_default:
+        return parent_dir / f"verbatim_shingle_k{k}.db"
+    else:
+        labels = sorted([c[3] for c in corpora])
+        slug = "-".join(labels)
+        return parent_dir / f"verbatim_shingle_k{k}_{slug}.db"
+
+
+def parse_corpora_labels(raw_labels: list[str] | None) -> list[tuple[str, str, str, str]] | None:
+    if raw_labels is None:
+        return None
+    labels = []
+    for rl in raw_labels:
+        for lbl in rl.split(","):
+            lbl = lbl.strip()
+            if lbl:
+                labels.append(lbl)
+
+    valid_labels = sorted(list(ALL_POSSIBLE_CORPORA.keys()))
+    invalid = [l for l in labels if l not in ALL_POSSIBLE_CORPORA]
+    if invalid:
+        raise argparse.ArgumentTypeError(
+            f"Invalid corpus label(s): {', '.join(invalid)}. Valid labels are: {', '.join(valid_labels)}"
+        )
+
+    unique_labels = list(dict.fromkeys(labels))
+    return [ALL_POSSIBLE_CORPORA[lbl] for lbl in unique_labels]
+
 
 def normalize_text(text: str) -> str:
     """Ukrainian-aware normalization for shingling (must be identical on both sides).
@@ -145,6 +200,7 @@ def _find_offsets(haystack: str, needle: str) -> tuple[int, int]:
 @dataclass
 class ExtractedSpan:
     """One extracted UA content span with audit provenance."""
+
     text: str
     norm: str
     tokens: list[str]
@@ -391,7 +447,9 @@ def extract_from_activities_yaml(yaml_path: Path) -> list[ExtractedSpan]:
     return unique
 
 
-def extract_module_content(level_or_path: str | Path, slug: str | None = None) -> tuple[list[ExtractedSpan], dict[str, Any]]:
+def extract_module_content(
+    level_or_path: str | Path, slug: str | None = None
+) -> tuple[list[ExtractedSpan], dict[str, Any]]:
     """High level extractor for a module.
 
     Accepts either a path to module.md / module dir, or level+slug.
@@ -458,6 +516,7 @@ def module_tokens_from_spans(spans: list[ExtractedSpan]) -> list[str]:
 
 # ----------------------------- Index + metrics -----------------------------
 
+
 @dataclass
 class VerbatimReport:
     module: str
@@ -472,6 +531,9 @@ class VerbatimReport:
     df_excluded_count: int = 0
     verified_quote_excludes: list[dict] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    corpus_hash: str = ""
+    indexed_corpora: list[str] = field(default_factory=list)
+    scope_note: str | None = None
 
 
 class ShingleIndex:
@@ -514,11 +576,24 @@ class ShingleIndex:
         self.conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)", (key, value))
         self.conn.commit()
 
-    def corpus_hash_matches(self, fp: str) -> bool:
+    def corpus_hash_matches(self, fp: str, corpora: list[tuple[str, str, str, str]]) -> bool:
         stored = self.get_meta("corpus_hash")
         k_stored = self.get_meta("k")
         spec = self.get_meta("extraction_spec")
-        return stored == fp and k_stored == str(self.k) and spec == EXTRACTION_SPEC_VERSION
+        stored_corpora_json = self.get_meta("indexed_corpora")
+
+        requested_labels = [c[3] for c in corpora]
+        try:
+            stored_corpora = json.loads(stored_corpora_json) if stored_corpora_json else []
+        except Exception:
+            stored_corpora = []
+
+        return (
+            stored == fp
+            and k_stored == str(self.k)
+            and spec == EXTRACTION_SPEC_VERSION
+            and stored_corpora == requested_labels
+        )
 
     def close(self) -> None:
         self.conn.close()
@@ -535,7 +610,7 @@ class ShingleIndex:
 
         # Compute fingerprint (content sensitive but cheap)
         fp = self._compute_fingerprint(sources_conn, corpora)
-        if self.corpus_hash_matches(fp):
+        if self.corpus_hash_matches(fp, corpora):
             if progress:
                 print("Index up-to-date for corpus hash; skipping rebuild.")
             return fp
@@ -564,10 +639,12 @@ class ShingleIndex:
                     shingle_to_chunks[sh].add((corpus_label, cid))
                 total_shingles += len(shs)
                 # insert postings (char_offset 0 is sufficient; LCS recovers exact)
+                # deduplicate postings to unique (shingle_key, corpus, chunk_id) before insert
                 if shs:
+                    unique_shs = list(dict.fromkeys(shs))
                     self.conn.executemany(
                         "INSERT INTO postings (shingle_key, corpus, chunk_id, char_offset) VALUES (?, ?, ?, 0)",
-                        [(sh, corpus_label, cid) for sh in shs],
+                        [(sh, corpus_label, cid) for sh in unique_shs],
                     )
             if progress:
                 print(f"  indexed {len(rows)} from {corpus_label} ({table})")
@@ -581,6 +658,7 @@ class ShingleIndex:
         self.set_meta("k", str(self.k))
         self.set_meta("extraction_spec", EXTRACTION_SPEC_VERSION)
         self.set_meta("total_shingles", str(total_shingles))
+        self.set_meta("indexed_corpora", json.dumps([c[3] for c in corpora]))
         self.conn.commit()
 
         if progress:
@@ -659,9 +737,31 @@ def compute_metrics(
     verify_quote_fn: Callable[[str, str], float] | None = None,
 ) -> VerbatimReport:
     """Core deterministic computation. Returns full report (no side effects)."""
+    indexed_corpora_meta = index.get_meta("indexed_corpora")
+    if indexed_corpora_meta is None:
+        raise ValueError("Missing indexed_corpora in index metadata")
+    try:
+        indexed_corpora = json.loads(indexed_corpora_meta)
+    except Exception:
+        indexed_corpora = []
+
+    corpus_hash = index.get_meta("corpus_hash", "")
+
+    # Check if scope is non-default
+    default_corpora = FULL_CORPORA + SELF_CORPORA
+    default_labels = {c[3] for c in default_corpora}
+    scope_note = None
+    if set(indexed_corpora) != default_labels:
+        scope_note = (
+            "WARNING: DF counts and the verify_quote allowlist are computed over the scoped corpus only. "
+            "Ratios are NOT comparable to full-index runs and MUST NOT set enforcement thresholds without a full-index delta check."
+        )
+
     if verify_quote_fn is None:
+
         def _no_verify(author: str, txt: str) -> float:
             return 0.0
+
         verify_quote_fn = _no_verify
 
     total = len(module_tokens)
@@ -675,6 +775,9 @@ def compute_metrics(
             max_contiguous_run=0,
             max_contiguous_run_df_filtered=0,
             overlap_ratio=0.0,
+            corpus_hash=corpus_hash,
+            indexed_corpora=indexed_corpora,
+            scope_note=scope_note,
         )
 
     mod_shingles = make_shingles(module_tokens, index.k)
@@ -705,7 +808,7 @@ def compute_metrics(
             # pick first (now stable due to ORDER BY in postings) for legacy LCS
             c, cid = posts[0]
             candidate_sources.append((c, cid, sh))
-            for (c2, cid2) in posts:
+            for c2, cid2 in posts:
                 source_positions[(c2, cid2)].update(modposs)
             # verify using real source author (not empty) + shingle text for attribution
             # require matched source author for a real attribution
@@ -715,7 +818,9 @@ def compute_metrics(
                     tbl = "textbooks" if c2 == "textbooks" else ("literary_texts" if c2 == "literary" else None)
                     idc = "chunk_id"
                     if tbl:
-                        row = sources_conn.execute(f"SELECT author FROM {tbl} WHERE {idc} = ? LIMIT 1", (cid2,)).fetchone()
+                        row = sources_conn.execute(
+                            f"SELECT author FROM {tbl} WHERE {idc} = ? LIMIT 1", (cid2,)
+                        ).fetchone()
                         author = str(row[0] or "") if row else ""
                 except Exception:
                     author = ""
@@ -725,16 +830,17 @@ def compute_metrics(
                     for p in modposs:
                         for t in range(p, min(p + index.k, total)):
                             verified_token_positions.add(t)
-                    verified_excludes.append({
-                        "text": sh,
-                        "author": author,
-                        "corpus": c2,
-                        "chunk_id": cid2,
-                        "conf": conf,
-                        "excluded_from_ratio": True,
-                    })
+                    verified_excludes.append(
+                        {
+                            "text": sh,
+                            "author": author,
+                            "corpus": c2,
+                            "chunk_id": cid2,
+                            "conf": conf,
+                            "excluded_from_ratio": True,
+                        }
+                    )
                     # do not break: allow all matching shingles of the quote to be recorded/excluded
-
 
     # raw max run: per source chunk (bug7), high-DF retained via source_positions
     max_raw = 0
@@ -761,7 +867,7 @@ def compute_metrics(
 
     # overlap tokens for ratio: ONLY shingles that actually matched postings (bug1), minus DF, minus verified (bug2)
     covered: set[int] = set()
-    for sh in (hit_shingles - df_excluded):
+    for sh in hit_shingles - df_excluded:
         for p in sh_to_pos[sh]:
             for t in range(p, min(p + index.k, total)):
                 if t not in verified_token_positions:
@@ -817,6 +923,9 @@ def compute_metrics(
         df_excluded_count=len(df_excluded),
         verified_quote_excludes=verified_excludes,
         notes=[f"DF allowlist N={df_n} (ratio only)", "LCS used for true max run"],
+        corpus_hash=corpus_hash,
+        indexed_corpora=indexed_corpora,
+        scope_note=scope_note,
     )
     return report
 
@@ -844,6 +953,7 @@ def _chained_run_len(tokens: list[str], hit_start_positions: set[int], k: int) -
 
 # ----------------------------- CLI + sweep ---------------------------------
 
+
 def open_sources(db_path: Path | str) -> sqlite3.Connection:
     conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
@@ -852,6 +962,7 @@ def open_sources(db_path: Path | str) -> sqlite3.Connection:
 
 def make_default_verify_fn(sources_db: Path | str) -> Callable[[str, str], float]:
     """Best-effort verify_quote using direct SQL + difflib (no rapidfuzz dep)."""
+
     def _fn(author: str, text: str) -> float:
         if not text or len(text) < 6:
             return 0.0
@@ -875,6 +986,7 @@ def make_default_verify_fn(sources_db: Path | str) -> Callable[[str, str], float
             return best
         except Exception:
             return 0.0
+
     return _fn
 
 
@@ -885,6 +997,7 @@ def analyze_module(
     k: int = K_DEFAULT,
     df_n: int = DF_N_DEFAULT,
     verify_fn: Callable[[str, str], float] | None = None,
+    corpora: list[tuple[str, str, str, str]] | None = None,
 ) -> VerbatimReport:
     """End-to-end for one module (used by CLI and tests)."""
     spans, _meta = extract_module_content(module_path)
@@ -893,12 +1006,10 @@ def analyze_module(
 
     sources_conn = open_sources(sources_db)
     if index_db is None:
-        # derive stable index location (next to sources or in /tmp for tests)
-        idx_name = f"verbatim_shingle_k{k}_{Path(sources_db).stem}.db"
-        index_db = Path(sources_db).parent / idx_name
+        index_db = get_default_index_db_path(sources_db, k, corpora)
     idx = ShingleIndex(index_db, k=k)
 
-    fp = idx.build(sources_conn, progress=False)
+    fp = idx.build(sources_conn, corpora=corpora, progress=False)
     # ensure matches
     _ = fp
 
@@ -923,8 +1034,9 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         index_db=args.index_db,
         k=args.k,
         df_n=args.df_n,
+        corpora=args.corpora_resolved,
     )
-    print(json.dumps({
+    out = {
         "module": rpt.module,
         "k": rpt.k,
         "df_n": rpt.df_n,
@@ -937,15 +1049,20 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         "verified_quote_excludes": rpt.verified_quote_excludes,
         "notes": rpt.notes,
         "extraction_spec": rpt.extraction_spec,
-    }, ensure_ascii=False, indent=2))
+        "corpus_hash": rpt.corpus_hash,
+        "indexed_corpora": rpt.indexed_corpora,
+    }
+    if rpt.scope_note is not None:
+        out["scope_note"] = rpt.scope_note
+    print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0
 
 
 def cmd_build_index(args: argparse.Namespace) -> int:
     sources_conn = open_sources(args.sources_db)
-    idx_path = args.index_db or (Path(args.sources_db).parent / f"verbatim_shingle_k{args.k}.db")
+    idx_path = args.index_db or get_default_index_db_path(args.sources_db, args.k, args.corpora_resolved)
     idx = ShingleIndex(idx_path, k=args.k)
-    fp = idx.build(sources_conn, progress=True)
+    fp = idx.build(sources_conn, corpora=args.corpora_resolved, progress=True)
     print(f"OK corpus_hash={fp} index={idx_path}")
     sources_conn.close()
     idx.close()
@@ -963,9 +1080,9 @@ def cmd_baseline_sweep(args: argparse.Namespace) -> int:
     modules = sorted(modules)[: args.limit or 9999]
 
     sources_conn = open_sources(args.sources_db)
-    idx_path = args.index_db or (Path(args.sources_db).parent / f"verbatim_shingle_k{args.k}.db")
+    idx_path = args.index_db or get_default_index_db_path(args.sources_db, args.k, args.corpora_resolved)
     idx = ShingleIndex(idx_path, k=args.k)
-    _ = idx.build(sources_conn, progress=args.verbose)
+    _ = idx.build(sources_conn, corpora=args.corpora_resolved, progress=args.verbose)
 
     results = []
     for md in modules:
@@ -973,16 +1090,43 @@ def cmd_baseline_sweep(args: argparse.Namespace) -> int:
         toks = module_tokens_from_spans(spans)
         rpt = compute_metrics(toks, idx, sources_conn, df_n=args.df_n)
         rpt.module = f"{md.parent.parent.name}/{md.parent.name}"
-        results.append({
-            "module": rpt.module,
-            "tokens": rpt.total_prose_tokens,
-            "max_run": rpt.max_contiguous_run,
-            "ratio": rpt.overlap_ratio,
-        })
+        results.append(
+            {
+                "module": rpt.module,
+                "tokens": rpt.total_prose_tokens,
+                "max_run": rpt.max_contiguous_run,
+                "ratio": rpt.overlap_ratio,
+            }
+        )
         if args.verbose:
             print(rpt.module, rpt.max_contiguous_run, rpt.overlap_ratio)
 
-    print(json.dumps({"count": len(results), "results": results[:50]}, indent=2, ensure_ascii=False))
+    corpus_hash = idx.get_meta("corpus_hash", "")
+    indexed_corpora_json = idx.get_meta("indexed_corpora")
+    if indexed_corpora_json is None:
+        raise ValueError("Missing indexed_corpora in index metadata")
+    try:
+        indexed_corpora = json.loads(indexed_corpora_json)
+    except Exception:
+        indexed_corpora = []
+
+    out = {
+        "count": len(results),
+        "results": results[:50],
+        "corpus_hash": corpus_hash,
+        "indexed_corpora": indexed_corpora,
+        "extraction_spec": EXTRACTION_SPEC_VERSION,
+    }
+
+    default_corpora = FULL_CORPORA + SELF_CORPORA
+    default_labels = {c[3] for c in default_corpora}
+    if set(indexed_corpora) != default_labels:
+        out["scope_note"] = (
+            "WARNING: DF counts and the verify_quote allowlist are computed over the scoped corpus only. "
+            "Ratios are NOT comparable to full-index runs and MUST NOT set enforcement thresholds without a full-index delta check."
+        )
+
+    print(json.dumps(out, indent=2, ensure_ascii=False))
     sources_conn.close()
     idx.close()
     return 0
@@ -994,6 +1138,12 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--index-db", default=None, help="Explicit index sqlite path")
     p.add_argument("--k", type=int, default=K_DEFAULT, help="Shingle size (words)")
     p.add_argument("--df-n", type=int, default=DF_N_DEFAULT, help="DF threshold for ratio allowlist")
+    p.add_argument(
+        "--corpus",
+        action="append",
+        default=None,
+        help="Corpus to index/analyze (repeatable or comma-separated list of: textbooks, literary, external, ukrainian_wiki, wikipedia)",
+    )
 
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -1015,6 +1165,12 @@ def build_argparser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_argparser()
     args = parser.parse_args(argv)
+
+    try:
+        args.corpora_resolved = parse_corpora_labels(args.corpus)
+    except argparse.ArgumentTypeError as e:
+        parser.error(str(e))
+
     return args.func(args)
 
 

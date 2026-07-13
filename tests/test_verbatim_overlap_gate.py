@@ -171,8 +171,15 @@ def test_hermetic_verbatim_copy_flagged(tmp_path: Path):
 
     # Simulate module that copied a long contiguous chunk
     copy = "Біля вокзалу я раптом зустріла однокласника. Він усміхнувся і запропонував піти разом."
-    spans = [ExtractedSpan(text=copy, norm=normalize_text(copy), tokens=tokenize(normalize_text(copy)),
-                           source="test.md:10-20", kind="test")]
+    spans = [
+        ExtractedSpan(
+            text=copy,
+            norm=normalize_text(copy),
+            tokens=tokenize(normalize_text(copy)),
+            source="test.md:10-20",
+            kind="test",
+        )
+    ]
     mod_tokens = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "idx.db", k=4)  # smaller k for toy
@@ -194,8 +201,9 @@ def test_paraphrase_is_clean(tmp_path: Path):
     _seed_corpus(conn, [{"table": "literary_texts", "chunk_id": "lit-42", "text": corpus_text, "author": "Тест"}])
 
     para = "Ми неквапно крокували вузьким провулком і раптом почули звуки. Двері зненацька розчахнулися."
-    spans = [ExtractedSpan(text=para, norm=normalize_text(para), tokens=tokenize(normalize_text(para)),
-                           source="p", kind="p")]
+    spans = [
+        ExtractedSpan(text=para, norm=normalize_text(para), tokens=tokenize(normalize_text(para)), source="p", kind="p")
+    ]
     mod_tokens = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "idx2.db", k=5)
@@ -212,10 +220,23 @@ def test_paraphrase_is_clean(tmp_path: Path):
 def test_attributed_quote_allowlisted_in_ratio(tmp_path: Path):
     conn, _dbp = _tiny_sources_db()
     qtext = "І сниться мені, що я лечу."
-    _seed_corpus(conn, [{"table": "literary_texts", "chunk_id": "shev-1", "text": "І сниться мені, що я лечу крізь ніч.", "author": "Шевченко"}])
+    _seed_corpus(
+        conn,
+        [
+            {
+                "table": "literary_texts",
+                "chunk_id": "shev-1",
+                "text": "І сниться мені, що я лечу крізь ніч.",
+                "author": "Шевченко",
+            }
+        ],
+    )
 
-    spans = [ExtractedSpan(text=qtext, norm=normalize_text(qtext), tokens=tokenize(normalize_text(qtext)),
-                           source="q", kind="quote")]
+    spans = [
+        ExtractedSpan(
+            text=qtext, norm=normalize_text(qtext), tokens=tokenize(normalize_text(qtext)), source="q", kind="quote"
+        )
+    ]
     mod_tokens = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "idxq.db", k=3)
@@ -249,8 +270,15 @@ def test_df_gaming_long_run_still_flagged_by_max_contiguous(tmp_path: Path):
     _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "long-1", "text": long_run}])
 
     # Module copies the long run
-    spans = [ExtractedSpan(text=long_run, norm=normalize_text(long_run), tokens=tokenize(normalize_text(long_run)),
-                           source="m", kind="m")]
+    spans = [
+        ExtractedSpan(
+            text=long_run,
+            norm=normalize_text(long_run),
+            tokens=tokenize(normalize_text(long_run)),
+            source="m",
+            kind="m",
+        )
+    ]
     mod_tokens = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "idxdf.db", k=4)
@@ -270,8 +298,15 @@ def test_copied_activity_is_flagged(tmp_path: Path):
     _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "actbook-7", "text": act_text + " і слухати музику."}])
 
     # Simulate extracted activity item
-    spans = [ExtractedSpan(text=act_text, norm=normalize_text(act_text), tokens=tokenize(normalize_text(act_text)),
-                           source="activities.yaml#act-1", kind="activity")]
+    spans = [
+        ExtractedSpan(
+            text=act_text,
+            norm=normalize_text(act_text),
+            tokens=tokenize(normalize_text(act_text)),
+            source="activities.yaml#act-1",
+            kind="activity",
+        )
+    ]
     mod_tokens = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "idxact.db", k=4)
@@ -285,10 +320,13 @@ def test_copied_activity_is_flagged(tmp_path: Path):
 
 def test_index_build_is_deterministic(tmp_path: Path):
     conn, _dbp = _tiny_sources_db()
-    _seed_corpus(conn, [
-        {"table": "literary_texts", "chunk_id": "d1", "text": "Сонце сідає за обрій. Птахи замовкають."},
-        {"table": "literary_texts", "chunk_id": "d2", "text": "Вітер гуляє в полі. Дерева шумлять."},
-    ])
+    _seed_corpus(
+        conn,
+        [
+            {"table": "literary_texts", "chunk_id": "d1", "text": "Сонце сідає за обрій. Птахи замовкають."},
+            {"table": "literary_texts", "chunk_id": "d2", "text": "Вітер гуляє в полі. Дерева шумлять."},
+        ],
+    )
     idx1 = ShingleIndex(tmp_path / "d1.db", k=3)
     fp1 = idx1.build(conn)
     p1 = idx1.conn.execute("SELECT COUNT(*) FROM postings").fetchone()[0]
@@ -307,7 +345,9 @@ def test_index_build_is_deterministic(tmp_path: Path):
 def test_full_extract_module_and_analyze_hermetic(tmp_path: Path):
     conn, _dbp = _tiny_sources_db()
     # Seed a chunk that will verbatim match something in real A1 (but we use synthetic for isolation)
-    _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "toy-1", "text": "Ходімо в кіно в суботу. Добре. О котрій?"}])
+    _seed_corpus(
+        conn, [{"table": "textbooks", "chunk_id": "toy-1", "text": "Ходімо в кіно в суботу. Добре. О котрій?"}]
+    )
 
     # Use real A1 module extraction (it must not crash and must surface UA)
     spans, meta = extract_module_content(A1_FREE_TIME)
@@ -333,7 +373,9 @@ def test_chained_run_and_lcs_recovery(tmp_path: Path):
 
     # module has almost exact but with one high-DF break
     mod = "один два три чотири п'ять шість сім вісім дев'ять десять"
-    spans = [ExtractedSpan(text=mod, norm=normalize_text(mod), tokens=tokenize(normalize_text(mod)), source="s", kind="s")]
+    spans = [
+        ExtractedSpan(text=mod, norm=normalize_text(mod), tokens=tokenize(normalize_text(mod)), source="s", kind="s")
+    ]
     toks = module_tokens_from_spans(spans)
 
     idx = ShingleIndex(tmp_path / "lcs.db", k=3)
@@ -424,7 +466,9 @@ def test_L698_overlap_ratio_zero_when_no_matches(tmp_path: Path):
     _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "u1", "text": "Сонце світить."}])
     # module prose with no overlap at all (unique tokens)
     uniq = "Каламар плаває в океані глибоко під водою шукаючи скарби."
-    spans = [ExtractedSpan(text=uniq, norm=normalize_text(uniq), tokens=tokenize(normalize_text(uniq)), source="t", kind="t")]
+    spans = [
+        ExtractedSpan(text=uniq, norm=normalize_text(uniq), tokens=tokenize(normalize_text(uniq)), source="t", kind="t")
+    ]
     toks = module_tokens_from_spans(spans)
     idx = ShingleIndex(tmp_path / "zero.db", k=4)
     idx.build(conn)
@@ -445,7 +489,9 @@ def test_L741_verify_quote_excludes_from_ratio_truthfully(tmp_path: Path):
     conn, _ = _tiny_sources_db()
     q = "І сниться мені що я лечу крізь ніч."
     _seed_corpus(conn, [{"table": "literary_texts", "chunk_id": "sh1", "text": q + " ще слова.", "author": "Шевченко"}])
-    spans = [ExtractedSpan(text=q, norm=normalize_text(q), tokens=tokenize(normalize_text(q)), source="mod:1", kind="quote")]
+    spans = [
+        ExtractedSpan(text=q, norm=normalize_text(q), tokens=tokenize(normalize_text(q)), source="mod:1", kind="quote")
+    ]
     toks = module_tokens_from_spans(spans)
     idx = ShingleIndex(tmp_path / "ver.db", k=3)
     idx.build(conn)
@@ -485,7 +531,9 @@ def test_L686_max_contiguous_run_per_chunk_not_summed(tmp_path: Path):
         {"table": "textbooks", "chunk_id": "cD", "text": "p3 p4 p5 fillerD"},
     ]
     _seed_corpus(conn, chunks)
-    spans = [ExtractedSpan(text=mod, norm=normalize_text(mod), tokens=tokenize(normalize_text(mod)), source="m", kind="m")]
+    spans = [
+        ExtractedSpan(text=mod, norm=normalize_text(mod), tokens=tokenize(normalize_text(mod)), source="m", kind="m")
+    ]
     toks = module_tokens_from_spans(spans)
     idx = ShingleIndex(tmp_path / "run.db", k=3)
     idx.build(conn)
@@ -566,6 +614,7 @@ def test_L307_extract_activities_prompt_and_options_text():
     Golden: the prompt text e.g. '___ ти?' MUST appear in extracted spans.
     """
     from pathlib import Path
+
     yaml_p = Path("curriculum/l2-uk-en/a1/questions/activities.yaml")
     spans = extract_from_activities_yaml(yaml_p)
     texts = [s.text for s in spans]
@@ -579,3 +628,184 @@ def test_L307_extract_activities_prompt_and_options_text():
     mod_spans, _meta = extract_module_content("curriculum/l2-uk-en/a1/questions")
     mod_texts = " ".join(s.text for s in mod_spans)
     assert "___ ти?" in mod_texts or any("___ ти?" in s.norm for s in mod_spans)
+
+
+def test_postings_deduplication_metrics_identical(tmp_path: Path):
+    import json
+
+    from scripts.audit.verbatim_overlap_gate import make_shingles
+
+    conn, _ = _tiny_sources_db()
+    # A chunk with highly repeated shingles
+    repeated_txt = "котик грається м'ячиком котик грається м'ячиком котик грається м'ячиком"
+    _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "rep-1", "text": repeated_txt}])
+
+    # 1. Build index with our updated deduplicated code
+    idx_dedup = ShingleIndex(tmp_path / "dedup.db", k=3)
+    idx_dedup.build(conn)
+
+    # 2. Build a duplicate-postings index manually to simulate the old behavior
+    idx_dup = ShingleIndex(tmp_path / "dup.db", k=3)
+    # We populate it manually without deduplication
+    idx_dup.conn.executescript("DELETE FROM postings; DELETE FROM shingle_df; DELETE FROM meta;")
+    # Get the shingles
+    toks = tokenize(normalize_text(repeated_txt))
+    shs = make_shingles(toks, 3)
+    # Insert multiple postings for the same shingle from the same chunk
+    idx_dup.conn.executemany(
+        "INSERT INTO postings (shingle_key, corpus, chunk_id, char_offset) VALUES (?, 'textbooks', 'rep-1', 0)",
+        [(sh,) for sh in shs],
+    )
+    # Build df manually
+    shingle_to_chunks = {}
+    for sh in shs:
+        if sh not in shingle_to_chunks:
+            shingle_to_chunks[sh] = 1  # df is 1 chunk
+    df_rows = [(sh, 1) for sh in shingle_to_chunks]
+    idx_dup.conn.executemany("INSERT OR REPLACE INTO shingle_df (shingle_key, df) VALUES (?, ?)", df_rows)
+    idx_dup.set_meta("corpus_hash", "some-hash")
+    idx_dup.set_meta("k", "3")
+    idx_dup.set_meta("extraction_spec", EXTRACTION_SPEC_VERSION)
+    idx_dup.set_meta("indexed_corpora", json.dumps(["textbooks"]))
+    idx_dup.conn.commit()
+
+    # Now compute metrics for a query/module using both indices
+    module_query = "котик грається м'ячиком котик"
+    mod_toks = tokenize(normalize_text(module_query))
+
+    rpt_dedup = compute_metrics(mod_toks, idx_dedup, conn, df_n=5)
+    rpt_dup = compute_metrics(mod_toks, idx_dup, conn, df_n=5)
+
+    assert rpt_dedup.overlap_ratio == rpt_dup.overlap_ratio
+    assert rpt_dedup.max_contiguous_run == rpt_dup.max_contiguous_run
+    assert rpt_dedup.max_contiguous_run_df_filtered == rpt_dup.max_contiguous_run_df_filtered
+
+    conn.close()
+    idx_dedup.close()
+    idx_dup.close()
+
+
+def test_cli_corpus_scoping_options():
+    import argparse
+
+    from scripts.audit.verbatim_overlap_gate import parse_corpora_labels
+
+    # Test valid parsing: textbooks,literary comma-separated
+    res1 = parse_corpora_labels(["textbooks,literary"])
+    assert len(res1) == 2
+    assert res1[0][3] == "textbooks"
+    assert res1[1][3] == "literary"
+
+    # Test repeatable options
+    res2 = parse_corpora_labels(["textbooks", "external"])
+    assert len(res2) == 2
+    assert res2[0][3] == "textbooks"
+    assert res2[1][3] == "external"
+
+    # Test combination of both
+    res3 = parse_corpora_labels(["textbooks,literary", "external"])
+    assert len(res3) == 3
+    assert res3[0][3] == "textbooks"
+    assert res3[1][3] == "literary"
+    assert res3[2][3] == "external"
+
+    # Test unknown corpus raises argparse.ArgumentTypeError
+    import pytest
+
+    with pytest.raises(argparse.ArgumentTypeError) as excinfo:
+        parse_corpora_labels(["textbooks,invalid_corpus"])
+    assert "Invalid corpus label(s): invalid_corpus" in str(excinfo.value)
+
+
+def test_index_db_filename_scoping(tmp_path: Path):
+    from scripts.audit.verbatim_overlap_gate import get_default_index_db_path
+
+    sources_db = tmp_path / "sources.db"
+
+    # Default (no corpora, or FULL_CORPORA + SELF_CORPORA)
+    path_def1 = get_default_index_db_path(sources_db, k=8)
+    assert path_def1.name == "verbatim_shingle_k8.db"
+
+    # Scoped non-default
+    from scripts.audit.verbatim_overlap_gate import ALL_POSSIBLE_CORPORA
+
+    scoped = [ALL_POSSIBLE_CORPORA["textbooks"], ALL_POSSIBLE_CORPORA["literary"]]
+    path_scoped = get_default_index_db_path(sources_db, k=8, corpora=scoped)
+    # alphabet sorted: literary, textbooks
+    assert path_scoped.name == "verbatim_shingle_k8_literary-textbooks.db"
+
+
+def test_missing_indexed_corpora_raises_hard_error(tmp_path: Path):
+    import pytest
+
+    conn, _ = _tiny_sources_db()
+    _seed_corpus(conn, [{"table": "textbooks", "chunk_id": "t-1", "text": "це просто тест"}])
+
+    idx = ShingleIndex(tmp_path / "idx_missing.db", k=3)
+    idx.build(conn)
+
+    # Manually delete indexed_corpora from meta table
+    idx.conn.execute("DELETE FROM meta WHERE key = 'indexed_corpora'")
+    idx.conn.commit()
+
+    # Try to compute metrics
+    mod_toks = tokenize(normalize_text("це просто тест"))
+    with pytest.raises(ValueError) as excinfo:
+        compute_metrics(mod_toks, idx, conn, df_n=5)
+    assert "Missing indexed_corpora in index metadata" in str(excinfo.value)
+
+    conn.close()
+    idx.close()
+
+
+def test_cross_scope_df_exclusion_warning(tmp_path: Path):
+    from scripts.audit.verbatim_overlap_gate import ALL_POSSIBLE_CORPORA, FULL_CORPORA, SELF_CORPORA
+
+    conn, _ = _tiny_sources_db()
+
+    # We want a phrase to appear in textbooks (2 times) and literary_texts (4 times)
+    # Total DF in full index = 6
+    # Total DF in textbooks index = 2
+    # If df_n = 5:
+    # Full index: DF (6) >= 5, so phrase is excluded from ratio.
+    # Textbooks index: DF (2) < 5, so phrase is NOT excluded from ratio.
+
+    phrase = "сонце світить над лісом весело"
+    # Seed 2 textbook chunks with the phrase
+    for i in range(2):
+        _seed_corpus(conn, [{"table": "textbooks", "chunk_id": f"tb-{i}", "text": phrase + f" {i}"}])
+    # Seed 4 literary chunks with the phrase
+    for i in range(4):
+        _seed_corpus(conn, [{"table": "literary_texts", "chunk_id": f"lit-{i}", "text": phrase + f" {i}"}])
+
+    # Module query
+    mod_toks = tokenize(normalize_text(phrase))
+
+    # --- 1. FULL INDEX ---
+    idx_full = ShingleIndex(tmp_path / "full.db", k=3)
+    idx_full.build(conn, corpora=FULL_CORPORA + SELF_CORPORA)
+
+    rpt_full = compute_metrics(mod_toks, idx_full, conn, df_n=5)
+    # The shingles are excluded because DF=6 >= 5. Ratio should be 0.0
+    assert rpt_full.overlap_ratio == 0.0
+    # No scope note since it is default/full
+    assert rpt_full.scope_note is None
+    assert set(rpt_full.indexed_corpora) == {"textbooks", "literary", "external", "ukrainian_wiki"}
+
+    # --- 2. SCOPED INDEX ---
+    idx_scoped = ShingleIndex(tmp_path / "scoped.db", k=3)
+    # index textbooks only
+    idx_scoped.build(conn, corpora=[ALL_POSSIBLE_CORPORA["textbooks"]])
+
+    rpt_scoped = compute_metrics(mod_toks, idx_scoped, conn, df_n=5)
+    # The shingles are NOT excluded because DF=2 < 5. Ratio should be > 0.0
+    assert rpt_scoped.overlap_ratio > 0.0
+    # Warning and labeling should appear
+    assert rpt_scoped.scope_note is not None
+    assert "WARNING" in rpt_scoped.scope_note
+    assert "DF counts" in rpt_scoped.scope_note
+    assert rpt_scoped.indexed_corpora == ["textbooks"]
+
+    conn.close()
+    idx_full.close()
+    idx_scoped.close()
