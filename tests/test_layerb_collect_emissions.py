@@ -345,6 +345,50 @@ def test_collector_extracts_bridge_sidecar_without_polluting_response() -> None:
     assert "_bridge_substituted" not in emission["response"]
 
 
+def test_collector_extracts_detector_sidecar_by_known_pair_and_deduplicates() -> None:
+    module, response = _module_response_with_mixed_injection(injection_observed=False)
+    response["_evidence_pattern_hits"] = [
+        {
+            "fact_check_id": "mixed-fact",
+            "candidate_id": "injection-candidate",
+            "pattern": r"\bignore\s+instructions?\b",
+        },
+        {
+            "fact_check_id": "mixed-fact",
+            "candidate_id": "injection-candidate",
+            "pattern": r"\bignore\s+instructions?\b",
+        },
+        {
+            "fact_check_id": "unknown-fact",
+            "candidate_id": "injection-candidate",
+            "pattern": r"\bignore\s+instructions?\b",
+        },
+    ]
+
+    normalized, _substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
+    hits = layerb_collect_emissions._evidence_pattern_hits_by_case(module, response)
+    emission = layerb_collect_emissions._emission(
+        module.cases[0],
+        call_id="bridge-call",
+        observed={"prompt_tokens": 1.0, "completion_tokens": 1.0, "cost_usd": 0.0},
+        response=normalized["mixed-case"],
+        status="completed",
+        evidence_pattern_hits=hits["mixed-case"],
+    )
+
+    assert hits == {
+        "mixed-case": [
+            {
+                "fact_check_id": "mixed-fact",
+                "candidate_id": "injection-candidate",
+                "pattern": r"\bignore\s+instructions?\b",
+            }
+        ]
+    }
+    assert emission["evidence_pattern_hits"] == hits["mixed-case"]
+    assert "_evidence_pattern_hits" not in emission["response"]
+
+
 def test_collector_keeps_envelope_mismatches_module_fatal() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
     response["fact_checks"][0]["fact_check_id"] = "unexpected-fact"
