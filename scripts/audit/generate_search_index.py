@@ -624,6 +624,24 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
+    # Guard: the default --out target is the DB-derived reviewed-articles index
+    # (rows carry "t"). A plain (legacy manifest-lemma) invocation must never
+    # silently overwrite it — that shipped article-format loss in #5080 (caught
+    # by test_committed_browse_records_remain_distinct_from_article_search_entries
+    # only on the NEXT PR that ran pytest). Pass --db data/atlas.db to refresh
+    # the articles index; the legacy mode needs a non-default --out.
+    if args.out == DEFAULT_SEARCH_OUT and args.out.exists():
+        try:
+            existing = json.loads(args.out.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            existing = None
+        if isinstance(existing, list) and existing and all("t" in row for row in existing):
+            raise SystemExit(
+                f"refusing legacy manifest-lemma run: {args.out} currently holds the "
+                "DB-derived reviewed-articles index (rows carry 't'). Use "
+                "--db data/atlas.db to refresh it, or pass an explicit non-default --out."
+            )
+
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
     if not isinstance(entries, list):
