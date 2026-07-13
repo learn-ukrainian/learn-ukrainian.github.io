@@ -27,6 +27,9 @@ paths:
 - `mcp__sources__search_heritage` — **canonical heritage-defense lookup** for verifying potential archaisms, historisms, dialectisms, and inherited Ukrainian words against Russianism/surzhyk false positives. Merges Грінченко, ЕСУМ, slovnyk.me, and Антоненко-Давидович evidence.
 
 > Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
+>
+> **Note on graceful degradation**: Dense reranking inside `mcp__sources__search_sources` is a degradable enhancement. On systems under 32GB RAM or if `SOURCES_MCP_NO_MLX=1` is specified, the MLX embedding worker will not auto-spawn, and search queries will degrade gracefully and silently to standard SQLite FTS5-only ranking instead of raising an exception.
+
 
 ## Dictionary tools (for quality and vocabulary)
 - `mcp__sources__check_russian_shadow` — Detects Russian-pattern morphology (Surzhyk / false forms) in Ukrainian text without ingesting Russian text. Uses `pymorphy3` heuristic modeling.
