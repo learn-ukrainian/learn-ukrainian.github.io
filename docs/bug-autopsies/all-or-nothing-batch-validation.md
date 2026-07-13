@@ -4,7 +4,7 @@
 `scripts/audit/layerb_collect_emissions.py` · **PRs:** #5021 (collector instance), bridge fix (this
 autopsy rides in its PR) · **Epic:** judge qualification (Layer B).
 
-## What broke (symptom)
+## What broke
 
 The 23-case adversarial probe of the Codex-subscription judge FAILED
 (`PROBE_TERMINAL_DECISION_MISMATCH` on `digit-17-not-18`) even though the judge was demonstrably
@@ -16,7 +16,7 @@ Had this shipped, production would over-AUDIT constantly: any module where the j
 imperfect support span would lose the entire module's judgments — a silent recall collapse wearing a
 fail-closed uniform.
 
-## Why (root cause)
+## Why
 
 Two independent components implemented the same defective shape:
 
@@ -37,7 +37,7 @@ sibling*. Every test constructed either an all-valid or an all/critically-invali
 case (N−1 valid + 1 invalid) was the production-dominant case and had zero coverage. Only the LIVE
 run caught it (#M-4a: verify the real artifact).
 
-## Prevention (what stops this category)
+## Prevention
 
 1. **For any fail-closed batch validator, the test matrix MUST include the mixed batch**: one invalid
    element among N valid → assert the N−1 valid elements SURVIVE verbatim and only the invalid one is
