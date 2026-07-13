@@ -400,6 +400,28 @@ class TestCheckPlanAdherence:
         result = check_plan_adherence(md_path, plan_path, activities_path)
         assert result.passed
 
+    def test_v2_activity_undercount_is_detected(self, tmp_path):
+        plan = {"activity_hints": [{"type": "quiz", "items": 4}]}
+        plan_path = tmp_path / "plan.yaml"
+        plan_path.write_text(yaml.safe_dump(plan), encoding="utf-8")
+
+        md_path = tmp_path / "module.md"
+        md_path.write_text("## Вступ\nТекст модуля.\n", encoding="utf-8")
+
+        activities = {
+            "version": 2,
+            "module": "test-module",
+            "inline": [{"type": "quiz", "items": [{}, {}, {}]}],
+            "workbook": [],
+        }
+        activities_path = tmp_path / "activities.yaml"
+        activities_path.write_text(yaml.safe_dump(activities), encoding="utf-8")
+
+        result = check_plan_adherence(md_path, plan_path, activities_path)
+
+        assert any(issue.check_type == "ACTIVITY_UNDERCOUNT" for issue in result.issues)
+        assert not result.passed
+
     def test_missing_plan_file(self, tmp_path):
         md_path = tmp_path / "module.md"
         md_path.write_text("content", encoding="utf-8")

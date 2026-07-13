@@ -7,6 +7,7 @@ Catches non-conforming activity formats during the audit workflow.
 Issue: #397
 """
 
+import copy
 import json
 import re
 from pathlib import Path
@@ -134,6 +135,94 @@ def get_activity_schema(activity_type: str, base_schema: dict) -> dict | None:
         if key.startswith(f"{activity_type}-"):
             return definitions[key]
     return definitions.get(activity_type)
+
+
+def _plan_path_for_activity_yaml(yaml_path: Path, level: str) -> Path | None:
+    """Return the immutable plan path for a module-local activity file."""
+    level_dir = next((parent for parent in yaml_path.parents if parent.name == level), None)
+    if level_dir is None:
+        return None
+
+    try:
+        relative_path = yaml_path.relative_to(level_dir)
+    except ValueError:
+        return None
+
+    if len(relative_path.parts) < 2:
+        return None
+
+    slug = yaml_path.stem if relative_path.parts[0] == "activities" else relative_path.parts[0]
+
+    return level_dir.parent / "plans" / level / f"{slug}.yaml"
+
+
+def _plan_activity_minimums(yaml_path: Path, level: str) -> dict[str, int]:
+    """Load explicit per-type item minimums from the module's source plan."""
+    plan_path = _plan_path_for_activity_yaml(yaml_path, level)
+    if plan_path is None or not plan_path.exists():
+        return {}
+
+    try:
+        with open(plan_path, encoding="utf-8") as f:
+            plan = yaml.safe_load(f)
+    except (OSError, yaml.YAMLError):
+        return {}
+
+    if not isinstance(plan, dict):
+        return {}
+
+    minima: dict[str, int] = {}
+    for hint in plan.get("activity_hints", []):
+        if not isinstance(hint, dict):
+            continue
+        activity_type = hint.get("type")
+        raw_items = hint.get("items")
+        if not isinstance(activity_type, str) or raw_items is None:
+            continue
+        try:
+            item_minimum = int(str(raw_items).rstrip("+").strip())
+        except (TypeError, ValueError):
+            continue
+        if item_minimum <= 0:
+            continue
+        minima[activity_type] = min(minima.get(activity_type, item_minimum), item_minimum)
+
+    return minima
+
+
+def _schema_with_plan_item_minimums(
+    level_schema: dict,
+    yaml_path: Path,
+    level: str,
+) -> dict:
+    """Apply lower plan-defined minima without weakening the shared schema.
+
+    Level schemas provide general activity floors. An immutable module plan can
+    deliberately require fewer items for a specific activity type. In that
+    case the plan is the module-local source of truth; plan-adherence validation
+    remains responsible for rejecting content below the declared minimum.
+    """
+    plan_minima = _plan_activity_minimums(yaml_path, level)
+    if not plan_minima:
+        return level_schema
+
+    adjusted_schema = copy.deepcopy(level_schema)
+    definitions = adjusted_schema.get("$defs", adjusted_schema.get("definitions", {}))
+
+    for activity_type, plan_minimum in plan_minima.items():
+        type_schema = definitions.get(f"{activity_type}-{level}")
+        if not isinstance(type_schema, dict):
+            continue
+        properties = type_schema.get("properties", {})
+        for count_field in ("items", "pairs"):
+            count_schema = properties.get(count_field)
+            if not isinstance(count_schema, dict):
+                continue
+            schema_minimum = count_schema.get("minItems")
+            if isinstance(schema_minimum, int) and plan_minimum < schema_minimum:
+                count_schema["minItems"] = plan_minimum
+
+    return adjusted_schema
 
 
 # =============================================================================
@@ -396,7 +485,8 @@ def validate_activity_yaml_file(yaml_path: Path) -> tuple[bool, list[str]]:
     # V1: bare list of activities at root
     # V1b: dict with 'activities' key wrapping a list
     # V2: dict with 'version', 'module', 'inline', 'workbook' keys (activity-v2.schema.json)
-    if isinstance(data, dict) and ('inline' in data or 'workbook' in data):
+    is_v2 = isinstance(data, dict) and ('inline' in data or 'workbook' in data)
+    if is_v2:
         # V2 format: merge inline + workbook into single list for validation
         activities = []
         for section in ('inline', 'workbook'):
@@ -417,15 +507,20 @@ def validate_activity_yaml_file(yaml_path: Path) -> tuple[bool, list[str]]:
 
     # FIRST: Validate entire array against level schema (checks minItems, etc.)
     if level_schema:
+        schema_for_validation = (
+            _schema_with_plan_item_minimums(level_schema, yaml_path, level_match)
+            if is_v2 and level_match
+            else level_schema
+        )
         try:
-            jsonschema.validate(instance=activities, schema=level_schema)
+            jsonschema.validate(instance=activities, schema=schema_for_validation)
         except jsonschema.ValidationError as e:
             # Array-level validation error (e.g., too few items)
             # Format concise error messages
             # Array-level validation error (e.g., too few items)
             # Format concise error messages
             if "too short" in e.message.lower() and len(e.path) == 0:
-                min_items = level_schema.get('minItems', 'N/A')
+                min_items = schema_for_validation.get('minItems', 'N/A')
                 errors.append(f"Insufficient activities: {len(activities)} found, minimum {min_items} required for {level_match.upper()}")
             else:
                 path_str = f" at key '{e.path[-1]}'" if e.path else ""

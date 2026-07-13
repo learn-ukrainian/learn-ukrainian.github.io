@@ -76,7 +76,7 @@ def _read_content(md_path: Path) -> str:
 
 
 def _load_activities(activities_path: Path) -> list[dict]:
-    """Load activities YAML (bare list at root)."""
+    """Load V1 bare-list or V2 inline/workbook activities."""
     if not activities_path.exists():
         return []
     try:
@@ -84,6 +84,13 @@ def _load_activities(activities_path: Path) -> list[dict]:
             data = yaml.safe_load(f)
         if isinstance(data, list):
             return data
+        if isinstance(data, dict) and ("inline" in data or "workbook" in data):
+            activities = []
+            for section in ("inline", "workbook"):
+                section_data = data.get(section, [])
+                if isinstance(section_data, list):
+                    activities.extend(section_data)
+            return activities
         return []
     except Exception:
         return []
