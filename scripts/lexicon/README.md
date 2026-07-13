@@ -17,7 +17,7 @@ does not retain entries promoted by `content_lexicon_grow` or
 `source_inventory_grow`.
 
 The target runs `scripts.lexicon.build_data_manifest`,
-`scripts.lexicon/enrich_manifest.py`, and `scripts.lexicon/verify_manifest.py`.
+`scripts/lexicon/enrich_manifest.py`, and `scripts/lexicon/verify_manifest.py`.
 It writes the derived local Atlas data files:
 
 - `site/src/data/lexicon-manifest.json`
