@@ -1254,3 +1254,63 @@ def test_confirmation_rejects_nine_of_ten_and_wrong_reserved_paths(tmp_path: Pat
     assert json.loads(state_path.read_text(encoding="utf-8"))["cleanup"]["old_automation_ready_to_delete"] is False
     assert th.main([*command[:-2], "--strict-probe", "wrong.json", "--strict-verdict", str(strict_verdict)]) == 2
     assert json.loads(state_path.read_text(encoding="utf-8"))["cleanup"]["old_automation_ready_to_delete"] is False
+
+
+@pytest.mark.parametrize("forgery", ["minimal", "top_level", "category", "source_ref"])
+def test_confirmation_revalidates_probe_before_handwritten_pass_can_unlock_cleanup(tmp_path: Path, forgery: str):
+    """The Fable bypass cannot turn a resumed lease into a started lease."""
+    state = prepared()
+    resumed, proof_path = resumed_with_proof(tmp_path, state)
+    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
+
+    if forgery == "minimal":
+        probe = {
+            "schema": "production-handoff-v2",
+            "strict_production": True,
+            "lineage_id": resumed["lineage_id"],
+            "rollover_id": resumed["replacement"]["rollover_id"],
+            "anchors": [{"id": f"forged-{index}"} for index in range(10)],
+        }
+    else:
+        probe = json.loads(strict_probe.read_text(encoding="utf-8"))
+        if forgery == "top_level":
+            probe.pop("source")
+        elif forgery == "category":
+            probe["anchors"][0]["category"] = "decision/rationale"
+        else:
+            probe["anchors"][0]["source_ref"] = "git:HEAD"
+    th.write_json_atomic(strict_probe, probe)
+
+    forged_verdict = {
+        "version": "2",
+        "schema": "production-handoff-v2",
+        "lineage_id": resumed["lineage_id"],
+        "rollover_id": resumed["replacement"]["rollover_id"],
+        "probe_sha256": th._canonical_json_sha256(probe),
+        "seed": probe.get("seed", 0),
+        "k": 10,
+        "correct": 10,
+        "score": 1.0,
+        "verdict": "PASS",
+        "model": "handwritten",
+        "per_anchor": [{"id": anchor["id"], "match": True} for anchor in probe["anchors"]],
+    }
+    th.write_json_atomic(strict_verdict, forged_verdict)
+    before_confirmation = json.loads(json.dumps(resumed))
+
+    with pytest.raises(ValueError, match="strict probe failed production validation"):
+        th.confirm_started(
+            resumed,
+            new_thread_id="new-thread",
+            new_automation_id=None,
+            confirmed_by="tester",
+            now=datetime(2026, 5, 30, 8, 3, tzinfo=UTC),
+            canary_proof=proof_path,
+            strict_probe=strict_probe,
+            strict_verdict=strict_verdict,
+            state_root=tmp_path,
+        )
+
+    assert resumed == before_confirmation
+    assert resumed["replacement"]["status"] == "resumed"
+    assert resumed["cleanup"]["old_automation_ready_to_delete"] is False

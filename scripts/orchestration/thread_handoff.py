@@ -715,16 +715,16 @@ def validate_strict_verdict(
         raise ValueError(f"strict production evidence is unreadable: {type(exc).__name__}: {exc}") from exc
     if not isinstance(probe, dict) or not isinstance(verdict, dict):
         raise ValueError("strict production evidence must be JSON objects")
-    if probe.get("schema") != "production-handoff-v2" or probe.get("strict_production") is not True:
-        raise ValueError("strict probe is not a production-handoff-v2 probe")
-    if probe.get("lineage_id") != replacement["lineage_id"] or probe.get("rollover_id") != replacement["rollover_id"]:
-        raise ValueError("strict probe identity does not match the pending rollover")
-    anchors = probe.get("anchors")
-    if not isinstance(anchors, list) or len(anchors) != 10:
-        raise ValueError("strict probe must contain exactly 10 anchors")
-    anchor_ids = [anchor.get("id") for anchor in anchors if isinstance(anchor, dict)]
-    if len(anchor_ids) != 10 or len(set(anchor_ids)) != 10:
-        raise ValueError("strict probe anchors are malformed")
+    validated_probe, probe_error = context_canary.validate_production_probe(
+        probe,
+        expected_lineage_id=replacement["lineage_id"],
+        expected_rollover_id=replacement["rollover_id"],
+    )
+    if probe_error:
+        raise ValueError(f"strict probe failed production validation: {probe_error}")
+    assert validated_probe is not None
+    probe = validated_probe
+    anchor_ids = [anchor["id"] for anchor in probe["anchors"]]
     required_verdict_keys = {
         "version",
         "schema",
@@ -747,6 +747,7 @@ def validate_strict_verdict(
         or verdict.get("lineage_id") != replacement["lineage_id"]
         or verdict.get("rollover_id") != replacement["rollover_id"]
         or verdict.get("probe_sha256") != _canonical_json_sha256(probe)
+        or verdict.get("seed") != probe["seed"]
         or verdict.get("k") != 10
         or verdict.get("correct") != 10
         or verdict.get("score") != 1.0

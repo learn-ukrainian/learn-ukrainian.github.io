@@ -124,6 +124,30 @@ CATEGORY_KIND_ALLOW: dict[str, tuple[str, ...]] = {
     # next actions from queue or handoff
     "next-action": ("queue", "handoff"),
 }
+PRODUCTION_PROBE_KEYS = frozenset(
+    {
+        "version",
+        "schema",
+        "source",
+        "lineage_id",
+        "rollover_id",
+        "seed",
+        "generated_at",
+        "anchor_counts",
+        "strict_production",
+        "policy",
+        "anchors",
+    }
+)
+PRODUCTION_ANCHOR_FIELDS = ("id", "q", "a", "category", "match_mode", "source_ref")
+PRODUCTION_ANCHOR_KEYS = frozenset(PRODUCTION_ANCHOR_FIELDS)
+PRODUCTION_ANCHOR_COUNTS = {
+    "goal": 3,
+    "decision/rationale": 3,
+    "negative-constraint/prohibition": 2,
+    "next-action": 2,
+}
+PRODUCTION_POLICY = "strict-10/10-only-from-durable-continuity-artifacts"
 
 
 def _parse_and_validate_source_ref(source_ref: object, category: str) -> bool:
@@ -208,6 +232,105 @@ def _validate_identity(val: object, kind: str) -> bool:
         return False
     # Reject consecutive path syntax
     return not ("--" in val or "//" in val or "\\\\" in val or ".." in val or val.endswith("-"))
+
+
+def validate_production_probe(
+    probe: object,
+    *,
+    expected_lineage_id: object | None = None,
+    expected_rollover_id: object | None = None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Validate the closed production-v2 probe contract without performing I/O.
+
+    Both the score command and rollover confirmation consume this validator so a
+    self-consistent hand-written verdict cannot bless a partial probe that the
+    score command would have rejected.
+    """
+    if not isinstance(probe, dict):
+        return None, "production probe must be a JSON object"
+    if set(probe.keys()) != PRODUCTION_PROBE_KEYS:
+        return (
+            None,
+            "production probe must have exactly these top-level keys with no missing/extra: "
+            "version,schema,source,lineage_id,rollover_id,seed,generated_at,anchor_counts,"
+            "strict_production,policy,anchors",
+        )
+    if probe.get("version") != "2":
+        return None, 'production probe version must be "2"'
+    if probe.get("schema") != "production-handoff-v2":
+        return None, "production probe schema must be production-handoff-v2"
+    if probe.get("source") != "snapshot":
+        return None, "production probe source must be snapshot"
+    if probe.get("strict_production") is not True:
+        return None, "production probe strict_production must be true"
+    if probe.get("policy") != PRODUCTION_POLICY:
+        return None, "production probe policy must be exact"
+    seed = probe.get("seed")
+    if not isinstance(seed, int) or isinstance(seed, bool):
+        return None, "production probe seed must be an integer"
+    if not _validate_utc_timestamp(probe.get("generated_at")):
+        return None, "production probe generated_at must be a real UTC timestamp"
+    anchor_counts = probe.get("anchor_counts")
+    if (
+        not isinstance(anchor_counts, dict)
+        or set(anchor_counts) != set(PRODUCTION_ANCHOR_COUNTS)
+        or any(type(count) is not int for count in anchor_counts.values())
+        or anchor_counts != PRODUCTION_ANCHOR_COUNTS
+    ):
+        return None, "production probe anchor_counts must be exact 3/3/2/2"
+
+    anchors = probe["anchors"]
+    if not isinstance(anchors, list) or len(anchors) != 10:
+        return None, "production probe must have exactly 10 anchors"
+    seen: set[str] = set()
+    category_counts = dict.fromkeys(PRODUCTION_ANCHOR_COUNTS, 0)
+    for anchor in anchors:
+        if not isinstance(anchor, dict) or set(anchor.keys()) != PRODUCTION_ANCHOR_KEYS:
+            return (
+                None,
+                "each production anchor must have exactly keys {id,q,a,category,match_mode,source_ref} "
+                "(no missing/extra)",
+            )
+        for field in PRODUCTION_ANCHOR_FIELDS:
+            value = anchor.get(field)
+            if value is None or (isinstance(value, str) and not value.strip()) or _has_unknowns(value):
+                return None, f"production anchor missing/empty/UNKNOWN field: {field}"
+        anchor_id = anchor["id"]
+        if not isinstance(anchor_id, str) or not anchor_id.strip() or anchor_id in seen:
+            return None, "v2 anchors require unique non-empty string ids (exact match; do not normalize IDs)"
+        seen.add(anchor_id)
+        category = anchor["category"]
+        if not isinstance(category, str) or category not in category_counts:
+            return None, f"invalid category {category} for v2 production"
+        category_counts[category] += 1
+        match_mode = anchor["match_mode"]
+        if not isinstance(match_mode, str) or match_mode not in ("exact", "normalized"):
+            return None, f"invalid match_mode '{match_mode}' (supported: exact, normalized)"
+        for field in ("q", "a"):
+            if not isinstance(anchor[field], str):
+                return None, f"production anchor missing/empty/UNKNOWN field: {field}"
+        if not _parse_and_validate_source_ref(anchor["source_ref"], category):
+            return (
+                None,
+                "v2 source_ref must follow kind:repo-relative-path#record-fragment with allowed kinds/roots for its "
+                "category; reject git:,github:,monitor:,abs,../,arbitrary,wrong-pair,UNKNOWN",
+            )
+    if category_counts != PRODUCTION_ANCHOR_COUNTS:
+        return None, "v2 probe must have exactly 3 goals, 3 decisions/rationales, 2 neg constraints, 2 next actions"
+
+    lineage_id = probe.get("lineage_id")
+    rollover_id = probe.get("rollover_id")
+    if not _validate_identity(lineage_id, "lineage"):
+        return None, "v2 probe requires well-formed lineage_id (exact identity)"
+    if not _validate_identity(rollover_id, "rollover"):
+        return None, "v2 probe requires well-formed rollover_id (exact identity)"
+    if not _validate_identity(expected_lineage_id, "lineage"):
+        return None, "production score requires --expected-lineage-id (well-formed identity)"
+    if not _validate_identity(expected_rollover_id, "rollover"):
+        return None, "production score requires --expected-rollover-id (well-formed identity)"
+    if expected_lineage_id != lineage_id or expected_rollover_id != rollover_id:
+        return None, "--expected-lineage-id and --expected-rollover-id must exactly match probe identity"
+    return probe, None
 
 
 def _is_exact_legacy_anchors_only(probe: object) -> bool:
@@ -526,136 +649,21 @@ def cmd_score(args: argparse.Namespace) -> int:
                 )
         return 0 if verdict == "PASS" else 2
     else:
-        # Strict v2 production path: exact metadata, exact anchor keys, source_ref grammar+cat, identity, expected match.
         # Any production marker or extra top key routes here and fails if not complete/valid.
-        required_keys = {
-            "version",
-            "schema",
-            "source",
-            "lineage_id",
-            "rollover_id",
-            "seed",
-            "generated_at",
-            "anchor_counts",
-            "strict_production",
-            "policy",
-            "anchors",
-        }
-        if set(probe.keys()) != required_keys:
-            print(
-                "error: production probe must have exactly these top-level keys with no missing/extra: version,schema,source,lineage_id,rollover_id,seed,generated_at,anchor_counts,strict_production,policy,anchors",
-                file=sys.stderr,
-            )
+        validated_probe, validation_error = validate_production_probe(
+            probe,
+            expected_lineage_id=getattr(args, "expected_lineage_id", None),
+            expected_rollover_id=getattr(args, "expected_rollover_id", None),
+        )
+        if validation_error:
+            print(f"error: {validation_error}", file=sys.stderr)
             return 2
-        if probe.get("version") != "2":
-            print('error: production probe version must be "2"', file=sys.stderr)
-            return 2
-        if probe.get("schema") != "production-handoff-v2":
-            print("error: production probe schema must be production-handoff-v2", file=sys.stderr)
-            return 2
-        if probe.get("source") != "snapshot":
-            print("error: production probe source must be snapshot", file=sys.stderr)
-            return 2
-        if probe.get("strict_production") is not True:
-            print("error: production probe strict_production must be true", file=sys.stderr)
-            return 2
-        if probe.get("policy") != "strict-10/10-only-from-durable-continuity-artifacts":
-            print("error: production probe policy must be exact", file=sys.stderr)
-            return 2
-        seed = probe.get("seed")
-        if not isinstance(seed, int):
-            print("error: production probe seed must be an integer", file=sys.stderr)
-            return 2
-        if not _validate_utc_timestamp(probe.get("generated_at")):
-            print("error: production probe generated_at must be a real UTC timestamp", file=sys.stderr)
-            return 2
-        expected_counts = {"goal": 3, "decision/rationale": 3, "negative-constraint/prohibition": 2, "next-action": 2}
-        if probe.get("anchor_counts") != expected_counts:
-            print("error: production probe anchor_counts must be exact 3/3/2/2", file=sys.stderr)
-            return 2
-
-        # anchors: exact keys + values validated recursively + source_ref closed
+        assert validated_probe is not None
+        probe = validated_probe
         anchors = probe["anchors"]
-        if not isinstance(anchors, list) or len(anchors) != 10:
-            print("error: production probe must have exactly 10 anchors", file=sys.stderr)
-            return 2
-        anchor_keys = {"id", "q", "a", "category", "match_mode", "source_ref"}
-        seen: set[str] = set()
-        cat_c: dict[str, int] = {
-            "goal": 0,
-            "decision/rationale": 0,
-            "negative-constraint/prohibition": 0,
-            "next-action": 0,
-        }
-        for a in anchors:
-            if not isinstance(a, dict) or set(a.keys()) != anchor_keys:
-                print(
-                    "error: each production anchor must have exactly keys {id,q,a,category,match_mode,source_ref} (no missing/extra)",
-                    file=sys.stderr,
-                )
-                return 2
-            for req in ("id", "q", "a", "category", "match_mode", "source_ref"):
-                val = a.get(req)
-                if val is None or (isinstance(val, str) and not val.strip()) or _has_unknowns(val):
-                    print(f"error: production anchor missing/empty/UNKNOWN field: {req}", file=sys.stderr)
-                    return 2
-            aid = a["id"]
-            if not isinstance(aid, str) or not aid.strip() or aid in seen:
-                print(
-                    "error: v2 anchors require unique non-empty string ids (exact match; do not normalize IDs)",
-                    file=sys.stderr,
-                )
-                return 2
-            seen.add(aid)
-            cat = a["category"]
-            if cat not in cat_c:
-                print(f"error: invalid category {cat} for v2 production", file=sys.stderr)
-                return 2
-            cat_c[cat] += 1
-            mm = a["match_mode"]
-            if mm not in ("exact", "normalized"):
-                print(f"error: invalid match_mode '{mm}' (supported: exact, normalized)", file=sys.stderr)
-                return 2
-            sr = a["source_ref"]
-            if not _parse_and_validate_source_ref(sr, cat):
-                print(
-                    "error: v2 source_ref must follow kind:repo-relative-path#record-fragment with allowed kinds/roots for its category; reject git:,github:,monitor:,abs,../,arbitrary,wrong-pair,UNKNOWN",
-                    file=sys.stderr,
-                )
-                return 2
-        if cat_c != expected_counts:
-            print(
-                "error: v2 probe must have exactly 3 goals, 3 decisions/rationales, 2 neg constraints, 2 next actions",
-                file=sys.stderr,
-            )
-            return 2
-
-        # Require explicit lineage_id + rollover_id (no unknown). Use centralized validator, exact raw.
-        lid = probe.get("lineage_id")
-        rid = probe.get("rollover_id")
-        if not _validate_identity(lid, "lineage"):
-            print("error: v2 probe requires well-formed lineage_id (exact identity)", file=sys.stderr)
-            return 2
-        if not _validate_identity(rid, "rollover"):
-            print("error: v2 probe requires well-formed rollover_id (exact identity)", file=sys.stderr)
-            return 2
-
-        # Production score REQUIRES caller-supplied expected ids and exact match before any scoring.
-        # Validate with same centralized closed validator (exact raw) BEFORE the == comparison.
-        exp_lid = getattr(args, "expected_lineage_id", None)
-        exp_rid = getattr(args, "expected_rollover_id", None)
-        if not _validate_identity(exp_lid, "lineage"):
-            print("error: production score requires --expected-lineage-id (well-formed identity)", file=sys.stderr)
-            return 2
-        if not _validate_identity(exp_rid, "rollover"):
-            print("error: production score requires --expected-rollover-id (well-formed identity)", file=sys.stderr)
-            return 2
-        if exp_lid != lid or exp_rid != rid:
-            print(
-                "error: --expected-lineage-id and --expected-rollover-id must exactly match probe identity",
-                file=sys.stderr,
-            )
-            return 2
+        lid = probe["lineage_id"]
+        rid = probe["rollover_id"]
+        seed = probe["seed"]
 
         # Strict 10/10 scoring. IDs matched exactly. match_mode only for text.
         correct = 0
