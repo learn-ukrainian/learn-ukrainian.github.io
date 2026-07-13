@@ -68,21 +68,29 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
     git(primary, "config", "user.name", "Thread Restart E2E")
     (primary / ".gitignore").write_text(".agent/\n.codex/\n.claude/\n.agents/\n.gemini/\n.venv\n", encoding="utf-8")
     (primary / "tracked.txt").write_text("canonical\n", encoding="utf-8")
+    sources = [
+        "scripts/__init__.py",
+        "scripts/context_canary.py",
+        "scripts/orchestration/thread_handoff.py",
+        "scripts/orchestration/thread_handoff_canary.py",
+    ]
     if bootstrap_sources:
-        sources = (
-            "scripts/lib/thread_rollover_link.sh",
-            "scripts/lib/deploy_extensions.sh",
-            "agents_extensions/codex/hooks.json",
-            "agents_extensions/shared/hooks/session-setup.sh",
+        sources.extend(
+            [
+                "scripts/lib/thread_rollover_link.sh",
+                "scripts/lib/deploy_extensions.sh",
+                "agents_extensions/codex/hooks.json",
+                "agents_extensions/shared/hooks/session-setup.sh",
+            ]
         )
-        for relative in sources:
-            target = primary / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(REPO_ROOT / relative, target)
         (primary / "package.json").write_text(
             '{"scripts":{"agents:deploy":"scripts/deploy_prompts.sh"}}\n',
             encoding="utf-8",
         )
+    for relative in sources:
+        target = primary / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / relative, target)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
     (primary / ".venv").symlink_to(REPO_ROOT / ".venv", target_is_directory=True)
@@ -96,6 +104,16 @@ def handoff_command(primary: Path, *args: str) -> list[str | Path]:
         HANDOFF,
         "--repo-root",
         primary,
+        "--monitor-base-url",
+        "http://127.0.0.1:1",
+        *args,
+    ]
+
+
+def checkout_handoff_command(checkout: Path, *args: str) -> list[str | Path]:
+    return [
+        checkout / ".venv/bin/python",
+        checkout / "scripts/orchestration/thread_handoff.py",
         "--monitor-base-url",
         "http://127.0.0.1:1",
         *args,
@@ -302,6 +320,11 @@ def test_packet_only_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup
     primary, _ = init_repo(tmp_path)
     packet = prepare(primary)
     assert_cleanup_locked(primary, packet)
+    lease = load_lease(primary, packet)
+    assert lease["replacement"]["source_checkout"] == {
+        "full_head": git(primary, "rev-parse", "HEAD").stdout.strip(),
+        "clean": True,
+    }
     runtime = primary / packet["runtime_path"]
     bootstrap = (runtime / "bootstrap.md").read_text(encoding="utf-8")
     assert "do not fork, continue, or resume provider conversation history" in bootstrap
@@ -468,21 +491,72 @@ def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(tmp_path:
 
 def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Path) -> None:
     primary, replacement = init_repo(tmp_path)
-    packet = prepare(primary)
+    (replacement / ".venv").symlink_to(primary / ".venv", target_is_directory=True)
+    prepared = run(
+        checkout_handoff_command(
+            primary,
+            "prepare",
+            "--agent",
+            "codex",
+            "--active-thread-id",
+            "old-thread",
+            "--active-automation-id",
+            "automation-old-thread",
+        ),
+        cwd=primary,
+        check=True,
+    )
+    packet = json.loads(prepared.stdout)
+    resumed = run(
+        checkout_handoff_command(
+            replacement,
+            "resume",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            packet["lineage_id"],
+            "--rollover-id",
+            packet["rollover_id"],
+            "--replacement-thread-id",
+            "fresh-thread",
+        ),
+        cwd=replacement,
+        check=True,
+    )
+    assert json.loads(resumed.stdout)["status"] == "resumed"
+    probe, verdict, _ = strict_evidence(primary, packet)
+    proof = canary_proof(primary, packet)
+
     (replacement / "tracked.txt").write_text("dirty replacement\n", encoding="utf-8")
     assert git(replacement, "status", "--short").stdout.startswith(" M tracked.txt")
     assert_cleanup_locked(primary, packet)
-    missing_proofs = run(
-        confirm_command(
-            primary,
-            packet,
-            proof=primary / "missing-proof.json",
-            probe=primary / "missing-probe.json",
-            verdict=primary / "missing-verdict.json",
+    rejected = run(
+        checkout_handoff_command(
+            replacement,
+            "confirm-started",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            packet["lineage_id"],
+            "--rollover-id",
+            packet["rollover_id"],
+            "--new-thread-id",
+            "fresh-thread",
+            "--canary-proof",
+            str(proof),
+            "--strict-probe",
+            str(probe),
+            "--strict-verdict",
+            str(verdict),
         ),
         cwd=replacement,
     )
-    assert missing_proofs.returncode == 2
+    assert rejected.returncode == 2
+    error = json.loads(rejected.stdout)["error"]
+    assert "checkout continuity failed: invoking checkout must be clean" in error
+    assert "tracked.txt" in error
+    lease = load_lease(primary, packet)
+    assert lease["replacement"]["status"] == "resumed"
     assert_cleanup_locked(primary, packet)
 
 

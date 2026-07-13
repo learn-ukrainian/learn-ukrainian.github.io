@@ -230,6 +230,8 @@ evidence="/tmp/rollover-smoke-$(date +%Y%m%dT%H%M%S)"
 mkdir -p "$evidence"
 cd "$canonical"
 npm run agents:deploy | tee "$evidence/canonical-deploy.txt"
+test -z "$(git status --porcelain)"
+source_head=$(git rev-parse HEAD)
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
   --agent codex \
   --active-thread-id <predecessor-task-id> \
@@ -259,6 +261,8 @@ test -f "$fresh/.codex/hooks.json"
 test -x "$fresh/.codex/hooks/session-setup.sh"
 test "$(readlink "$fresh/.agent/thread-rollovers")" = \
   "$canonical/.agent/thread-rollovers"
+test "$(git -C "$fresh" rev-parse HEAD)" = "$source_head"
+test -z "$(git -C "$fresh" status --porcelain)"
 ```
 
 For this smoke, do not pre-export `CODEX_CANONICAL_REPO_ROOT`. The reopened
@@ -310,6 +314,8 @@ challenge=$(jq -r .replacement.canary_challenge "$lease")
   --challenge "$challenge" \
   --proof-file "$canonical/$proof_rel" \
   | tee "$evidence/canary.json"
+test "$(git rev-parse HEAD)" = "$source_head"
+test -z "$(git status --porcelain)"
 .venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
   --agent codex \
   --lineage-id "$lineage_id" \
@@ -326,7 +332,9 @@ fresh task id differs from the predecessor, and `confirm.json` says
 `"old_automation_ready_to_delete": true`. Keep all captured evidence under
 `/tmp/rollover-smoke-*`; the packet itself stays under gitignored
 `.agent/thread-rollovers/`. Delete or pause the predecessor automation only
-after all four checks pass.
+after all four checks pass. `prepare`, `resume`, and `confirm-started` fail
+closed if their invoking checkout is dirty, is at a different HEAD, or if a
+live pending/resumed lease lacks the source-checkout binding.
 
 ## Worker Run Inbox
 
