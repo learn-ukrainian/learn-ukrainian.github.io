@@ -495,7 +495,7 @@ deterministic paragraph matches and marginal pedagogical value throughout the
 full size band, not only above the advisory ceiling. Source-backed density and
 necessary pedagogy remain acceptable even when long. Repeated framing,
 conclusions, transitions, definitions, generic exposition, or uncited
-interpretation are defects when they affect `{DIM}`.
+interpretation are filler/padding defects when they affect `{DIM}`.
 
 ## Immersion Rule
 

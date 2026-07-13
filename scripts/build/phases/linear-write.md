@@ -213,7 +213,7 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 
 {SIZE_POLICY}
 
-Satisfy the objectives and evidence coverage, not a token target. The policy never lowers the plan floor. Do not repeat framing, conclusions, transitions, or definitions to reach it. If grounded material is exhausted or the policy blocks expansion, emit the required `SIZE_POLICY_MISMATCH` marker and stop for plan review instead of padding.
+Satisfy the objectives and evidence coverage, not a token target; retire the old 150% multiplier thinking. The policy never lowers the plan floor. Expansion must be source-backed and pedagogically useful; do not repeat framing, conclusions, transitions, or definitions to reach the floor. If grounded material is exhausted or the policy blocks expansion, emit the required `SIZE_POLICY_MISMATCH` marker and stop for plan review instead of padding.
 
 ## Section Word Budgets — policy-aware first-draft requirements
 
