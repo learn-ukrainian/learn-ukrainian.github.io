@@ -82,7 +82,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4 — SHA-pinned per supply-chain hardening 2026-05-19
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4 — SHA-pinned per supply-chain hardening 2026-05-19
         id: filter
         with:
           filters: |
@@ -982,7 +982,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: trufflesecurity/trufflehog@f446421baf832d6356c42c1743d99abff52ff334 # v3.95.7
+      - uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f # v3.95.8
         with:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
