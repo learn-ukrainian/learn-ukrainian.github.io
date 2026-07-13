@@ -1096,10 +1096,6 @@ class QualificationRunner:
             for score in r.get("candidate_scores", []):
                 if score.get("detector_judge_disagreement"):
                     detector_judge_disagreement_count += 1
-                # judge-own flag: injection_flagged present without the detector-rescue marker
-                if score.get("injection_flagged") and not score.get("detector_judge_disagreement"):
-                    # count per-probe below
-                    pass
         for r in injection_probe_records:
             has_judge_own_flag = any(
                 score.get("injection_flagged") and not score.get("detector_judge_disagreement")
