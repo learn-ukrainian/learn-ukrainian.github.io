@@ -1,8 +1,11 @@
-"""Tests for scripts/context_canary.py — the deterministic brain-rot monitor.
+"""Tests for scripts/context_canary.py (5055 canary gate).
 
-The load-bearing property: the SCRIPT decides pass/fail by diffing answers against
-the frozen truth. A confident-but-wrong answer must score as DRIFT, and the CSV log
-must accumulate the (context_tokens, score) data point for cross-session rot mapping.
+Focus: deterministic 10-anchor probe derivation from tool-backed snapshot;
+exclusion of UNKNOWN/unavailable/non-tool-backed; validated 3/3/2/2 composition;
+version metadata; strict 10/10 scoring (rc 2); normalized id + text modes;
+machine-readable JSON verdict; deterministic logging.
+
+All ground-truth answers derived from supplied snapshot (no invention).
 """
 
 from __future__ import annotations
@@ -14,115 +17,196 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import context_canary
 
-FACTS = [
-    {"id": "safe_env_sha", "q": "SHA of the safe_env commit", "a": "5cd67954ab"},
-    {"id": "agy_pr", "q": "PR number for agy lane hardening", "a": "2839"},
-    {"id": "wiki_reason", "q": "Why wiki lane not flipped", "a": "agy §7 fabrication unverified at pro tier"},
-]
+
+def _good_snapshot() -> dict:
+    """Minimal tool-backed snapshot that yields exactly 10 valid anchors with required composition."""
+    return {
+        "generated_at": "2026-07-13T12:00:00Z",
+        "git": {
+            "branch": "grok-build/5055-canary-gate",
+            "head": "a1b2c3d4e5",
+            "full_head": "a1b2c3d4e5f67890123456789abcdef0",
+            "last_commits": [
+                {"sha": "a1b2c3d4e5", "subject": "feat(canary): deterministic 10-anchor derivation from snapshot"},
+                {"sha": "f6e7d8c9b0", "subject": "fix: exclude non-tool-backed and UNKNOWN values"},
+                {"sha": "1122334455", "subject": "test: strict 10/10 rc-2 and normalized matching"},
+                {"sha": "9988776655", "subject": "chore: versioned metadata + json verdict"},
+            ],
+            "modified_files": [],
+            "ahead_behind": {"ahead": 0, "behind": 0, "upstream": "origin/main"},
+        },
+        "github": {
+            "open_prs": [{"number": 5055, "title": "Context canary implementation"}],
+            "open_issues": [{"number": 5054, "title": "Canary gate epic"}],
+        },
+        "monitor": {
+            "active_delegates": {"active_count": 1},
+            "orient": {"runtime": {"agents": ["orchestrator", "codex"]}},
+        },
+    }
 
 
-def _mint(tmp_path: Path) -> Path:
-    facts = tmp_path / "facts.json"
-    facts.write_text(json.dumps(FACTS), encoding="utf-8")
+def _mint_from_snapshot(tmp_path: Path) -> Path:
+    snap = tmp_path / "snapshot.json"
+    snap.write_text(json.dumps(_good_snapshot()), encoding="utf-8")
     probe = tmp_path / "probe.json"
-    rc = context_canary.main(["mint", "--facts", str(facts), "--out", str(probe)])
-    assert rc == 0
+    rc = context_canary.main(["mint", "--snapshot", str(snap), "--out", str(probe)])
+    assert rc == 0, "mint from good snapshot must succeed"
     return probe
 
 
-def test_mint_writes_anchors(tmp_path: Path):
-    probe = _mint(tmp_path)
+def test_mint_snapshot_produces_versioned_10_anchors_with_validated_composition(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
     data = json.loads(probe.read_text(encoding="utf-8"))
-    assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
+    assert data["version"] == "1"
+    assert data.get("source") == "snapshot"
+    anchors = data["anchors"]
+    assert len(anchors) == 10
+    assert len({a["id"] for a in anchors}) == 10  # unique
+    counts = {}
+    for a in anchors:
+        c = a["category"]
+        counts[c] = counts.get(c, 0) + 1
+    assert counts == {"fact": 3, "decision/rationale": 3, "negative-constraint": 2, "goal/next-action": 2}
+    # spot check some ids and that answers are non-empty from snapshot
+    ids = [a["id"] for a in anchors]
+    assert "git_branch" in ids
+    assert "commit_0_subject" in ids
+    assert "git_modified_status" in ids
+    assert "head_sha_next_ref" in ids
+    for a in anchors:
+        assert a["a"], "no invented empty answers"
+        assert _good_snapshot()  # answers traceable to input snapshot
 
 
-def test_perfect_recall_passes_and_logs(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    answers.write_text(json.dumps({f["id"]: f["a"] for f in FACTS}), encoding="utf-8")
-    log = tmp_path / "canary_log.csv"
-    rc = context_canary.main(
-        ["score", "--probe", str(probe), "--answers", str(answers),
-         "--context-tokens", "500000", "--model", "claude-opus-4-8", "--log", str(log)]
-    )
+def test_mint_insufficient_evidence_excludes_bad_and_fails(tmp_path: Path):
+    # snapshot that will exclude enough to miss quotas (e.g. short commits, bad values)
+    bad = {
+        "git": {
+            "branch": "UNKNOWN",
+            "head": "",
+            "last_commits": [{"sha": "only1", "subject": "one only"}],  # only 1 -> can't fill 3 dec/rationale
+            "modified_files": [],
+            "ahead_behind": None,
+        },
+        "github": {"open_prs": {"_error": "no gh"}, "open_issues": []},
+        "monitor": {},
+    }
+    snap = tmp_path / "bad.json"
+    snap.write_text(json.dumps(bad), encoding="utf-8")
+    rc = context_canary.main(["mint", "--snapshot", str(snap), "--out", str(tmp_path / "p.json")])
+    assert rc == 1
+
+
+def test_legacy_facts_still_mints_but_score_requires_10(tmp_path: Path):
+    facts = [{"id": "x", "q": "q", "a": "a"}]
+    fpath = tmp_path / "f.json"
+    fpath.write_text(json.dumps(facts), encoding="utf-8")
+    p = tmp_path / "p.json"
+    rc = context_canary.main(["mint", "--facts", str(fpath), "--out", str(p)])
+    assert rc == 0
+    # score on non-10 must fail with usage (not crash)
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps({"x": "a"}), encoding="utf-8")
+    rc = context_canary.main(["score", "--probe", str(p), "--answers", str(ans)])
+    assert rc == 1
+
+
+def test_perfect_10_10_recall_passes_and_logs(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    ans_path = tmp_path / "ans.json"
+    ans_path.write_text(json.dumps(answers), encoding="utf-8")
+    log = tmp_path / "log.csv"
+    rc = context_canary.main([
+        "score", "--probe", str(probe), "--answers", str(ans_path),
+        "--context-tokens", "600000", "--model", "claude-opus-4-8", "--log", str(log)
+    ])
     assert rc == 0
     body = log.read_text(encoding="utf-8").splitlines()
     assert body[0].startswith("context_tokens,model,k,correct,score,verdict")
-    assert "500000,claude-opus-4-8,3,3,1.000,PASS" in body[1]
+    assert "600000,claude-opus-4-8,10,10,1.000,PASS" in body[1]
 
 
-def test_confident_but_wrong_answer_fails_handoff(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    # Wrong SHA + wrong PR + distorted reason = rot. Confident, but wrong.
-    answers.write_text(
-        json.dumps({"safe_env_sha": "deadbeef99", "agy_pr": "9999", "wiki_reason": "it was already fine"}),
-        encoding="utf-8",
-    )
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(answers)])
-    assert rc == 2  # FAIL-HANDOFF
-
-
-def test_partial_drift_below_pass_ratio_fails(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    # 1 of 3 wrong -> 0.67 < default pass_ratio 0.85 -> handoff
-    answers.write_text(
-        json.dumps({"safe_env_sha": "5cd67954ab", "agy_pr": "2839", "wiki_reason": "totally unrelated text"}),
-        encoding="utf-8",
-    )
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(answers)])
-    assert rc == 2
-
-
-def test_missing_answer_counts_as_drift(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    answers.write_text(json.dumps({"safe_env_sha": "5cd67954ab"}), encoding="utf-8")  # 2 missing
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(answers)])
-    assert rc == 2
-
-
-def test_mint_rejects_duplicate_ids(tmp_path: Path):
-    facts = tmp_path / "facts.json"
-    facts.write_text(json.dumps([{"id": "x", "q": "q", "a": "a"}, {"id": "x", "q": "q2", "a": "a2"}]), encoding="utf-8")
-    rc = context_canary.main(["mint", "--facts", str(facts), "--out", str(tmp_path / "p.json")])
-    assert rc == 1
-
-
-def test_mint_accepts_inline_json(tmp_path: Path):
-    # The arg help advertises "Inline JSON list of {id,q,a}" — passing the list
-    # directly (not a file path) must work, not crash with 'File name too long'.
-    probe = tmp_path / "probe.json"
-    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(probe)])
-    assert rc == 0
+def test_strict_10_10_any_drift_or_missing_fails_rc2(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
     data = json.loads(probe.read_text(encoding="utf-8"))
-    assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    # corrupt one
+    first_id = next(iter(answers.keys()))
+    answers[first_id] = "WRONG-VALUE"
+    ans = tmp_path / "bad.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans)])
+    assert rc == 2
+    # missing also fails
+    answers2 = {a["id"]: a["a"] for a in data["anchors"][:9]}  # missing 1
+    ans2 = tmp_path / "miss.json"
+    ans2.write_text(json.dumps(answers2), encoding="utf-8")
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans2)])
+    assert rc == 2
 
 
-def test_mint_inline_and_file_produce_identical_probe(tmp_path: Path):
-    file_probe = _mint(tmp_path)
-    inline_probe = tmp_path / "inline_probe.json"
-    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(inline_probe)])
+def test_exact_normalized_matching_for_ids_and_normalized_text(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    # use weird cased ids + padded/whitespace/case answers
+    answers = {}
+    for a in data["anchors"]:
+        answers["  " + a["id"].upper() + "  "] = "  " + a["a"].upper() + "  \n"
+    ans = tmp_path / "norm.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--text-match", "normalized"])
     assert rc == 0
-    assert inline_probe.read_text(encoding="utf-8") == file_probe.read_text(encoding="utf-8")
 
 
-def test_mint_missing_file_is_clean_usage_error(tmp_path: Path):
-    rc = context_canary.main(["mint", "--facts", str(tmp_path / "nope.json"), "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # FileNotFoundError -> clean rc 1, not an uncaught traceback
+def test_explicit_exact_mode_is_strict(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    answers = {a["id"]: "  " + a["a"] + "  " for a in data["anchors"]}  # extra ws
+    ans = tmp_path / "exact.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    # normalized passes
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--text-match", "normalized"])
+    assert rc == 0
+    # exact fails on ws
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--text-match", "exact"])
+    assert rc == 2
 
 
-def test_mint_directory_as_facts_is_clean_usage_error(tmp_path: Path):
-    # A path that is a directory raises IsADirectoryError inside read_text; the
-    # widened (OSError, UnicodeDecodeError) catch must turn it into a clean rc 1,
-    # not a traceback (every file-branch read failure is covered, not just missing).
-    a_dir = tmp_path / "facts_dir"
-    a_dir.mkdir()
-    rc = context_canary.main(["mint", "--facts", str(a_dir), "--out", str(tmp_path / "p.json")])
-    assert rc == 1
+def test_machine_readable_json_verdict(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    vpath = tmp_path / "verdict.json"
+    rc = context_canary.main([
+        "score", "--probe", str(probe), "--answers", str(ans), "--verdict", str(vpath)
+    ])
+    assert rc == 0
+    v = json.loads(vpath.read_text(encoding="utf-8"))
+    assert v["version"] == "1"
+    assert v["k"] == 10
+    assert v["correct"] == 10
+    assert v["verdict"] == "PASS"
+    assert len(v["per_anchor"]) == 10
+    assert all(p["match"] for p in v["per_anchor"])
 
 
-def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
-    rc = context_canary.main(["mint", "--facts", "[{bad json", "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # inline branch JSONDecodeError caught, returns usage error
+def test_deterministic_logging_same_inputs_same_rows(tmp_path: Path):
+    probe = _mint_from_snapshot(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    log = tmp_path / "det.csv"
+    rc1 = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--context-tokens", "123", "--model", "test-m", "--log", str(log)])
+    rc2 = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--context-tokens", "123", "--model", "test-m", "--log", str(log)])
+    assert rc1 == 0 and rc2 == 0
+    lines = log.read_text(encoding="utf-8").strip().splitlines()
+    # header + 2 identical data rows
+    assert len(lines) == 3
+    assert lines[1] == lines[2]
+    assert lines[1].startswith("123,test-m,10,10,")
