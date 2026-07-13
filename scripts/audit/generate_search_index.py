@@ -595,6 +595,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="Build public search artifacts from atlas.db instead of the legacy manifest.",
     )
+    parser.add_argument(
+        "--browse-only",
+        action="store_true",
+        help="Refresh legacy browse artifacts without overwriting DB-backed search artifacts.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_SEARCH_OUT)
     parser.add_argument("--aliases-out", type=Path, default=DEFAULT_SEARCH_ALIASES_OUT)
     parser.add_argument("--search-shards-out", type=Path, default=DEFAULT_SEARCH_SHARDS_OUT)
@@ -603,6 +608,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--browse-flagged-out", type=Path, default=DEFAULT_BROWSE_FLAGGED_OUT)
     parser.add_argument("--browse-dir", type=Path, default=DEFAULT_BROWSE_DIR)
     args = parser.parse_args(argv)
+
+    if args.db is not None and args.browse_only:
+        parser.error("--browse-only cannot be combined with --db")
 
     if args.db is not None:
         rows, aliases, counts = build_atlas_db_search_artifacts(args.db)
@@ -630,10 +638,11 @@ def main(argv: list[str] | None = None) -> int:
         raise ValueError("manifest entries must be list")
 
     rows = build_index(entries)
-    search_shards, search_shard_rows = build_search_shards(rows)
     meta, shards, flagged_rows = build_browse_outputs(rows)
-    write_index(rows, args.out)
-    write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
+    if not args.browse_only:
+        search_shards, search_shard_rows = build_search_shards(rows)
+        write_index(rows, args.out)
+        write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
     write_browse_outputs(
         meta,
         shards,

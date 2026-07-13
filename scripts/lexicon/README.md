@@ -38,7 +38,12 @@ manifest, so do not set `ATLAS_MANIFEST_FORCE_HYDRATE=1` for this workflow.
 .venv/bin/python -c \
   "from scripts.lexicon.manifest_io import load_manifest; print(len(load_manifest()['entries']))"
 .venv/bin/python scripts/lexicon/enrich_manifest.py
-.venv/bin/python -m scripts.audit.generate_search_index
+# Refresh the legacy browse shards from the release manifest first.
+.venv/bin/python -m scripts.audit.generate_search_index --browse-only
+# Then rebuild the entry-model database and public search artifacts with the
+# DB-backed article/alias schema (`t`, not legacy `k`).
+.venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db
+.venv/bin/python -m scripts.audit.generate_search_index --db data/atlas.db
 .venv/bin/python scripts/lexicon/export_open_dataset.py
 .venv/bin/python -m scripts.audit.generate_daily_pool
 .venv/bin/python scripts/lexicon/verify_manifest.py

@@ -348,6 +348,47 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     ]
 
 
+def test_browse_only_never_overwrites_db_backed_search_artifacts(tmp_path: Path) -> None:
+    manifest = tmp_path / "manifest.json"
+    search_out = tmp_path / "search.json"
+    search_shards_out = tmp_path / "search-shards.json"
+    meta_out = tmp_path / "meta.json"
+    flagged_out = tmp_path / "flagged.json"
+    browse_dir = tmp_path / "browse"
+    manifest.write_text(
+        json.dumps({"entries": [entry("абетка", gloss="alphabet")]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    search_out.write_text('[{"t":"lemma"}]\n', encoding="utf-8")
+    search_shards_out.write_text('{"schema":"db-backed"}\n', encoding="utf-8")
+
+    assert (
+        main(
+            [
+                "--manifest",
+                str(manifest),
+                "--browse-only",
+                "--out",
+                str(search_out),
+                "--search-shards-out",
+                str(search_shards_out),
+                "--browse-meta-out",
+                str(meta_out),
+                "--browse-flagged-out",
+                str(flagged_out),
+                "--browse-dir",
+                str(browse_dir),
+            ]
+        )
+        == 0
+    )
+
+    assert json.loads(search_out.read_text(encoding="utf-8")) == [{"t": "lemma"}]
+    assert json.loads(search_shards_out.read_text(encoding="utf-8")) == {"schema": "db-backed"}
+    assert json.loads(meta_out.read_text(encoding="utf-8"))["total"] == 1
+    assert json.loads((browse_dir / "А.json").read_text(encoding="utf-8"))[0]["l"] == "абетка"
+
+
 def test_committed_browse_records_remain_distinct_from_article_search_entries() -> None:
     search_rows = json.loads((PROJECT_ROOT / DEFAULT_SEARCH_OUT).read_text(encoding="utf-8"))
     meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
