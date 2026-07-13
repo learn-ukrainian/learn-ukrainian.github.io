@@ -33,7 +33,7 @@ def test_session_setup_hook_handoff_fixtures() -> None:
     assert result.returncode == 0, (
         f"hook fixtures failed (rc={result.returncode})\n"
         f"--- stdout ---\n{result.stdout}\n--- stderr ---\n{result.stderr}"
-        )
+    )
     assert "ok - session setup hook handoff fixtures passed" in result.stdout
 
 
@@ -95,9 +95,16 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     hook_path = _REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
 
     # Environment variables
+    isolated_home = tmp_path / "home"
     env = {
         "CLAUDE_PROJECT_DIR": str(project_dir),
         "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
+        "HOME": str(isolated_home),
+        "XDG_CONFIG_HOME": str(tmp_path / "xdg-config"),
+        "XDG_CACHE_HOME": str(tmp_path / "xdg-cache"),
+        "XDG_DATA_HOME": str(tmp_path / "xdg-data"),
+        "XDG_STATE_HOME": str(tmp_path / "xdg-state"),
+        "GH_CONFIG_DIR": str(tmp_path / "gh-config"),
         "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
     }
 

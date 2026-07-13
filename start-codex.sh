@@ -7,6 +7,9 @@
 
 set -e
 
+# shellcheck source=scripts/lib/thread_rollover_link.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/lib/thread_rollover_link.sh"
+
 # Ensure common local bin paths are available
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
 hash -r 2>/dev/null || true
@@ -146,6 +149,10 @@ if [ "$CODEX_TARGET" = "worktree" ]; then
         echo "Symlinked data/ into worktree"
     fi
 
+    # Bridge only the canonical rollover directory, never the whole .agent tree.
+    ensure_thread_rollover_link "$PROJECT_DIR" "$WORKTREE_DIR"
+    echo "Verified .agent/thread-rollovers canonical bridge"
+
     TARGET_DIR="$WORKTREE_DIR"
 fi
 
@@ -187,4 +194,5 @@ echo ""
 
 echo "Launching Codex in $CODEX_TARGET checkout..."
 export CODEX_SESSION=1
+export CODEX_CANONICAL_REPO_ROOT="$PROJECT_DIR"
 codex "${CODEX_FLAGS[@]}" -C "$TARGET_DIR" "${CODEX_ARGS[@]}"

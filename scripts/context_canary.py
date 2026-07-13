@@ -721,6 +721,46 @@ def cmd_score(args: argparse.Namespace) -> int:
         return 0 if is_pass else 2
 
 
+def cmd_questions(args: argparse.Namespace) -> int:
+    """Write the recall-only view of a strict production probe.
+
+    This deliberately excludes ground-truth answers so a replacement thread can
+    perform a memory recall without first reading the answer-bearing probe.
+    """
+    try:
+        probe = json.loads(Path(args.probe).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        print(f"error: cannot read production probe: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 2
+    if not isinstance(probe, dict) or probe.get("schema") != "production-handoff-v2":
+        print("error: questions requires a production-handoff-v2 probe", file=sys.stderr)
+        return 2
+    anchors = probe.get("anchors")
+    if not isinstance(anchors, list) or len(anchors) != 10:
+        print("error: questions requires exactly 10 production anchors", file=sys.stderr)
+        return 2
+    questions: list[dict[str, str]] = []
+    for anchor in anchors:
+        if (
+            not isinstance(anchor, dict)
+            or not isinstance(anchor.get("id"), str)
+            or not isinstance(anchor.get("q"), str)
+        ):
+            print("error: production probe has malformed question anchors", file=sys.stderr)
+            return 2
+        questions.append({"id": anchor["id"], "q": anchor["q"]})
+    payload = {
+        "version": "2",
+        "schema": "production-handoff-v2-questions",
+        "lineage_id": probe.get("lineage_id"),
+        "rollover_id": probe.get("rollover_id"),
+        "questions": questions,
+    }
+    Path(args.out).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"questions written -> {args.out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -741,6 +781,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     mint.add_argument("--out", required=True, help="Probe output path")
     mint.set_defaults(func=cmd_mint)
+
+    questions = sub.add_parser(
+        "questions",
+        help="Write an answer-free questions-only view of a strict production probe.",
+    )
+    questions.add_argument("--probe", required=True)
+    questions.add_argument("--out", required=True)
+    questions.set_defaults(func=cmd_questions)
 
     score = sub.add_parser(
         "score",

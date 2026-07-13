@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thread Rollover"
+  short_description: "Safely resume and prove thread continuity"
+  default_prompt: "Use $thread-rollover to prepare or safely resume this Codex thread rollover."

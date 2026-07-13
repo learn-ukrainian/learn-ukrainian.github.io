@@ -95,13 +95,14 @@ only as the offline fallback above.
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
-**Canary mint (orchestrator sessions, user go 2026-07-07):** after orientation,
-freeze 8-10 anchors from the facts just gathered (origin/main SHA, open-PR numbers,
-queue/corpus counts): `.venv/bin/python scripts/context_canary.py mint --facts
-'<json {id,q,a} list>' --out .agent/canary-<stamp>.json`. Score FROM MEMORY (no
-scrolling back) at ≥50% of the active model's window and before any handoff. Rot
-evidence is PER-MODEL (Claude lane rotates: Opus 4.8 verified, Fable 5 improvised
-10/10 @ ~500K, Sonnet 5 pending) — on a not-yet-canaried model this is mandatory.
+**Canary mint (production v2):** use this only inside a prepared rollover packet.
+The reserved snapshot has exactly 3 goals, 3 decision/rationale records, 2 negative
+constraint/prohibition records, and 2 next actions from durable allowed `source_ref`
+records. Never relabel Git, GitHub, or Monitor metadata as semantic anchors, fabricate,
+or pad. The replacement must run the exact reserved-path commands emitted by
+`thread_handoff.py detect --agent codex --format session-start`, including
+`context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
+the separate challenge proof and `confirm-started` can unlock cleanup.
 
 ## Merge policy — ready PRs must not sit (user directive 2026-07-07, #4703)
 
@@ -139,13 +140,23 @@ in-stream PRs from sitting, so this net is a rare safety valve, not the primary 
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
-Thread rollover handoffs are separate from durable session records. When a
-thread approaches context threshold, run
-`.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent <name>`
-and continue from `.agent/<name>-thread-bootstrap.md` plus
-`.agent/<name>-thread-handoff.md`. Those files are gitignored local state.
+Thread rollover handoffs are managed by the `thread-rollover` skill. When a
+thread approaches context threshold, use the `thread-rollover` skill to prepare
+a handoff packet using `scripts/orchestration/thread_handoff.py prepare --agent codex --active-thread-id <id>`.
+This creates an isolated `handoff.md` inside `.agent/thread-rollovers/codex/<lineage-id>/`.
 Do **not** write `docs/session-state/current.md` or any other git-tracked
 handoff file just to survive compaction.
+
+SessionStart automatically runs the read-only engine detector. If it reports a
+packet, follow its exact ordered commands; it never chooses a lease by filesystem
+order and never auto-runs resume, proof, confirmation, or cleanup. A no-packet
+cold start uses a complete legacy orientation-health probe only after tool-backed
+orientation:
+
+```bash
+printf '%s\n' '[{"id":"goal","q":"What is the active durable goal?","a":"<truthful durable answer>"},{"id":"decision","q":"What durable decision constrains this task?","a":"<truthful durable answer>"},{"id":"constraint","q":"What prohibition still applies?","a":"<truthful durable answer>"},{"id":"next-action","q":"What is the next durable action?","a":"<truthful durable answer>"},{"id":"owner","q":"Who owns the active task?","a":"<truthful durable answer>"},{"id":"scope","q":"What is explicitly out of scope?","a":"<truthful durable answer>"},{"id":"evidence","q":"Which durable artifact was read?","a":"<truthful durable answer>"},{"id":"risk","q":"What unresolved risk remains?","a":"<truthful durable answer>"},{"id":"validation","q":"What validation is required?","a":"<truthful durable answer>"},{"id":"next-boundary","q":"What condition ends this session?","a":"<truthful durable answer>"}]' > .agent/orientation-health-facts.json
+.venv/bin/python scripts/context_canary.py mint --facts .agent/orientation-health-facts.json --out .agent/orientation-health-probe.json
+```
 
 Every new durable session handoff ships as **MD brief only** (user decision 2026-07-07 —
 the HTML halves were not being read):

@@ -27,19 +27,27 @@ IN-PROGRESS MODULES:
 $MODULE_LIST"
 fi
 
-# 2. Current open GH issues (top 5)
-if command -v gh >/dev/null 2>&1; then
-  ISSUES=$(gh issue list --state open --limit 5 --json number,title 2>/dev/null | jq -r '.[] | "  #\(.number): \(.title)"' 2>/dev/null)
-  if [ -n "$ISSUES" ]; then
-    CONTEXT="$CONTEXT
-OPEN ISSUES (top 5):
-$ISSUES"
+# 2. Local rollover health only. PostCompact must never prepare, resume, prove,
+# confirm, clean up, query GitHub, or manufacture handoff anchors.
+HANDOFF_AGENT="${SESSION_HANDOFF_AGENT:-}"
+if [ -z "$HANDOFF_AGENT" ]; then
+  if [[ "${0:-}" == *"/.codex/"* ]] || [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
+    HANDOFF_AGENT="codex"
+  else
+    HANDOFF_AGENT="claude"
   fi
 fi
+CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
+ROLLOVER_HEALTH=$("$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
+  --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" 2>&1) || true
 
 # 3. Key reminders
 CONTEXT="$CONTEXT
 KEY REMINDERS:
+  - Thread rollover health (read-only): $ROLLOVER_HEALTH
+  - If a live packet is shown, read its handoff path; SessionStart provides the lifecycle commands.
   - Word targets are MINIMUMS (check config.py)
   - Edit agents_extensions/shared/, not .claude/ directly
   - .venv/bin/python only
