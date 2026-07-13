@@ -46,3 +46,89 @@ handoff_identity_for_agent() {
     *) ;;
   esac
 }
+
+# handoff_epic_from_argv "$@"
+# Echo the value of `--epic <v>` / `--epic=<v>` from an argv list, or nothing.
+# `--epic` is a LAUNCHER flag, not a claude CLI flag: the caller must ALSO
+# strip it from the argv it forwards (see strip_epic_from_argv). Accepts both
+# `atlas` and `atlas.epic` spellings; a `.epic` suffix is dropped.
+# First occurrence wins.
+handoff_epic_from_argv() {
+  local prev='' arg='' value=''
+  for arg in "$@"; do
+    case "$arg" in
+      --epic=*)
+        value="${arg#--epic=}"
+        printf '%s' "${value%.epic}"
+        return 0
+        ;;
+    esac
+    if [ "$prev" = "--epic" ]; then
+      printf '%s' "${arg%.epic}"
+      return 0
+    fi
+    prev="$arg"
+  done
+}
+
+# strip_epic_from_argv "$@"
+# Print the argv list minus `--epic <v>` / `--epic=<v>`, NUL-delimited so args
+# containing spaces or even newlines survive the round-trip (consume with:
+# while IFS= read -r -d '' a; do argv+=("$a"); done < <(strip_epic_from_argv "$@")).
+# Needed because the claude CLI does not know `--epic` and would reject it.
+strip_epic_from_argv() {
+  local skip_next=0 arg=''
+  for arg in "$@"; do
+    if [ "$skip_next" = "1" ]; then
+      skip_next=0
+      continue
+    fi
+    case "$arg" in
+      --epic) skip_next=1; continue ;;
+      --epic=*) continue ;;
+    esac
+    printf '%s\0' "$arg"
+  done
+}
+
+# epic_flag_present "$@"
+# Succeed when any `--epic` / `--epic=...` token appears in argv, regardless of
+# whether a usable value follows. Needed because handoff_epic_from_argv returns
+# empty BOTH for "flag absent" and "flag present with empty/dangling value" —
+# and the latter must fail the launch loudly instead of leaking the
+# launcher-private flag into the claude CLI argv (grok review of #5074).
+epic_flag_present() {
+  local arg=''
+  for arg in "$@"; do
+    case "$arg" in
+      --epic|--epic=*) return 0 ;;
+    esac
+  done
+  return 1
+}
+
+# epic_name_valid "<epic-name>"
+# Succeed only for sane epic names: lowercase alnum + inner hyphens (atlas,
+# hramatka, lit-war). Anything else — path chars, spaces, uppercase — is
+# refused so a malformed --epic can never traverse into the handoff-slot path
+# (.agent/claude-<epic>-thread-handoff.md) or the .claude/<epic>-epic/ pointer.
+epic_name_valid() {
+  # LC_ALL=C: under macOS system bash 3.2 the [a-z] range is locale-collated
+  # and matches uppercase too — pin the C locale so the class is literal.
+  local LC_ALL=C
+  case "${1:-}" in
+    ''|*[!a-z0-9-]*|-*|*-) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+# handoff_identity_for_epic "<epic-name>"
+# Echo the per-epic SESSION_HANDOFF_AGENT slot (claude-<epic>), or nothing when
+# no epic is given. An explicit epic BEATS the agent-type mapping: two sessions
+# of the same agent type on different epics must not share a handoff slot
+# (root cause of the 2026-07-13 atlas/hramatka/main lane collision).
+handoff_identity_for_epic() {
+  local epic="${1:-}"
+  [ -n "$epic" ] || return 0
+  printf 'claude-%s' "$epic"
+}

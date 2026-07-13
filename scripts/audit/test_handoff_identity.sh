@@ -42,4 +42,61 @@ eq "$(handoff_identity_for_agent "$agent")" "claude-infra" "e2e: --agent infra-o
 agent="$(handoff_agent_from_argv --chrome --agent curriculum-orchestrator)"
 eq "$(handoff_identity_for_agent "$agent")" "" "e2e: --agent curriculum-orchestrator → default claude"
 
+# --- epic argv extraction: spaced + equals forms, .epic suffix normalized ---
+eq "$(handoff_epic_from_argv --agent curriculum-orchestrator --epic atlas)" "atlas" "spaced --epic"
+eq "$(handoff_epic_from_argv --epic=hramatka)" "hramatka" "equals --epic"
+eq "$(handoff_epic_from_argv --epic atlas.epic)" "atlas" "spaced --epic with .epic suffix"
+eq "$(handoff_epic_from_argv --epic=harness.epic)" "harness" "equals --epic with .epic suffix"
+eq "$(handoff_epic_from_argv --agent curriculum-orchestrator)" "" "no --epic flag"
+eq "$(handoff_epic_from_argv)" "" "empty argv (epic)"
+
+# --- epic → slot mapping: epic beats agent-type; empty epic maps to nothing ---
+eq "$(handoff_identity_for_epic atlas)" "claude-atlas" "epic atlas → claude-atlas"
+eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → claude-hramatka"
+eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
+
+# --- strip: --epic (both forms) removed, everything else preserved in order ---
+stripped="$(strip_epic_from_argv --chrome --epic atlas --agent curriculum-orchestrator | tr '\0' ' ')"
+eq "$stripped" "--chrome --agent curriculum-orchestrator " "strip spaced --epic"
+stripped="$(strip_epic_from_argv --epic=atlas --chrome | tr '\0' ' ')"
+eq "$stripped" "--chrome " "strip equals --epic"
+stripped="$(strip_epic_from_argv --chrome --agent curriculum-orchestrator | tr '\0' ' ')"
+eq "$stripped" "--chrome --agent curriculum-orchestrator " "strip is no-op without --epic"
+
+# --- strip transport is NUL-delimited: args with spaces AND newlines survive ---
+args=()
+while IFS= read -r -d '' a; do args+=("$a"); done < <(strip_epic_from_argv --epic atlas "two words" $'line1\nline2' --chrome)
+eq "${#args[@]}" "3" "NUL transport: arg count preserved"
+eq "${args[0]}" "two words" "NUL transport: space arg intact"
+eq "${args[1]}" $'line1\nline2' "NUL transport: newline arg intact"
+eq "${args[2]}" "--chrome" "NUL transport: trailing flag intact"
+
+# --- epic name validation: sane names pass, path/space/case junk refused ---
+epic_name_valid atlas || fail "epic_name_valid: atlas must pass"
+epic_name_valid lit-war || fail "epic_name_valid: lit-war must pass"
+epic_name_valid "../../etc" && fail "epic_name_valid: traversal must be refused"
+epic_name_valid "two words" && fail "epic_name_valid: spaces must be refused"
+epic_name_valid "Atlas" && fail "epic_name_valid: uppercase must be refused"
+epic_name_valid "-atlas" && fail "epic_name_valid: leading hyphen must be refused"
+epic_name_valid "" && fail "epic_name_valid: empty must be refused"
+
+# --- flag-presence: distinguishes "flag absent" from "flag with empty/dangling value" ---
+epic_flag_present --chrome --epic && : || fail "epic_flag_present: dangling --epic must be detected"
+epic_flag_present --epic= && : || fail "epic_flag_present: --epic= must be detected"
+epic_flag_present --epic "" && : || fail "epic_flag_present: --epic '' must be detected"
+epic_flag_present --epic atlas && : || fail "epic_flag_present: valued --epic must be detected"
+epic_flag_present --chrome --agent curriculum-orchestrator && fail "epic_flag_present: must be false without the flag"
+# ...while extraction returns empty for all three malformed forms (the launcher
+# pairs these two signals to fail loudly instead of leaking --epic to claude):
+eq "$(handoff_epic_from_argv --chrome --epic)" "" "dangling --epic extracts empty"
+eq "$(handoff_epic_from_argv --epic=)" "" "--epic= extracts empty"
+eq "$(handoff_epic_from_argv --epic '')" "" "--epic '' extracts empty"
+
+# --- e2e: two same-agent-type launches on different epics get DIFFERENT slots ---
+epic_a="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic atlas)"
+epic_b="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic hramatka)"
+if [[ "$(handoff_identity_for_epic "$epic_a")" == "$(handoff_identity_for_epic "$epic_b")" ]]; then
+  fail "same-agent different-epic launches must not share a handoff slot"
+fi
+
 printf 'ok - handoff identity fixtures passed\n'
