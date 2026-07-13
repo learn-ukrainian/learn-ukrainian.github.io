@@ -1,60 +1,23 @@
 {
   "combined_disposition": {
     "reasons": [
-      "high-severity mechanical finding is unresolved"
+      "deterministic and semantic review passed"
     ],
-    "status": "BLOCK"
+    "status": "PASS"
   },
   "deterministic": {
     "aggregate": {
       "findings_by_severity": {
         "blocker": 0,
-        "high": 4,
+        "high": 0,
         "info": 0,
         "low": 0,
         "medium": 0
       },
       "reasons": [],
-      "status": "block"
+      "status": "clear"
     },
-    "policy_findings": [
-      {
-        "category": "crosslink_integrity",
-        "evidence": "declared=bio-137-dmytro-pavlychko; target_sequence=159",
-        "id": "connects-to-sequence-0",
-        "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-        "message": "connects_to sequence does not match the target plan.",
-        "severity": "high",
-        "source": "track_policy"
-      },
-      {
-        "category": "crosslink_integrity",
-        "evidence": "declared=bio-39-taras-shevchenko; target_sequence=61",
-        "id": "connects-to-sequence-1",
-        "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-        "message": "connects_to sequence does not match the target plan.",
-        "severity": "high",
-        "source": "track_policy"
-      },
-      {
-        "category": "crosslink_integrity",
-        "evidence": "declared=bio-149-volodymyr-ivasyuk; target_sequence=171",
-        "id": "connects-to-sequence-2",
-        "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-        "message": "connects_to sequence does not match the target plan.",
-        "severity": "high",
-        "source": "track_policy"
-      },
-      {
-        "category": "unresolved_rights",
-        "evidence": "portrait_fallback.license=VERIFY",
-        "id": "forbidden-placeholder-0",
-        "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-        "message": "Public-media rights remain unresolved; use text-only until cleared.",
-        "severity": "high",
-        "source": "track_policy"
-      }
-    ],
+    "policy_findings": [],
     "size_policy": {
       "error": null,
       "provenance": {
@@ -85,10 +48,10 @@
         ],
         "exit_code": 0,
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stdout_sha256": "b23a9b0022a8eea8d5bbe761092226410e2dcc061ea520970aecd9f5aeadac48"
+        "stdout_sha256": "fe74233e41557022ec77c64d37de861f5c5e291b9811fa3d453d686337a5b4f6"
       },
       "result": {
-        "actual_words": 2428,
+        "actual_words": 2497,
         "advisory_ceiling": 4000,
         "band_max": 2800,
         "band_min": 2200,
@@ -232,126 +195,34 @@
     }
   },
   "deterministic_contract_version": "1.0.1",
-  "findings": [
-    {
-      "category": "crosslink_integrity",
-      "evidence": "declared=bio-137-dmytro-pavlychko; target_sequence=159",
-      "id": "connects-to-sequence-0",
-      "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-      "message": "connects_to sequence does not match the target plan.",
-      "severity": "high",
-      "source": "track_policy"
-    },
-    {
-      "category": "crosslink_integrity",
-      "evidence": "declared=bio-39-taras-shevchenko; target_sequence=61",
-      "id": "connects-to-sequence-1",
-      "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-      "message": "connects_to sequence does not match the target plan.",
-      "severity": "high",
-      "source": "track_policy"
-    },
-    {
-      "category": "crosslink_integrity",
-      "evidence": "declared=bio-149-volodymyr-ivasyuk; target_sequence=171",
-      "id": "connects-to-sequence-2",
-      "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-      "message": "connects_to sequence does not match the target plan.",
-      "severity": "high",
-      "source": "track_policy"
-    },
-    {
-      "category": "unresolved_rights",
-      "evidence": "portrait_fallback.license=VERIFY",
-      "id": "forbidden-placeholder-0",
-      "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml",
-      "message": "Public-media rights remain unresolved; use text-only until cleared.",
-      "severity": "high",
-      "source": "track_policy"
-    },
-    {
-      "category": "language",
-      "evidence": "The plan says «потребує критичного співставлення». Project source tool search_ua_gec_errors returned a human-annotated native-author pair: error «співставлення», correction «зіставлення», tag F/Calque.",
-      "id": "ua-calque-spivstavlennia",
-      "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml:208",
-      "message": "Replace the learner-facing calque «співставлення» with standard «зіставлення».",
-      "severity": "medium",
-      "source": "semantic"
-    },
-    {
-      "category": "activity",
-      "evidence": "The activity asks learners to compare «Баяніст із Градизька» with the 2026 concert, and its model answer requires «однієї пісні у двох версіях». Official Mediateka metadata specifically names «Впали роси на покоси» and «Смерека»; YouTube metadata for P6_-jd0nvRU lists 16 chapters, including «Ясени» and «Два кольори», but neither named archive performance. The supplied materials do not identify any overlap or archive timestamp, so learners cannot reliably perform the required same-song comparison from the packet.",
-      "id": "comparison-shared-recording-not-established",
-      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:76",
-      "message": "Identify a song demonstrably present in both recordings, with usable timestamps, or provide a different archival recording; the current workbook comparison does not establish the common object required by its model answer.",
-      "severity": "medium",
-      "source": "semantic"
-    },
-    {
-      "category": "language",
-      "evidence": "GRAC returned no concordance for the exact phrase «межа певності», while «ступінь певності» returned seven concordance examples. The uncorroborated phrase is promoted as a vocabulary lemma and rubric term, so it merits source-aligned polishing even though its intended meaning is understandable.",
-      "id": "certainty-metalanguage-not-attested",
-      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml:26",
-      "message": "Prefer attested «ступінь певності» (or another source-checked formulation) over repeatedly teaching «межа певності» as a fixed noun phrase.",
-      "severity": "low",
-      "source": "semantic"
-    }
-  ],
-  "prompt_sha256": "64ef1f69fa272995a545671ed03d092a9977e928a977cc3b4e9b1c88c8900aaa",
-  "reproducibility_key": "cbcd2ef8546b6058ee14c8b5df9a35e61d5195d20e8dec1aa63f5f09e0940d4b",
+  "findings": [],
+  "prompt_sha256": "eb163248e6c61c1d7cab9407636d5ba88b109bc49c281637946abb5cfb27ffda",
+  "reproducibility_key": "8efb250d4fed5ab45a30e06442a8eb780d76ad8e4f2c4593d93c59531bbf693c",
   "review_protocol_version": "1.0.1",
   "reviewer": {
-    "agent": "codex-subagent",
-    "effort": "runtime-unreported",
-    "family": "openai-gpt",
-    "model": "runtime-unreported"
+    "agent": "agy",
+    "effort": "high",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": "post-build-review.result.v1",
   "semantic": {
     "claim_coverage": {
-      "claims_total": 74,
-      "claims_verified": 74,
+      "claims_total": 275,
+      "claims_verified": 275,
       "status": "complete"
     },
     "family": "seminar",
-    "findings": [
-      {
-        "category": "language",
-        "evidence": "The plan says «потребує критичного співставлення». Project source tool search_ua_gec_errors returned a human-annotated native-author pair: error «співставлення», correction «зіставлення», tag F/Calque.",
-        "id": "ua-calque-spivstavlennia",
-        "location": "curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml:208",
-        "message": "Replace the learner-facing calque «співставлення» with standard «зіставлення».",
-        "severity": "medium",
-        "source": "semantic"
-      },
-      {
-        "category": "activity",
-        "evidence": "The activity asks learners to compare «Баяніст із Градизька» with the 2026 concert, and its model answer requires «однієї пісні у двох версіях». Official Mediateka metadata specifically names «Впали роси на покоси» and «Смерека»; YouTube metadata for P6_-jd0nvRU lists 16 chapters, including «Ясени» and «Два кольори», but neither named archive performance. The supplied materials do not identify any overlap or archive timestamp, so learners cannot reliably perform the required same-song comparison from the packet.",
-        "id": "comparison-shared-recording-not-established",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:76",
-        "message": "Identify a song demonstrably present in both recordings, with usable timestamps, or provide a different archival recording; the current workbook comparison does not establish the common object required by its model answer.",
-        "severity": "medium",
-        "source": "semantic"
-      },
-      {
-        "category": "language",
-        "evidence": "GRAC returned no concordance for the exact phrase «межа певності», while «ступінь певності» returned seven concordance examples. The uncorroborated phrase is promoted as a vocabulary lemma and rubric term, so it merits source-aligned polishing even though its intended meaning is understandable.",
-        "id": "certainty-metalanguage-not-attested",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml:26",
-        "message": "Prefer attested «ступінь певності» (or another source-checked formulation) over repeatedly teaching «межа певності» as a fixed noun phrase.",
-        "severity": "low",
-        "source": "semantic"
-      }
-    ],
-    "summary": "All 74 atomic factual/source claims were checked against ESU, VUE, the NBU for Children bibliography, Suspilne/Mediateka metadata, Ukrainian Wikipedia, the project research dossier, VESUM, the literary corpus, UA-GEC, and GRAC. The module is careful about evidence limits and decolonization, but it contains one source-confirmed Ukrainian calque and a workbook comparison whose supplied resources do not establish the shared performance needed by its model answer.",
-    "verdict": "REVISE"
+    "findings": [],
+    "summary": "Exhaustive BIO review verified 275 atomic factual, attribution, quotation, language, activity, plan-adherence, decolonization, rights, and media claim instances across all five resolved target files. All previous findings, including crosslinks, rights placeholders, reassigned Suspilne URLs, unbound recordings, broadcast claims, and nonstandard language, have been definitively resolved. The module effectively executes the seminar prompt with accurate claims, clear attribution, precise source framing, and rigorous, plan-adherent activities.",
+    "verdict": "PASS"
   },
   "semantic_prompt_version": "1.0.0",
   "source_hashes": {
-    "activities": "90548efda024b3ce722fa2548a7a92e8645cf39963a479fac0bd827ea04dd05b",
-    "content": "81b01bf7fb52a120c2d9d283817ee7b0399c5530ef95aa0773443258a4f2bfd8",
-    "plan": "7c9d3623533452f3c96fdd97c26e8b926c74643d030c05838f4e9a8577ca1625",
-    "resources": "6558ce471e000a317fa4887107ecb2e1cbfd458ccb2f397ac89c0008f70ebc6a",
+    "activities": "20fcad8f33a05631aa5c917e1a89915d456e5407af12e370a4abd141c2bec095",
+    "content": "65d5da02915983a4b54a67d0d3bf2682ecaa33451d21013b5b4782c2b1cb02b8",
+    "plan": "3596ab011261897f4bf318731f402eb85a658103eae420e621db61ab56c6b347",
+    "resources": "9b1019e953df44a8522e61e4b4de860d0904c17f6fc792178e061ff5389e40af",
     "vocabulary": "50c20da1c4216d2353ec752fad78092f3e959d7f8af718643d3ee362ef6d761e"
   },
   "target": {

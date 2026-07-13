@@ -30,6 +30,41 @@ def _reviewer() -> dict[str, str]:
     }
 
 
+def _mechanical_high_deterministic() -> dict:
+    """Return stable mechanical findings without coupling tests to live content."""
+    findings = [
+        {
+            "id": f"connects-to-sequence-{index}",
+            "source": "track_policy",
+            "severity": "high",
+            "category": "crosslink_integrity",
+            "message": "Synthetic crosslink integrity failure.",
+            "evidence": f"synthetic sequence mismatch {index}",
+            "location": "curriculum/l2-uk-en/plans/bio/subject.yaml",
+        }
+        for index in range(3)
+    ]
+    findings.append(
+        {
+            "id": "forbidden-placeholder-0",
+            "source": "track_policy",
+            "severity": "high",
+            "category": "unresolved_rights",
+            "message": "Synthetic unresolved rights placeholder.",
+            "evidence": "portrait_fallback.license=VERIFY",
+            "location": "curriculum/l2-uk-en/plans/bio/subject.yaml",
+        }
+    )
+    deterministic = {
+        "track_audit": {"status": "complete"},
+        "size_policy": {"status": "complete"},
+        "policy_findings": findings,
+        "skip_assessments": [],
+    }
+    deterministic["aggregate"] = pbr.aggregate_deterministic(deterministic)
+    return deterministic
+
+
 def _artifact_snapshot() -> dict[str, tuple[int, int, str]]:
     paths: list[Path] = []
     bundle = ROOT / "curriculum" / "l2-uk-en" / "bio" / "oleksandr-bilash"
@@ -171,12 +206,51 @@ def test_prompt_versions_match_track_policy() -> None:
         assert marker in path.read_text(encoding="utf-8")
 
 
-def test_bilash_mechanical_regressions_are_detected(bilash_packet: dict) -> None:
-    findings = bilash_packet["deterministic"]["policy_findings"]
+def test_mechanical_track_policy_detects_crosslinks_and_rights(tmp_path: Path) -> None:
+    plan_root = tmp_path / "curriculum" / "l2-uk-en" / "plans" / "bio"
+    plan_root.mkdir(parents=True)
+    subject_plan = plan_root / "subject.yaml"
+    subject_plan.write_text(
+        yaml.safe_dump(
+            {
+                "connects_to": [
+                    "bad-format",
+                    "bio-1-missing",
+                    "bio-999-existing",
+                ],
+                "portrait_fallback": {"license": "VERIFY"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (plan_root / "existing.yaml").write_text(
+        yaml.safe_dump({"sequence": 1}),
+        encoding="utf-8",
+    )
+    target = {
+        "files": {
+            "plan": "curriculum/l2-uk-en/plans/bio/subject.yaml",
+        }
+    }
+    track_policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+
+    findings = pbr.evaluate_mechanical_track_policy(
+        target,
+        track_policy,
+        repo_root=tmp_path,
+        size_record={"status": "explicit_override"},
+    )
+
     categories = [finding["category"] for finding in findings]
     assert categories.count("crosslink_integrity") == 3
     assert categories.count("unresolved_rights") == 1
     assert {finding["severity"] for finding in findings} == {"high"}
+    assert {finding["id"] for finding in findings} == {
+        "connects-to-format-0",
+        "connects-to-missing-1",
+        "connects-to-sequence-2",
+        "forbidden-placeholder-0",
+    }
 
 
 def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) -> None:
@@ -197,7 +271,8 @@ def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) ->
 
 def test_bilash_size_policy_is_exemplar_only(bilash_packet: dict) -> None:
     size = bilash_packet["deterministic"]["size_policy"]["result"]
-    assert size["actual_words"] == 2428
+    assert size["status"] == "explicit_override"
+    assert size["effective_min"] <= size["actual_words"] <= size["band_max"]
     assert [size["band_min"], size["band_max"]] == [2200, 2800]
     assert size["advisory_ceiling"] == 4000
     policy_text = (SKILL / "config" / "track-policy.v1.yaml").read_text(encoding="utf-8")
@@ -205,14 +280,22 @@ def test_bilash_size_policy_is_exemplar_only(bilash_packet: dict) -> None:
     assert "4000" not in policy_text
 
 
-def test_semantic_pass_cannot_override_mechanical_high(bilash_packet: dict) -> None:
+def test_semantic_pass_cannot_override_mechanical_high(monkeypatch: pytest.MonkeyPatch) -> None:
+    policy_findings = _mechanical_high_deterministic()["policy_findings"]
+    monkeypatch.setattr(
+        pbr,
+        "evaluate_mechanical_track_policy",
+        lambda *args, **kwargs: copy.deepcopy(policy_findings),
+    )
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
     semantic = {
         "verdict": "PASS",
         "summary": "Semantic review completed.",
         "claim_coverage": {"status": "complete", "claims_total": 5, "claims_verified": 5},
         "findings": [],
     }
-    result = pbr.finalize_review(bilash_packet, semantic)
+    result = pbr.finalize_review(packet, semantic)
+
     assert result["combined_disposition"]["status"] == "BLOCK"
     assert any(finding["source"] == "track_policy" for finding in result["findings"])
     pbr.validate_result(result)
