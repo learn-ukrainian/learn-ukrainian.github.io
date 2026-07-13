@@ -46,3 +46,57 @@ handoff_identity_for_agent() {
     *) ;;
   esac
 }
+
+# handoff_epic_from_argv "$@"
+# Echo the value of `--epic <v>` / `--epic=<v>` from an argv list, or nothing.
+# `--epic` is a LAUNCHER flag, not a claude CLI flag: the caller must ALSO
+# strip it from the argv it forwards (see strip_epic_from_argv). Accepts both
+# `atlas` and `atlas.epic` spellings; a `.epic` suffix is dropped.
+# First occurrence wins.
+handoff_epic_from_argv() {
+  local prev='' arg='' value=''
+  for arg in "$@"; do
+    case "$arg" in
+      --epic=*)
+        value="${arg#--epic=}"
+        printf '%s' "${value%.epic}"
+        return 0
+        ;;
+    esac
+    if [ "$prev" = "--epic" ]; then
+      printf '%s' "${arg%.epic}"
+      return 0
+    fi
+    prev="$arg"
+  done
+}
+
+# strip_epic_from_argv "$@"
+# Print the argv list minus `--epic <v>` / `--epic=<v>`, one arg per line
+# (consume with: while IFS= read -r a; do argv+=("$a"); done < <(strip_epic_from_argv "$@")).
+# Needed because the claude CLI does not know `--epic` and would reject it.
+strip_epic_from_argv() {
+  local skip_next=0 arg=''
+  for arg in "$@"; do
+    if [ "$skip_next" = "1" ]; then
+      skip_next=0
+      continue
+    fi
+    case "$arg" in
+      --epic) skip_next=1; continue ;;
+      --epic=*) continue ;;
+    esac
+    printf '%s\n' "$arg"
+  done
+}
+
+# handoff_identity_for_epic "<epic-name>"
+# Echo the per-epic SESSION_HANDOFF_AGENT slot (claude-<epic>), or nothing when
+# no epic is given. An explicit epic BEATS the agent-type mapping: two sessions
+# of the same agent type on different epics must not share a handoff slot
+# (root cause of the 2026-07-13 atlas/hramatka/main lane collision).
+handoff_identity_for_epic() {
+  local epic="${1:-}"
+  [ -n "$epic" ] || return 0
+  printf 'claude-%s' "$epic"
+}

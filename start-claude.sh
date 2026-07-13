@@ -134,17 +134,45 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # curriculum default to the `claude` slot; `--agent infra-orchestrator` →
 # `claude-infra`. An explicit SESSION_HANDOFF_AGENT in the environment wins.
 # Mapping + argv parsing live in scripts/lib/handoff_identity.sh (unit-tested).
-if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
+#
+# EPIC ASSIGNMENT (`--epic <name>` / `--epic=<name>`, e.g. `--epic atlas`):
+# a LAUNCHER-ONLY flag (stripped before exec — the claude CLI does not know it).
+# It pins the session to one epic lane: SESSION_EPIC is exported for the
+# SessionStart hook to print a binding assignment banner, and the handoff slot
+# becomes claude-<epic> so two sessions of the SAME agent type on DIFFERENT
+# epics never share (or clobber) a thread handoff. Without --epic the hook
+# tells the session to ASK the user instead of defaulting to a lane — the
+# 2026-07-13 atlas/hramatka/main lane collision is the reason this exists.
+_forward_args=("$@")
+if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
     # shellcheck source=scripts/lib/handoff_identity.sh
     source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
-    _selected_agent="$(handoff_agent_from_argv "$@")"
-    _handoff_slot="$(handoff_identity_for_agent "$_selected_agent")"
-    if [ -n "$_handoff_slot" ]; then
-        export SESSION_HANDOFF_AGENT="$_handoff_slot"
-        echo "Handoff identity: $SESSION_HANDOFF_AGENT (from --agent $_selected_agent)"
+
+    _selected_epic="$(handoff_epic_from_argv "$@")"
+    if [ -n "$_selected_epic" ]; then
+        export SESSION_EPIC="$_selected_epic"
+        _forward_args=()
+        while IFS= read -r _fwd_arg; do
+            _forward_args+=("$_fwd_arg")
+        done < <(strip_epic_from_argv "$@")
+        unset _fwd_arg
+        echo "Epic assignment: ${SESSION_EPIC}.epic"
     fi
-    unset _selected_agent _handoff_slot
+
+    if [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
+        _selected_agent="$(handoff_agent_from_argv "$@")"
+        _handoff_slot="$(handoff_identity_for_epic "${_selected_epic:-}")"
+        if [ -z "$_handoff_slot" ]; then
+            _handoff_slot="$(handoff_identity_for_agent "$_selected_agent")"
+        fi
+        if [ -n "$_handoff_slot" ]; then
+            export SESSION_HANDOFF_AGENT="$_handoff_slot"
+            echo "Handoff identity: $SESSION_HANDOFF_AGENT (from --epic '${_selected_epic:-}' / --agent '${_selected_agent:-}')"
+        fi
+        unset _selected_agent _handoff_slot
+    fi
+    unset _selected_epic
 fi
 
 echo "Launching Claude Code (native install)..."
-exec "$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "$@"
+exec "$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "${_forward_args[@]}"

@@ -55,8 +55,13 @@ initialPrompt: |
      any handoff: `context_canary.py score --probe <file> --answers <my-answers.json>`. Rot
      evidence is PER-MODEL — on a model not yet canaried, this is mandatory (user go 2026-07-07).
 
-  Standalone session = main orchestrator. Drive the queue without asking when the next
-  action is obvious.
+  Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints
+  (from the launcher's `--epic` flag) — that binding beats everything below. Without a
+  banner: the user's first message names the epic → that binds; else
+  `.agent/lane-assignments.md` maps this agent type to exactly ONE epic → that binds;
+  else ASK THE USER one question before claiming any lane. NEVER self-assign
+  "main orchestrator" as a default — that default caused the 2026-07-13 lane collision.
+  Once the lane is bound: drive its queue without asking when the next action is obvious.
   Promoted track orchestrators own their tracks. Treat their PRs/delegates as awareness-only
   unless they ask for main review, merge, a Decision Card, or bounded Codex help.
 ---

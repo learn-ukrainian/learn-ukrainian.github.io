@@ -418,14 +418,44 @@ elif [ "${SESSION_HANDOFF_ALLOW_GIT_ROUTER:-0}" = "1" ] && [ -f "$HANDOFF_FILE" 
   fi
 fi
 
+# Epic assignment banner — the FIRST thing the session reads. SESSION_EPIC is
+# exported by start-claude.sh from its launcher-only `--epic` flag. With an
+# epic: bind the session to that lane and point at the epic driver handoff.
+# Without: forbid the old "standalone = main orchestrator" default that caused
+# the 2026-07-13 atlas/hramatka/main lane collision — the session must resolve
+# its lane from the user's first message / .agent/lane-assignments.md, or ASK.
+EPIC_BANNER=""
+if [ -n "${SESSION_EPIC:-}" ]; then
+  EPIC_BANNER="ASSIGNED EPIC: ${SESSION_EPIC}.epic (binding — from the launch command).
+You are the ${SESSION_EPIC} lane, NOT the main orchestrator. Do not claim or work
+other lanes' queues. Epic driver handoff (load AFTER the thread handoff below, it
+is the lane SSOT): .claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"
+  if [ ! -f "$PROJECT_DIR/.claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md" ]; then
+    EPIC_BANNER="$EPIC_BANNER
+(No driver handoff exists yet for this epic — create it at first rollover.)"
+  fi
+else
+  EPIC_BANNER="NO EPIC ASSIGNED (launcher had no --epic flag).
+Do NOT default to 'main orchestrator'. Resolve your lane in this order:
+1. The user's first message names the epic → that binds.
+2. .agent/lane-assignments.md maps this agent type to exactly ONE epic → that binds.
+3. Otherwise ASK THE USER one question ('which epic is this session?') BEFORE
+   claiming any lane, reading any thread handoff as your own, or touching queues."
+fi
+
 # Build output
-if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTEXT" ]; then
+if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTEXT" ] && [ -z "$EPIC_BANNER" ]; then
   exit 0
 fi
 
 CONTEXT=""
+if [ -n "$EPIC_BANNER" ]; then
+  CONTEXT="$EPIC_BANNER
+
+"
+fi
 if [ -n "$HANDOFF_CONTEXT" ]; then
-  CONTEXT="$HANDOFF_CONTEXT
+  CONTEXT="${CONTEXT}$HANDOFF_CONTEXT
 "
 fi
 CONTEXT="${CONTEXT}SESSION SETUP CHECK:"
