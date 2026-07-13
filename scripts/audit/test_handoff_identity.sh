@@ -80,6 +80,18 @@ epic_name_valid "Atlas" && fail "epic_name_valid: uppercase must be refused"
 epic_name_valid "-atlas" && fail "epic_name_valid: leading hyphen must be refused"
 epic_name_valid "" && fail "epic_name_valid: empty must be refused"
 
+# --- flag-presence: distinguishes "flag absent" from "flag with empty/dangling value" ---
+epic_flag_present --chrome --epic && : || fail "epic_flag_present: dangling --epic must be detected"
+epic_flag_present --epic= && : || fail "epic_flag_present: --epic= must be detected"
+epic_flag_present --epic "" && : || fail "epic_flag_present: --epic '' must be detected"
+epic_flag_present --epic atlas && : || fail "epic_flag_present: valued --epic must be detected"
+epic_flag_present --chrome --agent curriculum-orchestrator && fail "epic_flag_present: must be false without the flag"
+# ...while extraction returns empty for all three malformed forms (the launcher
+# pairs these two signals to fail loudly instead of leaking --epic to claude):
+eq "$(handoff_epic_from_argv --chrome --epic)" "" "dangling --epic extracts empty"
+eq "$(handoff_epic_from_argv --epic=)" "" "--epic= extracts empty"
+eq "$(handoff_epic_from_argv --epic '')" "" "--epic '' extracts empty"
+
 # --- e2e: two same-agent-type launches on different epics get DIFFERENT slots ---
 epic_a="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic atlas)"
 epic_b="$(handoff_epic_from_argv --agent curriculum-orchestrator --epic hramatka)"

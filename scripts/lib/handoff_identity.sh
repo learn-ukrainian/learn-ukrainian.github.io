@@ -91,6 +91,22 @@ strip_epic_from_argv() {
   done
 }
 
+# epic_flag_present "$@"
+# Succeed when any `--epic` / `--epic=...` token appears in argv, regardless of
+# whether a usable value follows. Needed because handoff_epic_from_argv returns
+# empty BOTH for "flag absent" and "flag present with empty/dangling value" —
+# and the latter must fail the launch loudly instead of leaking the
+# launcher-private flag into the claude CLI argv (grok review of #5074).
+epic_flag_present() {
+  local arg=''
+  for arg in "$@"; do
+    case "$arg" in
+      --epic|--epic=*) return 0 ;;
+    esac
+  done
+  return 1
+}
+
 # epic_name_valid "<epic-name>"
 # Succeed only for sane epic names: lowercase alnum + inner hyphens (atlas,
 # hramatka, lit-war). Anything else — path chars, spaces, uppercase — is

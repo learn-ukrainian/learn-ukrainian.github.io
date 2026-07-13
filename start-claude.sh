@@ -149,6 +149,11 @@ if [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
     source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
 
     _selected_epic="$(handoff_epic_from_argv "$@")"
+    if [ -z "$_selected_epic" ] && epic_flag_present "$@"; then
+        echo "Error: --epic flag present but no usable value (dangling --epic, --epic=, or empty value)."
+        echo "   Refusing to launch — pass --epic <name> (e.g. --epic atlas) or drop the flag."
+        exit 1
+    fi
     if [ -n "$_selected_epic" ]; then
         if ! epic_name_valid "$_selected_epic"; then
             echo "Error: invalid --epic name '$_selected_epic' (allowed: lowercase alnum + inner hyphens, e.g. atlas, lit-war)."
