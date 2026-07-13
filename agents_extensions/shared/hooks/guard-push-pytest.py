@@ -211,6 +211,18 @@ def _contains_git_push(command: str) -> bool:
     return any(_git_push_args(seg) is not None for seg in _segments(command))
 
 
+def _has_inline_skip(command: str) -> bool:
+    """Check if the command includes inline SKIP_PYTEST_HOOK=1 override before a git push."""
+    for seg in _segments(command):
+        if _git_push_args(seg) is not None:
+            for tok in seg:
+                if tok == "git":
+                    break
+                if tok in {"SKIP_PYTEST_HOOK=1", "SKIP_PYTEST_HOOK=\"1\"", "SKIP_PYTEST_HOOK=\x271\x27"}:
+                    return True
+    return False
+
+
 def _current_branch() -> str | None:
     try:
         out = subprocess.run(
@@ -267,9 +279,9 @@ def _marker_is_fresh(path: Path) -> bool | None:
         return None
 
 
-def _block_msg(marker: Path) -> str:
+def _block_msg(branch: str, marker: Path) -> str:
     return (
-        "BLOCKED by guard-push-pytest (#M-7): direct push from `main` includes "
+        f"BLOCKED by guard-push-pytest (#M-7): direct push from `{branch}` includes "
         "Python/test-trigger changes, but no recent local pytest stamp was found.\n\n"
         f"Marker path: {marker}\n"
         "Run `.venv/bin/python -m pytest ...` locally, then push again within "
@@ -287,6 +299,9 @@ def main() -> int:
     if not command or not _contains_git_push(command):
         return 0
 
+    if _has_inline_skip(command):
+        return 0
+
     branch = _current_branch()
     if branch != "main":
         return 0
@@ -300,7 +315,7 @@ def main() -> int:
     if fresh is None or fresh:
         return 0
 
-    sys.stderr.write(_block_msg(marker))
+    sys.stderr.write(_block_msg(branch, marker))
     return 2
 
 
