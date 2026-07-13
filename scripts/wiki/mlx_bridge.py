@@ -6,6 +6,7 @@ import base64
 import json
 import os
 import subprocess
+import sys
 import threading
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,58 @@ class WorkerCrashedError(RuntimeError):
     """Raised when the MLX subprocess exits unexpectedly."""
 
 
+class MLXDisabledError(RuntimeError):
+    """Raised when the MLX bridge is disabled due to memory or environment constraints."""
+
+
+_LOGGED_DISABLE = False
+
+
+def get_physical_ram() -> int | None:
+    """Read physical RAM size in bytes. Returns None if it cannot be determined."""
+    if sys.platform == "darwin":
+        try:
+            out = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True)
+            return int(out.strip())
+        except Exception:
+            return None
+    elif sys.platform.startswith("linux"):
+        try:
+            with open("/proc/meminfo") as f:
+                for line in f:
+                    if line.startswith("MemTotal:"):
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            return int(parts[1]) * 1024
+        except Exception:
+            return None
+    return None
+
+
+def check_mlx_availability() -> None:
+    """Check if MLX is available based on environment variables and physical RAM size."""
+    global _LOGGED_DISABLE
+    if os.environ.get("SOURCES_MCP_NO_MLX") == "1":
+        raise MLXDisabledError("MLX disabled: SOURCES_MCP_NO_MLX=1 is set")
+
+    if os.environ.get("SOURCES_MCP_FORCE_MLX") == "1":
+        return
+
+    ram_bytes = get_physical_ram()
+    if ram_bytes is not None:
+        floor_bytes = 32 * 1024 * 1024 * 1024
+        if ram_bytes < floor_bytes:
+            ram_gb = round(ram_bytes / (1024 ** 3))
+            if not _LOGGED_DISABLE:
+                sys.stderr.write(
+                    f"mlx disabled: {ram_gb}GB RAM < 32GB floor (SOURCES_MCP_NO_MLX to force off, SOURCES_MCP_FORCE_MLX=1 to override)\n"
+                )
+                _LOGGED_DISABLE = True
+            raise MLXDisabledError(
+                f"mlx disabled: {ram_gb}GB RAM < 32GB floor (SOURCES_MCP_NO_MLX to force off, SOURCES_MCP_FORCE_MLX=1 to override)"
+            )
+
+
 class MLXEncoderBridge:
     """Encode text batches through an isolated MLX worker process."""
 
@@ -33,6 +86,7 @@ class MLXEncoderBridge:
         worker_python: Path = EMBED_PYTHON,
         worker_script: Path = WORKER_SCRIPT,
     ) -> None:
+        check_mlx_availability()
         self._worker_python = worker_python
         self._worker_script = worker_script
         self._process: subprocess.Popen[str] | None = None

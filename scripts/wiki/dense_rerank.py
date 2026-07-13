@@ -28,7 +28,7 @@ from .embedding_manifest import (
     append_shard,
     filter_new_or_changed,
 )
-from .mlx_bridge import EMBEDDING_DIMS, MLXEncoderBridge
+from .mlx_bridge import EMBEDDING_DIMS, MLXDisabledError, MLXEncoderBridge
 from .thermal import nsprocessinfo_thermal_state
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -529,47 +529,57 @@ def rerank_candidates(
     if not candidates:
         return []
 
-    index = load_corpus_index(corpus, manifest_db=manifest_db)
-    if not index.unit_rows:
-        return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
+    try:
+        index = load_corpus_index(corpus, manifest_db=manifest_db)
+        if not index.unit_rows:
+            return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
 
-    vectors: list[NDArray[np.float32]] = []
-    present: list[dict[str, Any]] = []
-    missing: list[dict[str, Any]] = []
-    for candidate in candidates:
-        unit_key = str(candidate.get("unit_key", "")).strip()
-        location = index.unit_rows.get(unit_key)
-        if location is None:
-            missing.append({**candidate, "dense_score": 0.0, "cosine_score": 0.0})
-            continue
-        shard_id, row_idx = location
-        vectors.append(np.asarray(index.shards[shard_id][row_idx], dtype=np.float32))
-        present.append(candidate)
+        vectors: list[NDArray[np.float32]] = []
+        present: list[dict[str, Any]] = []
+        missing: list[dict[str, Any]] = []
+        for candidate in candidates:
+            unit_key = str(candidate.get("unit_key", "")).strip()
+            location = index.unit_rows.get(unit_key)
+            if location is None:
+                missing.append({**candidate, "dense_score": 0.0, "cosine_score": 0.0})
+                continue
+            shard_id, row_idx = location
+            vectors.append(np.asarray(index.shards[shard_id][row_idx], dtype=np.float32))
+            present.append(candidate)
 
-    if not present:
-        return missing[:limit]
+        if not present:
+            return missing[:limit]
 
-    candidate_matrix = _normalize_matrix(np.stack(vectors, axis=0))
-    query_vector = encode_query(query, encoder=encoder)
-    scores = candidate_matrix @ query_vector
+        candidate_matrix = _normalize_matrix(np.stack(vectors, axis=0))
+        query_vector = encode_query(query, encoder=encoder)
+        scores = candidate_matrix @ query_vector
 
-    scored = [
-        {
-            **candidate,
-            "dense_score": float(score),
-            "cosine_score": float(score),
-        }
-        for candidate, score in zip(present, scores, strict=True)
-    ]
-    scored.extend(missing)
-    scored.sort(
-        key=lambda row: (
-            -float(row.get("dense_score", 0.0)),
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
-            str(row.get("unit_key", "")),
+        scored = [
+            {
+                **candidate,
+                "dense_score": float(score),
+                "cosine_score": float(score),
+            }
+            for candidate, score in zip(present, scores, strict=True)
+        ]
+        scored.extend(missing)
+        scored.sort(
+            key=lambda row: (
+                -float(row.get("dense_score", 0.0)),
+                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+                str(row.get("unit_key", "")),
+            )
         )
-    )
-    return scored[:limit]
+        return scored[:limit]
+    except MLXDisabledError:
+        scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
+        scored.sort(
+            key=lambda row: (
+                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+                str(row.get("unit_key", "")),
+            )
+        )
+        return scored[:limit]
 
 
 def rerank_sections(
