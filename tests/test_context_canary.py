@@ -143,27 +143,29 @@ def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
 
 
 def _good_v2_snapshot() -> dict:
-    """Minimal durable-artifact snapshot yielding exactly 3/3/2/2 with required fields and seed."""
+    """Minimal durable-artifact snapshot yielding exactly 3/3/2/2 with required fields and seed.
+    Uses explicit lineage_id/rollover_id and valid source_ref grammar (kind:repo-rel#frag) with correct kind per category.
+    """
     return {
         "generated_at": "2026-07-13T12:00:00Z",
-        "lineage": "grok-build/5055-canary-gate:5055-semantic-fix",
-        "source": "handoff-artifact",
+        "lineage_id": "grok-build/5055-canary-gate:5055-semantic-fix",
+        "rollover_id": "rollover-5055-20260713-01",
         "seed": 987654321,
         "goals": [
             {
                 "id": "goal-restore-compat",
                 "statement": "Keep original legacy mint --facts and score with threshold/pass-ratio and 3-anchor flow",
-                "source_ref": "handoff:goals:goal-restore-compat",
+                "source_ref": "handoff:.agent/thread-rollovers/rollover-5055-001.json#goal-restore-compat",
             },
             {
                 "id": "goal-strict-v2",
                 "statement": "Add distinct production schema v2 with exactly 10 anchors from durable artifacts only",
-                "source_ref": "handoff:goals:goal-strict-v2",
+                "source_ref": "handoff:.agent/thread-rollovers/rollover-5055-001.json#goal-strict-v2",
             },
             {
                 "id": "goal-fail-closed",
                 "statement": "Mint must fail closed on insufficient categories or UNKNOWN; never pad with git data",
-                "source_ref": "handoff:goals:goal-fail-closed",
+                "source_ref": "handoff:.agent/thread-rollovers/rollover-5055-001.json#goal-fail-closed",
             },
         ],
         "decision_records": [
@@ -171,43 +173,43 @@ def _good_v2_snapshot() -> dict:
                 "id": "dec-exact-shape",
                 "decision": "Every prod anchor must be shaped {id,q,a,category,match_mode,source_ref}",
                 "rationale": "Required by architecture review for provenance",
-                "source_ref": "handoff:decisions:dec-exact-shape",
+                "source_ref": "decision:docs/decisions/2026-07-13-provenance.md#dec-exact-shape",
             },
             {
                 "id": "dec-strict-10",
                 "decision": "Use strict 10/10 for production confirmation, legacy ratio for facts",
                 "rationale": "Prevents 9/10 from passing as handoff safe",
-                "source_ref": "handoff:decisions:dec-strict-10",
+                "source_ref": "decision:docs/decisions/2026-07-13-provenance.md#dec-strict-10",
             },
             {
                 "id": "dec-no-relabel",
                 "decision": "Source anchors exclusively from handoff goals/decisions/constraints/actions not git or monitor",
                 "rationale": "git SHAs and file counts are not semantic continuity records",
-                "source_ref": "handoff:decisions:dec-no-relabel",
+                "source_ref": "decision:docs/decisions/2026-07-13-provenance.md#dec-no-relabel",
             },
         ],
         "constraint_records": [
             {
                 "id": "const-no-git-as-anchor",
                 "prohibition": "git_branch, commit subjects, ahead counts, file counts must never become semantic anchors",
-                "source_ref": "handoff:constraints:const-no-git-as-anchor",
+                "source_ref": "handoff:.agent/thread-rollovers/rollover-5055-001.json#const-no-git-as-anchor",
             },
             {
                 "id": "const-reject-unknown",
                 "prohibition": "Reject any UNKNOWN, empty, duplicate, or wrong-category at mint time recursively",
-                "source_ref": "handoff:constraints:const-reject-unknown",
+                "source_ref": "decision:docs/decisions/2026-07-13-provenance.md#const-reject-unknown",
             },
         ],
         "next_actions": [
             {
                 "id": "na-verify-blockers",
                 "action": "Prove arbitrary facts, UNKNOWN modified, git SHAs, ws ids, and legacy flow all behave correctly",
-                "source_ref": "handoff:actions:na-verify-blockers",
+                "source_ref": "queue:batch_state/orchestrator-runs/orchestrator-5055.json#na-verify-blockers",
             },
             {
                 "id": "na-run-all-checks",
                 "action": "Run pytest, ruff, format check, git diff --check, and agent trailer lint after the commit",
-                "source_ref": "handoff:actions:na-run-all-checks",
+                "source_ref": "handoff:.agent/thread-rollovers/rollover-5055-001.json#na-run-all-checks",
             },
         ],
     }
@@ -230,7 +232,8 @@ def test_mint_v2_snapshot_produces_strict_10_anchors_with_exact_schema_and_metad
     assert data["strict_production"] is True
     assert data["source"] == "snapshot"
     assert "seed" in data and isinstance(data["seed"], int)
-    assert data.get("lineage")
+    assert data.get("lineage_id")
+    assert data.get("rollover_id")
     assert "generated_at" in data
     assert data["anchor_counts"] == {
         "goal": 3,
@@ -250,7 +253,11 @@ def test_mint_v2_snapshot_produces_strict_10_anchors_with_exact_schema_and_metad
     assert cats == {"goal": 3, "decision/rationale": 3, "negative-constraint/prohibition": 2, "next-action": 2}
     for a in anchors:
         assert set(a.keys()) == {"id", "q", "a", "category", "match_mode", "source_ref"}
-        assert a["source_ref"] and "handoff:" in a["source_ref"]
+        assert a["source_ref"] and (
+            a["source_ref"].startswith("handoff:")
+            or a["source_ref"].startswith("decision:")
+            or a["source_ref"].startswith("queue:")
+        )
         assert a["match_mode"] in ("exact", "normalized")
         assert a["a"], "no invented answers"
         # check fields are not the sentinel tokens themselves (word "unknown" may legitimately appear in prose)
@@ -266,7 +273,21 @@ def test_v2_production_perfect_10_10_passes_rc0(tmp_path: Path):
     answers = {a["id"]: a["a"] for a in data["anchors"]}
     ans_path = tmp_path / "ans.json"
     ans_path.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans_path)])
+    lid = data["lineage_id"]
+    rid = data["rollover_id"]
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans_path),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 0
 
 
@@ -279,13 +300,39 @@ def test_v2_9_of_10_or_drift_fails_rc2(tmp_path: Path):
     answers[some_id] = "WRONG ANSWER FOR DRIFT"
     ans = tmp_path / "bad9.json"
     ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans)])
+    lid = data["lineage_id"]
+    rid = data["rollover_id"]
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 2
     # missing one also
     answers2 = {a["id"]: a["a"] for a in data["anchors"][:9]}
     ans2 = tmp_path / "miss.json"
     ans2.write_text(json.dumps(answers2), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans2)])
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans2),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 2
 
 
@@ -299,7 +346,21 @@ def test_v2_exact_id_match_no_normalization(tmp_path: Path):
         answers["  " + a["id"].upper() + "  "] = a["a"]
     ans = tmp_path / "wsid.json"
     ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans)])
+    lid = data["lineage_id"]
+    rid = data["rollover_id"]
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 2
 
 
@@ -319,7 +380,21 @@ def test_v2_match_mode_exact_vs_normalized(tmp_path: Path):
             ansd[a["id"]] = a["a"]
     ans = tmp_path / "anspad.json"
     ans.write_text(json.dumps(ansd), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(p2), "--answers", str(ans)])
+    lid = pdata["lineage_id"]
+    rid = pdata["rollover_id"]
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(p2),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 0
 
 
@@ -366,7 +441,7 @@ def test_arbitrary_ten_entry_facts_source_does_not_produce_v2_prod_probe(tmp_pat
 
 def test_v2_score_rejects_wrong_lineage_or_malformed_provenance(tmp_path: Path):
     snap = _good_v2_snapshot()
-    snap["lineage"] = ""
+    snap["lineage_id"] = ""
     sfile = tmp_path / "badline.json"
     sfile.write_text(json.dumps(snap), encoding="utf-8")
     p = tmp_path / "pbad.json"
@@ -473,12 +548,267 @@ def test_v2_verdict_contains_audit_fields(tmp_path: Path):
     ans = tmp_path / "av.json"
     ans.write_text(json.dumps(answers), encoding="utf-8")
     vpath = tmp_path / "verdict.json"
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans), "--verdict", str(vpath)])
+    lid = data["lineage_id"]
+    rid = data["rollover_id"]
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--verdict",
+            str(vpath),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
     assert rc == 0
     v = json.loads(vpath.read_text(encoding="utf-8"))
     assert v["version"] == "2"
     assert v["schema"] == "production-handoff-v2"
-    assert "lineage" in v
+    assert "lineage_id" in v
+    assert "rollover_id" in v
+    assert "probe_sha256" in v
     assert "seed" in v
     assert v["correct"] == 10
     assert v["verdict"] == "PASS"
+    # context_tokens must not be present (removed duplicate)
+    assert "context_tokens" not in v
+
+
+# --- Exact reproduction regression tests per requirements (preserve all prior tests; add these) ---
+
+
+def _expected_identity_from_good() -> tuple[str, str]:
+    snap = _good_v2_snapshot()
+    return snap["lineage_id"], snap["rollover_id"]
+
+
+def test_mint_rejects_git_github_monitor_arbitrary_and_bad_source_refs(tmp_path: Path):
+    """records with git:HEAD, github:, monitor:, arbitrary/non-durable source_ref fail mint."""
+    base = _good_v2_snapshot()
+    bad_refs = [
+        "git:HEAD",
+        "github:foo/bar#123",
+        "monitor:session#1",
+        "arbitrary-string",
+        "/absolute/path#f",
+        "../traversal#f",
+        "handoff:foo/bar#no-root-match",
+        "handoff:.agent/..#bad",
+        "badkind:docs/decisions/x.md#f",
+        "decision:docs/decisions/x.md#f",  # wrong for goal
+        "queue:docs/decisions/x.md#f",  # wrong kind/root
+        "handoff:.agent/thread-rollovers/r.json",  # missing #
+    ]
+    for i, bad in enumerate(bad_refs):
+        snap = _good_v2_snapshot()
+        snap["goals"][0]["source_ref"] = bad
+        s = tmp_path / f"badref{i}.json"
+        s.write_text(json.dumps(snap), encoding="utf-8")
+        rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(tmp_path / f"p{i}.json")])
+        assert rc == 1, f"should reject bad source_ref: {bad}"
+
+
+def test_forged_v2_with_bad_source_refs_fails_score(tmp_path: Path):
+    """forged v2 with such refs fails score (even if other fields look ok)."""
+    probe = _mint_v2(tmp_path)
+    pdata = json.loads(probe.read_text(encoding="utf-8"))
+    lid, rid = pdata["lineage_id"], pdata["rollover_id"]
+    # corrupt one ref
+    pdata["anchors"][0]["source_ref"] = "git:HEAD"
+    badp = tmp_path / "forged_badref.json"
+    badp.write_text(json.dumps(pdata), encoding="utf-8")
+    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
+    ans = tmp_path / "a.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(badp),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
+    assert rc == 2
+
+
+def test_snapshot_missing_either_identity_fails_mint(tmp_path: Path):
+    """snapshot missing either identity fails mint."""
+    for key in ("lineage_id", "rollover_id"):
+        snap = _good_v2_snapshot()
+        snap.pop(key, None)
+        s = tmp_path / f"no{key}.json"
+        s.write_text(json.dumps(snap), encoding="utf-8")
+        rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(tmp_path / "p.json")])
+        assert rc == 1
+
+
+def test_v2_score_missing_or_wrong_expected_identity_fails(tmp_path: Path):
+    """v2 score missing/wrong expected identity fails."""
+    probe = _mint_v2(tmp_path)
+    pdata = json.loads(probe.read_text(encoding="utf-8"))
+    lid, rid = pdata["lineage_id"], pdata["rollover_id"]
+    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
+    ans = tmp_path / "ans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    # missing expected
+    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(ans)])
+    assert rc == 2
+    # wrong
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            "wrong",
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
+    assert rc == 2
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            "wrong",
+        ]
+    )
+    assert rc == 2
+
+
+def test_v2_incomplete_or_extra_markers_fail_closed_not_legacy(tmp_path: Path):
+    """v2 missing seed/count/timestamp/policy, with extra anchor keys, or with partial markers fails rather than using legacy."""
+    # 1. partial marker on legacy shape
+    facts = [{"id": f"f{i}", "q": f"q{i}", "a": f"a{i}"} for i in range(3)]
+    fpath = tmp_path / "lf.json"
+    fpath.write_text(json.dumps(facts), encoding="utf-8")
+    p = tmp_path / "pleg.json"
+    rc = context_canary.main(["mint", "--facts", str(fpath), "--out", str(p)])
+    assert rc == 0
+    # add a v2 marker -> routes to v2 validation -> fail
+    pdat = json.loads(p.read_text(encoding="utf-8"))
+    pdat["version"] = "2"
+    pdat["schema"] = "production-handoff-v2"
+    p.write_text(json.dumps(pdat), encoding="utf-8")
+    ans = {f["id"]: f["a"] for f in facts}
+    ap = tmp_path / "al.json"
+    ap.write_text(json.dumps(ans), encoding="utf-8")
+    rc = context_canary.main(["score", "--probe", str(p), "--answers", str(ap)])
+    assert rc == 2  # not legacy pass
+
+    # 2. full v2 missing required field (e.g. seed)
+    snap = _good_v2_snapshot()
+    snap.pop("seed", None)  # will be generated, but remove generated_at to break
+    snap["generated_at"] = "not-a-timestamp"
+    s2 = tmp_path / "badts.json"
+    s2.write_text(json.dumps(snap), encoding="utf-8")
+    rc = context_canary.main(["mint", "--snapshot", str(s2), "--out", str(tmp_path / "pbadts.json")])
+    assert rc == 1
+
+    # 3. extra key in anchor
+    goodp = _mint_v2(tmp_path)
+    gdat = json.loads(goodp.read_text(encoding="utf-8"))
+    gdat["anchors"][0]["extra"] = "no"
+    gp = tmp_path / "pextra.json"
+    gp.write_text(json.dumps(gdat), encoding="utf-8")
+    lid, rid = gdat["lineage_id"], gdat["rollover_id"]
+    ansd = {a["id"]: a["a"] for a in gdat["anchors"]}
+    aa = tmp_path / "aa.json"
+    aa.write_text(json.dumps(ansd), encoding="utf-8")
+    rc = context_canary.main(
+        ["score", "--probe", str(gp), "--answers", str(aa), "--expected-lineage-id", lid, "--expected-rollover-id", rid]
+    )
+    assert rc == 2
+
+
+def test_missing_or_both_mint_sources_return_rc2(tmp_path: Path):
+    """missing/both mint source arguments return rc 2 (via required mutually_exclusive_group)."""
+    outp = str(tmp_path / "o.json")
+    # neither
+    rc = context_canary.main(["mint", "--out", outp])
+    assert rc == 2
+    # both
+    facts = tmp_path / "f.json"
+    facts.write_text(json.dumps([{"id": "x", "q": "q", "a": "a"}]), encoding="utf-8")
+    snap = tmp_path / "s.json"
+    snap.write_text(json.dumps(_good_v2_snapshot()), encoding="utf-8")
+    rc = context_canary.main(["mint", "--facts", str(facts), "--snapshot", str(snap), "--out", outp])
+    assert rc == 2
+
+
+def test_valid_durable_refs_for_every_allowed_category_pass(tmp_path: Path):
+    """valid durable refs for every allowed category pass (goals handoff; dec/rationale decision+handoff; const handoff+decision; next queue+handoff)."""
+    # already exercised by _good + _mint_v2 + perfect score, but explicit
+    probe = _mint_v2(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    lid, rid = data["lineage_id"], data["rollover_id"]
+    answers = {a["id"]: a["a"] for a in data["anchors"]}
+    ans = tmp_path / "okans.json"
+    ans.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(
+        [
+            "score",
+            "--probe",
+            str(probe),
+            "--answers",
+            str(ans),
+            "--expected-lineage-id",
+            lid,
+            "--expected-rollover-id",
+            rid,
+        ]
+    )
+    assert rc == 0
+    # also re-mint to confirm
+    s2 = tmp_path / "s2.json"
+    s2.write_text(json.dumps(_good_v2_snapshot()), encoding="utf-8")
+    p2 = tmp_path / "p2.json"
+    rc = context_canary.main(["mint", "--snapshot", str(s2), "--out", str(p2)])
+    assert rc == 0
+
+
+def test_all_prior_strictness_determinism_and_origin_legacy_tests_still_pass(tmp_path: Path):
+    """all prior strictness/determinism and every origin/main legacy test still pass (sanity after changes)."""
+    # run a representative legacy flow
+    probe = tmp_path / "pl.json"
+    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(probe)])
+    assert rc == 0
+    answers = {f["id"]: f["a"] for f in FACTS}
+    ap = tmp_path / "al.json"
+    ap.write_text(json.dumps(answers), encoding="utf-8")
+    rc = context_canary.main(
+        ["score", "--probe", str(probe), "--answers", str(ap), "--threshold", "0.75", "--pass-ratio", "0.85"]
+    )
+    assert rc == 0
+
+    # determinism on v2
+    snap = _good_v2_snapshot()
+    s = tmp_path / "sd.json"
+    s.write_text(json.dumps(snap), encoding="utf-8")
+    p1 = tmp_path / "pd1.json"
+    rc1 = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p1)])
+    p2 = tmp_path / "pd2.json"
+    rc2 = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p2)])
+    assert rc1 == rc2 == 0
+    d1 = json.loads(p1.read_text(encoding="utf-8"))
+    d2 = json.loads(p2.read_text(encoding="utf-8"))
+    assert [a["id"] for a in d1["anchors"]] == [a["id"] for a in d2["anchors"]]
+    assert d1["lineage_id"] == d2["lineage_id"] and d1["rollover_id"] == d2["rollover_id"]
