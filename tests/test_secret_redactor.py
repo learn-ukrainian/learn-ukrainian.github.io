@@ -51,6 +51,60 @@ def test_redact_text_handles_env_dump_and_known_token_shapes():
     assert "normal text" in redacted
 
 
+def test_redact_text_leaves_benign_code_with_secret_named_lhs_untouched():
+    # Regression for the 2026-07-12 diff-corruption burn: a secret-*named*
+    # identifier on the LHS must not nuke a benign code RHS (function call, list
+    # comprehension, set literal). These must survive byte-identical.
+    lines = [
+        "token_verdicts = vesum_gate.check_tokens(sentence)",
+        "tokens = [t for t in words if len(t) > 1]",
+        "secret_keys = set(pairwise(parts))",
+    ]
+
+    for line in lines:
+        assert redact_text(line) == line, line
+
+    joined = "\n".join(lines)
+    assert redact_text(joined) == joined
+    assert REDACTION not in redact_text(joined)
+
+
+def test_redact_text_still_redacts_real_secret_shaped_assignments():
+    cases = {
+        "GITHUB_TOKEN=ghp_abcdefghijklmnopqrstuvwxyz1234567890": "ghp_",
+        "AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY": "wJalrXUtn",
+    }
+
+    for line, marker in cases.items():
+        redacted = redact_text(line)
+        assert marker not in redacted, line
+        assert REDACTION in redacted, line
+
+
+def test_redact_text_still_redacts_quoted_and_json_secret_values():
+    assert "sk-ant-" not in redact_text("api_key = 'sk-ant-abcdefghijklmnop1234'")
+    assert REDACTION in redact_text('{"password": "hunter2secret"}')
+    assert "hunter2secret" not in redact_text('{"password": "hunter2secret"}')
+
+
+def test_redact_text_still_redacts_known_token_shapes_anywhere():
+    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123def456"
+    assert "eyJ" not in redact_text(f"the token is {jwt} in prose")
+    assert REDACTION in redact_text(f"the token is {jwt} in prose")
+
+
+def test_redact_text_redacts_unquoted_passphrase_but_not_code():
+    # Documented narrow allowance: a bare whitespace-separated passphrase assigned
+    # to a secret-named key is redacted (fail-closed), while code expressions —
+    # which always carry () [] {} , . operators — pass through.
+    redacted = redact_text("PASSWORD=correct horse battery staple")
+    assert "correct horse" not in redacted
+    assert REDACTION in redacted
+
+    code = "secret = compute(a, b) + other[0]"
+    assert redact_text(code) == code
+
+
 def test_redact_value_recursively_redacts_secret_keys_and_values():
     value = {
         "nested": {
