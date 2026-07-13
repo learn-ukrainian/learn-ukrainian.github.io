@@ -1951,3 +1951,103 @@ entries:
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4953012667
       active: false
       reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  vasyl-stus:
+    dossier_grounding: &cohort_next3_c1_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next3_c1_review
+    wiki_quote_verification: *cohort_next3_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Stus_KGB_photo_1980.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next3_c1_review
+    hold: &cohort_next3_c1_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  ivan-mykolaichuk:
+    dossier_grounding: *cohort_next3_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next3_c1_review
+    wiki_quote_verification: *cohort_next3_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Stamp_of_Ukraine_s1512.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next3_c1_review
+    hold: *cohort_next3_c1_hold
+  bohdan-stupka:
+    dossier_grounding: *cohort_next3_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next3_c1_review
+    wiki_quote_verification: *cohort_next3_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Bogdan_Stupka.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next3_c1_review
+    hold: *cohort_next3_c1_hold
+  natalia-yakovenko:
+    dossier_grounding: *cohort_next3_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next3_c1_review
+    wiki_quote_verification: *cohort_next3_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9D%D0%B0%D1%82%D0%B0%D0%BB%D1%8C%D1%8F_%D0%AF%D0%BA%D0%BE%D0%B2%D0%B5%D0%BD%D0%BA%D0%BE.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next3_c1_review
+    hold: *cohort_next3_c1_hold
+  myroslav-marynovych:
+    dossier_grounding: *cohort_next3_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4955719421
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next3_c1_review
+    wiki_quote_verification: *cohort_next3_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-13
+      evidence_url: https://commons.wikimedia.org/wiki/File:Marynovych_M.F._(05-2013)_1.JPG
+      disposition: approved
+    cohort_promotion: *cohort_next3_c1_review
+    hold: *cohort_next3_c1_hold

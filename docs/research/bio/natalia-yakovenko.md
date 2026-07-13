@@ -1,154 +1,193 @@
 # Наталя Миколаївна Яковенко — Research Dossier
 
 **Slug:** `natalia-yakovenko`
-**Block:** K (living scholar; decolonizer of Ukrainian historiography)
-**Tier:** 2
-**Issue:** #2535 (bio dossier uplift, original-180 ghost-wiki backfill)
-**Researcher:** Claude Opus 4.8 (`claude-opus-4-8`)
-**Completed:** 2026-06-04
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ — Плохій [T1]; her own monographs [T2/primary]; Плохій *Визволена Кліо* / Критика [T2])
-- [x] Oppression mechanism specific (the Soviet colonisation of Ukrainian medieval/early-modern history her work reverses; archival constraint 1970–81) — honestly framed for a living, non-repressed scholar
-- [x] ≥2 primary-source quotes (her own published interview statements — recorded speech; verify_quote applicability reported)
-- [x] Cross-track links verified with `git ls-tree`/`test -e` on 2026-06-04
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-13
+**Evidence key:** D1 — Інститут історії України НАНУ; D2 — авторизоване інтерв'ю НаУКМА; D3 — Wikimedia Commons.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Ната́ля Микола́ївна Якове́нко. [T1: ЕІУ — Плохій С.М., "Яковенко Наталя", т. 10, с. 731; T3: uk.wikipedia — Яковенко Наталя Миколаївна]
-- **Pseudonyms / aliases:** none of note (publishes under her own name; EN transliteration variants Nataliya/Natalia Yakovenko). Russian transliteration (forbidden in body text; §8 only): Наталья Яковенко, Natalya Yakovenko.
-- **Born:** **16 жовтня 1942** | с. **Апрелівка**, **Кіровоградська область** | Українська РСР, СРСР. **Living** (no death date). [T1: ЕІУ; T3: uk.wikipedia]
-- **Position:** Ukrainian historian; **доктор історичних наук (1994)**; **professor and head of the history chair at the Національний університет «Києво-Могилянська академія» (НаУКМА)** (professor since 1992); translator; **заслужений діяч науки і техніки України (2015)**. Author of **300+ works**. [T1: ЕІУ; T3: uk.wikipedia]
-- **Education / career key facts:** graduated the **classical division of the foreign-languages faculty, Львівський університет (1967)**; **1970–1981 senior researcher, Центральний державний історичний архів України**; 1981–1987 lecturer, Kyiv University; 1987–1991 senior researcher, **Інститут історії України НАН України**; 1991–1995 head of department, **Інститут української археографії та джерелознавства НАН України**; her doctoral dissertation was in **Latin palaeography** (documents of Ukrainian provenance), after which she moved to the history of the Ukrainian **шляхта (nobility)**. [T3: uk.wikipedia]
+Наталя Миколаївна Яковенко — українська історикиня, фахівчиня з історії
+ранньомодерної України, джерелознавства й історіографії. Інституційна сторінка
+Інституту історії України НАНУ підтверджує освіту з класичної філології у
+Львівському університеті, архівну та наукову працю, викладання в Національному
+університеті «Києво-Могилянська академія», наукові ступені й основні
+публікації [D1].
+
+Авторизоване інтерв'ю в репозитарії НаУКМА [D2] додає першеособову розповідь
+про освіту, латину, палеографію, архівну практику, вибір теми шляхти та
+формування університетського середовища. Воно є цінним самоописом, але не
+незалежною оцінкою впливу. Dossier зіставляє його з D1 і не приписує Яковенко
+одноосібного створення цілої історіографічної школи.
 
 ## 2. Oppression mechanism
 
-Yakovenko is a **living scholar who was not personally arrested or exiled** — to claim otherwise would be fabrication. Her place in this Russia-oppression track is precise and real nonetheless: her life's work **reverses the Soviet/Russian-imperial colonisation of Ukrainian medieval and early-modern history**. The template's "indirect oppression (censorship, professional)" rule governs here — the oppression is of the **discipline**, named with mechanism and date.
+Цей пакет не встановлює персонального політичного ув'язнення чи прямого
+карального переслідування Яковенко. Її професійний маршрут відбувався в умовах
+радянської академічної системи, де теми, інституції та кар'єрні можливості
+були ідеологічно регульовані, але D1 і D2 не дають права вигадувати конкретну
+справу КДБ або формальну заборону. Доказова точність вимагає зупинитися на
+тому, що джерела справді описують.
 
-- **The colonised field she inherited:** under the Soviet historiographic regime, the Ukrainian past was subordinated to a Russocentric master-narrative — Київська Русь annexed to a "common Russian" origin, the early-modern Ukrainian lands read through the lens of "**возз'єднання**" (the 1654 "reunification" myth), and the **шляхта, the Polish-Lithuanian Commonwealth experience, and Ukrainian Latinity** marginalised or treated as foreign. Honest study of these subjects was constrained.
-- **Working inside the constraint (dated):** for **eleven years (1970–1981)** Yakovenko worked as an archivist at the Central State Historical Archive under that regime; her substantive reinterpretive scholarship — the szlachta monograph, the *Нарис*, the studies of "уявлення та ідеї" — became possible only **after 1991**, when the ideological filter lifted. The very shape of her career (archivist → free historian after independence) is the imprint of the constraint.
-- **What she liberated (the positive mechanism):** her **«Українська шляхта…» (1993)** restored the Ukrainian nobility as a historical subject; her **«Нарис історії середньовічної та ранньомодерної України»** offered a deliberately **non-teleological, non-Russocentric** account "spoken in the language of the late twentieth century" (her own phrase, §4); her **«Вступ до історії» (2007)** taught a generation of Ukrainian historians source-critical method against ideological history. Serhii Plokhy titled his essay on her, fittingly, **«Визволена Кліо»** — *Liberated Clio*. [T2: Плохій, *Критика*, 2012]
-- **Where the Russian state still attacks the field:** modern Russian historiography and propaganda continue to deny the distinctness of the Ukrainian past (the "one people" / "ancient-Rus-is-Russia" claims weaponised in 2014–2022). Yakovenko's decolonised early-modern scholarship is part of the documentary answer; her receipt of the **Хрест Івана Мазепи (2010)** and the order **«За інтелектуальну відвагу» (2001)** marks the contested terrain.
+Натомість можна аналізувати структурний механізм: привілейовані історіографічні
+схеми, класову редукцію ранньомодерного суспільства, обмежене місце локальних
+еліт та мовну підготовку, потрібну для доступу до джерел. Робота з латиною,
+актовими книгами й палеографією розширювала можливість перевіряти минуле поза
+готовою радянською оповіддю [D1, D2]. Це інтелектуальна зміна, але не підстава
+ретроспективно називати кожен фаховий крок дисидентством.
 
 ## 3. Major works
 
-- `1993` — ***«Українська шляхта з кінця XIV до середини XVII століття. Волинь і Центральна Україна»*** (Київ: Наукова думка; 2nd ed. Критика, 2008). Her field-founding study of the Ukrainian nobility. [T1/primary; cited in the literary corpus, e.g. Щербак, *Козацтво*]
-- `1997` — ***«Нарис історії України з найдавніших часів до кінця XVIII століття»*** (Київ: Генеза); **retitled in the 2nd/3rd editions (Критика, 2005, 2006) as «Нарис історії середньовічної та ранньомодерної України»** — her synthetic, decolonised narrative. [primary; uk.wikipedia]
-- `2002` — *«Паралельний світ. Дослідження з історії уявлень та ідей в Україні XVI—XVII ст.»* (Київ: Критика). [primary]
-- `2007` — *«Вступ до історії»* (Київ: Критика) — her methodological manifesto on what history is and how it is written. [primary]
-- `2012` — *«Дзеркала ідентичності: Дослідження з історії уявлень та ідей в Україні XVII – початку XVIII століття»* (Київ: Laurus). [primary]
-- `2016` — *«У пошуках Нового неба: Життя і тексти Йоаникія Ґалятовського»* (Київ: Laurus). [primary]
-- co-author of a **Latin-language university textbook** (with В. Миронова). [uk.wikipedia]
+D1 подає бібліографічний каркас: дослідження української шляхти кінця XIV —
+середини XVII століття, синтетичні праці з історії України, «Вступ до історії»,
+«Дзеркала ідентичності» та інші студії ранньомодерної культури й уявлень.
+Точні назви принципові. Помилкова форма «Дзеркала історії» не повинна
+відтворюватися; D1 підтверджує «Дзеркала ідентичності».
 
-**Title-correction note:** the build-plan reference to *«Дзеркала історії»* is a mis-citation; the verified title is **«Дзеркала ідентичності»** (2012). Likewise the *«Нарис історії середньовічної та ранньомодерної України»* is the **retitled later edition** of the 1997 *Нарис*.
+Праця про шляхту повертає до історії України еліти Волині й Центральної
+України як складні соціальні групи. Це не апологія шляхти й не твердження, що
+ранньомодерні люди мали сучасну національну ідентичність. Синтетична історія
+розширює перелік історичних суб'єктів: поруч із селянством бачить міщан,
+духовенство, козацтво, шляхту, князів і локальні спільноти [D1, D2].
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation disposition
 
-Yakovenko's scholarly prose is **not indexed as literary in the project corpus** (its references corpus cites her monographs bibliographically), so `verify_quote` over the literary author-index is **not the right instrument** here. The quotes below are her **own published statements — recorded speech in named, dated interviews** — exactly the "recorded speech" the template admits, drawn from the interview titles documented in her uk.wikipedia bibliography (each is a verbatim phrase she gave the interviewer).
+Жодної персональної цитати Яковенко не схвалено для вбудованого навчального
+тексту. D2 є прямим авторизованим інтерв'ю, до якого план дає зовнішнє
+посилання, але dossier не передруковує довгі уривки. Поширені афоризми про
+історика як «невільника джерела» та інші фрази не використовуються без точного
+локатора в опрацьованому матеріалі.
 
-**Quote 1 — the historian's discipline before the source:**
-
-> «Історик є невільником джерела.»
-
-(*"The historian is a slave of the source."*) Her epistemic credo — history bounded by evidence, the antithesis of ideologically driven narrative. From her dialogue with Сергій Махун, **16 жовтня 2004** (also the keynote of her source-critical *Вступ до історії*). [T3: uk.wikipedia — Інтерв'ю; cross-referenced to *Вступ до історії*, 2007]
-
-**Quote 2 — choosing scholarship over career:**
-
-> «Ніколи не будувала кар'єру, тільки власний паралельний світ.»
-
-(*"I never built a career, only my own parallel world."*) From her **2016** dialogue with Світлана Одинець — a self-description that doubles as a quiet account of intellectual independence under, and after, the Soviet regime; "паралельний світ" deliberately echoes her 2002 monograph title. [T3: uk.wikipedia — Інтерв'ю]
-
-**A third, programmatic line** captures her decolonising aim: history must be re-told **«мовою кінця ХХ століття»** — *in the language of the late twentieth century* (dialogue with Діана Клочко, 2000) — i.e. freed from the inherited Soviet idiom. [T3: uk.wikipedia] *(These are interview titles attested in the uk.wikipedia reference list; their full verbatim context lives in the published interviews, referenced rather than reconstructed.)*
+Учні можуть читати D2 безпосередньо й переказувати позицію з атрибуцією.
+Авторизація підтверджує погоджений текст інтерв'ю, але не перетворює кожне
+ретроспективне судження на незалежно перевірений факт. Різниця між словами
+респондентки, редакторським оформленням і пізнішою інтерпретацією має бути
+видима.
 
 ## 5. Language register
 
-- **Register:** contemporary **academic-historiographic** Ukrainian — precise, source-critical, theoretically informed (history of ideas / mentalités, microhistory); also accomplished translation prose (from Latin/Polish).
-- **CEFR readiness for full reading:** **C2** for her monographs and *Вступ до історії* (specialist vocabulary: шляхта, ранньомодерний, уявлення та ідеї, ідентичність, джерелознавство, палеографія); the **biographical narrative** about her sits at **B2–C1**.
-- **Lexicon notes (pre-teach):** ранньомодерна Україна, шляхта, джерело/джерелознавство, уявлення та ідеї (mentalités), ідентичність, наратив, історіографія. VESUM-standard forms verified: шляхта, джерело, історіографія, ідентичність (FOUND); *ранньомодерний* glossed as the scholarly periodisation term she helped normalise.
-- **Stylistic features:** the deliberate replacement of teleological/ideological narrative with a non-determinist, evidence-bounded account; the "parallel world" of mentalités beside event-history.
+Ключова лексика: `джерелознавство`, `палеографія`, `актові книги`, `шляхта`,
+`ранньомодерний час`, `історіографія`, `анахронізм`, `історичний синтез`,
+`авторизоване інтерв'ю`. Для B2/C1 важливо тренувати застережні конструкції:
+«джерело дозволяє припустити», «термін не слід переносити», «інтерв'ю передає
+перспективу», «для оцінки впливу потрібне інше джерело».
+
+Назви соціальних груп не є прозорими. «Українська шляхта» — аналітична назва
+еліт, пов'язаних із землями та традиціями історії України, а не автоматичне
+приписування громадянської ідентичності XXI століття. Так само імперські
+категорії «польські» чи «російські» не можна механічно накладати на всі
+локальні еліти.
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** Yakovenko's **history-of-ideas / non-national approach** drew criticism from historians who wanted a more explicitly nation-building narrative; the 2007 debates around her school-textbook concept and *Вступ до історії* turned on how far history should serve national pedagogy versus source-critical neutrality. This is a genuine, ongoing methodological argument — presented, not resolved. [T2: Плохій, *Визволена Кліо*; Грицак, *Zbruč* 2013]
-- **What gets simplified in popular memory:** she is sometimes flattened into "the historian of the szlachta," obscuring the breadth (Galiatovsky, mentalités, palaeography) and the methodological revolution she led.
-- **Where Russian framing attacks the field:** the early-modern Ukrainian distinctness her work documents directly contradicts the Russian "one people / common-Russian-history" narrative; her scholarship is therefore implicated in the live historiographic front of the Russo-Ukrainian war.
-- **Polish dimension:** working on the szlachta and the Polish-Lithuanian Commonwealth, she models a non-confrontational Ukrainian-Polish historiography — valued by some, contested by those who read the Commonwealth period through a more adversarial lens.
+Перша напруга — елітарний поворот. Дослідження шляхти потрібне для розуміння
+влади, права, культурного посередництва та нерівності, але не повинно витісняти
+історію більшості населення. Друга — анахронізм: повернення локальної
+суб'єктності не виправдовує винайдення однорідної модерної нації в XVI
+столітті. Деколонізація й джерельна критика мають працювати разом.
+
+Третя напруга — персональний канон. Епітети на кшталт «матріарх української
+історіографії» можуть виражати пошану, але закривають дискусію. Вплив на
+дисципліну потребує рецепційних досліджень і голосів інших науковців. D1
+підтверджує праці й посади, D2 — самоопис; жодне не є повним вимірюванням
+академічної спадщини.
 
 ## 7. Cross-track links
 
-> Every path under **Existing** below was verified with `git ls-tree`/`test -e` on 2026-06-04 and resolves under `curriculum/l2-uk-en/plans/`.
-
-- **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/natalia-yakovenko.yaml` — the figure's own plan (this dossier backfills its research base).
-  - `curriculum/l2-uk-en/plans/bio/nataliia-polonska-vasylenko.yaml` — predecessor of the державницька/source-based school (Wave sibling).
-  - `curriculum/l2-uk-en/plans/bio/mykhailo-hrushevskyi.yaml` — the founding national historian whose paradigm she both inherits and revises.
-  - `curriculum/l2-uk-en/plans/bio/serhii-plokhy.yaml` — fellow decolonising historian and her ЕІУ biographer (*Визволена Кліо*).
-  - `curriculum/l2-uk-en/plans/bio/yaroslav-hrytsak.yaml` — contemporary historian in dialogue with her work.
-  - `curriculum/l2-uk-en/plans/bio/omelian-pritsak.yaml` — diaspora historian of the same source-critical, anti-Russocentric orientation.
-- **Existing HIST plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/hist/boiare-i-shliakhta.yaml` — the boyars-and-szlachta theme her 1993 monograph founded.
-  - `curriculum/l2-uk-en/plans/hist/rich-pospolyta.yaml` — the Polish-Lithuanian Commonwealth, her core period.
-  - `curriculum/l2-uk-en/plans/hist/liublinska-uniia.yaml` — the Union of Lublin (1569), pivot of her early-modern Ukraine.
-  - `curriculum/l2-uk-en/plans/hist/ukrainski-zemli-u-vkl.yaml` — Ukrainian lands in the Grand Duchy of Lithuania.
-- **Candidate cross-track connections (Phase 2+, NOT existing files):**
-  - A HIST/methodology module on **«Як пишеться історія»** built on *Вступ до історії* — not yet built.
-  - A "decolonising the early-modern" strand pairing Yakovenko with Polonska-Vasylenko and Kohut — not yet built.
-- **Potential additions surfaced (file as `bio-expansion-followup`, do not add unilaterally):**
-  - A historiography seminar on the post-1991 "liberation of Clio."
+- **Existing dedicated plan:** `plans/bio/natalia-yakovenko.yaml`.
+- **Potential classroom links:** ранньомодерна Україна, історія шляхти,
+  джерелознавство, палеографія, НаУКМА, деколонізація історіографії.
+- **Boundary:** потенційні теми не заявляються як наявні плани без окремої
+  перевірки каталогу.
 
 ## 8. Naming-canonical
 
-- **Slug:** `natalia-yakovenko`
-- **EN canonical (BGN/PCGN-style project spelling):** Natalia Yakovenko
-- **UA canonical (with patronymic):** Наталя Миколаївна Яковенко
-- **Aliases to track (`aliases:` YAML field):** Nataliya Yakovenko; Natalya Yakovenko.
-- **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Наталья Яковенко; Natalya Yakovenko (as a Russified rendering).
+Українська форма в цьому пакеті: **Наталя Миколаївна Яковенко**; інституційне
+джерело D1 є авторитетом для метаданих. Англійська форма: **Natalia
+Yakovenko**. Slug: `natalia-yakovenko`. Російськомовна назва файла на Commons
+не змінює канонічної української форми імені. Назви установ подаються
+українською, без імперських транслітерацій.
 
-## 9. Image candidates
+## 9. Image candidate
 
-- **Best CC portrait:** as a living public scholar, photographs exist from NaUKMA, lectures, and award ceremonies; **rights must be cleared individually** (these are NOT PD-by-age). Prefer a CC-licensed conference/lecture photo or a NaUKMA press photo with permission. [Check Wikimedia Commons category "Natalia Yakovenko" for any CC uploads.]
-- **Backup candidates:**
-  - The **cover of «Українська шляхта» (1993 / Критика 2008)** — clear, rights-manageable, illustrates §3.
-  - The cover of **«Вступ до історії» (2007)** — illustrates her methodological work.
-- **Context image:** a Києво-Могилянська академія building photo, or a Volhynian/early-modern document image (palaeography theme).
-- **If no rights-clear portrait clears review:** use a book-cover image of «Українська шляхта» or «Нарис історії середньовічної та ранньомодерної України» (with publisher permission).
+Схвалено **File:Наталья Яковенко.jpg** [D3]. Назва файла зберігається як
+технічний ідентифікатор Commons. Сторінка вказує ліцензію **CC BY-SA 3.0** й
+автора **Водник**. Використання потребує атрибуції, посилання на ліцензію та
+дотримання share-alike для похідної версії. Права стосуються лише цього
+портрета, не відеокадрів, університетських фотографій чи обкладинок книжок.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- *Енциклопедія історії України*, т. 10 (Т–Я). Плохій С.М. "Яковенко Наталя." Київ: Наукова думка, 2013. С. 731.
+- **D1:** Інститут історії України НАНУ, «ЯКОВЕНКО НАТАЛЯ МИКОЛАЇВНА» —
+  <https://resource.history.org.ua/person/0000517>. Біографія, професійні
+  ролі, ступені, напрями й бібліографія.
+- **D2:** НаУКМА, «Інтерв'ю Наталі Яковенко (авторизоване)» —
+  <https://ekmair.ukma.edu.ua/items/23492c95-ba69-4b83-96d5-ce5bb830253a>.
+  Пряме авторизоване інтерв'ю про освіту, архівну й університетську працю.
+- **D3:** Wikimedia Commons, **File:Наталья Яковенко.jpg** —
+  <https://commons.wikimedia.org/wiki/File:%D0%9D%D0%B0%D1%82%D0%B0%D0%BB%D1%8C%D1%8F_%D0%AF%D0%BA%D0%BE%D0%B2%D0%B5%D0%BD%D0%BA%D0%BE.jpg>.
+  Права й атрибуція конкретного портрета.
 
-**Tier 2 (institutional / scholarly):**
-- Плохій С. "Визволена Кліо. Тексти і контексти Наталі Яковенко." *Критика*, грудень 2012.
-- Грицак Я. "Слово подяки Наталі Яковенко"; Маринович М. "Представлення Наталі Яковенко." *Zbruč*, 2013-05-30/31.
-- Кафедра історії НаУКМА — institutional profile.
+## Decolonization self-check
 
-**Primary sources (her own works):**
-- Яковенко Н. *Українська шляхта з кінця XIV до середини XVII століття.* Київ, 1993 (Критика, 2008).
-- Яковенко Н. *Нарис історії середньовічної та ранньомодерної України.* Київ: Критика, 2005/2006 (1st ed. *Нарис історії України…*, Генеза, 1997).
-- Яковенко Н. *Паралельний світ* (2002); *Вступ до історії* (2007); *Дзеркала ідентичності* (2012); *У пошуках Нового неба* (2016).
-- Published interviews (recorded speech) cited in §4 — Махун (2004), Одинець (2016), Клочко (2000).
+- [x] Ранньомодерні українські землі не подано як периферію чужих наративів.
+- [x] Локальну суб'єктність повернуто без модерного національного анахронізму.
+- [x] Радянські історіографічні рамки не названо природними або нейтральними.
+- [x] Дослідження еліт не перетворено на їхню моральну апологію.
+- [x] Живу історикиню не канонізовано як безпомилковий авторитет.
+- [x] Цитатні та зображальні права позначено окремо й точно.
 
-**Tier 3 (encyclopedic — navigation, cross-checked):**
-- Українська Вікіпедія. "Яковенко Наталя Миколаївна." Birth, education (Lviv 1967), career, works (with the corrected титул «Дзеркала ідентичності»), awards, interviews. Accessed 2026-06-04 via `mcp__sources__query_wikipedia` (extract).
+### Evidence-to-claim matrix
 
-**Honest gaps:** as a living scholar, this dossier's §2 reframes "oppression" as the **decolonisation of a colonised discipline** (with the explicit, honest statement that she was **not** personally repressed). The §4 quotes are her **published interview statements**; their full verbatim context lives in the source interviews (referenced, not reconstructed). `verify_quote` over the literary author-index is not the right instrument for an academic historian and was not used to claim a score.
+D1 підтримує освіту, установи, ступені, дослідницькі напрями та назви праць.
+Воно не є незалежною рецепцією. Коли майбутній текст говорить про «перелом»,
+«школу» або «найвпливовішу історикиню», потрібні праці інших науковців і явні
+критерії. Наявний packet дозволяє говорити про документовану професійну роль,
+не про абсолютне місце в ієрархії.
 
----
+D2 підтримує першеособовий маршрут від класичної філології та архіву до
+викладання й досліджень. Авторизація дає текстові підстави переказувати
+позицію, але не усуває часової дистанції й вибірковості пам'яті. Інтерв'ю не
+можна використовувати як єдине джерело про мотиви колег або повну історію
+кафедри.
 
-## Decolonization self-check (run before submitting)
+D3 підтримує права конкретного портрета. Російськомовна технічна назва файла
+не є підставою змінювати українське ім'я. Ліцензія share-alike стосується
+похідного зображення, а не автоматично всього навчального тексту; атрибуція
+автора залишається обов'язковою.
 
-- [x] No Russocentric framing — her entire significance is the **dismantling** of Russocentric historiography.
-- [x] No Russian-imperial transliterations in body text — confined to §8, labelled FORBIDDEN.
-- [x] No Russocentric periodization — **ранньомодерна Україна**, **Велике князівство Литовське**, **Річ Посполита**, never "возз'єднання" in the project's voice (named only as the Soviet myth she revised, §2).
-- [x] No uncritical Soviet propaganda terms — "буржуазний націоналізм"/"возз'єднання" appear only **as** the Soviet frame she reversed.
-- [x] No "lost his life" euphemism — N/A (living scholar); honesty maintained that she was not personally repressed.
-- [x] Modern UA place names — Апрелівка (Кіровоградська обл.), Київ, Львів.
-- [x] Holodomor — N/A to her biography; not invoked spuriously.
-- [x] Russian aggression framing — the "one people / common-Russian-history" denial named as the live front her early-modern scholarship answers (§2/§6).
+Перед додаванням історіографічної тези редактор визначає її масштаб: факт
+біографії, самоопис методу, аналіз книжки чи оцінка впливу. Перші два масштаби
+покривають D1 і D2, третій потребує самої праці, четвертий — незалежної
+рецепції. Це розрізнення не послаблює деколонізаційний аргумент. Навпаки, воно
+не дозволяє замінити імперську схему новим некритичним каноном і тримає
+суб'єктність у межах документованого доказу.
+
+### Research boundaries and classroom use
+
+Пакет достатній для біографічної орієнтації, розмови про історичне ремесло,
+аналізу авторизованого інтерв'ю й перевірки бібліографічних назв. Він не є
+повним оглядом усіх праць Яковенко, історією НаУКМА або незалежною оцінкою її
+впливу. Для рецепційного твердження потрібні рецензії, історіографічні огляди й
+позиції інших дослідників.
+
+Підсумкова вправа: учень бере один факт із D1, один самоопис із D2 та формулює
+межу між ними. Потім пояснює, чому деколонізація не скасовує критики джерел і
+чому критика анахронізму не повертає імперську схему. Така структура робить
+метод центральним предметом біографії, а не декоративним додатком до переліку
+книжок.
+
+### Promotion disposition
+
+Пакет придатний до каталогового просування в режимі external-only. D1
+підтримує біографію та бібліографію, D2 — пряме авторизоване читання, D3 —
+правомірний портрет; активного hold для цих функцій немає. Статус не охоплює
+уривки з монографій, обкладинки, інші університетські фото чи абсолютні оцінки
+впливу. Для кожного розширення потрібні окремі правові й історіографічні
+підстави. Чітка межа дає змогу навчати метод і деколонізацію без перетворення
+живої науковиці на некритичний символ.
+
+Під час наступного оновлення слід повторно перевірити доступність обох
+інституційних сторінок, незмінність ліцензії D3 та точні бібліографічні назви.
+Якщо з'явиться потреба аналізувати окрему монографію, її текст і права мають
+стати новим джерельним записом, а не неявним продовженням D1.

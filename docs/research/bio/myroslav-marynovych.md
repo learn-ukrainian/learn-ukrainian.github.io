@@ -1,116 +1,194 @@
-# Маринович Мирослав Франкович (Myroslav Marynovych) — Research Dossier
+# Мирослав Франкович Маринович — Research Dossier
 
 **Slug:** `myroslav-marynovych`
-**Block:** E (Шістдесятники / Українська Гельсінська група — human-rights resistance)
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Claude (Opus 4.8)
-**Completed:** 2026-05-29
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-13
+**Evidence key:** D1 — Енциклопедія Сучасної України; D2 — Харківська правозахисна група; D3 — УІНП; D4 — Wikimedia Commons.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Маринович Мирослав Франкович
-- **Pseudonyms / aliases:** Myroslav Marynovych (EN); born surname **Дицьо** (changed to his mother's surname Marynovych at age 18)
-- **Born:** 1949-01-04 | село Комаровичі, Старосамбірський район, Дрогобицька область (нині Самбірський район, Львівська область) | Українська СРР
-- **Died:** — (living as of 2026; adviser to the rector of the Ukrainian Catholic University, Lviv)
-- **Family / education key facts:** Human-rights defender, prisoner of conscience, philosopher, and religious-studies scholar. His family was displaced by **Operation Vistula (Akcja "Wisła")** from Viiske (now in Poland); the family suffered repression (an uncle died on Kolyma; his grandfather, a priest, was repeatedly jailed). Graduate of Lviv Polytechnic (1972). A **member-founder of the Ukrainian Helsinki Group (1976)**; founder and head of the amnesty movement in Ukraine (1991–1997); co-founder of Amnesty International's first group on former-USSR soil.
+Мирослав Франкович Маринович народився 4 січня 1949 року в селі Комаровичі на
+Львівщині. Енциклопедія Сучасної України підтверджує освіту у Львівській
+політехніці, інженерну працю, участь у правозахисному русі, членство-заснування
+Української Гельсінської групи, арешт, вирок, табір і заслання, а також
+громадську, академічну та публіцистичну роботу після звільнення [D1].
 
-Cited from ≥2 sources:
-- uk.wikipedia.org "Маринович Мирослав Франкович" (intro): "член-засновник Української Гельсінської групи (1976), дисидент і політв'язень часів СРСР (1977—1987)… радник ректора Українського католицького університету у Львові."
-- Касьянов Г. *Незгодні* (1995), С. 161–164, 173, and the New York *Хроника текущих событий* (вип. 43–63) corroborate his UHG membership, 1977 arrest, and the 7+5-year sentence.
+Інтерв'ю в електронному музеї Харківської правозахисної групи дає
+першеособовий виклад формування поглядів, стеження, вступу до УГГ, арешту,
+слідства, ув'язнення, релігійного досвіду, заслання та повернення [D2]. УІНП
+підтверджує створення групи 9 листопада 1976 року, її відкритий характер,
+правозахисну мету й склад засновників, серед яких був Маринович [D3].
 
 ## 2. Oppression mechanism
 
-- **What happened:** Arrested for Helsinki-Group activity and held as a prisoner of conscience through camps and exile.
-- **When (specific dates):** KGB warning 1977-02-05 (the day UHG head Rudenko and Tykhy were arrested); arrested 1977-04-23; tried 1978-03-22/27 (Kyiv regional court, Vasylkiv); released early (pardoned) end of March 1987.
-- **By whom (specific Soviet agency):** КДБ УРСР; Kyiv regional court under Art. 62 of the Criminal Code of the UkrSSR (and Art. 70 of the RSFSR code).
-- **Document references:** 1978 Vasylkiv verdict; the *Хроника текущих событий* and the UHG *Вісник репресій в Україні* logged his case; Amnesty International adopted him as a **prisoner of conscience**.
-- **Mechanism specifics:** As a UHG member he prepared and carried the Group's memoranda, traveling to other members and to families of the arrested. He and Mykola Matusevych were tried together and given the **maximum: 7 years strict-regime camps + 5 years' exile**. He served at **ВС-389/36, Kuchino (Perm Oblast)** — taking part in strikes and hunger strikes (the longest, 20 days, for the right to keep a Bible) — spending roughly 150 days in punishment cells (ШІЗО) and about 18 months in the camp prison-block (ПКТ). His exile (from 1984) was to **Saralzhyn, Aktobe region, Kazakhstan**; he was "pardoned" by Gorbachev in 1987 and fully rehabilitated by Ukraine's Verkhovna Rada in 1991.
-- **What survived / what was destroyed:** A decade (1977–1987) of his life was taken. His resistance generated literature: in camp he wrote the essay *Євангеліє від Юродивого* (1982) and co-authored a secret Easter 1981 appeal to Pope John Paul II about religious persecution. After release he built civic and academic institutions — the Institute of Religion and Society and, at UCU, decades of teaching.
+Участь у відкритій правозахисній групі стала підставою для державного
+переслідування. Мариновича заарештували 1977 року, а 1978 року засудили до
+семи років таборів суворого режиму й п'яти років заслання [D1, D2]. D2
+описує стеження, слідство, етапування, табірний режим і дисциплінарні покарання
+з перспективи самого учасника. D1 дає зовнішній хронологічний каркас.
+
+Механізм не слід пом'якшувати формулою про «конфлікт із владою». Радянська
+держава криміналізувала ненасильницьке документування порушень прав і
+публічне посилання на міжнародні зобов'язання СРСР [D2, D3]. Табір і заслання
+були різними послідовними формами примусу. Після табору Маринович перебував у
+засланні в Казахстані [D1, D2]. Пізніше звільнення не робить первинний вирок
+законним і не повертає відібрані роки.
 
 ## 3. Major works
 
-- `1982` — *Євангеліє від Юродивого* (The Gospel of the Holy Fool) — essay written in camp, smuggled out and published abroad.
-- `1991` — *Україна на полях Святого Письма* — his first book (essays/prose/poetry).
-- `2003` — *Українська ідея і християнство, або Коли гарцюють кольорові коні Апокаліпсису*.
-- `2016` — *Всесвіт за колючим дротом. Спогади і роздуми дисидента* (published in English in 2021 as *The Universe Behind Barbed Wire: Memoirs of a Ukrainian Soviet Dissident*).
-- `2019` — *Митрополит Андрей Шептицький і принцип «позитивної суми»*.
+D1 підтверджує Мариновича як публіциста й релігієзнавця та дає
+бібліографічний каркас його праць. Для біографічного модуля важливі мемуарне
+осмислення табірного досвіду, тексти про релігійну свободу, гідність,
+примирення та суспільну відповідальність. Пакет не містить ліцензованих повних
+книжок, тому назви використовуються для орієнтації, а не як дозвіл на
+відтворення уривків.
 
-## 4. Primary-source quotes (≥2 required)
+D2 є самостійним навчальним читанням: довге інтерв'ю дозволяє простежити, як
+пізніший Маринович розповідає про молодість, рішення, страх, релігію й
+інституційну працю. Його треба читати як ретроспективне свідчення. Воно
+зберігає голос учасника, але не є дослівним записом думок 1976 року й не
+замінює документів інших членів групи.
 
-> «Добре, я буду проти вас.»
-- **Source:** Marynovych's documented reply, in 1973 at the «Позитрон» plant (Ivano-Frankivsk), to a KGB officer's threat "Кто не с нами, тот против нас." Verbatim from the verified extract.
-- **Context:** A founding moment of conscience — choosing open opposition. Excellent B2/C1 material on courage, choice, and the cost of integrity (note the regime addressing him in Russian, he answering in Ukrainian).
+## 4. Quotation disposition
 
-> «[Свій] PhD [він отримав] в ув'язненні.»
-- **Source:** Marynovych's own oft-repeated remark, documented in the verified extract ("жартує, що отримав свій PhD в ув'язненні").
-- **Context:** A wry reframing of the camps as the place that formed him intellectually; useful for discussing irony, dignity, and how survivors narrate trauma.
+Жодної персональної цитати не схвалено для вбудованого навчального тексту.
+Попередній dossier містив фрази з вторинних переказів і «відомі» вислови без
+надійного прямого локатора. Їх вилучено. D2 доступне зовнішнім посиланням, але
+цей packet не передруковує довгі уривки та не перетворює окремі речення на
+позачасові афоризми.
+
+Учні можуть переказувати інтерв'ю з чіткою атрибуцією й датою джерела. Для
+дослівного цитування потрібні точний фрагмент, контекст і правомірний обсяг.
+Твердження D3 про мету й заснування УГГ не слід подавати як слова Мариновича;
+це інституційний матеріал УІНП.
 
 ## 5. Language register
 
-- **Register:** Philosophical, theological, and publicistic; reflective memoir.
-- **CEFR readiness for full reading:** C1 (essays/theology); B2 for biographical narrative.
-- **Lexicon notes:** Vocabulary of conscience, religion, and reconciliation (в'язень сумління, екуменізм, релігійна свобода, примирення, гідність) alongside the dissident-era lexicon (самвидав, табір, заслання).
-- **Stylistic features:** Bridges Christian ethics and civic philosophy; his memoir frames imprisonment as moral formation rather than mere suffering — a hallmark "spirituality of the Gulag."
+Ключова лексика: `правозахисник`, `Українська Гельсінська група`, `в'язень
+сумління`, `суворий режим`, `заслання`, `міжнародні зобов'язання`,
+`ретроспективне свідчення`, `релігійна свобода`, `гідність`, `примирення`.
+Для B2/C1 варто порівнювати енциклопедичну хронологію D1, усний самоопис D2 і
+інституційний нарис D3.
+
+Радянський ярлик «антирадянська агітація» можна використовувати лише як
+атрибутовану мову обвинувачення. Аналітичні назви — ненасильницький
+правозахист, документування порушень, політичне переслідування, табір і
+заслання. Релігійна мова самого Мариновича не повинна затуляти юридичний опис
+завданої державою шкоди.
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** As a living public intellectual at UCU, Marynovych is an active voice in debates on reconciliation (Ukrainian–Polish, Ukrainian–Jewish), religious freedom, and the ethics of memory — positions discussed and contested in current scholarship rather than historically disputed facts.
-- **What gets simplified in popular memory:** He is sometimes labelled only "a UCU vice-rector," obscuring that he is a founding member of the UHG who served a full decade as a prisoner of conscience.
-- **Where modern Russian disinformation attacks:** Russian narratives smear the UHG as Western-funded "nationalism"; Marynovych's Christian, reconciliation-centred ethic and his Amnesty International work directly contradict that caricature.
+Перша напруга — агіографія. Публічна репутація морального авторитета не робить
+кожну сучасну позицію Мариновича безпомилковою. D1 і D2 підтверджують досвід,
+ролі та самоопис, але не оцінюють незалежно всі його пізніші погляди. Повага до
+в'язня сумління сумісна з критичною дискусією про живого інтелектуала.
+
+Друга напруга — характеристика УГГ. Група діяла в українському національному й
+правозахисному контексті, але її не слід ретроспективно перетворювати на партію
+з програмою, якої D3 не фіксує. Так само вона не була провінційним додатком до
+московського дисидентства. Її відкриті документи й склад показують самостійну
+українську дію в мові прав і міжнародних норм [D3].
 
 ## 7. Cross-track links
 
-- **Existing bio modules referencing this figure:**
-  - `plans/bio/myroslav-marynovych.yaml` (the existing dedicated bio plan). Sibling dissident bio plans: `plans/bio/levko-lukyanenko.yaml`, `plans/bio/yevhen-sverstiuk.yaml` (his camp-mate at Kuchino), `plans/bio/vasyl-stus.yaml`.
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/ukrainska-helsinska-hrupa.yaml`, `plans/hist/shistdesiatnyky.yaml`, `plans/hist/deportatsii-ukraintsiv.yaml` (Operation Vistula, which displaced his family), `plans/hist/krymski-tatary-pislia-2014.yaml` (his post-2014 Crimean-Tatar solidarity work).
-- **Existing ISTORIO (source-study) modules:**
-  - `plans/istorio/memorandum-uhh.yaml` (UHG memoranda he carried), `plans/istorio/syntez-dysydentski-dzherela.yaml`, `plans/istorio/kulturna-rezystentsiia.yaml`.
-- **Existing BIO plans for the religious tradition he belongs to (UGCC):**
-  - `plans/bio/andrey-sheptytsky.yaml` (subject of his 2019 book), `plans/bio/josyf-slipyj.yaml`, `plans/bio/liubomyr-huzar.yaml`.
-- **Potential (Phase 2+) candidates surfaced by this research:**
-  - A reading of *Всесвіт за колючим дротом* (2016 / English 2021) as a memoir primary source; a "spirituality of the Gulag" module bridging the bio and religious tracks.
+- **Existing dedicated plan:** `plans/bio/myroslav-marynovych.yaml`.
+- **Potential classroom links:** Українська Гельсінська група, Микола Руденко,
+  Олекса Тихий, радянські табори політичних в'язнів, релігійна свобода,
+  правозахисні інституції незалежної України.
+- **Boundary:** потенційні зв'язки не заявляються як наявні плани без окремої
+  перевірки каталогу.
 
 ## 8. Naming-canonical
 
-- **Slug:** `myroslav-marynovych`
-- **EN canonical (BGN/PCGN 2010):** Myroslav Marynovych
-- **UA canonical (with patronymic):** Маринович Мирослав Франкович
-- **Aliases (for `aliases:` YAML field):** Myroslav Frankovych Marynovych; birth surname Дицьо (Dytso)
-- **Forbidden forms (Russian-imperial transliterations to flag):** Miroslav Marinovich (FORBIDDEN — Russified given name and surname)
+Українська форма: **Мирослав Франкович Маринович**. Англійська форма:
+**Myroslav Marynovych**. Slug: `myroslav-marynovych`. Русифіковані форми
+`Miroslav Marinovich` не використовуються як канонічні. Географічні назви
+подаються українською: Львів, Комаровичі, Казахстан. Технічна назва файла
+Commons не змінює форму імені.
 
-## 9. Image candidates
+## 9. Image candidate
 
-- **Best PD/CC portrait:** Search Wikimedia Commons for "Мирослав Маринович" / "Myroslav Marynovych" (as a public UCU figure, CC-licensed portraits may exist); verify licence. As a living person, prefer a freely-licensed photo with documented consent.
-- **Backup candidates:** UCU press/portrait images (request permission); photographs from the 2016 UHG 40th-anniversary Dissidents' Forum he organized — check rights.
-- **If no PD/CC portrait exists:** Use a fair-use crop from the cover of *The Universe Behind Barbed Wire* (2021), clearly attributed.
-- **Era-appropriate context image:** A photograph of the Kuchino (ВС-389/36) camp or the UCU campus in Lviv.
+Схвалено **File:Marynovych M.F. (05-2013) 1.JPG** [D4]. Commons указує
+ліцензію **CC BY-SA 3.0** та атрибуцію **Kharkivian (Сергій Петров)**. Це
+портрет 2013 року, не архівне або табірне фото. Використання потребує
+атрибуції, посилання на ліцензію й дотримання share-alike для похідних версій.
+Інші портрети, обкладинки мемуарів і музейні зображення цим дозволом не
+охоплені.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- "Маринович, Мирослав Франкович" // *Філософський енциклопедичний словник* (Інститут філософії ім. Г. Сковороди НАН України, 2002), С. 361 | Accessed 2026-05-29
+- **D1:** Енциклопедія Сучасної України, «Маринович Мирослав Франкович» —
+  <https://esu.com.ua/article-63634>. Біографія, хронологія, професійні ролі й
+  бібліографічний каркас.
+- **D2:** Харківська правозахисна група, електронний музей, «Маринович Мирослав
+  Франкович» — <https://museum.khpg.org/1282334474>. Пряме ретроспективне
+  інтерв'ю про правозахист, переслідування, табір, заслання й повернення.
+- **D3:** Український інститут національної пам'яті, «1976 — утворення
+  Української гельсінської групи» —
+  <https://uinp.gov.ua/istorychnyy-kalendar/lystopad/9/1976-utvorennya-ukrayinskoyi-gelsinskoyi-grupy>.
+  Дата, мета, відкритий характер і засновники УГГ.
+- **D4:** Wikimedia Commons, **File:Marynovych M.F. (05-2013) 1.JPG** —
+  <https://commons.wikimedia.org/wiki/File:Marynovych_M.F._(05-2013)_1.JPG>.
+  Права й атрибуція конкретного портрета.
 
-**Tier 2 (institutional):**
-- Касьянов Г. *Незгодні: українська інтелігенція в русі опору 1960—1980-х років*. К.: Либідь, 1995, С. 161–164, 173 | Accessed 2026-05-29
-- *Українська Гельсінкська Група. До 20-ліття створення* (К.: УРП, 1996), С. 17–18 | Accessed 2026-05-29
+## Decolonization self-check
 
-**Tier 3 (encyclopedic):**
-- uk.wikipedia.org "Маринович Мирослав Франкович" (summary + extract) | Accessed 2026-05-29
+- [x] УГГ подано як самостійну українську правозахисну дію.
+- [x] Радянську державу названо суб'єктом переслідування, а не нейтральним
+  «контекстом».
+- [x] Правозахисну мову не зведено до радянського кримінального ярлика.
+- [x] Мариновича не перетворено на безпомилкову національну ікону.
+- [x] Ретроспективне свідчення відділено від зовнішньої хронології.
+- [x] Цитатні й зображальні права позначено окремо та точно.
 
-**Tier 4/5 (primary-source chronicles, corroborating):**
-- *Хроника текущих событий* (Нью-Йорк, вип. 43–63); *Вісник репресій в Україні* (Закордонне представництво УГГ) | Accessed 2026-05-29
+### Evidence-to-claim matrix
 
----
+D1 підтримує зовнішню хронологію: освіту, участь у групі, вирок, покарання,
+звільнення, подальші професійні ролі й бібліографічні орієнтири. Воно не
+підтверджує кожну табірну деталь або сучасне публічне судження. Для сильнішої
+заяви про конкретну акцію протесту потрібен прямий документ чи локалізований
+фрагмент D2.
 
-## Decolonization self-check (run before submitting)
+D2 підтримує власну розповідь Мариновича про рішення, страх, слідство, табір,
+релігійний досвід, заслання й повернення. Оскільки це ретроспективне інтерв'ю,
+воно не є незалежним доказом мотивів інших осіб. Переказ має називати
+оповідача й не перетворювати пам'ять на синхронний щоденниковий запис.
 
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text (forbidden forms confined to §8, labelled FORBIDDEN)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms (Soviet labels quoted as persecution evidence, not endorsed)
-- [x] No "lost his life" euphemisms — arrest, maximum sentence, camps, and exile stated plainly (living survivor)
-- [x] All place names use modern UA canonical form (Lviv, Drohobych, Ivano-Frankivsk)
-- [x] Holodomor referenced where relevant (family repression — Operation Vistula, Kolyma — foregrounded)
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable (his Crimean-Tatar solidarity work post-2014)
+D3 підтримує дату створення, відкриту правозахисну мету й перелік засновників
+УГГ. Воно не повинно слугувати універсальним посиланням на всі подальші
+меморандуми групи або політичні погляди кожного члена. Для такого аналізу
+потрібні самі документи УГГ.
+
+D4 підтримує лише портрет 2013 року, автора та ліцензію CC BY-SA 3.0.
+Редакторський тест для нового твердження запитує: це зовнішній факт, спогад,
+інституційний контекст чи правова інформація про зображення? Кожному типу
+відповідає своє джерело. Якщо відповідність неможлива, твердження залишається
+на hold. Саме така сегментація не дає моральному авторитету перетворитися на
+джерельну індульгенцію.
+
+### Research boundaries and classroom use
+
+Пакет достатній для біографічної хронології, пояснення відкритого правозахисту,
+зіставлення події зі спогадом і точної атрибуції сучасного портрета. Він не є
+повним архівом УГГ, корпусом усіх мемуарів або оглядом сучасної публіцистики
+Мариновича. Для тверджень про інших учасників потрібні їхні документи; для
+оцінки конкретної книжки — сам текст і фахова рецепція.
+
+Підсумкова вправа може мати три колонки: хронологічний факт D1, першеособове
+свідчення D2 та організаційний контекст D3. Учень формулює одну спільну тезу і
+одну межу, яку ці джерела не долають. Окремо він складає підпис до D4. Такий
+формат підтримує деколонізовану українську перспективу без вигаданих мотивів,
+цитат або надмірного героїчного узагальнення.
+
+### Promotion disposition
+
+Пакет придатний до каталогового просування як external-only. D1 дає
+хронологію, D2 — пряме ретроспективне читання, D3 — контекст УГГ, D4 —
+ліцензований портрет; активного hold для цих функцій немає. Диспозиція не
+схвалює книжкові уривки, інші фотографії, приписані афоризми або оцінку всіх
+сучасних позицій Мариновича. Такі розширення потребують нової перевірки.
+Контрольована достатність підтримує правозахисний сюжет без агіографічної
+певності.
+
+Доступність і ліцензії джерел перевіряються повторно під час наступного
+редакційного циклу.

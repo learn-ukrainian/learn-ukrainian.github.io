@@ -1,49 +1,26 @@
-# Source registry for wiki/figures/myroslav-marynovych.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/myroslav-marynovych_Біографія-Мирослав-Маринович-Совість-нації-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Мирослав Маринович: Совість нації'
-  section_path: 'Біографія: Мирослав Маринович: Совість нації > Короткий зміст'
+  file: https://esu.com.ua/article-63634
+  type: external
+  title: Маринович Мирослав Франкович
+  url: https://esu.com.ua/article-63634
 - id: S2
-  file: ukrainian_wiki/myroslav-marynovych_Біографія-Мирослав-Маринович-Совість-нації-Основний-зміст-Історичні-та-економічні-передумови-опору
-  type: ukrainian_wiki
-  title: 'Біографія: Мирослав Маринович: Совість нації'
-  section_path: 'Біографія: Мирослав Маринович: Совість нації > Основний зміст > Історичні
-    та економічні передумови опору'
+  file: https://museum.khpg.org/1282334474
+  type: external
+  title: Маринович Мирослав Франкович
+  url: https://museum.khpg.org/1282334474
 - id: S3
-  file: ukrainian_wiki/ukrainska-helsinska-hrupa_Історія-України-Українська-Гельсінська-група-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Історія України: Українська Гельсінська група'
-  section_path: 'Історія України: Українська Гельсінська група > Деколонізаційна перспектива'
-- id: S5
-  file: wave7-ukrxx-derzhavnist_c0126
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S6
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1028
-  type: textbook
-  title: УКРАЇНСЬКА ГРОМАДСЬКА ГРУПА СПРИЯННЯ ВИКОНАННЮ
-  page: 132
-  grade: 11
-- id: S7
-  file: 11-klas-istoriya-ukr-gisem-2024_s0921
-  type: textbook
-  title: розділ III. україна в період системної кризи Союзу радянських Соціалістичних
-    республік
-  page: 100
-  grade: 11
-- id: S8
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1027
-  type: textbook
-  title: ДИСИДЕНТСЬКИЙ РУХ ДРУГОЇ ПОЛОВИНИ 1960-Х – ПЕРШОЇ ПОЛОВИНИ 1970-Х РОКІВ
-  page: 125
-  grade: 11
-- id: S9
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1029
-  type: textbook
-  title: Мовою джерела. Із повідомлення про створення Української громад
-  page: 136
-  grade: 11
+  file: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/9/1976-utvorennya-ukrayinskoyi-gelsinskoyi-grupy
+  type: external
+  title: 1976 — утворення Української гельсінської групи
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/9/1976-utvorennya-ukrayinskoyi-gelsinskoyi-grupy
+- id: S4
+  file: https://commons.wikimedia.org/wiki/File:Marynovych_M.F._(05-2013)_1.JPG
+  type: external
+  title: File:Marynovych M.F. (05-2013) 1.JPG — CC BY-SA 3.0
+  url: https://commons.wikimedia.org/wiki/File:Marynovych_M.F._(05-2013)_1.JPG
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Marynovych_M.F._(05-2013)_1.JPG
+    license: CC BY-SA 3.0
+    attribution: Kharkivian (Сергій Петров)

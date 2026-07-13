@@ -1,159 +1,179 @@
 # Василь Семенович Стус — Research Dossier
 
 **Slug:** `vasyl-stus`
-**Block:** A (killed in the GULAG — шістдесятник / dissident; Ukrainian Helsinki Group)
-**Tier:** 1a
-**Issue:** #2535 (original-180 ghost-wiki dossier uplift — Wave C)
-**Researcher:** Claude Opus 4.8 (`claude-opus-4-8`)
-**Completed:** 2026-06-03
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited (IEU T1; НАН Інститут літератури 4-vol edition T1/T2; Кіпіані KGB-archive book; Хейфец co-prisoner memoir)
-- [x] Oppression mechanism is specific (arrests 12.01.1972 & May 1980; camps named: Mordovia → Magadan exile → Perm-36 ВС-389/36-1; died 4.09.1985)
-- [x] ≥2 primary-source quotes — the corpus-verified programmatic poem (conf 1.0) + his recorded statement on the verdict
-- [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
-> **⚠ GEOGRAPHY CORRECTION (load-bearing):** Stus was **NOT held in Siberia.** First term (1972–77): **Mordovian camps** (Дубравлаг), then **exile in Magadan oblast / Kolyma** (gold mines, 1977–79). Second term (1980–85): **camp ВС-389/36-1 — "Perm-36" — at Кучино in the Урал (Perm krai)**, where he died on **4 September 1985**. Reburied in **Kyiv, 19 November 1989**. Any "Siberia" framing is an error.
-
----
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-13
+**Evidence key:** D1 — Інститут історії України; D2 — Стус Центр; D3 — Wikimedia Commons.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Василь Семенович Стус. [T1: IEU — "Stus, Vasyl"; T3: uk.wikipedia]
-- **Pseudonyms / aliases:** псевдо **Василь Петрик**. Russified imperial form (forbidden in body text; §8 only): Василий Семёнович Стус, Vasili Stus.
-- **Born:** **6 January 1938** | село Рахнівка, Гайсинський район, Вінницька область | Українська РСР, СРСР. [T3: uk.wikipedia — "6 січня 1938"; T1: IEU gives **8 January 1938** — a date divergence, flagged below]
-- **Died:** 4 September 1985 (night of 3–4 Sept, aged 47) | **табір ВС-389/36-1 ("Перм-36"), біля села Кучино, Чусовський район, Пермський край, РРФСР** | killed by the GULAG regime during an indefinite dry hunger-strike (official cause "зупинка серця"; co-prisoners allege deliberate killing — see §2). [T1: IEU — "d 4 September 1985 in… camp no. 389/36-1, Perm oblast"; T3: uk.wikipedia]
-- **Family / education key facts:** Fourth child of peasants Семен Дем'янович and Ірина Яківна; in 1939–40 the family moved to **Сталіно (now Донецьк)** to escape forced collectivisation. Graduated the історико-філологічний факультет of the **Сталінський (Донецький) педагогічний інститут** (1959, honours); two years' army service **on the Урал**. Entered the aspirantura of the **Інститут літератури ім. Т. Шевченка АН УРСР** (Kyiv); expelled after his 1965 protest. Married **Валентина Попелюх** (1965); son **Дмитро Стус** (b. 1966), the scholar of his father's work. [T3: uk.wikipedia]
+Василь Семенович Стус народився 6 січня 1938 року в селі Рахнівка на
+Вінниччині. Дитинство і юність минули на Донеччині, куди переїхала родина.
+Інститут історії України простежує навчання в педагогічному інституті,
+учителювання, військову службу, працю та аспірантуру в Інституті літератури в
+Києві [D1]. Цей маршрут важливий без ретроспективної легенди: поет і критик
+формувався в українському промисловому регіоні, а не в абстрактному
+«російськомовному Сході».
 
-**Source disagreement note (flagged, not smoothed):** Stus's **birth date** is given as **6 January 1938** by Ukrainian sources (and is the celebrated date) but as **8 January 1938** by IEU — a two-day divergence, not two events. The **cause of death** is genuinely contested (official "cardiac arrest" vs hypothermia vs deliberate killing by carcer bunk-blow per Василь Овсієнко) and is presented as open in §2/§6.
+Джерело підтверджує належність Стуса до середовища шістдесятників, участь у
+протесті на прем'єрі «Тіней забутих предків» 1965 року, професійні обмеження,
+арешти 1972 і 1980 років, табори, колимське заслання, членство в Українській
+Гельсінській групі та смерть у таборі 4 вересня 1985 року [D1]. У 1989 році
+останки Стуса, Юрія Литвина й Олекси Тихого перепоховали в Києві [D1].
+Хронологія не встановлює остаточного фізичного механізму смерті; dossier не
+додає версій, яких пакет документально не розрізняє.
 
 ## 2. Oppression mechanism
 
-This is the load-bearing section.
+Репресія складалася не з одного епізоду. Публічний протест спричинив виключення
+з аспірантури й подальше витіснення з нормального професійного та видавничого
+життя [D1]. Перший політичний вирок 1972 року означав табори в Мордовії, після
+яких настало заслання на Колимі. Другий арешт 1980 року після повернення до
+України та приєднання до Української Гельсінської групи завершився тяжчим
+вироком і табором особливого режиму на Уралі [D1].
 
-- **What happened:** dissident protest → expulsion → two arrests → two camp terms (Mordovia, then Perm-36) with exile between → death on hunger-strike in the carcer. [T1: IEU; T3: uk.wikipedia]
-- **When (specific dates):** protest **4 September 1965**; expelled from the aspirantura 1965; **first arrest 12 January 1972** → 5 years camp + 3 years exile (Sept 1972); **second arrest May 1980** → 10 years hard labour + 5 years exile (Sept 1980); **died 4 September 1985**. [T3: uk.wikipedia]
-- **By whom (specific agency):** the **КДБ УРСР** (surveillance from 1965, both cases), the **Київський обласний суд** (1972 and 1980 sentences), and the **GULAG camp administration** of Дубравлаг (Mordovia) and ВС-389/36 (Perm). [T3: uk.wikipedia]
-- **Document references (quoted, not paraphrased):**
-  - On **4 September 1965**, at the Kyiv premiere of Параджанов's «Тіні забутих предків» in the «Україна» cinema, Stus — with **Іван Дзюба, В'ячеслав Чорновіл, Юрій Бадзьо** — called on the audience to condemn the arrests of the Ukrainian intelligentsia: "the first public political protest against the mass repressions in the postwar USSR." [T3: uk.wikipedia]
-  - The 1972 case rested on a КДБ-commissioned "review" of his samvydav collections by **Арсен Каспрук**, who branded «Зимові дерева» the poetics of "декадансу, ідейного занепаду" and "шкідлива всім своїм ідейним спрямуванням." Stus answered (see §4 Quote 2) that "на руках цього доктора філології — моя кров." [T3: uk.wikipedia]
-- **Mechanism specifics:** the **first term (1972–77)** was served in the **Mordovian camps**; most camp verse was confiscated and destroyed, a little reaching freedom in letters to his wife. Then **exile (1977–79) in селище Імені Матросова, Magadan oblast**, working the **gold mines of Kolyma**. Returning to Kyiv in autumn 1979 he joined the **Українська Гельсінська група**; **rearrested in May 1980**, declared an "особливо небезпечний рецидивіст," and tried with the assigned lawyer **Віктор Медведчук, who conceded his client's guilt** — a notorious betrayal later condemned by legal analysis. From November 1980 he was held in **camp ВС-389/36-1 (Perm-36) at Кучино**; family visits were forbidden after spring 1981. The guards destroyed the ~300-poem collection **«Птах душі»**. On **28 August 1985** he was thrown into the карцер for leaning his elbow on the bunk; he declared an **indefinite dry hunger-strike** and **died in the night of 4 September 1985**. [T3: uk.wikipedia; T1: IEU]
-- **What survived / what was destroyed:** «Птах душі» (~300 poems) and much camp verse were **destroyed**; «Палімпсести» survived only because it circulated as several different "списки" smuggled out — a deliberate echo of the chronicle/palimpsest tradition. Stus was **reburied in Kyiv on 19 November 1989** (Байкове кладовище) beside camp-mates **Юрій Литвин** and **Олекса Тихий**; over **30,000 mourners** attended. **Posthumously rehabilitated 1990**; Shevchenko Prize 1991; **Hero of Ukraine 2005**. [T1: IEU; T3: uk.wikipedia]
+Механізм треба називати інституційно: нагляд, обшуки, конфіскації рукописів,
+закриття видавничих можливостей, кримінальне переслідування ненасильницької
+позиції, ув'язнення, дисциплінарний режим і заслання. Не все це однаково
+деталізовано в D1, тому конкретні адміністративні рішення не вигадуються.
+Лист до сина з Колими [D2] підтверджує інший вимір примусу: цензуровану
+дистанцію, невизначеність зв'язку й неможливість звичайного батьківства.
 
 ## 3. Major works
 
-- `1965` — **«Круговерть»** — first collection, rejected by the publisher. [T3: uk.wikipedia]
-- `1970` — **«Зимові дерева»** — circulated in самвидав and printed abroad (Brussels/London). [T3: uk.wikipedia]
-- `1971` — **«Веселий цвинтар»** — the satirically bleak collection the КДБ used against him. [T3: uk.wikipedia]
-- `1972` — **«Час творчості / Dichtenszeit»** — written in the КДБ remand prison; a dated prison "diary in verse." [T3: uk.wikipedia]
-- `1971–1977 (pub. 1986)` — **«Палімпсести»** — his masterwork, existing in several smuggled redactions; contains the prayer-meditations. [T3: uk.wikipedia]
-- `translations` — Goethe, **Rilke** («Сонети до Орфея», «Дуїнські елегії»), Celan, Lorca, Rimbaud, Kipling, Ungaretti — a major contribution; his early ~100 Goethe/Rilke translations were **confiscated and lost**. [T3: uk.wikipedia]
-- `essays` — **«Феномен доби»** (on Tychyna's "poetic death," 1970–71); **«Зникоме розцвітання»** (on Свідзінський). [T3: uk.wikipedia]
-- `posthumous` — НАН Інститут літератури **Твори у 4 т., 6 кн.** (Львів, 1994–99, ред. Д. Стус, М. Коцюбинська); **«Дорога болю»** (1990, Shevchenko Prize). [T3: uk.wikipedia]
+D1 називає Стуса поетом, перекладачем і літературним критиком та дає
+бібліографічний каркас. Для курсу центральними орієнтирами є збірки «Зимові
+дерева», «Веселий цвинтар» і «Палімпсести». Їх слід розглядати як частину
+історії рукопису, самвидаву, закордонного видання і цензурного блокування, а не
+лише як список канонічних назв. Пакет не містить ліцензованого повного тексту
+поезій, тому dossier не відтворює віршовані уривки.
 
-**Suppression note:** his work was banned and partly destroyed in his lifetime; «Палімпсести» appeared only in 1986; the scholarly Twory came after independence.
+D2 — конкретний лист до сина Дмитра, датований 28 квітня — 1 травня 1978 року.
+Він корисний як епістолярне джерело про Колиму, родинний зв'язок, Великдень,
+навчання дитини та дрібні побутові турботи. Один лист не репрезентує всієї
+епістолярної спадщини й не замінює поетики. Його навчальна функція — показати,
+як велика політична історія входить у приватний час.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation disposition
 
-**Quote 1 — the programmatic poem, his life-credo.** `verify_quote` against the corpus (`ukrlib-stus`) returned **matched=true, confidence 1.0** for both the opening and the «Народе мій» turn (they are one poem):
+Жодної персональної цитати для вбудованого навчального тексту не схвалено.
+Старі приписані афоризми й поетичні рядки вилучено з пакета: D1 не є
+ліцензованим корпусом творів, а D2 надається як зовнішнє посилання для читання,
+не як дозвіл на передрук великого фрагмента. На занятті викладач може скерувати
+до прямого листа й просити учнів описувати його структуру та теми без
+копіювання довгих уривків.
 
-> «Як добре те, що смерті не боюсь я / і не питаю, чи тяжкий мій хрест… / що жив-любив і не набрався скверни, / ненависті, прокльону, каяття. / Народе мій, до тебе я ще верну…»
-
-The whole ethic of Stus in nine lines: fearlessness before death, refusal of hatred and recantation, and the vow of return to his people — pedagogically the single best entry point. [Primary: В. Стус, «Як добре те, що смерті не боюсь я»; verify_quote conf. 1.0, work `ukrlib-stus`]
-
-**Quote 2 — his recorded answer to the verdict (recorded statement, labelled).** On the КДБ "reviewer" Каспрук and the investigators:
-
-> «На руках цього доктора філології — моя кров, як і на руках слідчих Логінова, Мезері, Пархоменка, судді, прокурора і адвоката-прокурора, накиненого силоміць… Вони такі самі душогуби, як слідчі і судді.»
-
-This lets learners hear Stus naming the *intellectual* complicity of the regime's literary servants — central to «Феномен доби» and his whole moral stance. [T3: uk.wikipedia — his commentary on the 1972 verdict; recorded statement, not corpus-verified verbatim]
+Це рішення відрізняє верифікацію авторства від прав на відтворення. Навіть
+широко відома фраза не входить до матеріалу без прямого локатора, контексту та
+правової підстави. Дозволені лише короткі власні перекази з чітким посиланням
+на D1 або D2.
 
 ## 5. Language register
 
-- **Register:** high modernist / **hermetic** lyric — fusing Ukrainian folk stylisation with Goethe, Rilke and the existentialists (Camus). Prayer-meditation forms appear after the first arrest; verlibre dominates the lost late work.
-- **CEFR readiness for full reading:** **C1–C2** — the neologisms and archaisms are demanding; a few accessible programmatic poems («Як добре те…», «Господи, гніву пречистого…») can be staged at **B2** with glossing.
-- **Lexicon notes:** authorial neologisms (**всевікна, всенезустріч, стобагаття, стогори, сторозтриклятий, стосиній**); dialect/archaic lexis (антоновий огонь, комонь = кінь, парсуна, щовб, чезнути); biblical phraseology (Глас Господній; край Господніх Брам). VESUM will reject the deliberate новотвори — these are the poetics, not errors, and must be glossed, never "corrected."
-- **Stylistic features:** "розривні" lines with enjambment, dense assonance/alliteration, the palimpsest principle (multiple co-existing redactions) — itself a teaching point about samvydav transmission.
+Для біографічного викладу потрібна лексика правозахисту й репресій:
+`шістдесятники`, `самвидав`, `політв'язень`, `табір особливого режиму`,
+`заслання`, `Українська Гельсінська група`. Епістолярна частина вводить слова
+родинного й побутового регістру. На рівні B2/C1 корисно порівнювати стислу
+енциклопедичну хронологію з приватним листом: пасивні конструкції офіційної
+довідки та звертання, побажання, часові маркери особистого тексту.
+
+Не використовувати радянські звинувачувальні ярлики як нейтральні. Формули на
+кшталт «антирадянська діяльність» потребують атрибуції до обвинувачення;
+аналітична мова dossier — ненасильницький протест, літературна праця,
+правозахист і державне переслідування.
 
 ## 6. Contested points
 
-- **Cause of death — genuinely open.** Official "cardiac arrest"; widely held hypothermia/exhaustion on dry hunger-strike; co-prisoner **Василь Овсієнко** raises possible deliberate killing by carcer bunk-blow. The firm core (died 4 Sept 1985 in the Perm-36 carcer, on hunger-strike, killed by the regime) stands; the exact mechanism is contested. [T3: uk.wikipedia; T2/T5: Хейфец; Плющ «Вбивство поета В. Стуса»]
-- **The Medvedchuk question.** That his court-appointed lawyer **Віктор Медведчук** conceded guilt is documented; the debate is over whether anything could have changed the (party-decided) outcome — Medvedchuk's self-exculpation is itself contested by 2016 legal analysis. [T3: uk.wikipedia]
-- **Simplified in memory:** reduced to "martyr" or "Nobel nominee 1985," losing the hermetic poet and translator; or claimed for one political camp when his stance was moral before it was factional.
-- **Where Russian aggression continues:** occupying forces **destroyed the Stus memorial plaque at Donetsk University in 2015** and his sister's home near Donetsk airport in 2014; Donetsk National University, renamed for Stus, relocated to Vinnytsia. The erasure is ongoing, not historical. [T3: uk.wikipedia]
+Найважливіша межа — причина смерті. Пакет підтверджує смерть у таборі в умовах
+незаконного політичного ув'язнення [D1], але не містить судово-медичного
+документа, достатнього для вибору однієї детальної версії. Формула про
+відповідальність репресивної системи є причинною оцінкою режиму; вона не
+підмінює висновок про конкретний фізичний механізм.
+
+Друга межа — канонізація. Моральна безкомпромісність Стуса не скасовує досвіду
+родини й не робить кожне рішення універсальним рецептом. D2 показує ціну
+розлуки без права домислювати психологію дружини чи сина. Третя межа —
+естетична: репресія суттєва для історії текстів, але не вичерпує художнього
+значення поезії. Для такого висновку потрібен окремий літературознавчий корпус.
 
 ## 7. Cross-track links
 
-> Every path under **Existing** was verified with `test -e` on 2026-06-03 and resolves under `curriculum/l2-uk-en/plans/`.
-
-- **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/ivan-svitlychnyi.yaml`, `curriculum/l2-uk-en/plans/bio/ivan-dziuba.yaml`, `curriculum/l2-uk-en/plans/bio/yevhen-sverstiuk.yaml` — шістдесятники co-protesters and friends (Dziuba stood beside him in 1965).
-  - `curriculum/l2-uk-en/plans/bio/vasyl-symonenko.yaml` — the шістдесятник generation's earlier martyr.
-  - `curriculum/l2-uk-en/plans/bio/alla-horska.yaml` — Клуб творчої молоді circle; murdered 1970.
-  - `curriculum/l2-uk-en/plans/bio/ihor-kalynets.yaml`, `curriculum/l2-uk-en/plans/bio/iryna-kalynets.yaml`, `curriculum/l2-uk-en/plans/bio/mykola-rudenko.yaml`, `curriculum/l2-uk-en/plans/bio/levko-lukyanenko.yaml` — Ukrainian Helsinki Group co-members.
-  - `curriculum/l2-uk-en/plans/bio/yurii-lytvyn.yaml`, `curriculum/l2-uk-en/plans/bio/oleksa-tykhyi.yaml` — died in the same ВС-389/36 camp and were reburied with him in Kyiv (1989).
-- **Existing HIST plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`, `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml` — his two movements.
-  - `curriculum/l2-uk-en/plans/hist/mekhanizm-teroru.yaml`, `curriculum/l2-uk-en/plans/hist/movna-polityka.yaml`, `curriculum/l2-uk-en/plans/hist/rukh.yaml` — repression machinery, language politics, and the movement that won his reburial.
-- **Existing LIT plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/lit/stus-palimpsests.yaml`, `curriculum/l2-uk-en/plans/lit/stus-letters-to-son.yaml`, `curriculum/l2-uk-en/plans/lit/stus-moral-imperative.yaml`, `curriculum/l2-uk-en/plans/lit/stus-vertical-of-spirit.yaml` — the dedicated Stus LIT cluster.
-  - `curriculum/l2-uk-en/plans/lit/kyiv-school-of-poetry.yaml`, `curriculum/l2-uk-en/plans/lit/shestydesiatnyky-as-phenomenon.yaml`, `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml` — poetic context and the samvydav system that carried «Палімпсести».
-- **Candidate cross-track connections (Phase 2+, NOT existing files):**
-  - A module on **Perm-36 / the Dissident memorial** as a site of memory.
-  - A translation-studies module on **Stus as translator of Rilke/Goethe**.
-- **Potential additions surfaced (file as `bio-expansion-followup`, do not add unilaterally):**
-  - A node pairing Stus with **Юрій Литвин** and **Олекса Тихий** (the 1989 triple reburial).
+- **Existing dedicated plan:** `plans/bio/vasyl-stus.yaml`.
+- **Potential classroom links:** шістдесятництво, український самвидав,
+  Українська Гельсінська група, табірна епістолярна спадщина, цензура в УРСР.
+- **Boundary:** жоден потенційний зв'язок не заявляється як наявний модуль без
+  окремої перевірки каталогу.
 
 ## 8. Naming-canonical
 
-- **Slug:** `vasyl-stus`
-- **EN canonical (BGN/PCGN-style project spelling):** Vasyl Stus
-- **UA canonical (with patronymic):** Василь Семенович Стус
-- **Aliases to track (`aliases:` YAML field):** Vasyl Stus; псевдо Василь Петрик.
-- **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Василий Семёнович Стус; Vasili/Vasily Stus; "Wassyl Stus" mis-transliteration. **Do not write "Siberia" for his imprisonment** (Mordovia / Magadan-Kolyma / Perm-Урал).
+Українська канонічна форма: **Василь Семенович Стус**. Англійська форма для
+метаданих: **Vasyl Stus**. Slug: `vasyl-stus`. Назви місць подаються українською
+нормою: Рахнівка, Донеччина, Київ, Колима, Мордовія, Урал. Російські
+транслітерації на кшталт `Vasily Stus` не використовуються як канонічні.
 
-## 9. Image candidates
+## 9. Image candidate
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Vasyl Stus"** holds 1960s–80s photographs and the КДБ case-file mugshots (now declassified via the СБУ archive / Кіпіані's «Справа Василя Стуса»); check each **file page** for license (some are СБУ-archive public-domain releases). [Commons category: `Vasyl Stus`]
-- **Backup candidates:** the 1989 reburial procession (Байкове кладовище); the Perm-36 camp (now a museum); his Donetsk University barelief (destroyed 2015 — a powerful "erasure" image via archival photo).
-- **Context image:** a samvydav page of «Палімпсести», or a КДБ Справа cover from the Кіпіані collection — strong §2 illustration if rights-clear.
-- **If no rights-clear portrait clears review:** fall back to a PD «Зимові дерева» (Brussels, 1970) cover.
+Єдиний схвалений об'єкт — **File:Stus KGB photo 1980.jpg** [D3]. Commons описує
+його як офіційну фотографію зі слідчої справи; правова підстава —
+**PD-UA-exempt**, атрибуція — **National Archive of Ukraine; official KGB
+arrest photograph**. Це не нейтральний студійний портрет. Підпис має прямо
+називати архівне походження й репресивний контекст. Інші фото, обкладинки й
+факсиміле не схвалені цим dossier.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- *Internet Encyclopedia of Ukraine.* "Stus, Vasyl." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages\S\T\StusVasyl.htm — birth/death, Perm-36 (camp 389/36-1), Helsinki Group, reburial. Accessed 2026-06-03 (opened and verified).
-- Стус В. *Твори: у 4 т., 6 кн.* / НАН України, Інститут літератури ім. Т. Г. Шевченка; ред. Д. Стус, М. Коцюбинська. Львів: Просвіта, 1994–1999 — the institutional scholarly edition.
+- **D1:** Інститут історії України, «СТУС Василь Семенович» —
+  <https://history.org.ua/?termin=Stus_V>. Біографія, хронологія, творчість,
+  репресії, смерть і перепоховання.
+- **D2:** Стус Центр, «Лист до сина від 28.04-1.05.1978 року: зустріч Великодня
+  на Колимі» —
+  <https://stus.center/p/list-do-sina-vid-2804-1051978-roku-velikodnie-sviato-na-kolimi-855428>.
+  Прямий епістолярний документ; у плані лише зовнішнє посилання.
+- **D3:** Wikimedia Commons, **File:Stus KGB photo 1980.jpg** —
+  <https://commons.wikimedia.org/wiki/File:Stus_KGB_photo_1980.jpg>. Права
+  конкретного зображення.
 
-**Tier 2 (institutional / primary-adjacent):**
-- Хейфец М. *Українські силюети.* Сучасність, 1984 — co-prisoner memoir of Stus.
-- Плющ Л. «Вбивство поета В. Стуса» // *В. Стус в житті, творчості, спогадах…* Балтимор; Торонто: Смолоскип, 1987.
+## Decolonization self-check
 
-**Tier 3 (encyclopedic — navigation, cross-checked against T1):**
-- Українська Вікіпедія. "Стус Василь Семенович." Dates/camps/death/reburial cross-checked against IEU. Accessed 2026-06-03.
+- [x] Донеччину описано як частину українського життєвого простору, не як
+  доказ «російської» належності.
+- [x] Радянську державу названо суб'єктом інституційного переслідування.
+- [x] Радянські кримінальні ярлики не прийнято як нейтральні категорії.
+- [x] Стуса не зведено ні до мученика, ні до безпомилкової національної ікони.
+- [x] Межі доказу про смерть, родину, поетику й цитати позначено явно.
+- [x] Зображення має точну правову підставу, атрибуцію та етичний контекст.
 
-**Tier 4 (modern scholarly — referenced):**
-- Дмитро Стус. *Василь Стус: життя як творчість.* Київ: Факт, 2004.
-- Вахтанг Кіпіані. *Справа Василя Стуса. Збірка документів з архіву колишнього КДБ УРСР.* Vivat, 2019 — the КДБ case files.
+### Evidence-to-claim matrix
 
-**Primary-source documents accessed (in transcription / via scholarship):**
-- The 1972 and 1980 Київський обласний суд sentences and the КДБ "review" by А. Каспрук (via T3/Кіпіані).
-- В. Стус, «Як добре те, що смерті не боюсь я» — accessed directly via the literary corpus (`ukrlib-stus`), verify_quote-confirmed conf. 1.0 (§4).
+Біографічне твердження про місце народження, освіту, протест 1965 року,
+вироки, географію покарання, вступ до УГГ, смерть і перепоховання спирається на
+D1. Якщо майбутній текст додає точні дати етапування, номер камери, медичний
+діагноз або слова слідчого, їх треба перевірити окремим архівним джерелом.
+Наявна довідка не є універсальним посиланням на будь-яку деталь репресії.
 
-**Honest gaps:** IEU is the opened encyclopedic anchor; the ЕСУ/ЕІУ entries exist but were not opened this pass. The **cause of death** is left open (three competing accounts). Quote 2 is a recorded statement via T3, not a corpus-verified literary text. Stus's lost works («Птах душі», early Goethe/Rilke translations) are gone — noted, not reconstructed.
+Твердження про колимське повсякдення, звертання до Дмитра, шкільні справи,
+підготовку до Великодня й невизначеність зв'язку походять тільки з D2. Один
+лист не дає статистики листування й не підтверджує досвід усієї родини.
+Інтерпретація може описувати присутність батьківської турботи, але не повинна
+встановлювати приховані емоції адресата.
 
----
+D3 підтримує тільки вибір і правовий статус конкретного архівного знімка.
+Його не можна використовувати як доказ умов у таборі або зовнішності Стуса в
+інший рік. Якщо зображення обрізане, підпис усе одно зберігає архівне
+походження та пояснює, що фото створила репресивна інституція.
 
-## Decolonization self-check (run before submitting)
+Перед публікацією кожне сильне речення має пройти простий тест: назвати
+джерело, показати релевантний фрагмент, відокремити переказ від цитати й
+перевірити права. Якщо жоден із D1–D3 не виконує цієї роботи, речення треба
+послабити, вилучити або забезпечити новим прямим джерелом. У цьому cohort
+готовність означає не максимальну кількість фактів, а контрольовану достатність.
 
-- [x] No Russocentric framing — Stus's defence of Ukrainian culture and his moral resistance are central; the empire appears as jailer.
-- [x] No Russian-imperial transliterations in body text — confined to §8, labelled FORBIDDEN.
-- [x] No Russocentric periodization — "шістдесятники," "Українська Гельсінська група," "самвидав," "GULAG" used precisely.
-- [x] No uncritical Soviet propaganda terms — "антирадянська агітація," "особливо небезпечний рецидивіст" appear only quoted as the regime's own charges, named as such.
-- [x] No "lost his life" euphemism — "killed by the GULAG regime" / "died on hunger-strike in the carcer" stated plainly.
-- [x] Modern UA place names — Рахнівка (Вінницька область), Донецьк (not "Сталіно" except as the historical name), Київ/Kyiv; camps named precisely (Mordovia / Magadan-Kolyma / Perm-36), **never "Siberia."**
-- [N/A] Holodomor — not directly his biography; his family fled collectivisation to Донецьк (noted), but the famine is not forced into the text.
-- [x] Russian aggression framing — the 2014/2015 destruction of his Donetsk memorial and his sister's home, and Donetsk University's displacement, are named as Russian aggression (§6).
+### Promotion disposition
+
+Пакет можна просувати для каталогового використання за умови збереження
+зовнішнього режиму читань. D1 дає достатню біографічну вісь, D2 — один прямий
+документ із чітким адресатом і датою, D3 — перевірене зображення. Активного
+hold для цих трьох функцій немає. Нові поетичні уривки, детальна версія смерті,
+інші фотографії або родинні свідчення не успадковують цей статус і мають
+проходити окрему перевірку. Така диспозиція дозволяє навчати репресивний
+механізм і приватну ціну без вигаданої повноти.

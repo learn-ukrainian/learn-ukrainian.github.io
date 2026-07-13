@@ -22,30 +22,34 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings_contract_version: 2
 readings:
-  - title: "Ступка Богдан Сильвестрович"
-    source_name: "Енциклопедія Сучасної України"
-    source_url: "https://esu.com.ua/article-8695"
-    language: uk
-    genre: "encyclopedia"
-    source_type: "biography"
-    role: "primary_bio"
-    cefr_min: C1
-    license: "copyrighted"
-    hosting: "link-only"
-    learner_task: "Ознайомитися з ключовими віхами життя та творчості."
-    caveats: "Офіційний енциклопедичний стиль."
-  - title: "Інтерв'ю Богдана Ступки про театр"
-    source_name: "Підлягає уточненню"
-    language: uk
-    genre: "interview"
-    source_type: "biography"
-    role: "reading-needed"
-    cefr_min: C1
-    license: "unknown"
-    hosting: "reading-needed"
-    learner_task: "Аналіз його філософії акторства та національної ідентичності."
-    caveats: "Знайти репрезентативне інтерв'ю або уривок з його спогадів."
+- title: Ступка Богдан
+  source_name: Національний академічний драматичний театр імені Івана Франка
+  source_url: https://ft.org.ua/person/stupka-bogdan
+  language: uk
+  type: institutional-biography
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ft.org.ua/person/stupka-bogdan
+    note: Зовнішнє посилання; текст і фотографії не відтворюються в курсі.
+  learner_task: Скласти хронологію сценічної та екранної праці Богдана Ступки,
+    відрізняючи акторські ролі від його інституційних посад.
+- title: 'Богдан Ступка: «Коли в героя є внутрішній конфлікт — це цікаво показувати глядачам»'
+  source_name: Урядовий кур'єр
+  source_url: https://ukurier.gov.ua/uk/articles/bogdan-stupka-koli-v-geroya-ye-vnutrishnij-konflik/
+  language: uk
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ukurier.gov.ua/uk/articles/bogdan-stupka-koli-v-geroya-ye-vnutrishnij-konflik/
+    note: Зовнішнє посилання; інтерв'ю не відтворюється в курсі.
+  learner_task: Проаналізувати, як актор пояснює внутрішній конфлікт персонажа,
+    роботу з історичними ролями та відповідальність керівника театру.
 connects_to:
 - bio-ivan-franko
 - bio-vasyl-stus
@@ -53,7 +57,7 @@ connects_to:
 content_outline:
 - points:
   - 'Провокація: Як одна людина могла бути і гетьманом, і зрадником, і королем, і євреєм-молочником? Богдан Ступка — актор, що втілив усі обличчя України, чи геній, що жив поза національними рамками?'
-  - '[!biography] Коротка цитата Ступки про театр, що інтригує: "Крила" Ліни Костенко у його виконанні як ключ до його філософії.'
+  - '[!biography] Авторизоване інтерв''ю про внутрішній конфлікт персонажа як вхід до розмови про акторський метод; неперевірені цитати й репліки ролей не приписуються Ступці.'
   section: Розминка
   words: 400
 - points:
@@ -105,21 +109,14 @@ persona:
   voice: Nuanced-Theater-Critic
 phase: BIO
 references:
-- title: Ступка Богдан Сильвестрович
-  note: Основна біографічна довідка
-  path: https://uk.wikipedia.org/wiki/Ступка_Богдан_Сильвестрович
-  type: wiki
-- title: Офіційний сайт
-  author: Театр імені Франка
-  note: Репертуар театру, історія, архів вистав
+- title: Ступка Богдан
+  note: Офіційна театральна біографія, репертуар і професійна хронологія
+  path: https://ft.org.ua/person/stupka-bogdan
+  type: reference
+- title: 'Богдан Ступка: «Коли в героя є внутрішній конфлікт — це цікаво показувати глядачам»'
+  note: Авторизоване інтерв'ю про акторську працю
+  path: https://ukurier.gov.ua/uk/articles/bogdan-stupka-koli-v-geroya-ye-vnutrishnij-konflik/
   type: primary
-  url: https://ft.org.ua/
-  work: Офіційний сайт
-- title: Численні інтерв'ю та публічні виступи
-  author: Ступка Б.
-  note: Джерело для аналізу його поглядів на мистецтво, політику та життя
-  type: primary
-  work: Численні інтерв'ю та публічні виступи
 sequence: 167
 slug: bohdan-stupka
 subtitle: 'Bohdan Stupka: The Hetman of the Stage'
