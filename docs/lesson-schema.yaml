@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 2237e61f61465c870e064ef2bca6cec1637b7d47130798178653e430431b9635
+  components_sha256: b511c1022ddba2de0c56a3d08cdf69cd2ca1c05bc56f7095eca2fef286e895d4
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1608,12 +1608,16 @@ components:
         description: card prop.
         ukrainian_text: 'false'
       - name: ratingLabels
-        type: Record<PracticeRating, string>
+        type: 'Record<PracticeRating, { uk: string; en: string }>'
         description: ratingLabels prop.
         ukrainian_text: 'false'
       - name: intervalPreviews
         type: Record<PracticeRating, string>
         description: intervalPreviews prop.
+        ukrainian_text: 'false'
+      - name: showEnglishSubtitles
+        type: boolean
+        description: showEnglishSubtitles prop.
         ukrainian_text: 'false'
       optional: []
     nested_types:
@@ -1640,8 +1644,9 @@ components:
         ukrainian_text: 'false'
     example:
       card: <PracticeFlashcardData>
-      ratingLabels: <Record<PracticeRating, string>>
+      ratingLabels: '<Record<PracticeRating, { uk: string; en: string }>>'
       intervalPreviews: <Record<PracticeRating, string>>
+      showEnglishSubtitles: false
     deprecated: false
     deprecation_reason: null
   PracticeSessionSummary:
@@ -1679,7 +1684,7 @@ components:
         description: streak prop.
         ukrainian_text: 'false'
       - name: nextDueLabel
-        type: string | null
+        type: '{ uk: string; en: string } | null'
         description: nextDueLabel prop.
         ukrainian_text: 'false'
       - name: deferredLemmas
