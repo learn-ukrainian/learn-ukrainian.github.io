@@ -62,6 +62,61 @@ lineage is unavailable, the live call fails closed. If the reviewer family
 matches the author family, the call is blocked as self-review; there is no
 silent fallback to a same-family reviewer.
 
+## Production factuality shadow run
+
+`qg_shadow_run.py` captures one **fresh, live** Tier-2 review of a built folk
+module, including the full learner-facing module, activities, vocabulary, and
+resources surface. It does not invoke `qg_bakeoff` or create a fixture. The
+capture is serialized as `qg_bakeoff_run.v2` only because that is the stable
+replay artifact contract consumed by `layerb_shadow`.
+
+The driver resolves real writer lineage before dispatch (explicit family,
+module metadata, then git `X-Agent` history) and errors if it cannot do so.
+It runs Layer B at the pinned `tau=0.75` only, writes a local audit artifact and
+per-module Markdown evidence, then persists advisory rows in the separate
+`llm_qg_shadow.db`. It neither reads nor writes canonical `llm_qg_runs`; Monitor
+and build gating ignore the shadow database until an explicit cutover.
+
+For a dry-ish end-to-end capture, use `--layerb-dry-run`: Tier 2 still runs, but
+the tool-disabled judge does not. A judged invocation instead requires the
+attested judge command, exact route identity, attestation, labels, and frozen
+qualification manifests; `layerb_shadow` verifies all of them.
+
+```bash
+.venv/bin/python scripts/audit/qg_shadow_run.py \
+  --module-dir curriculum/l2-uk-en/folk/vesnianky-hayivky \
+  --level folk \
+  --author-family claude \
+  --canary-artifact seminar=PATH_TO_PASSING_CANARY.json \
+  --max-cost-usd 1.00 \
+  --max-llm-calls 3 \
+  --layerb-dry-run \
+  --audit-dir audit/local-qg-shadow \
+  --shadow-db data/telemetry/llm_qg_shadow.db
+```
+
+The resulting Markdown, replay artifact, Layer-B report, and local SQLite
+database are operational evidence and must not be committed.
+
+### Reviewer prompt compatibility contract
+
+The Tier-2 reviewer prompt and emitted `fact_checks` remain compatible with the
+attested factuality judge only when all of the following hold:
+
+- A `CONFIRMED` or contradiction verdict has an actual captured
+  `mcp__sources__*` call; model memory or an uncaptured citation never counts.
+- Evidence excerpts are contiguous quotations from that tool output (a light
+  ellipsis is permitted) and keep the source query visible. Paraphrase must
+  never be presented as a quote.
+- Keep the established shape: claim → tool reference → quoted excerpt →
+  verdict. Do not invent a parallel verdict schema.
+- Authors prefer claims supported by the indexed sources and retain opaque
+  canonical `source_ref` keys. Claims outside that corpus go to human audit.
+- The reviewer captures evidence and makes its own verdict; the separate,
+  tool-disabled Layer-B judge audits grounding. Do not pre-judge grounding in
+  the reviewer prompt.
+- Shadow verdicts are advisory only until a separately approved cutover.
+
 ## Cost Controls
 
 Use `--dry-run` before broad reviewer spend:
