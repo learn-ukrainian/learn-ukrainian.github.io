@@ -1,13 +1,30 @@
-"""Generate the small daily-curated Word Atlas pool from the manifest."""
+"""Generate the small daily-curated Word Atlas pool.
+
+Two source modes, mirroring ``generate_search_index``:
+
+* ``--db data/atlas.db`` — read the daily-pool candidates from the entry-model
+  SSOT (``atlas.db``). This is the site-build path (``npm run hydrate``): every
+  learner-facing Atlas surface then reads from the one database. Candidate
+  selection is structurally constrained to approved, public *article* rows, so
+  ``form_of`` alias routes can never surface as Word-of-the-Day.
+* ``--manifest`` (default) — the legacy flat-manifest path used by ``make atlas``
+  before the DB is materialized.
+
+Both modes feed the identical ``build_pool`` admission logic, so flipping the
+source does not change which words are admitted (GH #4385, "no admission
+changes"): the migration only moves the read to the SSOT.
+"""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import sqlite3
 from pathlib import Path
 from typing import Any
 
+from scripts.audit.generate_search_index import _site_build_entry_model_gates
 from scripts.audit.lexeme_filter import (
     DERIVED_FORM_SOURCES,
     SURFACE_DAILY,
@@ -146,17 +163,53 @@ def write_pool(pool: list[dict[str, Any]], out_path: Path) -> None:
     )
 
 
+def load_db_entries(db_path: Path) -> list[dict[str, Any]]:
+    """Load daily-pool candidate entries from the entry-model SSOT (``atlas.db``).
+
+    Only approved, public *article* payloads are returned — the same rows the
+    entry-model gates count as reviewed entries. ``form_of`` alias routes have no
+    ``articles`` row, so the join structurally excludes them (they are search
+    resolvers, never Word-of-the-Day candidates). Each ``article_payloads`` row
+    stores the manifest-shaped public payload, so ``build_pool`` runs unchanged.
+    """
+    conn = sqlite3.connect(db_path)
+    try:
+        # Fail loudly on a stale/hand-edited DB before selecting candidates —
+        # the same count/target gates the search-artifact builder runs (#4385 §CI).
+        _site_build_entry_model_gates(conn)
+        rows = conn.execute(
+            """SELECT payload.payload_json
+               FROM article_payloads AS payload
+               JOIN articles AS article ON article.slug = payload.slug
+               WHERE payload.is_public_route = 1
+                 AND article.review_state = 'approved'
+                 AND article.visibility = 'public'
+               ORDER BY payload.route_order"""
+        ).fetchall()
+    finally:
+        conn.close()
+    return [json.loads(row[0]) for row in rows]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument(
+        "--db",
+        type=Path,
+        help="Build the daily pool from atlas.db (entry-model SSOT) instead of the legacy manifest.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--size", type=int, default=300)
     args = parser.parse_args(argv)
 
-    manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
-    entries = manifest.get("entries", [])
-    if not isinstance(entries, list):
-        raise ValueError("manifest entries must be a list")
+    if args.db is not None:
+        entries = load_db_entries(args.db)
+    else:
+        manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+        entries = manifest.get("entries", [])
+        if not isinstance(entries, list):
+            raise ValueError("manifest entries must be a list")
     pool = build_pool(entries, args.size)
     write_pool(pool, args.out)
     return 0

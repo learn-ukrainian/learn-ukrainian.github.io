@@ -72,6 +72,14 @@ generate_daily_pool → verify_manifest`. The manifest is published as a **GitHu
 with a committed pointer; the build hydrates it (`hydrate-manifest.mjs`). The "Atlas Manifest Freshness"
 CI gate + `check_atlas_manifest_enrichment` guard staleness/thin-manifest.
 
+At **site build time** (`npm run hydrate`) the derived artifacts are regenerated from the entry-model
+SSOT rather than the flat manifest: `atlas:build-db` materializes `data/atlas.db`, then
+`atlas:build-search` (`generate_search_index.py --db`) and `atlas:build-daily`
+(`generate_daily_pool --db`) rebuild the search/browse and Word-of-the-Day artifacts straight from that
+database (GH #4385). Both generators keep their legacy `--manifest` mode for the local `make atlas`
+pass, which runs before the DB exists; the `--db` mode is admission-identical (same selection logic,
+SSOT-sourced), so the two paths agree.
+
 ## The two gaps
 
 ### Gap 1 — the auto-grow cron is dormant (no-op on GitHub-hosted runners)
