@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Family Manager"
+  short_description: "Manage task family lifecycle, inspection, and cleanup"
+  default_prompt: "Use $task-family-manager to safely inspect, rename, archive, finish, or clean up task families."
