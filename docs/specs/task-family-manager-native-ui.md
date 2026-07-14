@@ -2,11 +2,22 @@
 
 This document specifies the target native UI and API contract for the Task Family Manager, implementing the R3 architecture approved for Issue #5140.
 
-> **NOTE:** The Native APIs described below are currently **UNAVAILABLE**. They specify the target upstream native implementation. Local agents must use the fallback Skill implementations until the upstream APIs are deployed. Do not claim native implementation exists locally.
+> **NOTE:** The Native APIs described below are currently **UNAVAILABLE**. They specify the target upstream native implementation. Local agents must use the fallback Skill implementations until the upstream APIs are deployed. Do not claim native implementation exists locally. Do not claim repo-local SQLite is stable.
 
-## 1. Native API Contract
+## 1. Native API Contract (UNAVAILABLE)
 
-### 1.1 Family Graph & Identity API
+### 1.1 Missing App Capabilities
+
+The following app capabilities are currently missing and required for the target upstream native implementation:
+- include-archived inventory
+- readable pin state
+- typed relation/lineage APIs
+- task version/ETag and batch CAS (Compare-and-Swap)
+- native receipt/restore
+- safe Git/worktree authority
+- purge token
+
+### 1.2 Family Graph & Identity API (UNAVAILABLE)
 
 `GET /api/v1/task-families/{family_id}/graph`
 
@@ -21,7 +32,7 @@ This document specifies the target native UI and API contract for the Task Famil
     "pinned": ["task_id", "..."]
   },
   "provenance": {
-    "reviewer_links": [{"source": "task_id", "target": "task_id", "type": "cross-family"}],
+    "reviewer_links": [{"source": "task_id", "target": "task_id", "type": "cross-family", "version": "v1"}],
     "handoff_links": [],
     "replacement_links": [],
     "rollover_links": []
@@ -32,14 +43,21 @@ This document specifies the target native UI and API contract for the Task Famil
     "pr": "string",
     "worktree": "string",
     "model": "string",
-    "status": "string"
-  }
+    "status": "string",
+    "local": true
+  },
+  "nodes": [
+    {
+      "task_id": "task_id",
+      "version": "W/\"etag_hash\"",
+      "title": "string",
+      "badges": ["model", "status", "project", "branch", "pr", "worktree", "local"]
+    }
+  ]
 }
 ```
 
-### 1.2 Batch Operations (Preview & Execute)
-
-Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-and-Swap) and idempotency.
+### 1.3 Batch Operations: Preview (UNAVAILABLE)
 
 **Preview Request:**
 
@@ -47,10 +65,30 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
 
 ```json
 {
-  "action": "archive",
-  "tasks": ["task_1", "task_2"]
+  "action": "archive|rename|cleanup",
+  "tasks": ["task_1", "task_2"],
+  "rename_template": "optional_string"
 }
 ```
+
+**Preview Response:**
+
+Returns expected blockers, counts, and a plan digest for CAS execution.
+
+```json
+{
+  "plan_digest": "sha256:...",
+  "affected_count": 2,
+  "blockers": [],
+  "expected_mutations": [
+    {"task_id": "task_1", "expected_state": "archived"}
+  ]
+}
+```
+
+### 1.4 Batch Operations: Execute (UNAVAILABLE)
+
+Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-and-Swap) and idempotency.
 
 **Execute Request:**
 
@@ -58,14 +96,15 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
 
 ```json
 {
-  "action": "archive",
+  "action": "archive|rename|cleanup|restore",
   "plan_digest": "sha256:...",
   "branch_proof": "exact_branch_name",
-  "confirmation_token": "optional_token_for_purge"
+  "purge_token": "optional_token_for_purge",
+  "tasks": ["task_1", "task_2"]
 }
 ```
 
-**Response (Receipt):**
+**Execute Response (Receipt):**
 
 ```json
 {
@@ -73,7 +112,7 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
   "success_count": 1,
   "fail_count": 1,
   "results": [
-    {"task_id": "task_1", "status": "success"},
+    {"task_id": "task_1", "status": "success", "reconciliation_read_back": "archived"},
     {"task_id": "task_2", "status": "failed", "error": "permission_denied"}
   ]
 }
@@ -81,11 +120,12 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
 
 **Error Semantics:**
 
-- `409 Conflict`: Digest mismatch (CAS failure).
-- `428 Precondition Required`: Missing branch proof or confirmation token.
-- `403 Forbidden`: Attempted broad upstream prune (not allowed).
+- `409 Conflict`: Digest mismatch (CAS failure) or ETag conflict.
+- `428 Precondition Required`: Missing branch proof or purge token.
+- `403 Forbidden`: Attempted broad upstream prune (not allowed) or bad purge token.
+- `206 Partial Content`: Batch idempotency partial results.
 
-## 2. Accessible Native UI
+## 2. Accessible Native UX
 
 ### 2.1 Navigation and Tree
 
@@ -99,13 +139,14 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
 
 - **Consolidated Inbox**: Central pane aggregating all approval requests, blocked tasks, and error tasks across the active scope.
 - **Explicit Counts**: Selection interfaces update dynamically (`aria-atomic="true"`). Batch action buttons explicitly state counts (e.g., "Archive 3 selected tasks").
+- **Batch Selection**: Explicit manual selection; no ambiguous destructive wording or short-toast safety.
 
 ### 2.3 Safety, Receipts, and Cleanup
 
-- **Summarize-Before-Archive**: Modal lists aggregate stats (e.g., active tasks to be halted) before confirmation.
+- **Summarize-Before-Archive**: Modal lists aggregate stats (e.g., active tasks to be halted) before confirmation. Correct AGY UX issues: family archive never implicitly halts active tasks.
 - **Blocker Preview**: Dry-run modal clearly itemizing blockers and data marked for deletion before execution.
 - **Receipts/Restoration**: Destructive actions return a clear receipt of successes/failures, providing an explicit, recoverable restore path.
-- **Destructive Safety**: Follows exact R3 contract. Short undo is NOT used as a safety mechanism for destructive actions. Cleanup relies strictly on exact-branch proof-gated cleanup. No broad gone-upstream pruner is implemented.
+- **Destructive Safety**: Follows exact R3 contract. Irreversible cleanup never relies on 10-second undo as a safety mechanism. Cleanup relies strictly on exact-branch proof-gated cleanup and explicit purge tokens. No broad gone-upstream pruner is implemented.
 
 ## 3. Local vs Native Acceptance Map
 
@@ -115,5 +156,6 @@ Atomic batch APIs for rename, archive, restore, and finish enforce CAS (Compare-
 | **Archiving** | Loop `set_thread_archived` with DB read-back | Atomic `POST /execute` (archive) |
 | **Renaming** | Loop `set_thread_title` with DB read-back | Atomic `POST /execute` (rename) |
 | **Receipts** | Skill persists JSON outcome locally | API returns partial-success receipt |
-| **Cleanup** | Exact-branch proof CLI verification | Confirmation tokens + precise proof |
-| **Pinned State** | Explicitly unknown, operator manual override | Typed pinned inventory |
+| **Cleanup** | Exact-branch proof CLI verification | Confirmation purge tokens + precise proof |
+| **Pinned State** | Human-mediated: explicit unknown, manual override | Spec-only mechanical pinned inventory & purge |
+| **Reconciliation** | Read-back on local sqlite | Native API read-back CAS validation |
