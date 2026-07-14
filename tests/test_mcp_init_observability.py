@@ -316,6 +316,53 @@ def test_runtime_tool_config_codex_tools_scoped_codex_home(
     assert Path(auth_link.resolve()) == (fake_home / "auth.json").resolve()
 
 
+def test_runtime_tool_config_codex_tools_nests_home_in_runtime_tmp_lease(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+
+    fake_home = tmp_path / "fake-codex-home"
+    fake_home.mkdir()
+    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(fake_home))
+
+    tmp_root = tmp_path / "os-tmp"
+    tmp_root.mkdir()
+    lease_root = tmp_root / "learn-ukrainian" / "task-4956"
+    lease_root.mkdir(parents=True)
+    monkeypatch.setattr(linear_pipeline.tempfile, "gettempdir", lambda: str(lease_root))
+    monkeypatch.setenv("TMPDIR", str(lease_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_root))
+
+    config = linear_pipeline._runtime_tool_config(
+        "codex-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
+    )
+
+    assert config["codex_home_override"] == str(
+        lease_root / f"codex-v7-writer-{os.getuid()}",
+    )
+
+
+def test_ensure_codex_writer_home_keeps_shared_no_task_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_home = tmp_path / "fake-codex-home"
+    fake_home.mkdir()
+    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(fake_home))
+    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
+    monkeypatch.setattr(linear_pipeline.tempfile, "gettempdir", lambda: str(tmp_path))
+
+    scoped_home = linear_pipeline._ensure_codex_writer_home()
+
+    assert scoped_home == str(tmp_path / f"codex-v7-writer-{os.getuid()}")
+
+
 def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

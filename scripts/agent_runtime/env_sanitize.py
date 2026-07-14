@@ -50,6 +50,16 @@ _SAFE_NAME_PREFIXES = (
     "LU_",
 )
 
+# These are process-control paths, not credentials. A task id such as
+# ``task-4956`` contains the substring ``sk-`` and otherwise looks like an
+# OpenAI key to the generic value redactor, so keep the tmp lease controls
+# before the value-pattern filter. Their names remain narrowly allowlisted.
+_SAFE_VALUE_NAME_ALLOWLIST = {
+    "TMPDIR",
+    "LU_RUNTIME_TMP_BASE_ROOT",
+    "LU_RUNTIME_TMP_ROOT",
+}
+
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
         "GEMINI_API_KEY",
@@ -108,6 +118,10 @@ def _normalized_provider(provider: str) -> str:
 def _is_safe_name(name: str) -> bool:
     upper = name.upper()
     return upper in _SAFE_NAME_ALLOWLIST or upper.startswith(_SAFE_NAME_PREFIXES)
+
+
+def _is_safe_value_name(name: str) -> bool:
+    return name.upper() in _SAFE_VALUE_NAME_ALLOWLIST
 
 
 def _is_provider_secret(name: str, provider: str) -> bool:
@@ -189,6 +203,9 @@ def build_agent_env(
             env[name] = value
             continue
 
+        if _is_safe_value_name(name):
+            env[name] = value
+            continue
         if _looks_sensitive_value(value):
             continue
         if _is_provider_safe_name(name, provider):

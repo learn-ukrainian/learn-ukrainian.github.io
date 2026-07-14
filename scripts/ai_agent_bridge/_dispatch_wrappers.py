@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
+import tempfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -19,6 +23,9 @@ MANDATORY_COMMIT_PUSH_PR_CHECKLIST = """## MANDATORY checklist — do NOT skip t
 3. `git push -u origin <branch-name>`
 4. `gh pr create --title "..." --body "..."` — return the URL in your final response
 5. Worktree at `.worktrees/dispatch/codex/<task-id>/`. NEVER branch in the main checkout.
+6. Put transient artifacts in `$LU_RUNTIME_TMP_ROOT` or the task worktree; never leave
+   evidence copies or model caches in bare `/tmp`. Explicitly clean any named temporary
+   path outside those locations before finishing.
 
 If you finish writing code but skip steps 2-4, the work is lost. Don't make that mistake.
 """
@@ -69,7 +76,22 @@ def _run_text_command(cmd: list[str]) -> str:
     return proc.stdout
 
 
-def _write_dispatch_fix_auto_brief(task_id: str) -> Path:
+@contextmanager
+def _prompt_directory() -> Iterator[Path]:
+    """Yield a task lease or a self-cleaning directory for prompt files."""
+    runtime_tmp_root = os.environ.get("LU_RUNTIME_TMP_ROOT")
+    if runtime_tmp_root:
+        lease_root = Path(runtime_tmp_root)
+        if not lease_root.is_dir():
+            raise RuntimeError(f"runtime tmp lease is not a directory: {lease_root}")
+        yield lease_root
+        return
+
+    with tempfile.TemporaryDirectory(prefix="learn-ukrainian-bridge-") as directory:
+        yield Path(directory)
+
+
+def _write_dispatch_fix_auto_brief(task_id: str, prompt_directory: Path) -> Path:
     issue = _run_json_command(["gh", "issue", "view", task_id, "--json", "title,body"])
     title = str(issue.get("title") or "").strip()
     body = str(issue.get("body") or "").strip()
@@ -79,21 +101,25 @@ def _write_dispatch_fix_auto_brief(task_id: str) -> Path:
         f"{body}\n\n"
         f"{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
     )
-    brief_path = Path("/tmp") / f"dispatch-fix-{_safe_path_component(task_id)}.md"
+    brief_path = prompt_directory / f"dispatch-fix-{_safe_path_component(task_id)}.md"
     brief_path.write_text(prompt, encoding="utf-8")
     return brief_path
 
 
-def _dispatch_fix_prompt_file(task_id: str, brief_file: str | None) -> Path:
+def _dispatch_fix_prompt_file(
+    task_id: str,
+    brief_file: str | None,
+    prompt_directory: Path,
+) -> Path:
     if brief_file:
         path = Path(brief_file).expanduser()
         prompt = path.read_text(encoding="utf-8")
         if MANDATORY_COMMIT_PUSH_PR_CHECKLIST not in prompt:
             prompt = f"{prompt.rstrip()}\n\n{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
-        brief_path = Path("/tmp") / f"dispatch-fix-{_safe_path_component(task_id)}.md"
+        brief_path = prompt_directory / f"dispatch-fix-{_safe_path_component(task_id)}.md"
         brief_path.write_text(prompt, encoding="utf-8")
         return brief_path
-    return _write_dispatch_fix_auto_brief(task_id)
+    return _write_dispatch_fix_auto_brief(task_id, prompt_directory)
 
 
 def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
@@ -137,7 +163,7 @@ def _serialize_files(files: Any) -> str:
     return "\n".join(lines)
 
 
-def _write_review_deep_pr_prompt(pr_number: str) -> Path:
+def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
     pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,body,files"])
     diff = _run_text_command(["gh", "pr", "diff", pr_number])
     title = str(pr.get("title") or "").strip()
@@ -150,7 +176,7 @@ def _write_review_deep_pr_prompt(pr_number: str) -> Path:
         f"### Files\n\n{files}\n\n"
         f"### Diff\n\n```diff\n{diff}\n```\n"
     )
-    prompt_path = Path("/tmp") / f"review-deep-pr-{_safe_path_component(pr_number)}.md"
+    prompt_path = prompt_directory / f"review-deep-pr-{_safe_path_component(pr_number)}.md"
     prompt_path.write_text(prompt, encoding="utf-8")
     return prompt_path
 
@@ -168,7 +194,7 @@ def _read_review_path(target: Path) -> str:
     return "\n\n".join(chunks)
 
 
-def _write_review_deep_path_prompt(target: str) -> Path:
+def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
     path = Path(target).expanduser()
     if not path.exists():
         raise SystemExit(f"review-deep target is not a PR number or existing path: {target}")
@@ -179,7 +205,7 @@ def _write_review_deep_path_prompt(target: str) -> Path:
         f"## Path target\n\n{resolved}\n\n"
         f"## Contents\n\n{content}\n"
     )
-    prompt_path = Path("/tmp") / f"review-deep-path-{_safe_path_component(target)}.md"
+    prompt_path = prompt_directory / f"review-deep-path-{_safe_path_component(target)}.md"
     prompt_path.write_text(prompt, encoding="utf-8")
     return prompt_path
 
@@ -189,10 +215,10 @@ def _review_task_id(target: str) -> str:
     return f"review-{_safe_path_component(target)}-{timestamp}"
 
 
-def _review_prompt_file(target: str) -> Path:
+def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
     if _is_pr_number(target):
-        return _write_review_deep_pr_prompt(target.lstrip("#"))
-    return _write_review_deep_path_prompt(target)
+        return _write_review_deep_pr_prompt(target.lstrip("#"), prompt_directory)
+    return _write_review_deep_path_prompt(target, prompt_directory)
 
 
 def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
@@ -247,12 +273,18 @@ def _run_dispatch(command: list[str], dry_run: bool, prompt_file: Path) -> int:
 
 
 def handle_dispatch_fix(args: Any) -> int:
-    prompt_file = _dispatch_fix_prompt_file(args.task_id, args.brief_file)
-    command = build_dispatch_fix_command(args.task_id, prompt_file)
-    return _run_dispatch(command, args.dry_run, prompt_file)
+    with _prompt_directory() as prompt_directory:
+        prompt_file = _dispatch_fix_prompt_file(
+            args.task_id,
+            args.brief_file,
+            prompt_directory,
+        )
+        command = build_dispatch_fix_command(args.task_id, prompt_file)
+        return _run_dispatch(command, args.dry_run, prompt_file)
 
 
 def handle_review_deep(args: Any) -> int:
-    prompt_file = _review_prompt_file(args.target)
-    command = build_review_deep_command(args.target, prompt_file, args.effort)
-    return _run_dispatch(command, args.dry_run, prompt_file)
+    with _prompt_directory() as prompt_directory:
+        prompt_file = _review_prompt_file(args.target, prompt_directory)
+        command = build_review_deep_command(args.target, prompt_file, args.effort)
+        return _run_dispatch(command, args.dry_run, prompt_file)
