@@ -1,4 +1,5 @@
 """Tests for delegate.py worktree local-file provisioning."""
+
 from __future__ import annotations
 
 import sys
@@ -98,3 +99,32 @@ def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys)
     # node_modules stays a real directory — no self-referential symlink created.
     assert (main_repo / "node_modules").is_dir()
     assert not (main_repo / "node_modules").is_symlink()
+
+
+def test_resolve_repo_root_hops_to_primary_from_worktree_script_copy(tmp_path):
+    # #5171: every dispatch worktree carries its own scripts/delegate.py copy;
+    # running that copy must still anchor state to the PRIMARY checkout.
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "dispatch" / "cursor" / "fix-123"
+    git_dir = main_repo / ".git" / "worktrees" / "fix-123"
+    git_dir.mkdir(parents=True)
+    (worktree / "scripts").mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n")
+
+    assert delegate._resolve_repo_root(worktree / "scripts" / "delegate.py") == main_repo
+
+
+def test_resolve_repo_root_is_identity_in_primary_checkout(tmp_path):
+    main_repo = tmp_path / "main"
+    (main_repo / ".git").mkdir(parents=True)
+    (main_repo / "scripts").mkdir()
+    assert delegate._resolve_repo_root(main_repo / "scripts" / "delegate.py") == main_repo
+
+
+def test_repo_root_constant_is_wired_through_the_resolver():
+    # Revert guard for #5171: in the primary checkout raw parents[1] and the
+    # resolver agree, so behavior alone can't detect a revert — pin the wiring.
+    from pathlib import Path as _P
+
+    source = _P(delegate.__file__).read_text(encoding="utf-8")
+    assert "_REPO_ROOT = _resolve_repo_root(Path(__file__))" in source
