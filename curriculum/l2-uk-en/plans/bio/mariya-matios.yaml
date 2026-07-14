@@ -80,59 +80,49 @@ persona:
   role: Літературний критик, що досліджує зв'язок між регіональною ідентичністю та національною літературою
   voice: Critical-Regionalist
 phase: BIO.4
+readings_contract_version: 2
 readings:
-  - title: Матіос Марія Василівна
-    language: uk
-    genre: Енциклопедична стаття / Довідка
-    source_type: reference
-    role: orientation
-    source: Вікіпедія
-    source_url: https://uk.wikipedia.org/wiki/Матіос_Марія_Василівна
-    license: CC-BY-SA-4.0
-    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Ознайомитися з біографією, переліком видань і поєднанням літературної та політичної кар'єри письменниці.
-    caveats: Стаття може фокусуватись на формальних досягненнях і не охоплювати глибину дискусій навколо її політичної діяльності.
-  - title: Уривок з роману "Солодка Даруся" (Потрібен матеріал)
-    language: uk
-    genre: Художня проза / Роман
-    source_type: primary
-    role: reading
-    source: Видавництво "Піраміда" або "А-БА-БА-ГА-ЛА-МА-ГА"
-    license: copyrighted
-    rights_note: Текст роману захищено авторським правом. Потрібен ознайомчий фрагмент, який легально розміщений у відкритому доступі.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Прочитати фрагмент роману, звертаючи увагу на буковинський діалект та способи передачі травматичного досвіду через мову (і мовчання).
-    caveats: Текст містить багато діалектизмів та описує важкі психологічні й історичні реалії.
-  - title: Інтерв'ю з Марією Матіос або критичний аналіз (Потрібен матеріал)
-    language: uk
-    genre: Інтерв'ю / Літературна критика
-    source_type: secondary
-    role: supplementary-reading
-    source: Українська правда / ЛітАкцент або інше надійне медіа
-    license: copyrighted
-    rights_note: Захищено авторським правом. Необхідно знайти стабільний лінк на якісне інтерв'ю чи рецензію.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Ознайомитися з позицією письменниці щодо її політичного вибору або з оцінками критиків щодо її переходу до публічної політики.
-    caveats: Текст відображатиме конфлікт між літературним ідеалізмом і прагматичною політикою.
+- title: Матіос Марія Василівна
+  source_name: Комітет з Національної премії України імені Тараса Шевченка
+  source_url: https://knpu.gov.ua/winners/matios-mariia-vasylivna/
+  language: uk
+  type: institutional-profile
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://knpu.gov.ua/winners/matios-mariia-vasylivna/
+    note: Зовнішнє посилання на офіційний профіль лауреатки; текст і фотографії не відтворюються в курсі.
+  learner_task: Зіставити біографічну хронологію, бібліографію та підставу Шевченківської премії, відокремлюючи факт від презентаційної оцінки.
+- title: 'Може, найстрашніша моя книжка: Марія Матіос про новий роман «Жінці можна довіряти» на літературному вечорі'
+  source_name: Суспільне Культура
+  source_url: https://suspilne.media/culture/936295-moze-najstrasnisa-moa-knizka-maria-matios-pro-novij-roman-zinci-mozna-dovirati-na-literaturnomu-vecori/
+  language: uk
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://suspilne.media/culture/936295-moze-najstrasnisa-moa-knizka-maria-matios-pro-novij-roman-zinci-mozna-dovirati-na-literaturnomu-vecori/
+    note: Зовнішнє посилання на інтерв'ю; текст, аудіо та фотографії не відтворюються в курсі.
+  learner_task: Проаналізувати, як Матіос описує роботу з радянською травмою, мовою і читацьким очікуванням; атрибутувати оцінки співрозмовниці.
 references:
-- title: Mariya Matios
-  note: Compiled from Wikipedia UA, interviews, and literary criticism
-  path: wiki/bio/mariya-matios.md
-  type: wiki
-- title: Солодка Даруся
-  author: Марія Матіос
-  note: Ключовий роман для аналізу теми травми та історичної пам'яті
-  type: primary
-  work: Солодка Даруся
-- title: Нація
-  author: Марія Матіос
-  note: Збірка новел, що розкриває тему історичної пам'яті на Буковині
-  type: primary
-  work: Нація
+- title: Матіос Марія Василівна
+  note: Офіційна біографія, бібліографія і підстава Шевченківської премії
+  type: institutional-profile
+  url: https://knpu.gov.ua/winners/matios-mariia-vasylivna/
+- title: Матіос Марія Василівна
+  note: Оновлена енциклопедична стаття про біографію, творчість і публічну діяльність
+  type: encyclopedia
+  url: https://esu.com.ua/article-67002
+- title: 'Може, найстрашніша моя книжка: Марія Матіос про новий роман «Жінці можна довіряти» на літературному вечорі'
+  note: Пряме інтерв'ю для аналізу авторської позиції, мови й роботи з пам'яттю
+  type: interview
+  url: https://suspilne.media/culture/936295-moze-najstrasnisa-moa-knizka-maria-matios-pro-novij-roman-zinci-mozna-dovirati-na-literaturnomu-vecori/
+- title: 'File:Matios.JPG'
+  note: Точний Commons-файл; Bumbaka; CC BY-SA 3.0
+  type: image-rights
+  url: https://commons.wikimedia.org/wiki/File:Matios.JPG
 sequence: 178
 slug: mariya-matios
 subtitle: How a regional voice gives words to national trauma

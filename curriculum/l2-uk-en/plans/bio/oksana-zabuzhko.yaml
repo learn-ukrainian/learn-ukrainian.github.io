@@ -79,65 +79,45 @@ persona:
   role: Модератор семінару, який розглядає Забужко не як ікону, а як складний культурний феномен, аналізуючи її сильні сторони та суперечності.
   voice: Critical-Literary-Analyst
 phase: BIO
+readings_contract_version: 2
 readings:
-  - title: Офіційний сайт Оксани Забужко (Есеїстика)
-    language: uk
-    genre: Есеїстика / Публіцистика
-    source_type: primary
-    role: reading
-    source: zabuzhko.com
-    source_url: https://zabuzhko.com
-    license: copyrighted
-    rights_note: Матеріали сайту є інтелектуальною власністю авторки. Використовувати як link-only для пошуку відкритих текстів та есе.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Відвідати розділ з есеїстикою, вибрати один доступний текст і проаналізувати філософську аргументацію авторки щодо деколонізації культури.
-    caveats: Тексти відзначаються полемічністю, складним синтаксисом ("забужківськими періодами") та високою щільністю культурних алюзій.
-  - title: Забужко Оксана Стефанівна
-    language: uk
-    genre: Енциклопедична стаття / Довідка
-    source_type: reference
-    role: orientation
-    source: Вікіпедія
-    source_url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
-    license: CC-BY-SA-4.0
-    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Ознайомитися з основними віхами життя, бібліографією та ключовими темами творчості для загального контексту.
-    caveats: У Вікіпедії складно передати масштаб суспільного резонансу, який викликала творчість письменниці.
-  - title: 'Фрагмент есе "Notre Dame d''Ukraine: Українка в конфлікті міфологій" (Потрібен матеріал)'
-    language: uk
-    genre: Літературознавство / Есеїстика
-    source_type: primary
-    role: supplementary-reading
-    source: Видавництво "Комора" (або офіційний ознайомчий фрагмент)
-    license: copyrighted
-    rights_note: Книга захищена авторським правом. Потрібно знайти відкритий фрагмент, присвячений концепції "української культури як самостійної європейської традиції".
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Прочитати концептуальний уривок, аби зрозуміти погляд Забужко на Лесю Українку та інтелектуальну еліту ХІХ століття.
-    caveats: Текст вимагає глибокого знання контексту європейської історії та літератури.
+- title: Забужко Оксана Стефанівна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-17259
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-17259
+    note: Зовнішнє посилання на енциклопедичну статтю; текст і фотографії не відтворюються в курсі.
+  learner_task: Побудувати перевірну біографічну й бібліографічну рамку та позначити, які оцінки належать авторці енциклопедичної статті.
+- title: 'Оксана Забужко: про російський імперіалізм, Захід, фемінізм і мовне питання'
+  source_name: Медіапроєкт «Українер»
+  source_url: https://www.ukrainer.net/zabuzhko/
+  language: uk
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrainer.net/zabuzhko/
+    note: Зовнішнє посилання на інтерв'ю; текст, відео й фотографії не відтворюються в курсі.
+  learner_task: Розкласти відповіді Забужко на тези про імперіалізм, мову й фемінізм та відрізнити її позицію від редакційного вступу.
 references:
-- title: Оксана Забужко (Wikipedia UA)
-  name: Оксана Забужко (Wikipedia UA)
-  note: Біографія, літературна діяльність, філософія
-  type: primary
-  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
-- title: Офіційний сайт Оксани Забужко
-  name: Офіційний сайт Оксани Забужко
-  note: Бібліографія та есеїстика
-  type: reference
-  url: https://zabuzhko.com
-- title: PEN Ukraine
-  name: PEN Ukraine
-  note: Громадська позиція та правозахисна діяльність
-  type: reference
-  url: https://pen.org.ua
-- title: Oksana Zabuzhko
-  note: Збірна аналітична довідка про ключові теми, романи, есеї та публічну діяльність
-  path: wiki/bio/oksana-zabuzhko.md
-  type: wiki
+- title: Забужко Оксана Стефанівна
+  note: Інституційна біографія, бібліографія і характеристика напрямів творчості
+  type: encyclopedia
+  url: https://esu.com.ua/article-17259
+- title: 'Оксана Забужко: про російський імперіалізм, Захід, фемінізм і мовне питання'
+  note: Пряме інтерв'ю для аналізу авторської позиції та деколонізаційного аргументу
+  type: interview
+  url: https://www.ukrainer.net/zabuzhko/
+- title: 'File:Oksana Zabuzhko (2019).jpg'
+  note: Точний Commons-файл; Jindřich Nosek; CC BY-SA 4.0
+  type: image-rights
+  url: https://commons.wikimedia.org/wiki/File:Oksana_Zabuzhko_(2019).jpg
 sequence: 179
 slug: oksana-zabuzhko
 subtitle: 'Oksana Zabuzhko: The Intellectual and the Feminist'

@@ -80,64 +80,49 @@ persona:
   role: Модератор семінару, що ставить гострі питання про відповідальність історика та ціну правди.
   voice: Critical-Intellectual-Historian
 phase: BIO.16
+readings_contract_version: 2
 readings:
-  - title: Ярослав Грицак (Колонки та статті)
-    language: uk
-    genre: Аналітика / Публіцистика
-    source_type: primary
-    role: reading
-    source: ZAXID.NET / Українська правда / НВ
-    license: copyrighted
-    rights_note: Статті захищені авторським правом відповідних видань. Потрібно підібрати одну концептуальну статтю (наприклад, про модернізацію чи війну).
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Ознайомитися з публіцистикою Грицака, щоб оцінити, як академічний історик формулює суспільні сенси в умовах кризи.
-    caveats: Статті відображають бачення історика на момент їх написання; деякі його прогнози (особливо довоєнні) можуть розбігатися з реальністю.
-  - title: Грицак Ярослав Йосипович
-    language: uk
-    genre: Енциклопедична стаття / Довідка
-    source_type: reference
-    role: orientation
-    source: Вікіпедія
-    source_url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
-    license: CC-BY-SA-4.0
-    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Переглянути основні біографічні факти, наукові зацікавлення та ключові видання.
-    caveats: Енциклопедична стаття не завжди відображає гостроту дискусій навколо деконструкції національних міфів.
-  - title: '"Нарис історії України: формування модерної нації" (Ознайомчий фрагмент)'
-    language: uk
-    genre: Історична проза / Науково-популярна література
-    source_type: primary
-    role: supplementary-reading
-    source: Yakaboo / Офіційні ресурси видавництв
-    license: copyrighted
-    rights_note: Книга захищена авторським правом. Потрібно знайти відкритий фрагмент тексту вступу або розділу, що розкриває концепцію формування нації.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Прочитати фрагмент, аби зрозуміти, як історик використовує концепт "модернізації" для пояснення української історії.
-    caveats: Праця є академічним синтезом, але має концептуальний фокус, який критикується частиною традиціоналістських істориків.
+- title: Лектор — Ярослав Грицак
+  source_name: Український католицький університет онлайн
+  source_url: https://online.ucu.edu.ua/lecturers/66ce251b5d00931bc1647074
+  language: uk
+  type: institutional-profile
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://online.ucu.edu.ua/lecturers/66ce251b5d00931bc1647074
+    note: Зовнішнє посилання на інституційний профіль лектора; текст і фотографії не відтворюються в курсі.
+  learner_task: Визначити академічні ролі й тематичні напрями Грицака, враховуючи презентаційний жанр сторінки установи.
+- title: Як і коли з'явилась назва «Україна». Інтерв'ю з істориком Ярославом Грицаком
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/videos/bez-bromu/iak-i-koli-ziavilas-nazva-ukrayina-iaroslav-gritsak/
+  language: uk
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://localhistory.org.ua/videos/bez-bromu/iak-i-koli-ziavilas-nazva-ukrayina-iaroslav-gritsak/
+    note: Зовнішнє посилання на інтерв'ю; текст, відео й фотографії не відтворюються в курсі.
+  learner_task: Простежити, як історик розрізняє назву території, держави й етнонім та де формулює інтерпретацію, а не безспірний факт.
 references:
-- title: Yaroslav Hrytsak
-  note: Compiled from UCU, Krytyka, Wikipedia — main biographical facts and concepts
-  path: wiki/bio/yaroslav-hrytsak.md
-  type: wiki
-- title: Грицак Ярослав Йосипович
-  author: Wikipedia
-  note: Основна біографічна інформація та список праць
-  type: primary
-  work: Грицак Ярослав Йосипович
-- title: 'Нарис історії України: формування модерної нації'
-  author: Ярослав Грицак
-  note: Ключова праця, що викладає його концепцію української історії
-  type: primary
-  work: 'Нарис історії України: формування модерної нації'
-- title: UCU Faculty Page
-  author: Український католицький університет
-  note: Офіційна академічна діяльність та проєкти
-  type: reference
-  work: UCU Faculty Page
+- title: Лектор — Ярослав Грицак
+  note: Інституційний профіль академічної ролі та тем викладання
+  type: institutional-profile
+  url: https://online.ucu.edu.ua/lecturers/66ce251b5d00931bc1647074
+- title: Як і коли з'явилась назва «Україна». Інтерв'ю з істориком Ярославом Грицаком
+  note: Пряме інтерв'ю про назви, історичні поняття та публічне пояснення минулого
+  type: interview
+  url: https://localhistory.org.ua/videos/bez-bromu/iak-i-koli-ziavilas-nazva-ukrayina-iaroslav-gritsak/
+- title: Цієї війни можна було уникнути
+  note: Датоване інтерв'ю про історичні рамки російсько-української війни
+  type: interview
+  url: https://zaxid.net/tsiyeyi_viyni_mozhna_bulo_uniknuti_n1587905
+- title: 'File:Hrytsak.jpg'
+  note: Точний Commons-файл; Christian Ganzer; CC BY-SA 3.0
+  type: image-rights
+  url: https://commons.wikimedia.org/wiki/File:Hrytsak.jpg
 sequence: 180
 slug: yaroslav-hrytsak
 subtitle: 'Yaroslav Hrytsak: The Historian Who Disturbs the Peace'

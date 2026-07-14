@@ -80,31 +80,52 @@ persona:
   role: Модератор семінару, що ставить під сумнів будь-які канони, включно з каноном самого Андруховича
   voice: Postmodern-Provocateur
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: reading-needed
+- title: Андрухович Юрій Ігорович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-44282
   language: uk
-  learner_task: "Читати біографію та аналізувати ранню творчість письменника"
-  license: unknown
-  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
-  role: primary
-  source_name: "Біографія Юрія Андруховича"
-  source_type: article
-  source_url: ""
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-44282
+    note: Зовнішнє посилання на енциклопедичну статтю; текст і фотографії не відтворюються в курсі.
+  learner_task: >-
+    Укласти хронологію освіти, Бу-Ба-Бу і ранньої творчості та відділити
+    бібліографічні факти від літературознавчої оцінки.
+- title: 'Юрій Андрухович: якщо не буде загальнонаціональної катастрофи Росії, то світ далі котитиметься у прірву'
+  source_name: Суспільне Івано-Франківськ
+  source_url: "https://suspilne.media/ivano-frankivsk/251617-urij-andruhovic-akso-ne-bude-ciei-\
+    zagalnonacionalnoi-katastrofi-rosii-to-svit-dali-kotitimetsa-u-prirvu/"
+  language: uk
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://suspilne.media/ivano-frankivsk/251617-urij-andruhovic-akso-ne-bude-ciei-\
+      zagalnonacionalnoi-katastrofi-rosii-to-svit-dali-kotitimetsa-u-prirvu/"
+    note: Зовнішнє посилання на інтерв'ю; текст і фотографії не відтворюються в курсі.
+  learner_task: >-
+    Розрізнити в інтерв'ю біографічне свідчення, культурну оцінку й політичний
+    прогноз, зберігаючи дату та воєнний контекст.
 references:
-- title: Yuri Andrukhovych
-  note: 'Системна біографія: від Бу-Ба-Бу до європейського інтелектуала. Зібрано з відкритих джерел.'
-  path: wiki/bio/yuri-andrukhovych.md
-  type: wiki
-- title: Московіада
-  author: Андрухович Ю.
-  note: Первинне джерело для аналізу теми прощання з імперією.
-  type: primary
-  work: Московіада
-- title: Диявол ховається в сирі
-  author: Андрухович Ю.
-  note: Приклад есеїстики для аналізу стилю та громадянської позиції.
-  type: primary
-  work: Диявол ховається в сирі
+- title: Андрухович Юрій Ігорович
+  note: Інституційна біографія, бібліографія та характеристика ранньої творчості
+  type: encyclopedia
+  url: https://esu.com.ua/article-44282
+- title: 'Юрій Андрухович: якщо не буде загальнонаціональної катастрофи Росії, то світ далі котитиметься у прірву'
+  note: Датоване інтерв'ю для аналізу позиції про війну, культуру й самоорганізацію
+  type: interview
+  url: "https://suspilne.media/ivano-frankivsk/251617-urij-andruhovic-akso-ne-bude-ciei-\
+    zagalnonacionalnoi-katastrofi-rosii-to-svit-dali-kotitimetsa-u-prirvu/"
+- title: 'File:Yurii Andrukhovych 2015.jpg'
+  note: Точний Commons-файл; Rafał Komorowski; CC BY-SA 4.0
+  type: image-rights
+  url: https://commons.wikimedia.org/wiki/File:Yurii_Andrukhovych_2015.jpg
 sequence: 181
 slug: yuri-andrukhovych
 subtitle: 'Yuri Andrukhovych: Carnival on the Ruins of an Empire'

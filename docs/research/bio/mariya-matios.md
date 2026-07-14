@@ -1,139 +1,177 @@
 # Марія Василівна Матіос — Research Dossier
 
 **Slug:** `mariya-matios`
-**Block:** E (contemporary Bukovyna/Hutsul writer — trauma & identity)
-**Tier:** 3
-**Issue:** #2535 (original-180 ghost-wiki dossier uplift — SHIP-grade Bukovyna facts)
-**Researcher:** Cursor Agent (`cursor/bio-w1-cursor`)
-**Completed:** 2026-06-04
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-14
+**Evidence key:** D1 — Комітет з Національної премії України імені Тараса
+Шевченка; D2 — Енциклопедія Сучасної України; D3 — Суспільне Культура;
+D4 — Wikimedia Commons.
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited (Borzenko grade-11 textbook T2; ukrainian_wiki T3; ukrlib literary header T2)
-- [x] Oppression mechanism is specific (Soviet/Russian imperial trauma themes; post-colonial memory politics in prose)
-- [x] ≥2 primary-source quotes (`verify_quote` **matched** on ukrlib-matios)
-- [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-04
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Перевірна біографічна рамка
 
----
+Марія Матіос народилася 19 грудня 1959 року в селі Розтоки на Буковині [D1,
+D2]. Вона навчалася на відділенні української мови та літератури
+Чернівецького університету й закінчила його 1982 року [D1]. Офіційний профіль
+лауреатки перелічує роботу в університетській бібліотеці, заводській та
+обласній пресі, письменницькій організації й державних установах [D1]. ЕСУ
+додає категорії письменниці, публіцистки й політичної діячки [D2].
 
-## 1. Verified facts
+Ця рамка дає хронологію, але не психологічний портрет. Походження з Буковини
+не є готовим поясненням усіх діалектних або історичних елементів письма.
+Робота в політиці не дозволяє автоматично читати кожен роман як політичну
+програму. Для причинного твердження потрібні пряме авторське свідчення,
+аналіз конкретного твору або незалежне дослідження.
 
-- **Full name (UA, canonical):** Марія **Василівна** Матіос. [T2: Borzenko 11 kl.; T2: ukrlib-matios header]
-- **Pseudonyms / aliases:** none major.
-- **Born:** **19 грудня 1959** | **с. Розтоки**, Путильський район, **Чернівецька область** | Ukrainian SSR | **Hutsul** regional identity (textbook + ukrainian_wiki). [T2: Borzenko; T3: ukrainian_wiki; T2: ukrlib header]
-- **Died:** living as of dossier date **2026-06-04**. [No death attested in sources used]
-- **Family / education key facts:** Chernivtsi University **philology**; librarian; factory work; moved to **Kyiv 1997**; **People's Deputy of Ukraine VII–VIII convocations** (UDAR/BPP bloc per ukrlib header); **Head of Verkhovna Rada subcommittee on publishing (from 2015)** per textbook. [T2: Borzenko; T2: ukrlib]
+## 2. Літературний дебют і бібліографія
 
-**Awards (verified in ukrlib header):** **Shevchenko National Prize 2005**; **Merited Worker of Culture of Ukraine 2008**. [T2: ukrlib-matios metadata line]
+D1 повідомляє про ранні поетичні публікації й прозовий дебют у журналі
+«Київ» 1992 року. Профіль та ЕСУ перелічують поетичні збірки, новели, романи й
+публіцистику [D1, D2]. Серед найвідоміших назв — `Нація`, `Солодка Даруся`,
+`Майже ніколи не навпаки`, `Букова земля` [D1, D2]. Назви та роки є
+бібліографічними фактами; характеристика художньої якості потребує окремого
+критичного джерела.
 
-## 2. Oppression mechanism
+2005 року Матіос отримала Шевченківську премію за роман «Солодка Даруся»
+[D1, D2]. Офіційний профіль подає відзнаку як частину інституційної біографії.
+Це сильний доказ факту нагородження, але жанр сторінки лауреатки є
+презентаційним. Семінар не має перетворювати премію на доказ безпомилковості
+авторки або обов'язкової згоди з усіма інтерпретаціями роману.
 
-Matios is a **writer of memory under empire**, not a gulag martyr biography — oppression appears as **historical trauma encoded in Bukovyna borderland experience**.
+## 3. «Солодка Даруся» і історичний контекст
 
-- **What happened:** Literary processing of **Soviet and imperial violence** (e.g., **Sweet Darusya** village rape/massacre narrative; **Almost Never the Other Way Around** WWI-era trauma).
-- **When:** creative peak **2000s–2010s**; public political role **2014–** (textbook subcommittee).
-- **By whom:** **Tsarist army / Soviet totalitarianism** as historical agents inside fiction; contemporary **memory politics** (decolonization of «Soviet man»).
-- **Document references:** Fiction — not NKVD files; teach as **literary testimony**, not court record.
-- **Mechanism specifics:** Bukovyna/Hutsul **borderland** carries **dual imperial pressure** (Austro-Hungarian past, Soviet present, Romanian/Chernovtsy oblast complexity). Matios uses **family saga** to refuse sanitized official history (ukrainian_wiki «decolonization» chunk).
-- **What survived:** Published novels, poetry cycles; parliamentary voice for **Ukrainian publishing** ecosystem.
+ЕСУ пов'язує події роману з історією Буковини та Галичини у 1930–1970-х
+роках, радянським насильством і підпіллям [D2]. Це енциклопедична
+характеристика твору, а не заміна історичного дослідження. Художня проза може
+передавати травматичний досвід, але персонаж і сюжет не є архівним протоколом.
+Учень має розділяти три рівні: історичний контекст, художню конструкцію і
+пізнішу критичну оцінку.
 
-## 3. Major works
+Попередній пакет приписував романові точні уривки з внутрішнього корпусу без
+публічного видання, сторінки й правової підстави. Такі цитати вилучено.
+Навчальна робота може аналізувати назву, жанр, контекст нагороди та
+енциклопедичний опис. Для дослівного читання роману потрібне легальне видання,
+точний локатор і окреме рішення про обсяг використання.
 
-- `1990s` — prose debut in journal **«Kyiv»** (novella «Yuriana i Dovhpol» — ukrainian_wiki).
-- `2004` — novel **«Solodka Darusya»** (**Sweet Darusya**) — Shevchenko Prize trajectory. [Audit #2535; T3: ukrainian_wiki]
-- `2000s` — **«Natsiia»** (story collection); **«Maizhe nikoly ne navpaky»** (novel in novellas). [T2: Borzenko]
-- Poetry cycles **«Triiedyna perspektyva»**, **«Prosti virshi»** (textbook section). [T2: Borzenko]
-- `2010s` — **«Mynule, pochatok stolittia»** and other epic prose (ukrainian_wiki).
-- `2010s–2020s` — public role in **Verkhovna Rada** publishing policy; continues poetry cycles (**«Zhasminovyi vohon'»** etc. per ukrainian_wiki bibliography list — titles for Phase-2 title-page verify).
+## 4. Новий роман як авторське свідчення
 
-**Institutional footprint (T2/T3):** chaired **Chernivtsi regional Writers' Union**; co-founded **«Bukovynian Journal»** (ukrainian_wiki); credited in textbook with **library + factory + Kyiv migration 1997** career path before national visibility.
+Інтерв'ю Суспільного 2025 року присвячене роману «Жінці можна довіряти» та
+літературному вечору [D3]. Матіос описує тему радянської агентурної системи,
+роботу з історичним матеріалом, читацькі очікування і власне місце поза
+простими канонічними категоріями [D3]. Це первинне джерело її позиції на дату
+розмови, а не незалежна оцінка роману.
 
-## 4. Primary-source quotes (≥2 required)
+Учень має атрибутувати кожну тезу: `в інтерв'ю Матіос пояснює`, `авторка
+називає`, `редакція Суспільного подає`. Не можна перетворити авторську
+самохарактеристику на доведений суспільний консенсус. Для оцінки історичної
+точності роману потрібні архівні та фахові джерела; для оцінки художньої форми
+— незалежна рецензія.
 
-**Quote 1 — memory ethics (`verify_quote` matched, confidence 1.0):**
+## 5. Буковинська мова без екзотизації
 
-> «"Пробачити" — ми повинні, а ось "забути" — нам категорично ЗАБОРОНЕНО. Якщо забудемо, то втратимо і наше минуле, і нашу особистісну самоідентифікацію.»
+Регіональна лексика і мовна різноманітність є важливою темою розмови про
+Матіос, однак цей пакет не складає словник діалектизмів і не вгадує їхнє
+значення. D3 підтримує обговорення читацького очікування щодо буковинських
+лексичних потоків. Конкретне слово, наголос або морфологічна форма мають бути
+перевірені за текстом і словниковим джерелом перед внесенням до уроку.
 
-[Primary: ukrlib-matios; chunk `82130c5f_c0001`; `verify_quote(author="Матіос", text="Пробачити — ми повинні…")` → **matched:true, confidence 1.0**]
+Деколонізаційна перспектива визнає буковинський досвід повноцінною частиною
+української культури, а не провінційною екзотикою. Водночас не можна
+представляти Буковину як однорідний простір з одним голосом. Регіон має
+багатомовну й багатоконфесійну історію, яку художній твір добирає вибірково.
+Авторський вибір перспективи слід аналізувати, а не ототожнювати з усім
+регіоном.
 
-Pedagogically: decolonized memory — forgiveness without erasure.
+## 6. Література, пам'ять і політика
 
-**Quote 2 — Darusya novel voice (opening movement, corpus-attested):**
+Матіос поєднувала літературну діяльність із державною та парламентською
+роботою [D1, D2]. Цей факт створює продуктивне питання про ролі публічної
+особи, але не доказ того, що художні рішення підпорядковані партійній лінії.
+Пакет не відтворює неназвані суперечки й не приписує авторці позиції без
+датованого джерела.
 
-> «ДАРУСЯ ЗАВЖДИ збиралася до тата з самого ранечку. Довго вмивалася. Ще довше чесалася…»
+Для антиагіографії учні складають дві колонки. У першій — перевірні посади,
+дати та твори за D1 і D2. У другій — позиції з конкретного інтерв'ю D3.
+Висновок має показати, де змінюється жанр доказу. Біографічний профіль
+відповідає на питання `що й коли`, інтерв'ю — `як авторка пояснювала це в
+конкретній розмові`.
 
-[Primary: ukrlib-matios *Solodka Darusya*; chunk `82130c5f` — **matched in literary DB**; pedagogically: ritualized female body as historical canvas]
+## 7. Quotation disposition
 
-**Textbook quote gap:** Borzenko prints **«Pereä kozhnoiu novoiu knyhoiu…»** with encoding corruption — use ukrlib-verified lines instead; do not guess restored spelling without edition page.
+Жодної персональної цитати Марії Матіос і жодного уривка з художніх творів для
+відтворення в модулі не схвалено. Попередній пакет містив вислів про пам'ять і
+початок «Солодкої Дарусі» з внутрішнього корпусу, але не подавав публічного
+видання, сторінки та правової підстави. Ще один підручниковий фрагмент мав
+пошкоджене кодування. Усі ці матеріали вилучено.
 
-## 5. Language register
+D3 залишається зовнішнім інтерв'ю. Учні можуть читати його на сайті
+Суспільного, виділяти тезу і переказувати її з атрибуцією. Дослівний уривок
+потребуватиме точного локатора, мінімального обсягу й редакторської перевірки.
+Назви книжок, дати і нагороди можна згадувати як бібліографічні факти.
 
-- **Register:** **Hutsul-inflected literary Ukrainian** in dialogue; **high rhetorical** publicistic voice in essays; **violent/tragic** lexicon in war/trauma scenes.
-- **CEFR readiness:** **Sweet Darusya** excerpt **C1** (trauma, implicit politics); textbook bio **B2**.
-- **Lexicon notes:** гуцул/гуцулка, буковинець, рушник, коло (historical village politics).
-- **Stylistic features:** **family saga** multi-voice; poetic cycles use **dance metaphors** («zhinochyi arkan» — textbook). Borzenko guides learners to read **«Triiedyna perspektyva»** as **female subjectivity under patriarchal ritual**, not as decorative lyric — useful C1 gender-and-tradition pairing with **Sweet Darusya**'s historical violence.
+## 8. Anti-hagiography та межі джерел
 
-**Module placement note:** BIO plan for Matios should route **Sweet Darusya** to LIT track (`matios-sweet-darusia`) while BIO module keeps **biography + memory politics**; do not dump full plot summary here — trauma mechanism is named in §2, text evidence in §4 only.
+D1 — офіційна сторінка лауреатки, тому надійно підтверджує нагороду й подану
+інституцією біографію, але природно підкреслює досягнення. D2 —
+енциклопедична стаття з авторською критичною характеристикою. D3 — медійне
+інтерв'ю, де редакційний вступ і відповіді співрозмовниці мають різні ролі.
+Жодне з них окремо не є повною біографією або остаточним судом про твори.
 
-## 6. Contested points
+Пакет не схвалює узагальнення про «голос усієї Буковини», точну політичну
+мотивацію творчості, психологічні наслідки кожної історичної травми чи
+одностайну реакцію критиків. Для таких тверджень потрібні названі дослідження.
+Методична чесність полягає в тому, щоб зберегти значення письменниці без
+підміни джерела легендою.
 
-- **«Grand dame» label** — ukrainian_wiki cites critics calling Matios **«grand-dame of Ukrainian literature»** and **«most prolific woman writer»** [T3] — useful as reception data, not as uncritical module title.
-- **Politics vs literature:** MP role (**UDAR/BPP** bloc per ukrlib header) — readers disagree whether parliament service helps or dilutes literary voice. Textbook notes **2015+** publishing subcommittee chair — concrete policy lever distinct from pure fiction career.
-- **Trauma representation:** **Sweet Darusya** opens with ritualized female grooming before historical catastrophe (ukrlib opening lines in §4) — graphic violence elsewhere in novel requires **C1 trigger framing**; pair with Quote 1 memory ethics so module is not sensationalist.
-- **Hutsul/Bukovyna identity:** Matios is consistently tagged **корінна гуцулка з Буковини** [T3: ukrainian_wiki; T2: ukrlib header]. Risk of **exotic Carpathian postcard** gaze — counter by emphasizing **Putylshchyna** as multi-ethnic borderland with real historical violence (WWI, Soviet collectivization echoes in later prose).
-- **Shevchenko Prize timing:** Novel **2004**, prize **2005** — do not collapse into «instant classic» myth; multi-year reception mattered.
-- **Russian/Soviet framing:** Soviet canon sidelined Hutsul-themed high prose; post-1991 recovery sometimes over-romanticizes «authentic highlander voice» — BIO module should hold **insider authenticity** and **critical self-reflection** together.
+## 9. Називання і мовний режим
 
-**Bukovyna/Hutsul context (load-bearing):** Roztoky lies in **Putylia**, the forested Hutsul zone of **Chernivtsi oblast** — historically tied to **Yuriy Fedkovych** «Bukovynian nightingale» tradition (ukrainian_wiki notes her pride in Chernivtsi University's Fedkovych naming campaign). Sweet Darusya's **Darusya** archetype connects to interwar **Bukovinian** village memory, not generic «mountain Ukraine» wallpaper.
+Канонічна форма — **Марія Василівна Матіос**. У навчальному тексті вживаються
+українські назви `Розтоки`, `Чернівці`, `Буковина`, `Київ`. Назви творів
+подаються за українськими джерелами. Термін `радянський` описує політичну
+систему або період і не має замінювати конкретний механізм насильства.
 
-## 7. Cross-track links
+Слова `травма`, `пам'ять`, `колективізація`, `підпілля`, `агентурна система`
+вимагають точного контексту. Художнє письмо може досліджувати їх через образ,
+але історичний модуль мусить окремо перевіряти подію, дату, установу й
+масштаб. Переказ інтерв'ю має зберігати часову рамку 2025 року.
 
-> Every path under **Existing** verified with `test -e` on 2026-06-04.
+## 10. Image rights
 
-- **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/mariya-matios.yaml`
-- **Existing LIT plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/lit/matios-sweet-darusia.yaml`
-  - `curriculum/l2-uk-en/plans/lit/matios-bukovina-trauma.yaml`
-- **Existing HIST plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/hist/bukovyna-zakarpattia.yaml`
-- **Candidate cross-track connections (Phase 2+, NOT existing files):**
-  - `bio/yuriy-fedkovych` — «Bukovynian nightingale» university naming (ukrainian_wiki)
-  - Seminar on **Holodomor memory vs Bukovyna specificity**
+Схвалене зображення — **File:Matios.JPG** [D4]. Commons ідентифікує Марію
+Матіос, дату 21 травня 2007 року, автора Bumbaka і власну роботу [D4]. Сторінка
+пропонує GFDL та CC BY-SA 3.0; для пакета обрано CC BY-SA 3.0 [D4].
+Рекомендований підпис: `Марія Матіос; фото Bumbaka; CC BY-SA 3.0; Wikimedia
+Commons`.
 
-## 8. Naming-canonical
+Потрібно назвати автора, дати посилання на ліцензію, позначити кадрування чи
+іншу зміну та дотримати share-alike для адаптації. Ліцензія D4 не поширюється
+на фотографії з D1, D2 або D3.
 
-- **Slug:** `mariya-matios`
-- **EN canonical (BGN/PCGN 2010):** Mariia Matios (Maria Matios common in diaspora press)
-- **UA canonical:** Марія Василівна Матіос
-- **Aliases:** none
-- **Forbidden forms:** Russian **Матios** without Ukrainian **і**; **Maria Matios** only in EN track headers
+## 11. Рекомендована навчальна послідовність
 
-## 9. Image candidates
+Спочатку учні укладають хронологію за D1 і звіряють її з D2. Розбіжність не
+розв'язують здогадом: вони фіксують формулювання, дату оновлення та жанр
+джерела. Потім створюють карту `твір — рік — доказова роль`, не додаючи
+сюжетних деталей із пам'яті.
 
-- **Best PD/CC portrait:** author photo from publisher **ArtEk** / **Kalvariya** editions — ©; fair-use thumbnail.
-- **Backup:** Verkhovna Rada official MP portrait (government work — verify UA copyright rules).
-- **Context image:** Bukovyna highland landscape (PD landscape if no people).
+На другому етапі учні читають D3 та маркують речення як редакційне
+представлення, авторське свідчення, оцінку або перевірний бібліографічний факт.
+На третьому редагують абзац, де премія помилково доводить художню
+безпомилковість, авторська позиція названа консенсусом, а Буковина описана як
+однорідна екзотична околиця.
 
-## 10. Sources used
+## 12. Evidence matrix і disposition
 
-**Tier 2:**
-- Borzenko O., *Ukrains'ka literatura*, 11 kl., prof., 2019 — Matios bio box + poetry section. Accessed 2026-06-04 via `sources.db`.
-- ukrlib-matios full text chunks (Sweet Darusya + essay). Accessed 2026-06-04.
+| Claim family | Evidence | Disposition |
+|---|---|---|
+| Народження, освіта, праця, посади | D1, D2 | Схвалено з часовою рамкою |
+| Твори й Шевченківська премія | D1, D2 | Схвалено |
+| Позиція щодо нового роману | D3 | Атрибутувати авторці й даті |
+| Історична точність романів | — | Потребує окремих джерел |
+| Персональні цитати й уривки | — | Не схвалено |
+| Портрет і права | D4 | Схвалено для точного файла |
 
-**Tier 3:**
-- ukrainian_wiki `mariya-matios` compiled biography. Accessed 2026-06-04.
-
-**Primary-source documents accessed:** ukrlib digital text (verify_quote confirmed).
-
----
-
-## Decolonization self-check
-
-- [x] Bukovyna/Hutsul context not reduced to «Carpathian exotic»
-- [x] Soviet trauma named, not «generic Eastern European suffering»
-- [x] Shevchenko Prize year 2005 verified via ukrlib header (not confused with 2004 publication alone)
-- [x] No Russianisms in quoted UA
+Пакет придатний до catalog-source promotion. Він замінює рекурсивні
+згенеровані записи прямими інституційними й медійними джерелами, вилучає
+непублічні цитати та фіксує точні права на портрет. Побудова модуля,
+відтворення романних уривків і незалежна оцінка історичної точності залишаються
+поза цим рішенням.

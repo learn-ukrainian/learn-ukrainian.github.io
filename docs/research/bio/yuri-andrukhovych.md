@@ -1,117 +1,182 @@
 # Юрій Ігорович Андрухович — Research Dossier
 
 **Slug:** `yuri-andrukhovych`
-**Block:** J (Contemporary / Living Figures)
-**Tier:** 1a
-**Issue:** #2535
-**Researcher:** Gemini 3.1 Pro
-**Completed:** 2026-06-04
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-14
+**Evidence key:** D1 — Енциклопедія Сучасної України; D2 — Суспільне
+Івано-Франківськ; D3 — Суспільне Культура; D4 — Wikimedia Commons.
 
-## 1. Verified facts
+## 1. Перевірна біографічна рамка
 
-- **Full name (UA, canonical):** Юрій Ігорович Андрухович. [T3: uk.wikipedia; T1: ЕСУ]
-- **Pseudonyms / aliases:** none used professionally. Russian-imperial forms (forbidden in body text, listed only in §8): Юрий Игоревич Андрухович.
-- **Born:** 13 March 1960 | Станіслав (renamed Івано-Франківськ in 1962), Станіславська область, Українська РСР | The Soviet Union held Ukraine at the time. [T3: uk.wikipedia; T1: ЕСУ]
-- **Died:** [N/A — Living]
-- **Family / education key facts:** Born to Ihor (1930–1997) and Hanna (1940–2016). Graduated from the editorial department of the Ukrainian Polygraphic Institute in Lviv (1982) and the Higher Literary Courses at the Maxim Gorky Literature Institute in Moscow (1991). In 1994, he defended his Candidate of Sciences dissertation on the poetry of Bohdan-Ihor Antonych. He is married to Nina, and his daughter, Sofia Andrukhovych (b. 1982), is also a prominent Ukrainian writer. [T3: uk.wikipedia]
+Юрій Андрухович народився 13 березня 1960 року у Станіславі, нині
+Івано-Франківську [D1]. ЕСУ подає його як поета, прозаїка, есеїста й
+літературознавця [D1]. Він закінчив Український поліграфічний інститут,
+навчався на Вищих літературних курсах у Москві, працював у редакції
+`Прикарпатської правди` та був співредактором журналу `Четвер` [D1].
 
-## 2. Oppression mechanism
+Ця хронологія не є готовим сюжетом про рух від `радянської людини` до
+`європейця`. Навчання, праця й географія підтверджені, але психологічні
+наслідки потребують прямого свідчення. Станіслав та Івано-Франківськ — назви
+одного міста в різних історичних контекстах; їх треба пояснювати, а не
+використовувати як декоративний символ.
 
-This is the load-bearing section. As a living figure who began his career in the twilight of the USSR, Andrukhovych's experience of oppression was primarily systemic and cultural, characterized by state-mandated aesthetic conformity and censorship.
+## 2. Бу-Ба-Бу та літературний контекст
 
-- **What happened:** Conscription into the Soviet Army and institutional censorship of non-conformist aesthetics, prompting the creation of an underground cultural resistance.
-- **When (specific dates):** 1980s (Soviet period).
-- **By whom (specific Russian/Soviet/RF agency):** The Soviet Ministry of Defense (conscription) and the official Soviet Writers' Union (literary censorship).
-- **Document references:** Autobiographical reflections and the founding manifesto of the Bu-Ba-Bu group. [T3: uk.wikipedia; T1: ЕСУ]
-- **Mechanism specifics:** Like many young Ukrainian men of his generation, he was conscripted into the Soviet Army—an experience of intense Russification and ideological control that he later subverted in his early cycle of stories, *Зліва, де серце* (1989). In the literary sphere, the Soviet state demanded adherence to Socialist Realism and a sterile, monument-focused view of Ukrainian culture. In 1985, as a direct reaction against this oppressive cultural stagnation, Andrukhovych co-founded the literary group **Бу-Ба-Бу** (Burlesque-Balagan-Buffoonery) with Віктор Неборак and Олександр Ірванець. Their "carnivalesque" approach was a deliberate act of subversion against Soviet censorship and the mandated solemnity of official literature.
-- **What survived / what was destroyed:** The repressive cultural apparatus of the USSR ultimately collapsed, and Andrukhovych emerged as the patriarch of the "Stanislav Phenomenon," reshaping independent Ukraine's literary landscape through postmodernism.
+D1 повідомляє, що 1985 року Андрухович разом з Олександром Ірванцем і
+Віктором Небораком заснував літературну групу Бу-Ба-Бу. ЕСУ пов'язує його
+поезію і прозу з іронією, сатирою, міською культурою та постмодерністською
+проблематикою [D1]. Це критична характеристика автора енциклопедичної статті,
+а не самоназва кожного твору.
 
-## 3. Major works
+Карнавал можна аналізувати як зміну ієрархій через гру, маску, сміх і
+перформанс. Проте не кожна провокація автоматично є деколонізаційною. Учні
+мають показати, яку норму вона розхитує, хто отримує голос і чи не створює
+нова гра іншого виключення. Пакет не називає Бу-Ба-Бу `єдиною можливою
+відповіддю` на пізній СРСР.
 
-A novelist, poet, essayist, and the leading figure of the "Stanislav Phenomenon."
+## 3. Рання проза й імперський центр
 
-- `1985` — Co-founded **Бу-Ба-Бу** with Viktor Neborak and Oleksandr Irvanets. [T1: ЕСУ]
-- `1992` — *Рекреації*, novel. A carnival-esque, postmodern journey set in the fictional town of Chortopil. [T3: uk.wikipedia]
-- `1993` — *Московіада*, novel. A surreal, dark satire detailing the collapse of the Soviet empire from the perspective of a Ukrainian student in Moscow. [T3: uk.wikipedia]
-- `1996` — *Перверзія*, novel. A complex, multi-layered narrative of a Ukrainian intellectual in Venice. [T1: ЕСУ]
-- `2003` — *Дванадцять обручів*, novel. An exploration of the Carpathian mythos and the legacy of Bohdan-Ihor Antonych. [T3: uk.wikipedia]
-- `2011` — *Лексикон інтимних міст*, memoir/essay collection. Autobiographical reflections on 111 cities. [T3: uk.wikipedia]
+D1 фіксує публікацію `Рекреацій`, `Московіади` й `Перверзії` та характеризує
+їх як частину європейської постмодерної прози з національно-трансформаційними
+рисами [D1]. Ця оцінка дає напрям для семінару, але самі романи в пакет не
+включені. Їхні уривки не можна відтворювати з пам'яті або внутрішнього корпусу
+без видання, сторінки й правового рішення.
 
-## 4. Primary-source quotes (≥2 required)
+`Московіада` дозволяє поставити питання про імперський центр, але поточний
+пакет не переказує сюжет і не схвалює цитат. Учень може дослідити, чому назва
+міста стає назвою роману, як енциклопедичне джерело описує стиль і які
+гіпотези ще потребують читання первинного тексту.
 
-**Quote 1 — from the novel «Московіада»:**
-> «Я прожив у Москві майже два роки, і то було чи не найщасливіші мої часи. Мабуть, саме з цієї причини в моєму романі стільки злості й чорної невдячності.»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-andrukhovych`, author queried as `Андрухович Ю.`). Pedagogically valuable: highlights the deep irony and post-colonial ambivalence toward the imperial center (Moscow) that defines his early novels. [Primary: corpus-verified]
+## 4. Есеїстика і авторське «я»
 
-**Quote 2 — from the essay «Shevchenko is OK»:**
-> «Агіографія Тараса Шевченка для більшості українців починається з його дитячої подорожі до кінця світу.»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-andrukhovych`, author queried as `Андрухович Ю.`). Pedagogically valuable: demonstrates his role in de-mythologizing and humanizing canonical Ukrainian figures, challenging the rigid "hagiography" enforced by Soviet and conservative Ukrainian education. [Primary: corpus-verified]
+ЕСУ описує есеїстику Андруховича як письмо з виразною присутністю авторського
+`я` та широким культурно-історичним колом [D1]. Це не означає, що кожний
+оповідач у прозі тотожний біографічному авторові. Семінар повинен розрізняти
+персонажа, оповідача, есеїстичний голос і публічного співрозмовника.
 
-## 5. Language register
+D2 показує Андруховича в інтерв'ю 2022 року, де тема війни, російської
+культури й самоорганізації українців формує публічну позицію. D3, пізніше
+інтерв'ю Суспільного Культура, зосереджується на літературі, авторстві,
+читанні й успіху письменника. Разом джерела демонструють різні комунікативні
+ролі, але жодне не вичерпує творчості.
 
-- **Register:** Postmodern, highly erudite, yet deeply playful and carnivalesque. He seamlessly blends high European philosophical and literary allusions with Galician regionalisms, street slang, and deliberate stylistic pastiche.
-- **CEFR readiness for full reading:** **C1–C2**. The complexity of his vocabulary, the frequent use of historical and cultural allusions, and his ironical, non-linear narratives require advanced proficiency.
-- **Lexicon notes:** Galician dialectisms, Latinisms, Polonisms, and postmodern terminology. Terms to pre-teach: постмодернізм, карнавальність, буфонада, Станіславський феномен, есеїстика.
-- **Stylistic features:** Irony, grotesque, pastiche, intertextuality, and the "carnivalization" of literature (Mikhail Bakhtin's concept applied to Ukrainian realities).
+## 5. Війна, культура і прогноз
 
-## 6. Contested points
+У D2 письменник відповідає на питання в контексті великої війни 2022 року.
+Учні мають відрізнити особисте свідчення, політичну оцінку, культурний
+аргумент і прогноз. Прогноз не стає фактом лише тому, що його висловлює
+відомий автор. Водночас дата й контекст роблять його важливим первинним
+джерелом суспільної дискусії.
 
-- **The Donbas/Crimea Separation Statement (2010):** Following the election of Viktor Yanukovych, Andrukhovych made a highly controversial statement suggesting that if pro-European forces ever regained power, Ukraine should consider allowing Donbas and Crimea to separate, arguing their pro-Russian political majorities were chronically dragging the country back toward Russia. This drew massive backlash from politicians and society who viewed it as an unacceptable concession of sovereign territory. After 2014, this debate took on a tragic resonance. [T3: uk.wikipedia]
-- **Bu-Ba-Bu Aesthetics vs. Conservatism:** In the 1990s, his integration of eroticism, slang, and burlesque was harshly criticized by conservative and nationalist critics, who accused him of disrespecting classical Ukrainian literature and promoting "hooliganism."
-- **Right Sector Statement (2015):** A radical nationalist group quoted some of his earlier phrases out of context in a manifesto attacking the "liberal intelligentsia," demonstrating his ongoing friction with far-right elements in Ukrainian society. [T3: uk.wikipedia]
+Деколонізаційна робота не повинна замінити російський культурний центр
+біографічним культом українського письменника. Потрібно аналізувати механізми
+інституційної переваги, перекладу, доступу до медіа й канону. Особиста позиція
+Андруховича атрибутується й перевіряється поряд з іншими джерелами.
 
-## 7. Cross-track links
+## 6. Європейська видимість без телології
 
-> Every path under **Existing** was verified with `test -e` on 2026-06-04. Forward-looking ties are under **Candidate**.
+ЕСУ фіксує жанри, публікації й ранні інституційні ролі [D1]. Публічні
+інтерв'ю засвідчують широку медійну присутність [D2, D3]. Звідси не випливає
+наперед визначений маршрут `від провокатора до канону`. Канон формується
+видавцями, критиками, освітніми програмами, перекладачами, преміями й
+читачами. Для повної історії рецепції потрібен окремий корпус джерел.
 
-- **Existing BIO plans:** none yet.
-- **Existing HIST plans:** none yet.
-- **Existing LIT plans:** none yet.
-- **Candidate cross-track connections (Phase 2+):**
-  - `plans/lit/stanislav-phenomenon.yaml` — Andrukhovych is the central patriarch of this literary movement.
-  - `plans/lit/bu-ba-bu.yaml` — connecting him with Neborak and Irvanets.
-  - `plans/bio/bohdan-ihor-antonych.yaml` — Antonych was the subject of Andrukhovych's academic dissertation and features prominently in *Дванадцять обручів*.
+Формула `голос України в Європі` може працювати як тема дискусії, але не як
+монополія. Багато авторів, перекладачів і культурних інституцій представляють
+Україну. Антиагіографічний текст називає конкретну подію або публікацію й не
+приписує одній постаті колективну роботу.
 
-## 8. Naming-canonical
+## 7. Постмодернізм і деколонізація
 
-- **Slug:** `yuri-andrukhovych`
-- **EN canonical (BGN/PCGN 2010):** Yuri Andrukhovych (or Yuriy Andrukhovych)
-- **UA canonical (with patronymic):** Юрій Ігорович Андрухович
-- **Aliases (track these for `aliases:` YAML field):** Yuriy Andrukhovych, Yuri Andrukhovych.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Юрий Игоревич Андрухович, Yury Andrukhovych.
+Постмодернізм у пакеті — не ярлик `несерйозності`. Це набір можливих
+стратегій: іронія, цитатність, гра з авторитетом, множинність голосів,
+підважування великого наративу. D1 підтримує сам факт критичного зв'язку
+Андруховича з постмодерною проблематикою. Аналіз конкретної стратегії
+потребує тексту.
 
-## 9. Image candidates
+Деколонізаційне питання полягає в тому, чи допомагає форма побачити
+українського суб'єкта поза імперською нормою. Відповідь не може бути
+автоматично позитивною. Учень перевіряє, кого репрезентує міська богема, які
+регіони й соціальні досвіди залишаються поза кадром та як працює мова
+імперського центру.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Yuriy Andrukhovych"** holds numerous high-quality CC-BY-SA portraits from literary festivals (e.g., Leipzig Book Fair, Book Arsenal). Use the individual **file page** for the final license proof. [Commons category: `Yuriy Andrukhovych`]
-- **Backup candidates:** Official press photos from his publishers (Meridian Czernowitz, Folio) with educational use permission.
-- **Era-appropriate context image:** A photograph of the original Bu-Ba-Bu trio (Andrukhovych, Neborak, Irvanets) in the late 1980s or early 1990s to illustrate the literary movement.
+## 8. Quotation disposition
 
-## 10. Sources used
+Жодної персональної цитати Юрія Андруховича й жодного уривка з романів або
+есеїв для відтворення в модулі не схвалено. Попереднє досьє містило фрагменти
+з `Московіади` й `Shevchenko is OK`, підтверджені лише внутрішнім корпусом без
+публічного видання, сторінки та правової підстави. Їх вилучено. Дев'ять
+непублічних цитат із рекурсивного wiki також відхилено.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Андрухович Юрій Ігорович." https://esu.com.ua/article-44243. Accessed 2026-06-04.
+D2 і D3 є зовнішніми читаннями. Учні можуть переказати відповіді з
+атрибуцією медіа й даті. Дослівне використання потребуватиме точного локатора,
+мінімального обсягу й окремої правової перевірки. Назви творів і роки
+публікації можна згадувати як бібліографічні факти.
 
-**Tier 2 (institutional):**
-- Український ПЕН (PEN Ukraine). Profile: Yuri Andrukhovych. Accessed 2026-06-04.
+## 9. Мова й називання
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Андрухович Юрій Ігорович." https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович. Accessed 2026-06-04. Used as a starting point and for details on public controversies; cross-checked against Tier 1.
+Канонічна форма — **Юрій Ігорович Андрухович**. Назва `Станіслав` подається
+як історична назва Івано-Франківська в контексті народження [D1]. Назви
+Бу-Ба-Бу, `Рекреації`, `Московіада`, `Перверзія`, `Четвер` зберігаються за
+українським джерелом. Російські форми імені не потрібні для learner-facing
+тексту.
 
-**Tier 4 (modern scholarly post-1991):**
-- Гундорова Т. *Післячорнобильська бібліотека: український літературний постмодернізм*. Київ: Критика, 2013. (Referenced for analysis of postmodernism and Bu-Ba-Bu).
+Ключові терміни: `карнавал`, `постмодернізм`, `оповідач`, `есеїстичне я`,
+`імперський центр`, `публічний інтелектуал`, `прогноз`, `атрибуція`. Учень має
+визначати їх робочо й показувати приклад функції, а не повторювати словникову
+формулу без зв'язку з джерелом.
 
-**Primary-source documents accessed:**
-- Corpus `ukrlib-andrukhovych` (project literary index): «Московіада», «Shevchenko is OK» — `verify_quote`-confirmed (§4), confidence 1.0.
+## 10. Image rights
 
----
+Схвалене зображення — **File:Yurii Andrukhovych 2015.jpg** [D4]. Commons
+ідентифікує Юрія Андруховича на Місяці авторських читань у Вроцлаві, дату
+16 липня 2015 року, автора Rafał Komorowski і джерело `own work` [D4]. Файл
+має CC BY-SA 4.0 [D4]. Рекомендований підпис: `Юрій Андрухович; фото Rafał
+Komorowski; CC BY-SA 4.0; Wikimedia Commons`.
 
-## Decolonization self-check (run before submitting)
+Атрибуція, посилання на ліцензію, позначення змін і share-alike для адаптацій
+обов'язкові. Правовий статус не поширюється на фотографії з D1–D3.
 
-- [x] No Russocentric framing — his work is framed as a conscious subversion of Soviet aesthetics and an embrace of European/Ukrainian postmodernism.
-- [x] No Russian-imperial transliterations in body text (only allowed in `aliases:` field labeled FORBIDDEN).
-- [x] No Russocentric periodization.
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms for documented executions (N/A, living).
-- [x] All place names use modern UA canonical form (Ivano-Frankivsk, Stanislav).
-- [x] Holodomor referenced as Holodomor (N/A).
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable (his 2010 statement is contextualized accurately).
+## 11. Рекомендована навчальна послідовність
+
+Спочатку учні укладають хронологію D1 і відділяють факти від критичних
+характеристик. Потім порівнюють D2 і D3: тема, дата, роль журналіста, тип
+відповіді, межа прогнозу. На третьому етапі створюють карту `форма — норма,
+яку вона підважує — доказ — можливе виключення` для поняття карнавалу.
+
+Фінальна редакторська вправа виправляє абзац, де оповідача ототожнено з
+автором, постмодернізм названо втечею від відповідальності, а медійний прогноз
+— доведеним майбутнім. Учень має зберегти культурну значущість постаті без
+культу й без імперської периферизації.
+
+### Редакторська повторна перевірка
+
+Перед побудовою уроку редактор повторно відкриває D1–D3, звіряє назви,
+авторство, дати й часові формули. Особливо важливо не переносити політичний
+прогноз 2022 року як опис пізнішого стану без нової перевірки. Для D4
+повторно звіряються особа, автор фото, ліцензія й вимога share-alike. Якщо
+пряме джерело зникає, його не замінюють рекурсивним конспектом або пам'яттю
+редактора: відповідний блок повертається до source-needed до появи перевірної
+заміни.
+
+Редактор окремо перевіряє межу між біографічним фактом і характеристикою
+стилю. Наявність твору в бібліографії не доводить конкретної інтерпретації, а
+наявність інтерв'ю не перетворює всі відповіді на сталі погляди поза датою
+розмови. У фінальному уроці кожна теза зберігає видимий тип джерела.
+
+## 12. Evidence matrix і disposition
+
+| Claim family | Evidence | Disposition |
+|---|---|---|
+| Народження, освіта, Бу-Ба-Бу, ранні твори | D1 | Схвалено |
+| Критична характеристика стилю | D1 | Атрибутувати авторові ЕСУ |
+| Позиції про війну й російську культуру | D2 | Атрибутувати даті й жанру |
+| Позиції про літературу й авторство | D3 | Атрибутувати інтерв'ю |
+| Персональні цитати й книжкові уривки | — | Не схвалено |
+| Портрет і права | D4 | Схвалено для точного файла |
+
+Пакет придатний до catalog-source promotion. D1 дає перевірну біографічну й
+бібліографічну рамку, D2 — датовану суспільну позицію, D3 — окремий
+літературний контекст, D4 — точний портрет із правами. Рекурсивні джерела,
+непублічні цитати й телологічна легенда `від руйнівника до канону` не
+схвалені.

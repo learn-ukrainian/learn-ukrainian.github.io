@@ -1,49 +1,26 @@
-# Source registry for wiki/figures/mariya-matios.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/mariya-matios_Біографія-Марія-Матіос-Буковинський-голос-Основний-зміст-Подолання-колоніальної-травми-та-історіософія-пам-яті
-  type: ukrainian_wiki
-  title: 'Біографія: Марія Матіос: Буковинський голос'
-  section_path: 'Біографія: Марія Матіос: Буковинський голос > Основний зміст > Подолання
-    колоніальної травми та історіософія пам''яті'
+  file: https://knpu.gov.ua/winners/matios-mariia-vasylivna/
+  type: external
+  title: Матіос Марія Василівна
+  url: https://knpu.gov.ua/winners/matios-mariia-vasylivna/
 - id: S2
-  file: ukrainian_wiki/mariya-matios_Біографія-Марія-Матіос-Буковинський-голос-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Марія Матіос: Буковинський голос'
-  section_path: 'Біографія: Марія Матіос: Буковинський голос > Короткий зміст'
+  file: https://esu.com.ua/article-67002
+  type: external
+  title: Матіос Марія Василівна
+  url: https://esu.com.ua/article-67002
 - id: S3
-  file: ukrainian_wiki/mariya-matios_Біографія-Марія-Матіос-Буковинський-голос-Основний-зміст-Топос-Буковини-та-гірський-простір-у-системі-координат-письменниці
-  type: ukrainian_wiki
-  title: 'Біографія: Марія Матіос: Буковинський голос'
-  section_path: 'Біографія: Марія Матіос: Буковинський голос > Основний зміст > Топос
-    Буковини та гірський простір у системі координат письменниці'
+  file: https://suspilne.media/culture/936295-moze-najstrasnisa-moa-knizka-maria-matios-pro-novij-roman-zinci-mozna-dovirati-na-literaturnomu-vecori/
+  type: external
+  title: 'Може, найстрашніша моя книжка: Марія Матіос про новий роман «Жінці можна довіряти» на літературному вечорі'
+  url: https://suspilne.media/culture/936295-moze-najstrasnisa-moa-knizka-maria-matios-pro-novij-roman-zinci-mozna-dovirati-na-literaturnomu-vecori/
 - id: S4
-  file: ukrainian_wiki/matios-sweet-darusia_Українська-література-Марія-Матіос-Солодка-Даруся-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Марія Матіос: "Солодка Даруся"'
-  section_path: 'Українська література: Марія Матіос: "Солодка Даруся" > Короткий
-    зміст'
-- id: S5
-  file: ukrainian_wiki/mariya-matios_Біографія-Марія-Матіос-Буковинський-голос-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Марія Матіос: Буковинський голос'
-  section_path: 'Біографія: Марія Матіос: Буковинський голос > Деколонізаційна перспектива'
-- id: S6
-  file: ukrainian_wiki/mariya-matios_Біографія-Марія-Матіос-Буковинський-голос-Основний-зміст-Біографічні-витоки-родинна-пам-ять-та-професійне-становлення
-  type: ukrainian_wiki
-  title: 'Біографія: Марія Матіос: Буковинський голос'
-  section_path: 'Біографія: Марія Матіос: Буковинський голос > Основний зміст > Біографічні
-    витоки, родинна пам''ять та професійне становлення'
-- id: S7
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1403
-  type: textbook
-  title: Су÷асна українська література . Марія Матіос  235
-  page: 235
-  grade: 11
-- id: S8
-  file: ukrainian_wiki/matios-sweet-darusia_Українська-література-Марія-Матіос-Солодка-Даруся-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Українська література: Марія Матіос: "Солодка Даруся"'
-  section_path: 'Українська література: Марія Матіос: "Солодка Даруся" > Деколонізаційна
-    перспектива'
+  file: https://commons.wikimedia.org/wiki/File:Matios.JPG
+  type: external
+  title: 'File:Matios.JPG'
+  url: https://commons.wikimedia.org/wiki/File:Matios.JPG
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Matios.JPG
+    license: CC BY-SA 3.0
+    attribution: Bumbaka

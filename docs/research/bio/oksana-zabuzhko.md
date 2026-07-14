@@ -1,117 +1,181 @@
 # Оксана Стефанівна Забужко — Research Dossier
 
 **Slug:** `oksana-zabuzhko`
-**Block:** J (Contemporary / Living Figures)
-**Tier:** 1a
-**Issue:** #2535
-**Researcher:** Gemini 3.1 Pro
-**Completed:** 2026-06-04
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-14
+**Evidence key:** D1 — Енциклопедія Сучасної України; D2 — інтерв'ю «Українер»;
+D3 — Wikimedia Commons.
 
-## 1. Verified facts
+## 1. Перевірна біографічна рамка
 
-- **Full name (UA, canonical):** Оксана Стефанівна Забужко. [T3: uk.wikipedia; T1: ЕСУ]
-- **Pseudonyms / aliases:** none used professionally. Russian-imperial forms (forbidden in body text, listed only in §8): Оксана Степановна Забужко.
-- **Born:** 19 September 1960 | Луцьк, Волинська область, Українська РСР | The Soviet Union held Ukraine at the time. [T3: uk.wikipedia; T1: ЕСУ]
-- **Died:** [N/A — Living]
-- **Family / education key facts:** Born into a *shistdesiatnyky* (Sixtiers) intelligentsia family. Her father, Стефан (Степан) Іванович Забужко (1926–1983), was a pedagogue and translator who was repressed during the Stalin era and exiled to the Zabaykalsky Krai. Her mother, Надія Яківна Обжирко-Забужко (1926–2014), was a teacher of Ukrainian literature. Zabuzhko graduated from the philosophy faculty of Kyiv State University (1977–1982) and earned her Candidate of Sciences (kandydat) degree in aesthetics in 1987. [T3: uk.wikipedia; T1: ЕСУ]
+Оксана Забужко народилася 19 вересня 1960 року в Луцьку [D1]. ЕСУ подає її як
+поетку, письменницю, літературознавицю, публіцистку й філософиню [D1]. Вона
+закінчила філософський факультет Київського університету, навчалася в
+аспірантурі Інституту філософії та працювала в академічних і викладацьких
+середовищах [D1]. Ці факти задають інституційну рамку, але не доводять, що
+кожний художній твір є прямим викладом філософської теорії.
 
-## 2. Oppression mechanism
+Біографічне джерело поєднує дати, посади, бібліографію й критичну
+характеристику. Учень має розрізняти ці шари. Дата видання або назва праці є
+перевірним бібліографічним фактом. Твердження про значення твору в каноні є
+оцінкою автора енциклопедичної статті, навіть коли опубліковане авторитетною
+установою.
 
-This is the load-bearing section. While Zabuzhko is a living, globally recognized author today, her early life and career were directly suppressed by the Soviet state apparatus.
+## 2. Поезія, проза, есеїстика
 
-- **What happened:** Family persecution leading to internal displacement, followed by direct literary censorship (blacklisting).
-- **When (specific dates):** 1965–1968 (forced displacement); 1972–1985 (censorship and publication ban).
-- **By whom (specific Russian/Soviet/RF agency):** The KGB (Committee for State Security of the USSR) and Soviet state publishing censors.
-- **Document references:** Her autobiographical accounts and encyclopedic entries document the 1972 repressions against the Ukrainian intelligentsia. [T1: ЕСУ; T3: uk.wikipedia]
-- **Mechanism specifics:** In September 1965, KGB repressions against the Ukrainian intelligentsia began to target her father, forcing the family to flee Lutsk and relocate to Kyiv in 1968 to escape the immediate local scrutiny. Later, during the 1972 Soviet crackdown (which targeted *shistdesiatnyky* dissidents), her parents were placed on Soviet "blacklists". Consequently, Zabuzhko's debut poetry collection, *Весняна акварель*, which was already prepared for print with a foreword by Mykhailo Stelmakh, was removed from production by Soviet censors.
-- **What survived / what was destroyed:** Her literary voice was silenced for 13 years during the Brezhnev stagnation. She was not allowed to publish her first book until 1985 (*Травневий іній*). Despite this suppression, she survived the Soviet era to become one of the most prominent architects of post-colonial Ukrainian literature, famously noting that the ban prevented her from becoming a conformist Soviet writer.
+D1 перелічує поетичні збірки, прозу, есеїстику та літературознавчі праці
+Забужко. Для навчального пакета ключовими орієнтирами є роман «Польові
+дослідження з українського сексу», роман «Музей покинутих секретів», повість
+«Казка про калинову сопілку» та дослідження `Notre Dame d'Ukraine: Українка в
+конфлікті міфологій` [D1]. Назви фіксують діапазон жанрів; пакет не відтворює
+їхніх текстів.
 
-## 3. Major works
+Список успіхів не повинен замінити аналіз. Популярність, переклади й нагороди
+пояснюють публічну видимість, але не визначають єдиної інтерпретації. Щоб
+говорити про оповідну форму, феміністську критику чи роботу з пам'яттю, учень
+має назвати конкретний твір, сцену або аргумент і використовувати законний
+доступ із точним локатором.
 
-A foundational figure of contemporary Ukrainian literature; her works deconstruct colonial and patriarchal narratives.
+## 3. Інтерв'ю як первинне джерело позиції
 
-- `1996` — *Польові дослідження з українського сексу*, novel, Kyiv. The first major bestseller of independent Ukraine; a foundational feminist and post-colonial text. [T3: uk.wikipedia]
-- `2000` — *Казка про калинову сопілку*, novella. A feminist reimagining of traditional Ukrainian folklore and myth. [T1: ЕСУ]
-- `2003` — *Сестро, сестро*, collection of short stories and novellas. [T3: uk.wikipedia]
-- `2007` — *Notre Dame d'Ukraine: Українка в конфлікті міфологій*, intellectual non-fiction. This is **her own** major scholarly work exploring Ukrainian cultural history and the nobility through the figure of Lesya Ukrainka (do not falsely attribute this to her father). [T1: ЕСУ]
-- `2009` — *Музей покинутих секретів*, novel. An intergenerational saga spanning WWII (UPA struggles), the 1970s, and the 2000s, decolonizing Ukrainian history. [T3: uk.wikipedia]
-- `2022` — *Найдовша подорож*, essay. A reflection on the 2022 full-scale Russian invasion of Ukraine. [T3: uk.wikipedia]
+Інтерв'ю «Українер» присвячене російському імперіалізму, Заходу, фемінізму й
+мовному питанню [D2]. Воно є первинним джерелом публічної позиції Забужко на
+момент розмови. Редакційний вступ окреслює тему й представляє співрозмовницю;
+відповіді належать авторці. Ці два голоси не можна цитувати або переказувати
+як один безособовий факт.
 
-## 4. Primary-source quotes (≥2 required)
+Учень маркує кожну тезу як авторське свідчення, історичне твердження,
+інтерпретацію або прогноз. Авторитет письменниці у сфері культури не робить
+кожне історичне узагальнення автоматично остаточним. Паралельно критик не має
+права знецінювати позицію лише тому, що вона подана в інтерв'ю. Потрібна
+перевірка конкретного твердження за джерелом відповідного типу.
 
-**Quote 1 — from the novella «Казка про калинову сопілку»:**
-> «Вона вродилася з місяцем на лобі.»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-zabuzhko`). Pedagogically valuable: establishes her engagement with Ukrainian mythos and folklore, showcasing a high literary style that elevates traditional storytelling into modern myth-making. [Primary: corpus-verified]
+## 4. Імперіалізм і деколонізаційна оптика
 
-**Quote 2 — from the novella «Казка про калинову сопілку» (dialogue):**
-> «дурна ти, дівко, за таким паливодою весь вік би сльозами вмивалася, колись іще дякувать будеш, як до розуму дійдеш»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-zabuzhko`). Pedagogically valuable: demonstrates her masterful use of colloquial, folk-inflected Ukrainian dialogue within a highly structured literary text. [Primary: corpus-verified]
+D2 дозволяє аналізувати, як Забужко пов'язує культурну політику, російський
+імперіалізм, західне сприйняття України й мовну нерівність. Це не просто набір
+гасел: учні мають реконструювати послідовність аргументу, приклади та адресата.
+Ключова вимога — атрибуція. Формула `Забужко в інтерв'ю стверджує` точніша за
+безособове `історія доводить`.
 
-## 5. Language register
+Деколонізація в цьому пакеті означає повернення українській культурі права на
+власні генеалогії та поняття, а не лише заперечення російського канону. Вона
+також вимагає перевіряти західні схеми, які роблять Україну невидимою або
+похідною. Проте деколонізаційна рамка не звільняє від доказу: широке
+твердження про століття культурної політики потребує названих історичних
+джерел.
 
-- **Register:** High modernist, intellectual, deeply intertwined with European philosophical discourse, feminism, and post-colonial theory. She frequently employs complex, multi-clausal syntax (often referred to as *écriture féminine* or "writing from the body") alongside vivid Ukrainian vernacular.
-- **CEFR readiness for full reading:** **C1–C2**. Her philosophical non-fiction (*Notre Dame d'Ukraine*) and sprawling novels (*Музей покинутих секретів*) require advanced proficiency and deep cultural context.
-- **Lexicon notes:** neologisms, philosophical terminology, psychological vocabulary, and authentic regional dialects. Terms to pre-teach: фемінізм, постколоніальний, міфологія, інтелектуалка, шляхта.
-- **Stylistic features:** Stream-of-consciousness, intricate psychological probing, and a distinct "poetic" voice merged with intellectual rigor.
+## 5. Фемінізм без редукції авторки
 
-## 6. Contested points
+Феміністська проблематика присутня і в тематичному описі D2, і в
+літературознавчому профілі D1. Пакет не зводить Забужко до ярлика
+`письменниця про жіноче питання`. Феміністська оптика може аналізувати владу,
+тіло, голос, канон, працю пам'яті та інституції. Конкретний висновок має бути
+прив'язаний до тексту або атрибутованої позиції.
 
-- **Feminism vs. Traditionalism:** When *Польові дослідження з українського сексу* was published in 1996, it provoked a massive scandal among conservative Ukrainian critics who were unprepared for its frank exploration of female sexuality, patriarchy, and national trauma. Her work was often dismissed by traditionalists but championed by modern scholars as a post-colonial breakthrough. [T4: Гундорова Т. "Феміністичний постмодерн: Оксана Забужко"]
-- **De-mystification of National Icons:** Her scholarly work on Taras Shevchenko (*Шевченків міф України*) and Lesya Ukrainka (*Notre Dame d'Ukraine*) drew ire from conservative literary scholars who accused her of "demoliberalism" and of applying "snobbish" Western methodologies (Freud, Jung, post-colonialism) to canonical figures. Modern scholarship overwhelmingly supports her approach as a necessary Europeanization of Ukrainian literary studies. [T5: Суспільне / media archives]
-- **Russian Disinformation:** As an unapologetic critic of Russian imperialism and a visible cultural ambassador for Ukraine, Zabuzhko is frequently targeted by Russian state media and pro-Russian proxies, who attempt to frame her decolonial stance as "radical nationalism."
+Антиагіографічний підхід передбачає дві симетричні заборони. Не можна
+представляти авторку безпомилковою речницею всіх українських жінок. Так само
+не можна знецінювати складну аргументацію як приватну емоцію. Учні оцінюють
+структуру доказу, поняття і контекст, а не відтворюють стереотипи про стать
+авторки.
 
-## 7. Cross-track links
+## 6. Мова як тема й інструмент
 
-> Every path under **Existing** was verified with `test -e` on 2026-06-04. Forward-looking ties are under **Candidate**.
+Мовне питання в D2 пов'язане з культурною владою та імперськими ієрархіями.
+Забужко говорить українською для української медійної аудиторії; це дає
+матеріал для аналізу публічного регістру. Пакет не вигадує термін
+`забужківський період` як науково встановлену одиницю і не оцінює синтаксис
+без конкретного уривка.
 
-- **Existing BIO plans:** none yet.
-- **Existing HIST plans:** none yet.
-- **Existing LIT plans:** none yet.
-- **Candidate cross-track connections (Phase 2+):**
-  - `plans/bio/lesya-ukrainka.yaml` — highly relevant connection due to Zabuzhko's monumental study *Notre Dame d'Ukraine*.
-  - `plans/hist/shistdesiatnyky.yaml` — to explore the 1965 and 1972 repressions that shaped her early life and her parents' fate.
-  - `plans/lit/zabuzhko-feminism.yaml` — a future module dedicated to her role in introducing feminist and post-colonial discourse to Ukrainian literature in the 1990s.
+Для семінару корисно порівняти три рівні: термін у запитанні журналіста,
+визначення у відповіді та приклад. Учень перевіряє, чи термін не змінює
+значення між частинами розмови. Слова й наголоси, що потрапляють до
+вокабуляра, мають проходити окрему словникову верифікацію; інтуїтивної
+схожості з іншою слов'янською мовою недостатньо.
 
-## 8. Naming-canonical
+## 7. Канон і конфлікт міфологій
 
-- **Slug:** `oksana-zabuzhko`
-- **EN canonical (BGN/PCGN 2010):** Oksana Zabuzhko
-- **UA canonical (with patronymic):** Оксана Стефанівна Забужко
-- **Aliases (track these for `aliases:` YAML field):** Oksana Zabuzhko
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Оксана Степановна Забужко, Oksana Zabuzhko (when treated as a Russian author).
+D1 підтверджує існування праці `Notre Dame d'Ukraine` та її місце в
+бібліографії Забужко. Поточний пакет не має законного відкритого уривка з цієї
+книжки, тому не видає переказ за первинне читання. Учні можуть дослідити назву,
+бібліографічний контекст і згадки у D1 та D2, але не приписувати розділам
+конкретні тези без доступу до тексту.
 
-## 9. Image candidates
+Такий обмежувальний режим є частиною якості. Якщо матеріал не локалізовано,
+його не треба «відновлювати» з пам'яті або генерованого резюме. Краще
+побудувати вправу на жанровому зіставленні D1 і D2, ніж створити впевнений,
+але неперевірний конспект книжки.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Oksana Zabuzhko"** contains numerous CC-BY-SA photographs from public appearances (e.g., Book Arsenal, international book fairs). Use the individual **file page** for the final license proof. [Commons category: `Oksana Zabuzhko`]
-- **Backup candidates:** Author portraits provided by her primary Ukrainian publisher, Komora (with explicit permission for educational use).
-- **Era-appropriate context image:** Cover of the first edition of *Польові дослідження з українського сексу* (1996) to illustrate the cultural milestone.
+## 8. Quotation disposition
 
-## 10. Sources used
+Жодної персональної цитати Оксани Забужко і жодного уривка з художніх чи
+есеїстичних книжок для відтворення в модулі не схвалено. Попередній пакет
+містив два речення з «Казки про калинову сопілку», підтверджені лише
+внутрішнім корпусом без публічного URL, видання, сторінки й правової підстави.
+Їх вилучено разом із непублічними цитатами з рекурсивного wiki-реєстру.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Забужко Оксана Стефанівна." https://esu.com.ua/article-15222. Accessed 2026-06-04.
+D2 доступне як зовнішнє читання. Учні можуть переказувати аргумент із
+атрибуцією. Будь-яке дослівне використання потребуватиме точного локатора,
+мінімального обсягу та редакторської перевірки. Назви книжок, дати й посади
+залишаються бібліографічними фактами, а не дозволом на копіювання тексту.
 
-**Tier 2 (institutional):**
-- Український ПЕН (PEN Ukraine). Profile: Oksana Zabuzhko. Accessed 2026-06-04.
+## 9. Межі біографічного і публічного образу
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Забужко Оксана Стефанівна." https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна. Accessed 2026-06-04. Used as a starting point; biographical details cross-checked against Tier 1.
+ЕСУ представляє довгий творчий маршрут [D1], а «Українер» — одну тематично
+організовану публічну розмову [D2]. Інтерв'ю не вичерпує творчості, а
+енциклопедія не відтворює динаміки живої суперечки. Семінар має показати цю
+різницю жанрів. Похвала, критика й самопрезентація отримують чітку атрибуцію.
 
-**Tier 4 (modern scholarly post-1991):**
-- Гундорова Т. "Феміністичний постмодерн: Оксана Забужко" // *Післячорнобильська бібліотека: український літературний постмодернізм*. Київ: Критика, 2013. С. 209-222. (Referenced for §6 feminist framing).
+Пакет не схвалює твердження про одностайний суспільний резонанс, приховані
+мотиви авторки, точний вплив окремої книжки на всіх читачів або репрезентацію
+всіх жінок. Для історії рецепції потрібні рецензії, наклади, опитування чи
+архів дискусій. Для біографії — надійні датовані джерела.
 
-**Primary-source documents accessed:**
-- Corpus `ukrlib-zabuzhko` (project literary index): «Казка про калинову сопілку» — `verify_quote`-confirmed (§4), confidence 1.0.
+## 10. Image rights
 
----
+Схвалене зображення — **File:Oksana Zabuzhko (2019).jpg** [D3]. Commons
+ідентифікує Оксану Забужко, дату 11 травня 2019 року, власну роботу й автора
+Jindřich Nosek (NoJin) [D3]. Файл ліцензовано CC BY-SA 4.0 [D3].
+Рекомендований підпис: `Оксана Забужко; фото Jindřich Nosek (NoJin); CC BY-SA
+4.0; Wikimedia Commons`.
 
-## Decolonization self-check (run before submitting)
+Потрібно подати атрибуцію, посилання на ліцензію, позначити зміни й дотримати
+share-alike для адаптацій. Правовий статус стосується тільки файла D3, а не
+зображень на сторінках D1 або D2.
 
-- [x] No Russocentric framing — her work is framed purely within the context of European and Ukrainian literary traditions, actively opposing colonial narratives.
-- [x] No Russian-imperial transliterations in body text (only allowed in `aliases:` field labeled FORBIDDEN).
-- [x] No Russocentric periodization (framed around Ukrainian independence and Soviet stagnation/repressions).
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms for documented executions (N/A, living).
-- [x] All place names use modern UA canonical form (Kyiv, Lutsk).
-- [x] Holodomor referenced as Holodomor, not "Soviet famine" (N/A).
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable (her 2022 essay is properly contextualized).
+## 11. Рекомендована навчальна послідовність
+
+Перший етап — джерельна карта D1. Учні виписують дати, установи й назви
+творів, окремо маркуючи критичні характеристики. Другий етап — аргументативна
+карта D2: запитання, теза, приклад, припущення, часовий контекст. Кожна група
+пояснює, яке твердження можна перевірити зовнішнім джерелом.
+
+Третій етап — редакторська вправа. Учні виправляють абзац, де інтерв'ю
+помилково подано як нейтральну енциклопедію, фемінізм зведено до теми жінок,
+а деколонізацію — до автоматичного заперечення всього чужого. Завершальна
+відповідь має зберегти силу позиції Забужко й водночас показати межі доказу.
+
+### Редакторська повторна перевірка
+
+Перед побудовою модуля редактор повторно відкриває D1 і D2, звіряє точні
+заголовки, дату енциклопедичної редакції, авторство інтерв'ю та доступність
+медіаматеріалів. Окремо перевіряються автор, ліцензія й незмінність файла D3.
+Часово чутливі твердження з інтерв'ю не переносяться в теперішній час без
+нової звірки. Якщо джерело зникає, його не підмінюють згенерованим резюме;
+відповідний блок повертається до source-needed і отримує нову пряму основу.
+
+## 12. Evidence matrix і disposition
+
+| Claim family | Evidence | Disposition |
+|---|---|---|
+| Народження, освіта, діяльність | D1 | Схвалено |
+| Бібліографія й жанровий діапазон | D1 | Схвалено з атрибуцією оцінок |
+| Позиції про імперіалізм, мову, фемінізм | D2 | Атрибутувати інтерв'ю й даті |
+| Точний зміст ненаданих книжок | — | Не доведено |
+| Персональні цитати й уривки | — | Не схвалено |
+| Портрет і права | D3 | Схвалено для точного файла |
+
+Пакет придатний до catalog-source promotion. Він замінює загальні домашні
+сторінки й рекурсивні записи точним інституційним профілем, прямим тематичним
+інтерв'ю та перевіреним Commons-портретом. Побудова модуля, книжкові уривки й
+історія рецепції залишаються поза цим рішенням.

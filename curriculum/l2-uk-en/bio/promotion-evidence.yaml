@@ -2151,3 +2151,103 @@ entries:
       disposition: approved
     cohort_promotion: *cohort_next10_c1_review
     hold: *cohort_next10_c1_hold
+  halyna-pahutyak:
+    dossier_grounding: &cohort_next10_c2_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_c2_review
+    wiki_quote_verification: *cohort_next10_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://commons.wikimedia.org/wiki/File:Halyna_Pahutiak_(cropped).jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_c2_review
+    hold: &cohort_next10_c2_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  mariya-matios:
+    dossier_grounding: *cohort_next10_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_c2_review
+    wiki_quote_verification: *cohort_next10_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://commons.wikimedia.org/wiki/File:Matios.JPG
+      disposition: approved
+    cohort_promotion: *cohort_next10_c2_review
+    hold: *cohort_next10_c2_hold
+  oksana-zabuzhko:
+    dossier_grounding: *cohort_next10_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_c2_review
+    wiki_quote_verification: *cohort_next10_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://commons.wikimedia.org/wiki/File:Oksana_Zabuzhko_(2019).jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_c2_review
+    hold: *cohort_next10_c2_hold
+  yaroslav-hrytsak:
+    dossier_grounding: *cohort_next10_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_c2_review
+    wiki_quote_verification: *cohort_next10_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://commons.wikimedia.org/wiki/File:Hrytsak.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_c2_review
+    hold: *cohort_next10_c2_hold
+  yuri-andrukhovych:
+    dossier_grounding: *cohort_next10_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4974571173
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_c2_review
+    wiki_quote_verification: *cohort_next10_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-14
+      evidence_url: https://commons.wikimedia.org/wiki/File:Yurii_Andrukhovych_2015.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_c2_review
+    hold: *cohort_next10_c2_hold

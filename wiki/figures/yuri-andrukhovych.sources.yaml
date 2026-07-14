@@ -1,54 +1,26 @@
-# Source registry for wiki/figures/yuri-andrukhovych.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/new-prose-displacement_Українська-література-Нова-проза-та-література-переміщених-і-вигнанців-Основний-зміст-Постмодернізм-Станіславський-феномен-і-нові-культурні-героїні
-  type: ukrainian_wiki
-  title: 'Українська література: Нова проза та література переміщених і вигнанців'
-  section_path: 'Українська література: Нова проза та література переміщених і вигнанців
-    > Основний зміст > Постмодернізм, "Станіславський феномен" і нові культурні героїні'
+  file: https://esu.com.ua/article-44282
+  type: external
+  title: Андрухович Юрій Ігорович
+  url: https://esu.com.ua/article-44282
 - id: S2
-  file: ukrainian_wiki/andrukhovych-moscoviad_Українська-література-Юрій-Андрухович-та-роман-Московіада-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Юрій Андрухович та роман «Московіада»'
-  section_path: 'Українська література: Юрій Андрухович та роман «Московіада» > Короткий
-    зміст'
+  file: https://suspilne.media/ivano-frankivsk/251617-urij-andruhovic-akso-ne-bude-ciei-zagalnonacionalnoi-katastrofi-rosii-to-svit-dali-kotitimetsa-u-prirvu/
+  type: external
+  title: 'Юрій Андрухович: якщо не буде загальнонаціональної катастрофи Росії, то світ далі котитиметься у прірву'
+  url: https://suspilne.media/ivano-frankivsk/251617-urij-andruhovic-akso-ne-bude-ciei-zagalnonacionalnoi-katastrofi-rosii-to-svit-dali-kotitimetsa-u-prirvu/
 - id: S3
-  file: ukrainian_wiki/yuri-andrukhovych_Біографія-Юрій-Андрухович-Карнавал-на-руїнах-імперії-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії'
-  section_path: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії > Короткий
-    зміст'
+  file: https://suspilne.media/culture/1093966-urij-andruhovic-v-ukraini-mene-majze-ne-citaut-ale-fotografuutsa/
+  type: external
+  title: 'Юрій Андрухович: «В Україні мене майже не читають, але фотографуються»'
+  url: https://suspilne.media/culture/1093966-urij-andruhovic-v-ukraini-mene-majze-ne-citaut-ale-fotografuutsa/
 - id: S4
-  file: ukrainian_wiki/yuri-andrukhovych_Біографія-Юрій-Андрухович-Карнавал-на-руїнах-імперії-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії'
-  section_path: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії > Деколонізаційна
-    перспектива'
-- id: S5
-  file: ukrlib-andrukhovych_c0001
-  type: literary
-  title: Юрій Андрухович. Біографія Юрія Андруховича
-  author: Андрухович Ю.
-- id: S6
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1395
-  type: textbook
-  title: Су÷асна українська література  219
-  page: 219
-  grade: 11
-- id: S7
-  file: wikipedia/Постмодернізм
-  type: wikipedia
-  title: Постмодернізм
-  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%BD%D1%96%D0%B7%D0%BC
-- id: S8
-  file: ukrainian_wiki/yuri-andrukhovych_Біографія-Юрій-Андрухович-Карнавал-на-руїнах-імперії-Основний-зміст-Станіславський-феномен-і-карнавальний-бунт-Бу-Ба-Бу
-  type: ukrainian_wiki
-  title: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії'
-  section_path: 'Біографія: Юрій Андрухович: Карнавал на руїнах імперії > Основний
-    зміст > «Станіславський феномен» і карнавальний бунт «Бу-Ба-Бу»'
-- id: S9
-  file: ukrlib-andrukhovych_c0000
-  type: literary
-  title: Юрій Андрухович. Час і місце, або Моя остання територія
-  author: Андрухович Ю.
+  file: https://commons.wikimedia.org/wiki/File:Yurii_Andrukhovych_2015.jpg
+  type: external
+  title: 'File:Yurii Andrukhovych 2015.jpg'
+  url: https://commons.wikimedia.org/wiki/File:Yurii_Andrukhovych_2015.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Yurii_Andrukhovych_2015.jpg
+    license: CC BY-SA 4.0
+    attribution: Rafał Komorowski

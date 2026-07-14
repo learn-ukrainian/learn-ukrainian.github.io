@@ -76,59 +76,45 @@ persona:
   role: Модератор семінару, що ставить складні питання та уникає простої апології, змушуючи студентів бачити складнощі та суперечності.
   voice: Pahutyak-Admirer-With-Reservations
 phase: BIO
+readings_contract_version: 2
 readings:
-  - title: Пагутяк Галина Василівна
-    language: uk
-    genre: Енциклопедична стаття / Довідка
-    source_type: reference
-    role: orientation
-    source: Вікіпедія
-    source_url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
-    license: CC-BY-SA-4.0
-    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Ознайомитися з біографічними даними, творчим доробком і місцем авторки в сучасній українській літературі.
-    caveats: Довідковий формат не передає стилістичної специфіки "химерного реалізму".
-  - title: Есеїстика Галини Пагутяк (Потрібен матеріал)
-    language: uk
-    genre: Есеїстика / Публіцистика
-    source_type: primary
-    role: reading
-    source: Авторський блог, Збруч або Українська правда
-    license: copyrighted
-    rights_note: Текст захищено авторським правом письменниці або видання. Потрібно знайти стабільний лінк на її авторську колонку.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Прочитати одне з есеїв авторки, щоб побачити її безкомпромісну позицію та перехід від містики до гострої соціальної критики.
-    caveats: Есеї часто містять суб'єктивні, гострі оцінки суспільно-політичних подій.
-  - title: Уривок з роману "Слуга з Добромиля" (Потрібен матеріал)
-    language: uk
-    genre: Художня проза / Химерний реалізм
-    source_type: primary
-    role: supplementary-reading
-    source: Видавництво "Піраміда" / Офіційний ресурс
-    license: copyrighted
-    rights_note: Текст роману захищено авторським правом. Потрібно знайти легальний ознайомчий фрагмент або отримати дозвіл.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Ознайомитися з художнім стилем Пагутяк, щоб зрозуміти атмосферу "урізької міфології" та елементи карпатської готики.
-    caveats: Текст може бути складним для розуміння через специфічну лексику, містичні алюзії та нелінійність оповіді.
+- title: Пагутяк Галина Василівна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-878100
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-878100
+    note: Зовнішнє посилання на енциклопедичну статтю; текст і фотографії не відтворюються в курсі.
+  learner_task: Укласти перевірну хронологію життя і творчості Пагутяк та відрізнити бібліографічний факт від оцінки її письма.
+- title: Мовний портрет Слуги з Добромиля за однойменним романом Галини Пагутяк
+  source_name: Лінгвостилістичні студії
+  source_url: https://doi.org/10.29038/2413-0923-2019-11-89-99
+  language: uk
+  type: scholarly-article
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://doi.org/10.29038/2413-0923-2019-11-89-99
+    note: Зовнішнє посилання на статтю відкритого доступу CC BY-NC 4.0; текст не відтворюється в курсі.
+  learner_task: Простежити, як дослідниця описує лексичні й синтаксичні засоби мовного портрета Слуги, не підмінюючи роман переказом статті.
 references:
-- title: Halyna Pahutyak
-  note: Compiled from Wikipedia, critical essays, and publisher data. Primary source for biographical facts and major works.
-  path: wiki/bio/halyna-pahutyak.md
-  type: wiki
-- title: Слуга з Добромиля
-  author: Пагутяк Г.
-  note: Ключовий роман для аналізу стилю «химерного реалізму» та Урізької міфології.
-  type: primary
-  work: Слуга з Добромиля
-- title: Післячорнобильська бібліотека
-  author: Гундорова Т.
-  note: Для контекстуалізації творчості Пагутяк у рамках постмодерної української літератури.
-  type: critical
-  work: Післячорнобильська бібліотека
+- title: Пагутяк Галина Василівна
+  note: Інституційна біографія, бібліографія та датована характеристика творчості
+  type: encyclopedia
+  url: https://esu.com.ua/article-878100
+- title: Мовний портрет Слуги з Добромиля за однойменним романом Галини Пагутяк
+  note: Фаховий аналіз мовного портрета персонажа; стаття CC BY-NC 4.0
+  type: scholarly-article
+  url: https://doi.org/10.29038/2413-0923-2019-11-89-99
+- title: 'File:Halyna Pahutiak (cropped).jpg'
+  note: Точний Commons-файл; Алла Рогашко; CC BY-SA 4.0
+  type: image-rights
+  url: https://commons.wikimedia.org/wiki/File:Halyna_Pahutiak_(cropped).jpg
 sequence: 177
 slug: halyna-pahutyak
 subtitle: 'Halyna Pahutyak: Architect of Chimerical Worlds'
