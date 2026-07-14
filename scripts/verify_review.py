@@ -61,8 +61,18 @@ def _parse_finding(body: str, finding_id: int) -> dict[str, object]:
     }
 
 
+def _origin_branch_ref(branch: str) -> str:
+    """Return the remote-tracking ref used for branch quote verification."""
+    normalized = branch.strip()
+    if not normalized or normalized.startswith(("origin/", "refs/", "-")):
+        raise ValueError("--branch must be a branch name without origin/ or refs/ prefixes")
+    return f"origin/{normalized}"
+
+
 def _load_file(path: str, branch: str | None) -> str:
-    return _run(["git", "show", f"{branch}:{path}"]) if branch else Path(path).read_text("utf-8")
+    if branch is None:
+        return Path(path).read_text("utf-8")
+    return _run(["git", "show", f"{_origin_branch_ref(branch)}:{path}"])
 
 
 def _verify_finding(finding: dict[str, object], branch: str | None) -> dict[str, object]:

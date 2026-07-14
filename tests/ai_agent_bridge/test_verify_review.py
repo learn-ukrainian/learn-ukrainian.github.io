@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import verify_review
@@ -30,9 +32,9 @@ def _finding(path: str, line: int, quote: str, *, include_fix: bool = True) -> s
 
 def test_verify_review_outcomes(monkeypatch):
     files = {
-        "main:ok.py": "a = 1\nb = 2\n",
-        "main:mismatch.py": "x = 0\nvalue = 2\n",
-        "main:missing.py": "z = 9\n",
+        "origin/main:ok.py": "a = 1\nb = 2\n",
+        "origin/main:mismatch.py": "x = 0\nvalue = 2\n",
+        "origin/main:missing.py": "z = 9\n",
     }
     monkeypatch.setattr(verify_review, "_run", lambda cmd, input_text=None: files[cmd[-1]])
     review = "\n\n".join(
@@ -98,6 +100,22 @@ def test_issue_mode_reads_latest_comment_and_posts_summary(
     assert calls[-1][:3] == ["gh", "issue", "comment"]
 
 
+def test_verify_review_branch_mode_never_uses_a_local_branch_or_worktree(monkeypatch):
+    commands: list[list[str]] = []
+
+    def fake_run(command, input_text=None):
+        commands.append(command)
+        assert input_text is None
+        return "value = 1\n"
+
+    monkeypatch.setattr(verify_review, "_run", fake_run)
+
+    assert verify_review._load_file("path/to/file.py", "feature/review") == "value = 1\n"
+    assert commands == [["git", "show", "origin/feature/review:path/to/file.py"]]
+    with pytest.raises(ValueError, match="without origin"):
+        verify_review._load_file("path/to/file.py", "origin/feature/review")
+
+
 def test_review_protocol_is_loaded_at_call_time(tmp_path, monkeypatch):
     docs = tmp_path / "docs"
     docs.mkdir()
@@ -118,6 +136,22 @@ def test_review_protocol_is_loaded_at_call_time(tmp_path, monkeypatch):
 
     assert "PROTO v1" in first
     assert "PROTO v2" in second
+
+
+def test_branch_targeted_review_prompt_forbids_primary_checkout_evidence(tmp_path, monkeypatch):
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "review-protocol.md").write_text("PROTO", encoding="utf-8")
+    monkeypatch.setattr(_prompts, "REPO_ROOT", tmp_path)
+
+    prompt = _prompts.review_protocol_prefix(
+        branch="feature/review", pr_number=5150, worktree_provisioned=False
+    )
+
+    assert "checkout may NOT be that branch" in prompt
+    assert "gh pr diff 5150" in prompt
+    assert "git show origin/feature/review:<path>" in prompt
+    assert "Do not read files from the current checkout" in prompt
 
 
 def test_build_agent_prompt_review_prefix_precedes_channel_context(monkeypatch):
