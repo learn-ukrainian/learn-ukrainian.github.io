@@ -14,6 +14,13 @@ shared adapter deliberately has more recovery behavior than this boundary may
 allow.  ``codex exec`` accepts one prompt, so this bridge uses the documented
 flattened-prompt mitigation set for the lean qualification only.
 
+The qualified Grok Build route invokes the native ``grok`` CLI directly.  It
+uses a fresh ``GROK_HOME`` with only its OAuth credential, an empty built-in
+tool allowlist, an MCP deny rule, and a caller-supplied fresh session UUID.
+The native CLI persists that exact session's authoritative ``updates.jsonl``
+and detailed ``events.jsonl`` under the scoped home; both must be complete
+strict JSONL, tool-free, and model-pinned before a response is accepted.
+
 The Gemini family deliberately remains fail-closed.  Agy's ``--log-file``
 does not itself record every tool event (the existing runtime must locate a
 separate per-conversation transcript from it), so it cannot yet satisfy this
@@ -31,11 +38,13 @@ import re
 import subprocess
 import sys
 import tempfile
+import uuid
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 if __package__ in {None, ""}:
     project_root = Path(__file__).resolve().parents[2]
@@ -45,10 +54,11 @@ if __package__ in {None, ""}:
 from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
 from scripts.audit import layerb_shadow
 
-BRIDGE_VERSION = "qg-layer-b-judge-bridge.v4"
+BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
+    "grok": "grok-build",
     "gemini": "gemini-3.5-flash-high",
 }
 CODEX_DISABLED_FEATURES = (
@@ -67,6 +77,13 @@ CODEX_DISABLED_FEATURES = (
     "tool_suggest",
 )
 CODEX_CONFIG_OVERRIDES = ("web_search=disabled", "tools.view_image=false")
+GROK_DISABLED_FEATURES = ("Agent",)
+GROK_DENY_RULES = ("MCPTool",)
+GROK_CONFIG_FLAGS = ("--disable-web-search", "--no-memory", "--no-subagents")
+GROK_TOOL_EVENT_TYPES = frozenset(
+    {"tool_started", "tool_completed", "tool_failed", "permission_requested", "permission_resolved"}
+)
+GROK_TRACE_TOOL_KEYS = frozenset({"toolcall", "toolcalls", "toolcallid", "toolname", "functioncall"})
 _TRACE_ACTIVITY_RE = re.compile(
     r"(?:^|[^a-z0-9])(tool|function|mcp|web|browser|terminal|shell|computer)(?:$|[^a-z0-9])", re.I
 )
@@ -195,21 +212,45 @@ class BridgeConfig:
     def transport(self) -> str:
         if self.family == "codex":
             return "codex-subscription-isolated.v1"
+        if self.family == "grok":
+            return "grok-build-subscription-traced.v1"
         if self.family == "gemini":
             return "agy-subscription-unqualified.v1"
         raise BridgeInputError(f"unknown judge family {self.family!r}")
 
     def material(self) -> dict[str, Any]:
-        argv_template = (
-            build_codex_judge_argv(
+        if self.family == "codex":
+            argv_template = build_codex_judge_argv(
                 config=self,
                 scratch_dir=Path("{fresh-empty-scratch-dir}"),
                 schema_path=Path("{strict-output-schema-path}"),
                 output_path=Path("{output-last-message-path}"),
             )
-            if self.family == "codex"
-            else None
-        )
+        elif self.family == "grok":
+            argv_template = build_grok_judge_argv(
+                config=self,
+                scratch_dir=Path("{fresh-empty-scratch-dir}"),
+                session_id="{fresh-session-uuid}",
+                prompt="{flattened-judge-prompt}",
+            )
+        else:
+            argv_template = None
+        scoped_home = self.family in {"codex", "grok"}
+        if self.family == "codex":
+            tool_enforcement = "CLI disabled-features + scoped no-MCP home + fail-closed trace screen"
+            disabled_features = list(CODEX_DISABLED_FEATURES)
+            config_overrides = list(CODEX_CONFIG_OVERRIDES)
+        elif self.family == "grok":
+            tool_enforcement = (
+                "empty built-in CLI allowlist + Agent/MCP deny rules + scoped no-MCP GROK_HOME "
+                "+ fail-closed authoritative updates/events trace screen"
+            )
+            disabled_features = list(GROK_DISABLED_FEATURES)
+            config_overrides = list(GROK_CONFIG_FLAGS)
+        else:
+            tool_enforcement = "unqualified transport is never invoked"
+            disabled_features = []
+            config_overrides = []
         return {
             "bridge_version": BRIDGE_VERSION,
             "family": self.family,
@@ -224,18 +265,28 @@ class BridgeConfig:
                 "argv_template": argv_template,
                 "argv_sha256": _sha256_json(argv_template) if argv_template is not None else None,
                 "scoped_codex_home": self.family == "codex",
+                "scoped_grok_home": self.family == "grok",
                 "minimal_config_has_mcp_servers": False,
-                "auth": "user-auth.json symlink only" if self.family == "codex" else "not invoked",
-                "trace_tool_screen": self.family == "codex",
+                "auth": "user-auth.json symlink only" if scoped_home else "not invoked",
+                "trace_tool_screen": scoped_home,
+                "trace_evidence": (
+                    "fresh scoped Codex rollout JSONL"
+                    if self.family == "codex"
+                    else "fresh UUID session authoritative updates.jsonl plus events.jsonl"
+                    if self.family == "grok"
+                    else None
+                ),
                 "tokens": None,
                 "token_accounting": "collector records configured byte-bound worst case when seat tokens are unavailable",
             },
             "tool_access": {
                 "enabled": False,
                 "mcp": False,
-                "enforcement": "CLI disabled-features + scoped no-MCP home + fail-closed trace screen",
-                "disabled_features": list(CODEX_DISABLED_FEATURES) if self.family == "codex" else [],
-                "config_overrides": list(CODEX_CONFIG_OVERRIDES) if self.family == "codex" else [],
+                "enforcement": tool_enforcement,
+                "disabled_features": disabled_features,
+                "config_overrides": config_overrides,
+                "builtin_tool_allowlist": [] if self.family == "grok" else None,
+                "deny_rules": list(GROK_DENY_RULES) if self.family == "grok" else [],
             },
             "determinism": {
                 "reasoning_effort": None,
@@ -537,6 +588,39 @@ def build_codex_judge_argv(
     return argv
 
 
+def build_grok_judge_argv(*, config: BridgeConfig, scratch_dir: Path, session_id: str, prompt: str) -> list[str]:
+    """Build the complete native Grok CLI command with a zero-tool policy."""
+
+    argv = [
+        "grok",
+        "-p",
+        prompt,
+        "--output-format",
+        "json",
+        "--json-schema",
+        _canonical_json(output_json_schema()),
+        "--no-alt-screen",
+        "--verbatim",
+        "--max-turns",
+        "1",
+        "--cwd",
+        str(scratch_dir),
+        "--session-id",
+        session_id,
+        "-m",
+        config.model,
+        "--tools",
+        "",
+        "--disallowed-tools",
+        ",".join(GROK_DISABLED_FEATURES),
+    ]
+    for flag in GROK_CONFIG_FLAGS:
+        argv.append(flag)
+    for rule in GROK_DENY_RULES:
+        argv.extend(("--deny", rule))
+    return argv
+
+
 def _prepare_scoped_codex_home(scoped_home: Path) -> None:
     """Create a no-MCP Codex home with only a live link to user authentication."""
 
@@ -546,6 +630,20 @@ def _prepare_scoped_codex_home(scoped_home: Path) -> None:
         encoding="utf-8",
     )
     real_home = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
+    real_auth = real_home / "auth.json"
+    if real_auth.is_file():
+        (scoped_home / "auth.json").symlink_to(real_auth)
+
+
+def _prepare_scoped_grok_home(scoped_home: Path) -> None:
+    """Create a fresh Grok home with no configured MCP/plugins and live OAuth."""
+
+    scoped_home.mkdir(parents=True, exist_ok=False)
+    (scoped_home / "config.toml").write_text(
+        "# Layer-B judge scoped home: intentionally no MCP or plugin configuration.\n",
+        encoding="utf-8",
+    )
+    real_home = Path(os.environ.get("GROK_HOME") or Path.home() / ".grok")
     real_auth = real_home / "auth.json"
     if real_auth.is_file():
         (scoped_home / "auth.json").symlink_to(real_auth)
@@ -631,6 +729,129 @@ def _resolved_models(events: Sequence[Mapping[str, Any]]) -> set[str]:
     return models
 
 
+def _read_strict_json_object(path: Path) -> dict[str, Any]:
+    """Read one required trace object without accepting malformed JSON."""
+
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise BridgeInvocationError("transport_exit") from exc
+    if not isinstance(value, Mapping):
+        raise BridgeInvocationError("transport_exit")
+    return dict(value)
+
+
+def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
+    """Read a non-empty complete JSONL trace or fail the transport closed."""
+
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError) as exc:
+        raise BridgeInvocationError("transport_exit") from exc
+    events: list[dict[str, Any]] = []
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise BridgeInvocationError("transport_exit") from exc
+        if not isinstance(value, Mapping):
+            raise BridgeInvocationError("transport_exit")
+        events.append(dict(value))
+    if not events:
+        raise BridgeInvocationError("transport_exit")
+    return events
+
+
+def _grok_session_dir(scoped_home: Path, scratch_dir: Path, session_id: str) -> Path:
+    """Return the documented Grok session directory for this fresh invocation."""
+
+    return scoped_home / "sessions" / quote(str(scratch_dir), safe="") / session_id
+
+
+def _value_has_grok_tool_activity(value: Any) -> bool:
+    """Detect a tool-call shape in Grok's authoritative update stream."""
+
+    if isinstance(value, Mapping):
+        for key, nested in value.items():
+            normalized_key = re.sub(r"[^a-z0-9]", "", str(key).lower())
+            if normalized_key in GROK_TRACE_TOOL_KEYS:
+                if isinstance(nested, (list, tuple, Mapping)):
+                    if nested:
+                        return True
+                elif nested:
+                    return True
+            if _value_has_grok_tool_activity(nested):
+                return True
+    elif isinstance(value, (list, tuple)):
+        return any(_value_has_grok_tool_activity(item) for item in value)
+    return False
+
+
+def _grok_trace_has_tool_activity(*, updates: Sequence[Mapping[str, Any]], events: Sequence[Mapping[str, Any]]) -> bool:
+    """Screen both documented Grok traces for any attempted tool use."""
+
+    if normalize_tool_calls(list(updates)):
+        return True
+    for update in updates:
+        event_type = str(update.get("type", "")).lower()
+        if "tool" in event_type or "function" in event_type or _value_has_grok_tool_activity(update):
+            return True
+    for event in events:
+        event_type = str(event.get("type", "")).lower()
+        if event_type in GROK_TOOL_EVENT_TYPES:
+            return True
+        tool_name = event.get("tool_name")
+        if isinstance(tool_name, str) and tool_name.strip():
+            return True
+        if _value_has_grok_tool_activity(event):
+            return True
+    return False
+
+
+def _strict_grok_stdout(stdout: str, *, expected_session_id: str) -> str:
+    """Require the one documented Grok JSON envelope for the planned session."""
+
+    try:
+        value = json.loads(stdout)
+    except json.JSONDecodeError as exc:
+        raise BridgeInvocationError("output_decode") from exc
+    if not isinstance(value, Mapping):
+        raise BridgeInvocationError("output_decode")
+    text = value.get("text")
+    if not isinstance(text, str) or not text.strip():
+        raise BridgeInvocationError("output_missing")
+    if value.get("sessionId") != expected_session_id:
+        raise BridgeInvocationError("transport_exit")
+    if not isinstance(value.get("stopReason"), str) or not isinstance(value.get("requestId"), str):
+        raise BridgeInvocationError("output_decode")
+    return text
+
+
+def _validate_grok_trace(*, config: BridgeConfig, scoped_home: Path, scratch_dir: Path, session_id: str) -> None:
+    """Validate one fresh session's documented tool and model evidence."""
+
+    session_dir = _grok_session_dir(scoped_home, scratch_dir, session_id)
+    summary = _read_strict_json_object(session_dir / "summary.json")
+    if summary.get("grok_home") != str(scoped_home):
+        raise BridgeInvocationError("transport_exit")
+    if summary.get("current_model_id") != config.model_version:
+        raise BridgeInvocationError("model_pin")
+    events = _read_strict_jsonl(session_dir / "events.jsonl")
+    updates = _read_strict_jsonl(session_dir / "updates.jsonl")
+    turns_started = [event for event in events if event.get("type") == "turn_started"]
+    turns_ended = [event for event in events if event.get("type") == "turn_ended"]
+    if len(turns_started) != 1 or len(turns_ended) != 1:
+        raise BridgeInvocationError("transport_exit")
+    if turns_started[0].get("session_id") != session_id:
+        raise BridgeInvocationError("transport_exit")
+    if turns_started[0].get("model_id") != config.model_version:
+        raise BridgeInvocationError("model_pin")
+    if _grok_trace_has_tool_activity(updates=updates, events=events):
+        raise BridgeInvocationError("rollout_tool_activity")
+
+
 def invoke_codex(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
     """Run one strict schema Codex subscription-seat judge invocation."""
 
@@ -672,6 +893,43 @@ def invoke_codex(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
         models = _resolved_models(events)
         if models != {config.model_version}:
             raise BridgeInvocationError("model_pin")
+        return ModelResult(text=text)
+
+
+def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
+    """Run one strict-schema Grok Build subscription-seat judge invocation."""
+
+    with tempfile.TemporaryDirectory(prefix="layerb-grok-judge-") as temp_dir:
+        root = Path(temp_dir)
+        scratch_dir = root / "scratch"
+        scratch_dir.mkdir()
+        scoped_home = root / "grok-home"
+        session_id = str(uuid.uuid4())
+        _prepare_scoped_grok_home(scoped_home)
+        environment = dict(os.environ)
+        environment["GROK_HOME"] = str(scoped_home)
+        completed = subprocess.run(
+            build_grok_judge_argv(
+                config=config,
+                scratch_dir=scratch_dir,
+                session_id=session_id,
+                prompt=build_codex_prompt(parsed),
+            ),
+            text=True,
+            capture_output=True,
+            timeout=config.timeout_seconds,
+            check=False,
+            env=environment,
+        )
+        if completed.returncode != 0:
+            raise BridgeInvocationError("transport_exit")
+        text = _strict_grok_stdout(completed.stdout, expected_session_id=session_id)
+        _validate_grok_trace(
+            config=config,
+            scoped_home=scoped_home,
+            scratch_dir=scratch_dir,
+            session_id=session_id,
+        )
         return ModelResult(text=text)
 
 
@@ -726,6 +984,8 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
             )
         if config.family == "codex":
             model_result = invoke_codex(parsed, config)
+        elif config.family == "grok":
+            model_result = invoke_grok(parsed, config)
         elif config.family == "gemini":
             # TODO: qualify an agy trace source that records every tool event,
             # then add the agy subscription transport in the immediate follow-up.
