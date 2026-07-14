@@ -42,6 +42,8 @@ from typing import Any, Protocol
 
 import yaml
 
+from scripts.audit import layerb_qualify
+
 if __package__ in {None, ""}:
     project_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(project_root))
@@ -1451,11 +1453,21 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--judge-command", help="Explicit tool-disabled judge bridge command; otherwise B3 audits.")
     parser.add_argument("--judge-family")
     parser.add_argument("--judge-model")
+    parser.add_argument("--judge-model-version", help="Immutable resolved model version recorded in attested effective route.")
+    parser.add_argument("--provider-account-lane", help="Exact provider/account lane recorded in attested effective route.")
+    parser.add_argument(
+        "--judge-attestation",
+        type=Path,
+        help="Path to a tier=shadow qualification-attestation.json; runner verifies via the same path as layerb_qualify --verify-attestation (replaces bare --judge-qualified).",
+    )
+    # Retained only to produce a clear error for the removed flag (do not accept).
     parser.add_argument(
         "--judge-qualified",
         action="store_true",
-        help="Attest that this route separately passed the labeled Ukrainian relation set.",
+        help=argparse.SUPPRESS,
     )
+    parser.add_argument("--corpus-manifest", action="append", default=[], metavar="PATH")
+    parser.add_argument("--fixture-manifest", action="append", default=[], metavar="PATH")
     parser.add_argument("--judge-input-usd-per-mtok", type=float, default=0.0)
     parser.add_argument("--judge-output-usd-per-mtok", type=float, default=0.0)
     parser.add_argument("--judge-timeout-seconds", type=float, default=90.0)
@@ -1467,16 +1479,66 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.tau != DEFAULT_TAU:
         print("Layer B shadow requires the pinned Phase-1 tau=0.75.", file=sys.stderr)
         return 2
+    # Deprecation guard: old bare flag must error naming the new flag (never silently accept).
+    if getattr(args, "judge_qualified", False):
+        print("--judge-qualified is removed; use --judge-attestation <path> instead.", file=sys.stderr)
+        return 2
     if args.judge_command is None and (args.judge_family is not None or args.judge_model is not None):
         print("--judge-family and --judge-model require --judge-command.", file=sys.stderr)
         return 2
-    if args.judge_command is None and args.judge_qualified:
-        print("--judge-qualified requires --judge-command.", file=sys.stderr)
+    if args.judge_command is None and args.judge_attestation:
+        print("--judge-attestation requires --judge-command.", file=sys.stderr)
         return 2
-    if args.judge_command is not None and (args.judge_family is None or args.judge_model is None):
-        print("--judge-command requires --judge-family and --judge-model (and vice versa).", file=sys.stderr)
+    if args.judge_command is not None and (
+        args.judge_family is None
+        or args.judge_model is None
+        or args.judge_model_version is None
+        or args.provider_account_lane is None
+    ):
+        print(
+            "--judge-command requires --judge-family, --judge-model, --judge-model-version, and --provider-account-lane (and vice versa).",
+            file=sys.stderr,
+        )
+        return 2
+    if args.judge_command is not None and args.judge_attestation is None:
+        print(
+            "--judge-command requires --judge-attestation <path> (the old --judge-qualified bare flag is removed; verify via the same path as layerb_qualify --verify-attestation).",
+            file=sys.stderr,
+        )
         return 2
     try:
+        if args.judge_attestation is not None:
+            if args.labels is None:
+                print("--judge-attestation requires --labels for verification cross-checks.", file=sys.stderr)
+                return 2
+            att_path: Path = args.judge_attestation
+            base = att_path.parent
+            report_path = base / "qualification-report.json"
+            raw_call_manifest_path = base / "raw-call-manifest.json"
+            corpus_manifests = [Path(p) for p in (args.corpus_manifest or [])]
+            fixture_manifests = [Path(p) for p in (args.fixture_manifest or [])]
+            verified = layerb_qualify.verify_attestation(
+                attestation_path=att_path,
+                report_path=report_path,
+                raw_call_manifest_path=raw_call_manifest_path,
+                labels_path=args.labels,
+                corpus_manifests=corpus_manifests,
+                fixture_manifests=fixture_manifests,
+                tier="shadow",
+            )
+            attested = verified.get("effective_route", {})
+            # Route mismatch must fail-closed: resolved model + lane must match attested route.
+            if (
+                attested.get("family") != (args.judge_family or "").casefold()
+                or attested.get("resolved_model") != args.judge_model
+                or attested.get("provider_account_lane") != args.provider_account_lane
+                or (args.judge_model_version and attested.get("resolved_model_version") != args.judge_model_version)
+            ):
+                raise ValueError(
+                    "route mismatch (resolved judge model + lane): "
+                    f"CLI=({args.judge_family!r}, {args.judge_model!r}, lane={args.provider_account_lane!r}) "
+                    f"attested=({attested.get('family')!r}, {attested.get('resolved_model')!r}, lane={attested.get('provider_account_lane')!r})"
+                )
         seat_caps = _parse_seat_caps(args.seat_cap)
         routes: tuple[JudgeRoute, ...] = ()
         judge: Judge | None = None
@@ -1487,7 +1549,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     args.judge_model,
                     args.judge_input_usd_per_mtok,
                     args.judge_output_usd_per_mtok,
-                    qualified=args.judge_qualified,
+                    qualified=True,  # only reached when --judge-attestation verified successfully
                 ),
             )
             judge = SubprocessJudge(shlex.split(args.judge_command), args.judge_timeout_seconds)
