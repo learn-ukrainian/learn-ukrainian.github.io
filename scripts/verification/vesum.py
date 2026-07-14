@@ -41,7 +41,9 @@ def get_vesum_conn(db_path: str | Path | None = None):
         if not resolved_path.exists():
             raise FileNotFoundError(
                 f"VESUM database not found at {resolved_path}. "
-                "Run: .venv/bin/python scripts/rag/import_vesum.py"
+                "Step 1 builds an explicit shadow database only; run "
+                ".venv/bin/python scripts/rag/build_vesum_shadow.py --help "
+                "and pass its explicit path with db_path after approved activation."
             )
         _vesum_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
         _vesum_conn.row_factory = sqlite3.Row

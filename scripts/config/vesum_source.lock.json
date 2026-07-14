@@ -1,0 +1,73 @@
+{
+  "schema_version": "vesum-source-lock-v1",
+  "release_asset": {
+    "project": "brown-uk/dict_uk",
+    "version": "v6.8.0",
+    "upstream_commit": "bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824",
+    "url": "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2",
+    "size_bytes": 18195377,
+    "sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+    "format": "block-structured: an unindented analysis opens a paradigm; indented analyses are its forms; comments are structurally bound within that block",
+    "license": "CC BY-NC-SA 4.0"
+  },
+  "pipeline": {
+    "importer_version": "v1",
+    "marker_policy_version": "v1",
+    "parser_module": {
+      "path": "scripts/rag/vesum_reingest.py",
+      "sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477"
+    },
+    "operator_entrypoint": {
+      "path": "scripts/rag/build_vesum_shadow.py",
+      "sha256": "780653661f447727a6498cbde9f9ac0bfd9b78dbfeb241b46ce08ce425c58ced"
+    }
+  },
+  "marker_policy": {
+    "compatibility_hidden_markers": [
+      "bad",
+      "obsc",
+      "subst"
+    ],
+    "tag_markers": [
+      "alt",
+      "arch",
+      "bad",
+      "obsc",
+      "slang",
+      "subst",
+      "vulg"
+    ],
+    "comment_markers": {
+      "діалект": "dialect"
+    }
+  },
+  "known_absent_marker_classes": [
+    {
+      "marker": "coll",
+      "marker_class": "colloquial",
+      "status": "known-absent",
+      "asset_census": {
+        "tag_token_count": 0,
+        "comment_encoding": "No reusable analysis-level colloquial marker exists. The asset contains lexical/comment strings such as 'розм.', but they describe particular meanings rather than a tag that can be structurally applied to analyses."
+      }
+    }
+  ],
+  "expected": {
+    "analysis_count": 6970759,
+    "block_count": 442458,
+    "forms_all_count": 6970759,
+    "forms_compatibility_count": 6632807,
+    "marker_counts": {
+      "alt": 24291,
+      "arch": 122645,
+      "bad": 279483,
+      "dialect": 7,
+      "obsc": 9262,
+      "slang": 52583,
+      "subst": 50503,
+      "vulg": 4710
+    },
+    "canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+    "fixture_manifest_sha256": "3379450633465c7082a02b549d10b4881842051fbecf88e799ba4a2613e847d4"
+  }
+}

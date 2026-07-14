@@ -13,7 +13,7 @@ requires_vesum_db = pytest.mark.skipif(
     or Path("data/vesum.db").stat().st_size < 1_000_000,
     reason=(
         "requires the full VESUM data/vesum.db; CI may omit or stub it; "
-        "run .venv/bin/python scripts/rag/import_vesum.py"
+        "build a verified shadow with scripts/rag/build_vesum_shadow.py and provision the required DB"
     ),
 )
 

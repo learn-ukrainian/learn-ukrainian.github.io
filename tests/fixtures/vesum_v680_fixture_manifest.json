@@ -1,0 +1,195 @@
+{
+  "fixtures": [
+    {
+      "class": "clean",
+      "compatibility_visible": true,
+      "entry_id": 95794,
+      "lemma": "'дин",
+      "markers": [],
+      "pos": "numr",
+      "source_comment": null,
+      "source_location": "1510723-1510754",
+      "tags": "numr:m:v_naz:short",
+      "word_form": "'дин"
+    },
+    {
+      "class": "alt",
+      "compatibility_visible": true,
+      "entry_id": 113563,
+      "lemma": "Євґєній",
+      "markers": [
+        {
+          "marker": "alt",
+          "marker_class": "orthographic_variant",
+          "origin": "tag"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": null,
+      "source_location": "1789456-1789465",
+      "tags": "noun:anim:m:v_naz:prop:fname:alt",
+      "word_form": "Євґєній"
+    },
+    {
+      "class": "arch",
+      "compatibility_visible": true,
+      "entry_id": 152669,
+      "lemma": "Ізрайлів",
+      "markers": [
+        {
+          "marker": "arch",
+          "marker_class": "archaic",
+          "origin": "tag"
+        }
+      ],
+      "pos": "adj",
+      "source_comment": null,
+      "source_location": "2357379-2357410",
+      "tags": "adj:f:v_kly:arch",
+      "word_form": "Ізрайлева"
+    },
+    {
+      "class": "bad",
+      "compatibility_visible": false,
+      "entry_id": 114162,
+      "lemma": "Єгіпет",
+      "markers": [
+        {
+          "marker": "bad",
+          "marker_class": "invalid",
+          "origin": "tag"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": null,
+      "source_location": "1798393-1798402",
+      "tags": "noun:inanim:m:v_naz:prop:geo:bad",
+      "word_form": "Єгіпет"
+    },
+    {
+      "class": "obsc",
+      "compatibility_visible": false,
+      "entry_id": 13936,
+      "lemma": "ахуй",
+      "markers": [
+        {
+          "marker": "obsc",
+          "marker_class": "obscene",
+          "origin": "tag"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": null,
+      "source_location": "236144-236155",
+      "tags": "noun:inanim:m:v_naz:obsc",
+      "word_form": "ахуй"
+    },
+    {
+      "class": "slang",
+      "compatibility_visible": true,
+      "entry_id": 87295,
+      "lemma": "ДАІвець",
+      "markers": [
+        {
+          "marker": "slang",
+          "marker_class": "slang",
+          "origin": "tag"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": null,
+      "source_location": "1371436-1371453",
+      "tags": "noun:anim:m:v_naz:slang",
+      "word_form": "ДАІвець"
+    },
+    {
+      "class": "subst",
+      "compatibility_visible": false,
+      "entry_id": 151738,
+      "lemma": "Іваньо",
+      "markers": [
+        {
+          "marker": "subst",
+          "marker_class": "nonstandard",
+          "origin": "tag"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": null,
+      "source_location": "2343074-2343086",
+      "tags": "noun:anim:m:v_dav:prop:lname:subst",
+      "word_form": "Іваньові"
+    },
+    {
+      "class": "vulg",
+      "compatibility_visible": true,
+      "entry_id": 22900,
+      "lemma": "бздіти",
+      "markers": [
+        {
+          "marker": "vulg",
+          "marker_class": "vulgar",
+          "origin": "tag"
+        }
+      ],
+      "pos": "verb",
+      "source_comment": "rv_oru",
+      "source_location": "386181-386204",
+      "tags": "verb:imperf:pres:s:1:vulg",
+      "word_form": "бзджу"
+    },
+    {
+      "class": "dialect",
+      "compatibility_visible": true,
+      "entry_id": 170039,
+      "lemma": "кокні",
+      "markers": [
+        {
+          "marker": "dialect",
+          "marker_class": "dialect",
+          "origin": "comment"
+        }
+      ],
+      "pos": "noun",
+      "source_comment": "діалект",
+      "source_location": "2635694-2635700",
+      "tags": "noun:inanim:m:v_dav:nv",
+      "word_form": "кокні"
+    }
+  ],
+  "generated_by": {
+    "importer_version": "v1",
+    "marker_policy_version": "v1",
+    "module": "scripts/rag/vesum_reingest.py"
+  },
+  "known_absent_classes": [
+    {
+      "asset_census": {
+        "comment_encoding": "No reusable analysis-level colloquial marker exists. The asset contains lexical/comment strings such as 'розм.', but they describe particular meanings rather than a tag that can be structurally applied to analyses.",
+        "tag_token_count": 0
+      },
+      "marker": "coll",
+      "marker_class": "colloquial",
+      "status": "known-absent"
+    }
+  ],
+  "marker_counts": {
+    "alt": 24291,
+    "arch": 122645,
+    "bad": 279483,
+    "dialect": 7,
+    "obsc": 9262,
+    "slang": 52583,
+    "subst": 50503,
+    "vulg": 4710
+  },
+  "schema_version": "vesum-v6.8.0-fixtures-v1",
+  "selection": "lowest binary SQLite sort key per required marker class; never hand-picked",
+  "source": {
+    "license": "CC BY-NC-SA 4.0",
+    "name": "VESUM dict_uk visible dictionary release asset",
+    "sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
+    "url": "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2",
+    "version": "v6.8.0"
+  }
+}
