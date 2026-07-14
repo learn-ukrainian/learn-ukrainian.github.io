@@ -29,6 +29,7 @@ def _patch_state_dir(monkeypatch, tmp_path: Path) -> Path:
 
 
 def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(monkeypatch, tmp_path):
+    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     brief = tmp_path / "brief.md"
     brief.write_text("# Fix this\n\nExisting acceptance criteria.\n", encoding="utf-8")
     calls = []
@@ -140,6 +141,7 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
 
 
 def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch, tmp_path):
+    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     target = tmp_path / "target.py"
     target.write_text("def broken():\n    return missing_name\n", encoding="utf-8")
     calls = []
