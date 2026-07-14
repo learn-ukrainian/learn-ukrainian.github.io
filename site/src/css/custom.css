@@ -55,6 +55,10 @@
   --lu-state-wrong-bg: rgba(198,40,40,.08);
   --lu-state-wrong-fg: #C62828;
   --lu-state-missed: rgba(251,188,4,.15);
+  /* Amber missed-state pair — never use raw --co-warning / #FBBC04 as text on white. */
+  --lu-state-missed-fg: #6B4A0A;
+  --lu-state-missed-border: #9A6700;
+  --lu-on-warning: #1A1A1A;
   --lu-state-drag: rgba(106,27,154,.08);
   --lu-match-right: rgba(230,81,0,.08);
 
@@ -123,6 +127,13 @@
   --ifm-color-primary-lighter: #0066d3;
   --ifm-color-primary-lightest: #1A73E8;
 
+  --ifm-color-success: var(--co-success);
+  --ifm-color-success-dark: #1B5E20;
+  --ifm-color-warning: var(--co-warning);
+  --ifm-color-warning-dark: var(--lu-state-missed-fg);
+  --ifm-color-danger: var(--co-error);
+  --ifm-color-danger-dark: #B71C1C;
+
   --ifm-font-family-base: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --ifm-heading-font-family: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --ifm-font-size-base: 16px;
@@ -159,6 +170,9 @@
   --lu-state-wrong-bg: rgba(210,70,70,.26);
   --lu-state-wrong-fg: #F28B82;
   --lu-state-missed: rgba(251,188,4,.22);
+  --lu-state-missed-fg: #FFC971;
+  --lu-state-missed-border: #FFB300;
+  --lu-on-warning: #1A1A1A;
   --lu-state-drag: rgba(167,130,224,.18);
   --lu-match-right: rgba(230,145,56,.20);
 
@@ -207,6 +221,13 @@
   --ifm-color-primary-light: #70a6da;
   --ifm-color-primary-lighter: #7baedc;
   --ifm-color-primary-lightest: #9fc4e6;
+
+  --ifm-color-success: var(--co-success);
+  --ifm-color-success-dark: #81C995;
+  --ifm-color-warning: var(--co-warning);
+  --ifm-color-warning-dark: var(--lu-state-missed-fg);
+  --ifm-color-danger: var(--co-error);
+  --ifm-color-danger-dark: #F28B82;
 
   --ifm-background-color: #0f0f1a;
   --ifm-background-surface-color: #1a1a2e;

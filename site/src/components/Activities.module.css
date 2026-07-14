@@ -117,9 +117,11 @@
   text-align: left;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
-  background: white;
+  background: var(--ifm-card-background-color);
+  color: var(--lu-text);
   cursor: pointer;
   transition: all 0.2s ease;
+  font: inherit;
   font-size: 14px;
   font-weight: 500;
 }
@@ -252,9 +254,11 @@
   padding: 7px 14px;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
-  background: white;
+  background: var(--ifm-card-background-color);
+  color: var(--lu-text);
   cursor: pointer;
   transition: all 0.2s ease;
+  font: inherit;
   font-size: 14px;
   font-weight: 500;
 }
@@ -337,11 +341,18 @@
   padding: 5px 14px;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 6px;
-  background: white;
+  background: var(--ifm-card-background-color);
+  color: var(--lu-text);
   cursor: pointer;
+  font: inherit;
   font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
+}
+
+.tfButton.selected {
+  border-color: var(--ifm-color-primary);
+  background: var(--lu-state-active);
 }
 
 .tfButton:hover:not(:disabled) {
@@ -565,38 +576,53 @@
 }
 
 .submitButton,
-.resetButton {
+.resetButton,
+.checkButton,
+.retryButton {
   padding: 7px 20px;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
+  font: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.submitButton {
+.submitButton,
+.checkButton {
   background: var(--ifm-color-primary);
-  color: white;
+  color: var(--lu-on-primary);
   border-color: var(--ifm-color-primary);
 }
 
-.submitButton:hover:not(:disabled) {
+.submitButton:hover:not(:disabled),
+.checkButton:hover:not(:disabled) {
   opacity: 0.9;
 }
 
-.submitButton:disabled {
+.submitButton:disabled,
+.checkButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.resetButton {
+.resetButton,
+.retryButton {
   background: var(--ifm-color-emphasis-200);
-  color: var(--ifm-font-color-base);
+  color: var(--lu-text);
 }
 
-.resetButton:hover {
+.resetButton:hover,
+.retryButton:hover {
   background: var(--ifm-color-emphasis-300);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
 }
 
 /* ============= GROUP SORT ============= */
@@ -797,8 +823,10 @@
   padding: 7px 14px;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
-  background: white;
+  background: var(--ifm-card-background-color);
+  color: var(--lu-text);
   cursor: pointer;
+  font: inherit;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -877,15 +905,16 @@
 }
 
 .checkboxOption.missedAnswer {
-  border-color: #FBBC04 !important;
+  border-color: var(--lu-state-missed-border) !important;
   background: var(--lu-state-missed) !important;
+  color: var(--lu-state-missed-fg);
 }
 
 .checkboxOption.missedAnswer::after {
   content: '\2190 missed';
   margin-left: auto;
   font-size: 0.8rem;
-  color: #B06000;
+  color: var(--lu-state-missed-fg);
   font-weight: 600;
 }
 
@@ -941,9 +970,11 @@
   text-align: left;
   border: 2px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
-  background: white;
+  background: var(--ifm-card-background-color);
+  color: var(--lu-text);
   cursor: pointer;
   transition: all 0.2s ease;
+  font: inherit;
   font-size: 14px;
 }
 
@@ -1849,6 +1880,7 @@
 
 .hotspotActive {
   background: var(--ifm-color-warning);
+  color: var(--lu-on-warning);
   transform: translate(-50%, -50%) scale(1.2);
   box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.3);
 }
@@ -2133,8 +2165,8 @@
 }
 
 .scoreMedium {
-  background: rgba(251, 188, 4, 0.2);
-  color: #B06000;
+  background: var(--lu-state-missed);
+  color: var(--lu-state-missed-fg);
 }
 
 .scoreLow {
@@ -2488,7 +2520,7 @@
 
 [data-theme='dark'] .scoreMedium {
   background: var(--lu-state-missed);
-  color: var(--lu-text);
+  color: var(--lu-state-missed-fg);
 }
 
 [data-theme='dark'] .scoreLow {
@@ -2532,6 +2564,7 @@
 /* neutral · hover · selected → blue */
 [data-theme='dark'] .option:hover:not(:disabled),
 [data-theme='dark'] .option.selected,
+[data-theme='dark'] .tfButton.selected,
 [data-theme='dark'] .chip:hover,
 [data-theme='dark'] .blankDropZone:hover,
 [data-theme='dark'] .letterTile,
@@ -2607,4 +2640,5 @@
 [data-theme='dark'] .checkboxOption.missedAnswer,
 [data-theme='dark'] .transcriptionOriginal {
   background: var(--lu-state-missed);
+  color: var(--lu-state-missed-fg);
 }
