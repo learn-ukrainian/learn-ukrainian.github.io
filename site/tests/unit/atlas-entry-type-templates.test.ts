@@ -91,7 +91,7 @@ function makeHomonymFixture(withHomonyms: boolean): LexiconEntry {
               },
             ],
             source: 'СУМ-20',
-            source_urls: ['https://slovnyk.me/dict/newsum/коса'],
+            source_urls: ['https://services.ulif.org.ua/expl/#/word/%D0%BA%D0%BE%D1%81%D0%B0'],
           },
         }
       : undefined,
@@ -256,7 +256,7 @@ describe('entry_type-branched article rendering (#4385)', () => {
     expect(html).toContain('коса<sup>2</sup>');
     expect(html).toContain('сільськогосподарське знаряддя для косіння трави');
     expect(html).toContain('Джерела омонімів:');
-    expect(html).toContain('href="https://slovnyk.me/dict/newsum/коса"');
+    expect(html).toContain('href="https://services.ulif.org.ua/expl/#/word/%D0%BA%D0%BE%D1%81%D0%B0"');
     expect(html).toContain('<span class="src">СУМ-20</span>');
   });
 
