@@ -1,5 +1,6 @@
 {
-  "fingerprint": "b40f569524811bd28b53b22006be968bc9967825b5319d4fffcdebe96cb87928",
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -132,11 +133,11 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "d1614c11e5099113ad2b4ec5104f07f86b16e64c7a5a8e46a40d0d9317562513"
+        "sha256": "f22cb1acc7d7d1fb23ac082301fbcf0c3de0e8e178f1eddfc74d072bf73aa6a6"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "28c72082c388ae5b301acc006eeed4e585c9fbbda48b805d1ff543d31862745d"
+        "sha256": "9270110568552cffdf82bfb907cb624afc38da121c4d3aa3e2af3fc95bb3a162"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
@@ -160,8 +161,7 @@
       }
     ]
   },
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "fingerprint": "fc98f3dc7992876d33fbdd187930a806fe7ddde7b501deae4fcb7cea43608d03",
   "stats": {
     "lexicon_code_files": 39
   }

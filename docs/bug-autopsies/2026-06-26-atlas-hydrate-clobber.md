@@ -77,9 +77,10 @@ paid (bundle output-neutral code changes into a PR that regenerates the manifest
 
    ```python
    from scripts.lexicon import publish_manifest as pm
-   gz = pm.gzip_manifest()                        # re-gzip the freshly regenerated manifest
-   payload = pm.build_pointer_payload(...)         # new gz_sha256/json_sha256/fingerprint
-   pm.write_pointer(pointer_path, payload)         # NO gh release upload
+   # Do not call gzip_manifest/build_pointer_payload/write_pointer directly:
+   # every canonical pointer write must first pass the shared richness gate.
+   # Use publish_manifest (or reenrich_thin_manifest_entries.py --write), which
+   # records the gate decision and then packages the pointer.
    ```
 
    Now `local manifest sha == pointer.json_sha256` → hydrate is a **no-op** → the build renders the
