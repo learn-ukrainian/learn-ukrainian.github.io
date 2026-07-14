@@ -648,7 +648,11 @@ def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
         "Прийняте дослідницьке досьє встановлює межу. "
         "Однак доступний пакет не подає тексту виступу. "
         "Проєктний літературний корпус підтвердив цитату. "
-        "У цьому пошуку не знайдено листа."
+        "У цьому пошуку не знайдено листа. "
+        "Складіть карту доказів і запишіть атомарне твердження. "
+        "Назвіть джерельну межу та межу доказу. "
+        "Не приписуйте зміст непрочитаній справі. "
+        "Зіставте заголовок статті з її основним текстом."
     )
 
     findings = pbr.scan_learner_workflow_leakage(
@@ -657,12 +661,18 @@ def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
     )
 
     assert {finding["category"] for finding in findings} == {"learner_workflow_leakage"}
-    assert {finding["severity"] for finding in findings} == {"medium"}
+    assert {finding["severity"] for finding in findings} == {"high"}
     assert {finding["evidence"] for finding in findings} == {
         "Прийняте дослідницьке досьє",
         "доступний пакет",
         "Проєктний літературний корпус",
         "У цьому пошуку не знайдено",
+        "карту доказів",
+        "атомарне твердження",
+        "джерельну межу",
+        "межу доказу",
+        "зміст непрочитаній справі",
+        "заголовок статті з її основним текстом",
     }
 
 
@@ -944,7 +954,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "2.0.1"
-    assert len(rows) == 27
+    assert len(rows) == 28
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -961,6 +971,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "1.2.0",
         "1.2.1",
         "1.2.2",
+        "1.3.0",
         "2.0.0",
         "2.0.1",
     }

@@ -1,7 +1,7 @@
 review_protocol_version: 2.0.1
 deterministic_contract_version: 1.2.1
 semantic_prompt_version: 2.0.0
-track_policy_version: 1.2.2
+track_policy_version: 1.3.0
 
 defaults:
   semantic_requirements:
@@ -10,7 +10,7 @@ defaults:
     modality_capability_provenance: required
   mechanical_checks:
     learner_workflow_leakage:
-      severity: medium
+      severity: high
       patterns:
         - id: accepted-dossier-or-package
           regex: '(?:доступн\w*|прийнят\w*)\s+(?:дослідницьк\w*\s+)?(?:пакет\w*|досьє\w*)'
@@ -18,6 +18,18 @@ defaults:
           regex: 'проєктн\w*\s+(?:літературн\w*\s+)?корпус\w*'
         - id: internal-search-result
           regex: 'у\s+цьому\s+пошуку\s+не\s+знайдено'
+        - id: evidence-map
+          regex: 'карт\w*\s+доказ\w*'
+        - id: atomic-claim
+          regex: 'атомарн\w*\s+твердженн\w*'
+        - id: source-boundary
+          regex: 'джерельн\w*\s+меж\w*'
+        - id: evidence-boundary
+          regex: 'меж\w*\s+доказ\w*'
+        - id: unread-archive-item
+          regex: 'зміст\w*\s+непрочитан\w*\s+(?:справ|документ)\w*'
+        - id: title-body-reconciliation
+          regex: '(?:заголовок\w*[^.\n]{0,80}основн\w*\s+текст\w*|основн\w*\s+текст\w*[^.\n]{0,80}заголовок\w*)'
     evidence_requirements:
       - id: audio-dependent-task
         modality: audio

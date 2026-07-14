@@ -119,6 +119,12 @@ regressions:
     version_field: semantic_prompt_version
     input: A plan rewards source evaluation and the built lesson turns into an internal source-audit tutorial.
     expected: High pedagogy finding and REVISE; plan adherence cannot excuse learner-facing workflow leakage.
+  - bug_id: source-audit-vocabulary-escaped-mechanical-policy
+    responsible_layer: track_policy
+    fixed_in_version: 1.3.0
+    version_field: track_policy_version
+    input: Learner prose teaches evidence maps, atomic claims, source boundaries, unread-file cautions, or title/body reconciliation without naming a dossier or package.
+    expected: Generic mechanical learner_workflow_leakage findings for each source-audit pattern.
   - bug_id: maiboroda-media-dependency-not-inventoried
     responsible_layer: deterministic_code
     fixed_in_version: 1.2.0
