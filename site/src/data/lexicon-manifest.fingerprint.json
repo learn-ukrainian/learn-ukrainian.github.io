@@ -1,6 +1,5 @@
 {
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "fingerprint": "6097659ff7208d78f2525ce0ab562b77eae1bfea0e8276a3736f46ad9a50da44",
   "inputs": {
     "lexicon_code": [
       {
@@ -181,7 +180,8 @@
       }
     ]
   },
-  "fingerprint": "6097659ff7208d78f2525ce0ab562b77eae1bfea0e8276a3736f46ad9a50da44",
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
     "lexicon_code_files": 44
   }
