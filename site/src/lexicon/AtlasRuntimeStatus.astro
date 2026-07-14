@@ -76,10 +76,10 @@ const statusUrl = "/api/lexicon/status.json";
     setRuntimeText(root, "publicAtlas", formatCount(status.entryModel.total_reviewed_entries));
     
     const aliasCount = status.entryModel.alias_records ?? 0;
-    const aliasLabel = pluralizeUk(aliasCount, ["форма пошуку", "форми пошуку", "форм пошуку"]);
+    const aliasLabel = pluralizeUk(aliasCount, ["пошукова словоформа", "пошукові словоформи", "пошукових словоформ"]);
     
     const shardCount = status.publicAtlas.searchShards ?? 0;
-    const shardLabel = pluralizeUk(shardCount, ["пошук-шард", "пошук-шарди", "пошук-шардів"]);
+    const shardLabel = pluralizeUk(shardCount, ["сегмент пошуку", "сегменти пошуку", "сегментів пошуку"]);
 
     setRuntimeDetail(
       root,
