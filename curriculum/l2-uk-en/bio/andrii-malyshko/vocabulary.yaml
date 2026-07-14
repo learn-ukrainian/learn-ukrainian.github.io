@@ -22,7 +22,7 @@
 - lemma: пісенність
   translation: song-like quality
   pos: noun
-  usage: Пісенність треба доводити через синтаксис, повтор, інтонацію та конкретне виконання.
+  usage: Пісенність треба доводити через синтаксис, повтор, інтонацію та композицію.
 - lemma: народнопісенна інтонація
   translation: folk-song intonation
   pos: noun phrase
@@ -38,7 +38,7 @@
 - lemma: повтор
   translation: repetition
   pos: noun
-  usage: У записі повтор можна спершу описати, а вже потім тлумачити його функцію.
+  usage: У тексті повтор можна спершу описати, а вже потім тлумачити його функцію.
 - lemma: синтаксична межа
   translation: syntactic boundary
   pos: noun phrase
@@ -46,19 +46,11 @@
 - lemma: мелодійна фраза
   translation: melodic phrase
   pos: noun phrase
-  usage: Мелодійна фраза у виконанні має конкретну тривалість і місце для вдиху.
+  usage: Мелодійна фраза організовує музичний рух і може відповідати синтаксичній частині.
 - lemma: співавторство
   translation: co-authorship
   pos: noun
   usage: Співавторство Малишка й Майбороди поєднало поетичний рядок із музичною формою.
-- lemma: аранжування
-  translation: arrangement
-  pos: noun
-  usage: Аранжування впливає на звучання запису, але не змінює авторства слів і музики.
-- lemma: виконавська манера
-  translation: performance style
-  pos: noun phrase
-  usage: Виконавська манера Дмитра Гнатюка помітна в дикції, диханні й фразуванні.
 - lemma: рецепція
   translation: reception
   pos: noun
@@ -71,10 +63,10 @@
   translation: legislative representative activity
   pos: noun phrase
   usage: Депутатська діяльність Малишка включала роботу зі зверненнями громадян та установ.
-- lemma: протест
-  translation: protest
-  pos: noun
-  usage: Повідомлення про протест 1966 року потребує точної атрибуції джерелу.
+- lemma: джерельна межа
+  translation: evidentiary boundary
+  pos: noun phrase
+  usage: Джерельна межа не дозволяє переносити один архівний факт на всю біографію.
 - lemma: маркер поступки
   translation: concessive marker
   pos: noun phrase
@@ -90,7 +82,7 @@
 - lemma: спостереження
   translation: observation
   pos: noun
-  usage: Точне спостереження містить часову позначку й опис почутого.
+  usage: Точне спостереження називає перевірну рису тексту до її інтерпретації.
 - lemma: художня деталь
   translation: artistic detail
   pos: noun phrase
