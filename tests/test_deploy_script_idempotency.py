@@ -22,6 +22,7 @@ ORPHAN_PATH_VARS = (
 DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
 CODEX_HOOKS_CONFIG = Path(".codex/hooks.json")
+PROMPT_CONTRACT_MANIFEST = Path("prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml")
 UNSCOPED_RULE_FILES = (
     "operator-expectations.md",
     "critical-rules.md",
@@ -124,6 +125,9 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         assert (repo / ".agent" / "rules" / filename).exists()
         assert (repo / ".gemini" / "rules" / filename).exists()
         assert (repo / ".codex" / "rules" / filename).exists()
+    canonical_manifest = repo / "agents_extensions/shared" / PROMPT_CONTRACT_MANIFEST
+    for mirror_root in (".claude", ".agent", ".codex"):
+        assert (repo / mirror_root / PROMPT_CONTRACT_MANIFEST).read_bytes() == canonical_manifest.read_bytes()
 
     codex_hooks_diff = _run_command(
         repo,

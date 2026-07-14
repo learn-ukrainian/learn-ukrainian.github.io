@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "prompt-manifest.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "prompt_id",
+    "version",
+    "input_schema",
+    "output_schema",
+    "policy_ids",
+    "compatible",
+    "fragments",
+    "variants",
+    "deprecation"
+  ],
+  "properties": {
+    "manifest_version": {"const": "prompt-manifest.v1"},
+    "prompt_id": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"},
+    "version": {"$ref": "#/$defs/semver"},
+    "input_schema": {"$ref": "#/$defs/path"},
+    "output_schema": {"$ref": "#/$defs/path"},
+    "policy_ids": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9.-]+$": {"$ref": "#/$defs/path"}
+      },
+      "additionalProperties": false
+    },
+    "compatible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["families", "routes"],
+      "properties": {
+        "families": {"$ref": "#/$defs/stringArray"},
+        "routes": {"$ref": "#/$defs/stringArray"}
+      }
+    },
+    "fragments": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9.-]+$": {"$ref": "#/$defs/fragment"}
+      },
+      "additionalProperties": false
+    },
+    "variants": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9.-]+$": {"$ref": "#/$defs/variant"}
+      },
+      "additionalProperties": false
+    },
+    "deprecation": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["replacement", "message"],
+          "properties": {
+            "replacement": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"},
+            "message": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "semver": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "not": {"pattern": "(^/|^~|(^|/)\\.\\.(/|$))"}
+    },
+    "stringArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "fragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "section", "includes"],
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "section": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"},
+        "includes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"}
+        }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "roots"],
+      "properties": {
+        "family": {"type": "string", "minLength": 1},
+        "roots": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"}
+        }
+      }
+    }
+  }
+}
