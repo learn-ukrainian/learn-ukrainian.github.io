@@ -230,6 +230,26 @@ export interface PracticeHeritageItem {
   authenticSense?: string;
 }
 
+export interface PracticeParonymOption {
+  label: string;
+}
+
+export interface PracticeParonymItem {
+  paronymId: string;
+  lemmaId: string;
+  srsKey: string;
+  lemma: string;
+  confusable: string;
+  distinction_gloss_uk: string;
+  frameIndex: number;
+  cefr: string;
+  prompt: string;
+  answer: string;
+  options: PracticeParonymOption[];
+  origin?: string;
+  citations?: string[];
+}
+
 export interface PracticeShardMeta {
   schema: string;
   schemaVersion: number;
@@ -277,6 +297,10 @@ export interface PracticeHeritageShard extends PracticeShardMeta {
   heritage: PracticeHeritageItem[];
 }
 
+export interface PracticeParonymShard extends PracticeShardMeta {
+  paronym: PracticeParonymItem[];
+}
+
 export interface PracticeDeckData {
   deckVersion: string;
   level: string;
@@ -287,6 +311,7 @@ export interface PracticeDeckData {
   classify?: PracticeClassifyItem[];
   paradigm?: PracticeParadigmItem[];
   synonym?: PracticeSynonymItem[];
+  paronym?: PracticeParonymItem[];
   heritage?: PracticeHeritageItem[];
   fixtureNote?: string;
 }
@@ -405,6 +430,7 @@ export interface PracticeSelection {
   classifySetId?: string;
   paradigm?: PracticeParadigmItem;
   synonym?: PracticeSynonymItem;
+  paronym?: PracticeParonymItem;
   heritage?: PracticeHeritageItem;
   recallDirection: RecallDirection;
   choicePolarity: ChoicePolarity;
@@ -1235,6 +1261,7 @@ interface DeckMaps {
   classify: Map<string, PracticeClassifyItem>;
   paradigm: Map<string, PracticeParadigmItem[]>;
   synonym: Map<string, PracticeSynonymItem[]>;
+  paronym: Map<string, PracticeParonymItem[]>;
   heritage: Map<string, PracticeHeritageItem[]>;
 }
 
@@ -1260,6 +1287,7 @@ function deckMaps(deck: PracticeDeckData): DeckMaps {
     classify: new Map((deck.classify ?? []).map((item) => [item.lemmaId, item])),
     paradigm: groupByLemma(deck.paradigm),
     synonym: groupByLemma(deck.synonym),
+    paronym: groupByLemma(deck.paronym),
     heritage: groupByLemma(deck.heritage),
   };
   deckMapsCache.set(deck, maps);
@@ -1595,6 +1623,19 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
         continue;
       }
       if (mode === 'paronym') {
+        const items = maps.paronym.get(indexItem.lemmaId) ?? [];
+        for (const paronym of items) {
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, paronym.paronymId),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: paronym.srsKey,
+              paronym,
+            }),
+          );
+        }
         continue;
       }
       const key = cardKey(indexItem.lemmaId, mode);
@@ -1811,6 +1852,7 @@ export function combinePracticeShards(
     classify?: PracticeClassifyShard;
     paradigm?: PracticeParadigmShard;
     synonym?: PracticeSynonymShard;
+    paronym?: PracticeParonymShard;
     heritage?: PracticeHeritageShard;
   } = {},
 ): PracticeDeckData {
@@ -1824,6 +1866,7 @@ export function combinePracticeShards(
     classify: modeShards.classify?.classify ?? [],
     paradigm: modeShards.paradigm?.paradigm ?? [],
     synonym: modeShards.synonym?.synonym ?? [],
+    paronym: modeShards.paronym?.paronym ?? [],
     heritage: modeShards.heritage?.heritage ?? [],
     fixtureNote: indexShard.fixtureNote,
   };
@@ -1845,6 +1888,7 @@ export function extendWithLowerDecks(base: PracticeDeckData, lowers: PracticeDec
     classify: [...(base.classify ?? []), ...lowers.flatMap((d) => d.classify ?? [])],
     paradigm: [...(base.paradigm ?? []), ...lowers.flatMap((d) => d.paradigm ?? [])],
     synonym: [...(base.synonym ?? []), ...lowers.flatMap((d) => d.synonym ?? [])],
+    paronym: [...(base.paronym ?? []), ...lowers.flatMap((d) => d.paronym ?? [])],
     heritage: [...(base.heritage ?? []), ...lowers.flatMap((d) => d.heritage ?? [])],
     fixtureNote: base.fixtureNote ?? lowers.find((d) => d.fixtureNote)?.fixtureNote,
   };

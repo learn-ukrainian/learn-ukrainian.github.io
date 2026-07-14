@@ -40,6 +40,8 @@ import {
   type PracticeDeckData,
   type PracticeHeritageItem,
   type PracticeHeritageShard,
+  type PracticeParonymItem,
+  type PracticeParonymShard,
   type PracticeIndexItem,
   type PracticeIndexShard,
   type PracticeLexeme,
@@ -94,6 +96,12 @@ interface HeritageFeedback {
   textUk: string;
   textEn?: string;
   citations?: string[];
+}
+
+interface ParonymFeedback {
+  kind: 'correct' | 'wrong';
+  textUk: string;
+  textEn?: string;
 }
 
 interface ClozeFeedback {
@@ -243,6 +251,7 @@ type VisiblePracticeModeFilter = Extract<
   | 'classify'
   | 'paradigm'
   | 'synonym'
+  | 'paronym'
   | 'heritage'
 >;
 
@@ -256,6 +265,7 @@ const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
   classify: 'Classify',
   paradigm: 'Paradigm',
   synonym: 'Synonym',
+  paronym: 'Пароніми',
   heritage: 'Спадщина',
 };
 
@@ -269,6 +279,7 @@ const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
   'classify',
   'paradigm',
   'synonym',
+  'paronym',
   'heritage',
 ];
 
@@ -364,6 +375,15 @@ const MODE_META: Record<
     step: 'Лексика',
     stepEn: 'Vocabulary',
     accent: 'orange',
+  },
+  paronym: {
+    title: 'Пароніми',
+    en: 'Paronyms',
+    description: 'Розрізняйте близькі за звуковим складом, але різні за значенням слова.',
+    descriptionEn: 'Distinguish words that sound similar but have different meanings.',
+    step: 'Лексика',
+    stepEn: 'Vocabulary',
+    accent: 'purple',
   },
   heritage: {
     title: 'Спадщина',
@@ -565,6 +585,17 @@ function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
     );
   }
 
+  if (mode === 'paronym') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M9 3H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4" />
+        <path d="M15 21h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4" />
+        <path d="M9 10h6" />
+        <path d="M9 14h6" />
+      </svg>
+    );
+  }
+
   if (mode === 'heritage') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -602,6 +633,7 @@ function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
         (deck.classify?.length ?? 0) > 0 ||
         (deck.paradigm?.length ?? 0) > 0 ||
         (deck.synonym?.length ?? 0) > 0 ||
+        (deck.paronym?.length ?? 0) > 0 ||
         (deck.heritage?.length ?? 0) > 0),
   );
 }
@@ -906,7 +938,7 @@ function slotPromptParts(prompt: string): [string, string] {
 }
 
 function shouldLoadCloze(mode: PracticeModeFilter): boolean {
-  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'heritage'].includes(mode);
+  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'].includes(mode);
 }
 
 function sessionScopeIndexForMode(
@@ -924,9 +956,15 @@ function shouldShowFocusModeCard(
   deck: PracticeDeckData | null,
   indexForStats: PracticeIndexItem[],
 ): boolean {
-  if (practiceMode !== 'heritage') return true;
-  if (deck) return (deck.heritage?.length ?? 0) > 0;
-  return indexForStats.some((item) => item.modes.includes('heritage'));
+  if (practiceMode === 'heritage') {
+    if (deck) return (deck.heritage?.length ?? 0) > 0;
+    return indexForStats.some((item) => item.modes.includes('heritage'));
+  }
+  if (practiceMode === 'paronym') {
+    if (deck) return (deck.paronym?.length ?? 0) > 0;
+    return indexForStats.some((item) => item.modes.includes('paronym'));
+  }
+  return true;
 }
 
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
@@ -1074,6 +1112,7 @@ function LexiconPracticeIsland({
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
+  const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -1109,6 +1148,7 @@ function LexiconPracticeIsland({
     setClozeFeedback(null);
     setClozeAttemptRecorded(false);
     setHeritageFeedback(null);
+    setParonymFeedback(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
     matchedSelectedRatingRef.current = null;
@@ -1491,6 +1531,7 @@ function LexiconPracticeIsland({
           `${shardBaseUrl}/practice-classify.${targetLevel}.json`,
           `${shardBaseUrl}/practice-paradigm.${targetLevel}.json`,
           `${shardBaseUrl}/practice-synonym.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-paronym.${targetLevel}.json`,
           `${shardBaseUrl}/practice-heritage.${targetLevel}.json`,
         ];
         const drillResults = await Promise.all(
@@ -1498,7 +1539,7 @@ function LexiconPracticeIsland({
             getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({})),
           ),
         );
-        const [clozeR, stressR, classifyR, paradigmR, synonymR, heritageR] = drillResults;
+        const [clozeR, stressR, classifyR, paradigmR, synonymR, paronymR, heritageR] = drillResults;
         nextDeck = {
           ...nextDeck!,
           cloze: [...(nextDeck!.cloze ?? []), ...((clozeR as { cloze?: PracticeClozeItem[] }).cloze ?? [])],
@@ -1506,6 +1547,7 @@ function LexiconPracticeIsland({
           classify: [...(nextDeck!.classify ?? []), ...((classifyR as { classify?: any[] }).classify ?? [])],
           paradigm: [...(nextDeck!.paradigm ?? []), ...((paradigmR as { paradigm?: any[] }).paradigm ?? [])],
           synonym: [...(nextDeck!.synonym ?? []), ...((synonymR as { synonym?: any[] }).synonym ?? [])],
+          paronym: [...(nextDeck!.paronym ?? []), ...((paronymR as { paronym?: any[] }).paronym ?? [])],
           heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
         };
         nextClozeLoaded = true;
@@ -1526,6 +1568,7 @@ function LexiconPracticeIsland({
                   `${shardBaseUrl}/practice-classify.${lv}.json`,
                   `${shardBaseUrl}/practice-paradigm.${lv}.json`,
                   `${shardBaseUrl}/practice-synonym.${lv}.json`,
+                  `${shardBaseUrl}/practice-paronym.${lv}.json`,
                   `${shardBaseUrl}/practice-heritage.${lv}.json`,
                 ];
                 const rs = await Promise.all(
@@ -1537,7 +1580,8 @@ function LexiconPracticeIsland({
                   classify: (rs[2] as { classify?: any[] }).classify ?? [],
                   paradigm: (rs[3] as { paradigm?: any[] }).paradigm ?? [],
                   synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
-                  heritage: (rs[5] as { heritage?: any[] }).heritage ?? [],
+                  paronym: (rs[5] as { paronym?: any[] }).paronym ?? [],
+                  heritage: (rs[6] as { heritage?: any[] }).heritage ?? [],
                 };
               }),
             );
@@ -1551,6 +1595,7 @@ function LexiconPracticeIsland({
                 classify: [...(prev.classify ?? []), ...lowerDrillBatches.flatMap((b) => b.classify)],
                 paradigm: [...(prev.paradigm ?? []), ...lowerDrillBatches.flatMap((b) => b.paradigm)],
                 synonym: [...(prev.synonym ?? []), ...lowerDrillBatches.flatMap((b) => b.synonym)],
+                paronym: [...(prev.paronym ?? []), ...lowerDrillBatches.flatMap((b) => b.paronym)],
                 heritage: [...(prev.heritage ?? []), ...lowerDrillBatches.flatMap((b) => b.heritage)],
               };
             });
@@ -1996,8 +2041,12 @@ function LexiconPracticeIsland({
     const nextHeritageFeedback = selection.heritage
       ? heritageFeedbackFor(selection.heritage, option)
       : null;
+    const nextParonymFeedback = selection.paronym
+      ? paronymFeedbackFor(selection.paronym, option)
+      : null;
     setAnswerLocked(true);
     setHeritageFeedback(nextHeritageFeedback);
+    setParonymFeedback(nextParonymFeedback);
     setFeedback({
       uk: option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
       en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
@@ -2604,6 +2653,7 @@ function LexiconPracticeIsland({
                     clozeInput={clozeInput}
                     clozeFeedback={clozeFeedback}
                     heritageFeedback={heritageFeedback}
+                    paronymFeedback={paronymFeedback}
                     onClozeInput={setClozeInput}
                     onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
                     onChoice={handleChoice}
@@ -2656,6 +2706,15 @@ function LexiconPracticeIsland({
                     </span>
                   ) : null}
                 </p>
+              ) : mode === 'paronym' && (deck.paronym?.length ?? 0) === 0 ? (
+                <p className="lexicon-practice-muted" data-testid="practice-paronym-empty">
+                  <span lang="uk">Вправи з паронімами для цього рівня ще готуються.</span>
+                  {showEnglishSubtitles ? (
+                    <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
+                      / Paronym exercises for this level are still being prepared.
+                    </span>
+                  ) : null}
+                </p>
               ) : (
                 <p className="lexicon-practice-muted">
                   <span lang="uk">Усі картки на зараз повторено.</span>
@@ -2695,6 +2754,7 @@ function PracticeItem({
   clozeInput,
   clozeFeedback,
   heritageFeedback,
+  paronymFeedback,
   onClozeInput,
   onFlashcardRating,
   onChoice,
@@ -2711,6 +2771,7 @@ function PracticeItem({
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
   heritageFeedback: HeritageFeedback | null;
+  paronymFeedback: ParonymFeedback | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
@@ -2758,6 +2819,18 @@ function PracticeItem({
       <PracticeHeritage
         item={selection.heritage}
         feedback={heritageFeedback}
+        answerLocked={answerLocked}
+        onChoice={onChoice}
+        showEnglishSubtitles={showEnglishSubtitles}
+      />
+    );
+  }
+
+  if (selection.mode === 'paronym' && selection.paronym) {
+    return (
+      <PracticeParonym
+        item={selection.paronym}
+        feedback={paronymFeedback}
         answerLocked={answerLocked}
         onChoice={onChoice}
         showEnglishSubtitles={showEnglishSubtitles}
@@ -2886,6 +2959,105 @@ function PracticeItem({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function paronymOptions(item: PracticeParonymItem): ChoiceOption[] {
+  return item.options.map((option) => ({
+    label: option.label,
+    correct: option.label === item.answer,
+  }));
+}
+
+function paronymFeedbackFor(item: PracticeParonymItem, option: ChoiceOption): ParonymFeedback {
+  if (option.correct) {
+    return {
+      kind: 'correct',
+      textUk: `Правильно! ${item.distinction_gloss_uk}`,
+      textEn: 'Correct!',
+    };
+  }
+  return {
+    kind: 'wrong',
+    textUk: `Неправильно. ${item.distinction_gloss_uk}`,
+    textEn: 'Incorrect.',
+  };
+}
+
+function PracticeParonym({
+  item,
+  feedback,
+  answerLocked,
+  onChoice,
+  showEnglishSubtitles,
+}: {
+  item: PracticeParonymItem;
+  feedback: ParonymFeedback | null;
+  answerLocked: boolean;
+  onChoice(option: ChoiceOption): void;
+  showEnglishSubtitles: boolean;
+}) {
+  const [before, after] = slotPromptParts(item.prompt);
+  const options = paronymOptions(item);
+  const slotText = feedback?.kind === 'correct' ? item.answer : '___';
+  return (
+    <div className="lexicon-paronym" data-testid="practice-paronym">
+      <p className="paronym-task">
+        <span lang="uk">Оберіть правильний паронім.</span>
+        {showEnglishSubtitles ? (
+          <span className="btn-sub" lang="en">/ Choose the correct paronym.</span>
+        ) : null}
+      </p>
+      <p className="paronym-sentence">
+        <span>{before}</span>
+        <span className={feedback?.kind === 'correct' ? 'paronym-slot filled' : 'paronym-slot'}>
+          {slotText}
+        </span>
+        <span>{after}</span>
+      </p>
+      <ul className="lexicon-option-list mc-options">
+        {options.map((option, index) => (
+          <li key={`${option.label}-${index}`}>
+            <button
+              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              type="button"
+              disabled={answerLocked}
+              onClick={() => onChoice(option)}
+            >
+              <span>{option.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {feedback ? (
+        <div
+          className={`paronym-feedback ${feedback.kind}`}
+          role={feedback.kind === 'wrong' ? 'alert' : 'status'}
+          aria-live="polite"
+          data-testid="practice-paronym-feedback"
+        >
+          <p>
+            <span lang="uk">{feedback.textUk}</span>
+            {showEnglishSubtitles && feedback.textEn ? (
+              <span className="btn-sub" lang="en">/ {feedback.textEn}</span>
+            ) : null}
+          </p>
+          <div style={{ marginTop: '0.4rem' }}>
+            <a
+              href={`/lexicon/${item.lemmaId}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
+            >
+              <span lang="uk">Відкрити в Атласі →</span>
+              {showEnglishSubtitles ? (
+                <span className="btn-sub" lang="en">/ Open in Atlas →</span>
+              ) : null}
+            </a>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
