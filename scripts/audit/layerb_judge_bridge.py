@@ -644,9 +644,13 @@ def _prepare_scoped_grok_home(scoped_home: Path) -> None:
         encoding="utf-8",
     )
     real_home = Path(os.environ.get("GROK_HOME") or Path.home() / ".grok")
-    real_auth = real_home / "auth.json"
-    if real_auth.is_file():
-        (scoped_home / "auth.json").symlink_to(real_auth)
+    # Empirical minimal sign-in set (probed 2026-07-15 with live auth): the grok
+    # CLI requires BOTH auth.json and agent_id; auth.json alone reports
+    # "Not signed in". Session state is deliberately NOT linked (isolation).
+    for credential in ("auth.json", "agent_id"):
+        source = real_home / credential
+        if source.is_file():
+            (scoped_home / credential).symlink_to(source)
 
 
 def _rollout_trace(scoped_home: Path) -> str:
@@ -920,6 +924,10 @@ def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
             timeout=config.timeout_seconds,
             check=False,
             env=environment,
+            # The grok CLI keys its session trace directory by WORKING DIRECTORY
+            # (urlencoded path under sessions/). _validate_grok_trace looks under
+            # the scratch key, so the invocation must actually run there.
+            cwd=scratch_dir,
         )
         if completed.returncode != 0:
             raise BridgeInvocationError("transport_exit")
