@@ -237,7 +237,7 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "git worktree list" in prompt
     assert "confirm-started --agent orchestrator --lineage-id" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
-    assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789" in prompt
+    assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)." in prompt
     assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
     assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
 
@@ -340,6 +340,85 @@ def test_checkout_continuity_requires_clean_source_binding_and_same_clean_head()
     assert "invoking checkout must be clean" in th.checkout_continuity_error(replacement, dirty)
     with pytest.raises(ValueError, match="source checkout must be clean before prepare"):
         th.source_checkout_binding(dirty)
+
+
+def test_checkout_continuity_ff_descent_and_failure_modes():
+    clean = sample_snapshot(Path("."))["git"]
+    binding = th.source_checkout_binding(clean)
+    replacement = {"source_checkout": binding}
+
+    prepared_head = binding["full_head"]
+    current_head = "current-head"
+    git_state = {**clean, "full_head": current_head}
+
+    def make_is_ancestor(ancestry_map):
+        def is_ancestor(expected, current):
+            return ancestry_map.get((expected, current))
+        return is_ancestor
+
+    # 1. Descent accepted: prepared is ancestor of current
+    is_ancestor_ok = make_is_ancestor({(prepared_head, current_head): True})
+    assert th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_ok) is None
+
+    # 2. Divergence rejected: neither is ancestor
+    is_ancestor_diverged = make_is_ancestor({
+        (prepared_head, current_head): False,
+        (current_head, prepared_head): False,
+    })
+    err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_diverged)
+    assert f"invoking checkout HEAD {current_head} has diverged from prepared HEAD {prepared_head}" in err
+
+    # 3. Rewind rejected: current is strict ancestor of prepared
+    is_ancestor_rewind = make_is_ancestor({
+        (prepared_head, current_head): False,
+        (current_head, prepared_head): True,
+    })
+    err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_rewind)
+    assert f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {prepared_head})" in err
+
+    # 4. Dirty-at-descent rejected: prepared is ancestor, but tree is dirty
+    dirty_state = {
+        **clean,
+        "full_head": current_head,
+        "modified_files": [{"status": "M", "path": "tracked.txt"}]
+    }
+    err = th.checkout_continuity_error(replacement, dirty_state, is_ancestor=is_ancestor_ok)
+    assert "invoking checkout must be clean" in err
+
+    # 5. Ancestry undeterminable rejected: is_ancestor is None or returns None
+    err = th.checkout_continuity_error(replacement, git_state, is_ancestor=None)
+    assert "does not match prepared HEAD" in err
+    assert "ancestry undeterminable" in err
+
+    is_ancestor_none = make_is_ancestor({(prepared_head, current_head): None})
+    err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_none)
+    assert "does not match prepared HEAD" in err
+    assert "ancestry undeterminable" in err
+
+    is_ancestor_partial_none = make_is_ancestor({
+        (prepared_head, current_head): False,
+        (current_head, prepared_head): None,
+    })
+    err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_partial_none)
+    assert "does not match prepared HEAD" in err
+    assert "ancestry undeterminable" in err
+
+
+def test_resume_after_descent_state_roundtrips(tmp_path: Path):
+    state = prepared()
+    replacement = state["replacement"]
+    replacement["source_checkout"]["head_advanced_to"] = "some-advanced-sha"
+
+    assert th.source_checkout_binding_error(replacement) is None
+
+    state_path = th.default_state_path("orchestrator", state["lineage_id"])
+    th.write_json_atomic(state_path, state)
+
+    loaded_state = th.load_state(state_path)
+    res_replacement, err = th.validate_live_lease(loaded_state, agent="orchestrator", state_path=state_path)
+    assert err is None
+    assert res_replacement is not None
+    assert res_replacement["source_checkout"]["head_advanced_to"] == "some-advanced-sha"
 
 
 def test_live_lease_requires_binding_but_started_history_remains_compatible():
