@@ -3651,7 +3651,11 @@ def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) ->
 # cache reset) a gate that CANNOT run must PRESERVE the previously-confirmed section
 # rather than silently overwrite it with an empty recomputation. Only a gate that RAN
 # may retract items (e.g. WordNet auto-translation junk). See scripts/lexicon/README.md.
-from scripts.lexicon.manifest_io import GATE_REJECTED, GATE_SKIPPED_OFFLINE
+from scripts.lexicon.manifest_io import (
+    GATE_ANNOTATIONS_CARRIED,
+    GATE_REJECTED,
+    GATE_SKIPPED_OFFLINE,
+)
 
 
 def _stub_section_producers(monkeypatch) -> None:
@@ -3908,3 +3912,193 @@ def test_offline_gate_did_not_run_records_skipped_even_without_loss(monkeypatch)
     )
     assert entry["sections"]["synonyms"]["items"] == ["джерело", "живець"]  # took new (no loss)
     assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE  # still recorded
+
+
+# --- #5121 antonym pointer-annotation carry-over ---------------------------------------
+
+
+def _run_antonym_annotation_gate(monkeypatch, *, offline, cache, new_antonyms, baseline):
+    """Drive enrich_entry with a controllable local-compute antonym section over a
+    published baseline, exercising the #5121 annotation carry-over in isolation."""
+    entry = _run_enrich_entry(
+        monkeypatch,
+        {"lemma": "великий", "pos": "adj", "sections": {"antonyms": baseline}},
+        offline=offline,
+        cache=cache,
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", lambda *a, **k: new_antonyms)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_antonym_relations", lambda ex, rel: new_antonyms)
+    _drive_enrich_entry(entry)
+    return entry
+
+
+def test_offline_cold_cache_carries_antonym_annotations_from_baseline(monkeypatch) -> None:
+    # #5121 (a): offline + cold cache. The СУМ-20/ВТС pointer annotation source could not
+    # be consulted (no newsum/vts slug), so item MEMBERSHIP is exactly what local sources
+    # computed, but the published annotation pointers are carried forward per-item instead
+    # of silently degrading to the bare Вікісловник label.
+    new_antonyms = {
+        "items": ["малий"],  # local (Вікісловник) compute — no annotation offline
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
+    }
+    baseline = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий",
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # no newsum/vts -> annotation source not consultable
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["малий"]  # membership identical to local compute
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий"
+    )
+    assert section["source_urls"] == [
+        "https://example.invalid/wiktionary/velykyi",
+        "https://example.invalid/sum20/velykyi",
+    ]
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+    assert "antonyms" not in entry["gate_provenance"]  # membership gate: confirmed, unrecorded
+
+
+def test_cache_present_fresh_antonym_annotations_win_no_carry(monkeypatch) -> None:
+    # #5121 (b): the annotation source WAS consultable (newsum cached), so the fresh
+    # recompute is authoritative — a stale baseline annotation is NOT merged back in and
+    # no carry-over provenance is recorded.
+    new_antonyms = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий",
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+        ],
+    }
+    baseline = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list + ВТС: прот. → малий",  # stale
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/vts/velykyi",  # stale — must NOT be carried
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {"newsum": {"text": "x"}}},  # annotation gate ran
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    assert entry["sections"]["antonyms"] == new_antonyms  # fresh wins, verbatim
+    assert "https://example.invalid/vts/velykyi" not in entry["sections"]["antonyms"]["source_urls"]
+    assert "antonyms_annotations" not in entry.get("gate_provenance", {})
+
+
+def test_offline_carry_over_skips_items_absent_from_baseline(monkeypatch) -> None:
+    # #5121 (c): a local item that never existed in the baseline gains NO phantom
+    # annotation — only items matched by canonical term inherit their baseline pointers.
+    new_antonyms = {
+        "items": ["малий", "крихітний"],  # крихітний is fresh local membership
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
+    }
+    baseline = {
+        "items": ["малий"],  # крихітний absent from baseline
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий",
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["малий", "крихітний"]  # membership untouched
+    # only малий's pointer is carried; крихітний gets no phantom annotation segment
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий"
+    )
+    assert "крихітний" not in section["source"]
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_offline_carry_over_matches_across_apostrophe_style(monkeypatch) -> None:
+    # #5121 (d) / #5128 finding 1: a baseline pointer segment whose term uses a curly
+    # apostrophe (бабу’ся) must still carry onto a present member stored with a straight
+    # apostrophe (бабу'ся). Both sides normalize through the shared canonical key, so
+    # apostrophe style never splits one member into two keys and silently drops the pointer.
+    new_antonyms = {
+        "items": ["бабу'ся"],  # straight-apostrophe stored form (local membership)
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/didus"],
+    }
+    baseline = {
+        "items": ["бабу’ся"],  # curly-apostrophe baseline form
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → бабу’ся",
+        "source_urls": [
+            "https://example.invalid/wiktionary/didus",
+            "https://example.invalid/sum20/didus",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # annotation source not consultable -> carry path
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["бабу'ся"]  # membership untouched
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → бабу’ся"
+    )
+    assert section["source_urls"] == [
+        "https://example.invalid/wiktionary/didus",
+        "https://example.invalid/sum20/didus",
+    ]
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_offline_carry_over_matches_across_stress_marks(monkeypatch) -> None:
+    # #5121 (e) / #5128 finding 1: a baseline pointer segment whose term carries a stress
+    # mark (мали́й) must still carry onto the present bare member (малий). Stress-stripping
+    # in the shared canonical key keeps both on the same key.
+    new_antonyms = {
+        "items": ["малий"],  # bare stored form (local membership)
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
+    }
+    baseline = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й",
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["малий"]
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й"
+    )
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
