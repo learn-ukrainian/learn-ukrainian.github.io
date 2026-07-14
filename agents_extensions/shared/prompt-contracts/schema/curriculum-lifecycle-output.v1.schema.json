@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-lifecycle-output.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "findings", "next_action", "evidence_identity"],
+  "properties": {
+    "status": {"enum": ["ready", "repair_required", "blocked"]},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "severity", "summary", "owner"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["blocker", "high", "medium", "low"]},
+          "summary": {"type": "string", "minLength": 1},
+          "owner": {"enum": ["preparation", "plan", "built_artifact", "audit_tooling", "authority"]}
+        }
+      }
+    },
+    "next_action": {"enum": ["prepare", "plan", "build", "certify", "stop"]},
+    "evidence_identity": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

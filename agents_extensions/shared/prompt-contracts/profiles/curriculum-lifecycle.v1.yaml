@@ -1,0 +1,10 @@
+profile_schema_version: prompt-profile.v1
+profiles:
+  core:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.0.0
+    variant: core
+  seminar:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.0.0
+    variant: seminar

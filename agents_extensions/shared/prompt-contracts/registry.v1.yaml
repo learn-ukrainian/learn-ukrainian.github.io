@@ -1,0 +1,6 @@
+registry_version: prompt-registry.v1
+prompts:
+  curriculum-lifecycle.module:
+    current: 1.0.0
+    versions:
+      1.0.0: agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml
