@@ -1,0 +1,234 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: curriculum-intake-2026-07-14-bulk-reject-R1
+batch_label: 'Refs #4222 — bulk-reject rules batch R1'
+reviewer: curriculum-intake-automation
+reviewed_at: '2026-07-14'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 25502
+  approved_in_queue: 0
+  promotion_batch_size: 1
+production_outputs_updated: []
+decisions:
+- lemma: д
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: c0e489255c53cbc2
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/reading-ukrainian/activities.yaml::inline[3].items[1].error
+    source_id: curriculum-b39cf20d79ca2721
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: и
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 71e533f85767363b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/module.md::module_body
+    source_id: curriculum-6ce2915bf2ed755d
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: к
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 85cb00d25c2a1582
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/many-things/activities.yaml::inline[0].items[5].explanation
+    source_id: curriculum-cb80bbcd13af0089
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: н
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: efcf4f18b7c42767
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/reading-ukrainian/activities.yaml::inline[3].items[3].correction
+    source_id: curriculum-b39cf20d79ca2721
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: п
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 2d4ca738cfb5fd35
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/module.md::module_body
+    source_id: curriculum-6ce2915bf2ed755d
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: п-п-п-п
+  decision: reject
+  sense_note: 'Bulk-reject noise: interjection_onomatopoeia'
+  source_inventory:
+    key: 75dcc1fbd2753e5c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-narration/module.md::module_body
+    source_id: curriculum-c4330011cdd0f739
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: р
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 1516209dc8057242
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/activities.yaml::[2].items[20].letter
+    source_id: curriculum-c5a78b5f0b44229b
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ф
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 1a042897e69b30eb
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/activities.yaml::[2].items[24].letter
+    source_id: curriculum-c5a78b5f0b44229b
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: х
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 2ce77e2a06e205ca
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/activities.yaml::[2].items[25].letter
+    source_id: curriculum-c5a78b5f0b44229b
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ч
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 8028c63ae0ea4511
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/activities.yaml::[2].items[27].letter
+    source_id: curriculum-c5a78b5f0b44229b
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ш
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: faf330aa5bce1371
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-actions/module.md::module_body
+    source_id: curriculum-c6d053649508e126
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: щ
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 3149a91058fec8de
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/activities.yaml::[2].items[29].letter
+    source_id: curriculum-c5a78b5f0b44229b
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ь
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 45badc6a2e42e308
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/activities.yaml::inline[0].items[7].explanation
+    source_id: curriculum-634571f8cf51a5ab
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ю
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: c5481966872580ab
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-actions/module.md::module_body
+    source_id: curriculum-c6d053649508e126
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: і-і-і
+  decision: reject
+  sense_note: 'Bulk-reject noise: interjection_onomatopoeia'
+  source_inventory:
+    key: 59fbf0210651d074
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/sounds-letters-and-hello/module.md::module_body
+    source_id: curriculum-749bfd30f83ef9a1
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ї
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 0353a5669bf83cb0
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/module.md::module_body
+    source_id: curriculum-6ce2915bf2ed755d
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized
+- lemma: ґ
+  decision: reject
+  sense_note: 'Bulk-reject noise: single_letter'
+  source_inventory:
+    key: 0078c2e794ba4b6e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/module.md::module_body
+    source_id: curriculum-6ce2915bf2ed755d
+    source_family: curriculum
+  evidence_refs:
+  - vesum_unrecognized
+  original_flags:
+  - vesum_unrecognized

@@ -419,6 +419,7 @@ data/lexicon/grow_needs_review.json
 # data/lexicon/source-inventory-review-decisions/2026-07-14-ohoiko-corpus-intake-batch-*.yaml
 # plus the committed SUMMARY (counts + content hash) beside this path.
 data/lexicon/source-inventory/ohoiko-corpus-intake.json
+data/lexicon/source-inventory/curriculum-full-text-intake.json
 data/eval-archive/
 
 # clawpatch tool output (config + findings + locks + patches — regenerable)
