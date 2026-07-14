@@ -149,14 +149,14 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
       {instruction && (
         <p className={styles.instruction}><strong>{instruction}</strong></p>
       )}
-      <div className={styles.matchUpContainer}>
-        <div className={styles.matchColumn} data-activity="match-left-column">
+      <div className="matchUpContainer">
+        <div className="matchColumn" data-activity="match-left-column">
           {pairs.map((pair, index) => (
             <button
               key={`left-${index}`}
-              className={`${styles.matchItem} ${matched.has(index) ? styles.matched : ''
-                } ${selectedLeft === index ? styles.selected : ''} ${wrongPair?.left === index ? styles.wrong : ''
-                }`}
+              className={`matchItem ${matched.has(index) ? 'matched' : ''} ${
+                selectedLeft === index ? 'selected' : ''
+              } ${wrongPair?.left === index ? 'wrong' : ''}`}
               data-activity="match-left-tile"
               data-matched={matched.has(index) ? 'true' : 'false'}
               data-pair-color={matched.has(index) ? index % MATCH_PAIR_COLOR_COUNT : undefined}
@@ -169,12 +169,13 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
             </button>
           ))}
         </div>
-        <div className={styles.matchColumn} data-activity="match-right-column">
+        <div className="matchColumn" data-activity="match-right-column">
           {shuffledRight.map((originalIndex, displayIndex) => (
             <button
               key={`right-${displayIndex}`}
-              className={`${styles.matchItem} ${matched.has(originalIndex) ? styles.matched : ''
-                } ${wrongPair?.right === originalIndex ? styles.wrong : ''}`}
+              className={`matchItem ${matched.has(originalIndex) ? 'matched' : ''} ${
+                wrongPair?.right === originalIndex ? 'wrong' : ''
+              }`}
               data-activity="match-right-tile"
               data-matched={matched.has(originalIndex) ? 'true' : 'false'}
               data-original-index={originalIndex}

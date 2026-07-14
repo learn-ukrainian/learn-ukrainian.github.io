@@ -313,107 +313,7 @@
 }
 
 /* ============= MATCH UP ============= */
-.matchUpContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  align-items: center;
-  padding: 1rem 0;
-}
-
-.matchColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.matchItem {
-  padding: 10px 14px;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Left column items */
-.matchColumn:first-child .matchItem {
-  background: var(--lu-state-active);
-  text-align: right;
-}
-
-/* Right column items */
-.matchColumn:last-child .matchItem {
-  background: var(--lu-match-right);
-}
-
-.matchItem:hover:not(:disabled) {
-  border-color: var(--ifm-color-primary);
-}
-
-.matchItem.selected {
-  border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 2px var(--lu-state-active);
-}
-
-.matchItem.matched {
-  --match-pair-hue: 142;
-  --match-pair-bg: hsl(var(--match-pair-hue) 68% 43% / 0.14);
-  --match-pair-border: hsl(var(--match-pair-hue) 72% 35%);
-  --match-pair-fg: var(--lu-text);
-
-  border-color: var(--match-pair-border);
-  background: var(--match-pair-bg);
-  color: var(--match-pair-fg);
-  cursor: default;
-  box-shadow: inset 4px 0 0 var(--match-pair-border);
-}
-
-.matchColumn:first-child .matchItem.matched {
-  box-shadow: inset -4px 0 0 var(--match-pair-border);
-}
-
-.matchColumn .matchItem.matched {
-  border-color: var(--match-pair-border);
-  background: var(--match-pair-bg);
-  color: var(--match-pair-fg);
-}
-
-.matchItem.matched::after {
-  content: '';
-}
-
-.matchItem.wrong {
-  border-color: var(--lu-state-wrong-fg);
-  background: var(--lu-state-wrong-bg);
-  animation: shake 0.5s ease;
-}
-
-@keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  20% {
-    transform: translateX(-8px);
-  }
-
-  40% {
-    transform: translateX(8px);
-  }
-
-  60% {
-    transform: translateX(-6px);
-  }
-
-  80% {
-    transform: translateX(6px);
-  }
-}
+/* NOTE: MatchUp presentation rules have been moved to the canonical global stylesheet site/src/styles/match-up.css */
 
 /* ============= TRUE/FALSE ============= */
 .trueFalseQuestion {
@@ -1619,10 +1519,6 @@
 
 /* ============= RESPONSIVE ============= */
 @media (max-width: 768px) {
-  .matchUpContainer {
-    grid-template-columns: 1fr;
-  }
-
   .trueFalseButtons {
     flex-direction: column;
   }
@@ -2638,8 +2534,6 @@
 [data-theme='dark'] .option.selected,
 [data-theme='dark'] .chip:hover,
 [data-theme='dark'] .blankDropZone:hover,
-[data-theme='dark'] .matchColumn:first-child .matchItem,
-[data-theme='dark'] .matchItem.selected,
 [data-theme='dark'] .letterTile,
 [data-theme='dark'] .wordTile.selectedWord,
 [data-theme='dark'] .wordHoverable:hover,
@@ -2658,20 +2552,6 @@
 
 [data-theme='dark'] .blankDropZone {
   background: var(--lu-state-active);
-}
-
-/* match-up right column → amber-orange (distinct from the blue left) */
-[data-theme='dark'] .matchColumn:last-child .matchItem {
-  background: var(--lu-match-right);
-}
-
-[data-theme='dark'] .matchColumn .matchItem.matched {
-  --match-pair-bg: hsl(var(--match-pair-hue) 82% 65% / 0.24);
-  --match-pair-border: hsl(var(--match-pair-hue) 82% 75%);
-
-  border-color: var(--match-pair-border);
-  background: var(--match-pair-bg);
-  color: var(--lu-text);
 }
 
 /* drag pools · prompts → violet */
@@ -2706,7 +2586,6 @@
 /* incorrect · wrong → red (+ legible text) */
 [data-theme='dark'] .option.incorrect,
 [data-theme='dark'] .blank.incorrect,
-[data-theme='dark'] .matchItem.wrong,
 [data-theme='dark'] .falseButton:hover:not(:disabled),
 [data-theme='dark'] .tfButton.incorrect,
 [data-theme='dark'] .answerZone.incorrect,
