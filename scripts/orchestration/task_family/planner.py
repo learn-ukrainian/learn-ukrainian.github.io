@@ -55,6 +55,7 @@ class TaskFamilyPlan:
     resource_decisions: tuple[ResourceDecision, ...]
     stages: tuple[PlanStage, ...]
     blockers: tuple[Blocker, ...]
+    execution_context: dict[str, Any] | None = None
     state: LifecycleState = LifecycleState.PLANNED
     schema_version: int = SCHEMA_VERSION
     digest: str = ""
@@ -98,6 +99,7 @@ class TaskFamilyPlan:
             "resource_decisions": [item.to_dict() for item in self.resource_decisions],
             "stages": [item.to_dict() for item in self.stages],
             "blockers": [item.to_dict() for item in self.blockers],
+            "execution_context": self.execution_context or {},
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -154,6 +156,9 @@ class TaskFamilyPlan:
 
         if len(string_list("selected_task_ids")) != len(payload.get("selected_task_ids", [])):
             raise ValueError("task-family plan selected_task_ids must be strings")
+        execution_context = payload.get("execution_context", {})
+        if not isinstance(execution_context, dict):
+            raise ValueError("task-family plan execution_context must be an object")
         plan = cls(
             family_id=payload.get("family_id") if isinstance(payload.get("family_id"), str) else "",
             operation_id=payload.get("operation_id") if isinstance(payload.get("operation_id"), str) else "",
@@ -166,6 +171,7 @@ class TaskFamilyPlan:
             resource_decisions=tuple(ResourceDecision.from_dict(item) for item in record_list("resource_decisions")),
             stages=tuple(PlanStage.from_dict(item) for item in record_list("stages")),
             blockers=tuple(Blocker.from_dict(item) for item in record_list("blockers")),
+            execution_context=execution_context,
             state=state,
             schema_version=payload["schema_version"],
             digest=payload.get("digest") if isinstance(payload.get("digest"), str) else "",
@@ -252,6 +258,7 @@ def build_plan(
     operation: OperationKind,
     selections: tuple[ArchiveSelection, ...],
     base_title: str,
+    execution_context: dict[str, Any] | None = None,
 ) -> TaskFamilyPlan:
     """Build a deterministic plan, recording blockers instead of guessing intent."""
     blockers = list(graph.blockers)
@@ -282,5 +289,6 @@ def build_plan(
         resource_decisions=_resource_decisions(graph, tuple(sorted(selected_set))),
         stages=_stages(operation),
         blockers=tuple(sorted(blockers, key=lambda item: (item.code, item.task_ids, item.message))),
+        execution_context=execution_context or {},
     )
     return replace(plan, digest=sha256_digest(plan.immutable_payload()))

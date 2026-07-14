@@ -14,6 +14,7 @@ from uuid import UUID, uuid4
 import pytest
 
 from scripts.orchestration.task_family import codex_state, executor, git_safety
+from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 
 def _git_env() -> dict[str, str]:
@@ -164,6 +165,28 @@ def test_discovers_state_5_and_uses_read_only_production_threads_schema(tmp_path
     record = codex_state.read_thread_record(production_db, task_id=task_id)
     assert record.thread_id == task_id
     assert record.archived is False
+
+
+def test_executor_paths_match_task_family_storage(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    cleanup_plan = executor.CleanupPlan(
+        operation_id=str(uuid4()),
+        family_id="path-contract",
+        lineage_id=str(uuid4()),
+        mode="archive_only",
+        task_targets=(),
+        worktree_targets=(),
+        runtime_targets=(),
+        selected_task_ids=frozenset(),
+        pin_unknown_confirmed=True,
+        persisted_plan_digest="0" * 64,
+    )
+    storage = TaskFamilyStorage(repo, cleanup_plan.family_id, cleanup_plan.operation_id)
+
+    assert executor.state_path(repo, cleanup_plan) == storage.state_path
+    assert executor.plan_path(repo, cleanup_plan) == storage.plan_path
+    assert executor.manifest_path(repo, cleanup_plan) == storage.manifest_path
+    assert executor.receipt_path(repo, cleanup_plan) == storage.receipt_path
 
 
 def test_apply_requires_caller_digest_and_exact_persisted_selection(tmp_path: Path) -> None:

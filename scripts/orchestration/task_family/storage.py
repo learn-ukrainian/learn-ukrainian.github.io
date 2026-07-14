@@ -96,6 +96,16 @@ class TaskFamilyStorage:
         return self.root / "receipt.txt"
 
     @property
+    def execution_path(self) -> Path:
+        """Immutable CLI-to-executor adaptation inputs for this operation."""
+        return self.root / "execution.json"
+
+    @property
+    def rename_plan_path(self) -> Path:
+        """Immutable, display-only rename preview; it authorizes no mutation."""
+        return self.root / "rename-plan.json"
+
+    @property
     def lock_path(self) -> Path:
         return self.root / ".operation.lock"
 
@@ -125,6 +135,20 @@ class TaskFamilyStorage:
                 raise ValueError("immutable plan digest mismatch; create a new operation instead of replacing this plan")
             return
         atomic_write_json(self.plan_path, plan.to_dict())
+
+    def write_immutable_json(self, path: Path, payload: dict[str, Any]) -> None:
+        """Write a stable operation document once, rejecting replacement drift."""
+        if path.exists():
+            if self.read_json(path) != payload:
+                raise ValueError(f"immutable operation document mismatch: {path.name}")
+            return
+        atomic_write_json(path, payload)
+
+    def write_execution(self, payload: dict[str, Any]) -> None:
+        self.write_immutable_json(self.execution_path, payload)
+
+    def load_execution(self) -> dict[str, Any]:
+        return self.read_json(self.execution_path)
 
     def load_plan(self) -> TaskFamilyPlan:
         return TaskFamilyPlan.from_dict(self.read_json(self.plan_path))

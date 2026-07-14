@@ -12,6 +12,7 @@ from typing import Any, Literal
 
 from scripts.orchestration.task_family import codex_state
 from scripts.orchestration.task_family import git_safety as safety
+from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 CLEANUP_STAGES = (
     "planned",
@@ -89,25 +90,27 @@ def _iso_now() -> str:
 
 
 def state_path(repo_root: Path, plan: CleanupPlan) -> Path:
-    return (
-        safety.resolve_state_root(repo_root)
-        / plan.family_id
-        / "operations"
-        / plan.operation_id
-        / "state.json"
-    )
+    return TaskFamilyStorage(
+        safety.resolve_main_root(repo_root), plan.family_id, plan.operation_id
+    ).state_path
 
 
 def plan_path(repo_root: Path, plan: CleanupPlan) -> Path:
-    return state_path(repo_root, plan).with_name("plan.json")
+    return TaskFamilyStorage(
+        safety.resolve_main_root(repo_root), plan.family_id, plan.operation_id
+    ).plan_path
 
 
 def receipt_path(repo_root: Path, plan: CleanupPlan) -> Path:
-    return state_path(repo_root, plan).with_name("receipt.json")
+    return TaskFamilyStorage(
+        safety.resolve_main_root(repo_root), plan.family_id, plan.operation_id
+    ).receipt_path
 
 
 def manifest_path(repo_root: Path, plan: CleanupPlan) -> Path:
-    return state_path(repo_root, plan).with_name("manifest.json")
+    return TaskFamilyStorage(
+        safety.resolve_main_root(repo_root), plan.family_id, plan.operation_id
+    ).manifest_path
 
 
 def _as_text(value: Any) -> Any:
@@ -337,6 +340,12 @@ def load_state(repo_root: Path, plan: CleanupPlan) -> dict[str, Any]:
         raise ExecutionStateError(f"state file {path} is invalid JSON") from exc
     if not isinstance(raw, dict):
         raise ExecutionStateError(f"state file {path} must be an object")
+    # ``TaskFamilyStorage`` writes a preview seed before execution.  It is not
+    # executor state and must never be treated as a partially completed run.
+    if "operation_id" not in raw and raw.get("schema_version") == 1 and isinstance(raw.get("details"), dict):
+        if raw.get("state") != "planned":
+            raise ExecutionStateError("task-family preview state is not planned")
+        return _ensure_ids(_default_state(plan), plan)
     return _ensure_ids(raw, plan)
 
 
