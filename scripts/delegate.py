@@ -145,6 +145,13 @@ def _resolve_repo_root(script_path: Path) -> Path:
     Every dispatch worktree carries its own copy of this script; running that
     copy used to anchor batch_state/ and .worktrees/ to the WORKTREE root,
     nesting worktrees and hiding tasks from the Monitor API (#5171).
+
+    Consequence: sys.path inserts and relative-path resolution (e.g. a
+    relative --cwd) also anchor to the primary checkout — a worktree copy
+    of this script lazy-imports the PRIMARY's scripts/* modules, not the
+    worktree branch's. Intentional: dispatch infrastructure is ground truth
+    in the primary; cross-cutting changes to delegate.py plus its lazy deps
+    must land on main before they steer live dispatches.
     """
     return _main_checkout_root(script_path.resolve().parents[1])
 
