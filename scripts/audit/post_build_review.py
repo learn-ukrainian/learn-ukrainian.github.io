@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import subprocess
+import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
 from pathlib import Path
@@ -1298,6 +1299,27 @@ def ensure_output_outside_repo(path: Path, *, repo_root: Path = PROJECT_ROOT) ->
     raise ReviewProtocolError("Review outputs must be written outside the repository")
 
 
+def allocate_run_paths(
+    target_value: str,
+    *,
+    temp_root: Path | None = None,
+    repo_root: Path = PROJECT_ROOT,
+) -> dict[str, str]:
+    """Reserve one invocation-scoped directory for every review artifact."""
+    target = resolve_target(target_value, repo_root=repo_root)
+    root = (temp_root or Path(tempfile.gettempdir())).resolve()
+    ensure_output_outside_repo(root / "post-build-review-placeholder", repo_root=repo_root)
+    root.mkdir(parents=True, exist_ok=True)
+    prefix = f"post-build-review-{target['track']}-{target['slug']}-"
+    run_dir = Path(tempfile.mkdtemp(prefix=prefix, dir=root)).resolve()
+    return {
+        "run_dir": str(run_dir),
+        "packet": str(run_dir / "packet.json"),
+        "semantic_response": str(run_dir / "semantic-response.json"),
+        "result": str(run_dir / "result.json"),
+    }
+
+
 def _write_or_print(value: object, output: Path | None, *, repo_root: Path) -> None:
     text = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if output is None:
@@ -1311,6 +1333,13 @@ def _write_or_print(value: object, output: Path | None, *, repo_root: Path) -> N
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the canonical read-only post-build review protocol.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    allocate = subparsers.add_parser(
+        "allocate",
+        help="Reserve invocation-scoped paths for packet, semantic response, and result.",
+    )
+    allocate.add_argument("target", help="track/slug, e.g. bio/oleksandr-bilash")
+    allocate.add_argument("--temp-root", type=Path)
+
     prepare = subparsers.add_parser("prepare", help="Run deterministic stages and assemble the semantic prompt.")
     prepare.add_argument("target", help="track/slug, e.g. bio/oleksandr-bilash")
     prepare.add_argument("--reviewer-agent", required=True)
@@ -1338,6 +1367,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.command == "allocate":
+        _write_or_print(
+            allocate_run_paths(args.target, temp_root=args.temp_root),
+            None,
+            repo_root=PROJECT_ROOT,
+        )
+        return 0
     if args.command == "prepare":
         reviewer = {
             "agent": args.reviewer_agent,

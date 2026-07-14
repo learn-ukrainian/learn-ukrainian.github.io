@@ -16,7 +16,15 @@ artifacts. Report findings; do not fix the module during this invocation.
    every evidence modality it can directly inspect: `text`, `audio`, `video`,
    `image`, or `interactive`. Do not declare a capability merely because page
    metadata is readable.
-3. Run deterministic preparation:
+3. Allocate one invocation-scoped run directory. Copy the emitted paths exactly
+   and use them only for this review. Never reuse another review's run directory
+   or fall back to global `/tmp/post-build-review-*.json` names:
+
+   ```bash
+   .venv/bin/python scripts/audit/post_build_review.py allocate <track/slug>
+   ```
+
+4. Run deterministic preparation with the emitted `packet` path:
 
    ```bash
    .venv/bin/python scripts/audit/post_build_review.py prepare \
@@ -26,33 +34,34 @@ artifacts. Report findings; do not fix the module during this invocation.
      --reviewer-model <model> \
      --reviewer-effort <effort> \
      --reviewer-capability text \
-     --output /tmp/post-build-review-packet.json
+     --output <packet_path>
    ```
 
-4. Read `/tmp/post-build-review-packet.json`. Follow its `semantic_prompt`
+5. Read `<packet_path>`. Follow its `semantic_prompt`
    exactly. Read every path in `target.files`; use the project source tools for
    Ukrainian, factual, attribution, and quotation claims. Never guess a
    Ukrainian fact. If required tools or evidence are unavailable, return
    `INCOMPLETE`.
-5. Preserve the reviewer's exact response bytes at
-   `/tmp/post-build-review-semantic-response.json`. Do not extract, repair,
+6. Preserve the reviewer's exact response bytes at the emitted
+   `<semantic_response_path>`. Do not extract, repair,
    normalize, merge, or reconcile malformed output. A malformed response ends
    this review as `INCOMPLETE`; any retry is a distinct review with a new
-   packet/result and cannot replace the failed artifact. Use `apply_patch`, not
-   a shell heredoc, when the current agent is the reviewer.
-6. Finalize and validate:
+   packet/result and cannot replace the failed artifact. Allocate a new run
+   directory before every retry. Use `apply_patch`, not a shell heredoc, when
+   the current agent is the reviewer.
+7. Finalize and validate using paths from the same allocated run directory:
 
    ```bash
    .venv/bin/python scripts/audit/post_build_review.py finalize \
-     --packet /tmp/post-build-review-packet.json \
-     --semantic-response /tmp/post-build-review-semantic-response.json \
-     --output /tmp/post-build-review-result.json
+     --packet <packet_path> \
+     --semantic-response <semantic_response_path> \
+     --output <result_path>
    ```
 
-7. Read the result back, report the combined disposition and material findings,
-   and cite `/tmp/post-build-review-result.json`. A non-zero finalize exit means
+8. Read the result back, report the combined disposition and material findings,
+   and cite `<result_path>`. A non-zero finalize exit means
    `BLOCK`, `REVISE`, or `INCOMPLETE`; it is a review outcome, not a tool crash.
-8. Verify `git status --short` is unchanged from before the invocation.
+9. Verify `git status --short` is unchanged from before the invocation.
 
 ## Canonical resources
 

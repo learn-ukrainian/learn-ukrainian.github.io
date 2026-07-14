@@ -473,8 +473,8 @@
     }
   ],
   "prompt_sha256": "f48057421a91997fd9408d3d2ddf1467c5cf611f551b4ff7f61251eca87ba7cb",
-  "reproducibility_key": "0a891f4a4bd499bc7476c428f7564ed746fbc751b6a08dcd29dabccd77222d35",
-  "review_protocol_version": "2.0.0",
+  "reproducibility_key": "5800e00c8c203dd3d2c75fbb15a4f7948d4452584c61c53d5555fcbbbafec919",
+  "review_protocol_version": "2.0.1",
   "reviewer": {
     "agent": "fixture",
     "capabilities": [

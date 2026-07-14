@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -815,6 +816,43 @@ def test_repository_output_paths_are_rejected(tmp_path: Path) -> None:
     pbr.ensure_output_outside_repo(tmp_path / "review.json")
 
 
+def test_concurrent_review_runs_allocate_isolated_artifact_paths(tmp_path: Path) -> None:
+    command = [
+        str(ROOT / ".venv" / "bin" / "python"),
+        str(ROOT / "scripts" / "audit" / "post_build_review.py"),
+        "allocate",
+        "bio/oleksandr-bilash",
+        "--temp-root",
+        str(tmp_path),
+    ]
+
+    def allocate() -> dict[str, str]:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        return json.loads(completed.stdout)
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first, second = list(executor.map(lambda _: allocate(), range(2)))
+
+    assert first["run_dir"] != second["run_dir"]
+    for paths in (first, second):
+        run_dir = Path(paths["run_dir"])
+        assert run_dir.is_dir()
+        assert Path(paths["packet"]) == run_dir / "packet.json"
+        assert Path(paths["semantic_response"]) == run_dir / "semantic-response.json"
+        assert Path(paths["result"]) == run_dir / "result.json"
+
+    Path(first["packet"]).write_text('{"target":"first"}\n', encoding="utf-8")
+    Path(second["packet"]).write_text('{"target":"second"}\n', encoding="utf-8")
+    assert json.loads(Path(first["packet"]).read_text(encoding="utf-8"))["target"] == "first"
+    assert json.loads(Path(second["packet"]).read_text(encoding="utf-8"))["target"] == "second"
+
+
 def test_tampered_packet_paths_cannot_escape_repository() -> None:
     target = {"files": {"plan": "../../etc/passwd"}}
     with pytest.raises(pbr.ReviewProtocolError, match="escapes the checkout"):
@@ -840,14 +878,16 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
     assert "Preserve the reviewer's exact response bytes" in text
     assert "--semantic-response" in text
     assert "--semantic-result" not in text
+    assert "post_build_review.py allocate <track/slug>" in text
+    assert "--output <packet_path>" in text
     assert "curriculum/l2-uk-en/{track}/audit" not in text
 
 
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "2.0.0"
-    assert len(rows) == 23
+    assert catalog["catalog_version"] == "2.0.1"
+    assert len(rows) == 24
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -863,6 +903,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "1.1.0",
         "1.2.0",
         "2.0.0",
+        "2.0.1",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

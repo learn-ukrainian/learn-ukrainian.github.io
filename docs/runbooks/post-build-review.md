@@ -15,8 +15,8 @@ Use $post-build-review for bio/oleksandr-bilash.
 
 The skill runs deterministic preparation, selects the core or seminar semantic
 family from versioned track policy, requires a source-backed semantic result,
-and combines both layers into `/tmp/post-build-review-result.json`. It must not
-write curriculum audit/status/review files or telemetry.
+and combines both layers inside an invocation-unique directory allocated under
+`/tmp`. It must not write curriculum audit/status/review files or telemetry.
 
 ## Responsibility boundaries
 
@@ -25,7 +25,7 @@ write curriculum audit/status/review files or telemetry.
 | Deterministic facts and aggregation | `scripts/audit/post_build_review.py` plus existing audit code |
 | Mechanically verifiable track rules | `post-build-review/config/track-policy.v1.yaml` |
 | Semantic judgment | `post-build-review/prompts/*.md` |
-| Orchestration order | `post-build-review/SKILL.md` |
+| Orchestration order and run isolation | `post-build-review/SKILL.md` plus `post_build_review.py allocate` |
 | Output shape | `post-build-review/schema/review-result.v2.schema.json` |
 | Operator maintenance | This runbook |
 
@@ -83,6 +83,12 @@ For every review defect:
 9. Commit with an `X-Agent` trailer and merge through one scoped PR. Close the
    linked stream issue with command/output evidence and clean the worktree.
 
+Each invocation starts with `post_build_review.py allocate <track/slug>` and
+keeps its packet, exact semantic response, and result in the returned directory.
+Fixed global `/tmp/post-build-review-*.json` names are forbidden because
+concurrent reviewers can replace one another's evidence between `prepare` and
+`finalize`.
+
 For semantic-response defects, preserve the exact reviewer output. Never copy
 selected fields into a new JSON object, strip a Markdown wrapper, choose one of
 multiple objects, adjust counts, or reconcile retries. Finalize the raw response
@@ -120,8 +126,7 @@ Then forward-test the exact short prompt in a fresh agent. Validate the emitted
 result with:
 
 ```bash
-.venv/bin/python scripts/audit/post_build_review.py validate \
-  /tmp/post-build-review-result.json
+.venv/bin/python scripts/audit/post_build_review.py validate <result_path>
 ```
 
 Compare `reproducibility_key`, version fields, prompt hash, source hashes,
