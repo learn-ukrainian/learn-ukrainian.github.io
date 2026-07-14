@@ -35,7 +35,7 @@ Decision: use a marker-preserving full dataset with a compatibility view that hi
   - `subst`
   - `obsc`
 
-- Analyses marked `arch`, `coll`, `slang`, or confirmed dialect remain visible in `forms`, with their markers exposed in `tags`. This preserves current marker-aware consumer behavior. Register and heritage policy belongs in `inspect_*` and downstream gate policy, not in compatibility-view exclusion.
+- Analyses marked `arch`, `coll`, `slang`, `alt`, `vulg`, or confirmed dialect remain visible in `forms`, with their markers exposed in `tags`. This preserves current marker-aware consumer behavior (the pre-existing DB already exposed `arch`/`slang`/`subst`/`alt`/`vulg`; of those only `subst` moves to hidden, as a deliberate, delta-measured tightening). Register and heritage policy belongs in `inspect_*` and downstream gate policy, not in compatibility-view exclusion.
 
 - Existing `verify_word`, `verify_words`, and `verify_lemma` continue querying `forms`:
 
