@@ -1,6 +1,5 @@
 {
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "fingerprint": "b87bba5c9d95daab04404d2a90074baadda710e4f9e8bb83badb94f76a838e54",
   "inputs": {
     "lexicon_code": [
       {
@@ -53,7 +52,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "042635510b49afc7b68be3d10ecdc8420a82a8d803cb9a32100cebecfab7518f"
+        "sha256": "116d65bea38faaa2a984ebecc4623dc3cbcfa36960f328b50840c46cd127843a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -161,7 +160,8 @@
       }
     ]
   },
-  "fingerprint": "fc98f3dc7992876d33fbdd187930a806fe7ddde7b501deae4fcb7cea43608d03",
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
     "lexicon_code_files": 39
   }
