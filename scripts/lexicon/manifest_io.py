@@ -47,6 +47,12 @@ FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 GATE_CONFIRMED = "confirmed"  # gate ran; kept or added items (default — not recorded)
 GATE_REJECTED = "rejected"  # gate ran and dropped item(s): a quality win (allowed to shrink)
 GATE_SKIPPED_OFFLINE = "skipped-offline"  # gate could not run; existing section preserved
+GATE_ANNOTATIONS_CARRIED = "annotations-carried-offline"  # #5121: item membership recomputed
+# from local sources, but a section's SECONDARY annotation source (e.g. СУМ-20/ВТС antonym
+# pointers via the per-lemma slovnyk cache) was not consultable, so its published annotation
+# pointers were carried forward per-item. Recorded on a distinct ``<section>_annotations`` key
+# so it sits alongside — never clobbers — the membership outcome and is invisible to the
+# item-count shrink gate (which only consults real section names).
 
 
 def _sha256(data: bytes) -> str:

@@ -80,6 +80,7 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.lexicon.manifest_io import (
+    GATE_ANNOTATIONS_CARRIED,
     GATE_REJECTED,
     GATE_SKIPPED_OFFLINE,
 )
@@ -5360,6 +5361,88 @@ def _resolve_gated_section(
     return resolved, (GATE_SKIPPED_OFFLINE if resolved else None)
 
 
+# #5121 — antonym pointer ANNOTATIONS (the СУМ-20/ВТС "протилежне → X" source segments
+# plus their source_urls) come from the per-lemma slovnyk cache slugs below. Item
+# MEMBERSHIP is Вікісловник + local-db and offline-safe, so its gate always runs; the
+# annotation augmentation is NOT — an offline run with a cold cache recomputes the same
+# items without their published annotation pointers. This is the #5077 preserve contract
+# applied one level down, at annotation granularity, with membership left untouched.
+_SLOVNYK_ANTONYM_ANNOTATION_SLUGS = ("newsum", "vts")
+
+
+def _annotation_segment_item(segment: str) -> str | None:
+    """Canonical item a rendered pointer-annotation ``source`` segment points at.
+
+    Pointer segments render as ``"<dict>: <pattern> → <item>[ (reciprocal)][ [gate: …]]"``
+    (see :func:`_relation_source_label`). The base Вікісловник label carries no ``→`` and
+    is not a pointer annotation, so it returns ``None`` — only per-item pointer segments
+    are carry-over candidates.
+    """
+    marker = " → "
+    idx = segment.rfind(marker)
+    if idx == -1:
+        return None
+    tail = segment[idx + len(marker) :]
+    for cut in (" (reciprocal)", " [gate:"):
+        pos = tail.find(cut)
+        if pos != -1:
+            tail = tail[:pos]
+    # Key it exactly as _section_item_keys keys the rendered items so both sides of the
+    # membership match normalize identically (base word, stress-stripped, casefolded).
+    return _section_item_key(tail.strip())
+
+
+def _carry_over_pointer_annotations(
+    new_section: dict[str, Any] | None,
+    baseline_section: dict[str, Any] | None,
+    *,
+    gate_ran: bool,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Carry a baseline section's pointer annotations forward when the annotation
+    source could not be consulted this run (#5121).
+
+    Item MEMBERSHIP is untouched — ``new_section`` already holds the offline-safe items
+    computed from local sources. Only the secondary annotation layer is restored, and only
+    per-item: a baseline pointer segment is carried iff its item survives in ``new_section``
+    (match by canonical term), so an item absent from the baseline gains no phantom
+    annotation. Returns ``(section, provenance_or_None)``; provenance is ``None`` whenever
+    nothing was carried, keeping a normal run's diff minimal.
+    """
+    if gate_ran or not new_section or not isinstance(baseline_section, dict):
+        return new_section, None
+    new_keys = _section_item_keys(new_section)
+    existing_segments = {
+        seg.strip()
+        for seg in str(new_section.get("source") or "").split(" + ")
+        if seg.strip()
+    }
+    carried_segments: list[str] = []
+    for raw in str(baseline_section.get("source") or "").split(" + "):
+        seg = raw.strip()
+        if not seg or seg in existing_segments or seg in carried_segments:
+            continue
+        item_key = _annotation_segment_item(seg)
+        if item_key is None or item_key not in new_keys:
+            continue  # base label, or a pointer at a non-member item — no phantom carry
+        carried_segments.append(seg)
+    if not carried_segments:
+        return new_section, None
+    resolved = dict(new_section)
+    base_source = str(resolved.get("source") or "").strip()
+    resolved["source"] = " + ".join(part for part in (base_source, *carried_segments) if part)
+    # source_urls are per-(dictionary, lemma), shared across a source's items, not per-item;
+    # membership is protected so every carried item's source survives — carry the baseline
+    # annotation URLs the fresh recompute lacks (its own Вікісловник URL already dedups out).
+    urls = [str(url) for url in resolved.get("source_urls", []) if str(url).strip()]
+    for raw_url in baseline_section.get("source_urls") or []:
+        url = str(raw_url).strip()
+        if url and url not in urls:
+            urls.append(url)
+    if urls:
+        resolved["source_urls"] = list(dict.fromkeys(urls))
+    return resolved, GATE_ANNOTATIONS_CARRIED
+
+
 def _ordered_sections(
     sections: dict[str, object], baseline: dict[str, Any]
 ) -> dict[str, object]:
@@ -5499,9 +5582,24 @@ def enrich_entry(
         )
     )
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
-    # Antonyms are Вікісловник + lexicographer-pointer driven (local db); the gate
-    # always runs, so authoritative local retractions apply even offline (finding 2).
+    # #5121: item membership is Вікісловник + local-db (offline-safe, gate always runs),
+    # but the СУМ-20/ВТС pointer ANNOTATIONS ride the per-lemma slovnyk cache. When that
+    # cache could not be consulted (offline + no newsum/vts slug), carry the published
+    # pointer annotations forward per-item rather than silently dropping them; online or
+    # cache-present the fresh recompute wins and nothing is carried.
+    antonym_annotation_gate_ran = _slovnyk_gate_ran(
+        slovnyk_cache, _SLOVNYK_ANTONYM_ANNOTATION_SLUGS
+    )
+    antonyms, antonym_annotation_outcome = _carry_over_pointer_annotations(
+        antonyms, baseline_sections.get("antonyms"), gate_ran=antonym_annotation_gate_ran
+    )
+    # Antonyms are Вікісловник + lexicographer-pointer driven (local db); the membership
+    # gate always runs, so authoritative local retractions apply even offline (finding 2).
     _apply_section("antonyms", antonyms, gate_ran=True)
+    if antonym_annotation_outcome and "antonyms" in sections:
+        # Distinct key so the annotation carry-over sits ALONGSIDE the membership outcome
+        # and stays invisible to the item-count shrink gate (which reads real section names).
+        gate_provenance["antonyms_annotations"] = antonym_annotation_outcome
     homonym_relations = (
         pointer_homonym_relations
         if pointer_homonym_relations is not None
