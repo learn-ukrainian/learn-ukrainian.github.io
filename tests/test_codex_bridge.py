@@ -9,6 +9,7 @@ import os
 import re
 import sqlite3
 import sys
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
@@ -29,6 +30,7 @@ from ai_agent_bridge._codex import (
 )
 from ai_agent_bridge._db import get_db, init_db
 from ai_agent_bridge._messaging import detect_sender, send_message
+from ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 @pytest.fixture(autouse=True)
@@ -381,6 +383,61 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     )
     assert mock_acknowledge.call_args_list[0].args == (8,)
     assert mock_acknowledge.call_args_list[1].args == (100,)
+
+
+def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_path):
+    checkout = ProvisionedReviewWorktree(
+        path=tmp_path / "review-checkout",
+        branch="feature/review",
+        sha="a" * 40,
+    )
+    checkout.path.mkdir()
+    captured: dict[str, object] = {}
+
+    @contextmanager
+    def fake_checkout(*_args, **_kwargs):
+        yield checkout
+
+    monkeypatch.setattr(
+        "ai_agent_bridge._codex._fetch_codex_message",
+        lambda _id: {
+            "id": 9,
+            "task_id": "branch-review",
+            "from": "gemini",
+            "to": "codex",
+            "type": "query",
+            "content": "Review the branch.",
+            "data": json.dumps({"review_target": {"branch": "feature/review"}}),
+        },
+    )
+    monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr("ai_agent_bridge._codex.acknowledge", lambda *_args: None)
+    monkeypatch.setattr("ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr("ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("ai_agent_bridge._codex.set_session", lambda *_args: None)
+    monkeypatch.setattr(
+        "ai_agent_bridge._codex.agent_runner.invoke",
+        lambda *_args, **kwargs: captured.update(kwargs)
+        or Result(
+            ok=True,
+            agent="codex",
+            model="gpt-5.6-terra",
+            mode="read-only",
+            response="reply",
+            stderr_excerpt=None,
+            duration_s=0.1,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        ),
+    )
+
+    process_for_codex(9, review=True)
+
+    assert captured["cwd"] == checkout.path
 
 
 def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
