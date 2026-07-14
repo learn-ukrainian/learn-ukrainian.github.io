@@ -30,10 +30,30 @@ POLICY_PATH = SKILL_ROOT / "config" / "track-policy.v1.yaml"
 SCHEMA_PATHS = {
     "post-build-review.result.v1": SKILL_ROOT / "schema" / "review-result.v1.schema.json",
     "post-build-review.result.v2": SKILL_ROOT / "schema" / "review-result.v2.schema.json",
+    "post-build-review.result.v3": SKILL_ROOT / "schema" / "review-result.v3.schema.json",
 }
+CURRENT_PACKET_VERSION = "post-build-review.packet.v3"
+CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v3"
 TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
+QUALITY_DIMENSIONS = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
+REPRODUCIBILITY_FIELDS = (
+    "schema_version",
+    "review_protocol_version",
+    "deterministic_contract_version",
+    "semantic_prompt_version",
+    "track_policy_version",
+    "prompt_sha256",
+    "target",
+    "source_hashes",
+    "reviewer",
+    "semantic_response",
+    "deterministic",
+    "semantic",
+    "findings",
+    "combined_disposition",
+)
 SEVERITY_ALIASES = {
     "critical": "blocker",
     "major": "high",
@@ -770,7 +790,7 @@ def prepare_review(
         target, track_policy, deterministic, source_hashes, repo_root=repo_root
     )
     return {
-        "packet_version": "post-build-review.packet.v2",
+        "packet_version": CURRENT_PACKET_VERSION,
         "review_protocol_version": str(policy["review_protocol_version"]),
         "deterministic_contract_version": str(policy["deterministic_contract_version"]),
         "semantic_prompt_version": str(policy["semantic_prompt_version"]),
@@ -815,6 +835,8 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
         repo_root=repo_root,
     )
     failures: list[str] = []
+    if packet.get("packet_version") != CURRENT_PACKET_VERSION:
+        failures.append("packet_version is not the current canonical version")
     actual_prompt = str(packet.get("semantic_prompt") or "")
     if sha256_text(actual_prompt) != packet.get("prompt_sha256"):
         failures.append("semantic_prompt does not match prompt_sha256")
@@ -907,12 +929,14 @@ def normalize_semantic_result(
     family: str,
     reviewer: Mapping[str, Any],
     evidence_requirements: Sequence[Mapping[str, Any]] = (),
+    source_texts: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     _require_exact_keys(
         value,
         {
             "verdict",
             "summary",
+            "quality_dimensions",
             "claim_coverage",
             "claim_ledger",
             "learner_evidence_ledger",
@@ -932,7 +956,15 @@ def normalize_semantic_result(
         raise ReviewProtocolError("Semantic findings must be a list")
     findings: list[dict[str, Any]] = []
     finding_ids: set[str] = set()
-    expected_finding_keys = {"id", "category", "severity", "message", "evidence", "location"}
+    expected_finding_keys = {
+        "id",
+        "issue_id",
+        "category",
+        "severity",
+        "message",
+        "evidence",
+        "location",
+    }
     for raw in raw_findings:
         if not isinstance(raw, Mapping):
             raise ReviewProtocolError("Semantic findings must be mappings")
@@ -941,6 +973,11 @@ def normalize_semantic_result(
         if finding_id in finding_ids:
             raise ReviewProtocolError(f"Duplicate semantic finding id: {finding_id}")
         finding_ids.add(finding_id)
+        issue_id = _nonempty_string(raw["issue_id"], "semantic finding issue_id")
+        if re.fullmatch(r"[A-Z][A-Z0-9_]*", issue_id) is None:
+            raise ReviewProtocolError(
+                f"Semantic finding issue_id must be uppercase underscore form: {issue_id!r}"
+            )
         location = raw["location"]
         if location is not None and not isinstance(location, str):
             raise ReviewProtocolError("semantic finding location must be a string or null")
@@ -950,6 +987,7 @@ def normalize_semantic_result(
         findings.append(
             {
                 "id": finding_id,
+                "issue_id": issue_id,
                 "source": "semantic",
                 "category": _nonempty_string(raw["category"], "semantic finding category"),
                 "severity": semantic_severity,
@@ -958,6 +996,125 @@ def normalize_semantic_result(
                 "location": location,
             }
         )
+
+    raw_dimensions = value["quality_dimensions"]
+    if not isinstance(raw_dimensions, Mapping):
+        raise ReviewProtocolError("quality_dimensions must be a mapping")
+    _require_exact_keys(raw_dimensions, set(QUALITY_DIMENSIONS), "quality dimensions")
+    dimensions: dict[str, dict[str, Any]] = {}
+    dimension_statuses = {"PASS", "REVISE", "BLOCK", "INCOMPLETE"}
+    expected_dimension_keys = {"status", "evidence", "finding_ids"}
+    source_lookup = dict(source_texts or {})
+    for dimension in QUALITY_DIMENSIONS:
+        raw = raw_dimensions[dimension]
+        if not isinstance(raw, Mapping):
+            raise ReviewProtocolError(f"Quality dimension {dimension} must be a mapping")
+        _require_exact_keys(raw, expected_dimension_keys, f"quality dimension {dimension}")
+        dimension_status = raw["status"]
+        if dimension_status not in dimension_statuses:
+            raise ReviewProtocolError(
+                f"Invalid quality dimension status for {dimension}: {dimension_status!r}"
+            )
+        raw_evidence = raw["evidence"]
+        if not isinstance(raw_evidence, list):
+            raise ReviewProtocolError(f"Quality dimension {dimension} evidence must be a list")
+        if dimension_status != "INCOMPLETE" and not raw_evidence:
+            raise ReviewProtocolError(f"Quality dimension {dimension} requires cited evidence")
+        dimension_evidence: list[dict[str, str]] = []
+        for item in raw_evidence:
+            if not isinstance(item, Mapping):
+                raise ReviewProtocolError(
+                    f"Quality dimension {dimension} evidence entries must be mappings"
+                )
+            _require_exact_keys(item, {"location", "excerpt"}, f"quality dimension {dimension} evidence")
+            location = _nonempty_string(item["location"], f"quality dimension {dimension} location")
+            excerpt = _nonempty_string(item["excerpt"], f"quality dimension {dimension} excerpt")
+            if len(excerpt.strip()) < 8:
+                raise ReviewProtocolError(
+                    f"Quality dimension {dimension} evidence excerpt must contain at least 8 characters"
+                )
+            if source_lookup:
+                matching_paths = [
+                    path
+                    for path in source_lookup
+                    if location == path or location.startswith(f"{path}:")
+                ]
+                if not matching_paths:
+                    raise ReviewProtocolError(
+                        f"Quality dimension {dimension} evidence location is not a target file: {location}"
+                    )
+                if not any(excerpt in source_lookup[path] for path in matching_paths):
+                    raise ReviewProtocolError(
+                        f"Quality dimension {dimension} evidence excerpt is not present at {location}"
+                    )
+            dimension_evidence.append({"location": location, "excerpt": excerpt})
+        raw_dimension_finding_ids = raw["finding_ids"]
+        if not isinstance(raw_dimension_finding_ids, list):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} finding_ids must be a list"
+            )
+        dimension_finding_ids: list[str] = []
+        for finding_id_value in raw_dimension_finding_ids:
+            referenced = _nonempty_string(
+                finding_id_value, f"quality dimension {dimension} finding id"
+            )
+            if referenced in dimension_finding_ids:
+                raise ReviewProtocolError(
+                    f"Quality dimension {dimension} repeats finding {referenced}"
+                )
+            if referenced not in finding_ids:
+                raise ReviewProtocolError(
+                    f"Quality dimension {dimension} references unknown finding {referenced}"
+                )
+            dimension_finding_ids.append(referenced)
+        referenced_severities = {
+            finding["severity"] for finding in findings if finding["id"] in dimension_finding_ids
+        }
+        if dimension_status == "PASS" and referenced_severities.intersection(
+            {"blocker", "high", "medium"}
+        ):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} PASS references a material finding"
+            )
+        if dimension_status == "REVISE" and not referenced_severities.intersection(
+            {"high", "medium"}
+        ):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} REVISE requires a high or medium finding"
+            )
+        if dimension_status == "BLOCK" and "blocker" not in referenced_severities:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} BLOCK requires a blocker finding"
+            )
+        if dimension_status == "INCOMPLETE" and not dimension_finding_ids:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} INCOMPLETE requires a finding"
+            )
+        dimensions[dimension] = {
+            "status": dimension_status,
+            "evidence": dimension_evidence,
+            "finding_ids": dimension_finding_ids,
+        }
+
+    nonpassing_dimensions = {
+        dimension: entry["status"]
+        for dimension, entry in dimensions.items()
+        if entry["status"] != "PASS"
+    }
+    if verdict == "PASS" and nonpassing_dimensions:
+        raise ReviewProtocolError(
+            "Semantic PASS requires PASS for every quality dimension: "
+            + ", ".join(sorted(nonpassing_dimensions))
+        )
+    if any(status == "INCOMPLETE" for status in nonpassing_dimensions.values()) and verdict != "INCOMPLETE":
+        raise ReviewProtocolError("An incomplete quality dimension requires semantic INCOMPLETE")
+    if any(status == "BLOCK" for status in nonpassing_dimensions.values()) and verdict not in {
+        "BLOCK",
+        "INCOMPLETE",
+    }:
+        raise ReviewProtocolError("A blocked quality dimension requires semantic BLOCK or INCOMPLETE")
+    if any(status == "REVISE" for status in nonpassing_dimensions.values()) and verdict == "PASS":
+        raise ReviewProtocolError("A revisable quality dimension is inconsistent with semantic PASS")
 
     coverage = value["claim_coverage"]
     if not isinstance(coverage, Mapping):
@@ -1108,6 +1265,7 @@ def normalize_semantic_result(
         "family": family,
         "verdict": verdict,
         "summary": summary,
+        "quality_dimensions": dimensions,
         "claim_coverage": {
             "status": status,
             "claims_total": claims_total,
@@ -1123,6 +1281,7 @@ def normalize_semantic_result(
 def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
     finding = {
         "id": "semantic-response-integrity",
+        "issue_id": "SEMANTIC_RESPONSE_INTEGRITY",
         "source": "semantic",
         "category": "semantic_response_integrity",
         "severity": "high",
@@ -1134,6 +1293,14 @@ def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
         "family": family,
         "verdict": "INCOMPLETE",
         "summary": "Semantic review output was malformed or violated the response contract.",
+        "quality_dimensions": {
+            dimension: {
+                "status": "INCOMPLETE",
+                "evidence": [],
+                "finding_ids": ["semantic-response-integrity"],
+            }
+            for dimension in QUALITY_DIMENSIONS
+        },
         "claim_coverage": {
             "status": "incomplete",
             "claims_total": 0,
@@ -1184,6 +1351,13 @@ def combine_disposition(
         reasons.append("reviewer could not verify required learner evidence")
     if semantic["verdict"] == "INCOMPLETE":
         reasons.append("semantic reviewer reported incomplete")
+    incomplete_dimensions = sorted(
+        dimension
+        for dimension, assessment in semantic.get("quality_dimensions", {}).items()
+        if assessment.get("status") == "INCOMPLETE"
+    )
+    if incomplete_dimensions:
+        reasons.append("quality dimension coverage is incomplete: " + ", ".join(incomplete_dimensions))
     integrity_categories = {item.get("category") for item in findings}
     if "source_drift" in integrity_categories:
         reasons.append("source files changed after deterministic preparation")
@@ -1205,6 +1379,60 @@ def combine_disposition(
     return {"status": "PASS", "reasons": ["deterministic and semantic review passed"]}
 
 
+def _validate_normalized_quality_dimensions(semantic: Mapping[str, Any]) -> None:
+    dimensions = semantic["quality_dimensions"]
+    finding_severities = {
+        str(finding["id"]): str(finding["severity"])
+        for finding in semantic["findings"]
+    }
+    nonpassing: dict[str, str] = {}
+    for dimension in QUALITY_DIMENSIONS:
+        assessment = dimensions[dimension]
+        status = str(assessment["status"])
+        evidence = assessment["evidence"]
+        finding_ids = [str(finding_id) for finding_id in assessment["finding_ids"]]
+        if status != "INCOMPLETE" and not evidence:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} requires cited evidence"
+            )
+        unknown = sorted(set(finding_ids) - set(finding_severities))
+        if unknown:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} references unknown findings: "
+                + ", ".join(unknown)
+            )
+        severities = {finding_severities[finding_id] for finding_id in finding_ids}
+        if status == "PASS" and severities.intersection({"blocker", "high", "medium"}):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} PASS references a material finding"
+            )
+        if status == "REVISE" and not severities.intersection({"high", "medium"}):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} REVISE requires a high or medium finding"
+            )
+        if status == "BLOCK" and "blocker" not in severities:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} BLOCK requires a blocker finding"
+            )
+        if status == "INCOMPLETE" and not finding_ids:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} INCOMPLETE requires a finding"
+            )
+        if status != "PASS":
+            nonpassing[dimension] = status
+
+    verdict = str(semantic["verdict"])
+    if verdict == "PASS" and nonpassing:
+        raise ReviewProtocolError(
+            "Semantic PASS requires PASS for every quality dimension: "
+            + ", ".join(sorted(nonpassing))
+        )
+    if "INCOMPLETE" in nonpassing.values() and verdict != "INCOMPLETE":
+        raise ReviewProtocolError("An incomplete quality dimension requires semantic INCOMPLETE")
+    if "BLOCK" in nonpassing.values() and verdict not in {"BLOCK", "INCOMPLETE"}:
+        raise ReviewProtocolError("A blocked quality dimension requires semantic BLOCK or INCOMPLETE")
+
+
 def validate_result(
     result: Mapping[str, Any], *, schema_path: Path | None = None, repo_root: Path = PROJECT_ROOT
 ) -> None:
@@ -1216,6 +1444,24 @@ def validate_result(
         schema_path = repo_root / relative.relative_to(PROJECT_ROOT)
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(result)
+    if result.get("schema_version") != CURRENT_RESULT_SCHEMA_VERSION:
+        return
+    _validate_normalized_quality_dimensions(result["semantic"])
+    expected_findings = [
+        *_deterministic_findings(result),
+        *deepcopy(result["semantic"]["findings"]),
+    ]
+    if result["findings"] != expected_findings:
+        raise ReviewProtocolError("Result findings do not match deterministic plus semantic evidence")
+    expected_disposition = combine_disposition(
+        result["deterministic"], result["semantic"], expected_findings
+    )
+    if result["combined_disposition"] != expected_disposition:
+        raise ReviewProtocolError("Combined disposition does not match canonical precedence")
+    reproducible = {key: deepcopy(result[key]) for key in REPRODUCIBILITY_FIELDS}
+    expected_key = sha256_text(_stable_json(reproducible))
+    if result["reproducibility_key"] != expected_key:
+        raise ReviewProtocolError("Result reproducibility key does not match canonical evidence")
 
 
 def finalize_review(
@@ -1237,6 +1483,12 @@ def finalize_review(
                 family,
                 packet["reviewer"],
                 packet["deterministic"].get("evidence_requirements") or [],
+                {
+                    str(path): resolve_repo_path(str(path), repo_root=repo_root).read_text(
+                        encoding="utf-8"
+                    )
+                    for path in packet["target"]["files"].values()
+                },
             )
         except ReviewProtocolError as exc:
             error = str(exc)
@@ -1258,7 +1510,7 @@ def finalize_review(
     findings = [*_deterministic_findings(normalized_packet), *semantic["findings"]]
     disposition = combine_disposition(deterministic, semantic, findings)
     result: dict[str, Any] = {
-        "schema_version": "post-build-review.result.v2",
+        "schema_version": CURRENT_RESULT_SCHEMA_VERSION,
         "review_protocol_version": str(packet["review_protocol_version"]),
         "deterministic_contract_version": str(packet["deterministic_contract_version"]),
         "semantic_prompt_version": str(packet["semantic_prompt_version"]),
@@ -1273,25 +1525,7 @@ def finalize_review(
         "findings": findings,
         "combined_disposition": disposition,
     }
-    reproducible = {
-        key: deepcopy(result[key])
-        for key in (
-            "schema_version",
-            "review_protocol_version",
-            "deterministic_contract_version",
-            "semantic_prompt_version",
-            "track_policy_version",
-            "prompt_sha256",
-            "target",
-            "source_hashes",
-            "reviewer",
-            "semantic_response",
-            "deterministic",
-            "semantic",
-            "findings",
-            "combined_disposition",
-        )
-    }
+    reproducible = {key: deepcopy(result[key]) for key in REPRODUCIBILITY_FIELDS}
     result["reproducibility_key"] = sha256_text(_stable_json(reproducible))
     validate_result(result, repo_root=repo_root)
     return result

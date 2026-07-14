@@ -4,6 +4,13 @@
   "semantic_result": {
     "verdict": "PASS",
     "summary": "Core exemplar with non-factual beginner content and no material semantic findings.",
+    "quality_dimensions": {
+      "pedagogical": {"status": "PASS", "evidence": [{"location": "fixture.md:1", "excerpt": "Вітаю! Як справи?"}], "finding_ids": []},
+      "naturalness": {"status": "PASS", "evidence": [{"location": "fixture.md:1", "excerpt": "Вітаю! Як справи?"}], "finding_ids": []},
+      "decolonization": {"status": "PASS", "evidence": [{"location": "fixture.md:1", "excerpt": "Вітаю! Як справи?"}], "finding_ids": []},
+      "engagement": {"status": "PASS", "evidence": [{"location": "fixture.md:1", "excerpt": "Вітаю! Як справи?"}], "finding_ids": []},
+      "tone": {"status": "PASS", "evidence": [{"location": "fixture.md:1", "excerpt": "Вітаю! Як справи?"}], "finding_ids": []}
+    },
     "claim_coverage": {
       "status": "not_applicable",
       "claims_total": 0,

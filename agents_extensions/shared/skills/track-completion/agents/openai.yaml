@@ -1,0 +1,4 @@
+interface:
+  display_name: "Track Completion"
+  short_description: "Complete one curriculum module safely"
+  default_prompt: "Use $track-completion to complete one CORE or seminar curriculum module."
