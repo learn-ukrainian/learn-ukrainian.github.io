@@ -99,6 +99,19 @@ def test_exact_id_component_excludes_similar_title_and_display_only_members() ->
     assert plan.excluded_task_ids == ("display", "unrelated")
 
 
+def test_unknown_relation_endpoint_blocks_without_entering_component() -> None:
+    graph = discover_task_family(
+        _manifest(
+            nodes=(_node("root", "Root"),),
+            relations=(TaskRelation("unknown-worker", "root", RelationType.SUBAGENT_OF, "invalid endpoint"),),
+        )
+    )
+
+    assert graph.included_task_ids == ("root",)
+    assert graph.roles_by_task == {"root": ("Lead",)}
+    assert any(blocker.code == "unknown_endpoint" for blocker in graph.blockers)
+
+
 def test_rename_mapping_uses_one_caller_supplied_base_and_stable_separator() -> None:
     mapping = {item.task_id: item for item in rename_mapping(_graph(), "Lifecycle repair")}
 

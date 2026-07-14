@@ -197,14 +197,19 @@ def discover_task_family(manifest: TaskFamilyManifest) -> FamilyGraph:
         missing = tuple(task_id for task_id in (relation.source_id, relation.target_id) if task_id not in nodes_by_id)
         if missing:
             blockers.append(Blocker("unknown_endpoint", f"Relation {relation.relation_type.value} names unknown exact task ID(s): {', '.join(missing)}.", missing, "Correct the manifest endpoints; titles cannot establish membership."))
+    known_relations = tuple(
+        relation
+        for relation in manifest.relations
+        if relation.source_id in nodes_by_id and relation.target_id in nodes_by_id
+    )
     if manifest.seed_task_id not in nodes_by_id:
         blockers.append(Blocker("unknown_seed_task", f"Seed task ID {manifest.seed_task_id!r} is not in the manifest.", (manifest.seed_task_id,), "Supply one existing exact task ID as the family seed."))
-    included_set = _component(manifest.seed_task_id, manifest.relations) if manifest.seed_task_id in nodes_by_id else set()
+    included_set = _component(manifest.seed_task_id, known_relations) if manifest.seed_task_id in nodes_by_id else set()
     included_nodes = tuple(node for node in manifest.nodes if node.task_id in included_set)
     excluded_task_ids = tuple(sorted(set(nodes_by_id) - included_set))
     included_relations = tuple(
         relation
-        for relation in manifest.relations
+        for relation in known_relations
         if not relation.is_display_only and relation.source_id in included_set and relation.target_id in included_set
     )
     roots = _roots(included_nodes, included_relations)

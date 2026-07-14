@@ -268,6 +268,10 @@ def _execution_payload(
         for task_id in (relation.source_id, relation.target_id)
     }
     for task_id in plan.selected_task_ids:
+        if task_id not in nodes:
+            # The planner already records ``unknown_selected_task``.  Keep the
+            # execution adapter fail-closed instead of indexing an absent node.
+            continue
         node = nodes[task_id]
         metadata_state = _active_metadata_state(node.metadata)
         if metadata_state is not None:

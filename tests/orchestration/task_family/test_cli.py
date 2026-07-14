@@ -249,6 +249,27 @@ def test_conflicting_graph_blocks_preview_without_db_or_git_mutation(tmp_path: P
         assert connection.execute("SELECT archived FROM threads WHERE id = ?", (root,)).fetchone()[0] == 0
 
 
+def test_preview_archive_unknown_selection_returns_blocker_without_key_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+    root, unknown = str(uuid4()), str(uuid4())
+    manifest = TaskFamilyManifest("unknown-selection", root, (TaskNode(root, "Root", str(repo)),), ())
+    path = tmp_path / "unknown-selection.json"
+    _write_manifest(path, manifest)
+    db = tmp_path / "state_unknown.sqlite"
+    _write_db(db, [(root, "Root", str(repo), 0, None, "test-host")])
+
+    assert cli.main([
+        "preview-archive", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", str(uuid4()), "--lineage-id", str(uuid4()), "--base-title", "Repair",
+        "--db", str(db), "--select-task", unknown, "--actor", "operator",
+        "--confirm-pin-unknown", unknown, "--json",
+    ]) == cli.EXIT_BLOCKED
+    payload = json.loads(capsys.readouterr().out)
+    assert "unknown_selected_task" in {item["code"] for item in payload["planner_blockers"]}
+
+
 def test_preview_archive_blocks_explicitly_active_task_metadata(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     repo = _repo(tmp_path)
     task_id = str(uuid4())
