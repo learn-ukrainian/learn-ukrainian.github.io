@@ -37,17 +37,59 @@ manifest, so do not set `ATLAS_MANIFEST_FORCE_HYDRATE=1` for this workflow.
 ```bash
 .venv/bin/python -c \
   "from scripts.lexicon.manifest_io import load_manifest; print(len(load_manifest()['entries']))"
+cp site/src/data/lexicon-manifest.json /tmp/atlas-hydrated-baseline.json   # #5077 shrink-gate baseline
 .venv/bin/python scripts/lexicon/enrich_manifest.py
 .venv/bin/python -m scripts.audit.generate_search_index --db data/atlas.db
 .venv/bin/python scripts/lexicon/export_open_dataset.py
 .venv/bin/python -m scripts.audit.generate_daily_pool
-.venv/bin/python scripts/lexicon/verify_manifest.py
+.venv/bin/python scripts/lexicon/verify_manifest.py --baseline /tmp/atlas-hydrated-baseline.json
 .venv/bin/python -m scripts.lexicon.publish_manifest
 ```
 
 The last command publishes a Release asset and must run only when publishing is
 authorized. See `docs/bug-autopsies/atlas-manifest-source-split.md` for the
 2026-07-13 evidence behind this split.
+
+### Offline enrich is non-destructive (preserve-vs-retract, #5077)
+
+`enrich_manifest.py` recomputes gated sections (synonyms/antonyms/homonyms/paronyms/
+idioms) from scratch each run. The **synonyms** and **idioms** sections need a live
+slovnyk lookup (synonyms from the slovnyk synonym dictionaries; idioms from the
+Фразеологічний page). With `LEXICON_SLOVNYK_OFFLINE=1` — or after the per-lemma cache
+is reset when its `schema_version` bumps, or a transient error — a gate that **cannot
+run** used to return empty and silently overwrite the previously-confirmed published
+section (809 sections stripped + 1,748 shrunk on the 2026-07-13 go-live). Enrich now
+distinguishes three per-section outcomes and records the notable ones in an entry's
+`gate_provenance` map:
+
+- **ran-and-confirmed** — gate ran, kept/added items (default; not recorded).
+- **ran-and-rejected** — gate ran and dropped items (a quality win, e.g. WordNet
+  auto-translation junk `ключ→джерело/живець`); recorded as `rejected`.
+- **did-not-run** — gate could not consult its source; a confirmed item that would be
+  dropped is preserved byte-for-byte, and the non-consultation is always recorded as
+  `skipped-offline` (even when nothing was lost), so the audit trail distinguishes a
+  freshly-gated section from one carried over unconsulted.
+
+"Did the gate run" is decided **per relevant slug set**, not `bool(lookups)`: the
+synonyms gate ran only when a synonym slug was consulted, the idioms gate only when
+the phraseology slug was. A partial cache that holds only unrelated slugs (e.g. the
+davydov warning slug) does not count as the synonym gate having run. **Homonyms,
+antonyms and paronyms are local** (VESUM/СУМ numbering, Вікісловник, approved corpus
+relation pairs, ZNO paronym pairs) — their source is always available, so their gate
+always runs and offline runs let their authoritative local data update.
+
+`gate_provenance` is a **current-run snapshot**: it replaces any prior map wholesale
+so each field reflects this run's status (the signal the shrink gate reads); it is not
+a history log. Because an offline gate that did not run **preserves** rather than
+recomputes, an offline run cannot add brand-new items to a preserved slovnyk section —
+run online (the full recipe above, on a data-enabled checkout) to pick up new
+slovnyk-sourced chips.
+
+`verify_manifest.py --baseline <hydrated>` adds a **shrink gate**: any per-section
+item-count regression vs the hydrated baseline fails the promote unless the entry's
+`gate_provenance` marks it `rejected` (gate ran) or the `(lemma, section)` pair is on
+`scripts/lexicon/shrink_allowlist.yaml`. This is the second line of defence the old
+NONEMPTY→EMPTY hazard scan lacked — it also catches partial shrinks.
 
 ## Module Release Recipe
 

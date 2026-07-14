@@ -41,11 +41,15 @@ DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = ROOT / "data" / "vesum.db"
 DEFAULT_SOURCES_DB = ROOT / "data" / "sources.db"
 DEFAULT_CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+# Curated (lemma, section) retractions the shrink gate permits even without a
+# gate-ran provenance marker (e.g. a manually-edited manifest). Co-located with this
+# script so it is always present in worktrees (unlike gitignored data/).
+DEFAULT_SHRINK_ALLOWLIST = ROOT / "scripts" / "lexicon" / "shrink_allowlist.yaml"
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.manifest_io import load_manifest
+from scripts.lexicon.manifest_io import GATE_REJECTED, load_manifest
 
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
 # Keep MINIMAL (see module docstring) — only tokens with zero defensible sense
@@ -118,6 +122,81 @@ def hazards(manifest: dict, entries: list[dict]) -> dict[str, list]:
     }
 
 
+def _section_item_count(section: object) -> int:
+    """Number of rendered items in a section (0 for a missing/malformed section)."""
+    if not isinstance(section, dict):
+        return 0
+    items = section.get("items")
+    return len(items) if isinstance(items, list) else 0
+
+
+def _load_shrink_allowlist(path: Path | None) -> set[tuple[str, str]]:
+    """Load curated ``(lemma, section)`` retractions permitted to shrink (#5077).
+
+    Shape (YAML)::
+
+        version: 1
+        kind: atlas_shrink_allowlist
+        retractions:
+          - lemma: ключ
+            section: synonyms
+            reason: WordNet auto-translation junk (джерело/живець wrong sense)
+    """
+    if not path or not path.exists():
+        return set()
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    allow: set[tuple[str, str]] = set()
+    for row in data.get("retractions") or []:
+        if isinstance(row, dict) and row.get("lemma") and row.get("section"):
+            allow.add((str(row["lemma"]), str(row["section"])))
+    return allow
+
+
+def shrink_regressions(
+    entries: list[dict],
+    baseline_entries: list[dict],
+    *,
+    allowlist: set[tuple[str, str]],
+) -> list[tuple[str, str, int, int]]:
+    """Per-section item-count regressions vs the hydrated baseline (#5077).
+
+    The NONEMPTY->EMPTY hazard scan catches only fully-stripped sections; it misses
+    partial shrinks (1,748 on the 2026-07-13 go-live). A section that lost items — or
+    vanished — relative to the baseline is a hazard UNLESS its retraction is justified:
+
+      * the entry's ``gate_provenance`` records the gate ran and retracted (``rejected``
+        — a quality win, e.g. WordNet auto-translation junk), or
+      * the ``(lemma, section)`` pair is on the explicit curated allowlist.
+
+    An unexplained regression is the offline gate-did-not-run strip/shrink bug and
+    fails verification. Returns ``(lemma, section, baseline_count, current_count)``.
+    """
+    base_by_lemma = {str(e.get("lemma")): e for e in baseline_entries if e.get("lemma")}
+    regressions: list[tuple[str, str, int, int]] = []
+    for entry in entries:
+        lemma = str(entry.get("lemma") or "")
+        base = base_by_lemma.get(lemma)
+        if not base:
+            continue
+        base_sections = base.get("sections")
+        if not isinstance(base_sections, dict):
+            continue
+        provenance = entry.get("gate_provenance") or {}
+        cur_sections = entry.get("sections") if isinstance(entry.get("sections"), dict) else {}
+        for name, base_sec in base_sections.items():
+            base_n = _section_item_count(base_sec)
+            if base_n == 0:
+                continue
+            if _section_item_count(cur_sections.get(name)) >= base_n:
+                continue
+            if provenance.get(name) == GATE_REJECTED:
+                continue  # gate ran and retracted — quality win (#5077 design pt 4)
+            if (lemma, name) in allowlist:
+                continue  # curated intended retraction
+            regressions.append((lemma, name, base_n, _section_item_count(cur_sections.get(name))))
+    return regressions
+
+
 def conformance(
     manifest: dict,
     *,
@@ -168,16 +247,18 @@ def run(
     curriculum_path: Path = DEFAULT_CURRICULUM,
     vesum_path: Path = DEFAULT_VESUM,
     sources_path: Path = DEFAULT_SOURCES_DB,
+    shrink_allowlist_path: Path | None = None,
 ) -> int:
     manifest = load_manifest(manifest_path)
     entries = manifest.get("entries", [])
     cov = coverage(entries)
 
     print(f"=== COVERAGE ({manifest_path.name}) ===")
-    base_cov = None
+    base_entries: list[dict] | None = None
     if baseline_path and baseline_path.exists():
         base = json.loads(baseline_path.read_text(encoding="utf-8"))
-        base_cov = coverage(base.get("entries", []))
+        base_entries = base.get("entries", [])
+    base_cov = coverage(base_entries) if base_entries is not None else None
     for k, v in cov.items():
         delta = f"  (was {base_cov[k]})" if base_cov and base_cov.get(k) != v else ""
         print(f"  {k:18} {v}{delta}")
@@ -187,6 +268,20 @@ def run(
     for name, hits in haz.items():
         status = "CLEAN" if not hits else f"{len(hits)} — {hits[:8]}"
         print(f"  {name:18} {status}")
+
+    # #5077 shrink gate: needs the hydrated baseline to compare per-section item counts.
+    shrink: list[tuple[str, str, int, int]] = []
+    if base_entries is not None:
+        allowlist = _load_shrink_allowlist(shrink_allowlist_path)
+        shrink = shrink_regressions(entries, base_entries, allowlist=allowlist)
+        print("\n=== SHRINK GATE (per-section item count vs baseline, #5077) ===")
+        if not shrink:
+            print("  CLEAN — no unexplained section shrink")
+        else:
+            for lemma, name, base_n, cur_n in shrink[:20]:
+                print(f"  {lemma:16} {name:12} {base_n} -> {cur_n}")
+            if len(shrink) > 20:
+                print(f"  ... and {len(shrink) - 20} more")
 
     if sample > 0:
         print(f"\n=== SAMPLE (every {max(1, len(entries) // sample)}th entry — eyeball for sense) ===")
@@ -219,13 +314,16 @@ def run(
 
     has_hazard = any(haz.values())
     has_conformance_fail = bool(conf)
-    failed = has_hazard or has_conformance_fail
+    has_shrink = bool(shrink)
+    failed = has_hazard or has_conformance_fail or has_shrink
     if failed:
         reasons = []
         if has_hazard:
             reasons.append("structural hazard")
         if has_conformance_fail:
             reasons.append(f"{len(conf)} conformance violation(s)")
+        if has_shrink:
+            reasons.append(f"{len(shrink)} unexplained section shrink(s)")
         verdict = f"{' + '.join(reasons)} — do NOT commit"
     else:
         verdict = "clean (eyeball the sample before commit)"
@@ -236,7 +334,12 @@ def run(
 def main() -> int:
     p = argparse.ArgumentParser(description="Verify the Atlas lexicon manifest before promote (#M-11).")
     p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Manifest JSON to verify.")
-    p.add_argument("--baseline", type=Path, default=None, help="Optional prior manifest for coverage deltas.")
+    p.add_argument(
+        "--baseline",
+        type=Path,
+        default=None,
+        help="Prior (hydrated) manifest for coverage deltas AND the #5077 shrink gate.",
+    )
     p.add_argument("--sample", type=int, default=12, help="How many spread-sampled entries to print (0 = none).")
     p.add_argument(
         "--skip-conformance",
@@ -251,6 +354,12 @@ def main() -> int:
         default=DEFAULT_SOURCES_DB,
         help="sources.db for the Грінченко/ЕСУМ heritage fallback on VESUM-gap lemmas (#3211).",
     )
+    p.add_argument(
+        "--shrink-allowlist",
+        type=Path,
+        default=DEFAULT_SHRINK_ALLOWLIST,
+        help="Curated (lemma, section) retractions the #5077 shrink gate permits.",
+    )
     args = p.parse_args()
     return run(
         args.manifest,
@@ -260,6 +369,7 @@ def main() -> int:
         curriculum_path=args.curriculum,
         vesum_path=args.vesum,
         sources_path=args.sources,
+        shrink_allowlist_path=args.shrink_allowlist,
     )
 
 

@@ -1,0 +1,26 @@
+# Atlas manifest shrink-gate allowlist (#5077).
+#
+# The shrink gate in verify_manifest.py fails a per-section item-count regression
+# vs the hydrated baseline, because an offline gate that could not run once stripped
+# 809 sections and shrank 1,748 more on the 2026-07-13 go-live.
+#
+# INTENDED retractions belong here. A retraction is normally auto-justified when the
+# enricher records `gate_provenance: {<section>: rejected}` on the entry (the stricter
+# gate ran online and dropped WordNet auto-translation junk). This file covers the
+# residual cases where that provenance is absent — e.g. a manually-curated manifest
+# edit — so the gate stays quiet for known-good removals without a provenance marker.
+#
+# The three canonical WordNet auto-translation retractions from #5077 / #1657 are
+# listed for documentation; online re-enrich tags them `rejected` automatically.
+version: 1
+kind: atlas_shrink_allowlist
+retractions:
+  - lemma: ключ
+    section: synonyms
+    reason: WordNet auto-translated джерело/живець are a wrong sense of ключ (#1657).
+  - lemma: адвокат
+    section: synonyms
+    reason: WordNet auto-translated прихильник/радник are a wrong sense of адвокат (#1657).
+  - lemma: аеродром
+    section: synonyms
+    reason: WordNet auto-translated поле is a wrong sense of аеродром (#1657).

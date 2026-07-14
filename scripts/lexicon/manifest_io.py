@@ -38,6 +38,16 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 
+# Per-section gate-provenance outcomes for the #5077 preserve-vs-retract contract.
+# Recorded in an entry's ``gate_provenance`` map so offline preserves and gate-ran
+# retractions are auditable at release time. Shared here (a stdlib-only module both
+# enrich_manifest and verify_manifest already import) so neither has to depend on the
+# other. ``confirmed`` is the default outcome and is intentionally never recorded, so
+# a normal full run leaves the manifest diff minimal.
+GATE_CONFIRMED = "confirmed"  # gate ran; kept or added items (default — not recorded)
+GATE_REJECTED = "rejected"  # gate ran and dropped item(s): a quality win (allowed to shrink)
+GATE_SKIPPED_OFFLINE = "skipped-offline"  # gate could not run; existing section preserved
+
 
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()

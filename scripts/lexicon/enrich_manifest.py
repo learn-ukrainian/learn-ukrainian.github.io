@@ -48,7 +48,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
@@ -79,6 +79,10 @@ from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
+from scripts.lexicon.manifest_io import (
+    GATE_REJECTED,
+    GATE_SKIPPED_OFFLINE,
+)
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
@@ -162,6 +166,7 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = {
 }
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
+_SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = "Українсько-англійський словник"
@@ -5265,6 +5270,118 @@ def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     return covered, len(entries)
 
 
+# --- #5077 preserve-vs-retract section semantics ---------------------------------
+# enrich_entry recomputes gated sections from scratch each run. Offline (or after a
+# schema-version cache reset, or a transient lookup error) a gate that CANNOT run
+# returns empty and silently overwrites the previously-confirmed published section
+# (809 stripped + 1,748 shrunk on the 2026-07-13 8,552 go-live). The contract below
+# distinguishes THREE outcomes per section so a gate that did not run preserves the
+# existing content while a gate that ran keeps its authoritative retractions.
+
+
+def _section_item_key(item: object) -> str | None:
+    """Canonical identity for one rendered section item (string chip or relation dict).
+
+    Synonym/antonym chips are strings, optionally ``"word (qualifier)"``; homonym,
+    paronym and idiom items are dicts. The qualifier is stripped so a purely cosmetic
+    re-tag (``дорога (діал.)`` -> ``дорога``) is not counted as a lost item.
+    """
+    if isinstance(item, str):
+        return _base_word(item).strip().casefold() or None
+    if isinstance(item, dict):
+        for field in ("word", "target", "lemma", "phrase", "text", "definition"):
+            value = item.get(field)
+            if isinstance(value, str) and value.strip():
+                return _base_word(value).strip().casefold() or None
+    return None
+
+
+def _section_item_keys(section: object) -> set[str]:
+    if not isinstance(section, dict):
+        return set()
+    keys: set[str] = set()
+    for item in section.get("items") or []:
+        key = _section_item_key(item)
+        if key:
+            keys.add(key)
+    return keys
+
+
+def _section_loses_items(existing: object, new: object) -> bool:
+    """True iff a confirmed item present in ``existing`` is absent from ``new``."""
+    return bool(_section_item_keys(existing) - _section_item_keys(new))
+
+
+def _slovnyk_gate_ran(cache: dict[str, Any] | None, slugs: Sequence[str]) -> bool:
+    """Whether the slovnyk.me gate for a section depending on ``slugs`` could
+    consult its data source this run (#5077).
+
+    Online the live source is always fetched, so the gate ran. Offline it ran only
+    if the per-lemma cache already holds at least one of the section's OWN slugs —
+    a lemma whose cache is missing every relevant slug (schema reset, never fetched)
+    is one the offline gate could NOT consult, so its section must be preserved.
+
+    Per-slug is load-bearing (#5077 review finding 1): a generic ``bool(lookups)``
+    treats a partial cache holding only unrelated slugs (e.g. the davydov warning
+    slug) as "the synonym gate ran" and lets it retract a section its source was
+    never consulted for. The gate ran for a section only when the section's own
+    source is present.
+    """
+    if not _phase1_offline_mode():
+        return True
+    return any(_cache_has_lookup(cache, slug) for slug in slugs)
+
+
+def _resolve_gated_section(
+    new_section: dict[str, Any] | None,
+    existing_section: dict[str, Any] | None,
+    *,
+    gate_ran: bool,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Apply the #5077 preserve-vs-retract contract to one gated section.
+
+    Three explicitly-distinguished outcomes:
+      * gate ran, no confirmed item lost   -> ran-and-confirmed: take the new section
+        (additions welcome); no provenance marker (default, keeps the diff minimal).
+      * gate ran, confirmed item(s) dropped -> ran-and-rejected: the retraction is
+        authoritative (e.g. WordNet auto-translation junk ключ->джерело/живець); take
+        the new section (may be ``None`` when everything was retracted); mark ``rejected``.
+      * gate did NOT run -> did-not-run: never retract a confirmed item (PRESERVE the
+        existing section when the recomputation would drop one), and ALWAYS mark
+        ``skipped-offline`` so the audit trail records the non-consultation, not only
+        the losses (#5077 review finding 4).
+
+    Returns ``(section_or_None, provenance_or_None)``.
+    """
+    loses = _section_loses_items(existing_section, new_section)
+    if gate_ran:
+        return new_section, (GATE_REJECTED if loses else None)
+    resolved = existing_section if loses else (new_section or existing_section)
+    return resolved, (GATE_SKIPPED_OFFLINE if resolved else None)
+
+
+def _ordered_sections(
+    sections: dict[str, object], baseline: dict[str, Any]
+) -> dict[str, object]:
+    """Emit sections in the baseline manifest's key order so a pure-preserve run
+    serializes byte-identical to its baseline (#5077 review finding 3).
+
+    The recompute rebuilds ``sections`` in a fixed apply order (synonyms, antonyms,
+    homonyms, paronyms, idioms). When the entry already had published sections in a
+    different order, that reorder alone produced spurious byte diffs on runs that
+    changed nothing. Keys present in the baseline keep the baseline's order; keys new
+    to this entry follow in canonical apply order.
+    """
+    ordered: dict[str, object] = {}
+    for name in baseline:
+        if name in sections:
+            ordered[name] = sections[name]
+    for name, value in sections.items():
+        if name not in ordered:
+            ordered[name] = value
+    return ordered
+
+
 def enrich_entry(
     entry,
     conn,
@@ -5325,7 +5442,30 @@ def enrich_entry(
         entry["pronunciation"] = pronunciation
     else:
         entry.pop("pronunciation", None)
+    # #5077: the hydrated/published sections are the preserve baseline. Capture them
+    # BEFORE recomputing so a gate that did not run can restore its confirmed content
+    # instead of silently overwriting it with an offline-empty recomputation.
+    existing_sections = entry.get("sections")
+    baseline_sections = existing_sections if isinstance(existing_sections, dict) else {}
+    # "Did the gate run" is decided per RELEVANT slug set (#5077 review finding 1):
+    # synonyms depend on the slovnyk synonym dictionaries, idioms on the phraseology
+    # dictionary. Homonyms/antonyms/paronyms are db/pointer-driven local sections with
+    # no slovnyk dependency, so their gate always runs (finding 2) — an offline run
+    # must let their authoritative local data update, not freeze a stale section.
+    synonyms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_SYNONYM_SLUGS)
+    idioms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
     sections: dict[str, object] = {}
+    gate_provenance: dict[str, str] = {}
+
+    def _apply_section(name: str, new_section: dict[str, Any] | None, *, gate_ran: bool) -> None:
+        resolved, outcome = _resolve_gated_section(
+            new_section, baseline_sections.get(name), gate_ran=gate_ran
+        )
+        if resolved:
+            sections[name] = resolved
+        if outcome:
+            gate_provenance[name] = outcome
+
     synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry_pos)
     if not synonyms and fallback_base:
         synonyms = _synonyms_slovnyk(fallback_base, entry_pos=entry_pos)
@@ -5342,8 +5482,7 @@ def enrich_entry(
         )
     )
     synonyms = _merge_synonym_relations(synonyms, pointer_relations)
-    if synonyms:
-        sections["synonyms"] = synonyms
+    _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
     if not antonyms and fallback_base:
         antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
@@ -5360,8 +5499,9 @@ def enrich_entry(
         )
     )
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
-    if antonyms:
-        sections["antonyms"] = antonyms
+    # Antonyms are Вікісловник + lexicographer-pointer driven (local db); the gate
+    # always runs, so authoritative local retractions apply even offline (finding 2).
+    _apply_section("antonyms", antonyms, gate_ran=True)
     homonym_relations = (
         pointer_homonym_relations
         if pointer_homonym_relations is not None
@@ -5372,23 +5512,34 @@ def enrich_entry(
         )
     )
     homonyms = _merge_homonym_relations(None, homonym_relations)
-    if homonyms:
-        sections["homonyms"] = homonyms
+    # Homonyms come from СУМ numbering + approved corpus relation pairs (local db); the
+    # gate always runs, so an offline run updates from local data (finding 2).
+    _apply_section("homonyms", homonyms, gate_ran=True)
     paronym_relations = (
         pointer_paronym_relations
         if pointer_paronym_relations is not None
         else _paronym_relations(conn, lemma)
     )
     paronyms = _merge_paronym_relations(None, paronym_relations)
-    if paronyms:
-        sections["paronyms"] = paronyms
+    # Paronyms come from local ZNO/cache pairs only (no slovnyk.me), so their gate runs
+    # fully offline — retractions here are always authoritative.
+    _apply_section("paronyms", paronyms, gate_ran=True)
     idioms = _idioms(conn, lemma, slovnyk_cache)
-    if idioms:
-        sections["idioms"] = idioms
+    _apply_section("idioms", idioms, gate_ran=idioms_gate_ran)
     if sections:
-        entry["sections"] = sections
+        entry["sections"] = _ordered_sections(sections, baseline_sections)
     else:
         entry.pop("sections", None)
+    # gate_provenance is a CURRENT-RUN snapshot: it replaces any prior map wholesale so
+    # each field reflects this run's consultation status (rejected / skipped-offline),
+    # which is exactly the signal the verify_manifest shrink gate reads. It is not a
+    # history log — a section confirmed this run drops its stale prior marker by design
+    # (#5077 review finding 4; replacement chosen over a `previous` key for the smaller
+    # diff and because the shrink gate only ever consults the current status).
+    if gate_provenance:
+        entry["gate_provenance"] = gate_provenance
+    else:
+        entry.pop("gate_provenance", None)
     block: dict[str, object] = {}
     stressed_lemma = _stress_display_form(lemma)
     if stressed_lemma:
