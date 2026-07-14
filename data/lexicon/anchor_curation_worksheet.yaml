@@ -1,7 +1,4 @@
-# STAGE 2 VERIFICATION — #5133, 2026-07-14
-# Cross-family AGY pass: 110 APPROVE / 1 CORRECT / 47 NULL-OK / 0 NULL-WRONG.
-# Claude-atlas adjudicated the 10 flagged edge cases with dictionary evidence;
-# approved non-null proposals are eligible for deterministic manifest application.
+# Final round-2 split: 42 anchored / 1 abstention; seats codex proposer · agy cross-family · claude-atlas dictionary adjudication.
 schema_version: 1
 meta:
   issue: '#5133'
@@ -229,7 +226,7 @@ records:
 - lemma: дурненько
   cefr: C1
   url_slug: дурненько
-  proposed_anchor: foolishly
+  proposed_anchor: silly (endearing)
   balla_reverse_hints: []
   sum11_sense: In a somewhat foolish or affectionate way.
   vesum_verified: true
@@ -237,7 +234,7 @@ records:
   sum11_source_lemma: дурненький
   confidence: medium
   round: 2
-  notes: Adverbial form anchored to the primary СУМ-11 sense of дурненький.
+  notes: The diminutive-affectionate register is core to this adverb; bare `foolishly` loses it.
 - lemma: емоційно
   cefr: B2
   url_slug: емоційно
@@ -615,14 +612,14 @@ records:
 - lemma: кортизол
   cefr: C1
   url_slug: кортизол
-  proposed_anchor: null
+  proposed_anchor: cortisol
   balla_reverse_hints: []
   sum11_sense: No exact or related СУМ-11 headword is available in the source database.
   vesum_verified: true
   vesum_pos: noun
-  confidence: low
+  confidence: medium
   round: 2
-  notes: No course usage or sense-specific СУМ-11 evidence supports an anchor; retained as a low-confidence abstention.
+  notes: Transparent scientific internationalism; VESUM-verified at intake.
 - lemma: косуля
   cefr: C1
   url_slug: косуля
@@ -713,14 +710,14 @@ records:
 - lemma: маскулінний
   cefr: C1
   url_slug: маскулінний
-  proposed_anchor: null
+  proposed_anchor: masculine
   balla_reverse_hints: []
-  sum11_sense: No exact or related СУМ-11 headword is available in the source database.
+  sum11_sense: 'СУМ-20: «Характерний для чоловіків» (https://slovnyk.me/dict/newsum/маскулінний).'
   vesum_verified: true
   vesum_pos: adjective
-  confidence: low
+  confidence: medium
   round: 2
-  notes: VESUM attests the adjective, but no sense-specific СУМ-11 or course evidence distinguishes its possible uses; retained as a low-confidence abstention.
+  notes: Modern СУМ-20 evidence supports the approved anchor.
 - lemma: мовби
   cefr: A1
   url_slug: мовби
@@ -1031,7 +1028,7 @@ records:
   sum11_source_lemma: ніч
   confidence: medium
   round: 2
-  notes: Adverbial derivative anchored to the primary СУМ-11 night sense.
+  notes: bookish; chiefly in «денно і нощно» (day and night) — collocation-bound
 - lemma: обгризання
   cefr: C1
   url_slug: обгризання
@@ -1364,14 +1361,14 @@ records:
 - lemma: психувати
   cefr: C1
   url_slug: психувати
-  proposed_anchor: null
+  proposed_anchor: freak out (colloquial)
   balla_reverse_hints: []
-  sum11_sense: No exact or related СУМ-11 headword is available in the source database.
+  sum11_sense: 'СУМ-20: «фам. Втрачати психічну рівновагу; нервувати» (https://slovnyk.me/dict/newsum/психувати).'
   vesum_verified: true
   vesum_pos: verb
-  confidence: low
+  confidence: medium
   round: 2
-  notes: No course usage or sense-specific СУМ-11 evidence supports an anchor for this colloquial verb; retained as a low-confidence abstention.
+  notes: Modern СУМ-20 evidence supports the colloquial anchor.
 - lemma: пукати
   cefr: C1
   url_slug: пукати
@@ -1817,7 +1814,7 @@ records:
   round: 2
   sovietization_flag: true
   course_usage: curriculum/l2-uk-en/plans/bio/yuri-andrukhovych.yaml — літугрупування
-  notes: Derived noun anchored to the primary СУМ-11 grouping sense; paraphrased neutrally.
+  notes: variant spelling; standard modern form is угруповання
 - lemma: уникання
   cefr: B2
   url_slug: уникання
