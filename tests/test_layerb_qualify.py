@@ -145,6 +145,8 @@ def _run(
     probe_cases: list[dict[str, Any]],
     emissions: dict[str, Any],
     collection_call_plan: dict[str, dict[str, Any]] | None = None,
+    layer_a_probe_results: list[dict[str, Any]] | None = None,
+    tier: str = "cutover",
     **kwargs: Any,
 ) -> dict[str, Any]:
     plans: dict[str, dict[str, Any]] = {}
@@ -178,10 +180,47 @@ def _run(
     }
     return layerb_qualify.QualificationRunner(
         route=ROUTE,
-        layer_a_probe_results=_probes(),
+        layer_a_probe_results=layer_a_probe_results if layer_a_probe_results is not None else _probes(),
         collection_call_plan=collection_call_plan or normalized_plans,
+        tier=tier,
         **kwargs,
     ).run(main_labels={"cases": main_cases}, probe_labels={"cases": probe_cases}, emissions=emissions)
+
+
+def _attestation_thresholds(*, stability_disagreements: list[str] | None = None) -> dict[str, Any]:
+    disagreements = stability_disagreements or []
+    return {
+        "adversarial_probes": {"status": "PASS"},
+        "relation_agreement": {"status": "FAIL" if disagreements else "PASS"},
+        "terminal_decision_agreement": {"status": "PASS"},
+        "unsafe_accept_ucb": {"status": "PASS"},
+        "accept_recall": {"status": "FAIL" if disagreements else "PASS"},
+        "audit_rate": {"status": "PASS"},
+        "cost_envelope": {"status": "PASS"},
+        "layer_a_regression": {"status": "PASS"},
+        "integrity": {"status": "PASS", "failures": {}},
+        "semantic_stability": {
+            "required": True,
+            "seed": layerb_qualify.STABILITY_SEED,
+            "case_ids": ["unstable-case"] if disagreements else [],
+            "status": "FAIL" if disagreements else "PASS",
+            "disagreements": disagreements,
+        },
+    }
+
+
+def _attestation_report(*, tier: str, stability_disagreements: list[str] | None = None) -> dict[str, Any]:
+    thresholds = _attestation_thresholds(stability_disagreements=stability_disagreements)
+    return {
+        "verdict": "PASS_SHADOW" if tier == "shadow" else "PASS",
+        "tier": tier,
+        "effective_route": ROUTE.to_dict(),
+        "thresholds": thresholds,
+        "tier_evaluation": layerb_qualify._tier_evaluation(thresholds, tier),
+        "human_audit_of_new_accepts": {"complete": True},
+        "row_eligibility_matrix": [{"case_id": "row", "reason": "ELIGIBLE", "eligible": True}],
+        "raw_call_manifest": [{"case_id": "row", "raw": "recorded"}],
+    }
 
 
 def test_per_candidate_scoring_reuses_production_aggregation_and_contradiction_can_accept() -> None:
@@ -485,6 +524,102 @@ def test_invalid_or_hash_mismatched_rows_fail_without_leaving_a_denominator() ->
     assert report["thresholds"]["integrity"]["status"] == "FAIL"
 
 
+def test_shadow_passes_with_failing_capacity_and_reports_it_as_advisory() -> None:
+    raw = "The source supports the claim."
+    case = _case("shadow-capacity-failure", raw)
+    report = _run(
+        [case],
+        [],
+        {case["case_id"]: _emission(case, {"candidate-1": raw}, relations={"candidate-1": "NO_RELATION"})},
+        tier="shadow",
+    )
+
+    assert report["verdict"] == "PASS_SHADOW"
+    assert report["thresholds"]["accept_recall"]["status"] == "FAIL"
+    assert report["thresholds"]["integrity"]["failures"] == {"SPAN_GOLD_OVERLAP_FAILURE": 1}
+    tier_evaluation = report["tier_evaluation"]
+    assert tier_evaluation["capacity"]["gating"] == "ADVISORY"
+    assert tier_evaluation["capacity"]["advisory"] is True
+    assert tier_evaluation["capacity"]["results"]["accept_recall"] == report["thresholds"]["accept_recall"]
+    assert tier_evaluation["capacity"]["results"]["span_gold_overlap"] == {
+        "status": "FAIL",
+        "failures": {"SPAN_GOLD_OVERLAP_FAILURE": 1},
+    }
+    assert tier_evaluation["safety"]["results"]["integrity"] == {"status": "PASS", "failures": {}}
+
+
+@pytest.mark.parametrize(
+    "safety_name",
+    ["adversarial_probes", "unsafe_accept_ucb", "layer_a_regression", "integrity"],
+)
+def test_shadow_fails_on_every_safety_threshold(safety_name: str) -> None:
+    raw = "The source supports the claim."
+    case = _case("shadow-safety", raw)
+    if safety_name == "adversarial_probes":
+        report = _run(
+            [],
+            [case],
+            {case["case_id"]: _emission(case, {"candidate-1": raw}, relations={"candidate-1": "CONTRADICTS"})},
+            tier="shadow",
+        )
+    elif safety_name == "unsafe_accept_ucb":
+        unsafe_case = _case(
+            "shadow-unsafe-accept",
+            raw,
+            relation="INSUFFICIENT_CONTEXT",
+            reviewer_verdict="CONFIRMED",
+            decision="AUDIT",
+        )
+        report = _run(
+            [unsafe_case],
+            [],
+            {
+                unsafe_case["case_id"]: _emission(
+                    unsafe_case,
+                    {"candidate-1": raw},
+                    relations={"candidate-1": "ENTAILS"},
+                )
+            },
+            tier="shadow",
+        )
+    elif safety_name == "layer_a_regression":
+        layer_a_probes = _probes()
+        layer_a_probes[0]["passed"] = False
+        report = _run(
+            [case],
+            [],
+            {case["case_id"]: _emission(case, {"candidate-1": raw})},
+            layer_a_probe_results=layer_a_probes,
+            tier="shadow",
+        )
+    else:
+        case["candidate_set_complete"] = False
+        report = _run(
+            [case],
+            [],
+            {case["case_id"]: _emission(case, {"candidate-1": raw})},
+            tier="shadow",
+        )
+
+    assert report["verdict"] == "FAIL"
+    assert report["tier_evaluation"]["safety"]["results"][safety_name]["status"] == "FAIL"
+
+
+def test_cutover_default_keeps_full_gating_for_existing_capacity_failure() -> None:
+    raw = "The source supports the claim."
+    case = _case("cutover-capacity-failure", raw)
+    emissions = {case["case_id"]: _emission(case, {"candidate-1": raw}, relations={"candidate-1": "NO_RELATION"})}
+
+    default_report = _run([case], [], emissions)
+    cutover_report = _run([case], [], emissions, tier="cutover")
+
+    assert default_report["verdict"] == "FAIL"
+    assert cutover_report["verdict"] == "FAIL"
+    assert default_report["thresholds"] == cutover_report["thresholds"]
+    assert cutover_report["tier_evaluation"]["capacity"]["gating"] == "BINDING"
+    assert cutover_report["tier_evaluation"]["capacity"]["advisory"] is False
+
+
 @pytest.mark.parametrize("status,confidence", [("timeout", "high"), ("completed", "low")])
 def test_timeout_malformed_or_low_confidence_are_hard_qualification_failures(status: str, confidence: str) -> None:
     raw = "The source supports the claim."
@@ -671,13 +806,7 @@ def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> 
     corpus_manifest.write_text(json.dumps({"corpus": "frozen"}), encoding="utf-8")
     fixture_manifest.write_text(json.dumps({"fixture": "frozen"}), encoding="utf-8")
     report_path = tmp_path / "qualification-report.json"
-    report = {
-        "verdict": "PASS",
-        "effective_route": ROUTE.to_dict(),
-        "human_audit_of_new_accepts": {"complete": True},
-        "row_eligibility_matrix": [{"case_id": "row", "reason": "ELIGIBLE", "eligible": True}],
-        "raw_call_manifest": [{"case_id": "row", "raw": "recorded"}],
-    }
+    report = _attestation_report(tier="cutover")
     report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
     raw_manifest_path = tmp_path / "raw-call-manifest.json"
     raw_manifest_path.write_text(json.dumps(report["raw_call_manifest"], sort_keys=True), encoding="utf-8")
@@ -717,6 +846,20 @@ def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> 
             fixture_manifests=[fixture_manifest],
         )
 
+
+def test_shadow_attestation_round_trip_binds_tier_capacity_and_stability_wobble(tmp_path: Path) -> None:
+    labels = tmp_path / "labels.json"
+    corpus_manifest = tmp_path / "corpus.json"
+    fixture_manifest = tmp_path / "fixture.json"
+    labels.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    corpus_manifest.write_text(json.dumps({"corpus": "frozen"}), encoding="utf-8")
+    fixture_manifest.write_text(json.dumps({"fixture": "frozen"}), encoding="utf-8")
+    report_path = tmp_path / "qualification-report.json"
+    report = _attestation_report(tier="shadow", stability_disagreements=["unstable-case"])
+    report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+    raw_manifest_path = tmp_path / "raw-call-manifest.json"
+    raw_manifest_path.write_text(json.dumps(report["raw_call_manifest"], sort_keys=True), encoding="utf-8")
+
     attestation = layerb_qualify.create_attestation(
         report_path=report_path,
         raw_call_manifest_path=raw_manifest_path,
@@ -725,6 +868,48 @@ def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> 
         fixture_manifests=[fixture_manifest],
         expires_at=datetime.now(UTC) + timedelta(days=1),
         require_frozen_main_hash=False,
+        tier="shadow",
+    )
+    attestation_path = tmp_path / "qualification-attestation.json"
+    attestation_path.write_text(json.dumps(attestation, sort_keys=True), encoding="utf-8")
+
+    assert attestation["tier"] == "shadow"
+    assert attestation["qualification_verdict"] == "PASS_SHADOW"
+    assert attestation["capacity_gating"] == "ADVISORY"
+    assert attestation["capacity_results"] == report["tier_evaluation"]["capacity"]["results"]
+    assert attestation["stability_disagreements"] == ["unstable-case"]
+    assert (
+        layerb_qualify.verify_attestation(
+            attestation_path=attestation_path,
+            report_path=report_path,
+            raw_call_manifest_path=raw_manifest_path,
+            labels_path=labels,
+            corpus_manifests=[corpus_manifest],
+            fixture_manifests=[fixture_manifest],
+            tier="shadow",
+        )["tier"]
+        == "shadow"
+    )
+    with pytest.raises(layerb_qualify.AttestationError, match="tier"):
+        layerb_qualify.verify_attestation(
+            attestation_path=attestation_path,
+            report_path=report_path,
+            raw_call_manifest_path=raw_manifest_path,
+            labels_path=labels,
+            corpus_manifests=[corpus_manifest],
+            fixture_manifests=[fixture_manifest],
+            tier="cutover",
+        )
+
+    attestation = layerb_qualify.create_attestation(
+        report_path=report_path,
+        raw_call_manifest_path=raw_manifest_path,
+        labels_path=labels,
+        corpus_manifests=[corpus_manifest],
+        fixture_manifests=[fixture_manifest],
+        expires_at=datetime.now(UTC) + timedelta(days=1),
+        require_frozen_main_hash=False,
+        tier="shadow",
     )
     attestation["effective_route"]["tools_disabled"] = False
     attestation_path.write_text(json.dumps(attestation, sort_keys=True), encoding="utf-8")
@@ -736,4 +921,5 @@ def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> 
             labels_path=labels,
             corpus_manifests=[corpus_manifest],
             fixture_manifests=[fixture_manifest],
+            tier="shadow",
         )
