@@ -43,6 +43,7 @@ def _sanitize_git_env_for_test(monkeypatch) -> None:
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
             monkeypatch.delenv(key, raising=False)
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
 def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):

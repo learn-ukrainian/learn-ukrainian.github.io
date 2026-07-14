@@ -35,6 +35,12 @@ from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt
+from ._review_worktree import (
+    ReviewWorktreeError,
+    provision_review_worktree,
+    review_target_from_message,
+    review_target_payload,
+)
 
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 
@@ -43,10 +49,20 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                data: str | None = None, new_session: bool = False,
                from_llm: str = "gemini", from_model: str | None = None,
                to_model: str | None = None, review: bool = False,
-               background: bool = False):
+               background: bool = False, review_branch: str | None = None,
+               review_pr_number: int | None = None):
     """Send message to Claude AND invoke Claude to process it."""
-    msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
-                          to_llm="claude", from_model=from_model, to_model=to_model)
+    msg_id = send_message(
+        content,
+        task_id,
+        msg_type,
+        data,
+        from_llm=from_llm,
+        to_llm="claude",
+        from_model=from_model,
+        to_model=to_model,
+        review_target=review_target_payload(review_branch, review_pr_number),
+    )
     register_ask(msg_id)
     if background:
         launch_background_ask(
@@ -144,25 +160,33 @@ def _run_claude_sync_via_runtime(
     _response_sent = False
     try:
         target_model = _extract_target_model(msg)
-        result = runtime_invoke(
-            "claude",
-            build_claude_prompt(msg, review),
-            mode="read-only",
-            cwd=REPO_ROOT,
-            model=target_model,
-            task_id=msg.get('task_id'),
-            session_id=session_id_to_pass,
-            tool_config=tool_config,
-            entrypoint="bridge",
-            hard_timeout=timeout_val,
-            # 600s matches dispatch.py. Claude CLI can go quiet for
-            # several minutes during long reasoning; the project-scoped
-            # session JSONL dir under ~/.claude/projects/<slug>/ gives
-            # the mtime poller a reliable liveness signal. Raised from
-            # 300s on 2026-04-10 for consistency across the codebase
-            # after the dispatch.py bump. (#1184)
-            stall_timeout=min(600, timeout_val),
-        )
+        review_target = review_target_from_message(msg) if review else None
+        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
+            result = runtime_invoke(
+                "claude",
+                build_claude_prompt(
+                    msg,
+                    review,
+                    review_branch=checkout.branch if checkout else None,
+                    review_pr_number=checkout.pr_number if checkout else None,
+                    review_worktree_provisioned=checkout is not None,
+                ),
+                mode="read-only",
+                cwd=checkout.path if checkout else REPO_ROOT,
+                model=target_model,
+                task_id=msg.get('task_id'),
+                session_id=session_id_to_pass,
+                tool_config=tool_config,
+                entrypoint="bridge",
+                hard_timeout=timeout_val,
+                # 600s matches dispatch.py. Claude CLI can go quiet for
+                # several minutes during long reasoning; the project-scoped
+                # session JSONL dir under ~/.claude/projects/<slug>/ gives
+                # the mtime poller a reliable liveness signal. Raised from
+                # 300s on 2026-04-10 for consistency across the codebase
+                # after the dispatch.py bump. (#1184)
+                stall_timeout=min(600, timeout_val),
+            )
 
         if not result.ok:
             _response_sent = _handle_claude_error(
@@ -227,6 +251,17 @@ def _run_claude_sync_via_runtime(
         acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
         acknowledge(err_id)
         record_ask_failure(message_id, "Claude CLI not found")
+    except ReviewWorktreeError as exc:
+        err_id = send_message(
+            content=f"[Bridge Error] Claude review checkout failed: {exc}",
+            task_id=msg['task_id'], msg_type="error",
+            from_llm="claude", to_llm=msg['from'],
+            from_model="claude-bridge-review-checkout",
+        )
+        _response_sent = True
+        acknowledge(message_id)
+        acknowledge(err_id)
+        record_ask_failure(message_id, str(exc))
     finally:
         if not _response_sent:
             _send_claude_fallback_error(msg, message_id)

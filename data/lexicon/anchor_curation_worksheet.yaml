@@ -1,7 +1,4 @@
-# STAGE 2 VERIFICATION — #5133, 2026-07-14
-# Cross-family AGY pass: 110 APPROVE / 1 CORRECT / 47 NULL-OK / 0 NULL-WRONG.
-# Claude-atlas adjudicated the 10 flagged edge cases with dictionary evidence;
-# approved non-null proposals are eligible for deterministic manifest application.
+# Final round-2 split: 42 anchored / 1 abstention; seats codex proposer · agy cross-family · claude-atlas dictionary adjudication.
 schema_version: 1
 meta:
   issue: '#5133'
@@ -76,30 +73,42 @@ records:
 - lemma: депресивність
   cefr: C1
   url_slug: депресивність
-  proposed_anchor: null
+  proposed_anchor: depressiveness
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The state or quality of being depressive.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: депресивний
+  confidence: medium
+  round: 2
+  notes: Derived noun sense from the primary СУМ-11 relation of депресивний to depression.
 - lemma: дизель-поїзд
   cefr: C1
   url_slug: дизель-поїзд
-  proposed_anchor: null
+  proposed_anchor: diesel train
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: A train made of connected rail cars; the compound specifies diesel power.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: поїзд
+  confidence: medium
+  round: 2
+  sovietization_flag: true
+  notes: Compound sense is grounded in the primary СУМ-11 train sense; paraphrased neutrally.
 - lemma: дистанціювання
   cefr: B1
   url_slug: дистанціювання
-  proposed_anchor: null
+  proposed_anchor: distancing
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Creating or maintaining distance from someone or something.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: дистанція
+  confidence: medium
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/b2/idioms-somatic/module.md — моральне дистанціювання
+  notes: Derived action noun from the primary СУМ-11 distance sense; paraphrased neutrally.
 - lemma: дитяча
   cefr: A2
   url_slug: дитяча
@@ -217,12 +226,15 @@ records:
 - lemma: дурненько
   cefr: C1
   url_slug: дурненько
-  proposed_anchor: null
+  proposed_anchor: silly (endearing)
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: In a somewhat foolish or affectionate way.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  sum11_source_lemma: дурненький
+  confidence: medium
+  round: 2
+  notes: The diminutive-affectionate register is core to this adverb; bare `foolishly` loses it.
 - lemma: емоційно
   cefr: B2
   url_slug: емоційно
@@ -237,12 +249,16 @@ records:
 - lemma: етнічність
   cefr: C1
   url_slug: етнічність
-  proposed_anchor: null
+  proposed_anchor: ethnicity
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The quality of belonging to a people or its culture.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: етнічний
+  confidence: medium
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/religion-in-ukraine/module.md — етнічність
+  notes: Derived abstract noun from the primary СУМ-11 ethnic sense.
 - lemma: жертовність
   cefr: B2
   url_slug: жертовність
@@ -305,12 +321,15 @@ records:
 - lemma: занудний
   cefr: C1
   url_slug: занудний
-  proposed_anchor: null
+  proposed_anchor: boring
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Causing boredom through monotony or lack of interest.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  sum11_source_lemma: нудний
+  confidence: medium
+  round: 2
+  notes: Colloquial derivative anchored to the primary СУМ-11 boredom sense.
 - lemma: заповнений
   cefr: B1
   url_slug: заповнений
@@ -445,12 +464,16 @@ records:
 - lemma: йододефіцит
   cefr: C1
   url_slug: йододефіцит
-  proposed_anchor: null
+  proposed_anchor: iodine deficiency
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: A shortage of iodine relative to need.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: дефіцит
+  confidence: medium
+  round: 2
+  sovietization_flag: true
+  notes: Compound sense is grounded in the relevant shortage sense of СУМ-11 дефіцит; paraphrased neutrally.
 - lemma: кажучи
   cefr: B2
   url_slug: кажучи
@@ -545,16 +568,20 @@ records:
 - lemma: коригування
   cefr: A2
   url_slug: коригування
-  proposed_anchor: null
+  proposed_anchor: adjustment
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The act of correcting or making a change.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: корекція
+  confidence: medium
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/register-public-discourse/activities.yaml — здійснюється коригування
+  notes: Deverbal noun anchored to the primary СУМ-11 correction sense.
 - lemma: корисне
   cefr: A2
   url_slug: корисне
-  proposed_anchor: null
+  proposed_anchor: useful thing
   balla_reverse_hints:
   - actual
   - mix
@@ -563,10 +590,14 @@ records:
   - service
   - work
   - working
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Something that brings benefit.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: корисний
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/checkpoint-lexicology-i/vocabulary.yaml — корисне
+  notes: СУМ-11 explicitly gives the substantivized neuter sense under корисний.
 - lemma: коротший
   cefr: A2
   url_slug: коротший
@@ -581,12 +612,14 @@ records:
 - lemma: кортизол
   cefr: C1
   url_slug: кортизол
-  proposed_anchor: null
+  proposed_anchor: cortisol
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: No exact or related СУМ-11 headword is available in the source database.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  confidence: medium
+  round: 2
+  notes: Transparent scientific internationalism; VESUM-verified at intake.
 - lemma: косуля
   cefr: C1
   url_slug: косуля
@@ -608,12 +641,15 @@ records:
 - lemma: кричачи
   cefr: C1
   url_slug: кричачи
-  proposed_anchor: null
+  proposed_anchor: shouting
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: While making a loud cry.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverbial participle
+  sum11_source_lemma: кричати
+  confidence: high
+  round: 2
+  notes: Adverbial participle anchored to the primary СУМ-11 sense of making a cry.
 - lemma: кровити
   cefr: C1
   url_slug: кровити
@@ -662,21 +698,26 @@ records:
 - lemma: маловідомо
   cefr: C1
   url_slug: маловідомо
-  proposed_anchor: null
+  proposed_anchor: little known
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Known to only a few people.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  sum11_source_lemma: маловідомий
+  confidence: high
+  round: 2
+  notes: Adverbial form anchored to the primary СУМ-11 маловідомий sense.
 - lemma: маскулінний
   cefr: C1
   url_slug: маскулінний
-  proposed_anchor: null
+  proposed_anchor: masculine
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: 'СУМ-20: «Характерний для чоловіків» (https://slovnyk.me/dict/newsum/маскулінний).'
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  confidence: medium
+  round: 2
+  notes: Modern СУМ-20 evidence supports the approved anchor.
 - lemma: мовби
   cefr: A1
   url_slug: мовби
@@ -718,21 +759,29 @@ records:
 - lemma: молодше
   cefr: B1
   url_slug: молодше
-  proposed_anchor: null
+  proposed_anchor: younger
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Of less age than another person or group.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective; adverb
+  sum11_source_lemma: молодий
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/b1/adjectives-comparative/activities.yaml — молодше
+  notes: Comparative form anchored to the primary СУМ-11 age sense; paraphrased neutrally.
 - lemma: мотиватор
   cefr: C1
   url_slug: мотиватор
-  proposed_anchor: null
+  proposed_anchor: motivator
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: A person or thing that prompts action.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: мотив
+  confidence: medium
+  round: 2
+  notes: Agent noun derived from the primary СУМ-11 motive sense.
 - lemma: мікс
   cefr: B2
   url_slug: мікс
@@ -749,12 +798,15 @@ records:
 - lemma: найактивніше
   cefr: B1
   url_slug: найактивніше
-  proposed_anchor: null
+  proposed_anchor: most actively
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: With the greatest energy or activity.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb; adjective
+  sum11_source_lemma: активно
+  confidence: high
+  round: 2
+  notes: Superlative form anchored to the СУМ-11 adverbial sense of actively.
 - lemma: найважливіше
   cefr: A2
   url_slug: найважливіше
@@ -781,12 +833,16 @@ records:
 - lemma: народжування
   cefr: C1
   url_slug: народжування
-  proposed_anchor: null
+  proposed_anchor: giving birth
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The process of giving birth.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: народжувати
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  notes: Deverbal noun anchored to the primary СУМ-11 sense of giving birth; paraphrased neutrally.
 - lemma: наслідковий
   cefr: C1
   url_slug: наслідковий
@@ -825,13 +881,17 @@ records:
 - lemma: невідомі
   cefr: A1
   url_slug: невідомі
-  proposed_anchor: null
+  proposed_anchor: unknown people
   balla_reverse_hints:
   - where
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: People one does not know.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: невідомий
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/tekhnolohii-ta-shi/module.md — невідомі
+  notes: СУМ-11 explicitly gives the substantivized person sense under невідомий.
 - lemma: недосипання
   cefr: B2
   url_slug: недосипання
@@ -855,12 +915,16 @@ records:
 - lemma: некомфортно
   cefr: B1
   url_slug: некомфортно
-  proposed_anchor: null
+  proposed_anchor: uncomfortably
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Without comfort or ease.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  sum11_source_lemma: комфорт
+  confidence: medium
+  round: 2
+  course_usage: curriculum/l2-uk-en/plans/c1/stylistic-phonetics-euphony.yaml — різко і некомфортно
+  notes: Negated adverbial derivative is anchored to the primary СУМ-11 comfort sense.
 - lemma: ненадійно
   cefr: C1
   url_slug: ненадійно
@@ -876,21 +940,28 @@ records:
 - lemma: неначеб
   cefr: C1
   url_slug: неначеб
-  proposed_anchor: null
+  proposed_anchor: as if
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Introducing an apparent comparison or supposition.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: conjunction
+  sum11_source_lemma: начеб
+  confidence: medium
+  round: 2
+  notes: Variant conjunction anchored to the СУМ-11 equivalence of начеб and неначе.
 - lemma: неочікувано
   cefr: B1
   url_slug: неочікувано
-  proposed_anchor: null
+  proposed_anchor: unexpectedly
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: In a way that was not expected.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  sum11_source_lemma: очікуваний
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/istorio/discovery/syntez-polska-ukraina-2022.yaml — неочікуваного братерства
+  notes: Negated adverbial participial form is anchored to the СУМ-11 expected sense.
 - lemma: неперевершено
   cefr: B2
   url_slug: неперевершено
@@ -911,12 +982,15 @@ records:
 - lemma: непрофесійно
   cefr: B2
   url_slug: непрофесійно
-  proposed_anchor: null
+  proposed_anchor: unprofessionally
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: In a manner not meeting professional standards.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  confidence: medium
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/register-formal-informal/module.md — непрофесійно
+  notes: No matching СУМ-11 headword; the course usage supplies the sense-specific context for this transparent negated adverb.
 - lemma: нестямно
   cefr: B2
   url_slug: нестямно
@@ -946,12 +1020,15 @@ records:
 - lemma: нощно
   cefr: C1
   url_slug: нощно
-  proposed_anchor: null
+  proposed_anchor: at night
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: During the night.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb
+  sum11_source_lemma: ніч
+  confidence: medium
+  round: 2
+  notes: bookish; chiefly in «денно і нощно» (day and night) — collocation-bound
 - lemma: обгризання
   cefr: C1
   url_slug: обгризання
@@ -1028,12 +1105,16 @@ records:
 - lemma: обігрів
   cefr: B2
   url_slug: обігрів
-  proposed_anchor: null
+  proposed_anchor: heating
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The provision of warmth to a room or space.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; verb
+  sum11_source_lemma: обігрівати
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/word-formation-place-object-names/activities.yaml — обігріває кімнату
+  notes: Action noun anchored to the primary СУМ-11 sense of making a space warm.
 - lemma: опірність
   cefr: B2
   url_slug: опірність
@@ -1068,7 +1149,7 @@ records:
 - lemma: останнє
   cefr: B2
   url_slug: останнє
-  proposed_anchor: null
+  proposed_anchor: the last thing
   balla_reverse_hints:
   - cope-stone
   - decisive
@@ -1086,10 +1167,15 @@ records:
   - supreme
   - why-not
   - wooden
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The item that comes at the end of a series.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: останній
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/b2/pobut-shchodenne/activities.yaml — Останнє називає проблему
+  notes: Substantivized neuter sense is derived from the primary СУМ-11 final-in-a-series sense; paraphrased neutrally.
 - lemma: пекельно
   cefr: C1
   url_slug: пекельно
@@ -1168,12 +1254,15 @@ records:
 - lemma: працевлаштований
   cefr: C1
   url_slug: працевлаштований
-  proposed_anchor: null
+  proposed_anchor: employed
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Having been placed in work or holding a job.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  sum11_source_lemma: працевлаштування
+  confidence: medium
+  round: 2
+  notes: Passive participial form anchored to the СУМ-11 employment-placement sense.
 - lemma: приглушено
   cefr: B2
   url_slug: приглушено
@@ -1203,34 +1292,47 @@ records:
 - lemma: приречена
   cefr: B1
   url_slug: приречена
-  proposed_anchor: null
+  proposed_anchor: doomed
   balla_reverse_hints:
   - battle
   - deaf
   - galley-slave
   - hopeless
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Facing an unavoidable negative outcome.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: приречений
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/plans/hist/zunr.yaml — чи була злука приречена від початку?
+  notes: Feminine participial form anchored to the primary СУМ-11 fate/condemnation sense; paraphrased neutrally.
 - lemma: прихищати
   cefr: C1
   url_slug: прихищати
-  proposed_anchor: null
+  proposed_anchor: shelter
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: To give someone shelter or protection.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: verb
+  sum11_source_lemma: прихистити
+  confidence: high
+  round: 2
+  notes: Imperfective variant anchored to the primary СУМ-11 shelter sense.
 - lemma: причиновий
   cefr: C1
   url_slug: причиновий
-  proposed_anchor: null
+  proposed_anchor: causal
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Relating to a cause that produces an effect.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  sum11_source_lemma: причина
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/b1/checkpoint-cases/vocabulary.yaml — причиновий прийменник
+  notes: Derived adjective anchored to the primary СУМ-11 cause sense; paraphrased neutrally.
 - lemma: пропущений
   cefr: B1
   url_slug: пропущений
@@ -1246,30 +1348,38 @@ records:
 - lemma: прочитання
   cefr: A2
   url_slug: прочитання
-  proposed_anchor: null
+  proposed_anchor: reading
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: An act or interpretation of reading a text.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: читати
+  confidence: medium
+  round: 2
+  course_usage: curriculum/l2-uk-en/folk/narodni-balady/activities.yaml — прочитання сцени
+  notes: Deverbal noun anchored to the primary СУМ-11 reading sense; the course context supports the interpretive use.
 - lemma: психувати
   cefr: C1
   url_slug: психувати
-  proposed_anchor: null
+  proposed_anchor: freak out (colloquial)
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: 'СУМ-20: «фам. Втрачати психічну рівновагу; нервувати» (https://slovnyk.me/dict/newsum/психувати).'
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: verb
+  confidence: medium
+  round: 2
+  notes: Modern СУМ-20 evidence supports the colloquial anchor.
 - lemma: пукати
   cefr: C1
   url_slug: пукати
   proposed_anchor: null
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: No exact or related СУМ-11 headword is available in the source database.
   vesum_verified: true
+  vesum_pos: verb
   confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  round: 2
+  notes: No course usage or sense-specific СУМ-11 evidence supports an anchor for this colloquial verb; retained as a low-confidence abstention.
 - lemma: півлітровий
   cefr: C1
   url_slug: півлітровий
@@ -1331,12 +1441,16 @@ records:
 - lemma: ризиковий
   cefr: C1
   url_slug: ризиковий
-  proposed_anchor: null
+  proposed_anchor: risky
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Involving the possibility of harm or loss.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  sum11_source_lemma: ризик
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/passive-in-context/module.md — Ризиковий варіант
+  notes: Derived adjective anchored to the СУМ-11 risk sense.
 - lemma: ринопластика
   cefr: C1
   url_slug: ринопластика
@@ -1368,21 +1482,28 @@ records:
 - lemma: рідше
   cefr: A2
   url_slug: рідше
-  proposed_anchor: null
+  proposed_anchor: less often
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: With lower frequency.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb; adjective
+  sum11_source_lemma: рідко
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/a2/dative-nouns/module.md — рідше буває одержувачем
+  notes: Comparative adverbial form anchored to the СУМ-11 frequency sense of рідко.
 - lemma: самолікуватися
   cefr: C1
   url_slug: самолікуватися
-  proposed_anchor: null
+  proposed_anchor: self-medicate
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: To treat oneself without a doctor.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: verb
+  sum11_source_lemma: самолікування
+  confidence: high
+  round: 2
+  notes: Reflexive verb anchored to the explicit СУМ-11 self-treatment sense.
 - lemma: самонавіювання
   cefr: C1
   url_slug: самонавіювання
@@ -1423,24 +1544,33 @@ records:
 - lemma: сильніше
   cefr: B2
   url_slug: сильніше
-  proposed_anchor: null
+  proposed_anchor: more strongly
   balla_reverse_hints:
   - better
   - worse
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: With greater force or intensity.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb; adjective
+  sum11_source_lemma: сильно
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b1/work-and-career/module.md — звучить сильніше й точніше
+  notes: Comparative adverbial form anchored to the СУМ-11 sense of strongly.
 - lemma: сильніший
   cefr: A2
   url_slug: сильніший
-  proposed_anchor: null
+  proposed_anchor: stronger
   balla_reverse_hints:
   - tenfold
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Having greater strength than another person or thing.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adjective
+  sum11_source_lemma: сильний
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/b1/aspect-past-tense/module.md — Контекст сильніший за окреме слово
+  notes: Comparative adjective anchored to the primary СУМ-11 strength sense; paraphrased neutrally.
 - lemma: синтезуватися
   cefr: C1
   url_slug: синтезуватися
@@ -1463,12 +1593,15 @@ records:
 - lemma: смачненьке
   cefr: B2
   url_slug: смачненьке
-  proposed_anchor: null
+  proposed_anchor: tasty treat
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Something pleasantly tasty.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: смачненький
+  confidence: high
+  round: 2
+  notes: СУМ-11 explicitly gives the substantivized neuter sense under смачненький.
 - lemma: споживаний
   cefr: C1
   url_slug: споживаний
@@ -1561,16 +1694,21 @@ records:
 - lemma: сучасне
   cefr: A2
   url_slug: сучасне
-  proposed_anchor: null
+  proposed_anchor: the present
   balla_reverse_hints:
   - modernity
   - neglect
   - pentathlon
   - revolutionize
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The time or things of the current era.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun; adjective
+  sum11_source_lemma: сучасний
+  confidence: high
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/folk/zahadky/module.md — сучасне навчання
+  notes: СУМ-11 explicitly gives the substantivized neuter current-era sense under сучасний; paraphrased neutrally.
 - lemma: сфокусуватися
   cefr: B2
   url_slug: сфокусуватися
@@ -1666,12 +1804,17 @@ records:
 - lemma: угрупування
   cefr: A2
   url_slug: угрупування
-  proposed_anchor: null
+  proposed_anchor: grouping
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: The act or result of arranging into a group.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: групування
+  confidence: medium
+  round: 2
+  sovietization_flag: true
+  course_usage: curriculum/l2-uk-en/plans/bio/yuri-andrukhovych.yaml — літугрупування
+  notes: variant spelling; standard modern form is угруповання
 - lemma: уникання
   cefr: B2
   url_slug: уникання
@@ -1688,22 +1831,30 @@ records:
 - lemma: хлібом-сіллю
   cefr: B2
   url_slug: хлібом-сіллю
-  proposed_anchor: null
+  proposed_anchor: with bread and salt
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: In the traditional bread-and-salt welcome.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb; noun
+  sum11_source_lemma: хліб-сіль
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/callout-claims-review.md — welcomed з хлібом-сіллю
+  notes: The phrase-level course usage selects the traditional welcome sense documented under хліб-сіль.
 - lemma: чіткіше
   cefr: B1
   url_slug: чіткіше
-  proposed_anchor: null
+  proposed_anchor: more clearly
   balla_reverse_hints:
   - spell
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: In a more clear or distinct way.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: adverb; adjective
+  sum11_source_lemma: чітко
+  confidence: high
+  round: 2
+  course_usage: curriculum/l2-uk-en/b2/correlative-constructions/activities.yaml — Чим чіткіше правило
+  notes: Comparative adverbial form anchored to the СУМ-11 sense of clearly.
 - lemma: янголятко
   cefr: B2
   url_slug: янголятко
@@ -1838,12 +1989,15 @@ records:
 - lemma: ігроманія
   cefr: C1
   url_slug: ігроманія
-  proposed_anchor: null
+  proposed_anchor: gambling addiction
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: A compulsive pathological preoccupation with gambling.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  vesum_pos: noun
+  sum11_source_lemma: манія
+  confidence: medium
+  round: 2
+  notes: Compound noun is anchored to the primary СУМ-11 pathological-preoccupation sense of манія.
 - lemma: ідеально
   cefr: B1
   url_slug: ідеально

@@ -2,11 +2,31 @@
   "reviewed": [
     {
       "status": "reviewed",
-      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml"
+      "path": "curriculum/l2-uk-en/a1/a1-finale/vocabulary.yaml"
     },
     {
       "status": "reviewed",
-      "path": "curriculum/l2-uk-en/a1/health/vocabulary.yaml"
+      "path": "curriculum/l2-uk-en/a1/around-the-city/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/at-the-cafe/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-actions/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-communication/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-first-contact/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-food-shopping/vocabulary.yaml"
     },
     {
       "status": "reviewed",
@@ -14,7 +34,67 @@
     },
     {
       "status": "reviewed",
-      "path": "curriculum/l2-uk-en/a1/a1-finale/vocabulary.yaml"
+      "path": "curriculum/l2-uk-en/a1/checkpoint-places/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-time-nature/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/colors/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/days-and-months/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/emergencies/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/euphony/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/free-time/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/health/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/hey-friend/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/holidays/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/how-many/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/i-eat-i-drink/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/i-want-i-can/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/linking-ideas/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/many-things/vocabulary.yaml"
     },
     {
       "status": "reviewed",
@@ -22,7 +102,123 @@
     },
     {
       "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-day/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-family/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-morning/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-plans/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-story/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/people-around-me/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/please-do-this/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/questions/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/reading-ukrainian/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/shopping/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/sounds-letters-and-hello/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/special-signs/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/stress-and-melody/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/things-have-gender/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/this-and-that/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
       "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/verbs-group-one/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/verbs-group-two/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/weather/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-happened/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-i-like/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-is-it-like/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-time/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-will-happen/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/when-and-where/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-from/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-is-it/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-to/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/who-am-i/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/yesterday/vocabulary.yaml"
     },
     {
       "status": "reviewed",

@@ -1,0 +1,17 @@
+---
+config_version: curriculum-coordinator.v1
+manifest_path: curriculum/l2-uk-en/curriculum.yaml
+runtime_root: batch_state/curriculum-lifecycle
+lease_seconds: 1800
+default_wave_size: 1
+maximum_wave_size: 10
+health:
+  acceptable_statuses: [cool, warm, hot]
+  require_fresh_snapshot: true
+  capability_groups:
+    - id: curriculum-build
+      lanes: [codex]
+      minimum_available: 1
+    - id: independent-review
+      lanes: [claude, gemini]
+      minimum_available: 1

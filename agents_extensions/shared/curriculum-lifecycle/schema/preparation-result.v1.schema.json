@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-preparation-result.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "track",
+    "slug",
+    "profile_id",
+    "profile_version",
+    "family",
+    "manifest",
+    "module_state",
+    "preparation_state",
+    "state",
+    "next_action",
+    "requirements",
+    "findings",
+    "sources",
+    "preparation_identity",
+    "consumed_preparation_identity"
+  ],
+  "properties": {
+    "contract_version": {"const": "curriculum-preparation-result.v1"},
+    "track": {"type": "string", "minLength": 1},
+    "slug": {"type": "string", "minLength": 1},
+    "profile_id": {"type": "string", "minLength": 1},
+    "profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "family": {"enum": ["core", "seminar"]},
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "index"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/hash"},
+        "index": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "module_state": {"enum": ["off-manifest", "unbuilt", "partial", "built"]},
+    "preparation_state": {"enum": ["not-applicable", "missing", "stale", "current"]},
+    "state": {
+      "enum": [
+        "off-manifest",
+        "missing-plan",
+        "preparation-required",
+        "prepared-plan",
+        "partial-bundle",
+        "built-preparation-drift",
+        "built-current"
+      ]
+    },
+    "next_action": {"enum": ["stop", "prepare", "plan", "build", "certify"]},
+    "requirements": {"type": "array", "items": {"$ref": "#/$defs/requirement"}},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "preparation_identity": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+    "consumed_preparation_identity": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256", "exists"],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "exists": {"type": "boolean"}
+      }
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "passed", "detail"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "passed": {"type": "boolean"},
+        "detail": {"type": "string"}
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "path", "sha256", "passed", "validators"],
+      "properties": {
+        "artifact": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "passed": {"type": "boolean"},
+        "validators": {"type": "array", "items": {"$ref": "#/$defs/validator"}}
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "owner", "passed", "options"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "owner": {"enum": ["preparation", "plan", "built_artifact", "audit_tooling", "authority"]},
+        "passed": {"type": "boolean"},
+        "options": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/option"}}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "severity", "summary", "owner"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "category": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["blocker", "high", "medium", "low"]},
+        "summary": {"type": "string", "minLength": 1},
+        "owner": {"enum": ["preparation", "plan", "built_artifact", "audit_tooling", "authority"]}
+      }
+    }
+  }
+}
