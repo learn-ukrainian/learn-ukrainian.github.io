@@ -3644,3 +3644,144 @@ def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) ->
     assert card["definitions"][0].startswith("(докон. до заховувати / див. заховувати) ")
     assert card["definitions"][0].endswith("Класти що-небудь у невідоме місце.")
     assert card["cross_reference"]["target"] == "заховувати"
+
+
+# --- #5077 preserve-vs-retract section gate semantics ------------------------------
+# enrich_entry recomputes gated sections each run. Offline (or after a schema-version
+# cache reset) a gate that CANNOT run must PRESERVE the previously-confirmed section
+# rather than silently overwrite it with an empty recomputation. Only a gate that RAN
+# may retract items (e.g. WordNet auto-translation junk). See scripts/lexicon/README.md.
+from scripts.lexicon.manifest_io import GATE_REJECTED, GATE_SKIPPED_OFFLINE
+
+
+def _stub_section_producers(monkeypatch) -> None:
+    """Neutralize every enrich_entry producer except the synonyms gate so the
+    preserve-vs-retract contract can be exercised in isolation."""
+
+    def none(*args, **kwargs):
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *a, **k: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "standard",
+            "is_russianism": False,
+            "russian_shadow": False,
+            "calque_warning": None,
+            "attestations": [],
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_warning_slovnyk", none)
+    monkeypatch.setattr(enrich_manifest_module, "_curated_calque", none)
+    monkeypatch.setattr(enrich_manifest_module, "_reverse_calques", none)
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", none)
+    monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", none)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_antonym_relations", lambda existing, rel: None)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_homonym_relations", lambda existing, rel: None)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_paronym_relations", lambda existing, rel: None)
+    monkeypatch.setattr(enrich_manifest_module, "_idioms", none)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda *a, **k: "")
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_stress", none)
+    monkeypatch.setattr(enrich_manifest_module, "_cefr", none)
+    monkeypatch.setattr(enrich_manifest_module, "_morphology", none)
+    monkeypatch.setattr(enrich_manifest_module, "_meaning", none)
+    monkeypatch.setattr(enrich_manifest_module, "_etymology", none)
+    monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", none)
+    monkeypatch.setattr(enrich_manifest_module, "_translation", none)
+    monkeypatch.setattr(enrich_manifest_module, "_wiki_reference", none)
+    monkeypatch.setattr(enrich_manifest_module, "_base_lookup_for_entry", lambda lemma, pos: None)
+
+
+def _run_synonyms_gate(monkeypatch, *, offline, cache, new_synonyms, existing_synonyms):
+    _stub_section_producers(monkeypatch)
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: offline)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", lambda *a, **k: new_synonyms)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_synonym_relations", lambda syn, rel: syn)
+
+    entry = {"lemma": "ключ", "pos": "noun", "sections": {"synonyms": existing_synonyms}}
+    enrich_manifest_module.enrich_entry(
+        entry,
+        sqlite3.connect(":memory:"),
+        {},
+        has_sum11_flags=False,
+        pointer_synonym_relations=[],
+        pointer_antonym_relations=[],
+        pointer_homonym_relations=[],
+        pointer_paronym_relations=[],
+    )
+    return entry
+
+
+def test_offline_gate_did_not_run_preserves_section_byte_identical(monkeypatch) -> None:
+    existing = {"items": ["джерело", "живець"], "source": "slovnyk.me: Словник синонімів"}
+    baseline = json.loads(json.dumps(existing, ensure_ascii=False))  # pristine reference
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # schema-reset / never-fetched offline -> gate did not run
+        new_synonyms=None,  # offline recompute yields nothing
+        existing_synonyms=existing,
+    )
+    assert entry["sections"]["synonyms"] == baseline
+    # byte-identical serialization is the #5077 "must PRESERVE" contract
+    assert json.dumps(entry["sections"]["synonyms"], ensure_ascii=False) == json.dumps(
+        baseline, ensure_ascii=False
+    )
+    assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE
+
+
+def test_online_gate_ran_and_rejected_retracts_with_provenance(monkeypatch) -> None:
+    existing = {"items": ["джерело", "живець"], "source": "slovnyk.me: WordNet"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=False,  # online -> gate ran
+        cache={"lookups": {"synonyms": {"text": "x"}}},
+        new_synonyms=None,  # ran and rejected everything (auto-translation junk)
+        existing_synonyms=existing,
+    )
+    assert "synonyms" not in entry.get("sections", {})
+    assert entry["gate_provenance"]["synonyms"] == GATE_REJECTED
+
+
+def test_online_gate_partial_retraction_keeps_survivors_marks_rejected(monkeypatch) -> None:
+    existing = {"items": ["замок", "джерело", "живець"], "source": "s"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=False,
+        cache={"lookups": {"synonyms": {"text": "x"}}},
+        new_synonyms={"items": ["замок"], "source": "s"},  # dropped 2 junk senses
+        existing_synonyms=existing,
+    )
+    assert entry["sections"]["synonyms"]["items"] == ["замок"]
+    assert entry["gate_provenance"]["synonyms"] == GATE_REJECTED
+
+
+def test_online_gate_confirmed_addition_records_no_provenance(monkeypatch) -> None:
+    existing = {"items": ["замок"], "source": "s"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=False,
+        cache={"lookups": {"synonyms": {"text": "x"}}},
+        new_synonyms={"items": ["замок", "шифр"], "source": "s"},
+        existing_synonyms=existing,
+    )
+    assert entry["sections"]["synonyms"]["items"] == ["замок", "шифр"]
+    assert "gate_provenance" not in entry  # minimal diff — confirmed outcome is default
+
+
+def test_offline_with_cached_lookups_counts_as_gate_ran(monkeypatch) -> None:
+    # Offline is NOT the signal — a populated cache means the gate consulted its data,
+    # so an offline run over cached lemmas still applies authoritative retractions.
+    existing = {"items": ["джерело", "живець"], "source": "s"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {"synonyms": {"text": "x"}}},  # cache present -> gate ran
+        new_synonyms=None,
+        existing_synonyms=existing,
+    )
+    assert "synonyms" not in entry.get("sections", {})
+    assert entry["gate_provenance"]["synonyms"] == GATE_REJECTED
