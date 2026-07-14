@@ -1,5 +1,5 @@
 {
-  "fingerprint": "2a237972606346211ea918f4c124bfe3e5499168d0f42d7b9e930d39a0395275",
+  "fingerprint": "bed2f6523f035bfb1910cef8e6fde21087f5f6aca15acbe5bd94c8aef20bd5f7",
   "inputs": {
     "lexicon_code": [
       {
@@ -52,7 +52,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "a5e77321061a7d6128e9946ca8b11aedd2ee05fb8e90cd6ec647210a4c54b580"
+        "sha256": "7f7cd03522b4ccda26b43da841ec67b4141a04398c417f0fdc363ca2ab76f9ac"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
