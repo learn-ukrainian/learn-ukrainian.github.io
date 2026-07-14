@@ -674,7 +674,7 @@ def test_malyshko_regression_detects_current_workflow_leakage() -> None:
     assert any("activities.yaml" in str(finding["location"]) for finding in leakage)
 
 
-def test_maiboroda_regression_inventories_audio_dependent_tasks() -> None:
+def test_maiboroda_regression_replaces_audio_task_with_text_evidence() -> None:
     target = pbr.resolve_target("bio/platon-maiboroda")
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
     texts = pbr._learner_surface_texts(target)
@@ -685,9 +685,9 @@ def test_maiboroda_regression_inventories_audio_dependent_tasks() -> None:
     )
 
     audio = [item for item in requirements if item["modality"] == "audio"]
-    assert audio
-    assert any("activities.yaml" in item["location"] for item in audio)
-    assert any("module.md" in item["location"] for item in audio)
+    assert not audio
+    assert "Текстова лабораторія" in texts[target["files"]["activities"]]
+    assert "Лабораторія одного опису" in texts[target["files"]["content"]]
 
 
 def test_folk_productive_performance_is_not_supplied_audio_evidence() -> None:
