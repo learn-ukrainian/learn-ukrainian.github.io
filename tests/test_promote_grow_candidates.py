@@ -9,6 +9,7 @@ import pytest
 import yaml
 
 from scripts.lexicon import promote_grow_candidates as promote
+from scripts.lexicon.source_attribution import BALLA_LABEL, attach_official_url
 
 
 def test_manifest_entry_from_candidate_is_schema_conformant() -> None:
@@ -338,16 +339,23 @@ def test_cached_anchor_fill_touches_only_translation_and_sources(tmp_path: Path,
 
     filled, anchorless = promote._fill_cached_anchors_for_new_entries([entry])
 
+    expected_translation: dict[str, object] = {
+        "en": ["rebooting"],
+        "source": BALLA_LABEL,
+    }
+    attach_official_url(
+        expected_translation,
+        mirror_url=cache["lookups"]["ukreng"]["source_url"],
+        slug="ukreng",
+        word="перезавантаження",
+    )
+
     assert (filled, anchorless) == (("перезавантаження",), ())
     assert entry.keys() == before.keys()
     assert entry["enrichment"] == {
         **before["enrichment"],
-        "translation": {
-            "en": ["rebooting"],
-            "source": "slovnyk.me: Українсько-англійський словник",
-            "source_url": "https://slovnyk.me/dict/ukreng/перезавантаження",
-        },
-        "sources": ["fixture", "slovnyk.me: Українсько-англійський словник"],
+        "translation": expected_translation,
+        "sources": ["fixture", BALLA_LABEL],
     }
 
 
