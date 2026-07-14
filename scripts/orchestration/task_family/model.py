@@ -313,18 +313,36 @@ class ReceiptAction(SchemaModel):
     task_ids: tuple[str, ...]
     action: str
     reason: str = ""
+    error: str = ""
+    recovery: str = ""
 
     def __post_init__(self) -> None:
         if not self.resource_type.strip() or not self.resource_id.strip() or not self.action.strip():
             raise ValueError("receipt actions require resource_type, resource_id, and action")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"resource_type": self.resource_type, "resource_id": self.resource_id, "task_ids": list(self.task_ids), "action": self.action, "reason": self.reason}
+        return {
+            "resource_type": self.resource_type,
+            "resource_id": self.resource_id,
+            "task_ids": list(self.task_ids),
+            "action": self.action,
+            "reason": self.reason,
+            "error": self.error,
+            "recovery": self.recovery,
+        }
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> ReceiptAction:
         data = _object(payload, "receipt action")
-        return cls(_string(data.get("resource_type"), "receipt action resource_type"), _string(data.get("resource_id"), "receipt action resource_id"), tuple(_string(item, "receipt action task_id") for item in _list(data.get("task_ids", []), "receipt action task_ids")), _string(data.get("action"), "receipt action action"), _string(data.get("reason", ""), "receipt action reason"))
+        return cls(
+            _string(data.get("resource_type"), "receipt action resource_type"),
+            _string(data.get("resource_id"), "receipt action resource_id"),
+            tuple(_string(item, "receipt action task_id") for item in _list(data.get("task_ids", []), "receipt action task_ids")),
+            _string(data.get("action"), "receipt action action"),
+            _string(data.get("reason", ""), "receipt action reason"),
+            _string(data.get("error", ""), "receipt action error"),
+            _string(data.get("recovery", ""), "receipt action recovery"),
+        )
 
 
 @dataclass(frozen=True, slots=True)

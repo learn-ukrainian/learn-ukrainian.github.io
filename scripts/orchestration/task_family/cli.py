@@ -191,6 +191,34 @@ def _preview_receipt(plan: TaskFamilyPlan) -> OperationReceipt:
     )
 
 
+def _rename_plan_digest(payload: dict[str, Any]) -> str:
+    """Digest exactly the immutable rename authorization, never its digest field."""
+    immutable = dict(payload)
+    immutable.pop("digest", None)
+    return sha256_digest(immutable)
+
+
+def _rename_preview_receipt(rename_payload: dict[str, Any]) -> OperationReceipt:
+    actions = tuple(
+        ReceiptAction(
+            "task",
+            item["task_id"],
+            (item["task_id"],),
+            "reconcile_title",
+            "exact persisted rename mapping",
+            recovery="Use the native title action, then reconcile this exact task again.",
+        )
+        for item in rename_payload["rename_map"]
+    )
+    return OperationReceipt(
+        operation_id=rename_payload["operation_id"],
+        family_id=rename_payload["family_id"],
+        plan_digest=rename_payload["digest"],
+        final_state=LifecycleState.PLANNED,
+        planned=actions,
+    )
+
+
 def _db_path(value: str) -> Path:
     try:
         return codex_state.discover_state_database(None if value == "auto" else Path(value).expanduser())
@@ -213,6 +241,16 @@ def _execution_payload(
     worktrees: list[dict[str, Any]] = []
     for task_id in plan.selected_task_ids:
         node = nodes[task_id]
+        metadata_state = _active_metadata_state(node.metadata)
+        if metadata_state is not None:
+            blockers.append(
+                Blocker(
+                    "selected_task_active",
+                    f"Selected task {task_id!r} is explicitly marked {metadata_state!r} in manifest metadata.",
+                    (task_id,),
+                    "Wait for the task to stop, then create a new explicit preview.",
+                )
+            )
         expected_host = host if host is not None else node.metadata.get("host")
         tasks.append(
             {
@@ -289,6 +327,115 @@ def _execution_payload(
     return payload, tuple(blockers)
 
 
+def _active_metadata_state(metadata: dict[str, str]) -> str | None:
+    """Recognize only explicit manifest claims; absent metadata remains unknown."""
+    for key in ("state", "status", "task_state", "lifecycle_state"):
+        value = metadata.get(key, "").strip().lower()
+        if value in {"running", "active"}:
+            return value
+    for key in ("running", "active"):
+        if metadata.get(key, "").strip().lower() in {"1", "true", "yes", "running", "active"}:
+            return key
+    return None
+
+
+def _cleanup_preview_evidence(
+    root: Path,
+    graph: FamilyGraph,
+    plan: TaskFamilyPlan,
+    execution_data: dict[str, Any],
+) -> tuple[list[dict[str, Any]], tuple[Blocker, ...]]:
+    """Collect all cleanup preconditions read-only before declaring a plan actionable."""
+    targets = execution_data.get("worktree_targets", [])
+    evidence: list[dict[str, Any]] = []
+    blockers: list[Blocker] = []
+    try:
+        registered = {item.path.resolve(): item for item in git_safety.worktree_list(root)}
+        registry_error: str | None = None
+    except Exception as exc:  # Git inspection failures are blockers, never guesses.
+        registered = {}
+        registry_error = str(exc)
+
+    for target in targets:
+        task_id = str(target["id"])
+        node = graph.nodes_by_id[task_id]
+        worktree = Path(str(target["worktree"])).expanduser()
+        item: dict[str, Any] = {
+            "task_id": task_id,
+            "worktree": str(worktree),
+            "expected_branch": target["branch"],
+            "expected_pr": target["pr_number"],
+            "registered": False,
+            "permanent": None,
+            "dirty": None,
+            "locked": None,
+            "prunable": None,
+            "index_locked": None,
+            "registered_branch": None,
+            "registered_head": None,
+            "expected_head": None,
+            "task_cwd": node.metadata.get("cwd"),
+            "cwd_owns_worktree": False,
+            "pr": None,
+        }
+        if registry_error is not None:
+            item["registry_error"] = registry_error
+            blockers.append(Blocker("cleanup_evidence_unknown", f"Could not inspect registered worktrees for {task_id!r}: {registry_error}", (task_id,)))
+            evidence.append(item)
+            continue
+        info = registered.get(worktree.resolve())
+        item["registered"] = info is not None
+        if info is None:
+            blockers.append(Blocker("unregistered_worktree", f"Selected worktree is not registered: {worktree}", (task_id,)))
+        else:
+            item["permanent"] = git_safety.is_worktree_permanent(root, worktree)
+            item["registered_branch"] = info.branch
+            item["registered_head"] = info.head
+            item["prunable"] = info.prunable
+            item["index_locked"] = git_safety.worktree_index_locked(worktree)
+            item["locked"] = info.locked or info.prunable or item["index_locked"]
+            try:
+                item["dirty"] = git_safety.is_worktree_dirty(worktree)
+                item["expected_head"] = git_safety.local_branch_head(root, str(target["branch"]))
+            except Exception as exc:
+                item["inspection_error"] = str(exc)
+                blockers.append(Blocker("cleanup_evidence_unknown", f"Could not inspect selected worktree {worktree}: {exc}", (task_id,)))
+
+        cwd = item["task_cwd"]
+        if isinstance(cwd, str) and cwd.strip():
+            item["cwd_owns_worktree"] = Path(cwd).expanduser().resolve() == worktree.resolve()
+        if not item["cwd_owns_worktree"]:
+            blockers.append(Blocker("task_cwd_worktree_mismatch", f"Task {task_id!r} cwd does not exactly own selected worktree {worktree}.", (task_id,)))
+        if info is not None:
+            if item["permanent"]:
+                blockers.append(Blocker("permanent_worktree", f"Selected worktree is the primary checkout: {worktree}", (task_id,)))
+            if item["dirty"] is True:
+                blockers.append(Blocker("dirty_worktree", f"Selected worktree is dirty: {worktree}", (task_id,)))
+            if item["locked"]:
+                blockers.append(Blocker("locked_worktree", f"Selected worktree has a Git lock or prunable marker: {worktree}", (task_id,)))
+            if info.branch != target["branch"]:
+                blockers.append(Blocker("worktree_branch_mismatch", f"Selected worktree branch differs from manifest: {worktree}", (task_id,)))
+            if item["expected_head"] is None or info.head != item["expected_head"]:
+                blockers.append(Blocker("worktree_head_mismatch", f"Selected worktree HEAD differs from registered branch head: {worktree}", (task_id,)))
+
+        try:
+            pr = git_safety.query_pr_by_head(root, branch=str(target["branch"]), pr_number=int(target["pr_number"]))
+            item["pr"] = pr
+            if (
+                int(pr.get("number", 0) or 0) != int(target["pr_number"])
+                or pr.get("head_ref_name") != target["branch"]
+                or pr.get("base_ref_name") != target["pr_base"]
+                or pr.get("head_ref_oid") != item["expected_head"]
+                or pr.get("state") != "MERGED"
+            ):
+                blockers.append(Blocker("pr_evidence_mismatch", f"Exact PR evidence does not match selected worktree {worktree}.", (task_id,)))
+        except Exception as exc:
+            item["pr_error"] = str(exc)
+            blockers.append(Blocker("pr_evidence_unknown", f"Could not verify exact PR evidence for selected worktree {worktree}: {exc}", (task_id,)))
+        evidence.append(item)
+    return evidence, tuple(blockers)
+
+
 def _persist_operation(
     root: Path,
     manifest: TaskFamilyManifest,
@@ -321,6 +468,10 @@ def _preview_payload(graph: FamilyGraph, plan: TaskFamilyPlan, execution_data: d
             "resources": execution_data,
         }
     )
+    if "cleanup_evidence" in execution_data:
+        payload["cleanup_evidence"] = execution_data["cleanup_evidence"]
+    payload["counts"]["blockers"] = len(plan.blockers)
+    payload["counts"]["planner_blockers"] = len(plan.blockers)
     return payload
 
 
@@ -329,7 +480,7 @@ def _human_preview(payload: dict[str, Any]) -> str:
         f"Preview {payload['operation']} for family {payload['family_id']}",
         f"Operation: {payload['operation_id']}",
         f"Plan digest: {payload['plan_digest']}",
-        f"Counts: included={payload['counts']['included']}, selected={len(payload['selected_task_ids'])}, excluded={payload['counts']['excluded']}",
+        f"Counts: included={payload['counts']['included']}, selected={len(payload['selected_task_ids'])}, excluded={payload['counts']['excluded']}, blockers={len(payload['planner_blockers'])}",
     ]
     for item in payload["rename_map"]:
         lines.append(f"- {item['task_id']}: {item['old_title']} -> {item['new_title']}")
@@ -337,6 +488,14 @@ def _human_preview(payload: dict[str, Any]) -> str:
         lines.append(f"- excluded {task['task_id']}: {task['title']}")
     for blocker in payload["planner_blockers"]:
         lines.append(f"BLOCKER {blocker['code']}: {blocker['message']}")
+    for item in payload.get("cleanup_evidence", []):
+        lines.append(
+            "- cleanup evidence "
+            f"{item['task_id']}: registered={item['registered']}, permanent={item['permanent']}, "
+            f"dirty={item['dirty']}, locked={item['locked']}, prunable={item['prunable']}, "
+            f"branch={item['registered_branch']}, head={item['registered_head']}, "
+            f"cwd_owns_worktree={item['cwd_owns_worktree']}"
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -360,6 +519,21 @@ def _cmd_preview_rename(args: argparse.Namespace) -> int:
         selections=selections,
         base_title=args.base_title,
     )
+    selected = set(plan.selected_task_ids)
+    included = set(graph.included_task_ids)
+    if selected != included:
+        plan = _plan_with_blockers(
+            plan,
+            (
+                Blocker(
+                    "partial_family_rename_selection",
+                    "Family-level rename requires every included exact task ID to be selected.",
+                    tuple(sorted(included - selected)),
+                    "Select every included exact task ID; excluded similar-title tasks remain excluded.",
+                ),
+            ),
+        )
+    selected_rename_map = tuple(item for item in plan.rename_map if item.task_id in selected)
     rename_payload = {
         "schema_version": 1,
         "kind": "rename_preview",
@@ -370,18 +544,19 @@ def _cmd_preview_rename(args: argparse.Namespace) -> int:
         "excluded_task_ids": list(plan.excluded_task_ids),
         "rename_map": [
             {"task_id": item.task_id, "old_title": item.old_title, "new_title": item.new_title, "roles": list(item.roles)}
-            for item in plan.rename_map
+            for item in selected_rename_map
         ],
         "blockers": [_blocker_payload(item) for item in plan.blockers],
     }
-    rename_payload["digest"] = sha256_digest(rename_payload)
+    rename_payload["digest"] = _rename_plan_digest(rename_payload)
     storage = TaskFamilyStorage(root, manifest.family_id, operation_id)
     storage.write_manifest(manifest)
     storage.write_immutable_json(storage.rename_plan_path, rename_payload)
     storage.write_state(LifecycleState.PLANNED, details={"preview": "rename", "digest": rename_payload["digest"]})
-    storage.write_receipt(_preview_receipt(plan))
+    storage.write_receipt(_rename_preview_receipt(rename_payload))
     payload = _graph_payload(graph)
     payload.update(rename_payload)
+    payload["counts"]["blockers"] = len(rename_payload["blockers"])
     payload["planner_blockers"] = rename_payload["blockers"]
     _emit(payload, json_output=args.json, human=_human_preview({**payload, "operation": "rename_preview", "plan_digest": rename_payload["digest"]}))
     return EXIT_OK if plan.is_actionable else EXIT_BLOCKED
@@ -397,6 +572,10 @@ def _cmd_preview_operation(args: argparse.Namespace, operation: OperationKind) -
     plan = build_plan(graph, operation_id=operation_id, operation=operation, selections=selections, base_title=args.base_title)
     db_path = _db_path(args.db)
     execution_data, extra_blockers = _execution_payload(graph, plan, lineage_id=lineage_id, db_path=db_path, host=args.host)
+    if operation is OperationKind.FINISH_AND_CLEAN:
+        cleanup_evidence, cleanup_blockers = _cleanup_preview_evidence(root, graph, plan, execution_data)
+        execution_data["cleanup_evidence"] = cleanup_evidence
+        extra_blockers = (*extra_blockers, *cleanup_blockers)
     plan = _plan_with_blockers(plan, extra_blockers)
     plan = _plan_with_execution_context(plan, execution_data)
     execution_data = {**execution_data, "plan_digest": plan.digest}
@@ -417,22 +596,6 @@ def _thread_result(record: codex_state.ThreadRecord) -> dict[str, Any]:
     }
 
 
-def _cmd_reconcile_title(args: argparse.Namespace) -> int:
-    task_id = _canonical_uuid(args.task_id, "--task-id")
-    db_path = _db_path(args.db)
-    try:
-        record = codex_state.read_thread_record(db_path, task_id=task_id)
-        if record.title != args.expected_title or record.cwd != args.cwd or (args.host is not None and record.host != args.host):
-            raise codex_state.CodexStateContextError("exact title, cwd, or host context does not match")
-    except codex_state.CodexStateError as exc:
-        payload = {"ok": False, "action": "reconcile_title", "task_id": task_id, "db_path": str(db_path), "error": str(exc)}
-        print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
-        return EXIT_BLOCKED
-    payload = {"ok": True, "action": "reconcile_title", "db_path": str(db_path), "thread": _thread_result(record)}
-    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
-    return EXIT_OK
-
-
 def _append_reconciliation(
     storage: TaskFamilyStorage,
     *,
@@ -440,34 +603,150 @@ def _append_reconciliation(
     action: str,
     result: dict[str, Any],
     verified: bool,
+    plan_digest: str,
+    recovery: str,
 ) -> None:
+    retry = False
+    try:
+        previous = storage.load_receipt() if storage.receipt_path.exists() else None
+    except ValueError:
+        previous = None
+    if previous is not None:
+        retry = any(item.resource_id == task_id and item.action == action for item in previous.actual)
+    details = {**result, "recovery": recovery, "retry": retry}
     storage.append_event(
         LifecycleEvent(
             event_id=str(uuid.uuid4()),
             occurred_at=utc_now(),
-            state=LifecycleState.TASKS_ARCHIVED,
-            kind=f"native_{action}_reconciled",
-            details=result,
+            state=LifecycleState.TASKS_ARCHIVED if verified else LifecycleState.BLOCKED,
+            kind=f"native_{action}_{'retry_' if retry else ''}{'reconciled' if verified else 'failed'}",
+            details=details,
         )
     )
-    plan = storage.load_plan()
-    try:
-        previous = storage.load_receipt() if storage.receipt_path.exists() else _preview_receipt(plan)
-    except ValueError:
-        # The cleanup executor owns its state-shaped receipt after apply.  The
-        # append-only event remains the exact per-task reconciliation evidence.
-        return
     action_record = ReceiptAction(
         "task",
         task_id,
         (task_id,),
-        f"native_{action}_{'verified' if verified else 'blocked'}",
+        action,
+        "native DB read-back verified the persisted target" if verified else "native DB read-back did not reach the persisted target",
         "" if verified else str(result.get("error", "native target was not reached")),
+        recovery,
     )
+    if previous is None:
+        previous = OperationReceipt(
+            operation_id=result.get("operation_id", storage.root.name),
+            family_id=result.get("family_id", storage.root.parent.parent.name),
+            plan_digest=plan_digest,
+            final_state=LifecycleState.PLANNED,
+        )
     if verified:
-        storage.write_receipt(replace(previous, actual=(*previous.actual, action_record), events=storage.load_events()))
+        if retry:
+            retry_record = ReceiptAction(
+                "task",
+                task_id,
+                (task_id,),
+                f"{action}_retry_readback",
+                "already reconciled; no second native resource action was performed",
+                recovery=recovery,
+            )
+            storage.write_receipt(replace(previous, skipped=(*previous.skipped, retry_record), events=storage.load_events()))
+        else:
+            storage.write_receipt(replace(previous, actual=(*previous.actual, action_record), events=storage.load_events()))
     else:
         storage.write_receipt(replace(previous, failures=(*previous.failures, action_record), events=storage.load_events()))
+
+
+def _canonical_digest(value: str, label: str) -> str:
+    if len(value) != 64 or any(character not in "0123456789abcdef" for character in value):
+        raise CliError(f"{label} must be a lowercase SHA-256 hex digest")
+    return value
+
+
+def _load_rename_authorization(
+    storage: TaskFamilyStorage,
+    *,
+    family_id: str,
+    operation_id: str,
+    task_id: str,
+    digest: str,
+) -> dict[str, Any]:
+    payload = storage.read_json(storage.rename_plan_path)
+    if payload.get("kind") != "rename_preview":
+        raise CliError("persisted rename plan has an invalid kind")
+    if payload.get("family_id") != family_id or payload.get("operation_id") != operation_id:
+        raise CliError("persisted rename plan identity does not match reconcile request")
+    if payload.get("digest") != digest or _rename_plan_digest(payload) != digest:
+        raise CliError("immutable rename plan digest does not match persisted authorization")
+    if payload.get("blockers"):
+        raise CliError("persisted rename plan contains blockers and cannot authorize reconciliation")
+    selected = payload.get("selected_task_ids")
+    mappings = payload.get("rename_map")
+    if not isinstance(selected, list) or not all(isinstance(item, str) for item in selected):
+        raise CliError("persisted rename plan has invalid selected task IDs")
+    if task_id not in selected:
+        raise CliError(f"task {task_id} is not an explicitly selected rename target")
+    if not isinstance(mappings, list):
+        raise CliError("persisted rename plan has invalid title mappings")
+    matching = [item for item in mappings if isinstance(item, dict) and item.get("task_id") == task_id]
+    if len(matching) != 1 or not isinstance(matching[0].get("new_title"), str):
+        raise CliError(f"persisted rename plan has no exact title mapping for task {task_id}")
+    if any(not isinstance(item, dict) or item.get("task_id") not in selected for item in mappings):
+        raise CliError("persisted rename plan exposes a mapping for an unselected task")
+    return matching[0]
+
+
+def _cmd_reconcile_title(args: argparse.Namespace) -> int:
+    root = _repo_root(args.repo_root)
+    task_id = _canonical_uuid(args.task_id, "--task-id")
+    operation_id = _canonical_uuid(args.operation_id, "--operation-id")
+    digest = _canonical_digest(args.plan_digest, "--plan-digest")
+    storage = TaskFamilyStorage(root, args.family_id, operation_id)
+    recovery = "Use the native title action for the persisted mapping, then retry reconciliation."
+    try:
+        mapping = _load_rename_authorization(
+            storage,
+            family_id=args.family_id,
+            operation_id=operation_id,
+            task_id=task_id,
+            digest=digest,
+        )
+        if args.expected_title != mapping["new_title"]:
+            raise CliError("--expected-title does not match the persisted exact rename mapping")
+        manifest = storage.load_manifest()
+        node = next((item for item in manifest.nodes if item.task_id == task_id), None)
+        if node is None:
+            raise CliError("persisted manifest does not contain selected rename task")
+        expected_cwd = node.metadata.get("cwd", node.project_root)
+        expected_host = node.metadata.get("host")
+        if args.cwd != expected_cwd or (expected_host is not None and args.host != expected_host):
+            raise CliError("reconcile cwd or host does not match persisted manifest task context")
+        db_path = _db_path(args.db)
+        record = codex_state.read_thread_record(db_path, task_id=task_id)
+        if record.title != mapping["new_title"] or record.cwd != args.cwd or (args.host is not None and record.host != args.host):
+            raise codex_state.CodexStateContextError("exact persisted title, cwd, or host context does not match")
+        result = {
+            "ok": True,
+            "action": "title",
+            "operation_id": operation_id,
+            "family_id": args.family_id,
+            "db_path": str(db_path),
+            "thread": _thread_result(record),
+        }
+        _append_reconciliation(storage, task_id=task_id, action="title", result=result, verified=True, plan_digest=digest, recovery=recovery)
+    except (CliError, codex_state.CodexStateError, ValueError) as exc:
+        result = {
+            "ok": False,
+            "action": "title",
+            "operation_id": operation_id,
+            "family_id": args.family_id,
+            "task_id": task_id,
+            "error": str(exc),
+        }
+        _append_reconciliation(storage, task_id=task_id, action="title", result=result, verified=False, plan_digest=digest, recovery=recovery)
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        return EXIT_BLOCKED
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    return EXIT_OK
 
 
 def _cmd_reconcile_archive(args: argparse.Namespace, *, archived: bool) -> int:
@@ -475,8 +754,12 @@ def _cmd_reconcile_archive(args: argparse.Namespace, *, archived: bool) -> int:
     task_id = _canonical_uuid(args.task_id, "--task-id")
     operation_id = _canonical_uuid(args.operation_id, "--operation-id")
     storage = TaskFamilyStorage(root, args.family_id, operation_id)
+    action = "archive" if archived else "restore"
+    plan_digest = "unavailable"
+    recovery = f"Use the native {action} action for this exact task, then retry reconciliation."
     try:
         plan = storage.load_plan()
+        plan_digest = plan.digest
         if task_id not in plan.selected_task_ids:
             raise CliError(f"task {task_id} is not an explicitly selected operation target")
         db_path = _db_path(args.db)
@@ -488,12 +771,11 @@ def _cmd_reconcile_archive(args: argparse.Namespace, *, archived: bool) -> int:
             expected_archived=archived,
             db_path=db_path,
         )
-        result = {"ok": True, "action": "archive" if archived else "restore", "db_path": str(db_path), "thread": _thread_result(record)}
-        _append_reconciliation(storage, task_id=task_id, action=result["action"], result=result, verified=True)
+        result = {"ok": True, "action": action, "operation_id": operation_id, "family_id": args.family_id, "db_path": str(db_path), "thread": _thread_result(record)}
+        _append_reconciliation(storage, task_id=task_id, action=action, result=result, verified=True, plan_digest=plan_digest, recovery=recovery)
     except (CliError, codex_state.CodexStateError, ValueError) as exc:
-        result = {"ok": False, "action": "archive" if archived else "restore", "task_id": task_id, "error": str(exc)}
-        if storage.plan_path.exists():
-            _append_reconciliation(storage, task_id=task_id, action=result["action"], result=result, verified=False)
+        result = {"ok": False, "action": action, "operation_id": operation_id, "family_id": args.family_id, "task_id": task_id, "error": str(exc)}
+        _append_reconciliation(storage, task_id=task_id, action=action, result=result, verified=False, plan_digest=plan_digest, recovery=recovery)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return EXIT_BLOCKED
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
@@ -658,6 +940,10 @@ def build_parser() -> argparse.ArgumentParser:
         _add_preview_arguments(command)
 
     title = commands.add_parser("reconcile-title")
+    title.add_argument("--repo-root", required=True)
+    title.add_argument("--family-id", required=True)
+    title.add_argument("--operation-id", required=True)
+    title.add_argument("--plan-digest", required=True)
     title.add_argument("--db", required=True)
     title.add_argument("--task-id", required=True)
     title.add_argument("--cwd", required=True)

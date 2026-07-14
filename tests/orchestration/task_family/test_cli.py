@@ -36,6 +36,25 @@ def _repo(tmp_path: Path) -> Path:
     return repo
 
 
+def _managed_worktree(repo: Path, branch: str = "codex/cleanup-cli") -> Path:
+    worktree = repo.parent / "managed"
+    _git(repo, "worktree", "add", "-b", branch, str(worktree))
+    return worktree
+
+
+def _merged_pr_evidence(repo: Path, branch: str, number: int, base: str = "main") -> dict[str, object]:
+    return {
+        "number": number,
+        "state": "MERGED",
+        "head_ref_name": branch,
+        "head_ref_oid": git_safety.local_branch_head(repo, branch),
+        "base_ref_name": base,
+        "merge_state_status": "CLEAN",
+        "is_cross_repository": False,
+        "merge_commit": git_safety.local_branch_head(repo, branch),
+    }
+
+
 def _write_db(path: Path, rows: list[tuple[str, str, str, int, str | None, str]]) -> None:
     connection = sqlite3.connect(path)
     connection.execute(
@@ -148,6 +167,9 @@ def test_preview_rename_persists_immutable_mapping_and_requires_each_pin_confirm
     storage = TaskFamilyStorage(repo, manifest.family_id, operation)
     assert storage.rename_plan_path.exists()
     assert storage.manifest_path.exists()
+    receipt = storage.load_receipt()
+    assert receipt.plan_digest == payload["digest"]
+    assert {item.action for item in receipt.planned} == {"reconcile_title"}
 
     incomplete = args.copy()
     confirmation_index = incomplete.index("--confirm-pin-unknown", incomplete.index("--actor"))
@@ -157,6 +179,30 @@ def test_preview_rename_persists_immutable_mapping_and_requires_each_pin_confirm
     incomplete[incomplete.index("--operation-id") + 1] = str(uuid4())
     assert cli.main(incomplete) == cli.EXIT_BLOCKED
     assert "pin_state_unconfirmed" in json.loads(capsys.readouterr().out)["planner_blockers"][0]["code"]
+
+
+def test_preview_rename_blocks_partial_family_and_never_persists_unselected_mapping(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo = _repo(tmp_path)
+    manifest, ids = _manifest(repo)
+    path = tmp_path / "manifest.json"
+    _write_manifest(path, manifest)
+    selected = [ids["root"], ids["worker"]]
+    args = [
+        "preview-rename", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", str(uuid4()), "--base-title", "Lifecycle repair",
+    ]
+    for task_id in selected:
+        args.extend(("--select-task", task_id))
+    args.extend(("--actor", "operator"))
+    for task_id in selected:
+        args.extend(("--confirm-pin-unknown", task_id))
+    args.append("--json")
+
+    assert cli.main(args) == cli.EXIT_BLOCKED
+    payload = json.loads(capsys.readouterr().out)
+    assert {item["task_id"] for item in payload["rename_map"]} == set(selected)
+    assert ids["unrelated"] not in {item["task_id"] for item in payload["rename_map"]}
+    assert any(item["code"] == "partial_family_rename_selection" for item in payload["planner_blockers"])
 
 
 def test_conflicting_graph_blocks_preview_without_db_or_git_mutation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -189,6 +235,28 @@ def test_conflicting_graph_blocks_preview_without_db_or_git_mutation(tmp_path: P
         assert connection.execute("SELECT archived FROM threads WHERE id = ?", (root,)).fetchone()[0] == 0
 
 
+def test_preview_archive_blocks_explicitly_active_task_metadata(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo = _repo(tmp_path)
+    task_id = str(uuid4())
+    manifest = TaskFamilyManifest(
+        "active-task",
+        task_id,
+        (TaskNode(task_id, "Active", str(repo), metadata={"cwd": str(repo), "status": "running"}),),
+        (),
+    )
+    path = tmp_path / "active.json"
+    _write_manifest(path, manifest)
+    db = tmp_path / "state_5.sqlite"
+    _write_db(db, [(task_id, "Active", str(repo), 0, None, "test-host")])
+    assert cli.main([
+        "preview-archive", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", str(uuid4()), "--lineage-id", str(uuid4()), "--base-title", "Active",
+        "--db", str(db), "--select-task", task_id, "--actor", "operator",
+        "--confirm-pin-unknown", task_id, "--json",
+    ]) == cli.EXIT_BLOCKED
+    assert "selected_task_active" in {item["code"] for item in json.loads(capsys.readouterr().out)["planner_blockers"]}
+
+
 def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     repo = _repo(tmp_path)
     manifest, ids = _manifest(repo)
@@ -200,12 +268,45 @@ def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Pat
         title = "Planner" if name in {"root", "unrelated"} else {"worker": "Implementation", "review": "Review", "handoff": "Continuation", "replacement": "Continuation"}[name]
         rows.append((task_id, title, str(repo), 1 if name != "worker" else 0, "2026-07-14T00:00:00Z" if name != "worker" else None, "test-host"))
     _write_db(db, rows)
+    rename_operation = str(uuid4())
+    rename_args = [
+        "preview-rename", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", rename_operation, "--base-title", "Lifecycle repair",
+        *_selection_args(ids), "--json",
+    ]
+    assert cli.main(rename_args) == cli.EXIT_OK
+    rename_preview = json.loads(capsys.readouterr().out)
+    new_title = next(item["new_title"] for item in rename_preview["rename_map"] if item["task_id"] == ids["root"])
+    with sqlite3.connect(db) as connection:
+        connection.execute("UPDATE threads SET title = ? WHERE id = ?", (new_title, ids["root"]))
+        connection.commit()
+
+    title_reconcile = [
+        "reconcile-title", "--repo-root", str(repo), "--family-id", manifest.family_id,
+        "--operation-id", rename_operation, "--plan-digest", rename_preview["digest"],
+        "--db", str(db), "--task-id", ids["root"], "--cwd", str(repo),
+        "--expected-title", new_title, "--host", "test-host",
+    ]
+    assert cli.main(title_reconcile) == cli.EXIT_OK
+    assert json.loads(capsys.readouterr().out)["ok"] is True
+    title_storage = TaskFamilyStorage(repo, manifest.family_id, rename_operation)
+    assert len(title_storage.load_receipt().actual) == 1
+    assert title_storage.load_receipt().actual[0].action == "title"
+
+    assert cli.main(title_reconcile) == cli.EXIT_OK
+    capsys.readouterr()
+    assert len(title_storage.load_receipt().actual) == 1
+    assert len(title_storage.load_receipt().skipped) == 1
+    with sqlite3.connect(db) as connection:
+        connection.execute("UPDATE threads SET title = ? WHERE id = ?", ("wrong title", ids["root"]))
+        connection.commit()
+    assert cli.main(title_reconcile) == cli.EXIT_BLOCKED
+    assert title_storage.load_receipt().failures[-1].error
+    assert title_storage.load_receipt().failures[-1].recovery
+
     operation, lineage = str(uuid4()), str(uuid4())
     assert cli.main(_preview_args("preview-archive", repo, path, db, ids, operation, lineage)) == cli.EXIT_OK
     capsys.readouterr()
-
-    assert cli.main(["reconcile-title", "--db", str(db), "--task-id", ids["root"], "--cwd", str(repo), "--expected-title", "Planner", "--host", "test-host"]) == cli.EXIT_OK
-    assert json.loads(capsys.readouterr().out)["ok"] is True
 
     reconcile = [
         "reconcile-archive", "--repo-root", str(repo), "--family-id", manifest.family_id,
@@ -219,8 +320,45 @@ def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Pat
         connection.commit()
     assert cli.main(reconcile) == cli.EXIT_OK
     assert json.loads(capsys.readouterr().out)["thread"]["archived"] is True
+    assert cli.main(reconcile) == cli.EXIT_OK
+    capsys.readouterr()
     storage = TaskFamilyStorage(repo, manifest.family_id, operation)
-    assert len(storage.load_events()) == 2
+    assert len([item for item in storage.load_receipt().actual if item.action == "archive"]) == 1
+    assert any(item.action == "archive_retry_readback" for item in storage.load_receipt().skipped)
+    restore = reconcile.copy()
+    restore[0] = "reconcile-restore"
+    assert cli.main(restore) == cli.EXIT_BLOCKED
+    assert storage.load_receipt().failures[-1].action == "restore"
+    assert storage.load_receipt().failures[-1].recovery
+    assert len(storage.load_events()) == 4
+
+
+def test_reconcile_title_rejects_rename_digest_drift_and_persists_failure(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo = _repo(tmp_path)
+    manifest, ids = _manifest(repo)
+    path = tmp_path / "manifest.json"
+    _write_manifest(path, manifest)
+    db = tmp_path / "state_5.sqlite"
+    _write_db(db, [(task_id, node.title, str(repo), 0, None, "test-host") for task_id, node in ((node.task_id, node) for node in manifest.nodes)])
+    operation = str(uuid4())
+    args = [
+        "preview-rename", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", operation, "--base-title", "Lifecycle repair", *_selection_args(ids), "--json",
+    ]
+    assert cli.main(args) == cli.EXIT_OK
+    preview = json.loads(capsys.readouterr().out)
+    storage = TaskFamilyStorage(repo, manifest.family_id, operation)
+    tampered = storage.read_json(storage.rename_plan_path)
+    tampered["rename_map"][0]["new_title"] = "tampered"
+    storage.rename_plan_path.write_text(json.dumps(tampered), encoding="utf-8")
+    task_id = ids["root"]
+    assert cli.main([
+        "reconcile-title", "--repo-root", str(repo), "--family-id", manifest.family_id,
+        "--operation-id", operation, "--plan-digest", preview["digest"], "--db", str(db),
+        "--task-id", task_id, "--cwd", str(repo), "--expected-title", "Lifecycle repair [Lead]", "--host", "test-host",
+    ]) == cli.EXIT_BLOCKED
+    assert "digest" in json.loads(capsys.readouterr().out)["error"]
+    assert storage.load_receipt().failures[-1].action == "title"
 
 
 def test_apply_archive_uses_persisted_digest_zero_git_mutation_and_completed_repeat_is_noop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
@@ -273,10 +411,11 @@ def test_apply_archive_uses_persisted_digest_zero_git_mutation_and_completed_rep
     assert "drifted" in capsys.readouterr().out
 
 
-def test_preview_cleanup_reports_only_explicit_owned_resource_targets(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_preview_cleanup_reports_read_only_evidence_for_registered_clean_target(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     repo = _repo(tmp_path)
     task_id = str(uuid4())
-    worktree = repo / "managed"
+    branch = "codex/cleanup-cli"
+    worktree = _managed_worktree(repo, branch)
     manifest = TaskFamilyManifest(
         "cleanup-cli",
         task_id,
@@ -286,9 +425,9 @@ def test_preview_cleanup_reports_only_explicit_owned_resource_targets(tmp_path: 
                 "Done",
                 str(repo),
                 worktree=str(worktree),
-                branch="codex/cleanup-cli",
+                branch=branch,
                 pr_id="42",
-                metadata={"cwd": str(repo), "worktree_family": "cleanup-cli", "pr_base": "main"},
+                metadata={"cwd": str(worktree), "worktree_family": "cleanup-cli", "pr_base": "main"},
             ),
         ),
         (),
@@ -296,7 +435,8 @@ def test_preview_cleanup_reports_only_explicit_owned_resource_targets(tmp_path: 
     path = tmp_path / "cleanup.json"
     _write_manifest(path, manifest)
     db = tmp_path / "state_5.sqlite"
-    _write_db(db, [(task_id, "Done", str(repo), 0, None, "test-host")])
+    _write_db(db, [(task_id, "Done", str(worktree), 0, None, "test-host")])
+    monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: _merged_pr_evidence(repo, branch, 42))
     assert cli.main([
         "preview-cleanup", "--repo-root", str(repo), "--manifest", str(path),
         "--operation-id", str(uuid4()), "--lineage-id", str(uuid4()), "--base-title", "Done",
@@ -308,3 +448,40 @@ def test_preview_cleanup_reports_only_explicit_owned_resource_targets(tmp_path: 
         "id": task_id, "worktree": str(worktree), "branch": "codex/cleanup-cli",
         "pr_number": 42, "pr_base": "main", "explicit_family": "cleanup-cli",
     }]
+    assert payload["cleanup_evidence"] == [{
+        "task_id": task_id, "worktree": str(worktree), "expected_branch": branch, "expected_pr": 42,
+        "registered": True, "permanent": False, "dirty": False, "locked": False, "prunable": False,
+        "index_locked": False, "registered_branch": branch,
+        "registered_head": git_safety.local_branch_head(repo, branch),
+        "expected_head": git_safety.local_branch_head(repo, branch), "task_cwd": str(worktree),
+        "cwd_owns_worktree": True, "pr": _merged_pr_evidence(repo, branch, 42),
+    }]
+
+
+@pytest.mark.parametrize("kind", ["dirty", "permanent", "unregistered"])
+def test_preview_cleanup_blocks_unsafe_local_evidence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], kind: str) -> None:
+    repo = _repo(tmp_path)
+    task_id = str(uuid4())
+    branch = "codex/cleanup-evidence"
+    worktree = _managed_worktree(repo, branch) if kind == "dirty" else (repo if kind == "permanent" else repo / "missing")
+    if kind == "dirty":
+        (worktree / "dirty.txt").write_text("dirty\n", encoding="utf-8")
+    expected_branch = branch if kind == "dirty" else "main"
+    manifest = TaskFamilyManifest(
+        f"cleanup-{kind}", task_id,
+        (TaskNode(task_id, "Done", str(repo), worktree=str(worktree), branch=expected_branch, pr_id="42", metadata={"cwd": str(worktree), "worktree_family": f"cleanup-{kind}", "pr_base": "main"}),),
+        (),
+    )
+    path = tmp_path / f"{kind}.json"
+    _write_manifest(path, manifest)
+    db = tmp_path / "state_5.sqlite"
+    _write_db(db, [(task_id, "Done", str(worktree), 0, None, "test-host")])
+    monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: _merged_pr_evidence(repo, expected_branch, 42))
+    assert cli.main([
+        "preview-cleanup", "--repo-root", str(repo), "--manifest", str(path),
+        "--operation-id", str(uuid4()), "--lineage-id", str(uuid4()), "--base-title", "Done", "--db", str(db),
+        "--select-task", task_id, "--actor", "operator", "--confirm-pin-unknown", task_id, "--json",
+    ]) == cli.EXIT_BLOCKED
+    payload = json.loads(capsys.readouterr().out)
+    codes = {item["code"] for item in payload["planner_blockers"]}
+    assert {"dirty": "dirty_worktree", "permanent": "permanent_worktree", "unregistered": "unregistered_worktree"}[kind] in codes

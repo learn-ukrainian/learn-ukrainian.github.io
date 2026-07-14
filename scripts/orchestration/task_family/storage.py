@@ -102,7 +102,7 @@ class TaskFamilyStorage:
 
     @property
     def rename_plan_path(self) -> Path:
-        """Immutable, display-only rename preview; it authorizes no mutation."""
+        """Immutable title-reconciliation authorization for one rename operation."""
         return self.root / "rename-plan.json"
 
     @property
