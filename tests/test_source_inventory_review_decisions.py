@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -125,6 +126,62 @@ def test_decision_validator_allows_general_promotion_batch_size(tmp_path: Path) 
     summary = decisions.validate_committed_decision_files([path])
 
     assert summary["rows"] == 1
+
+
+def test_decision_validator_discovers_its_staged_inventory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    project_root = tmp_path / "project"
+    inventory_path = "data/lexicon/source-inventory/curriculum-full-text-intake.json"
+    inventory = project_root / inventory_path
+    inventory.parent.mkdir(parents=True)
+    inventory.write_text(
+        json.dumps(
+            [
+                {
+                    "lemma": "кіт",
+                    "source_family": "curriculum",
+                    "extraction_mode": "module_markdown_token",
+                    "source_id": "curriculum-fixture",
+                    "source_title": "Fixture curriculum",
+                    "source_path": "curriculum/l2-uk-en/a1/fixture/module.md",
+                    "source_locator": "curriculum/l2-uk-en/a1/fixture/module.md::module_body",
+                    "count": 1,
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    payload = _minimal_payload()
+    row = payload["decisions"][0]  # type: ignore[index]
+    source_inventory = row["source_inventory"]  # type: ignore[index]
+    source_inventory.update(  # type: ignore[union-attr]
+        {
+            "path": inventory_path,
+            "locator": "curriculum/l2-uk-en/a1/fixture/module.md::module_body",
+            "source_id": "curriculum-fixture",
+            "source_family": "curriculum",
+        }
+    )
+    source_inventory["key"] = decisions.source_inventory_key(  # type: ignore[index]
+        lemma="ананас",
+        inventory_path=inventory_path,
+        locator="curriculum/l2-uk-en/a1/fixture/module.md::module_body",
+    )
+    row["lemma"] = "кіт"  # type: ignore[index]
+    row["approved_gloss"] = "cat"  # type: ignore[index]
+    path = tmp_path / "staged-ledger.yaml"
+    _write_decision_file(path, payload)
+    monkeypatch.setattr(decisions, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(decisions, "SOURCE_INVENTORY_DIR", inventory.parent)
+    monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", ())
+    source_inventory["key"] = decisions.source_inventory_key(  # type: ignore[index]
+        lemma="кіт",
+        inventory_path=inventory_path,
+        locator="curriculum/l2-uk-en/a1/fixture/module.md::module_body",
+    )
+    _write_decision_file(path, payload)
+
+    assert decisions.validate_committed_decision_files([path])["rows"] == 1
 
 
 def test_decision_validator_rejects_missing_promotion_batch_size(tmp_path: Path) -> None:

@@ -1,5 +1,6 @@
 {
-  "fingerprint": "27807e92fe3355b2cd51e870ed4f9e12d810daf84172943ef54274bc075badad",
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -53,6 +54,10 @@
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
         "sha256": "b2f1b2cab47fe23d34590355ba0c5c67a008bbb4e773852ce37c65aaf3d09a39"
+      },
+      {
+        "path": "scripts/lexicon/curriculum_atlas_intake.py",
+        "sha256": "adc7a12cce7be834d8188d71f9c456117119343ccd18ade88cb0ab799e381275"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -168,9 +173,8 @@
       }
     ]
   },
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "fingerprint": "aeac5a3434aceceaec83726fe4f14eb8cc9c3fe80ce3e704b2f1b07409585745",
   "stats": {
-    "lexicon_code_files": 41
+    "lexicon_code_files": 42
   }
 }

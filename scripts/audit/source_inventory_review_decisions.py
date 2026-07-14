@@ -26,6 +26,7 @@ from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 DECISION_KIND = "atlas_source_inventory_review_decisions"
 DECISION_VERSION = 1
 DEFAULT_DECISION_DIR = PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
+SOURCE_INVENTORY_DIR = PROJECT_ROOT / "data/lexicon/source-inventory"
 QUEUE_WORKFLOW = "source_inventory_publish_review_queue.v1"
 ALLOWED_DECISIONS = {
     "approve_for_publish",
@@ -89,9 +90,7 @@ def validate_committed_decision_files(
     if not decision_paths:
         raise SourceInventoryError("no source-inventory review decision files found")
 
-    records = read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
-    source_index = _source_record_index(records)
-    summaries = [validate_decision_file(path, source_index=source_index) for path in decision_paths]
+    summaries = [validate_decision_file(path) for path in decision_paths]
     decision_counts: Counter[str] = Counter()
     total_rows = 0
     for summary in summaries:
@@ -149,7 +148,10 @@ def validate_decision_file(
         raise SourceInventoryError(f"{path}: decisions must be a non-empty list")
 
     index = source_index or _source_record_index(
-        read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
+        read_source_inventories(
+            inventory_paths_for_decision_payload(payload),
+            project_root=PROJECT_ROOT,
+        )
     )
     seen_source_keys: set[str] = set()
     decision_counts: Counter[str] = Counter()
@@ -247,6 +249,40 @@ def _source_record_index(
         (record.lemma, record.inventory_path, record.source_locator): record
         for record in records
     }
+
+
+def inventory_paths_for_decision_payload(payload: Mapping[str, Any]) -> tuple[Path, ...]:
+    """Locate referenced staged inventories without broadening the review corpus."""
+
+    paths: list[Path] = list(COMMITTED_SOURCE_INVENTORIES)
+    decisions = payload.get("decisions")
+    if not isinstance(decisions, list):
+        return tuple(paths)
+    for row in decisions:
+        if not isinstance(row, Mapping):
+            continue
+        source_inventory = row.get("source_inventory")
+        if not isinstance(source_inventory, Mapping):
+            continue
+        inventory_path = source_inventory.get("path")
+        if not isinstance(inventory_path, str) or not inventory_path.strip():
+            continue
+        paths.append(resolve_staged_inventory_path(inventory_path))
+    return tuple(dict.fromkeys(paths))
+
+
+def resolve_staged_inventory_path(inventory_path: str) -> Path:
+    """Resolve one ledger-referenced inventory, restricted to the inventory directory."""
+
+    candidate = (PROJECT_ROOT / inventory_path).resolve()
+    try:
+        candidate.relative_to(SOURCE_INVENTORY_DIR.resolve())
+    except ValueError as exc:
+        raise SourceInventoryError(
+            "source_inventory.path must be inside data/lexicon/source-inventory: "
+            f"{inventory_path}"
+        ) from exc
+    return candidate
 
 
 def _read_yaml_mapping(path: Path) -> dict[str, Any]:
