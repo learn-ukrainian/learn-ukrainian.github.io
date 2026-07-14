@@ -221,7 +221,7 @@ def build_intake_candidates(
     resolutions: Mapping[str, VesumResolution],
     atlas_keys: set[str],
     ledger_keys: set[str],
-    committed_inventory_keys: set[str],
+    committed_inventory_keys: set[str] | None = None,
     heritage_lookup: HeritageLookup,
     inventory_path: str,
     source_family: str,
@@ -357,7 +357,7 @@ def build_resolved_candidates(
     resolutions: Mapping[str, VesumResolution],
     atlas_keys: set[str],
     ledger_keys: set[str],
-    committed_inventory_keys: set[str],
+    committed_inventory_keys: set[str] | None = None,
     heritage_lookup: HeritageLookup,
     inventory_path: str,
     source_family: str,
@@ -426,7 +426,7 @@ def classify_resolved_candidate(
     metadata_reasons: Sequence[str],
     atlas_keys: set[str],
     ledger_keys: set[str],
-    committed_inventory_keys: set[str],
+    committed_inventory_keys: set[str] | None = None,
     heritage_lookup: HeritageLookup,
 ) -> tuple[Classification, tuple[str, ...], Mapping[str, Any] | None]:
     lemma_key = _lemma_key(lemma)
@@ -434,7 +434,7 @@ def classify_resolved_candidate(
         return "reject", ("already_in_atlas",), None
     if lemma_key in ledger_keys:
         return "reject", ("already_in_existing_ledger",), None
-    if lemma_key in committed_inventory_keys:
+    if committed_inventory_keys and lemma_key in committed_inventory_keys:
         return "reject", ("already_in_committed_source_inventory",), None
     if metadata_reasons:
         return "review_queue", tuple(metadata_reasons), None
@@ -505,6 +505,7 @@ def build_ledger_append_payload(
     batch_label: str,
     reviewed_at: str,
     reviewer: str,
+    sense_note: str,
 ) -> dict[str, Any]:
     auto_count = result.classification_counts["auto_approve"]
     decisions: list[dict[str, Any]] = []
@@ -513,7 +514,7 @@ def build_ledger_append_payload(
         row: dict[str, Any] = {
             "lemma": candidate.lemma,
             "decision": ledger_decision(candidate),
-            "sense_note": "Generated from Ohoiko corpus intake; Atlas publication is a later phase.",
+            "sense_note": sense_note,
             "source_inventory": {
                 "key": source_inventory_key(
                     lemma=candidate.lemma,

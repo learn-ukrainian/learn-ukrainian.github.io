@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping, Sequence
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -225,6 +227,7 @@ def test_writes_parser_compatible_inventory_and_decision_ledger(tmp_path: Path) 
         batch_label="ohoiko fixture corpus intake",
         reviewed_at="2026-07-14",
         reviewer="ohoiko-intake-automation",
+        sense_note=intake.OHOKO_LEDGER_SENSE_NOTE,
     )
     core.write_yaml_payload(ledger, ledger_out)
 
@@ -240,6 +243,135 @@ def test_writes_parser_compatible_inventory_and_decision_ledger(tmp_path: Path) 
     assert auto_row["approved_gloss"] == "bus"
 
 
+def _classify_resolved_candidate_curriculum_source(
+    *,
+    lemma: str,
+    pos: str | None,
+    gloss: str | None,
+    metadata_reasons: Sequence[str],
+    atlas_keys: set[str],
+    ledger_keys: set[str],
+    heritage_lookup: core.HeritageLookup,
+) -> tuple[core.Classification, tuple[str, ...], Mapping[str, Any] | None]:
+    """Byte-identical copy of curriculum_atlas_intake.classify_resolved_candidate (4222 source)."""
+
+    lemma_key = core._lemma_key(lemma)
+    if lemma_key in atlas_keys:
+        return "reject", ("already_in_atlas",), None
+    if lemma_key in ledger_keys:
+        return "reject", ("already_in_existing_ledger",), None
+    if metadata_reasons:
+        return "review_queue", tuple(metadata_reasons), None
+    if not pos:
+        return "review_queue", ("vesum_ambiguous_pos",), None
+    if not gloss:
+        return "review_queue", ("missing_english_anchor",), None
+    try:
+        heritage = heritage_lookup(lemma)
+    except Exception:
+        return "review_queue", ("heritage_lookup_failed",), None
+    classification = core.normalised_text(heritage.get("classification")) if isinstance(heritage, Mapping) else None
+    if not classification:
+        return "review_queue", ("heritage_unresolved",), None
+    if bool(heritage.get("is_russianism")) or classification == "russianism":
+        return "reject", ("heritage_russianism",), heritage
+    if classification == "surzhyk":
+        return "reject", ("heritage_surzhyk",), heritage
+    if bool(heritage.get("russian_shadow")):
+        return "review_queue", ("heritage_russian_shadow",), heritage
+    sovietization_risk = heritage.get("sovietization_risk")
+    if not isinstance(sovietization_risk, int):
+        return "review_queue", ("heritage_sovietization_risk_unknown",), heritage
+    if sovietization_risk > 0:
+        return "review_queue", ("heritage_sovietization_risk",), heritage
+    if classification != "standard":
+        return "review_queue", ("heritage_nonstandard_classification",), heritage
+    return "auto_approve", ("vesum_unique_lemma_pos", "explicit_english_anchor", "heritage_clear"), heritage
+
+
+@pytest.mark.parametrize(
+    ("case", "kwargs", "heritage_lookup"),
+    [
+        (
+            "auto_approve",
+            {
+                "lemma": "автобус",
+                "pos": "noun",
+                "gloss": "bus",
+                "metadata_reasons": (),
+                "atlas_keys": set(),
+                "ledger_keys": set(),
+            },
+            clear_heritage,
+        ),
+        (
+            "review_queue_missing_gloss",
+            {
+                "lemma": "читати",
+                "pos": "verb",
+                "gloss": None,
+                "metadata_reasons": (),
+                "atlas_keys": set(),
+                "ledger_keys": set(),
+            },
+            clear_heritage,
+        ),
+        (
+            "review_queue_metadata",
+            {
+                "lemma": "мати",
+                "pos": None,
+                "gloss": "mother",
+                "metadata_reasons": ("vesum_ambiguous_pos",),
+                "atlas_keys": set(),
+                "ledger_keys": set(),
+            },
+            clear_heritage,
+        ),
+        (
+            "reject_already_in_atlas",
+            {
+                "lemma": "кіт",
+                "pos": "noun",
+                "gloss": "cat",
+                "metadata_reasons": (),
+                "atlas_keys": {core._lemma_key("кіт")},
+                "ledger_keys": set(),
+            },
+            clear_heritage,
+        ),
+        (
+            "reject_russianism",
+            {
+                "lemma": "тест",
+                "pos": "noun",
+                "gloss": "test",
+                "metadata_reasons": (),
+                "atlas_keys": set(),
+                "ledger_keys": set(),
+            },
+            lambda _: {"classification": "russianism", "is_russianism": True},
+        ),
+    ],
+)
+def test_classify_resolved_candidate_matches_curriculum_without_committed_keys(
+    case: str,
+    kwargs: dict[str, object],
+    heritage_lookup: core.HeritageLookup,
+) -> None:
+    curriculum = _classify_resolved_candidate_curriculum_source(
+        **kwargs,
+        heritage_lookup=heritage_lookup,
+    )
+    for committed_keys in (None, set()):
+        core_result = core.classify_resolved_candidate(
+            **kwargs,
+            committed_inventory_keys=committed_keys,
+            heritage_lookup=heritage_lookup,
+        )
+        assert core_result == curriculum, case
+
+
 def test_heritage_rejection_and_uncertainty_are_fail_closed() -> None:
     common = {
         "lemma": "тест",
@@ -248,7 +380,6 @@ def test_heritage_rejection_and_uncertainty_are_fail_closed() -> None:
         "metadata_reasons": (),
         "atlas_keys": set(),
         "ledger_keys": set(),
-        "committed_inventory_keys": set(),
     }
 
     reject, reject_reasons, _ = core.classify_resolved_candidate(
@@ -262,6 +393,46 @@ def test_heritage_rejection_and_uncertainty_are_fail_closed() -> None:
 
     assert (reject, reject_reasons) == ("reject", ("heritage_russianism",))
     assert (shadow, shadow_reasons) == ("review_queue", ("heritage_russian_shadow",))
+
+
+def test_main_with_absent_private_root_exits_zero_with_empty_outputs(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    missing_private = tmp_path / "nonexistent-private"
+    inventory_out = tmp_path / "inventory.json"
+    report_out = tmp_path / "report.json"
+
+    exit_code = intake.main(
+        [
+            "--private-root",
+            str(missing_private),
+            "--june-notes-root",
+            str(missing_private / "notes"),
+            "--inventory-out",
+            str(inventory_out),
+            "--report-out",
+            str(report_out),
+        ]
+    )
+
+    assert exit_code == 0
+    assert json.loads(inventory_out.read_text(encoding="utf-8")) == []
+    report = json.loads(report_out.read_text(encoding="utf-8"))
+    assert report["counts"]["source_units"] == 8
+    assert report["inventory_counts"]["source_units_available"] == 0
+    assert report["counts"]["token_occurrences"] == 0
+    assert report["counts"]["deduped_candidates"] == 0
+    assert report["counts"]["auto_approve"] == 0
+    assert report["counts"]["review_queue"] == 0
+    assert report["counts"]["reject"] == 0
+    sources_json = json.dumps(report["sources"], ensure_ascii=False)
+    assert str(missing_private) not in sources_json
+    assert all(source["available"] is False for source in report["sources"])
+    assert all("source_ref" in source for source in report["sources"])
+    stdout = capsys.readouterr().out
+    assert "deduped_candidates: 0" in stdout
+    assert "token_occurrences: 0" in stdout
 
 
 def test_cli_rejects_ledger_output_outside_source_inventory_directory(

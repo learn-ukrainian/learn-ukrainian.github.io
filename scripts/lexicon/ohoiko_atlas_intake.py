@@ -40,6 +40,9 @@ DEFAULT_REPORT_OUT = Path("/tmp/atlas-ohoiko-corpus-intake.json")
 DEFAULT_INVENTORY_PATH = "data/lexicon/source-inventory/ohoiko-corpus-intake.json"
 WORKFLOW_ID = "ohoiko_corpus_atlas_intake.v1"
 SOURCE_FAMILY = "ohoiko"
+OHOKO_LEDGER_SENSE_NOTE = (
+    "Generated from Ohoiko corpus intake; Atlas publication is a later phase."
+)
 
 TEXT_SUFFIXES = frozenset({".md", ".txt"})
 _VERB_HEADWORD_RE = re.compile(
@@ -251,6 +254,8 @@ def build_ohoiko_intake(
     committed_keys = (
         committed_inventory_keys
         if committed_inventory_keys is not None
+        # Ohoiko opts into committed-inventory dedup: public ohoiko-*.yaml keyword
+        # inventories already represent curated headwords that must not be re-queued.
         else core.load_committed_inventory_keys(
             committed_ohoiko_inventory_paths(project_root=project_root),
             project_root=project_root,
@@ -542,6 +547,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     batch_label=args.batch_label,
                     reviewed_at=args.reviewed_at,
                     reviewer="ohoiko-intake-automation",
+                    sense_note=OHOKO_LEDGER_SENSE_NOTE,
                 ),
                 args.ledger_out,
             )
