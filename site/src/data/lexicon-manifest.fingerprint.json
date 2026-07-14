@@ -8,6 +8,14 @@
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
+        "path": "scripts/lexicon/anchor_curation_evidence.py",
+        "sha256": "0fa635732aacc6970242805168ea08470191a11447f0ffe69bcc177ceb0eb543"
+      },
+      {
+        "path": "scripts/lexicon/apply_anchor_worksheet.py",
+        "sha256": "7e96525ed1f3a9b755d0b0b6f2413c6bc327f4b64d66e013bd5749a843fe3e86"
+      },
+      {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
         "sha256": "406e7ad427f0b7ecfb60bd0de0ff5cc00899025bf75c5af2fc045d80426028b9"
       },
@@ -57,7 +65,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "042635510b49afc7b68be3d10ecdc8420a82a8d803cb9a32100cebecfab7518f"
+        "sha256": "116d65bea38faaa2a984ebecc4623dc3cbcfa36960f328b50840c46cd127843a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -137,11 +145,11 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "d1614c11e5099113ad2b4ec5104f07f86b16e64c7a5a8e46a40d0d9317562513"
+        "sha256": "f22cb1acc7d7d1fb23ac082301fbcf0c3de0e8e178f1eddfc74d072bf73aa6a6"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "28c72082c388ae5b301acc006eeed4e585c9fbbda48b805d1ff543d31862745d"
+        "sha256": "9270110568552cffdf82bfb907cb624afc38da121c4d3aa3e2af3fc95bb3a162"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
@@ -165,8 +173,8 @@
       }
     ]
   },
-  "fingerprint": "2dbf2b41002b741769541cbfb04f31b11e65c89cbafeeb0dde0867af352016d4",
+  "fingerprint": "aeac5a3434aceceaec83726fe4f14eb8cc9c3fe80ce3e704b2f1b07409585745",
   "stats": {
-    "lexicon_code_files": 40
+    "lexicon_code_files": 42
   }
 }
