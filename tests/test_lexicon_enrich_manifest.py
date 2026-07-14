@@ -30,8 +30,10 @@ from scripts.lexicon.enrich_manifest import (
     _definition_pointer_relations_by_headword,
     _definition_synonym_targets,
     _dmklinger_key,
+    _entry_has_learner_english_anchor,
     _etymology,
     _etymology_lookup_variants,
+    _fill_learner_english_anchor_from_slovnyk_cache,
     _homonym_relations,
     _homonym_relations_by_headword,
     _idioms,
@@ -2340,10 +2342,49 @@ def test_translation_parses_slovnyk_ukreng_plural_label(monkeypatch) -> None:
     }
 
     assert _translation(conn, "бризки", {}, slovnyk_cache=cache) == {
-        "en": ["splashes", "spray"],
+        "en": ["splashes", "spray", "sparks", "fine drops of rain"],
         "source": _SLOVNYK_UKRENG_SOURCE,
         "source_url": "https://slovnyk.me/dict/ukreng/бризки",
     }
+
+
+def test_fill_learner_english_anchor_from_cached_ukreng() -> None:
+    cache = {
+        "lookups": {
+            "ukreng": {
+                "dictionary_slug": "ukreng",
+                "text": "перезавантаження комп. rebooting Джерело: Українсько-англійський словник на Slovnyk.me",
+                "source_url": "https://slovnyk.me/dict/ukreng/перезавантаження",
+            }
+        }
+    }
+    entry: dict[str, object] = {
+        "lemma": "перезавантаження",
+        "enrichment": {"cefr": {"level": "C1", "source": "estimated (GRAC frequency)"}},
+    }
+
+    assert _fill_learner_english_anchor_from_slovnyk_cache(entry, "перезавантаження", cache) is True
+    assert _entry_has_learner_english_anchor(entry)
+    enrichment = entry["enrichment"]
+    assert isinstance(enrichment, dict)
+    translation = enrichment["translation"]
+    assert isinstance(translation, dict)
+    assert translation["en"] == ["rebooting"]
+    assert translation["source"] == _SLOVNYK_UKRENG_SOURCE
+
+
+def test_fill_learner_english_anchor_leaves_entry_without_cached_ukreng() -> None:
+    entry: dict[str, object] = {
+        "lemma": "бажане",
+        "enrichment": {"cefr": {"level": "B1", "source": "estimated (GRAC frequency)"}},
+    }
+    cache = {"lookups": {"ukreng": None}}
+
+    assert _fill_learner_english_anchor_from_slovnyk_cache(entry, "бажане", cache) is False
+    assert not _entry_has_learner_english_anchor(entry)
+    enrichment = entry["enrichment"]
+    assert isinstance(enrichment, dict)
+    assert "translation" not in enrichment
 
 
 def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> None:

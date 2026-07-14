@@ -4886,15 +4886,20 @@ _SLOVNYK_UKRENG_PREFIX_LABELS = {
     "військ",
     "геогр",
     "геол",
+    "г",
     "гірн",
     "грам",
     "діал",
+    "див",
+    "док",
     "ек",
     "ел",
     "жарт",
+    "збірн",
     "зоол",
     "інформ",
     "іст",
+    "комп",
     "кул",
     "лінгв",
     "мат",
@@ -4904,25 +4909,78 @@ _SLOVNYK_UKRENG_PREFIX_LABELS = {
     "мн",
     "мор",
     "муз",
+    "недок",
+    "невідм",
     "перен",
     "побут",
     "поет",
     "політ",
+    "прийм",
+    "род",
     "розм",
+    "с",
+    "спец",
     "спорт",
     "тех",
+    "текст",
     "тж",
+    "тк",
     "фіз",
+    "фізіол",
     "філол",
     "філос",
     "хім",
     "церк",
+    "відм",
+    "в",
+    "спол",
+    "лит",
 }
 
 
-def _ukreng_prefix_is_label(prefix: str) -> bool:
-    words = re.findall(r"[А-Яа-яЄєІіЇїҐґ]+", prefix.casefold())
-    return all(word in _SLOVNYK_UKRENG_PREFIX_LABELS for word in words)
+def _ukreng_strip_aspect_prefix(body: str) -> str:
+    """Remove leading imperfective/perfective aspect pair(s) from ukreng body text."""
+    return re.sub(
+        r"^недок\.\s+.+?,\s+док\.\s+(?:\S+(?:,\s+\S+)*)?\s*",
+        "",
+        body,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+
+
+def _ukreng_prefix_lemma_tokens(lemma: str) -> set[str]:
+    return {_strip_stress(variant).casefold() for variant in _split_lemma_variants(lemma) if variant}
+
+
+def _ukreng_prefix_is_label(prefix: str, *, lemma: str = "") -> bool:
+    """Return True when Cyrillic text before the English gloss is label-only."""
+    cleaned = re.sub(r"\([^)]*\)", " ", prefix)
+    if "див." in cleaned.casefold():
+        cleaned = re.sub(r"^.*?див\.\s*", " ", cleaned, count=1, flags=re.IGNORECASE)
+        cleaned = re.sub(r"^[^—–-]+(?:[—–-]\s*)?", " ", cleaned, count=1)
+    cleaned = re.sub(r"^в\s+спол\.\s+\S+(?:\s+як\s*)?", " ", cleaned, flags=re.IGNORECASE)
+    words = re.findall(r"[А-Яа-яЄєІіЇїҐґ]+|\d+", cleaned.casefold())
+    skip = _ukreng_prefix_lemma_tokens(lemma)
+    words = [word for word in words if word not in skip]
+    if not words:
+        return True
+    return all(word in _SLOVNYK_UKRENG_PREFIX_LABELS or word.isdigit() for word in words)
+
+
+def _slovnyk_ukreng_body_chunks(body: str) -> list[str]:
+    """Split ukreng body text into sense-sized chunks in deterministic order."""
+    chunks: list[str] = []
+    aspect_stripped = _ukreng_strip_aspect_prefix(body)
+    for part in re.split(r";|\n", aspect_stripped):
+        part = part.strip()
+        if not part:
+            continue
+        for sense in re.split(r"(?<=\))\s*(?=\d+\))", part):
+            sense = sense.strip()
+            if sense:
+                chunks.append(sense)
+    return chunks
 
 
 def _clean_ukreng_gloss(candidate: str) -> str | None:
@@ -4945,17 +5003,18 @@ def _slovnyk_ukreng_glosses(row: dict[str, Any], lemma: str, *, limit: int = 6) 
     body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, str(row.get("word") or "")))
     out: list[str] = []
     seen: set[str] = set()
-    for chunk in re.split(r";|\n", body):
+    for chunk in _slovnyk_ukreng_body_chunks(body):
         chunk = re.sub(r"^\s*\d+\)?\.?\s*", "", chunk.strip())
         if not chunk:
             continue
         first_latin = _LATIN_RE.search(chunk)
-        if not first_latin or not _ukreng_prefix_is_label(chunk[: first_latin.start()]):
+        if not first_latin or not _ukreng_prefix_is_label(chunk[: first_latin.start()], lemma=lemma):
             continue
         english_part = chunk[first_latin.start() :]
         first_cyrillic = re.search(r"[А-Яа-яЄєІіЇїҐґ]", english_part)
         if first_cyrillic:
             english_part = english_part[: first_cyrillic.start()]
+        english_part = re.sub(r"\([^)]*\)", " ", english_part)
         english_part = re.split(r"\s+—", english_part, maxsplit=1)[0]
         for candidate in re.split(r",|/|\bor\b", english_part, flags=re.IGNORECASE):
             gloss = _clean_ukreng_gloss(candidate)
@@ -5004,6 +5063,62 @@ def _slovnyk_ukreng_translation(lemma: str, cache: dict[str, Any] | None) -> dic
     if source_url:
         block["source_url"] = source_url
     return block
+
+
+def _entry_has_learner_english_anchor(entry: dict[str, Any]) -> bool:
+    gloss = entry.get("gloss")
+    if isinstance(gloss, str) and gloss.strip():
+        return True
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return False
+    translation = enrichment.get("translation")
+    if isinstance(translation, dict):
+        terms = translation.get("en")
+        if isinstance(terms, list) and any(isinstance(term, str) and term.strip() for term in terms):
+            return True
+    meaning = enrichment.get("meaning")
+    if isinstance(meaning, dict) and meaning.get("source") == KAIKKI_SOURCE:
+        definitions = meaning.get("definitions")
+        if isinstance(definitions, list) and any(isinstance(item, str) and item.strip() for item in definitions):
+            return True
+    return False
+
+
+def _fill_learner_english_anchor_from_slovnyk_cache(
+    entry: dict[str, Any],
+    lemma: str,
+    slovnyk_cache: dict[str, Any] | None,
+) -> bool:
+    """Fill a missing learner English anchor from a cached slovnyk ukreng row (#4515).
+
+    Offline-safe (#5114): only rows with cached ``text`` are consulted; never
+    live-fetch or invent a gloss.
+    """
+    if _entry_has_learner_english_anchor(entry):
+        return False
+    row = _cache_lookup(slovnyk_cache, _SLOVNYK_UKRENG_SLUG)
+    if not row:
+        return False
+    glosses = _slovnyk_ukreng_glosses(row, lemma)
+    if not glosses:
+        return False
+    translation: dict[str, object] = {
+        "en": glosses,
+        "source": _SLOVNYK_UKRENG_SOURCE,
+    }
+    source_url = str(row.get("source_url") or "").strip()
+    if source_url:
+        translation["source_url"] = source_url
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        enrichment = {}
+        entry["enrichment"] = enrichment
+    enrichment["translation"] = translation
+    sources = set(enrichment.get("sources") or [])
+    sources.add(_SLOVNYK_UKRENG_SOURCE)
+    enrichment["sources"] = sorted(sources)
+    return True
 
 
 def _translation(
@@ -5722,13 +5837,15 @@ def enrich_entry(
     else:
         entry.pop("enrichment", None)
 
+    filled_anchor = _fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, slovnyk_cache)
+
     wiki_ref = _wiki_reference(lemma, block.get("literary_attestation"))
     if wiki_ref:
         entry["wiki_reference"] = wiki_ref
     else:
         entry.pop("wiki_reference", None)
 
-    return bool(block or sections or pronunciation or wiki_ref)
+    return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
 
 
 def enrich() -> tuple[int, int]:
