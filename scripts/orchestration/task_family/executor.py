@@ -661,8 +661,9 @@ class CleanupExecutor:
             locks.enter_context(safety.operation_lock(self.repo_root, operation_id=self.plan.operation_id))
             locks.enter_context(safety.lineage_lock(self.repo_root, self.plan.lineage_id))
             locks.enter_context(safety.family_lock(self.repo_root, self.plan.family_id))
-            for target in sorted(self.plan.worktree_targets, key=lambda item: str(item.worktree.resolve())):
-                locks.enter_context(safety.worktree_lock(self.repo_root, target.worktree))
+            worktrees = {target.worktree.resolve() for target in self.plan.worktree_targets}
+            for worktree in sorted(worktrees, key=str):
+                locks.enter_context(safety.worktree_lock(self.repo_root, worktree))
             return self._run_locked()
 
     def _run_locked(self) -> dict[str, Any]:

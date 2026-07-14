@@ -6,6 +6,7 @@ import json
 import os
 import sqlite3
 import subprocess
+from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -251,6 +252,34 @@ def test_advisory_lock_path_is_not_git_lock_but_git_worktree_lock_blocks(tmp_pat
     assert git_safety.is_worktree_locked(repo, worktree) is True
     with pytest.raises(git_safety.GitSafetyError, match="locked"):
         git_safety.verify_worktree_candidate(repo, worktree=worktree, branch="cleanup/locked")
+
+
+def test_executor_locks_each_resolved_worktree_path_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    shared_worktree = tmp_path / "shared-worktree"
+    approved = plan(
+        repo,
+        family="shared-worktree-lock",
+        mode="finish_and_clean",
+        task_targets=(),
+        worktree_targets=(
+            worktree_target(shared_worktree, "cleanup/shared-a", "shared-worktree-lock", number=31),
+            worktree_target(shared_worktree, "cleanup/shared-b", "shared-worktree-lock", number=32),
+        ),
+    )
+    locked_paths: list[Path] = []
+
+    def record_lock(_repo: Path, worktree: Path):
+        locked_paths.append(worktree.resolve())
+        return nullcontext()
+
+    monkeypatch.setattr(git_safety, "worktree_lock", record_lock)
+    monkeypatch.setattr(executor.CleanupExecutor, "_run_locked", lambda _self: {"state": "locks-acquired"})
+
+    assert executor.CleanupExecutor(repo, approved).run() == {"state": "locks-acquired"}
+    assert locked_paths == [shared_worktree.resolve()]
 
 
 def test_github_queries_use_valid_commands_and_normalize_merge_commit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
