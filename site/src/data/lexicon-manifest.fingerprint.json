@@ -1,10 +1,18 @@
 {
-  "fingerprint": "b87bba5c9d95daab04404d2a90074baadda710e4f9e8bb83badb94f76a838e54",
+  "fingerprint": "27807e92fe3355b2cd51e870ed4f9e12d810daf84172943ef54274bc075badad",
   "inputs": {
     "lexicon_code": [
       {
         "path": "scripts/lexicon/__init__.py",
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "scripts/lexicon/anchor_curation_evidence.py",
+        "sha256": "0fa635732aacc6970242805168ea08470191a11447f0ffe69bcc177ceb0eb543"
+      },
+      {
+        "path": "scripts/lexicon/apply_anchor_worksheet.py",
+        "sha256": "7e96525ed1f3a9b755d0b0b6f2413c6bc327f4b64d66e013bd5749a843fe3e86"
       },
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
@@ -163,6 +171,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 39
+    "lexicon_code_files": 41
   }
 }
