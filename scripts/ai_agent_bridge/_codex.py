@@ -22,6 +22,12 @@ from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_codex_prompt
+from ._review_worktree import (
+    ReviewWorktreeError,
+    provision_review_worktree,
+    review_target_from_message,
+    review_target_payload,
+)
 
 _CODEX_MODES = {"safe", "workspace-write", "full-auto", "danger"}
 _CHAIN_ISSUE_REF_RE = re.compile(r"^(?:#|issue-|gh-)?(?P<num>\d+)$")
@@ -103,11 +109,21 @@ def ask_codex(
     no_timeout: bool = False,
     review: bool = False,
     background: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
 ):
     """Send message to Codex AND invoke Codex to process it."""
     from_llm = _resolve_codex_from_llm(from_llm)
     msg_id = send_message(
-        content, task_id, msg_type, data, from_llm=from_llm, to_llm="codex", from_model=from_model, to_model=to_model
+        content,
+        task_id,
+        msg_type,
+        data,
+        from_llm=from_llm,
+        to_llm="codex",
+        from_model=from_model,
+        to_model=to_model,
+        review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
     if background:
@@ -134,6 +150,8 @@ def ask_codex_chain(
     no_timeout: bool = False,
     review: bool = False,
     background: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
 ) -> list[int]:
     """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
     from_llm = _resolve_codex_from_llm(from_llm)
@@ -158,6 +176,8 @@ def ask_codex_chain(
             no_timeout,
             review=review,
             background=background,
+            review_branch=review_branch,
+            review_pr_number=review_pr_number,
         )
         message_ids.append(msg_id)
 
@@ -233,8 +253,6 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         _handle_codex_rate_limited(msg, message_id, reason)
         return
 
-    prompt = build_codex_prompt(msg, review)
-
     print(f"📨 Message #{msg['id']}")
     print(f"   From: {msg['from']} → To: {msg['to']}")
     print(f"   Type: {msg['type']}")
@@ -246,25 +264,33 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         print(f"   Hard timeout: {timeout_val}s")
 
     try:
-        result = agent_runner.invoke(
-            "codex",
-            prompt,
-            mode=_codex_bridge_runtime_mode(),
-            cwd=REPO_ROOT,
-            model=model,
-            task_id=msg["task_id"],
-            session_id=None,  # Codex resume_policy="never"
-            tool_config=None,
-            entrypoint="bridge",
-            hard_timeout=timeout_val,
-            # 600s matches dispatch.py — with the mtime-poller liveness
-            # fallback in place (state_5.sqlite, sessions/YYYY/MM/DD/,
-            # history.jsonl, output file), the stall ceiling only applies
-            # to genuinely dead processes. Raised from 180s 2026-04-10
-            # after a real delegated task stalled at 181s on a
-            # successfully-running invocation. (#1184)
-            stall_timeout=min(600, timeout_val),
-        )
+        review_target = review_target_from_message(msg) if review else None
+        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
+            result = agent_runner.invoke(
+                "codex",
+                build_codex_prompt(
+                    msg,
+                    review,
+                    review_branch=checkout.branch if checkout else None,
+                    review_pr_number=checkout.pr_number if checkout else None,
+                    review_worktree_provisioned=checkout is not None,
+                ),
+                mode=_codex_bridge_runtime_mode(),
+                cwd=checkout.path if checkout else REPO_ROOT,
+                model=model,
+                task_id=msg["task_id"],
+                session_id=None,  # Codex resume_policy="never"
+                tool_config=None,
+                entrypoint="bridge",
+                hard_timeout=timeout_val,
+                # 600s matches dispatch.py — with the mtime-poller liveness
+                # fallback in place (state_5.sqlite, sessions/YYYY/MM/DD/,
+                # history.jsonl, output file), the stall ceiling only applies
+                # to genuinely dead processes. Raised from 180s 2026-04-10
+                # after a real delegated task stalled at 181s on a
+                # successfully-running invocation. (#1184)
+                stall_timeout=min(600, timeout_val),
+            )
     except RateLimitedError as exc:
         _handle_codex_rate_limited(msg, message_id, f"Rate limited: {exc}")
         return
@@ -276,6 +302,9 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         return
     except AgentUnavailableError as exc:
         _handle_codex_error(msg, message_id, f"Codex unavailable: {exc}")
+        return
+    except ReviewWorktreeError as exc:
+        _handle_codex_error(msg, message_id, f"Codex review checkout failed: {exc}")
         return
 
     if not result.ok:

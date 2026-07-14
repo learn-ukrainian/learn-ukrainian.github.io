@@ -92,6 +92,11 @@ class WorkflowOptions:
     max_daily_cost_usd: float | None = None
     max_module_cost_usd: float | None = None
     fail_closed_on_llm_skip: bool = True
+    use_llm_cache: bool = True
+    persist_llm_qg: bool = True
+    record_live_outcomes: bool = True
+    record_daily_spend: bool = True
+    capture_tier2: bool = False
 
 
 @dataclass(slots=True)
@@ -264,6 +269,11 @@ def dry_run_modules(
         max_daily_cost_usd=dry_options.max_daily_cost_usd,
         max_module_cost_usd=dry_options.max_module_cost_usd,
         fail_closed_on_llm_skip=dry_options.fail_closed_on_llm_skip,
+        use_llm_cache=dry_options.use_llm_cache,
+        persist_llm_qg=dry_options.persist_llm_qg,
+        record_live_outcomes=dry_options.record_live_outcomes,
+        record_daily_spend=dry_options.record_daily_spend,
+        capture_tier2=dry_options.capture_tier2,
     )
     budget = BudgetState()
     records = [
@@ -785,17 +795,21 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
 
-    cached = llm_qg_store.current_llm_qg_for_module(
-        level,
-        slug,
-        target.module_dir,
-        gate_version=options.gate_version,
-        prompt_hash=prompt_hash,
-        checker_version=CHECKER_VERSION,
-        level_policy_family=policy_family,
-        reviewer_model=reviewer_model_id,
-        route_name=route_name,
-        path=store_path,
+    cached = (
+        llm_qg_store.current_llm_qg_for_module(
+            level,
+            slug,
+            target.module_dir,
+            gate_version=options.gate_version,
+            prompt_hash=prompt_hash,
+            checker_version=CHECKER_VERSION,
+            level_policy_family=policy_family,
+            reviewer_model=reviewer_model_id,
+            route_name=route_name,
+            path=store_path,
+        )
+        if options.use_llm_cache
+        else None
     )
     if cached is not None:
         cached_payload = dict(cached.payload)
@@ -869,15 +883,19 @@ def _run_tier2(
                     "reviewer_family": reviewer_family,
                 }
 
-    stale_cache = _has_stale_cache(
-        level=level,
-        slug=slug,
-        gate_version=options.gate_version,
-        checker_version=CHECKER_VERSION,
-        level_policy_family=policy_family,
-        reviewer_model=reviewer_model_id,
-        route_name=route_name,
-        store_path=store_path,
+    stale_cache = (
+        _has_stale_cache(
+            level=level,
+            slug=slug,
+            gate_version=options.gate_version,
+            checker_version=CHECKER_VERSION,
+            level_policy_family=policy_family,
+            reviewer_model=reviewer_model_id,
+            route_name=route_name,
+            store_path=store_path,
+        )
+        if options.use_llm_cache
+        else False
     )
     estimate = (
         llm_reviewer_dispatch.estimate_route_cost(prompt, route, policy_family=policy_family)
@@ -958,6 +976,7 @@ def _run_tier2(
     dispatch_meta: dict[str, Any]
     tier2_status = "ran"
     workflow_override: str | None = None
+    capture_attempts: list[dict[str, Any]] = []
     while True:
         try:
             raw_response = effective_reviewer(target, attempt_prompt)
@@ -988,6 +1007,14 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
         response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
+        if options.capture_tier2:
+            capture_attempts.append(
+                {
+                    "attempt": len(capture_attempts) + 1,
+                    "raw_response": response_text,
+                    "dispatch": dict(dispatch_meta),
+                }
+            )
         actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
         actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
         actual_route_name = str(dispatch_meta.get("route_name") or route_name)
@@ -1196,35 +1223,60 @@ def _run_tier2(
         status=tier2_status,
         reason=workflow_override,
     )
-    llm_qg_store.record_llm_qg(
-        level=level,
-        slug=slug,
-        module_dir=target.module_dir,
-        payload=payload,
-        gate_version=options.gate_version,
-        prompt_hash=prompt_hash,
-        checker_version=CHECKER_VERSION,
-        level_policy_family=policy_family,
-        reviewer_model=reviewer_model_id,
-        reviewer_family=reviewer_family,
-        route_name=route_name,
-        tool_call_count=llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch_meta),
-        tools_used=[str(tool) for tool in (dispatch_meta.get("tools_used") or ())],
-        tool_events=llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch_meta),
-        source="qg_workflow",
-        path=store_path,
-    )
+    tier2_run_id = f"qg-workflow-{uuid4().hex}"
+    if options.persist_llm_qg:
+        llm_qg_store.record_llm_qg(
+            level=level,
+            slug=slug,
+            module_dir=target.module_dir,
+            payload=payload,
+            gate_version=options.gate_version,
+            prompt_hash=prompt_hash,
+            checker_version=CHECKER_VERSION,
+            level_policy_family=policy_family,
+            reviewer_model=reviewer_model_id,
+            reviewer_family=reviewer_family,
+            route_name=route_name,
+            tool_call_count=llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch_meta),
+            tools_used=[str(tool) for tool in (dispatch_meta.get("tools_used") or ())],
+            tool_events=llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch_meta),
+            source="qg_workflow",
+            run_id=tier2_run_id,
+            path=store_path,
+        )
+    result = {
+        **base_result,
+        "status": tier2_status,
+        "findings": len(findings),
+        "estimate": estimate,
+        "dispatch": dispatch_meta,
+        "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+        "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
+    }
+    if options.capture_tier2:
+        result.update(
+            {
+                "tier2_run_id": tier2_run_id,
+                "payload": payload,
+                "raw_response": response_text,
+                "retry_history": capture_attempts,
+                "gate_outcomes": {
+                    "status": tier2_status,
+                    "workflow_override": workflow_override,
+                    "theatre_retried": theatre_retried,
+                    "deep_read_retried": deep_read_retried,
+                    "grounding": {
+                        "ungrounded_findings": grounding_gate.ungrounded_findings,
+                        "required_ungrounded_findings": grounding_gate.required_ungrounded_findings,
+                        "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+                        "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
+                    },
+                },
+            }
+        )
     return {
         "findings": findings,
-        "result": {
-            **base_result,
-            "status": tier2_status,
-            "findings": len(findings),
-            "estimate": estimate,
-            "dispatch": dispatch_meta,
-            "invalid_fact_checks": grounding_gate.invalid_fact_checks,
-            "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
-        },
+        "result": result,
         "llm_used": True,
         "workflow_verdict": workflow_override,
         "reviewer_model_id": reviewer_model_id,
@@ -1372,7 +1424,7 @@ def _record_daily_spend(
     estimate: Mapping[str, Any],
     observed_cost_usd: float | None,
 ) -> None:
-    if not options.live_reviewer:
+    if not options.live_reviewer or not options.record_daily_spend:
         return
     llm_reviewer_dispatch.append_daily_spend(
         path=options.daily_spend_path,
@@ -1395,7 +1447,7 @@ def _record_live_tier2_outcome(
     status: str,
     reason: str | None = None,
 ) -> dict[str, Any] | None:
-    if not options.live_reviewer or options.dry_run:
+    if not options.live_reviewer or options.dry_run or not options.record_live_outcomes:
         return None
     return llm_qg_store.record_live_tier2_outcome(
         level=level,

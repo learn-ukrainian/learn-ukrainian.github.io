@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
@@ -17,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from agent_runtime.result import Result
 from ai_agent_bridge._agy import _extract_target_model, process_for_agy
 from ai_agent_bridge._config import REPO_ROOT
+from ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 def test_pro_slug_round_trips_from_data_blob():
@@ -102,3 +104,57 @@ def test_agy_bridge_records_unsandboxed_repo_read_mode(monkeypatch):
     assert spawn_cwd != repo_root
     assert not spawn_cwd.is_relative_to(repo_root)
     assert spawn_cwd.is_dir()
+
+
+def test_agy_branch_review_grants_only_the_provisioned_worktree(monkeypatch, tmp_path):
+    checkout = ProvisionedReviewWorktree(
+        path=tmp_path / "review-checkout",
+        branch="feature/review",
+        sha="a" * 40,
+    )
+    checkout.path.mkdir()
+    msg = {
+        "id": 9,
+        "task_id": "branch-review",
+        "from": "codex",
+        "to": "agy",
+        "type": "query",
+        "content": "Review the branch.",
+        "data": json.dumps({"review_target": {"branch": "feature/review"}}),
+    }
+    captured: dict[str, object] = {}
+
+    @contextmanager
+    def fake_checkout(*_args, **_kwargs):
+        yield checkout
+
+    monkeypatch.setattr("ai_agent_bridge._agy._fetch_agy_message", lambda _id: msg)
+    monkeypatch.setattr("ai_agent_bridge._agy.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr("ai_agent_bridge._agy.acknowledge", lambda _id: None)
+    monkeypatch.setattr("ai_agent_bridge._agy.send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr("ai_agent_bridge._agy.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr(
+        "ai_agent_bridge._agy.agent_runner.invoke",
+        lambda *_args, **kwargs: captured.update(kwargs)
+        or Result(
+            ok=True,
+            agent="agy",
+            model="gemini-3.5-flash-high",
+            mode="danger",
+            response="reply",
+            stderr_excerpt=None,
+            duration_s=0.1,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        ),
+    )
+
+    assert process_for_agy(9, review=True, stdout_only=True) == "reply"
+    assert captured["cwd"] != checkout.path
+    assert captured["tool_config"] == {
+        "bridge_repo_read": True,
+        "repo_read_root": str(checkout.path),
+    }

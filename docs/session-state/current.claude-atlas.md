@@ -1,29 +1,26 @@
 # Current — claude-atlas role handoff (durable layer)
 
 > Role: atlas/practice-hub lane driver (umbrella #4387).
-> Launch: `./start-claude.sh --agent curriculum-orchestrator --epic atlas` — the
-> SessionStart banner binds the lane (PR #5074); never self-assign "main orchestrator".
-> Session-layer SSOT (gitignored, richest detail): `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`.
-> Thread rollover packets: `.agent/thread-rollovers/claude-atlas/` (strict continuity protocol).
+> Launch: `./start-claude.sh --agent curriculum-orchestrator --epic atlas`; never self-assign "main orchestrator".
+> Session-layer SSOT (gitignored, richest detail incl. BINDING user orders): `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`.
+> Thread rollover packets: `.agent/thread-rollovers/claude-atlas/`.
 
-## State as of 2026-07-14 (~15:45Z)
+## State as of 2026-07-14 (~23:55Z session end)
 
-- **Anchor release SHIPPED + LIVE-verified**: 115 three-seat-verified EN anchors published
-  through the #5138 richness gate (its first production run; 158→43 gloss-less); pointer flip
-  #5149 merged; live canary косуля→'roe deer' curl-verified. #5133/#4515/#4383/#5082/#5077 CLOSED.
-- **Practice Zone**: all #4383 ACs met (paronym mode surfaced #5115, thin-deck CI warnings,
-  coverage table #5117). Fill tracks: #4506 (paronym), heritage calques.
-- **Intake machinery merged**: #5136 (curriculum, phase-1: 754 auto / 19,337 review / 5,416 reject)
-  + #5141 (Ohoiko adapter, family-neutral core, parity-tested). BOTH epics await next phases:
-  #4222 review-queue triage (two design asks pending in bridge: task-ids 4222-triage-design +
-  4222-triage-design-grok — READ REPLIES via `ab asks` before designing); #4223 phase-2 = the
-  actual private-corpus extraction run — MAIN CHECKOUT ONLY (dispatch worktrees can't see
-  docs/references/private/), CLI: `python -m scripts.lexicon.ohoiko_atlas_intake` (fail-closed).
-- **43 anchor nulls remain** (documented NULL-OK in data/lexicon/anchor_curation_worksheet.yaml)
-  — next curation round = translation-authoring from СУМ-11 senses via the proven three-seat
-  protocol; they fail closed at publish until then.
-- **Hard-won session mechanics**: fingerprint-sidecar PRs serially conflict (#5147 — until fixed,
-  SERIALIZE lexicon PRs, rebase+regen after each merge); cursor workers die on GH secondary
-  limits post-push (#5146 — verify their pushed work yourself); no full-manifest enrich on 16GB
-  machines (targeted runs only); delegate worktree nesting guard (#5127); venv cross-repo
-  contamination tripwire (#5134); deepseek stalls → grok-build failover works.
+- **CRITICAL IN-FLIGHT**: a detached grow run survives the session (pid + worktree + log recorded in the
+  driver handoff). On its exit: promote via the hardened machinery (#5172 — anchor-fill at promotion),
+  then ONE combined publish through the #5138 gate (expansion + 195 verified anchors #5145/#5182 +
+  attribution migration #5166) → pointer-flip PR → live canaries.
+- **Shipped today (atlas lane)**: both user-reported bugs (matching render #5164 — CSS never shipped, root-caused;
+  8k-words → expansion in flight); УМІФ source-attribution guideline (#5162 doc, #5166 fail-closed impl,
+  #5163 closes at the publish); anchors 196→195+1 abstention (three-seat, heritage-defense precedent
+  «світлина» — СУМ-20 modern beats СУМ-11 Soviet marks); cloze 22→52 reviewed A1 (#5183); review-queue
+  machinery live (batch-0 94/6, reject-rules R1); entry-model epic STARTED (#5184 p1 merged, byte-identical).
+- **Behavioral orders (BINDING, in driver handoff header)**: UI testing never inline — delegate whole;
+  hard-bug diagnosis stays inline, fixes route out; no idling — keep all lanes loaded during waits.
+- **Lane health**: glm ask lane dead (#5091 datapoint); cursor dies post-push on GH secondary limits
+  (#5146) — verify its pushed work yourself; deepseek stalls → grok-build failover; SERIALIZE
+  fingerprint-carrying lexicon PRs (#5147).
+- **Queue order**: (1) grow→promote→publish arc; (2) review-queue batch-1 (add UA-GEC-count +
+  СУМ-11-marking pre-filters per calibration lessons); (3) #4223/#4222 next batches; (4) entry-model
+  p2 = 336 thin-page redirects (recommendation given, user nod pending); (5) #4384 backend epic.

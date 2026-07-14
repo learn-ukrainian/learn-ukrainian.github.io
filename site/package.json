@@ -5,9 +5,10 @@
   "scripts": {
     "atlas:build-db": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db",
     "atlas:build-search": "cd .. && python3 scripts/audit/generate_search_index.py --db data/atlas.db",
+    "atlas:build-daily": "cd .. && .venv/bin/python -m scripts.audit.generate_daily_pool --db data/atlas.db",
     "atlas:perf": "node ./scripts/benchmark-atlas-db.mjs",
     "atlas:validate-aliases": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only",
-    "hydrate": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts",
+    "hydrate": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && npm run atlas:build-daily && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts",
     "hydrate:manifest": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db",
     "hydrate:practice": "node ./scripts/hydrate-practice-deck.mjs",
     "dev": "npm run hydrate && astro dev",

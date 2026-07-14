@@ -3,13 +3,60 @@
 from ._config import REPO_ROOT
 
 
-def review_protocol_prefix() -> str:
-    """Load the canonical review protocol at call time."""
-    return (REPO_ROOT / "docs" / "review-protocol.md").read_text("utf-8").rstrip() + "\n\n"
+def review_protocol_prefix(
+    *,
+    branch: str | None = None,
+    pr_number: int | None = None,
+    worktree_provisioned: bool = False,
+) -> str:
+    """Load the canonical review protocol and optional branch-target guard."""
+    protocol = (REPO_ROOT / "docs" / "review-protocol.md").read_text("utf-8").rstrip()
+    if branch is None:
+        return protocol + "\n\n"
+
+    pr_evidence = f" `gh pr diff {pr_number}` or" if pr_number is not None else ""
+    fallback = (
+        "BRANCH-TARGETED REVIEW — EVIDENCE BOUNDARY\n"
+        f"The target is `origin/{branch}`. Your checkout may NOT be that branch; "
+        "never infer branch contents from the primary checkout.\n"
+    )
+    if worktree_provisioned:
+        fallback += (
+            "A read-only detached worktree at that fetched branch head was provisioned "
+            "for this invocation. Use it for branch file evidence. If it is unavailable, "
+            "do not fall back to ordinary local file reads; use the no-worktree evidence "
+            "forms below.\n"
+        )
+    else:
+        fallback += "No branch worktree is provisioned for this invocation.\n"
+    fallback += (
+        "Without a provisioned worktree, the ONLY permitted file-evidence forms are"
+        f"{pr_evidence} `git show origin/{branch}:<path>`. "
+        "Do not read files from the current checkout.\n"
+    )
+    return f"{protocol}\n\n{fallback}\n"
 
 
-def _prepend_review_protocol(prompt: str, review: bool) -> str:
-    return f"{review_protocol_prefix()}{prompt}" if review else prompt
+def _prepend_review_protocol(
+    prompt: str,
+    review: bool,
+    *,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
+    review_worktree_provisioned: bool = False,
+) -> str:
+    if not review:
+        return prompt
+    if review_branch is None and review_pr_number is None and not review_worktree_provisioned:
+        return f"{review_protocol_prefix()}{prompt}"
+    return (
+        review_protocol_prefix(
+            branch=review_branch,
+            pr_number=review_pr_number,
+            worktree_provisioned=review_worktree_provisioned,
+        )
+        + prompt
+    )
 
 
 def _load_gemini_context() -> str:
@@ -173,7 +220,13 @@ Format your response clearly.
     return prompt
 
 
-def build_claude_prompt(msg: dict, review: bool = False) -> str:
+def build_claude_prompt(
+    msg: dict,
+    review: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
+    review_worktree_provisioned: bool = False,
+) -> str:
     """Build prompt for Claude invocation."""
     prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
 
@@ -197,7 +250,13 @@ Respond directly to this message. Be concise and helpful.
 Your response will be automatically sent back to the sender via the message broker.
 Do NOT use MCP tools to send your response - just output your response directly.
 """
-    return _prepend_review_protocol(prompt, review)
+    return _prepend_review_protocol(
+        prompt,
+        review,
+        review_branch=review_branch,
+        review_pr_number=review_pr_number,
+        review_worktree_provisioned=review_worktree_provisioned,
+    )
 
 
 _CODEX_STANDING_RULES = """\
@@ -243,7 +302,13 @@ English scaffolding is by design; from A2 never raise English) - reviews need an
 cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution."""
 
 
-def build_agy_prompt(msg: dict, review: bool = False) -> str:
+def build_agy_prompt(
+    msg: dict,
+    review: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
+    review_worktree_provisioned: bool = False,
+) -> str:
     """Build prompt for Agy (Antigravity CLI) invocation.
 
     Mirrors the codex prompt shape — minimal context, directive framing,
@@ -289,10 +354,22 @@ Standing rules for bridge Q&A:
   them via your native plugin surface; only fall back to run_command +
   curl if the plugin isn't loaded.
 """
-    return _prepend_review_protocol(prompt, review)
+    return _prepend_review_protocol(
+        prompt,
+        review,
+        review_branch=review_branch,
+        review_pr_number=review_pr_number,
+        review_worktree_provisioned=review_worktree_provisioned,
+    )
 
 
-def build_codex_prompt(msg: dict, review: bool = False) -> str:
+def build_codex_prompt(
+    msg: dict,
+    review: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
+    review_worktree_provisioned: bool = False,
+) -> str:
     """Build prompt for Codex invocation."""
     prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
 
@@ -318,4 +395,10 @@ Respond directly to this message. Be concise and helpful.
 This bridge is for quick questioning and short coordination, not long-running task execution.
 Do NOT use broker or MCP messaging tools to send your response - just output your response directly.
 """
-    return _prepend_review_protocol(prompt, review)
+    return _prepend_review_protocol(
+        prompt,
+        review,
+        review_branch=review_branch,
+        review_pr_number=review_pr_number,
+        review_worktree_provisioned=review_worktree_provisioned,
+    )

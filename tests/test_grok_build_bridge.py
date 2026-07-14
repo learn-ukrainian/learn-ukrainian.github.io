@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import json
 from argparse import Namespace
+from contextlib import contextmanager
 from types import SimpleNamespace
 from unittest.mock import patch
 
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.ai_agent_bridge import _cli, _grok_build
+from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 def test_ask_grok_build_parser_accepts_first_class_args():
@@ -117,6 +120,49 @@ def test_process_grok_build_invokes_native_registry_key(monkeypatch):
     assert kwargs["model"] == "grok-build"
     assert kwargs["effort"] == _grok_build.GROK_BUILD_DEFAULT_EFFORT
     assert kwargs["entrypoint"] == "bridge"
+
+
+def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_path):
+    checkout = ProvisionedReviewWorktree(
+        path=tmp_path / "review-checkout",
+        branch="feature/review",
+        sha="a" * 40,
+    )
+    checkout.path.mkdir()
+    captured: dict[str, object] = {}
+
+    @contextmanager
+    def fake_checkout(*_args, **_kwargs):
+        yield checkout
+
+    monkeypatch.setattr(
+        _grok_build,
+        "_fetch_grok_build_message",
+        lambda _message_id: {
+            "id": 9,
+            "task_id": "branch-review",
+            "from": "codex",
+            "to": "grok-build",
+            "type": "query",
+            "content": "Review the branch.",
+            "data": json.dumps({"review_target": {"branch": "feature/review"}}),
+        },
+    )
+    monkeypatch.setattr(_grok_build, "provision_review_worktree", fake_checkout)
+    monkeypatch.setattr(_grok_build, "send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr(_grok_build, "acknowledge", lambda *_args: None)
+    monkeypatch.setattr(_grok_build, "record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr(_grok_build, "set_session", lambda *_args: None)
+    monkeypatch.setattr(
+        _grok_build.agent_runner,
+        "invoke",
+        lambda *_args, **kwargs: captured.update(kwargs)
+        or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-build"),
+    )
+
+    _grok_build.process_for_grok_build(9, review=True)
+
+    assert captured["cwd"] == checkout.path
 
 
 def test_grok_build_registry_key_resolves_native_adapter():

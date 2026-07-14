@@ -183,6 +183,16 @@ Public reports list opaque ``source_ref`` locators and aggregate counts only.
 Raw copyrighted paths, passage text, and quotes never leave the private
 boundary.
 
+The full ``ohoiko-corpus-intake.json`` inventory (~31 MB) is **gitignored,
+regenerable output** — not committed (#4223). Its committed stand-in is
+``data/lexicon/source-inventory/ohoiko-corpus-intake.summary.md`` (counts +
+content hash + regeneration command). ``--ledger-out`` writes one monolithic
+YAML; the committed durable record is that ledger re-split into bounded
+per-batch files (``…-batch-NN.yaml``, ~1,000 rows each) under
+``data/lexicon/source-inventory-review-decisions/``. The committed-ledger
+validator fails open on the absent regenerable inventory (structural
+key-hash check only); regenerate the JSON to restore the full row cross-check.
+
 The source inventory parser accepts CSV, TSV, JSONL, JSON, or YAML. YAML/JSON
 structured inventories use this minimal v1 shape:
 

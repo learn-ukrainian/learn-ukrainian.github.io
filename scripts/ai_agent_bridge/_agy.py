@@ -26,6 +26,12 @@ from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_agy_prompt
+from ._review_worktree import (
+    ReviewWorktreeError,
+    provision_review_worktree,
+    review_target_from_message,
+    review_target_payload,
+)
 
 _DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS = 900
 _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
@@ -87,6 +93,8 @@ def ask_agy(
     stdout_only: bool = False,
     output_path: str | None = None,
     background: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
 ):
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
     if background and (stdout_only or output_path):
@@ -100,6 +108,7 @@ def ask_agy(
         to_llm="agy",
         from_model=from_model,
         to_model=to_model,
+        review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
     if background:
@@ -148,7 +157,7 @@ def process_for_agy(
     timeout_val = _resolve_agy_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or _DEFAULT_AGY_MODEL
 
-    prompt = build_agy_prompt(msg, review)
+    review_target = review_target_from_message(msg) if review else None
 
     if not stdout_only:
         print(f"📨 Message #{msg['id']}")
@@ -162,32 +171,39 @@ def process_for_agy(
             print(f"   Hard timeout: {timeout_val}s")
 
     try:
-        result = agent_runner.invoke(
-            "agy",
-            prompt,
-            # AGY's only sandbox switch is the opt-in ``--sandbox`` flag;
-            # there is no ``--no-sandbox`` counterpart.  Bridge Q&A must run
-            # without that sandbox so it can read the repository named by the
-            # caller.  The prompt remains explicitly read-only because AGY's
-            # headless permission bypass is otherwise full-trust.
-            mode="danger",
-            # Spawn from an out-of-tree scratch cwd: the runner's worktree
-            # containment guard (#4444) correctly refuses write-capable
-            # spawns whose cwd IS the protected primary checkout, which
-            # broke every `ask-agy` run from repo root after #4841 shipped
-            # cwd=REPO_ROOT (its live verify ran inside a dispatch worktree,
-            # masking this).  Repo READ access is granted separately via
-            # ``repo_read_root`` → ``--add-dir`` in the adapter, so the
-            # guard stays fully intact — no exemptions.
-            cwd=_agy_ask_scratch_cwd(),
-            model=model,
-            task_id=msg["task_id"],
-            session_id=None,
-            tool_config={"bridge_repo_read": True, "repo_read_root": str(REPO_ROOT)},
-            entrypoint="bridge",
-            hard_timeout=timeout_val,
-            stall_timeout=min(600, timeout_val),
-        )
+        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
+            prompt = build_agy_prompt(
+                msg,
+                review,
+                review_branch=checkout.branch if checkout else None,
+                review_pr_number=checkout.pr_number if checkout else None,
+                review_worktree_provisioned=checkout is not None,
+            )
+            result = agent_runner.invoke(
+                "agy",
+                prompt,
+                # AGY's only sandbox switch is the opt-in ``--sandbox`` flag;
+                # there is no ``--no-sandbox`` counterpart. Bridge Q&A must run
+                # without that sandbox so it can read the named review checkout.
+                mode="danger",
+                # Keep AGY in its out-of-tree scratch cwd. The runner rejects a
+                # danger-mode spawn inside the protected primary checkout; the
+                # branch-pinned worktree is granted only through ``--add-dir``.
+                cwd=_agy_ask_scratch_cwd(),
+                model=model,
+                task_id=msg["task_id"],
+                session_id=None,
+                tool_config={
+                    "bridge_repo_read": True,
+                    "repo_read_root": str(checkout.path if checkout else REPO_ROOT),
+                },
+                entrypoint="bridge",
+                hard_timeout=timeout_val,
+                stall_timeout=min(600, timeout_val),
+            )
+    except ReviewWorktreeError as exc:
+        _handle_agy_error(msg, message_id, f"Agy review checkout failed: {exc}")
+        return None
     except RateLimitedError as exc:
         _handle_agy_error(msg, message_id, f"Agy rate limited: {exc}")
         return None

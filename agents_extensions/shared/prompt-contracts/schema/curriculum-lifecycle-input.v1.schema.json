@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-lifecycle-input.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["track", "slug", "family", "phase", "module_state", "evidence_identity"],
+  "properties": {
+    "track": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+    "family": {"enum": ["core", "seminar"]},
+    "phase": {"enum": ["prepare", "plan", "build", "certify"]},
+    "module_state": {"enum": ["built", "unbuilt", "partial", "stale", "current"]},
+    "evidence_identity": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

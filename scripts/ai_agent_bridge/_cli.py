@@ -811,6 +811,24 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
     ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
+    for review_parser in (
+        ask_claude_parser,
+        ask_codex_parser,
+        ask_gemini_parser,
+        ask_agy_parser,
+        ask_grok_build_parser,
+    ):
+        review_target = review_parser.add_mutually_exclusive_group()
+        review_target.add_argument(
+            "--branch",
+            help="Remote branch to review; fetched and resolved only as origin/<branch>",
+        )
+        review_target.add_argument(
+            "--pr",
+            type=int,
+            help="PR whose head branch to fetch and review",
+        )
+
     for ask_parser in (
         ask_claude_parser,
         ask_codex_parser,
@@ -1256,12 +1274,24 @@ def _background_kwargs(args) -> dict[str, bool]:
     return {"background": True} if getattr(args, "background", False) else {}
 
 
+def _review_target_kwargs(args) -> dict[str, str | int | None]:
+    """Pass an explicit branch target only to a review ask."""
+    branch = getattr(args, "branch", None)
+    pr_number = getattr(args, "pr", None)
+    if branch is None and pr_number is None:
+        return {}
+    if not getattr(args, "review", False):
+        raise SystemExit("--branch/--pr require --review")
+    return {"review_branch": branch, "review_pr_number": pr_number}
+
+
 def _handle_ask_claude(args):
     """Handle ask-claude subcommand."""
     data = None
     if args.data:
         data = Path(args.data).read_text()
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_claude(
         args.content,
@@ -1288,6 +1318,7 @@ def _handle_ask_codex(args):
             raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
         try:
             kwargs = {"review": True} if getattr(args, "review", False) else {}
+            kwargs.update(_review_target_kwargs(args))
             from_llm = _resolve_from_llm(args)
             ask_codex_chain(
                 content,
@@ -1308,6 +1339,7 @@ def _handle_ask_codex(args):
     if not args.task_id:
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_codex(
         content,
@@ -1331,6 +1363,7 @@ def _handle_ask_agy(args):
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_agy(
         content,
@@ -1474,6 +1507,7 @@ def _handle_ask_grok_build(args):
         no_timeout=args.no_timeout,
         review=args.review,
         model=args.model,
+        **_review_target_kwargs(args),
         **_background_kwargs(args),
     )
 
@@ -1485,6 +1519,7 @@ def _handle_ask_gemini(args):
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
+    kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     if not getattr(args, "stdout_only", False):
         print("⚠️ ask-gemini is retired; routing through ask-agy.", file=sys.stderr)

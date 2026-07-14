@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-readiness-profiles.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["config_version", "selectors", "profiles"],
+  "properties": {
+    "config_version": {"const": "curriculum-readiness.v1"},
+    "selectors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tracks", "manifest_types"],
+      "properties": {
+        "tracks": {"$ref": "#/$defs/selectorMap"},
+        "manifest_types": {"$ref": "#/$defs/selectorMap"}
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9-]+$": {"$ref": "#/$defs/profile"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "selectorMap": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]+$": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"}
+      },
+      "additionalProperties": false
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "family", "prompt_profile", "requirements"],
+      "properties": {
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "family": {"enum": ["core", "seminar"]},
+        "prompt_profile": {"enum": ["core", "seminar"]},
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/requirement"}
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "owner", "options"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+        "owner": {"enum": ["preparation", "plan", "built_artifact", "audit_tooling", "authority"]},
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/option"}
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "validators"],
+      "properties": {
+        "artifact": {
+          "enum": ["dossier", "plan", "manual-registry", "wiki-document", "wiki-sources", "discovery"]
+        },
+        "validators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "exists",
+              "yaml-mapping",
+              "plan-check",
+              "seminar-plan-language",
+              "readings-present",
+              "bio-dossier-xref",
+              "manual-gate",
+              "wiki-completeness",
+              "bio-wiki-subject",
+              "seminar-wiki-language",
+              "bio-discovery-integrity"
+            ]
+          }
+        },
+        "manual_gate": {
+          "enum": [
+            "dossier_grounding",
+            "reading_rights",
+            "wiki_grounding",
+            "wiki_quote_verification",
+            "image_rights"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"validators": {"contains": {"const": "manual-gate"}}}},
+          "then": {"required": ["manual_gate"]},
+          "else": {"not": {"required": ["manual_gate"]}}
+        },
+        {
+          "if": {"required": ["manual_gate"]},
+          "then": {"properties": {"artifact": {"const": "manual-registry"}}}
+        }
+      ]
+    }
+  }
+}

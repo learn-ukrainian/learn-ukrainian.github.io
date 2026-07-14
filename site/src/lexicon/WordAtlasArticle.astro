@@ -527,6 +527,24 @@ function sourceHost(url: string) {
   }
 }
 
+const MIRROR_HOSTS = new Set(["slovnyk.me", "goroh.pp.ua", "sum.in.ua"]);
+// Keep in sync with scripts/lexicon/source_attribution.py MIRROR_HOSTS (www. variants handled at parse time).
+
+function isMirrorUrl(url: string) {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return MIRROR_HOSTS.has(host);
+  } catch {
+    // Fail closed on unparseable URLs: a schemeless mirror reference
+    // ("slovnyk.me/dict/...") must still be filtered from learner-facing links.
+    return [...MIRROR_HOSTS].some((host) => url.includes(host));
+  }
+}
+
+function learnerFacingUrls(urls?: string[]) {
+  return (urls ?? []).filter((url) => url && !isMirrorUrl(url));
+}
+
 function buildComponentLinks(
   current: LexiconEntry,
   entries: LexiconEntry[],
@@ -740,7 +758,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           {definitionCards.map((card) => (
             <div class={`def-card ${sourceClass(card)}`}>
               <div class="def-source">
-                {card.source_url ? (
+                {card.source_url && !isMirrorUrl(card.source_url) ? (
                   <a class="src-pill" href={card.source_url} target="_blank" rel="noopener noreferrer">
                     {card.source_pill ?? card.source}
                   </a>
@@ -925,9 +943,9 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           )}
           <div class="data-caveat">
             Дані синонімів та антонімів показано з джерел маніфесту; звіряйте з контекстом перед уживанням.
-            {sections?.synonyms?.source_urls?.length ? (
+            {learnerFacingUrls(sections?.synonyms?.source_urls).length ? (
               <>
-                {" "}Джерела синонімів: {sections.synonyms.source_urls.map((url, index) => (
+                {" "}Джерела синонімів: {learnerFacingUrls(sections?.synonyms?.source_urls).map((url, index) => (
                   <>
                     {index > 0 && " · "}
                     <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
@@ -935,9 +953,9 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
                 ))}
               </>
             ) : null}
-            {sections?.antonyms?.source_urls?.length ? (
+            {learnerFacingUrls(sections?.antonyms?.source_urls).length ? (
               <>
-                {" "}Джерела антонімів: {sections.antonyms.source_urls.map((url, index) => (
+                {" "}Джерела антонімів: {learnerFacingUrls(sections?.antonyms?.source_urls).map((url, index) => (
                   <>
                     {index > 0 && " · "}
                     <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
@@ -962,9 +980,9 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           </div>
           <div class="data-caveat">
             Омоніми показано за нумерованими словниковими заголовками; звіряйте значення з контекстом.
-            {sections?.homonyms?.source_urls?.length ? (
+            {learnerFacingUrls(sections?.homonyms?.source_urls).length ? (
               <>
-                {" "}Джерела омонімів: {sections.homonyms.source_urls.map((url, index) => (
+                {" "}Джерела омонімів: {learnerFacingUrls(sections?.homonyms?.source_urls).map((url, index) => (
                   <>
                     {index > 0 && " · "}
                     <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
@@ -990,9 +1008,9 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           </div>
           <div class="data-caveat">
             Пароніми — близькі за формою слова з різними значеннями; розрізняйте їх за контекстом.
-            {sections?.paronyms?.source_urls?.length ? (
+            {learnerFacingUrls(sections?.paronyms?.source_urls).length ? (
               <>
-                {" "}Джерела паронімів: {sections.paronyms.source_urls.map((url, index) => (
+                {" "}Джерела паронімів: {learnerFacingUrls(sections?.paronyms?.source_urls).map((url, index) => (
                   <>
                     {index > 0 && " · "}
                     <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
@@ -1011,7 +1029,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
             <div class="resource-card">
               <h4>{idiom.phrase}</h4>
               <p>{idiom.definition}</p>
-              {idiom.source_url ? (
+              {idiom.source_url && !isMirrorUrl(idiom.source_url) ? (
                 <a class="tag" href={idiom.source_url}>{idiom.source}</a>
               ) : (
                 <span class="tag">{idiom.source}</span>
@@ -1026,7 +1044,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           <h2>Літературні засвідчення</h2>
           <div class="source-box">
             <div class="source-box-header">
-              {enrichment.literary_attestation.source_url ? (
+              {enrichment.literary_attestation.source_url && !isMirrorUrl(enrichment.literary_attestation.source_url) ? (
                 <a href={enrichment.literary_attestation.source_url} target="_blank" rel="noopener noreferrer">
                   {enrichment.literary_attestation.source_label ?? "Літературний корпус"}
                 </a>

@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-coordinator-ledger.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ledger_version",
+    "run_id",
+    "owner",
+    "created_at",
+    "request",
+    "request_sha256",
+    "authority",
+    "queue",
+    "history"
+  ],
+  "properties": {
+    "ledger_version": {"const": "curriculum-coordinator-ledger.v1"},
+    "run_id": {"type": "string", "pattern": "^clc-[0-9a-f]{24}$"},
+    "owner": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "request": {"$ref": "#/$defs/request"},
+    "request_sha256": {"$ref": "#/$defs/hash"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "queue": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/queueItem"}
+    },
+    "history": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/event"}
+    }
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest_path", "manifest_sha256"],
+      "properties": {
+        "manifest_path": {"type": "string", "const": "curriculum/l2-uk-en/curriculum.yaml"},
+        "manifest_sha256": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track", "scope", "module", "start", "end", "wave_size"],
+      "properties": {
+        "track": {"$ref": "#/$defs/identifier"},
+        "scope": {"enum": ["all", "built", "unbuilt", "stale", "one"]},
+        "module": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "start": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "end": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "wave_size": {"type": "integer", "minimum": 1}
+      }
+    },
+    "queueItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "position",
+        "manifest_index",
+        "track",
+        "slug",
+        "wave",
+        "prerequisites",
+        "initial_module_state",
+        "initial_preparation_state",
+        "initial_preparation_identity"
+      ],
+      "properties": {
+        "position": {"type": "integer", "minimum": 0},
+        "manifest_index": {"type": "integer", "minimum": 0},
+        "track": {"$ref": "#/$defs/identifier"},
+        "slug": {"$ref": "#/$defs/identifier"},
+        "wave": {"type": "integer", "minimum": 1},
+        "prerequisites": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "initial_module_state": {"enum": ["unbuilt", "partial", "built"]},
+        "initial_preparation_state": {
+          "enum": ["not-evaluated", "missing", "stale", "current"]
+        },
+        "initial_preparation_identity": {
+          "anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "event_id", "event", "at", "details"],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "event_id": {"type": "string", "pattern": "^[a-z0-9-]+-[0-9a-f]{24}$"},
+        "event": {
+          "enum": [
+            "RUN_STARTED",
+            "RUN_ABANDONED",
+            "RUN_PAUSED",
+            "RUN_RESUMED",
+            "WAVE_HEALTH_ACCEPTED",
+            "MODULE_ACQUIRED",
+            "MODULE_FINISHED",
+            "WAVE_COMPLETED",
+            "RUN_COMPLETED"
+          ]
+        },
+        "at": {"type": "string", "format": "date-time"},
+        "details": {"type": "object"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"event": {"const": "RUN_STARTED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/runStarted"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "RUN_ABANDONED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/runAbandoned"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "RUN_PAUSED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/runPaused"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "RUN_RESUMED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/runResumed"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "WAVE_HEALTH_ACCEPTED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/waveHealth"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "MODULE_ACQUIRED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/moduleAcquired"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "MODULE_FINISHED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/moduleFinished"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "WAVE_COMPLETED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/waveCompleted"}}}
+        },
+        {
+          "if": {"properties": {"event": {"const": "RUN_COMPLETED"}}},
+          "then": {"properties": {"details": {"$ref": "#/$defs/runCompleted"}}}
+        }
+      ]
+    },
+    "runStarted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_sha256"],
+      "properties": {"request_sha256": {"$ref": "#/$defs/hash"}}
+    },
+    "runAbandoned": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "prior_status",
+        "current_module",
+        "manifest_changed",
+        "recorded_manifest_sha256",
+        "current_manifest_sha256",
+        "track_lease_stale"
+      ],
+      "properties": {
+        "reason": {"type": "string", "minLength": 1, "maxLength": 500},
+        "prior_status": {"enum": ["active", "paused", "blocked"]},
+        "current_module": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "manifest_changed": {"const": true},
+        "recorded_manifest_sha256": {"$ref": "#/$defs/hash"},
+        "current_manifest_sha256": {
+          "anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]
+        },
+        "track_lease_stale": {"type": "boolean"}
+      }
+    },
+    "runPaused": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wave", "health"],
+      "properties": {
+        "wave": {"type": "integer", "minimum": 1},
+        "health": {"$ref": "#/$defs/healthAssessment"}
+      }
+    },
+    "runResumed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["after_sequence", "reason"],
+      "properties": {
+        "after_sequence": {"type": "integer", "minimum": 1},
+        "reason": {"enum": ["exact-run-resume", "wave-health-restored"]}
+      }
+    },
+    "waveHealth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wave", "health"],
+      "properties": {
+        "wave": {"type": "integer", "minimum": 1},
+        "health": {"$ref": "#/$defs/healthAssessment"}
+      }
+    },
+    "healthAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "groups"],
+      "properties": {
+        "reason": {
+          "enum": ["accepted", "quota-or-health-unavailable", "health-probe-error", "invalid-health-snapshot"]
+        },
+        "generated_at": {"type": ["string", "null"], "format": "date-time"},
+        "fresh": {"type": "boolean"},
+        "error_type": {"type": "string", "minLength": 1},
+        "groups": {"type": "array", "items": {"$ref": "#/$defs/healthGroup"}}
+      }
+    },
+    "healthGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "minimum_available", "available", "passed", "lanes"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "minimum_available": {"type": "integer", "minimum": 1},
+        "available": {"type": "integer", "minimum": 0},
+        "passed": {"type": "boolean"},
+        "lanes": {"type": "array", "items": {"$ref": "#/$defs/healthLane"}}
+      }
+    },
+    "healthLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lane", "status", "healthy", "stale"],
+      "properties": {
+        "lane": {"$ref": "#/$defs/identifier"},
+        "status": {"type": "string", "minLength": 1},
+        "healthy": {"type": "boolean"},
+        "stale": {"type": "boolean"}
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_state", "preparation_state", "state", "next_action", "preparation_identity"],
+      "properties": {
+        "module_state": {"enum": ["unbuilt", "partial", "built"]},
+        "preparation_state": {"enum": ["missing", "stale", "current"]},
+        "state": {
+          "enum": [
+            "missing-plan",
+            "preparation-required",
+            "prepared-plan",
+            "partial-bundle",
+            "built-preparation-drift",
+            "built-current"
+          ]
+        },
+        "next_action": {"enum": ["stop", "prepare", "plan", "build", "certify"]},
+        "preparation_identity": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]}
+      }
+    },
+    "moduleAcquired": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track", "slug", "manifest_index", "wave", "attempt", "readiness"],
+      "properties": {
+        "track": {"$ref": "#/$defs/identifier"},
+        "slug": {"$ref": "#/$defs/identifier"},
+        "manifest_index": {"type": "integer", "minimum": 0},
+        "wave": {"type": "integer", "minimum": 1},
+        "attempt": {"type": "integer", "minimum": 1},
+        "readiness": {"$ref": "#/$defs/readiness"}
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue", "worktree", "branch", "pr", "merge_sha", "cleanup", "evidence"],
+      "properties": {
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "worktree": {
+          "anyOf": [
+            {"type": "string", "pattern": "^\\.worktrees/dispatch/[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"},
+            {"type": "null"}
+          ]
+        },
+        "branch": {
+          "anyOf": [
+            {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"},
+            {"type": "null"}
+          ]
+        },
+        "pr": {"type": ["integer", "null"], "minimum": 1},
+        "merge_sha": {
+          "anyOf": [
+            {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            {"type": "null"}
+          ]
+        },
+        "cleanup": {"enum": ["not-required", "pending", "complete"]},
+        "evidence": {"type": "string", "minLength": 1}
+      }
+    },
+    "moduleFinished": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track", "slug", "wave", "attempt", "disposition", "integration"],
+      "properties": {
+        "track": {"$ref": "#/$defs/identifier"},
+        "slug": {"$ref": "#/$defs/identifier"},
+        "wave": {"type": "integer", "minimum": 1},
+        "attempt": {"type": "integer", "minimum": 1},
+        "disposition": {"enum": ["complete", "no-change", "blocked"]},
+        "integration": {"$ref": "#/$defs/integration"}
+      }
+    },
+    "waveCompleted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wave"],
+      "properties": {"wave": {"type": "integer", "minimum": 1}}
+    },
+    "runCompleted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_count"],
+      "properties": {"module_count": {"type": "integer", "minimum": 1}}
+    }
+  }
+}

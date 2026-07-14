@@ -1,0 +1,32 @@
+manifest_version: prompt-manifest.v1
+prompt_id: curriculum-lifecycle.module
+version: 1.0.0
+input_schema: agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json
+output_schema: agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-output.v1.schema.json
+policy_ids:
+  operator-contract: agents_extensions/shared/rules/operator-expectations.md
+  workflow: agents_extensions/shared/rules/workflow.md
+compatible:
+  families: [core, seminar]
+  routes: [tool-capable]
+fragments:
+  contract.base:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-common.md
+    section: contract-base
+    includes: []
+  family.core:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core.md
+    section: family-policy
+    includes: [contract.base]
+  family.seminar:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar.md
+    section: family-policy
+    includes: [contract.base]
+variants:
+  core:
+    family: core
+    roots: [family.core]
+  seminar:
+    family: seminar
+    roots: [family.seminar]
+deprecation: null

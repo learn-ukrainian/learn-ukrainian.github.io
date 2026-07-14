@@ -200,4 +200,27 @@ describe('MatchUp', () => {
     // Still matched, still disabled
     expect(leftTiles(container)[0]).toBeDisabled();
   });
+
+  test('renders correctly in a lesson context (Cyrillic/English pairs and custom instructions)', () => {
+    const lessonPairs = [
+      { left: 'стіл', right: 'table' },
+      { left: 'книга', right: 'book' },
+      { left: 'вікно', right: 'window' },
+    ];
+    const { container } = render(
+      <MatchUp
+        pairs={lessonPairs}
+        instruction="Match each Ukrainian noun with its English cue."
+        isUkrainian={false}
+      />
+    );
+
+    expect(screen.getByText('Match each Ukrainian noun with its English cue.')).toBeInTheDocument();
+
+    const leftTextContents = leftTiles(container).map((b) => b.textContent?.trim());
+    expect(leftTextContents).toEqual(['стіл', 'книга', 'вікно']);
+
+    const rightTextContents = rightTiles(container).map((b) => b.textContent?.trim());
+    expect(new Set(rightTextContents)).toEqual(new Set(['table', 'book', 'window']));
+  });
 });

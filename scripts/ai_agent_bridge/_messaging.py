@@ -91,6 +91,7 @@ def read_message(message_id: int, quiet: bool = False):
 def send_message(content: str, task_id: str | None = None, msg_type: str = "response",
                  data: str | None = None, from_llm: str = "gemini", to_llm: str = "claude",
                  from_model: str | None = None, to_model: str | None = None,
+                 review_target: dict | None = None,
                  quiet: bool = False):
     """Send a message between agents."""
     content = redact_text(content) or ""
@@ -111,6 +112,8 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
         metadata["from_model"] = from_model
     if to_model:
         metadata["to_model"] = to_model
+    if review_target is not None:
+        metadata["review_target"] = review_target
 
     metadata = redact_value(metadata)
     data_json = json.dumps(metadata) if metadata else None

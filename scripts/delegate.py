@@ -110,8 +110,16 @@ from typing import Any
 import yaml
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
-# Resolve repo root from this file's location so we work from any cwd.
-_REPO_ROOT = Path(__file__).resolve().parents[1]
+# Resolve repo root from this file's location so we work from any cwd —
+# then hop to the primary checkout so worktree copies behave identically.
+_local_repo_root = Path(__file__).resolve().parents[1]
+if str(_local_repo_root) not in sys.path:
+    sys.path.insert(0, str(_local_repo_root))
+
+from scripts.common.repo_root import main_checkout_root as _main_checkout_root
+from scripts.common.repo_root import resolve_repo_root
+
+_REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
@@ -183,34 +191,6 @@ DEFAULT_SILENCE_TIMEOUT_S = 3600
 # Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
 # activity at startup — distinct from the long silence window above (#2071).
 DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 180
-
-
-def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
-    """Return the primary checkout root that owns the shared .git dir."""
-    git_path = repo_root / ".git"
-    if git_path.is_dir():
-        return repo_root
-    if not git_path.is_file():
-        return repo_root
-
-    try:
-        first_line = git_path.read_text().splitlines()[0]
-    except (IndexError, OSError):
-        return repo_root
-    prefix = "gitdir:"
-    if not first_line.startswith(prefix):
-        return repo_root
-
-    git_dir = Path(first_line[len(prefix) :].strip())
-    if not git_dir.is_absolute():
-        git_dir = repo_root / git_dir
-    git_dir = git_dir.resolve()
-    if git_dir.parent.name != "worktrees":
-        return repo_root
-    common_git_dir = git_dir.parent.parent
-    if common_git_dir.name != ".git":
-        return repo_root
-    return common_git_dir.parent
 
 
 # ---------------------------------------------------------------------------
@@ -1436,7 +1416,7 @@ def _ensure_worktree(
             return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
-        _provision_data_symlinks(worktree_path, _main_checkout_root())
+        _provision_data_symlinks(worktree_path, _REPO_ROOT)
         return worktree_path, worktree_branch, telemetry
 
     if dry_run:
@@ -1491,7 +1471,7 @@ def _ensure_worktree(
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
-    _provision_data_symlinks(worktree_path, _main_checkout_root())
+    _provision_data_symlinks(worktree_path, _REPO_ROOT)
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, worktree_branch, telemetry
 

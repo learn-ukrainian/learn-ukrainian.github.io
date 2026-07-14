@@ -32,6 +32,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.manifest_io import load_manifest
+from scripts.lexicon.source_attribution import learner_facing_mirror_violations
 
 # The #3631 regression was a cliff: ~85% enriched -> 0%. Healthy manifests have
 # historically run 60-85% enriched. A 0.40 floor decisively separates a thin
@@ -63,12 +64,26 @@ def check_enrichment(
     ratio = enriched / total
     flag = manifest.get("enrichment_generated")
 
+    mirror_violations = 0
+    mirror_probe = json.loads(json.dumps(manifest, ensure_ascii=False))
+    from scripts.lexicon.migrate_source_labels import migrate_manifest
+
+    migrate_manifest(mirror_probe)
+    for entry in mirror_probe.get("entries", []):
+        if isinstance(entry, dict):
+            mirror_violations += len(learner_facing_mirror_violations(entry))
+
     problems: list[str] = []
     if flag is not True:
         problems.append(f"enrichment_generated={flag!r} (expected True)")
     if ratio < min_ratio:
         problems.append(
             f"enriched ratio {ratio:.1%} ({enriched}/{total}) below floor {min_ratio:.0%}"
+        )
+    if mirror_violations:
+        problems.append(
+            f"{mirror_violations} learner-facing mirror attribution violation(s) after "
+            "migrate_source_labels (slovnyk.me/goroh.pp.ua/sum.in.ua in source labels or hrefs)"
         )
 
     if problems:

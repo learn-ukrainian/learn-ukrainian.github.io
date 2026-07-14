@@ -350,5 +350,485 @@
       "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
       "cardId": "a1-my-city-zupynka-accusative-1"
     }
+  },
+  {
+    "lemma": "книжка",
+    "lemmaId": "книжка",
+    "sentence": "Я читаю ___.",
+    "blankCase": "accusative",
+    "form": "книжку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I am reading a book.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-happened/vocabulary.yaml",
+      "cardId": "a1-what-happened-knyzhka-accusative-1"
+    }
+  },
+  {
+    "lemma": "пошта",
+    "lemmaId": "пошта",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "пошту",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the post office.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-to/vocabulary.yaml",
+      "cardId": "a1-where-to-poshta-accusative-1"
+    }
+  },
+  {
+    "lemma": "церква",
+    "lemmaId": "церква",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "церкву",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the church.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+      "cardId": "a1-my-city-tserkva-accusative-1"
+    }
+  },
+  {
+    "lemma": "маршрутка",
+    "lemmaId": "маршрутка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "маршрутку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the minibus.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml",
+      "cardId": "a1-transport-marshrutka-accusative-1"
+    }
+  },
+  {
+    "lemma": "станція",
+    "lemmaId": "станція",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "станцію",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the station.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml",
+      "cardId": "a1-transport-stantsiia-accusative-1"
+    }
+  },
+  {
+    "lemma": "вишиванка",
+    "lemmaId": "вишиванка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "вишиванку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the embroidered shirt.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
+      "cardId": "a1-checkpoint-my-world-vyshyvanka-accusative-1"
+    }
+  },
+  {
+    "lemma": "листівка",
+    "lemmaId": "листівка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "листівку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a postcard.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-is-it-like/vocabulary.yaml",
+      "cardId": "a1-what-is-it-like-lystivka-accusative-1"
+    }
+  },
+  {
+    "lemma": "картка",
+    "lemmaId": "картка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "картку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a card.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/shopping/vocabulary.yaml",
+      "cardId": "a1-shopping-kartka-accusative-1"
+    }
+  },
+  {
+    "lemma": "температура",
+    "lemmaId": "температура",
+    "sentence": "Лікарка міряє ___.",
+    "blankCase": "accusative",
+    "form": "температуру",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "The doctor measures the temperature.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/health/vocabulary.yaml",
+      "cardId": "a1-health-temperatura-accusative-1"
+    }
+  },
+  {
+    "lemma": "лікарка",
+    "lemmaId": "лікарка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "лікарку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the doctor.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/who-am-i/vocabulary.yaml",
+      "cardId": "a1-who-am-i-likarka-accusative-1"
+    }
+  },
+  {
+    "lemma": "квартира",
+    "lemmaId": "квартира",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "квартиру",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have an apartment.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-plans/vocabulary.yaml",
+      "cardId": "a1-my-plans-kvartyra-accusative-1"
+    }
+  },
+  {
+    "lemma": "сестра",
+    "lemmaId": "сестра",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "сестру",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a sister.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/people-around-me/vocabulary.yaml",
+      "cardId": "a1-people-around-me-sestra-accusative-1"
+    }
+  },
+  {
+    "lemma": "донька",
+    "lemmaId": "донька",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "доньку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a daughter.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-family/vocabulary.yaml",
+      "cardId": "a1-my-family-donka-accusative-1"
+    }
+  },
+  {
+    "lemma": "подруга",
+    "lemmaId": "подруга",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "подругу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a friend.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/who-am-i/vocabulary.yaml",
+      "cardId": "a1-who-am-i-podruha-accusative-1"
+    }
+  },
+  {
+    "lemma": "година",
+    "lemmaId": "година",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "годину",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have an hour.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-time/vocabulary.yaml",
+      "cardId": "a1-what-time-hodyna-accusative-1"
+    }
+  },
+  {
+    "lemma": "погода",
+    "lemmaId": "погода",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "погоду",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the weather.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/weather/vocabulary.yaml",
+      "cardId": "a1-weather-pohoda-accusative-1"
+    }
+  },
+  {
+    "lemma": "весна",
+    "lemmaId": "весна",
+    "sentence": "Я люблю ___.",
+    "blankCase": "accusative",
+    "form": "весну",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I love spring.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/weather/vocabulary.yaml",
+      "cardId": "a1-weather-vesna-accusative-1"
+    }
+  },
+  {
+    "lemma": "зима",
+    "lemmaId": "зима",
+    "sentence": "Я люблю ___.",
+    "blankCase": "accusative",
+    "form": "зиму",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I love winter.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/weather/vocabulary.yaml",
+      "cardId": "a1-weather-zima-accusative-1"
+    }
+  },
+  {
+    "lemma": "країна",
+    "lemmaId": "країна",
+    "sentence": "Я люблю ___.",
+    "blankCase": "accusative",
+    "form": "країну",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I love my country.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-from/vocabulary.yaml",
+      "cardId": "a1-where-from-kraina-accusative-1"
+    }
+  },
+  {
+    "lemma": "вечеря",
+    "lemmaId": "вечеря",
+    "sentence": "Я їм ___.",
+    "blankCase": "accusative",
+    "form": "вечерю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I eat dinner.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/what-happened/vocabulary.yaml",
+      "cardId": "a1-what-happened-vecheria-accusative-1"
+    }
+  },
+  {
+    "lemma": "дата",
+    "lemmaId": "дата",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "дату",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a date.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/days-and-months/vocabulary.yaml",
+      "cardId": "a1-days-and-months-data-accusative-1"
+    }
+  },
+  {
+    "lemma": "неділя",
+    "lemmaId": "неділя",
+    "sentence": "Я люблю ___.",
+    "blankCase": "accusative",
+    "form": "неділю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I love Sunday.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/days-and-months/vocabulary.yaml",
+      "cardId": "a1-days-and-months-nedilia-accusative-1"
+    }
+  },
+  {
+    "lemma": "сторінка",
+    "lemmaId": "сторінка",
+    "sentence": "Я читаю ___.",
+    "blankCase": "accusative",
+    "form": "сторінку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I am reading a page.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/please-do-this/vocabulary.yaml",
+      "cardId": "a1-please-do-this-storinka-accusative-1"
+    }
+  },
+  {
+    "lemma": "столиця",
+    "lemmaId": "столиця",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "столицю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the capital.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/where-from/vocabulary.yaml",
+      "cardId": "a1-where-from-stolytsia-accusative-1"
+    }
+  },
+  {
+    "lemma": "страва",
+    "lemmaId": "страва",
+    "sentence": "Я їм ___.",
+    "blankCase": "accusative",
+    "form": "страву",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I eat a dish.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-food-shopping/vocabulary.yaml",
+      "cardId": "a1-checkpoint-food-shopping-strava-accusative-1"
+    }
+  },
+  {
+    "lemma": "офіціантка",
+    "lemmaId": "офіціантка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "офіціантку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the waitress.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-food-shopping/vocabulary.yaml",
+      "cardId": "a1-checkpoint-food-shopping-ofitsiantka-accusative-1"
+    }
+  },
+  {
+    "lemma": "студентка",
+    "lemmaId": "студентка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "студентку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the student.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/who-am-i/vocabulary.yaml",
+      "cardId": "a1-who-am-i-studentka-accusative-1"
+    }
+  },
+  {
+    "lemma": "тітка",
+    "lemmaId": "тітка",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "тітку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have an aunt.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-family/vocabulary.yaml",
+      "cardId": "a1-my-family-titka-accusative-1"
+    }
+  },
+  {
+    "lemma": "тарілка",
+    "lemmaId": "тарілка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "тарілку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a plate.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-food-shopping/vocabulary.yaml",
+      "cardId": "a1-checkpoint-food-shopping-tarilka-accusative-1"
+    }
+  },
+  {
+    "lemma": "копійка",
+    "lemmaId": "копійка",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "копійку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a kopeck.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/how-many/vocabulary.yaml",
+      "cardId": "a1-how-many-kopiyka-accusative-1"
+    }
   }
 ]

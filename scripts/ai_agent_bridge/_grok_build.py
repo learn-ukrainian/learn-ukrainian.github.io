@@ -27,6 +27,12 @@ from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import _prepend_review_protocol
+from ._review_worktree import (
+    ReviewWorktreeError,
+    provision_review_worktree,
+    review_target_from_message,
+    review_target_payload,
+)
 
 _DEFAULT_GROK_BUILD_BRIDGE_TIMEOUT_SECONDS = 900
 _NO_TIMEOUT_GROK_BUILD_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
@@ -72,6 +78,8 @@ def ask_grok_build(
     review: bool = False,
     model: str | None = None,
     background: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
 ) -> int:
     """Send message to native Grok Build and invoke it to process the message."""
     effective_model = to_model or model or GROK_BUILD_DEFAULT_MODEL
@@ -84,6 +92,7 @@ def ask_grok_build(
         to_llm="grok-build",
         from_model=from_model,
         to_model=effective_model,
+        review_target=review_target_payload(review_branch, review_pr_number),
     )
     register_ask(msg_id)
     if background:
@@ -117,7 +126,6 @@ def process_for_grok_build(
     _ = new_session  # grok-build resume_policy="never"; bridge calls are fresh.
     timeout_val = _resolve_grok_build_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or GROK_BUILD_DEFAULT_MODEL
-    prompt = _build_grok_build_prompt(msg, review)
 
     print(f"Message #{msg['id']}")
     print(f"   From: {msg['from']} -> To: {msg['to']}")
@@ -132,20 +140,28 @@ def process_for_grok_build(
         print(f"   Hard timeout: {timeout_val}s")
 
     try:
-        result = agent_runner.invoke(
-            "grok-build",
-            prompt,
-            mode="read-only",
-            cwd=REPO_ROOT,
-            model=model,
-            task_id=msg["task_id"],
-            session_id=None,
-            tool_config=None,
-            entrypoint="bridge",
-            hard_timeout=timeout_val,
-            stall_timeout=min(600, timeout_val),
-            effort=GROK_BUILD_DEFAULT_EFFORT,
-        )
+        review_target = review_target_from_message(msg) if review else None
+        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
+            result = agent_runner.invoke(
+                "grok-build",
+                _build_grok_build_prompt(
+                    msg,
+                    review,
+                    review_branch=checkout.branch if checkout else None,
+                    review_pr_number=checkout.pr_number if checkout else None,
+                    review_worktree_provisioned=checkout is not None,
+                ),
+                mode="read-only",
+                cwd=checkout.path if checkout else REPO_ROOT,
+                model=model,
+                task_id=msg["task_id"],
+                session_id=None,
+                tool_config=None,
+                entrypoint="bridge",
+                hard_timeout=timeout_val,
+                stall_timeout=min(600, timeout_val),
+                effort=GROK_BUILD_DEFAULT_EFFORT,
+            )
     except RateLimitedError as exc:
         _handle_grok_build_error(msg, message_id, f"Grok Build rate limited: {exc}")
         return
@@ -157,6 +173,9 @@ def process_for_grok_build(
         return
     except AgentUnavailableError as exc:
         _handle_grok_build_error(msg, message_id, f"Grok Build unavailable: {exc}")
+        return
+    except ReviewWorktreeError as exc:
+        _handle_grok_build_error(msg, message_id, f"Grok Build review checkout failed: {exc}")
         return
 
     if not result.ok:
@@ -235,7 +254,13 @@ def _extract_target_model(msg: dict) -> str | None:
     return str(model) if model else None
 
 
-def _build_grok_build_prompt(msg: dict, review: bool = False) -> str:
+def _build_grok_build_prompt(
+    msg: dict,
+    review: bool = False,
+    review_branch: str | None = None,
+    review_pr_number: int | None = None,
+    review_worktree_provisioned: bool = False,
+) -> str:
     """Build the native Grok Build bridge prompt."""
     prompt = f"""You are Grok Build (native grok CLI), receiving a message from {msg['from'].title()} via the message broker.
 
@@ -261,7 +286,13 @@ Standing rules for bridge Q&A:
 - Do NOT use broker or MCP messaging tools to send your response; output it directly.
 - This is the native grok-build lane. Do not route through Hermes/OpenRouter.
 """
-    return _prepend_review_protocol(prompt, review)
+    return _prepend_review_protocol(
+        prompt,
+        review,
+        review_branch=review_branch,
+        review_pr_number=review_pr_number,
+        review_worktree_provisioned=review_worktree_provisioned,
+    )
 
 
 def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:

@@ -4,12 +4,13 @@ import json
 import subprocess
 from collections import Counter
 from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from scripts.audit import layerb_candidates
+from scripts.audit import layerb_candidates, layerb_qualify
 from scripts.audit.layerb_shadow import (
     JUDGE_OUTPUT_VERSION,
     JudgeCall,
@@ -342,6 +343,71 @@ def test_judged_replay_refuses_artifact_with_unknown_lineage(
     artifact["model"] = {"family": "unmapped", "pin": "local/mystery-model"}
     artifacts = _write_artifacts(tmp_path / "unknown", artifact)
 
+    # Setup a valid shadow-tier attestation (and siblings) so the CLI path reaches the lineage validation.
+    # Route in attestation must match the CLI --judge-* values.
+    labels = tmp_path / "labels.json"
+    labels.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    corpus_m = tmp_path / "corpus.json"
+    fixture_m = tmp_path / "fixture.json"
+    corpus_m.write_text(json.dumps({"corpus": "x"}), encoding="utf-8")
+    fixture_m.write_text(json.dumps({"fixture": "x"}), encoding="utf-8")
+    report_path = tmp_path / "qualification-report.json"
+    raw_path = tmp_path / "raw-call-manifest.json"
+    thresholds = {
+        "adversarial_probes": {"status": "PASS"},
+        "relation_agreement": {"status": "PASS"},
+        "terminal_decision_agreement": {"status": "PASS"},
+        "unsafe_accept_ucb": {"status": "PASS"},
+        "accept_recall": {"status": "PASS"},
+        "audit_rate": {"status": "PASS"},
+        "cost_envelope": {"status": "PASS"},
+        "layer_a_regression": {"status": "PASS"},
+        "integrity": {"status": "PASS", "failures": {}},
+        "semantic_stability": {
+            "required": True,
+            "seed": layerb_qualify.STABILITY_SEED,
+            "case_ids": [],
+            "status": "PASS",
+            "disagreements": [],
+        },
+    }
+    tier_evaluation = layerb_qualify._tier_evaluation(thresholds, "shadow")
+    route_input = {
+        "family": "claude",
+        "resolved_model": "test",
+        "resolved_model_version": "test-v1",
+        "bridge_executable": "must-not-run",
+        "bridge_config_sha256": "b" * 64,
+        "provider_account_lane": "test-lane",
+        "tools_disabled": True,
+        "tools_disabled_evidence": "test",
+    }
+    route_obj = layerb_qualify.EffectiveRoute.from_mapping(route_input)
+    report = {
+        "verdict": "PASS_SHADOW",
+        "tier": "shadow",
+        "effective_route": route_obj.to_dict(),
+        "thresholds": thresholds,
+        "tier_evaluation": tier_evaluation,
+        "human_audit_of_new_accepts": {"complete": True},
+        "row_eligibility_matrix": [{"case_id": "row", "reason": "ELIGIBLE", "eligible": True}],
+        "raw_call_manifest": [{"case_id": "row", "raw": "recorded"}],
+    }
+    report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+    raw_path.write_text(json.dumps(report["raw_call_manifest"], sort_keys=True), encoding="utf-8")
+    attestation = layerb_qualify.create_attestation(
+        report_path=report_path,
+        raw_call_manifest_path=raw_path,
+        labels_path=labels,
+        corpus_manifests=[corpus_m],
+        fixture_manifests=[fixture_m],
+        expires_at=datetime.now(UTC) + timedelta(days=30),
+        require_frozen_main_hash=False,
+        tier="shadow",
+    )
+    att_path = tmp_path / "qualification-attestation.json"
+    att_path.write_text(json.dumps(attestation, sort_keys=True), encoding="utf-8")
+
     exit_code = main(
         [
             "--artifacts-dir",
@@ -354,6 +420,18 @@ def test_judged_replay_refuses_artifact_with_unknown_lineage(
             "claude",
             "--judge-model",
             "test",
+            "--judge-model-version",
+            "test-v1",
+            "--provider-account-lane",
+            "test-lane",
+            "--judge-attestation",
+            str(att_path),
+            "--labels",
+            str(labels),
+            "--corpus-manifest",
+            str(corpus_m),
+            "--fixture-manifest",
+            str(fixture_m),
         ]
     )
 
@@ -560,3 +638,292 @@ def test_untrusted_serializer_json_escapes_raw_source_and_keeps_nonce_delimited(
     assert f"<<<BEGIN_UNTRUSTED_TOOL_OUTPUT\nnonce={nonce}" in block
     assert f"<<<END_UNTRUSTED_TOOL_OUTPUT nonce={nonce}>>>" in block
     assert json.dumps(RAW, ensure_ascii=False) in block
+
+
+def _make_attestation_artifacts(
+    tmp: Path,
+    *,
+    family: str = "claude",
+    resolved_model: str = "sonnet-5",
+    resolved_model_version: str = "2026-07-11",
+    provider_account_lane: str = "subscription:test",
+    expires_days: int = 30,
+    tier: str = "shadow",
+) -> tuple[Path, Path, Path, Path, Path, Path]:
+    """Create a minimal consistent shadow (or cutover) attestation + supporting files for CLI tests."""
+    labels = tmp / "labels.json"
+    labels.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    corpus_m = tmp / "corpus.json"
+    fixture_m = tmp / "fixture.json"
+    corpus_m.write_text(json.dumps({"corpus": "frozen"}), encoding="utf-8")
+    fixture_m.write_text(json.dumps({"fixture": "frozen"}), encoding="utf-8")
+    report_path = tmp / "qualification-report.json"
+    raw_path = tmp / "raw-call-manifest.json"
+    thresholds = {
+        "adversarial_probes": {"status": "PASS"},
+        "relation_agreement": {"status": "PASS"},
+        "terminal_decision_agreement": {"status": "PASS"},
+        "unsafe_accept_ucb": {"status": "PASS"},
+        "accept_recall": {"status": "PASS"},
+        "audit_rate": {"status": "PASS"},
+        "cost_envelope": {"status": "PASS"},
+        "layer_a_regression": {"status": "PASS"},
+        "integrity": {"status": "PASS", "failures": {}},
+        "semantic_stability": {
+            "required": True,
+            "seed": layerb_qualify.STABILITY_SEED,
+            "case_ids": [],
+            "status": "PASS",
+            "disagreements": [],
+        },
+    }
+    tier_evaluation = layerb_qualify._tier_evaluation(thresholds, tier)
+    route_input = {
+        "family": family,
+        "resolved_model": resolved_model,
+        "resolved_model_version": resolved_model_version,
+        "bridge_executable": "echo",
+        "bridge_config_sha256": "c" * 64,
+        "provider_account_lane": provider_account_lane,
+        "tools_disabled": True,
+        "tools_disabled_evidence": "test-evidence",
+    }
+    route_obj = layerb_qualify.EffectiveRoute.from_mapping(route_input)
+    report = {
+        "verdict": "PASS_SHADOW" if tier == "shadow" else "PASS",
+        "tier": tier,
+        "effective_route": route_obj.to_dict(),
+        "thresholds": thresholds,
+        "tier_evaluation": tier_evaluation,
+        "human_audit_of_new_accepts": {"complete": True},
+        "row_eligibility_matrix": [{"case_id": "row", "reason": "ELIGIBLE", "eligible": True}],
+        "raw_call_manifest": [{"case_id": "row", "raw": "recorded"}],
+    }
+    report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+    raw_path.write_text(json.dumps(report["raw_call_manifest"], sort_keys=True), encoding="utf-8")
+    att = layerb_qualify.create_attestation(
+        report_path=report_path,
+        raw_call_manifest_path=raw_path,
+        labels_path=labels,
+        corpus_manifests=[corpus_m],
+        fixture_manifests=[fixture_m],
+        expires_at=datetime.now(UTC) + timedelta(days=expires_days),
+        require_frozen_main_hash=False,
+        tier=tier,
+    )
+    att_path = tmp / "qualification-attestation.json"
+    att_path.write_text(json.dumps(att, sort_keys=True), encoding="utf-8")
+    return att_path, labels, corpus_m, fixture_m, report_path, raw_path
+
+
+def test_judge_attestation_old_flag_errors(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    artifacts = tmp_path / "art"
+    artifacts.mkdir()
+    (artifacts / "a.json").write_text("{}", encoding="utf-8")
+    labels = tmp_path / "l.json"
+    labels.write_text("{}", encoding="utf-8")
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "aud"),
+            "--judge-command",
+            "echo",
+            "--judge-family",
+            "claude",
+            "--judge-model",
+            "x",
+            "--judge-model-version",
+            "v",
+            "--provider-account-lane",
+            "lane",
+            "--labels",
+            str(labels),
+            "--judge-qualified",
+        ]
+    )
+    err = capsys.readouterr().err
+    assert exit_code == 2
+    assert "--judge-qualified is removed; use --judge-attestation <path> instead" in err
+
+
+def test_judge_attestation_valid_passes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    att_dir = tmp_path / "attested"
+    att_dir.mkdir()
+    att_path, labels, c_m, f_m, _, _ = _make_attestation_artifacts(att_dir, expires_days=30)
+    artifacts = _write_artifacts(tmp_path / "arts", _artifact([_fact_check("fc")], writer_family="openai"))
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "aud"),
+            "--dry-run",
+            "--judge-command",
+            "echo",
+            "--judge-family",
+            "claude",
+            "--judge-model",
+            "sonnet-5",
+            "--judge-model-version",
+            "2026-07-11",
+            "--provider-account-lane",
+            "subscription:test",
+            "--judge-attestation",
+            str(att_path),
+            "--labels",
+            str(labels),
+            "--corpus-manifest",
+            str(c_m),
+            "--fixture-manifest",
+            str(f_m),
+        ]
+    )
+    err = capsys.readouterr().err
+    # Valid attestation must not cause early FAIL-CLOSED; later errors (if any) must be unrelated.
+    assert "attestation" not in err.lower() or "verified" in err.lower()
+    assert "expired" not in err
+    assert "route mismatch" not in err
+    # With --dry-run we expect either success or non-attestation failure; exit 0/2/3 are acceptable as long as attest passed.
+    assert exit_code in (0, 2, 3)
+
+
+def test_judge_attestation_expired_fails(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    att_dir = tmp_path / "exp"
+    att_dir.mkdir()
+    # Force past expiry (create accepts it; verify rejects).
+    att_path, labels, c_m, f_m, _, _ = _make_attestation_artifacts(att_dir, expires_days=-1)
+    artifacts = tmp_path / "a"
+    artifacts.mkdir()
+    (artifacts / "x.json").write_text("{}", encoding="utf-8")
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "aud"),
+            "--judge-command",
+            "echo",
+            "--judge-family",
+            "claude",
+            "--judge-model",
+            "sonnet-5",
+            "--judge-model-version",
+            "2026-07-11",
+            "--provider-account-lane",
+            "subscription:test",
+            "--judge-attestation",
+            str(att_path),
+            "--labels",
+            str(labels),
+            "--corpus-manifest",
+            str(c_m),
+            "--fixture-manifest",
+            str(f_m),
+        ]
+    )
+    err = capsys.readouterr().err
+    assert exit_code == 2
+    assert "layerb shadow error" in err
+    assert "expired" in err.lower()
+
+
+def test_judge_attestation_route_mismatch_fails(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    att_dir = tmp_path / "mismatch"
+    att_dir.mkdir()
+    att_path, labels, c_m, f_m, _, _ = _make_attestation_artifacts(
+        att_dir, family="claude", resolved_model="sonnet-5", provider_account_lane="subscription:test"
+    )
+    artifacts = tmp_path / "a"
+    artifacts.mkdir()
+    (artifacts / "x.json").write_text("{}", encoding="utf-8")
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "aud"),
+            "--judge-command",
+            "echo",
+            "--judge-family",
+            "gemini",  # mismatch
+            "--judge-model",
+            "sonnet-5",
+            "--judge-model-version",
+            "2026-07-11",
+            "--provider-account-lane",
+            "subscription:test",
+            "--judge-attestation",
+            str(att_path),
+            "--labels",
+            str(labels),
+            "--corpus-manifest",
+            str(c_m),
+            "--fixture-manifest",
+            str(f_m),
+        ]
+    )
+    err = capsys.readouterr().err
+    assert exit_code == 2
+    assert "layerb shadow error" in err
+    assert "route mismatch" in err
+
+
+def test_judge_attestation_malformed_fails(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    att_dir = tmp_path / "bad"
+    att_dir.mkdir()
+    labels = att_dir / "labels.json"
+    labels.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    c_m = att_dir / "c.json"
+    f_m = att_dir / "f.json"
+    c_m.write_text("{}", encoding="utf-8")
+    f_m.write_text("{}", encoding="utf-8")
+    # Malformed: wrong schema version (triggers early in verify_attestation)
+    bad_att = att_dir / "qualification-attestation.json"
+    bad_att.write_text(
+        json.dumps(
+            {
+                "schema_version": "qg-layer-b-qualification-attestation.v999",
+                "tier": "shadow",
+                "qualification_verdict": "PASS_SHADOW",
+                "effective_route": {},
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    artifacts = tmp_path / "a"
+    artifacts.mkdir()
+    (artifacts / "x.json").write_text("{}", encoding="utf-8")
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "aud"),
+            "--judge-command",
+            "echo",
+            "--judge-family",
+            "claude",
+            "--judge-model",
+            "x",
+            "--judge-model-version",
+            "v",
+            "--provider-account-lane",
+            "l",
+            "--judge-attestation",
+            str(bad_att),
+            "--labels",
+            str(labels),
+            "--corpus-manifest",
+            str(c_m),
+            "--fixture-manifest",
+            str(f_m),
+        ]
+    )
+    err = capsys.readouterr().err
+    assert exit_code == 2
+    assert "layerb shadow error" in err
+    # Malformed triggers schema or route parse failure inside verify
+    assert "unknown attestation schema" in err or "effective route" in err or "attestation" in err.lower()
