@@ -1,5 +1,5 @@
 {
-  "fingerprint": "78da57a36df4668bd7fdfc40a59358fe7f87212c959f4c54a0facfa9bfe59bd0",
+  "fingerprint": "b87bba5c9d95daab04404d2a90074baadda710e4f9e8bb83badb94f76a838e54",
   "inputs": {
     "lexicon_code": [
       {
@@ -52,7 +52,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "c7598fb57ce24c46359a3de84b8459c85f3a9ed3f803200a5584299a9e06cdfc"
+        "sha256": "116d65bea38faaa2a984ebecc4623dc3cbcfa36960f328b50840c46cd127843a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -132,11 +132,11 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "d1614c11e5099113ad2b4ec5104f07f86b16e64c7a5a8e46a40d0d9317562513"
+        "sha256": "f22cb1acc7d7d1fb23ac082301fbcf0c3de0e8e178f1eddfc74d072bf73aa6a6"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "28c72082c388ae5b301acc006eeed4e585c9fbbda48b805d1ff543d31862745d"
+        "sha256": "9270110568552cffdf82bfb907cb624afc38da121c4d3aa3e2af3fc95bb3a162"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",
