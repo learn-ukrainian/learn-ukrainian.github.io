@@ -153,6 +153,36 @@ explicit provenance through:
   --report
 ```
 
+### Anna Ohoiko corpus intake (#4223 Phase 1)
+
+The Ohoiko adapter reuses the shared ``atlas_intake_core`` machinery
+introduced for curriculum full-text intake (#4222). It scans the private
+Anna Ohoiko corpus under ``docs/references/private/`` and emits safe
+inventory + ledger metadata only — no Atlas publish, no Daily/Practice/Cloze
+admission:
+
+```bash
+.venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
+  --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json \
+  --report-out /tmp/atlas-ohoiko-corpus-intake.json
+```
+
+Optional append-format ledger output (requires ``--batch-id``,
+``--batch-label``, and ``--reviewed-at``):
+
+```bash
+.venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
+  --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json \
+  --ledger-out data/lexicon/source-inventory-review-decisions/YYYY-MM-DD-ohoiko-corpus-intake.yaml \
+  --batch-id ohoiko-corpus-intake-2026-07-14 \
+  --batch-label "Ohoiko corpus Phase 1 intake" \
+  --reviewed-at 2026-07-14
+```
+
+Public reports list opaque ``source_ref`` locators and aggregate counts only.
+Raw copyrighted paths, passage text, and quotes never leave the private
+boundary.
+
 The source inventory parser accepts CSV, TSV, JSONL, JSON, or YAML. YAML/JSON
 structured inventories use this minimal v1 shape:
 
