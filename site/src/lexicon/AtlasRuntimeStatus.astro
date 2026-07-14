@@ -54,6 +54,8 @@ const statusUrl = "/api/lexicon/status.json";
 </section>
 
 <script>
+  import { pluralizeUk } from "../lib/i18n/plural";
+
   const numberFormatter = new Intl.NumberFormat("uk-UA");
   const formatCount = (value) =>
     typeof value === "number" ? numberFormatter.format(value) : "-";
@@ -72,20 +74,32 @@ const statusUrl = "/api/lexicon/status.json";
 
   function renderRuntimeStatus(root, status) {
     setRuntimeText(root, "publicAtlas", formatCount(status.entryModel.total_reviewed_entries));
+    
+    const aliasCount = status.entryModel.alias_records ?? 0;
+    const aliasLabel = pluralizeUk(aliasCount, ["форма пошуку", "форми пошуку", "форм пошуку"]);
+    
+    const shardCount = status.publicAtlas.searchShards ?? 0;
+    const shardLabel = pluralizeUk(shardCount, ["пошук-шард", "пошук-шарди", "пошук-шардів"]);
+
     setRuntimeDetail(
       root,
       "publicAtlas",
-      `${formatCount(status.entryModel.alias_records)} форм пошуку · ${status.publicAtlas.searchShards} пошук-шардів`,
+      `${formatCount(aliasCount)} ${aliasLabel} · ${formatCount(shardCount)} ${shardLabel}`,
     );
 
     setRuntimeText(root, "manifest", formatCount(status.manifest.records));
+    
+    const publicCount = status.manifest.publicLexemeRecords ?? 0;
+    const publicLabel = pluralizeUk(publicCount, ["публічний запис", "публічні записи", "публічних записів"]);
+    
+    const grammarCount = status.manifest.grammarTermRecords ?? 0;
+    const grammarLabel = pluralizeUk(grammarCount, ["внутрішній", "внутрішні", "внутрішніх"]);
+
     setRuntimeDetail(
       root,
       "manifest",
       status.manifest.hydrated
-        ? `${formatCount(status.manifest.publicLexemeRecords)} публічних записів · ${formatCount(
-            status.manifest.grammarTermRecords,
-          )} внутрішніх`
+        ? `${formatCount(publicCount)} ${publicLabel} · ${formatCount(grammarCount)} ${grammarLabel}`
         : `${formatBytes(status.manifest.jsonBytes)} pinned`,
     );
 

@@ -1,3 +1,5 @@
+import { pluralizeUk } from '../i18n/plural';
+
 /** Morphology rows carrying VESUM style/register markers (#4891 / #4900). */
 export interface MarkedMorphologyForm {
   marker_label: string;
@@ -61,7 +63,11 @@ export function morphologyFormCountLabel(
   isFullyMarked: boolean,
 ): string {
   if (isFullyMarked) {
-    return `${morphology.marked_form_count} маркованих форм`;
+    const count = morphology.marked_form_count ?? 0;
+    const formWord = pluralizeUk(count, ['маркована форма', 'марковані форми', 'маркованих форм']);
+    return `${count} ${formWord}`;
   }
-  return `${morphology.form_count ?? 0} форм`;
+  const count = morphology.form_count ?? 0;
+  const formWord = pluralizeUk(count, ['форма', 'форми', 'форм']);
+  return `${count} ${formWord}`;
 }
