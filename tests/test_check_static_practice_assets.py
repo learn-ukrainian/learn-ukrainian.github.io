@@ -587,3 +587,70 @@ def test_thin_deck_warnings(tmp_path: Path) -> None:
     assert summary["ok"] is True
     assert any("A1 synonym coverage 0.0000 is below thin-deck threshold 0.05" in warning for warning in summary["warnings"])
     assert any("A1 paronym coverage 0.0000 is below thin-deck threshold 0.01" in warning for warning in summary["warnings"])
+
+
+def test_check_assets_summary_includes_coverage_structure(tmp_path: Path) -> None:
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _write_level(practice_dir, level="A2")
+    index_path = practice_dir / "practice-index.A2.json"
+    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    index_payload["counts"]["modeCoverage"]["cloze"] = 0.5
+    index_payload["counts"]["modeCoverage"]["synonym"] = 0.08
+    _write_json(index_path, index_payload)
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1", "A2"),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    coverage = summary["coverage"]
+    assert coverage["modes"] == [
+        "cloze",
+        "stress",
+        "classify",
+        "paradigm",
+        "synonym",
+        "heritage",
+        "paronym",
+    ]
+    assert coverage["levels"]["A1"]["cloze"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
+    assert coverage["levels"]["A1"]["synonym"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
+    assert coverage["levels"]["A1"]["heritage"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
+    assert coverage["levels"]["A2"]["cloze"] == {"ratio": 0.5, "pct": 50.0, "thin": False}
+    assert coverage["levels"]["A2"]["synonym"] == {"ratio": 0.08, "pct": 8.0, "thin": False}
+
+
+def test_cli_prints_coverage_table(tmp_path: Path) -> None:
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+
+    result = subprocess.run(
+        [
+            ".venv/bin/python",
+            "scripts/audit/check_static_practice_assets.py",
+            "--daily-pool",
+            str(daily_pool),
+            "--practice-dir",
+            str(practice_dir),
+            "--reviewed-sources",
+            str(reviewed_sources),
+            "--levels",
+            "A1",
+            "--min-daily-pool-size",
+            "2",
+            "--min-practice-lexemes-per-level",
+            "1",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert "Practice mode coverage (% of lexemes):" in result.stdout
+    assert "cloze" in result.stdout and "synonym" in result.stdout
+    assert "0.0%*" in result.stdout
+    assert "* below thin-deck warning threshold" in result.stdout

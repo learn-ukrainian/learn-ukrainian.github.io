@@ -75,6 +75,7 @@ MODE_BODY_KEYS = {
 }
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym")
 MODE_SHARD_KINDS = ("cloze", *DRILL_MODES)
+COVERAGE_MODES = MODE_SHARD_KINDS
 
 
 def _read_json(path: Path, errors: list[str]) -> Any:
@@ -528,7 +529,52 @@ def _check_level(
         **{kind: len(rows) for kind, rows in mode_items.items() if isinstance(rows, list)},
         "deck_versions": sorted(versions),
         "lexeme_ids": frozenset(lexeme_by_id),
+        "mode_coverage": dict(mode_coverage),
     }
+
+
+def _build_coverage(
+    practice: dict[str, dict[str, Any]],
+    levels: tuple[str, ...],
+) -> dict[str, Any]:
+    level_rows: dict[str, dict[str, dict[str, Any]]] = {}
+    for level in levels:
+        mode_coverage = practice.get(level, {}).get("mode_coverage", {})
+        if not isinstance(mode_coverage, dict):
+            mode_coverage = {}
+        cells: dict[str, dict[str, Any]] = {}
+        for mode in COVERAGE_MODES:
+            ratio = float(mode_coverage.get(mode, 0.0))
+            threshold = THIN_WARN_THRESHOLDS.get(mode)
+            cells[mode] = {
+                "ratio": ratio,
+                "pct": round(ratio * 100, 1),
+                "thin": threshold is not None and ratio < threshold,
+            }
+        level_rows[level] = cells
+    return {
+        "modes": list(COVERAGE_MODES),
+        "levels": level_rows,
+    }
+
+
+def _format_coverage_table(coverage: dict[str, Any]) -> str:
+    modes: list[str] = coverage["modes"]
+    level_rows: dict[str, dict[str, dict[str, Any]]] = coverage["levels"]
+    header = " " * 6 + "".join(f"{mode:>9}" for mode in modes)
+    lines = ["Practice mode coverage (% of lexemes):", header]
+    for level, row in level_rows.items():
+        cells = []
+        for mode in modes:
+            cell = row[mode]
+            label = f"{cell['pct']:5.1f}%"
+            if cell["thin"]:
+                label += "*"
+            cells.append(f"{label:>9}")
+        lines.append(f"  {level}  " + "".join(cells))
+    if any(cell["thin"] for row in level_rows.values() for cell in row.values()):
+        lines.append("* below thin-deck warning threshold")
+    return "\n".join(lines)
 
 
 def check_assets(
@@ -577,12 +623,17 @@ def check_assets(
     if total_cloze and not reviewed:
         errors.append(f"{reviewed_sources}: cloze shards are nonempty but reviewed allowlist is empty")
 
+    coverage = _build_coverage(practice, levels)
+    for level_row in practice.values():
+        level_row.pop("mode_coverage", None)
+
     return {
         "ok": not errors,
         "errors": errors,
         "warnings": warnings,
         "daily": daily,
         "practice": practice,
+        "coverage": coverage,
         "reviewed_sources": len(reviewed),
         "total_cloze": total_cloze,
         "deck_versions": sorted(deck_versions),
@@ -611,6 +662,7 @@ def _print_summary(summary: dict[str, Any]) -> None:
             f"  {level}: index={row['index']} lexemes={row['lexemes']} "
             f"cloze={row['cloze']} {mode_counts}"
         )
+    print(_format_coverage_table(summary["coverage"]))
 
 
 def main(argv: list[str] | None = None) -> int:
