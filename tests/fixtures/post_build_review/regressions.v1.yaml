@@ -137,3 +137,9 @@ regressions:
     version_field: review_protocol_version
     input: Two reviews prepare and finalize concurrently for different module targets.
     expected: Each invocation receives a distinct run directory whose packet, exact semantic response, and result cannot cross targets.
+  - bug_id: folk-productive-performance-misclassified-as-supplied-audio
+    responsible_layer: track_policy
+    fixed_in_version: 1.2.1
+    version_field: track_policy_version
+    input: Descriptive prose about listeners plus a learner-created vocal performance with show_record_button metadata.
+    expected: No supplied-audio requirement; productive-task metadata never proves media access, while explicit listening and timestamp tasks remain inventoried.

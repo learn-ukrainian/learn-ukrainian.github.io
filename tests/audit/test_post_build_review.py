@@ -690,6 +690,23 @@ def test_maiboroda_regression_inventories_audio_dependent_tasks() -> None:
     assert any("module.md" in item["location"] for item in audio)
 
 
+def test_folk_productive_performance_is_not_supplied_audio_evidence() -> None:
+    target = pbr.resolve_target("folk/narodna-kultura-yak-systema")
+    policy = pbr.resolve_track_policy("folk", pbr.load_track_policy())
+    texts = pbr._learner_surface_texts(target)
+
+    assert "show_record_button: true" in next(
+        text for path, text in texts.items() if path.endswith("activities.yaml")
+    )
+
+    requirements = pbr.inventory_evidence_requirements(
+        texts,
+        policy["mechanical_checks"]["evidence_requirements"],
+    )
+
+    assert requirements == []
+
+
 def test_audio_evidence_requires_matching_reviewer_capability() -> None:
     semantic = {
         "verdict": "PASS",
@@ -887,7 +904,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "2.0.1"
-    assert len(rows) == 24
+    assert len(rows) == 25
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -902,6 +919,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "1.0.1",
         "1.1.0",
         "1.2.0",
+        "1.2.1",
         "2.0.0",
         "2.0.1",
     }

@@ -21,213 +21,45 @@
     },
     "evidence_requirements": [
       {
-        "evidence": "слухання",
-        "id": "audio-dependent-task-1",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:5",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слух",
-        "id": "audio-dependent-task-2",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:11",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слуховий",
-        "id": "audio-dependent-task-3",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слуху",
-        "id": "audio-dependent-task-4",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:15",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слуху",
-        "id": "audio-dependent-task-5",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:17",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухом",
-        "id": "audio-dependent-task-6",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:21",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слух",
-        "id": "audio-dependent-task-7",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:23",
-        "modality": "audio"
-      },
-      {
-        "evidence": "чує",
-        "id": "audio-dependent-task-8",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:33",
-        "modality": "audio"
-      },
-      {
         "evidence": "слухайте",
-        "id": "audio-dependent-task-9",
+        "id": "audio-dependent-task-1",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:41",
         "modality": "audio"
       },
       {
-        "evidence": "Слухач",
-        "id": "audio-dependent-task-10",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:43",
-        "modality": "audio"
-      },
-      {
-        "evidence": "почуте",
-        "id": "audio-dependent-task-11",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:47",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухача",
-        "id": "audio-dependent-task-12",
+        "evidence": "часові позначки",
+        "id": "audio-dependent-task-2",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:51",
         "modality": "audio"
       },
       {
-        "evidence": "слухаєте",
-        "id": "audio-dependent-task-13",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:55",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухання",
-        "id": "audio-dependent-task-14",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:57",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухацької",
-        "id": "audio-dependent-task-15",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:59",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухачів",
-        "id": "audio-dependent-task-16",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:73",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухання",
-        "id": "audio-dependent-task-17",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:77",
-        "modality": "audio"
-      },
-      {
-        "evidence": "почуття",
-        "id": "audio-dependent-task-18",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:79",
-        "modality": "audio"
-      },
-      {
         "evidence": "Часова позначка",
-        "id": "audio-dependent-task-19",
+        "id": "audio-dependent-task-3",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:87",
         "modality": "audio"
       },
       {
-        "evidence": "почути",
-        "id": "audio-dependent-task-20",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:91",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухацьких",
-        "id": "audio-dependent-task-21",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:93",
-        "modality": "audio"
-      },
-      {
         "evidence": "часовими позначками",
-        "id": "audio-dependent-task-22",
+        "id": "audio-dependent-task-4",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:95",
         "modality": "audio"
       },
       {
-        "evidence": "слухач",
-        "id": "audio-dependent-task-23",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:97",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухацьке",
-        "id": "audio-dependent-task-24",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:100",
-        "modality": "audio"
-      },
-      {
         "evidence": "часову позначку",
-        "id": "audio-dependent-task-25",
+        "id": "audio-dependent-task-5",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:19",
         "modality": "audio"
       },
       {
-        "evidence": "чує",
-        "id": "audio-dependent-task-26",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:20",
-        "modality": "audio"
-      },
-      {
-        "evidence": "почуте",
-        "id": "audio-dependent-task-27",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:30",
-        "modality": "audio"
-      },
-      {
         "evidence": "часовими позначками",
-        "id": "audio-dependent-task-28",
+        "id": "audio-dependent-task-6",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:43",
         "modality": "audio"
       },
       {
         "evidence": "часові позначки",
-        "id": "audio-dependent-task-29",
+        "id": "audio-dependent-task-7",
         "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:49",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слух",
-        "id": "audio-dependent-task-30",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:58",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухання",
-        "id": "audio-dependent-task-31",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:59",
-        "modality": "audio"
-      },
-      {
-        "evidence": "чує",
-        "id": "audio-dependent-task-32",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:87",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухачів",
-        "id": "audio-dependent-task-33",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:114",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухачів",
-        "id": "audio-dependent-task-34",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:123",
-        "modality": "audio"
-      },
-      {
-        "evidence": "слухацьке",
-        "id": "audio-dependent-task-35",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml:41",
         "modality": "audio"
       }
     ],
@@ -472,8 +304,8 @@
       "source": "semantic"
     }
   ],
-  "prompt_sha256": "f48057421a91997fd9408d3d2ddf1467c5cf611f551b4ff7f61251eca87ba7cb",
-  "reproducibility_key": "5800e00c8c203dd3d2c75fbb15a4f7948d4452584c61c53d5555fcbbbafec919",
+  "prompt_sha256": "b22e0640dfdf2e632e72d6e8b26fcf2c0faaeffe80e320b5b050d2eba9006061",
+  "reproducibility_key": "88c3397306788288d77f1358544c9741f38b82ade90017099886513a9743f708",
   "review_protocol_version": "2.0.1",
   "reviewer": {
     "agent": "fixture",
@@ -553,5 +385,5 @@
     "slug": "oleksandr-bilash",
     "track": "bio"
   },
-  "track_policy_version": "1.2.0"
+  "track_policy_version": "1.2.1"
 }

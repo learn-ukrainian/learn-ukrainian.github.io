@@ -1,7 +1,7 @@
 review_protocol_version: 2.0.1
 deterministic_contract_version: 1.2.0
 semantic_prompt_version: 2.0.0
-track_policy_version: 1.2.0
+track_policy_version: 1.2.1
 
 defaults:
   semantic_requirements:
@@ -21,7 +21,7 @@ defaults:
     evidence_requirements:
       - id: audio-dependent-task
         modality: audio
-        regex: '(?:слух\w*|чує\w*|почут\w*|прослух\w*|аудіо\w*|часов\w*\s+позначк\w*)'
+        regex: '(?:прослух(?:ай(?:те)?|овуванн\w*|ати|овуй\w*|овуват\w*)|слухай(?:те)?|аудіо\w*|часов\w*\s+позначк\w*|(?:ви|де|що)\s+чуєте\b|виразно\s+почут\w*\s+(?:слов|звук|нот|фраз|акорд)\w*)'
       - id: video-dependent-task
         modality: video
         regex: '(?:дивіться|переглян\w*|відео\w*|екранн\w*\s+момент\w*)'
