@@ -4,7 +4,7 @@ sequence: 1
 slug: narodna-kultura-yak-systema
 title: "Народна культура як система"
 subtitle: "Oral tradition as the foundation of written Ukrainian literature"
-version: 4
+version: 5
 status: locked
 phase: base-first
 cefr_min: C1
@@ -21,7 +21,7 @@ pedagogy:
   notes:
     - "Begin from a short primary text excerpt, then move to genre/system map."
     - "Keep Christian-heritage-first framing where the tradition is historically Christian; seasonal imagery is read as poetics in genre context."
-    - "Do not publish module until hosted readings are cleaned or created with public source_url frontmatter."
+    - "Publish only with cleaned hosted readings that expose public source_url frontmatter."
 content_outline:
   - section: "Постановка проблеми"
     words: 550
@@ -116,7 +116,7 @@ readings:
     source: "Народна творчість. УкрЛіб."
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
     license: public_domain
-    hosting: needs-clean-hosted-reading
+    hosting: hosted
     reading_slug: "shchedrivka-oi-syvaia-ta-i-zozulechka"
   - title: "Ой весна, весна, ти красна"
     title_en: "Oh Spring, Beautiful Spring"
@@ -126,7 +126,7 @@ readings:
     source: "Народна творчість. УкрЛіб."
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
     license: public_domain
-    hosting: needs-clean-hosted-reading
+    hosting: hosted
     reading_slug: "vesnianka-oi-vesna-vesna-ty-krasna"
   - title: "Втеча трьох братів з города Азова, з турецької неволі"
     title_en: "The Escape of Three Brothers from Azov"
@@ -136,7 +136,7 @@ readings:
     source: "Народна творчість. УкрЛіб."
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1"
     license: public_domain
-    hosting: needs-clean-hosted-reading
+    hosting: hosted
     reading_slug: "duma-vtecha-trokh-brativ-z-azova"
   - title: "Пісня про Байду"
     title_en: "The Song about Baida"
@@ -160,6 +160,9 @@ connects_to:
   - folk-010-dumy-nevilnytski-lytsarski
   - folk-014-istorychni-pisni
 changelog:
+  - version: 5
+    date: "2026-07-14"
+    note: "Post-build review: align reading hosting metadata with the four published canonical reading pages."
   - version: 4
     date: "2026-07-14"
     note: "Post-build repair: replace five bare sequence links with canonical FOLK module IDs."
