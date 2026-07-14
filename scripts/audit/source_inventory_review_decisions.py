@@ -147,18 +147,24 @@ def validate_decision_file(
     if not isinstance(decisions, list) or not decisions:
         raise SourceInventoryError(f"{path}: decisions must be a non-empty list")
 
-    index = source_index or _source_record_index(
-        read_source_inventories(
-            inventory_paths_for_decision_payload(payload),
-            project_root=PROJECT_ROOT,
-        )
-    )
+    if source_index is not None:
+        index = source_index
+        absent_inventories: set[str] = set()
+    else:
+        index, absent_inventories = _index_and_absent_inventories(payload)
     seen_source_keys: set[str] = set()
     decision_counts: Counter[str] = Counter()
     for idx, row in enumerate(decisions, start=1):
         if not isinstance(row, Mapping):
             raise SourceInventoryError(f"{path}: decisions[{idx}] must be a mapping")
-        _validate_decision_row(path, idx, row, source_index=index, seen_source_keys=seen_source_keys)
+        _validate_decision_row(
+            path,
+            idx,
+            row,
+            source_index=index,
+            seen_source_keys=seen_source_keys,
+            absent_inventories=absent_inventories,
+        )
         decision_counts[str(row["decision"])] += 1
 
     return {
@@ -168,6 +174,48 @@ def validate_decision_file(
     }
 
 
+def _index_and_absent_inventories(
+    payload: Mapping[str, Any],
+) -> tuple[dict[tuple[str, str, str], SourceInventoryRecord], set[str]]:
+    """Build the source-record index, tolerating absent regenerable inventories.
+
+    Committed source inventories (``COMMITTED_SOURCE_INVENTORIES``) must always be
+    present — a missing one is a real error and ``read_source_inventory`` raises.
+    A ledger-referenced *staged* inventory (e.g. the Ohoiko corpus intake JSON) is
+    deterministic, regenerable output that is deliberately gitignored, not committed
+    (orchestrator decision, #4223): it will be absent on a fresh clone or in CI. When
+    such a file is absent we skip it here and return its ledger ``path`` string in the
+    ``absent`` set so ``_validate_decision_row`` can fall back to structural-only
+    validation (the ``source_inventory.key`` hash still pins lemma+path+locator). When
+    the file *is* present (a local regeneration), every row is fully cross-checked as
+    before — fail-open applies only to the genuinely-absent regenerable case.
+    """
+
+    read_paths: list[Path] = list(COMMITTED_SOURCE_INVENTORIES)
+    absent: set[str] = set()
+    decisions = payload.get("decisions")
+    if isinstance(decisions, list):
+        for row in decisions:
+            if not isinstance(row, Mapping):
+                continue
+            source_inventory = row.get("source_inventory")
+            if not isinstance(source_inventory, Mapping):
+                continue
+            raw_path = source_inventory.get("path")
+            if not isinstance(raw_path, str) or not raw_path.strip():
+                continue
+            resolved = resolve_staged_inventory_path(raw_path)
+            if resolved.exists():
+                read_paths.append(resolved)
+            else:
+                absent.add(raw_path.strip())
+    records = read_source_inventories(
+        tuple(dict.fromkeys(read_paths)),
+        project_root=PROJECT_ROOT,
+    )
+    return _source_record_index(records), absent
+
+
 def _validate_decision_row(
     path: Path,
     idx: int,
@@ -175,6 +223,7 @@ def _validate_decision_row(
     *,
     source_index: Mapping[tuple[str, str, str], SourceInventoryRecord],
     seen_source_keys: set[str],
+    absent_inventories: set[str] = frozenset(),
 ) -> None:
     prefix = f"{path}: decisions[{idx}]"
     _reject_unknown_fields(path, row, allowed=DECISION_FIELDS, scope=f"decisions[{idx}]")
@@ -233,6 +282,10 @@ def _validate_decision_row(
 
     record = source_index.get((lemma, inventory_path, locator))
     if record is None:
+        if inventory_path in absent_inventories:
+            # Regenerable inventory absent (gitignored, #4223): the key hash above
+            # already pins lemma+path+locator; cross-check the record on regeneration.
+            return
         raise SourceInventoryError(
             f"{prefix} source inventory record not found for {lemma!r} at {inventory_path}:{locator}"
         )
@@ -249,26 +302,6 @@ def _source_record_index(
         (record.lemma, record.inventory_path, record.source_locator): record
         for record in records
     }
-
-
-def inventory_paths_for_decision_payload(payload: Mapping[str, Any]) -> tuple[Path, ...]:
-    """Locate referenced staged inventories without broadening the review corpus."""
-
-    paths: list[Path] = list(COMMITTED_SOURCE_INVENTORIES)
-    decisions = payload.get("decisions")
-    if not isinstance(decisions, list):
-        return tuple(paths)
-    for row in decisions:
-        if not isinstance(row, Mapping):
-            continue
-        source_inventory = row.get("source_inventory")
-        if not isinstance(source_inventory, Mapping):
-            continue
-        inventory_path = source_inventory.get("path")
-        if not isinstance(inventory_path, str) or not inventory_path.strip():
-            continue
-        paths.append(resolve_staged_inventory_path(inventory_path))
-    return tuple(dict.fromkeys(paths))
 
 
 def resolve_staged_inventory_path(inventory_path: str) -> Path:

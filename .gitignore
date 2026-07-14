@@ -404,6 +404,16 @@ data/lexicon/cache/
 #   .venv/bin/python -m scripts.lexicon.grow_lexicon_from_content (#3675 P2; promotion = P3)
 data/lexicon/grow_candidates.json
 data/lexicon/grow_needs_review.json
+# Ohoiko corpus intake full source inventory (~31 MB, 111,200 rows): deterministic,
+# regenerable output of committed code over the private corpus (#4223). It does NOT
+# belong in git history — regenerate on demand into this path (main checkout only):
+#   .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
+#     --private-root /ABS/PATH/TO/docs/references/private \
+#     --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json
+# The durable record is the per-batch review ledgers under
+# data/lexicon/source-inventory-review-decisions/2026-07-14-ohoiko-corpus-intake-batch-*.yaml
+# plus the committed SUMMARY (counts + content hash) beside this path.
+data/lexicon/source-inventory/ohoiko-corpus-intake.json
 data/eval-archive/
 
 # clawpatch tool output (config + findings + locks + patches — regenerable)

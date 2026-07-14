@@ -184,6 +184,122 @@ def test_decision_validator_discovers_its_staged_inventory(tmp_path: Path, monke
     assert decisions.validate_committed_decision_files([path])["rows"] == 1
 
 
+def _staged_ledger_in_tmp_project(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    write_inventory: bool,
+) -> Path:
+    """Write a ledger referencing a staged (regenerable) inventory in an isolated
+    project root. When ``write_inventory`` is False the referenced JSON is absent,
+    mirroring the gitignored Ohoiko corpus intake on a fresh clone / CI (#4223)."""
+
+    project_root = tmp_path / "project"
+    inventory_path = "data/lexicon/source-inventory/ohoiko-corpus-intake.json"
+    inventory = project_root / inventory_path
+    inventory.parent.mkdir(parents=True)
+    if write_inventory:
+        inventory.write_text(
+            json.dumps(
+                [
+                    {
+                        "lemma": "кіт",
+                        "source_family": "ohoiko",
+                        "extraction_mode": "content_token",
+                        "source_id": "ohoiko-fixture",
+                        "source_title": "Fixture Ohoiko",
+                        "source_path": None,
+                        "source_locator": "ohoiko-book-001::entry-0001",
+                        "count": 1,
+                    }
+                ],
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+    locator = "ohoiko-book-001::entry-0001"
+    payload = _minimal_payload()
+    row = payload["decisions"][0]  # type: ignore[index]
+    row["lemma"] = "кіт"  # type: ignore[index]
+    row["approved_gloss"] = "cat"  # type: ignore[index]
+    row["source_inventory"].update(  # type: ignore[union-attr]
+        {
+            "path": inventory_path,
+            "locator": locator,
+            "source_id": "ohoiko-fixture",
+            "source_family": "ohoiko",
+            "key": decisions.source_inventory_key(
+                lemma="кіт", inventory_path=inventory_path, locator=locator
+            ),
+        }
+    )
+    monkeypatch.setattr(decisions, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(decisions, "SOURCE_INVENTORY_DIR", inventory.parent)
+    monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", ())
+    path = tmp_path / "staged-ledger.yaml"
+    _write_decision_file(path, payload)
+    return path
+
+
+def test_decision_validator_fails_open_on_absent_regenerable_inventory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # JSON absent (gitignored/regenerable): structural key-hash check still passes.
+    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=False)
+    assert decisions.validate_committed_decision_files([path])["rows"] == 1
+
+
+def test_decision_validator_full_crosscheck_when_inventory_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Same ledger, JSON present: full row cross-check runs and passes.
+    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=True)
+    assert decisions.validate_committed_decision_files([path])["rows"] == 1
+
+
+def test_decision_validator_absent_inventory_still_rejects_bad_key(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Fail-open does NOT bypass structural integrity: a tampered key is still caught
+    # even when the regenerable inventory is absent.
+    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=False)
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    payload["decisions"][0]["source_inventory"]["key"] = "deadbeefdeadbeef"
+    _write_decision_file(path, payload)
+    with pytest.raises(SourceInventoryError, match="does not match"):
+        decisions.validate_committed_decision_files([path])
+
+
+def test_decision_validator_requires_committed_inventory_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A COMMITTED inventory (not the regenerable staged one) staying strict: if it is
+    # absent from disk, validation still hard-errors — fail-open is staged-only.
+    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=False)
+    missing = decisions.SOURCE_INVENTORY_DIR / "committed-but-missing.yaml"
+    monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", (missing,))
+    with pytest.raises(SourceInventoryError, match="not found"):
+        decisions.validate_committed_decision_files([path])
+
+
+def test_committed_ohoiko_batch_ledgers_validate() -> None:
+    # The real committed per-batch Ohoiko ledgers validate with the regenerable
+    # inventory JSON absent (its normal state in git).
+    batch = sorted(
+        decisions.DEFAULT_DECISION_DIR.glob(
+            "2026-07-14-ohoiko-corpus-intake-batch-*.yaml"
+        )
+    )
+    assert len(batch) == 21
+    summary = decisions.validate_committed_decision_files(batch)
+    assert summary["rows"] == 20848
+    assert summary["decision_counts"] == {
+        "approve_for_publish": 50,
+        "needs_more_evidence": 16237,
+        "reject": 4561,
+    }
+
+
 def test_decision_validator_rejects_missing_promotion_batch_size(tmp_path: Path) -> None:
     payload = _minimal_payload()
     source_queue = payload["source_queue"]  # type: ignore[index]
