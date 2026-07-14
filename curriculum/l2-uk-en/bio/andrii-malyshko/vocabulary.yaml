@@ -1,12 +1,4 @@
 ---
-- lemma: атрибуція
-  translation: attribution
-  pos: noun
-  usage: Атрибуція «за оцінкою ЕСУ» відділяє позицію автора статті від довідкового факту.
-- lemma: ступінь певності
-  translation: degree of certainty
-  pos: noun phrase
-  usage: Ступінь певності має відповідати силі й повноті джерельної опори.
 - lemma: хронологія
   translation: chronology
   pos: noun
@@ -19,6 +11,14 @@
   translation: responsible editor
   pos: noun phrase
   usage: У 1944–1947 роках Малишко був відповідальним редактором журналу «Дніпро».
+- lemma: воєнна лірика
+  translation: wartime lyric poetry
+  pos: noun phrase
+  usage: Воєнна лірика Малишка поєднує публічний заклик з особистим звертанням.
+- lemma: ліричний адресат
+  translation: lyrical addressee
+  pos: noun phrase
+  usage: У назві «Україно моя!» Україна постає як ліричний адресат.
 - lemma: пісенність
   translation: song-like quality
   pos: noun
@@ -63,14 +63,10 @@
   translation: legislative representative activity
   pos: noun phrase
   usage: Депутатська діяльність Малишка включала роботу зі зверненнями громадян та установ.
-- lemma: джерельна межа
-  translation: evidentiary boundary
+- lemma: громадянське звернення
+  translation: citizen petition
   pos: noun phrase
-  usage: Джерельна межа не дозволяє переносити один архівний факт на всю біографію.
-- lemma: маркер поступки
-  translation: concessive marker
-  pos: noun phrase
-  usage: Маркер поступки «хоча» допомагає втримати два документовані аспекти біографії.
+  usage: Громадянське звернення могло стосуватися житла, податків або господарської потреби.
 - lemma: інтерпретація
   translation: interpretation
   pos: noun
@@ -82,12 +78,12 @@
 - lemma: спостереження
   translation: observation
   pos: noun
-  usage: Точне спостереження називає перевірну рису тексту до її інтерпретації.
+  usage: Точне спостереження називає помітну рису тексту до її інтерпретації.
 - lemma: художня деталь
   translation: artistic detail
   pos: noun phrase
   usage: Художня деталь може відкрити тему, але не замінює аналізу всього твору.
-- lemma: доказовий висновок
-  translation: evidence-based conclusion
+- lemma: образ дороги
+  translation: road motif
   pos: noun phrase
-  usage: Доказовий висновок розрізняє факт, джерельну оцінку й власну інтерпретацію.
+  usage: Образ дороги пов'язує материнське звертання з рухом, відстанню та пам'яттю.

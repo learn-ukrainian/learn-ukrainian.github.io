@@ -212,8 +212,8 @@
   },
   "deterministic_contract_version": "1.2.1",
   "findings": [],
-  "prompt_sha256": "7c4c79c5cfd6af49a0338bbab03c4851246a6d25042fe53219ce15e5844ae19d",
-  "reproducibility_key": "95733071cee76da4de7c7ffe5ad5752fa8bfeb6c00d0df01a3b8bf891d389903",
+  "prompt_sha256": "88c0b17df7d5fe32d63ec9751104bca5791110f8738e5b4e9e0b79b17934f2af",
+  "reproducibility_key": "7fe24fdcc0809536f3dda21fa1797a9e972dcc582b2a35c37a234edb77cb4ad2",
   "review_protocol_version": "2.0.1",
   "reviewer": {
     "agent": "fixture",
@@ -744,5 +744,5 @@
     "slug": "oleksandr-bilash",
     "track": "bio"
   },
-  "track_policy_version": "1.2.2"
+  "track_policy_version": "1.3.0"
 }
