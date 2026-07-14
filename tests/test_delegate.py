@@ -79,6 +79,86 @@ def test_state_path_sanitizes_slashes(tmp_tasks_dir):
     assert p.name == "issue_1184_subtask.json"
 
 
+def test_create_runtime_tmp_lease_sanitizes_task_id(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+
+    lease_root, namespace_root = delegate._create_runtime_tmp_lease(
+        "codex/4956 tmp/../lease",
+    )
+
+    assert namespace_root == tmp_path / "learn-ukrainian"
+    assert lease_root == namespace_root / "codex-4956-tmp-..-lease"
+    assert lease_root.is_dir()
+
+
+def test_runtime_tmp_reap_refuses_root_outside_namespace(tmp_path):
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = delegate._reap_runtime_tmp_lease(outside, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "not under $TMPDIR/learn-ukrainian" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_refuses_a_symlinked_lease_root(tmp_path):
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+    lease_root = namespace_root / "task"
+    lease_root.symlink_to(outside, target_is_directory=True)
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "lease is a symlink" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path):
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    (lease_root / "payload.bin").write_bytes(b"lease")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+    (lease_root / "outside-link").symlink_to(outside, target_is_directory=True)
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result == {"tmp_bytes_freed": 5 + len(str(outside)), "tmp_reap_error": None}
+    assert not lease_root.exists()
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+
+    def fail_rmtree(*_args, **_kwargs):
+        raise OSError("permission denied")
+
+    fail_rmtree.avoids_symlink_attacks = True
+    monkeypatch.setattr(delegate.shutil, "rmtree", fail_rmtree)
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "permission denied" in str(result["tmp_reap_error"])
+    assert lease_root.exists()
+
+
 def test_write_state_atomic_no_partial_reads(tmp_tasks_dir):
     """Atomic write should never leave a partial file visible."""
     path = tmp_tasks_dir / "atomic-test.json"
@@ -957,6 +1037,11 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     monkeypatch.setenv("LU_RUN_ID", "run-dispatch")
     monkeypatch.setenv("LU_SESSION_ID", "session-dispatch")
 
+    runtime_tmp_namespace = tmp_path / "learn-ukrainian"
+    runtime_tmp_root = runtime_tmp_namespace / "worker-dispatch-event"
+    runtime_tmp_root.mkdir(parents=True)
+    (runtime_tmp_root / "payload.bin").write_bytes(b"lease")
+
     state_path = delegate._state_path("worker-dispatch-event")
     delegate._write_state_atomic(state_path, {
         "task_id": "worker-dispatch-event",
@@ -966,6 +1051,9 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         "prompt_chars": 2,
         "worktree_branch": "deepseek/worker-dispatch-event",
         "worktree_path": str(tmp_path),
+        "runtime_tmp_root": str(runtime_tmp_root),
+        "tmp_bytes_freed": None,
+        "tmp_reap_error": None,
     })
 
     mock_result = type(
@@ -1001,6 +1089,8 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
             model=None,
             hard_timeout=60,
             effort=None,
+            runtime_tmp_root=str(runtime_tmp_root),
+            runtime_tmp_namespace_root=str(runtime_tmp_namespace),
         )
 
     assert rc == 0
@@ -1024,9 +1114,14 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["substitution"]["actual_provider"] == "openrouter"
+    assert state["tmp_bytes_freed"] == 5
+    assert state["tmp_reap_error"] is None
+    assert not runtime_tmp_root.exists()
     assert event["cost_usd"] == pytest.approx(0.00002)
     assert event["billing_model"] == "per_token"
     assert event["cost_provenance"] == "priced"
+    assert event["tmp_bytes_freed"] == 5
+    assert event["tmp_reap_error"] is None
 
 
 def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
@@ -1799,6 +1894,93 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     env = recorded["env"]
     assert env["AGENT_NO_MERGE"] == "1"
     assert "AGENT_ALLOW_MERGE" not in env
+
+
+def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24681
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **kwargs):
+        recorded["cmd"] = cmd
+        recorded["env"] = kwargs["env"]
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "codex/4956 tmp",
+            "--prompt",
+            "test",
+        ],
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("codex/4956 tmp"))
+    assert state is not None
+    lease_root = tmp_path / "learn-ukrainian" / "codex-4956-tmp"
+    assert state["runtime_tmp_root"] == str(lease_root)
+    assert state["tmp_bytes_freed"] is None
+    assert state["tmp_reap_error"] is None
+    assert lease_root.is_dir()
+
+    env = recorded["env"]
+    assert isinstance(env, dict)
+    assert env["TMPDIR"] == str(lease_root)
+    assert env["LU_RUNTIME_TMP_ROOT"] == str(lease_root)
+    cmd = recorded["cmd"]
+    assert isinstance(cmd, list)
+    assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
+
+
+def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dry/run tmp",
+            "--prompt",
+            "test",
+            "--dry-run",
+        ],
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("dry/run tmp"))
+    assert state is not None
+    lease_root = tmp_path / "learn-ukrainian" / "dry-run-tmp"
+    assert state["status"] == "dry_run"
+    assert state["runtime_tmp_root"] == str(lease_root)
+    assert state["tmp_bytes_freed"] == 0
+    assert state["tmp_reap_error"] is None
+    assert not lease_root.exists()
 
 
 def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypatch):

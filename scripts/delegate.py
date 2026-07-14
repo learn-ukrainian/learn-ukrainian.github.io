@@ -92,9 +92,12 @@ import logging
 import os
 import re
 import shlex
+import shutil
 import signal
+import stat
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.parse
@@ -341,6 +344,138 @@ def _normalize_task_id(agent: str, task_id: str) -> str:
         if task_id.startswith(prefix):
             return task_id[len(prefix) :]
     return task_id
+
+
+def _runtime_tmp_lease_name(task_id: str) -> str:
+    """Return one safe path component for a task's runtime tmp lease."""
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("./-") or "task"
+
+
+def _create_runtime_tmp_lease(task_id: str) -> tuple[Path, Path]:
+    """Create and return a task lease plus its resolved namespace root.
+
+    The lease is intentionally deterministic per task ID: a task can restart
+    after its previous worker has finished and re-create the same root, while
+    Stage 2 will eventually handle roots left by crashed processes.
+    """
+    namespace_root = Path(tempfile.gettempdir()) / "learn-ukrainian"
+    try:
+        namespace_root.mkdir(parents=True, exist_ok=True)
+        namespace_stat = namespace_root.lstat()
+    except OSError as exc:
+        raise RuntimeError(
+            f"could not create runtime tmp namespace {namespace_root}: {exc}",
+        ) from exc
+    if stat.S_ISLNK(namespace_stat.st_mode):
+        raise RuntimeError(
+            f"runtime tmp namespace must not be a symlink: {namespace_root}",
+        )
+
+    lease_root = namespace_root / _runtime_tmp_lease_name(task_id)
+    try:
+        lease_root.mkdir(exist_ok=True)
+        lease_stat = lease_root.lstat()
+        resolved_namespace = namespace_root.resolve(strict=True)
+        resolved_lease = lease_root.resolve(strict=True)
+    except OSError as exc:
+        raise RuntimeError(
+            f"could not create runtime tmp lease {lease_root}: {exc}",
+        ) from exc
+    if stat.S_ISLNK(lease_stat.st_mode):
+        raise RuntimeError(
+            f"runtime tmp lease must not be a symlink: {lease_root}",
+        )
+    if not stat.S_ISDIR(lease_stat.st_mode) or resolved_lease.parent != resolved_namespace:
+        raise RuntimeError(
+            f"runtime tmp lease is not a direct child of its namespace: {lease_root}",
+        )
+    return resolved_lease, resolved_namespace
+
+
+def _runtime_tmp_lease_bytes(lease_root: Path) -> int:
+    """Count lease payload bytes without traversing directory symlinks."""
+    total = 0
+    seen_regular_files: set[tuple[int, int]] = set()
+    for directory, dirnames, filenames in os.walk(lease_root, followlinks=False):
+        for name in [*dirnames, *filenames]:
+            path = Path(directory) / name
+            try:
+                entry = path.lstat()
+            except FileNotFoundError:
+                continue
+            if stat.S_ISREG(entry.st_mode):
+                inode = (entry.st_dev, entry.st_ino)
+                if inode in seen_regular_files:
+                    continue
+                seen_regular_files.add(inode)
+                total += entry.st_size
+            elif stat.S_ISLNK(entry.st_mode):
+                # Account for the link's own small directory entry, never its
+                # target. ``os.walk(..., followlinks=False)`` will not descend.
+                total += entry.st_size
+    return total
+
+
+def _reap_runtime_tmp_lease(
+    lease_root: Path | str | None,
+    namespace_root: Path | str | None,
+) -> dict[str, int | str | None]:
+    """Best-effort, fd-relative deletion of one task-scoped runtime lease.
+
+    This is intentionally stricter than a generic ``rm -rf``. It only removes
+    a non-symlink direct child of the dispatcher-created namespace and uses
+    ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
+    cleanup into a deletion outside the lease. Any failure is state telemetry,
+    never a worker failure.
+    """
+    result: dict[str, int | str | None] = {
+        "tmp_bytes_freed": 0,
+        "tmp_reap_error": None,
+    }
+    try:
+        if lease_root is None or namespace_root is None:
+            raise ValueError("runtime tmp lease metadata is missing")
+        lease = Path(lease_root)
+        namespace = Path(namespace_root)
+        namespace_stat = namespace.lstat()
+        lease_stat = lease.lstat()
+        if stat.S_ISLNK(namespace_stat.st_mode):
+            raise ValueError("runtime tmp namespace is a symlink")
+        if stat.S_ISLNK(lease_stat.st_mode):
+            raise ValueError("runtime tmp lease is a symlink")
+        if not stat.S_ISDIR(namespace_stat.st_mode):
+            raise ValueError("runtime tmp namespace is not a directory")
+        if not stat.S_ISDIR(lease_stat.st_mode):
+            raise ValueError("runtime tmp lease is not a directory")
+
+        resolved_namespace = namespace.resolve(strict=True)
+        resolved_lease = lease.resolve(strict=True)
+        if resolved_lease.parent != resolved_namespace:
+            raise ValueError(
+                "resolved runtime tmp lease is not under $TMPDIR/learn-ukrainian",
+            )
+        if resolved_namespace.name != "learn-ukrainian":
+            raise ValueError("runtime tmp namespace has the wrong name")
+        if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
+            raise RuntimeError("platform rmtree lacks symlink-attack protection")
+
+        bytes_freed = _runtime_tmp_lease_bytes(lease)
+        open_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+        if hasattr(os, "O_NOFOLLOW"):
+            open_flags |= os.O_NOFOLLOW
+        namespace_fd = os.open(namespace, open_flags)
+        try:
+            # Passing a basename plus dir_fd keeps the deletion anchored to
+            # the verified namespace even if an ancestor changes afterwards.
+            shutil.rmtree(lease.name, dir_fd=namespace_fd)
+        finally:
+            os.close(namespace_fd)
+        result["tmp_bytes_freed"] = bytes_freed
+    except Exception as exc:
+        result["tmp_reap_error"] = (
+            f"{type(exc).__name__}: {exc}"
+        )[:500]
+    return result
 
 
 def _derive_worktree_branch(agent: str, task_id: str) -> str:
@@ -1577,6 +1712,8 @@ def _emit_terminal_dispatch_event(
                 "cost_usd": cost.cost_usd,
                 "billing_model": cost.billing_model,
                 "cost_provenance": cost.provenance,
+                "tmp_bytes_freed": final_state.get("tmp_bytes_freed"),
+                "tmp_reap_error": final_state.get("tmp_reap_error"),
             },
         )
     except Exception as exc:  # pragma: no cover - degraded mode only
@@ -1601,6 +1738,8 @@ def _run_worker(
     initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     keep_worktree: bool = False,
     provider: str | None = None,
+    runtime_tmp_root: str | None = None,
+    runtime_tmp_namespace_root: str | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -1657,6 +1796,7 @@ def _run_worker(
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
+    runtime_tmp_reap: dict[str, int | str | None] | None = None
 
     cancelled = False
     try:
@@ -1724,6 +1864,12 @@ def _run_worker(
         # "crashed" forever.
         stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
         returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
+    finally:
+        if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
+            runtime_tmp_reap = _reap_runtime_tmp_lease(
+                runtime_tmp_root,
+                runtime_tmp_namespace_root,
+            )
 
     duration_s = time.monotonic() - start
 
@@ -1834,6 +1980,16 @@ def _run_worker(
             "needs_finalize": needs_finalize,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
+            "tmp_bytes_freed": (
+                runtime_tmp_reap["tmp_bytes_freed"]
+                if runtime_tmp_reap is not None
+                else final_state.get("tmp_bytes_freed")
+            ),
+            "tmp_reap_error": (
+                runtime_tmp_reap["tmp_reap_error"]
+                if runtime_tmp_reap is not None
+                else final_state.get("tmp_reap_error")
+            ),
             "auto_finalize": (
                 {
                     "ok": auto_finalize.ok,
@@ -1989,34 +2145,92 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
-    if getattr(args, "dry_run", False) and not requested_branch:
-        print(task_id)
-        return 0
-
-    if getattr(args, "dry_run", False) and requested_branch:
-        resolved_raw = (
-            str(_auto_worktree_path(dispatch_agent, task_id))
-            if worktree_arg == "auto"
-            else worktree_arg
-        )
-        assert resolved_raw is not None  # --branch above supplies the auto sentinel.
-        try:
-            worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
-                agent=dispatch_agent,
-                task_id=task_id,
-                raw_path=resolved_raw,
-                base=getattr(args, "base", None) or "main",
-                branch=requested_branch,
-                dry_run=True,
+    if getattr(args, "dry_run", False):
+        dry_run_worktree: Path | None = None
+        dry_run_branch: str | None = None
+        dry_run_worktree_telemetry: dict[str, Any] = {}
+        if requested_branch:
+            resolved_raw = (
+                str(_auto_worktree_path(dispatch_agent, task_id))
+                if worktree_arg == "auto"
+                else worktree_arg
             )
-        except (ValueError, RuntimeError) as exc:
-            print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
+            assert resolved_raw is not None  # --branch above supplies the auto sentinel.
+            try:
+                (
+                    dry_run_worktree,
+                    dry_run_branch,
+                    dry_run_worktree_telemetry,
+                ) = _ensure_worktree(
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    raw_path=resolved_raw,
+                    base=getattr(args, "base", None) or "main",
+                    branch=requested_branch,
+                    dry_run=True,
+                )
+            except (ValueError, RuntimeError) as exc:
+                print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
+
+        try:
+            runtime_tmp_root, runtime_tmp_namespace_root = _create_runtime_tmp_lease(task_id)
+        except RuntimeError as exc:
+            print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
             return 1
-        print(
-            f"🌲 branch reuse validated: branch={worktree_branch} "
-            f"path={worktree_path} base_sha={worktree_telemetry.get('base_sha') or '?'} [reused]",
-            file=sys.stderr,
+
+        start_telemetry = resolve_dispatch_start_telemetry(
+            agent_name=dispatch_agent,
+            requested_model=args.model,
+            requested_effort=getattr(args, "effort", None),
         )
+        dry_run_state = {
+            "task_id": task_id,
+            "agent": dispatch_agent,
+            "model": start_telemetry.model,
+            "effort": start_telemetry.effort,
+            "cli_version": start_telemetry.cli_version,
+            "mode": args.mode,
+            "cwd": str(dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)),
+            "worktree_path": str(dry_run_worktree) if dry_run_worktree else None,
+            "worktree_branch": dry_run_branch,
+            "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
+            "runtime_tmp_root": str(runtime_tmp_root),
+            "tmp_bytes_freed": None,
+            "tmp_reap_error": None,
+            "pid": None,
+            "status": "dry_run",
+            "started_at": datetime.now(UTC).isoformat(),
+            "finished_at": None,
+            "duration_s": None,
+            "prompt_chars": len(prompt),
+            "response_chars": None,
+            "result_file": None,
+            "stderr_excerpt": None,
+            "returncode": None,
+            "returncode_reason": None,
+            "substitution": None,
+        }
+        dry_run_reap = _reap_runtime_tmp_lease(
+            runtime_tmp_root,
+            runtime_tmp_namespace_root,
+        )
+        dry_run_state.update(
+            {
+                "finished_at": datetime.now(UTC).isoformat(),
+                "duration_s": 0.0,
+                "tmp_bytes_freed": dry_run_reap["tmp_bytes_freed"],
+                "tmp_reap_error": dry_run_reap["tmp_reap_error"],
+            }
+        )
+        _write_state_atomic(state_path, dry_run_state)
+        if requested_branch:
+            print(
+                f"🌲 branch reuse validated: branch={dry_run_branch} "
+                f"path={dry_run_worktree} "
+                f"base_sha={dry_run_worktree_telemetry.get('base_sha') or '?'} [reused]",
+                file=sys.stderr,
+            )
         print(task_id)
         return 0
 
@@ -2059,6 +2273,14 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
             return 1
 
+    try:
+        runtime_tmp_root, runtime_tmp_namespace_root = _create_runtime_tmp_lease(task_id)
+    except RuntimeError as exc:
+        stdout_fd.close()
+        stderr_fd.close()
+        print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
+        return 1
+
     cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
     prompt = _augment_prompt_with_worktree(prompt, worktree_path)
 
@@ -2097,6 +2319,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_rebased": bool(worktree_telemetry.get("rebased")),
         "worktree_reused": bool(worktree_telemetry.get("reused")),
         "worktree_layout": worktree_layout,
+        "runtime_tmp_root": str(runtime_tmp_root),
+        "tmp_bytes_freed": None,
+        "tmp_reap_error": None,
         "keep_worktree": keep_worktree,
         "hard_timeout": args.hard_timeout,
         "silence_timeout": silence_timeout,
@@ -2163,6 +2388,10 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         str(silence_timeout),
         "--initial-response-timeout",
         str(initial_response_timeout),
+        "--runtime-tmp-root",
+        str(runtime_tmp_root),
+        "--runtime-tmp-namespace-root",
+        str(runtime_tmp_namespace_root),
     ]
     if keep_worktree:
         cmd.append("--keep-worktree")
@@ -2185,6 +2414,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worker_env = os.environ.copy()
     _inject_gh_token_for_agent(worker_env, dispatch_agent)
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    worker_env["TMPDIR"] = str(runtime_tmp_root)
+    worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"
@@ -2219,6 +2450,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     "returncode": None,
                     "returncode_reason": "worker process was not started",
                 }
+            )
+            failed_state.update(
+                _reap_runtime_tmp_lease(
+                    runtime_tmp_root,
+                    runtime_tmp_namespace_root,
+                )
             )
             _write_state_atomic(state_path, failed_state)
             print(
@@ -2513,7 +2750,9 @@ def cmd_status_or_fail(args: argparse.Namespace) -> int:
 # Wait command — poll until terminal state or timeout
 # ---------------------------------------------------------------------------
 
-_TERMINAL_STATUSES = frozenset({"done", "failed", "timeout", "rate_limited", "crashed", "cancelled"})
+_TERMINAL_STATUSES = frozenset(
+    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled", "dry_run"},
+)
 
 
 def cmd_wait(args: argparse.Namespace) -> int:
@@ -2702,6 +2941,8 @@ def cmd_worker(args: argparse.Namespace) -> int:
             DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
         ),
         keep_worktree=bool(getattr(args, "keep_worktree", False)),
+        runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
+        runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
     )
 
 
@@ -3023,6 +3264,7 @@ def build_parser() -> argparse.ArgumentParser:
             "crashed",
             "cancelled",
             "needs_finalize",
+            "dry_run",
         ],
         help="Optional status filter, e.g. running or failed.",
     )
@@ -3050,6 +3292,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     wk.add_argument("--keep-worktree", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
+    wk.add_argument("--runtime-tmp-root", default=None)
+    wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.set_defaults(func=cmd_worker)
 
     return p

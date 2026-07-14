@@ -19,6 +19,9 @@ MANDATORY_COMMIT_PUSH_PR_CHECKLIST = """## MANDATORY checklist — do NOT skip t
 3. `git push -u origin <branch-name>`
 4. `gh pr create --title "..." --body "..."` — return the URL in your final response
 5. Worktree at `.worktrees/dispatch/codex/<task-id>/`. NEVER branch in the main checkout.
+6. Put transient artifacts in `$LU_RUNTIME_TMP_ROOT` or the task worktree; never leave
+   evidence copies or model caches in bare `/tmp`. Explicitly clean any named temporary
+   path outside those locations before finishing.
 
 If you finish writing code but skip steps 2-4, the work is lost. Don't make that mistake.
 """

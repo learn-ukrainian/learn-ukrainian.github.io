@@ -3701,11 +3701,11 @@ def _ensure_codex_writer_home(
     skips MCP config, and ``-c`` overrides can't add a fresh server
     entry — verified via ``ab ask-codex`` 2026-05-22 + smoke tests.
 
-    The scoped home is materialized at
-    ``$CODEX_HOME_USER/.../codex-v7-writer/`` (project temp dir under
-    the OS temp root) and updated idempotently each call so changes
-    to the canonical config get picked up. Auth is symlinked rather
-    than copied so token refreshes propagate.
+    During a delegate task the scoped home is nested in that task's
+    ``$LU_RUNTIME_TMP_ROOT`` lease. Outside a task it keeps the legacy
+    shared ``$TMPDIR/codex-v7-writer-{uid}`` fallback. Both forms update
+    idempotently each call so changes to the canonical config get picked
+    up. Auth is symlinked rather than copied so token refreshes propagate.
 
     Returns the absolute path to the scoped home.
 
@@ -3722,11 +3722,31 @@ def _ensure_codex_writer_home(
     real_home = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
     real_auth = real_home / "auth.json"
 
-    # Scoped home under tempdir — survives across invocations within a
-    # single user session but doesn't pollute the repo tree. Per-user
-    # uid stays away from cross-user clobbering when multiple shells
-    # share /tmp.
-    scoped_home = Path(tempfile.gettempdir()) / f"codex-v7-writer-{os.getuid()}"
+    # The dispatch runtime sets both values for spawned agents. Require them
+    # to agree before treating LU_RUNTIME_TMP_ROOT as task context so a stale
+    # or externally supplied environment variable cannot redirect CODEX_HOME.
+    runtime_tmp_root = os.environ.get("LU_RUNTIME_TMP_ROOT")
+    scoped_home: Path
+    if runtime_tmp_root:
+        candidate = Path(runtime_tmp_root)
+        try:
+            resolved_candidate = candidate.resolve(strict=True)
+            candidate_is_lease = (
+                not candidate.is_symlink()
+                and candidate.is_dir()
+                and resolved_candidate == Path(tempfile.gettempdir()).resolve(strict=True)
+                and resolved_candidate.parent.name == "learn-ukrainian"
+            )
+        except OSError:
+            candidate_is_lease = False
+        if candidate_is_lease:
+            scoped_home = resolved_candidate / f"codex-v7-writer-{os.getuid()}"
+        else:
+            scoped_home = Path(tempfile.gettempdir()) / f"codex-v7-writer-{os.getuid()}"
+    else:
+        # Legacy no-task behavior: one shared, per-user tmp home. This is
+        # deliberately preserved for direct pipeline runs outside delegate.
+        scoped_home = Path(tempfile.gettempdir()) / f"codex-v7-writer-{os.getuid()}"
     scoped_home.mkdir(parents=True, exist_ok=True)
 
     config_path = scoped_home / "config.toml"

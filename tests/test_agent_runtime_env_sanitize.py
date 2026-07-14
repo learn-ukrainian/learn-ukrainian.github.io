@@ -160,6 +160,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
             "LC_ALL": "C",
             "AB_REPO_ROOT": "/repo",
             "LU_BYPASS_RATE_LIMIT": "1",
+            "LU_RUNTIME_TMP_ROOT": "/tmp/learn-ukrainian/task-4956",
             "UNRELATED": "drop-me",
         },
         clear=True,
@@ -181,6 +182,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
     assert env["LC_ALL"] == "C"
     assert env["AB_REPO_ROOT"] == "/repo"
     assert env["LU_BYPASS_RATE_LIMIT"] == "1"
+    assert env["LU_RUNTIME_TMP_ROOT"] == "/tmp/learn-ukrainian/task-4956"
     assert env["GEMINI_AUTH_MODE"] == "subscription"
     assert "AB_BAD_OVERRIDE" not in env
     assert "GITHUB_TOKEN" not in env
@@ -291,6 +293,46 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
+
+
+def test_runner_passes_runtime_tmp_lease_to_agent_subprocess(tmp_path):
+    lease_root = tmp_path / "learn-ukrainian" / "runtime-tmp-env"
+    lease_root.mkdir(parents=True)
+    script = (
+        "import json, os; "
+        "print(json.dumps({key: os.environ.get(key) for key in "
+        "('TMPDIR', 'LU_RUNTIME_TMP_ROOT')}, sort_keys=True))"
+    )
+    parent_env = {
+        "PATH": os.environ.get("PATH", ""),
+        "HOME": str(tmp_path),
+        "TMPDIR": str(lease_root),
+        "LU_RUNTIME_TMP_ROOT": str(lease_root),
+    }
+
+    with patch.dict("os.environ", parent_env, clear=True), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        outcome = _execute_invocation_plan(
+            agent_name="codex",
+            adapter=_SmokeAdapter(),
+            plan=_SmokePlan(cmd=[_TEST_PYTHON, "-c", script], cwd=tmp_path),
+            prompt="tmp lease env smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model="smoke-model",
+            task_id="runtime-tmp-env-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+
+    assert outcome.parse.ok is True
+    assert json.loads(outcome.stdout_text) == {
+        "LU_RUNTIME_TMP_ROOT": str(lease_root),
+        "TMPDIR": str(lease_root),
+    }
 
 
 def test_runner_codex_subprocess_gets_gh_token_for_gh_auth_status(tmp_path):
