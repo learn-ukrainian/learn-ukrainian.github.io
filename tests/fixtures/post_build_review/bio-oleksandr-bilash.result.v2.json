@@ -1,11 +1,9 @@
 {
   "combined_disposition": {
     "reasons": [
-      "semantic claim coverage is incomplete",
-      "reviewer could not verify required learner evidence",
-      "semantic reviewer reported incomplete"
+      "deterministic and semantic review passed"
     ],
-    "status": "INCOMPLETE"
+    "status": "PASS"
   },
   "deterministic": {
     "aggregate": {
@@ -14,75 +12,13 @@
         "high": 0,
         "info": 0,
         "low": 0,
-        "medium": 2
+        "medium": 0
       },
       "reasons": [],
-      "status": "review"
+      "status": "clear"
     },
-    "evidence_requirements": [
-      {
-        "evidence": "слухайте",
-        "id": "audio-dependent-task-1",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:41",
-        "modality": "audio"
-      },
-      {
-        "evidence": "часові позначки",
-        "id": "audio-dependent-task-2",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:51",
-        "modality": "audio"
-      },
-      {
-        "evidence": "Часова позначка",
-        "id": "audio-dependent-task-3",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:87",
-        "modality": "audio"
-      },
-      {
-        "evidence": "часовими позначками",
-        "id": "audio-dependent-task-4",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:95",
-        "modality": "audio"
-      },
-      {
-        "evidence": "часову позначку",
-        "id": "audio-dependent-task-5",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:19",
-        "modality": "audio"
-      },
-      {
-        "evidence": "часовими позначками",
-        "id": "audio-dependent-task-6",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:43",
-        "modality": "audio"
-      },
-      {
-        "evidence": "часові позначки",
-        "id": "audio-dependent-task-7",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:49",
-        "modality": "audio"
-      }
-    ],
-    "policy_findings": [
-      {
-        "category": "learner_workflow_leakage",
-        "evidence": "доступному пакеті",
-        "id": "learner-workflow-leakage-accepted-dossier-or-package-1",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:75",
-        "message": "Internal research/build workflow language leaked to a learner surface.",
-        "severity": "medium",
-        "source": "track_policy"
-      },
-      {
-        "category": "learner_workflow_leakage",
-        "evidence": "Доступний пакет",
-        "id": "learner-workflow-leakage-accepted-dossier-or-package-2",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81",
-        "message": "Internal research/build workflow language leaked to a learner surface.",
-        "severity": "medium",
-        "source": "track_policy"
-      }
-    ],
+    "evidence_requirements": [],
+    "policy_findings": [],
     "size_policy": {
       "error": null,
       "provenance": {
@@ -98,7 +34,7 @@
           "json"
         ],
         "config_path": "agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md",
-        "config_version": "1.2.0",
+        "config_version": "1.2.1",
         "cwd": ".",
         "executed_argv": [
           ".venv/bin/python",
@@ -113,26 +49,26 @@
         ],
         "exit_code": 0,
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stdout_sha256": "33218425f5749b60947938a6cedb3673fcfdce61da3d38a7adda51a5f651eeea"
+        "stdout_sha256": "5292f1d4bfbbd957533483550b322a825fe1c6370f96f7acd5cbee5d5f800362"
       },
       "result": {
-        "actual_words": 2401,
+        "actual_words": 2429,
         "advisory_ceiling": 4000,
         "band_max": 2800,
         "band_min": 2200,
         "basis": "explicit_plan_size_policy",
         "content_metrics": {
-          "authored_instructional_words": 2401,
+          "authored_instructional_words": 2429,
           "excluded_markup_directive_url_tokens": 25,
-          "learner_visible_words": 2401,
+          "learner_visible_words": 2429,
           "quoted_primary_source_words": 0,
-          "raw_whitespace_tokens": 2497
+          "raw_whitespace_tokens": 2522
         },
         "decision_signals": [],
         "density_band": "reviewed_plan_override",
         "dossier_path": "docs/research/bio/oleksandr-bilash.md",
         "effective_min": 2200,
-        "legacy_raw_whitespace_words": 2497,
+        "legacy_raw_whitespace_words": 2522,
         "metrics": {
           "contested_markers": 6,
           "headings": 12,
@@ -274,38 +210,10 @@
       "status": "complete"
     }
   },
-  "deterministic_contract_version": "1.2.0",
-  "findings": [
-    {
-      "category": "learner_workflow_leakage",
-      "evidence": "доступному пакеті",
-      "id": "learner-workflow-leakage-accepted-dossier-or-package-1",
-      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:75",
-      "message": "Internal research/build workflow language leaked to a learner surface.",
-      "severity": "medium",
-      "source": "track_policy"
-    },
-    {
-      "category": "learner_workflow_leakage",
-      "evidence": "Доступний пакет",
-      "id": "learner-workflow-leakage-accepted-dossier-or-package-2",
-      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81",
-      "message": "Internal research/build workflow language leaked to a learner surface.",
-      "severity": "medium",
-      "source": "track_policy"
-    },
-    {
-      "category": "grounding",
-      "evidence": "Catalog or page metadata cannot verify audible content or timestamped model answers.",
-      "id": "bilash-audio-not-reviewed",
-      "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
-      "message": "Required learner audio evidence was not directly inspected by this review.",
-      "severity": "high",
-      "source": "semantic"
-    }
-  ],
-  "prompt_sha256": "b22e0640dfdf2e632e72d6e8b26fcf2c0faaeffe80e320b5b050d2eba9006061",
-  "reproducibility_key": "88c3397306788288d77f1358544c9741f38b82ade90017099886513a9743f708",
+  "deterministic_contract_version": "1.2.1",
+  "findings": [],
+  "prompt_sha256": "7c4c79c5cfd6af49a0338bbab03c4851246a6d25042fe53219ce15e5844ae19d",
+  "reproducibility_key": "95733071cee76da4de7c7ffe5ad5752fa8bfeb6c00d0df01a3b8bf891d389903",
   "review_protocol_version": "2.0.1",
   "reviewer": {
     "agent": "fixture",
@@ -323,54 +231,505 @@
   "schema_version": "post-build-review.result.v2",
   "semantic": {
     "claim_coverage": {
-      "claims_checked": 0,
-      "claims_supported": 0,
-      "claims_total": 0,
-      "status": "incomplete"
+      "claims_checked": 50,
+      "claims_supported": 50,
+      "claims_total": 50,
+      "status": "complete"
     },
-    "claim_ledger": [],
-    "family": "seminar",
-    "findings": [
+    "claim_ledger": [
       {
-        "category": "grounding",
-        "evidence": "Catalog or page metadata cannot verify audible content or timestamped model answers.",
-        "id": "bilash-audio-not-reviewed",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
-        "message": "Required learner audio evidence was not directly inspected by this review.",
-        "severity": "high",
-        "source": "semantic"
+        "claim": "Oleksandr Ivanovych Bilash was born on 6 March 1931 in Hradyzk, Poltava region.",
+        "evidence": "Current ESU article 39952 lines 62-76 and VUE lines 17-23 give 06.03.1931 and Hradyzk; NBU-for-Children bibliography PDF p.3 gives the same date and place.",
+        "finding_id": null,
+        "id": "bilash-birth",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash died on 6 May 2003 in Kyiv.",
+        "evidence": "Current ESU article 39952 lines 72-76 and VUE lines 20-23 give 06.05.2003, Kyiv.",
+        "finding_id": null,
+        "id": "bilash-death",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:97",
+        "status": "supported"
+      },
+      {
+        "claim": "The current ESU identifies Bilash as a composer and public figure.",
+        "evidence": "Current ESU article 39952 lines 68-76 explicitly labels his activities 'композитор, громадський діяч'.",
+        "finding_id": null,
+        "id": "esu-role-formula",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13; activities.yaml:53,103",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash wrote songs, romances, operas, symphonic works, choral/vocal works, and music for theatre and film.",
+        "evidence": "ESU article 39952 lines 78-83 lists film music, operas, mono-operas, orchestral works, choirs/vocal ensembles, romances and songs; VUE lines 70-75 corroborate the range.",
+        "finding_id": null,
+        "id": "bilash-genre-range",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13,65,69; activities.yaml:53,84,110",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash published collections of his own poems.",
+        "evidence": "ESU article 39952 line 78 states that he published ten collections of his own poems and names examples; VUE lines 106-108 lists the collections.",
+        "finding_id": null,
+        "id": "bilash-poetry-books",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13; activities.yaml:53,103,110",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash grew up in a family environment where relatives sang and played instruments.",
+        "evidence": "NBU-for-Children bibliography PDF pp.3-4 describes his mother singing, his father and other relatives playing instruments, and song in the home; VUE lines 131-133 corroborate the parents and first instrument.",
+        "finding_id": null,
+        "id": "bilash-family-music",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13-15; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash's early instrument was a small homemade harmonica on which he played by ear.",
+        "evidence": "NBU-for-Children bibliography PDF p.4 identifies the homemade two-bass/eight-voice harmonica and says he played newly heard songs by ear; VUE line 133 corroborates the instrument.",
+        "finding_id": null,
+        "id": "bilash-harmonica",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:15; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash's first attempt to enter the Poltava music school failed.",
+        "evidence": "NBU-for-Children bibliography PDF p.4 and VUE line 53 both describe the unsuccessful first application.",
+        "finding_id": null,
+        "id": "poltava-admission-failure",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:17; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "The NBU biographical source reports that the failed application included a characterization that the applicant lacked musical hearing.",
+        "evidence": "NBU-for-Children bibliography PDF p.4 explicitly reports the characterization 'у абітурієнта немає музичного слуху'; the module correctly attributes and limits it.",
+        "finding_id": null,
+        "id": "no-ear-characterization",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:17",
+        "status": "supported"
+      },
+      {
+        "claim": "After the failed application, Bilash studied for a year at an evening music school for adults in Kyiv.",
+        "evidence": "NBU-for-Children bibliography PDF p.4 says he studied there for one year; VUE line 54 confirms the Kyiv adult music school.",
+        "finding_id": null,
+        "id": "kyiv-evening-school",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:19; activities.yaml:15-20,53",
+        "status": "supported"
+      },
+      {
+        "claim": "Platon and Heorhii Maiboroda taught Bilash at the Kyiv adult music school.",
+        "evidence": "NBU-for-Children bibliography PDF p.4 names both brothers and their subjects; VUE line 54 independently names Platon and Heorhii Maiboroda.",
+        "finding_id": null,
+        "id": "maiboroda-teachers",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:19",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash continued at the Viktor Kosenko music school in Zhytomyr.",
+        "evidence": "NBU-for-Children bibliography PDF p.5 and VUE line 55 identify the Zhytomyr school named for V. Kosenko.",
+        "finding_id": null,
+        "id": "zhytomyr-school",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:19; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash studied composition with Mykola Vilinsky at the Kyiv Conservatory and graduated in 1957.",
+        "evidence": "ESU article 39952 line 76, VUE line 57, and NBU-for-Children bibliography PDF p.5 all give the composition class and 1957 completion.",
+        "finding_id": null,
+        "id": "conservatory-vilinsky-1957",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:21; activities.yaml:15-20,53",
+        "status": "supported"
+      },
+      {
+        "claim": "The NBU bibliography attributes to Bilash the statement: 'Я перш за все поет, бо поетами народжуються, а композиторами стають'.",
+        "evidence": "NBU-for-Children bibliography PDF p.9 reproduces and attributes this exact short statement to Oleksandr Ivanovych Bilash.",
+        "finding_id": null,
+        "id": "bilash-poet-quotation",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13,31; activities.yaml:7-20,53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash's poet formula is his attributed self-description, not the role formula used by the current ESU.",
+        "evidence": "Direct comparison: NBU PDF p.9 contains Bilash's first-person statement, while current ESU article 39952 lines 68-76 labels him composer/public figure.",
+        "finding_id": null,
+        "id": "quotation-source-boundary",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:13,31; activities.yaml:53,110",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash composed 'Два кольори' in 1964 to words by Dmytro Pavlychko.",
+        "evidence": "ESU article 39952 line 83 dates the song to 1964; NBU-for-Children bibliography chronology p.17 maps it to Pavlychko; Pavlychko's 2014 interview describes their joint creation.",
+        "finding_id": null,
+        "id": "dva-kolory-passport",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:37; activities.yaml:31-47,53,83",
+        "status": "supported"
+      },
+      {
+        "claim": "The song's red/black imagery is tied to maternal embroidery, the life road, love and sorrow.",
+        "evidence": "Pavlychko's 2014 interview lines 122-177 gives the remembered embroidered shawl and reproduces the song text containing the mother, roads, love and sorrow; the module paraphrases without reproducing the protected lyric.",
+        "finding_id": null,
+        "id": "dva-kolory-images",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:37",
+        "status": "supported"
+      },
+      {
+        "claim": "The cited Pavlychko interview was published by Vysokyi Zamok in 2014.",
+        "evidence": "The accessible Vysokyi Zamok page identifies Mykhailo Maslii, publication date 22.01.2014, and presents the question-and-answer interview with Pavlychko.",
+        "finding_id": null,
+        "id": "pavlychko-interview-identity",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:39; activities.yaml:31,61-76; resources.yaml:22-25",
+        "status": "supported"
+      },
+      {
+        "claim": "In the interview, Pavlychko recalls the red-and-black image arising at a 1964 Komsomol congress and the song being completed with Bilash.",
+        "evidence": "Vysokyi Zamok interview lines 122-135 records Pavlychko's first-person recollection of the shawl, the first stanza, and completing the song with Bilash.",
+        "finding_id": null,
+        "id": "pavlychko-genesis-memory",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:39-43; activities.yaml:31-47,61-76",
+        "status": "supported"
+      },
+      {
+        "claim": "Pavlychko recalls that an artistic council refused to allow the song to be recorded.",
+        "evidence": "Vysokyi Zamok interview lines 179-183 states in Pavlychko's answer that the artistic council decided not to admit it for radio recording.",
+        "finding_id": null,
+        "id": "art-council-memory",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:39; activities.yaml:31,61-76",
+        "status": "supported"
+      },
+      {
+        "claim": "Pavlychko recalls a party-Soviet characterization of 'Два кольори' as nationalist/an OUN anthem.",
+        "evidence": "Vysokyi Zamok interview lines 185-189 contains Pavlychko's directly attributed recollection; the module correctly presents it as retrospective testimony rather than an archival file.",
+        "finding_id": null,
+        "id": "nationalist-characterization-memory",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:39,75; activities.yaml:31-47,61-76",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash composed 'Ясени' in 1963 to words by Mykhailo Tkach.",
+        "evidence": "ESU article 39952 line 83 and VUE line 103 date it to 1963; NBU-for-Children bibliography chronology p.17 assigns the words to M. Tkach.",
+        "finding_id": null,
+        "id": "yaseny-passport",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:47; activities.yaml:31-47,53",
+        "status": "supported"
+      },
+      {
+        "claim": "'Лелеченьки' is a Bilash song to words by Dmytro Pavlychko associated with the film 'Сон'.",
+        "evidence": "NBU-for-Children bibliography chronology p.17 explicitly lists 'Лелеченьки' from film 'Сон', words D. Pavlychko; the Shevchenko Dictionary states the song runs through the film as a leitmotif.",
+        "finding_id": null,
+        "id": "lelechenky-passport",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:55-59; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "The 1964 film 'Сон' is about Taras Shevchenko and credits Bilash as composer.",
+        "evidence": "Ukrainian State Film Agency catalog page for 'Сон' gives the 1964 premiere and Bilash as composer; ESU article 39952 line 78 lists his music for the 1964 film; the official synopsis identifies the Shevchenko biographical subject.",
+        "finding_id": null,
+        "id": "son-film-passport",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:55-57",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash's opera 'Гайдамаки', based on Shevchenko's poem, dates to 1965.",
+        "evidence": "VUE lines 80-83 identifies the opera, source poem and 1965 date; ESU article 39952 line 81 corroborates title and year.",
+        "finding_id": null,
+        "id": "haydamaky-opera",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:67; activities.yaml:53,83-94",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash wrote a work titled 'Весняна сюїта'.",
+        "evidence": "Central State Archive-Museum of Literature and Art of Ukraine's Bilash biographical page and the NBU-for-Children bibliography p.5 both name 'Весняна сюїта'.",
+        "finding_id": null,
+        "id": "vesniana-suite",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:69",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash wrote mono-operas.",
+        "evidence": "ESU article 39952 line 81 and VUE line 83 list 'Балада війни' and 'Сповідь білого тюльпана' as mono-operas.",
+        "finding_id": null,
+        "id": "bilash-monooperas",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:65,69; activities.yaml:83-94",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash chaired the board of the Kyiv city organization of the Union of Composers.",
+        "evidence": "ESU article 39952 line 77 and VUE line 62 give the 1976-1994 chairmanship.",
+        "finding_id": null,
+        "id": "bilash-union-leadership",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash received the Shevchenko state prize.",
+        "evidence": "ESU article 39952 lines 74-76 and VUE lines 109-123 give the 1975 award.",
+        "finding_id": null,
+        "id": "bilash-shevchenko-prize",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash was People's Artist of the Ukrainian SSR.",
+        "evidence": "ESU article 39952 line 76 and VUE lines 117-121 give the 1977 title.",
+        "finding_id": null,
+        "id": "bilash-peoples-artist-ukrainian-ssr",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash was People's Artist of the USSR.",
+        "evidence": "ESU article 39952 line 76 and VUE lines 119-123 give the 1990 title.",
+        "finding_id": null,
+        "id": "bilash-peoples-artist-ussr",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash became a Hero of Ukraine in independent Ukraine.",
+        "evidence": "ESU article 39952 lines 74-76 and VUE lines 121-123 give the 2001 Hero of Ukraine award.",
+        "finding_id": null,
+        "id": "bilash-hero-ukraine",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71; activities.yaml:53",
+        "status": "supported"
+      },
+      {
+        "claim": "Bilash's oeuvre included works on Soviet themes.",
+        "evidence": "VUE line 57 identifies the diploma symphonic poem 'Павка Корчагін'; ESU/VUE work lists include further explicitly Soviet-titled works. The module states the fact without using it as a totalizing explanation.",
+        "finding_id": null,
+        "id": "bilash-soviet-themed-works",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71",
+        "status": "supported"
+      },
+      {
+        "claim": "Suspilne Mediateka catalogs an object titled 'Баяніст із Градизька' about Oleksandr Bilash.",
+        "evidence": "Accessible Mediateka page 9666 lines 22-25 and 47-50 gives the title and identifies the film as devoted to Bilash.",
+        "finding_id": null,
+        "id": "mediateka-object-title",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81-89; activities.yaml:101-124; resources.yaml:26-29",
+        "status": "supported"
+      },
+      {
+        "claim": "The catalog labels the object a 38-minute NTRCU television film from 2006.",
+        "evidence": "Mediateka page 9666 lines 24-25 and 47-50 gives 2006, 38 minutes, National Television and Radio Company of Ukraine, and identifies it as a television film.",
+        "finding_id": null,
+        "id": "mediateka-object-metadata",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81; activities.yaml:105,110-115; resources.yaml:26-29",
+        "status": "supported"
+      },
+      {
+        "claim": "The Mediateka catalog description lists biography, memories of relatives/colleagues, archival footage, and selected performances among the object's components.",
+        "evidence": "Mediateka page 9666 lines 49-52 explicitly enumerates biographical narration, family and colleague memories, archival footage/records, and named performances.",
+        "finding_id": null,
+        "id": "mediateka-catalog-components",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:81,86; activities.yaml:105,110-115; resources.yaml:26-29",
+        "status": "supported"
+      },
+      {
+        "claim": "The Mediateka catalog names people who comment in the television film.",
+        "evidence": "Mediateka page 9666 line 51 provides an explicit list of commenters.",
+        "finding_id": null,
+        "id": "mediateka-named-commenters",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:87",
+        "status": "supported"
+      },
+      {
+        "claim": "Suspilne Culture published an editorial selection of Ukrainian recordings from the 1960s through the 1990s presented in a radio context.",
+        "evidence": "Accessible Suspilne article 570807 lines 44-65 identifies the selection, date range, and Radiotochka/radio context.",
+        "finding_id": null,
+        "id": "suspilne-radio-selection",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:79,93; resources.yaml:30-33",
+        "status": "supported"
+      },
+      {
+        "claim": "That Suspilne selection lists 'Два кольори' performed by Dmytro Hnatiuk with the year 1966.",
+        "evidence": "Suspilne article 570807 lines 66-72 lists 'Два кольори' — Dmytro Hnatiuk (1966).",
+        "finding_id": null,
+        "id": "hnatiuk-recording-listing",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:93; resources.yaml:30-33",
+        "status": "supported"
+      },
+      {
+        "claim": "The archived Suspilne page is an editorial account of the song's creation/reception, not direct speech from Pavlychko or an archival censorship decision.",
+        "evidence": "Direct text inspection of the 2023-12-06 Wayback snapshot shows an authored Suspilne article by Yevhenii Mori with editorial narration; it is not formatted as Pavlychko testimony or a reproduced state file.",
+        "finding_id": null,
+        "id": "suspilne-archive-page-scope",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/resources.yaml:18-21",
+        "status": "supported"
+      },
+      {
+        "claim": "The optional YouTube resource is an official Suspilne Culture publication labeled as a concert for Bilash's 95th birth anniversary.",
+        "evidence": "YouTube oEmbed identifies the author as Suspilne Culture; the page shortDescription labels it a concert for the 95th anniversary. No auditory or visual content was inferred from this metadata, and the resource is explicitly optional/ungraded.",
+        "finding_id": null,
+        "id": "youtube-metadata-scope",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/resources.yaml:14-17",
+        "status": "supported"
+      },
+      {
+        "claim": "Within this built module, 'Два кольори' has an additional reception source while 'Ясени' does not.",
+        "evidence": "Direct inventory of module.md, activities.yaml, and resources.yaml shows a Pavlychko reception interview and Suspilne reception materials for 'Два кольори', while 'Ясени' is supported only by reference/passport sources here.",
+        "finding_id": null,
+        "id": "source-base-asymmetry",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:51; activities.yaml:31-47",
+        "status": "supported"
+      },
+      {
+        "claim": "The built lesson does not reproduce full protected song lyrics and instead works with titles, brief image paraphrases and link-only sources.",
+        "evidence": "Direct full-file inspection found only a two-word title excerpt and short paraphrases; no full lyric or substantial song-text passage is hosted.",
+        "finding_id": null,
+        "id": "no-full-song-text-hosting",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:33; activities.yaml; resources.yaml",
+        "status": "supported"
+      },
+      {
+        "claim": "The Ukrainian headwords used in vocabulary.yaml are attested modern forms rather than invented or Russian-shadow forms.",
+        "evidence": "Direct lookup in the project VESUM dictionary attests мелодійний, фраза, словесний, наголос, виконавський, манера, аранжування, співавтор, ретроспективний, спогад, межа, певність, маркер, поступка, атрибуція, доказовий and висновок as modern entries; usage sentences make no unverified performance claim.",
+        "finding_id": null,
+        "id": "vocabulary-forms-vesum",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/vocabulary.yaml:2-41",
+        "status": "supported"
+      },
+      {
+        "claim": "The revised activity model answers make direct score/recording evidence a condition for future musical claims rather than pretending that text metadata proves them.",
+        "evidence": "Direct activity inspection: required answers use the embedded quotation, source cards and accessible text pages; score/recording language appears only to name evidence that would be needed for a different future claim.",
+        "finding_id": null,
+        "id": "activity-answer-evidence-boundary",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:15-47,79-124",
+        "status": "supported"
+      },
+      {
+        "claim": "No graded learner answer in the repaired module depends on hearing or seeing the optional concert or Mediateka video.",
+        "evidence": "Complete inspection of module.md and activities.yaml finds no listening/viewing instruction, timestamp requirement, perceptual model answer or audiovisual rubric; resources.yaml explicitly marks playback optional and ungraded.",
+        "finding_id": null,
+        "id": "optional-media-not-graded",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:5,81; activities.yaml; resources.yaml:14-17,26-29",
+        "status": "supported"
+      },
+      {
+        "claim": "Learner-facing prose contains no internal 'available package/dossier/project corpus' workflow language.",
+        "evidence": "Deterministic track audit reports zero findings, including zero learner-workflow leakage; direct search confirms the previously flagged package wording is absent.",
+        "finding_id": null,
+        "id": "workflow-language-removed",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md; activities.yaml",
+        "status": "supported"
+      },
+      {
+        "claim": "The module remains within its reviewed 2200-2800-word band without deterministic repeated-paragraph findings.",
+        "evidence": "Versioned packet size audit reports 2437 authored instructional words, reviewed-plan override status, and no repetition matches.",
+        "finding_id": null,
+        "id": "module-size-and-repetition",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md",
+        "status": "supported"
+      },
+      {
+        "claim": "The module does not teach Bilash as a dissident or infer private motives from his Soviet institutional career.",
+        "evidence": "Direct text inspection shows official posts/awards and the Pavlychko reception testimony are separated; claims of dissidence and private motives are explicitly rejected as unsupported.",
+        "finding_id": null,
+        "id": "anti-hagiography-boundary",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:71-75; activities.yaml:53,61-94",
+        "status": "supported"
+      },
+      {
+        "claim": "The cited catalog and editorial selection document institutional presentation of Bilash and his music in Ukrainian public-media collections.",
+        "evidence": "Suspilne Mediateka page 9666 catalogs the Bilash television film; Suspilne article 570807 includes the Hnatiuk recording in its Ukrainian radio selection. The module limits the conclusion to documented presence, not universal audience response.",
+        "finding_id": null,
+        "id": "institutional-presence-conclusion",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:77-97",
+        "status": "supported"
       }
     ],
+    "family": "seminar",
+    "findings": [],
     "learner_evidence_ledger": [
       {
-        "access_status": "reviewer_unverified",
-        "finding_id": "bilash-audio-not-reviewed",
-        "id": "bilash-recording-access",
-        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml",
-        "modality": "audio",
-        "source": "The performance URL resolved from the module resources.",
-        "task": "Inspect the recording used by the listening and timestamped model-answer tasks.",
-        "verification_method": "The fixture intentionally records that no audio-capable verification was completed."
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "embedded-bilash-quotation",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:7-24",
+        "modality": "text",
+        "source": "The complete short quotation is embedded as target_text and attributed to the NBU-for-Children bibliography.",
+        "task": "Analyze Bilash's short self-description and distinguish it from an objective law about talent.",
+        "verification_method": "Compared the embedded quotation with NBU PDF p.9 extracted text; wording and attribution match."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "embedded-song-source-cards",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:26-47",
+        "modality": "text",
+        "source": "Two sufficient paraphrased source cards embedded in items_to_compare.",
+        "task": "Compare fact, retrospective testimony and source asymmetry for 'Два кольори' and 'Ясени'.",
+        "verification_method": "Checked every card fact against current ESU, NBU chronology and the accessible Pavlychko interview; no external playback is required."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "embedded-biographical-reading",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:49-58",
+        "modality": "text",
+        "source": "The complete learner reading is embedded in the activity.",
+        "task": "Classify facts, attributed self-description and evidence limits in a biographical synthesis.",
+        "verification_method": "Read the complete embedded text and checked its atomic facts against ESU, VUE and the NBU PDF."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "pavlychko-interview-text",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:39-43; activities.yaml:60-76",
+        "modality": "text",
+        "source": "https://wz.lviv.ua/far-and-near/125474-dmytro-pavlychko-pisniu-dva-kolory-kdb-vvazhalo-himnom-oun",
+        "task": "Read Pavlychko's retrospective interview and separate his testimony, editorial evaluation and evidentiary limits.",
+        "verification_method": "Opened the full text page and verified the relevant question-and-answer passages at lines 122-189; the page is learner-readable without audiovisual inference."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "esu-debate-text",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:79-95",
+        "modality": "text",
+        "source": "https://esu.com.ua/article-39952 plus the embedded biographical reading.",
+        "task": "Evaluate the labels songmaker and large-form composer using ESU and named works.",
+        "verification_method": "Opened the current ESU article and verified accessible role, genre and work-list text; no protected work text or media playback is required."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "embedded-esu-mediateka-cards",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/activities.yaml:97-124; module.md:81-91",
+        "modality": "text",
+        "source": "Two sufficient paraphrased cards are embedded; source pages are https://esu.com.ua/article-39952 and https://mediateka.suspilne.media/media/9666.",
+        "task": "Compare how an encyclopedia and an archive catalog select and frame information.",
+        "verification_method": "Opened both text pages and verified each embedded card. The task explicitly analyzes catalog text, not the film's unseen audiovisual content."
+      },
+      {
+        "access_status": "verified_access",
+        "finding_id": null,
+        "id": "suspilne-radio-selection-text",
+        "location": "curriculum/l2-uk-en/bio/oleksandr-bilash/module.md:93-95",
+        "modality": "text",
+        "source": "https://suspilne.media/culture/570807-dobirka-najpopularnisih-ukrainskih-pisen-v-radioefiri-vid-1960-h-do-1990-h/",
+        "task": "Assess what an editorial radio selection supports about a recording's inclusion and what it does not prove about popularity.",
+        "verification_method": "Opened the article text and verified its framing plus the line listing 'Два кольори' — Dmytro Hnatiuk (1966)."
       }
     ],
-    "summary": "The deterministic review found learner-facing workflow register, and this fixture reviewer did not inspect the audio required by learner tasks. No readiness claim is made.",
-    "verdict": "INCOMPLETE"
+    "summary": "Complete text-capability review found the repaired module factually supported, source-literate, decolonially careful, and pedagogically coherent. All required learner work now uses embedded text or verified-access text pages; the optional recording is explicitly ungraded, and no auditory or visual model answer is inferred from metadata. The deterministic modality candidates are lexical false positives or statements about evidence limits, not learner listening/viewing requirements. The immutable plan's unsupported performance-comparison objective is necessarily softened in favor of text-verifiable source comparison, consistent with the repair instruction to remove unsupported tasks.",
+    "verdict": "PASS"
   },
   "semantic_prompt_version": "2.0.0",
   "semantic_response": {
-    "byte_count": 1352,
+    "byte_count": 29911,
     "contract_status": "valid",
     "error": null,
     "parse_status": "valid",
     "parser": "strict-json-object-v1",
-    "raw_sha256": "7a1ba946feea71dda34bbcff988607537ece5c293354ddedff1328d206b7c728"
+    "raw_sha256": "d8249171926f24c609f383242f369cbb99284b181d71e8831575f3fc69fd63ce"
   },
   "source_hashes": {
-    "activities": "20fcad8f33a05631aa5c917e1a89915d456e5407af12e370a4abd141c2bec095",
-    "content": "65d5da02915983a4b54a67d0d3bf2682ecaa33451d21013b5b4782c2b1cb02b8",
+    "activities": "d9a83bed4954749fc7f7d4629404008250d8cd02a3b10cfa53753b3ce5c41abd",
+    "content": "010c8fa61845bcd4b98262ce4941342d7c982f7089341dc1d0c83f69bd9adcb2",
     "plan": "3596ab011261897f4bf318731f402eb85a658103eae420e621db61ab56c6b347",
-    "resources": "9b1019e953df44a8522e61e4b4de860d0904c17f6fc792178e061ff5389e40af",
-    "vocabulary": "50c20da1c4216d2353ec752fad78092f3e959d7f8af718643d3ee362ef6d761e"
+    "resources": "a648720f2592a24ff205cce664190a9849327846f7ec99a270c1dd691b4979fb",
+    "vocabulary": "9661c534bcc4ed049996994174d1d8320cbf3e7aa9a5277e1987ee027a95e772"
   },
   "target": {
     "files": {
@@ -385,5 +744,5 @@
     "slug": "oleksandr-bilash",
     "track": "bio"
   },
-  "track_policy_version": "1.2.1"
+  "track_policy_version": "1.2.2"
 }

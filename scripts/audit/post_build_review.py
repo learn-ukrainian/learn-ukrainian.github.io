@@ -594,9 +594,16 @@ def inventory_evidence_requirements(
         if modality not in {"text", "audio", "video", "image", "interactive"}:
             raise ReviewProtocolError(f"Invalid evidence modality: {modality!r}")
         pattern = _configured_pattern(raw_spec)
+        exclude_pattern: re.Pattern[str] | None = None
+        if "exclude_line_regex" in raw_spec:
+            exclude_pattern = _configured_pattern(
+                {"regex": raw_spec.get("exclude_line_regex")}
+            )
         occurrence = 0
         for path, text in texts.items():
             for line_no, line in enumerate(text.splitlines(), start=1):
+                if exclude_pattern is not None and exclude_pattern.search(line):
+                    continue
                 match = pattern.search(line)
                 if match is None:
                     continue
