@@ -101,10 +101,8 @@ def test_bio_profile_expresses_complete_preparation_without_track_branches() -> 
     assert config["profiles"]["core"]["prompt_profile"] == "core"
     assert config["profiles"]["seminar"]["prompt_profile"] == "seminar"
     assert bio["prompt_profile"] == "seminar"
-    assert config["profiles"]["core"]["certification"]["production_qg"]["mode"] == "disabled"
-    assert config["profiles"]["core-b1"]["certification"]["production_qg"]["mode"] == "pending"
-    assert config["profiles"]["seminar"]["certification"]["production_qg"]["mode"] == "pending"
-    assert bio["certification"]["production_qg"]["mode"] == "pending"
+    assert set(config["profiles"]) == {"core", "seminar", "bio"}
+    assert all("certification" not in profile for profile in config["profiles"].values())
     engine_source = (REPO_ROOT / "scripts/orchestration/curriculum_readiness.py").read_text(encoding="utf-8")
     assert 'track == "bio"' not in engine_source
     assert "llm_qg" not in engine_source
@@ -327,30 +325,15 @@ def test_config_rejects_raw_prose_and_unknown_selector(tmp_path: Path) -> None:
         readiness.load_config(repo_root=repo_root)
 
 
-@pytest.mark.parametrize(
-    ("mode", "qualification", "arming", "match"),
-    [
-        ("armed-canary", None, None, "failed schema validation"),
-        ("armed-canary", "../escape", "docs/arming.md", "failed schema validation"),
-        ("armed-canary", "docs/qualification.md", "docs/arming.md", "required preparation contract file is missing"),
-    ],
-)
-def test_certification_profile_rejects_unsafe_or_unarmed_canary(
-    tmp_path: Path, mode: str, qualification: str | None, arming: str | None, match: str
-) -> None:
+def test_readiness_contract_rejects_certification_policy_declarations(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     _copy_contracts(repo_root)
     config_path = repo_root / readiness.CONFIG_PATH
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    qg = config["profiles"]["core"]["certification"]["production_qg"]
-    qg["mode"] = mode
-    if qualification is not None:
-        qg["qualification_artifact"] = qualification
-    if arming is not None:
-        qg["human_arming_artifact"] = arming
+    config["profiles"]["core"]["certification"] = {"production_qg": {"mode": "armed-canary"}}
     config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
 
-    with pytest.raises(readiness.ReadinessError, match=match):
+    with pytest.raises(readiness.ReadinessError, match="Additional properties"):
         readiness.load_config(repo_root=repo_root)
 
 

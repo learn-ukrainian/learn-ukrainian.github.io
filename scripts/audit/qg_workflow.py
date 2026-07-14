@@ -196,6 +196,7 @@ def review_module(
         }
     )
 
+    workflow_run_id = f"qg-workflow-{uuid4().hex}"
     tier2 = _run_tier2(
         target=target,
         level=level,
@@ -211,6 +212,8 @@ def review_module(
         store_path=store_path,
         budget=effective_budget,
     )
+    if effective_options.capture_tier2:
+        tier2["result"]["workflow_run_id"] = workflow_run_id
     tier_results.append(tier2["result"])
     all_findings.extend(tier2["findings"])
 
@@ -236,6 +239,7 @@ def review_module(
         reviewer_model_id=str(tier2.get("reviewer_model_id") or effective_options.reviewer_model_id),
         reviewer_family=str(tier2.get("reviewer_family") or effective_options.reviewer_family),
         options=effective_options,
+        workflow_run_id=workflow_run_id,
     )
 
 
@@ -1007,17 +1011,25 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
         response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
+        actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
+        actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
+        actual_route_name = str(dispatch_meta.get("route_name") or route_name)
+        dispatch_meta = {
+            **dispatch_meta,
+            "reviewer_model_id": actual_model_id,
+            "reviewer_family": actual_family,
+            "route_name": actual_route_name,
+            "lineage": f"{actual_family}:{actual_model_id}:{actual_route_name}",
+        }
         if options.capture_tier2:
             capture_attempts.append(
                 {
                     "attempt": len(capture_attempts) + 1,
                     "raw_response": response_text,
+                    "raw_response_sha256": llm_qg_store._sha256_bytes(response_text.encode("utf-8")),
                     "dispatch": dict(dispatch_meta),
                 }
             )
-        actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
-        actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
-        actual_route_name = str(dispatch_meta.get("route_name") or route_name)
         observed_cost = _observed_cost(dispatch_meta)
         budget.record_spend(estimate, observed_cost_usd=observed_cost)
         if route is not None:
@@ -1247,6 +1259,7 @@ def _run_tier2(
     result = {
         **base_result,
         "status": tier2_status,
+        "completion_status": "COMPLETE",
         "findings": len(findings),
         "estimate": estimate,
         "dispatch": dispatch_meta,
@@ -1256,9 +1269,12 @@ def _run_tier2(
     if options.capture_tier2:
         result.update(
             {
+                "source": "qg_workflow",
                 "tier2_run_id": tier2_run_id,
+                "attempt_id": len(capture_attempts),
                 "payload": payload,
                 "raw_response": response_text,
+                "raw_response_sha256": llm_qg_store._sha256_bytes(response_text.encode("utf-8")),
                 "retry_history": capture_attempts,
                 "gate_outcomes": {
                     "status": tier2_status,
@@ -1646,6 +1662,7 @@ def _build_evidence_record(
     reviewer_model_id: str,
     reviewer_family: str,
     options: WorkflowOptions,
+    workflow_run_id: str | None = None,
 ) -> dict[str, Any]:
     dimensions = dimensions_from_findings(findings)
     aggregate = _aggregate_from_dimensions(dimensions)
@@ -1687,7 +1704,7 @@ def _build_evidence_record(
         content_sha=content_sha,
         provenance={
             "created_at": _now_z(),
-            "run_id": f"qg-workflow-{uuid4().hex}",
+            "run_id": workflow_run_id or f"qg-workflow-{uuid4().hex}",
             "source": "qg_workflow",
             "module_dir": str(target.module_dir),
         },

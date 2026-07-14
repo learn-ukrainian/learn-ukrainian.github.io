@@ -1,82 +1,82 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "production-qg-qualification.v1",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "verdict",
-    "profile",
-    "identity",
-    "route"
-  ],
+  "required": ["schema_version", "verdict", "profile", "identity", "route"],
   "properties": {
-    "schema_version": {
-      "const": "production-qg-qualification.v1"
-    },
-    "verdict": {
-      "const": "PASS"
-    },
+    "schema_version": {"const": "production-qg-qualification.v1"},
+    "verdict": {"const": "PASS"},
+    "profile": {"$ref": "#/$defs/profile"},
+    "identity": {"$ref": "#/$defs/identity"},
+    "route": {"$ref": "#/$defs/route"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "profile": {
       "type": "object",
-      "required": [
-        "id",
-        "version"
-      ]
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
     },
     "identity": {
       "type": "object",
-      "minProperties": 12,
-      "additionalProperties": {
-        "type": "string",
-        "pattern": "^[0-9a-f]{64}$"
+      "additionalProperties": false,
+      "required": ["gate", "profile", "prompt", "checker", "checker_config", "policy", "schema", "tool", "routing", "canary", "cost", "circuit", "resume"],
+      "properties": {
+        "gate": {"$ref": "#/$defs/sha"}, "profile": {"$ref": "#/$defs/sha"},
+        "prompt": {"$ref": "#/$defs/sha"}, "checker": {"$ref": "#/$defs/sha"},
+        "checker_config": {"$ref": "#/$defs/sha"}, "policy": {"$ref": "#/$defs/sha"},
+        "schema": {"$ref": "#/$defs/sha"}, "tool": {"$ref": "#/$defs/sha"},
+        "routing": {"$ref": "#/$defs/sha"}, "canary": {"$ref": "#/$defs/sha"},
+        "cost": {"$ref": "#/$defs/sha"}, "circuit": {"$ref": "#/$defs/sha"},
+        "resume": {"$ref": "#/$defs/sha"}
       }
+    },
+    "canary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "artifact_sha256", "route", "model", "prompt_identity", "gate_identity"],
+      "properties": {
+        "status": {"const": "PASS"}, "artifact_sha256": {"$ref": "#/$defs/sha"},
+        "route": {"type": "string", "minLength": 1}, "model": {"type": "string", "minLength": 1},
+        "prompt_identity": {"$ref": "#/$defs/sha"}, "gate_identity": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "policy_sha256", "max_module_cost_usd", "max_daily_cost_usd"],
+      "properties": {
+        "status": {"const": "QUALIFIED"}, "policy_sha256": {"$ref": "#/$defs/sha"},
+        "max_module_cost_usd": {"type": "number", "exclusiveMinimum": 0},
+        "max_daily_cost_usd": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "circuit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "policy_sha256"],
+      "properties": {"status": {"const": "CLOSED"}, "policy_sha256": {"$ref": "#/$defs/sha"}}
+    },
+    "resume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "contract_sha256"],
+      "properties": {"status": {"const": "QUALIFIED"}, "contract_sha256": {"$ref": "#/$defs/sha"}}
     },
     "route": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "family",
-        "model",
-        "route",
-        "lineage",
-        "canary",
-        "budget",
-        "circuit",
-        "resume"
-      ],
+      "required": ["family", "model", "route", "lineage", "canary", "budget", "circuit", "resume"],
       "properties": {
-        "family": {
-          "type": "string",
-          "minLength": 1
-        },
-        "model": {
-          "type": "string",
-          "minLength": 1
-        },
-        "route": {
-          "type": "string",
-          "minLength": 1
-        },
-        "lineage": {
-          "type": "string",
-          "minLength": 1
-        },
-        "canary": {
-          "type": "string",
-          "minLength": 1
-        },
-        "budget": {
-          "type": "string",
-          "minLength": 1
-        },
-        "circuit": {
-          "type": "string",
-          "minLength": 1
-        },
-        "resume": {
-          "type": "string",
-          "minLength": 1
-        }
+        "family": {"type": "string", "minLength": 1}, "model": {"type": "string", "minLength": 1},
+        "route": {"type": "string", "minLength": 1}, "lineage": {"type": "string", "minLength": 1},
+        "canary": {"$ref": "#/$defs/canary"}, "budget": {"$ref": "#/$defs/budget"},
+        "circuit": {"$ref": "#/$defs/circuit"}, "resume": {"$ref": "#/$defs/resume"}
       }
     }
   }

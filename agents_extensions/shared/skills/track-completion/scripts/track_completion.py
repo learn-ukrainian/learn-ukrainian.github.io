@@ -331,14 +331,18 @@ def certification_profile_for(
     snapshot: TargetSnapshot, *, repo_root: Path, config: Mapping[str, Any]
 ) -> dict[str, Any]:
     """Resolve only a registered, schema-valid profile; absent profiles are unsafe."""
-    profile_path = _repo_path(repo_root, str(config["readiness_profiles_path"]))
-    schema_path = _repo_path(repo_root, str(config["readiness_profiles_schema_path"]))
+    profile_path = _repo_path(repo_root, str(config["certification_profiles_path"]))
+    schema_path = _repo_path(repo_root, str(config["certification_profiles_schema_path"]))
     if not profile_path.is_file() or not schema_path.is_file():
-        raise CompletionError("Certification readiness profile contract is missing")
+        raise CompletionError("Certification profile contract is missing")
     value = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
-        raise CompletionError("Certification readiness profile contract must be a mapping")
-    _validate(value, schema_path, "certification readiness profiles")
+        raise CompletionError("Certification profile contract must be a mapping")
+    _validate(value, schema_path, "certification profiles")
+    for selector_group in value["selectors"].values():
+        for configured_profile_id in selector_group.values():
+            if configured_profile_id not in value["profiles"]:
+                raise CompletionError(f"Certification selector references unknown profile: {configured_profile_id}")
     manifest = _manifest(config, repo_root)
     manifest_type = str(manifest["levels"][snapshot.track].get("type") or "")
     selectors = value["selectors"]
@@ -346,7 +350,9 @@ def certification_profile_for(
     if not isinstance(profile_id, str) or profile_id not in value["profiles"]:
         raise CompletionError("No registered certification profile applies to this target")
     profile = value["profiles"][profile_id]
-    qg = profile["certification"]["production_qg"]
+    if profile["family"] != snapshot.family:
+        raise CompletionError("Certification profile family does not match the resolved target family")
+    qg = profile["production_qg"]
     if qg["mode"] == "armed-canary":
         for key in ("qualification_artifact", "human_arming_artifact"):
             artifact = _repo_path(repo_root, str(qg[key]))
@@ -356,7 +362,11 @@ def certification_profile_for(
         "id": profile_id,
         "version": profile["version"],
         "family": profile["family"],
-        "certification": profile["certification"],
+        "readiness_profile": profile["readiness_profile"],
+        "pbr": profile["pbr"],
+        "independent_review": profile["independent_review"],
+        "integration": profile["integration"],
+        "production_qg": profile["production_qg"],
     }
 
 
@@ -389,7 +399,11 @@ def certification_inputs(
         readiness = curriculum_readiness.evaluate_preparation(snapshot.track, snapshot.slug, repo_root=repo_root)
     except curriculum_readiness.ReadinessError as exc:
         raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
-    if readiness["family"] != snapshot.family or readiness["profile_id"] != profile["id"]:
+    if (
+        readiness["family"] != snapshot.family
+        or profile["family"] != snapshot.family
+        or readiness["profile_id"] != profile["readiness_profile"]
+    ):
         raise CompletionError("Readiness profile contradicts the completion target family/profile")
     if not readiness["preparation_identity"] or not all(item["passed"] for item in readiness["requirements"]):
         raise CompletionError("Current declared preparation and plan requirements must pass")
@@ -418,7 +432,6 @@ def certification_inputs(
         name: _identity(_declared_hashes(repo_root, paths, label=f"production-QG {name}"))
         for name, paths in declarations["production_qg"].items()
     }
-    qg_identity["profile"] = sha256_bytes(stable_json(profile["certification"]["production_qg"]).encode("utf-8"))
     return {
         "target": snapshot.selector,
         "profile": {"id": profile["id"], "version": profile["version"]},
@@ -655,26 +668,47 @@ def resume_run(
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     identity = build_identity(snapshot, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    prior = _read_ledger(path)
+    reopening_state: str | None = None
+    if prior is not None and prior.get("run", {}).get("run_id") == run_id and prior["run"].get("status") == "completed":
+        projection = certification_projection(
+            selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+        )
+        candidate = str(projection["state"])
+        if candidate in {
+            "POST_BUILD_REVIEW_REQUIRED",
+            "INDEPENDENT_REVIEW_REQUIRED",
+            "INTEGRATION_REQUIRED",
+            "PBR_PASS_QG_PENDING",
+            "PRODUCTION_QG_REQUIRED",
+        }:
+            reopening_state = candidate
     try:
         with _with_lock(path):
             ledger = _read_ledger(path)
             if ledger is None or ledger["run"]["run_id"] != run_id:
                 raise CompletionError("No matching completion run to resume")
             if ledger["run"]["status"] != "active":
-                raise CompletionError("Completed runs cannot be resumed")
+                if reopening_state is None:
+                    raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
+                ledger["run"]["status"] = "active"
+                ledger["state"] = reopening_state
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
             if drifted and ledger["state"] not in MUTATING_STATES:
                 raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
             _renew_lease(ledger, config)
-            eid = _event_id("RESUMED", {"run_id": run_id, "identity": identity["sha256"]})
+            eid = _event_id(
+                "CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
+                {"run_id": run_id, "identity": identity["sha256"], "state": reopening_state},
+            )
             if not _event_exists(ledger, eid):
                 _append_event(
                     ledger,
                     event_id=eid,
-                    event="RESUMED",
+                    event="CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
                     to_state=ledger["state"],
                     identity=ledger["current_identity"] if drifted else identity,
-                    details={"pending_identity_drift": drifted},
+                    details={"pending_identity_drift": drifted, "reopened_for_certification": reopening_state is not None},
                 )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
@@ -1095,7 +1129,7 @@ def record_review(
                 if ledger["author_families"]:
                     to_state = "INDEPENDENT_REVIEW_REQUIRED"
                 else:
-                    mode = inputs["profile_config"]["certification"]["production_qg"]["mode"] if inputs else "pending"
+                    mode = inputs["profile_config"]["production_qg"]["mode"] if inputs else "pending"
                     to_state = {
                         "disabled": "CERTIFIED_FINAL",
                         "pending": "PBR_PASS_QG_PENDING",
@@ -1348,20 +1382,78 @@ def record_certification_evidence(
             _config, _snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            if _event_exists(ledger, eid):
-                return path, ledger
-            record = {"path": str(artifact.path), "sha256": artifact.sha256, "value": artifact.value}
-            ledger.setdefault("certification_evidence", []).append(record)
-            _append_event(
-                ledger,
-                event_id=eid,
-                event="CERTIFICATION_EVIDENCE_RECORDED",
-                to_state=ledger["state"],
-                identity=identity,
-                details={"evidence": {"kind": artifact.value["kind"], "sha256": artifact.sha256}},
+            if not _event_exists(ledger, eid):
+                record = {"path": str(artifact.path), "sha256": artifact.sha256, "value": artifact.value}
+                ledger.setdefault("certification_evidence", []).append(record)
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="CERTIFICATION_EVIDENCE_RECORDED",
+                    to_state=ledger["state"],
+                    identity=identity,
+                    details={"evidence": {"kind": artifact.value["kind"], "sha256": artifact.sha256}},
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+    return _advance_certification_cursor(
+        selector,
+        run_id=run_id,
+        evidence_sha256=artifact.sha256,
+        repo_root=repo_root,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+
+def _advance_certification_cursor(
+    selector: str,
+    *,
+    run_id: str,
+    evidence_sha256: str,
+    repo_root: Path,
+    config_path: Path,
+    ledger_root: Path | None,
+) -> tuple[Path, dict[str, Any]]:
+    """Advance only to a freshly derived certification state after recording evidence."""
+    projection = certification_projection(
+        selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
+    desired = str(projection["state"])
+    allowed_from = {
+        "INTEGRATION_REQUIRED": {"INDEPENDENT_REVIEW_REQUIRED"},
+        "PBR_PASS_QG_PENDING": {"INTEGRATION_REQUIRED"},
+        "PRODUCTION_QG_REQUIRED": {"INTEGRATION_REQUIRED"},
+        "CERTIFIED_FINAL": {"INTEGRATION_REQUIRED", "PBR_PASS_QG_PENDING", "PRODUCTION_QG_REQUIRED"},
+    }
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
-            _atomic_write_json(path, ledger)
+            if ledger["state"] not in allowed_from.get(desired, set()):
+                return path, ledger
+            eid = _event_id(
+                "CERTIFICATION_CURSOR_ADVANCED",
+                {"evidence_sha256": evidence_sha256, "state": desired},
+            )
+            if not _event_exists(ledger, eid):
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="CERTIFICATION_CURSOR_ADVANCED",
+                    to_state=desired,
+                    identity=identity,
+                    details={"evidence_sha256": evidence_sha256, "projection": projection},
+                )
+                if desired == "CERTIFIED_FINAL":
+                    ledger["run"]["status"] = "completed"
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
             return path, ledger
     except Timeout as exc:
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
@@ -1460,23 +1552,35 @@ def certification_projection(
     independent_ok = not mutation_required
     independent_state = "not-required" if not mutation_required else "pending"
     if mutation_required:
+        current_independent: list[certification.EvidenceArtifact] = []
+        unresolved_material = False
         for artifact in _ledger_artifacts(ledger, "independent-review"):
             try:
                 certification.require_current(artifact, kind="independent-review", expected=expected)
                 if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
                     independent_state = "stale"
-                elif certification.independent_review_passes(
-                    artifact,
-                    author_groups=author_groups,
-                    author_families=set(ledger.get("author_families", [])),
-                    config=config,
-                    track_policy=snapshot.track_policy,
-                ):
-                    independent_ok, independent_state = True, "current"
                 else:
-                    independent_state = "unresolved"
+                    current_independent.append(artifact)
+                    review = artifact.value["review"]
+                    if any(
+                        item["severity"] in MATERIAL_SEVERITIES and not item["resolved"]
+                        for item in review["material_findings"]
+                    ):
+                        unresolved_material = True
+                    elif certification.independent_review_passes(
+                        artifact,
+                        author_groups=author_groups,
+                        author_families=set(ledger.get("author_families", [])),
+                        config=config,
+                        track_policy=snapshot.track_policy,
+                    ):
+                        independent_ok, independent_state = True, "current"
+                    else:
+                        independent_state = "unresolved"
             except certification.CertificationEvidenceError:
                 independent_state = "malformed"
+        if unresolved_material:
+            independent_ok, independent_state = False, "unresolved"
     if not independent_ok:
         return {
             "state": "INDEPENDENT_REVIEW_REQUIRED",
@@ -1490,19 +1594,24 @@ def certification_projection(
     integration_ok = not mutation_required
     integration_state = "not-required" if not mutation_required else "pending"
     if mutation_required:
-        independent_shas = {
-            artifact.sha256: artifact.value.get("diff_sha256")
-            for artifact in _ledger_artifacts(ledger, "independent-review")
-            if artifact.value.get("mutation_identity") == inputs["mutation_identity"]
-            and artifact.value.get("diff_sha256")
-            and certification.independent_review_passes(
-                artifact,
-                author_groups=author_groups,
-                author_families=set(ledger.get("author_families", [])),
-                config=config,
-                track_policy=snapshot.track_policy,
-            )
-        }
+        independent_shas: dict[str, str] = {}
+        for artifact in _ledger_artifacts(ledger, "independent-review"):
+            try:
+                certification.require_current(artifact, kind="independent-review", expected=expected)
+                if (
+                    artifact.value.get("mutation_identity") == inputs["mutation_identity"]
+                    and artifact.value.get("diff_sha256")
+                    and certification.independent_review_passes(
+                        artifact,
+                        author_groups=author_groups,
+                        author_families=set(ledger.get("author_families", [])),
+                        config=config,
+                        track_policy=snapshot.track_policy,
+                    )
+                ):
+                    independent_shas[artifact.sha256] = str(artifact.value["diff_sha256"])
+            except certification.CertificationEvidenceError:
+                continue
         for artifact in _ledger_artifacts(ledger, "integration"):
             try:
                 certification.require_current(artifact, kind="integration", expected=expected)
@@ -1529,7 +1638,7 @@ def certification_projection(
             "final": "not-certified",
         }
 
-    qg = profile["certification"]["production_qg"]
+    qg = profile["production_qg"]
     if qg["mode"] == "disabled":
         return {
             "state": "CERTIFIED_FINAL",
@@ -1552,6 +1661,11 @@ def certification_projection(
     passing = False
     qg_state = "required"
     fingerprints: dict[str, set[str]] = {}
+    module_dir = repo_root / "curriculum" / "l2-uk-en" / snapshot.track / snapshot.slug
+    try:
+        qg_facts = certification.current_qg_facts(target=snapshot.selector, module_dir=module_dir)
+    except certification.CertificationEvidenceError:
+        qg_facts = None
     for artifact in _ledger_artifacts(ledger, "production-qg"):
         try:
             certification.require_current(artifact, kind="production-qg", expected=expected)
@@ -1566,9 +1680,10 @@ def certification_projection(
                 continue
             qg_key = certification.production_qg_stability_key(artifact)
             fingerprints.setdefault(qg_key, set()).add(certification.production_qg_material_fingerprint(artifact))
-            if certification.production_qg_passes(
+            if qg_facts is not None and certification.production_qg_passes(
                 artifact,
                 expected_identity=inputs["qg_identity"],
+                expected_facts=qg_facts,
                 seminar=profile["family"] == "seminar",
                 authorization=authorization,
             ):

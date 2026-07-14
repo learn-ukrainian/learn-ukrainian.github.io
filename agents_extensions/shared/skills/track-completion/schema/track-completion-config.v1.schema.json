@@ -8,8 +8,8 @@
     "ledger_schema_version",
     "config_schema_version",
     "manifest_path",
-    "readiness_profiles_path",
-    "readiness_profiles_schema_path",
+    "certification_profiles_path",
+    "certification_profiles_schema_path",
     "runtime_root",
     "lease_seconds",
     "family_for_manifest_type",
@@ -25,8 +25,8 @@
     "ledger_schema_version": {"const": "track-completion.ledger.v1"},
     "config_schema_version": {"const": "track-completion.config.v1"},
     "manifest_path": {"$ref": "#/$defs/path"},
-    "readiness_profiles_path": {"$ref": "#/$defs/path"},
-    "readiness_profiles_schema_path": {"$ref": "#/$defs/path"},
+    "certification_profiles_path": {"$ref": "#/$defs/path"},
+    "certification_profiles_schema_path": {"$ref": "#/$defs/path"},
     "runtime_root": {"$ref": "#/$defs/path"},
     "lease_seconds": {"type": "integer", "minimum": 60},
     "family_for_manifest_type": {
@@ -98,9 +98,9 @@
     },
     "qgPaths": {
       "type": "object", "additionalProperties": false,
-      "required": ["gate", "prompt", "checker", "checker_config", "policy", "schema", "tool", "routing", "canary", "cost", "circuit", "resume"],
+      "required": ["gate", "profile", "prompt", "checker", "checker_config", "policy", "schema", "tool", "routing", "canary", "cost", "circuit", "resume"],
       "properties": {
-        "gate": {"$ref": "#/$defs/pathArray"}, "prompt": {"$ref": "#/$defs/pathArray"},
+        "gate": {"$ref": "#/$defs/pathArray"}, "profile": {"$ref": "#/$defs/pathArray"}, "prompt": {"$ref": "#/$defs/pathArray"},
         "checker": {"$ref": "#/$defs/pathArray"}, "checker_config": {"$ref": "#/$defs/pathArray"},
         "policy": {"$ref": "#/$defs/pathArray"}, "schema": {"$ref": "#/$defs/pathArray"},
         "tool": {"$ref": "#/$defs/pathArray"}, "routing": {"$ref": "#/$defs/pathArray"},

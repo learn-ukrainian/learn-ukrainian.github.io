@@ -297,6 +297,7 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "arm",
             "authorization",
             "canonical_record",
             "tier2"
@@ -310,6 +311,9 @@
             "profile": true,
             "preparation_identity": true,
             "learner_hashes": true,
+            "arm": {
+              "const": "production-qualified"
+            },
             "authorization": {
               "type": "object",
               "additionalProperties": false,
@@ -320,11 +324,7 @@
               ],
               "properties": {
                 "identity": {
-                  "type": "object",
-                  "minProperties": 12,
-                  "additionalProperties": {
-                    "$ref": "#/$defs/sha"
-                  }
+                  "$ref": "#/$defs/qgIdentity"
                 },
                 "qualification_sha256": {
                   "$ref": "#/$defs/sha"
@@ -341,18 +341,30 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
+                "source",
+                "workflow_run_id",
+                "tier2_run_id",
+                "attempt_id",
+                "canonical_tier_index",
                 "status",
                 "completion_status",
                 "dispatch",
                 "payload",
+                "raw_response",
                 "raw_response_sha256",
                 "retry_history",
                 "gate_outcomes"
               ],
               "properties": {
+                "source": {"const": "qg_workflow"},
+                "workflow_run_id": {"type": "string", "minLength": 1},
+                "tier2_run_id": {"type": "string", "minLength": 1},
+                "attempt_id": {"type": "integer", "minimum": 1},
+                "canonical_tier_index": {"const": 2},
                 "status": {
-                  "type": "string"
+                  "enum": ["ran", "cache_hit"]
                 },
+                "cache_regate": {"type": "string"},
                 "completion_status": {
                   "const": "COMPLETE"
                 },
@@ -362,6 +374,7 @@
                 "payload": {
                   "type": "object"
                 },
+                "raw_response": {"type": "string"},
                 "raw_response_sha256": {
                   "$ref": "#/$defs/sha"
                 },
@@ -376,6 +389,23 @@
           }
         }
       ]
+    },
+    "qgIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate", "profile", "prompt", "checker", "checker_config", "policy", "schema",
+        "tool", "routing", "canary", "cost", "circuit", "resume"
+      ],
+      "properties": {
+        "gate": {"$ref": "#/$defs/sha"}, "profile": {"$ref": "#/$defs/sha"},
+        "prompt": {"$ref": "#/$defs/sha"}, "checker": {"$ref": "#/$defs/sha"},
+        "checker_config": {"$ref": "#/$defs/sha"}, "policy": {"$ref": "#/$defs/sha"},
+        "schema": {"$ref": "#/$defs/sha"}, "tool": {"$ref": "#/$defs/sha"},
+        "routing": {"$ref": "#/$defs/sha"}, "canary": {"$ref": "#/$defs/sha"},
+        "cost": {"$ref": "#/$defs/sha"}, "circuit": {"$ref": "#/$defs/sha"},
+        "resume": {"$ref": "#/$defs/sha"}
+      }
     }
   }
 }

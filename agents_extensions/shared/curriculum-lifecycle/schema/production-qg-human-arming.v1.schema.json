@@ -2,37 +2,65 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "decision",
-    "actor_type",
-    "profile",
-    "route",
-    "qualification_sha256"
-  ],
+  "required": ["schema_version", "decision", "actor_type", "actor_id", "approval_id", "qualification_sha256", "profile", "route", "budget"],
   "properties": {
-    "schema_version": {
-      "const": "production-qg-human-arming.v1"
-    },
-    "decision": {
-      "const": "ARMED"
-    },
-    "actor_type": {
-      "const": "human"
-    },
+    "schema_version": {"const": "production-qg-human-arming.v1"},
+    "decision": {"const": "ARMED"},
+    "actor_type": {"const": "human"},
+    "actor_id": {"type": "string", "minLength": 1},
+    "approval_id": {"type": "string", "minLength": 1},
+    "qualification_sha256": {"$ref": "#/$defs/sha"},
+    "profile": {"$ref": "#/$defs/profile"},
+    "route": {"$ref": "#/$defs/route"},
+    "budget": {"$ref": "#/$defs/budget"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "profile": {
-      "type": "object",
-      "required": [
-        "id",
-        "version"
-      ]
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "canary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "artifact_sha256", "route", "model", "prompt_identity", "gate_identity"],
+      "properties": {
+        "status": {"const": "PASS"}, "artifact_sha256": {"$ref": "#/$defs/sha"},
+        "route": {"type": "string", "minLength": 1}, "model": {"type": "string", "minLength": 1},
+        "prompt_identity": {"$ref": "#/$defs/sha"}, "gate_identity": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "policy_sha256", "max_module_cost_usd", "max_daily_cost_usd"],
+      "properties": {
+        "status": {"const": "QUALIFIED"}, "policy_sha256": {"$ref": "#/$defs/sha"},
+        "max_module_cost_usd": {"type": "number", "exclusiveMinimum": 0},
+        "max_daily_cost_usd": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "circuit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "policy_sha256"],
+      "properties": {"status": {"const": "CLOSED"}, "policy_sha256": {"$ref": "#/$defs/sha"}}
+    },
+    "resume": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "contract_sha256"],
+      "properties": {"status": {"const": "QUALIFIED"}, "contract_sha256": {"$ref": "#/$defs/sha"}}
     },
     "route": {
-      "type": "object"
-    },
-    "qualification_sha256": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
+      "type": "object", "additionalProperties": false,
+      "required": ["family", "model", "route", "lineage", "canary", "budget", "circuit", "resume"],
+      "properties": {
+        "family": {"type": "string", "minLength": 1}, "model": {"type": "string", "minLength": 1},
+        "route": {"type": "string", "minLength": 1}, "lineage": {"type": "string", "minLength": 1},
+        "canary": {"$ref": "#/$defs/canary"}, "budget": {"$ref": "#/$defs/budget"},
+        "circuit": {"$ref": "#/$defs/circuit"}, "resume": {"$ref": "#/$defs/resume"}
+      }
     }
   }
 }

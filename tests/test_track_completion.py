@@ -34,8 +34,8 @@ def _config() -> dict[str, Any]:
         "ledger_schema_version": "track-completion.ledger.v1",
         "config_schema_version": "track-completion.config.v1",
         "manifest_path": "curriculum/l2-uk-en/curriculum.yaml",
-        "readiness_profiles_path": "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
-        "readiness_profiles_schema_path": "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
+        "certification_profiles_path": "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml",
+        "certification_profiles_schema_path": "agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json",
         "runtime_root": "batch_state/track-completion",
         "lease_seconds": 3600,
         "family_for_manifest_type": {"core": "core", "track": "seminar", "seminar": "seminar"},
@@ -69,6 +69,7 @@ def _config() -> dict[str, Any]:
                 name: ["workflow.txt"]
                 for name in (
                     "gate",
+                    "profile",
                     "prompt",
                     "checker",
                     "checker_config",
@@ -95,6 +96,8 @@ def _install_certification_profiles(repo: Path) -> None:
     for relative in (
         "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
         "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
+        "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml",
+        "agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json",
     ):
         source = ROOT / relative
         target = repo / relative
@@ -636,7 +639,7 @@ def test_projection_uses_only_bound_canonical_pbr_review(
         "plan_hash": tc.sha256_file(repo / snapshot.review_files["plan"]),
         "workflow_hashes": {"workflow.txt": tc.sha256_file(repo / "workflow.txt")},
         "pbr_dependency_identity": "2" * 64,
-        "profile_config": {"certification": {"production_qg": {"mode": "disabled"}}},
+        "profile_config": {"production_qg": {"mode": "disabled"}},
         "qg_identity": {},
     }
     result = _result(snapshot, repo, status="PASS")

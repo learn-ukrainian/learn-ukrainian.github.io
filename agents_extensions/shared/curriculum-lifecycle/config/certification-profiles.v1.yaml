@@ -1,0 +1,72 @@
+---
+config_version: curriculum-certification.v1
+selectors:
+  tracks:
+    a1: core-disabled
+    a2: core-disabled
+    b1: core-pending
+    b2: core-pending
+    c1: core-pending
+    c2: core-pending
+    bio: bio-pending
+  manifest_types:
+    core: core-disabled
+    track: seminar-pending
+    seminar: seminar-pending
+profiles:
+  core-disabled:
+    version: 1.0.0
+    family: core
+    readiness_profile: core
+    pbr:
+      adapter: post-build-review.v3
+      required: true
+    independent_review:
+      required_for_mutation: true
+    integration:
+      required_for_mutation: true
+    production_qg:
+      adapter: production-qg.v1
+      mode: disabled
+  core-pending:
+    version: 1.0.0
+    family: core
+    readiness_profile: core
+    pbr:
+      adapter: post-build-review.v3
+      required: true
+    independent_review:
+      required_for_mutation: true
+    integration:
+      required_for_mutation: true
+    production_qg:
+      adapter: production-qg.v1
+      mode: pending
+  seminar-pending:
+    version: 1.0.0
+    family: seminar
+    readiness_profile: seminar
+    pbr:
+      adapter: post-build-review.v3
+      required: true
+    independent_review:
+      required_for_mutation: true
+    integration:
+      required_for_mutation: true
+    production_qg:
+      adapter: production-qg.v1
+      mode: pending
+  bio-pending:
+    version: 1.0.0
+    family: seminar
+    readiness_profile: bio
+    pbr:
+      adapter: post-build-review.v3
+      required: true
+    independent_review:
+      required_for_mutation: true
+    integration:
+      required_for_mutation: true
+    production_qg:
+      adapter: production-qg.v1
+      mode: pending
