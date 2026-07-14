@@ -20,7 +20,10 @@ DEFAULT_FINGERPRINT = ROOT / "site" / "src" / "data" / "lexicon-manifest.fingerp
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon import enrich_manifest
+# NOTE: import the pure fingerprint module, NOT enrich_manifest — the CI freshness
+# gate imports this module in a minimal env without third-party deps (#5166 burn:
+# enrich_manifest pulls `requests` at module level).
+from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.source_attribution import apply_entry_attribution, learner_facing_mirror_violations
 
 
@@ -36,7 +39,7 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _refresh_manifest_fingerprint(manifest: dict[str, Any], fingerprint_path: Path) -> None:
-    fingerprint_payload = enrich_manifest.write_fingerprint(fingerprint_path, root=ROOT)
+    fingerprint_payload = write_fingerprint(fingerprint_path, root=ROOT)
     manifest["manifest_fingerprint"] = {
         "schema_version": fingerprint_payload["schema_version"],
         "fingerprint": fingerprint_payload["fingerprint"],

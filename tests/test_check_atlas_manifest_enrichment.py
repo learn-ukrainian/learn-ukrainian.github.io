@@ -71,3 +71,40 @@ def test_missing_manifest_fails(tmp_path: Path) -> None:
 def test_committed_manifest_is_enriched() -> None:
     # The real shipped manifest must always pass — this is the regression guard.
     assert check_enrichment() == 0
+
+
+def test_gate_runs_in_minimal_env_without_third_party_deps(tmp_path: Path) -> None:
+    """The freshness CI job installs no third-party deps (#5166 burn).
+
+    The gate's FULL import chain — including the lazy in-function import of
+    migrate_source_labels — must never pull `requests` (or transitively,
+    enrich_manifest's other heavy deps). Reproduces the CI env by blocking
+    `requests` at import time in a fresh interpreter, then running the gate
+    end-to-end on a healthy fixture manifest.
+    """
+    import subprocess
+    import sys
+
+    root = Path(__file__).resolve().parents[1]
+    manifest = _write(tmp_path / "m.json", enrichment_generated=True, n_total=4, n_enriched=4)
+    code = (
+        "import builtins, sys\n"
+        "_real = builtins.__import__\n"
+        "def _guard(name, *a, **k):\n"
+        "    if name == 'requests' or name.startswith('requests.'):\n"
+        "        raise ModuleNotFoundError(\"No module named 'requests' (blocked: minimal CI env)\")\n"
+        "    return _real(name, *a, **k)\n"
+        "builtins.__import__ = _guard\n"
+        f"sys.path.insert(0, {str(root)!r})\n"
+        "from scripts.audit.check_atlas_manifest_enrichment import check_enrichment\n"
+        "from pathlib import Path\n"
+        f"rc = check_enrichment(manifest_path=Path({str(manifest)!r}))\n"
+        "raise SystemExit(rc)\n"
+    )
+    proc = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, text=True, cwd=root, timeout=120
+    )
+    assert proc.returncode == 0, (
+        f"gate failed in minimal env (rc={proc.returncode})\n"
+        f"stdout: {proc.stdout}\nstderr: {proc.stderr}"
+    )
