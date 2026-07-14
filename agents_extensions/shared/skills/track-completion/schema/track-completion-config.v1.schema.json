@@ -17,7 +17,8 @@
     "track_overrides",
     "review_family_groups",
     "routing",
-    "identity_paths"
+    "identity_paths",
+    "certification_identity_paths"
   ],
   "properties": {
     "workflow_version": {"$ref": "#/$defs/semver"},
@@ -72,6 +73,15 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {"$ref": "#/$defs/path"}
+    },
+    "certification_identity_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pbr", "production_qg"],
+      "properties": {
+        "pbr": {"$ref": "#/$defs/pathArray"},
+        "production_qg": {"$ref": "#/$defs/qgPaths"}
+      }
     }
   },
   "$defs": {
@@ -81,6 +91,22 @@
       "type": "array",
       "uniqueItems": true,
       "items": {"type": "string", "minLength": 1}
+    },
+    "pathArray": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/path"}
+    },
+    "qgPaths": {
+      "type": "object", "additionalProperties": false,
+      "required": ["gate", "prompt", "checker", "checker_config", "policy", "schema", "tool", "routing", "canary", "cost", "circuit", "resume"],
+      "properties": {
+        "gate": {"$ref": "#/$defs/pathArray"}, "prompt": {"$ref": "#/$defs/pathArray"},
+        "checker": {"$ref": "#/$defs/pathArray"}, "checker_config": {"$ref": "#/$defs/pathArray"},
+        "policy": {"$ref": "#/$defs/pathArray"}, "schema": {"$ref": "#/$defs/pathArray"},
+        "tool": {"$ref": "#/$defs/pathArray"}, "routing": {"$ref": "#/$defs/pathArray"},
+        "canary": {"$ref": "#/$defs/pathArray"}, "cost": {"$ref": "#/$defs/pathArray"},
+        "circuit": {"$ref": "#/$defs/pathArray"}, "resume": {"$ref": "#/$defs/pathArray"}
+      }
     },
     "command": {
       "type": "array",

@@ -11,7 +11,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-SCHEMA_PATH = Path(__file__).resolve().parents[3] / "curriculum-lifecycle" / "schema" / "certification-evidence.v1.schema.json"
+SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3] / "curriculum-lifecycle" / "schema" / "certification-evidence.v1.schema.json"
+)
+QUALIFICATION_SCHEMA_PATH = SCHEMA_PATH.with_name("production-qg-qualification.v1.schema.json")
+ARMING_SCHEMA_PATH = SCHEMA_PATH.with_name("production-qg-human-arming.v1.schema.json")
 MATERIAL_SEVERITIES = frozenset({"blocker", "high", "medium"})
 
 
@@ -81,19 +85,37 @@ def require_current(artifact: EvidenceArtifact, *, kind: str, expected: Mapping[
         raise CertificationEvidenceError("stale certification evidence: profile differs")
 
 
-def independent_review_passes(artifact: EvidenceArtifact, *, author_groups: set[str], allowed_groups: set[str] | None = None) -> bool:
+def independent_review_passes(
+    artifact: EvidenceArtifact,
+    *,
+    author_groups: set[str],
+    author_families: set[str],
+    config: Mapping[str, Any],
+    track_policy: Mapping[str, Any],
+) -> bool:
     review = artifact.value["review"]
     material_open = any(
-        item["severity"] in MATERIAL_SEVERITIES and not item["resolved"]
-        for item in review["material_findings"]
+        item["severity"] in MATERIAL_SEVERITIES and not item["resolved"] for item in review["material_findings"]
     )
     return bool(
         review["verdict"] == "PASS"
         and review["resolution_state"] == "RESOLVED"
         and not material_open
-        and review["reviewer_group"] not in author_groups
-        and (not allowed_groups or review["reviewer_group"] in allowed_groups)
+        and _reviewer_group(review["reviewer_family"], config) not in author_groups
+        and set(review["author_families"]) == author_families
+        and review["reviewer_family"] not in set(track_policy.get("forbidden_reviewer_families", ()))
+        and (
+            not track_policy.get("allowed_reviewer_groups")
+            or _reviewer_group(review["reviewer_family"], config) in set(track_policy["allowed_reviewer_groups"])
+        )
     )
+
+
+def _reviewer_group(family: str, config: Mapping[str, Any]) -> str:
+    group = config["review_family_groups"].get(str(family).lower())
+    if not isinstance(group, str) or not group:
+        raise CertificationEvidenceError(f"unknown reviewer family: {family}")
+    return group
 
 
 def integration_passes(artifact: EvidenceArtifact) -> bool:
@@ -110,47 +132,134 @@ def integration_passes(artifact: EvidenceArtifact) -> bool:
     )
 
 
-def _confirmed_facts_are_grounded(qg: Mapping[str, Any]) -> bool:
-    events = {event["id"]: event for event in qg["tool_events"]}
-    for check in qg["fact_checks"]:
-        if check["verdict"] != "CONFIRMED":
-            continue
-        event = events.get(check.get("tool_event_id"))
-        excerpt = check.get("excerpt")
-        if not event or not isinstance(excerpt, str) or not excerpt:
-            return False
-        if not str(event["tool_name"]).startswith("mcp__sources__"):
-            return False
-        # A light ellipsis may omit only a contiguous middle span of real output.
-        pieces = excerpt.split("…")
-        if len(pieces) > 2 or any(piece and piece not in event["output"] for piece in pieces):
-            return False
-        if len(pieces) == 2 and event["output"].find(pieces[0]) > event["output"].find(pieces[1]):
-            return False
-    return True
+def load_authorization(
+    qg_profile: Mapping[str, Any],
+    *,
+    repo_root: Path,
+    expected_profile: Mapping[str, Any],
+    expected_identity: Mapping[str, str],
+) -> dict[str, Any]:
+    """Load tracked qualification + human arming records, never infer arming from presence."""
+    if qg_profile.get("mode") != "armed-canary":
+        raise CertificationEvidenceError("production QG profile is not armed")
+    paths = [repo_root / str(qg_profile[key]) for key in ("qualification_artifact", "human_arming_artifact")]
+    try:
+        qualification, arming = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CertificationEvidenceError(f"invalid tracked QG authorization: {exc}") from exc
+    if not isinstance(qualification, Mapping) or not isinstance(arming, Mapping):
+        raise CertificationEvidenceError("tracked QG authorization must be JSON objects")
+    for value, schema_path, label in (
+        (qualification, QUALIFICATION_SCHEMA_PATH, "qualification"),
+        (arming, ARMING_SCHEMA_PATH, "human arming"),
+    ):
+        try:
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+            errors = list(Draft202012Validator(schema).iter_errors(value))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise CertificationEvidenceError(f"invalid {label} schema: {exc}") from exc
+        if errors:
+            raise CertificationEvidenceError(f"invalid {label} artifact: {errors[0].message}")
+    qualification_sha = _sha256(paths[0].read_bytes())
+    if (
+        qualification.get("schema_version") != "production-qg-qualification.v1"
+        or qualification.get("verdict") != "PASS"
+    ):
+        raise CertificationEvidenceError("qualification is not a passing v1 artifact")
+    if qualification.get("profile") != dict(expected_profile) or qualification.get("identity") != dict(
+        expected_identity
+    ):
+        raise CertificationEvidenceError("qualification does not bind the current profile/QG contract")
+    route = qualification.get("route")
+    required = ("family", "model", "route", "lineage", "canary", "budget", "circuit", "resume")
+    if not isinstance(route, Mapping) or any(not route.get(key) for key in required):
+        raise CertificationEvidenceError("qualification lacks exact route/canary/budget/circuit/resume binding")
+    if (
+        arming.get("schema_version") != "production-qg-human-arming.v1"
+        or arming.get("decision") != "ARMED"
+        or arming.get("actor_type") != "human"
+    ):
+        raise CertificationEvidenceError("arming is not an explicit human ARMED decision")
+    if (
+        arming.get("qualification_sha256") != qualification_sha
+        or arming.get("profile") != dict(expected_profile)
+        or arming.get("route") != route
+    ):
+        raise CertificationEvidenceError("arming does not bind this qualification/profile/route")
+    return {
+        "qualification_sha256": qualification_sha,
+        "human_arming_sha256": _sha256(paths[1].read_bytes()),
+        "route": dict(route),
+    }
 
 
-def production_qg_passes(artifact: EvidenceArtifact, *, expected_identity: Mapping[str, str], seminar: bool) -> bool:
-    qg = artifact.value["qg"]
-    if qg["verdict"] != "PASS" or qg["shadow"] or qg["cache_regate"] == "unavailable":
+def production_qg_passes(
+    artifact: EvidenceArtifact, *, expected_identity: Mapping[str, str], seminar: bool, authorization: Mapping[str, Any]
+) -> bool:
+    """Validate a captured canonical QG run with the production validators, read-only."""
+    from scripts.audit import llm_reviewer_dispatch, qg_schema
+
+    value = artifact.value
+    if value["authorization"]["identity"] != dict(expected_identity):
         return False
-    if qg["completion"] != "COMPLETE" or qg["canary"]["status"] != "PASS":
+    record, tier2 = value["canonical_record"], value["tier2"]
+    try:
+        qg_schema.validate_record(record)
+        qg_schema.validate_reviewer_payload(tier2["payload"], "seminar" if seminar else "core")
+    except (ValueError, KeyError, TypeError):
         return False
-    if qg["budget"]["status"] != "WITHIN_BUDGET" or qg["circuit"] != "CLOSED":
+    dispatch = tier2["dispatch"]
+    route = authorization["route"]
+    if any(
+        dispatch.get(key) != route[key] for key in ("reviewer_family", "reviewer_model_id", "route_name", "lineage")
+    ):
         return False
-    if qg["canary"]["route"] != qg["reviewer"]["route"]:
+    if tier2["status"] != "ran" or record.get("terminal_verdict") != "PASS":
         return False
-    if dict(qg["identity"]) != dict(expected_identity):
+    if dispatch.get("shadow") is True or dispatch.get("advisory") is True:
         return False
-    return not seminar or _confirmed_facts_are_grounded(qg)
+    cache_regate = tier2.get("cache_regate", dispatch.get("cache_regate"))
+    if cache_regate not in {None, "replayed"}:
+        return False
+    if tier2["gate_outcomes"].get("status") != "ran":
+        return False
+    try:
+        grounded = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+            tier2["payload"], dispatch, policy_family="seminar" if seminar else "core", gate_version="v2"
+        )
+    except (ValueError, TypeError):
+        return False
+    if seminar and (
+        grounded.invalid_fact_checks
+        or llm_reviewer_dispatch.factual_sweep_incomplete(
+            grounded.payload, policy_family="seminar", invalid_fact_checks=grounded.invalid_fact_checks
+        )
+    ):
+        return False
+    return grounded.payload == tier2["payload"]
 
 
 def production_qg_stability_key(artifact: EvidenceArtifact) -> str:
-    qg = artifact.value["qg"]
-    payload = {"target": artifact.value["target"], "profile": artifact.value["profile"], "preparation": artifact.value["preparation_identity"], "learner": artifact.value["learner_hashes"], "identity": qg["identity"], "reviewer": qg["reviewer"]}
+    qg = artifact.value
+    payload = {
+        "target": qg["target"],
+        "profile": qg["profile"],
+        "preparation": qg["preparation_identity"],
+        "learner": qg["learner_hashes"],
+        "identity": qg["authorization"]["identity"],
+        "dispatch": qg["tier2"]["dispatch"],
+    }
     return _sha256(_stable(payload).encode("utf-8"))
 
 
 def production_qg_material_fingerprint(artifact: EvidenceArtifact) -> str:
-    material = [item for item in artifact.value["qg"]["findings"] if item.get("severity") in MATERIAL_SEVERITIES]
-    return _sha256(_stable(sorted(material, key=_stable)).encode("utf-8"))
+    tier2 = artifact.value["tier2"]
+    material = [item for item in tier2["payload"].get("findings", []) if item.get("severity") in MATERIAL_SEVERITIES]
+    return _sha256(
+        _stable(
+            {
+                "terminal": artifact.value["canonical_record"].get("terminal_verdict"),
+                "findings": sorted(material, key=_stable),
+            }
+        ).encode("utf-8")
+    )

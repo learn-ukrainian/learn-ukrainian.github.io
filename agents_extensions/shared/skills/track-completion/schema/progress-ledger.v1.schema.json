@@ -32,6 +32,10 @@
         "AUDIT_TOOLING_REQUIRED",
         "REVIEWER_INSTABILITY",
         "INDEPENDENT_REVIEW_REQUIRED",
+        "INTEGRATION_REQUIRED",
+        "PBR_PASS_QG_PENDING",
+        "PRODUCTION_QG_REQUIRED",
+        "CERTIFIED_FINAL",
         "PUBLISH_REQUIRED",
         "COMPLETE"
       ]
@@ -174,7 +178,19 @@
         "status": {"enum": ["PASS", "REVISE", "BLOCK", "INCOMPLETE"]},
         "reviewer_family": {"type": "string", "minLength": 1},
         "reviewer_model": {"type": "string", "minLength": 1},
-        "target_identity_sha256": {"$ref": "#/$defs/sha"}
+        "target_identity_sha256": {"$ref": "#/$defs/sha"},
+        "certification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["profile", "preparation_identity", "learner_hashes", "plan_hash", "raw_response_sha256", "dependency_hashes", "dependency_identity"],
+          "properties": {
+            "profile": {"type": "object"}, "preparation_identity": {"$ref": "#/$defs/sha"},
+            "learner_hashes": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha"}},
+            "plan_hash": {"$ref": "#/$defs/sha"}, "raw_response_sha256": {"$ref": "#/$defs/sha"},
+            "dependency_hashes": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha"}},
+            "dependency_identity": {"$ref": "#/$defs/sha"}
+          }
+        }
       }
     }
   }

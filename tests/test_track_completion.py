@@ -13,15 +13,7 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = (
-    ROOT
-    / "agents_extensions"
-    / "shared"
-    / "skills"
-    / "track-completion"
-    / "scripts"
-    / "track_completion.py"
-)
+SCRIPT = ROOT / "agents_extensions" / "shared" / "skills" / "track-completion" / "scripts" / "track_completion.py"
 SPEC = importlib.util.spec_from_file_location("track_completion_for_tests", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 tc = importlib.util.module_from_spec(SPEC)
@@ -34,9 +26,7 @@ def _config() -> dict[str, Any]:
         "plan_review_skill": "plan-review",
         "plan_fix_skill": "apply-plan-fixes",
         "build_command": [".venv/bin/python", "builder.py", "{track}", "{slug}", "--no-resume"],
-        "plan_validation_commands": [
-            [".venv/bin/python", "validate.py", "{track}/{slug}"]
-        ],
+        "plan_validation_commands": [[".venv/bin/python", "validate.py", "{track}/{slug}"]],
         "shippability_command": [".venv/bin/python", "ship.py", "{track}", "{slug}"],
     }
     return {
@@ -73,6 +63,26 @@ def _config() -> dict[str, Any]:
             "audit_tooling_id_prefixes": ["packet-", "reviewer-"],
         },
         "identity_paths": ["workflow.txt"],
+        "certification_identity_paths": {
+            "pbr": ["workflow.txt"],
+            "production_qg": {
+                name: ["workflow.txt"]
+                for name in (
+                    "gate",
+                    "prompt",
+                    "checker",
+                    "checker_config",
+                    "policy",
+                    "schema",
+                    "tool",
+                    "routing",
+                    "canary",
+                    "cost",
+                    "circuit",
+                    "resume",
+                )
+            },
+        },
     }
 
 
@@ -183,10 +193,7 @@ def _result(
             "slug": snapshot.slug,
             "files": snapshot.review_files,
         },
-        "source_hashes": {
-            name: tc.sha256_file(repo / path)
-            for name, path in sorted(snapshot.review_files.items())
-        },
+        "source_hashes": {name: tc.sha256_file(repo / path) for name, path in sorted(snapshot.review_files.items())},
         "reviewer": {
             "agent": "fixture",
             "family": reviewer_family,
@@ -358,9 +365,7 @@ def test_review_rejects_unrecorded_drift_and_routes_plan_findings(
 ) -> None:
     repo, config_path, ledger_root = fake_repo
     _, stale_ledger = _start(fake_repo, "bio/seminar-built")
-    snapshot = tc.resolve_target(
-        "bio/seminar-built", repo_root=repo, config=tc.load_config(config_path)
-    )
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
     stale_result = _result(snapshot, repo, status="PASS")
     stale_path = _result_file(tmp_path, "stale.json")
     monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: stale_result)
@@ -385,9 +390,7 @@ def test_review_rejects_unrecorded_drift_and_routes_plan_findings(
         config_path=fresh_config,
         ledger_root=fresh_ledgers,
     )
-    snapshot = tc.resolve_target(
-        "bio/seminar-built", repo_root=fresh_repo, config=tc.load_config(fresh_config)
-    )
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=fresh_repo, config=tc.load_config(fresh_config))
     plan_result = _result(
         snapshot,
         fresh_repo,
@@ -448,9 +451,7 @@ def test_unchanged_source_material_flip_enters_and_exits_instability(
         ledger_root=ledger_root,
     )
     run_id = ledger["run"]["run_id"]
-    snapshot = tc.resolve_target(
-        "bio/seminar-built", repo_root=repo, config=tc.load_config(config_path)
-    )
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
     first = _result(snapshot, repo, status="REVISE", finding_id="first-finding")
     second = _result(snapshot, repo, status="REVISE", finding_id="second-finding")
     first_path = _result_file(tmp_path, "first.json")
@@ -521,9 +522,7 @@ def test_cross_family_review_gate_and_publication(
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    snapshot = tc.resolve_target(
-        "a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path)
-    )
+    snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
     passing = _result(snapshot, repo, status="PASS")
     result_path = _result_file(tmp_path, "pass.json")
     monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: passing)
@@ -560,7 +559,7 @@ def test_cross_family_review_gate_and_publication(
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    assert ledger["state"] == "PUBLISH_REQUIRED"
+    assert ledger["state"] == "INTEGRATION_REQUIRED"
     _, ledger = tc.record_published(
         "a1/core-unbuilt",
         run_id=run_id,
@@ -574,132 +573,96 @@ def test_cross_family_review_gate_and_publication(
     assert ledger["run"]["status"] == "completed"
 
 
-def test_legacy_qg_sidecar_cannot_advance_completion(
-    fake_repo: tuple[Path, Path, Path]
-) -> None:
+def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path, Path]) -> None:
     repo, config_path, _ledger_root = fake_repo
     legacy = repo / "curriculum/l2-uk-en/bio/seminar-built/llm_qg.json"
     legacy.write_text('{"aggregate":{"verdict":"PASS"}}\n', encoding="utf-8")
 
     _, ledger = _start(fake_repo, "bio/seminar-built")
-    snapshot = tc.resolve_target(
-        "bio/seminar-built", repo_root=repo, config=tc.load_config(config_path)
-    )
+    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
 
     assert ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
     assert "llm_qg" not in snapshot.observed_files
 
 
 def test_historical_post_build_result_cannot_advance_current_ledger() -> None:
-    historical = (
-        ROOT
-        / "tests"
-        / "fixtures"
-        / "post_build_review"
-        / "bio-oleksandr-bilash.result.v2.json"
-    )
+    historical = ROOT / "tests" / "fixtures" / "post_build_review" / "bio-oleksandr-bilash.result.v2.json"
 
     with pytest.raises(tc.CompletionError, match="historical"):
         tc._load_post_build_result(historical)
 
 
-def test_strict_projection_certifies_disabled_core_only_from_current_evidence(
+def test_certification_never_accepts_a_second_post_build_gate(
     fake_repo: tuple[Path, Path, Path], tmp_path: Path
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    _, ledger = _start(fake_repo, "a1/core-built")
-    preparation = "e" * 64
-    inputs = tc.certification_inputs(
-        "a1/core-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger=ledger
+    _start(fake_repo, "a1/core-built")
+    fabricated = tmp_path / "fabricated-pbr.json"
+    fabricated.write_text(
+        json.dumps(
+            {
+                "schema_version": "certification-evidence.v1",
+                "kind": "post-build",
+                "target": "a1/core-built",
+                "profile": {"id": "core", "version": "1.0.0"},
+                "preparation_identity": "a" * 64,
+                "learner_hashes": {"content": "b" * 64},
+                "pbr": {"verdict": "PASS"},
+            }
+        ),
+        encoding="utf-8",
     )
-    evidence = _certification_artifact(tmp_path, "pbr.json", inputs, "post-build")
-    tc.record_certification_evidence(
-        "a1/core-built", run_id=ledger["run"]["run_id"], evidence=evidence,
-        repo_root=repo, config_path=config_path, ledger_root=ledger_root,
-    )
-
-    assert tc.certification_projection(
-        "a1/core-built", preparation_identity=preparation, repo_root=repo,
-        config_path=config_path, ledger_root=ledger_root,
-    )["state"] == "CERTIFIED_FINAL"
-    (repo / "curriculum/l2-uk-en/a1/core-built/module.md").write_text("# changed\n", encoding="utf-8")
-    assert tc.certification_projection(
-        "a1/core-built", preparation_identity=preparation, repo_root=repo,
-        config_path=config_path, ledger_root=ledger_root,
-    )["state"] == "POST_BUILD_REVIEW_REQUIRED"
-
-
-def test_pending_qg_and_armed_qg_evidence_fail_closed(
-    fake_repo: tuple[Path, Path, Path], tmp_path: Path
-) -> None:
-    repo, config_path, ledger_root = fake_repo
-    # B1 receives the strict CORE profile rather than A1/A2's disabled production gate.
-    manifest = yaml.safe_load((repo / "curriculum/l2-uk-en/curriculum.yaml").read_text(encoding="utf-8"))
-    manifest["levels"]["b1"] = {"type": "core", "modules": ["strict-built"]}
-    _write(repo / "curriculum/l2-uk-en/curriculum.yaml", yaml.safe_dump(manifest, sort_keys=False))
-    _write(repo / "curriculum/l2-uk-en/plans/b1/strict-built.yaml", "level: b1\n")
-    _write(repo / "curriculum/l2-uk-en/b1/strict-built/module.md", "# B1\n")
-    _, ledger = tc.start_run("b1/strict-built", owner="codex/test", repo_root=repo, config_path=config_path, ledger_root=ledger_root)
-    preparation = "f" * 64
-    inputs = tc.certification_inputs("b1/strict-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger=ledger)
-    pbr = _certification_artifact(tmp_path, "b1-pbr.json", inputs, "post-build")
-    tc.record_certification_evidence("b1/strict-built", run_id=ledger["run"]["run_id"], evidence=pbr, repo_root=repo, config_path=config_path, ledger_root=ledger_root)
-    assert tc.certification_projection("b1/strict-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger_root=ledger_root)["state"] == "PBR_PASS_QG_PENDING"
-
-    shadow = _certification_artifact(tmp_path, "shadow.json", inputs, "post-build")
-    payload = json.loads(shadow.read_text(encoding="utf-8"))
-    payload["kind"] = "production-qg"
-    payload.pop("pbr")
-    payload["qg"] = {"adapter": "production-qg.v1", "shadow": True}
-    shadow.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(tc.certification.CertificationEvidenceError):
-        tc.certification.read_evidence(shadow)
+        tc.certification.read_evidence(fabricated)
+    assert (
+        tc.certification_projection("a1/core-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
+            "final"
+        ]
+        == "not-certified"
+    )
 
 
-def test_armed_canary_requires_exact_repository_arming_and_qg_evidence(
-    fake_repo: tuple[Path, Path, Path], tmp_path: Path
+def test_projection_uses_only_bound_canonical_pbr_review(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    profiles = repo / "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml"
-    config = yaml.safe_load(profiles.read_text(encoding="utf-8"))
-    qg_profile = config["profiles"]["core"]["certification"]["production_qg"]
-    qg_profile.update(
-        {
-            "mode": "armed-canary",
-            "qualification_artifact": "docs/qualification.md",
-            "human_arming_artifact": "docs/arming.md",
-        }
-    )
-    _write(repo / "docs/qualification.md", "qualified\n")
-    _write(repo / "docs/arming.md", "armed\n")
-    profiles.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     _, ledger = _start(fake_repo, "a1/core-built")
-    preparation = "1" * 64
-    inputs = tc.certification_inputs("a1/core-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger=ledger)
-    pbr = _certification_artifact(tmp_path, "armed-pbr.json", inputs, "post-build")
-    tc.record_certification_evidence("a1/core-built", run_id=ledger["run"]["run_id"], evidence=pbr, repo_root=repo, config_path=config_path, ledger_root=ledger_root)
-    qg = {
-        "schema_version": "certification-evidence.v1",
-        "kind": "production-qg",
-        "target": inputs["target"],
-        "profile": inputs["profile"],
-        "preparation_identity": preparation,
-        "learner_hashes": inputs["learner_hashes"],
-        "qg": {
-            "adapter": "production-qg.v1", "shadow": False, "cache_regate": "available", "identity": inputs["qg_identity"],
-            "reviewer": {"family": "google", "model": "fixture", "route": "canary-route", "lineage": "fixture-v1"},
-            "raw_response_sha256": "2" * 64,
-            "qualification_sha256": tc.sha256_file(repo / "docs/qualification.md"),
-            "human_arming_sha256": tc.sha256_file(repo / "docs/arming.md"),
-            "canary": {"status": "PASS", "route": "canary-route"}, "budget": {"status": "WITHIN_BUDGET", "cost": 0},
-            "circuit": "CLOSED", "run_id": "run", "attempt_id": "attempt", "completion": "COMPLETE", "verdict": "PASS",
-            "findings": [], "tool_events": [], "fact_checks": [],
-        },
+    snapshot = tc.resolve_target("a1/core-built", repo_root=repo, config=tc.load_config(config_path))
+    inputs = {
+        "target": "a1/core-built",
+        "profile": {"id": "core", "version": "1.0.0"},
+        "preparation_identity": "1" * 64,
+        "learner_hashes": {"content": tc.sha256_file(repo / snapshot.review_files["content"])},
+        "plan_hash": tc.sha256_file(repo / snapshot.review_files["plan"]),
+        "workflow_hashes": {"workflow.txt": tc.sha256_file(repo / "workflow.txt")},
+        "pbr_dependency_identity": "2" * 64,
+        "profile_config": {"certification": {"production_qg": {"mode": "disabled"}}},
+        "qg_identity": {},
     }
-    qg_path = tmp_path / "armed-qg.json"
-    qg_path.write_text(json.dumps(qg), encoding="utf-8")
-    tc.record_certification_evidence("a1/core-built", run_id=ledger["run"]["run_id"], evidence=qg_path, repo_root=repo, config_path=config_path, ledger_root=ledger_root)
+    result = _result(snapshot, repo, status="PASS")
+    result["semantic_response"] = {"raw_sha256": "3" * 64}
+    result_path = _result_file(tmp_path, "canonical.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: result)
+    monkeypatch.setattr(tc, "certification_inputs", lambda *_args, **_kwargs: inputs)
+    _, updated = tc.record_review(
+        "a1/core-built",
+        run_id=ledger["run"]["run_id"],
+        result_path=result_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert updated["reviews"][-1]["certification"]["raw_response_sha256"] == "3" * 64
+    assert (
+        tc.certification_projection("a1/core-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
+            "state"
+        ]
+        == "CERTIFIED_FINAL"
+    )
+    updated["reviews"][-1]["certification"]["dependency_identity"] = "4" * 64
+    assert tc._current_pbr_reviews(updated, inputs)[0] is False
 
-    assert tc.certification_projection("a1/core-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger_root=ledger_root)["state"] == "CERTIFIED_FINAL"
-    _write(repo / "docs/arming.md", "changed arming\n")
-    assert tc.certification_projection("a1/core-built", preparation_identity=preparation, repo_root=repo, config_path=config_path, ledger_root=ledger_root)["state"] == "PRODUCTION_QG_REQUIRED"
+
+def test_projection_has_no_caller_controlled_preparation_identity() -> None:
+    assert "preparation_identity" not in tc.certification_projection.__annotations__
+    assert "preparation_identity" not in tc.certification_inputs.__annotations__

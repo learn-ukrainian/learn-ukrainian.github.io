@@ -2,82 +2,379 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "curriculum-certification-evidence.v1",
   "oneOf": [
-    {"$ref": "#/$defs/postBuild"},
-    {"$ref": "#/$defs/independentReview"},
-    {"$ref": "#/$defs/integration"},
-    {"$ref": "#/$defs/productionQG"}
+    {
+      "$ref": "#/$defs/independentReview"
+    },
+    {
+      "$ref": "#/$defs/integration"
+    },
+    {
+      "$ref": "#/$defs/productionQG"
+    }
   ],
   "$defs": {
-    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "shortSha": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "shortSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,64}$"
+    },
     "base": {
       "type": "object",
-      "required": ["schema_version", "kind", "target", "profile", "preparation_identity", "learner_hashes"],
+      "required": [
+        "schema_version",
+        "kind",
+        "target",
+        "profile",
+        "preparation_identity",
+        "learner_hashes"
+      ],
       "properties": {
-        "schema_version": {"const": "certification-evidence.v1"},
-        "kind": {"enum": ["post-build", "independent-review", "integration", "production-qg"]},
-        "target": {"type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"},
+        "schema_version": {
+          "const": "certification-evidence.v1"
+        },
+        "kind": {
+          "enum": [
+            "independent-review",
+            "integration",
+            "production-qg"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+        },
         "profile": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["id", "version"],
-          "properties": {"id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"}, "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}}
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            }
+          }
         },
-        "preparation_identity": {"$ref": "#/$defs/sha"},
-        "learner_hashes": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha"}}
+        "preparation_identity": {
+          "$ref": "#/$defs/sha"
+        },
+        "learner_hashes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/sha"
+          }
+        }
       }
-    },
-    "postBuild": {
-      "allOf": [
-        {"$ref": "#/$defs/base"},
-        {"type": "object", "additionalProperties": false, "required": ["pbr"], "properties": {
-          "schema_version": true, "kind": {"const": "post-build"}, "target": true, "profile": true, "preparation_identity": true, "learner_hashes": true,
-          "pbr": {"type": "object", "additionalProperties": false, "required": ["adapter", "verdict", "raw_response_sha256", "workflow_hashes"], "properties": {
-            "adapter": {"const": "post-build-review.v3"}, "verdict": {"enum": ["PASS", "FAIL", "MALFORMED"]}, "raw_response_sha256": {"$ref": "#/$defs/sha"}, "workflow_hashes": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha"}}
-          }}
-        }}
-      ]
     },
     "independentReview": {
       "allOf": [
-        {"$ref": "#/$defs/base"},
-        {"type": "object", "additionalProperties": false, "required": ["mutation_identity", "review"], "properties": {
-          "schema_version": true, "kind": {"const": "independent-review"}, "target": true, "profile": true, "preparation_identity": true, "learner_hashes": true,
-          "mutation_identity": {"$ref": "#/$defs/sha"},
-          "review": {"type": "object", "additionalProperties": false, "required": ["author_families", "reviewer_family", "reviewer_group", "verdict", "material_findings", "resolution_state", "raw_response_sha256"], "properties": {
-            "author_families": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-            "reviewer_family": {"type": "string", "minLength": 1}, "reviewer_group": {"type": "string", "minLength": 1}, "verdict": {"enum": ["PASS", "CHANGES_REQUESTED"]},
-            "material_findings": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "severity", "resolved"], "properties": {"id": {"type": "string", "minLength": 1}, "severity": {"enum": ["blocker", "high", "medium", "low"]}, "resolved": {"type": "boolean"}}}},
-            "resolution_state": {"enum": ["RESOLVED", "UNRESOLVED"]}, "raw_response_sha256": {"$ref": "#/$defs/sha"}
-          }}
-        }}
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mutation_identity",
+            "diff_sha256",
+            "review"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "independent-review"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "mutation_identity": {
+              "$ref": "#/$defs/sha"
+            },
+            "diff_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "author_families",
+                "reviewer_family",
+                "verdict",
+                "material_findings",
+                "resolution_state",
+                "raw_response_sha256"
+              ],
+              "properties": {
+                "author_families": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "reviewer_family": {
+                  "type": "string"
+                },
+                "verdict": {
+                  "enum": [
+                    "PASS",
+                    "CHANGES_REQUESTED"
+                  ]
+                },
+                "material_findings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "severity",
+                      "resolved"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "severity": {
+                        "enum": [
+                          "blocker",
+                          "high",
+                          "medium",
+                          "low"
+                        ]
+                      },
+                      "resolved": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "resolution_state": {
+                  "enum": [
+                    "RESOLVED",
+                    "UNRESOLVED"
+                  ]
+                },
+                "raw_response_sha256": {
+                  "$ref": "#/$defs/sha"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "integration": {
       "allOf": [
-        {"$ref": "#/$defs/base"},
-        {"type": "object", "additionalProperties": false, "required": ["mutation_identity", "integration"], "properties": {
-          "schema_version": true, "kind": {"const": "integration"}, "target": true, "profile": true, "preparation_identity": true, "learner_hashes": true, "mutation_identity": {"$ref": "#/$defs/sha"},
-          "integration": {"type": "object", "additionalProperties": false, "required": ["issue", "branch", "worktree", "commit", "pr", "ci_gate", "review_gate", "merge_sha", "telemetry", "cleanup"], "properties": {
-            "issue": {"type": "integer", "minimum": 1}, "branch": {"type": "string", "minLength": 1}, "worktree": {"type": "string", "minLength": 1}, "commit": {"$ref": "#/$defs/shortSha"}, "pr": {"type": "integer", "minimum": 1}, "ci_gate": {"const": "PASS"}, "review_gate": {"const": "PASS"}, "merge_sha": {"$ref": "#/$defs/shortSha"},
-            "telemetry": {"type": "object", "additionalProperties": false, "required": ["applicable", "receipt"], "properties": {"applicable": {"type": "boolean"}, "receipt": {"type": ["string", "null"]}}},
-            "cleanup": {"type": "object", "additionalProperties": false, "required": ["state"], "properties": {"state": {"const": "COMPLETE"}}}
-          }}
-        }}
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mutation_identity",
+            "diff_sha256",
+            "independent_evidence_sha256",
+            "integration"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "integration"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "mutation_identity": {
+              "$ref": "#/$defs/sha"
+            },
+            "diff_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "independent_evidence_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "integration": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "issue",
+                "branch",
+                "worktree",
+                "commit",
+                "pr",
+                "ci_gate",
+                "review_gate",
+                "merge_sha",
+                "telemetry",
+                "cleanup"
+              ],
+              "properties": {
+                "issue": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "branch": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "worktree": {
+                  "type": "string",
+                  "pattern": "^\\.worktrees/dispatch/[a-z0-9-]+/[a-z0-9-]+$"
+                },
+                "commit": {
+                  "$ref": "#/$defs/shortSha"
+                },
+                "pr": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "ci_gate": {
+                  "const": "PASS"
+                },
+                "review_gate": {
+                  "const": "PASS"
+                },
+                "merge_sha": {
+                  "$ref": "#/$defs/shortSha"
+                },
+                "telemetry": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "applicable",
+                    "receipt"
+                  ],
+                  "properties": {
+                    "applicable": {
+                      "type": "boolean"
+                    },
+                    "receipt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "cleanup": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "COMPLETE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "productionQG": {
       "allOf": [
-        {"$ref": "#/$defs/base"},
-        {"type": "object", "additionalProperties": false, "required": ["qg"], "properties": {
-          "schema_version": true, "kind": {"const": "production-qg"}, "target": true, "profile": true, "preparation_identity": true, "learner_hashes": true,
-          "qg": {"type": "object", "additionalProperties": false, "required": ["adapter", "shadow", "cache_regate", "identity", "reviewer", "raw_response_sha256", "qualification_sha256", "human_arming_sha256", "canary", "budget", "circuit", "run_id", "attempt_id", "completion", "verdict", "findings", "tool_events", "fact_checks"], "properties": {
-            "adapter": {"const": "production-qg.v1"}, "shadow": {"const": false}, "cache_regate": {"const": "available"}, "identity": {"type": "object", "additionalProperties": false, "required": ["gate", "prompt", "checker", "checker_config", "policy", "schema", "tool", "reviewer"], "properties": {"gate": {"$ref": "#/$defs/sha"}, "prompt": {"$ref": "#/$defs/sha"}, "checker": {"$ref": "#/$defs/sha"}, "checker_config": {"$ref": "#/$defs/sha"}, "policy": {"$ref": "#/$defs/sha"}, "schema": {"$ref": "#/$defs/sha"}, "tool": {"$ref": "#/$defs/sha"}, "reviewer": {"$ref": "#/$defs/sha"}}},
-            "reviewer": {"type": "object", "additionalProperties": false, "required": ["family", "model", "route", "lineage"], "properties": {"family": {"type": "string", "minLength": 1}, "model": {"type": "string", "minLength": 1}, "route": {"type": "string", "minLength": 1}, "lineage": {"type": "string", "minLength": 1}}}, "raw_response_sha256": {"$ref": "#/$defs/sha"}, "qualification_sha256": {"$ref": "#/$defs/sha"}, "human_arming_sha256": {"$ref": "#/$defs/sha"},
-            "canary": {"type": "object", "additionalProperties": false, "required": ["status", "route"], "properties": {"status": {"const": "PASS"}, "route": {"type": "string", "minLength": 1}}}, "budget": {"type": "object", "additionalProperties": false, "required": ["status", "cost"], "properties": {"status": {"const": "WITHIN_BUDGET"}, "cost": {"type": "number", "minimum": 0}}}, "circuit": {"const": "CLOSED"}, "run_id": {"type": "string", "minLength": 1}, "attempt_id": {"type": "string", "minLength": 1}, "completion": {"const": "COMPLETE"}, "verdict": {"enum": ["PASS", "FAIL"]},
-            "findings": {"type": "array", "items": {"type": "object"}}, "tool_events": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "tool_name", "output"], "properties": {"id": {"type": "string", "minLength": 1}, "tool_name": {"type": "string", "minLength": 1}, "output": {"type": "string", "minLength": 1}}}}, "fact_checks": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["claim", "verdict"], "properties": {"claim": {"type": "string", "minLength": 1}, "verdict": {"enum": ["CONFIRMED", "UNCONFIRMED"]}, "tool_event_id": {"type": "string"}, "excerpt": {"type": "string"}}}}
-          }}
-        }}
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authorization",
+            "canonical_record",
+            "tier2"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "production-qg"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "authorization": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "identity",
+                "qualification_sha256",
+                "human_arming_sha256"
+              ],
+              "properties": {
+                "identity": {
+                  "type": "object",
+                  "minProperties": 12,
+                  "additionalProperties": {
+                    "$ref": "#/$defs/sha"
+                  }
+                },
+                "qualification_sha256": {
+                  "$ref": "#/$defs/sha"
+                },
+                "human_arming_sha256": {
+                  "$ref": "#/$defs/sha"
+                }
+              }
+            },
+            "canonical_record": {
+              "type": "object"
+            },
+            "tier2": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "completion_status",
+                "dispatch",
+                "payload",
+                "raw_response_sha256",
+                "retry_history",
+                "gate_outcomes"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "completion_status": {
+                  "const": "COMPLETE"
+                },
+                "dispatch": {
+                  "type": "object"
+                },
+                "payload": {
+                  "type": "object"
+                },
+                "raw_response_sha256": {
+                  "$ref": "#/$defs/sha"
+                },
+                "retry_history": {
+                  "type": "array"
+                },
+                "gate_outcomes": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   }

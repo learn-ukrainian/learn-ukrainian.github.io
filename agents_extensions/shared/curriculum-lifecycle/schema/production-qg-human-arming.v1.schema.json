@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision",
+    "actor_type",
+    "profile",
+    "route",
+    "qualification_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "production-qg-human-arming.v1"
+    },
+    "decision": {
+      "const": "ARMED"
+    },
+    "actor_type": {
+      "const": "human"
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "id",
+        "version"
+      ]
+    },
+    "route": {
+      "type": "object"
+    },
+    "qualification_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "verdict",
+    "profile",
+    "identity",
+    "route"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "production-qg-qualification.v1"
+    },
+    "verdict": {
+      "const": "PASS"
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "id",
+        "version"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "minProperties": 12,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "model",
+        "route",
+        "lineage",
+        "canary",
+        "budget",
+        "circuit",
+        "resume"
+      ],
+      "properties": {
+        "family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lineage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget": {
+          "type": "string",
+          "minLength": 1
+        },
+        "circuit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resume": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
