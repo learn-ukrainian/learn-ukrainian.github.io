@@ -335,6 +335,10 @@ def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
                 unknown = sorted(set(option["validators"]) - set(VALIDATORS))
                 if unknown:
                     raise ReadinessError(f"readiness profile {profile_id} uses unknown validators: {unknown}")
+        qg = profile["certification"]["production_qg"]
+        if qg["mode"] == "armed-canary":
+            for key in ("qualification_artifact", "human_arming_artifact"):
+                _repo_file(repo_root, qg[key])
     return config
 
 

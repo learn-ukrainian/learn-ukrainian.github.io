@@ -50,6 +50,19 @@
       "type": "array",
       "items": {"$ref": "#/$defs/review"}
     },
+    "certification_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "value"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/sha"},
+          "value": {"type": "object"}
+        }
+      }
+    },
     "routing": {
       "oneOf": [
         {"type": "null"},

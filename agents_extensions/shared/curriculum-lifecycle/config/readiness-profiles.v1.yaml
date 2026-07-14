@@ -3,6 +3,12 @@ config_version: curriculum-readiness.v1
 selectors:
   tracks:
     bio: bio
+    a1: core
+    a2: core
+    b1: core-b1
+    b2: core-b1
+    c1: core-b1
+    c2: core-b1
   manifest_types:
     core: core
     track: seminar
@@ -11,6 +17,36 @@ profiles:
     version: 1.0.0
     family: core
     prompt_profile: core
+    certification:
+      pbr_adapter: post-build-review.v3
+      pbr_required: true
+      independent_review:
+        required_for_mutation: true
+      integration:
+        required_for_mutation: true
+      production_qg:
+        adapter: production-qg.v1
+        mode: disabled
+    requirements:
+      - id: plan
+        owner: plan
+        options:
+          - artifact: plan
+            validators: [exists, plan-check]
+  core-b1:
+    version: 1.0.0
+    family: core
+    prompt_profile: core
+    certification:
+      pbr_adapter: post-build-review.v3
+      pbr_required: true
+      independent_review:
+        required_for_mutation: true
+      integration:
+        required_for_mutation: true
+      production_qg:
+        adapter: production-qg.v1
+        mode: pending
     requirements:
       - id: plan
         owner: plan
@@ -21,6 +57,16 @@ profiles:
     version: 1.0.0
     family: seminar
     prompt_profile: seminar
+    certification:
+      pbr_adapter: post-build-review.v3
+      pbr_required: true
+      independent_review:
+        required_for_mutation: true
+      integration:
+        required_for_mutation: true
+      production_qg:
+        adapter: production-qg.v1
+        mode: pending
     requirements:
       - id: plan
         owner: plan
@@ -31,6 +77,16 @@ profiles:
     version: 1.0.0
     family: seminar
     prompt_profile: seminar
+    certification:
+      pbr_adapter: post-build-review.v3
+      pbr_required: true
+      independent_review:
+        required_for_mutation: true
+      integration:
+        required_for_mutation: true
+      production_qg:
+        adapter: production-qg.v1
+        mode: pending
     requirements:
       - id: dossier
         owner: preparation

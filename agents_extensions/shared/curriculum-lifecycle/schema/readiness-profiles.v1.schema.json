@@ -35,11 +35,12 @@
     "profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["version", "family", "prompt_profile", "requirements"],
+      "required": ["version", "family", "prompt_profile", "certification", "requirements"],
       "properties": {
         "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
         "family": {"enum": ["core", "seminar"]},
         "prompt_profile": {"enum": ["core", "seminar"]},
+        "certification": {"$ref": "#/$defs/certification"},
         "requirements": {
           "type": "array",
           "minItems": 1,
@@ -60,6 +61,47 @@
           "items": {"$ref": "#/$defs/option"}
         }
       }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pbr_adapter", "pbr_required", "independent_review", "integration", "production_qg"],
+      "properties": {
+        "pbr_adapter": {"const": "post-build-review.v3"},
+        "pbr_required": {"const": true},
+        "independent_review": {"$ref": "#/$defs/mutationGate"},
+        "integration": {"$ref": "#/$defs/mutationGate"},
+        "production_qg": {"$ref": "#/$defs/productionQG"}
+      }
+    },
+    "mutationGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_for_mutation"],
+      "properties": {"required_for_mutation": {"type": "boolean"}}
+    },
+    "productionQG": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter", "mode"],
+      "properties": {
+        "adapter": {"const": "production-qg.v1"},
+        "mode": {"enum": ["disabled", "pending", "armed-canary"]},
+        "qualification_artifact": {"$ref": "#/$defs/repositoryPath"},
+        "human_arming_artifact": {"$ref": "#/$defs/repositoryPath"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "armed-canary"}}},
+          "then": {"required": ["qualification_artifact", "human_arming_artifact"]},
+          "else": {"not": {"anyOf": [{"required": ["qualification_artifact"]}, {"required": ["human_arming_artifact"]}]}}
+        }
+      ]
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
     },
     "option": {
       "type": "object",

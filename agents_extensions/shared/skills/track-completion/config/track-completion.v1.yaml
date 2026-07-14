@@ -2,6 +2,8 @@ workflow_version: 1.0.0
 ledger_schema_version: track-completion.ledger.v1
 config_schema_version: track-completion.config.v1
 manifest_path: curriculum/l2-uk-en/curriculum.yaml
+readiness_profiles_path: agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml
+readiness_profiles_schema_path: agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json
 runtime_root: batch_state/track-completion
 lease_seconds: 86400
 
@@ -112,6 +114,10 @@ identity_paths:
   - agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml
   - agents_extensions/shared/skills/track-completion/schema/progress-ledger.v1.schema.json
   - agents_extensions/shared/skills/track-completion/schema/track-completion-config.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml
+  - agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/certification-evidence.v1.schema.json
+  - agents_extensions/shared/skills/track-completion/scripts/certification_evidence.py
   - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
   - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
   - agents_extensions/shared/skills/post-build-review/contracts/combined-disposition-policy.md
