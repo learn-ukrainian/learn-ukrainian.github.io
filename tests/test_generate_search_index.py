@@ -16,6 +16,7 @@ from scripts.audit.generate_search_index import (
     build_browse_outputs,
     build_index,
     classification_code,
+    guard_browse_staleness,
     main,
 )
 
@@ -398,3 +399,81 @@ def test_legacy_run_refuses_to_overwrite_article_index(tmp_path, monkeypatch) ->
         ]
     )
     assert rc == 0
+
+
+def test_db_mode_writes_browse_artifacts(tmp_path: Path) -> None:
+    db = atlas_db_fixture(tmp_path)
+    search_out = tmp_path / "search.json"
+    aliases_out = tmp_path / "aliases.json"
+    search_shards_out = tmp_path / "search-shards.json"
+    meta_out = tmp_path / "browse-meta.json"
+    flagged_out = tmp_path / "browse-flagged.json"
+    browse_dir = tmp_path / "browse"
+
+    assert (
+        main(
+            [
+                "--db",
+                str(db),
+                "--out",
+                str(search_out),
+                "--aliases-out",
+                str(aliases_out),
+                "--search-shards-out",
+                str(search_shards_out),
+                "--browse-meta-out",
+                str(meta_out),
+                "--browse-flagged-out",
+                str(flagged_out),
+                "--browse-dir",
+                str(browse_dir),
+            ]
+        )
+        == 0
+    )
+
+    _, _, counts = build_atlas_db_search_artifacts(db)
+    meta = json.loads(meta_out.read_text(encoding="utf-8"))
+    flagged = json.loads(flagged_out.read_text(encoding="utf-8"))
+    search_rows = json.loads(search_out.read_text(encoding="utf-8"))
+
+    assert counts["reviewed_entries"] == 2
+    assert len(search_rows) == 2
+    assert meta["schema"] == "atlas-browse-meta"
+    assert meta["total"] == 2
+    assert meta["letterCounts"]["А"] == 1
+    assert meta["letterCounts"]["І"] == 1
+    assert flagged == []
+    assert json.loads((browse_dir / "А.json").read_text(encoding="utf-8")) == [
+        {
+            "l": "автобус",
+            "s": "автобус",
+            "g": "bus",
+            "c": None,
+            "hay": "автобус bus avtobus",
+        },
+    ]
+    assert json.loads((browse_dir / "І.json").read_text(encoding="utf-8")) == [
+        {
+            "l": "Іван",
+            "s": "іван",
+            "g": "Ivan",
+            "c": None,
+            "hay": "іван ivan ivan",
+        },
+    ]
+
+
+def test_browse_staleness_guard_fires_when_browse_would_stay_pinned(tmp_path: Path) -> None:
+    stale_meta = tmp_path / "browse-meta.json"
+    stale_meta.write_text(json.dumps({"total": 1}), encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="browse-meta stale"):
+        guard_browse_staleness(stale_meta, reviewed_article_count=5, will_refresh_browse=False)
+
+
+def test_browse_staleness_guard_allows_refresh_when_browse_will_be_rewritten(tmp_path: Path) -> None:
+    stale_meta = tmp_path / "browse-meta.json"
+    stale_meta.write_text(json.dumps({"total": 1}), encoding="utf-8")
+
+    guard_browse_staleness(stale_meta, reviewed_article_count=5, will_refresh_browse=True)
