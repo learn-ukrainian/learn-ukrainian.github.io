@@ -63,6 +63,11 @@ audit/*-qg-bakeoff*/*.json
 # (audit/2026-07-07-*/, audit/2026-07-08-*/): every NEW dated dir was an
 # untracked-write guard landmine until someone extended this file by hand.
 audit/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*/
+# QG shadow-driver per-module evidence is local-only BY DESIGN (#5186 point 5:
+# "Per-module MD = local evidence, not committed"). The driver writes here in
+# the primary checkout, so without this line every write-capable dispatch in
+# the fleet is blocked by the untracked-write guard while a shadow run exists.
+audit/local-qg-shadow/
 
 
 # Python
