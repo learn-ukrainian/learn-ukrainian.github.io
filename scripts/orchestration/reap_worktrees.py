@@ -287,6 +287,22 @@ def _worktree_age_hours(path: Path, now: float | None = None) -> float | None:
     return ((now or time.time()) - mtime) / 3600
 
 
+def _active_task_ids() -> set[str] | None:
+    try:
+        import urllib.request
+        with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            tasks = data.get("tasks", [])
+            return {str(t.get("task_id")) for t in tasks if t.get("task_id")}
+    except Exception:
+        return None
+
+
+def _is_ancestor_of_origin_main(path: Path) -> bool:
+    proc = _run(["git", "merge-base", "--is-ancestor", "HEAD", "origin/main"], cwd=path)
+    return proc.returncode == 0
+
+
 def _qualifying_reason(
     *,
     repo_root: Path,
@@ -294,21 +310,79 @@ def _qualifying_reason(
     pr_state: PullRequestState | None,
     build_age_hours: float,
     now: float | None,
+    active_ids: set[str] | None = None,
+    safe_only: bool = False,
 ) -> str | None:
-    if pr_state is not None:
-        pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
-        if pr_state.state == "MERGED":
-            return f"{pr_label} MERGED"
-        if pr_state.state == "CLOSED":
-            return f"{pr_label} CLOSED"
+    if info.branch is not None:
+        if pr_state is not None:
+            pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
+            if pr_state.state == "MERGED":
+                return f"{pr_label} MERGED"
+            if pr_state.state == "CLOSED":
+                return f"{pr_label} CLOSED"
 
-    if info.branch and info.branch.startswith("build/"):
-        age_hours = _worktree_age_hours(info.path, now=now)
-        if age_hours is not None and age_hours > build_age_hours:
-            return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
+        if not safe_only:
+            if info.branch.startswith("build/"):
+                age_hours = _worktree_age_hours(info.path, now=now)
+                if age_hours is not None and age_hours > build_age_hours:
+                    return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
 
-    if _origin_matches_head(info.path, info.branch):
-        return f"HEAD matches origin/{info.branch}"
+            if _origin_matches_head(info.path, info.branch):
+                return f"HEAD matches origin/{info.branch}"
+
+    # Class B: detached-HEAD worktrees under .worktrees/
+    is_under_wt = is_under_worktrees(repo_root, info.path)
+    clean = _worktree_clean(info.path)
+    dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
+    is_dispatch_candidate = False
+    task_id = None
+    try:
+        rel_path = info.path.resolve().relative_to(dispatch_root)
+        if len(rel_path.parts) == 2:
+            task_id = rel_path.parts[1]
+            is_dispatch_candidate = True
+    except ValueError:
+        pass
+
+    if is_under_wt and info.detached and clean is True and _is_ancestor_of_origin_main(info.path):
+        has_matching_task = False
+        task_settled = False
+        if is_dispatch_candidate:
+            task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+            if task_file.exists():
+                has_matching_task = True
+                try:
+                    task_data = json.loads(task_file.read_text(encoding="utf-8"))
+                    task_status = task_data.get("status")
+                    if task_status in ("done", "failed") and active_ids is not None and task_id not in active_ids:
+                        task_settled = True
+                except Exception:
+                    pass
+
+        if has_matching_task:
+            if task_settled:
+                return f"detached HEAD ancestor of origin/main; settled dispatch task-id={task_id}"
+        else:
+            age_hours = _worktree_age_hours(info.path, now=now)
+            if age_hours is not None and age_hours > 24.0:
+                return f"detached HEAD ancestor of origin/main; age {age_hours:.1f}h > 24h"
+
+    # Class A: settled-dispatch, no PR
+    if is_dispatch_candidate and clean is True:
+        task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+        if task_file.exists():
+            try:
+                task_data = json.loads(task_file.read_text(encoding="utf-8"))
+                task_status = task_data.get("status")
+                if task_status in ("done", "failed") and active_ids is not None and task_id not in active_ids:
+                    if info.branch:
+                        prs, pr_error = _query_pr_states(repo_root, info.branch)
+                        if pr_error is None and not any(pr.state == "OPEN" for pr in prs):
+                            return f"settled dispatch task-id={task_id} status={task_status}"
+                    else:
+                        return f"settled dispatch task-id={task_id} status={task_status}"
+            except Exception:
+                pass
 
     return None
 
@@ -343,10 +417,11 @@ def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
     return None
 
 
-def _prune_branch(repo_root: Path, branch: str | None) -> str | None:
+def _prune_branch(repo_root: Path, branch: str | None, force: bool = False) -> str | None:
     if not branch:
         return None
-    proc = _run(["git", "branch", "-d", branch], cwd=repo_root)
+    flag = "-D" if force else "-d"
+    proc = _run(["git", "branch", flag, branch], cwd=repo_root)
     if proc.returncode != 0:
         return _format_failure(proc)
     return None
@@ -420,7 +495,7 @@ def _reap_qualified_worktree(
 
     branch_prune_error = None
     if prune_merged_branches and pr_state is not None and pr_state.state == "MERGED":
-        branch_prune_error = _prune_branch(repo_root, info.branch)
+        branch_prune_error = _prune_branch(repo_root, info.branch, force=True)
 
     if branch_prune_error is not None:
         return ReapResult(
@@ -458,11 +533,13 @@ def reap_worktrees(
     prune_merged_branches: bool = False,
     target_paths: list[Path] | None = None,
     now: float | None = None,
+    safe_only: bool = False,
 ) -> list[ReapResult]:
     """Evaluate and optionally reap eligible worktrees."""
     repo_root = repo_root.resolve()
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
+    active_ids = _active_task_ids()
 
     for info in list_git_worktrees(repo_root):
         if targets is not None and info.path.resolve() not in targets:
@@ -478,35 +555,34 @@ def reap_worktrees(
                 )
             )
             continue
-        if info.branch is None:
-            results.append(
-                ReapResult(
-                    path=str(info.path),
-                    branch=None,
-                    action="skipped",
-                    reason="detached or missing branch",
-                    dirty=None,
-                )
-            )
-            continue
 
         dirty_state = _worktree_clean(info.path)
         dirty = None if dirty_state is None else not dirty_state
-        pr_states, pr_error = _query_pr_states(repo_root, info.branch)
-        pr_state = _best_pr(pr_states)
+
+        pr_state = None
+        pr_error = None
+        if info.branch is not None:
+            pr_states, pr_error = _query_pr_states(repo_root, info.branch)
+            pr_state = _best_pr(pr_states)
+
         reason = _qualifying_reason(
             repo_root=repo_root,
             info=info,
             pr_state=pr_state,
             build_age_hours=build_age_hours,
             now=now,
+            active_ids=active_ids,
+            safe_only=safe_only,
         )
         if reason is None:
-            reason = (
-                f"no reap condition matched; {pr_error}"
-                if pr_error
-                else "no reap condition matched"
-            )
+            if info.branch is None:
+                reason = "detached or missing branch"
+            else:
+                reason = (
+                    f"no reap condition matched; {pr_error}"
+                    if pr_error
+                    else "no reap condition matched"
+                )
             results.append(
                 ReapResult(
                     path=str(info.path),
@@ -668,6 +744,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="After removing a MERGED PR worktree, run safe 'git branch -d <branch>'.",
     )
     parser.add_argument(
+        "--safe-only",
+        action="store_true",
+        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors).",
+    )
+    parser.add_argument(
         "--worktree",
         action="append",
         type=Path,
@@ -693,6 +774,7 @@ def main(argv: list[str] | None = None) -> int:
         preserve_then_reap=bool(args.preserve_then_reap),
         prune_merged_branches=bool(args.prune_merged_branches),
         target_paths=args.worktree,
+        safe_only=bool(args.safe_only),
     )
     if args.json:
         print(json.dumps([_result_payload(result) for result in results], indent=2))

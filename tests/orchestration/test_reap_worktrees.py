@@ -18,7 +18,7 @@ def git_env() -> dict[str, str]:
     return {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT")
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
     }
 
 
@@ -262,3 +262,194 @@ def test_dry_run_makes_zero_filesystem_change(
     assert worktree.exists()
     assert git(worktree, "status", "--porcelain") == ""
     assert_main_checkout_unchanged(repo)
+
+
+def test_class_a_settled_dispatch_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "5102-raisa-review-repair"
+    worktree_path = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/5102-raisa", path=worktree_path)
+
+    # Create task JSON
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "done"}), encoding="utf-8"
+    )
+
+    # Mock active set and PR state
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {"codex/5102-raisa": []})
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "settled dispatch" in result.reason
+    assert "task-id=5102-raisa-review-repair" in result.reason
+    assert not worktree_path.exists()
+
+
+def test_class_a_fail_safe_skips(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "5102-raisa-fail"
+    worktree_path = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/5102-raisa-fail", path=worktree_path)
+
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    task_file = tasks_dir / f"{task_id}.json"
+    task_file.write_text(json.dumps({"status": "done"}), encoding="utf-8")
+
+    # Case 1: active task
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
+    patch_gh(monkeypatch, {"codex/5102-raisa-fail": []})
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+    # Case 2: API down
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+    # Case 3: missing task file
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    task_file.unlink()
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+    # Re-create task file for remaining cases
+    task_file.write_text(json.dumps({"status": "running"}), encoding="utf-8")
+
+    # Case 4: task status is not done/failed
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+    # Set status back to done
+    task_file.write_text(json.dumps({"status": "done"}), encoding="utf-8")
+
+    # Case 5: dirty tree
+    (worktree_path / "dirty.txt").write_text("uncommitted change", encoding="utf-8")
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+    # Clean up dirty file
+    (worktree_path / "dirty.txt").unlink()
+
+    # Case 6: branch has open PR
+    patch_gh(monkeypatch, {"codex/5102-raisa-fail": [{"number": 42, "state": "OPEN"}]})
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    assert result_for(results, worktree_path).action == "skipped"
+
+
+def test_class_b_detached_head_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    # Add a detached HEAD worktree
+    worktree_path = repo / ".worktrees" / "detached-wt"
+    git(repo, "worktree", "add", "--detach", str(worktree_path), "main")
+
+    # Set age > 24h
+    now = time.time()
+    old = now - 25 * 3600
+    os.utime(worktree_path, (old, old))
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    # Check it is removed because age > 24h and no matching task
+    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now)
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "detached HEAD ancestor of origin/main" in result.reason
+    assert "age 25.0h > 24h" in result.reason
+    assert not worktree_path.exists()
+
+
+def test_class_b_settled_task_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    # Add detached HEAD under dispatch
+    task_id = "detached-task"
+    worktree_path = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    git(repo, "worktree", "add", "--detach", str(worktree_path), "main")
+
+    # Create task JSON
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "done"}), encoding="utf-8"
+    )
+
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    # Check it is removed even if age is fresh (e.g. 0h) because task is settled
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "detached HEAD ancestor of origin/main; settled dispatch task-id=detached-task" in result.reason
+    assert not worktree_path.exists()
+
+
+def test_class_b_fail_safe_skips(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree_path = repo / ".worktrees" / "detached-wt-fail"
+    git(repo, "worktree", "add", "--detach", str(worktree_path), "main")
+
+    # Case 1: HEAD is not ancestor of origin/main
+    # Create a new commit in the worktree so HEAD is ahead of main (origin/main)
+    git(worktree_path, "commit", "--allow-empty", "-m", "new commit")
+
+    now = time.time()
+    old = now - 25 * 3600
+    os.utime(worktree_path, (old, old))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now)
+    assert result_for(results, worktree_path).action == "skipped"
+
+
+def test_squash_merge_branch_force_delete(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree_path = add_worktree(repo, "codex/squash-merged")
+
+    # Commit a change so that the local branch has a commit not in main.
+    (worktree_path / "change.txt").write_text("change\n", encoding="utf-8")
+    git(worktree_path, "add", "change.txt")
+    git(worktree_path, "commit", "-m", "feat: change")
+
+    patch_gh(monkeypatch, {"codex/squash-merged": [{"number": 101, "state": "MERGED"}]})
+
+    # Run reap with prune_merged_branches=True.
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        prune_merged_branches=True,
+    )
+
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert not worktree_path.exists()
+
+    # Check that the branch was indeed deleted
+    proc = subprocess.run(
+        ["git", "branch", "--list", "codex/squash-merged"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    assert "codex/squash-merged" not in proc.stdout

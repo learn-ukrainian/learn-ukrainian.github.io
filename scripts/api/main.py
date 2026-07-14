@@ -15,6 +15,7 @@ import logging
 import os
 import socket
 import subprocess
+import threading
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -33,6 +34,8 @@ try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
+
+from scripts.orchestration.reap_worktrees import primary_checkout_root, reap_worktrees
 
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
@@ -394,7 +397,72 @@ async def _collect_pipeline_orient_data() -> dict:
     return {"summary": await state_api.state_summary()}
 
 
+_gc_sweep_lock = threading.Lock()
+_gc_sweep_thread: threading.Thread | None = None
+_last_gc_sweep_summary: dict[str, Any] | None = None
+
+
+def _maybe_run_worktree_gc_sweep() -> None:
+    # Check kill switch first
+    kill_switch = os.environ.get("LEARN_UK_WORKTREE_GC", "1")
+    if kill_switch in ("0", "false", "no", "False", "NO"):
+        return
+
+    # Check cache TTL (default 60 minutes)
+    try:
+        interval_min = float(os.environ.get("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "60"))
+    except ValueError:
+        interval_min = 60.0
+    interval_s = interval_min * 60.0
+
+    if cache_get("worktree_gc_sweep", ttl=interval_s) is not None:
+        return
+
+    # Set cache to prevent concurrent triggering
+    cache_set("worktree_gc_sweep", True)
+
+    global _gc_sweep_thread
+    with _gc_sweep_lock:
+        if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
+            return
+        _gc_sweep_thread = threading.Thread(
+            target=_run_worktree_gc_sweep, daemon=True
+        )
+        _gc_sweep_thread.start()
+
+
+def _run_worktree_gc_sweep() -> None:
+    global _last_gc_sweep_summary
+    try:
+        repo_root = primary_checkout_root(PROJECT_ROOT)
+
+        results = reap_worktrees(
+            repo_root=repo_root,
+            apply=True,
+            prune_merged_branches=True,
+            safe_only=True,
+        )
+
+        removed = sum(1 for r in results if r.action in ("removed", "preserved_then_removed"))
+        skipped = sum(1 for r in results if r.action == "skipped")
+        errors = sum(1 for r in results if r.action == "error")
+
+        _last_gc_sweep_summary = {
+            "time": _isoformat_z(datetime.now(UTC)),
+            "removed": removed,
+            "skipped": skipped,
+            "errors": errors,
+        }
+        logger.info(
+            "worktree GC sweep: removed=%d, skipped=%d, errors=%d",
+            removed, skipped, errors
+        )
+    except Exception as exc:
+        logger.exception("worktree GC sweep failed: %s", exc)
+
+
 def _collect_runtime_orient_data() -> dict:
+    _maybe_run_worktree_gc_sweep()
     agents = runtime_api.list_runtime_agents()
     headroom = {}
     for agent_info in agents:
@@ -407,11 +475,15 @@ def _collect_runtime_orient_data() -> dict:
         except Exception:
             ok = False
         headroom[str(name)] = ok
-    return {
+
+    res = {
         "agents": [agent["name"] for agent in agents if agent.get("name")],
         "recent_outcomes": runtime_api.runtime_recent_outcomes_today(),
         "headroom": headroom,
     }
+    if _last_gc_sweep_summary is not None:
+        res["worktree_gc"] = _last_gc_sweep_summary
+    return res
 
 
 def _collect_delegate_orient_data() -> dict:
