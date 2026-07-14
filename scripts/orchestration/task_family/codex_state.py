@@ -1,12 +1,19 @@
-"""Fragile Codex DB reconciliation bridge for cleanup state repair."""
+"""Fragile Codex DB reconciliation bridge for cleanup state repair.
+
+The module is intentionally read-only: it validates that selected Codex task
+threads are already at the required archive state. It never writes to the Codex
+state DB.
+"""
 
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import json
 import re
 import sqlite3
 import time
+import uuid
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -15,7 +22,10 @@ from typing import Any
 
 THREADS_TABLE = "threads"
 THREADS_REQUIRED_COLUMNS = frozenset({"id", "title", "cwd", "archived", "archived_at"})
-STATE_PATTERN = re.compile(r"^state_.*\.sqlite$")
+# Codex uses versioned filenames such as ``state_5.sqlite`` and longer opaque
+# versions.  Discovery deliberately accepts the documented family, not a
+# guessed length or hexadecimal-only subset.
+STATE_PATTERN = re.compile(r"^state_[A-Za-z0-9][A-Za-z0-9._-]*\.sqlite$")
 
 
 class CodexStateError(RuntimeError):
@@ -44,7 +54,7 @@ class CodexStateConflictError(CodexStateError):
 
 @dataclass(frozen=True)
 class ThreadRecord:
-    thread_id: int
+    thread_id: str
     title: str
     cwd: str
     archived: bool
@@ -78,12 +88,22 @@ def _to_text(value: Any) -> str | None:
     return str(value)
 
 
+def _coerce_task_id(raw: Any) -> str:
+    candidate = _to_text(raw)
+    if candidate is None:
+        raise CodexStateContextError("task id is required")
+    try:
+        return str(uuid.UUID(candidate.strip()))
+    except ValueError as exc:
+        raise CodexStateContextError(f"task id must be a UUID: {candidate!r}") from exc
+
+
 def _row_to_record(row: sqlite3.Row, *, has_host: bool) -> ThreadRecord:
     archived = _coerce_bool(row["archived"])
     archived_at = _to_text(row["archived_at"])
     host = row["host"] if has_host else None
     return ThreadRecord(
-        thread_id=int(row["id"]),
+        thread_id=_coerce_task_id(row["id"]),
         title=_to_text(row["title"]) or "",
         cwd=_to_text(row["cwd"]) or "",
         archived=archived,
@@ -110,12 +130,10 @@ def _require_threads_schema(columns: frozenset[str]) -> None:
         raise CodexStateSchemaError(f"missing threads columns: {', '.join(missing)}")
 
 
-def _codex_home_path(codex_home: Path | None) -> Path:
-    return codex_home or (Path.home() / ".codex")
-
-
 def _make_uri(path: Path, mode: str) -> str:
-    return f"file:{path.as_posix()}?mode={mode}"
+    if mode != "ro":
+        raise ValueError("mode must be 'ro'")
+    return f"file:{path.resolve().as_posix()}?mode=ro"
 
 
 def _raise_db_failure(exc: Exception, *, context: str) -> None:
@@ -132,26 +150,24 @@ def open_state_db(
     timeout_seconds: float = 5.0,
     mode: str = "ro",
 ):
-    """Open the bridge DB in strict read-only mode unless writable is requested."""
-    if mode not in {"ro", "rw"}:
-        raise ValueError("mode must be 'ro' or 'rw'")
+    """Open the bridge DB read-only. Mutations are forbidden."""
+    if mode != "ro":
+        raise ValueError("mode must be 'ro'")
 
     uri = _make_uri(path, mode)
-    try:
-        connection = sqlite3.connect(
-            uri,
-            uri=True,
-            timeout=timeout_seconds,
-            check_same_thread=False,
-        )
-    except sqlite3.Error as exc:
-        _raise_db_failure(exc, context="opening DB")
-
+    connection = sqlite3.connect(
+        uri,
+        uri=True,
+        timeout=timeout_seconds,
+        check_same_thread=False,
+    )
     try:
         connection.row_factory = sqlite3.Row
-        if mode == "ro":
-            connection.execute("PRAGMA query_only = ON")
+        connection.execute("PRAGMA query_only = ON")
+        connection.execute(f"PRAGMA busy_timeout = {int(max(0.0, timeout_seconds) * 1000)}")
         yield connection
+    except sqlite3.Error as exc:
+        _raise_db_failure(exc, context="opening DB")
     finally:
         with contextlib.suppress(Exception):
             connection.close()
@@ -163,11 +179,13 @@ def discover_state_database(
     codex_home: Path | None = None,
     timeout_seconds: float = 5.0,
 ) -> Path:
-    """Return explicit DB or the newest unique compatible ``~/.codex/state_*.sqlite``."""
+    """Return explicit DB or the newest compatible ``~/.codex/state_*.sqlite``."""
     if explicit_db_path is not None:
         db_path = Path(explicit_db_path).expanduser()
         if not db_path.exists():
             raise CodexStateDiscoveryError(f"explicit codex DB not found: {db_path}")
+        if not STATE_PATTERN.fullmatch(db_path.name):
+            raise CodexStateContextError(f"invalid Codex DB filename: {db_path.name}")
         with open_state_db(db_path, timeout_seconds=timeout_seconds, mode="ro") as connection:
             tables = _sqlite_tables(connection)
             if not tables:
@@ -178,7 +196,7 @@ def discover_state_database(
             _require_threads_schema(columns)
         return db_path
 
-    home = _codex_home_path(codex_home)
+    home = codex_home or Path.home() / ".codex"
     if not home.exists():
         raise CodexStateDiscoveryError(f"codex home not found: {home}")
 
@@ -222,16 +240,17 @@ def _select_sql(connection: sqlite3.Connection) -> str:
 
 def _read_thread_once(
     db_path: Path,
-    thread_id: int,
+    thread_id: str,
     *,
     timeout_seconds: float = 5.0,
 ) -> ThreadRecord:
+    normalized = _coerce_task_id(thread_id)
     with open_state_db(db_path, timeout_seconds=timeout_seconds, mode="ro") as connection:
         columns = _select_sql(connection)
-        has_host = "host" in columns
+        has_host = "host" in columns.split(", ")
         rows = connection.execute(
             f"select {columns} from {THREADS_TABLE} where id = ? limit 1",
-            (thread_id,),
+            (normalized,),
         ).fetchall()
 
     if not rows:
@@ -241,16 +260,22 @@ def _read_thread_once(
 
 
 def read_thread_record(
-    thread_id: int,
     db_path: Path | str,
     *,
+    thread_id: str | None = None,
+    task_id: str | None = None,
     timeout_seconds: float = 5.0,
     read_window_seconds: float = 0.75,
 ) -> ThreadRecord:
-    """Read one exact thread row with a bounded monotonic read guard."""
+    """Read one exact thread row with a bounded stable sample guard."""
+    if thread_id is None and task_id is None:
+        raise CodexStateContextError("thread_id/task_id is required")
+    task = task_id or thread_id
+    assert task is not None
+
     path = Path(db_path)
     if not path.exists():
-        raise CodexStateMissingTaskError(f"missing task {thread_id} in {path}")
+        raise CodexStateMissingTaskError(f"missing task {task} in {path}")
 
     deadline = time.monotonic() + max(0.0, read_window_seconds)
     stable_sample: ThreadRecord | None = None
@@ -258,7 +283,7 @@ def read_thread_record(
 
     while True:
         try:
-            current = _read_thread_once(path, thread_id, timeout_seconds=timeout_seconds)
+            current = _read_thread_once(path, task, timeout_seconds=timeout_seconds)
         except sqlite3.Error as exc:
             _raise_db_failure(exc, context="reading thread row")
 
@@ -276,14 +301,83 @@ def read_thread_record(
             stable_count = 1
         if time.monotonic() >= deadline:
             raise CodexStateConflictError(
-                f"thread {thread_id} state raced during bounded read window: {db_path}"
+                f"thread {task} state raced during bounded read window: {db_path}"
+            )
+        time.sleep(0.05)
+
+
+def _ensure_archive_shape(record: ThreadRecord, *, archived: bool) -> bool:
+    if archived:
+        return record.archived and bool(record.archived_at and str(record.archived_at).strip())
+    return not record.archived and record.archived_at in (None, "")
+
+
+def _validate_context(
+    record: ThreadRecord,
+    *,
+    expected_title: str,
+    expected_cwd: str,
+    expected_host: str | None,
+) -> None:
+    if record.title != expected_title:
+        raise CodexStateContextError(
+            f"title mismatch for task {record.thread_id}: db={record.title!r}, expected={expected_title!r}"
+        )
+    if record.cwd != expected_cwd:
+        raise CodexStateContextError(
+            f"cwd mismatch for task {record.thread_id}: db={record.cwd!r}, expected={expected_cwd!r}"
+        )
+    if expected_host is not None and record.host != expected_host:
+        raise CodexStateContextError(
+            f"host mismatch for task {record.thread_id}: db={record.host!r}, expected={expected_host!r}"
+        )
+
+
+def await_task_target(
+    *,
+    task_id: str,
+    expected_title: str,
+    expected_cwd: str,
+    expected_archived: bool,
+    db_path: Path | str,
+    expected_host: str | None = None,
+    timeout_seconds: float = 5.0,
+    read_window_seconds: float = 0.75,
+) -> ThreadRecord:
+    """Poll until a task reaches exact archive target or fail closed."""
+    deadline = time.monotonic() + max(0.0, read_window_seconds)
+
+    while True:
+        record = read_thread_record(
+            task_id=task_id,
+            db_path=db_path,
+            timeout_seconds=timeout_seconds,
+            read_window_seconds=min(0.75, read_window_seconds),
+        )
+        _validate_context(record, expected_title=expected_title, expected_cwd=expected_cwd, expected_host=expected_host)
+
+        if record.archived and not record.archived_at:
+            raise CodexStateConflictError(
+                f"conflicting archive shape for task {task_id}: archived=1 and archived_at is NULL"
+            )
+        if (not record.archived) and record.archived_at not in (None, ""):
+            raise CodexStateConflictError(
+                f"conflicting archive shape for task {task_id}: archived=0 and archived_at={record.archived_at!r}"
+            )
+
+        if _ensure_archive_shape(record, archived=expected_archived):
+            return record
+
+        if time.monotonic() >= deadline:
+            raise CodexStateConflictError(
+                f"thread {task_id} state did not reach target within bounded read window: {db_path}"
             )
         time.sleep(0.05)
 
 
 def reconcile_thread_archive(
     *,
-    thread_id: int,
+    thread_id: str,
     expected_title: str,
     expected_cwd: str,
     archived: bool,
@@ -292,82 +386,23 @@ def reconcile_thread_archive(
     archive_now: str | None = None,
     timeout_seconds: float = 5.0,
 ) -> tuple[ThreadRecord, ThreadRecord, bool]:
-    """Reconcile a thread to the target archive state and report mutation status."""
-    path = Path(db_path)
-    before = read_thread_record(thread_id, path, timeout_seconds=timeout_seconds)
-
-    if before.title != expected_title:
-        raise CodexStateContextError(
-            f"title mismatch for task {thread_id}: db={before.title!r}, expected={expected_title!r}"
-        )
-    if before.cwd != expected_cwd:
-        raise CodexStateContextError(
-            f"cwd mismatch for task {thread_id}: db={before.cwd!r}, expected={expected_cwd!r}"
-        )
-    if expected_host is not None and before.host != expected_host:
-        raise CodexStateContextError(
-            f"host mismatch for task {thread_id}: db={before.host!r}, expected={expected_host!r}"
-        )
-
-    if before.archived and before.archived_at in (None, ""):
-        raise CodexStateConflictError(
-            f"conflicting archive shape for task {thread_id}: archived=1 and archived_at is NULL"
-        )
-    if (not before.archived) and before.archived_at not in (None, ""):
-        raise CodexStateConflictError(
-            f"conflicting archive shape for task {thread_id}: archived=0 and archived_at={before.archived_at!r}"
-        )
-
-    target_archived_at = None if not archived else (archive_now or _utc_now())
-    already_target = before.archived == archived and (
-        (archived is False and before.archived_at in (None, ""))
-        or (archived is True and before.archived_at not in (None, ""))
+    """Reconcile expectation: return only when the DB matches the target shape."""
+    del archive_now
+    before = await_task_target(
+        task_id=_coerce_task_id(thread_id),
+        expected_title=expected_title,
+        expected_cwd=expected_cwd,
+        expected_archived=archived,
+        db_path=db_path,
+        expected_host=expected_host,
+        timeout_seconds=timeout_seconds,
     )
-    if already_target:
-        return before, before, False
-
-    where = "id = ? AND title = ? AND cwd = ?"
-    params = [int(bool(archived)), target_archived_at, thread_id, expected_title, expected_cwd]
-    if expected_host is not None:
-        where += " AND host = ?"
-        params.append(expected_host)
-
-    target = None
-    try:
-        with open_state_db(path, timeout_seconds=timeout_seconds, mode="rw") as connection:
-            cursor = connection.execute(
-                f"UPDATE {THREADS_TABLE} SET archived = ?, archived_at = ? WHERE {where}",
-                params,
-            )
-            if cursor.rowcount != 1:
-                raise CodexStateConflictError(f"conflicting update for task {thread_id}")
-            connection.commit()
-            target = read_thread_record(
-                thread_id,
-                path,
-                timeout_seconds=timeout_seconds,
-            )
-    except sqlite3.Error as exc:
-        _raise_db_failure(exc, context=f"reconciling task {thread_id}")
-
-    if target is None:
-        raise CodexStateConflictError(f"could not read task {thread_id} after reconcile")
-
-    if target.archived != archived:
-        raise CodexStateConflictError(f"archive target mismatch for task {thread_id}")
-    if archived and not target.archived_at:
-        raise CodexStateConflictError(f"archive target requires archived_at for task {thread_id}")
-    if (not archived) and target.archived_at not in (None, ""):
-        raise CodexStateConflictError(f"restore target requires archived_at NULL for task {thread_id}")
-    if target.title != expected_title:
-        raise CodexStateConflictError(f"title mismatch after reconcile for task {thread_id}: {target.title!r}")
-
-    return before, target, True
+    return before, before, False
 
 
 def reconcile_thread_restore(
     *,
-    thread_id: int,
+    thread_id: str,
     expected_title: str,
     expected_cwd: str,
     db_path: Path | str,
@@ -388,7 +423,7 @@ def reconcile_thread_restore(
 
 def reconcile_task_thread(
     *,
-    task_id: int,
+    task_id: str,
     action: str,
     expected_title: str,
     expected_cwd: str,
@@ -401,7 +436,7 @@ def reconcile_task_thread(
     verb = action.lower()
     if verb == "archive":
         return reconcile_thread_archive(
-            thread_id=task_id,
+            thread_id=_coerce_task_id(task_id),
             expected_title=expected_title,
             expected_cwd=expected_cwd,
             archived=True,
@@ -412,7 +447,7 @@ def reconcile_task_thread(
         )
     if verb == "restore":
         return reconcile_thread_restore(
-            thread_id=task_id,
+            thread_id=_coerce_task_id(task_id),
             expected_title=expected_title,
             expected_cwd=expected_cwd,
             db_path=db_path,
@@ -456,4 +491,4 @@ def build_reconciliation_payload(
 
 
 def dump_thread_state(record: ThreadRecord) -> dict[str, Any]:
-    return json.loads(json.dumps(record.__dict__))
+    return json.loads(json.dumps(dataclasses.asdict(record)))

@@ -6,8 +6,10 @@ import contextlib
 import fcntl
 import hashlib
 import json
+import os
 import re
 import subprocess
+import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -15,19 +17,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-try:
-    from guardrails.worktree_containment import PROTECTED_BRANCHES, resolve_main_root
-except Exception:  # pragma: no cover - fallback for unit test imports
-    PROTECTED_BRANCHES = frozenset({"main", "master"})
-
-    def resolve_main_root(start: Path | str | None = None) -> Path:
-        cwd = Path(start or Path.cwd())
-        for path in (cwd, *cwd.parents):
-            if (path / ".git").is_dir():
-                return path
-        raise RuntimeError("not in a git repository")
-
 from scripts.common.git_context import sanitized_git_env
+from scripts.guardrails.worktree_containment import (
+    PROTECTED_BRANCHES,
+    resolve_main_root,
+)
 
 
 class GitSafetyError(RuntimeError):
@@ -50,7 +44,7 @@ class LockAcquisitionError(GitSafetyError):
     """Required advisory lock is unavailable."""
 
 
-STATE_FILE_RE = re.compile(r"^[A-Za-z0-9._-]+\.(json|yml|yaml)$")
+STATE_FILE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*\.[A-Za-z0-9]{2,8}$")
 
 
 @dataclass(frozen=True)
@@ -58,6 +52,8 @@ class WorktreeInfo:
     path: Path
     branch: str | None
     head: str | None = None
+    locked: bool = False
+    prunable: bool = False
 
 
 @dataclass(frozen=True)
@@ -106,13 +102,34 @@ def _utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_name, path)
+        directory_fd = os.open(str(path.parent), os.O_DIRECTORY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(temporary_name)
+        raise
+
+
 def resolve_lock_root(repo_root: Path) -> Path:
     root = resolve_main_root(repo_root)
-    return root / ".agent" / "task_family_cleanup" / "locks"
+    return root / ".agent" / "task-families" / "locks"
 
 
 def resolve_state_root(repo_root: Path) -> Path:
-    return resolve_main_root(repo_root) / ".agent" / "task_family_cleanup"
+    return resolve_main_root(repo_root) / ".agent" / "task-families"
 
 
 def _require_existing_root(root: Path) -> None:
@@ -124,8 +141,10 @@ def safe_lock_token(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]", "-", value)
 
 
-def _operation_lock_path(repo_root: Path) -> Path:
-    return resolve_lock_root(repo_root) / "operation.lock"
+def _operation_lock_path(repo_root: Path, operation_id: str | None = None) -> Path:
+    lock_root = resolve_lock_root(repo_root)
+    suffix = f"{safe_lock_token(operation_id)}.lock" if operation_id else "global.lock"
+    return lock_root / f"operation-{suffix}"
 
 
 def _lineage_lock_path(repo_root: Path, lineage_id: str) -> Path:
@@ -157,8 +176,8 @@ def flock(lock_path: Path) -> Iterator[Path]:
 
 
 @contextmanager
-def operation_lock(repo_root: Path):
-    with flock(_operation_lock_path(repo_root)):
+def operation_lock(repo_root: Path, operation_id: str | None = None):
+    with flock(_operation_lock_path(repo_root, operation_id=operation_id)):
         yield
 
 
@@ -194,6 +213,8 @@ def _parse_worktree_porcelain(raw: str) -> list[WorktreeInfo]:
                 path=Path(current["path"]),
                 branch=current.get("branch"),
                 head=current.get("head"),
+                locked=(current.get("locked") == "true"),
+                prunable=(current.get("prunable") == "true"),
             )
         )
         current = None
@@ -216,6 +237,13 @@ def _parse_worktree_porcelain(raw: str) -> list[WorktreeInfo]:
             if branch.startswith("refs/heads/"):
                 branch = branch[len("refs/heads/") :]
             current["branch"] = branch
+            continue
+        if line.startswith("locked"):
+            current["locked"] = "true"
+            continue
+        if line.startswith("prunable"):
+            current["prunable"] = "true"
+            continue
 
     flush()
     return items
@@ -269,20 +297,50 @@ def is_worktree_dirty(worktree: Path) -> bool:
     return bool((proc.stdout or "").strip())
 
 
+def worktree_index_locked(worktree: Path) -> bool:
+    proc = run_git(["rev-parse", "--git-path", "index.lock"], cwd=worktree)
+    if proc.returncode != 0:
+        return False
+    raw = (proc.stdout or "").strip()
+    if not raw:
+        return False
+    path = Path(raw)
+    if not path.is_absolute():
+        path = worktree / path
+    try:
+        return path.exists()
+    except OSError:
+        return False
+
+
 def is_worktree_locked(repo_root: Path, worktree: Path) -> bool:
-    return _worktree_lock_path(repo_root, worktree).exists()
+    """Return real Git lock evidence, never our advisory-lock file's existence."""
+    canonical = worktree.resolve()
+    for item in worktree_list(repo_root):
+        if item.path.resolve() == canonical:
+            return item.locked or item.prunable or worktree_index_locked(worktree)
+    return worktree_index_locked(worktree)
 
 
 def active_jobs_or_leases(repo_root: Path, lineage_id: str | None = None) -> list[Path]:
     state_root = resolve_state_root(repo_root)
     entries: list[Path] = []
-    for kind in ("jobs", "leases"):
-        for path in sorted((state_root / kind).glob("*")):
-            if not path.is_file() or not STATE_FILE_RE.match(path.name):
-                continue
-            if lineage_id is not None and lineage_id not in path.name:
-                continue
-            entries.append(path)
+    for path in sorted((state_root / "jobs").glob("*")):
+        if not path.is_file() or not STATE_FILE_RE.match(path.name):
+            continue
+        if lineage_id is not None and lineage_id not in path.name:
+            continue
+        entries.append(path)
+    for path in sorted((state_root / "leases").glob("*")):
+        if not path.is_file() or not STATE_FILE_RE.match(path.name):
+            continue
+        if lineage_id is not None and lineage_id not in path.name:
+            continue
+        entries.append(path)
+    for path in sorted(state_root.glob("*/operations/*/state.json")):
+        if not STATE_FILE_RE.match(path.name):
+            continue
+        entries.append(path)
     return entries
 
 
@@ -311,10 +369,30 @@ def _repo_owner_and_name(repo_root: Path) -> tuple[str, str]:
     return owner, name
 
 
+def _github_repo_default_branch(repo_root: Path) -> str:
+    proc = run_gh(
+        ["repo", "view", "--json", "defaultBranchRef"],
+        cwd=repo_root,
+    )
+    if proc.returncode != 0:
+        raise GitHubQueryError("github repo query failed")
+    try:
+        payload = json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError as exc:
+        raise GitHubQueryError("invalid JSON from github repo query") from exc
+    if not isinstance(payload, dict):
+        raise GitHubQueryError("invalid github repo payload type")
+    ref = payload.get("defaultBranchRef")
+    default_branch = ref.get("name") if isinstance(ref, dict) else None
+    if not isinstance(default_branch, str) or not default_branch:
+        raise GitHubQueryError("missing default branch in github repo payload")
+    return default_branch
+
+
 def remote_protected_branches(repo_root: Path, *, timeout: float = 30.0) -> set[str]:
     owner, name = _repo_owner_and_name(repo_root)
     proc = run_gh(
-        ["api", f"repos/{owner}/{name}/branches", "--paginate", "--json", "name,protected"],
+        ["api", "--paginate", "--slurp", f"repos/{owner}/{name}/branches?per_page=100"],
         cwd=repo_root,
         timeout=timeout,
     )
@@ -326,15 +404,19 @@ def remote_protected_branches(repo_root: Path, *, timeout: float = 30.0) -> set[
         raise GitHubQueryError("invalid JSON from protected-branch query") from exc
     if not isinstance(payload, list):
         raise GitHubQueryError("invalid protected-branch payload")
+    pages = payload if not payload or isinstance(payload[0], list) else [payload]
     protected: set[str] = set()
-    for item in payload:
-        if not isinstance(item, dict):
-            raise GitHubQueryError("invalid protected-branch item")
-        name = item.get("name")
-        if not isinstance(name, str) or not name:
-            continue
-        if item.get("protected") is True:
-            protected.add(name)
+    for page in pages:
+        if not isinstance(page, list):
+            raise GitHubQueryError("invalid protected-branch page")
+        for item in page:
+            if not isinstance(item, dict):
+                raise GitHubQueryError("invalid protected-branch item")
+            name = item.get("name")
+            if not isinstance(name, str) or not name:
+                continue
+            if item.get("protected") is True:
+                protected.add(name)
     return protected
 
 
@@ -360,14 +442,7 @@ def is_protected_branch(
 
 
 def repo_default_branch(repo_root: Path) -> str:
-    proc = run_git(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], cwd=repo_root)
-    if proc.returncode != 0:
-        proc = run_git(["branch", "--show-current"], cwd=repo_root)
-    _require_success(proc, context="cannot discover default branch")
-    ref = (proc.stdout or "").strip()
-    if ref.startswith("origin/"):
-        return ref.split("/", 1)[1]
-    return ref
+    return _github_repo_default_branch(repo_root)
 
 
 def ensure_clean_base(repo_root: Path, base_branch: str) -> None:
@@ -377,7 +452,12 @@ def ensure_clean_base(repo_root: Path, base_branch: str) -> None:
     if current != base_branch:
         raise GitSafetyError(f"active branch is {current!r}, expected protected base {base_branch!r}")
 
-    proc = run_git(["rev-list", "--left-right", "--count", f"origin/{base_branch}...{base_branch}"], cwd=repo_root)
+    proc = run_git([
+        "rev-list",
+        "--left-right",
+        "--count",
+        f"origin/{base_branch}...{base_branch}",
+    ], cwd=repo_root)
     if proc.returncode != 0:
         raise GitSafetyError(f"cannot verify base branch up-to-date for {base_branch}")
     if (proc.stdout or "").strip() not in {"0\t0", "0 0"}:
@@ -390,7 +470,66 @@ def assert_primary_checkout(repo_root: Path) -> None:
         raise GitSafetyError("operation must execute from primary checkout")
 
 
-def query_pr_by_head(repo_root: Path, *, branch: str, timeout: float = 30.0) -> dict[str, Any]:
+def _normalize_merge_commit(raw: Any) -> str:
+    if isinstance(raw, str):
+        value = raw.strip()
+        if value:
+            return value
+        raise GitSafetyError("PR payload missing merge commit SHA")
+    if isinstance(raw, dict):
+        value = raw.get("oid") or raw.get("sha") or raw.get("id")
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    raise GitSafetyError("PR payload merge commit not provided")
+
+
+def _normalize_pr_payload(payload: Any) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise GitHubQueryError("unexpected pr payload shape")
+    data = {
+        "number": payload.get("number"),
+        "state": str(payload.get("state") or "").upper(),
+        "head_ref_oid": str(payload.get("headRefOid") or "").strip(),
+        "head_ref_name": str(payload.get("headRefName") or "").strip(),
+        "base_ref_name": str(payload.get("baseRefName") or "").strip(),
+        "merge_state_status": str(payload.get("mergeStateStatus") or "").strip(),
+        "is_cross_repository": bool(payload.get("isCrossRepository")),
+        "merge_commit": _normalize_merge_commit(payload.get("mergeCommit")),
+    }
+    if not data["head_ref_oid"]:
+        raise GitHubQueryError("PR payload missing headRefOid")
+    return data
+
+
+def query_pr_by_head(
+    repo_root: Path,
+    *,
+    branch: str,
+    pr_number: int | None = None,
+    timeout: float = 30.0,
+) -> dict[str, Any]:
+    if pr_number is not None:
+        proc = run_gh(
+            [
+                "pr",
+                "view",
+                str(pr_number),
+                "--json",
+                "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository",
+            ],
+            cwd=repo_root,
+            timeout=timeout,
+        )
+        if proc.returncode != 0:
+            raise GitHubQueryError(f"gh pr view failed for #{pr_number}")
+        try:
+            payload = json.loads(proc.stdout or "{}")
+        except json.JSONDecodeError as exc:
+            raise GitHubQueryError("invalid JSON from gh pr view") from exc
+        if str(payload.get("headRefName") or "") != branch:
+            raise GitHubQueryError(f"PR #{pr_number} head mismatch for branch {branch}")
+        return _normalize_pr_payload(payload)
+
     proc = run_gh(
         [
             "pr",
@@ -417,24 +556,42 @@ def query_pr_by_head(repo_root: Path, *, branch: str, timeout: float = 30.0) -> 
         raise GitHubQueryError(f"no PR found for head {branch}")
     if len(items) != 1:
         raise GitHubQueryError(f"ambiguous PR lookup for head {branch}")
-    pr = items[0]
-    if not isinstance(pr, dict):
-        raise GitHubQueryError("malformed PR payload item")
-    return pr
+    if not isinstance(items[0], dict):
+        raise GitHubQueryError("unexpected pr payload shape")
+    return _normalize_pr_payload(items[0])
 
 
-def assert_pr_is_merged(pr: dict[str, Any]) -> str:
-    state = str(pr.get("state") or "").upper()
-    if state != "MERGED":
-        raise GitSafetyError(f"PR is not merged: {state or 'MISSING'}")
-    head_ref = str(pr.get("headRefOid") or "")
-    if not head_ref:
-        raise GitSafetyError("PR payload missing headRefOid")
-    if str(pr.get("isCrossRepository")) not in {"", "False", "false"} and pr.get("isCrossRepository") is True:
+def assert_pr_is_merged(
+    pr: dict[str, Any],
+    *,
+    expected_number: int | None = None,
+    expected_branch: str | None = None,
+    expected_head: str | None = None,
+    expected_base: str | None = None,
+) -> tuple[str, str, str]:
+    if pr.get("state") != "MERGED":
+        raise GitSafetyError(f"PR is not merged: {pr.get('state', 'MISSING')!r}")
+    if pr.get("merge_state_status") and str(pr["merge_state_status"]).upper() not in {"CLEAN", "UNKNOWN"}:
+        raise GitSafetyError(f"PR merge state is {pr.get('merge_state_status')!r}")
+    if pr.get("is_cross_repository"):
         raise GitSafetyError("PR must not be cross-repository")
-    if not isinstance(pr.get("mergeCommit"), str) or not pr["mergeCommit"].strip():
-        raise GitSafetyError("PR payload missing merge commit SHA")
-    return str(pr["mergeCommit"]).strip()
+    number = int(pr.get("number", 0) or 0)
+    if expected_number is not None and number and number != expected_number:
+        raise GitSafetyError(
+            f"PR number mismatch: expected {expected_number!r}, got {pr.get('number')!r}"
+        )
+    head_ref_name = pr.get("head_ref_name")
+    if expected_branch is not None and head_ref_name != expected_branch:
+        raise GitSafetyError(f"PR head branch mismatch: expected {expected_branch!r}, got {head_ref_name!r}")
+    if expected_head is not None and pr.get("head_ref_oid") != expected_head:
+        raise GitSafetyError(
+            f"PR head mismatch: expected {expected_head!r}, got {pr.get('head_ref_oid')!r}"
+        )
+    if expected_base is not None and str(pr.get("base_ref_name") or "") != expected_base:
+        raise GitSafetyError(
+            f"PR base mismatch: expected {expected_base!r}, got {pr.get('base_ref_name')!r}"
+        )
+    return str(number), str(pr["head_ref_oid"]), pr["merge_commit"]
 
 
 def local_branch_head(repo_root: Path, branch: str) -> str:
@@ -443,8 +600,18 @@ def local_branch_head(repo_root: Path, branch: str) -> str:
     return (proc.stdout or "").strip()
 
 
+def local_branch_exists(repo_root: Path, branch: str) -> bool:
+    proc = run_git(["show-ref", "--verify", "--quiet", f"refs/heads/{branch}"], cwd=repo_root)
+    return proc.returncode == 0
+
+
+def _local_branch_exists(repo_root: Path, branch: str) -> bool:
+    return local_branch_exists(repo_root, branch)
+
+
 def remote_branch_present(repo_root: Path, branch: str) -> bool:
-    proc = run_git(["ls-remote", "--heads", "--exit-code", "origin", branch], cwd=repo_root)
+    ref = branch if branch.startswith("refs/heads/") else f"refs/heads/{branch}"
+    proc = run_git(["ls-remote", "--heads", "--exit-code", "origin", ref], cwd=repo_root)
     if proc.returncode == 0:
         return bool((proc.stdout or "").strip())
     if proc.returncode == 2:
@@ -481,7 +648,11 @@ def build_bundle(
     assert_no_unknown_branch_mutation(repo_root, branch)
     bundle_dir.mkdir(parents=True, exist_ok=True)
     bundle_path = bundle_dir / f"{safe_lock_token(branch)}.bundle"
-    proc = run_git(["bundle", "create", str(bundle_path), f"refs/heads/{branch}"], cwd=repo_root, timeout=timeout)
+    proc = run_git(
+        ["bundle", "create", str(bundle_path), f"refs/heads/{branch}"],
+        cwd=repo_root,
+        timeout=timeout,
+    )
     _require_success(proc, context=f"bundle create failed for {branch}")
     verify_bundle(bundle_path, branch=branch, repo_root=repo_root, timeout=timeout)
     return BundleReceipt(
@@ -535,23 +706,17 @@ def remove_worktree(repo_root: Path, worktree: Path) -> None:
     _require_success(proc, context=f"git worktree remove failed: {worktree}")
 
 
-def _assert_lock_present(path: Path) -> None:
-    if not path.exists():
-        raise GitSafetyError(f"required lock missing: {path}")
-
-
 def verify_frozen_preconditions(
     repo_root: Path,
     *,
+    operation_id: str | None,
     lineage_id: str,
     family: str,
     worktree: Path,
 ) -> None:
-    _assert_lock_present(_operation_lock_path(repo_root))
-    _assert_lock_present(_lineage_lock_path(repo_root, lineage_id))
-    _assert_lock_present(_family_lock_path(repo_root, family))
-    _assert_lock_present(_worktree_lock_path(repo_root, worktree))
-    assert_no_active_jobs_or_leases(repo_root, lineage_id=lineage_id)
+    # Advisory locks are held by the caller.  Their files are not Git locks and
+    # existence alone is not live-lock evidence.
+    del operation_id, lineage_id, family
     if is_worktree_permanent(repo_root, worktree):
         raise GitSafetyError(f"worktree is primary checkout and cannot be removed: {worktree}")
 
@@ -561,11 +726,17 @@ def verify_worktree_candidate(
     *,
     worktree: Path,
     branch: str,
+    explicit_family: str | None = None,
+    planned_family: str | None = None,
 ) -> None:
+    if explicit_family is not None and planned_family is not None and explicit_family != planned_family:
+        raise GitSafetyError(f"family mismatch for {worktree}: {explicit_family!r} != {planned_family!r}")
     if not is_worktree_registered(repo_root, worktree):
         raise GitSafetyError(f"worktree is not registered: {worktree}")
     if is_worktree_shared(repo_root, worktree):
         raise GitSafetyError(f"worktree is shared: {worktree}")
+    if is_worktree_locked(repo_root, worktree):
+        raise GitSafetyError(f"worktree is locked: {worktree}")
     if is_worktree_permanent(repo_root, worktree):
         raise GitSafetyError(f"worktree is primary checkout: {worktree}")
     if is_worktree_dirty(worktree):
@@ -587,21 +758,19 @@ def assert_branch_deletion_preconditions(
     require_remote_gone: bool = True,
     allow_current_head: bool = False,
     worktree_registered: bool = False,
-) -> str:
+    expected_head: str | None = None,
+) -> tuple[str, str, str]:
     assert_no_unknown_branch_mutation(repo_root, branch, explicit_protected=explicit_protected)
     assert_bundle_matches_receipt(bundle, branch=branch)
-    merge_commit = assert_pr_is_merged(pr_data)
-    pr_head_oid = str(pr_data.get("headRefOid") or "")
-    if not pr_head_oid:
-        raise GitSafetyError("PR payload missing headRefOid")
+    pr_number, pr_head_oid, merge_commit = assert_pr_is_merged(
+        pr_data,
+        expected_branch=branch,
+        expected_head=expected_head,
+    )
     local_head = local_branch_head(repo_root, branch)
     if local_head != pr_head_oid:
         raise GitSafetyError(
             f"local branch head mismatch for {branch}: local {local_head!r}, pr head {pr_head_oid!r}"
-        )
-    if not allow_current_head and local_head == merge_commit:
-        raise GitSafetyError(
-            f"local branch head equals PR merge commit for {branch}: {local_head!r}"
         )
     if require_remote_gone and remote_branch_present(repo_root, branch):
         raise GitSafetyError(f"remote branch still present: {branch}")
@@ -611,10 +780,13 @@ def assert_branch_deletion_preconditions(
     _require_success(proc, context="cannot determine active checkout branch")
     if proc.stdout.strip() == branch:
         raise GitSafetyError(f"cannot delete currently checked out branch: {branch}")
-    return merge_commit
+    return pr_number, pr_head_oid, merge_commit
 
 
 def delete_branch(repo_root: Path, *, branch: str, require_force: bool = False) -> None:
-    _ = require_force
+    del require_force
+    # Squash/rebase GitHub merges need not make the local branch an ancestor of
+    # the checkout.  Preconditions above are the authority; worktree removal is
+    # never forced.
     proc = run_git(["branch", "-D", branch], cwd=repo_root)
     _require_success(proc, context=f"git branch deletion failed for {branch}")
