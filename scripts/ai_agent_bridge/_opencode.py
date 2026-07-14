@@ -492,12 +492,21 @@ def _strip_gemma_thought(text: str) -> str:
 class OpencodeStreamParse:
     """One-pass parse of an opencode ``--format json`` (NDJSON) stream.
 
-    ``text`` is the assistant's final answer (same value the thin
-    :func:`_parse_opencode_ndjson` wrapper returns). ``tool_events`` is the
-    deduped, ordered tuple of MCP/tool invocations the model made during the
-    run — the per-run observability the tool-theatre and grounding gates
-    (#2156) are built on. Each event is a minimal
-    ``{tool, input, status, tool_call_id, output}`` dict.
+    ``text`` is the model's *complete final output*: the last assistant
+    message (post any tool-using steps / narration) when the opencode agent
+    loop emits multiple assistant turns; falls back to the single/only
+    message or raw stdout. This is the value the thin
+    :func:`_parse_opencode_ndjson` wrapper returns for ask-*-one-shots.
+    We deliberately return the LAST assistant message (not the first
+    streamed chunk and not a cross-turn concatenation) because the reply
+    of record for a one-shot bridge ask (ask-glm, ask-pool, ...) must be
+    the model's terminal substantive answer, not preamble narration such
+    as "Let me fetch…". See #5091.
+
+    ``tool_events`` is the deduped, ordered tuple of MCP/tool invocations
+    the model made during the run — the per-run observability the
+    tool-theatre and grounding gates (#2156) are built on. Each event is
+    a minimal ``{tool, input, status, tool_call_id, output}`` dict.
     """
 
     text: str
@@ -705,13 +714,27 @@ def _parse_opencode_stream(stdout: str) -> OpencodeStreamParse:
     """Parse an opencode NDJSON stream ONCE into text + deduped tool events.
 
     Assistant text lives in ``type == "text"`` events (``part.text``); tool
-    invocations live in ``type in {"tool", "tool_use"}`` events. Tool events are
-    deduped by ``(tool, input-json)`` keeping the FINAL status (opencode may emit
-    the same call multiple times as it transitions pending -> completed) while
-    preserving first-seen order. Falls back to raw (stripped) stdout for text if
-    no text parts parse — robust to opencode format drift.
+    invocations live in ``type in {"tool", "tool_use"}`` events.
+
+    Per the opencode stream contract for agent/tool-using runs (pool/glm
+    default agent; ask-glm/ask-pool one-shots), a single ``run`` can emit
+    multiple assistant generations: an initial "narration" assistant message
+    ("Let me fetch…", "I'll read the design…") followed (after tool results)
+    by a subsequent final assistant message containing the substantive
+    answer. We return only the *last* assistant message's concatenated text
+    parts as ``text`` (the model's complete final output), never the first
+    streamed chunk. This is the correct capture layer for bridge one-shot
+    replies (process-ask path and direct ask-glm/ask-pool). Cross-turn
+    gluing is avoided; single-turn streams are unaffected.
+
+    Tool events are deduped by ``(tool, input-json)`` keeping the FINAL
+    status (opencode may emit the same call multiple times as it transitions
+    pending -> completed) while preserving first-seen order. Falls back to
+    raw (stripped) stdout for text if no text parts parse — robust to
+    opencode format drift.
     """
-    chunks: list[str] = []
+    current_turn: list[str] = []
+    assistant_messages: list[str] = []
     deduped: dict[str, dict] = {}
     for raw_line in stdout.splitlines():
         line = raw_line.strip()
@@ -726,24 +749,52 @@ def _parse_opencode_stream(stdout: str) -> OpencodeStreamParse:
             part = event.get("part") or {}
             text = part.get("text")
             if isinstance(text, str):
-                chunks.append(text)
+                current_turn.append(text)
             continue
         if event_type in ("tool", "tool_use"):
+            if current_turn:
+                # Commit the just-finished assistant turn (e.g. preamble)
+                # before processing the tool that followed it.
+                msg = "".join(current_turn).strip()
+                if msg:
+                    assistant_messages.append(msg)
+                current_turn = []
             extracted = _extract_tool_event(event)
             if extracted is not None:
                 # Overwrite keeps the FINAL status; dict order keeps first-seen.
                 deduped[_tool_event_key(extracted)] = extracted
+            continue
+        if event_type in ("step_finish", "step_start"):
+            if current_turn:
+                msg = "".join(current_turn).strip()
+                if msg:
+                    assistant_messages.append(msg)
+                current_turn = []
+            continue
 
-    parsed = "".join(chunks).strip()
+    if current_turn:
+        msg = "".join(current_turn).strip()
+        if msg:
+            assistant_messages.append(msg)
+
+    # Reply of record = LAST substantive assistant message (final output),
+    # not first streamed chunk. This fixes the one-shot opencode capture
+    # for multi-step tasks (ask-glm, ask-pool via process-ask). Refs #5091.
+    parsed = next((m for m in reversed(assistant_messages) if m), "") if assistant_messages else ""
+
     text = parsed if parsed else stdout.strip()
     return OpencodeStreamParse(text=text, tool_events=tuple(deduped.values()))
 
 
 def _parse_opencode_ndjson(stdout: str) -> str:
-    """Extract the assistant's final text from opencode ``--format json`` output.
+    """Extract the model's complete *final* output (last assistant message)
+    from opencode ``--format json`` output.
 
     Thin ``.text`` wrapper over :func:`_parse_opencode_stream` — signature kept
-    ``-> str`` because ~8 bridge call sites (ask_gemma/ask_pool/ask_glm/...) and
-    their tests assume a plain string.
+    ``-> str`` because ~8 bridge call sites (ask_gemma/ask_pool/ask_glm/ask-opencode
+    and process-ask paths) and their tests assume a plain string.
+
+    The selection of LAST (not first) message is the fix for the capture
+    defect in the opencode ask lane. See _parse_opencode_stream and #5091.
     """
     return _parse_opencode_stream(stdout).text

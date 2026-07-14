@@ -187,3 +187,41 @@ def test_ask_glm_honors_model_override_when_not_ci(monkeypatch):
     ):
         ask_glm("hi", task_id="t", model="openrouter/z-ai/glm-5.2")
         assert inv.call_args[0][1] == "openrouter/z-ai/glm-5.2"
+
+
+# --- capture fix for multi-message streams (first vs last assistant msg) ---
+
+
+def test_parse_ndjson_multi_message_stream_yields_last_substantive_message():
+    """'capture fixed' deterministic check for #5091.
+
+    Synthetic multi-message (preamble narration + final after "tool" turn)
+    stream must return a reply containing the LAST substantive message,
+    not the first streamed assistant message (narration/prefix).
+    """
+    stream = "\n".join(
+        [
+            '{"type":"text","part":{"type":"text","text":"I\'ll read the design document first..."}}',
+            '{"type":"tool_use","part":{"type":"tool","tool":"read","callID":"c1","state":{"status":"completed","input":{"path":"foo.md"},"output":"..."}}}',
+            '{"type":"text","part":{"type":"text","text":"Here is the full review:\\n\\n## Summary\\nPASS with evidence on lines 12-34."}}',
+            '{"type":"step_finish","part":{"reason":"stop"}}',
+        ]
+    )
+    result = _parse_opencode_ndjson(stream)
+    assert "Here is the full review" in result
+    assert "PASS with evidence" in result
+    # Must NOT be just the first (preamble) message.
+    assert "I'll read the design document first" not in result
+    assert result.strip().startswith("Here is the full review")
+
+
+def test_parse_ndjson_single_message_no_regression():
+    """No regression on single-message replies (the common non-tool case)."""
+    stream = "\n".join(
+        [
+            '{"type":"step_start","part":{}}',
+            '{"type":"text","part":{"type":"text","text":"Single complete answer here."}}',
+            '{"type":"step_finish","part":{"reason":"stop"}}',
+        ]
+    )
+    assert _parse_opencode_ndjson(stream) == "Single complete answer here."
