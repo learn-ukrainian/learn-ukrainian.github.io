@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -310,6 +311,68 @@ def test_cached_anchor_fill_runs_only_for_newly_promoted_entries(tmp_path: Path,
 
     assert result.cached_anchor_fills == ("мама",)
     assert result.anchorless_promoted == ()
+
+
+def test_cached_anchor_fill_touches_only_translation_and_sources(tmp_path: Path, monkeypatch) -> None:
+    entry: dict[str, object] = {
+        "lemma": "перезавантаження",
+        "url_slug": "перезавантаження",
+        "primary_source": "content_lexicon_grow",
+        "enrichment": {
+            "cefr": {"level": "C1", "source": "fixture"},
+            "sources": ["fixture"],
+        },
+    }
+    before = deepcopy(entry)
+    cache = {
+        "lookups": {
+            "ukreng": {
+                "dictionary_slug": "ukreng",
+                "text": "перезавантаження комп. rebooting",
+                "source_url": "https://slovnyk.me/dict/ukreng/перезавантаження",
+            }
+        }
+    }
+    monkeypatch.setattr(promote, "_slovnyk_cache_path", lambda _lemma: tmp_path / "cache.json")
+    monkeypatch.setattr(promote, "_load_slovnyk_cache_file", lambda _path: cache)
+
+    filled, anchorless = promote._fill_cached_anchors_for_new_entries([entry])
+
+    assert (filled, anchorless) == (("перезавантаження",), ())
+    assert entry.keys() == before.keys()
+    assert entry["enrichment"] == {
+        **before["enrichment"],
+        "translation": {
+            "en": ["rebooting"],
+            "source": "slovnyk.me: Українсько-англійський словник",
+            "source_url": "https://slovnyk.me/dict/ukreng/перезавантаження",
+        },
+        "sources": ["fixture", "slovnyk.me: Українсько-англійський словник"],
+    }
+
+
+def test_format_summary_names_publish_backstop_only_for_anchorless_promotions() -> None:
+    base = promote.PromotionResult(
+        candidates_found=True,
+        promoted=("мама",),
+        skipped_existing=(),
+        held=(),
+        cached_anchor_fills=(),
+        anchorless_promoted=(),
+        lemmas_total=1,
+        manifest_written=True,
+        fingerprint_written=True,
+        needs_review_written=True,
+        dry_run=False,
+    )
+
+    assert "#5138 publish gate" not in promote.format_summary(base)
+    anchorless = promote.PromotionResult(
+        **{**base.__dict__, "anchorless_promoted": ("мама",)}
+    )
+    summary = promote.format_summary(anchorless)
+    assert "#5138 publish gate blocks old_gate_no_english_anchor regression" in summary
+    assert "live baseline unless --allow-richness-regression has a recorded reason" in summary
 
 
 def test_gate_failure_aborts_without_writing(tmp_path: Path, monkeypatch) -> None:

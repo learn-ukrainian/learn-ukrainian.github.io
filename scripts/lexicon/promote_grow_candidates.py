@@ -5,7 +5,10 @@ Phase 2 writes ``data/lexicon/grow_candidates.json`` with a confidence split:
 ``auto_merge`` entries are dictionary-grounded and safe to promote, while
 ``needs_review`` entries are held for a human. This script promotes only the
 clean bucket, validates the prospective manifest before writing it, and leaves
-the held set as a local PR-body artifact.
+the held set as a local PR-body artifact.  Entries still lacking a learner-English
+anchor remain visible promotion debt: the curation ledger records it, while the
+#5138 publish gate enforces the downstream ``old_gate_no_english_anchor``
+richness-regression backstop against the live baseline.
 """
 
 from __future__ import annotations
@@ -82,6 +85,7 @@ class PromotionResult:
     promoted: tuple[str, ...]
     skipped_existing: tuple[str, ...]
     held: tuple[HeldLemma, ...]
+    # Deterministic per input order (canonical for the sorted content-grower path).
     cached_anchor_fills: tuple[str, ...]
     anchorless_promoted: tuple[str, ...]
     lemmas_total: int | None
@@ -164,6 +168,8 @@ def promote_grow_candidates(
         promoted.append(lemma)
         newly_promoted_entries.append(entry)
 
+    # Fill before validation: the prospective gate must inspect the exact post-fill
+    # manifest state that would ship, including its translation/source enrichment.
     cached_anchor_fills, anchorless_promoted = _fill_cached_anchors_for_new_entries(
         newly_promoted_entries
     )
@@ -262,6 +268,11 @@ def format_summary(result: PromotionResult, *, report: bool = False, candidates_
             f"Needs-review written: {str(result.needs_review_written).lower()}",
         ]
     )
+    if result.anchorless_promoted:
+        lines.append(
+            "Backstop: #5138 publish gate blocks old_gate_no_english_anchor regression "
+            "against the live baseline unless --allow-richness-regression has a recorded reason."
+        )
     if report:
         if result.promoted:
             lines.append("Promoted lemmas:")
@@ -434,6 +445,8 @@ def _fill_cached_anchors_for_new_entries(
     The helper deliberately reads the pre-existing slovnyk cache and never
     fetches or invents glosses.  Any remaining lemma is returned so callers
     must preserve it in the next curation ledger instead of hiding search debt.
+    The #5138 publish gate remains the hard backstop for an
+    ``old_gate_no_english_anchor`` regression against the live baseline.
     """
     filled: list[str] = []
     anchorless: list[str] = []
