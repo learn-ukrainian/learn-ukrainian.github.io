@@ -646,7 +646,9 @@ def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
     text = (
         "Прийняте дослідницьке досьє встановлює межу. "
-        "Однак доступний пакет не подає тексту виступу."
+        "Однак доступний пакет не подає тексту виступу. "
+        "Проєктний літературний корпус підтвердив цитату. "
+        "У цьому пошуку не знайдено листа."
     )
 
     findings = pbr.scan_learner_workflow_leakage(
@@ -656,9 +658,15 @@ def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
 
     assert {finding["category"] for finding in findings} == {"learner_workflow_leakage"}
     assert {finding["severity"] for finding in findings} == {"medium"}
+    assert {finding["evidence"] for finding in findings} == {
+        "Прийняте дослідницьке досьє",
+        "доступний пакет",
+        "Проєктний літературний корпус",
+        "У цьому пошуку не знайдено",
+    }
 
 
-def test_malyshko_regression_detects_current_workflow_leakage() -> None:
+def test_malyshko_regression_has_no_current_workflow_leakage() -> None:
     target = pbr.resolve_target("bio/andrii-malyshko")
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
 
@@ -669,9 +677,7 @@ def test_malyshko_regression_detects_current_workflow_leakage() -> None:
     )
 
     leakage = [finding for finding in findings if finding["category"] == "learner_workflow_leakage"]
-    assert leakage
-    assert any("module.md" in str(finding["location"]) for finding in leakage)
-    assert any("activities.yaml" in str(finding["location"]) for finding in leakage)
+    assert leakage == []
 
 
 def test_maiboroda_regression_inventories_audio_dependent_tasks() -> None:
