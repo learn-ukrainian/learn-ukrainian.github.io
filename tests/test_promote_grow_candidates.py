@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
+
+import pytest
+import yaml
 
 from scripts.lexicon import promote_grow_candidates as promote
 
@@ -221,6 +225,93 @@ def test_needs_review_is_reported_but_never_promoted(tmp_path: Path) -> None:
     assert "- сумнів: missing dictionary definition" in report
 
 
+def test_approval_ledger_promotes_only_explicit_approvals(tmp_path: Path) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("авто")])
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама"), _candidate("тато")], [])
+    approval_ledger = _write_approval_ledger(
+        candidates_path,
+        [
+            {"lemma": "мама", "pos": "noun", "decision": "approve"},
+            {"lemma": "тато", "pos": "noun", "decision": "deferred"},
+        ],
+    )
+
+    result = promote.promote_grow_candidates(
+        candidates_path=candidates_path,
+        manifest_path=manifest_path,
+        needs_review_path=tmp_path / "grow_needs_review.json",
+        fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+        approval_ledger_path=approval_ledger,
+        write=True,
+        self_check=lambda _path: 0,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    assert [entry["lemma"] for entry in _read_json(manifest_path)["entries"]] == ["авто", "мама"]
+    assert result.promoted == ("мама",)
+
+
+def test_approval_ledger_fails_closed_when_candidate_is_unlisted(tmp_path: Path) -> None:
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама"), _candidate("тато")], [])
+    approval_ledger = _write_approval_ledger(
+        candidates_path,
+        [{"lemma": "мама", "pos": "noun", "decision": "approve"}],
+    )
+
+    with pytest.raises(ValueError, match="does not exactly cover"):
+        promote.promote_grow_candidates(
+            candidates_path=candidates_path,
+            manifest_path=_write_manifest(tmp_path, [_entry("авто")]),
+            approval_ledger_path=approval_ledger,
+            self_check=lambda _path: 0,
+            fingerprint_writer=_fingerprint_writer,
+        )
+
+
+def test_approval_ledger_fails_closed_when_candidate_bytes_change(tmp_path: Path) -> None:
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+    approval_ledger = _write_approval_ledger(
+        candidates_path,
+        [{"lemma": "мама", "pos": "noun", "decision": "approve"}],
+    )
+    candidates_path.write_text(candidates_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="SHA-256"):
+        promote.promote_grow_candidates(
+            candidates_path=candidates_path,
+            manifest_path=_write_manifest(tmp_path, [_entry("авто")]),
+            approval_ledger_path=approval_ledger,
+            self_check=lambda _path: 0,
+            fingerprint_writer=_fingerprint_writer,
+        )
+
+
+def test_cached_anchor_fill_runs_only_for_newly_promoted_entries(tmp_path: Path, monkeypatch) -> None:
+    manifest_path = _write_manifest(tmp_path, [_entry("авто")])
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+    monkeypatch.setattr(promote, "_slovnyk_cache_path", lambda _lemma: tmp_path / "cache.json")
+    monkeypatch.setattr(promote, "_load_slovnyk_cache_file", lambda _path: {"text": "mother"})
+
+    def fill(entry: dict[str, object], lemma: str, _cache: object) -> bool:
+        entry.setdefault("enrichment", {})["translation"] = {"en": ["mother"]}
+        return lemma == "мама"
+
+    monkeypatch.setattr(promote, "_fill_learner_english_anchor_from_slovnyk_cache", fill)
+
+    result = promote.promote_grow_candidates(
+        candidates_path=candidates_path,
+        manifest_path=manifest_path,
+        needs_review_path=tmp_path / "grow_needs_review.json",
+        fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+        write=True,
+        self_check=lambda _path: 0,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    assert result.cached_anchor_fills == ("мама",)
+    assert result.anchorless_promoted == ()
+
+
 def test_gate_failure_aborts_without_writing(tmp_path: Path, monkeypatch) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("авто")])
     before = manifest_path.read_text(encoding="utf-8")
@@ -368,6 +459,20 @@ def _write_candidates(tmp_path: Path, auto_merge: list[dict[str, object]], needs
         "needs_review": needs_review,
     }
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def _write_approval_ledger(candidates_path: Path, decisions: list[dict[str, str]]) -> Path:
+    path = candidates_path.with_name("grow-promotion-ledger.yaml")
+    payload = {
+        "version": 1,
+        "kind": promote.APPROVAL_LEDGER_KIND,
+        "provenance": {
+            "candidates_sha256": hashlib.sha256(candidates_path.read_bytes()).hexdigest(),
+        },
+        "decisions": decisions,
+    }
+    path.write_text(yaml.safe_dump(payload, allow_unicode=True, sort_keys=False), encoding="utf-8")
     return path
 
 
