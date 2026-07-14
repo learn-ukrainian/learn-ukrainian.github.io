@@ -23,6 +23,7 @@ if str(AUDIT_DIR) not in sys.path:
     sys.path.insert(0, str(AUDIT_DIR))
 
 from generate_practice_deck import (
+    THIN_WARN_THRESHOLDS,
     validate_classify_item,
     validate_classify_session_cap,
     validate_heritage_item,
@@ -310,6 +311,7 @@ def _check_level(
     min_lexemes: int,
     reviewed: set[tuple[str, str]],
     errors: list[str],
+    warnings: list[str],
     *,
     lower_lexeme_ids: set[str] | None = None,
 ) -> dict[str, Any]:
@@ -511,6 +513,14 @@ def _check_level(
                 f"{mode_coverage.get(kind)!r} != {expected_mode_coverage!r}"
             )
 
+    if isinstance(mode_coverage, dict):
+        for mode, threshold in THIN_WARN_THRESHOLDS.items():
+            cov = mode_coverage.get(mode, 0.0)
+            if cov < threshold:
+                warnings.append(
+                    f"{level} {mode} coverage {cov:.4f} is below thin-deck threshold {threshold:.2f}"
+                )
+
     return {
         "index": len(index_items),
         "lexemes": len(lexemes),
@@ -534,6 +544,7 @@ def check_assets(
         ensure_practice_deck_hydrated(practice_dir)
 
     errors: list[str] = []
+    warnings: list[str] = []
     daily = _check_daily_pool(daily_pool, min_daily_pool_size, errors)
     reviewed = _reviewed_source_keys(reviewed_sources, errors)
     practice: dict[str, dict[str, Any]] = {}
@@ -547,6 +558,7 @@ def check_assets(
             min_practice_lexemes_per_level,
             reviewed,
             errors,
+            warnings,
             lower_lexeme_ids=seen_lexeme_ids,
         )
         seen_lexeme_ids |= set(row.pop("lexeme_ids", None) or ())
@@ -568,6 +580,7 @@ def check_assets(
     return {
         "ok": not errors,
         "errors": errors,
+        "warnings": warnings,
         "daily": daily,
         "practice": practice,
         "reviewed_sources": len(reviewed),
@@ -624,6 +637,10 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:
         _print_summary(summary)
+        if summary["warnings"]:
+            print("Static practice asset warnings:", file=sys.stderr)
+            for warning in summary["warnings"]:
+                print(f"- {warning}", file=sys.stderr)
         if summary["errors"]:
             print("Static practice asset gate failed:")
             for error in summary["errors"]:

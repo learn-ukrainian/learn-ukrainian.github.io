@@ -572,3 +572,18 @@ def test_non_heritage_modes_stay_strictly_same_level(tmp_path: Path) -> None:
 
     assert summary["ok"] is False
     assert any("lemmaId 'dim' missing from A2 lexeme shard" in error for error in summary["errors"])
+
+
+def test_thin_deck_warnings(tmp_path: Path) -> None:
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+    assert summary["ok"] is True
+    assert any("A1 synonym coverage 0.0000 is below thin-deck threshold 0.05" in warning for warning in summary["warnings"])
+    assert any("A1 paronym coverage 0.0000 is below thin-deck threshold 0.01" in warning for warning in summary["warnings"])

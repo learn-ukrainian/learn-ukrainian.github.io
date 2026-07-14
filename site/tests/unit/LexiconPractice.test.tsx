@@ -11,6 +11,7 @@ import {
   saveState,
   type PracticeDeckData,
   type PracticeHeritageItem,
+  type PracticeParonymItem,
   type PracticeLexeme,
   type PracticeMode,
   type PracticeRating,
@@ -39,7 +40,7 @@ function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
     const url = String(input);
     requested.push(url);
     const match = url.match(
-      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|paronym|heritage)\.([ABC][12])\.json/,
     );
     if (!match) return notFoundResponse();
     const kind = match[1] as
@@ -50,6 +51,7 @@ function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
       | 'classify'
       | 'paradigm'
       | 'synonym'
+      | 'paronym'
       | 'heritage';
     const level = match[2] as CefrLevel;
     const n = counts[level];
@@ -98,7 +100,7 @@ function mockProgressiveFetch(counts: Partial<Record<CefrLevel, number>>) {
     const url = String(input);
     requested.push(url);
     const match = url.match(
-      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|paronym|heritage)\.([ABC][12])\.json/,
     );
     if (!match) return notFoundResponse();
     const kind = match[1] as any;
@@ -850,6 +852,145 @@ describe('LexiconPractice', () => {
     const link = screen.getByRole('link', { name: /Відкрити в Атласі/ });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/lexicon/dim/');
+  });
+
+  function paronymPracticeItem(): PracticeParonymItem {
+    return {
+      paronymId: 'par-test-fixture',
+      lemmaId: 'bihate',
+      srsKey: cardKey('bihate', 'paronym'),
+      lemma: 'бігати',
+      confusable: 'біжить',
+      distinction_gloss_uk: 'бігати регулярно, бігти конкретно зараз',
+      frameIndex: 1,
+      cefr: 'A1',
+      prompt: 'Вранці він ___ у парку.',
+      answer: 'бігає',
+      options: [
+        { label: 'бігає' },
+        { label: 'біжить' },
+      ],
+    };
+  }
+
+  function paronymDeck({ includeItems = true } = {}): PracticeDeckData {
+    const entry = lexeme(
+      'bihate',
+      'бігати',
+      'to run',
+      {
+        nominative: 'бігати',
+        accusative: 'бігати',
+        locative: 'бігати',
+      },
+      { cefr: 'A1' },
+    );
+    return {
+      deckVersion: 'test-paronym',
+      level: 'A1',
+      lexemes: [entry],
+      index: [
+        {
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['paronym'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        },
+      ],
+      cloze: [],
+      stress: [],
+      classify: [],
+      paradigm: [],
+      synonym: [],
+      paronym: includeItems ? [paronymPracticeItem()] : [],
+    };
+  }
+
+  test('paronym renders in mixed sessions and paronym focus mode', async () => {
+    const user = userEvent.setup();
+    const mixedRender = render(
+      <LexiconPractice
+        initialDeck={paronymDeck()}
+        autoStart
+        initialMode="mixed"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    expect(screen.getByTestId('practice-paronym')).toBeInTheDocument();
+    expect(screen.getByText('Оберіть правильний паронім.')).toBeInTheDocument();
+    expect(screen.getByText(/Вранці він/)).toBeInTheDocument();
+
+    mixedRender.unmount();
+    const { container } = render(<LexiconPractice initialDeck={paronymDeck()} advanceDelayMs={10_000} />);
+    expect(screen.getByText('Пароніми')).toBeInTheDocument();
+
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="paronym"]')!);
+
+    expect(await screen.findByTestId('practice-paronym')).toBeInTheDocument();
+  });
+
+  test('paronym wrong choice scores again and shows explanation', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={paronymDeck()}
+        autoStart
+        initialMode="paronym"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-paronym')).getByRole('button', { name: /біжить/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-paronym-feedback');
+    expect(feedback).toHaveTextContent('Неправильно. бігати регулярно, бігти конкретно зараз');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'bihate',
+        mode: 'paronym',
+        rating: 'again',
+        cardKey: cardKey('bihate', 'paronym'),
+      });
+    });
+  });
+
+  test('paronym correct answer scores good', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={paronymDeck()}
+        autoStart
+        initialMode="paronym"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-paronym')).getByRole('button', { name: /бігає/ }),
+    );
+
+    expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent('Правильно! бігати регулярно, бігти конкретно зараз');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'bihate',
+        mode: 'paronym',
+        rating: 'good',
+        cardKey: cardKey('bihate', 'paronym'),
+      });
+    });
+  });
+
+  test('hides paronym mode card when the loaded deck has no paronym items', () => {
+    render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
+
+    expect(screen.queryByText('Пароніми')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Пароніми/ })).not.toBeInTheDocument();
   });
 
   test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {

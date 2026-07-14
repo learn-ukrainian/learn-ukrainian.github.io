@@ -209,7 +209,8 @@ const frontmatter = {
   }
 
   :global(.lexicon-choice),
-  :global(.lexicon-cloze) {
+  :global(.lexicon-cloze),
+  :global(.lexicon-paronym) {
     display: grid;
     gap: 1rem;
   }
@@ -725,7 +726,8 @@ const frontmatter = {
 
   :global(.lexicon-choice),
   :global(.lexicon-cloze),
-  :global(.lexicon-heritage) {
+  :global(.lexicon-heritage),
+  :global(.lexicon-paronym) {
     display: grid;
     gap: 1rem;
   }
@@ -804,6 +806,66 @@ const frontmatter = {
     color: var(--lu-text-muted);
     font-size: 0.86rem;
     font-weight: 700;
+  }
+
+  :global(.paronym-task) {
+    margin: 0 0 -0.1rem;
+    color: var(--lu-purple);
+    font-size: 0.92rem;
+    font-weight: 900;
+  }
+
+  :global(.paronym-sentence) {
+    margin: 0;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-purple);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+    color: var(--lu-text);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  :global(.paronym-slot) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    padding: 0 10px;
+    margin: 0 4px;
+    border-bottom: 3px solid var(--lu-purple);
+    color: var(--lu-purple);
+    font-weight: 900;
+  }
+
+  :global(.paronym-slot.filled) {
+    border-bottom-color: var(--lu-green);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.paronym-feedback) {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 8px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  :global(.paronym-feedback p) {
+    margin: 0;
+  }
+
+  :global(.paronym-feedback.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.paronym-feedback.wrong) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
   }
 
   :global(.mc-q) {
