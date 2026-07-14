@@ -1,0 +1,1924 @@
+schema_version: 1
+meta:
+  issue: '#5133'
+  stage: 1 — proposals only; not consumed by the Atlas manifest
+  source_scope: 'data/sources.db read-only: Балла EN→UK whole-word hints and СУМ-11 senses'
+  audit_command: .venv/bin/python scripts/audit/audit_atlas_poc_richness.py --max-search-no-visible-gloss
+    0 --max-old-gate-no-english-anchor 0 --max-poc-thin-pages 900 --format tsv --limit 300
+  audit_reconciliation: 'Literal audit reports 196 because #5132 shipped cached-ukreng fill code without
+    a regenerated manifest. This worksheet deterministically simulates only that cached 38-fill operation
+    in memory, then retains its 158-entry remainder; no manifest or cache is written.'
+  anchor_rule: Anchors are curator proposals, never copied automatically from Балла. Null plus low confidence
+    is the fail-closed outcome when no sense-specific source supports an anchor.
+records:
+- lemma: бажане
+  cefr: B1
+  url_slug: бажане
+  proposed_anchor: desired thing
+  balla_reverse_hints:
+  - wish
+  - would
+  sum11_sense: Something wanted or wished for.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized neuter adjective; Балла hint `wish` sense-checked.
+- lemma: вітамінізація
+  cefr: C1
+  url_slug: вітамінізація
+  proposed_anchor: vitamin fortification
+  balla_reverse_hints:
+  - enrichment
+  - fortification
+  sum11_sense: Adding vitamins to food or a diet.
+  vesum_verified: true
+  confidence: medium
+  notes: No exact СУМ-11 headword; Балла hint `fortification` sense-checked.
+- lemma: гейби
+  cefr: B2
+  url_slug: гейби
+  proposed_anchor: as if
+  balla_reverse_hints: []
+  sum11_sense: A dialectal conjunction meaning as if or like.
+  vesum_verified: true
+  confidence: high
+- lemma: генрі
+  cefr: C1
+  url_slug: генрі
+  proposed_anchor: henry
+  balla_reverse_hints:
+  - Henry
+  - henry
+  - young
+  sum11_sense: The SI unit of electrical inductance.
+  vesum_verified: true
+  confidence: medium
+  notes: No exact СУМ-11 headword; Балла headword `henry` is the unit, not the name.
+- lemma: гіповітаміноз
+  cefr: C1
+  url_slug: гіповітаміноз
+  proposed_anchor: vitamin deficiency
+  balla_reverse_hints: []
+  sum11_sense: An illness caused by insufficient vitamins.
+  vesum_verified: true
+  confidence: high
+- lemma: денно
+  cefr: B2
+  url_slug: денно
+  proposed_anchor: daily
+  balla_reverse_hints: []
+  sum11_sense: Every day; also, for a working day.
+  vesum_verified: true
+  confidence: high
+- lemma: депресивність
+  cefr: C1
+  url_slug: депресивність
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: дизель-поїзд
+  cefr: C1
+  url_slug: дизель-поїзд
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: дистанціювання
+  cefr: B1
+  url_slug: дистанціювання
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: дитяча
+  cefr: A2
+  url_slug: дитяча
+  proposed_anchor: nursery
+  balla_reverse_hints:
+  - baby
+  - bathinette
+  - biggin
+  - brattery
+  - buggy
+  - calf-love
+  - childhood
+  - criss-cross
+  - duostroller
+  - egg-and-spoon-race
+  - Florentine
+  - follow-my-leader
+  - formula
+  - frock
+  - garibaldi
+  - go-cart
+  - gum-rash
+  - handy-dandy
+  - health
+  - hopscotch
+  - hy-spy
+  - juvenile
+  - kidvid
+  - kilt
+  - kit-cat
+  - mail-cart
+  - matinee
+  - meccano
+  - muggins
+  - musical
+  - night-dress
+  - nighty
+  - nursery
+  - nursing
+  - pat-a-cake
+  - perambulator
+  - petticoat
+  - picture-book
+  - play
+  - playroom
+  - postman
+  - pram
+  - push-cart
+  - rag-book
+  - red
+  - sand-table
+  - sardine
+  - see-saw
+  - slapjack
+  - stocking
+  - stroller
+  - taw
+  - teeter
+  - thread-needle
+  - touch
+  - touchwood
+  - undies
+  - vest
+  - waggon
+  - waist
+  - wheel
+  - wrapper
+  sum11_sense: A room for children.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized feminine adjective; `bathinette` is a noisy Балла match.
+- lemma: добові
+  cefr: B2
+  url_slug: добові
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: домашні
+  cefr: A2
+  url_slug: домашні
+  proposed_anchor: household
+  balla_reverse_hints:
+  - carpet-slippers
+  - domesticity
+  - effects
+  - home-folk|home-folks
+  - household
+  - lumber
+  sum11_sense: People or things belonging to the home.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized plural adjective; Балла home/household hints sense-checked.
+- lemma: достоту
+  cefr: B1
+  url_slug: достоту
+  proposed_anchor: exactly
+  balla_reverse_hints: []
+  sum11_sense: Exactly; truly or really.
+  vesum_verified: true
+  confidence: high
+- lemma: дурненький
+  cefr: B2
+  url_slug: дурненький
+  proposed_anchor: silly
+  balla_reverse_hints:
+  - gosling
+  - silly
+  sum11_sense: Somewhat foolish; also an affectionate form of foolish.
+  vesum_verified: true
+  confidence: high
+- lemma: дурненько
+  cefr: C1
+  url_slug: дурненько
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: емоційно
+  cefr: B2
+  url_slug: емоційно
+  proposed_anchor: emotionally
+  balla_reverse_hints:
+  - appellative
+  - emotionally
+  - such
+  sum11_sense: In an emotional manner.
+  vesum_verified: true
+  confidence: high
+- lemma: етнічність
+  cefr: C1
+  url_slug: етнічність
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: жертовність
+  cefr: B2
+  url_slug: жертовність
+  proposed_anchor: self-sacrifice
+  balla_reverse_hints: []
+  sum11_sense: Readiness to make a sacrifice for someone or something.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: живучи
+  cefr: B1
+  url_slug: живучи
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: зазвучати
+  cefr: C1
+  url_slug: зазвучати
+  proposed_anchor: begin to sound
+  balla_reverse_hints: []
+  sum11_sense: To begin making or filling with sound.
+  vesum_verified: true
+  confidence: high
+- lemma: зайве
+  cefr: A2
+  url_slug: зайве
+  proposed_anchor: the unnecessary
+  balla_reverse_hints:
+  - blunder
+  - loose
+  - nimiety
+  - redundancy
+  - stream-line
+  - thick
+  - widow
+  sum11_sense: Something extra or not needed.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized neuter adjective; Балла `redundancy` hint sense-checked.
+- lemma: замкнуто
+  cefr: C1
+  url_slug: замкнуто
+  proposed_anchor: reservedly
+  balla_reverse_hints: []
+  sum11_sense: In a withdrawn or closed-off manner.
+  vesum_verified: true
+  confidence: high
+- lemma: замішування
+  cefr: C1
+  url_slug: замішування
+  proposed_anchor: kneading
+  balla_reverse_hints: []
+  sum11_sense: The act of kneading dough; also mixing in.
+  vesum_verified: true
+  confidence: high
+- lemma: занудний
+  cefr: C1
+  url_slug: занудний
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: заповнений
+  cefr: B1
+  url_slug: заповнений
+  proposed_anchor: filled
+  balla_reverse_hints:
+  - alive
+  - boatful
+  - cram-full
+  - flowerful
+  - froggy
+  - full
+  - fumy
+  - gassy
+  - life-preserver
+  - snaggy
+  - thick
+  - thick-sown
+  - throng
+  - tight
+  - waspy
+  sum11_sense: Filled or occupied with something.
+  vesum_verified: true
+  confidence: high
+- lemma: зарахований
+  cefr: B2
+  url_slug: зарахований
+  proposed_anchor: enrolled
+  balla_reverse_hints:
+  - ball
+  sum11_sense: Accepted into an institution or counted as belonging to something.
+  vesum_verified: true
+  confidence: high
+- lemma: засвоюватися
+  cefr: C1
+  url_slug: засвоюватися
+  proposed_anchor: be absorbed
+  balla_reverse_hints: []
+  sum11_sense: To be taken in or assimilated by an organism.
+  vesum_verified: true
+  confidence: high
+- lemma: засинання
+  cefr: C1
+  url_slug: засинання
+  proposed_anchor: falling asleep
+  balla_reverse_hints:
+  - dormition
+  sum11_sense: The process of falling asleep.
+  vesum_verified: true
+  confidence: high
+- lemma: захопливо
+  cefr: B2
+  url_slug: захопливо
+  proposed_anchor: engagingly
+  balla_reverse_hints: []
+  sum11_sense: In an exciting or captivating way.
+  vesum_verified: true
+  confidence: high
+- lemma: звикання
+  cefr: B2
+  url_slug: звикання
+  proposed_anchor: getting used to
+  balla_reverse_hints: []
+  sum11_sense: The process of becoming accustomed to something.
+  vesum_verified: true
+  confidence: high
+- lemma: здирати
+  cefr: B2
+  url_slug: здирати
+  proposed_anchor: strip off
+  balla_reverse_hints:
+  - abrade
+  - abrase
+  - bark
+  - debark
+  - decorticate
+  - disbark
+  - excoriate
+  - excorticate
+  - extort
+  - flay
+  - flench
+  - flipe
+  - hide
+  - husk
+  - raw
+  - rind
+  - rip
+  - rive
+  - scarf
+  - skin
+  - strip
+  - wring
+  sum11_sense: To remove or tear off an outer layer.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: зернові
+  cefr: A2
+  url_slug: зернові
+  proposed_anchor: cereals
+  balla_reverse_hints:
+  - cereal
+  - crop
+  - small
+  - white
+  sum11_sense: Grain crops used for food.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized plural adjective; Балла `cereal` hint sense-checked.
+- lemma: знайома
+  cefr: A2
+  url_slug: знайома
+  proposed_anchor: female acquaintance
+  balla_reverse_hints:
+  - acquaintance
+  - bailiwick
+  sum11_sense: A woman whom one knows.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized feminine adjective; Балла `acquaintance` hint sense-checked.
+- lemma: зумовленість
+  cefr: B2
+  url_slug: зумовленість
+  proposed_anchor: causal dependence
+  balla_reverse_hints:
+  - dependence
+  - dependency
+  sum11_sense: Dependence on particular causes.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: йододефіцит
+  cefr: C1
+  url_slug: йододефіцит
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: кажучи
+  cefr: B2
+  url_slug: кажучи
+  proposed_anchor: null
+  balla_reverse_hints:
+  - admittedly
+  - apart
+  - broadly
+  - by
+  - conscience
+  - English
+  - frankly
+  - generally
+  - honest
+  - least
+  - long
+  - make
+  - mention
+  - mildly
+  - needless
+  - parlance
+  - post
+  - practically
+  - properly
+  - relatively
+  - say
+  - short
+  - shortly
+  - sooth
+  - speak
+  - story
+  - strip
+  - sum
+  - truly
+  - truth
+  - word
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: книжно
+  cefr: C1
+  url_slug: книжно
+  proposed_anchor: bookishly
+  balla_reverse_hints: []
+  sum11_sense: In a bookish or overly formal manner.
+  vesum_verified: true
+  confidence: high
+- lemma: комендантська
+  cefr: B1
+  url_slug: комендантська
+  proposed_anchor: curfew
+  balla_reverse_hints:
+  - curfew
+  - standstill
+  sum11_sense: A restriction requiring people to stay indoors at set hours.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized adjective in the fixed phrase комендантська година; Балла `curfew` hint sense-checked.
+- lemma: компартія
+  cefr: B2
+  url_slug: компартія
+  proposed_anchor: Communist Party
+  balla_reverse_hints: []
+  sum11_sense: An abbreviation for the Communist Party.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: компромісний
+  cefr: B1
+  url_slug: компромісний
+  proposed_anchor: compromise
+  balla_reverse_hints:
+  - half-way
+  sum11_sense: Formed by or involving a compromise.
+  vesum_verified: true
+  confidence: high
+- lemma: консервований
+  cefr: C1
+  url_slug: консервований
+  proposed_anchor: canned
+  balla_reverse_hints:
+  - canned
+  - lasting
+  - potted
+  - preserved
+  - tinned
+  sum11_sense: Preserved for storage, especially as food.
+  vesum_verified: true
+  confidence: high
+- lemma: коригування
+  cefr: A2
+  url_slug: коригування
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: корисне
+  cefr: A2
+  url_slug: корисне
+  proposed_anchor: null
+  balla_reverse_hints:
+  - actual
+  - mix
+  - payload
+  - relatively
+  - service
+  - work
+  - working
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: коротший
+  cefr: A2
+  url_slug: коротший
+  proposed_anchor: shorter
+  balla_reverse_hints:
+  - by-way
+  - shorter
+  sum11_sense: Having less length or duration.
+  vesum_verified: true
+  confidence: medium
+  notes: Comparative adjective; Балла `shorter` hint sense-checked.
+- lemma: кортизол
+  cefr: C1
+  url_slug: кортизол
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: косуля
+  cefr: C1
+  url_slug: косуля
+  proposed_anchor: wooden plough
+  balla_reverse_hints: []
+  sum11_sense: An archaic type of plough.
+  vesum_verified: true
+  confidence: high
+  notes: Primary СУМ-11 sense is the farming tool, not the roe deer cross-reference.
+- lemma: коцик
+  cefr: C1
+  url_slug: коцик
+  proposed_anchor: small rug
+  balla_reverse_hints: []
+  sum11_sense: A small rug or blanket.
+  vesum_verified: true
+  confidence: high
+- lemma: кричачи
+  cefr: C1
+  url_slug: кричачи
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: кровити
+  cefr: C1
+  url_slug: кровити
+  proposed_anchor: bleed
+  balla_reverse_hints: []
+  sum11_sense: To bleed from a wound.
+  vesum_verified: true
+  confidence: high
+- lemma: ледве-ледве
+  cefr: B2
+  url_slug: ледве-ледве
+  proposed_anchor: barely
+  balla_reverse_hints:
+  - finger
+  sum11_sense: Only just; with difficulty.
+  vesum_verified: true
+  confidence: high
+- lemma: лиш
+  cefr: C1
+  url_slug: лиш
+  proposed_anchor: only
+  balla_reverse_hints: []
+  sum11_sense: Only; merely.
+  vesum_verified: true
+  confidence: high
+- lemma: літа
+  cefr: A1
+  url_slug: літа
+  proposed_anchor: years
+  balla_reverse_hints:
+  - age
+  - approach
+  - dog-days
+  - heart
+  - height
+  - high
+  - midsummer
+  - on-coming
+  - return
+  - summer
+  - testify
+  - wear
+  sum11_sense: A period measured in years; years of life.
+  vesum_verified: true
+  confidence: high
+- lemma: маловідомо
+  cefr: C1
+  url_slug: маловідомо
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: маскулінний
+  cefr: C1
+  url_slug: маскулінний
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: мовби
+  cefr: A1
+  url_slug: мовби
+  proposed_anchor: as if
+  balla_reverse_hints: []
+  sum11_sense: As if; as though.
+  vesum_verified: true
+  confidence: high
+- lemma: мовбито
+  cefr: C1
+  url_slug: мовбито
+  proposed_anchor: as if
+  balla_reverse_hints: []
+  sum11_sense: As if; as though.
+  vesum_verified: true
+  confidence: high
+- lemma: можливе
+  cefr: A1
+  url_slug: можливе
+  proposed_anchor: the possible
+  balla_reverse_hints:
+  - anxious
+  - best
+  - do
+  - foot
+  - level
+  - mettle
+  - move
+  - possible
+  - sounding
+  - stone
+  - suggest
+  - trier
+  - way
+  sum11_sense: Something that is possible.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized neuter adjective; Балла `possible` hint sense-checked.
+- lemma: молодше
+  cefr: B1
+  url_slug: молодше
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: мотиватор
+  cefr: C1
+  url_slug: мотиватор
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: мікс
+  cefr: B2
+  url_slug: мікс
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: найактивніше
+  cefr: B1
+  url_slug: найактивніше
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: найважливіше
+  cefr: A2
+  url_slug: найважливіше
+  proposed_anchor: the most important
+  balla_reverse_hints:
+  - everything
+  - feature
+  - leader
+  - life
+  - precede
+  - thing
+  sum11_sense: The thing that matters most.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized superlative; reviewed against the raw Балла hints rather than auto-copied.
+- lemma: найраніше
+  cefr: C1
+  url_slug: найраніше
+  proposed_anchor: earliest
+  balla_reverse_hints: []
+  sum11_sense: Earlier than all others; at the earliest time.
+  vesum_verified: true
+  confidence: high
+- lemma: народжування
+  cefr: C1
+  url_slug: народжування
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: наслідковий
+  cefr: C1
+  url_slug: наслідковий
+  proposed_anchor: result clause
+  balla_reverse_hints:
+  - consecutive
+  sum11_sense: Relating to a result clause in grammar.
+  vesum_verified: true
+  confidence: high
+  notes: Primary СУМ-11 sense is the grammatical term.
+- lemma: наші
+  cefr: A1
+  url_slug: наші
+  proposed_anchor: our people
+  balla_reverse_hints:
+  - anxious
+  - despite
+  - jar
+  - latterly
+  - living
+  - mess
+  - nowadays
+  - our
+  - ours
+  - part
+  - today|to-day
+  - trade
+  - unfulfilled
+  - wrong
+  - year
+  sum11_sense: People regarded as one's own group.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized plural possessive; Балла `ours` hint sense-checked.
+- lemma: невідомі
+  cefr: A1
+  url_slug: невідомі
+  proposed_anchor: null
+  balla_reverse_hints:
+  - where
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: недосипання
+  cefr: B2
+  url_slug: недосипання
+  proposed_anchor: lack of sleep
+  balla_reverse_hints: []
+  sum11_sense: The state or result of not getting enough sleep.
+  vesum_verified: true
+  confidence: high
+- lemma: незвично
+  cefr: A2
+  url_slug: незвично
+  proposed_anchor: unusually
+  balla_reverse_hints:
+  - extraordinarily
+  - extraordinary
+  - strangely
+  - uncommonly
+  sum11_sense: In an unfamiliar or strange way.
+  vesum_verified: true
+  confidence: high
+- lemma: некомфортно
+  cefr: B1
+  url_slug: некомфортно
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: ненадійно
+  cefr: C1
+  url_slug: ненадійно
+  proposed_anchor: unreliably
+  balla_reverse_hints:
+  - incalculably
+  - precariously
+  - pregnable
+  - treacherously
+  sum11_sense: In an unreliable or insecure way.
+  vesum_verified: true
+  confidence: high
+- lemma: неначеб
+  cefr: C1
+  url_slug: неначеб
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: неочікувано
+  cefr: B1
+  url_slug: неочікувано
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: неперевершено
+  cefr: B2
+  url_slug: неперевершено
+  proposed_anchor: superbly
+  balla_reverse_hints:
+  - matchlessly
+  sum11_sense: In an unsurpassed way.
+  vesum_verified: true
+  confidence: high
+- lemma: неповторно
+  cefr: C1
+  url_slug: неповторно
+  proposed_anchor: uniquely
+  balla_reverse_hints: []
+  sum11_sense: In a unique, unrepeatable way.
+  vesum_verified: true
+  confidence: high
+- lemma: непрофесійно
+  cefr: B2
+  url_slug: непрофесійно
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: нестямно
+  cefr: B2
+  url_slug: нестямно
+  proposed_anchor: frantically
+  balla_reverse_hints:
+  - amuck
+  - blaze
+  - bray
+  - fiercely
+  - giddily
+  - maniacally
+  sum11_sense: In an uncontrollably excited or distraught way.
+  vesum_verified: true
+  confidence: high
+- lemma: нехарактерний
+  cefr: C1
+  url_slug: нехарактерний
+  proposed_anchor: uncharacteristic
+  balla_reverse_hints:
+  - indistinctive
+  - uncharacteristic
+  - unrepresentative
+  sum11_sense: Not typical or characteristic.
+  vesum_verified: true
+  confidence: medium
+  notes: No exact СУМ-11 headword; Балла `uncharacteristic` hint sense-checked.
+- lemma: нощно
+  cefr: C1
+  url_slug: нощно
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: обгризання
+  cefr: C1
+  url_slug: обгризання
+  proposed_anchor: nibbling
+  balla_reverse_hints:
+  - nibble
+  sum11_sense: The act of gnawing or nibbling away.
+  vesum_verified: true
+  confidence: medium
+  notes: No exact СУМ-11 headword; Балла `nibble` hint sense-checked.
+- lemma: обприскування
+  cefr: B2
+  url_slug: обприскування
+  proposed_anchor: spraying
+  balla_reverse_hints:
+  - air-spraying
+  - douching
+  - perfusion
+  - spray
+  - spraying
+  - sprinkle
+  - syringing
+  - wash
+  sum11_sense: The act of spraying something with liquid.
+  vesum_verified: true
+  confidence: high
+- lemma: образливо
+  cefr: B1
+  url_slug: образливо
+  proposed_anchor: offensively
+  balla_reverse_hints:
+  - foully
+  - obnoxiously
+  - opprobriously
+  - ridiculously
+  - rudely
+  - scant
+  - touchily
+  sum11_sense: In an insulting or hurtful way.
+  vesum_verified: true
+  confidence: high
+- lemma: оброблений
+  cefr: B2
+  url_slug: оброблений
+  proposed_anchor: processed
+  balla_reverse_hints:
+  - cultivated
+  - dressed
+  - featured
+  - fine-cut
+  - finished
+  - medicated
+  - prepared
+  - processed
+  - tilled
+  - tooled
+  - treated
+  - wrought
+  sum11_sense: Treated, worked, or processed.
+  vesum_verified: true
+  confidence: high
+- lemma: обтирання
+  cefr: C1
+  url_slug: обтирання
+  proposed_anchor: rubbing down
+  balla_reverse_hints:
+  - friction
+  - rub-down
+  - sponge
+  - sponge-bath
+  sum11_sense: The act of rubbing or wiping the body or a surface.
+  vesum_verified: true
+  confidence: high
+- lemma: обігрів
+  cefr: B2
+  url_slug: обігрів
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: опірність
+  cefr: B2
+  url_slug: опірність
+  proposed_anchor: resistance
+  balla_reverse_hints:
+  - fastness
+  - resistance
+  - stamina
+  sum11_sense: The ability to resist or withstand something.
+  vesum_verified: true
+  confidence: high
+- lemma: ослаблений
+  cefr: B2
+  url_slug: ослаблений
+  proposed_anchor: weakened
+  balla_reverse_hints:
+  - attenuated
+  - blooded
+  - broken
+  - deadish
+  - depressed
+  - dilute
+  - marcid
+  - rickety
+  - slack
+  - stray
+  - subdued
+  - suppressed
+  sum11_sense: Made weak or less strong.
+  vesum_verified: true
+  confidence: high
+- lemma: останнє
+  cefr: B2
+  url_slug: останнє
+  proposed_anchor: null
+  balla_reverse_hints:
+  - cope-stone
+  - decisive
+  - hot
+  - lag
+  - last
+  - latest
+  - nestle-cock
+  - reaggravation
+  - rebuttal
+  - recent
+  - shirt
+  - stripping
+  - stroking
+  - supreme
+  - why-not
+  - wooden
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: пекельно
+  cefr: C1
+  url_slug: пекельно
+  proposed_anchor: hellishly
+  balla_reverse_hints:
+  - infernally
+  sum11_sense: In an extremely intense or dreadful way.
+  vesum_verified: true
+  confidence: high
+- lemma: повинно
+  cefr: B2
+  url_slug: повинно
+  proposed_anchor: should
+  balla_reverse_hints:
+  - occur
+  sum11_sense: Expressing what ought to happen or be done.
+  vesum_verified: true
+  confidence: high
+- lemma: повів
+  cefr: A1
+  url_slug: повів
+  proposed_anchor: gust
+  balla_reverse_hints: []
+  sum11_sense: A gust or faint waft of wind.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: повішати
+  cefr: C1
+  url_slug: повішати
+  proposed_anchor: hang up
+  balla_reverse_hints: []
+  sum11_sense: To hang several things or hang things in different places.
+  vesum_verified: true
+  confidence: high
+- lemma: пожувати
+  cefr: C1
+  url_slug: пожувати
+  proposed_anchor: chew
+  balla_reverse_hints: []
+  sum11_sense: To chew for a while.
+  vesum_verified: true
+  confidence: high
+- lemma: політехніка
+  cefr: A2
+  url_slug: політехніка
+  proposed_anchor: polytechnic institute
+  balla_reverse_hints: []
+  sum11_sense: A polytechnic educational institution.
+  vesum_verified: true
+  confidence: high
+- lemma: попити
+  cefr: B1
+  url_slug: попити
+  proposed_anchor: drink some
+  balla_reverse_hints: []
+  sum11_sense: To drink for a while or drink some liquid.
+  vesum_verified: true
+  confidence: high
+- lemma: попрати
+  cefr: B2
+  url_slug: попрати
+  proposed_anchor: wash clothes
+  balla_reverse_hints: []
+  sum11_sense: To wash clothes or other laundry.
+  vesum_verified: true
+  confidence: high
+- lemma: посмажити
+  cefr: C1
+  url_slug: посмажити
+  proposed_anchor: fry
+  balla_reverse_hints: []
+  sum11_sense: To fry something, often completely or in quantity.
+  vesum_verified: true
+  confidence: high
+- lemma: працевлаштований
+  cefr: C1
+  url_slug: працевлаштований
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: приглушено
+  cefr: B2
+  url_slug: приглушено
+  proposed_anchor: quietly
+  balla_reverse_hints:
+  - obtusely
+  - sullenly
+  sum11_sense: In a muffled or subdued way.
+  vesum_verified: true
+  confidence: high
+- lemma: примружено
+  cefr: C1
+  url_slug: примружено
+  proposed_anchor: squinting
+  balla_reverse_hints: []
+  sum11_sense: With the eyes partly closed or narrowed.
+  vesum_verified: true
+  confidence: high
+- lemma: приналежність
+  cefr: A2
+  url_slug: приналежність
+  proposed_anchor: belonging
+  balla_reverse_hints: []
+  sum11_sense: The state of belonging or being affiliated.
+  vesum_verified: true
+  confidence: high
+- lemma: приречена
+  cefr: B1
+  url_slug: приречена
+  proposed_anchor: null
+  balla_reverse_hints:
+  - battle
+  - deaf
+  - galley-slave
+  - hopeless
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: прихищати
+  cefr: C1
+  url_slug: прихищати
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: причиновий
+  cefr: C1
+  url_slug: причиновий
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: пропущений
+  cefr: B1
+  url_slug: пропущений
+  proposed_anchor: omitted
+  balla_reverse_hints:
+  - lost
+  - omissible
+  - strike
+  - unseized
+  sum11_sense: Missed, omitted, or allowed to pass through.
+  vesum_verified: true
+  confidence: high
+- lemma: прочитання
+  cefr: A2
+  url_slug: прочитання
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: психувати
+  cefr: C1
+  url_slug: психувати
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: пукати
+  cefr: C1
+  url_slug: пукати
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: півлітровий
+  cefr: C1
+  url_slug: півлітровий
+  proposed_anchor: half-liter
+  balla_reverse_hints: []
+  sum11_sense: Having a capacity of half a liter.
+  vesum_verified: true
+  confidence: high
+- lemma: підпільно
+  cefr: B2
+  url_slug: підпільно
+  proposed_anchor: underground
+  balla_reverse_hints:
+  - underground
+  sum11_sense: Secretly or illegally, outside official control.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: радикально
+  cefr: A2
+  url_slug: радикально
+  proposed_anchor: radically
+  balla_reverse_hints:
+  - cardinally
+  - drastically
+  - radically
+  sum11_sense: In a thorough or fundamental way.
+  vesum_verified: true
+  confidence: high
+- lemma: рано-вранці
+  cefr: B1
+  url_slug: рано-вранці
+  proposed_anchor: early morning
+  balla_reverse_hints:
+  - early
+  - rather
+  sum11_sense: Very early, at dawn.
+  vesum_verified: true
+  confidence: high
+- lemma: рекомендуватися
+  cefr: C1
+  url_slug: рекомендуватися
+  proposed_anchor: introduce oneself
+  balla_reverse_hints: []
+  sum11_sense: To give one's name when meeting someone.
+  vesum_verified: true
+  confidence: high
+- lemma: ризиковано
+  cefr: B1
+  url_slug: ризиковано
+  proposed_anchor: riskily
+  balla_reverse_hints:
+  - precariously
+  sum11_sense: In a risky way.
+  vesum_verified: true
+  confidence: high
+- lemma: ризиковий
+  cefr: C1
+  url_slug: ризиковий
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: ринопластика
+  cefr: C1
+  url_slug: ринопластика
+  proposed_anchor: rhinoplasty
+  balla_reverse_hints:
+  - rhinoplasty
+  sum11_sense: Surgery to reconstruct or reshape the nose.
+  vesum_verified: true
+  confidence: high
+- lemma: розгадування
+  cefr: C1
+  url_slug: розгадування
+  proposed_anchor: solving
+  balla_reverse_hints:
+  - thought-reading
+  sum11_sense: The act of guessing or solving something.
+  vesum_verified: true
+  confidence: high
+- lemma: розлитий
+  cefr: C1
+  url_slug: розлитий
+  proposed_anchor: spilled
+  balla_reverse_hints:
+  - bottled
+  - diffuse
+  sum11_sense: Poured or spread out over a surface.
+  vesum_verified: true
+  confidence: high
+- lemma: рідше
+  cefr: A2
+  url_slug: рідше
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: самолікуватися
+  cefr: C1
+  url_slug: самолікуватися
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: самонавіювання
+  cefr: C1
+  url_slug: самонавіювання
+  proposed_anchor: self-suggestion
+  balla_reverse_hints:
+  - self-suggestion
+  sum11_sense: The practice of influencing oneself by suggestion.
+  vesum_verified: true
+  confidence: high
+- lemma: святково
+  cefr: B1
+  url_slug: святково
+  proposed_anchor: festively
+  balla_reverse_hints:
+  - festively
+  sum11_sense: In a festive or celebratory way.
+  vesum_verified: true
+  confidence: high
+- lemma: свіжо
+  cefr: B1
+  url_slug: свіжо
+  proposed_anchor: freshly
+  balla_reverse_hints:
+  - freshly
+  - greenly
+  - sweetly
+  sum11_sense: In a fresh or cool way; just recently.
+  vesum_verified: true
+  confidence: high
+- lemma: сигаретний
+  cefr: C1
+  url_slug: сигаретний
+  proposed_anchor: cigarette
+  balla_reverse_hints: []
+  sum11_sense: Relating to cigarettes or their manufacture.
+  vesum_verified: true
+  confidence: high
+- lemma: сильніше
+  cefr: B2
+  url_slug: сильніше
+  proposed_anchor: null
+  balla_reverse_hints:
+  - better
+  - worse
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: сильніший
+  cefr: A2
+  url_slug: сильніший
+  proposed_anchor: null
+  balla_reverse_hints:
+  - tenfold
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: синтезуватися
+  cefr: C1
+  url_slug: синтезуватися
+  proposed_anchor: become unified
+  balla_reverse_hints: []
+  sum11_sense: To become a unified whole; also, to form by synthesis.
+  vesum_verified: true
+  confidence: medium
+  notes: Primary СУМ-11 sense precedes the chemical sense.
+- lemma: скрипт
+  cefr: B2
+  url_slug: скрипт
+  proposed_anchor: manuscript
+  balla_reverse_hints: []
+  sum11_sense: An archaic word for a manuscript.
+  vesum_verified: true
+  confidence: high
+- lemma: смачненьке
+  cefr: B2
+  url_slug: смачненьке
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: споживаний
+  cefr: C1
+  url_slug: споживаний
+  proposed_anchor: consumed
+  balla_reverse_hints:
+  - consumable
+  - expendable
+  sum11_sense: Used up or consumed.
+  vesum_verified: true
+  confidence: high
+- lemma: спохмурніти
+  cefr: C1
+  url_slug: спохмурніти
+  proposed_anchor: become gloomy
+  balla_reverse_hints: []
+  sum11_sense: To become gloomy or dark; of a face, to frown.
+  vesum_verified: true
+  confidence: high
+- lemma: спричинений
+  cefr: B1
+  url_slug: спричинений
+  proposed_anchor: caused
+  balla_reverse_hints:
+  - fiy-borne
+  - sick
+  - toxic
+  - toxicant
+  sum11_sense: Brought about by something.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: спровокований
+  cefr: B2
+  url_slug: спровокований
+  proposed_anchor: provoked
+  balla_reverse_hints: []
+  sum11_sense: Brought about or triggered by someone or something.
+  vesum_verified: true
+  confidence: high
+- lemma: стало
+  cefr: A1
+  url_slug: стало
+  proposed_anchor: steadily
+  balla_reverse_hints:
+  - dawn
+  - eponym
+  - knowledge
+  - more
+  - rally
+  - steady
+  - thicken
+  - unalterably
+  - view
+  sum11_sense: In a steady or constant manner.
+  vesum_verified: true
+  confidence: high
+- lemma: стиглий
+  cefr: C1
+  url_slug: стиглий
+  proposed_anchor: ripe
+  balla_reverse_hints:
+  - headed
+  - mature
+  - mellow
+  - red-ripe
+  - ripe
+  sum11_sense: Fully ripe or mature.
+  vesum_verified: true
+  confidence: high
+- lemma: стильно
+  cefr: B2
+  url_slug: стильно
+  proposed_anchor: stylishly
+  balla_reverse_hints:
+  - jauntily
+  - saucily
+  - stylishly
+  sum11_sense: In a stylish manner.
+  vesum_verified: true
+  confidence: high
+- lemma: супроводжуватися
+  cefr: B1
+  url_slug: супроводжуватися
+  proposed_anchor: be accompanied
+  balla_reverse_hints: []
+  sum11_sense: To occur together with another action or event.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: сучасне
+  cefr: A2
+  url_slug: сучасне
+  proposed_anchor: null
+  balla_reverse_hints:
+  - modernity
+  - neglect
+  - pentathlon
+  - revolutionize
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: сфокусуватися
+  cefr: B2
+  url_slug: сфокусуватися
+  proposed_anchor: come into focus
+  balla_reverse_hints: []
+  sum11_sense: To bring oneself into focus.
+  vesum_verified: true
+  confidence: medium
+  notes: СУМ-11 points to the primary sense of фокусуватися.
+- lemma: так-так
+  cefr: A2
+  url_slug: так-так
+  proposed_anchor: yes indeed
+  balla_reverse_hints: []
+  sum11_sense: An emphatic affirmation; also an imitative ticking sound.
+  vesum_verified: true
+  confidence: high
+- lemma: теплоізоляція
+  cefr: C1
+  url_slug: теплоізоляція
+  proposed_anchor: insulation
+  balla_reverse_hints:
+  - insulation
+  sum11_sense: Protection against heat loss or heat effects.
+  vesum_verified: true
+  confidence: high
+- lemma: тирозин
+  cefr: C1
+  url_slug: тирозин
+  proposed_anchor: tyrosine
+  balla_reverse_hints: []
+  sum11_sense: An amino acid found in almost all proteins.
+  vesum_verified: true
+  confidence: high
+- lemma: травмуватися
+  cefr: C1
+  url_slug: травмуватися
+  proposed_anchor: get injured
+  balla_reverse_hints: []
+  sum11_sense: To receive an injury or become damaged.
+  vesum_verified: true
+  confidence: high
+- lemma: тривало
+  cefr: A1
+  url_slug: тривало
+  proposed_anchor: for a long time
+  balla_reverse_hints:
+  - chronically
+  - durably
+  - long
+  - protractedly
+  sum11_sense: For a long duration.
+  vesum_verified: true
+  confidence: high
+- lemma: тривожно
+  cefr: A2
+  url_slug: тривожно
+  proposed_anchor: anxiously
+  balla_reverse_hints:
+  - alarmingly
+  - anxiously
+  - discomposedly
+  - forebodingly
+  - pass
+  - restless
+  - uncomfortably
+  - uneasily
+  sum11_sense: In an anxious or alarmed way.
+  vesum_verified: true
+  confidence: high
+- lemma: триптофан
+  cefr: C1
+  url_slug: триптофан
+  proposed_anchor: tryptophan
+  balla_reverse_hints: []
+  sum11_sense: An essential amino acid found in many proteins.
+  vesum_verified: true
+  confidence: high
+- lemma: трубочка
+  cefr: C1
+  url_slug: трубочка
+  proposed_anchor: small tube
+  balla_reverse_hints:
+  - cornicle
+  - duct
+  - implant
+  - tubule
+  sum11_sense: A small tube or tube-shaped object.
+  vesum_verified: true
+  confidence: high
+- lemma: угрупування
+  cefr: A2
+  url_slug: угрупування
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: уникання
+  cefr: B2
+  url_slug: уникання
+  proposed_anchor: avoidance
+  balla_reverse_hints:
+  - jink
+  - prevarication
+  - shirk
+  - tergiversation
+  sum11_sense: The act of avoiding something.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: хлібом-сіллю
+  cefr: B2
+  url_slug: хлібом-сіллю
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: чіткіше
+  cefr: B1
+  url_slug: чіткіше
+  proposed_anchor: null
+  balla_reverse_hints:
+  - spell
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: янголятко
+  cefr: B2
+  url_slug: янголятко
+  proposed_anchor: little angel
+  balla_reverse_hints: []
+  sum11_sense: An affectionate diminutive of angel.
+  vesum_verified: true
+  confidence: high
+- lemma: ять
+  cefr: B2
+  url_slug: ять
+  proposed_anchor: yat letter
+  balla_reverse_hints:
+  - alpha
+  - anywhere
+  - article
+  - be
+  - book
+  - brand
+  - burn
+  - by
+  - camera
+  - con
+  - conservation
+  - decus
+  - determinable
+  - elusive
+  - embed
+  - eye-memory
+  - 'false'
+  - finger-end
+  - five
+  - five-acre
+  - fivefold
+  - five-o'clock
+  - fivepence
+  - fiver
+  - fortieth
+  - get
+  - half-dime
+  - haunting
+  - heart
+  - irretention
+  - jitney
+  - large
+  - learn
+  - live
+  - long
+  - make
+  - memorialize
+  - memoriter
+  - memorize
+  - memory
+  - million
+  - mind
+  - monumental
+  - nine
+  - ninefold
+  - ninepence
+  - novennial
+  - one-minute
+  - over
+  - part
+  - pentad
+  - pentamerous
+  - per cent
+  - point
+  - quadruple
+  - quinary
+  - quinquefid
+  - quinquennial
+  - quinquepartite
+  - quinquesect
+  - quintuple
+  - rake
+  - recall
+  - recitation
+  - recite
+  - recollection
+  - recollective
+  - record
+  - remembrance
+  - remembrancer
+  - rep
+  - repeat
+  - repetition
+  - retention
+  - retentive
+  - rote
+  - running
+  - rust
+  - sacred
+  - say
+  - second
+  - sense
+  - servitude
+  - seventieth
+  - shade
+  - short
+  - solo
+  - souvenir
+  - spell
+  - still
+  - stop
+  - storage
+  - stretch
+  - strong
+  - study
+  - subtract
+  - succession
+  - T{, t}|{T, }t
+  - tenacious
+  - thousand
+  - time
+  - tip
+  - toast
+  - treacherous
+  - treasure
+  - twenties
+  - two-minute
+  - under
+  - unretentive
+  - value
+  - vee
+  - wit
+  - word-perfect
+  - worthy
+  - written
+  sum11_sense: The name of a historical letter in the old alphabet.
+  vesum_verified: true
+  confidence: high
+- lemma: ігроманія
+  cefr: C1
+  url_slug: ігроманія
+  proposed_anchor: null
+  balla_reverse_hints: []
+  sum11_sense: No exact СУМ-11 headword.
+  vesum_verified: true
+  confidence: low
+  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+- lemma: ідеально
+  cefr: B1
+  url_slug: ідеально
+  proposed_anchor: ideally
+  balla_reverse_hints:
+  - ideally
+  - theoretically
+  sum11_sense: In an ideal manner.
+  vesum_verified: true
+  confidence: high
+  sovietization_flag: true
+- lemma: інформування
+  cefr: A2
+  url_slug: інформування
+  proposed_anchor: informing
+  balla_reverse_hints:
+  - inquiry
+  sum11_sense: The act of giving information.
+  vesum_verified: true
+  confidence: high
+- lemma: інше
+  cefr: B1
+  url_slug: інше
+  proposed_anchor: the other thing
+  balla_reverse_hints:
+  - adjourn
+  - alter
+  - ambulant
+  - anabaptize
+  - both
+  - cock-fighting
+  - cross-reference
+  - discursive
+  - displace
+  - dissolve
+  - elsewhere
+  - elsewhither
+  - et alia
+  - etc
+  - etcetera
+  - etceteras
+  - hearsay
+  - interchange
+  - interchangeability
+  - interknit
+  - mistake
+  - move
+  - nothing
+  - other
+  - otherwhere|otherwheres
+  - out-burn
+  - outpoint
+  - outwear
+  - pure
+  - quit
+  - re-establish
+  - resettlement
+  - skip
+  - so
+  - such
+  - such-like
+  - thing
+  - to-and-fro
+  - tranship
+  - translate
+  sum11_sense: Something else or different.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized neuter adjective; Балла `other` hint sense-checked.
+- lemma: інші
+  cefr: A1
+  url_slug: інші
+  proposed_anchor: others
+  balla_reverse_hints:
+  - counter-evidence
+  - deacon
+  - dwarf
+  - et alii
+  - host
+  - lapse
+  - milkweed
+  - mother-church
+  - other
+  - parent
+  - remainder
+  - rest
+  - science
+  - side-track
+  - smothering
+  - some
+  - something
+  - translation
+  - view
+  sum11_sense: Other people or things.
+  vesum_verified: true
+  confidence: medium
+  notes: Substantivized plural adjective; Балла `other` hint sense-checked.
