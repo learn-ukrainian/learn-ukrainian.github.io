@@ -141,11 +141,47 @@ def _emission(
 
 
 def _run(
-    main_cases: list[dict[str, Any]], probe_cases: list[dict[str, Any]], emissions: dict[str, Any], **kwargs: Any
+    main_cases: list[dict[str, Any]],
+    probe_cases: list[dict[str, Any]],
+    emissions: dict[str, Any],
+    collection_call_plan: dict[str, dict[str, Any]] | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
-    return layerb_qualify.QualificationRunner(route=ROUTE, layer_a_probe_results=_probes(), **kwargs).run(
-        main_labels={"cases": main_cases}, probe_labels={"cases": probe_cases}, emissions=emissions
-    )
+    plans: dict[str, dict[str, Any]] = {}
+    for value in emissions.values():
+        attempts = value if isinstance(value, list) else [value]
+        for emission in attempts:
+            if not isinstance(emission, dict):
+                continue
+            module_id, call_id = emission.get("module_id"), emission.get("call_id")
+            if not isinstance(module_id, str) or not isinstance(call_id, str):
+                continue
+            plan = plans.setdefault(
+                module_id,
+                {
+                    "expected_call_ids": [],
+                    "expected_call_count": 0,
+                    "expected_prompt_tokens": 0,
+                    "expected_completion_tokens": 0,
+                    "expected_cost_usd": 0.0,
+                },
+            )
+            if call_id not in plan["expected_call_ids"]:
+                plan["expected_call_ids"].append(call_id)
+                plan["expected_call_count"] += 1
+                plan["expected_prompt_tokens"] += 10_000
+                plan["expected_completion_tokens"] += 800
+                plan["expected_cost_usd"] += 0.25
+    normalized_plans = {
+        module_id: {**plan, "expected_call_ids": tuple(sorted(plan["expected_call_ids"]))}
+        for module_id, plan in plans.items()
+    }
+    return layerb_qualify.QualificationRunner(
+        route=ROUTE,
+        layer_a_probe_results=_probes(),
+        collection_call_plan=collection_call_plan or normalized_plans,
+        **kwargs,
+    ).run(main_labels={"cases": main_cases}, probe_labels={"cases": probe_cases}, emissions=emissions)
 
 
 def test_per_candidate_scoring_reuses_production_aggregation_and_contradiction_can_accept() -> None:
@@ -431,6 +467,7 @@ def test_decisive_span_requires_role_matched_critical_coverage() -> None:
     assert candidate_score["agreement"] is False
     assert report["thresholds"]["relation_agreement"]["status"] == "FAIL"
     assert "SPAN_GOLD_OVERLAP_FAILURE" in report["thresholds"]["integrity"]["failures"]
+    assert report["thresholds"]["integrity"]["failures"]["SPAN_GOLD_OVERLAP_FAILURE"] == 1
 
 
 def test_invalid_or_hash_mismatched_rows_fail_without_leaving_a_denominator() -> None:
@@ -479,8 +516,17 @@ def test_call_cap_must_exactly_cover_main_plus_probe_rows() -> None:
     raw = "one"
     main = _case("main", raw)
     probe = _case("probe", raw)
+    plan = {
+        "module-1": {
+            "expected_call_ids": ("main-call", "probe-call"),
+            "expected_call_count": 2,
+            "expected_prompt_tokens": 20_000,
+            "expected_completion_tokens": 1_600,
+            "expected_cost_usd": 0.5,
+        }
+    }
     with pytest.raises(layerb_qualify.QualificationAbort, match="must equal 2"):
-        _run([main], [probe], {}, max_judge_calls=1)
+        _run([main], [probe], {}, collection_call_plan=plan, max_judge_calls=1)
 
 
 def test_six_layer_a_fail_closed_probes_are_serialized_by_production_delimiter() -> None:
@@ -522,6 +568,58 @@ def test_cost_envelopes_use_module_call_grouping_and_p95() -> None:
     assert any(not module["within_envelope"] for module in cost["modules"])
 
 
+def test_cost_envelope_uses_collector_plan_and_includes_stability_attempts() -> None:
+    raw = "planned cost source"
+    case = _case("planned-cost", raw)
+    primary = _emission(
+        case,
+        {"candidate-1": raw},
+        call_id="planned-primary",
+        observed={"prompt_tokens": 9_000.0, "completion_tokens": 300.0, "cost_usd": 0.10},
+    )
+    replay = _emission(
+        case,
+        {"candidate-1": raw},
+        call_id="planned-replay",
+        observed={"prompt_tokens": 9_500.0, "completion_tokens": 350.0, "cost_usd": 0.11},
+    )
+    primary["attempt"] = 0
+    replay["attempt"] = 1
+    envelope = {
+        "expected_call_ids": ["planned-primary", "planned-replay"],
+        "expected_call_count": 2,
+        "expected_prompt_tokens": 20_000,
+        "expected_completion_tokens": 1_600,
+        "expected_cost_usd": 0.50,
+    }
+    manifest = [
+        {"module_id": "module-1", "call_id": call_id, "expected_module_envelope": envelope}
+        for call_id in envelope["expected_call_ids"]
+    ]
+
+    report = _run(
+        [case],
+        [],
+        {case["case_id"]: [primary, replay]},
+        collection_call_plan=layerb_qualify.collection_call_plan_from_manifest(manifest),
+    )
+
+    cost = report["thresholds"]["cost_envelope"]
+    assert cost["status"] == "PASS"
+    assert cost["call_count"] == 2
+    module = cost["modules"][0]
+    assert module["module_id"] == "module-1"
+    assert module["call_count"] == 2
+    assert module["prompt_tokens"] == 18_500.0
+    assert module["completion_tokens"] == 650.0
+    assert module["cost_usd"] == pytest.approx(0.21)
+    assert module["expected_call_count"] == 2
+    assert module["expected_prompt_tokens"] == 20_000
+    assert module["expected_completion_tokens"] == 1_600
+    assert module["expected_cost_usd"] == 0.5
+    assert module["within_envelope"] is True
+
+
 def test_fixed_stability_subset_replay_rejects_any_relation_disagreement() -> None:
     raw = "stable source"
     probe = _case("stability-probe", raw, failure_class="PROMPT_INJECTION")
@@ -541,7 +639,7 @@ def test_fixed_stability_subset_replay_rejects_any_relation_disagreement() -> No
             {"candidate-1": raw},
             relations={"candidate-1": "CONTRADICTS"} if case is not probe else None,
             module_id=f"module-{index}",
-            call_id=f"call-{index}",
+            call_id=f"call-{index}-attempt-1",
         )
         emissions[case["case_id"]] = [first, second]
 

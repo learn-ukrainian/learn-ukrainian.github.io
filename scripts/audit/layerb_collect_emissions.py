@@ -39,7 +39,7 @@ from scripts.audit.layerb_label_common import atomic_write_json
 from scripts.audit.llm_reviewer_dispatch import tool_events_from_dispatch_meta
 
 EMISSIONS_VERSION = "qg-layer-b-qualification-emissions.v1"
-CACHE_VERSION = "qg-layer-b-qualification-collector-cache.v2"
+CACHE_VERSION = "qg-layer-b-qualification-collector-cache.v3"
 COLLECTOR_VERSION = "qg-layer-b-qualification-collector.v1"
 
 
@@ -75,6 +75,7 @@ class ModuleEnvelope:
     corpus: str
     artifact_sha256: str
     cases: tuple[PreparedCase, ...]
+    attempt: int = 0
 
 
 def _canonical_json(value: Any) -> str:
@@ -359,6 +360,7 @@ def _planned_modules(
     *,
     eligibility: str,
     effective_route: layerb_qualify.EffectiveRoute,
+    attempt: int = 0,
 ) -> list[ModuleEnvelope]:
     grouped: dict[tuple[str, str], list[PreparedCase]] = defaultdict(list)
     for prepared in prepared_cases:
@@ -373,12 +375,41 @@ def _planned_modules(
         grouped[(prepared.corpus, prepared.artifact_sha256)].append(prepared)
     return [
         ModuleEnvelope(
-            corpus=corpus, artifact_sha256=artifact_sha, cases=tuple(sorted(cases, key=lambda item: item.case_id))
+            corpus=corpus,
+            artifact_sha256=artifact_sha,
+            cases=tuple(sorted(cases, key=lambda item: item.case_id)),
+            attempt=attempt,
         )
         for (corpus, artifact_sha), cases in sorted(
             grouped.items(), key=lambda item: (0 if item[0][0] == "probe" else 1, item[0][1])
         )
     ]
+
+
+def _stability_modules(
+    prepared_cases: Sequence[PreparedCase],
+    *,
+    main_cases: Sequence[Mapping[str, Any]],
+    probe_cases: Sequence[Mapping[str, Any]],
+    eligibility: str,
+    effective_route: layerb_qualify.EffectiveRoute,
+) -> tuple[list[str], list[ModuleEnvelope]]:
+    """Plan exactly the fixed scorer-selected replay subset as attempt one."""
+
+    selected = layerb_qualify.stability_case_ids(main_cases, probe_cases)
+    selected_ids = set(selected)
+    prepared_by_id = {prepared.case_id: prepared for prepared in prepared_cases}
+    if len(prepared_by_id) != len(prepared_cases):
+        raise CollectionError("qualification labels contain duplicate case_id values")
+    missing = sorted(selected_ids - set(prepared_by_id))
+    if missing:
+        raise CollectionError(f"stability selection is absent from prepared labels: {', '.join(missing[:8])}")
+    return selected, _planned_modules(
+        [prepared_by_id[case_id] for case_id in selected],
+        eligibility=eligibility,
+        effective_route=effective_route,
+        attempt=1,
+    )
 
 
 def _module_request(module: ModuleEnvelope) -> tuple[dict[str, Any], dict[str, str]]:
@@ -569,6 +600,7 @@ def _emission(
     prepared: PreparedCase,
     *,
     call_id: str,
+    attempt: int = 0,
     observed: Mapping[str, float],
     response: Mapping[str, Any],
     status: str,
@@ -585,6 +617,7 @@ def _emission(
         # call_id remains the immutable artifact-envelope identity.
         "module_id": _required_str(prepared.case, "fixture_id", prepared.case_id),
         "call_id": call_id,
+        "attempt": attempt,
         "observed": dict(observed),
         "windows": windows,
         "response": dict(response),
@@ -598,17 +631,69 @@ def _emission(
     return result
 
 
-def _cache_path(cache_dir: Path, request: Mapping[str, Any], route: Mapping[str, Any]) -> Path:
+def _cache_path(cache_dir: Path, request: Mapping[str, Any], route: Mapping[str, Any], *, attempt: int) -> Path:
     key = _sha256_json(
         {
             "version": CACHE_VERSION,
             "request": request,
             "route": route,
+            "attempt": attempt,
             "prompt_version": layerb_shadow.PROMPT_VERSION,
             "output_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
         }
     )
     return cache_dir / f"{key}.json"
+
+
+def _module_id(module: ModuleEnvelope) -> str:
+    module_ids = {_required_str(prepared.case, "fixture_id", prepared.case_id) for prepared in module.cases}
+    if len(module_ids) != 1:
+        raise CollectionError(
+            f"artifact {module.artifact_sha256} spans multiple fixture_id values: {', '.join(sorted(module_ids))}"
+        )
+    return next(iter(module_ids))
+
+
+def _call_id(module: ModuleEnvelope) -> str:
+    base = f"artifact-{module.artifact_sha256}"
+    return base if module.attempt == 0 else f"{base}-attempt-{module.attempt}"
+
+
+def _module_call_plan(
+    modules: Sequence[ModuleEnvelope],
+    module_requests: Sequence[tuple[Mapping[str, Any], Mapping[str, str]]],
+    request_routes: Sequence[layerb_shadow.JudgeRoute],
+) -> dict[str, dict[str, Any]]:
+    """Derive every per-fixture envelope from the collector's concrete batch plan."""
+
+    plans: dict[str, dict[str, Any]] = {}
+    for module, (request, _serialized_hashes), route in zip(modules, module_requests, request_routes, strict=True):
+        module_id = _module_id(module)
+        max_output_tokens = request.get("max_output_tokens")
+        if not isinstance(max_output_tokens, int) or isinstance(max_output_tokens, bool) or max_output_tokens < 1:
+            raise CollectionError(f"{module_id}: request has no positive max_output_tokens")
+        plan = plans.setdefault(
+            module_id,
+            {
+                "expected_call_ids": [],
+                "expected_call_count": 0,
+                "expected_prompt_tokens": 0,
+                "expected_completion_tokens": 0,
+                "expected_cost_usd": 0.0,
+            },
+        )
+        call_id = _call_id(module)
+        if call_id in plan["expected_call_ids"]:
+            raise CollectionError(f"{module_id}: duplicate planned call identity {call_id}")
+        plan["expected_call_ids"].append(call_id)
+        plan["expected_call_count"] += 1
+        plan["expected_prompt_tokens"] += route.max_input_tokens
+        plan["expected_completion_tokens"] += max_output_tokens
+        plan["expected_cost_usd"] += route.worst_case_usd
+    return {
+        module_id: {**plan, "expected_call_ids": sorted(plan["expected_call_ids"])}
+        for module_id, plan in sorted(plans.items())
+    }
 
 
 def _route_metadata(
@@ -736,11 +821,19 @@ def _write_collector_outputs(
     emissions: Mapping[str, Any],
     route: Mapping[str, Any],
     manifest: Sequence[Mapping[str, Any]],
+    module_call_plan: Mapping[str, Mapping[str, Any]],
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     atomic_write_json(output_dir / "emissions.json", {"version": EMISSIONS_VERSION, "emissions": dict(emissions)})
     atomic_write_json(output_dir / "route.json", dict(route))
-    atomic_write_json(output_dir / "raw-call-manifest.json", list(manifest))
+    atomic_write_json(
+        output_dir / "raw-call-manifest.json",
+        {
+            "version": "qg-layer-b-qualification-collector-manifest.v2",
+            "calls": list(manifest),
+            "module_call_plan": dict(module_call_plan),
+        },
+    )
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -800,10 +893,26 @@ def main(argv: Sequence[str] | None = None) -> int:
         }
         artifacts = _artifact_sources(source_hashes, (args.main_labels, args.probe_labels)) if source_hashes else {}
         prepared = [_prepared_case(corpus, case, artifacts) for corpus, case in all_cases]
-        modules = _planned_modules(prepared, eligibility=args.eligibility, effective_route=effective_route)
+        primary_modules = _planned_modules(prepared, eligibility=args.eligibility, effective_route=effective_route)
+        stability_ids, stability_replay_modules = _stability_modules(
+            prepared,
+            main_cases=main_cases,
+            probe_cases=probe_cases,
+            eligibility=args.eligibility,
+            effective_route=effective_route,
+        )
+        # Preserve probe-first authorization for both samples.  A stability
+        # replay of a probe therefore cannot follow any main judge request.
+        modules = [
+            *[module for module in primary_modules if module.corpus == "probe"],
+            *[module for module in stability_replay_modules if module.corpus == "probe"],
+            *[module for module in primary_modules if module.corpus == "main"],
+            *[module for module in stability_replay_modules if module.corpus == "main"],
+        ]
         module_requests = [_module_request(module) for module in modules]
         request_routes = [_request_route(judge_route, request) for request, _hashes in module_requests]
         _preflight_caps(args=args, request_routes=request_routes, seat_key=seat_key, seat_caps=seat_caps)
+        module_call_plan = _module_call_plan(modules, module_requests, request_routes)
         candidate_windows = sum(len(item.windows) for item in prepared)
         serializer_hash_checks = sum(len(item.windows) for item in prepared)
         probe_classes = sorted(
@@ -820,8 +929,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             "probe_cases": len(probe_cases),
             "candidate_windows": candidate_windows,
             "module_calls": len(modules),
+            "primary_module_calls": len(primary_modules),
+            "stability_module_calls": len(stability_replay_modules),
             "probe_module_calls": sum(module.corpus == "probe" for module in modules),
             "main_module_calls": sum(module.corpus == "main" for module in modules),
+            "stability_case_ids": stability_ids,
             "serializer_hash_checks": serializer_hash_checks,
             "worst_case_usd": sum(route.worst_case_usd for route in request_routes),
             "seat_key": seat_key,
@@ -846,7 +958,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_dir = args.output_dir
         cache_dir = output_dir / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
-        emissions: dict[str, Any] = {}
+        emissions: dict[str, list[dict[str, Any]]] = {}
         manifest: list[dict[str, Any]] = []
         ledger = layerb_shadow.BudgetLedger(args.max_usd, seat_caps, args.max_judge_calls)
         judge = layerb_shadow.SubprocessJudge(shlex.split(args.judge_command), args.judge_timeout_seconds)
@@ -854,9 +966,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             modules, module_requests, request_routes, strict=True
         ):
             request_hash = _sha256_json(request)
-            cache_path = _cache_path(cache_dir, request, effective_route.to_dict())
+            cache_path = _cache_path(cache_dir, request, effective_route.to_dict(), attempt=module.attempt)
             cached = _read_json(cache_path) if args.resume and cache_path.is_file() else None
-            call_id = f"artifact-{module.artifact_sha256}"
+            call_id = _call_id(module)
+            module_id = _module_id(module)
             call: layerb_shadow.JudgeCall | None = None
             response: Mapping[str, Any] | None = None
             status = "completed"
@@ -925,17 +1038,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 module_emissions[prepared_case.case_id] = _emission(
                     prepared_case,
                     call_id=call_id,
+                    attempt=module.attempt,
                     observed=observed,
                     response=case_response or _failure_response(prepared_case),
                     status=status,
                     validation_substituted=substitutions_by_case.get(prepared_case.case_id, ()),
                     evidence_pattern_hits=evidence_pattern_hits_by_case.get(prepared_case.case_id, ()),
                 )
-            emissions.update(module_emissions)
+            for case_id, emission in module_emissions.items():
+                attempts = emissions.setdefault(case_id, [])
+                if len(attempts) != module.attempt:
+                    raise CollectionError(
+                        f"{case_id}: cannot record attempt {module.attempt} after {len(attempts)} prior attempts"
+                    )
+                attempts.append(emission)
             manifest.append(
                 {
                     "artifact_sha256": module.artifact_sha256,
+                    "module_id": module_id,
                     "call_id": call_id,
+                    "attempt": module.attempt,
                     "corpus": module.corpus,
                     "case_ids": sorted(module_emissions),
                     "request_sha256": request_hash,
@@ -947,6 +1069,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     },
                     "serialized_window_sha256": serialized_window_hashes,
                     "input_token_upper_bound": module_route.max_input_tokens,
+                    "expected_module_envelope": module_call_plan[module_id],
                     "cost": dict(observed),
                     "seat": {"key": seat_key, "metadata": seat_metadata},
                     "status": status,
@@ -955,7 +1078,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "timestamp": _utc_now(),
                 }
             )
-            _write_collector_outputs(output_dir, emissions, route_payload, manifest)
+            _write_collector_outputs(output_dir, emissions, route_payload, manifest, module_call_plan)
             if module.corpus == "probe":
                 for prepared_case in module.cases:
                     probe_error = _probe_error(prepared_case, module_emissions[prepared_case.case_id], effective_route)
