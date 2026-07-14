@@ -5285,15 +5285,19 @@ def _section_item_key(item: object) -> str | None:
 
     Synonym/antonym chips are strings, optionally ``"word (qualifier)"``; homonym,
     paronym and idiom items are dicts. The qualifier is stripped so a purely cosmetic
-    re-tag (``дорога (діал.)`` -> ``дорога``) is not counted as a lost item.
+    re-tag (``дорога (діал.)`` -> ``дорога``) is not counted as a lost item. The bare
+    term is then run through the same canonicalization as synonym terms
+    (``_strip_stress`` then ``_lookup_key`` apostrophe folding + whitespace collapse +
+    strip + casefold) so a difference only in stress marks (``мали́й``/``малий``) or
+    apostrophe style (``бабу’ся``/``бабу'ся``) never splits one member into two keys.
     """
     if isinstance(item, str):
-        return _base_word(item).strip().casefold() or None
+        return _lookup_key(_strip_stress(_base_word(item))) or None
     if isinstance(item, dict):
         for field in ("word", "target", "lemma", "phrase", "text", "definition"):
             value = item.get(field)
             if isinstance(value, str) and value.strip():
-                return _base_word(value).strip().casefold() or None
+                return _lookup_key(_strip_stress(_base_word(value))) or None
     return None
 
 

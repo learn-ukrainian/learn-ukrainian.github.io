@@ -4033,3 +4033,72 @@ def test_offline_carry_over_skips_items_absent_from_baseline(monkeypatch) -> Non
     )
     assert "крихітний" not in section["source"]
     assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_offline_carry_over_matches_across_apostrophe_style(monkeypatch) -> None:
+    # #5121 (d) / #5128 finding 1: a baseline pointer segment whose term uses a curly
+    # apostrophe (бабу’ся) must still carry onto a present member stored with a straight
+    # apostrophe (бабу'ся). Both sides normalize through the shared canonical key, so
+    # apostrophe style never splits one member into two keys and silently drops the pointer.
+    new_antonyms = {
+        "items": ["бабу'ся"],  # straight-apostrophe stored form (local membership)
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/didus"],
+    }
+    baseline = {
+        "items": ["бабу’ся"],  # curly-apostrophe baseline form
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → бабу’ся",
+        "source_urls": [
+            "https://example.invalid/wiktionary/didus",
+            "https://example.invalid/sum20/didus",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # annotation source not consultable -> carry path
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["бабу'ся"]  # membership untouched
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → бабу’ся"
+    )
+    assert section["source_urls"] == [
+        "https://example.invalid/wiktionary/didus",
+        "https://example.invalid/sum20/didus",
+    ]
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_offline_carry_over_matches_across_stress_marks(monkeypatch) -> None:
+    # #5121 (e) / #5128 finding 1: a baseline pointer segment whose term carries a stress
+    # mark (мали́й) must still carry onto the present bare member (малий). Stress-stripping
+    # in the shared canonical key keeps both on the same key.
+    new_antonyms = {
+        "items": ["малий"],  # bare stored form (local membership)
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
+    }
+    baseline = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й",
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+        ],
+    }
+    entry = _run_antonym_annotation_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},
+        new_antonyms=new_antonyms,
+        baseline=baseline,
+    )
+    section = entry["sections"]["antonyms"]
+    assert section["items"] == ["малий"]
+    assert section["source"] == (
+        "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й"
+    )
+    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
