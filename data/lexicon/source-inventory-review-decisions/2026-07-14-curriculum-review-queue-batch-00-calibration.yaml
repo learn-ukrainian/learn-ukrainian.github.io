@@ -1,3 +1,4 @@
+# Final adjudicated split: 94 approve / 6 needs_more_evidence; seats: codex proposer · agy cross-family · claude-atlas dictionary adjudication.
 version: 1
 kind: atlas_source_inventory_review_decisions
 batch_id: curriculum-review-queue-2026-07-14-batch-00-calibration
@@ -411,11 +412,10 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: задача
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: noun
   approved_gloss: problem (schoolwork exercise)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: 'Contested calque risk: 6 UA-GEC corrections to завдання; needs per-item review with sense boundary (math task vs general task).'
   source_inventory:
     key: 897f4af46eb0c43b
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -430,11 +430,10 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: тека
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: noun
   approved_gloss: folder (organizer)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: 'Authentic pre-Soviet word (Грінченко 1907, Голоскевич 1929) with modern revival (computing ''folder''); demoted from CALIBRATION only — heritage-defense case to be made in a per-item batch, keep authentic_ukrainian=true in notes.'
   source_inventory:
     key: 2a8602d51deed4a3
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -445,15 +444,14 @@ decisions:
   - 'curriculum context: source_inventory.locator'
   - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword тека'
   - 'VESUM: unique lemma+POS'
-  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0; authentic_ukrainian=true'
   review_queue_reasons:
   - missing_english_anchor
 - lemma: білизна
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: noun
   approved_gloss: laundry (that which needs to be laundered)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: 'Stress homograph: біли́зна (whiteness) vs білизна́ (linen); needs stress-disambiguated per-item entry.'
   source_inventory:
     key: ad8e451d668905ad
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1155,11 +1153,10 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: ей
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: intj
   approved_gloss: hey (exclamation to get attention) (interjection)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: Non-standard interjection with russian-shadow pattern; standard UA is гей; route to per-item/reject review.
   source_inventory:
     key: 33a2b1df4bf80e0c
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1234,8 +1231,7 @@ decisions:
   decision: approve_for_publish
   approved_pos: noun
   approved_gloss: picture (photograph)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: 'СУМ-20 (modern): СВІТЛИ́НА — фотографія, with literary citations; heritage-defense verified (ЕСУМ + Lviv attestation; Soviet-era заст. marking is suppression artifact, not obsolescence). Approved: decolonization-positive modern word.'
   source_inventory:
     key: 4a33195f5feeaad7
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1244,7 +1240,7 @@ decisions:
     source_family: curriculum
   evidence_refs:
   - 'curriculum context: source_inventory.locator'
-  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword світлина'
+  - 'СУМ-20 (modern): СВІТЛИ́НА — фотографія, with literary citations; heritage-defense verified (ЕСУМ + Lviv attestation; Soviet-era заст. marking is suppression artifact, not obsolescence). Approved: decolonization-positive modern word.'
   - 'VESUM: unique lemma+POS'
   - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
   review_queue_reasons:
@@ -1422,11 +1418,10 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: любий
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: adj
   approved_gloss: dear (loved; lovable)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: "False-friend risk vs russian 'любой'(=any); authentic UA sense 'dear/beloved'; needs per-item review with contrast note (будь-який)."
   source_inventory:
     key: 39c07082d2c1aa7c
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1612,11 +1607,10 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: лік
-  decision: approve_for_publish
+  decision: needs_more_evidence
   approved_pos: noun
   approved_gloss: medicine (substance which promotes healing)
-  sense_note: Curriculum context; see source_inventory.locator. Exact dmklinger
-    UK→EN dictionary gloss.
+  sense_note: "Singular 'medicine' sense dialectal/obsolete (standard: ліки pl.); primary singular sense is 'count'; per-item review."
   source_inventory:
     key: 34d35079fbf1d11c
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
