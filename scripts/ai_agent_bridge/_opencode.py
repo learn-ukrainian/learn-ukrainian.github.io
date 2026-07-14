@@ -25,6 +25,12 @@ Invocation:
 
 Under the hood: opencode run --model PROVIDER/MODEL [--variant V]
     --format {default|json} [--file FILE --] "CONTENT"
+
+For glm/pool (reasoning lanes), the bridge also injects
+OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX (sourced from AB_* envs or
+per-model defaults of 128K+) into the subprocess to raise the output
+budget beyond the ~32k cap that produced step_finish reason=length.
+See _get_max_output_tokens and GLM/POOL_DEFAULT_MAX_OUTPUT_TOKENS.
 """
 
 from __future__ import annotations
@@ -80,6 +86,29 @@ GLM_DEFAULT_TIMEOUT_S = 1800
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM.
 _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
+
+# Max output token budget for opencode-routed reasoning-heavy lanes (glm/pool)
+# to give headroom for hidden reasoning before a `step_finish` with reason="length".
+# Observed death: ~32k reasoning + 5 output on glm-5.2 (input ~31k). Target:
+# reasoning + final output headroom >= 64K (or the provider-advertised max).
+#
+# Control:
+# - Sane default per model (131072 for glm-5.2 which advertises ~131K output).
+# - Per-model env overrides: AB_GLM_MAX_OUTPUT_TOKENS, AB_POOL_MAX_OUTPUT_TOKENS
+# - Global: AB_OPENCODE_MAX_OUTPUT_TOKENS
+# - Falls back to setting OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX for the
+#   subprocess (the known lever to lift opencode's internal ~32k cap on some
+#   paths / custom providers; see anomalyco/opencode#29363 and related).
+# If the provider plan or opencode build still caps it server-side, the
+# experimental env is still passed (no placebo; callers can observe via
+# raw NDJSON step_finish + tokens).
+#
+# NOTE: this is *output* (incl. reasoning for these models). Context is separate.
+GLM_DEFAULT_MAX_OUTPUT_TOKENS = 131072
+POOL_DEFAULT_MAX_OUTPUT_TOKENS = 131072
+AB_OPENCODE_MAX_OUTPUT_TOKENS_ENV = "AB_OPENCODE_MAX_OUTPUT_TOKENS"
+AB_GLM_MAX_OUTPUT_TOKENS_ENV = "AB_GLM_MAX_OUTPUT_TOKENS"
+AB_POOL_MAX_OUTPUT_TOKENS_ENV = "AB_POOL_MAX_OUTPUT_TOKENS"
 
 # Google Gemma 4 fleet member (Apr 2026, Apache-2.0). Default pin since
 # 2026-07-07 = Google AI Studio DIRECT (`google-ais` opencode provider, user
@@ -488,6 +517,52 @@ def _strip_gemma_thought(text: str) -> str:
     return stripped if stripped.strip() else text
 
 
+def _get_max_output_tokens(model: str) -> int | None:
+    """Return the output token budget (incl. reasoning) to request for this model.
+
+    Resolution (highest to lowest precedence):
+      1. model-specific AB_* env (AB_GLM_MAX_OUTPUT_TOKENS etc.)
+      2. global AB_OPENCODE_MAX_OUTPUT_TOKENS
+      3. per-model sane default (131072 for glm/pool)
+      4. None (do not override; let opencode/provider decide)
+
+    The returned value (if any) is injected as OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX
+    into the opencode subprocess env. This is the current mechanism to raise
+    beyond opencode's ~32k internal default on some reasoning/custom paths.
+    """
+    # Model-specific envs take precedence
+    if model == GLM_MODEL or "glm" in model.lower() or model.startswith("zai"):
+        v = os.environ.get(AB_GLM_MAX_OUTPUT_TOKENS_ENV)
+        if v and v.strip():
+            try:
+                return int(v)
+            except ValueError:
+                pass
+    if model == POOL_MODEL or "poolside" in model.lower() or "pool" in model.lower():
+        v = os.environ.get(AB_POOL_MAX_OUTPUT_TOKENS_ENV)
+        if v and v.strip():
+            try:
+                return int(v)
+            except ValueError:
+                pass
+
+    # Global override
+    v = os.environ.get(AB_OPENCODE_MAX_OUTPUT_TOKENS_ENV)
+    if v and v.strip():
+        try:
+            return int(v)
+        except ValueError:
+            pass
+
+    # Sane defaults for the reasoning lanes that exhibited the length death.
+    if model == GLM_MODEL or "glm" in model.lower() or model.startswith("zai"):
+        return GLM_DEFAULT_MAX_OUTPUT_TOKENS
+    if model == POOL_MODEL or "poolside" in model.lower():
+        return POOL_DEFAULT_MAX_OUTPUT_TOKENS
+
+    return None
+
+
 @dataclass(frozen=True, slots=True)
 class OpencodeStreamParse:
     """One-pass parse of an opencode ``--format json`` (NDJSON) stream.
@@ -570,6 +645,15 @@ def _run_opencode(
     argv.append("--")
     argv.append(content)
 
+    # Inject per-model (or env-overridable) output token budget for reasoning
+    # models. This is passed via the known experimental lever so that glm/pool
+    # reasoning does not hit the opencode-internal ~32k cap and die with
+    # step_finish reason=length before producing the final message.
+    env = os.environ.copy()
+    max_tokens = _get_max_output_tokens(model)
+    if max_tokens is not None:
+        env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] = str(max_tokens)
+
     timeout = None if no_timeout else default_timeout_s
     try:
         result = subprocess.run(
@@ -578,6 +662,7 @@ def _run_opencode(
             text=True,
             timeout=timeout,
             cwd=str(cwd) if cwd is not None else None,
+            env=env,
         )
     except subprocess.TimeoutExpired as exc:
         raise SystemExit(f"ask-opencode: opencode timed out after {timeout}s") from exc
