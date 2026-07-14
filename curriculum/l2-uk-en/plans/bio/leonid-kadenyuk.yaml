@@ -22,6 +22,7 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings_contract_version: 2
 connects_to:
 - bio-117
 - bio-118
@@ -86,44 +87,42 @@ readings:
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-12076
   language: uk
-  genre: Енциклопедична стаття
-  source_type: reference
-  role: primary_bio
-  cefr_min: C1
-  license: copyrighted
+  type: encyclopedia
+  role: context
   hosting: link-only
-  learner_task: 'Виписати військову освіту, випробувальну кар''єру, місію STS-87 та українські державні ролі; відділити факти польоту від символічного образу "першого космонавта незалежної України".'
-  caveats: 'ЕСУ дає стислий довідковий каркас; питання радянської авіаційної кар''єри й українського символічного переозначення потребують окремої дискусії.'
-- title: 'Уривок зі щоденника Леоніда Каденюка під час місії STS-87'
-  source_name: Книга «Місія — Космос»
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-12076
+    note: Зовнішнє посилання; текст енциклопедичної статті не відтворюється в курсі.
+  learner_task: Виписати перевірну хронологію освіти, льотної підготовки, місії
+    STS-87 та роботи після польоту; окремо позначити символічні інтерпретації.
+- title: Леонід Каденюк, перший астронавт незалежної України
+  source_name: Укрінформ
+  source_url: https://www.ukrinform.ua/rubric-society/2394072-futbolist-sahtara-kostue-bilse-niz-vsa-kosmicna-galuz-ukraini-leonid-kadenuk.html
   language: uk
-  genre: 'Мемуари / Щоденник'
-  source_type: 'Первинне джерело'
-  role: 'Безпосереднє свідчення про політ та наукову роботу'
-  cefr_min: C1
-  license: 'copyrighted'
-  hosting: 'reading-needed'
-  learner_task: 'Проаналізувати стилістику записів: як балансують наукові спостереження та патріотичні рефлексії.'
-  caveats: 'Текст був відредагований для публікації, тому може не відображати спонтанні думки.'
+  type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrinform.ua/rubric-society/2394072-futbolist-sahtara-kostue-bilse-niz-vsa-kosmicna-galuz-ukraini-leonid-kadenuk.html
+    note: Зовнішнє посилання на інтерв'ю; текст і фотографії не відтворюються в курсі.
+  learner_task: Проаналізувати, як Каденюк пояснює тривалу підготовку, значення
+    польоту та стан космічної галузі; відрізнити спогад учасника від довідкового факту.
 references:
 - title: Каденюк Леонід Костянтинович
-  note: Леонід Каденюк (Wikipedia UA) — базова біографічна інформація
-  path: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
-  type: primary
-- title: Sts 87
-  note: NASA - STS-87 — офіційна інформація про місію
-  path: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
+  note: Інституційна біографія і професійна хронологія
   type: reference
-- title: Місія — Космос
-  author: Леонід Каденюк
-  note: Автобіографічна книга, джерело цитат та прямої мови
-  type: primary
-  work: Місія — Космос
+  url: https://esu.com.ua/article-12076
+- title: Леонід Каденюк, перший астронавт незалежної України
+  note: Пряме інтерв'ю про підготовку, політ і стан космічної галузі
+  type: interview
+  url: https://www.ukrinform.ua/rubric-society/2394072-futbolist-sahtara-kostue-bilse-niz-vsa-kosmicna-galuz-ukraini-leonid-kadenuk.html
 sequence: 172
 slug: leonid-kadenyuk
 subtitle: 'Leonid Kadenyuk: The First Astronaut of Independent Ukraine'
 title: 'Леонід Каденюк: Перший космонавт незалежної України'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: людина, яка здійснила політ у космос; льотчик-випробувач космічної техніки
   pos: ч.

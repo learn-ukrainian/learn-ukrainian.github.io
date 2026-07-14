@@ -22,6 +22,7 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings_contract_version: 2
 connects_to:
 - bio-89-taras-prokhasko
 - bio-86-oksana-zabuzhko
@@ -83,50 +84,42 @@ readings:
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-34039
   language: uk
-  genre: Енциклопедична стаття
-  source_type: reference
-  role: primary_bio
-  cefr_min: C1
-  license: copyrighted
+  type: encyclopedia
+  role: context
   hosting: link-only
-  learner_task: 'Виписати ранні львівські театральні й журналістські практики, прозові тексти та жанрову різноманітність; поставити питання, як довідкова біографія співвідноситься з образом містифікатора.'
-  caveats: 'ЕСУ подає базову біографію й перелік ранніх творів; для етики містифікації та львівського міфотворення потрібна окрема критична стаття або уривок з тексту.'
-- title: Критична стаття про містифікацію й львівський міф у прозі Винничука
-  source_name: Підлягає уточненню
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-34039
+    note: Зовнішнє посилання; текст енциклопедичної статті не відтворюється в курсі.
+  learner_task: Укласти хронологію від народження в Станіславі до роботи у Львові;
+    зіставити жанрову різноманітність із пізнішим образом містифікатора.
+- title: 'Від міста-перехрестя до міста-жертви: Львів у романі Юрія Винничука «Танґо смерті»'
+  source_name: Інститут історії України НАН України
+  source_url: https://resource.history.org.ua/publ/misto_2020_9_12
   language: uk
-  genre: Літературна критика
-  source_type: reading-needed
-  role: reading-needed
-  cefr_min: C1
-  license: unknown
-  hosting: reading-needed
-  learner_task: 'Підібрати українську критичну статтю про "Легенди Львова", "Танґо смерті" або постмодерну гру з історією; не використовувати неперевірені назви.'
-  caveats: 'Потрібна окрема курація, щоб не підмінити критику рекламним або довідковим текстом.'
+  type: scholarly-article
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/publ/misto_2020_9_12
+    note: Зовнішнє посилання на наукову статтю; текст не відтворюється в курсі.
+  learner_task: Простежити, як дослідник розрізняє Львів-перехрестя і Львів-жертву;
+    оцінити межу між історичною пам'яттю, художньою реконструкцією та міфотворенням.
 references:
-- title: Yuriy Vynnychuk
-  note: Compiled biographical data, list of works, key critical interpretations
-  path: wiki/bio/yuriy-vynnychuk.md
-  type: wiki
-- title: Танґо смерті
-  author: Винничук Ю.
-  note: Ключовий роман для аналізу тем пам'яті, історії та міжнаціональних стосунків
-  type: primary
-  work: Танґо смерті
-- title: Легенди Львова
-  author: Винничук Ю.
-  note: Джерело для аналізу прийомів містифікації та створення міського міфу
-  type: primary
-  work: Легенди Львова
-- title: ЛітАкцент
-  note: Рецензії та критичні статті про творчість Винничука
-  source: ЛітАкцент
+- title: Винничук Юрій Павлович
+  note: Інституційна біографія і жанровий профіль
   type: reference
-  url: https://litakcent.com/
+  url: https://esu.com.ua/article-34039
+- title: 'Від міста-перехрестя до міста-жертви: Львів у романі Юрія Винничука «Танґо смерті»'
+  note: Наукова стаття про міську пам'ять у романі
+  type: scholarly-article
+  url: https://resource.history.org.ua/publ/misto_2020_9_12
 sequence: 174
 slug: yuriy-vynnychuk
 subtitle: 'Yuriy Vynnychuk: The Lviv Storyteller and Mystifier'
 title: 'Юрій Винничук: Львівський казкар'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: свідоме введення в оману; твір, що видається за створений іншим автором або в іншу епоху
   pos: ж.

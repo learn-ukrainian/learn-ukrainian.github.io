@@ -22,6 +22,7 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings_contract_version: 2
 connects_to:
 - bio-82-yuriy-vynnychuk
 - bio-85-mariya-matios
@@ -82,46 +83,42 @@ readings:
   source_name: Радіо Свобода
   source_url: https://www.radiosvoboda.org/a/24413939.html
   language: uk
-  genre: 'Інтерв''ю'
-  source_type: 'Журналістика'
-  role: authorial-position
-  cefr_min: C1
-  license: 'copyrighted'
+  type: interview
+  role: context
   hosting: link-only
-  learner_task: 'Проаналізувати, як Шкляр сам формулює роль письменника, історичної пам''яті та політичної позиції; відокремити авторську самопрезентацію від перевірних фактів.'
-  caveats: 'Інтерв''ю є майданчиком прямої мови автора, тому його потрібно читати поруч із критикою масового історичного роману й академічними джерелами про Холодний Яр.'
-- title: Критичний матеріал про роман «Чорний ворон»
-  source_name: Підлягає уточненню
+  rights:
+    basis: external-link
+    evidence_url: https://www.radiosvoboda.org/a/24413939.html
+    note: Зовнішнє посилання на інтерв'ю; текст не відтворюється в курсі.
+  learner_task: Визначити тези Шкляра про письменницьку відповідальність та
+    історичну пам'ять; відокремити авторську самопрезентацію від перевірних фактів.
+- title: '«Чорний ворон» Василя Шкляра: між високою та масовою літературою?'
+  source_name: Наукові праці. Філологія. Літературознавство
+  source_url: https://litstudies.chdu.edu.ua/article/view/71821
   language: uk
-  genre: 'Літературна критика / Рецензія'
-  source_type: reading-needed
-  role: reading-needed
-  cefr_min: C1
-  license: unknown
-  hosting: reading-needed
-  learner_task: 'Підібрати українську критичну рецензію, що розбирає маскульт, історичну пам''ять і ризик ідеалізації в романі.'
-  caveats: 'Не підставляти неперевірену назву або URL; потрібна окрема курація якісного критичного джерела.'
+  type: scholarly-article
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://litstudies.chdu.edu.ua/article/view/71821
+    note: Зовнішнє посилання на наукову статтю; текст не відтворюється в курсі.
+  learner_task: Порівняти ознаки високої та масової літератури в аналізі роману;
+    оцінити, як жанрова форма впливає на образ холодноярців і пам'ять про повстання.
 references:
-- title: Василь Шкляр (Wikipedia UA)
-  name: Василь Шкляр (Wikipedia UA)
-  note: Основна біографічна інформація
-  type: primary
-  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
-- title: Видавництво Клуб сімейного дозвілля
-  name: Видавництво Клуб сімейного дозвілля
-  note: Бібліографія та видання
-  type: reference
-  url: https://www.bookclub.ua/
-- title: Літакцент
-  name: Літакцент
-  note: Рецензії та аналіз творчості
-  type: reference
-  url: https://litakcent.com/
+- title: '«Українське суспільство мовчить, зціпивши зуби» – Василь Шкляр'
+  note: Пряме інтерв'ю про авторську позицію та історичну пам'ять
+  type: interview
+  url: https://www.radiosvoboda.org/a/24413939.html
+- title: '«Чорний ворон» Василя Шкляра: між високою та масовою літературою?'
+  note: Фахова стаття про жанрову організацію роману
+  type: scholarly-article
+  url: https://litstudies.chdu.edu.ua/article/view/71821
 sequence: 173
 slug: vasyl-shkliar
 subtitle: 'Vasyl Shkliar: Master of the Historical Novel'
 title: 'Василь Шкляр: Майстер історичного роману'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: книга, що видається найбільшим накладом і має комерційний успіх
   pos: ч.
@@ -152,5 +149,5 @@ vocabulary_hints:
   word: популяризація
 - definition: учасники повстанського руху в Холодному Яру (1918-1922)
   pos: ч. (мн.)
-  word: холоднояровці
+  word: холодноярці
 word_target: 5000

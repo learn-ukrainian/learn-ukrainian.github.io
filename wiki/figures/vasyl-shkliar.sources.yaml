@@ -1,37 +1,21 @@
-# Source registry for wiki/figures/vasyl-shkliar.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Основний-зміст-Деконструкція-імперського-міфу-Постколоніальна-оптика-роману
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Основний зміст
-    > Деконструкція імперського міфу: Постколоніальна оптика роману'
+  file: https://www.radiosvoboda.org/a/24413939.html
+  type: external
+  title: '«Українське суспільство мовчить, зціпивши зуби» – Василь Шкляр'
+  url: https://www.radiosvoboda.org/a/24413939.html
 - id: S2
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Деколонізаційна
-    перспектива'
+  file: https://litstudies.chdu.edu.ua/article/view/71821
+  type: external
+  title: '«Чорний ворон» Василя Шкляра: між високою та масовою літературою?'
+  url: https://litstudies.chdu.edu.ua/article/view/71821
 - id: S3
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Основний-зміст-Культурний-опір-та-протистояння-російському-світу
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Основний зміст
-    > Культурний опір та протистояння «російському світу»'
-- id: S4
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Основний-зміст-Концепція-залишенців-та-збройний-опір-Холодного-Яру
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Основний зміст
-    > Концепція «залишенців» та збройний опір Холодного Яру'
-- id: S5
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Короткий зміст'
-- id: S6
-  file: ukrainian_wiki/vasyl-shkliar_Біографія-Василь-Шкляр-Майстер-історичного-роману-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Василь Шкляр: Майстер історичного роману'
-  section_path: 'Біографія: Василь Шкляр: Майстер історичного роману > Мовні зразки'
+  file: https://commons.wikimedia.org/wiki/File:Vasyl-shklyar-2011.jpg
+  type: external
+  title: File:Vasyl-shklyar-2011.jpg
+  url: https://commons.wikimedia.org/wiki/File:Vasyl-shklyar-2011.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Vasyl-shklyar-2011.jpg
+    license: CC BY-SA 3.0
+    attribution: Kronk

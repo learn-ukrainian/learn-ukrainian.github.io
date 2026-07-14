@@ -1,161 +1,180 @@
 # Юрій Павлович Винничук — Research Dossier
 
 **Slug:** `yuriy-vynnychuk`
-**Block:** K (living contemporary writer; Soviet-era pressure and post-Soviet cultural controversy, not a martyr biography)
-**Tier:** 3
-**Issue:** #2535 (original-180 ghost-wiki dossier uplift — living writers)
-**Researcher:** GPT-5.5 (Codex)
-**Completed:** 2026-06-04
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] >=3 Tier 1/Tier 2 institutional sources cited where available (ЕСУ, EBRD/BBC award note, Wilson Center event record); Wikipedia kept Tier 3 only
-- [x] Oppression mechanism is specific and modest: KDB interest/search in 1974, later KDB attention in 1978; no invented arrest, case file, or imprisonment
-- [x] >=2 primary/recorded-speech quotes included; `verify_quote` scores reported honestly as corpus-unmatched
-- [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-04
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-14
+**Evidence key:** D1 — Енциклопедія Сучасної України; D2 — Іван Монолатій,
+Інститут історії України НАН України; D3 — Wikimedia Commons.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Юрій Павлович Винничук. [T1: ЕСУ; T3: uk.wikipedia]
-- **Pseudonyms / aliases:** Юрко Винничук (publication form); Юзьо Обсерватор (journalistic persona). Forbidden/Russified forms for body text: Юрий Павлович Винничук; Yuri Vinnichuk when copied from Russian-language metadata.
-- **Born:** 18 March 1952 | **Станіслав, now Івано-Франківськ** | Ukrainian SSR, USSR. [T1: ЕСУ; T3: uk.wikipedia]
-- **Died:** N/A — living person as of this dossier date.
-- **Education / early work:** Graduated from the Ivano-Frankivsk Pedagogical Institute in 1973; worked for a time as an artist-designer and in journalism; later became a writer, journalist, editor, translator, and anthologist. [T1: ЕСУ; T3: uk.wikipedia]
+Юрій Павлович Винничук народився 18 березня 1952 року в Станіславі, нині
+Івано-Франківську [D1]. Енциклопедія Сучасної України простежує освіту,
+переїзд до Львова, роботу в театрі та журналістиці, а також прозову,
+перекладацьку й упорядницьку діяльність [D1]. Цей факт виправляє поширену
+спрощену рамку про «львівське дитинство»: Львів став центральним містом його
+дорослої творчої біографії, але не місцем народження.
 
-**Hard correction note:** Do **not** write a "Lviv childhood" premise. The verified birth place is **Станіслав/Ivano-Frankivsk**, and the verified education path is the Ivano-Frankivsk Pedagogical Institute. In a 2009 recorded interview, Vynnychuk says he finished the institute in 1973, worked at **«Прикарпатська правда»**, and after a 4 April 1974 KGB search fled to Lviv. [T5: Detector Media interview; T3: uk.wikipedia]
+D1 подає жанрово широкий доробок: проза, літературні містифікації, краєзнавчі
+й фольклорні зацікавлення, переклади та публіцистика. Для цього пакета перелік
+важливий не як повна бібліографія, а як доказ того, що образ «львівського
+казкаря» охоплює лише частину практик. Наукова стаття Івана Монолатія зосереджує
+увагу на одному пізнішому романі — «Танґо смерті» — й аналізує в ньому перехід
+від образу міста-перехрестя до образу міста-жертви [D2].
 
-## 2. Oppression mechanism
+## 2. Львів як дорослий творчий простір
 
-This is a **living-writer dossier**, so the section should not inflate the record into martyrdom. The documented mechanism is **Soviet security pressure and publishability constraints**, not arrest, exile, or imprisonment.
+Біографічний маршрут потрібно формулювати точно: Станіслав / Івано-Франківськ
+є місцем народження й раннього формування, Львів — місцем тривалої професійної
+роботи [D1]. Таке розрізнення важливе, бо публічний образ Винничука настільки
+тісно з'єднаний зі Львовом, що культурна належність може помилково
+перетворитися на вигаданий факт дитинства.
 
-**What happened:** Vynnychuk's early manuscripts and non-socialist-realist writing drew KGB/KDB interest. The best accessible source in this pass is his own recorded account: after someone reported that he had old books and wrote texts far from socialist realism, KGB officers searched his home on **4 April 1974**; he describes the search as lasting 12 hours and says he then left for Lviv. Ukrainian Wikipedia repeats the same date and adds that the search was meant to find anti-Soviet writing. [T5: Detector Media interview; T3: uk.wikipedia]
+У Львові автор працював із міською історією, легендою, гумором, театральністю
+й журналістським письмом [D1]. Місто в його творчій практиці не є лише
+декорацією. Воно стає механізмом оповіді: місця накопичують історії, назви
+викликають різні часові шари, а межа між архівною згадкою та художнім додатком
+може свідомо розмиватися. Саме цю межу учень має вміти назвати.
 
-**By whom:** Soviet KGB/KDB structures. The dossier did **not** locate an archival case number, warrant, or personnel file; do not invent one.
+## 3. Містифікація як метод і ризик
 
-**Later pressure:** The Ukrainian Wikipedia article states that in 1978 Vynnychuk wrote the poem **«Арканум»** and the story **«Ги-ги-ги»**, which again attracted KGB attention because of anti-Soviet satire. Treat this as a tertiary-source claim unless a future researcher finds a primary archival record or a stable author interview specifically on the 1978 episode. [T3: uk.wikipedia]
+D1 фіксує містифікаційний складник творчості Винничука [D1]. У літературі
+містифікація може наслідувати документ, давній текст або чуже авторство,
+створюючи гру з довірою читача. Це художній прийом, а не автоматичний доказ
+нечесності. Його педагогічна цінність полягає в питанні: які сигнали дозволяють
+відрізнити стилізацію від джерела?
 
-**What survived / what was distorted:** The relevant survival story is not destroyed manuscripts but **delayed public circulation**: much of the prose associated with Vynnychuk's black humor, mystification, erotic grotesque, and old-Lviv urban memory enters print only around the late Soviet collapse and post-1991 market. This makes him useful pedagogically as a case of how late Soviet censorship and post-Soviet publishing conditions shaped genre, not as a case of carceral repression.
+Ризик виникає, коли мистецьку гру переносять у довідковий режим без маркування.
+Якщо легенда повторюється як історичний факт, читач втрачає можливість
+перевірки. Тому dossier розрізняє `містифікацію` як жанрову стратегію,
+`псевдодокумент` як елемент твору й `фальсифікацію` як неправдиве твердження в
+контексті, де очікується факт. Пакет не оголошує кожний текст Винничука
+містифікацією.
 
-## 3. Major works
+## 4. «Танґо смерті» і складна пам'ять міста
 
-- `1989` — **«Огненний змій»**, anthology of 19th-c. Ukrainian fantasy, editor/anthologist role. [T1: ЕСУ]
-- `1990` — **«Спалах»**, fantastic prose collection; includes the early **«Місце для дракона»** material. [T1: ЕСУ; T3: uk.wikipedia]
-- `1990/2002` — **«Місце для дракона»**, philosophical children's/YA tale; strong candidate for accessible B2/C1 discussion. [T1: ЕСУ]
-- `1991/1992` — **«Діви ночі»**, crime/erotic urban prose; first journal publication then book publication. [T3: uk.wikipedia]
-- `1992` — **«Ласкаво просимо в Щуроград»**, anti-utopian Soviet-reality satire. [T3: uk.wikipedia]
-- `1999` — **«Легенди Львова»**, urban-legend/cultural-memory collection; important but should not be mistaken for childhood autobiography. [T1: ЕСУ]
-- `2003` — **«Мальва Ланда»**, novel. [T1: ЕСУ]
-- `2005` — **«Весняні ігри в осінніх садах»**, novel; listed by EBRD/BBC as the 2005 BBC Ukrainian Book of the Year winner. [T2: EBRD/BBC award note]
-- `2012` — **«Танґо смерті»**, novel; named BBC Ukrainian Book of the Year 2012 by BBC Ukrainian/EBRD; Wilson Center later hosted him in a Contemporary Ukrainian Literature event around the English translation. [T2: EBRD; T2: Wilson Center]
-- `2015` — **«Аптекар»**, historical-adventure novel set in early modern Lviv; useful for language/register work but requires high-context scaffolding. [T5: Rozmova interview; T3: uk.wikipedia]
+Стаття Монолатія прямо досліджує Львів у романі «Танґо смерті» [D2]. Її
+заголовкова опозиція — місто-перехрестя та місто-жертва — дає робочу модель
+для аналізу. Перехрестя підкреслює зустріч мов, релігій, культур і політичних
+режимів. Жертва нагадує про масове насильство, Голокост, окупації, війни й
+знищення спільнот. Романна модель поєднує ці образи, але не замінює історії
+кожної громади.
 
-## 4. Primary-source quotes (>=2 required)
+D2 слід використовувати як зовнішню наукову інтерпретацію, а не як дозвіл
+переказати роман повністю. Вона допомагає поставити питання про багатокультурну
+пам'ять і про небезпеку ретроспективної гармонізації. Назвати довоєнний Львів
+«багатокультурним» недостатньо: потрібно бачити нерівність, конфлікти,
+національні проєкти й подальше насильство. Водночас образ міста-жертви не має
+поглинати досвід його мешканців у єдиній безособовій трагедії.
 
-The local literary corpus did **not** match the chosen recorded-speech passages under `ukrlib-vynnychuk`; the real scores are reported rather than upgraded.
+## 5. Quotation disposition
 
-**Quote 1 — recorded speech on national mythmaking:**
+Жодної персональної цитати Юрія Винничука для відтворення не схвалено.
+Попередній пакет містив афоризми й уривки без прямого корпусного локатора.
+Вони вилучені, оскільки популярне приписування не підтверджує точну редакцію,
+контекст або право на передрук.
 
-> «Кожна нація творить свої міфи»
+D1 та D2 працюють у режимі link-only. Дозволений стислий переказ перевірних
+тверджень із посиланням. Якщо майбутній модуль потребуватиме художнього уривка,
+треба окремо встановити видання, сторінки, обсяг, навчальну необхідність і
+правову підставу. Ані енциклопедична стаття, ані критична публікація не надає
+ліцензії на відтворення роману.
 
-`verify_quote(author="ukrlib-vynnychuk")` -> **matched: false, best_confidence: 0.0**. Source context: interview title and topic in Detector Media, 2009. Pedagogically useful because Vynnychuk's mystifications and old-Lviv prose need to be taught as invented/curated cultural memory, not as transparent documentary history. [T5: Detector Media]
+## 6. Anti-hagiography and decolonization
 
-**Quote 2 — recorded speech on censorship pressure and the move to Lviv:**
+Образ «казкового Львова» може бути привабливим, але він здатен перетворити
+історичне місто на ностальгійну декорацію. D2 пропонує складнішу рамку:
+перехрестя співіснує з досвідом жертви [D2]. Деколонізоване читання не повинно
+повертати місто лише до імперської назви або одного панівного наративу. Воно
+має визнавати українські, єврейські, польські та інші присутності без
+привласнення їхніх травм.
 
-> «Після того, як 4 квітня 1974 р. у мене зробили обшук... я втік до Львова»
+Антиагіографічний підхід до автора також уникає двох крайнощів. Винничук не є
+ані безпомилковим хранителем «справжнього Львова», ані лише провокатором.
+Джерела підтримують твердження про жанрове розмаїття й міський фокус [D1, D2],
+але не дають права пояснювати кожен прийом прихованим мотивом. Оцінка має
+спиратися на конкретний текст і жанр.
 
-`verify_quote(author="ukrlib-vynnychuk")` was run on a shorter related passage and returned **matched: false, best_confidence: 0.0**. Source context: Detector Media interview, where he links the search to KGB interest in old books and non-socialist-realist writing. Pedagogically useful because it corrects the false "Lviv childhood" storyline and anchors Lviv as an adult relocation after Soviet pressure. [T5: Detector Media]
+## 7. Language register and naming
 
-**Quote 3 — recorded craft stance, optional teaching hook:**
+Основна форма — **Юрій Павлович Винничук**. Місто народження в історичному
+контексті можна називати Станіславом, додаючи сучасну назву Івано-Франківськ
+[D1]. Львів не слід подавати як місце дитинства. Ключова лексика:
+`містифікація`, `стилізація`, `пастиш`, `псевдодокумент`, `інтертекстуальність`,
+`міський міф`, `багатокультурність`, `історична пам'ять`, `місто-перехрестя`,
+`місто-жертва`.
 
-> «Реалізм у літературі — це часто страшенно нудно»
+Слово `постмодернізм` варто вживати лише тоді, коли учень може назвати
+конкретні ознаки — гру з авторством, цитатність, змішування жанрів або
+ненадійність документа. Загальний ярлик без текстового доказу нічого не
+пояснює.
 
-`verify_quote(author="ukrlib-vynnychuk")` was not corpus-matched in this pass; treat it as recorded interview/public-title evidence, not corpus-verified literary text. It helps explain why the dossier should foreground grotesque, fantasy, parody, and urban legend instead of forcing a realist-prose template. [T5: Rozmova interview archive]
+## 8. Image rights
 
-## 5. Language register
+Схвалене зображення — **File:Yuriy Vynnychuk.jpg** [D3]. Commons указує
+ліцензію CC BY-SA 3.0 та атрибуцію `Водник at ru.wikipedia` [D3]. Походження
+метаданих із російськомовного розділу не змінює ліцензійної чинності, але його
+не можна приховувати або замінювати вигаданим авторством. Підпис має містити
+точну атрибуцію, ліцензію й посилання на сторінку файла.
 
-- **Register:** urban Galician/Ukrainian literary prose with black humor, parody, erotic grotesque, fantasy, old-Lviv cultural lexicon, and deliberate mystification.
-- **CEFR readiness for full reading:** **B2/C1** for selected excerpts from **«Місце для дракона»** or urban legends; **C1/C2** for **«Танґо смерті»**, **«Аптекар»**, and heavily intertextual satirical prose.
-- **Lexicon notes:** VESUM check found `містифікація`, `постмодернізм`, `андеграунд`, `пастиш`, `інтертекстуальність`, `фантасмагорія`, `гротеск`, `бурлеск`, `краєзнавство`, and `антологія`. `check_russian_shadow` returned `matches_russian: false` for `містифікація` and `пастиш` at threshold 0.7.
-- **Stylistic features:** genre-mixing, mock-archival posture, unreliable documentary voice, burlesque shifts between comic and tragic registers, and Lviv urban micro-history.
+Правовий статус поширюється лише на цей файл. Якщо зображення кадрують,
+коригують або поєднують з іншою графікою, зміна позначається, а похідна версія
+дотримується share-alike. Інші світлини автора потребують окремої перевірки.
 
-## 6. Contested points
+## 9. Recommended teaching sequence
 
-- **Birthplace and Lviv identity.** Vynnychuk is strongly associated with Lviv as a writer and anthologist, but source-backed biography begins in **Станіслав/Ivano-Frankivsk** and only moves to Lviv in 1974. Any module that begins "Lviv boyhood" is factually wrong.
-- **Mystification vs fabrication.** His literary hoaxes are part of the art and should be taught as authored postmodern play, not accidentally repeated as historical evidence. This matters because one of his invented "old texts" entered reference circulation before being exposed as a hoax.
-- **Erotic/black-humor controversies.** Treat controversies through sourced public texts only. Do not add private-life speculation, moralizing, or unsourced claims about intent.
-- **Decolonial use.** His work can be read against Soviet realism and against Russian cultural prestige, but he should not be reduced to "anti-Russian writer." The better frame is the recovery and invention of Ukrainian urban genre spaces that Soviet cultural policy had narrowed.
+На першому етапі учні створюють дві колонки `Станіслав / Івано-Франківськ` і
+`Львів`. До першої заносять лише народження та раннє формування, до другої —
+дорослі професійні практики, які підтверджує D1. Потім вони пояснюють, чому
+культурний епітет «львівський автор» не дає права вигадувати львівське
+дитинство. Це проста вправа на розрізнення біографічного факту й рецепції [D1].
 
-## 7. Cross-track links
+Другий етап присвячено містифікації. Учитель пропонує умовні описи документа,
+псевдодокумента й легенди, а учні називають ознаки перевірки: видавець, автор,
+дата, жанровий маркер, бібліографічний слід, незалежне підтвердження. Жоден
+приклад не приписується Винничукові без прямого джерела. Мета — опанувати
+метод, а не створити нові міські перекази.
 
-> Every path under **Existing** below was verified with `test -e` on 2026-06-04. Candidate links are bare slugs/topics only and are not asserted as files.
+На третьому етапі D2 читається як карта двох метафор. Для
+`міста-перехрестя` учні фіксують можливість бачити зустріч культур і ризик
+гармонізації. Для `міста-жертви` — увагу до насильства і ризик знеособити
+конкретні спільноти. Завершальний текст має показати, як обидві метафори
+доповнюють одна одну, й позначити, де закінчується доказ D2 [D2].
 
-- **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/yuriy-vynnychuk.yaml` — the bio plan this dossier should correct, especially birthplace/Lviv timing.
-- **Existing LIT plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/lit-fantastika/vynnychuk-tango-death.yaml`
-  - `curriculum/l2-uk-en/plans/lit-fantastika/vynnychuk-night-maiden.yaml`
-  - `curriculum/l2-uk-en/plans/lit-youth/vynnychuk-lviv-tales.yaml`
-  - `curriculum/l2-uk-en/plans/lit-humor/vynnychuk-hoaxes.yaml`
-- **Candidate cross-track connections (Phase 2+, NOT existing files):**
-  - `postmodern-mystification` — teach literary hoax as method, not as archive.
-  - `lviv-urban-memory` — compare Vynnychuk's curated Lviv with historical Lviv modules.
-  - `late-soviet-censorship-humor` — connect black humor to publishability under late Soviet constraints.
+### Cross-link guidance
 
-## 8. Naming-canonical
+Подальші зв'язки можливі з історією Львова, студіями пам'яті, Голокостом і
+теорією постмодерного письма. Кожна з цих тем потребує власного прямого
+корпусу; поточний пакет лише відкриває питання. D3 використовується як
+ліцензований портрет, а не як доказ авторської іронії чи конкретного періоду
+творчості.
 
-- **Slug:** `yuriy-vynnychuk`
-- **EN canonical (project spelling):** Yuriy Vynnychuk
-- **UA canonical (with patronymic):** Юрій Павлович Винничук
-- **Aliases (track for `aliases:` YAML field):** Юрко Винничук; Юзьо Обсерватор; Yuriy Vynnychuk; Yuri Vynnychuk.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Юрий Павлович Винничук; Yuri Vinnichuk.
+### Editorial verification
 
-## 9. Image candidates
+Редакторська перевірка перед складанням модуля має пройти трьома питаннями.
+По-перше, чи кожний біографічний факт справді походить із D1, а не з публічного
+образу автора? По-друге, чи твердження про Львів у «Танґо смерті» подано як
+інтерпретацію D2, а не як універсальний опис усієї творчості? По-третє, чи
+будь-який приклад містифікації має прямий текстовий локатор? Негативна відповідь
+означає вилучення або окреме доопрацювання, а не ослаблення формулювання без
+джерела. Такий контроль особливо важливий для автора, чия творча практика сама
+грає з довірою й документальністю.
 
-- **Best portrait candidate:** Wikimedia Commons category/page for Yuriy Vynnychuk. Because he is living, verify the individual file license before reuse; do not assume public domain.
-- **Backup candidates:** event photographs from Wilson Center/Kennan Institute pages if license permits; publisher or festival headshots only with explicit CC/license permission.
-- **Context image:** book cover/title page for **«Танґо смерті»** or **«Легенди Львова»** may be fair-use-like in some contexts but should not be used as open educational art unless rights are cleared.
+## 10. Evidence matrix
 
-## 10. Sources used
+| Claim family | Evidence | Disposition |
+|---|---|---|
+| Народження, маршрут, професійні практики | D1 | Approved for bounded paraphrase |
+| Львів як дорослий творчий центр | D1 | Approved; not childhood |
+| Містифікація як частина практики | D1 | Approved without universalizing |
+| «Танґо смерті» і модель міста | D2 | Approved as scholarly interpretation |
+| Персональні цитати й уривки | — | Not approved for reproduction |
+| Портрет і права | D3 | Approved for exact file |
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Винничук Юрій Павлович." https://esu.com.ua/article-34039. Accessed 2026-06-04. Birth in Станіслав, date, education, early work, genre characterization, selected bibliography.
+## 11. Promotion disposition
 
-**Tier 2 (institutional / award):**
-- EBRD Press Office. "BBC Book prize winners in partnership with EBRD Cultural Programme." https://www.ebrd.com/home/news-and-events/news/2012/bbc-book-prize-winners-in-partnership-with-ebrd-cultural-programme.html. Accessed 2026-06-04. BBC Book 2012 for **«Танґо смерті»** and past-winner note for **«Весняні ігри в осінніх садах»**.
-- Wilson Center / Kennan Institute. "Tango of Death." https://www.wilsoncenter.org/event/tango-death. Accessed 2026-06-04. Event record for Vynnychuk and **The Tango of Death**, including BBC 2012 award note.
-
-**Tier 3 (encyclopedic — tertiary, not primary):**
-- Українська Вікіпедія. "Винничук Юрій Павлович." https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович. Accessed through `query_wikipedia` on 2026-06-04. Used for cross-checking life/work chronology; not treated as primary.
-
-**Tier 5 (general web / interviews):**
-- Detector Media. "Юрій Винничук: «Кожна нація творить свої міфи»." https://detector.media/withoutsection/article/43711/2009-02-10-yuriy-vynnychuk-kozhna-natsiya-tvoryt-svoi-mify/. Accessed 2026-06-04. Recorded interview; used for 1974 search/move account and quote.
-- Rozmova interview archive. "Юрій Винничук: Реалізм у літературі — це часто страшенно нудно." https://rozmova.wordpress.com/2015/10/08/urij-vynnychuk/. Accessed 2026-06-04. Used only as interview evidence/craft hook.
-- Radio Svoboda. "Порнографія чи еротика: хто стане цензором творчості Юрія Винничука?" https://www.radiosvoboda.org/a/24460860.html. Accessed 2026-06-04. Background on public controversy; not used for private claims.
-
-**Primary-source/corpus checks:**
-- `verify_quote(author="ukrlib-vynnychuk", text="Кожна нація творить свої міфи")` -> matched false, best_confidence 0.0.
-- `verify_quote(author="ukrlib-vynnychuk", text="Поезія належить молодості")` -> matched false, best_confidence 0.0.
-- `search_literary("Винничук Танґо смерті")` returned no Vynnychuk primary text match in the local corpus.
-- `verify_words` and `check_russian_shadow` results recorded in §5.
-
-**Honest gaps:** No KGB/KDB archival file number was located in this pass. ЕСУ is current only through its 2005 entry, so later works/awards are cross-checked against award/institutional or tertiary sources. Living-person private details are intentionally omitted.
-
-**URL verification:** Every external URL listed in §10 returned HTTP 200 after redirects via `curl -L` on 2026-06-04.
-
----
-
-## Decolonization self-check
-
-- [x] No Russocentric framing — Soviet/KGB pressure is named, but the biography stays Ukrainian and local.
-- [x] No Russian-imperial transliterations in body text except the explicitly forbidden list in §8.
-- [x] No Russocentric periodization — late Soviet and post-1991 contexts are named directly.
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms — living person.
-- [x] Place names use modern UA canonical forms with historical Станіслав explained.
-- [N/A] Holodomor.
-- [x] Russian aggression framing not central to this dossier; no false 2014/2022 claims added.
+Пакет придатний до catalog-source promotion. D1 дає достатню біографічну й
+жанрову орієнтацію, D2 — предметну наукову статтю про пам'ять Львова в
+«Танґо смерті», D3 — точний ліцензійний запис. Обидва читання залишаються
+link-only. Виправлено хибну рамку про львівське дитинство, персональні цитати
+не схвалено, а містифікацію чітко відділено від довідкового факту.

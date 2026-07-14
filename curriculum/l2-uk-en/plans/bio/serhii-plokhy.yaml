@@ -22,6 +22,7 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings_contract_version: 2
 connects_to:
 - mykhailo-hrushevsky
 - yaroslav-hrytsak
@@ -41,14 +42,14 @@ content_outline:
   section: 'Конфліктна карта: Між академією та масовим ринком'
   words: 900
 - points:
-  - Народження в російськомовній Горлівці, зростання в Запоріжжі та Дніпрі — формування в середовищі пізнього СРСР.
+  - Народження в Горькому (нині Нижній Новгород), дитинство та освіта в Запоріжжі й Дніпрі — формування в середовищі пізнього СРСР.
   - Навчання в Дніпропетровському університеті. Вибір теми дисертації про козацтво — дозволена, але водночас "національна" тема в радянській історіографії.
   - 'Академічна кар''єра в УРСР: від аспіранта до професора Київського університету. Робота в умовах ідеологічного контролю.'
   - Інтелектуальний клімат "перебудови" та розпаду СРСР як каталізатор для переоцінки історичних парадигм.
   section: 'Формування: Від Запоріжжя до Києва'
   words: 1000
 - points:
-  - 'Переїзд до Канади (1996) та робота в Альбертському університеті: інтеграція в західну академічну систему.'
+  - 'Початок роботи в Альбертському університеті 1991 року та подальша інтеграція в західну академічну систему.'
   - Запрошення до Гарварду (2007) та очолення Українського наукового інституту (HURI) з 2013 року. Перетворення HURI на ключовий світовий центр україністики.
   - 'Ключові праці: "Брама Європи", "Остання імперія", "Чорнобиль", "Ядерне безумство" — книги, що стали бестселерами та сформували розуміння України у мільйонів читачів.'
   - 'Вплив на світову політику: праці Плохія цитують провідні політики та аналітики, його експертиза стає основою для рішень.'
@@ -82,67 +83,50 @@ persona:
   voice: Historiography-Seminar-Moderator
 phase: BIO
 readings:
-  - title: Інтерв'ю Сергія Плохія (Українська правда)
-    language: uk
-    genre: Інтерв'ю / Публіцистика
-    source_type: primary
-    role: reading
-    source: Українська правда
-    source_url: https://www.pravda.com.ua/articles/2023/06/21/7407817/
-    license: copyrighted
-    rights_note: Текст інтерв'ю захищено авторським правом видання "Українська правда". Використовувати як link-only.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Прочитати інтерв'ю, звертаючи увагу на те, як історик формулює свої думки для широкої аудиторії та оцінює поточні події через призму історії.
-    caveats: Інтерв'ю відображає думки на момент літа 2023 року і є прикладом роботи "публічного інтелектуала", а не академічним дослідженням.
-  - title: Плохій Сергій Миколайович
-    language: uk
-    genre: Енциклопедична стаття / Довідка
-    source_type: reference
-    role: orientation
-    source: Вікіпедія
-    source_url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
-    license: CC-BY-SA-4.0
-    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: Ознайомитися з біографічною довідкою, еволюцією академічної кар'єри (від Дніпра до Гарварда) та переліком ключових праць.
-    caveats: Матеріал містить загальні факти; критичну оцінку "популярної історії" слід шукати у фахових рецензіях.
-  - title: Фрагмент / Передмова до книги "Брама Європи" (Потрібен матеріал)
-    language: uk
-    genre: Історична проза / Науково-популярний текст
-    source_type: primary
-    role: reading
-    source: Видавництво КСД
-    license: copyrighted
-    rights_note: Текст книги є об'єктом авторського права. Потрібно знайти легально опублікований уривок або ознайомчий фрагмент.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: Прочитати фрагмент "Брами Європи", аби відчути синтетичний авторський стиль і побачити, як Плохій пояснює складні історичні концепції загальному читачу.
-    caveats: Це фрагмент масового видання, стиль якого навмисне адаптовано для широкої світової аудиторії.
-references:
-- title: Плохій Сергій Миколайович
-  note: Біографія, академічна кар'єра, список праць
-  path: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
-  type: wiki
-- title: Брама Європи. Історія України від скіфських воєн до незалежності
-  author: Сергій Плохій
-  note: Ключова синтетична праця для розуміння стилю та підходу автора.
-  type: primary
-  work: Брама Європи. Історія України від скіфських воєн до незалежності
-- title: Huri.harvard.edu
-  note: Офіційний сайт Українського наукового інституту в Гарварді, який очолює Плохій.
-  path: https://huri.harvard.edu/
-  type: reference
-- title: '7407817'
-  note: Приклад інтерв'ю, де Плохій виступає як публічний інтелектуал.
-  path: https://www.pravda.com.ua/articles/2023/06/21/7407817/
+- title: Сергій Плохій (Serhii Plokhii)
+  source_name: Українська наукова діаспора
+  source_url: https://ukrdiaspora.nauka.gov.ua/uk/naukova-diplomatiya/serhii-plokhii/
+  language: uk
+  type: institutional-profile
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ukrdiaspora.nauka.gov.ua/uk/naukova-diplomatiya/serhii-plokhii/
+    note: Зовнішнє посилання на інституційну біографію; текст і зображення не відтворюються в курсі.
+  learner_task: Укласти виправлену хронологію від Горького, Запоріжжя й Дніпра
+    до Альберти та Гарварду; відрізнити біографічний факт від презентаційної оцінки.
+- title: 'Путін цього не очікував: історик Сергій Плохій про руйнування імперіалізму та український партизанський спротив'
+  source_name: Суспільне Культура
+  source_url: https://suspilne.media/culture/591921-putin-cogo-ne-ocikuvav-istorik-sergij-plohij-pro-rujnuvanna-imperializmu-ta-ukrainskij-partizanskij-sprotiv/
+  language: uk
   type: interview
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://suspilne.media/culture/591921-putin-cogo-ne-ocikuvav-istorik-sergij-plohij-pro-rujnuvanna-imperializmu-ta-ukrainskij-partizanskij-sprotiv/
+    note: Зовнішнє посилання на інтерв'ю; текст і фотографії не відтворюються в курсі.
+  learner_task: Проаналізувати, як Плохій пояснює імперські наративи, деколонізацію
+    та спротив широкій аудиторії; відокремити історичний аргумент від оцінки сучасності.
+references:
+- title: Сергій Плохій (Serhii Plokhii)
+  note: Інституційна біографія і перевірна академічна хронологія
+  type: reference
+  url: https://ukrdiaspora.nauka.gov.ua/uk/naukova-diplomatiya/serhii-plokhii/
+- title: Serhii Plokhii
+  note: Актуальний профіль посади, дослідницьких інтересів, книжок і відзнак
+  type: institutional-profile
+  url: https://www.huri.harvard.edu/people/serhii-plokhii
+- title: 'Путін цього не очікував: історик Сергій Плохій про руйнування імперіалізму та український партизанський спротив'
+  note: Пряме інтерв'ю для аналізу публічного історичного аргументу
+  type: interview
+  url: https://suspilne.media/culture/591921-putin-cogo-ne-ocikuvav-istorik-sergij-plohij-pro-rujnuvanna-imperializmu-ta-ukrainskij-partizanskij-sprotiv/
 sequence: 176
 slug: serhii-plokhy
 subtitle: 'Serhii Plokhy: The Historian Who Explained Ukraine to the World'
 title: 'Сергій Плохій: Історик, який пояснив Україну світові'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: 1) історія історичної науки; 2) сукупність праць з певного історичного питання
   pos: ж.

@@ -1,63 +1,21 @@
-# Source registry for wiki/figures/leonid-kadenyuk.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Основний-зміст-Вступні-зауваги-до-джерельної-бази-та-історіографії
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Основний зміст > Вступні зауваги до джерельної бази та історіографії'
+  file: https://esu.com.ua/article-12076
+  type: external
+  title: Каденюк Леонід Костянтинович
+  url: https://esu.com.ua/article-12076
 - id: S2
-  file: 11-klas-istoriya-ukr-gisem-2024_s0970
-  type: textbook
-  title: § 28. культурне та релігійне життя
-  page: 230
-  grade: 11
+  file: https://www.ukrinform.ua/rubric-society/2394072-futbolist-sahtara-kostue-bilse-niz-vsa-kosmicna-galuz-ukraini-leonid-kadenuk.html
+  type: external
+  title: Леонід Каденюк, перший астронавт незалежної України
+  url: https://www.ukrinform.ua/rubric-society/2394072-futbolist-sahtara-kostue-bilse-niz-vsa-kosmicna-galuz-ukraini-leonid-kadenuk.html
 - id: S3
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1060
-  type: textbook
-  title: Леонід Каденюк — перший
-  page: 264
-  grade: 11
-- id: S4
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Деколонізаційна перспектива'
-- id: S5
-  file: 11-klas-istoriya-ukr-galimov-2024_s0873
-  type: textbook
-  title: § 28. Культурне та релігійне життя
-  page: 207
-  grade: 11
-- id: S6
-  file: 3-klas-ukrainska-mova-vashulenko-2020-2_s1795
-  type: textbook
-  title: Живопис — поезія, яку бачать
-  page: 153
-  grade: 3
-- id: S7
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Основний-зміст-Підготовка-та-реалізація-космічної-місії-1997-року
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Основний зміст > Підготовка та реалізація космічної місії 1997 року'
-- id: S8
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Короткий зміст'
-- id: S9
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Основний-зміст-Символічний-вимір-синьо-жовтий-прапор-та-український-гімн
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Основний зміст > Символічний вимір: синьо-жовтий прапор та український гімн'
-- id: S10
-  file: ukrainian_wiki/leonid-kadenyuk_Біографія-Леонід-Каденюк-Перший-космонавт-незалежної-України-Основний-зміст-Дидактичне-осмислення-та-історіософський-контекст
-  type: ukrainian_wiki
-  title: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України'
-  section_path: 'Біографія: Леонід Каденюк: Перший космонавт незалежної України >
-    Основний зміст > Дидактичне осмислення та історіософський контекст'
+  file: https://commons.wikimedia.org/wiki/File:Leonid_Kadenyuk.jpg
+  type: external
+  title: File:Leonid Kadenyuk.jpg — NASA portrait
+  url: https://commons.wikimedia.org/wiki/File:Leonid_Kadenyuk.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Leonid_Kadenyuk.jpg
+    license: NASA public domain
+    attribution: NASA
