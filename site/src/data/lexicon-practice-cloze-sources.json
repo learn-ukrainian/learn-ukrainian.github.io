@@ -482,12 +482,12 @@
   {
     "lemma": "температура",
     "lemmaId": "температура",
-    "sentence": "У мене ___.",
+    "sentence": "Лікарка міряє ___.",
     "blankCase": "accusative",
     "form": "температуру",
     "number": "singular",
     "caseRule": "accusative_direct_object",
-    "clozeEn": "I have a fever.",
+    "clozeEn": "The doctor measures the temperature.",
     "cefr": "A1",
     "provenance": {
       "status": "reviewed",
@@ -658,12 +658,12 @@
   {
     "lemma": "вечеря",
     "lemmaId": "вечеря",
-    "sentence": "Я маю ___.",
+    "sentence": "Я їм ___.",
     "blankCase": "accusative",
     "form": "вечерю",
     "number": "singular",
     "caseRule": "accusative_direct_object",
-    "clozeEn": "I have dinner.",
+    "clozeEn": "I eat dinner.",
     "cefr": "A1",
     "provenance": {
       "status": "reviewed",
