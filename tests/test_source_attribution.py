@@ -2,14 +2,20 @@
 
 from __future__ import annotations
 
+from scripts.lexicon.enrich_manifest import _merge_homonym_relations, _relation_source_label
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
+    GRAC_LABEL,
+    GRINCHENKO_LABEL,
     KARAVANSKY_LABEL,
+    MIYKLAS_LABEL,
     PHRASEOLOGY_LABEL,
     SUM20_ACADEMIC_LABEL,
     apply_entry_attribution,
     join_academic_source_labels,
     learner_facing_mirror_violations,
+    learner_facing_unmapped_source_violations,
+    normalize_academic_label,
     official_url_from_mirror,
     remap_mirror_source_string,
 )
@@ -97,3 +103,64 @@ def test_idiom_section_source_remaps_phraseology_label() -> None:
     apply_entry_attribution(entry)
     assert entry["sections"]["idioms"]["source"] == PHRASEOLOGY_LABEL
     assert learner_facing_mirror_violations(entry) == []
+
+
+def test_normalize_academic_label_maps_relation_pairs_corpora() -> None:
+    assert normalize_academic_label("relation_pairs/grac19a") == GRAC_LABEL
+    assert normalize_academic_label("relation_pairs/miyklas.com.ua") == MIYKLAS_LABEL
+    assert normalize_academic_label("Грінченко") == GRINCHENKO_LABEL
+
+
+def test_relation_pairs_label_flows_to_provenance_footer_and_gate() -> None:
+    relation = {
+        "source": "relation_pairs/miyklas.com.ua",
+        "pattern": "corpus relation pair",
+        "word": "атлас",
+        "gloss": "атлас - map-book",
+        "vein": 3,
+    }
+    label = _relation_source_label(relation, "атлас")
+    assert label.startswith(f"{MIYKLAS_LABEL}: corpus relation pair → атлас")
+
+    merged = _merge_homonym_relations(None, [relation])
+    assert merged is not None
+    assert MIYKLAS_LABEL in merged["source"]
+    assert "relation_pairs/" not in merged["source"]
+
+    entry = {"lemma": "атлас", "sections": {"homonyms": merged}}
+    assert learner_facing_unmapped_source_violations(entry) == []
+
+
+def test_unmapped_relation_pairs_fail_closed_in_conformance_gate() -> None:
+    relation = {
+        "source": "relation_pairs/uk.wikipedia",
+        "pattern": "corpus relation pair",
+        "word": "ключ",
+        "gloss": "джерело води",
+        "vein": 3,
+    }
+    merged = _merge_homonym_relations(None, [relation])
+    assert merged is not None
+    assert "relation_pairs/uk.wikipedia" in merged["source"]
+
+    entry = {"lemma": "ключ", "sections": {"homonyms": merged}}
+    violations = learner_facing_unmapped_source_violations(entry)
+    assert len(violations) == 2
+    assert all("relation_pairs/uk.wikipedia" in item for item in violations)
+
+
+def test_learner_provenance_walker_checks_literary_attestation_and_enrichment_blocks() -> None:
+    entry = {
+        "lemma": "книга",
+        "enrichment": {
+            "meaning": {"definitions": ["test"], "source": "slovnyk.me: bad"},
+            "literary_attestation": {
+                "text": "Приклад.",
+                "source": "corpus",
+                "source_url": "https://slovnyk.me/dict/newsum/test",
+            },
+        },
+    }
+    mirror_violations = learner_facing_mirror_violations(entry)
+    assert any("enrichment.meaning.source" in item for item in mirror_violations)
+    assert any("enrichment.literary_attestation.source_url" in item for item in mirror_violations)

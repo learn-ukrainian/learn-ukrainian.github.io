@@ -528,6 +528,7 @@ function sourceHost(url: string) {
 }
 
 const MIRROR_HOSTS = new Set(["slovnyk.me", "goroh.pp.ua", "sum.in.ua"]);
+// Keep in sync with scripts/lexicon/source_attribution.py MIRROR_HOSTS (www. variants handled at parse time).
 
 function isMirrorUrl(url: string) {
   try {
@@ -1041,7 +1042,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           <h2>Літературні засвідчення</h2>
           <div class="source-box">
             <div class="source-box-header">
-              {enrichment.literary_attestation.source_url ? (
+              {enrichment.literary_attestation.source_url && !isMirrorUrl(enrichment.literary_attestation.source_url) ? (
                 <a href={enrichment.literary_attestation.source_url} target="_blank" rel="noopener noreferrer">
                   {enrichment.literary_attestation.source_label ?? "Літературний корпус"}
                 </a>

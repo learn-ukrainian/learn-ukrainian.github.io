@@ -4038,7 +4038,7 @@ def _merge_homonym_relations(
                 item["homonym_no"] = number
                 item["pos"] = pos
             if relation.get("pattern") == "corpus relation pair":
-                item["source"] = relation["source"]
+                item["source"] = normalize_academic_label(str(relation.get("source") or ""))
             items.append(item)
             additions += 1
 

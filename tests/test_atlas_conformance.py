@@ -70,7 +70,10 @@ def test_real_lexicon_manifest_conforms_to_atlas_gates():
         # lemma_in_vesum gate; every other §8 gate still enforces on the real manifest.
         violations = validate(manifest, vesum=None, curriculum=curriculum, heritage=heritage)
 
-    assert violations == []
+    # Pre-migration manifest still carries unmapped relation_pairs corpora
+    # (synonym_verdicts, grinchyshyn-1986, ukr-mova.in.ua) until corpus map expansion
+    # and migrate_source_labels.py --write (#5163); enforce every other gate here.
+    assert [v for v in violations if v.gate != "unmapped_source_label"] == []
 
 
 def test_clean_fixture_passes_all_gates():
@@ -462,3 +465,16 @@ def test_mirror_attribution_gate_flags_slovnyk_me_href():
     )
 
     assert _gates_for(entry) == ["no_mirror_attribution"]
+
+
+def test_unmapped_source_label_gate_flags_relation_pairs_corpus():
+    entry = _entry(
+        sections={
+            "homonyms": {
+                "items": [{"word": "ключ", "gloss": "джерело води"}],
+                "source": "relation_pairs/uk.wikipedia: corpus relation pair → ключ",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["unmapped_source_label"]

@@ -49,8 +49,12 @@ enterprise with named institutions, not an anonymous internet commons.
 
 ## Implementation status
 
-Tracked in the issue referenced by this doc's introducing PR: source-label
-generation in `scripts/lexicon/enrich_manifest.py` (e.g. `_relation_source_label`,
-translation source lines) currently emits `slovnyk.me: …` strings that ship into
-learner-visible section labels — these migrate to structured
-`{dictionary, authors, official_url}` attribution.
+Tracked in #5163: source-label generation in `scripts/lexicon/enrich_manifest.py`
+maps mirror aggregators and per-corpus `relation_pairs/*` keys to academic labels
+via `scripts/lexicon/source_attribution.py`; unmapped internal labels fail the
+`unmapped_source_label` conformance gate (never silent pass-through).
+
+**Post-merge operator step:** run
+`.venv/bin/python scripts/lexicon/migrate_source_labels.py --write` against
+`site/src/data/lexicon-manifest.json`, then republish the Atlas manifest release
+so learner-facing footers pick up remapped attribution.

@@ -13,6 +13,7 @@ from typing import Any
 from urllib.parse import quote, unquote, urlparse
 
 MIRROR_HOSTS = frozenset({"slovnyk.me", "goroh.pp.ua", "sum.in.ua", "www.slovnyk.me", "www.goroh.pp.ua", "www.sum.in.ua"})
+# Astro mirror guard: site/src/lexicon/WordAtlasArticle.astro MIRROR_HOSTS (no www. prefix there).
 MIRROR_HOST_PATTERN = re.compile(
     r"(?:^|[\s/+])(slovnyk\.me|goroh\.pp\.ua|sum\.in\.ua)(?:[/:\s]|$)",
     re.IGNORECASE,
@@ -42,6 +43,12 @@ DAVYDOV_LABEL = "«Як ми говоримо» Антоненка-Давидо�
 VOLOSHCHAK_LABEL = "Неправильно-правильно"
 SHTEPA_LABEL = "Словник чужослів Павла Штепи"
 CORRECTION_DICTIONARIES_LABEL = "Словники мовних поправок"
+GRAC_LABEL = "Генеральний регіонально анотований корпус української мови (ГРАК)"
+MIYKLAS_LABEL = "навчальні матеріали МійКлас (корпусні пари)"
+GRINCHENKO_LABEL = "Словарь української мови Б. Грінченка (1907–1909)"
+
+RELATION_PAIRS_PREFIX = "relation_pairs/"
+UNMAPPED_SOURCE_PATTERN = re.compile(r"relation_pairs/", re.IGNORECASE)
 
 SUM20_OFFICIAL_HOME = "https://sum20ua.com"
 ULIF_EXPL_HOME = "https://services.ulif.org.ua/expl"
@@ -67,7 +74,29 @@ LEGACY_LABEL_ALIASES: dict[str, str] = {
     "Словник української мови у 20 томах (СУМ-20)": SUM20_ACADEMIC_LABEL,
     SUM20_SHORT_LABEL: SUM20_ACADEMIC_LABEL,
     VTS_SHORT_LABEL: VTS_ACADEMIC_LABEL,
+    "Грінченко": GRINCHENKO_LABEL,
 }
+
+KNOWN_ACADEMIC_LABELS = frozenset(
+    {
+        *SLUG_ACADEMIC_LABELS.values(),
+        *LEGACY_LABEL_ALIASES.values(),
+        SUM20_ACADEMIC_LABEL,
+        VTS_ACADEMIC_LABEL,
+        KARAVANSKY_LABEL,
+        SYNONYMS_LABEL,
+        PHRASEOLOGY_LABEL,
+        BALLA_LABEL,
+        BALLA_SHORT_LABEL,
+        DAVYDOV_LABEL,
+        VOLOSHCHAK_LABEL,
+        SHTEPA_LABEL,
+        CORRECTION_DICTIONARIES_LABEL,
+        GRAC_LABEL,
+        MIYKLAS_LABEL,
+        GRINCHENKO_LABEL,
+    }
+)
 
 
 def is_mirror_host(host: str) -> bool:
@@ -132,13 +161,56 @@ def academic_label_for_slug(slug: str) -> str | None:
     return SLUG_ACADEMIC_LABELS.get(slug.strip().casefold())
 
 
+def _relation_pairs_corpus_key(label: str) -> str | None:
+    trimmed = label.strip()
+    if not trimmed.casefold().startswith(RELATION_PAIRS_PREFIX):
+        return None
+    remainder = trimmed[len(RELATION_PAIRS_PREFIX) :]
+    return remainder.split(":", 1)[0].strip()
+
+
+def _map_relation_pairs_corpus(corpus_key: str) -> str | None:
+    lowered = corpus_key.casefold()
+    if lowered.startswith("grac"):
+        return GRAC_LABEL
+    if "miyklas" in lowered:
+        return MIYKLAS_LABEL
+    return None
+
+
+def _remap_relation_pairs_label(label: str) -> str:
+    corpus_key = _relation_pairs_corpus_key(label)
+    if corpus_key is None:
+        return label
+    mapped = _map_relation_pairs_corpus(corpus_key)
+    if mapped is None:
+        return label
+    if ":" in label:
+        _, rest = label.split(":", 1)
+        rest = rest.lstrip()
+        return f"{mapped}: {rest}" if rest else mapped
+    return mapped
+
+
+def contains_unmapped_source_label(value: object) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    return bool(UNMAPPED_SOURCE_PATTERN.search(value))
+
+
 def normalize_academic_label(label: str) -> str:
     cleaned = SLOVNYK_SOURCE_PREFIX_RE.sub("", label.strip())
     if not cleaned:
         return cleaned
     if cleaned.casefold().startswith("slovnyk.me correction"):
         return CORRECTION_DICTIONARIES_LABEL
-    return LEGACY_LABEL_ALIASES.get(cleaned, cleaned)
+    if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
+        return _remap_relation_pairs_label(cleaned)
+    if cleaned in LEGACY_LABEL_ALIASES:
+        return LEGACY_LABEL_ALIASES[cleaned]
+    if cleaned in KNOWN_ACADEMIC_LABELS:
+        return cleaned
+    return cleaned
 
 
 def join_academic_source_labels(labels: list[str]) -> str:
@@ -221,6 +293,17 @@ def apply_section_attribution(section: dict[str, Any]) -> bool:
     remapped = remap_mirror_source_string(source)
     if remapped != source:
         section["source"] = remapped
+        changed = True
+
+    block_url = str(section.get("source_url") or "")
+    if is_mirror_url(block_url):
+        block = dict(section)
+        attach_official_url(block, mirror_url=block_url)
+        for key in ("source_url", "mirror_source_url"):
+            if key in block:
+                section[key] = block[key]
+            elif key in section and key not in block:
+                del section[key]
         changed = True
 
     raw_urls = [str(url) for url in section.get("source_urls", []) if str(url).strip()]
@@ -328,6 +411,28 @@ def apply_entry_attribution(entry: dict[str, Any]) -> bool:
         for card in enrichment.get("definition_cards") or []:
             if isinstance(card, dict) and apply_definition_card_attribution(card, lemma=lemma):
                 changed = True
+        sources = enrichment.get("sources")
+        if isinstance(sources, list):
+            remapped_sources: list[str] = []
+            seen: set[str] = set()
+            sources_changed = False
+            for raw in sources:
+                label = remap_mirror_source_string(str(raw or "").strip())
+                if label and label not in seen:
+                    seen.add(label)
+                    remapped_sources.append(label)
+                if label != str(raw or "").strip():
+                    sources_changed = True
+            if sources_changed:
+                enrichment["sources"] = remapped_sources
+                changed = True
+        for block_name in ("meaning", "etymology", "morphology", "stress", "cefr"):
+            block = enrichment.get(block_name)
+            if isinstance(block, dict) and apply_section_attribution(block):
+                changed = True
+        literary = enrichment.get("literary_attestation")
+        if isinstance(literary, dict) and apply_section_attribution(literary):
+            changed = True
     sections = entry.get("sections")
     if isinstance(sections, dict):
         for section in sections.values():
@@ -336,40 +441,74 @@ def apply_entry_attribution(entry: dict[str, Any]) -> bool:
     return changed
 
 
-def learner_facing_mirror_violations(entry: dict[str, Any]) -> list[str]:
-    """Return human-readable violations when mirror provenance leaks to learners."""
-    lemma = str(entry.get("lemma") or "")
-    violations: list[str] = []
-
-    def check(value: object, path: str) -> None:
-        if contains_mirror_provenance(value):
-            violations.append(f"{path}={value!r}")
+def _iter_learner_provenance_fields(entry: dict[str, Any]):
+    """Yield (path, value) pairs for every learner-surfaced provenance field."""
+    yield "primary_source", entry.get("primary_source")
 
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, dict):
+        for index, source in enumerate(enrichment.get("sources") or []):
+            yield f"enrichment.sources[{index}]", source
+
+        for block_name in ("meaning", "etymology", "morphology", "stress", "cefr"):
+            block = enrichment.get(block_name)
+            if isinstance(block, dict):
+                yield f"enrichment.{block_name}.source", block.get("source")
+                yield f"enrichment.{block_name}.source_url", block.get("source_url")
+
+        literary = enrichment.get("literary_attestation")
+        if isinstance(literary, dict):
+            yield "enrichment.literary_attestation.source", literary.get("source")
+            yield "enrichment.literary_attestation.source_url", literary.get("source_url")
+
         translation = enrichment.get("translation")
         if isinstance(translation, dict):
-            check(translation.get("source"), "enrichment.translation.source")
-            check(translation.get("source_url"), "enrichment.translation.source_url")
+            yield "enrichment.translation.source", translation.get("source")
+            yield "enrichment.translation.source_url", translation.get("source_url")
+
         for index, card in enumerate(enrichment.get("definition_cards") or []):
             if not isinstance(card, dict):
                 continue
-            check(card.get("source"), f"enrichment.definition_cards[{index}].source")
-            check(card.get("source_url"), f"enrichment.definition_cards[{index}].source_url")
+            yield f"enrichment.definition_cards[{index}].source", card.get("source")
+            yield f"enrichment.definition_cards[{index}].source_url", card.get("source_url")
 
     sections = entry.get("sections")
     if isinstance(sections, dict):
         for name, section in sections.items():
             if not isinstance(section, dict):
                 continue
-            check(section.get("source"), f"sections.{name}.source")
+            yield f"sections.{name}.source", section.get("source")
             for index, url in enumerate(section.get("source_urls") or []):
-                check(url, f"sections.{name}.source_urls[{index}]")
+                yield f"sections.{name}.source_urls[{index}]", url
             for index, item in enumerate(section.get("items") or []):
                 if not isinstance(item, dict):
                     continue
-                check(item.get("source"), f"sections.{name}.items[{index}].source")
-                check(item.get("source_url"), f"sections.{name}.items[{index}].source_url")
+                yield f"sections.{name}.items[{index}].source", item.get("source")
+                yield f"sections.{name}.items[{index}].source_url", item.get("source_url")
+
+
+def learner_facing_mirror_violations(entry: dict[str, Any]) -> list[str]:
+    """Return human-readable violations when mirror provenance leaks to learners."""
+    lemma = str(entry.get("lemma") or "")
+    violations: list[str] = []
+
+    for path, value in _iter_learner_provenance_fields(entry):
+        if contains_mirror_provenance(value):
+            violations.append(f"{path}={value!r}")
+
+    if violations:
+        return [f"{lemma}: {detail}" for detail in violations]
+    return []
+
+
+def learner_facing_unmapped_source_violations(entry: dict[str, Any]) -> list[str]:
+    """Return violations when internal corpus labels reach learners unmapped."""
+    lemma = str(entry.get("lemma") or "")
+    violations: list[str] = []
+
+    for path, value in _iter_learner_provenance_fields(entry):
+        if contains_unmapped_source_label(value):
+            violations.append(f"{path}={value!r}")
 
     if violations:
         return [f"{lemma}: {detail}" for detail in violations]

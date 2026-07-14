@@ -76,6 +76,7 @@ from scripts.lexicon.enrich_manifest import (
     clean_gloss,
     clean_html_entities,
 )
+from scripts.lexicon.source_attribution import MIYKLAS_LABEL
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -3016,10 +3017,10 @@ def test_corpus_homonym_renders_fixture(monkeypatch) -> None:
     merged = _merge_homonym_relations(None, relations["атлас"]["homonym"])
     assert merged is not None
     assert merged["items"] == [
-        {"word": "атлас", "gloss": "атлас - map-book", "source": "relation_pairs/miyklas.com.ua"},
-        {"word": "атлас", "gloss": "атлас - satin fabric", "source": "relation_pairs/miyklas.com.ua"},
+        {"word": "атлас", "gloss": "атлас - map-book", "source": MIYKLAS_LABEL},
+        {"word": "атлас", "gloss": "атлас - satin fabric", "source": MIYKLAS_LABEL},
     ]
-    assert merged["source"] == "relation_pairs/miyklas.com.ua: corpus relation pair → атлас"
+    assert merged["source"] == f"{MIYKLAS_LABEL}: corpus relation pair → атлас"
     assert merged["source_urls"] == ["https://example.invalid/atlas"]
 
 
@@ -3069,11 +3070,11 @@ def test_corpus_homonym_deduplication(monkeypatch) -> None:
         {
             "word": "атлас",
             "gloss": "атлас - satin fabric",
-            "source": "relation_pairs/miyklas.com.ua",
+            "source": MIYKLAS_LABEL,
         }
     ]
     assert "СУМ-11: numbered homonym headwords" in merged["source"]
-    assert "relation_pairs/miyklas.com.ua: corpus relation pair → атлас" in merged["source"]
+    assert f"{MIYKLAS_LABEL}: corpus relation pair → атлас" in merged["source"]
     assert "dropped_source.org" not in merged["source"]
     assert "https://example.invalid/dropped_url" not in merged["source_urls"]
     assert sorted(merged["source_urls"]) == [
