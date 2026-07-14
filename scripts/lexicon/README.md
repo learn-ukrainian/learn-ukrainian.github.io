@@ -67,6 +67,19 @@ reason:
 The pointer written by a real publish records the baseline/candidate counts,
 regressions, and any override reason.
 
+The first canonical asset must use the explicit bootstrap path; it remains
+fail-closed by default. Bootstrap succeeds only when no canonical release asset
+exists, still rejects broken form stubs, and records `bootstrap: true` in the
+pointer's `richness_gate` record:
+
+```bash
+.venv/bin/python -m scripts.lexicon.publish_manifest --bootstrap-no-baseline
+```
+
+Both `publish_manifest` and `reenrich_thin_manifest_entries.py --write` use the
+same gate before gzip or pointer writes. The pointer builder and writer reject
+payloads without its complete recorded decision.
+
 ### Offline enrich is non-destructive (preserve-vs-retract, #5077)
 
 `enrich_manifest.py` recomputes gated sections (synonyms/antonyms/homonyms/paronyms/

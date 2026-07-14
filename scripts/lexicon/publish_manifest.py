@@ -144,7 +144,10 @@ def build_pointer_payload(
     fingerprint_path: Path = DEFAULT_FINGERPRINT,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
+    richness_gate: dict[str, Any],
 ) -> dict[str, Any]:
+    """Build a pointer only after the shared release-richness gate has run."""
+    validate_richness_gate_record(richness_gate)
     manifest_bytes = manifest_path.read_bytes()
     gzip_bytes = gzip_path.read_bytes()
     manifest = json.loads(manifest_bytes.decode("utf-8"))
@@ -171,6 +174,7 @@ def build_pointer_payload(
         "json_sha256": json_sha256,
         "gz_bytes": len(gzip_bytes),
         "json_bytes": len(manifest_bytes),
+        "richness_gate": richness_gate,
         "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON.",
     }
     validate_pointer_freshness(pointer, fingerprint, manifest=manifest)
@@ -178,6 +182,11 @@ def build_pointer_payload(
 
 
 def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
+    """Persist only a pointer built with a recorded richness-gate decision."""
+    gate_record = payload.get("richness_gate")
+    if not isinstance(gate_record, dict):
+        raise ManifestPublishError("Atlas manifest pointer requires a richness_gate record")
+    validate_richness_gate_record(gate_record)
     pointer_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = pointer_path.with_suffix(f"{pointer_path.suffix}.tmp")
     temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -240,6 +249,19 @@ def _download_release_asset(
     return result.stdout
 
 
+def _stderr_excerpt(error: subprocess.CalledProcessError, *, limit: int = 400) -> str:
+    """Return bounded command stderr without inspecting the process environment."""
+    stderr = error.stderr
+    if isinstance(stderr, bytes):
+        text = stderr.decode("utf-8", errors="replace")
+    elif isinstance(stderr, str):
+        text = stderr
+    else:
+        text = ""
+    normalized = " ".join(text.split())
+    return normalized[:limit]
+
+
 def download_published_manifest(
     *,
     release_tag: str = DEFAULT_RELEASE_TAG,
@@ -251,9 +273,11 @@ def download_published_manifest(
             _download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo)
         )
         manifest = json.loads(manifest_bytes.decode("utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (subprocess.CalledProcessError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        excerpt = _stderr_excerpt(exc) if isinstance(exc, subprocess.CalledProcessError) else ""
+        detail = f" (gh stderr: {excerpt})" if excerpt else ""
         raise ManifestPublishError(
-            "could not read the canonical published Atlas manifest for the richness baseline"
+            "could not read the canonical published Atlas manifest for the richness baseline" + detail
         ) from exc
     if not isinstance(manifest, dict):
         raise ManifestPublishError("canonical published Atlas manifest must contain a JSON object")
@@ -360,6 +384,102 @@ def assert_manifest_richness_publishable(
     return record
 
 
+def assert_manifest_richness_bootstrap_publishable(manifest_path: Path) -> dict[str, Any]:
+    """Validate a first publish that deliberately has no canonical baseline yet."""
+    from scripts.audit.audit_atlas_poc_richness import audit_manifest
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    candidate_summary = audit_manifest(manifest)
+    broken_stubs = int(candidate_summary.get("form_stub_broken", 0))
+    if broken_stubs > 0:
+        raise ManifestPublishError(
+            f"publish blocked (#4220): manifest at {manifest_path} has {broken_stubs} "
+            "broken form_of stub page(s). Each stub must point at an existing manifest "
+            "entry and expose a gloss or form_of lemma label. Repair the broken stubs "
+            "(samples: scripts/audit/audit_atlas_poc_richness.py --format json "
+            "--limit 2000, bucket form_stub_broken) before publishing. There is no "
+            "publish-time override by design."
+        )
+    return {
+        "bootstrap": True,
+        "baseline": None,
+        "candidate": {key: int(candidate_summary[key]) for key in RICHNESS_REGRESSION_KEYS},
+        "regressions": {},
+        "override_reason": None,
+    }
+
+
+def canonical_published_manifest_exists(
+    *,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+) -> bool:
+    """Return whether the canonical baseline asset exists on the configured release."""
+    try:
+        return ASSET_NAME in _release_asset_names(release_tag=release_tag, repo=repo)
+    except subprocess.CalledProcessError as exc:
+        excerpt = _stderr_excerpt(exc)
+        raise ManifestPublishError(
+            "could not determine whether the canonical published Atlas manifest exists"
+            + (f" (gh stderr: {excerpt})" if excerpt else "")
+        ) from exc
+
+
+def evaluate_manifest_pointer_write_gate(
+    manifest_path: Path,
+    *,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+    allow_richness_regression_reason: str | None = None,
+    bootstrap_no_baseline: bool = False,
+) -> dict[str, Any]:
+    """Run the one required richness decision before any Atlas pointer packaging."""
+    if bootstrap_no_baseline:
+        if allow_richness_regression_reason is not None:
+            raise ManifestPublishError(
+                "--bootstrap-no-baseline cannot be combined with --allow-richness-regression"
+            )
+        if canonical_published_manifest_exists(release_tag=release_tag, repo=repo):
+            raise ManifestPublishError(
+                "--bootstrap-no-baseline is only valid when the canonical published Atlas manifest "
+                "does not exist"
+            )
+        return assert_manifest_richness_bootstrap_publishable(manifest_path)
+
+    baseline_manifest = download_published_manifest(release_tag=release_tag, repo=repo)
+    record = assert_manifest_richness_publishable(
+        manifest_path,
+        baseline_manifest=baseline_manifest,
+        allow_richness_regression_reason=allow_richness_regression_reason,
+    )
+    record["bootstrap"] = False
+    return record
+
+
+def validate_richness_gate_record(record: dict[str, Any]) -> None:
+    """Reject pointer payloads that did not carry a complete gate decision."""
+    bootstrap = record.get("bootstrap")
+    if not isinstance(bootstrap, bool):
+        raise ManifestPublishError("Atlas manifest richness_gate must record boolean bootstrap")
+
+    candidate = record.get("candidate")
+    if not isinstance(candidate, dict) or any(key not in candidate for key in RICHNESS_REGRESSION_KEYS):
+        raise ManifestPublishError("Atlas manifest richness_gate must record all candidate richness metrics")
+
+    baseline = record.get("baseline")
+    if bootstrap:
+        if baseline is not None:
+            raise ManifestPublishError("bootstrap richness_gate must not contain a baseline")
+    elif not isinstance(baseline, dict) or any(key not in baseline for key in RICHNESS_REGRESSION_KEYS):
+        raise ManifestPublishError("Atlas manifest richness_gate must record all baseline richness metrics")
+
+    regressions = record.get("regressions")
+    if not isinstance(regressions, dict):
+        raise ManifestPublishError("Atlas manifest richness_gate must record regressions")
+    if "override_reason" not in record:
+        raise ManifestPublishError("Atlas manifest richness_gate must record override_reason")
+
+
 def publish_manifest(
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
@@ -370,12 +490,14 @@ def publish_manifest(
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
     allow_richness_regression_reason: str | None = None,
+    bootstrap_no_baseline: bool = False,
 ) -> dict[str, Any]:
-    baseline_manifest = download_published_manifest(release_tag=release_tag, repo=repo)
-    richness_record = assert_manifest_richness_publishable(
+    richness_record = evaluate_manifest_pointer_write_gate(
         manifest_path,
-        baseline_manifest=baseline_manifest,
+        release_tag=release_tag,
+        repo=repo,
         allow_richness_regression_reason=allow_richness_regression_reason,
+        bootstrap_no_baseline=bootstrap_no_baseline,
     )
     gzip_manifest(manifest_path, gzip_path)
     pointer = build_pointer_payload(
@@ -384,8 +506,8 @@ def publish_manifest(
         fingerprint_path=fingerprint_path,
         release_tag=release_tag,
         repo=repo,
+        richness_gate=richness_record,
     )
-    pointer["richness_gate"] = richness_record
 
     if dry_run:
         return pointer
@@ -409,6 +531,14 @@ def main() -> int:
         metavar="REASON",
         help="Publish despite a richness regression, recording this required operator decision reason.",
     )
+    parser.add_argument(
+        "--bootstrap-no-baseline",
+        action="store_true",
+        help=(
+            "Allow the first publish only when the canonical release asset does not exist; "
+            "records bootstrap=true in the pointer."
+        ),
+    )
     args = parser.parse_args()
 
     pointer = publish_manifest(
@@ -420,6 +550,7 @@ def main() -> int:
         repo=args.repo,
         dry_run=args.dry_run,
         allow_richness_regression_reason=args.allow_richness_regression,
+        bootstrap_no_baseline=args.bootstrap_no_baseline,
     )
     print(
         "Atlas manifest pointer "

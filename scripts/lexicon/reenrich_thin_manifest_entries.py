@@ -26,6 +26,7 @@ from scripts.lexicon.publish_manifest import (
     DEFAULT_GZIP,
     DEFAULT_POINTER,
     build_pointer_payload,
+    evaluate_manifest_pointer_write_gate,
     gzip_manifest,
     write_pointer,
 )
@@ -58,11 +59,25 @@ def _refresh_manifest_fingerprint(manifest: dict[str, Any]) -> None:
     }
 
 
-def _write_default_release_pointer(manifest_path: Path) -> dict[str, Any] | None:
+def _write_default_release_pointer(
+    manifest_path: Path,
+    *,
+    bootstrap_no_baseline: bool = False,
+    allow_richness_regression_reason: str | None = None,
+) -> dict[str, Any] | None:
     if manifest_path.resolve() != DEFAULT_MANIFEST.resolve():
         return None
+    richness_gate = evaluate_manifest_pointer_write_gate(
+        manifest_path,
+        bootstrap_no_baseline=bootstrap_no_baseline,
+        allow_richness_regression_reason=allow_richness_regression_reason,
+    )
     gzip_manifest(manifest_path, DEFAULT_GZIP)
-    pointer = build_pointer_payload(manifest_path=manifest_path, gzip_path=DEFAULT_GZIP)
+    pointer = build_pointer_payload(
+        manifest_path=manifest_path,
+        gzip_path=DEFAULT_GZIP,
+        richness_gate=richness_gate,
+    )
     write_pointer(DEFAULT_POINTER, pointer)
     return pointer
 
@@ -310,6 +325,16 @@ def main() -> int:
     )
     parser.add_argument("--refresh-wiki", action="store_true")
     parser.add_argument("--write", action="store_true")
+    parser.add_argument(
+        "--allow-richness-regression",
+        metavar="REASON",
+        help="Record an operator decision to permit a richness regression while writing the pointer.",
+    )
+    parser.add_argument(
+        "--bootstrap-no-baseline",
+        action="store_true",
+        help="Write only an initial pointer when no canonical release asset exists; records bootstrap=true.",
+    )
     args = parser.parse_args()
 
     manifest_path = args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
@@ -334,7 +359,11 @@ def main() -> int:
     if args.write:
         _refresh_manifest_fingerprint(manifest)
         _write_manifest(manifest_path, manifest)
-        pointer = _write_default_release_pointer(manifest_path)
+        pointer = _write_default_release_pointer(
+            manifest_path,
+            bootstrap_no_baseline=args.bootstrap_no_baseline,
+            allow_richness_regression_reason=args.allow_richness_regression,
+        )
         if pointer:
             print(
                 "Updated local atlas-manifest pointer "

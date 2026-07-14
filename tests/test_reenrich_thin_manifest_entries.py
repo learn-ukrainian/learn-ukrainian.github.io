@@ -1,6 +1,10 @@
 import sqlite3
 
+import pytest
+
 from scripts.lexicon import enrich_manifest
+from scripts.lexicon import reenrich_thin_manifest_entries as reenrich
+from scripts.lexicon.publish_manifest import ManifestPublishError
 from scripts.lexicon.reenrich_thin_manifest_entries import (
     _preserve_existing_metadata,
     _reenrich_translation_only,
@@ -156,3 +160,41 @@ def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(monkeypatch) -> 
         _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
 
     assert "translation" not in entry["enrichment"]
+
+
+def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(
+    tmp_path, monkeypatch
+) -> None:
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    manifest_path.write_text(
+        '{"richness_summary": {"poc_thin_pages": 2, "search_no_visible_gloss": 0, '
+        '"old_gate_no_english_anchor": 0, "form_stub_broken": 0}}\n',
+        encoding="utf-8",
+    )
+    baseline = {
+        "richness_summary": {
+            "poc_thin_pages": 1,
+            "search_no_visible_gloss": 0,
+            "old_gate_no_english_anchor": 0,
+            "form_stub_broken": 0,
+        }
+    }
+    gzip_calls = []
+
+    monkeypatch.setattr(reenrich, "DEFAULT_MANIFEST", manifest_path)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: baseline,
+    )
+    monkeypatch.setattr(
+        reenrich, "gzip_manifest", lambda manifest, gzip_path: gzip_calls.append(manifest)
+    )
+    monkeypatch.setattr(
+        "scripts.audit.audit_atlas_poc_richness.audit_manifest",
+        lambda manifest: manifest["richness_summary"],
+    )
+
+    with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4515\)"):
+        reenrich._write_default_release_pointer(manifest_path)
+
+    assert gzip_calls == []

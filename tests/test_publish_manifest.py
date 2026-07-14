@@ -25,6 +25,21 @@ def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _richness_gate_record(*, bootstrap: bool = False) -> dict:
+    counts = {
+        "poc_thin_pages": 0,
+        "search_no_visible_gloss": 0,
+        "old_gate_no_english_anchor": 0,
+    }
+    return {
+        "bootstrap": bootstrap,
+        "baseline": None if bootstrap else counts.copy(),
+        "candidate": counts,
+        "regressions": {},
+        "override_reason": None,
+    }
+
+
 def test_build_pointer_payload_records_manifest_version_and_fingerprint(tmp_path: Path) -> None:
     fingerprint = {"schema_version": 1, "fingerprint": "abc123"}
     manifest = {
@@ -45,6 +60,7 @@ def test_build_pointer_payload_records_manifest_version_and_fingerprint(tmp_path
         gzip_path=gzip_path,
         fingerprint_path=fingerprint_path,
         repo="learn-ukrainian/example",
+        richness_gate=_richness_gate_record(),
     )
 
     manifest_bytes = manifest_path.read_bytes()
@@ -56,6 +72,7 @@ def test_build_pointer_payload_records_manifest_version_and_fingerprint(tmp_path
     assert payload["fingerprint_schema_version"] == 1
     assert payload["json_sha256"] == _sha256(manifest_bytes)
     assert payload["gz_sha256"] == _sha256(gzip_path.read_bytes())
+    assert payload["richness_gate"] == _richness_gate_record()
 
 
 def test_publish_manifest_uploads_versioned_and_canonical_assets(
@@ -194,6 +211,41 @@ def test_download_published_manifest_decodes_canonical_release_asset(
 
     assert download_published_manifest(release_tag="live-tag", repo="learn-ukrainian/example") == release_manifest
     assert calls == [(ASSET_NAME, "live-tag", "learn-ukrainian/example")]
+
+
+def test_baseline_fetch_failure_aborts_before_gzip_with_manifest_publish_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    _write_json(manifest_path, {"version": "0.1", "entries": []})
+    gzip_calls: list[Path] = []
+    failure = subprocess.CalledProcessError(
+        1,
+        ["gh", "release", "download"],
+        stderr=b"release API unavailable; retry later",
+    )
+
+    def fail_download(*args: object, **kwargs: object) -> bytes:
+        raise failure
+
+    monkeypatch.setattr("scripts.lexicon.publish_manifest._download_release_asset", fail_download)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.gzip_manifest",
+        lambda manifest, gzip_path: gzip_calls.append(manifest),
+    )
+
+    with pytest.raises(ManifestPublishError, match="release API unavailable"):
+        publish_manifest(
+            manifest_path=manifest_path,
+            gzip_path=tmp_path / "lexicon-manifest.json.gz",
+            pointer_path=tmp_path / "lexicon-manifest.pointer.json",
+            fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+            repo="learn-ukrainian/example",
+            dry_run=True,
+        )
+
+    assert gzip_calls == []
 
 
 def _richness_summary(*, thin: int, gloss: int, anchor: int, broken_stubs: int = 0) -> dict:
@@ -350,4 +402,64 @@ def test_richness_gate_blocks_publish_on_broken_form_stubs(tmp_path: Path, monke
         assert_manifest_richness_publishable(
             manifest_path,
             baseline_manifest={"richness_summary": _richness_summary(thin=0, gloss=0, anchor=0)},
+        )
+
+
+def test_bootstrap_publish_requires_no_canonical_baseline(tmp_path: Path, monkeypatch) -> None:
+    fingerprint = {"schema_version": 1, "fingerprint": "abc123"}
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    fingerprint_path = tmp_path / "lexicon-manifest.fingerprint.json"
+    _write_json(
+        manifest_path,
+        {
+            "version": "0.1",
+            "manifest_fingerprint": fingerprint,
+            "richness_summary": _richness_summary(thin=1, gloss=2, anchor=3),
+        },
+    )
+    _write_json(fingerprint_path, fingerprint)
+    _install_richness_audit(monkeypatch)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.canonical_published_manifest_exists",
+        lambda **kwargs: False,
+    )
+
+    pointer = publish_manifest(
+        manifest_path=manifest_path,
+        gzip_path=tmp_path / "lexicon-manifest.json.gz",
+        pointer_path=tmp_path / "lexicon-manifest.pointer.json",
+        fingerprint_path=fingerprint_path,
+        repo="learn-ukrainian/example",
+        dry_run=True,
+        bootstrap_no_baseline=True,
+    )
+
+    assert pointer["richness_gate"]["bootstrap"] is True
+    assert pointer["richness_gate"]["baseline"] is None
+
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.canonical_published_manifest_exists",
+        lambda **kwargs: True,
+    )
+    with pytest.raises(ManifestPublishError, match="only valid when the canonical published Atlas manifest"):
+        publish_manifest(
+            manifest_path=manifest_path,
+            gzip_path=tmp_path / "refused.json.gz",
+            pointer_path=tmp_path / "refused.pointer.json",
+            fingerprint_path=fingerprint_path,
+            repo="learn-ukrainian/example",
+            dry_run=True,
+            bootstrap_no_baseline=True,
+        )
+
+    with pytest.raises(ManifestPublishError, match="cannot be combined"):
+        publish_manifest(
+            manifest_path=manifest_path,
+            gzip_path=tmp_path / "conflict.json.gz",
+            pointer_path=tmp_path / "conflict.pointer.json",
+            fingerprint_path=fingerprint_path,
+            repo="learn-ukrainian/example",
+            dry_run=True,
+            bootstrap_no_baseline=True,
+            allow_richness_regression_reason="not applicable",
         )
