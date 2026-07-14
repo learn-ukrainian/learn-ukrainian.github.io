@@ -614,11 +614,16 @@ def _append_reconciliation(
     if previous is not None:
         retry = any(item.resource_id == task_id and item.action == action for item in previous.actual)
     details = {**result, "recovery": recovery, "retry": retry}
+    verified_state = {
+        "title": LifecycleState.VERIFIED,
+        "archive": LifecycleState.TASKS_ARCHIVED,
+        "restore": LifecycleState.VERIFIED,
+    }.get(action, LifecycleState.VERIFIED)
     storage.append_event(
         LifecycleEvent(
             event_id=str(uuid.uuid4()),
             occurred_at=utc_now(),
-            state=LifecycleState.TASKS_ARCHIVED if verified else LifecycleState.BLOCKED,
+            state=verified_state if verified else LifecycleState.BLOCKED,
             kind=f"native_{action}_{'retry_' if retry else ''}{'reconciled' if verified else 'failed'}",
             details=details,
         )

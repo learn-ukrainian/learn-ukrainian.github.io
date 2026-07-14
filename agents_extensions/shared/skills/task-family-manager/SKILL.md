@@ -1,129 +1,180 @@
 ---
 name: "task-family-manager"
-description: "Inspect, rename, archive, finish, and clean up task families using exact inclusion and strict UI semantics."
+description: "Inspect, rename, archive, restore, or proof-gated-clean an exact Codex task family with native app mutations, previews, reconciliation, and receipts."
 ---
 
 # Task Family Manager
 
-Use this skill to inspect, rename, archive, finish, and clean up task families. Never infer family from titles. Compose operations via the deterministic Python package.
-Currently available Codex app tools for mutation/reading: `list_threads`, `read_thread`, `set_thread_title`, `set_thread_archived`, `handoff_thread`, `get_handoff_status`, `navigate_to_codex_page`. Use create/fork only when explicitly requested. Titles never prove membership.
+Use this skill when a user wants to inspect or operate on a Codex task family. Identity always comes from exact task UUIDs and typed relations; titles are display text only.
 
-## Provenance Evidence
+The repository package plans and verifies operations. Codex app tools perform task mutations. Never write Codex SQLite directly, call private app APIs, infer membership from similar titles, or treat archive as cancellation.
 
-Establish family membership using exact task IDs, structured fork/source responses, native spawn edges when present, and explicit typed manifest links. Note that `list_threads` excludes archived tasks and exposes no pin inventory.
+## Native boundary
 
-## Minimal Manifest Example
+Use the available Codex app tools for their supported actions:
 
-Build and validate an explicit versioned manifest (`manifest.json`):
+- `list_threads` and `read_thread` for visible task state;
+- `set_thread_title` for one exact rename;
+- `set_thread_archived` for one exact archive or restore;
+- `handoff_thread` and `get_handoff_status` only when handoff work is requested;
+- `navigate_to_codex_page` only when the user asks to open a task.
+
+The app currently lacks an include-archived inventory, readable pin state, typed family graph, atomic batch mutation, and native receipt API. The local bridge therefore performs bounded, read-only SQLite reconciliation after each native mutation. `--db auto` discovers a compatible local database fail-closed; an explicit database path is also accepted.
+
+## Build the manifest
+
+Create a versioned manifest from tool-backed exact IDs. Prefer structured fork responses or persisted spawn edges. Add reviewer, handoff, replacement, and rollover relations only when explicit evidence exists. `issue_or_pr_member` may be display-only by setting `family_defining` to `false`.
 
 ```json
 {
-  "version": "1.0",
-  "project_cwd": "/path/to/project",
-  "status_metadata": "active",
-  "tasks": [
+  "schema_version": 1,
+  "family_id": "issue-5140-family",
+  "seed_task_id": "00000000-0000-4000-8000-000000000001",
+  "nodes": [
     {
-      "id": "task_1",
-      "role": "root",
-      "evidence": "spawned from prompt"
+      "task_id": "00000000-0000-4000-8000-000000000001",
+      "title": "Plan lifecycle",
+      "project_root": "/absolute/project",
+      "worktree": null,
+      "branch": null,
+      "pr_id": null,
+      "metadata": {"cwd": "/absolute/project", "status": "completed"}
     },
     {
-      "id": "task_2",
-      "role": "worker",
-      "evidence": "forked from task_1"
-    },
+      "task_id": "00000000-0000-4000-8000-000000000002",
+      "title": "Implement lifecycle",
+      "project_root": "/absolute/project",
+      "worktree": "/absolute/project/.worktrees/dispatch/codex/example",
+      "branch": "codex/example",
+      "pr_id": "123",
+      "metadata": {"cwd": "/absolute/project", "status": "completed"}
+    }
+  ],
+  "relations": [
     {
-      "id": "task_3",
-      "role": "reviewer",
-      "evidence": "spawn edge target from task_2"
-    },
-    {
-      "id": "task_4",
-      "role": "handoff",
-      "evidence": "handoff thread from task_3"
-    },
-    {
-      "id": "task_5",
-      "role": "replacement",
-      "evidence": "replacement for task_2"
+      "source_id": "00000000-0000-4000-8000-000000000002",
+      "target_id": "00000000-0000-4000-8000-000000000001",
+      "relation_type": "subagent_of",
+      "evidence": "codex_app fork response sourceThreadId",
+      "family_defining": true
     }
   ]
 }
 ```
 
-## Procedural Workflow
+Supported typed relations are `root`, `subagent_of`, `reviewer_for`, `handoff_of`, `replacement_of`, `rollover_generation_of`, and `issue_or_pr_member`.
 
-Follow this exact step sequencing:
-1. Preview the operation using the CLI.
-2. Display counts, mapping, and blockers to the user.
-3. Apply per-task native tool mutation (e.g., `set_thread_title` or `set_thread_archived`).
-4. Perform immediate read-only reconciliation and persist the result (receipt).
-5. Stop on failure; retry idempotently.
-6. Apply cleanup only after app targets verify.
-
-### 1. Inspect Family
-
-Preview family state, identities, blockers, and exact counts before mutation:
+## Inspect before mutation
 
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family inspect --manifest manifest.json --json
+.venv/bin/python -m scripts.orchestration.task_family inspect \
+  --manifest /absolute/manifest.json --json
 ```
 
-### 2. Pinned State & Inclusion
+Show the exact included and excluded task IDs, derived roles, relation count, resources, and blockers. Stop if the graph has unknown endpoints, conflicting parents, cycles, incompatible project roots, or anything other than one root.
 
-Pinned state is unreadable via CLI. Mechanical enforcement is native-only. You must:
-1. Require exact per-task inclusion in the manifest file.
-2. Demand explicit operator affirmation that pin state is unknown using `--confirm-pin-unknown true`.
+Pinned state is currently unreadable. Every affected task must be selected explicitly with one `--select-task <TASK_UUID>` argument and separately acknowledged with one `--confirm-pin-unknown <TASK_UUID>` argument. Never pass a Boolean in place of a task UUID.
 
-### 3. Rename Tasks
+## Rename
 
-1. **Preview**:
+Use a fresh UUID for each operation. The preview persists an immutable exact rename map and digest. Generated titles keep role/generation suffixes and respect Codex's 60-character persisted-title limit.
+
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family preview-rename --repo-root . --manifest manifest.json --operation-id op_123 --base-title "New Title" --select-task task_1 --actor agent --confirm-pin-unknown true --json
+.venv/bin/python -m scripts.orchestration.task_family preview-rename \
+  --repo-root /absolute/project \
+  --manifest /absolute/manifest.json \
+  --operation-id 00000000-0000-4000-8000-000000000010 \
+  --base-title "Lifecycle complete" \
+  --select-task 00000000-0000-4000-8000-000000000001 \
+  --confirm-pin-unknown 00000000-0000-4000-8000-000000000001 \
+  --actor codex/operator --json
 ```
-2. **Apply**: Call the native tool `set_thread_title` for each included task.
-3. **Reconcile**: Perform a read-back to verify. Stop on partial failure, persist to a receipt file.
+
+After the user has seen the preview, call `set_thread_title` once per selected task using that task's exact `new_title`. Immediately reconcile each result:
+
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family reconcile-title --repo-root . --family-id fam_123 --operation-id op_123 --plan-digest sha256:abc... --db auto --task-id task_1 --cwd /path --expected-title "New Title"
+.venv/bin/python -m scripts.orchestration.task_family reconcile-title \
+  --repo-root /absolute/project \
+  --family-id issue-5140-family \
+  --operation-id 00000000-0000-4000-8000-000000000010 \
+  --plan-digest <64-lowercase-hex-digest> \
+  --db auto \
+  --task-id 00000000-0000-4000-8000-000000000001 \
+  --cwd /absolute/project \
+  --expected-title "Lifecycle complete [Lead]"
 ```
 
-### 4. Archive Family
+Proceed sequentially and stop on the first mismatch. A retry is read-back-only when that exact action already succeeded.
 
-Separate archive-only (reversible, transcripts/Git retained) from finish-and-clean. Do not imply archive halts running tasks.
+## Archive or finish and clean
 
-1. **Preview**:
+Choose the operation explicitly:
+
+- `preview-archive` is reversible and retains transcripts, worktrees, branches, and runtime resources.
+- `preview-cleanup` archives tasks and may remove only exact, verified, family-owned resources. Purge is not implemented.
+
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family preview-archive --repo-root . --manifest manifest.json --operation-id op_123 --lineage-id lin_123 --base-title "Archiving" --db auto --select-task task_1 --actor agent --confirm-pin-unknown true --json
+.venv/bin/python -m scripts.orchestration.task_family preview-archive \
+  --repo-root /absolute/project \
+  --manifest /absolute/manifest.json \
+  --operation-id 00000000-0000-4000-8000-000000000020 \
+  --lineage-id 00000000-0000-4000-8000-000000000021 \
+  --base-title "Lifecycle complete" --db auto \
+  --select-task 00000000-0000-4000-8000-000000000001 \
+  --confirm-pin-unknown 00000000-0000-4000-8000-000000000001 \
+  --actor codex/operator --json
 ```
-2. **Apply**: Call the native tool `set_thread_archived` for each included task.
-3. **Reconcile**:
+
+For cleanup, replace `preview-archive` with `preview-cleanup`. Display its exact resource decisions and blockers before any mutation.
+
+Call `set_thread_archived` with `archived: true` once per selected task, then reconcile immediately with its current exact title:
+
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family reconcile-archive --repo-root . --family-id fam_123 --operation-id op_123 --db auto --task-id task_1 --cwd /path --expected-title "Archiving"
+.venv/bin/python -m scripts.orchestration.task_family reconcile-archive \
+  --repo-root /absolute/project \
+  --family-id issue-5140-family \
+  --operation-id 00000000-0000-4000-8000-000000000020 \
+  --db auto \
+  --task-id 00000000-0000-4000-8000-000000000001 \
+  --cwd /absolute/project \
+  --expected-title "Lifecycle complete [Lead]"
 ```
 
-### 5. Finish and Clean
+Only after every selected task verifies, execute the persisted plan:
 
-Irreversible cleanup (proof-gated Git). Purge is not implemented. Never broad prune, remote-delete, force-remove worktrees, auto-commit/stash, delete locks, or call private DB writes.
-
-1. **Preview**:
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family preview-cleanup --repo-root . --manifest manifest.json --operation-id op_123 --lineage-id lin_123 --base-title "Cleanup" --db auto --select-task task_1 --actor agent --confirm-pin-unknown true --json
-```
-2. **Apply**: Execute the cleanup securely using the exact plan digest from preview.
-```bash
-.venv/bin/python -m scripts.orchestration.task_family apply-cleanup --repo-root . --family-id fam_123 --operation-id op_123 --lineage-id lin_123 --plan-digest sha256:abc... --json
-```
-
-### 6. Receipt and Restoration
-
-Generate a receipt of the operation:
-```bash
-.venv/bin/python -m scripts.orchestration.task_family receipt --repo-root . --family-id fam_123 --operation-id op_123 --json
+.venv/bin/python -m scripts.orchestration.task_family apply-cleanup \
+  --repo-root /absolute/project \
+  --family-id issue-5140-family \
+  --operation-id 00000000-0000-4000-8000-000000000020 \
+  --lineage-id 00000000-0000-4000-8000-000000000021 \
+  --plan-digest <64-lowercase-hex-digest> --json
 ```
 
-If restore is needed:
-1. Call `set_thread_archived` (to unarchive).
-2. Reconcile restore:
+Cleanup must never call `.git/hooks/post-merge`, `alias.cleanup-gone`, a broad gone-upstream pruner, remote branch deletion, forced worktree removal, auto-stash/commit, or lock deletion. A local branch is eligible only under the executor's exact PR/head/remote/worktree/snapshot/protected-base proof.
+
+## Restore and receipts
+
+To restore, call `set_thread_archived` with `archived: false`, then reconcile the same selected task:
+
 ```bash
-.venv/bin/python -m scripts.orchestration.task_family reconcile-restore --repo-root . --family-id fam_123 --operation-id op_123 --db auto --task-id task_1 --cwd /path --expected-title "Restored"
+.venv/bin/python -m scripts.orchestration.task_family reconcile-restore \
+  --repo-root /absolute/project \
+  --family-id issue-5140-family \
+  --operation-id 00000000-0000-4000-8000-000000000020 \
+  --db auto \
+  --task-id 00000000-0000-4000-8000-000000000001 \
+  --cwd /absolute/project \
+  --expected-title "Lifecycle complete [Lead]"
 ```
+
+Render the durable receipt at any point:
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_family receipt \
+  --repo-root /absolute/project \
+  --family-id issue-5140-family \
+  --operation-id 00000000-0000-4000-8000-000000000020 --json
+```
+
+Report planned versus actual actions, skipped resources and reasons, failures with recovery instructions, restoration information, final retained resources, and the receipt path under `.agent/task-families/<family>/operations/<operation>/`.

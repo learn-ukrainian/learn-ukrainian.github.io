@@ -12,7 +12,13 @@ from uuid import uuid4
 import pytest
 
 from scripts.orchestration.task_family import cli, git_safety
-from scripts.orchestration.task_family.model import RelationType, TaskFamilyManifest, TaskNode, TaskRelation
+from scripts.orchestration.task_family.model import (
+    LifecycleState,
+    RelationType,
+    TaskFamilyManifest,
+    TaskNode,
+    TaskRelation,
+)
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 
@@ -163,7 +169,7 @@ def test_preview_rename_persists_immutable_mapping_and_requires_each_pin_confirm
     assert cli.main(args) == cli.EXIT_OK
     payload = json.loads(capsys.readouterr().out)
     replacement = next(item for item in payload["rename_map"] if item["task_id"] == ids["replacement"])
-    assert replacement["new_title"] == "Lifecycle repair [Replacement · Generation 1]"
+    assert replacement["new_title"] == "Lifecycle repair [Repl. · Gen. 1]"
     storage = TaskFamilyStorage(repo, manifest.family_id, operation)
     assert storage.rename_plan_path.exists()
     assert storage.manifest_path.exists()
@@ -292,6 +298,7 @@ def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Pat
     title_storage = TaskFamilyStorage(repo, manifest.family_id, rename_operation)
     assert len(title_storage.load_receipt().actual) == 1
     assert title_storage.load_receipt().actual[0].action == "title"
+    assert title_storage.load_events()[-1].state is LifecycleState.VERIFIED
 
     assert cli.main(title_reconcile) == cli.EXIT_OK
     capsys.readouterr()
@@ -320,9 +327,10 @@ def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Pat
         connection.commit()
     assert cli.main(reconcile) == cli.EXIT_OK
     assert json.loads(capsys.readouterr().out)["thread"]["archived"] is True
+    storage = TaskFamilyStorage(repo, manifest.family_id, operation)
+    assert storage.load_events()[-1].state is LifecycleState.TASKS_ARCHIVED
     assert cli.main(reconcile) == cli.EXIT_OK
     capsys.readouterr()
-    storage = TaskFamilyStorage(repo, manifest.family_id, operation)
     assert len([item for item in storage.load_receipt().actual if item.action == "archive"]) == 1
     assert any(item.action == "archive_retry_readback" for item in storage.load_receipt().skipped)
     restore = reconcile.copy()

@@ -10,6 +10,30 @@ from pathlib import PurePath
 from .model import PARENT_LIKE_RELATIONS, Blocker, RelationType, TaskFamilyManifest, TaskNode, TaskRelation
 
 ROLE_ORDER = ("Lead", "Worker", "Reviewer", "Handoff", "Replacement")
+CODEX_TITLE_MAX_CHARS = 60
+
+
+def _display_role(role: str) -> str:
+    """Keep role semantics readable inside Codex's persisted title limit."""
+    if role == "Replacement":
+        return "Repl."
+    if role.startswith("Generation "):
+        return f"Gen. {role.removeprefix('Generation ')}"
+    return role
+
+
+def _bounded_title(base_title: str, roles: tuple[str, ...]) -> str:
+    base = base_title.strip()
+    suffix = " · ".join(_display_role(role) for role in roles)
+    if not suffix:
+        available = CODEX_TITLE_MAX_CHARS
+    else:
+        available = CODEX_TITLE_MAX_CHARS - len(suffix) - len(" []")
+        if available < 1:
+            raise ValueError("role suffix exceeds the Codex title limit")
+    if len(base) > available:
+        base = f"{base[: max(available - 1, 0)].rstrip()}…"
+    return f"{base} [{suffix}]" if suffix else base
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,7 +233,6 @@ def rename_mapping(graph: FamilyGraph, base_title: str) -> tuple[TitleRename, ..
     changes: list[TitleRename] = []
     for node in sorted(graph.nodes_by_id.values(), key=lambda item: item.task_id):
         roles = graph.roles_by_task[node.task_id]
-        suffix = " · ".join(roles)
-        new_title = f"{base_title} [{suffix}]" if suffix else base_title
+        new_title = _bounded_title(base_title, roles)
         changes.append(TitleRename(node.task_id, node.title, new_title, roles))
     return tuple(changes)

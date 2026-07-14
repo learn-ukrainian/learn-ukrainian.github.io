@@ -103,8 +103,18 @@ def test_rename_mapping_uses_one_caller_supplied_base_and_stable_separator() -> 
     mapping = {item.task_id: item for item in rename_mapping(_graph(), "Lifecycle repair")}
 
     assert mapping["root"].new_title == "Lifecycle repair [Lead]"
-    assert mapping["replacement"].new_title == "Lifecycle repair [Replacement · Generation 1]"
+    assert mapping["replacement"].new_title == "Lifecycle repair [Repl. · Gen. 1]"
     assert mapping["replacement"].old_title == "Continuation"
+
+
+def test_rename_mapping_respects_native_codex_title_limit_without_losing_roles() -> None:
+    mapping = {item.task_id: item for item in rename_mapping(_graph(), "A deliberately oversized lifecycle repair title")}
+
+    replacement = mapping["replacement"]
+    assert len(replacement.new_title) <= 60
+    assert "… [" in replacement.new_title
+    assert replacement.new_title.endswith("[Repl. · Gen. 1]")
+    assert replacement.roles == ("Replacement", "Generation 1")
 
 
 def test_generation_is_transitive_and_relation_order_independent() -> None:
