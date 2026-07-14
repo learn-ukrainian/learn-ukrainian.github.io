@@ -338,8 +338,13 @@ def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
     return config
 
 
-def _manifest_record(repo_root: Path, track: str) -> tuple[dict[str, Any], tuple[str, ...]]:
-    manifest_path = _repo_file(repo_root, MANIFEST_PATH)
+def load_manifest_track(
+    repo_root: Path,
+    track: str,
+    manifest_path: Path = MANIFEST_PATH,
+) -> tuple[dict[str, Any], tuple[str, ...]]:
+    """Load one active manifest track and its authoritative module order."""
+    manifest_path = _repo_file(repo_root, manifest_path)
     try:
         manifest = load_yaml_mapping(manifest_path)
     except RegistryValidationError as exc:
@@ -357,7 +362,11 @@ def _manifest_record(repo_root: Path, track: str) -> tuple[dict[str, Any], tuple
     manifest_type = level.get("type")
     if not isinstance(manifest_type, str) or not manifest_type:
         raise ReadinessError(f"manifest levels.{track}.type must be a non-empty string")
-    return {"type": manifest_type, "path": manifest_path}, tuple(modules)
+    return {
+        "type": manifest_type,
+        "path": manifest_path,
+        "sha256": _sha256_bytes(manifest_path.read_bytes()),
+    }, tuple(modules)
 
 
 def _select_profile(config: Mapping[str, Any], track: str, manifest_type: str) -> tuple[str, Mapping[str, Any]]:
@@ -371,7 +380,8 @@ def _select_profile(config: Mapping[str, Any], track: str, manifest_type: str) -
     return profile_id, profile
 
 
-def _module_state(repo_root: Path, track: str, slug: str) -> str:
+def module_bundle_state(repo_root: Path, track: str, slug: str) -> str:
+    """Classify the canonical four-file learner bundle without reading audit state."""
     module_dir = repo_root / "curriculum" / "l2-uk-en" / track / slug
     count = sum((module_dir / filename).is_file() for filename in MODULE_BUNDLE_FILES)
     if count == 0:
@@ -689,7 +699,7 @@ def _evaluate_manifest_target(
         requirements=requirements,
         sources=sources,
     )
-    module_state = _module_state(repo_root, track, slug)
+    module_state = module_bundle_state(repo_root, track, slug)
     decision, state_findings = _lifecycle_decision(
         module_state=module_state,
         requirements_pass=all(requirement["passed"] for requirement in requirements),
@@ -733,7 +743,7 @@ def evaluate_preparation(
         raise ReadinessError("consumed preparation identity must be a SHA-256 hex digest")
 
     config = load_config(repo_root=repo_root)
-    manifest_record, manifest_slugs = _manifest_record(repo_root, track)
+    manifest_record, manifest_slugs = load_manifest_track(repo_root, track)
     profile_id, profile = _select_profile(config, track, str(manifest_record["type"]))
     files = _contract_files(repo_root, manifest_record["path"])
 
