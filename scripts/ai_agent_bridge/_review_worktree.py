@@ -80,9 +80,14 @@ def review_target_from_message(message: dict[str, Any]) -> ReviewTarget | None:
         return None
     if not isinstance(metadata, dict):
         return None
+    if "review_target" not in metadata:
+        return None
     raw_target = metadata.get("review_target")
     if not isinstance(raw_target, dict):
-        return None
+        # Fail closed (#5175 review BLOCKER): a present-but-malformed target must
+        # never silently degrade to a primary-checkout review — that IS the bug
+        # this module exists to fix.
+        raise ReviewWorktreeError("review_target metadata must be an object when present")
 
     branch = raw_target.get("branch")
     pr_number = raw_target.get("pr")
@@ -182,6 +187,10 @@ def provision_review_worktree(
         return
 
     root = repo_root.resolve()
+    # Self-heal SIGKILL-stranded registrations from prior review asks: the
+    # finally-teardown below cannot run under SIGKILL, and a stale
+    # .git/worktrees/<id> entry otherwise persists forever (#5175 review).
+    _run_command(["git", "worktree", "prune"], cwd=root)
     branch, pr_number = _resolve_branch(target, repo_root=root)
     origin_ref = f"origin/{branch}"
     _run_command(["git", "fetch", "origin", branch], cwd=root)

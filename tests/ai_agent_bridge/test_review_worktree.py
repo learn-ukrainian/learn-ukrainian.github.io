@@ -131,3 +131,39 @@ def test_review_cli_accepts_explicit_branch_only_with_review() -> None:
     args.review = False
     with pytest.raises(SystemExit, match="require --review"):
         _cli._review_target_kwargs(args)
+
+
+def test_review_target_present_but_non_dict_fails_closed() -> None:
+    # #5175 review BLOCKER: a present-but-malformed review_target must raise,
+    # never silently degrade to a primary-checkout review (the original #5150 bug).
+    for bad in (None, "garbage", ["branch"], 7):
+        with pytest.raises(review_worktree.ReviewWorktreeError, match="must be an object"):
+            review_worktree.review_target_from_message(
+                {"data": json.dumps({"review_target": bad})}
+            )
+    # Absent key is a normal non-branch review — still None, no error.
+    assert review_worktree.review_target_from_message({"data": json.dumps({"x": 1})}) is None
+
+
+def test_provision_prunes_stale_worktree_registrations(tmp_path, monkeypatch) -> None:
+    # #5175 review MAJOR: SIGKILL between add and remove strands a
+    # .git/worktrees/<id> registration; provisioning must self-heal via prune.
+    commands: list[list[str]] = []
+
+    def fake_run(command, *, cwd):
+        commands.append(command)
+        if command[:2] == ["git", "fetch"]:
+            return ""
+        if command[:2] == ["git", "rev-parse"] and "--verify" in command:
+            return "deadbeef"
+        if command[:3] == ["git", "worktree", "add"]:
+            raise review_worktree.ReviewWorktreeError("stop before real checkout")
+        return ""
+
+    monkeypatch.setattr(review_worktree, "_run_command", fake_run)
+    target = review_worktree.ReviewTarget(branch="feature/x")
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="stop before real checkout"):
+        with review_worktree.provision_review_worktree(target, repo_root=tmp_path):
+            pass
+    assert ["git", "worktree", "prune"] in commands
+    assert commands.index(["git", "worktree", "prune"]) == 0
