@@ -12,7 +12,8 @@ from typing import Any, Literal
 
 from scripts.orchestration.task_family import codex_state
 from scripts.orchestration.task_family import git_safety as safety
-from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from scripts.orchestration.task_family.model import LifecycleState, OperationReceipt, ReceiptAction
+from scripts.orchestration.task_family.storage import TaskFamilyStorage, atomic_write_text
 
 CLEANUP_STAGES = (
     "planned",
@@ -370,26 +371,166 @@ def _set_blocked(
     return persist_state(path, payload)
 
 
-def _receipt_payload(payload: dict[str, Any]) -> dict[str, Any]:
-    """Durable, resource-addressable receipt; it never authorizes a mutation."""
-    return {
-        "schema_version": 1,
-        "operation_id": payload["operation_id"],
-        "family_id": payload["family_id"],
-        "plan_digest": payload["plan_digest"],
-        "state": payload["state"],
-        "resume_stage": payload.get("resume_stage"),
-        "resources": payload.get("resources", {}),
-        "blocked": payload.get("blocked"),
-        "updated_at": payload["updated_at"],
+def _dedupe_actions(actions: tuple[ReceiptAction, ...]) -> tuple[ReceiptAction, ...]:
+    seen: set[tuple[str, str, str]] = set()
+    result: list[ReceiptAction] = []
+    for action in actions:
+        key = (action.resource_type, action.resource_id, action.action)
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(action)
+    return tuple(result)
+
+
+def _initial_receipt(payload: dict[str, Any]) -> OperationReceipt:
+    raw = payload.get("initial_receipt")
+    if isinstance(raw, dict):
+        try:
+            return OperationReceipt.from_dict(raw)
+        except ValueError:
+            pass
+    return OperationReceipt(
+        operation_id=str(payload["operation_id"]),
+        family_id=str(payload["family_id"]),
+        plan_digest=str(payload["plan_digest"]),
+        final_state=LifecycleState.PLANNED,
+    )
+
+
+def _resource_actions(payload: dict[str, Any]) -> tuple[tuple[ReceiptAction, ...], tuple[ReceiptAction, ...], tuple[ReceiptAction, ...]]:
+    """Return exact actual, skipped, and failed resource outcomes."""
+    actual: list[ReceiptAction] = []
+    skipped: list[ReceiptAction] = []
+    failures: list[ReceiptAction] = []
+    resources = payload.get("resources", {})
+    if not isinstance(resources, dict):
+        return (), (), ()
+    branch_results = payload.get("stages", {}).get("branches_deleted", {}).get("results", {})
+    if not isinstance(branch_results, dict):
+        branch_results = {}
+    action_by_kind = {
+        "task": "archive",
+        "worktree": "retire_local_worktree_and_branch",
+        "runtime": "retire_runtime",
     }
+    for kind in ("task", "worktree", "runtime"):
+        entries = resources.get(kind, {})
+        if not isinstance(entries, dict):
+            continue
+        for resource_id, entry in sorted(entries.items()):
+            if not isinstance(entry, dict):
+                continue
+            status = entry.get("status")
+            if kind == "worktree":
+                branch_status = branch_results.get(resource_id, {})
+                if not isinstance(branch_status, dict):
+                    branch_status = {}
+                if branch_status.get("status") == "deleted":
+                    status = "actual"
+                elif branch_status.get("status") == "already_absent":
+                    status = "skipped"
+                elif status == "actual":
+                    continue
+            reason = str(entry.get("reason") or f"executor resource status: {status or 'unknown'}")
+            action = ReceiptAction(
+                kind,
+                str(resource_id),
+                (str(resource_id),),
+                action_by_kind[kind],
+                reason,
+                reason if status == "failed" else "",
+                "Inspect state.json and retained snapshots before retrying." if status == "failed" else "",
+            )
+            if status == "actual":
+                actual.append(action)
+            elif status == "skipped":
+                skipped.append(action)
+            elif status == "failed":
+                failures.append(action)
+    return tuple(actual), tuple(skipped), tuple(failures)
+
+
+def _final_resource_actions(payload: dict[str, Any]) -> tuple[ReceiptAction, ...]:
+    resources = payload.get("resources", {})
+    if not isinstance(resources, dict):
+        return ()
+    branch_results = payload.get("stages", {}).get("branches_deleted", {}).get("results", {})
+    if not isinstance(branch_results, dict):
+        branch_results = {}
+    actions: list[ReceiptAction] = []
+    for kind in ("task", "worktree", "runtime"):
+        entries = resources.get(kind, {})
+        if not isinstance(entries, dict):
+            continue
+        for resource_id, entry in sorted(entries.items()):
+            status = entry.get("status") if isinstance(entry, dict) else "unknown"
+            branch_status = branch_results.get(resource_id, {}) if kind == "worktree" else {}
+            if isinstance(branch_status, dict) and branch_status.get("status") == "deleted":
+                status = "retired"
+            elif isinstance(branch_status, dict) and branch_status.get("status") == "already_absent":
+                status = "already_absent"
+            action = {
+                ("task", "actual"): "archived",
+                ("worktree", "retired"): "retired",
+                ("worktree", "already_absent"): "retired_before_resume",
+                ("runtime", "actual"): "retired",
+            }.get((kind, status), "retained")
+            actions.append(
+                ReceiptAction(
+                    kind,
+                    str(resource_id),
+                    (str(resource_id),),
+                    action,
+                    f"final executor resource status: {status}",
+                )
+            )
+    return tuple(actions)
+
+
+def _receipt_payload(payload: dict[str, Any]) -> OperationReceipt:
+    """Build one durable receipt without discarding native reconciliation."""
+    initial = _initial_receipt(payload)
+    resource_actual, resource_skipped, resource_failures = _resource_actions(payload)
+    try:
+        final_state = LifecycleState(str(payload["state"]))
+    except ValueError as exc:
+        raise ExecutionStateError(f"invalid receipt lifecycle state: {payload.get('state')!r}") from exc
+    return OperationReceipt(
+        operation_id=initial.operation_id,
+        family_id=initial.family_id,
+        plan_digest=initial.plan_digest,
+        final_state=final_state,
+        planned=initial.planned,
+        actual=_dedupe_actions((*initial.actual, *resource_actual)),
+        skipped=_dedupe_actions((*initial.skipped, *resource_skipped)),
+        failures=_dedupe_actions((*initial.failures, *resource_failures)),
+        restoration=initial.restoration,
+        final_resources=_final_resource_actions(payload),
+        events=initial.events,
+    )
+
+
+def _capture_initial_receipt(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    if isinstance(payload.get("initial_receipt"), dict):
+        return payload
+    receipt_file = path.with_name("receipt.json")
+    try:
+        raw = json.loads(receipt_file.read_text(encoding="utf-8"))
+        receipt = OperationReceipt.from_dict(raw)
+    except (FileNotFoundError, json.JSONDecodeError, ValueError):
+        receipt = _initial_receipt(payload)
+    payload["initial_receipt"] = receipt.to_dict()
+    return payload
 
 
 def persist_state(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload["updated_at"] = _iso_now()
     safety.write_json_atomic(path, payload)
-    safety.write_json_atomic(path.with_name("receipt.json"), _receipt_payload(payload))
+    receipt = _receipt_payload(payload)
+    safety.write_json_atomic(path.with_name("receipt.json"), receipt.to_dict())
+    atomic_write_text(path.with_name("receipt.txt"), receipt.render_human())
     return payload
 
 
@@ -524,6 +665,7 @@ class CleanupExecutor:
 
     def _run_locked(self) -> dict[str, Any]:
         payload = load_state(self.repo_root, self.plan)
+        payload = _capture_initial_receipt(self.state_file, payload)
         try:
             _load_persisted_plan(self.repo_root, self.plan)
         except ExecutorError as exc:
@@ -877,6 +1019,9 @@ class CleanupExecutor:
 
     def _to_branches_deleted(self, payload: dict[str, Any]) -> str:
         self._verify_frozen_gate_once()
+        recorded = payload.get("stages", {}).get("branches_deleted", {}).get("results", {})
+        if not isinstance(recorded, dict):
+            recorded = {}
         for target in self.plan.worktree_targets:
             bundle = self._is_bundle_ready_for_target(payload, target)
             if bundle is None:
@@ -888,6 +1033,52 @@ class CleanupExecutor:
             if base_branch != target.pr_base:
                 raise ExecutorError(f"base branch drift for {target.branch}: expected {target.pr_base!r}, got {base_branch!r}")
             safety.ensure_clean_base(self.repo_root, base_branch)
+
+            if not safety.local_branch_exists(self.repo_root, target.branch):
+                if safety.is_worktree_registered(self.repo_root, target.worktree):
+                    raise ExecutorError(f"branch is absent but its worktree remains registered: {target.branch}")
+                if safety.remote_branch_present(self.repo_root, target.branch):
+                    raise ExecutorError(f"remote branch still present while local branch is absent: {target.branch}")
+                bundle_head = safety.bundle_branch_head(
+                    bundle.path,
+                    branch=target.branch,
+                    repo_root=self.repo_root,
+                )
+                current_pr = safety.query_pr_by_head(
+                    self.repo_root,
+                    branch=target.branch,
+                    pr_number=target.pr_number,
+                )
+                safety.assert_pr_is_merged(
+                    current_pr,
+                    expected_branch=target.branch,
+                    expected_number=target.pr_number,
+                    expected_base=target.pr_base,
+                    expected_head=bundle_head,
+                )
+                prior = recorded.get(target.id, {})
+                if isinstance(prior, dict) and prior.get("status") == "deleted":
+                    _record_resource(
+                        payload,
+                        "worktree",
+                        target.id,
+                        "actual",
+                        evidence=prior,
+                        reason="persisted deletion receipt reverified on safe resume",
+                    )
+                    _record(payload, "branches_deleted", "results", recorded)
+                    continue
+                recorded[target.id] = {"status": "already_absent", "branch": target.branch, "head": bundle_head}
+                _record_resource(
+                    payload,
+                    "worktree",
+                    target.id,
+                    "skipped",
+                    evidence=recorded[target.id],
+                    reason="exact local branch was already absent on safe resume",
+                )
+                _record(payload, "branches_deleted", "results", recorded)
+                continue
 
             local_head = safety.local_branch_head(self.repo_root, target.branch)
             pr = safety.query_pr_by_head(self.repo_root, branch=target.branch, pr_number=target.pr_number)
@@ -913,10 +1104,6 @@ class CleanupExecutor:
                 worktree_registered=safety.is_worktree_registered(self.repo_root, target.worktree),
                 expected_head=pr["head_ref_oid"],
             )
-
-            if not safety.local_branch_exists(self.repo_root, target.branch):
-                _record_resource(payload, "worktree", target.id, "skipped", evidence={"reason": "branch already removed"})
-                continue
 
             # Re-query exact PR and re-check the complete mutation fence at the
             # last possible point; unknown remote state is a blocker.
@@ -947,7 +1134,8 @@ class CleanupExecutor:
             if safety.remote_branch_present(self.repo_root, target.branch):
                 raise ExecutorError(f"remote branch still present after delete: {target.branch}")
 
-            _record(payload, "branches_deleted", "deleted", target.branch)
+            recorded[target.id] = {"status": "deleted", "branch": target.branch, "head": current_head}
+            _record(payload, "branches_deleted", "results", recorded)
 
         self._maybe_crash("branches_deleted")
         return "branches_deleted"

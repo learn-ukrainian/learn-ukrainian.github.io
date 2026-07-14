@@ -688,6 +688,28 @@ def verify_bundle(
             raise BundleError(f"bundle does not include {full_ref}")
 
 
+def bundle_branch_head(
+    path: Path,
+    *,
+    branch: str,
+    repo_root: Path,
+    timeout: float = 30.0,
+) -> str:
+    """Return the exact branch head recorded by a verified recovery bundle."""
+    verify_bundle(path, branch=branch, repo_root=repo_root, timeout=timeout)
+    listed = run_git(["bundle", "list-heads", str(path)], cwd=repo_root, timeout=timeout)
+    _require_success(listed, context="git bundle list-heads failed")
+    full_ref = f"refs/heads/{branch}"
+    matches = [
+        parts[0]
+        for line in (listed.stdout or "").splitlines()
+        if len(parts := line.strip().split()) >= 2 and parts[1] == full_ref
+    ]
+    if len(matches) != 1 or not re.fullmatch(r"[0-9a-fA-F]{40,64}", matches[0]):
+        raise BundleError(f"bundle has ambiguous or invalid head for {full_ref}")
+    return matches[0].lower()
+
+
 def assert_bundle_matches_receipt(bundle: BundleReceipt, branch: str) -> None:
     if bundle.branch != branch:
         raise GitSafetyError(f"bundle branch mismatch: {bundle.branch!r} != {branch!r}")
@@ -771,6 +793,11 @@ def assert_branch_deletion_preconditions(
     if local_head != pr_head_oid:
         raise GitSafetyError(
             f"local branch head mismatch for {branch}: local {local_head!r}, pr head {pr_head_oid!r}"
+        )
+    bundle_head = bundle_branch_head(bundle.path, branch=branch, repo_root=repo_root)
+    if bundle_head != local_head:
+        raise GitSafetyError(
+            f"recovery bundle head mismatch for {branch}: bundle {bundle_head!r}, local {local_head!r}"
         )
     if require_remote_gone and remote_branch_present(repo_root, branch):
         raise GitSafetyError(f"remote branch still present: {branch}")

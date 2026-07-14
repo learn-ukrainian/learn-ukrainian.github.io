@@ -612,7 +612,10 @@ def _append_reconciliation(
     except ValueError:
         previous = None
     if previous is not None:
-        retry = any(item.resource_id == task_id and item.action == action for item in previous.actual)
+        retry = any(
+            item.resource_id == task_id and item.action == action
+            for item in (*previous.actual, *previous.restoration)
+        )
     details = {**result, "recovery": recovery, "retry": retry}
     verified_state = {
         "title": LifecycleState.VERIFIED,
@@ -655,6 +658,14 @@ def _append_reconciliation(
                 recovery=recovery,
             )
             storage.write_receipt(replace(previous, skipped=(*previous.skipped, retry_record), events=storage.load_events()))
+        elif action == "restore":
+            storage.write_receipt(
+                replace(
+                    previous,
+                    restoration=(*previous.restoration, action_record),
+                    events=storage.load_events(),
+                )
+            )
         else:
             storage.write_receipt(replace(previous, actual=(*previous.actual, action_record), events=storage.load_events()))
     else:
@@ -760,7 +771,10 @@ def _cmd_reconcile_archive(args: argparse.Namespace, *, archived: bool) -> int:
     operation_id = _canonical_uuid(args.operation_id, "--operation-id")
     storage = TaskFamilyStorage(root, args.family_id, operation_id)
     action = "archive" if archived else "restore"
-    plan_digest = "unavailable"
+    try:
+        plan_digest = storage.load_receipt().plan_digest
+    except (FileNotFoundError, ValueError):
+        plan_digest = ""
     recovery = f"Use the native {action} action for this exact task, then retry reconciliation."
     try:
         plan = storage.load_plan()

@@ -222,8 +222,18 @@ def test_archive_only_observes_native_archive_and_stops_at_tasks_archived(tmp_pa
     assert result["state"] == "tasks_archived"
     assert result["resources"]["task"].keys() == {task_id}
     receipt = json.loads(executor.receipt_path(repo, approved).read_text(encoding="utf-8"))
-    assert receipt["state"] == "tasks_archived"
-    assert receipt["resources"]["task"][task_id]["status"] == "actual"
+    assert receipt["final_state"] == "tasks_archived"
+    assert receipt["actual"][-1]["action"] == "archive"
+    assert receipt["final_resources"] == [{
+        "resource_type": "task",
+        "resource_id": task_id,
+        "task_ids": [task_id],
+        "action": "archived",
+        "reason": "final executor resource status: actual",
+        "error": "",
+        "recovery": "",
+    }]
+    assert "Final resources: task:" in executor.receipt_path(repo, approved).with_name("receipt.txt").read_text(encoding="utf-8")
 
 
 def test_advisory_lock_path_is_not_git_lock_but_git_worktree_lock_blocks(tmp_path: Path) -> None:
@@ -283,6 +293,37 @@ def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_muta
     assert keep_worktree.exists()
     git(repo, "show-ref", "--verify", "--quiet", f"refs/heads/{unrelated_branch}")
     assert not git_safety.local_branch_exists(repo, target_branch)
+
+
+def test_branch_delete_crash_resumes_from_verified_bundle_when_branch_is_already_absent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    branch, worktree = "cleanup/resume", add_worktree(repo, "cleanup/resume")
+    task_id = str(uuid4())
+    db = tmp_path / "state_5.sqlite"
+    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    target = worktree_target(worktree, branch, "resume", number=10)
+    approved = plan(repo, family="resume", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),), worktree_targets=(target,))
+    stub_remote(monkeypatch)
+    head = git(worktree, "rev-parse", "HEAD")
+    monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: pr(branch, head, 10))
+    original_delete = git_safety.delete_branch
+
+    def delete_then_crash(*args: Any, **kwargs: Any) -> None:
+        original_delete(*args, **kwargs)
+        raise RuntimeError("simulated process crash immediately after branch deletion")
+
+    monkeypatch.setattr(git_safety, "delete_branch", delete_then_crash)
+
+    interrupted = executor.CleanupExecutor(repo, approved).run()
+    assert interrupted["state"] == "blocked"
+    assert not git_safety.local_branch_exists(repo, branch)
+
+    monkeypatch.setattr(git_safety, "delete_branch", original_delete)
+    resumed = executor.CleanupExecutor(repo, approved).run()
+    assert resumed["state"] == "completed"
+    assert resumed["stages"]["branches_deleted"]["results"][target.id]["status"] == "already_absent"
+    receipt = json.loads(executor.receipt_path(repo, approved).read_text(encoding="utf-8"))
+    assert any(item["action"] == "retired_before_resume" for item in receipt["final_resources"])
 
 
 def test_remote_lookup_failure_blocks_branch_delete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

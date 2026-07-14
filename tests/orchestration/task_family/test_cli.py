@@ -338,7 +338,14 @@ def test_reconcile_title_and_partial_archive_retry_append_receipts(tmp_path: Pat
     assert cli.main(restore) == cli.EXIT_BLOCKED
     assert storage.load_receipt().failures[-1].action == "restore"
     assert storage.load_receipt().failures[-1].recovery
-    assert len(storage.load_events()) == 4
+    with sqlite3.connect(db) as connection:
+        connection.execute("UPDATE threads SET archived = 0, archived_at = NULL WHERE id = ?", (ids["worker"],))
+        connection.commit()
+    assert cli.main(restore) == cli.EXIT_OK
+    capsys.readouterr()
+    assert storage.load_receipt().restoration[-1].action == "restore"
+    assert storage.load_events()[-1].state is LifecycleState.VERIFIED
+    assert len(storage.load_events()) == 5
 
 
 def test_reconcile_title_rejects_rename_digest_drift_and_persists_failure(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -393,7 +400,19 @@ def test_apply_archive_uses_persisted_digest_zero_git_mutation_and_completed_rep
         "receipt", "--repo-root", str(repo), "--family-id", manifest.family_id,
         "--operation-id", operation, "--json",
     ]) == cli.EXIT_OK
-    assert json.loads(capsys.readouterr().out)["state"] == "tasks_archived"
+    receipt = json.loads(capsys.readouterr().out)
+    assert receipt["final_state"] == "tasks_archived"
+    assert receipt["planned"]
+    assert receipt["actual"]
+    assert receipt["final_resources"]
+
+    assert cli.main([
+        "receipt", "--repo-root", str(repo), "--family-id", manifest.family_id,
+        "--operation-id", operation,
+    ]) == cli.EXIT_OK
+    human_receipt = capsys.readouterr().out
+    assert "Final state: tasks_archived" in human_receipt
+    assert "Actual: task:" in human_receipt
 
     calls = {"count": 0}
     original = cli.codex_state.await_task_target

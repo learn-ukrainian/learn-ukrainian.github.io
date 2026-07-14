@@ -116,6 +116,10 @@ def test_rename_mapping_respects_native_codex_title_limit_without_losing_roles()
     assert replacement.new_title.endswith("[Repl. · Gen. 1]")
     assert replacement.roles == ("Replacement", "Generation 1")
 
+    ukrainian = {item.task_id: item for item in rename_mapping(_graph(), "Завершення надзвичайно довгого життєвого циклу завдання")}
+    assert len(ukrainian["replacement"].new_title) <= 60
+    assert ukrainian["replacement"].new_title.endswith("[Repl. · Gen. 1]")
+
 
 def test_generation_is_transitive_and_relation_order_independent() -> None:
     nodes = (_node("root", "Root"), _node("generation-1", "One"), _node("generation-2", "Two"))
