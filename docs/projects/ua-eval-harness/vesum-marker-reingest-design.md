@@ -35,7 +35,7 @@ Decision: use a marker-preserving full dataset with a compatibility view that hi
   - `subst`
   - `obsc`
 
-- Analyses marked `arch`, `coll`, `slang`, or confirmed dialect remain visible in `forms`, with their markers exposed in `tags`. This preserves current marker-aware consumer behavior. Register and heritage policy belongs in `inspect_*` and downstream gate policy, not in compatibility-view exclusion.
+- Analyses marked `arch`, `coll`, `slang`, `alt`, `vulg`, or confirmed dialect remain visible in `forms`, with their markers exposed in `tags`. This preserves current marker-aware consumer behavior (the pre-existing DB already exposed `arch`/`slang`/`subst`/`alt`/`vulg`; of those only `subst` moves to hidden, as a deliberate, delta-measured tightening). Register and heritage policy belongs in `inspect_*` and downstream gate policy, not in compatibility-view exclusion.
 
 - Existing `verify_word`, `verify_words`, and `verify_lemma` continue querying `forms`:
 
@@ -59,10 +59,9 @@ Pin dict_uk `v6.8.0`, commit `bcb5ccd9585a79dbbbb7c8c5e241adcd8a64f824`. [Releas
 Commit `scripts/config/vesum_source.lock.json` containing:
 
 - full upstream commit;
-- source-archive SHA-256;
-- `doc/tags.txt` SHA-256;
-- exporter version and exact exporter-code/patch SHA-256;
-- importer version and exact importer-code/patch SHA-256;
+- pinned release-asset URL, byte size, and SHA-256;
+- parser/exporter version and exact parser-code SHA-256;
+- operator-entrypoint version and exact entrypoint-code SHA-256;
 - marker-policy version;
 - expected semantic row counts;
 - expected counts for every normalized marker class;
@@ -70,7 +69,7 @@ Commit `scripts/config/vesum_source.lock.json` containing:
 
 The importer version may replace a separate importer hash only if the version provably and immutably identifies the exact importer implementation. The same lock must imply the same upstream source, exporter, importer, marker policy, and semantic dataset.
 
-Use the pinned source tree plus a marker- and comment-preserving pre-filter export, not merely the release `dict_corp_vis.txt.bz2`. The existing consumer export/import path suppresses information needed for dialect and style semantics. Upstream documents that its source tree generates output dictionaries through `./gradlew expand`. [Upstream build contract](https://github.com/brown-uk/dict_uk).
+The primary source is the pinned v6.8.0 release asset `dict_corp_vis.txt.bz2`, not a Gradle/JVM expansion. Direct inspection established that this asset is block-structured: an unindented lemma analysis opens a paradigm, indented analyses are its forms, and inline comments remain structurally bound within that block. Derive `entry_id` from the block ordinal and `source_location` from its line span in the hash-locked asset. This preserves comment-to-paradigm identity without a cross-homograph join. A supplemental source-tree pass is permitted only if fixture generation proves that an evidence class is absent from the release export; document that exception and its rationale.
 
 Hash a canonically sorted JSONL export containing analyses, markers, and provenance. This semantic hash is the reproducibility identity; byte-identical SQLite files are not required across SQLite versions.
 
@@ -78,7 +77,7 @@ The build must fail on any source hash, pipeline-code hash, release identity, ta
 
 ## R3 — Contract tests
 
-Generate the fixture manifest deterministically from the pinned v6.8.0 source tree at lock time. Hand-picked fixture lemmas are forbidden. Each generated fixture must record its source location, raw tags/comment evidence, normalized markers, and expected compatibility/inspection results. The resulting manifest is frozen by the lock.
+Generate the fixture manifest deterministically from the hash-locked v6.8.0 release asset at lock time. Hand-picked fixture lemmas are forbidden. Each generated fixture must record its source location, raw tags/comment evidence, normalized markers, and expected compatibility/inspection results. The resulting manifest is frozen by the lock.
 
 The examples below are discovery hints only; they become fixtures only if the generator verifies their required properties in the pinned source.
 
@@ -88,7 +87,7 @@ Required probe classes:
 - `bad` plus clean orthographic counterpart: bad-only form returns legacy empty and inspection `KNOWN_INVALID`; the clean counterpart remains FOUND (`дзига`/`дзиґа` is illustrative).
 - `subst`: legacy empty; inspection `NONSTANDARD`. Candidate selection must come from the pinned source rather than assumptions about `такшо` or `штані`.
 - `obsc`: legacy empty; inspection uses bad-like `KNOWN_INVALID` treatment.
-- `coll`: legacy FOUND with `coll` retained in tags; inspection `COLLOQUIAL`. `днюха` must not be used unless the pinned source actually marks it `coll`.
+- Colloquial: the locked v6.8.0 release asset has zero `coll` tag tokens and no reusable analysis-level comment encoding. The fixture and lock record `coll` as a known-absent class; lexical/comment text such as `розм.` must not be promoted to a marker.
 - `slang`: legacy FOUND with `slang` retained; inspection `SLANG` (`бабло` is illustrative).
 - `arch`: legacy FOUND with `arch` retained; inspection routes to `ARCH_OR_DIALECT_UNRESOLVED`, never `KNOWN_INVALID` (`аби-де` is illustrative).
 - Pure dialect: an analysis with exact dialect evidence and no clean homograph; legacy FOUND, dialect evidence preserved, and inspection routes through dialect/heritage policy rather than invalid-word handling.

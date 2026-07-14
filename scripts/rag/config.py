@@ -14,7 +14,7 @@ LITERARY_DIR = DATA_DIR / "literary_texts"
 # ── VESUM morphological dictionary ──────────────────────────────
 VESUM_DIR = DATA_DIR / "vesum"
 VESUM_DB_PATH = DATA_DIR / "vesum.db"
-VESUM_URL = "https://github.com/brown-uk/dict_uk/releases/download/v6.7.5/dict_corp_vis.txt.bz2"
+VESUM_URL = "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2"
 
 # ── Embedding models ───────────────────────────────────────────────
 BGE_M3_MODEL = "BAAI/bge-m3"
