@@ -88,6 +88,10 @@ def test_publish_manifest_uploads_versioned_and_canonical_assets(
         raise AssertionError(f"unexpected command: {args}")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: {"entries": []},
+    )
 
     pointer = publish_manifest(
         manifest_path=manifest_path,
@@ -138,6 +142,10 @@ def test_publish_manifest_skips_existing_verified_versioned_asset(
         raise AssertionError(f"unexpected command: {args}")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: {"entries": []},
+    )
 
     publish_manifest(
         manifest_path=manifest_path,
@@ -170,24 +178,62 @@ def test_pointer_freshness_guard_fails_on_stale_pointer_fixture() -> None:
         validate_pointer_freshness(pointer, fingerprint)
 
 
-def test_richness_gate_blocks_publish_above_cap(tmp_path: Path, monkeypatch) -> None:
-    """#4515: the binding thin-page cap lives at publish time. A manifest whose
-    audit exceeds the cap must raise ManifestPublishError before any gzip/
-    upload/pointer work happens — on dry-run too (preflight parity)."""
+def test_download_published_manifest_decodes_canonical_release_asset(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.lexicon.publish_manifest import download_published_manifest
+
+    release_manifest = {"version": "live", "entries": []}
+    calls: list[tuple[str, str, str]] = []
+
+    def fake_download(asset_name: str, *, release_tag: str, repo: str) -> bytes:
+        calls.append((asset_name, release_tag, repo))
+        return gzip.compress(json.dumps(release_manifest).encode("utf-8"))
+
+    monkeypatch.setattr("scripts.lexicon.publish_manifest._download_release_asset", fake_download)
+
+    assert download_published_manifest(release_tag="live-tag", repo="learn-ukrainian/example") == release_manifest
+    assert calls == [(ASSET_NAME, "live-tag", "learn-ukrainian/example")]
+
+
+def _richness_summary(*, thin: int, gloss: int, anchor: int, broken_stubs: int = 0) -> dict:
+    return {
+        "poc_thin_pages": thin,
+        "search_no_visible_gloss": gloss,
+        "old_gate_no_english_anchor": anchor,
+        "form_stub_broken": broken_stubs,
+    }
+
+
+def _install_richness_audit(monkeypatch: pytest.MonkeyPatch) -> None:
+    import scripts.audit.audit_atlas_poc_richness as richness
+
+    monkeypatch.setattr(richness, "audit_manifest", lambda manifest: manifest["richness_summary"])
+
+
+def test_richness_regression_blocks_before_packaging(tmp_path: Path, monkeypatch) -> None:
+    """#4515: the publish chokepoint compares candidate and live baseline before gzip/upload."""
     import scripts.audit.audit_atlas_poc_richness as richness
     from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
 
     manifest_path = tmp_path / "lexicon-manifest.json"
-    _write_json(manifest_path, {"version": "0.1", "entries": []})
+    baseline = {"richness_summary": _richness_summary(thin=158, gloss=8, anchor=4)}
+    _write_json(
+        manifest_path,
+        {"richness_summary": _richness_summary(thin=159, gloss=8, anchor=4)},
+    )
 
-    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 901})
+    monkeypatch.setattr(richness, "audit_manifest", lambda manifest: manifest["richness_summary"])
 
-    with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4515\).*901"):
-        assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
+    with pytest.raises(ManifestPublishError, match=r"poc_thin_pages 158→159"):
+        assert_manifest_richness_publishable(manifest_path, baseline_manifest=baseline)
 
-    # Wired into publish_manifest itself (cap from DEFAULT_MAX_POC_THIN_PAGES=900),
-    # and dry_run does NOT bypass it.
+    # Wired into publish_manifest itself, and dry_run does NOT bypass it.
     gzip_calls: list[Path] = []
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: baseline,
+    )
     monkeypatch.setattr(
         "scripts.lexicon.publish_manifest.gzip_manifest",
         lambda mp, gp: gzip_calls.append(mp),
@@ -204,30 +250,104 @@ def test_richness_gate_blocks_publish_above_cap(tmp_path: Path, monkeypatch) -> 
     assert gzip_calls == [], "gate must fire before any packaging work"
 
 
-def test_richness_gate_passes_at_cap_and_reports_summary(tmp_path: Path, monkeypatch) -> None:
-    import scripts.audit.audit_atlas_poc_richness as richness
+def test_richness_improvement_passes_despite_nonzero_debt(tmp_path: Path, monkeypatch) -> None:
     from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
 
     manifest_path = tmp_path / "lexicon-manifest.json"
-    _write_json(manifest_path, {"version": "0.1", "entries": []})
+    baseline = {"richness_summary": _richness_summary(thin=800, gloss=158, anchor=4)}
+    _write_json(
+        manifest_path,
+        {"richness_summary": _richness_summary(thin=700, gloss=120, anchor=1)},
+    )
+    _install_richness_audit(monkeypatch)
 
-    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 900, "form_stub_broken": 0})
-    summary = assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
-    assert summary["poc_thin_pages"] == 900
+    record = assert_manifest_richness_publishable(manifest_path, baseline_manifest=baseline)
+    assert record["candidate"]["search_no_visible_gloss"] == 120
+    assert record["regressions"] == {}
+
+
+def test_richness_equal_counts_pass(tmp_path: Path, monkeypatch) -> None:
+    from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
+
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    baseline = {"richness_summary": _richness_summary(thin=158, gloss=8, anchor=4)}
+    _write_json(
+        manifest_path,
+        {"richness_summary": _richness_summary(thin=158, gloss=8, anchor=4)},
+    )
+    _install_richness_audit(monkeypatch)
+
+    record = assert_manifest_richness_publishable(manifest_path, baseline_manifest=baseline)
+    assert record["regressions"] == {}
+
+
+def test_richness_override_requires_nonempty_reason(tmp_path: Path, monkeypatch) -> None:
+    from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
+
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    _write_json(
+        manifest_path,
+        {"richness_summary": _richness_summary(thin=159, gloss=8, anchor=4)},
+    )
+    _install_richness_audit(monkeypatch)
+
+    with pytest.raises(ManifestPublishError, match="requires a non-empty reason"):
+        assert_manifest_richness_publishable(
+            manifest_path,
+            baseline_manifest={"richness_summary": _richness_summary(thin=158, gloss=8, anchor=4)},
+            allow_richness_regression_reason="  ",
+        )
+
+
+def test_richness_override_records_reason_in_publish_pointer(tmp_path: Path, monkeypatch) -> None:
+    fingerprint = {"schema_version": 1, "fingerprint": "abc123"}
+    baseline = {"richness_summary": _richness_summary(thin=158, gloss=8, anchor=4)}
+    manifest = {
+        "version": "0.1",
+        "generated_at": "2026-06-23T00:00:00+00:00",
+        "manifest_fingerprint": fingerprint,
+        "entries": [],
+        "richness_summary": _richness_summary(thin=159, gloss=8, anchor=4),
+    }
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    fingerprint_path = tmp_path / "lexicon-manifest.fingerprint.json"
+    _write_json(manifest_path, manifest)
+    _write_json(fingerprint_path, fingerprint)
+    _install_richness_audit(monkeypatch)
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.download_published_manifest",
+        lambda **kwargs: baseline,
+    )
+
+    pointer = publish_manifest(
+        manifest_path=manifest_path,
+        gzip_path=tmp_path / "lexicon-manifest.json.gz",
+        pointer_path=tmp_path / "lexicon-manifest.pointer.json",
+        fingerprint_path=fingerprint_path,
+        repo="learn-ukrainian/example",
+        dry_run=True,
+        allow_richness_regression_reason="operator approved source migration",
+    )
+
+    assert pointer["richness_gate"]["override_reason"] == "operator approved source migration"
+    assert pointer["richness_gate"]["regressions"]["poc_thin_pages"] == {
+        "baseline": 158,
+        "candidate": 159,
+    }
 
 
 def test_richness_gate_blocks_publish_on_broken_form_stubs(tmp_path: Path, monkeypatch) -> None:
-    import scripts.audit.audit_atlas_poc_richness as richness
     from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
 
     manifest_path = tmp_path / "lexicon-manifest.json"
-    _write_json(manifest_path, {"version": "0.1", "entries": []})
-
-    monkeypatch.setattr(
-        richness,
-        "audit_manifest",
-        lambda m: {"poc_thin_pages": 0, "form_stub_broken": 2},
+    _write_json(
+        manifest_path,
+        {"richness_summary": _richness_summary(thin=0, gloss=0, anchor=0, broken_stubs=2)},
     )
+    _install_richness_audit(monkeypatch)
 
     with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4220\).*2"):
-        assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
+        assert_manifest_richness_publishable(
+            manifest_path,
+            baseline_manifest={"richness_summary": _richness_summary(thin=0, gloss=0, anchor=0)},
+        )

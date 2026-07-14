@@ -257,10 +257,9 @@ jobs:
       # Learner-facing static Atlas gate (#3930). ADVISORY since #4515: all
       # three caps (gloss, anchor, thin pages) audit the LIVE release asset,
       # not this PR's diff — regressions can only enter at publish time, where
-      # scripts/lexicon/publish_manifest.py enforces the thin-page cap
-      # (DEFAULT_MAX_POC_THIN_PAGES in audit_atlas_poc_richness.py) as a hard
-      # ManifestPublishError; anchor/gloss caps are held at 0 by the same
-      # publish flow. Blocking here failed unrelated PRs after the fact
+      # scripts/lexicon/publish_manifest.py compares all three metrics against
+      # the canonical published Release asset and raises ManifestPublishError
+      # only for a regression. Blocking here failed unrelated PRs after the fact
       # (#4514/#4512, 2026-07-06). Kept for visibility only.
       - name: Gate Atlas POC richness and learner anchors (#3930, advisory since #4515)
         continue-on-error: true

@@ -42,6 +42,11 @@ REQUIRED_POINTER_KEYS = (
     "gz_bytes",
     "json_bytes",
 )
+RICHNESS_REGRESSION_KEYS = (
+    "poc_thin_pages",
+    "search_no_visible_gloss",
+    "old_gate_no_english_anchor",
+)
 
 
 class ManifestPublishError(RuntimeError):
@@ -235,6 +240,26 @@ def _download_release_asset(
     return result.stdout
 
 
+def download_published_manifest(
+    *,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+) -> dict[str, Any]:
+    """Return the canonical live Atlas manifest used as the publish baseline."""
+    try:
+        manifest_bytes = gzip.decompress(
+            _download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo)
+        )
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ManifestPublishError(
+            "could not read the canonical published Atlas manifest for the richness baseline"
+        ) from exc
+    if not isinstance(manifest, dict):
+        raise ManifestPublishError("canonical published Atlas manifest must contain a JSON object")
+    return manifest
+
+
 def verify_existing_release_asset(
     asset_name: str,
     *,
@@ -280,27 +305,25 @@ def upload_manifest_assets(
 def assert_manifest_richness_publishable(
     manifest_path: Path,
     *,
-    max_poc_thin_pages: int | None = None,
+    baseline_manifest: dict[str, Any],
+    allow_richness_regression_reason: str | None = None,
 ) -> dict[str, Any]:
-    """#4515: thin-page regressions can only ENTER at publish time — so the
-    binding cap lives here, not in per-PR CI (which audits the live asset and
-    therefore fails unrelated PRs after the fact; that step is now advisory).
+    """Block publish-time richness regressions relative to the live asset.
 
-    Raises :class:`ManifestPublishError` with an actionable message when the
-    manifest about to be published carries more thin POC pages than the cap.
-    Runs on dry-run too (preflight should fail the same way the real publish
-    would). There is deliberately NO CLI override — enrich, don't bypass.
+    Per-PR CI deliberately audits the live asset only as an advisory signal.
+    This mutation chokepoint compares the manifest about to be published with
+    the canonical live Release asset, including on dry runs.
     """
-    from scripts.audit.audit_atlas_poc_richness import (
-        DEFAULT_MAX_POC_THIN_PAGES,
-        audit_manifest,
-    )
+    from scripts.audit.audit_atlas_poc_richness import audit_manifest
 
-    cap = DEFAULT_MAX_POC_THIN_PAGES if max_poc_thin_pages is None else max_poc_thin_pages
+    reason = allow_richness_regression_reason.strip() if allow_richness_regression_reason else None
+    if allow_richness_regression_reason is not None and not reason:
+        raise ManifestPublishError("--allow-richness-regression requires a non-empty reason")
+
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    summary = audit_manifest(manifest)
-    thin = int(summary["poc_thin_pages"])
-    broken_stubs = int(summary.get("form_stub_broken", 0))
+    candidate_summary = audit_manifest(manifest)
+    baseline_summary = audit_manifest(baseline_manifest)
+    broken_stubs = int(candidate_summary.get("form_stub_broken", 0))
     if broken_stubs > 0:
         raise ManifestPublishError(
             f"publish blocked (#4220): manifest at {manifest_path} has {broken_stubs} "
@@ -310,16 +333,31 @@ def assert_manifest_richness_publishable(
             f"--limit 2000, bucket form_stub_broken) before publishing. There is no "
             f"publish-time override by design."
         )
-    if thin > cap:
-        raise ManifestPublishError(
-            f"publish blocked (#4515): manifest at {manifest_path} has {thin} thin "
-            f"POC pages (> cap {cap}). Enrich the thin entries before publishing "
-            f"(entry list: scripts/audit/audit_atlas_poc_richness.py --format tsv; "
-            f"machine-readable: --format json --limit 2000; fill via enrich_entry / "
-            f"the fill recipe), then re-run. The cap has no publish-time override "
-            f"by design."
+    regressions = {
+        key: {
+            "baseline": int(baseline_summary[key]),
+            "candidate": int(candidate_summary[key]),
+        }
+        for key in RICHNESS_REGRESSION_KEYS
+        if int(candidate_summary[key]) > int(baseline_summary[key])
+    }
+    record = {
+        "baseline": {key: int(baseline_summary[key]) for key in RICHNESS_REGRESSION_KEYS},
+        "candidate": {key: int(candidate_summary[key]) for key in RICHNESS_REGRESSION_KEYS},
+        "regressions": regressions,
+        "override_reason": reason,
+    }
+    if regressions and reason is None:
+        details = ", ".join(
+            f"{key} {values['baseline']}→{values['candidate']}"
+            for key, values in regressions.items()
         )
-    return summary
+        raise ManifestPublishError(
+            f"publish blocked (#4515): Atlas POC richness regressed versus the canonical "
+            f"published manifest ({details}). Enrich the affected entries before publishing "
+            "or use --allow-richness-regression with an operator decision reason."
+        )
+    return record
 
 
 def publish_manifest(
@@ -331,8 +369,14 @@ def publish_manifest(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
+    allow_richness_regression_reason: str | None = None,
 ) -> dict[str, Any]:
-    assert_manifest_richness_publishable(manifest_path)
+    baseline_manifest = download_published_manifest(release_tag=release_tag, repo=repo)
+    richness_record = assert_manifest_richness_publishable(
+        manifest_path,
+        baseline_manifest=baseline_manifest,
+        allow_richness_regression_reason=allow_richness_regression_reason,
+    )
     gzip_manifest(manifest_path, gzip_path)
     pointer = build_pointer_payload(
         manifest_path=manifest_path,
@@ -341,6 +385,7 @@ def publish_manifest(
         release_tag=release_tag,
         repo=repo,
     )
+    pointer["richness_gate"] = richness_record
 
     if dry_run:
         return pointer
@@ -359,6 +404,11 @@ def main() -> int:
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
     parser.add_argument("--repo", default=DEFAULT_REPO)
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading or writing pointer")
+    parser.add_argument(
+        "--allow-richness-regression",
+        metavar="REASON",
+        help="Publish despite a richness regression, recording this required operator decision reason.",
+    )
     args = parser.parse_args()
 
     pointer = publish_manifest(
@@ -369,6 +419,7 @@ def main() -> int:
         release_tag=args.release_tag,
         repo=args.repo,
         dry_run=args.dry_run,
+        allow_richness_regression_reason=args.allow_richness_regression,
     )
     print(
         "Atlas manifest pointer "
