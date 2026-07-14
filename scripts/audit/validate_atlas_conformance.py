@@ -215,6 +215,7 @@ def validate(manifest: Any, *, vesum: Any, curriculum: Any, heritage: Any = None
             _check_kaikki_attribution(entry, lemma, violations)
             _check_cross_links(entry, lemma, curriculum_modules, violations)
             _check_wikipedia(entry, lemma, violations)
+            _check_mirror_attribution(entry, lemma, violations)
     finally:
         if should_close_lookup:
             lookup.close()
@@ -882,6 +883,19 @@ def _check_wikipedia(entry: Mapping[str, Any], lemma: str, violations: list[Viol
                     f"{section_path} section is missing url or freshness date",
                 )
             )
+
+
+def _check_mirror_attribution(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
+    from scripts.lexicon.source_attribution import learner_facing_mirror_violations
+
+    for detail in learner_facing_mirror_violations(dict(entry)):
+        violations.append(
+            Violation(
+                "no_mirror_attribution",
+                lemma,
+                detail.split(": ", 1)[-1] if ": " in detail else detail,
+            )
+        )
 
 
 def _load_json(path: Path) -> Any:

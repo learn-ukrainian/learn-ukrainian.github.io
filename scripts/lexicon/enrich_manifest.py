@@ -84,6 +84,21 @@ from scripts.lexicon.manifest_io import (
     GATE_REJECTED,
     GATE_SKIPPED_OFFLINE,
 )
+from scripts.lexicon.source_attribution import (
+    BALLA_LABEL,
+    CORRECTION_DICTIONARIES_LABEL,
+    PHRASEOLOGY_LABEL,
+    SLUG_ACADEMIC_LABELS,
+    SUM20_ACADEMIC_LABEL,
+    SUM20_SHORT_LABEL,
+    VTS_ACADEMIC_LABEL,
+    VTS_SHORT_LABEL,
+    attach_official_url,
+    join_academic_source_labels,
+    normalize_academic_label,
+    official_url_for_slug,
+    remap_url_list,
+)
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
@@ -156,22 +171,14 @@ _GRAC_WORDLIST_URL = "https://sketch.uacorpus.org/bonito/run.cgi/wordlist"
 _GRAC_CORPUS = "grac19a"
 _GRAC_BATCH_SIZE = 25
 
-_SLOVNYK_DICT_LABELS: dict[str, str] = {
-    "newsum": "Словник української мови у 20 томах (СУМ-20)",
-    "synonyms": "Словник синонімів української мови",
-    "synonyms_karavansky": "Словник синонімів Караванського",
-    "phraseology": "Фразеологічний словник української мови",
-    "davydov": "«Як ми говоримо» Антоненка-Давидовича",
-    "voloschak": "Неправильно-правильно",
-    "foreign_shtepa": "Словник чужослів Павла Штепи",
-}
+_SLOVNYK_DICT_LABELS: dict[str, str] = dict(SLUG_ACADEMIC_LABELS)
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_UKRENG_SLUG = "ukreng"
-_SLOVNYK_UKRENG_LABEL = "Українсько-англійський словник"
-_SLOVNYK_UKRENG_SOURCE = f"slovnyk.me: {_SLOVNYK_UKRENG_LABEL}"
+_SLOVNYK_UKRENG_LABEL = BALLA_LABEL
+_SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _SLOVNYK_BASE = "https://slovnyk.me"
 _SLOVNYK_CACHE_SCHEMA_VERSION = 2
 _OFFLINE_VALUES = {"1", "true", "yes", "on"}
@@ -1587,11 +1594,16 @@ def _synonyms_slovnyk(
             urls.append(str(row["source_url"]))
     if not items:
         return None
-    return {
+    official_urls, mirror_urls = remap_url_list(list(dict.fromkeys(urls)))
+    block: dict[str, Any] = {
         "items": items[:24],
-        "source": "slovnyk.me: " + " + ".join(dict.fromkeys(sources)),
-        "source_urls": list(dict.fromkeys(urls)),
+        "source": join_academic_source_labels(sources),
     }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
 
 
 def _clean_atlas_chip_candidate(candidate: str, lemma: str) -> str | None:
@@ -1738,19 +1750,24 @@ def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str
     if not split:
         return None
     phrase, definition = split
-    return {
-        "items": [
-            {
-                "text": phrase,
-                "phrase": phrase,
-                "definition": definition,
-                "source": str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS["phraseology"]),
-                "source_url": str(row.get("source_url") or ""),
-            }
-        ],
-        "source": "slovnyk.me: Фразеологічний словник української мови",
-        "source_urls": [str(row["source_url"])] if row.get("source_url") else [],
+    item: dict[str, Any] = {
+        "text": phrase,
+        "phrase": phrase,
+        "definition": definition,
+        "source": PHRASEOLOGY_LABEL,
     }
+    mirror_url = str(row.get("source_url") or "")
+    attach_official_url(item, mirror_url=mirror_url, slug="phraseology", word=str(row.get("word") or lemma))
+    official_urls, mirror_urls = remap_url_list([mirror_url] if mirror_url else [])
+    block: dict[str, Any] = {
+        "items": [item],
+        "source": PHRASEOLOGY_LABEL,
+    }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
 
 
 _PHRASEOLOGY_MARKUP_REPLACEMENTS = (
@@ -2116,7 +2133,7 @@ def _warning_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[st
         return None
     return {
         "alternatives": alternatives,
-        "source": "slovnyk.me correction dictionaries",
+        "source": CORRECTION_DICTIONARIES_LABEL,
         "evidence": evidence,
     }
 
@@ -2895,12 +2912,18 @@ def _sum20_definition_card(
         return None
     card = {
         "id": "sum20",
-        "source": "СУМ-20",
-        "source_pill": "СУМ-20",
+        "source": SUM20_ACADEMIC_LABEL,
+        "source_pill": SUM20_SHORT_LABEL,
         "note": "сучасний тлумачний словник",
         "definitions": [text],
-        "source_url": str(row.get("source_url") or ""),
     }
+    mirror_url = str(row.get("source_url") or "")
+    attach_official_url(
+        card,
+        mirror_url=mirror_url,
+        slug="newsum",
+        word=str(row.get("word") or lookup_word),
+    )
     if resolve_xref:
         resolved = _resolve_definition_xref(
             card,
@@ -2953,12 +2976,18 @@ def _vts_definition_card(
         return None
     card = {
         "id": "vts",
-        "source": "ВТС",
-        "source_pill": "ВТС",
+        "source": VTS_ACADEMIC_LABEL,
+        "source_pill": VTS_SHORT_LABEL,
         "note": "Великий тлумачний словник сучасної української мови",
         "definitions": [text],
-        "source_url": str(row.get("source_url") or ""),
     }
+    mirror_url = str(row.get("source_url") or "")
+    attach_official_url(
+        card,
+        mirror_url=mirror_url,
+        slug="vts",
+        word=str(row.get("word") or lookup_word),
+    )
     if resolve_xref:
         resolved = _resolve_definition_xref(
             card,
@@ -3078,14 +3107,20 @@ def _dictionary_definition_rows(
             strip_leading_headword=True,
         )
         if text:
-            rows.append(
-                {
-                    "source": source,
-                    "text": text,
-                    "source_url": str(row.get("source_url") or ""),
-                    "sovietization_risk": 0,
-                }
-            )
+            row_payload: dict[str, Any] = {
+                "source": SUM20_SHORT_LABEL if source == "СУМ-20" else source,
+                "text": text,
+                "sovietization_risk": 0,
+            }
+            mirror_url = str(row.get("source_url") or "")
+            if mirror_url:
+                attach_official_url(
+                    row_payload,
+                    mirror_url=mirror_url,
+                    slug="newsum" if slug == "newsum" else "vts",
+                    word=str(row.get("word") or lemma),
+                )
+            rows.append(row_payload)
 
     sum11_fields = "definition, text"
     if has_sum11_flags:
@@ -3464,13 +3499,17 @@ def _homonym_dictionary_rows(
     rows: list[dict[str, str]] = []
     sum20 = _cache_lookup(cache, "newsum")
     if sum20 and sum20.get("text"):
-        rows.append(
-            {
-                "source": "СУМ-20",
-                "text": _definition_body(sum20["text"], limit=20_000),
-                "source_url": str(sum20.get("source_url") or ""),
-            }
+        payload = {
+            "source": SUM20_SHORT_LABEL,
+            "text": _definition_body(sum20["text"], limit=20_000),
+        }
+        attach_official_url(
+            payload,
+            mirror_url=str(sum20.get("source_url") or ""),
+            slug="newsum",
+            word=str(sum20.get("word") or lemma),
         )
+        rows.append(payload)
     try:
         for variant in _split_lemma_variants(lemma):
             for definition, text in conn.execute(
@@ -3773,7 +3812,8 @@ def _corpus_relation_pairs_by_headword(
 
 def _relation_source_label(relation: dict[str, Any], item: str) -> str:
     """Record pair-level provenance in the existing rendered ``source`` field."""
-    label = f"{relation['source']}: {relation['pattern']} → {item}"
+    source = normalize_academic_label(str(relation.get("source") or ""))
+    label = f"{source}: {relation['pattern']} → {item}"
     if relation.get("direction"):
         label += " (reciprocal)"
     gate = relation.get("gate")
@@ -3790,6 +3830,22 @@ def _relation_source_label(relation: dict[str, Any], item: str) -> str:
         synset_note = f"; synset={synset_id}" if synset_id else ""
         label += f" [gate: VESUM both valid; {evidence}{synset_note}]"
     return label
+
+
+def _append_relation_source_urls(
+    merged: dict[str, Any],
+    source_urls: list[str],
+    relation: dict[str, Any],
+) -> None:
+    raw = str(relation.get("source_url") or "").strip()
+    if not raw:
+        return
+    official, mirrors = remap_url_list([raw])
+    source_urls.extend(url for url in official if url not in source_urls)
+    if mirrors:
+        mirror_urls = [str(url) for url in merged.get("mirror_source_urls", []) if str(url).strip()]
+        mirror_urls.extend(url for url in mirrors if url not in mirror_urls)
+        merged["mirror_source_urls"] = list(dict.fromkeys(mirror_urls))
 
 
 def _merge_synonym_relations(
@@ -3823,7 +3879,7 @@ def _merge_synonym_relations(
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
-            source_urls.append(str(relation["source_url"]))
+            _append_relation_source_urls(merged, source_urls, relation)
 
     if not items:
         return None
@@ -3871,7 +3927,7 @@ def _merge_antonym_relations(
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
-            source_urls.append(str(relation["source_url"]))
+            _append_relation_source_urls(merged, source_urls, relation)
 
     if not items:
         return None
@@ -3994,7 +4050,7 @@ def _merge_homonym_relations(
             if label not in source_labels:
                 source_labels.append(label)
             if relation.get("source_url") and relation["source_url"] not in source_urls:
-                source_urls.append(str(relation["source_url"]))
+                _append_relation_source_urls(merged, source_urls, relation)
 
     if not items:
         return None
@@ -4078,7 +4134,7 @@ def _merge_paronym_relations(
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
-            source_urls.append(str(relation["source_url"]))
+            _append_relation_source_urls(merged, source_urls, relation)
 
     if not items:
         return None
@@ -5059,9 +5115,8 @@ def _slovnyk_ukreng_translation(lemma: str, cache: dict[str, Any] | None) -> dic
         "en": glosses,
         "source": _SLOVNYK_UKRENG_SOURCE,
     }
-    source_url = str(row.get("source_url") or "").strip()
-    if source_url:
-        block["source_url"] = source_url
+    mirror_url = str(row.get("source_url") or "").strip()
+    attach_official_url(block, mirror_url=mirror_url, slug=_SLOVNYK_UKRENG_SLUG, word=lemma)
     return block
 
 
@@ -5107,9 +5162,8 @@ def _fill_learner_english_anchor_from_slovnyk_cache(
         "en": glosses,
         "source": _SLOVNYK_UKRENG_SOURCE,
     }
-    source_url = str(row.get("source_url") or "").strip()
-    if source_url:
-        translation["source_url"] = source_url
+    mirror_url = str(row.get("source_url") or "").strip()
+    attach_official_url(translation, mirror_url=mirror_url, slug=_SLOVNYK_UKRENG_SLUG, word=lemma)
     enrichment = entry.get("enrichment")
     if not isinstance(enrichment, dict):
         enrichment = {}

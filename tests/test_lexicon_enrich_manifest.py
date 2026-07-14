@@ -592,7 +592,7 @@ def test_slovnyk_synonyms_extract_known_garnyi_word(monkeypatch) -> None:
     assert "вродливий" in section["items"]
     assert "хороший" in section["items"]
     assert "гарний" not in section["items"]
-    assert section["source"].startswith("slovnyk.me:")
+    assert section["source"].startswith("Словник синонімів")
 
 
 def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
@@ -1470,7 +1470,7 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
     cards = _definition_cards(conn, "вишиванка", has_sum11_flags=False)
 
     assert [card["id"] for card in cards] == ["vts"]
-    assert cards[0]["source"] == "ВТС"
+    assert cards[0]["source"] == "Великий тлумачний словник сучасної української мови"
     assert "Вишита сорочка" in cards[0]["definitions"][0]
     # СУМ-20 also present → BOTH cards show, VTS on top and СУМ-20 below.
     monkeypatch.setattr(
@@ -2315,7 +2315,7 @@ def test_translation_uses_slovnyk_ukreng_after_source_misses(monkeypatch) -> Non
     assert _translation(conn, "наголос", {}, slovnyk_cache=cache) == {
         "en": ["accent", "stress", "emphasis"],
         "source": _SLOVNYK_UKRENG_SOURCE,
-        "source_url": "https://slovnyk.me/dict/ukreng/наголос",
+        "mirror_source_url": "https://slovnyk.me/dict/ukreng/наголос",
     }
 
 
@@ -2344,7 +2344,7 @@ def test_translation_parses_slovnyk_ukreng_plural_label(monkeypatch) -> None:
     assert _translation(conn, "бризки", {}, slovnyk_cache=cache) == {
         "en": ["splashes", "spray", "sparks", "fine drops of rain"],
         "source": _SLOVNYK_UKRENG_SOURCE,
-        "source_url": "https://slovnyk.me/dict/ukreng/бризки",
+        "mirror_source_url": "https://slovnyk.me/dict/ukreng/бризки",
     }
 
 
@@ -2714,8 +2714,10 @@ def test_antonym_relation_merge_preserves_rendered_schema_and_source_urls() -> N
     assert merged == {
         "items": ["малий", "низький"],
         "source": (
-            "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий + "
-            "ВТС: прот. → низький"
+            "Вікісловник: explicit antonym list + "
+            "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні): "
+            "протилежне → малий + "
+            "Великий тлумачний словник сучасної української мови: прот. → низький"
         ),
         "source_urls": [
             "https://example.invalid/wiktionary/velykyi",
@@ -3532,7 +3534,10 @@ def test_synonym_relation_merge_preserves_rendered_schema_deduplicates_and_caps(
     assert merged is not None
     assert set(merged) == {"items", "source", "source_urls"}
     assert merged["items"] == ["база (рідше)", *pointer_items[:8]]
-    assert "СУМ-20: Те саме, що → база" in merged["source"]
+    assert (
+        "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні): "
+        "Те саме, що → база"
+    ) in merged["source"]
     assert "relation_pairs/synonym_verdicts" not in merged["source"]
 
 
@@ -3681,7 +3686,7 @@ def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) ->
 
     card = _vts_definition_card("заховати")
     assert card is not None
-    assert card["source"] == "ВТС"
+    assert card["source"] == "Великий тлумачний словник сучасної української мови"
     assert card["definitions"][0].startswith("(докон. до заховувати / див. заховувати) ")
     assert card["definitions"][0].endswith("Класти що-небудь у невідоме місце.")
     assert card["cross_reference"]["target"] == "заховувати"

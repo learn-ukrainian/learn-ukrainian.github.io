@@ -1,5 +1,5 @@
 {
-  "fingerprint": "6097659ff7208d78f2525ce0ab562b77eae1bfea0e8276a3736f46ad9a50da44",
+  "fingerprint": "117947379f3c650936c4938d45e3bc7ac12b12c6f5c3cd021e8ddab2d12ff1df",
   "inputs": {
     "lexicon_code": [
       {
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "116d65bea38faaa2a984ebecc4623dc3cbcfa36960f328b50840c46cd127843a"
+        "sha256": "02bf964a1a846155d1365b4f499386e09c29f2a9a66cfeded053c58e0c7dec0c"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -127,6 +127,10 @@
         "sha256": "b76c9ff8e5db5929aa051f111fb50cb27cb0a304dc6d260f0f650ffc3f2bcf24"
       },
       {
+        "path": "scripts/lexicon/migrate_source_labels.py",
+        "sha256": "4b44de44cb0e39e152a00f1be5e125ed3445e08833c52276dbe24243cebfb42c"
+      },
+      {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",
         "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
       },
@@ -171,6 +175,10 @@
         "sha256": "212d5d59061e2b3709e6f62b0861ccf0c98dfa4e1d63922efa8c5fce3d356416"
       },
       {
+        "path": "scripts/lexicon/source_attribution.py",
+        "sha256": "28ff5d9116a47609d57ae605138869b97dfae2a3b699c48acbfabc3c5638fb69"
+      },
+      {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "47df54386fda97fb7b372e8e68f89afb3ac5bd647c5a292a7380f14c5ae1f4b0"
       },
@@ -183,6 +191,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 44
+    "lexicon_code_files": 46
   }
 }
