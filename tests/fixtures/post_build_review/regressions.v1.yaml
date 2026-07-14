@@ -143,3 +143,15 @@ regressions:
     version_field: track_policy_version
     input: Descriptive prose about listeners plus a learner-created vocal performance with show_record_button metadata.
     expected: No supplied-audio requirement; productive-task metadata never proves media access, while explicit listening and timestamp tasks remain inventoried.
+  - bug_id: bilash-modality-vocabulary-forced-fabricated-evidence
+    responsible_layer: track_policy
+    fixed_in_version: 1.2.2
+    version_field: track_policy_version
+    input: Biographical prose mentions hearing/listeners and text tasks explain that catalog metadata cannot verify video.
+    expected: Do not inventory audio or video unless learner-facing language actually requires listening, viewing, or perceptual evidence.
+  - bug_id: optional-ungraded-media-inventoried-as-required
+    responsible_layer: deterministic_code
+    fixed_in_version: 1.2.1
+    version_field: deterministic_contract_version
+    input: A resource line explicitly marks listening or viewing as optional, ungraded enrichment.
+    expected: Exclude that line from required-modality inventory while retaining explicit graded listening instructions elsewhere.

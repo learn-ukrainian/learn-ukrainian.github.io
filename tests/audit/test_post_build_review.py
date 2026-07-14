@@ -713,6 +713,40 @@ def test_folk_productive_performance_is_not_supplied_audio_evidence() -> None:
     assert requirements == []
 
 
+def test_bilash_modality_vocabulary_does_not_create_evidence_requirements() -> None:
+    target = pbr.resolve_target("bio/oleksandr-bilash")
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    texts = pbr._learner_surface_texts(target)
+
+    requirements = pbr.inventory_evidence_requirements(
+        texts,
+        policy["mechanical_checks"]["evidence_requirements"],
+    )
+
+    assert not [item for item in requirements if item["modality"] in {"audio", "video"}]
+
+
+def test_optional_ungraded_media_does_not_hide_required_listening() -> None:
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    texts = {
+        "resources.yaml": (
+            "notes: Необов'язкове позааудиторне прослуховування; "
+            "запис не використовується в оцінюваних завданнях.\n"
+            "notes: Перегляд необов'язковий і не оцінюється.\n"
+        ),
+        "module.md": "Прослухайте запис і назвіть виразно почуті слова.\n",
+    }
+
+    requirements = pbr.inventory_evidence_requirements(
+        texts,
+        policy["mechanical_checks"]["evidence_requirements"],
+    )
+
+    assert [(item["modality"], item["location"]) for item in requirements] == [
+        ("audio", "module.md:1")
+    ]
+
+
 def test_audio_evidence_requires_matching_reviewer_capability() -> None:
     semantic = {
         "verdict": "PASS",
@@ -910,7 +944,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "2.0.1"
-    assert len(rows) == 25
+    assert len(rows) == 27
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -926,6 +960,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "1.1.0",
         "1.2.0",
         "1.2.1",
+        "1.2.2",
         "2.0.0",
         "2.0.1",
     }

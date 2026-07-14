@@ -1,7 +1,7 @@
 review_protocol_version: 2.0.1
-deterministic_contract_version: 1.2.0
+deterministic_contract_version: 1.2.1
 semantic_prompt_version: 2.0.0
-track_policy_version: 1.2.1
+track_policy_version: 1.2.2
 
 defaults:
   semantic_requirements:
@@ -22,12 +22,15 @@ defaults:
       - id: audio-dependent-task
         modality: audio
         regex: '(?:прослух(?:ай(?:те)?|овуванн\w*|ати|овуй\w*|овуват\w*)|слухай(?:те)?|аудіо\w*|часов\w*\s+позначк\w*|(?:ви|де|що)\s+чуєте\b|виразно\s+почут\w*\s+(?:слов|звук|нот|фраз|акорд)\w*)'
+        exclude_line_regex: '(?:необов''язков\w*|не\s+оціню\w*|не\s+використову\w*\s+в\s+оцінюван\w*\s+завданн\w*)'
       - id: video-dependent-task
         modality: video
-        regex: '(?:дивіться|переглян\w*|відео\w*|екранн\w*\s+момент\w*)'
+        regex: '(?:дивіться|подивіться|переглян\w*|(?:відкрийте|проаналізуйте|порівняйте|опишіть)\s+[^.\n]{0,60}відео\w*|екранн\w*\s+момент\w*)'
+        exclude_line_regex: '(?:необов''язков\w*|не\s+оціню\w*|не\s+використову\w*\s+в\s+оцінюван\w*\s+завданн\w*)'
       - id: image-dependent-task
         modality: image
         regex: '(?:розгляньте|проаналізуйте)\s+(?:зображенн\w*|фотограф\w*|портрет\w*)'
+        exclude_line_regex: '(?:необов''язков\w*|не\s+оціню\w*|не\s+використову\w*\s+в\s+оцінюван\w*\s+завданн\w*)'
 
 families:
   core:
