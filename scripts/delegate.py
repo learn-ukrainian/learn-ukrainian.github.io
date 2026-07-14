@@ -110,55 +110,16 @@ from typing import Any
 import yaml
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
-
-def _main_checkout_root(repo_root: Path) -> Path:
-    """Return the primary checkout root that owns the shared .git dir."""
-    git_path = repo_root / ".git"
-    if git_path.is_dir():
-        return repo_root
-    if not git_path.is_file():
-        return repo_root
-
-    try:
-        first_line = git_path.read_text().splitlines()[0]
-    except (IndexError, OSError):
-        return repo_root
-    prefix = "gitdir:"
-    if not first_line.startswith(prefix):
-        return repo_root
-
-    git_dir = Path(first_line[len(prefix) :].strip())
-    if not git_dir.is_absolute():
-        git_dir = repo_root / git_dir
-    git_dir = git_dir.resolve()
-    if git_dir.parent.name != "worktrees":
-        return repo_root
-    common_git_dir = git_dir.parent.parent
-    if common_git_dir.name != ".git":
-        return repo_root
-    return common_git_dir.parent
-
-
-def _resolve_repo_root(script_path: Path) -> Path:
-    """Anchor all dispatch state to the PRIMARY checkout, never a worktree copy.
-
-    Every dispatch worktree carries its own copy of this script; running that
-    copy used to anchor batch_state/ and .worktrees/ to the WORKTREE root,
-    nesting worktrees and hiding tasks from the Monitor API (#5171).
-
-    Consequence: sys.path inserts and relative-path resolution (e.g. a
-    relative --cwd) also anchor to the primary checkout — a worktree copy
-    of this script lazy-imports the PRIMARY's scripts/* modules, not the
-    worktree branch's. Intentional: dispatch infrastructure is ground truth
-    in the primary; cross-cutting changes to delegate.py plus its lazy deps
-    must land on main before they steer live dispatches.
-    """
-    return _main_checkout_root(script_path.resolve().parents[1])
-
-
 # Resolve repo root from this file's location so we work from any cwd —
 # then hop to the primary checkout so worktree copies behave identically.
-_REPO_ROOT = _resolve_repo_root(Path(__file__))
+_local_repo_root = Path(__file__).resolve().parents[1]
+if str(_local_repo_root) not in sys.path:
+    sys.path.insert(0, str(_local_repo_root))
+
+from scripts.common.repo_root import main_checkout_root as _main_checkout_root
+from scripts.common.repo_root import resolve_repo_root
+
+_REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}

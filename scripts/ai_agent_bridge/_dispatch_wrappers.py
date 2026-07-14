@@ -6,6 +6,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -13,7 +14,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+# Bootstrap import path for scripts.* from any cwd
+_local_repo_root = Path(__file__).resolve().parents[2]
+if str(_local_repo_root) not in sys.path:
+    sys.path.insert(0, str(_local_repo_root))
+
+from scripts.common.repo_root import resolve_repo_root
+
+REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 PYTHON = ".venv/bin/python"
 
 MANDATORY_COMMIT_PUSH_PR_CHECKLIST = """## MANDATORY checklist — do NOT skip these (the dispatch will be marked failed if you do)

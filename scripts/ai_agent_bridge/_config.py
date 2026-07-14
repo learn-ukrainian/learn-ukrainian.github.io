@@ -2,26 +2,36 @@
 
 import os
 import shutil
+import sys
 from pathlib import Path
 
 from ._env import build_agent_env
+
+# Bootstrap import path for scripts.* from any cwd
+_local_repo_root = Path(__file__).resolve().parents[2]
+if str(_local_repo_root) not in sys.path:
+    sys.path.insert(0, str(_local_repo_root))
+
+from scripts.common.repo_root import resolve_repo_root
 
 # Repo root for path resolution
 REPO_ROOT = Path(
     os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent.parent))
 )
 
+PRIMARY_REPO_ROOT = resolve_repo_root(Path(__file__), 2)
+
 # Database path (same as MCP server uses)
 DB_PATH = Path(
     os.environ.get(
         "AB_DB_PATH",
-        str(REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
+        str(PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
     )
 )
 PID_DIR = Path(
     os.environ.get(
         "AB_PID_DIR",
-        str(REPO_ROOT / ".mcp" / "servers" / "message-broker" / "pids"),
+        str(PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "pids"),
     )
 )
 

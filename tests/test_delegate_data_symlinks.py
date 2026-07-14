@@ -111,14 +111,14 @@ def test_resolve_repo_root_hops_to_primary_from_worktree_script_copy(tmp_path):
     (worktree / "scripts").mkdir(parents=True)
     (worktree / ".git").write_text(f"gitdir: {git_dir}\n")
 
-    assert delegate._resolve_repo_root(worktree / "scripts" / "delegate.py") == main_repo
+    assert delegate.resolve_repo_root(worktree / "scripts" / "delegate.py", 1) == main_repo
 
 
 def test_resolve_repo_root_is_identity_in_primary_checkout(tmp_path):
     main_repo = tmp_path / "main"
     (main_repo / ".git").mkdir(parents=True)
     (main_repo / "scripts").mkdir()
-    assert delegate._resolve_repo_root(main_repo / "scripts" / "delegate.py") == main_repo
+    assert delegate.resolve_repo_root(main_repo / "scripts" / "delegate.py", 1) == main_repo
 
 
 def test_repo_root_constant_is_wired_through_the_resolver():
@@ -127,4 +127,4 @@ def test_repo_root_constant_is_wired_through_the_resolver():
     from pathlib import Path as _P
 
     source = _P(delegate.__file__).read_text(encoding="utf-8")
-    assert "_REPO_ROOT = _resolve_repo_root(Path(__file__))" in source
+    assert "_REPO_ROOT = resolve_repo_root(Path(__file__), 1)" in source
