@@ -191,6 +191,7 @@ def test_manifest_selectors_ranges_and_prerequisites(repo: Path, tmp_path: Path)
         ({"start": "delta", "end": "alpha"}, "start occurs after"),
         ({"start": "0"}, "outside"),
         ({"scope": "all", "module": "alpha"}, "only valid"),
+        ({"wave_size": 0}, "wave size"),
     ],
 )
 def test_invalid_selectors_fail_closed(
@@ -220,11 +221,24 @@ def test_health_pause_resume_serial_waves_and_no_change(repo: Path, tmp_path: Pa
     _path, ledger = _start(repo, runtime, wave_size=3)
     run_id = ledger["run_id"]
 
-    _path, paused, item = _acquire(repo, runtime, run_id, health_probe=_health(codex="near_cap"))
+    polls = 0
+
+    def changing_unhealthy_probe() -> dict[str, Any]:
+        nonlocal polls
+        polls += 1
+        snapshot = _health(codex="near_cap")()
+        snapshot["generated_at"] = f"2026-07-14T12:00:0{polls}Z"
+        return snapshot
+
+    _path, paused, item = _acquire(
+        repo, runtime, run_id, health_probe=changing_unhealthy_probe
+    )
     assert item is None
     assert coordinator.compact_status(paused)["status"] == "paused"
     pause_count = len(paused["history"])
-    _path, retried, item = _acquire(repo, runtime, run_id, health_probe=_health(codex="near_cap"))
+    _path, retried, item = _acquire(
+        repo, runtime, run_id, health_probe=changing_unhealthy_probe
+    )
     assert item is None
     assert len(retried["history"]) == pause_count
 
@@ -483,6 +497,85 @@ def test_current_manifest_run_cannot_be_abandoned(repo: Path, tmp_path: Path) ->
             repo_root=repo,
             runtime_root=runtime,
         )
+
+
+def test_adjudication_retry_heals_leases_after_crash(
+    repo: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _acquire(repo, runtime, ledger["run_id"])
+    manifest_path = repo / "curriculum/l2-uk-en/curriculum.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    manifest["levels"]["folk"]["modules"].append("golf")
+    manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+    real_release = coordinator._release_owned_lease
+    calls = 0
+
+    def crash_once(path: Path, owned_run_id: str) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise OSError("simulated crash after abandonment commit")
+        real_release(path, owned_run_id)
+
+    monkeypatch.setattr(coordinator, "_release_owned_lease", crash_once)
+    with pytest.raises(OSError, match="simulated crash"):
+        coordinator.adjudicate_run(
+            ledger["run_id"],
+            owner="sol",
+            reason="manifest changed during an active module",
+            repo_root=repo,
+            runtime_root=runtime,
+        )
+    monkeypatch.setattr(coordinator, "_release_owned_lease", real_release)
+    _path, healed = coordinator.adjudicate_run(
+        ledger["run_id"],
+        owner="sol",
+        reason="exact retry after crash",
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    assert coordinator.compact_status(healed)["status"] == "abandoned"
+    assert not (runtime / "leases/tracks/folk.json").exists()
+    assert not (runtime / "leases/global/mutation.json").exists()
+    assert not (runtime / "leases/modules/folk--alpha.json").exists()
+    _path, replacement = _start(repo, runtime, scope="one", module="bravo")
+    assert replacement["run_id"] != ledger["run_id"]
+
+
+def test_blocked_integration_identity_is_consistent(repo: Path, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    _acquire(repo, runtime, ledger["run_id"])
+    with pytest.raises(coordinator.CoordinatorError, match="must not claim"):
+        coordinator.record_module(
+            ledger["run_id"],
+            owner="sol",
+            slug="alpha",
+            disposition="blocked",
+            integration={"issue": 5158, "evidence": "blocker:test"},
+            repo_root=repo,
+            runtime_root=runtime,
+        )
+    _path, blocked = coordinator.record_module(
+        ledger["run_id"],
+        owner="sol",
+        slug="alpha",
+        disposition="blocked",
+        integration={
+            "issue": 5158,
+            "worktree": ".worktrees/dispatch/codex/5158-track-coordinator",
+            "branch": "codex/5158-track-coordinator",
+            "cleanup": "pending",
+            "evidence": "blocker:test",
+        },
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    assert coordinator.compact_status(blocked)["status"] == "blocked"
 
 
 def test_partial_module_lease_claim_rolls_back_global_lease(repo: Path, tmp_path: Path) -> None:

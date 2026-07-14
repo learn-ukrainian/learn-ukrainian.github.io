@@ -703,7 +703,9 @@ def start_run(
     if scope not in _SCOPES:
         raise CoordinatorError(f"unsupported curriculum selector scope: {scope}")
     config = load_config(config_path)
-    selected_wave_size = wave_size or int(config["default_wave_size"])
+    selected_wave_size = (
+        wave_size if wave_size is not None else int(config["default_wave_size"])
+    )
     if selected_wave_size < 1 or selected_wave_size > int(config["maximum_wave_size"]):
         raise CoordinatorError(
             f"wave size must be within 1..{config['maximum_wave_size']}"
@@ -933,9 +935,21 @@ def adjudicate_run(
                 require_current_authority=False,
             )
             state = derive_state(ledger)
-            if state["status"] in {"complete", "abandoned"}:
+            if state["status"] == "complete":
                 return path, ledger
             track = ledger["request"]["track"]
+            if state["status"] == "abandoned":
+                abandonment = next(
+                    event for event in reversed(ledger["history"]) if event["event"] == "RUN_ABANDONED"
+                )
+                abandoned_module = abandonment["details"]["current_module"]
+                if abandoned_module is not None:
+                    _release_owned_lease(
+                        _lease_path(root, "module", f"{track}--{abandoned_module}"), run_id
+                    )
+                _release_owned_lease(_lease_path(root, "global"), run_id)
+                _release_owned_lease(_lease_path(root, "track", track), run_id)
+                return path, ledger
             manifest_path = _repo_relative_path(repo_root, ledger["authority"]["manifest_path"])
             current_sha = (
                 hashlib.sha256(manifest_path.read_bytes()).hexdigest()
@@ -1057,9 +1071,10 @@ def acquire_next(
             if needs_health and wave not in state["accepted_waves"]:
                 assert assessment is not None
                 if not passed:
-                    _append_event(ledger, "RUN_PAUSED", {"wave": wave, "health": assessment})
-                    _validate_ledger(ledger)
-                    _atomic_write_json(path, ledger)
+                    if state["status"] != "paused":
+                        _append_event(ledger, "RUN_PAUSED", {"wave": wave, "health": assessment})
+                        _validate_ledger(ledger)
+                        _atomic_write_json(path, ledger)
                     return path, ledger, None
                 if state["status"] == "paused":
                     _append_event(
@@ -1149,27 +1164,42 @@ def _validate_integration(disposition: str, integration: Mapping[str, Any]) -> N
             raise CoordinatorError("completed repair requires an issue number")
         if not isinstance(integration["pr"], int) or integration["pr"] < 1:
             raise CoordinatorError("completed repair requires a PR number")
-        for key in ("worktree", "branch"):
-            if not isinstance(integration[key], str) or not integration[key].strip():
-                raise CoordinatorError(f"completed repair requires {key} identity")
-        worktree = Path(integration["worktree"])
-        if (
-            worktree.is_absolute()
-            or len(worktree.parts) != 4
-            or worktree.parts[:2] != (".worktrees", "dispatch")
-            or not _TARGET_RE.fullmatch(worktree.parts[2])
-            or not _TARGET_RE.fullmatch(worktree.parts[3])
-        ):
-            raise CoordinatorError("completed repair worktree must use .worktrees/dispatch/<agent>/<task>")
-        expected_branch = f"{worktree.parts[2]}/{worktree.parts[3]}"
-        if integration["branch"] != expected_branch:
-            raise CoordinatorError("completed repair branch must align with its dispatch worktree")
+        _validate_dispatch_identity(integration, label="completed repair")
         if not isinstance(integration["merge_sha"], str) or not _SHA_RE.fullmatch(integration["merge_sha"]):
             raise CoordinatorError("completed repair requires a 40-character merge SHA")
         if integration["cleanup"] != "complete":
             raise CoordinatorError("completed repair requires proof of post-merge cleanup")
-    elif disposition == "blocked" and integration["cleanup"] not in {"not-required", "pending"}:
-        raise CoordinatorError("blocked disposition cleanup must be not-required or pending")
+    elif disposition == "blocked":
+        if integration["cleanup"] not in {"not-required", "pending"}:
+            raise CoordinatorError("blocked disposition cleanup must be not-required or pending")
+        if integration["merge_sha"] is not None:
+            raise CoordinatorError("blocked disposition cannot claim a merge SHA")
+        identity_keys = ("issue", "worktree", "branch", "pr", "merge_sha")
+        if integration["cleanup"] == "not-required":
+            if any(integration[key] is not None for key in identity_keys):
+                raise CoordinatorError("blocked no-repair disposition must not claim integration identities")
+        else:
+            if not isinstance(integration["issue"], int) or integration["issue"] < 1:
+                raise CoordinatorError("blocked repair with pending cleanup requires an issue number")
+            _validate_dispatch_identity(integration, label="blocked repair")
+
+
+def _validate_dispatch_identity(integration: Mapping[str, Any], *, label: str) -> None:
+    for key in ("worktree", "branch"):
+        if not isinstance(integration[key], str) or not integration[key].strip():
+            raise CoordinatorError(f"{label} requires {key} identity")
+    worktree = Path(integration["worktree"])
+    if (
+        worktree.is_absolute()
+        or len(worktree.parts) != 4
+        or worktree.parts[:2] != (".worktrees", "dispatch")
+        or not _TARGET_RE.fullmatch(worktree.parts[2])
+        or not _TARGET_RE.fullmatch(worktree.parts[3])
+    ):
+        raise CoordinatorError(f"{label} worktree must use .worktrees/dispatch/<agent>/<task>")
+    expected_branch = f"{worktree.parts[2]}/{worktree.parts[3]}"
+    if integration["branch"] != expected_branch:
+        raise CoordinatorError(f"{label} branch must align with its dispatch worktree")
 
 
 def _finish_events(ledger: dict[str, Any], item: Mapping[str, Any]) -> None:
