@@ -650,6 +650,79 @@ def stability_case_ids(main_cases: Sequence[Mapping[str, Any]], probe_cases: Seq
     return selected
 
 
+def collection_call_plan_from_manifest(value: Any) -> dict[str, dict[str, Any]]:
+    """Read the collector-owned batch plan without inferring it from emissions."""
+
+    records = value.get("calls") if isinstance(value, Mapping) else value
+    declared_plans = value.get("module_call_plan") if isinstance(value, Mapping) else None
+    if not isinstance(records, list):
+        raise QualificationError("collector manifest requires a calls list")
+
+    def normalize(module_id: str, envelope: Mapping[str, Any], context: str) -> dict[str, Any]:
+        expected_ids = envelope.get("expected_call_ids")
+        expected_count = envelope.get("expected_call_count")
+        expected_prompt = envelope.get("expected_prompt_tokens")
+        expected_completion = envelope.get("expected_completion_tokens")
+        expected_cost = envelope.get("expected_cost_usd")
+        if (
+            not isinstance(expected_ids, list)
+            or not expected_ids
+            or any(not isinstance(item, str) or not item for item in expected_ids)
+            or len(set(expected_ids)) != len(expected_ids)
+            or not isinstance(expected_count, int)
+            or isinstance(expected_count, bool)
+            or expected_count != len(expected_ids)
+            or not isinstance(expected_prompt, int)
+            or isinstance(expected_prompt, bool)
+            or expected_prompt < 1
+            or not isinstance(expected_completion, int)
+            or isinstance(expected_completion, bool)
+            or expected_completion < 1
+            or not isinstance(expected_cost, (int, float))
+            or isinstance(expected_cost, bool)
+            or expected_cost < 0
+        ):
+            raise QualificationError(f"collector manifest {context} has an invalid expected module envelope")
+        return {
+            "expected_call_ids": tuple(sorted(expected_ids)),
+            "expected_call_count": expected_count,
+            "expected_prompt_tokens": expected_prompt,
+            "expected_completion_tokens": expected_completion,
+            "expected_cost_usd": float(expected_cost),
+        }
+
+    plans: dict[str, dict[str, Any]] = {}
+    if declared_plans is not None:
+        if not isinstance(declared_plans, Mapping) or not declared_plans:
+            raise QualificationError("collector manifest has no module_call_plan")
+        for module_id, envelope in declared_plans.items():
+            if not isinstance(module_id, str) or not module_id or not isinstance(envelope, Mapping):
+                raise QualificationError("collector manifest has malformed module_call_plan")
+            plans[module_id] = normalize(module_id, envelope, f"module plan {module_id}")
+    elif not records:
+        raise QualificationError("collector manifest requires a non-empty calls list")
+    for index, record in enumerate(records):
+        if not isinstance(record, Mapping):
+            raise QualificationError(f"collector manifest call {index} is not an object")
+        module_id, call_id, envelope = (
+            record.get("module_id"),
+            record.get("call_id"),
+            record.get("expected_module_envelope"),
+        )
+        if not isinstance(module_id, str) or not module_id or not isinstance(call_id, str) or not call_id:
+            raise QualificationError(f"collector manifest call {index} is missing module_id or call_id")
+        if not isinstance(envelope, Mapping):
+            raise QualificationError(f"collector manifest call {index} has no expected_module_envelope")
+        normalized = normalize(module_id, envelope, f"call {index}")
+        if call_id not in normalized["expected_call_ids"]:
+            raise QualificationError(f"collector manifest call {index} is not included in its expected module envelope")
+        existing = plans.get(module_id)
+        if existing is not None and existing != normalized:
+            raise QualificationError(f"collector manifest has conflicting expected envelopes for {module_id}")
+        plans[module_id] = normalized
+    return plans
+
+
 class QualificationRunner:
     """Score recorded emissions in probe-first order without invoking a judge."""
 
@@ -658,11 +731,13 @@ class QualificationRunner:
         *,
         route: EffectiveRoute,
         layer_a_probe_results: Sequence[Mapping[str, Any]],
+        collection_call_plan: Mapping[str, Mapping[str, Any]] | None = None,
         max_judge_calls: int | None = None,
         human_audit_complete: bool = False,
     ) -> None:
         self.route = route
         self.layer_a_probe_results = tuple(layer_a_probe_results)
+        self.collection_call_plan = dict(collection_call_plan or {})
         self.max_judge_calls = max_judge_calls
         self.human_audit_complete = human_audit_complete
 
@@ -834,45 +909,100 @@ class QualificationRunner:
     def _emission_for(emissions: Mapping[str, Any], case_id: str, attempt: int = 0) -> Mapping[str, Any] | None:
         value = emissions.get(case_id)
         if isinstance(value, list):
-            return value[attempt] if attempt < len(value) and isinstance(value[attempt], Mapping) else None
+            emission = value[attempt] if attempt < len(value) and isinstance(value[attempt], Mapping) else None
+            if emission is None:
+                return None
+            recorded_attempt = emission.get("attempt")
+            if recorded_attempt is not None and recorded_attempt != attempt:
+                return None
+            return emission
         return value if attempt == 0 and isinstance(value, Mapping) else None
 
-    def _cost_metrics(self, records: Sequence[Mapping[str, Any]]) -> tuple[dict[str, Any], list[str]]:
+    def _cost_metrics(
+        self, records: Sequence[Mapping[str, Any]], emissions: Mapping[str, Any]
+    ) -> tuple[dict[str, Any], list[str]]:
         calls: dict[str, dict[str, Any]] = {}
         errors: list[str] = []
         for record in records:
-            emission = record.get("emission")
-            if not isinstance(emission, Mapping) or record.get("actual_aggregate_relation", "").startswith("LAYER_A_"):
+            if record.get("actual_aggregate_relation", "").startswith("LAYER_A_"):
                 continue
-            module_id, call_id, observed = emission.get("module_id"), emission.get("call_id"), emission.get("observed")
-            if not isinstance(module_id, str) or not isinstance(call_id, str) or not isinstance(observed, Mapping):
-                errors.append("COST_OBSERVATION_MISSING")
-                continue
-            numeric = ("prompt_tokens", "completion_tokens", "cost_usd")
-            if any(not isinstance(observed.get(field), (int, float)) for field in numeric):
-                errors.append("COST_OBSERVATION_MALFORMED")
-                continue
-            entry = {"module_id": module_id, "call_id": call_id, **{field: float(observed[field]) for field in numeric}}
-            existing = calls.get(call_id)
-            if existing is not None and existing != entry:
-                errors.append("RAW_CALL_IDENTITY_FAILURE")
-            else:
-                calls[call_id] = entry
+            value = emissions.get(record["case_id"])
+            attempts: Iterable[Any] = value if isinstance(value, list) else (value,)
+            for emission in attempts:
+                if not isinstance(emission, Mapping):
+                    errors.append("COST_OBSERVATION_MISSING")
+                    continue
+                module_id, call_id, observed = (
+                    emission.get("module_id"),
+                    emission.get("call_id"),
+                    emission.get("observed"),
+                )
+                if not isinstance(module_id, str) or not isinstance(call_id, str) or not isinstance(observed, Mapping):
+                    errors.append("COST_OBSERVATION_MISSING")
+                    continue
+                numeric = ("prompt_tokens", "completion_tokens", "cost_usd")
+                if any(
+                    not isinstance(observed.get(field), (int, float)) or isinstance(observed.get(field), bool)
+                    for field in numeric
+                ):
+                    errors.append("COST_OBSERVATION_MALFORMED")
+                    continue
+                entry = {
+                    "module_id": module_id,
+                    "call_id": call_id,
+                    **{field: float(observed[field]) for field in numeric},
+                }
+                existing = calls.get(call_id)
+                if existing is not None and existing != entry:
+                    errors.append("RAW_CALL_IDENTITY_FAILURE")
+                else:
+                    calls[call_id] = entry
         per_module: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for call in calls.values():
             per_module[call["module_id"]].append(call)
         modules: list[dict[str, Any]] = []
-        for module_id, module_calls in sorted(per_module.items()):
+        for module_id in sorted(set(per_module) | set(self.collection_call_plan)):
+            module_calls = per_module.get(module_id, [])
             prompt = sum(call["prompt_tokens"] for call in module_calls)
             completion = sum(call["completion_tokens"] for call in module_calls)
             cost = sum(call["cost_usd"] for call in module_calls)
+            plan = self.collection_call_plan.get(module_id)
+            if plan is None:
+                errors.append("COLLECTION_CALL_PLAN_MISSING")
+                plan = {}
+            expected_call_ids = plan.get("expected_call_ids")
+            expected_call_count = plan.get("expected_call_count")
+            expected_prompt = plan.get("expected_prompt_tokens")
+            expected_completion = plan.get("expected_completion_tokens")
+            expected_cost = plan.get("expected_cost_usd")
+            plan_complete = (
+                isinstance(expected_call_ids, tuple)
+                and isinstance(expected_call_count, int)
+                and isinstance(expected_prompt, int)
+                and isinstance(expected_completion, int)
+                and isinstance(expected_cost, float)
+            )
+            if not plan_complete:
+                errors.append("COLLECTION_CALL_PLAN_MALFORMED")
+                expected_call_ids, expected_call_count = (), 0
+                expected_prompt, expected_completion, expected_cost = 0, 0, 0.0
             module = {
                 "module_id": module_id,
                 "call_count": len(module_calls),
                 "prompt_tokens": prompt,
                 "completion_tokens": completion,
                 "cost_usd": cost,
-                "within_envelope": len(module_calls) <= 1 and prompt <= 10_000 and completion <= 800 and cost <= 0.25,
+                "expected_call_count": expected_call_count,
+                "expected_prompt_tokens": expected_prompt,
+                "expected_completion_tokens": expected_completion,
+                "expected_cost_usd": expected_cost,
+                "within_envelope": (
+                    len(module_calls) == expected_call_count
+                    and {call["call_id"] for call in module_calls} == set(expected_call_ids)
+                    and prompt <= expected_prompt
+                    and completion <= expected_completion
+                    and cost <= expected_cost + 1e-12
+                ),
             }
             modules.append(module)
             if not module["within_envelope"]:
@@ -933,10 +1063,12 @@ class QualificationRunner:
             raise QualificationError("both label sidecars require a cases list")
         main_cases = [case if isinstance(case, Mapping) else {} for case in main_cases_value]
         probe_cases = [case if isinstance(case, Mapping) else {} for case in probe_cases_value]
-        expected_cap = len(main_cases) + len(probe_cases)
+        expected_cap = sum(int(plan["expected_call_count"]) for plan in self.collection_call_plan.values())
+        if not self.collection_call_plan:
+            raise QualificationAbort("qualification scoring requires a collector-derived module call plan")
         if self.max_judge_calls is not None and self.max_judge_calls != expected_cap:
             raise QualificationAbort(
-                f"--max-judge-calls must equal {expected_cap} (535 + probes for the frozen run), got {self.max_judge_calls}"
+                f"--max-judge-calls must equal {expected_cap} collector-planned calls, got {self.max_judge_calls}"
             )
         layer_a = self._layer_a_gate()
         records: list[dict[str, Any]] = []
@@ -969,9 +1101,9 @@ class QualificationRunner:
             for record in records
             if record["emission"] is not None
         ]
-        cost, cost_errors = self._cost_metrics(records)
-        if cost["call_count"] > expected_cap:
-            cost_errors.append("MAX_JUDGE_CALLS_EXCEEDED")
+        cost, cost_errors = self._cost_metrics(records, emissions)
+        if cost["call_count"] != expected_cap:
+            cost_errors.append("COLLECTION_CALL_PLAN_TOTAL_MISMATCH")
         integrity_failures = Counter(
             failure for record in records for failure in [*record["integrity_failures"], *cost_errors]
         )
@@ -1290,11 +1422,23 @@ def _emissions_mapping(value: Mapping[str, Any]) -> Mapping[str, Any]:
     raise QualificationError("emissions must be an object keyed by case_id or a list of emission objects")
 
 
+def _read_json_value(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise QualificationError(f"invalid JSON at {path}: {exc}") from exc
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Hermetic QG Layer-B judge qualification scorer")
     parser.add_argument("--main-labels", type=Path)
     parser.add_argument("--probe-labels", type=Path)
     parser.add_argument("--emissions", type=Path, help="Recorded emissions; never a judge command")
+    parser.add_argument(
+        "--collector-manifest",
+        type=Path,
+        help="Collector raw-call manifest carrying the concrete per-module batch plan.",
+    )
     parser.add_argument("--route", type=Path, help="Exact effective-route JSON")
     parser.add_argument("--layer-a-probes", type=Path, help="Six deterministic serializer probe results")
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -1324,6 +1468,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "--main-labels": args.main_labels,
             "--probe-labels": args.probe_labels,
             "--emissions": args.emissions,
+            "--collector-manifest": args.collector_manifest,
             "--route": args.route,
             "--layer-a-probes": args.layer_a_probes,
         }
@@ -1337,6 +1482,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         runner = QualificationRunner(
             route=EffectiveRoute.from_mapping(_read_json(args.route)),
             layer_a_probe_results=[probe for probe in probe_results if isinstance(probe, Mapping)],
+            collection_call_plan=collection_call_plan_from_manifest(_read_json_value(args.collector_manifest)),
             max_judge_calls=args.max_judge_calls,
             human_audit_complete=args.human_audit_complete,
         )

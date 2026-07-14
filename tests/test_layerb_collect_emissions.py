@@ -129,6 +129,60 @@ def _shared_artifact_cases(directory: Path) -> list[dict[str, Any]]:
     ]
 
 
+def _many_shared_artifact_cases(directory: Path, count: int) -> list[dict[str, Any]]:
+    """Build a stability-sized main corpus that remains one artifact batch."""
+
+    raw = "Олена Теліга народилася 1906 року."
+    event = {
+        "tool": "query_wikipedia",
+        "input": {"query": "stability-module"},
+        "output": raw,
+        "status": "completed",
+        "document_id": "synthetic-stability-module",
+    }
+    fact_checks = [
+        {
+            "fact_check_id": f"stability-fact-{index}",
+            "claim": raw,
+            "verdict": "CONFIRMED",
+            "grounding": {"tool": "query_wikipedia", "query": "stability-module", "evidence_excerpt": raw},
+        }
+        for index in range(count)
+    ]
+    artifact = {
+        "schema_version": "qg_bakeoff_run.v1",
+        "fixture": {"slug": "stability-module"},
+        "payload": {"fact_checks": fact_checks},
+        "dispatch": {"tool_events": [event]},
+    }
+    candidate = layerb_candidates.materialize_candidates(fact_checks[0]["grounding"], [event]).candidates[0].to_dict()
+    candidate["expected_source_relation"] = "ENTAILS"
+    candidate["expected_support_spans"] = [{"start": 0, "end": len(raw), "role": "SUPPORTS"}]
+    path = directory / "stability-shared.json"
+    _write_json(path, artifact)
+    artifact_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    return [
+        {
+            "case_id": f"openrouter-deepseek-deepseek-v4-pro__stability.json#fact_checks[{index}]::stability-{index}",
+            "artifact_sha256": artifact_sha256,
+            "fixture_id": "stability-module",
+            "fact_check_id": fact_check["fact_check_id"],
+            "fact_check_index": index,
+            "claim": raw,
+            "evidence_excerpt": raw,
+            "expected_reviewer_verdict": "CONFIRMED",
+            "expected_layer_a_decision": "ANCHOR",
+            "anchor_scan_complete": True,
+            "candidate_set_complete": True,
+            "candidates_by_event_output_id": {candidate["event_output_id"]: [candidate]},
+            "expected_aggregate_relation": "ENTAILS",
+            "expected_fact_check_decision": "ACCEPT",
+            "failure_class": "ALTERED_CLAIM_VALUE",
+        }
+        for index, fact_check in enumerate(fact_checks)
+    ]
+
+
 def _datasets(tmp_path: Path, *, include_gemma: bool = False) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
     main_case = _case_artifact(
         tmp_path,
@@ -426,7 +480,7 @@ def test_happy_path_emission_shape_matches_scorer_response_contract(tmp_path: Pa
 
     emission = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"][
         main_case["case_id"]
-    ]
+    ][0]
     candidates = layerb_qualify._candidate_rows(main_case)
     windows, _hashes, window_errors = layerb_qualify._validate_windows(candidates, emission)
     relations, response_errors = layerb_qualify._response_relations(main_case, candidates, emission, windows)
@@ -462,6 +516,8 @@ def test_collector_emissions_round_trip_through_scorer_without_judge_or_delimite
                 str(probe_path),
                 "--emissions",
                 str(output_dir / "emissions.json"),
+                "--collector-manifest",
+                str(output_dir / "raw-call-manifest.json"),
                 "--route",
                 str(output_dir / "route.json"),
                 "--layer-a-probes",
@@ -495,6 +551,77 @@ def test_one_module_envelope_covers_multiple_cases_with_one_judge_call(tmp_path:
     emissions = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"]
     assert set(emissions) == {shared_cases[0]["case_id"], shared_cases[1]["case_id"], probe_case["case_id"]}
     assert _counter_lines(counter) == 2
+
+
+def test_stability_replay_plan_collects_exact_subset_as_attempt_one(tmp_path: Path, monkeypatch, capsys) -> None:
+    main_path, probe_path, _main_case, probe_case = _datasets(tmp_path)
+    main_cases = _many_shared_artifact_cases(tmp_path, layerb_qualify.STABILITY_CASES)
+    _write_json(main_path, {"schema_version": "qg-layer-b-labels.v2", "cases": main_cases})
+    counter = tmp_path / "calls.log"
+    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
+
+    assert (
+        layerb_collect_emissions.main(_collector_args(main_path, probe_path, tmp_path / "dry", calls=4, dry_run=True))
+        == 0
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["module_calls"] == 4
+    assert summary["primary_module_calls"] == 2
+    assert summary["stability_module_calls"] == 2
+    assert len(summary["stability_case_ids"]) == layerb_qualify.STABILITY_CASES
+    assert _counter_lines(counter) == 0
+
+    output_dir = tmp_path / "collector"
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=3)) == 2
+    assert _counter_lines(counter) == 0
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=4)) == 0
+    assert _counter_lines(counter) == 4
+
+    emissions = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"]
+    selected = set(layerb_qualify.stability_case_ids(main_cases, [probe_case]))
+    assert selected == set(summary["stability_case_ids"])
+    for case in [probe_case, *main_cases]:
+        attempts = emissions[case["case_id"]]
+        assert [entry["attempt"] for entry in attempts] == list(range(len(attempts)))
+        assert len(attempts) == (2 if case["case_id"] in selected else 1)
+
+    manifest = json.loads((output_dir / "raw-call-manifest.json").read_text(encoding="utf-8"))
+    assert manifest["version"] == "qg-layer-b-qualification-collector-manifest.v2"
+    assert len(manifest["calls"]) == 4
+    assert {entry["attempt"] for entry in manifest["calls"]} == {0, 1}
+    assert all(entry["expected_module_envelope"]["expected_call_count"] == 2 for entry in manifest["calls"])
+    assert all(plan["expected_call_count"] == 2 for plan in manifest["module_call_plan"].values())
+
+    calls_before_score = _counter_lines(counter)
+    score_dir = tmp_path / "score"
+    assert (
+        layerb_qualify.main(
+            [
+                "--main-labels",
+                str(main_path),
+                "--probe-labels",
+                str(probe_path),
+                "--emissions",
+                str(output_dir / "emissions.json"),
+                "--collector-manifest",
+                str(output_dir / "raw-call-manifest.json"),
+                "--route",
+                str(output_dir / "route.json"),
+                "--layer-a-probes",
+                str(_layer_a_probes(tmp_path / "layer-a-probes.json")),
+                "--output-dir",
+                str(score_dir),
+                "--max-judge-calls",
+                "4",
+            ]
+        )
+        == 0
+    )
+    report = json.loads((score_dir / "qualification-report.json").read_text(encoding="utf-8"))
+    assert report["thresholds"]["semantic_stability"]["status"] == "PASS"
+    assert report["thresholds"]["cost_envelope"]["status"] == "PASS"
+    assert report["thresholds"]["cost_envelope"]["call_count"] == 4
+    assert _counter_lines(counter) == calls_before_score
 
 
 @pytest.mark.parametrize(
@@ -578,8 +705,49 @@ def test_bridge_failure_emits_audited_probe_row_without_running_main(tmp_path: P
     assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 2
 
     emissions = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"]
-    assert emissions[probe_case["case_id"]]["status"] == "failure"
+    assert emissions[probe_case["case_id"]][0]["status"] == "failure"
     assert main_case["case_id"] not in emissions
+    assert _counter_lines(counter) == 1
+
+
+def test_probe_abort_preserves_full_call_plan_for_hermetic_scoring(tmp_path: Path, monkeypatch) -> None:
+    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
+    counter = tmp_path / "calls.log"
+    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
+    monkeypatch.setenv("LAYERB_STUB_EXIT", "7")
+    output_dir = tmp_path / "collector"
+
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 2
+    manifest = json.loads((output_dir / "raw-call-manifest.json").read_text(encoding="utf-8"))
+    assert len(manifest["calls"]) == 1
+    assert sum(plan["expected_call_count"] for plan in manifest["module_call_plan"].values()) == 2
+
+    score_dir = tmp_path / "score"
+    assert (
+        layerb_qualify.main(
+            [
+                "--main-labels",
+                str(main_path),
+                "--probe-labels",
+                str(probe_path),
+                "--emissions",
+                str(output_dir / "emissions.json"),
+                "--collector-manifest",
+                str(output_dir / "raw-call-manifest.json"),
+                "--route",
+                str(output_dir / "route.json"),
+                "--layer-a-probes",
+                str(_layer_a_probes(tmp_path / "layer-a-probes.json")),
+                "--output-dir",
+                str(score_dir),
+                "--max-judge-calls",
+                "2",
+            ]
+        )
+        == 2
+    )
+    report = json.loads((score_dir / "qualification-report.json").read_text(encoding="utf-8"))
+    assert report["aborted_reason"].startswith("PROBE_FAILURE:")
     assert _counter_lines(counter) == 1
 
 
