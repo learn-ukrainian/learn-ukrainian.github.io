@@ -35,9 +35,8 @@ decisions:
 - lemma: експерт
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: judge (someone with valued opinions)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: expert (specialist who conducts an expert assessment)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 721e04406d628e16
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -56,9 +55,8 @@ decisions:
 - lemma: вжити
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: bestow (to apply or make use of (someone or something))
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to use, to employ
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: a584d826ab954173
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -77,9 +75,8 @@ decisions:
 - lemma: встигти
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: (rare) Synonym of всти́гнути
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to make it in time, to manage (in time)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 15444acc8052527d
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -98,9 +95,8 @@ decisions:
 - lemma: кейс
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: briefcase (case used for carrying documents)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'case study (also: briefcase)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 0286303852b43fc8
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -119,9 +115,8 @@ decisions:
 - lemma: предикативний
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: (logic) predicative
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: predicative (grammar, logic)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: c669250f28c8cba5
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -140,9 +135,8 @@ decisions:
 - lemma: виступити
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: to step forth, to step forward, to come forward
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to speak publicly, to perform
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 8b2e2d4921bc4737
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -203,9 +197,8 @@ decisions:
 - lemma: плавець
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: fin (appendage of a fish)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: swimmer
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 3aa1b8ed696e3f39
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -245,10 +238,8 @@ decisions:
 - lemma: двоюрідний
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: (Denotes a relative in the same generation as the head noun but
-    one degree greater in separation.)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'cousin (attributive: двоюрідна сестра = female cousin)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: dfea47c31e99f144
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -267,9 +258,8 @@ decisions:
 - lemma: гравець
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: gamer (person who plays video games)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: player (participant in a game or sport)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 32d3a765b85836df
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -351,9 +341,8 @@ decisions:
 - lemma: налагодити
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: debug (to search for malfunctioning elements)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to set up, to get working
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 852c583a9e9b74a5
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -582,10 +571,8 @@ decisions:
 - lemma: провалитися
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: bungle (to incompetently perform (a task); to ruin (something) through
-    incompetent action)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'to fail (also: to fall through)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 500b942a11e3068e
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -731,9 +718,8 @@ decisions:
 - lemma: житель
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: citizen (resident of any particular place)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: resident, inhabitant
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 6e152836a0e21cc3
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1045,11 +1031,8 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: міс
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: miss (unmarried woman)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  decision: needs_more_evidence
+  sense_note: 'Source evidence is the abbreviation грн/міс (per month), unrelated to the ''miss'' gloss; per-item review with real evidence needed.'
   source_inventory:
     key: a755acaec9cd6db7
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1133,10 +1116,8 @@ decisions:
 - lemma: ректор
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: principal (chief executive and chief academic officer of a university
-    or college)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: rector (head of a university)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 44ddd31dd5e92327
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1176,9 +1157,8 @@ decisions:
 - lemma: водоспад
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: cataract (waterfall)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: waterfall
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 40defbe834048261
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1261,9 +1241,8 @@ decisions:
 - lemma: збільшитися
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: 'multiply (intransitive: grow in number)'
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'to increase, to grow'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 20d695e94c2921d6
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1301,11 +1280,8 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: молодець
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: daredevil (person who engages in risky behavior)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  decision: needs_more_evidence
+  sense_note: 'Curriculum usage is the exclamation Молодець! (''well done!''), not the ''daredevil'' noun sense; needs per-item entry with the exclamation-first gloss.'
   source_inventory:
     key: 57cc824214d571cd
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1366,9 +1342,8 @@ decisions:
 - lemma: портал
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: portal (grandiose entrance)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: portal (website); web portal
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 62ccb72ae993fb0e
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1406,11 +1381,8 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: роза
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: rose (shrub)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  decision: needs_more_evidence
+  sense_note: 'Only evidence is a checkpoint options[] token (likely distractor); Грінченко cross-refs рожа/троянда as canonical; standard modern word is троянда. Per-item review.'
   source_inventory:
     key: e930cf64b3f53783
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1534,9 +1506,8 @@ decisions:
 - lemma: еліптичний
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: elliptic (relating to an ellipse or its mathematical definition)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'elliptical (linguistics: with omitted sentence elements; also geometry)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: f6f9ab65d68574fc
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1788,9 +1759,8 @@ decisions:
 - lemma: твердість
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: resolution (state of being resolute)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: hardness, firmness
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 81e44986af23dc03
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -1809,9 +1779,8 @@ decisions:
 - lemma: транспортувати
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: freight (to transport (goods))
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to transport
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 39161f0cfa5451c3
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2019,9 +1988,8 @@ decisions:
 - lemma: логос
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: Logos (rational principle in Ancient Greek philosophy) (proper noun)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: logos (appeal to reason, in rhetoric)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 0b99190c1b3c42cc
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2059,11 +2027,8 @@ decisions:
   review_queue_reasons:
   - missing_english_anchor
 - lemma: мельник
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: miller (person)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  decision: needs_more_evidence
+  sense_note: 'Source occurrence is the surname Мельник (Моє прізвище Мельник), not the common noun; needs independent common-noun evidence.'
   source_inventory:
     key: 629a7e7492fa637e
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2082,9 +2047,8 @@ decisions:
 - lemma: неперехідний
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: impassable, impenetrable
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: intransitive (grammar)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 9d1c671f669c3fbd
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2272,9 +2236,8 @@ decisions:
 - lemma: чергуватися
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: take turns (do the same thing one after another)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to alternate, to take turns
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: d8dbe42bf8a3db52
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2335,9 +2298,8 @@ decisions:
 - lemma: дозувати
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: to administer a dose
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: 'to dose, to measure out (figuratively: use sparingly)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 0b0bf77265679fe3
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2482,9 +2444,8 @@ decisions:
 - lemma: наполегливість
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: insistence (state of being insistent)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: persistence, perseverance
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: a921d99171e5469d
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2546,9 +2507,8 @@ decisions:
 - lemma: перебивати
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: to break in two
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to interrupt
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 1bdb2ccf98aee2eb
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2609,9 +2569,8 @@ decisions:
 - lemma: приєднувати
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: annex (to add something to another, to incorporate into)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: to join, to attach
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 627a25ca2f28f6d4
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2630,9 +2589,8 @@ decisions:
 - lemma: сирена
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: horn (loud alarm, especially on a motor vehicle)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: siren (alarm device)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 697dab067ef14cd5
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2819,9 +2777,8 @@ decisions:
 - lemma: зменшувально-пестливий
   decision: approve_for_publish
   approved_pos: adj
-  approved_gloss: hypocoristic (relating to a nickname, usually indicating intimacy)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: diminutive-affectionate
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: 3da50cfbf46ffdcc
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
@@ -2966,9 +2923,8 @@ decisions:
 - lemma: незрозуміло
   decision: approve_for_publish
   approved_pos: adv
-  approved_gloss: inexplicably (in an inexplicable manner)
-  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
-    dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean.'
+  approved_gloss: unintelligibly, incomprehensibly
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN dictionary gloss. UA-GEC: 0 rows; СУМ-11: clean. Panel regloss: sense-priority vs curriculum context.'
   source_inventory:
     key: df78a18663627a97
     path: data/lexicon/source-inventory/curriculum-full-text-intake.json
