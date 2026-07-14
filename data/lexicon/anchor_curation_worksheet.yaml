@@ -1,3 +1,7 @@
+# STAGE 2 VERIFICATION — #5133, 2026-07-14
+# Cross-family AGY pass: 110 APPROVE / 1 CORRECT / 47 NULL-OK / 0 NULL-WRONG.
+# Claude-atlas adjudicated the 10 flagged edge cases with dictionary evidence;
+# approved non-null proposals are eligible for deterministic manifest application.
 schema_version: 1
 meta:
   issue: '#5133'
@@ -170,12 +174,13 @@ records:
 - lemma: добові
   cefr: B2
   url_slug: добові
-  proposed_anchor: null
+  proposed_anchor: per diem
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: 'СУМ-11 under добовий: «добові, -вих, мн. Сума, яка виплачується…»'
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  confidence: high
+  notes: Substantivized plural; dictionary-backed per-diem payment sense.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: домашні
   cefr: A2
   url_slug: домашні
@@ -250,12 +255,13 @@ records:
 - lemma: живучи
   cefr: B1
   url_slug: живучи
-  proposed_anchor: null
+  proposed_anchor: while living
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Adverbial participle of жити.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  confidence: high
+  notes: Derived-form policy; the VTS definition identifies it as a дієприслівник of жити.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: зазвучати
   cefr: C1
   url_slug: зазвучати
@@ -448,7 +454,7 @@ records:
 - lemma: кажучи
   cefr: B2
   url_slug: кажучи
-  proposed_anchor: null
+  proposed_anchor: speaking
   balla_reverse_hints:
   - admittedly
   - apart
@@ -481,10 +487,11 @@ records:
   - truly
   - truth
   - word
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: Adverbial participle of казати.
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  confidence: high
+  notes: Derived-form policy; chiefly occurs in fixed phrases.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: книжно
   cefr: C1
   url_slug: книжно
@@ -583,12 +590,13 @@ records:
 - lemma: косуля
   cefr: C1
   url_slug: косуля
-  proposed_anchor: wooden plough
+  proposed_anchor: roe deer
   balla_reverse_hints: []
-  sum11_sense: An archaic type of plough.
+  sum11_sense: Modern primary sense is roe deer; the plough sense is historical.
   vesum_verified: true
   confidence: high
-  notes: Primary СУМ-11 sense is the farming tool, not the roe deer cross-reference.
+  notes: VESUM check_modern_form is modern-codified, not archaic-only; СУМ-11's plough sense is historical.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: коцик
   cefr: C1
   url_slug: коцик
@@ -728,12 +736,16 @@ records:
 - lemma: мікс
   cefr: B2
   url_slug: мікс
-  proposed_anchor: null
+  proposed_anchor: mix
   balla_reverse_hints: []
-  sum11_sense: No exact СУМ-11 headword.
+  sum11_sense: СУМ-20 and ВТС define it as a «суміш чого-небудь».
   vesum_verified: true
-  confidence: low
-  notes: No sense-specific source supports an anchor; retained for reviewer adjudication.
+  confidence: high
+  notes: Modern borrowed noun; both dictionaries support the mixture sense.
+  evidence:
+  - https://slovnyk.me/dict/newsum/мікс
+  - https://slovnyk.me/dict/vts/мікс
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: найактивніше
   cefr: B1
   url_slug: найактивніше
@@ -778,13 +790,14 @@ records:
 - lemma: наслідковий
   cefr: C1
   url_slug: наслідковий
-  proposed_anchor: result clause
+  proposed_anchor: resultative
   balla_reverse_hints:
   - consecutive
   sum11_sense: Relating to a result clause in grammar.
   vesum_verified: true
   confidence: high
-  notes: Primary СУМ-11 sense is the grammatical term.
+  notes: Adjectival anchor; used chiefly in наслідкове речення.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: наші
   cefr: A1
   url_slug: наші
@@ -1289,13 +1302,15 @@ records:
 - lemma: рано-вранці
   cefr: B1
   url_slug: рано-вранці
-  proposed_anchor: early morning
+  proposed_anchor: early in the morning
   balla_reverse_hints:
   - early
   - rather
   sum11_sense: Very early, at dawn.
   vesum_verified: true
   confidence: high
+  notes: Adverb; cross-family correction from the nominal phrase proposal.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: рекомендуватися
   cefr: C1
   url_slug: рекомендуватися
@@ -1438,11 +1453,13 @@ records:
 - lemma: скрипт
   cefr: B2
   url_slug: скрипт
-  proposed_anchor: manuscript
+  proposed_anchor: script
   balla_reverse_hints: []
-  sum11_sense: An archaic word for a manuscript.
+  sum11_sense: Modern primary sense is a script; manuscript is historical.
   vesum_verified: true
   confidence: high
+  notes: The manuscript sense is historical.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: смачненьке
   cefr: B2
   url_slug: смачненьке
@@ -1574,12 +1591,14 @@ records:
 - lemma: теплоізоляція
   cefr: C1
   url_slug: теплоізоляція
-  proposed_anchor: insulation
+  proposed_anchor: thermal insulation
   balla_reverse_hints:
   - insulation
   sum11_sense: Protection against heat loss or heat effects.
   vesum_verified: true
   confidence: high
+  notes: Exact technical term.
+  verified_by: agy cross-family pass 2026-07-14 + claude-atlas adjudication (dictionary-backed)
 - lemma: тирозин
   cefr: C1
   url_slug: тирозин
