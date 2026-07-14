@@ -176,3 +176,31 @@ Flat CSV/TSV/JSONL rows require `lemma`, `source_family`, and
 Malformed rows fail before candidate output is written. Source-fed candidates
 use the same `auto_merge` / `needs_review` payload as content-grown candidates
 and carry `source_provenance` through promotion.
+
+## Full Curriculum Intake
+
+The Phase 1 curriculum machine scans the full running text of in-scope module
+Markdown and activity/vocabulary YAML files. It emits a safe-locator
+source inventory and report, and can emit a decision-ledger-compatible append
+when explicit batch metadata is supplied. It never changes the Atlas manifest
+or Daily Word, Practice, or Cloze surfaces.
+
+~~~bash
+.venv/bin/python -m scripts.lexicon.curriculum_atlas_intake \
+  --inventory-out data/lexicon/source-inventory/curriculum-full-text-intake.json \
+  --inventory-path data/lexicon/source-inventory/curriculum-full-text-intake.json \
+  --report-out /tmp/atlas-curriculum-full-text-intake.json \
+  --ledger-out /tmp/atlas-curriculum-full-text-ledger.yaml \
+  --batch-id curriculum-full-text-intake-2026-07-14 \
+  --batch-label "curriculum full-text intake" \
+  --reviewed-at 2026-07-14
+~~~
+
+The classifier is fail-closed. Missing or ambiguous VESUM data, missing English
+anchors, uncertain heritage results, and conflicting metadata enter
+`review_queue`; only unique VESUM/POS vocabulary candidates with clear heritage
+are `auto_approve`. Existing Atlas or source-ledger heads are `reject`
+dedupes. When `--ledger-out` is supplied, `--inventory-out` must be the same
+project-relative path as `--inventory-path`; this keeps every ledger reference
+valid once the staged inventory is reviewed. The generated decision ledger retains
+`production_outputs_updated: []`.
