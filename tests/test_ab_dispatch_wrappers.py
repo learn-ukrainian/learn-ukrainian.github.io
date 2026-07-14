@@ -32,9 +32,13 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     brief = tmp_path / "brief.md"
     brief.write_text("# Fix this\n\nExisting acceptance criteria.\n", encoding="utf-8")
     calls = []
+    captured_prompt: dict[str, str | Path] = {}
 
     def fake_run(command, **kwargs):
         calls.append((command, kwargs))
+        prompt_path = Path(_option(command, "--prompt-file"))
+        captured_prompt["path"] = prompt_path
+        captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
         return subprocess.CompletedProcess(command, 0)
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
@@ -52,13 +56,16 @@ def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(
     assert _option(command, "--base") == "origin/main"
     assert _option(command, "--task-id") == "1741"
     assert _option(command, "--effort") == "high"
-    prompt = Path(_option(command, "--prompt-file")).read_text(encoding="utf-8")
-    assert "Existing acceptance criteria." in prompt
-    assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in prompt
+    assert "Existing acceptance criteria." in str(captured_prompt["text"])
+    assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in str(captured_prompt["text"])
+    assert not Path(captured_prompt["path"]).exists()
 
 
 def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypatch, tmp_path):
     state_dir = _patch_state_dir(monkeypatch, tmp_path)
+    lease_root = tmp_path / "learn-ukrainian" / "task-1701"
+    lease_root.mkdir(parents=True)
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
 
     def fake_run(command, **kwargs):
         assert command == ["gh", "issue", "view", "1701", "--json", "title,body"]
@@ -80,7 +87,9 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
     assert state["model"] is None
     assert state["effort"] == "high"
     assert _option(command, "--task-id") == "1701"
-    prompt = Path(state["prompt_file"]).read_text(encoding="utf-8")
+    prompt_path = Path(state["prompt_file"])
+    assert prompt_path.parent == lease_root
+    prompt = prompt_path.read_text(encoding="utf-8")
     assert "Security issue" in prompt
     assert "Acceptance criteria from issue." in prompt
     assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in prompt
@@ -88,6 +97,9 @@ def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypa
 
 def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatch, tmp_path):
     state_dir = _patch_state_dir(monkeypatch, tmp_path)
+    lease_root = tmp_path / "learn-ukrainian" / "task-review"
+    lease_root.mkdir(parents=True)
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
 
     def fake_run(command, **kwargs):
         if command == ["gh", "pr", "view", "1740", "--json", "title,body,files"]:
@@ -119,7 +131,9 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert _option(command, "--model") == "claude-opus-4-8"
     assert _option(command, "--effort") == "xhigh"
     assert _option(command, "--task-id").startswith("review-1740-")
-    prompt = Path(state["prompt_file"]).read_text(encoding="utf-8")
+    prompt_path = Path(state["prompt_file"])
+    assert prompt_path.parent == lease_root
+    prompt = prompt_path.read_text(encoding="utf-8")
     assert wrappers.REVIEW_DEEP_INSTRUCTIONS in prompt
     assert "Review this behavior." in prompt
     assert "diff --git" in prompt
@@ -129,9 +143,13 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     target = tmp_path / "target.py"
     target.write_text("def broken():\n    return missing_name\n", encoding="utf-8")
     calls = []
+    captured_prompt: dict[str, str | Path] = {}
 
     def fake_run(command, **kwargs):
         calls.append((command, kwargs))
+        prompt_path = Path(_option(command, "--prompt-file"))
+        captured_prompt["path"] = prompt_path
+        captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
         return subprocess.CompletedProcess(command, 0)
 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
@@ -147,6 +165,6 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     assert _option(command, "--model") == "claude-opus-4-8"
     assert _option(command, "--effort") == "high"
     assert _option(command, "--task-id").startswith("review-")
-    prompt = Path(_option(command, "--prompt-file")).read_text(encoding="utf-8")
-    assert wrappers.REVIEW_DEEP_INSTRUCTIONS in prompt
-    assert "def broken()" in prompt
+    assert wrappers.REVIEW_DEEP_INSTRUCTIONS in str(captured_prompt["text"])
+    assert "def broken()" in str(captured_prompt["text"])
+    assert not Path(captured_prompt["path"]).exists()

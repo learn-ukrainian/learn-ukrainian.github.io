@@ -160,6 +160,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
             "LC_ALL": "C",
             "AB_REPO_ROOT": "/repo",
             "LU_BYPASS_RATE_LIMIT": "1",
+            "LU_RUNTIME_TMP_BASE_ROOT": "/tmp",
             "LU_RUNTIME_TMP_ROOT": "/tmp/learn-ukrainian/task-4956",
             "UNRELATED": "drop-me",
         },
@@ -182,6 +183,7 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
     assert env["LC_ALL"] == "C"
     assert env["AB_REPO_ROOT"] == "/repo"
     assert env["LU_BYPASS_RATE_LIMIT"] == "1"
+    assert env["LU_RUNTIME_TMP_BASE_ROOT"] == "/tmp"
     assert env["LU_RUNTIME_TMP_ROOT"] == "/tmp/learn-ukrainian/task-4956"
     assert env["GEMINI_AUTH_MODE"] == "subscription"
     assert "AB_BAD_OVERRIDE" not in env

@@ -3722,19 +3722,24 @@ def _ensure_codex_writer_home(
     real_home = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
     real_auth = real_home / "auth.json"
 
-    # The dispatch runtime sets both values for spawned agents. Require them
-    # to agree before treating LU_RUNTIME_TMP_ROOT as task context so a stale
+    # The dispatch runtime records the temp root that contained the lease
+    # before it sets TMPDIR to the lease itself. Require both locations to
+    # agree before treating LU_RUNTIME_TMP_ROOT as task context so a stale
     # or externally supplied environment variable cannot redirect CODEX_HOME.
     runtime_tmp_root = os.environ.get("LU_RUNTIME_TMP_ROOT")
+    runtime_tmp_base_root = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT")
     scoped_home: Path
     if runtime_tmp_root:
         candidate = Path(runtime_tmp_root)
         try:
             resolved_candidate = candidate.resolve(strict=True)
+            resolved_base_root = Path(
+                runtime_tmp_base_root or tempfile.gettempdir(),
+            ).resolve(strict=True)
             candidate_is_lease = (
                 not candidate.is_symlink()
                 and candidate.is_dir()
-                and resolved_candidate == Path(tempfile.gettempdir()).resolve(strict=True)
+                and resolved_candidate.parent.parent == resolved_base_root
                 and resolved_candidate.parent.name == "learn-ukrainian"
             )
         except OSError:

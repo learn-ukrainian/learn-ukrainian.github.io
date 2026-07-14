@@ -328,10 +328,14 @@ def test_runtime_tool_config_codex_tools_nests_home_in_runtime_tmp_lease(
     (fake_home / "auth.json").write_text("{}", encoding="utf-8")
     monkeypatch.setenv("CODEX_HOME", str(fake_home))
 
-    lease_root = tmp_path / "learn-ukrainian" / "task-4956"
+    tmp_root = tmp_path / "os-tmp"
+    tmp_root.mkdir()
+    lease_root = tmp_root / "learn-ukrainian" / "task-4956"
     lease_root.mkdir(parents=True)
     monkeypatch.setattr(linear_pipeline.tempfile, "gettempdir", lambda: str(lease_root))
+    monkeypatch.setenv("TMPDIR", str(lease_root))
     monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_root))
 
     config = linear_pipeline._runtime_tool_config(
         "codex-tools",

@@ -56,6 +56,7 @@ _SAFE_NAME_PREFIXES = (
 # before the value-pattern filter. Their names remain narrowly allowlisted.
 _SAFE_VALUE_NAME_ALLOWLIST = {
     "TMPDIR",
+    "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",
 }
 

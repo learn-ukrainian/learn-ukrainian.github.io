@@ -91,7 +91,8 @@ def test_create_runtime_tmp_lease_sanitizes_task_id(tmp_path, monkeypatch):
     assert lease_root.is_dir()
 
 
-def test_runtime_tmp_reap_refuses_root_outside_namespace(tmp_path):
+def test_runtime_tmp_reap_refuses_root_outside_namespace(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
     namespace_root.mkdir()
     outside = tmp_path / "outside"
@@ -106,7 +107,60 @@ def test_runtime_tmp_reap_refuses_root_outside_namespace(tmp_path):
     assert payload.read_text(encoding="utf-8") == "keep"
 
 
-def test_runtime_tmp_reap_refuses_a_symlinked_lease_root(tmp_path):
+def test_runtime_tmp_reap_refuses_namespace_outside_tempdir(tmp_path, monkeypatch):
+    os_tmp_root = tmp_path / "os-tmp"
+    os_tmp_root.mkdir()
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(os_tmp_root))
+    namespace_root = tmp_path / "repository" / "learn-ukrainian"
+    lease_root = namespace_root / "scripts"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "not directly under $TMPDIR" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_refuses_wrong_namespace_name(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "wrong-namespace"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "namespace has the wrong name" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_refuses_missing_symlink_protection(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    def unprotected_rmtree(*_args, **_kwargs):
+        raise AssertionError("rmtree must not run without symlink protection")
+
+    monkeypatch.setattr(delegate.shutil, "rmtree", unprotected_rmtree)
+
+    result = delegate._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "lacks symlink-attack protection" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+def test_runtime_tmp_reap_refuses_a_symlinked_lease_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
     namespace_root.mkdir()
     outside = tmp_path / "outside"
@@ -123,7 +177,8 @@ def test_runtime_tmp_reap_refuses_a_symlinked_lease_root(tmp_path):
     assert payload.read_text(encoding="utf-8") == "keep"
 
 
-def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path):
+def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
     lease_root = namespace_root / "task"
     lease_root.mkdir(parents=True)
@@ -142,6 +197,7 @@ def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path
 
 
 def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(tmp_path))
     namespace_root = tmp_path / "learn-ukrainian"
     lease_root = namespace_root / "task"
     lease_root.mkdir(parents=True)
@@ -1041,6 +1097,8 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     runtime_tmp_root = runtime_tmp_namespace / "worker-dispatch-event"
     runtime_tmp_root.mkdir(parents=True)
     (runtime_tmp_root / "payload.bin").write_bytes(b"lease")
+    monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(runtime_tmp_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
 
     state_path = delegate._state_path("worker-dispatch-event")
     delegate._write_state_atomic(state_path, {
@@ -1947,6 +2005,7 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     assert isinstance(env, dict)
     assert env["TMPDIR"] == str(lease_root)
     assert env["LU_RUNTIME_TMP_ROOT"] == str(lease_root)
+    assert env["LU_RUNTIME_TMP_BASE_ROOT"] == str(tmp_path)
     cmd = recorded["cmd"]
     assert isinstance(cmd, list)
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)

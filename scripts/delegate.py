@@ -450,6 +450,20 @@ def _reap_runtime_tmp_lease(
 
         resolved_namespace = namespace.resolve(strict=True)
         resolved_lease = lease.resolve(strict=True)
+        resolved_tmp_root = Path(tempfile.gettempdir()).resolve(strict=True)
+        if resolved_tmp_root == resolved_lease:
+            # The worker deliberately points TMPDIR at its lease. In that one
+            # process context, use the pre-override root recorded by the
+            # dispatcher; parent cleanup still validates against its live
+            # tempfile root, so a stale inherited base cannot bless a child.
+            runtime_tmp_base_root = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT")
+            if not runtime_tmp_base_root:
+                raise ValueError("runtime tmp worker is missing its base root")
+            resolved_tmp_root = Path(runtime_tmp_base_root).resolve(strict=True)
+        if resolved_namespace.parent != resolved_tmp_root:
+            raise ValueError(
+                "resolved runtime tmp namespace is not directly under $TMPDIR",
+            )
         if resolved_lease.parent != resolved_namespace:
             raise ValueError(
                 "resolved runtime tmp lease is not under $TMPDIR/learn-ukrainian",
@@ -2416,6 +2430,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     worker_env["TMPDIR"] = str(runtime_tmp_root)
     worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+    worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
         worker_env["AGENT_ALLOW_MERGE"] = "1"
