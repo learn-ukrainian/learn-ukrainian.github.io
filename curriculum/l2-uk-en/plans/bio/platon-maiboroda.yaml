@@ -5,13 +5,13 @@ activity_hints:
     items: 5
     placement: inline
     type: quiz
-  - after_section: 'Школа слухання: Ревуцькі, експедиції, війна'
+  - after_section: 'Школа формування: Ревуцькі, експедиції, війна'
     focus: Перевірка точної освітньої та воєнної хронології
     items: 5
     placement: inline
     type: true-false
-  - after_section: 'Лабораторія одного запису: Олександр Таранець (метадані: 1957)'
-    focus: Спостереження за фразуванням, дикцією, наголосом, супроводом і каденцією
+  - after_section: 'Лабораторія одного опису: як музикознавиця пояснює мелодію'
+    focus: Розбір атрибутованої музикознавчої тези, її термінів, обсягу й межі перевірки
     placement: inline
     type: critical-analysis
   - focus: Зіставлення двох повідомлень про арешт Іларіона Майбороди
@@ -42,9 +42,9 @@ content_outline:
     words: 300
     points:
       - >-
-          Вхід через конкретне слухацьке завдання: розрізнити поетичне
-          авторство Андрія Малишка, музику Платона Майбороди та виконавське
-          рішення Олександра Таранця.
+          Вхід через конкретне джерельне завдання: розрізнити поетичне
+          авторство Андрія Малишка, музику Платона Майбороди та атрибутовану
+          музикознавчу тезу Валентини Кузик.
       - >-
           [!biography] Платон Іларіонович Майборода (1918–1989) —
           український композитор і музично-громадський діяч, чию пісенну
@@ -67,7 +67,7 @@ content_outline:
           Сімейне сталінське насильство не перетворювати на недокументовану
           персональну справу композитора і не називати мотивів, яких не
           встановлюють джерела.
-  - section: 'Школа слухання: Ревуцькі, експедиції, війна'
+  - section: 'Школа формування: Ревуцькі, експедиції, війна'
     words: 650
     points:
       - >-
@@ -102,23 +102,23 @@ content_outline:
           козацькі могили», «Моя стежина», «Пісня про рушник».
       - >-
           Навчальна дія: зіставити функцію назви/образу, вокальну фразу й
-          доказ із джерела, не приписуючи партитурі не почутого й не
-          прочитаного.
-  - section: 'Лабораторія одного запису: Олександр Таранець (метадані: 1957)'
-    words: 550
+          доказ із джерела, не приписуючи партитурі не встановленого
+          прямим аналізом.
+  - section: 'Лабораторія одного опису: як музикознавиця пояснює мелодію'
+    words: 700
     points:
       - >-
-          Суспільне Медіатека ідентифікує перший трек добірки як
-          «Пісню про рушник» у виконанні Олександра Таранця й позначає
-          запис 1957 роком; Довженко-Центр датує фільм «Літа молодії»
-          1959 роком, тому 1957 подаємо лише як каталожні метадані запису.
+          Офіційна Бібліотека Шевченківського комітету відтворює фрагмент
+          передмови Валентини Кузик до видання «Я прийду до тебе з піснею…
+          Вибрані вокальні твори» («Музична Україна», 2008).
       - >-
-          Робочий інтервал 00:33–04:07; окремі вікна 00:33–01:05,
-          01:05–02:00 і 03:10–04:07 для фіксації вступу голосу, меж фраз,
-          дикції, словесного наголосу, складу супроводу, динаміки й каденції.
+          Розібрати тези про повторювані ланки-речення, кантиленне начало,
+          варіантний розвиток поспівки й названі приклади, відокремлюючи
+          атрибутований опис від прямого аналізу партитури.
       - >-
-          Висновок формулювати тільки про цей запис; не переносити манеру
-          виконавця на незмінний «намір композитора».
+          Зіставити нижні межі «понад 100» і «понад 200» пісень без
+          усереднення; за відсутності спільної методики лишити кількісну
+          розбіжність відкритою.
   - section: 'Поза піснею: сцена, кіно, великі форми'
     words: 350
     points:
@@ -145,8 +145,8 @@ content_outline:
 focus: >-
   Платон Майборода як композитор української пісні: школа Левка й Дмитра
   Ревуцьких, фольклорні експедиції, точна воєнна хронологія, понад 22
-  спільні твори з Андрієм Малишком, слуховий аналіз запису Олександра
-  Таранця та перевірений жанровий та інституційний контекст.
+  спільні твори з Андрієм Малишком, аналіз передмови Валентини Кузик та
+  перевірений жанровий і інституційний контекст.
 level: BIO
 module: bio-372
 objectives:
@@ -157,17 +157,17 @@ objectives:
       Пояснювати різні ролі поета, композитора й виконавця на матеріалі
       співпраці Майбороди з Андрієм Малишком
   - >-
-      Аналізувати один ідентифікований запис за мелодичним контуром,
-      фразуванням, дикцією, словесним наголосом, супроводом і каденцією
+      Аналізувати один ідентифікований музикознавчий текст за термінами,
+      обсягом твердження, прикладами й межею прямої перевірки
   - >-
       Формулювати розгорнутий аргумент просунутого рівня про пісенний
-      і жанровий доробок, чітко
-      відділяючи джерельний факт, слухове спостереження та інтерпретацію
+      і жанровий доробок, чітко відділяючи джерельний факт, атрибутовану
+      музикознавчу тезу та інтерпретацію
 pedagogy: CBI
 persona:
   role: >-
     Модератор музично-джерельного семінару, який веде від атрибутованого
-    факту до перевірюваного слухового спостереження
+    факту до перевірюваної музикознавчої тези
   voice: Evidence-Led-Music-Seminar-Moderator
 phase: BIO.4
 references:
@@ -184,7 +184,7 @@ references:
   - title: Георгій і Платон Майбороди
     work: ЦДАМЛМ України
     type: archive
-    path: https://web.archive.org/web/20241110173053/https://csamm.archives.gov.ua/2023/12/01/%D0%B3%D0%B5%D0%BE%D1%80%D0%B3%D1%96%D0%B9-%D1%96-%D0%BF%D0%BB%D0%B0%D1%82%D0%BE%D0%BD-%D0%BC%D0%B0%D0%B9%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D0%B8/
+    path: https://web.archive.org/web/20241110173053/https://csamm.archives.gov.ua/2023/12/01/%D0%B3%D0%B5%D0%BE%D1%80%D0%B3%D1%96%D0%B9-%D1%96-%D0%BF%D0%BB%D0%B0%D1%82%D0%BE%D0%BD-%D0%BC%D0%B0%D0%B9%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D0%B8/  # yamllint disable-line rule:line-length
     note: Архівні фонди, творчий діапазон, премія та інституційні ролі.
   - title: Народився Платон Майборода, український композитор, педагог, фольклорист
     work: Національна бібліотека України імені В. І. Вернадського
@@ -194,23 +194,23 @@ references:
   - title: Ця мовчазна богиня Кліо
     work: Запорізька обласна універсальна наукова бібліотека
     type: source-comparison
-    path: https://zounb.zp.ua/resourse/zaporizkyy-kray/iz-dorobku-zaporizhciv/vitalij-shevchenko/cya-movchazna-boginya-klio
+    path: https://zounb.zp.ua/resourse/zaporizkyy-kray/iz-dorobku-zaporizhciv/vitalij-shevchenko/cya-movchazna-boginya-klio  # yamllint disable-line rule:line-length
     note: Повідомлення про 9 березня 1938 року та архівну справу Іларіона Майбороди.
   - title: Платон Майборода. Дослідницьке досьє
     work: Learn Ukrainian research dossier
     type: dossier
     path: docs/research/bio/platon-maiboroda.md
     note: Прийнята рамка доказів, джерел, авторства й прав.
-  - title: 'Олександр Таранець — «Пісня про рушник» (метадані: 1957)'
-    work: Суспільне Медіатека, UnZip, епізод № 16
-    type: recording
-    path: https://mediateka.suspilne.media/media/4753
-    note: Перший трек добірки; робочий інтервал 00:33–04:07.
+  - title: «Я прийду до тебе з піснею… Вибрані вокальні твори»
+    work: Бібліотека Шевченківського комітету
+    type: musicological-excerpt
+    path: https://knpu.gov.ua/biblioteka-shevchenkivskogo-komitetu/platon-majboroda-ia-pryjdu-do-tebe-z-pisneiu-vybrani-vokalni-tvory/  # yamllint disable-line rule:line-length
+    note: Атрибутований фрагмент передмови Валентини Кузик про мелодичну будову пісень.
   - title: «Літа молодії» (1959) і перше загальносоюзне звучання пісні
     work: Довженко-Центр
     type: source-comparison
     path: https://dovzhenkocentre.org/event/shahtarski-kinopokazy/
-    note: Фільмова хронологія для зіставлення з каталожною датою Медіатеки.
+    note: Фільмова хронологія й повідомлення про перше загальнонаціональне звучання пісні.
 readings:
   - title: Майборода Платон Іларіонович
     language: uk
@@ -252,7 +252,7 @@ readings:
     source_type: archive
     role: supplementary-reading
     source: ЦДАМЛМ України
-    source_url: https://web.archive.org/web/20241110173053/https://csamm.archives.gov.ua/2023/12/01/%D0%B3%D0%B5%D0%BE%D1%80%D0%B3%D1%96%D0%B9-%D1%96-%D0%BF%D0%BB%D0%B0%D1%82%D0%BE%D0%BD-%D0%BC%D0%B0%D0%B9%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D0%B8/
+    source_url: https://web.archive.org/web/20241110173053/https://csamm.archives.gov.ua/2023/12/01/%D0%B3%D0%B5%D0%BE%D1%80%D0%B3%D1%96%D0%B9-%D1%96-%D0%BF%D0%BB%D0%B0%D1%82%D0%BE%D0%BD-%D0%BC%D0%B0%D0%B9%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D0%B8/  # yamllint disable-line rule:line-length
     license: copyrighted
     rights_note: Link-only; зображення й документи не перевикористовуються.
     hosting: link-only
@@ -263,31 +263,31 @@ readings:
     caveats: >-
       Ювілейний тон сторінки не замінює аналізу; використовуйте точні
       відомості про документи й ролі.
-  - title: 'Олександр Таранець — «Пісня про рушник» (метадані: 1957)'
+  - title: «Я прийду до тебе з піснею… Вибрані вокальні твори»
     language: uk
-    genre: архівний аудіозапис
-    source_type: primary-performance
-    role: listening
-    source: Суспільне Медіатека
-    source_url: https://mediateka.suspilne.media/media/4753
+    genre: музикознавча передмова
+    source_type: secondary-source
+    role: core-reading
+    source: Бібліотека Шевченківського комітету
+    source_url: https://knpu.gov.ua/biblioteka-shevchenkivskogo-komitetu/platon-majboroda-ia-pryjdu-do-tebe-z-pisneiu-vybrani-vokalni-tvory/  # yamllint disable-line rule:line-length
     license: copyrighted
-    rights_note: Link-only; аудіо не завантажується й не вбудовується в курс.
-    hosting: external-stream
+    rights_note: Link-only; у курсі подано лише короткий атрибутований витяг і переказ.
+    hosting: link-only
     cefr_min: C1
     learner_task: >-
-      Прослухайте 00:33–04:07 і занотуйте спостереження про фразування,
-      дикцію, словесний наголос, супровід, динаміку та завершальну каденцію.
+      Випишіть терміни Кузик, передайте своїми словами модель повторюваних
+      фраз і назвіть матеріал, потрібний для її прямої перевірки на
+      конкретному творі.
     caveats: >-
-      Це одна виконавська версія. Рік 1957 є каталожною датою Медіатеки,
-      а не доведеною датою створення пісні. Не приписуйте виконавське
-      рішення безпосередньо намірові композитора.
+      Передмова є фаховим вторинним текстом, а не партитурою. Формула про
+      більшість ліричних пісень не поширюється автоматично на кожен твір.
   - title: Ця мовчазна богиня Кліо
     language: uk
     genre: краєзнавчо-архівна стаття
     source_type: source-comparison
     role: supplementary-reading
     source: Запорізька обласна універсальна наукова бібліотека
-    source_url: https://zounb.zp.ua/resourse/zaporizkyy-kray/iz-dorobku-zaporizhciv/vitalij-shevchenko/cya-movchazna-boginya-klio
+    source_url: https://zounb.zp.ua/resourse/zaporizkyy-kray/iz-dorobku-zaporizhciv/vitalij-shevchenko/cya-movchazna-boginya-klio  # yamllint disable-line rule:line-length
     license: copyrighted
     rights_note: Link-only; коротко переказувати лише потрібні відомості.
     hosting: link-only
@@ -303,13 +303,13 @@ size_policy:
   floor_words: 3200
   recommended_range: [3200, 3900]
   ceiling_words: 4400
-  basis: human_reviewed_rewrite_plus_accepted_dossier_and_verified_listening
-  saturation_evidence: accepted_dossier_tier1_tier2_crosscheck_and_executable_recording_packet
+  basis: human_reviewed_rewrite_plus_accepted_dossier_and_verified_institutional_text
+  saturation_evidence: accepted_dossier_tier1_tier2_crosscheck_and_executable_text_evidence_packet
   exceptional_justification: required_above_ceiling
 slug: platon-maiboroda
-subtitle: Від фольклорної експедиції до звукозапису
+subtitle: Від фольклорної експедиції до музикознавчого опису
 title: 'Платон Майборода: Як працює пісенна мелодія'
-version: '5.0'
+version: '6.0'
 vocabulary_hints:
   - word: композиторське авторство
     pos: с.

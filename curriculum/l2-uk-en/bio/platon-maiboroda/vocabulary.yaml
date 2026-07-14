@@ -10,7 +10,7 @@
 - lemma: фразування
   translation: phrasing
   pos: noun
-  usage: Фразування треба описувати з часовими позначками й місцями подиху.
+  usage: Фразування треба описувати за партитурою або атрибутованим музикознавчим аналізом.
 - lemma: словесний наголос
   translation: word stress
   pos: noun phrase
@@ -54,7 +54,7 @@
 - lemma: виконавська версія
   translation: performance version
   pos: noun phrase
-  usage: Запис Олександра Таранця є однією виконавською версією твору.
+  usage: Виконавська версія належить конкретному співакові, але не змінює авторства твору.
 - lemma: межа доказу
   translation: limit of evidence
   pos: noun phrase
