@@ -164,3 +164,30 @@ def test_learner_provenance_walker_checks_literary_attestation_and_enrichment_bl
     mirror_violations = learner_facing_mirror_violations(entry)
     assert any("enrichment.meaning.source" in item for item in mirror_violations)
     assert any("enrichment.literary_attestation.source_url" in item for item in mirror_violations)
+
+
+def test_bare_mirror_prefix_label_stays_visible_to_gates() -> None:
+    # Fail closed (#5166 review finding 3): "slovnyk.me: " with no dictionary label
+    # must NOT normalize to an empty learner-facing label — the mirror string stays
+    # put so learner_facing_mirror_violations fires instead of shipping a blank.
+    assert normalize_academic_label("slovnyk.me: ") == "slovnyk.me:"
+    entry = {"lemma": "тест", "sections": {"synonyms": {"source": "slovnyk.me: "}}}
+    apply_entry_attribution(entry)
+    assert learner_facing_mirror_violations(entry)
+
+
+def test_relation_with_blank_source_has_no_leading_colon() -> None:
+    # #5166 review finding 4: a relation missing its source must not render ": …".
+    label = _relation_source_label({"pattern": "corpus relation pair"}, "тест")
+    assert label == "corpus relation pair → тест"
+
+
+def test_learner_provenance_walker_checks_section_singular_source_url() -> None:
+    # #5166 review finding 2: sections.*.source_url (singular) is learner-surfaced
+    # and must be walked like the plural source_urls list.
+    entry = {
+        "lemma": "тест",
+        "sections": {"synonyms": {"source_url": "https://slovnyk.me/dict/synonyms/тест"}},
+    }
+    violations = learner_facing_mirror_violations(entry)
+    assert any("sections.synonyms.source_url" in item for item in violations)

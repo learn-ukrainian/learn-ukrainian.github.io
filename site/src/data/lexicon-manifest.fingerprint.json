@@ -1,5 +1,5 @@
 {
-  "fingerprint": "1fe596d869020a025c8f1e79f0b4a3f38f629096b7456a4d2311e775403abe40",
+  "fingerprint": "3132e6d1704e496e6eedfac16bf778b12891c1c2f601dc6eb73cd9df59f8bbcd",
   "inputs": {
     "lexicon_code": [
       {
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "100be444e6e44dc925aea57a126b6ef97eda2f4857ccbb72a7c30001256d5756"
+        "sha256": "b0517f744dc44a876004d6481aa9b3f872acb16d550e4a295c1a24bcc28f252f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -128,7 +128,7 @@
       },
       {
         "path": "scripts/lexicon/migrate_source_labels.py",
-        "sha256": "4b44de44cb0e39e152a00f1be5e125ed3445e08833c52276dbe24243cebfb42c"
+        "sha256": "08a943e9fa5e39923a30d330af2eb5511e77de4d6116824d863302f8ddf1a056"
       },
       {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",
@@ -176,7 +176,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "4fdf8b702025e3997f706f82ffee17496a3ea3fe193067dd53fb81b1224d373b"
+        "sha256": "24996ae3d64f549249658bf65c30bfc86828c25b8abaa6e8f1a266690ca168e5"
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",

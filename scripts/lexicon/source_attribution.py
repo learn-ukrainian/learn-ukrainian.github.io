@@ -201,7 +201,9 @@ def contains_unmapped_source_label(value: object) -> bool:
 def normalize_academic_label(label: str) -> str:
     cleaned = SLOVNYK_SOURCE_PREFIX_RE.sub("", label.strip())
     if not cleaned:
-        return cleaned
+        # Fail closed: a bare mirror prefix ("slovnyk.me: ") must stay visible to
+        # the mirror gates, never silently become an empty learner-facing label.
+        return label.strip()
     if cleaned.casefold().startswith("slovnyk.me correction"):
         return CORRECTION_DICTIONARIES_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
@@ -478,6 +480,7 @@ def _iter_learner_provenance_fields(entry: dict[str, Any]):
             if not isinstance(section, dict):
                 continue
             yield f"sections.{name}.source", section.get("source")
+            yield f"sections.{name}.source_url", section.get("source_url")
             for index, url in enumerate(section.get("source_urls") or []):
                 yield f"sections.{name}.source_urls[{index}]", url
             for index, item in enumerate(section.get("items") or []):

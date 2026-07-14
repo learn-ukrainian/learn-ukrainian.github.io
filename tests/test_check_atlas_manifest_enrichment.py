@@ -83,9 +83,9 @@ def test_gate_runs_in_minimal_env_without_third_party_deps(tmp_path: Path) -> No
     end-to-end on a healthy fixture manifest.
     """
     import subprocess
-    import sys
 
     root = Path(__file__).resolve().parents[1]
+    venv_python = root / ".venv" / "bin" / "python"
     manifest = _write(tmp_path / "m.json", enrichment_generated=True, n_total=4, n_enriched=4)
     code = (
         "import builtins, sys\n"
@@ -102,7 +102,7 @@ def test_gate_runs_in_minimal_env_without_third_party_deps(tmp_path: Path) -> No
         "raise SystemExit(rc)\n"
     )
     proc = subprocess.run(
-        [sys.executable, "-c", code], capture_output=True, text=True, cwd=root, timeout=120
+        [str(venv_python), "-c", code], capture_output=True, text=True, cwd=root, timeout=120
     )
     assert proc.returncode == 0, (
         f"gate failed in minimal env (rc={proc.returncode})\n"

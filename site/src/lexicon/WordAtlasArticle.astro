@@ -535,7 +535,9 @@ function isMirrorUrl(url: string) {
     const host = new URL(url).hostname.replace(/^www\./, "");
     return MIRROR_HOSTS.has(host);
   } catch {
-    return false;
+    // Fail closed on unparseable URLs: a schemeless mirror reference
+    // ("slovnyk.me/dict/...") must still be filtered from learner-facing links.
+    return [...MIRROR_HOSTS].some((host) => url.includes(host));
   }
 }
 

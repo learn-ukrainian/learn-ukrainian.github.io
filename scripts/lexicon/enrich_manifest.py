@@ -3813,7 +3813,8 @@ def _corpus_relation_pairs_by_headword(
 def _relation_source_label(relation: dict[str, Any], item: str) -> str:
     """Record pair-level provenance in the existing rendered ``source`` field."""
     source = normalize_academic_label(str(relation.get("source") or ""))
-    label = f"{source}: {relation['pattern']} → {item}"
+    # A relation with no/blank source must not render a leading-colon label.
+    label = f"{source}: {relation['pattern']} → {item}" if source else f"{relation['pattern']} → {item}"
     if relation.get("direction"):
         label += " (reciprocal)"
     gate = relation.get("gate")
