@@ -103,6 +103,7 @@ CONSERVATIVE_REASONS = frozenset(
         "rollout_tool_activity",
         "model_pin",
         "envelope_alignment",
+        "trace_missing",
     }
 )
 
@@ -738,6 +739,12 @@ def _read_strict_json_object(path: Path) -> dict[str, Any]:
 
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        # An absent trace file is a distinct evidence failure, not a transport
+        # exit: the transport already returned rc=0 by the time traces are
+        # read. Folding it into transport_exit cost three live diagnosis
+        # loops on 2026-07-14/15 (PR #5200).
+        raise BridgeInvocationError("trace_missing") from exc
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise BridgeInvocationError("transport_exit") from exc
     if not isinstance(value, Mapping):
@@ -750,6 +757,8 @@ def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
 
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
+    except FileNotFoundError as exc:
+        raise BridgeInvocationError("trace_missing") from exc
     except (OSError, UnicodeDecodeError) as exc:
         raise BridgeInvocationError("transport_exit") from exc
     events: list[dict[str, Any]] = []
@@ -769,9 +778,18 @@ def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _grok_session_dir(scoped_home: Path, scratch_dir: Path, session_id: str) -> Path:
-    """Return the documented Grok session directory for this fresh invocation."""
+    """Return the documented Grok session directory for this fresh invocation.
 
-    return scoped_home / "sessions" / quote(str(scratch_dir), safe="") / session_id
+    The native CLI keys the session store by its REAL working directory —
+    symlinks resolved. On macOS every tempfile root is behind a symlink
+    (``/tmp`` and ``/var`` both point into ``/private``), so deriving the key
+    from the unresolved path can never match what the CLI writes. Proven
+    empirically on CLI 0.2.101 (PR #5200 debug, 2026-07-15): the CLI wrote
+    ``sessions/%2Fprivate%2Ftmp%2F...`` while the unresolved derivation
+    looked for ``sessions/%2Ftmp%2F...``.
+    """
+
+    return scoped_home / "sessions" / quote(str(Path(scratch_dir).resolve()), safe="") / session_id
 
 
 def _value_has_grok_tool_activity(value: Any) -> bool:

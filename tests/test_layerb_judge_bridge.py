@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import urllib.parse
 from pathlib import Path
 from typing import Any
 
@@ -409,6 +410,51 @@ def test_grok_transport_anomalies_fail_closed_to_abstain(
     assert _relation(response)["relation"] == "ABSTAIN", label
     assert _validate_single(response, "Kyiv is the capital of Ukraine.")["relation"] == "ABSTAIN"
     assert response["_bridge_conservative_reason"] == reason
+
+
+def test_grok_session_dir_resolves_symlinked_scratch(tmp_path: Path) -> None:
+    """The CLI keys sessions by the REAL cwd; the derivation must match it.
+
+    On macOS every tempfile scratch dir sits behind a symlink (/tmp and /var
+    point into /private), so an unresolved derivation can never find the
+    trace the CLI actually wrote (PR #5200 live debug, 2026-07-15).
+    """
+
+    scoped_home = tmp_path / "grok-home"
+    real_scratch = tmp_path / "real-scratch"
+    real_scratch.mkdir()
+    linked_scratch = tmp_path / "linked-scratch"
+    linked_scratch.symlink_to(real_scratch)
+
+    via_link = layerb_judge_bridge._grok_session_dir(scoped_home, linked_scratch, "session-1")
+    via_real = layerb_judge_bridge._grok_session_dir(scoped_home, real_scratch, "session-1")
+
+    assert via_link == via_real
+    assert via_link.parent.name == urllib.parse.quote(str(real_scratch.resolve()), safe="")
+
+
+def test_grok_missing_trace_fails_closed_as_trace_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A clean transport with an absent session trace is trace_missing, not transport_exit."""
+
+    def fake_run(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        session_id = argv[argv.index("--session-id") + 1]
+        stdout = json.dumps(
+            {
+                "text": json.dumps(_result(), ensure_ascii=False),
+                "stopReason": "EndTurn",
+                "sessionId": session_id,
+                "requestId": "request-stub",
+            },
+            ensure_ascii=False,
+        )
+        return subprocess.CompletedProcess(argv, 0, stdout=stdout, stderr="")
+
+    monkeypatch.setattr(layerb_judge_bridge.subprocess, "run", fake_run)
+
+    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
+
+    assert _relation(response)["relation"] == "ABSTAIN"
+    assert response["_bridge_conservative_reason"] == "trace_missing"
 
 
 def test_collector_module_envelope_multiple_candidates_uses_each_decoded_window(
