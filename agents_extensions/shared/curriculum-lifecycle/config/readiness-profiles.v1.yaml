@@ -1,0 +1,91 @@
+---
+config_version: curriculum-readiness.v1
+selectors:
+  tracks:
+    bio: bio
+  manifest_types:
+    core: core
+    track: seminar
+profiles:
+  core:
+    version: 1.0.0
+    family: core
+    prompt_profile: core
+    requirements:
+      - id: plan
+        owner: plan
+        options:
+          - artifact: plan
+            validators: [exists, plan-check]
+  seminar:
+    version: 1.0.0
+    family: seminar
+    prompt_profile: seminar
+    requirements:
+      - id: plan
+        owner: plan
+        options:
+          - artifact: plan
+            validators: [exists, plan-check, seminar-plan-language]
+  bio:
+    version: 1.0.0
+    family: seminar
+    prompt_profile: seminar
+    requirements:
+      - id: dossier
+        owner: preparation
+        options:
+          - artifact: dossier
+            validators: [exists, bio-dossier-xref]
+      - id: dossier-grounding
+        owner: preparation
+        options:
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: dossier_grounding
+      - id: plan
+        owner: plan
+        options:
+          - artifact: plan
+            validators: [exists, plan-check, seminar-plan-language]
+      - id: reading-or-rights
+        owner: preparation
+        options:
+          - artifact: plan
+            validators: [exists, readings-present]
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: reading_rights
+      - id: wiki-document
+        owner: preparation
+        options:
+          - artifact: wiki-document
+            validators: [exists, wiki-completeness, bio-wiki-subject, seminar-wiki-language]
+      - id: wiki-sources
+        owner: preparation
+        options:
+          - artifact: wiki-sources
+            validators: [exists, yaml-mapping]
+      - id: wiki-grounding
+        owner: preparation
+        options:
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: wiki_grounding
+      - id: wiki-quote-verification
+        owner: preparation
+        options:
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: wiki_quote_verification
+      - id: image-rights
+        owner: preparation
+        options:
+          - artifact: manual-registry
+            validators: [exists, manual-gate]
+            manual_gate: image_rights
+      - id: discovery
+        owner: preparation
+        options:
+          - artifact: discovery
+            validators: [exists, bio-discovery-integrity]
