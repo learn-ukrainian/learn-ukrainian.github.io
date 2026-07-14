@@ -404,7 +404,11 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     assert "ancestry undeterminable" in err
 
 
-def test_resume_after_descent_state_roundtrips(tmp_path: Path):
+def test_resume_after_descent_state_roundtrips(tmp_path: Path, monkeypatch):
+    # default_state_path is CWD-relative; without chdir this test would plant a
+    # phantom orchestrator lease in the invoking checkout's real .agent/ tree,
+    # which detect scans.
+    monkeypatch.chdir(tmp_path)
     state = prepared()
     replacement = state["replacement"]
     replacement["source_checkout"]["head_advanced_to"] = "some-advanced-sha"
