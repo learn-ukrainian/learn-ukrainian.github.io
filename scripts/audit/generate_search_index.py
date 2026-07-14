@@ -349,6 +349,143 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
         )
 
 
+def _primary_source_for_slug(conn: sqlite3.Connection, slug: str) -> str | None:
+    families = [
+        row[0]
+        for row in conn.execute(
+            "SELECT source_family FROM article_provenance WHERE slug = ? ORDER BY rowid",
+            (slug,),
+        )
+        if row[0]
+    ]
+    if _SURZHYK_SOURCE in families:
+        return _SURZHYK_SOURCE
+    return families[0] if families else None
+
+
+def _heritage_status_for_slug(
+    conn: sqlite3.Connection,
+    slug: str,
+    *,
+    heritage_classification: str | None,
+) -> Mapping[str, Any]:
+    row = conn.execute(
+        "SELECT payload_json FROM enrichment WHERE slug = ? AND section = 'heritage_status'",
+        (slug,),
+    ).fetchone()
+    if row is not None:
+        payload = json.loads(row[0])
+        if isinstance(payload, dict):
+            if heritage_classification and not payload.get("classification"):
+                return {**payload, "classification": heritage_classification}
+            return payload
+    if heritage_classification:
+        return {"classification": heritage_classification}
+    return {}
+
+
+def browse_rows_from_db_articles(
+    articles: list[dict[str, Any]],
+    db_path: Path,
+) -> list[dict[str, Any]]:
+    """Attach browse ``cls`` codes to DB article rows using stored heritage/provenance."""
+
+    conn = sqlite3.connect(db_path)
+    try:
+        heritage_by_slug = {
+            slug: heritage_classification
+            for slug, heritage_classification in conn.execute(
+                "SELECT slug, heritage_classification FROM articles"
+            )
+        }
+        browse_rows: list[dict[str, Any]] = []
+        for row in articles:
+            slug = str(row["s"])
+            pseudo_entry = {
+                "primary_source": _primary_source_for_slug(conn, slug),
+                "heritage_status": _heritage_status_for_slug(
+                    conn,
+                    slug,
+                    heritage_classification=_clean_text(heritage_by_slug.get(slug)),
+                ),
+            }
+            browse_row = dict(row)
+            cls = classification_code(pseudo_entry)
+            if cls:
+                browse_row["cls"] = cls
+            browse_rows.append(browse_row)
+        return browse_rows
+    finally:
+        conn.close()
+
+
+def guard_browse_staleness(
+    browse_meta_out: Path,
+    reviewed_article_count: int,
+    *,
+    will_refresh_browse: bool,
+) -> None:
+    """Fail loudly when search would advance but browse artifacts would stay pinned."""
+
+    if will_refresh_browse or not browse_meta_out.is_file():
+        return
+    try:
+        existing = json.loads(browse_meta_out.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return
+    existing_total = existing.get("total")
+    if isinstance(existing_total, int) and existing_total < reviewed_article_count:
+        raise SystemExit(
+            "browse-meta stale: "
+            f"{existing_total} browse records pinned while DB has "
+            f"{reviewed_article_count} reviewed articles; refusing to refresh search "
+            "index without also refreshing browse artifacts"
+        )
+
+
+def verify_browse_artifacts_written(
+    meta_out: Path,
+    browse_dir: Path,
+    expected_total: int,
+) -> None:
+    """Fail loudly when browse outputs were not written or do not match the build."""
+
+    if not meta_out.is_file():
+        raise SystemExit(f"browse-meta not written: {meta_out}")
+    meta = json.loads(meta_out.read_text(encoding="utf-8"))
+    actual_total = meta.get("total")
+    if actual_total != expected_total:
+        raise SystemExit(
+            "browse-meta total mismatch after write: "
+            f"expected {expected_total}, got {actual_total!r}"
+        )
+    letter_counts = meta.get("letterCounts")
+    if not isinstance(letter_counts, dict):
+        raise SystemExit("browse-meta missing letterCounts after write")
+    shard_total = sum(int(letter_counts.get(letter, 0)) for letter in UKRAINIAN_ALPHABET)
+    if shard_total != expected_total:
+        raise SystemExit(
+            "browse-meta letterCounts sum mismatch after write: "
+            f"expected {expected_total}, got {shard_total}"
+        )
+    for letter in UKRAINIAN_ALPHABET:
+        count = int(letter_counts.get(letter, 0))
+        shard_path = browse_dir / f"{letter}.json"
+        if count == 0:
+            if shard_path.exists():
+                raise SystemExit(
+                    f"browse shard {shard_path} must not exist when letterCounts[{letter!r}] is 0"
+                )
+            continue
+        if not shard_path.is_file():
+            raise SystemExit(f"browse shard missing for letter {letter!r}: {shard_path}")
+        shard_rows = json.loads(shard_path.read_text(encoding="utf-8"))
+        if len(shard_rows) != count:
+            raise SystemExit(
+                f"browse shard {letter!r} count mismatch: meta={count}, file={len(shard_rows)}"
+            )
+
+
 def build_atlas_db_search_artifacts(
     db_path: Path,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, int]]:
@@ -606,6 +743,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.db is not None:
         rows, aliases, counts = build_atlas_db_search_artifacts(args.db)
+        reviewed_count = counts["reviewed_entries"]
+        guard_browse_staleness(
+            args.browse_meta_out,
+            reviewed_count,
+            will_refresh_browse=True,
+        )
+        browse_rows = browse_rows_from_db_articles(rows, args.db)
+        meta, browse_shards, flagged_rows = build_browse_outputs(browse_rows)
         search_shards, search_shard_rows = build_search_shards(rows)
         write_index(rows, args.out)
         write_aliases(aliases, args.aliases_out)
@@ -615,12 +760,22 @@ def main(argv: list[str] | None = None) -> int:
             args.search_shards_out,
             args.search_shard_dir,
         )
+        write_browse_outputs(
+            meta,
+            browse_shards,
+            flagged_rows,
+            args.browse_meta_out,
+            args.browse_flagged_out,
+            args.browse_dir,
+        )
+        verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
         print(
             "atlas search artifacts: "
             f"reviewed_articles={counts['reviewed_entries']} "
             f"public_alias_records={counts['public_alias_records']} "
             f"emitted_aliases={counts['emitted_aliases']} "
-            f"alias_deduplication={counts['deduplicated_aliases']}"
+            f"alias_deduplication={counts['deduplicated_aliases']} "
+            f"browse_records={meta['total']}"
         )
         return 0
 
