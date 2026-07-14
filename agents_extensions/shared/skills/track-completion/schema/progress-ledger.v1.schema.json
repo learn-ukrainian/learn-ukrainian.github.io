@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "track-completion.ledger.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow_version",
+    "target",
+    "run",
+    "state",
+    "current_identity",
+    "author_families",
+    "history",
+    "reviews",
+    "routing",
+    "publication"
+  ],
+  "properties": {
+    "schema_version": {"const": "track-completion.ledger.v1"},
+    "workflow_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "target": {"$ref": "#/$defs/target"},
+    "run": {"$ref": "#/$defs/run"},
+    "state": {
+      "enum": [
+        "PLAN_REVIEW_REQUIRED",
+        "PLAN_REPAIR_REQUIRED",
+        "BUILD_REQUIRED",
+        "PARTIAL_RECOVERY_REQUIRED",
+        "POST_BUILD_REVIEW_REQUIRED",
+        "REPAIR_REQUIRED",
+        "AUDIT_TOOLING_REQUIRED",
+        "REVIEWER_INSTABILITY",
+        "INDEPENDENT_REVIEW_REQUIRED",
+        "PUBLISH_REQUIRED",
+        "COMPLETE"
+      ]
+    },
+    "current_identity": {"$ref": "#/$defs/identity"},
+    "author_families": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "history": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/event"}
+    },
+    "reviews": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/review"}
+    },
+    "routing": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["owners", "findings"],
+          "properties": {
+            "owners": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"enum": ["built_artifact", "plan_workflow", "audit_tooling"]}
+            },
+            "findings": {"type": "array", "items": {"type": "object"}}
+          }
+        }
+      ]
+    },
+    "publication": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pr", "merge_sha", "recorded_at"],
+          "properties": {
+            "pr": {"type": "integer", "minimum": 1},
+            "merge_sha": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+            "recorded_at": {"$ref": "#/$defs/timestamp"}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "timestamp": {"type": "string", "format": "date-time"},
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selector", "track", "slug", "family"],
+      "properties": {
+        "selector": {"type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"},
+        "track": {"type": "string", "minLength": 1},
+        "slug": {"type": "string", "minLength": 1},
+        "family": {"enum": ["core", "seminar"]}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "owner", "status", "started_at", "updated_at", "lease_expires_at"],
+      "properties": {
+        "run_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+        "owner": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "completed"]},
+        "started_at": {"$ref": "#/$defs/timestamp"},
+        "updated_at": {"$ref": "#/$defs/timestamp"},
+        "lease_expires_at": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "module_state", "layout", "target_hashes", "workflow_hashes"],
+      "properties": {
+        "sha256": {"$ref": "#/$defs/sha"},
+        "module_state": {"enum": ["UNBUILT", "PARTIAL", "BUILT"]},
+        "layout": {"enum": ["none", "flat", "directory", "ambiguous"]},
+        "target_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha"}},
+        "workflow_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha"}}
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "event_id", "event", "at", "from_state", "to_state", "identity_sha256", "details"],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "event_id": {"type": "string", "minLength": 1},
+        "event": {"type": "string", "minLength": 1},
+        "at": {"$ref": "#/$defs/timestamp"},
+        "from_state": {"type": ["string", "null"]},
+        "to_state": {"type": "string", "minLength": 1},
+        "identity_sha256": {"$ref": "#/$defs/sha"},
+        "details": {"type": "object"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_path",
+        "result_sha256",
+        "reproducibility_key",
+        "stability_key",
+        "material_fingerprint",
+        "status",
+        "reviewer_family",
+        "reviewer_model",
+        "target_identity_sha256"
+      ],
+      "properties": {
+        "result_path": {"type": "string", "minLength": 1},
+        "result_sha256": {"$ref": "#/$defs/sha"},
+        "reproducibility_key": {"$ref": "#/$defs/sha"},
+        "stability_key": {"$ref": "#/$defs/sha"},
+        "material_fingerprint": {"$ref": "#/$defs/sha"},
+        "status": {"enum": ["PASS", "REVISE", "BLOCK", "INCOMPLETE"]},
+        "reviewer_family": {"type": "string", "minLength": 1},
+        "reviewer_model": {"type": "string", "minLength": 1},
+        "target_identity_sha256": {"$ref": "#/$defs/sha"}
+      }
+    }
+  }
+}

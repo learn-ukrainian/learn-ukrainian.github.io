@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `2.0.0`
+Semantic prompt version: `3.0.0`
 
 Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
@@ -46,6 +46,24 @@ that code cannot decide.
   workflow leakage as a high pedagogy finding even when the plan asks for
   epistemic humility or source evaluation; plan adherence does not excuse it.
 
+## Required quality-dimension coverage
+
+Assess all five dimensions independently: `pedagogical`, `naturalness`,
+`decolonization`, `engagement`, and `tone`. For every dimension, return a
+status plus at least one exact learner-surface excerpt and its target-file
+location. Do not reuse a generic compliment as evidence across dimensions.
+`INCOMPLETE` may omit excerpts only when its finding explains why the evidence
+could not be inspected.
+
+Use stable uppercase-underscore `issue_id` values for semantic findings.
+Known calibration classes include `ENGLISH_LEAKAGE`,
+`AWKWARD_PASSIVE_RESULT_STATE`, `UNNATURAL_ANTHROPOMORPHISM`,
+`UKRAINIAN_GRAMMAR_CALQUE`, `AI_LEAKAGE`, `PATH_LEAKAGE`,
+`INTERNAL_LEAKAGE`, and `SEMINAR_REGISTER_PATHOS`. Preserve those names when
+applicable; create a precise new class instead of forcing an unrelated one.
+Calibration canaries test route and prompt behavior separately; never inject
+canary snippets into a real module review.
+
 ## Severity and verdict
 
 Use only `blocker`, `high`, `medium`, `low`, or `info`.
@@ -69,6 +87,38 @@ response bytes. It must not repair, merge, reconcile, or normalize this output.
 {
   "verdict": "PASS|REVISE|BLOCK|INCOMPLETE",
   "summary": "concise evidence-backed summary",
+  "quality_dimensions": {
+    "pedagogical": {
+      "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "evidence": [
+        {
+          "location": "repo-relative target file and locator",
+          "excerpt": "exact learner-surface excerpt"
+        }
+      ],
+      "finding_ids": []
+    },
+    "naturalness": {
+      "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
+      "finding_ids": []
+    },
+    "decolonization": {
+      "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
+      "finding_ids": []
+    },
+    "engagement": {
+      "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
+      "finding_ids": []
+    },
+    "tone": {
+      "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
+      "finding_ids": []
+    }
+  },
   "claim_coverage": {
     "status": "complete|incomplete|not_applicable",
     "claims_total": 0,
@@ -100,7 +150,8 @@ response bytes. It must not repair, merge, reconcile, or normalize this output.
   "findings": [
     {
       "id": "stable-kebab-id",
-      "category": "pedagogy|language|activity|factuality|grounding|decolonization|rights|size|other",
+      "issue_id": "STABLE_UPPERCASE_ISSUE_CLASS",
+      "category": "pedagogy|language|activity|factuality|grounding|decolonization|engagement|tone|rights|size|other",
       "severity": "blocker|high|medium|low|info",
       "message": "what is wrong and why it matters",
       "evidence": "exact text plus source/tool support",
@@ -115,3 +166,8 @@ excludes only `unverifiable`, and supported counts only `supported`. IDs are
 unique. Every non-supported claim and every learner-evidence entry other than
 `verified_access` references a finding. `PASS` requires complete coverage and
 only supported claims.
+
+Every quality-dimension `finding_id` must reference a semantic finding. A
+dimension marked `REVISE` requires a medium/high finding, `BLOCK` requires a
+blocker, and `PASS` cannot reference a material finding. The overall verdict
+must fail closed when any dimension is not `PASS`.

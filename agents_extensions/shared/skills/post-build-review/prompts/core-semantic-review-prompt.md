@@ -1,6 +1,6 @@
 # Core semantic post-build review prompt
 
-Semantic prompt version: `2.0.0`
+Semantic prompt version: `3.0.0`
 
 Apply this only to A1-C2 core tracks, after the common prompt.
 

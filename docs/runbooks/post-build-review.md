@@ -26,7 +26,7 @@ and combines both layers inside an invocation-unique directory allocated under
 | Mechanically verifiable track rules | `post-build-review/config/track-policy.v1.yaml` |
 | Semantic judgment | `post-build-review/prompts/*.md` |
 | Orchestration order and run isolation | `post-build-review/SKILL.md` plus `post_build_review.py allocate` |
-| Output shape | `post-build-review/schema/review-result.v2.schema.json` |
+| Output shape | `post-build-review/schema/review-result.v3.schema.json` |
 | Operator maintenance | This runbook |
 
 The evidence-derived size contract consumes the existing size-policy audit. It
@@ -46,6 +46,7 @@ Every result records:
 - reviewer evidence capabilities and learner-evidence access ledger
 - exact raw semantic-response SHA-256, byte count, parser status, and contract status
 - atomic claim ledger with count-consistency enforcement
+- explicit pedagogical, naturalness, decolonization, engagement, and tone coverage
 - deterministic argv/cwd/exit/output hashes/config provenance
 - source-file hashes and a normalized reproducibility key
 
@@ -60,7 +61,7 @@ Bump the version responsible for a behavior change:
 
 Use semantic versioning. A breaking schema change requires a new schema id/file
 and review protocol major version. Schema v1 remains available for historical
-validation; new reviews emit v2. Prompt hashes change automatically from the
+validation; schema v2 also remains historical and new reviews emit v3. Prompt hashes change automatically from the
 exact assembled common + family + resolved context.
 
 ## Bug-fix workflow

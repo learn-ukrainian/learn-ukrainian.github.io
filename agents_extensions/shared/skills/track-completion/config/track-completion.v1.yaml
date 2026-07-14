@@ -1,0 +1,140 @@
+workflow_version: 1.0.0
+ledger_schema_version: track-completion.ledger.v1
+config_schema_version: track-completion.config.v1
+manifest_path: curriculum/l2-uk-en/curriculum.yaml
+runtime_root: batch_state/track-completion
+lease_seconds: 86400
+
+family_for_manifest_type:
+  core: core
+  track: seminar
+  seminar: seminar
+
+families:
+  core:
+    plan_review_skill: plan-review
+    plan_fix_skill: apply-plan-fixes
+    build_command:
+      - .venv/bin/python
+      - scripts/build/v7_build.py
+      - '{track}'
+      - '{slug}'
+      - --no-resume
+    plan_validation_commands:
+      - [.venv/bin/python, scripts/validate/validate_plans.py, '{track}']
+      - [.venv/bin/python, scripts/validate_plan_config.py, '{track}/{slug}']
+      - [.venv/bin/python, scripts/audit/check_plan.py, 'curriculum/l2-uk-en/plans/{track}/{slug}.yaml']
+    shippability_command:
+      - .venv/bin/python
+      - -m
+      - scripts.build.verify_shippable
+      - '{track}'
+      - '{slug}'
+  seminar:
+    plan_review_skill: plan-review-seminar
+    plan_fix_skill: apply-plan-fixes
+    build_command:
+      - .venv/bin/python
+      - scripts/build/v7_build.py
+      - '{track}'
+      - '{slug}'
+      - --no-resume
+    plan_validation_commands:
+      - [.venv/bin/python, scripts/validate/validate_plans.py, '{track}']
+      - [.venv/bin/python, scripts/validate_plan_config.py, '{track}/{slug}']
+      - [.venv/bin/python, scripts/audit/check_plan.py, 'curriculum/l2-uk-en/plans/{track}/{slug}.yaml']
+      - - .venv/bin/python
+        - scripts/validate/lint_seminar_quality.py
+        - --paths
+        - 'curriculum/l2-uk-en/plans/{track}/{slug}.yaml'
+        - --severity
+        - high
+      - [.venv/bin/python, scripts/validate_plan_ordering.py, '{track}']
+    shippability_command:
+      - .venv/bin/python
+      - -m
+      - scripts.build.verify_shippable
+      - '{track}'
+      - '{slug}'
+
+track_overrides:
+  folk:
+    forbidden_reviewer_families: [deepseek]
+    allowed_reviewer_groups: [openai, anthropic]
+
+review_family_groups:
+  agy: google
+  anthropic: anthropic
+  claude: anthropic
+  codex: openai
+  deepseek: deepseek
+  gemini: google
+  google: google
+  gpt: openai
+  grok: xai
+  human: human
+  openai: openai
+  pool: poolside
+  xai: xai
+
+routing:
+  plan_categories:
+    - crosslink_integrity
+    - plan_adherence
+    - plan_scope
+    - prerequisite
+  audit_tooling_categories:
+    - packet_integrity
+    - protocol
+    - reviewer_capability
+    - reviewer_unverified
+    - source_drift
+    - tooling
+  built_artifact_categories:
+    - activity
+    - decolonization
+    - engagement
+    - factuality
+    - grounding
+    - language
+    - pedagogy
+    - rights
+    - size
+    - tone
+  audit_tooling_id_prefixes:
+    - packet-
+    - protocol-
+    - reviewer-
+    - source-drift-
+
+identity_paths:
+  - agents_extensions/shared/skills/track-completion/SKILL.md
+  - agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml
+  - agents_extensions/shared/skills/track-completion/schema/progress-ledger.v1.schema.json
+  - agents_extensions/shared/skills/track-completion/schema/track-completion-config.v1.schema.json
+  - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
+  - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
+  - agents_extensions/shared/skills/post-build-review/contracts/combined-disposition-policy.md
+  - agents_extensions/shared/skills/post-build-review/contracts/deterministic-audit-contract.md
+  - agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md
+  - agents_extensions/shared/skills/post-build-review/prompts/common-semantic-review-prompt.md
+  - agents_extensions/shared/skills/post-build-review/prompts/core-semantic-review-prompt.md
+  - agents_extensions/shared/skills/post-build-review/prompts/seminar-semantic-review-prompt.md
+  - agents_extensions/shared/skills/post-build-review/schema/review-result.v3.schema.json
+  - agents_extensions/shared/skills/post-build-review/SKILL.md
+  - agents_extensions/shared/skills/apply-plan-fixes/SKILL.md
+  - agents_extensions/shared/skills/apply-plan-fixes/apply-plan-fixes-prompt.md
+  - agents_extensions/shared/skills/plan-review/SKILL.md
+  - agents_extensions/shared/skills/plan-review/plan-review-prompt.md
+  - agents_extensions/shared/skills/plan-review-seminar/SKILL.md
+  - agents_extensions/shared/skills/plan-review-seminar/plan-review-seminar-prompt.md
+  - scripts/audit/post_build_review.py
+  - scripts/audit/check_plan.py
+  - scripts/audit/track_deterministic_audit_config.yaml
+  - scripts/build/v7_build.py
+  - scripts/build/linear_pipeline.py
+  - scripts/build/verify_shippable.py
+  - scripts/validate/validate_plans.py
+  - scripts/validate/lint_seminar_quality.py
+  - scripts/validate_plan_config.py
+  - scripts/validate_plan_ordering.py

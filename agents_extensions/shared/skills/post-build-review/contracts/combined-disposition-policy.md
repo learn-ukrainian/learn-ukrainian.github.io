@@ -1,6 +1,6 @@
 # Combined disposition policy
 
-Review protocol version: `2.0.0`
+Review protocol version: `3.0.0`
 
 Apply disposition in this order:
 
@@ -9,13 +9,15 @@ Apply disposition in this order:
    failure; malformed, duplicated, wrapped, or contract-invalid raw reviewer
    response; unavailable required source tooling; incomplete semantic
    coverage; required learner evidence the reviewer could not inspect.
+   Any incomplete required quality dimension also produces `INCOMPLETE`.
 2. `BLOCK`: any blocker from deterministic, track-policy, or semantic evidence;
    any high mechanical finding; semantic `BLOCK`.
 3. `REVISE`: semantic `REVISE`; semantic high/medium finding; other actionable
    non-mechanical medium finding.
 4. `PASS`: deterministic stages completed, all skips were policy-classified,
-   semantic coverage completed or is correctly not applicable, and only
-   low/info findings remain.
+   semantic coverage completed or is correctly not applicable, all five
+   quality dimensions passed with target-backed evidence, and only low/info
+   findings remain.
 
 Semantic `PASS` never overrides deterministic or track-policy findings. A
 declared claim count never substitutes for its atomic ledger. Metadata never

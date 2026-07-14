@@ -69,8 +69,8 @@ artifacts. Report findings; do not fix the module during this invocation.
 - Disposition policy: [contracts/combined-disposition-policy.md](contracts/combined-disposition-policy.md)
 - Size policy: [contracts/evidence-derived-size-policy-contract.md](contracts/evidence-derived-size-policy-contract.md)
 - Track configuration: [config/track-policy.v1.yaml](config/track-policy.v1.yaml)
-- Current output schema: [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json)
-- Historical v1 schema: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json)
+- Current output schema: [schema/review-result.v3.schema.json](schema/review-result.v3.schema.json)
+- Historical schemas: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json), [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json)
 
 The runner assembles the common prompt plus exactly one family prompt. Do not
 manually concatenate or substitute other review prompts.
