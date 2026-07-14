@@ -48,7 +48,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
@@ -166,6 +166,7 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = {
 }
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
+_SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = "Українсько-англійський словник"
@@ -5311,20 +5312,24 @@ def _section_loses_items(existing: object, new: object) -> bool:
     return bool(_section_item_keys(existing) - _section_item_keys(new))
 
 
-def _slovnyk_gate_ran(cache: dict[str, Any] | None) -> bool:
-    """Whether the slovnyk.me gate could consult its data source this run (#5077).
+def _slovnyk_gate_ran(cache: dict[str, Any] | None, slugs: Sequence[str]) -> bool:
+    """Whether the slovnyk.me gate for a section depending on ``slugs`` could
+    consult its data source this run (#5077).
 
-    Online the live source is always consulted. Offline the gate only ran if the
-    per-lemma cache already holds lookups; an empty ``lookups`` map means a
-    schema-reset / never-fetched lemma the offline gate could NOT consult — its
-    sections must be preserved, not recomputed to empty.
+    Online the live source is always fetched, so the gate ran. Offline it ran only
+    if the per-lemma cache already holds at least one of the section's OWN slugs —
+    a lemma whose cache is missing every relevant slug (schema reset, never fetched)
+    is one the offline gate could NOT consult, so its section must be preserved.
+
+    Per-slug is load-bearing (#5077 review finding 1): a generic ``bool(lookups)``
+    treats a partial cache holding only unrelated slugs (e.g. the davydov warning
+    slug) as "the synonym gate ran" and lets it retract a section its source was
+    never consulted for. The gate ran for a section only when the section's own
+    source is present.
     """
     if not _phase1_offline_mode():
         return True
-    if not isinstance(cache, dict):
-        return False
-    lookups = cache.get("lookups")
-    return isinstance(lookups, dict) and bool(lookups)
+    return any(_cache_has_lookup(cache, slug) for slug in slugs)
 
 
 def _resolve_gated_section(
@@ -5341,17 +5346,40 @@ def _resolve_gated_section(
       * gate ran, confirmed item(s) dropped -> ran-and-rejected: the retraction is
         authoritative (e.g. WordNet auto-translation junk ключ->джерело/живець); take
         the new section (may be ``None`` when everything was retracted); mark ``rejected``.
-      * gate did NOT run and would drop confirmed item(s) -> did-not-run: PRESERVE the
-        existing section unchanged; mark ``skipped-offline``.
+      * gate did NOT run -> did-not-run: never retract a confirmed item (PRESERVE the
+        existing section when the recomputation would drop one), and ALWAYS mark
+        ``skipped-offline`` so the audit trail records the non-consultation, not only
+        the losses (#5077 review finding 4).
 
     Returns ``(section_or_None, provenance_or_None)``.
     """
     loses = _section_loses_items(existing_section, new_section)
     if gate_ran:
         return new_section, (GATE_REJECTED if loses else None)
-    if loses:
-        return existing_section, GATE_SKIPPED_OFFLINE
-    return new_section, None
+    resolved = existing_section if loses else (new_section or existing_section)
+    return resolved, (GATE_SKIPPED_OFFLINE if resolved else None)
+
+
+def _ordered_sections(
+    sections: dict[str, object], baseline: dict[str, Any]
+) -> dict[str, object]:
+    """Emit sections in the baseline manifest's key order so a pure-preserve run
+    serializes byte-identical to its baseline (#5077 review finding 3).
+
+    The recompute rebuilds ``sections`` in a fixed apply order (synonyms, antonyms,
+    homonyms, paronyms, idioms). When the entry already had published sections in a
+    different order, that reorder alone produced spurious byte diffs on runs that
+    changed nothing. Keys present in the baseline keep the baseline's order; keys new
+    to this entry follow in canonical apply order.
+    """
+    ordered: dict[str, object] = {}
+    for name in baseline:
+        if name in sections:
+            ordered[name] = sections[name]
+    for name, value in sections.items():
+        if name not in ordered:
+            ordered[name] = value
+    return ordered
 
 
 def enrich_entry(
@@ -5419,7 +5447,13 @@ def enrich_entry(
     # instead of silently overwriting it with an offline-empty recomputation.
     existing_sections = entry.get("sections")
     baseline_sections = existing_sections if isinstance(existing_sections, dict) else {}
-    slovnyk_gate_ran = _slovnyk_gate_ran(slovnyk_cache)
+    # "Did the gate run" is decided per RELEVANT slug set (#5077 review finding 1):
+    # synonyms depend on the slovnyk synonym dictionaries, idioms on the phraseology
+    # dictionary. Homonyms/antonyms/paronyms are db/pointer-driven local sections with
+    # no slovnyk dependency, so their gate always runs (finding 2) — an offline run
+    # must let their authoritative local data update, not freeze a stale section.
+    synonyms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_SYNONYM_SLUGS)
+    idioms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
     sections: dict[str, object] = {}
     gate_provenance: dict[str, str] = {}
 
@@ -5448,7 +5482,7 @@ def enrich_entry(
         )
     )
     synonyms = _merge_synonym_relations(synonyms, pointer_relations)
-    _apply_section("synonyms", synonyms, gate_ran=slovnyk_gate_ran)
+    _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
     if not antonyms and fallback_base:
         antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
@@ -5465,7 +5499,9 @@ def enrich_entry(
         )
     )
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
-    _apply_section("antonyms", antonyms, gate_ran=slovnyk_gate_ran)
+    # Antonyms are Вікісловник + lexicographer-pointer driven (local db); the gate
+    # always runs, so authoritative local retractions apply even offline (finding 2).
+    _apply_section("antonyms", antonyms, gate_ran=True)
     homonym_relations = (
         pointer_homonym_relations
         if pointer_homonym_relations is not None
@@ -5476,7 +5512,9 @@ def enrich_entry(
         )
     )
     homonyms = _merge_homonym_relations(None, homonym_relations)
-    _apply_section("homonyms", homonyms, gate_ran=slovnyk_gate_ran)
+    # Homonyms come from СУМ numbering + approved corpus relation pairs (local db); the
+    # gate always runs, so an offline run updates from local data (finding 2).
+    _apply_section("homonyms", homonyms, gate_ran=True)
     paronym_relations = (
         pointer_paronym_relations
         if pointer_paronym_relations is not None
@@ -5487,11 +5525,17 @@ def enrich_entry(
     # fully offline — retractions here are always authoritative.
     _apply_section("paronyms", paronyms, gate_ran=True)
     idioms = _idioms(conn, lemma, slovnyk_cache)
-    _apply_section("idioms", idioms, gate_ran=slovnyk_gate_ran)
+    _apply_section("idioms", idioms, gate_ran=idioms_gate_ran)
     if sections:
-        entry["sections"] = sections
+        entry["sections"] = _ordered_sections(sections, baseline_sections)
     else:
         entry.pop("sections", None)
+    # gate_provenance is a CURRENT-RUN snapshot: it replaces any prior map wholesale so
+    # each field reflects this run's consultation status (rejected / skipped-offline),
+    # which is exactly the signal the verify_manifest shrink gate reads. It is not a
+    # history log — a section confirmed this run drops its stale prior marker by design
+    # (#5077 review finding 4; replacement chosen over a `previous` key for the smaller
+    # diff and because the shrink gate only ever consults the current status).
     if gate_provenance:
         entry["gate_provenance"] = gate_provenance
     else:

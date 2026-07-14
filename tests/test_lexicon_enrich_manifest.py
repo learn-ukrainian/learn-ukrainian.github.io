@@ -3785,3 +3785,126 @@ def test_offline_with_cached_lookups_counts_as_gate_ran(monkeypatch) -> None:
     )
     assert "synonyms" not in entry.get("sections", {})
     assert entry["gate_provenance"]["synonyms"] == GATE_REJECTED
+
+
+def test_offline_partial_cache_without_synonym_slugs_preserves(monkeypatch) -> None:
+    # #5077 review finding 1: a cache holding only NON-synonym slugs (the davydov /
+    # voloschak warning slugs) must NOT read as "the synonym gate ran". The old
+    # bool(lookups) signal retracted a section whose source was never consulted; the
+    # per-slug signal now preserves it byte-for-byte and marks skipped-offline.
+    existing = {"items": ["джерело", "живець"], "source": "s"}
+    baseline = json.loads(json.dumps(existing, ensure_ascii=False))
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {"davydov": {"text": "x"}, "voloschak": {"text": "y"}}},
+        new_synonyms=None,  # synonym slugs absent -> recompute yields nothing
+        existing_synonyms=existing,
+    )
+    assert entry["sections"]["synonyms"] == baseline
+    assert json.dumps(entry["sections"]["synonyms"], ensure_ascii=False) == json.dumps(
+        baseline, ensure_ascii=False
+    )
+    assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE
+
+
+def _run_enrich_entry(monkeypatch, entry, *, offline, cache):
+    """Drive enrich_entry with every producer neutralized except the ones a caller
+    overrides afterward — the #5077 gate harness for direct-entry assertions."""
+    _stub_section_producers(monkeypatch)
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: offline)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", lambda *a, **k: None)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_synonym_relations", lambda syn, rel: syn)
+    return entry
+
+
+def _drive_enrich_entry(entry) -> None:
+    enrich_manifest_module.enrich_entry(
+        entry,
+        sqlite3.connect(":memory:"),
+        {},
+        has_sum11_flags=False,
+        pointer_synonym_relations=[],
+        pointer_antonym_relations=[],
+        pointer_homonym_relations=[],
+        pointer_paronym_relations=[],
+    )
+
+
+def test_preexisting_provenance_replaced_by_current_run(monkeypatch) -> None:
+    # #5077 review finding 4: gate_provenance is a current-run snapshot. A prior
+    # 'rejected' from an online run is replaced by this offline run's 'skipped-offline'
+    # (not merged, not kept as history) — the shrink gate reads only the current status.
+    entry = _run_enrich_entry(
+        monkeypatch,
+        {
+            "lemma": "ключ",
+            "pos": "noun",
+            "sections": {"synonyms": {"items": ["джерело"], "source": "s"}},
+            "gate_provenance": {"synonyms": GATE_REJECTED},
+        },
+        offline=True,
+        cache={"lookups": {}},  # gate did not run
+    )
+    _drive_enrich_entry(entry)
+    assert entry["sections"]["synonyms"]["items"] == ["джерело"]  # preserved
+    assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE  # replaced, not merged
+
+
+def test_offline_empty_cache_updates_local_sections(monkeypatch) -> None:
+    # #5077 review finding 2: homonyms/antonyms are local db/pointer sections. Offline
+    # with an EMPTY slovnyk cache they still update from local data and are never frozen
+    # as skipped-offline — only synonyms/idioms are slovnyk-gated.
+    entry = _run_enrich_entry(
+        monkeypatch,
+        {"lemma": "ключ", "pos": "noun", "sections": {"antonyms": {"items": [], "source": "old"}}},
+        offline=True,
+        cache={"lookups": {}},
+    )
+    new_antonyms = {"items": ["день"], "source": "Вікісловник"}
+    new_homonyms = {"items": [{"word": "ключ", "gloss": "spring"}], "source": "СУМ"}
+    monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", lambda *a, **k: new_antonyms)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_antonym_relations", lambda ex, rel: new_antonyms)
+    monkeypatch.setattr(enrich_manifest_module, "_merge_homonym_relations", lambda ex, rel: new_homonyms)
+    _drive_enrich_entry(entry)
+    assert entry["sections"]["antonyms"] == new_antonyms  # updated from local, not preserved
+    assert entry["sections"]["homonyms"] == new_homonyms  # added from local
+    # Local gates ran (additions) -> no skipped-offline provenance for them.
+    assert "gate_provenance" not in entry
+
+
+def test_pure_preserve_run_serializes_sections_byte_identical(monkeypatch) -> None:
+    # #5077 review finding 3: a run that preserves every section must serialize the
+    # sections map byte-identical to the baseline — including its ORIGINAL key order,
+    # not the recompute's fixed apply order (synonyms, antonyms, ..., idioms).
+    baseline_sections = {
+        "idioms": {"items": [{"phrase": "p", "definition": "d"}], "source": "s"},
+        "synonyms": {"items": ["джерело"], "source": "s"},
+    }
+    baseline_bytes = json.dumps(baseline_sections, ensure_ascii=False)
+    entry = _run_enrich_entry(
+        monkeypatch,
+        {"lemma": "ключ", "pos": "noun", "sections": json.loads(baseline_bytes)},
+        offline=True,
+        cache={"lookups": {}},  # gate did not run -> synonyms + idioms both preserved
+    )
+    _drive_enrich_entry(entry)
+    assert list(entry["sections"]) == ["idioms", "synonyms"]  # baseline order, not apply order
+    assert json.dumps(entry["sections"], ensure_ascii=False) == baseline_bytes
+
+
+def test_offline_gate_did_not_run_records_skipped_even_without_loss(monkeypatch) -> None:
+    # #5077 review finding 4: skipped-offline is recorded WHENEVER the gate did not run,
+    # not only when items would be lost. Mirrors a mixed section (e.g. idioms) whose local
+    # source grows the section offline while its slovnyk source stayed unconsulted.
+    existing = {"items": ["джерело"], "source": "s"}
+    entry = _run_synonyms_gate(
+        monkeypatch,
+        offline=True,
+        cache={"lookups": {}},  # gate did not run
+        new_synonyms={"items": ["джерело", "живець"], "source": "s"},  # grew, no confirmed loss
+        existing_synonyms=existing,
+    )
+    assert entry["sections"]["synonyms"]["items"] == ["джерело", "живець"]  # took new (no loss)
+    assert entry["gate_provenance"]["synonyms"] == GATE_SKIPPED_OFFLINE  # still recorded
