@@ -13,9 +13,7 @@ import sqlite3
 import sys
 from collections import Counter
 from collections.abc import Mapping
-from datetime import date
 from pathlib import Path
-from urllib.parse import urlparse
 
 import yaml
 
@@ -34,27 +32,10 @@ from scripts.audit.llm_qg_store import db_path as configured_qg_db_path
 from scripts.audit.module_quality_audit import PlannedModule, audit_one_module
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
+from scripts.orchestration.preparation_evidence import RegistryValidationError, load_manual_evidence
 from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
 from scripts.wiki.domains import resolve_write_domain
 
-MANUAL_GATES = frozenset(
-    {
-        "dossier_grounding",
-        "reading_rights",
-        "wiki_grounding",
-        "wiki_quote_verification",
-        "image_rights",
-        "corpus_hammer",
-        "independent_content_review",
-        "cohort_promotion",
-        "hold",
-        "merged_publication",
-    }
-)
-MANUAL_STATUSES = frozenset({"pass", "fail"})
-REVIEWER_FAMILIES = frozenset({"agy", "claude", "codex", "deepseek", "gemini", "grok", "human", "mixed"})
-RIGHTS_DISPOSITIONS = frozenset({"approved", "exception-approved", "link-only-approved", "not-approved"})
-APPROVED_RIGHTS_DISPOSITIONS = RIGHTS_DISPOSITIONS - {"not-approved"}
 MILESTONES = (
     "inventory",
     "source-ready",
@@ -64,30 +45,6 @@ MILESTONES = (
     "module-built",
     "qg-current",
     "shipped",
-)
-
-
-class RegistryValidationError(ValueError):
-    """Raised when the manual promotion registry is malformed."""
-
-
-class _UniqueKeyLoader(yaml.SafeLoader):
-    pass
-
-
-def _construct_unique_mapping(loader: yaml.SafeLoader, node: yaml.nodes.MappingNode, deep: bool = False):
-    mapping: dict[object, object] = {}
-    for key_node, value_node in node.value:
-        key = loader.construct_object(key_node, deep=deep)
-        if key in mapping:
-            raise RegistryValidationError(f"duplicate YAML key: {key!r}")
-        mapping[key] = loader.construct_object(value_node, deep=deep)
-    return mapping
-
-
-_UniqueKeyLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-    _construct_unique_mapping,
 )
 
 
@@ -119,81 +76,6 @@ def _manual_gate(record: Mapping[str, object] | None, registry_path: Path, slug:
     if "reason" in record:
         result["reason"] = record["reason"]
     return result
-
-
-def _http_url(value: object) -> bool:
-    if not isinstance(value, str):
-        return False
-    parsed = urlparse(value)
-    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
-
-
-def load_manual_evidence(path: Path, manifest_slugs: set[str]) -> dict[str, dict[str, dict]]:
-    """Load and strictly validate sparse source-controlled manual evidence."""
-    if not path.exists():
-        return {}
-    try:
-        raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
-    except (OSError, yaml.YAMLError, RegistryValidationError) as exc:
-        raise RegistryValidationError(f"invalid promotion evidence registry {path}: {exc}") from exc
-    if not isinstance(raw, Mapping) or raw.get("version") != 1:
-        raise RegistryValidationError("registry must be a mapping with version: 1")
-    entries = raw.get("entries", {})
-    if not isinstance(entries, Mapping):
-        raise RegistryValidationError("registry entries must be a mapping")
-
-    validated: dict[str, dict[str, dict]] = {}
-    for slug, gates in entries.items():
-        if not isinstance(slug, str) or slug not in manifest_slugs:
-            raise RegistryValidationError(f"off-manifest registry slug: {slug!r}")
-        if not isinstance(gates, Mapping) or not gates:
-            raise RegistryValidationError(f"registry entry for {slug!r} must be a non-empty mapping")
-        validated[slug] = {}
-        for name, record in gates.items():
-            if name not in MANUAL_GATES:
-                raise RegistryValidationError(f"unsupported manual evidence gate {name!r} for {slug!r}")
-            if not isinstance(record, Mapping):
-                raise RegistryValidationError(f"manual evidence {slug}.{name} must be a mapping")
-            status = record.get("status")
-            if status not in MANUAL_STATUSES:
-                raise RegistryValidationError(f"manual evidence {slug}.{name} has invalid status {status!r}")
-            family = record.get("reviewer_family")
-            if family not in REVIEWER_FAMILIES:
-                raise RegistryValidationError(f"manual evidence {slug}.{name} has invalid reviewer_family {family!r}")
-            raw_date = record.get("date")
-            if isinstance(raw_date, str):
-                try:
-                    parsed_date = date.fromisoformat(raw_date)
-                except ValueError as exc:
-                    raise RegistryValidationError(f"manual evidence {slug}.{name} has invalid date") from exc
-            elif isinstance(raw_date, date):
-                parsed_date = raw_date
-            else:
-                raise RegistryValidationError(f"manual evidence {slug}.{name} has invalid date")
-            if not _http_url(record.get("evidence_url")):
-                raise RegistryValidationError(f"manual evidence {slug}.{name} needs an HTTP(S) evidence_url")
-            clean = dict(record)
-            clean["date"] = parsed_date
-            if name in {"reading_rights", "image_rights"}:
-                disposition = clean.get("disposition")
-                if disposition not in RIGHTS_DISPOSITIONS:
-                    raise RegistryValidationError(f"manual evidence {slug}.{name} has invalid disposition")
-                approved = disposition in APPROVED_RIGHTS_DISPOSITIONS
-                if (status == "pass") != approved:
-                    raise RegistryValidationError(
-                        f"manual evidence {slug}.{name} status conflicts with disposition {disposition!r}"
-                    )
-            if name == "hold":
-                if status != "pass":
-                    raise RegistryValidationError(f"manual evidence {slug}.hold must record a reviewed pass")
-                if (
-                    not isinstance(clean.get("active"), bool)
-                    or not isinstance(clean.get("reason"), str)
-                    or not clean["reason"].strip()
-                ):
-                    raise RegistryValidationError(f"manual evidence {slug}.hold needs active boolean and reason")
-            validated[slug][str(name)] = clean
-    return validated
 
 
 def manifest_inventory(root: Path, track: str) -> tuple[list[str], Counter[str]]:
