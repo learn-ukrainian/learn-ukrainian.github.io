@@ -25,6 +25,12 @@ may provide ``claim_critical_spans``; otherwise its
 coverage predicate ensures the critical value/entity belongs inside the
 returned span; syntactic in-bounds spans, partial overlap, and role mismatch
 never earn agreement.
+
+Tiered attestation changelog
+----------------------------
+Thresholds v2.2 adds shadow/cutover classification only.  No threshold values
+changed: cutover retains the v2.1 full gate, while shadow binds only the
+specified safety results and reports capacity results as advisory evidence.
 """
 
 from __future__ import annotations
@@ -53,16 +59,61 @@ if __package__ in {None, ""}:
 from scripts.audit import layerb_shadow  # isort: skip
 
 
-REPORT_VERSION = "qg-layer-b-qualification-report.v3"
+REPORT_VERSION = "qg-layer-b-qualification-report.v4"
 EMISSIONS_VERSION = "qg-layer-b-qualification-emissions.v1"
-ATTESTATION_VERSION = "qg-layer-b-qualification-attestation.v2"
-THRESHOLDS_VERSION = "qg-layer-b-phase2-thresholds.v2.1"
+ATTESTATION_VERSION = "qg-layer-b-qualification-attestation.v3"
+THRESHOLDS_VERSION = "qg-layer-b-phase2-thresholds.v2.2"
 FROZEN_MAIN_LABEL_SHA256 = "871337e5bd4560365371822237fb2846cdcc8eb28811ecd64efe7b39a25c9001"
 DEFAULT_EXPIRY_DAYS = 7
 STABILITY_SEED = 4913
 STABILITY_CASES = 40
 UNSAFE_ACCEPT_THRESHOLD = 0.01
 ONE_SIDED_CONFIDENCE = 0.95
+
+QUALIFICATION_TIERS = frozenset({"shadow", "cutover"})
+SAFETY_THRESHOLD_NAMES = (
+    "adversarial_probes",
+    "unsafe_accept_ucb",
+    "layer_a_regression",
+    "integrity",
+)
+CAPACITY_THRESHOLD_NAMES = (
+    "accept_recall",
+    "audit_rate",
+    "relation_agreement",
+    "terminal_decision_agreement",
+    "semantic_stability",
+    "cost_envelope",
+    "span_gold_overlap",
+)
+
+# Shadow integrity is intentionally narrower than the legacy cutover
+# integrity gate.  These are the only fail-closed classes: candidate-set,
+# identity, delimiter, and hash failures.  In particular,
+# SPAN_GOLD_OVERLAP_FAILURE remains a capacity signal.
+FAIL_CLOSED_INTEGRITY_FAILURES = frozenset(
+    {
+        "ANCHOR_SCAN_INCOMPLETE",
+        "ANCHOR_WITHOUT_CANDIDATES",
+        "CANDIDATE_SET_INCOMPLETE",
+        "CANDIDATE_IDENTITY_FAILURE",
+        "CANONICAL_SOURCE_IDENTITY_FAILURE",
+        "EVIDENCE_PATTERN_HIT_IDENTITY_FAILURE",
+        "JUDGE_CANDIDATE_DUPLICATE",
+        "JUDGE_CANDIDATE_IDENTITY_FAILURE",
+        "JUDGE_CANDIDATE_SET_FAILURE",
+        "JUDGE_FACT_CHECK_IDENTITY_FAILURE",
+        "JUDGE_FACT_CHECK_SET_FAILURE",
+        "MODULE_GROUPING_IDENTITY_FAILURE",
+        "RAW_CALL_IDENTITY_FAILURE",
+        "WINDOW_CANDIDATE_SET_FAILURE",
+        "WINDOW_DUPLICATE_CANDIDATE",
+        "WINDOW_HASH_INTEGRITY_FAILURE",
+        "WINDOW_RAW_MISSING",
+        "WINDOWS_MISSING",
+    }
+)
+FAIL_CLOSED_INTEGRITY_PREFIXES = ("DELIMITER_INTEGRITY_FAILURE:",)
 
 DECISIVE_RELATIONS = frozenset({"ENTAILS", "CONTRADICTS", "EXPLICITLY_UNCERTAIN", "MIXED"})
 SPAN_ROLES: Mapping[str, frozenset[str]] = {
@@ -157,6 +208,95 @@ def _sha256_json(value: Any) -> str:
 
 def _sha256_file(path: Path) -> str:
     return _sha256_bytes(path.read_bytes())
+
+
+def _validate_tier(tier: str) -> str:
+    if tier not in QUALIFICATION_TIERS:
+        raise QualificationError(f"unknown qualification tier: {tier}")
+    return tier
+
+
+def _fail_closed_integrity_failures(failures: Mapping[str, Any]) -> dict[str, int]:
+    """Keep only shadow's candidate-set/identity/delimiter/hash failures."""
+    return {
+        failure: count
+        for failure, count in sorted(failures.items())
+        if isinstance(failure, str)
+        and isinstance(count, int)
+        and not isinstance(count, bool)
+        and (
+            failure in FAIL_CLOSED_INTEGRITY_FAILURES
+            or failure.startswith(FAIL_CLOSED_INTEGRITY_PREFIXES)
+        )
+    }
+
+
+def _span_gold_overlap_result(integrity: Mapping[str, Any]) -> dict[str, Any]:
+    failures = integrity.get("failures")
+    count = failures.get("SPAN_GOLD_OVERLAP_FAILURE", 0) if isinstance(failures, Mapping) else 0
+    if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+        raise QualificationError("integrity has an invalid SPAN_GOLD_OVERLAP_FAILURE count")
+    return {
+        "status": "PASS" if count == 0 else "FAIL",
+        "failures": {"SPAN_GOLD_OVERLAP_FAILURE": count},
+    }
+
+
+def _tier_evaluation(thresholds: Mapping[str, Any], tier: str) -> dict[str, Any]:
+    """Classify fixed threshold results without changing their measured values."""
+    _validate_tier(tier)
+    required = (*SAFETY_THRESHOLD_NAMES[:-1], *CAPACITY_THRESHOLD_NAMES[:-1], "integrity")
+    missing = [name for name in required if name not in thresholds]
+    if missing:
+        raise QualificationError(f"tier evaluation is missing threshold results: {', '.join(missing)}")
+    integrity = thresholds["integrity"]
+    if not isinstance(integrity, Mapping):
+        raise QualificationError("tier evaluation requires an integrity result")
+    failures = integrity.get("failures")
+    if not isinstance(failures, Mapping):
+        raise QualificationError("tier evaluation requires integrity failures")
+    safety_integrity_failures = _fail_closed_integrity_failures(failures)
+    safety_results = {
+        **{name: thresholds[name] for name in SAFETY_THRESHOLD_NAMES[:-1]},
+        "integrity": {
+            "status": "PASS" if not safety_integrity_failures else "FAIL",
+            "failures": safety_integrity_failures,
+        },
+    }
+    capacity_results = {
+        **{name: thresholds[name] for name in CAPACITY_THRESHOLD_NAMES[:-1]},
+        "span_gold_overlap": _span_gold_overlap_result(integrity),
+    }
+    capacity_gating = "ADVISORY" if tier == "shadow" else "BINDING"
+    return {
+        "tier": tier,
+        "safety": {"gating": "BINDING", "results": safety_results},
+        "capacity": {
+            "gating": capacity_gating,
+            "advisory": tier == "shadow",
+            "results": capacity_results,
+        },
+    }
+
+
+def _report_tier_evaluation(report: Mapping[str, Any], tier: str) -> Mapping[str, Any]:
+    """Validate the complete, visible tier evidence required for attestation."""
+    evaluation = report.get("tier_evaluation")
+    if not isinstance(evaluation, Mapping) or evaluation.get("tier") != tier:
+        raise AttestationError("report tier evaluation differs from the requested tier")
+    thresholds = report.get("thresholds")
+    if not isinstance(thresholds, Mapping):
+        raise AttestationError("report has no threshold results")
+    try:
+        expected = _tier_evaluation(thresholds, tier)
+    except QualificationError as exc:
+        raise AttestationError(str(exc)) from exc
+    if evaluation != expected:
+        raise AttestationError("report tier evaluation is incomplete or drifted")
+    stability = expected["capacity"]["results"]["semantic_stability"]
+    if not isinstance(stability, Mapping) or not isinstance(stability.get("disagreements"), list):
+        raise AttestationError("report has no stability disagreement list")
+    return expected
 
 
 def _read_json(path: Path) -> Mapping[str, Any]:
@@ -734,12 +874,14 @@ class QualificationRunner:
         collection_call_plan: Mapping[str, Mapping[str, Any]] | None = None,
         max_judge_calls: int | None = None,
         human_audit_complete: bool = False,
+        tier: str = "cutover",
     ) -> None:
         self.route = route
         self.layer_a_probe_results = tuple(layer_a_probe_results)
         self.collection_call_plan = dict(collection_call_plan or {})
         self.max_judge_calls = max_judge_calls
         self.human_audit_complete = human_audit_complete
+        self.tier = _validate_tier(tier)
 
     def _layer_a_gate(self) -> dict[str, Any]:
         ids = [probe.get("id") for probe in self.layer_a_probe_results if isinstance(probe, Mapping)]
@@ -1025,7 +1167,13 @@ class QualificationRunner:
     ) -> dict[str, Any]:
         selected = stability_case_ids(main_cases, probe_cases)
         if not selected:
-            return {"required": False, "seed": STABILITY_SEED, "case_ids": [], "status": "NOT_APPLICABLE"}
+            return {
+                "required": False,
+                "seed": STABILITY_SEED,
+                "case_ids": [],
+                "status": "NOT_APPLICABLE",
+                "disagreements": [],
+            }
         cases_by_id = {_case_id(case, index): case for index, case in enumerate(all_cases)}
         disagreements: list[str] = []
         for index, case_id in enumerate(selected):
@@ -1125,7 +1273,13 @@ class QualificationRunner:
         unique_audits = sum(record["actual_final_decision"] == "AUDIT" for record in unique_anchor_rows)
         overall_audits = sum(record["actual_final_decision"] == "AUDIT" for record in all_primary)
         stability = (
-            {"required": False, "seed": STABILITY_SEED, "case_ids": [], "status": "ABORTED"}
+            {
+                "required": False,
+                "seed": STABILITY_SEED,
+                "case_ids": [],
+                "status": "ABORTED",
+                "disagreements": [],
+            }
             if aborted_reason
             else self._stability_gate(
                 [case for _kind, case in order], main_cases, probe_cases, emissions, primary_by_case
@@ -1194,13 +1348,23 @@ class QualificationRunner:
             "integrity": {"status": "PASS" if not integrity_failures else "FAIL", "failures": dict(integrity_failures)},
             "semantic_stability": stability,
         }
-        statuses = [str(value["status"]) for value in thresholds.values()]
-        if aborted_reason or "FAIL" in statuses:
-            verdict = "ABORTED" if aborted_reason else "FAIL"
-        elif "PASS_PENDING_SUPPLEMENT" in statuses:
-            verdict = "PASS_PENDING_SUPPLEMENT"
+        tier_evaluation = _tier_evaluation(thresholds, self.tier)
+        if self.tier == "cutover":
+            statuses = [str(value["status"]) for value in thresholds.values()]
+            if aborted_reason or "FAIL" in statuses:
+                verdict = "ABORTED" if aborted_reason else "FAIL"
+            elif "PASS_PENDING_SUPPLEMENT" in statuses:
+                verdict = "PASS_PENDING_SUPPLEMENT"
+            else:
+                verdict = "PASS"
         else:
-            verdict = "PASS"
+            safety_results = tier_evaluation["safety"]["results"]
+            safety_passed = all(
+                result["status"] == "PASS"
+                or (name == "unsafe_accept_ucb" and result["status"] == "PASS_PENDING_SUPPLEMENT")
+                for name, result in safety_results.items()
+            )
+            verdict = "PASS_SHADOW" if safety_passed else "FAIL"
         checklist = {
             "required": True,
             "complete": self.human_audit_complete,
@@ -1244,6 +1408,7 @@ class QualificationRunner:
             "thresholds_version": THRESHOLDS_VERSION,
             "generated_at": datetime.now(UTC).isoformat(),
             "effective_route": self.route.to_dict(),
+            "tier": self.tier,
             "run_order": {
                 "probe_first": True,
                 "shakeout_seed": STABILITY_SEED,
@@ -1262,6 +1427,7 @@ class QualificationRunner:
             },
             "records": records,
             "thresholds": thresholds,
+            "tier_evaluation": tier_evaluation,
             "human_audit_of_new_accepts": checklist,
             "row_eligibility_matrix": eligibility_matrix,
             "raw_call_manifest": raw_call_manifest,
@@ -1288,11 +1454,18 @@ def create_attestation(
     fixture_manifests: Iterable[Path],
     expires_at: datetime,
     require_frozen_main_hash: bool = True,
+    tier: str = "cutover",
 ) -> dict[str, Any]:
-    """Create a v2 attestation only for a complete, manually audited PASS report."""
+    """Create a tier-consistent attestation only for a complete, audited pass."""
+    if tier not in QUALIFICATION_TIERS:
+        raise AttestationError(f"unknown qualification tier: {tier}")
     report = _read_json(report_path)
-    if report.get("verdict") != "PASS":
-        raise AttestationError("only a PASS qualification report can be attested")
+    expected_verdict = "PASS_SHADOW" if tier == "shadow" else "PASS"
+    if report.get("tier") != tier:
+        raise AttestationError("report tier differs from the requested attestation tier")
+    if report.get("verdict") != expected_verdict:
+        raise AttestationError(f"only a {expected_verdict} qualification report can be attested for {tier}")
+    tier_evaluation = _report_tier_evaluation(report, tier)
     checklist = report.get("human_audit_of_new_accepts")
     if not isinstance(checklist, Mapping) or checklist.get("complete") is not True:
         raise AttestationError("human-audit-of-new-accepts checklist is incomplete")
@@ -1322,9 +1495,13 @@ def create_attestation(
         "schema_version": ATTESTATION_VERSION,
         "created_at": datetime.now(UTC).isoformat(),
         "expires_at": expires_at.astimezone(UTC).isoformat(),
-        "qualification_verdict": "PASS",
+        "tier": tier,
+        "qualification_verdict": expected_verdict,
         "thresholds_version": THRESHOLDS_VERSION,
         "effective_route": route.to_dict(),
+        "capacity_gating": tier_evaluation["capacity"]["gating"],
+        "capacity_results": tier_evaluation["capacity"]["results"],
+        "stability_disagreements": tier_evaluation["capacity"]["results"]["semantic_stability"]["disagreements"],
         "label_set": {
             "path": str(labels_path),
             "bytes_sha256": _sha256_file(labels_path),
@@ -1350,19 +1527,35 @@ def verify_attestation(
     corpus_manifests: Iterable[Path],
     fixture_manifests: Iterable[Path],
     now: datetime | None = None,
+    tier: str = "cutover",
 ) -> dict[str, Any]:
-    """Verify every v2 binding; unknown lineage, tools, expiry, or drift refuses."""
+    """Verify every tier binding; unknown lineage, tools, expiry, or drift refuses."""
+    if tier not in QUALIFICATION_TIERS:
+        raise AttestationError(f"unknown qualification tier: {tier}")
     attestation = _read_json(attestation_path)
     if attestation.get("schema_version") != ATTESTATION_VERSION:
         raise AttestationError("unknown attestation schema version")
-    if attestation.get("qualification_verdict") != "PASS":
-        raise AttestationError("attestation does not bind a PASS qualification")
+    expected_verdict = "PASS_SHADOW" if tier == "shadow" else "PASS"
+    if attestation.get("tier") != tier:
+        raise AttestationError("attestation tier differs from the requested verification tier")
+    if attestation.get("qualification_verdict") != expected_verdict:
+        raise AttestationError(f"attestation does not bind a {expected_verdict} qualification")
     if attestation.get("thresholds_version") != THRESHOLDS_VERSION:
         raise AttestationError("threshold version drifted")
     route = EffectiveRoute.from_mapping(attestation.get("effective_route", {}))
     report = _read_json(report_path)
     if _sha256_file(report_path) != attestation.get("report_sha256"):
         raise AttestationError("qualification report bytes drifted")
+    if report.get("tier") != tier or report.get("verdict") != expected_verdict:
+        raise AttestationError("qualification report tier or verdict differs from the attestation")
+    tier_evaluation = _report_tier_evaluation(report, tier)
+    if attestation.get("capacity_gating") != tier_evaluation["capacity"]["gating"]:
+        raise AttestationError("attestation capacity gating differs from the qualification report")
+    if attestation.get("capacity_results") != tier_evaluation["capacity"]["results"]:
+        raise AttestationError("attestation capacity results differ from the qualification report")
+    disagreements = tier_evaluation["capacity"]["results"]["semantic_stability"]["disagreements"]
+    if attestation.get("stability_disagreements") != disagreements:
+        raise AttestationError("attestation stability disagreements differ from the qualification report")
     if report.get("effective_route") != route.to_dict():
         raise AttestationError("report route differs from the attested effective route")
     label = attestation.get("label_set")
@@ -1402,7 +1595,12 @@ def verify_attestation(
     current = now or datetime.now(UTC)
     if expiry.tzinfo is None or current.astimezone(UTC) >= expiry.astimezone(UTC):
         raise AttestationError("attestation is expired")
-    return {"verified": True, "schema_version": ATTESTATION_VERSION, "effective_route": route.to_dict()}
+    return {
+        "verified": True,
+        "schema_version": ATTESTATION_VERSION,
+        "tier": tier,
+        "effective_route": route.to_dict(),
+    }
 
 
 def _parse_paths(values: Sequence[str]) -> list[Path]:
@@ -1444,6 +1642,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--max-judge-calls", type=int)
     parser.add_argument("--human-audit-complete", action="store_true")
+    parser.add_argument("--tier", choices=sorted(QUALIFICATION_TIERS), default="cutover")
     parser.add_argument("--attest", action="store_true")
     parser.add_argument("--expires-at")
     parser.add_argument("--corpus-manifest", action="append", default=[])
@@ -1461,6 +1660,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 labels_path=args.main_labels,
                 corpus_manifests=_parse_paths(args.corpus_manifest),
                 fixture_manifests=_parse_paths(args.fixture_manifest),
+                tier=args.tier,
             )
             print(json.dumps(result, ensure_ascii=False, sort_keys=True))
             return 0
@@ -1485,6 +1685,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             collection_call_plan=collection_call_plan_from_manifest(_read_json_value(args.collector_manifest)),
             max_judge_calls=args.max_judge_calls,
             human_audit_complete=args.human_audit_complete,
+            tier=args.tier,
         )
         report = runner.run(
             main_labels=_read_json(args.main_labels),
@@ -1505,10 +1706,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 corpus_manifests=_parse_paths(args.corpus_manifest),
                 fixture_manifests=_parse_paths(args.fixture_manifest),
                 expires_at=datetime.fromisoformat(args.expires_at),
+                tier=args.tier,
             )
             _write_json(args.output_dir / "qualification-attestation.json", attestation)
         print(json.dumps({"verdict": report["verdict"], "report": str(report_path)}, ensure_ascii=False))
-        return 0 if report["verdict"] in {"PASS", "PASS_PENDING_SUPPLEMENT"} else 2
+        return 0 if report["verdict"] in {"PASS", "PASS_PENDING_SUPPLEMENT", "PASS_SHADOW"} else 2
     except (AttestationError, QualificationAbort, QualificationError) as exc:
         parser.error(str(exc))
     return 2
