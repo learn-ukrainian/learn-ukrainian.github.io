@@ -12,6 +12,7 @@ import {
   registerBadgeLabel,
 } from "../lib/lexicon/register-markers";
 import { normalize as normalizeAtlasSearchText } from "../lib/lexicon/search";
+import { pluralizeUk } from "../lib/i18n/plural";
 
 interface CourseUsage {
   track: string;
@@ -449,7 +450,7 @@ function buildArticleOverview() {
     {
       label: "Значення",
       ready: definitionCount > 0,
-      detail: definitionCount > 0 ? `${definitionCount} картк.` : "очікує джерело",
+      detail: definitionCount > 0 ? `${definitionCount} ${pluralizeUk(definitionCount, ["картка", "картки", "карток"])}` : "очікує джерело",
     },
     {
       label: "Походження",
@@ -466,27 +467,27 @@ function buildArticleOverview() {
     {
       label: "Стилістика",
       ready: styleNotes.length > 0 || Boolean(heritageBoxes.red || heritageBoxes.yellow || heritageBoxes.blue || heritageBoxes.green),
-      detail: styleNotes.length > 0 ? `${styleNotes.length} нотатк.` : heritageBoxes.green ? "захист питомості" : "без нотаток",
+      detail: styleNotes.length > 0 ? `${styleNotes.length} ${pluralizeUk(styleNotes.length, ["нотатка", "нотатки", "нотаток"])}` : heritageBoxes.green ? "захист питомості" : "без нотаток",
     },
     {
       label: "Синонімія",
       ready: synonymCount > 0,
-      detail: synonymCount > 0 ? `${synonymCount} позицій` : "очікує джерело",
+      detail: synonymCount > 0 ? `${synonymCount} ${pluralizeUk(synonymCount, ["позиція", "позиції", "позицій"])}` : "очікує джерело",
     },
     {
       label: "Омонім",
       ready: homonymCount > 0,
-      detail: homonymCount > 0 ? `${homonymCount} позицій` : "очікує джерело",
+      detail: homonymCount > 0 ? `${homonymCount} ${pluralizeUk(homonymCount, ["позиція", "позиції", "позицій"])}` : "очікує джерело",
     },
     {
       label: "Паронім",
       ready: paronymCount > 0,
-      detail: paronymCount > 0 ? `${paronymCount} позицій` : "очікує джерело",
+      detail: paronymCount > 0 ? `${paronymCount} ${pluralizeUk(paronymCount, ["позиція", "позиції", "позицій"])}` : "очікує джерело",
     },
     {
       label: "Фразеологія",
       ready: idiomCount > 0,
-      detail: idiomCount > 0 ? `${idiomCount} виразів` : "очікує джерело",
+      detail: idiomCount > 0 ? `${idiomCount} ${pluralizeUk(idiomCount, ["вираз", "вирази", "виразів"])}` : "очікує джерело",
     },
     {
       label: "Засвідчення",
@@ -496,7 +497,7 @@ function buildArticleOverview() {
     {
       label: "Курс",
       ready: courseUsage.length > 0,
-      detail: courseUsage.length > 0 ? `${courseUsage.length} мод.` : "поза курсом",
+      detail: courseUsage.length > 0 ? `${courseUsage.length} ${pluralizeUk(courseUsage.length, ["модуль", "модулі", "модулів"])}` : "поза курсом",
     },
     {
       label: "Переклад",
@@ -511,7 +512,7 @@ function buildArticleOverview() {
     {
       label: "Зовнішні",
       ready: externalCount > 0,
-      detail: externalCount > 0 ? `${externalCount} матеріалів` : "очікує добірку",
+      detail: externalCount > 0 ? `${externalCount} ${pluralizeUk(externalCount, ["матеріал", "матеріали", "матеріалів"])}` : "очікує добірку",
     },
   ];
   // Non-lemma entries never surface a morphology card (no paradigm to await).

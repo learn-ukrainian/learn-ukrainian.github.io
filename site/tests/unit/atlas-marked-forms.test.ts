@@ -233,7 +233,7 @@ describe('fully-marked lemma register treatment (#4900)', () => {
   test('fully-marked lemma suppresses the empty modern paradigm table', async () => {
     const html = await renderFullyMarked('short');
     expect(html).not.toMatch(/0 форм/);
-    expect(html).toContain('2 маркованих форм');
+    expect(html).toContain('2 марковані форми');
     // No orphan «Форма | Позначка» shell before the marked block.
     const morphology = html.slice(html.indexOf('Морфологія'), html.indexOf('marked-forms-primary'));
     expect(morphology).not.toContain('<table class="paradigm-table">');
