@@ -315,8 +315,8 @@
 /* ============= MATCH UP ============= */
 .matchUpContainer {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   align-items: center;
   padding: 1rem 0;
 }

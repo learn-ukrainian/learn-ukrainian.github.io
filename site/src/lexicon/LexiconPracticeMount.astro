@@ -1,9 +1,18 @@
 ---
 import LexiconPractice from '../components/LexiconPractice';
+import styles from '../../../packages/activity-kit/src/components/Activities.module.css';
 ---
 
 <div id="lexicon-practice-mount" data-lexicon-practice-island>
   <LexiconPractice client:only="react" />
+</div>
+
+<div style="display: none;">
+  <div class={styles.matchUpContainer}>
+    <div class={styles.matchColumn}>
+      <div class={styles.matchItem}></div>
+    </div>
+  </div>
 </div>
 
 <div id="lexicon-practice-fallback" class="lexicon-practice-fallback" hidden>
