@@ -34,12 +34,12 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring, qg_schema
+from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
 from scripts.audit.runtime_tool_events import map_runtime_tool_calls
 
 FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
 BENCHMARK_V1_MANIFEST = PROJECT_ROOT / "benchmarks" / "v1" / "MANIFEST.json"
-RUN_SCHEMA_VERSION = "qg_bakeoff_run.v2"
 SCORECARD_NAME = "SCORECARD.md"
 SCORECARD_STRICT_NAME = "SCORECARD-STRICT.md"
 # Provenance tag for offline ``--regate`` rescoring: live_admissible uses STRICT
@@ -1647,31 +1647,33 @@ def run_one(
         gate_outcomes["grounding"].get("inadmissible_positive_verdicts") or 0
     )
     dispatch = gate_result["dispatch"]
-    artifact = {
-        "schema_version": RUN_SCHEMA_VERSION,
-        "arm": TOOLED_ARM,
-        "run_index": run_index,
-        "created_at": _now_z(),
-        "fixture": _fixture_block(fixture),
-        "model": _model_block(route, dispatch),
-        "status": gate_result["status"],
-        "workflow_verdict": gate_result["workflow_verdict"],
-        "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
-        "response_parse_lenient": bool(gate_result.get("response_parse_lenient")),
-        "attempt_count": gate_result["attempt_count"],
-        "timed_out": False,
-        "transport_retry": {"attempted": False, "reason": None},
-        "dispatch": dispatch,
-        "gate_outcomes": gate_outcomes,
-        "payload": gate_result["payload"],
-        # Raw model response is persisted alongside dispatch.tool_events so a
-        # future normalization/scoring change can be replayed OFFLINE from disk
-        # (no model re-run, no subscription quota burned). See docs note in #4761.
-        "raw_response": gate_result.get("raw_response_text"),
-        "score": score,
-        "tool_call_count": int(dispatch.get("tool_call_count") or 0),
-        "wall_seconds": wall_seconds,
-    }
+    artifact = serialize_qg_run_v2(
+        dispatch,
+        gate_result["payload"],
+        {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "arm": TOOLED_ARM,
+            "run_index": run_index,
+            "created_at": _now_z(),
+            "fixture": _fixture_block(fixture),
+            "model": _model_block(route, dispatch),
+            "status": gate_result["status"],
+            "workflow_verdict": gate_result["workflow_verdict"],
+            "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
+            "response_parse_lenient": bool(gate_result.get("response_parse_lenient")),
+            "attempt_count": gate_result["attempt_count"],
+            "timed_out": False,
+            "transport_retry": {"attempted": False, "reason": None},
+            "gate_outcomes": gate_outcomes,
+            # Raw model response is persisted alongside dispatch.tool_events so a
+            # future normalization/scoring change can be replayed OFFLINE from disk
+            # (no model re-run, no subscription quota burned). See docs note in #4761.
+            "raw_response": gate_result.get("raw_response_text"),
+            "score": score,
+            "tool_call_count": int(dispatch.get("tool_call_count") or 0),
+            "wall_seconds": wall_seconds,
+        },
+    )
     artifact_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
 
