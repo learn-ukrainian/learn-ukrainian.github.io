@@ -20,6 +20,10 @@
         "sha256": "406e7ad427f0b7ecfb60bd0de0ff5cc00899025bf75c5af2fc045d80426028b9"
       },
       {
+        "path": "scripts/lexicon/atlas_intake_core.py",
+        "sha256": "ab5434ee60dc8c5fc4fe1f4d195c89cebb24451b28b0d268b3a20ffda68d4f8a"
+      },
+      {
         "path": "scripts/lexicon/backfill_course_usage.py",
         "sha256": "593f83da3295beed8008b98bcec77a8db392d6a5497eb26c581d4ff7c148f350"
       },
@@ -136,6 +140,10 @@
         "sha256": "e3d459ad56d03e8821a46d5de26f8245501ae13ad536442c6734965107ffbae7"
       },
       {
+        "path": "scripts/lexicon/ohoiko_atlas_intake.py",
+        "sha256": "d87fafc2b0d0e8e23c6d40c98b1320e79cfe439079ff393787af4eff02e84528"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },
@@ -173,8 +181,8 @@
       }
     ]
   },
-  "fingerprint": "aeac5a3434aceceaec83726fe4f14eb8cc9c3fe80ce3e704b2f1b07409585745",
+  "fingerprint": "6097659ff7208d78f2525ce0ab562b77eae1bfea0e8276a3736f46ad9a50da44",
   "stats": {
-    "lexicon_code_files": 42
+    "lexicon_code_files": 44
   }
 }
