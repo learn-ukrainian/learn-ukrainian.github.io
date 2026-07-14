@@ -311,7 +311,7 @@ def _check_supersede_chains(records: list[AdrRecord], result: CheckResult) -> No
 
 def _build_index_block(records: list[AdrRecord]) -> str:
     """Produce the README table between the sentinel comments."""
-    header = "| ID  | Title | Status |\n|-----|-------|--------|"
+    header = "| ID | Title | Status |\n| --- | --- | --- |"
     rows = []
     for rec in records:
         rows.append(

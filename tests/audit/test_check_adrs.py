@@ -5,6 +5,14 @@ import pytest
 from scripts.audit import check_adrs
 
 
+def test_build_index_block_uses_markdownlint_compatible_table() -> None:
+    block = check_adrs._build_index_block([])
+
+    assert "| ID | Title | Status |" in block
+    assert "| --- | --- | --- |" in block
+    assert "| ID  |" not in block
+
+
 def test_rebuild_index_missing_sentinels(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
     adr_dir = tmp_path / "docs" / "architecture" / "adr"
     adr_dir.mkdir(parents=True)
