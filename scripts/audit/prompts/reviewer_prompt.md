@@ -141,6 +141,7 @@ Identify unidiomatic syntax or expressions, even if they are not lexical Russian
 ### B. Register and AI Leakage
 * **AI Personae & Leakage**: Look for phrases like "As an AI...", "Note to self", or internal pipeline commands. Flag as `AI_LEAKAGE` (`surface_leakage`, `critical`).
 * **Path Leakage**: Look for absolute paths (e.g., `/Users/...`, `/tmp/...`). Flag as `PATH_LEAKAGE` (`surface_leakage`, `critical`).
+* **Internal Leakage**: Look for internal project artifacts leaking into learner-facing text — repo-relative source/script paths (e.g., `scripts/audit/llm_qg.json`), internal gate or pipeline names, debug/build artifacts, issue/PR references. Flag as `INTERNAL_LEAKAGE` (`surface_leakage`, `critical`). Distinct from `PATH_LEAKAGE`: use `INTERNAL_LEAKAGE` when the leak names project internals (even without an absolute filesystem path); use `PATH_LEAKAGE` for generic filesystem paths. If a fragment is both (an absolute path to a project internal), flag both.
 
 ---
 
