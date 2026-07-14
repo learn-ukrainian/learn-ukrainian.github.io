@@ -3697,6 +3697,7 @@ def _corpus_relation_pairs_by_headword(
             SELECT relation, word_a, word_b, gloss_a, gloss_b, source, source_url
             FROM relation_pairs
             WHERE review_status = 'approved'
+            ORDER BY relation, word_a, word_b, gloss_a, gloss_b, source
             """
         ).fetchall()
     except sqlite3.Error:
@@ -3882,7 +3883,7 @@ def _merge_antonym_relations(
 
 
 def _are_glosses_similar(g1: str, g2: str) -> bool:
-    """Compare two glosses using case-insensitive SequenceMatcher ratio on normalized text."""
+    """Compare two glosses using case-insensitive SequenceMatcher ratio on normalized text and content token Jaccard similarity."""
     def clean(s: str) -> str:
         s = _strip_stress(s).lower()
         # Keep only alphanumeric characters and spaces
@@ -3895,8 +3896,27 @@ def _are_glosses_similar(g1: str, g2: str) -> bool:
         return False
     if c1 == c2:
         return True
+
+    # Check SequenceMatcher ratio
     from difflib import SequenceMatcher
-    return SequenceMatcher(None, c1, c2).ratio() >= 0.70
+    ratio = SequenceMatcher(None, c1, c2).ratio()
+    if ratio < 0.85:
+        return False
+
+    # Check content-token Jaccard similarity
+    # A small UA stopword set to be subtracted (grammatical particles, prepositions, conjunctions)
+    # Structural words like 'сімейства', 'частина' stay (are NOT in this stopword set).
+    ua_stopwords = {
+        "і", "та", "й", "у", "в", "на", "за", "з", "із", "зі", "до",
+        "для", "про", "без", "від", "через", "під", "над", "перед",
+        "по", "при", "як", "що", "це", "о", "об", "а", "але", "чи", "бо"
+    }
+
+    t1 = set(c1.split()) - ua_stopwords
+    t2 = set(c2.split()) - ua_stopwords
+
+    jaccard = 0.0 if not t1 or not t2 else len(t1 & t2) / len(t1 | t2)
+    return jaccard >= 0.5
 
 
 def _merge_homonym_relations(
@@ -3904,40 +3924,29 @@ def _merge_homonym_relations(
     relations: list[dict[str, Any]],
 ) -> dict[str, Any] | None:
     """Merge numbered and explicitly glossed corpus homonym relations."""
+    # Note: 'existing' is always None in practice, so the seeding loop is omitted.
     merged = dict(existing or {})
     items: list[dict[str, Any]] = []
     seen: set[tuple[str, int | None, str]] = set()
-    for raw_item in merged.get("items", []):
-        if not isinstance(raw_item, dict):
-            continue
-        word = _canonical_synonym_term(raw_item.get("word"))
-        try:
-            number = int(raw_item.get("homonym_no"))
-        except (TypeError, ValueError):
-            number = None
-        gloss = str(raw_item.get("gloss") or "").strip()
-        pos = str(raw_item.get("pos") or "").strip()
-        if not word or not gloss or (number is not None and (number < 1 or not pos)) or (number is None and pos):
-            continue
-        key = (word, number, gloss)
-        if key in seen:
-            continue
-        seen.add(key)
-        item: dict[str, Any] = {"word": word, "gloss": gloss}
-        if number is not None:
-            item["homonym_no"] = number
-            item["pos"] = pos
-        items.append(item)
 
     source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
     source_labels: list[str] = []
     additions = 0
-    def relation_order(item: dict[str, Any]) -> tuple[int, int]:
+    def relation_order(item: dict[str, Any]) -> tuple[int, int, str, str]:
         try:
             number = int(item.get("homonym_no"))
         except (TypeError, ValueError):
             number = 0
-        return (int(item.get("vein") or 99), number)
+        try:
+            vein = int(item.get("vein") or 99)
+        except (TypeError, ValueError):
+            vein = 99
+        return (
+            vein,
+            number,
+            str(item.get("gloss") or ""),
+            str(item.get("source") or ""),
+        )
 
     for relation in sorted(relations, key=relation_order):
         word = _canonical_synonym_term(relation.get("word"))
@@ -3966,17 +3975,20 @@ def _merge_homonym_relations(
             if number is not None:
                 item["homonym_no"] = number
                 item["pos"] = pos
+            if relation.get("pattern") == "corpus relation pair":
+                item["source"] = relation["source"]
             items.append(item)
             additions += 1
-        label = (
-            _relation_source_label(relation, word)
-            if relation.get("pattern") == "corpus relation pair"
-            else f"{relation['source']}: numbered homonym headwords"
-        )
-        if label not in source_labels:
-            source_labels.append(label)
-        if relation.get("source_url") and relation["source_url"] not in source_urls:
-            source_urls.append(str(relation["source_url"]))
+
+            label = (
+                _relation_source_label(relation, word)
+                if relation.get("pattern") == "corpus relation pair"
+                else f"{relation['source']}: numbered homonym headwords"
+            )
+            if label not in source_labels:
+                source_labels.append(label)
+            if relation.get("source_url") and relation["source_url"] not in source_urls:
+                source_urls.append(str(relation["source_url"]))
 
     if not items:
         return None

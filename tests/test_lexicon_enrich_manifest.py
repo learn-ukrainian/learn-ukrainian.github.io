@@ -2925,8 +2925,8 @@ def test_corpus_relation_pairs_render_only_approved_rows(monkeypatch) -> None:
     merged = _merge_homonym_relations(None, relations["ключ"]["homonym"])
     assert merged is not None
     assert merged["items"] == [
-        {"word": "ключ", "gloss": "знаряддя для замикання"},
-        {"word": "ключ", "gloss": "джерело води"},
+        {"word": "ключ", "gloss": "джерело води", "source": "relation_pairs/uk.wikipedia"},
+        {"word": "ключ", "gloss": "знаряддя для замикання", "source": "relation_pairs/uk.wikipedia"},
     ]
 
 
@@ -2973,8 +2973,8 @@ def test_corpus_homonym_renders_fixture(monkeypatch) -> None:
     merged = _merge_homonym_relations(None, relations["атлас"]["homonym"])
     assert merged is not None
     assert merged["items"] == [
-        {"word": "атлас", "gloss": "атлас - satin fabric"},
-        {"word": "атлас", "gloss": "атлас - map-book"},
+        {"word": "атлас", "gloss": "атлас - map-book", "source": "relation_pairs/miyklas.com.ua"},
+        {"word": "атлас", "gloss": "атлас - satin fabric", "source": "relation_pairs/miyklas.com.ua"},
     ]
     assert merged["source"] == "relation_pairs/miyklas.com.ua: corpus relation pair → атлас"
     assert merged["source_urls"] == ["https://example.invalid/atlas"]
@@ -2998,10 +2998,10 @@ def test_corpus_homonym_deduplication(monkeypatch) -> None:
         {
             "word": "атлас",
             "gloss": "Збірник географічних карт",
-            "source": "relation_pairs/miyklas.com.ua",
+            "source": "relation_pairs/dropped_source.org",
             "pattern": "corpus relation pair",
             "vein": 3,
-            "source_url": "https://example.invalid/atlas",
+            "source_url": "https://example.invalid/dropped_url",
         },
         {
             "word": "атлас",
@@ -3026,14 +3026,69 @@ def test_corpus_homonym_deduplication(monkeypatch) -> None:
         {
             "word": "атлас",
             "gloss": "атлас - satin fabric",
+            "source": "relation_pairs/miyklas.com.ua",
         }
     ]
     assert "СУМ-11: numbered homonym headwords" in merged["source"]
     assert "relation_pairs/miyklas.com.ua: corpus relation pair → атлас" in merged["source"]
+    assert "dropped_source.org" not in merged["source"]
+    assert "https://example.invalid/dropped_url" not in merged["source_urls"]
     assert sorted(merged["source_urls"]) == [
         "https://example.invalid/atlas",
         "https://example.invalid/sum11/atlas",
     ]
+
+
+def test_homonym_fixes_delta_regression(monkeypatch) -> None:
+    # 1. Regression test: adversarial gloss pairs must NOT merge
+    from scripts.lexicon.enrich_manifest import _are_glosses_similar
+    assert not _are_glosses_similar("рослина сімейства бобових", "тварина сімейства псових")
+    assert not _are_glosses_similar("частина тіла людини", "частина машини")
+
+    # Actual duplicate or restatement must merge
+    assert _are_glosses_similar("мапа світу у книжковій формі", "мапа світу у книжковій формі")
+    assert _are_glosses_similar("мапа світу у книжковій формі", "карта світу у книжковій формі")
+
+    # 2. Deterministic output order: build the section twice from rows inserted in different orders -> identical items list
+    conn = _conn()
+
+    # Setup test entries
+    # Order A:
+    conn.execute("DELETE FROM relation_pairs")
+    conn.executemany(
+        """
+        INSERT INTO relation_pairs(
+            relation, word_a, word_b, gloss_a, gloss_b, source, source_url, review_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            ("homonym", "атлас", "атлас", "атлас - satin fabric", "атлас - satin fabric", "source_a", "https://example.invalid/a", "approved"),
+            ("homonym", "атлас", "атлас", "атлас - map-book", "атлас - map-book", "source_b", "https://example.invalid/b", "approved"),
+        ],
+    )
+    _patch_synonym_vesum(monkeypatch, {"атлас"})
+    relations_order_a = _corpus_relation_pairs_by_headword(conn, {"entries": [{"lemma": "атлас"}]})
+    merged_a = _merge_homonym_relations(None, relations_order_a["атлас"]["homonym"])
+
+    # Order B (opposite insertion order):
+    conn.execute("DELETE FROM relation_pairs")
+    conn.executemany(
+        """
+        INSERT INTO relation_pairs(
+            relation, word_a, word_b, gloss_a, gloss_b, source, source_url, review_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            ("homonym", "атлас", "атлас", "атлас - map-book", "атлас - map-book", "source_b", "https://example.invalid/b", "approved"),
+            ("homonym", "атлас", "атлас", "атлас - satin fabric", "атлас - satin fabric", "source_a", "https://example.invalid/a", "approved"),
+        ],
+    )
+    relations_order_b = _corpus_relation_pairs_by_headword(conn, {"entries": [{"lemma": "атлас"}]})
+    merged_b = _merge_homonym_relations(None, relations_order_b["атлас"]["homonym"])
+
+    assert merged_a is not None
+    assert merged_b is not None
+    assert merged_a["items"] == merged_b["items"]
 
 
 def test_approved_cafe_verdict_renders_on_both_lemmas_and_resolves_form_aliases(tmp_path, monkeypatch) -> None:
