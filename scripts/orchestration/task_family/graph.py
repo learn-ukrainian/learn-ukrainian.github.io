@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import PurePath
@@ -24,6 +23,8 @@ class TitleRename:
 @dataclass(frozen=True, slots=True)
 class FamilyGraph:
     manifest: TaskFamilyManifest
+    included_task_ids: tuple[str, ...]
+    excluded_task_ids: tuple[str, ...]
     roots: tuple[str, ...]
     roles_by_task: dict[str, tuple[str, ...]]
     blockers: tuple[Blocker, ...] = ()
@@ -34,11 +35,17 @@ class FamilyGraph:
 
     @property
     def nodes_by_id(self) -> dict[str, TaskNode]:
-        return {node.task_id: node for node in self.manifest.nodes}
+        included = set(self.included_task_ids)
+        return {node.task_id: node for node in self.manifest.nodes if node.task_id in included}
 
     @property
     def family_relations(self) -> tuple[TaskRelation, ...]:
-        return tuple(relation for relation in self.manifest.relations if not relation.is_display_only)
+        included = set(self.included_task_ids)
+        return tuple(
+            relation
+            for relation in self.manifest.relations
+            if not relation.is_display_only and relation.source_id in included and relation.target_id in included
+        )
 
 
 def _normal_root(path: str) -> str:
@@ -80,11 +87,40 @@ def _roots(nodes: tuple[TaskNode, ...], relations: tuple[TaskRelation, ...]) -> 
     return tuple(sorted(inferred))
 
 
+def _generation_numbers(nodes: tuple[TaskNode, ...], relations: tuple[TaskRelation, ...]) -> dict[str, int]:
+    """Resolve rollover generations by dependency, never relation input order."""
+    parents: dict[str, tuple[str, ...]] = defaultdict(tuple)
+    grouped: dict[str, list[str]] = defaultdict(list)
+    for relation in relations:
+        if relation.relation_type is RelationType.ROLLOVER_GENERATION_OF:
+            grouped[relation.source_id].append(relation.target_id)
+    for source, targets in grouped.items():
+        parents[source] = tuple(sorted(set(targets)))
+    resolved: dict[str, int] = {}
+    visiting: set[str] = set()
+
+    def resolve(task_id: str) -> int:
+        if task_id in resolved:
+            return resolved[task_id]
+        if task_id in visiting:
+            return 0
+        visiting.add(task_id)
+        targets = parents.get(task_id, ())
+        value = 0 if not targets else max(resolve(target_id) + 1 for target_id in targets)
+        visiting.remove(task_id)
+        resolved[task_id] = value
+        return value
+
+    for node in sorted(nodes, key=lambda item: item.task_id):
+        resolve(node.task_id)
+    return resolved
+
+
 def _roles(nodes: tuple[TaskNode, ...], relations: tuple[TaskRelation, ...], roots: tuple[str, ...]) -> dict[str, tuple[str, ...]]:
     values: dict[str, set[str]] = {node.task_id: set() for node in nodes}
     for root in roots:
         values[root].add("Lead")
-    generation: dict[str, int] = defaultdict(int)
+    generation = _generation_numbers(nodes, relations)
     for relation in relations:
         if relation.is_display_only:
             continue
@@ -96,8 +132,6 @@ def _roles(nodes: tuple[TaskNode, ...], relations: tuple[TaskRelation, ...], roo
         }.get(relation.relation_type)
         if role:
             values[relation.source_id].add(role)
-        if relation.relation_type is RelationType.ROLLOVER_GENERATION_OF:
-            generation[relation.source_id] = max(generation[relation.source_id], generation[relation.target_id] + 1)
     for task_id, number in generation.items():
         if number:
             values[task_id].add(f"Generation {number}")
@@ -108,6 +142,24 @@ def _roles(nodes: tuple[TaskNode, ...], relations: tuple[TaskRelation, ...], roo
         return (1, int(role.removeprefix("Generation ")))
 
     return {task_id: tuple(sorted(roles, key=sort_key)) for task_id, roles in values.items()}
+
+
+def _component(seed_task_id: str, relations: tuple[TaskRelation, ...]) -> set[str]:
+    """Return the exact-ID component, ignoring display-only membership annotations."""
+    adjacency: dict[str, set[str]] = defaultdict(set)
+    for relation in relations:
+        if relation.is_display_only:
+            continue
+        adjacency[relation.source_id].add(relation.target_id)
+        adjacency[relation.target_id].add(relation.source_id)
+    discovered = {seed_task_id}
+    pending = [seed_task_id]
+    while pending:
+        current = pending.pop()
+        for neighbor in sorted(adjacency[current] - discovered):
+            discovered.add(neighbor)
+            pending.append(neighbor)
+    return discovered
 
 
 def discover_task_family(manifest: TaskFamilyManifest) -> FamilyGraph:
@@ -121,33 +173,43 @@ def discover_task_family(manifest: TaskFamilyManifest) -> FamilyGraph:
         missing = tuple(task_id for task_id in (relation.source_id, relation.target_id) if task_id not in nodes_by_id)
         if missing:
             blockers.append(Blocker("unknown_endpoint", f"Relation {relation.relation_type.value} names unknown exact task ID(s): {', '.join(missing)}.", missing, "Correct the manifest endpoints; titles cannot establish membership."))
-    roots = _roots(manifest.nodes, manifest.relations)
+    if manifest.seed_task_id not in nodes_by_id:
+        blockers.append(Blocker("unknown_seed_task", f"Seed task ID {manifest.seed_task_id!r} is not in the manifest.", (manifest.seed_task_id,), "Supply one existing exact task ID as the family seed."))
+    included_set = _component(manifest.seed_task_id, manifest.relations) if manifest.seed_task_id in nodes_by_id else set()
+    included_nodes = tuple(node for node in manifest.nodes if node.task_id in included_set)
+    excluded_task_ids = tuple(sorted(set(nodes_by_id) - included_set))
+    included_relations = tuple(
+        relation
+        for relation in manifest.relations
+        if not relation.is_display_only and relation.source_id in included_set and relation.target_id in included_set
+    )
+    roots = _roots(included_nodes, included_relations)
     if len(roots) != 1:
         blockers.append(Blocker("multiple_or_missing_roots", f"Family must resolve to exactly one root; found {len(roots)}: {', '.join(roots) or 'none'}.", roots, "Supply unambiguous family-defining exact-ID relations."))
-    project_roots = {_normal_root(node.project_root) for node in manifest.nodes}
+    project_roots = {_normal_root(node.project_root) for node in included_nodes}
     if len(project_roots) > 1:
-        blockers.append(Blocker("incompatible_project_roots", "Family nodes use incompatible project roots.", tuple(sorted(nodes_by_id)), "Split the family or supply evidence for a single compatible project root."))
+        blockers.append(Blocker("incompatible_project_roots", "Family nodes use incompatible project roots.", tuple(sorted(included_set)), "Split the family or supply evidence for a single compatible project root."))
     conflicts: dict[tuple[str, RelationType], set[str]] = defaultdict(set)
-    for relation in manifest.relations:
+    for relation in included_relations:
         if relation.relation_type in PARENT_LIKE_RELATIONS and not relation.is_display_only:
             conflicts[(relation.source_id, relation.relation_type)].add(relation.target_id)
     for (source, relation_type), targets in conflicts.items():
         if len(targets) > 1:
             blockers.append(Blocker("conflicting_membership", f"Task {source} has conflicting {relation_type.value} parents: {', '.join(sorted(targets))}.", (source, *sorted(targets))))
-    cycles = _cycle_nodes(manifest.relations)
+    cycles = _cycle_nodes(included_relations)
     if cycles:
         blockers.append(Blocker("parent_relation_cycle", f"Parent-like task relations contain a cycle at: {', '.join(cycles)}.", cycles))
-    return FamilyGraph(manifest, roots, _roles(manifest.nodes, manifest.relations, roots), tuple(blockers))
+    return FamilyGraph(manifest, tuple(sorted(included_set)), excluded_task_ids, roots, _roles(included_nodes, included_relations, roots), tuple(blockers))
 
 
-def rename_mapping(graph: FamilyGraph) -> tuple[TitleRename, ...]:
+def rename_mapping(graph: FamilyGraph, base_title: str) -> tuple[TitleRename, ...]:
     """Return stable title display changes; source titles are never identity keys."""
+    if not base_title.strip():
+        raise ValueError("base_title must be a non-empty caller-supplied value")
     changes: list[TitleRename] = []
-    for node in sorted(graph.manifest.nodes, key=lambda item: item.task_id):
+    for node in sorted(graph.nodes_by_id.values(), key=lambda item: item.task_id):
         roles = graph.roles_by_task[node.task_id]
-        suffix = ", ".join(roles)
-        managed_suffix = re.compile(r" \[(?:Lead|Worker|Reviewer|Handoff|Replacement|Generation \d+)(?:, (?:Lead|Worker|Reviewer|Handoff|Replacement|Generation \d+))*\]$")
-        base_title = managed_suffix.sub("", node.title)
+        suffix = " · ".join(roles)
         new_title = f"{base_title} [{suffix}]" if suffix else base_title
         changes.append(TitleRename(node.task_id, node.title, new_title, roles))
     return tuple(changes)

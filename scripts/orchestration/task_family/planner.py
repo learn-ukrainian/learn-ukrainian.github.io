@@ -10,6 +10,7 @@ from typing import Any
 from .graph import FamilyGraph, TitleRename, rename_mapping
 from .model import (
     PARENT_LIKE_RELATIONS,
+    SCHEMA_VERSION,
     STATE_SEQUENCE,
     ArchiveSelection,
     Blocker,
@@ -47,13 +48,15 @@ class TaskFamilyPlan:
     operation_id: str
     operation: OperationKind
     selected_task_ids: tuple[str, ...]
+    excluded_task_ids: tuple[str, ...]
+    base_title: str
     selections: tuple[ArchiveSelection, ...]
     rename_map: tuple[TitleRename, ...]
     resource_decisions: tuple[ResourceDecision, ...]
     stages: tuple[PlanStage, ...]
     blockers: tuple[Blocker, ...]
     state: LifecycleState = LifecycleState.PLANNED
-    schema_version: int = 1
+    schema_version: int = SCHEMA_VERSION
     digest: str = ""
 
     @property
@@ -62,8 +65,12 @@ class TaskFamilyPlan:
 
     @property
     def is_completed_cleanup_noop(self) -> bool:
-        """A completed plan is immutable and never schedules a second cleanup."""
-        return self.state is LifecycleState.COMPLETED
+        """A completed operation is immutable and never schedules a second cleanup."""
+        return self.state is self.terminal_state
+
+    @property
+    def terminal_state(self) -> LifecycleState:
+        return LifecycleState.TASKS_ARCHIVED if self.operation is OperationKind.ARCHIVE_ONLY else LifecycleState.COMPLETED
 
     def immutable_payload(self) -> dict[str, Any]:
         return {
@@ -72,6 +79,8 @@ class TaskFamilyPlan:
             "operation_id": self.operation_id,
             "operation": self.operation.value,
             "selected_task_ids": list(self.selected_task_ids),
+            "excluded_task_ids": list(self.excluded_task_ids),
+            "base_title": self.base_title,
             "selections": [
                 {
                     "task_id": item.task_id,
@@ -98,8 +107,10 @@ class TaskFamilyPlan:
         return payload
 
     def with_state(self, state: LifecycleState) -> TaskFamilyPlan:
-        if self.state is LifecycleState.COMPLETED:
-            return self
+        if self.state is self.terminal_state:
+            if state is self.state:
+                return self
+            raise ValueError(f"operation {self.operation.value} reached terminal state {self.state.value}")
         if state is LifecycleState.BLOCKED:
             return replace(self, state=state)
         state_sequence = tuple(stage.state for stage in self.stages)
@@ -110,6 +121,62 @@ class TaskFamilyPlan:
         if self.blockers:
             return replace(self, state=LifecycleState.BLOCKED)
         return replace(self, state=state)
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> TaskFamilyPlan:
+        if not isinstance(payload, dict):
+            raise ValueError("task-family plan must be an object")
+        if payload.get("schema_version") != SCHEMA_VERSION:
+            raise ValueError(f"unsupported task-family plan schema_version: {payload.get('schema_version')!r}")
+        try:
+            operation = OperationKind(payload.get("operation"))
+            state = LifecycleState(payload.get("state"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("task-family plan contains an unknown operation or lifecycle state") from exc
+
+        def string_list(key: str) -> tuple[str, ...]:
+            value = payload.get(key, [])
+            if not isinstance(value, list):
+                raise ValueError(f"task-family plan {key} must be a list")
+            return tuple(item for item in value if isinstance(item, str))
+
+        def record_list(key: str) -> list[dict[str, Any]]:
+            value = payload.get(key, [])
+            if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+                raise ValueError(f"task-family plan {key} must be a list of objects")
+            return value
+
+        def title_rename(item: dict[str, Any]) -> TitleRename:
+            roles = item.get("roles")
+            if not all(isinstance(item.get(key), str) for key in ("task_id", "old_title", "new_title")) or not isinstance(roles, list) or not all(isinstance(role, str) for role in roles):
+                raise ValueError("task-family plan rename_map must contain title rename objects")
+            return TitleRename(item["task_id"], item["old_title"], item["new_title"], tuple(roles))
+
+        if len(string_list("selected_task_ids")) != len(payload.get("selected_task_ids", [])):
+            raise ValueError("task-family plan selected_task_ids must be strings")
+        plan = cls(
+            family_id=payload.get("family_id") if isinstance(payload.get("family_id"), str) else "",
+            operation_id=payload.get("operation_id") if isinstance(payload.get("operation_id"), str) else "",
+            operation=operation,
+            selected_task_ids=string_list("selected_task_ids"),
+            excluded_task_ids=string_list("excluded_task_ids"),
+            base_title=payload.get("base_title") if isinstance(payload.get("base_title"), str) else "",
+            selections=tuple(ArchiveSelection.from_dict(item) for item in record_list("selections")),
+            rename_map=tuple(title_rename(item) for item in record_list("rename_map")),
+            resource_decisions=tuple(ResourceDecision.from_dict(item) for item in record_list("resource_decisions")),
+            stages=tuple(PlanStage.from_dict(item) for item in record_list("stages")),
+            blockers=tuple(Blocker.from_dict(item) for item in record_list("blockers")),
+            state=state,
+            schema_version=payload["schema_version"],
+            digest=payload.get("digest") if isinstance(payload.get("digest"), str) else "",
+        )
+        if not plan.family_id or not plan.operation_id or not plan.base_title or not plan.digest:
+            raise ValueError("task-family plan requires family_id, operation_id, base_title, and digest")
+        if sha256_digest(plan.immutable_payload()) != plan.digest:
+            raise ValueError("immutable plan digest does not match persisted plan")
+        if plan.state is not LifecycleState.BLOCKED and plan.state not in {stage.state for stage in plan.stages}:
+            raise ValueError("task-family plan state is absent from operation stages")
+        return plan
 
 
 def _shared_resource_blockers(graph: FamilyGraph, selected: set[str]) -> list[Blocker]:
@@ -170,16 +237,12 @@ def _resource_decisions(graph: FamilyGraph, selected: tuple[str, ...]) -> tuple[
 
 
 def _stages(operation: OperationKind) -> tuple[PlanStage, ...]:
-    archive_only_skips = {
-        LifecycleState.SNAPSHOTTED,
-        LifecycleState.WORKTREES_REMOVED,
-        LifecycleState.BRANCHES_DELETED,
-        LifecycleState.RUNTIME_RETIRED,
-    }
-    return tuple(
-        PlanStage(state, operation is not OperationKind.ARCHIVE_ONLY or state not in archive_only_skips, STAGE_DESCRIPTIONS[state])
-        for state in STATE_SEQUENCE
+    states = (
+        (LifecycleState.PLANNED, LifecycleState.FROZEN, LifecycleState.VERIFIED, LifecycleState.TASKS_ARCHIVED)
+        if operation is OperationKind.ARCHIVE_ONLY
+        else STATE_SEQUENCE
     )
+    return tuple(PlanStage(state, True, STAGE_DESCRIPTIONS[state]) for state in states)
 
 
 def build_plan(
@@ -188,9 +251,12 @@ def build_plan(
     operation_id: str,
     operation: OperationKind,
     selections: tuple[ArchiveSelection, ...],
+    base_title: str,
 ) -> TaskFamilyPlan:
     """Build a deterministic plan, recording blockers instead of guessing intent."""
     blockers = list(graph.blockers)
+    if not base_title.strip():
+        blockers.append(Blocker("missing_base_title", "A caller-supplied base title is required; titles are never identity inputs."))
     node_ids = set(graph.nodes_by_id)
     selected_ids = tuple(sorted(selection.task_id for selection in selections))
     if not selections:
@@ -209,8 +275,10 @@ def build_plan(
         operation_id=operation_id,
         operation=operation,
         selected_task_ids=selected_ids,
+        excluded_task_ids=graph.excluded_task_ids,
+        base_title=base_title,
         selections=tuple(sorted(selections, key=lambda item: item.task_id)),
-        rename_map=rename_mapping(graph),
+        rename_map=rename_mapping(graph, base_title) if base_title.strip() else (),
         resource_decisions=_resource_decisions(graph, tuple(sorted(selected_set))),
         stages=_stages(operation),
         blockers=tuple(sorted(blockers, key=lambda item: (item.code, item.task_ids, item.message))),
