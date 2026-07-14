@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+from contextlib import ExitStack
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -656,11 +657,12 @@ class CleanupExecutor:
 
     def run(self) -> dict[str, Any]:
         _validate_plan(self.plan)
-        with (
-            safety.operation_lock(self.repo_root, operation_id=self.plan.operation_id),
-            safety.lineage_lock(self.repo_root, self.plan.lineage_id),
-            safety.family_lock(self.repo_root, self.plan.family_id),
-        ):
+        with ExitStack() as locks:
+            locks.enter_context(safety.operation_lock(self.repo_root, operation_id=self.plan.operation_id))
+            locks.enter_context(safety.lineage_lock(self.repo_root, self.plan.lineage_id))
+            locks.enter_context(safety.family_lock(self.repo_root, self.plan.family_id))
+            for target in sorted(self.plan.worktree_targets, key=lambda item: str(item.worktree.resolve())):
+                locks.enter_context(safety.worktree_lock(self.repo_root, target.worktree))
             return self._run_locked()
 
     def _run_locked(self) -> dict[str, Any]:
@@ -1161,13 +1163,15 @@ class CleanupExecutor:
                 payload,
                 "runtime",
                 target.id,
-                "actual",
-                evidence={"retired": True, "proof": target.proof},
+                "skipped",
+                evidence={"retired": False, "preserved": True, "proof": target.proof},
+                reason="native runtime retirement is unavailable; evidence preserved and retirement deferred",
             )
 
         if blocked:
             raise ExecutorError("runtime retirement blocked: explicit eligibility and proof required")
         _record(payload, "runtime_retired", "proof_verified", True)
+        _record(payload, "runtime_retired", "mutation", "deferred_to_native")
         self._maybe_crash("runtime_retired")
         return "runtime_retired"
 

@@ -21,6 +21,8 @@ Use the available Codex app tools for their supported actions:
 
 The app currently lacks an include-archived inventory, readable pin state, typed family graph, atomic batch mutation, and native receipt API. The local bridge therefore performs bounded, read-only SQLite reconciliation after each native mutation. `--db auto` discovers a compatible local database fail-closed; an explicit database path is also accepted.
 
+Runtime packets, rollover leases, and automations are preservation-only locally. For finish-and-clean, record a tool-backed terminal task `status`. Any selected rollover endpoint also needs `rollover_cleanup_eligible: "true"` plus `rollover_cleanup_proof`; any `automation_id` needs `automation_cleanup_eligible: "true"` plus `automation_cleanup_proof`. Missing proof blocks cleanup. Even with proof, the local executor records retirement as deferred and preserves the evidence because no native retirement API exists.
+
 ## Build the manifest
 
 Create a versioned manifest from tool-backed exact IDs. Prefer structured fork responses or persisted spawn edges. Add reviewer, handoff, replacement, and rollover relations only when explicit evidence exists. `issue_or_pr_member` may be display-only by setting `family_defining` to `false`.
@@ -86,11 +88,13 @@ Use a fresh UUID for each operation. The preview persists an immutable exact ren
   --operation-id 00000000-0000-4000-8000-000000000010 \
   --base-title "Lifecycle complete" \
   --select-task 00000000-0000-4000-8000-000000000001 \
+  --select-task 00000000-0000-4000-8000-000000000002 \
   --confirm-pin-unknown 00000000-0000-4000-8000-000000000001 \
+  --confirm-pin-unknown 00000000-0000-4000-8000-000000000002 \
   --actor codex/operator --json
 ```
 
-After the user has seen the preview, call `set_thread_title` once per selected task using that task's exact `new_title`. Immediately reconcile each result:
+Family rename requires every included task. Repeat both selection arguments for every included UUID. After the user has seen the preview, call `set_thread_title` once per selected task using that task's exact `new_title`. Immediately reconcile each result:
 
 ```bash
 .venv/bin/python -m scripts.orchestration.task_family reconcile-title \
@@ -121,7 +125,9 @@ Choose the operation explicitly:
   --lineage-id 00000000-0000-4000-8000-000000000021 \
   --base-title "Lifecycle complete" --db auto \
   --select-task 00000000-0000-4000-8000-000000000001 \
+  --select-task 00000000-0000-4000-8000-000000000002 \
   --confirm-pin-unknown 00000000-0000-4000-8000-000000000001 \
+  --confirm-pin-unknown 00000000-0000-4000-8000-000000000002 \
   --actor codex/operator --json
 ```
 

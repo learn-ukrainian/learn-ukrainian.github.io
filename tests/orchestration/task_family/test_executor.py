@@ -18,7 +18,11 @@ from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 
 def _git_env() -> dict[str, str]:
-    return {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and key != "AGENT_NO_MERGE"
+    }
 
 
 def git(cwd: Path, *args: str) -> str:
@@ -266,6 +270,11 @@ def test_github_queries_use_valid_commands_and_normalize_merge_commit(tmp_path: 
     assert all("--json" not in call for call in calls if call and call[0] == "api")
     assert git_safety._normalize_merge_commit({"oid": "a" * 40}) == "a" * 40
     assert git_safety._normalize_merge_commit("b" * 40) == "b" * 40
+    incomplete_pr = pr("cleanup/missing-number", "a" * 40, 0)
+    with pytest.raises(git_safety.GitSafetyError, match="PR number mismatch"):
+        git_safety.assert_pr_is_merged(incomplete_pr, expected_number=9)
+    with pytest.raises(git_safety.GitSafetyError, match="invalid branch token"):
+        git_safety.assert_no_unknown_branch_mutation(repo, "--all")
 
 
 def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_mutation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -352,3 +361,24 @@ def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(tmp_path: 
     saved = result["resources"]["runtime"][runtime.id]
     assert saved["status"] == "failed"
     assert "preserved" in saved["reason"]
+
+
+def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unavailable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    branch, worktree = "cleanup/runtime-deferred", add_worktree(repo, "cleanup/runtime-deferred")
+    task_id = str(uuid4())
+    db = tmp_path / "state_5.sqlite"
+    write_threads(db, [{"id": task_id, "title": "A", "cwd": str(worktree), "archived": 1, "archived_at": "2026-01-01Z", "host": "host-a"}])
+    target = worktree_target(worktree, branch, "runtime-deferred", number=12)
+    runtime = executor.RuntimeTarget(id=str(uuid4()), kind="handoff", eligible=True, proof="replacement confirmed")
+    approved = plan(repo, family="runtime-deferred", mode="finish_and_clean", task_targets=(task(task_id, title="A", cwd=worktree, db_path=db),), worktree_targets=(target,), runtime_targets=(runtime,))
+    stub_remote(monkeypatch)
+    head = git(worktree, "rev-parse", "HEAD")
+    monkeypatch.setattr(git_safety, "query_pr_by_head", lambda *_args, **_kwargs: pr(branch, head, 12))
+
+    result = executor.CleanupExecutor(repo, approved).run()
+    assert result["state"] == "completed"
+    saved = result["resources"]["runtime"][runtime.id]
+    assert saved["status"] == "skipped"
+    assert saved["actual"]["retired"] is False
+    assert saved["actual"]["preserved"] is True

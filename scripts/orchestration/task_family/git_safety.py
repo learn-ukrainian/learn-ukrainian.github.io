@@ -446,11 +446,18 @@ def repo_default_branch(repo_root: Path) -> str:
 
 
 def ensure_clean_base(repo_root: Path, base_branch: str) -> None:
+    _assert_valid_branch_token(repo_root, base_branch)
     current_proc = run_git(["symbolic-ref", "--short", "HEAD"], cwd=repo_root)
     _require_success(current_proc, context="cannot determine active branch")
     current = (current_proc.stdout or "").strip()
     if current != base_branch:
         raise GitSafetyError(f"active branch is {current!r}, expected protected base {base_branch!r}")
+
+    fetch = run_git(
+        ["fetch", "--quiet", "origin", f"refs/heads/{base_branch}:refs/remotes/origin/{base_branch}"],
+        cwd=repo_root,
+    )
+    _require_success(fetch, context=f"cannot refresh protected base {base_branch}")
 
     proc = run_git([
         "rev-list",
@@ -576,7 +583,7 @@ def assert_pr_is_merged(
     if pr.get("is_cross_repository"):
         raise GitSafetyError("PR must not be cross-repository")
     number = int(pr.get("number", 0) or 0)
-    if expected_number is not None and number and number != expected_number:
+    if expected_number is not None and number != expected_number:
         raise GitSafetyError(
             f"PR number mismatch: expected {expected_number!r}, got {pr.get('number')!r}"
         )
@@ -619,13 +626,20 @@ def remote_branch_present(repo_root: Path, branch: str) -> bool:
     raise GitSafetyError(f"remote branch lookup failed for {branch!r}: {proc.stderr.strip() or proc.stdout.strip()}")
 
 
+def _assert_valid_branch_token(repo_root: Path, branch: str) -> None:
+    if ".." in branch or branch.startswith("-") or branch.strip() != branch or not branch:
+        raise GitSafetyError(f"invalid branch token: {branch!r}")
+    checked = run_git(["check-ref-format", "--branch", branch], cwd=repo_root)
+    if checked.returncode != 0:
+        raise GitSafetyError(f"invalid branch token: {branch!r}")
+
+
 def assert_no_unknown_branch_mutation(
     repo_root: Path,
     branch: str,
     explicit_protected: set[str] | frozenset[str] = frozenset(),
 ) -> None:
-    if ".." in branch or branch.strip() != branch or not branch:
-        raise GitSafetyError(f"invalid branch token: {branch!r}")
+    _assert_valid_branch_token(repo_root, branch)
     if is_protected_branch(repo_root, branch, explicit_protected=explicit_protected):
         raise GitSafetyError(f"refusing to mutate protected branch: {branch!r}")
 

@@ -16,6 +16,8 @@ The current app can list visible tasks, read a task, rename one task, archive or
 - Git/worktree ownership and cleanup authority;
 - an irreversible purge token.
 
+It also lacks an authoritative automation inventory/retirement API and a typed rollover lease cleanup-eligibility API. Local cleanup therefore preserves those resources. Explicit proof can unblock unrelated Git cleanup, but must never be represented as a local runtime or automation deletion.
+
 The local fallback therefore uses exact task UUIDs and explicit typed manifest relations, performs native task mutations one at a time, and verifies each result through a bounded read-only SQLite bridge. The database is not a supported public interface. The fallback never writes it and must fail closed when its schema, identity, title, `cwd`, host, or archive state is ambiguous.
 
 ## Native domain model
@@ -44,6 +46,8 @@ Each task record exposes:
 - project, worktree, branch, PR, model, harness, local/remote host, and `cwd` metadata;
 - whether the task is running, waiting, completed, blocked, or unavailable;
 - capabilities allowed for the current actor.
+
+Family inventory also exposes runtime packets, leases, and automations as first-class resources. Each resource carries its owning task UUID, lineage, current run state, predecessor/replacement IDs, cleanup eligibility, version, proof source, and evidence dependencies. An unavailable automation host or unknown replacement confirmation is a blocker, not an empty inventory.
 
 Pin state is tri-state only while migrating old data: `pinned`, `unpinned`, or `unknown`. Native operations protect `pinned` and `unknown` tasks by default. Unknown pin state requires an explicit task-specific confirmation; a family-wide Boolean override is invalid.
 
@@ -159,6 +163,8 @@ The response freezes exact inputs and returns:
 ```
 
 The preview must include every selected task, excluded task, title mapping, pin decision, and local resource decision. Standardized titles preserve role and generation information and fit the app's persisted title limit. A changed family/task/resource version invalidates the digest.
+
+Runtime and automation decisions distinguish `preserve`, `eligible_for_native_retirement`, and `blocked`. Eligibility requires the replacement thread and any successor automation to be confirmed by the authoritative rollover lease. Repository fallback receipts always say `preserved/deferred_to_native`; they never claim a runtime or automation was retired.
 
 ### Execute a preview
 

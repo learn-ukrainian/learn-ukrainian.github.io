@@ -25,6 +25,7 @@ from .model import (
     OperationKind,
     OperationReceipt,
     ReceiptAction,
+    RelationType,
     TaskFamilyManifest,
     utc_now,
 )
@@ -84,6 +85,7 @@ def _graph_payload(graph: FamilyGraph) -> dict[str, Any]:
     return {
         "family_id": graph.manifest.family_id,
         "seed_task_id": graph.manifest.seed_task_id,
+        "roots": list(graph.roots),
         "included_task_ids": list(graph.included_task_ids),
         "excluded_task_ids": list(graph.excluded_task_ids),
         "counts": {
@@ -97,14 +99,29 @@ def _graph_payload(graph: FamilyGraph) -> dict[str, Any]:
                 "task_id": node.task_id,
                 "title": node.title,
                 "roles": list(graph.roles_by_task[node.task_id]),
+                "status": next(
+                    (node.metadata[key] for key in ("state", "status", "task_state", "lifecycle_state") if node.metadata.get(key)),
+                    "unknown",
+                ),
                 "resources": {
                     "project_root": node.project_root,
+                    "cwd": node.metadata.get("cwd", node.project_root),
                     "worktree": node.worktree,
                     "branch": node.branch,
                     "pr_id": node.pr_id,
+                    "model": node.metadata.get("model"),
+                    "host": node.metadata.get("host"),
+                    "local": node.metadata.get("local"),
                 },
             }
             for node in sorted(nodes.values(), key=lambda item: item.task_id)
+        ],
+        "relations": [
+            relation.to_dict()
+            for relation in sorted(
+                graph.family_relations,
+                key=lambda item: (item.source_id, item.target_id, item.relation_type.value),
+            )
         ],
         "excluded": [
             {
@@ -126,7 +143,11 @@ def _human_inspect(payload: dict[str, Any]) -> str:
     ]
     for task in payload["tasks"]:
         roles = ", ".join(task["roles"]) or "unclassified"
-        lines.append(f"- {task['task_id']}: {roles}; {task['title']}")
+        lines.append(f"- {task['task_id']}: {roles}; status={task['status']}; {task['title']}")
+    for relation in payload["relations"]:
+        lines.append(
+            f"- edge {relation['source_id']} -[{relation['relation_type']}]-> {relation['target_id']}"
+        )
     for task in payload["excluded"]:
         lines.append(f"- excluded {task['task_id']}: {task['title']} ({task['reason']})")
     for blocker in payload["blockers"]:
@@ -239,6 +260,13 @@ def _execution_payload(
     blockers: list[Blocker] = []
     tasks: list[dict[str, Any]] = []
     worktrees: list[dict[str, Any]] = []
+    runtime: list[dict[str, Any]] = []
+    rollover_task_ids = {
+        task_id
+        for relation in graph.family_relations
+        if relation.relation_type is RelationType.ROLLOVER_GENERATION_OF
+        for task_id in (relation.source_id, relation.target_id)
+    }
     for task_id in plan.selected_task_ids:
         node = nodes[task_id]
         metadata_state = _active_metadata_state(node.metadata)
@@ -251,6 +279,15 @@ def _execution_payload(
                     "Wait for the task to stop, then create a new explicit preview.",
                 )
             )
+        elif plan.operation is OperationKind.FINISH_AND_CLEAN and _terminal_metadata_state(node.metadata) is None:
+            blockers.append(
+                Blocker(
+                    "task_completion_unproven",
+                    f"Selected task {task_id!r} has no explicit terminal or abandoned status.",
+                    (task_id,),
+                    "Record a tool-backed completed, failed, cancelled, stopped, or abandoned status, then create a new preview.",
+                )
+            )
         expected_host = host if host is not None else node.metadata.get("host")
         tasks.append(
             {
@@ -261,6 +298,51 @@ def _execution_payload(
                 "host": expected_host,
             }
         )
+        runtime_kinds: list[str] = []
+        runtime_proofs: list[str] = []
+        runtime_eligible = True
+        if task_id in rollover_task_ids:
+            runtime_kinds.append("rollover")
+            proof = node.metadata.get("rollover_cleanup_proof", "").strip()
+            eligible = node.metadata.get("rollover_cleanup_eligible", "").strip().lower() == "true" and bool(proof)
+            runtime_eligible = runtime_eligible and eligible
+            if proof:
+                runtime_proofs.append(proof)
+            if plan.operation is OperationKind.FINISH_AND_CLEAN and not eligible:
+                blockers.append(
+                    Blocker(
+                        "active_rollover_evidence",
+                        f"Selected rollover task {task_id!r} lacks explicit cleanup eligibility and proof.",
+                        (task_id,),
+                        "Confirm replacement startup and record tool-backed rollover cleanup proof before a new preview.",
+                    )
+                )
+        automation_id = node.metadata.get("automation_id", "").strip()
+        if automation_id:
+            runtime_kinds.append("automation")
+            proof = node.metadata.get("automation_cleanup_proof", "").strip()
+            eligible = node.metadata.get("automation_cleanup_eligible", "").strip().lower() == "true" and bool(proof)
+            runtime_eligible = runtime_eligible and eligible
+            if proof:
+                runtime_proofs.append(f"{automation_id}: {proof}")
+            if plan.operation is OperationKind.FINISH_AND_CLEAN and not eligible:
+                blockers.append(
+                    Blocker(
+                        "unconfirmed_predecessor_automation",
+                        f"Selected task {task_id!r} has automation {automation_id!r} without confirmed replacement cleanup proof.",
+                        (task_id,),
+                        "Confirm the replacement and record tool-backed automation cleanup eligibility before a new preview.",
+                    )
+                )
+        if runtime_kinds:
+            runtime.append(
+                {
+                    "id": task_id,
+                    "kind": "+".join(runtime_kinds),
+                    "eligible": runtime_eligible,
+                    "proof": "; ".join(runtime_proofs) or None,
+                }
+            )
         resource_values = (node.worktree, node.branch, node.pr_id)
         if not any(resource_values):
             continue
@@ -321,7 +403,7 @@ def _execution_payload(
         "target_db": str(db_path),
         "task_targets": tasks,
         "worktree_targets": worktrees,
-        "runtime_targets": [],
+        "runtime_targets": runtime,
         "pin_unknown_confirmed": all(item.pin_state_unknown_confirmed for item in plan.selections),
     }
     return payload, tuple(blockers)
@@ -336,6 +418,14 @@ def _active_metadata_state(metadata: dict[str, str]) -> str | None:
     for key in ("running", "active"):
         if metadata.get(key, "").strip().lower() in {"1", "true", "yes", "running", "active"}:
             return key
+    return None
+
+
+def _terminal_metadata_state(metadata: dict[str, str]) -> str | None:
+    for key in ("state", "status", "task_state", "lifecycle_state"):
+        value = metadata.get(key, "").strip().lower()
+        if value in {"completed", "done", "failed", "cancelled", "canceled", "stopped", "abandoned"}:
+            return value
     return None
 
 
