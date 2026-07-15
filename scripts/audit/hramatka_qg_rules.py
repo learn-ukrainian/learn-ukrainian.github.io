@@ -15,9 +15,11 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import sqlite3
 import sys
 import tempfile
 from collections.abc import Iterable, Mapping, Sequence
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -499,11 +501,18 @@ def _apostrophe_variants(token: str) -> list[str]:
 
 
 def _vesum_hits(token: str) -> list[dict]:
-    """VESUM lookup tolerant of apostrophe orthography and proper-noun case."""
-    for variant in _apostrophe_variants(token):
-        hits = verify_word(variant)
-        if hits:
-            return hits
+    """VESUM lookup tolerant of apostrophe orthography and proper-noun case.
+
+    Missing VESUM DB → empty + detector_unavailable (never crash the gate).
+    """
+    try:
+        for variant in _apostrophe_variants(token):
+            hits = verify_word(variant)
+            if hits:
+                return hits
+    except (FileNotFoundError, OSError, sqlite3.Error) as exc:
+        _mark_detector_unavailable("vesum", str(exc))
+        return []
     return []
 
 
@@ -591,13 +600,31 @@ def _heritage_safe(status: Mapping[str, Any]) -> bool:
     classification = str(status.get("classification") or "")
     if classification in {"authentic-archaism", "dialect", "historism", "borrowing"}:
         return True
-    return classification == "standard" and bool(
-        status.get("vesum_attested") or has_positive_attestation(status)
-    )
+    try:
+        attested = bool(status.get("vesum_attested") or has_positive_attestation(status))
+    except (FileNotFoundError, OSError, sqlite3.Error) as exc:
+        _mark_detector_unavailable("heritage_classifier", str(exc))
+        attested = bool(status.get("vesum_attested"))
+    return classification == "standard" and attested
+
+
+def _unknown_token_status() -> dict[str, Any]:
+    return {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": False,
+        "sovietization_risk": 0,
+        "calque_warning": None,
+    }
 
 
 def _classify_token(token: str) -> dict[str, Any]:
-    """Classify with VESUM-first short-circuit (performance + apostrophe tolerance)."""
+    """Classify with VESUM-first short-circuit (performance + apostrophe tolerance).
+
+    Partial sources.db / missing VESUM → degrade to unknown (no crash).
+    """
     if _vesum_hits(token):
         return {
             "classification": "standard",
@@ -621,7 +648,11 @@ def _classify_token(token: str) -> dict[str, Any]:
             "calque_warning": None,
         }
     # heritage_classifier always overrides when it attests; russian-shadow is a signal.
-    return classify_surface_form(token.casefold())
+    try:
+        return classify_surface_form(token.casefold())
+    except (FileNotFoundError, OSError, sqlite3.Error) as exc:
+        _mark_detector_unavailable("heritage_classifier", str(exc))
+        return _unknown_token_status()
 
 
 def _is_russianism_token(token: str, status: Mapping[str, Any] | None = None) -> bool:
@@ -659,10 +690,29 @@ def _is_invented_form(token: str, status: Mapping[str, Any] | None = None) -> bo
 # Synonym + CEFR local lookups (direct SQL; same DBs as sources_db)
 # ---------------------------------------------------------------------------
 
+# Scan-scoped map of unavailable sub-detectors → reason. Partial sources.db
+# (CI stripped builds) must degrade, never crash the harness.
+_ACTIVE_UNAVAILABLE: ContextVar[dict[str, str] | None] = ContextVar(
+    "hramatka_qg_unavailable_detectors",
+    default=None,
+)
+
+
+def _mark_detector_unavailable(detector: str, reason: str) -> None:
+    store = _ACTIVE_UNAVAILABLE.get()
+    if store is None:
+        return
+    store.setdefault(detector, reason)
+
+
+def _is_missing_table_error(exc: BaseException) -> bool:
+    if not isinstance(exc, sqlite3.OperationalError):
+        return False
+    msg = str(exc).casefold()
+    return "no such table" in msg or "no such column" in msg
+
 
 def _sources_conn():
-    import sqlite3
-
     db = PROJECT_ROOT / "data" / "sources.db"
     if not db.exists():
         return None
@@ -679,6 +729,7 @@ def _synonym_lemmas(word: str) -> set[str]:
     partners: set[str] = set()
     conn = _sources_conn()
     if conn is None:
+        _mark_detector_unavailable("ukrajinet_synonyms", "sources.db missing")
         return partners
     try:
         rows = conn.execute(
@@ -698,6 +749,11 @@ def _synonym_lemmas(word: str) -> set[str]:
             cyr = [m for m in normalized if _CYRILLIC_TOKEN_RE.fullmatch(m)]
             if word_n in cyr:
                 partners.update(m for m in cyr if m != word_n)
+    except sqlite3.OperationalError as exc:
+        if _is_missing_table_error(exc):
+            _mark_detector_unavailable("ukrajinet_synonyms", str(exc))
+            return partners
+        raise
     finally:
         conn.close()
     return partners
@@ -714,6 +770,7 @@ def _are_synonyms(a: str, b: str) -> bool:
 def _cefr_level_for(word: str) -> str | None:
     conn = _sources_conn()
     if conn is None:
+        _mark_detector_unavailable("puls_cefr", "sources.db missing")
         return None
     try:
         row = conn.execute(
@@ -728,6 +785,11 @@ def _cefr_level_for(word: str) -> str | None:
         ).fetchone()
         if row and row["level"]:
             return str(row["level"]).strip().lower()
+    except sqlite3.OperationalError as exc:
+        if _is_missing_table_error(exc):
+            _mark_detector_unavailable("puls_cefr", str(exc))
+            return None
+        raise
     finally:
         conn.close()
     return None
@@ -743,9 +805,12 @@ def _antonenko_title_hit(text: str) -> list[str]:
 
     Only multi-token left-hand sides of ``bad – good`` titles count. Single-token
     left sides (e.g. "Жити–бути") are too ambiguous for a deterministic gate.
+
+    Missing ``style_guide`` (CI stripped sources.db) → empty + detector_unavailable.
     """
     conn = _sources_conn()
     if conn is None:
+        _mark_detector_unavailable("antonenko_style_guide", "sources.db missing")
         return []
     hits: list[str] = []
     folded = text.casefold()
@@ -773,6 +838,11 @@ def _antonenko_title_hit(text: str) -> list[str]:
                 if cand in folded:
                     hits.append(title)
                     break
+    except sqlite3.OperationalError as exc:
+        if _is_missing_table_error(exc):
+            _mark_detector_unavailable("antonenko_style_guide", str(exc))
+            return []
+        raise
     finally:
         conn.close()
     return hits
@@ -781,6 +851,24 @@ def _antonenko_title_hit(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # Check classes
 # ---------------------------------------------------------------------------
+
+
+def _safe_curated_russicisms(text: str, file_path: str) -> list[dict]:
+    """Curated regex russicisms; never let a broken helper crash the gate."""
+    try:
+        return list(check_russicisms(text, file_path=file_path) or [])
+    except (OSError, sqlite3.Error, RuntimeError, ValueError) as exc:
+        _mark_detector_unavailable("check_russicisms", str(exc))
+        return []
+
+
+def _safe_ua_gec_calques(text: str, file_path: str) -> list[dict]:
+    """UA-GEC calques (CSV-backed); degrade if the lookup table cannot load."""
+    try:
+        return list(check_ua_gec_calques(text, file_path=file_path) or [])
+    except (OSError, sqlite3.Error, RuntimeError, ValueError) as exc:
+        _mark_detector_unavailable("ua_gec_calques", str(exc))
+        return []
 
 
 def check_russianism_calque(ctx: _ScanContext) -> list[dict[str, Any]]:
@@ -799,7 +887,7 @@ def check_russianism_calque(ctx: _ScanContext) -> list[dict[str, Any]]:
         file, line, file_text = _locate_in_texts(ctx.texts, text[:80] if len(text) > 80 else text)
 
         # 1) Curated regex / high-precision patterns (reused from qg_adapters stack)
-        for violation in check_russicisms(text, file_path=file):
+        for violation in _safe_curated_russicisms(text, file):
             excerpt = str(violation.get("matched") or text[:80])
             # check_russicisms aggregates; pull matched terms from issue when needed
             issue = str(violation.get("issue") or "Russicism detected")
@@ -823,7 +911,7 @@ def check_russianism_calque(ctx: _ScanContext) -> list[dict[str, Any]]:
 
         # 2) UA-GEC exact-span calques — multi-word only (single tokens are too noisy;
         # curated check_russicisms already covers high-precision single-token forms).
-        for violation in check_ua_gec_calques(text, file_path=file):
+        for violation in _safe_ua_gec_calques(text, file):
             matched = str(violation.get("matched") or "")
             if not matched or " " not in matched.strip():
                 continue
@@ -1597,20 +1685,30 @@ def scan_hramatka_module(
         learner_strings=strings,
     )
 
-    findings = _dedupe_findings(
-        [
-            *check_russianism_calque(ctx),
-            *check_invalid_distractors(ctx),
-            *check_answer_key_placeholders(ctx),
-            *check_structural_integrity(ctx),
-            *check_empty_learner_surface(ctx),
-            *check_task_language_cefr(ctx),
-            *check_invented_forms(ctx),
-        ]
-    )
+    unavailable: dict[str, str] = {}
+    token = _ACTIVE_UNAVAILABLE.set(unavailable)
+    try:
+        findings = _dedupe_findings(
+            [
+                *check_russianism_calque(ctx),
+                *check_invalid_distractors(ctx),
+                *check_answer_key_placeholders(ctx),
+                *check_structural_integrity(ctx),
+                *check_empty_learner_surface(ctx),
+                *check_task_language_cefr(ctx),
+                *check_invented_forms(ctx),
+            ]
+        )
+    finally:
+        _ACTIVE_UNAVAILABLE.reset(token)
+
     dimensions = _dimension_scores(findings)
     aggregate = _aggregate(dimensions)
     config_hash = checker_config_hash()
+    detector_status = {
+        name: {"status": "detector_unavailable", "reason": reason}
+        for name, reason in sorted(unavailable.items())
+    }
 
     return {
         "schema_version": EVIDENCE_SCHEMA_VERSION,
@@ -1628,6 +1726,7 @@ def scan_hramatka_module(
         "terminal_verdict": aggregate["terminal_verdict"],
         "aggregate": aggregate,
         "dimensions": dimensions,
+        "detector_status": detector_status,
         "checker_runs": [
             {
                 "source": "hramatka_deterministic",
