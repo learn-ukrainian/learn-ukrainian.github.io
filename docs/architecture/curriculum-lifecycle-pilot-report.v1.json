@@ -1,0 +1,912 @@
+{
+  "contract_sources": [
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml",
+      "sha256": "1133e380f9afa66872aeddbd5879d1af1fbd41e2f8094fb8048868b9dfe4a319"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/config/pilot-matrix.v1.yaml",
+      "sha256": "81e6d59d1bfbceba9283a06ea8ec6bdd325049d4ac5e8c331700efa3e51ae7e0"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
+      "sha256": "e618368f399322f769e0d5f318ec8933cf80e08c8a490f4646ff381fa271c894"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json",
+      "sha256": "fac8d51f9e2481a9aae44f49c81956c4662d141230d6e640245a8863859ae755"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/schema/pilot-authorization.v1.schema.json",
+      "sha256": "043cf7a05ecefbe7b5b42b657d530853b955a8ed593bacceae2a23210f65d3c9"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/schema/pilot-matrix.v1.schema.json",
+      "sha256": "39f55c732a02d79d55a9d54b85ee12fd4629dadcd2dcf945977e9f599fb7b28f"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/schema/pilot-report.v1.schema.json",
+      "sha256": "84a917aabd6970fe698f86822c503212f27f78e468b570390ea5c99290885237"
+    },
+    {
+      "path": "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
+      "sha256": "a4d638970e1bc93ae01f0570f2304298dd4e2c60806ea5af82a496d685f56843"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-common.md",
+      "sha256": "4055d198b7db2c4d3b200542f4eefe0f5f2eb7876e708acc7dcc03064d00b87e"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a1.md",
+      "sha256": "5b6bd1d84c29c4db80e64130bea4014879ec68ad132080ea653f17859b422554"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a2.md",
+      "sha256": "0576018362b3d23feb770b34ed0a82344bf854380f93581915d1a5f0a583f839"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b1.md",
+      "sha256": "097beae626b9a3abeaf7f29a672797b58a3da543d6106bdb9e61d7cc77859693"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b2.md",
+      "sha256": "83c005b93cadc40c57920a0f3807a4c3235b5868ba9ad00b3bcf5f45605221a4"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c1.md",
+      "sha256": "cfaded358c36c46f2313d393e8654ec43502d20ad8190c3116ec574f12c83375"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c2.md",
+      "sha256": "a4015b9fbc0ecb4db30b163286d406b0ca9e76208e249c268cc49ccc4d8f3e9e"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core.md",
+      "sha256": "01e52ecba7d9781f9fc764706c59ed382338c01023d7cd105f63ae038c583734"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-bio.md",
+      "sha256": "ae3808bd5ef287f7b27dce344ae1b51139be23b1da08770b70b9806350222d68"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-folk.md",
+      "sha256": "927a498d5a0bf2fc9385980a4113e64d8142b39e9746c5ff86a0665d63fc2fbc"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar.md",
+      "sha256": "ca92aa42978e8a2b0b7622c3550ae259236b620099f18fbedb53e161f29c4c3e"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v2.yaml",
+      "sha256": "d89413c564e753eb01d3c58f4bc22cd9d14ab627a4526bd5dc208d2f8e9d86f3"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml",
+      "sha256": "e7b375832eb7dfe81783e67cbac1f704c9f68a66001e2a39a58117cb128d1a87"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/registry.v1.yaml",
+      "sha256": "acf3b47711280afa6cee8010bead67d8ac375a55d3c0e308aee922e1bc643d12"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json",
+      "sha256": "90336fbef2d355b13c15ee283fe3dbeef97fca829097bc41239004e03b72ea71"
+    },
+    {
+      "path": "agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-output.v1.schema.json",
+      "sha256": "7981f4770d8f38082fece57ea5494e5578b0ae0bde8effcfbb3365fd084ee693"
+    },
+    {
+      "path": "agents_extensions/shared/rules/operator-expectations.md",
+      "sha256": "2534de993b71cd97168778cb3be0e86a28522d492a0511ad79a489a15ee11add"
+    },
+    {
+      "path": "agents_extensions/shared/rules/workflow.md",
+      "sha256": "7ba36bf5bee979d40890a77d0379fff63312e78ce18d1b0cf58af748c50be21d"
+    },
+    {
+      "path": "agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml",
+      "sha256": "bc290ccb238d363d5958d9b4a32e06d92f5fad299d2e46ea86eb0422501818bb"
+    },
+    {
+      "path": "agents_extensions/shared/skills/post-build-review/schema/review-result.v2.schema.json",
+      "sha256": "5fa427dc89bda3e59111b37f19cc2e09e357320b5947939b7a5b08126a03c75e"
+    },
+    {
+      "path": "agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml",
+      "sha256": "8633a7f6103b7eb8be719489651ac9793d45ecf30e1860c8fda0c7917be0667f"
+    },
+    {
+      "path": "agents_extensions/shared/skills/track-completion/scripts/track_completion.py",
+      "sha256": "7a78e3a23fbf8cc5ac308a58165f368e02f33f8c6b73413b25da4ce25871e64a"
+    },
+    {
+      "path": "scripts/audit/post_build_review.py",
+      "sha256": "de3611e2ce0c5e54dba98cfcfce7f45c84fe641c4f8149ca8ebd2397e24e3f96"
+    },
+    {
+      "path": "scripts/orchestration/curriculum_coordinator.py",
+      "sha256": "86418fc301dcf35e1395386919dc3fba20f61866ed15e5919fe2141fc5beaeda"
+    },
+    {
+      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
+      "sha256": "ba6754c19b42d11715a59cefda6fdddd47685b7d71c82e8aa0239af34d9c0a65"
+    },
+    {
+      "path": "scripts/orchestration/curriculum_readiness.py",
+      "sha256": "c3a4eabba30c2c29a628d7d11df44d1c327bf91a47bf202d76b18272c17871aa"
+    },
+    {
+      "path": "scripts/orchestration/prompt_contracts.py",
+      "sha256": "ede3d520c3f6a9fe415791513cdd88429262379dac1f985c5a2c06413c6631c5"
+    },
+    {
+      "path": "tests/fixtures/post_build_review/bio-oleksandr-bilash.result.v2.json",
+      "sha256": "7416acf77e8acee5a6021a265934d9e38755ab133bbd8d6d60a1387c0f678def"
+    },
+    {
+      "path": "tests/orchestration/test_curriculum_coordinator.py",
+      "sha256": "5cce9b069b20c7897fc0cbcd91415f29c9ab17c2f9bc32cdcb01371d5e01e436"
+    },
+    {
+      "path": "tests/orchestration/test_curriculum_lifecycle_pilot.py",
+      "sha256": "2b14dd3bc09a8244248ce1c18e5b0991c36a952e4bc8f29230f45c6b121077c0"
+    },
+    {
+      "path": "tests/orchestration/test_curriculum_readiness.py",
+      "sha256": "9b196a5a9db031625fbf4c35ba3d492a151230f34be39021583357bc2ade3047"
+    },
+    {
+      "path": "tests/test_certification_evidence.py",
+      "sha256": "21561c123f00cf80bd455121f676d467f409aefb3e7cd107a5a0d25eaf2aee09"
+    },
+    {
+      "path": "tests/test_track_completion.py",
+      "sha256": "a9cfa8279749e45a50e0e1ae0e38b879ee1cede34c60d6c3d5c3cb9b14d1f913"
+    }
+  ],
+  "identity_sha256": "09c38dfd5ca2fb79143796e08be6c733afd59cf9f69e5885a87ac6784b39e5fd",
+  "learner_tree": {
+    "after_sha256": "cdc9ed2c16616755a5014e2825c0aa361ebf19acb9bc7c70089f71a4fb7d0091",
+    "before_sha256": "cdc9ed2c16616755a5014e2825c0aa361ebf19acb9bc7c70089f71a4fb7d0091",
+    "file_count": 44,
+    "unchanged": true
+  },
+  "live_authorization": {
+    "eligible": false,
+    "production_qg_armed": false,
+    "reason": "separate-exact-report-review-and-human-authorization-required"
+  },
+  "matrix_sha256": "81e6d59d1bfbceba9283a06ea8ec6bdd325049d4ac5e8c331700efa3e51ae7e0",
+  "metrics": {
+    "context_bytes": 2687,
+    "evidence_freshness": "current",
+    "external_cache_used": false,
+    "false_positive_checks": 41,
+    "false_positive_failures": 0,
+    "model_calls": 0,
+    "prompt_bytes": 11168,
+    "provider_cost_usd": 0,
+    "resolver_exact_replays": 14,
+    "resolver_requests": 28,
+    "row_count": 22
+  },
+  "mode": "shadow",
+  "rows": [
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "80b7b5191a7d608ddcf4da890157653e0a28012ad5bb0dc7e531eaf39cea2b5a",
+      "disposition": "preparation-repair-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "folk-m01-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 200,
+        "exact_replay": true,
+        "identity_sha256": "77fc488e2c4df937c36edcecfda37b09827d1aeaa0eb3a2892cb3d61b25dd8ba",
+        "policy_checks_passed": true,
+        "profile": "seminar-folk",
+        "prompt_bytes": 818,
+        "prompt_sha256": "bd68f85e21211efecc6d04ea4af9afd5fc69b75f9777eb4cb66a82f774fb9f51"
+      },
+      "resume_evidence": "test_preparation_change_invalidates_build_pbr_and_qg_identities",
+      "scenario": "built-folk-m01",
+      "selector": "folk/narodna-kultura-yak-systema",
+      "transitions": [
+        {
+          "event": "PREPARATION_STALE",
+          "from": "built-preparation-drift",
+          "to": "preparation-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "b1eeaae813d0a4012040e1d585ba705a22c65ac0fd98a1e392b6499c146132f4",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "folk-m02-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 203,
+        "exact_replay": true,
+        "identity_sha256": "6409f8de4874171f2a4da83cab45f04983b3ced7d962ab064db0f33e44113ace",
+        "policy_checks_passed": true,
+        "profile": "seminar-folk",
+        "prompt_bytes": 821,
+        "prompt_sha256": "55f54b4d2934251fd8c07b5ac53dfdad40628075cdd0b8eb8a66f9dcdc752725"
+      },
+      "resume_evidence": "test_certification_rejects_built_bundle_without_consumed_preparation_identity",
+      "scenario": "built-folk-wave",
+      "selector": "folk/kalendarna-obriadovist-zvychai",
+      "transitions": [
+        {
+          "event": "PREPARATION_STALE",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "96c84da39a1e7ab69682c574fd3355f25206890ca8edde79b45cff1c08b23f1a",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "folk-m03-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 193,
+        "exact_replay": true,
+        "identity_sha256": "bcc59a388ca3e5de173df820bb7de82fef5122c8be61c786618043549f52aefa",
+        "policy_checks_passed": true,
+        "profile": "seminar-folk",
+        "prompt_bytes": 811,
+        "prompt_sha256": "6a4f0e09304a6325260e626bd209dcfdb7e1c8b65cd30115055217125bbc2360"
+      },
+      "resume_evidence": "test_certification_rejects_built_bundle_without_consumed_preparation_identity",
+      "scenario": "built-folk-wave",
+      "selector": "folk/koliadky-shchedrivky",
+      "transitions": [
+        {
+          "event": "PREPARATION_STALE",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "not-required",
+      "dependency_identity": "80b7b5191a7d608ddcf4da890157653e0a28012ad5bb0dc7e531eaf39cea2b5a",
+      "disposition": "material-repair-pass",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "historical-current",
+      "id": "folk-material-repair-history",
+      "kind": "historical",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 200,
+        "exact_replay": true,
+        "identity_sha256": "77fc488e2c4df937c36edcecfda37b09827d1aeaa0eb3a2892cb3d61b25dd8ba",
+        "policy_checks_passed": true,
+        "profile": "seminar-folk",
+        "prompt_bytes": 818,
+        "prompt_sha256": "bd68f85e21211efecc6d04ea4af9afd5fc69b75f9777eb4cb66a82f774fb9f51"
+      },
+      "resume_evidence": "issue-5090-pr-5093",
+      "scenario": "built-folk-material-repair",
+      "selector": "folk/narodna-kultura-yak-systema",
+      "transitions": [
+        {
+          "event": "REVIEW_BLOCKED",
+          "from": "post-build-review-required",
+          "to": "repair-required"
+        },
+        {
+          "event": "REPAIR_REVIEWED",
+          "from": "repair-required",
+          "to": "certified-final"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "not-required",
+      "dependency_identity": "80b7b5191a7d608ddcf4da890157653e0a28012ad5bb0dc7e531eaf39cea2b5a",
+      "disposition": "minimal-repair-pass",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "historical-current",
+      "id": "folk-minimal-repair-history",
+      "kind": "historical",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 200,
+        "exact_replay": true,
+        "identity_sha256": "77fc488e2c4df937c36edcecfda37b09827d1aeaa0eb3a2892cb3d61b25dd8ba",
+        "policy_checks_passed": true,
+        "profile": "seminar-folk",
+        "prompt_bytes": 818,
+        "prompt_sha256": "bd68f85e21211efecc6d04ea4af9afd5fc69b75f9777eb4cb66a82f774fb9f51"
+      },
+      "resume_evidence": "issue-5105-pr-5116",
+      "scenario": "built-folk-minimal-repair",
+      "selector": "folk/narodna-kultura-yak-systema",
+      "transitions": [
+        {
+          "event": "REVIEW_PASSED",
+          "from": "post-build-review-required",
+          "to": "certified-final"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "e6bb56db15ed9f7d301b0fe4bf6369709cbe23b1d5fd0c9b216f19f135a037eb",
+      "disposition": "preparation-repair-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "bio-built-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 188,
+        "exact_replay": true,
+        "identity_sha256": "dea16e73ebae106634c4528e208527a9f54ac7a72efff17a5ff87ca55dcac8b0",
+        "policy_checks_passed": true,
+        "profile": "seminar-bio",
+        "prompt_bytes": 827,
+        "prompt_sha256": "9121715a7a606b1034ad8786fb434304862df1fa00d4e351817161d22c4beb43"
+      },
+      "resume_evidence": "test_missing_bio_evidence_fails_closed_with_preparation_owner",
+      "scenario": "built-bio",
+      "selector": "bio/oleksandr-bilash",
+      "transitions": [
+        {
+          "event": "BIO_PREPARATION_STALE",
+          "from": "built-preparation-drift",
+          "to": "preparation-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "f750564f03b724a4ecbc24d6969711d780afe897c796df18f730ae3de0cbe048",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "a1-built-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 192,
+        "exact_replay": true,
+        "identity_sha256": "2232681ba9279bd947c5dada130e5ebd49fe6bcbb3e66f4b3bbf3f72614ef86c",
+        "policy_checks_passed": true,
+        "profile": "core-a1",
+        "prompt_bytes": 805,
+        "prompt_sha256": "596d7c8a04d313dd56f14799e034bdc14121562e22cf8574f556d9c0e0ead18c"
+      },
+      "resume_evidence": "test_built_module_is_current_only_with_consumed_preparation_identity",
+      "scenario": "built-a1",
+      "selector": "a1/sounds-letters-and-hello",
+      "transitions": [
+        {
+          "event": "PREPARATION_IDENTITY_MISSING",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "14d3d4229cc1ff600c80890d8bdfa313c539934547aa8dade46be6fda6f226b5",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "a2-built-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 177,
+        "exact_replay": true,
+        "identity_sha256": "a423dc662d8f887c3391fedcf27a5df79fa67cf6ba39a724d7b7776f3c192317",
+        "policy_checks_passed": true,
+        "profile": "core-a2",
+        "prompt_bytes": 768,
+        "prompt_sha256": "c801270eea3122639049469d0327ffe0675b146d98685e357122e1d8b1bb688e"
+      },
+      "resume_evidence": "test_built_module_is_current_only_with_consumed_preparation_identity",
+      "scenario": "built-a2",
+      "selector": "a2/a2-bridge",
+      "transitions": [
+        {
+          "event": "PREPARATION_IDENTITY_MISSING",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "2d3fe30b1dafab8e9bc76d51ced5f0df4051518b6a02eed48e1533159cd7ed41",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "b1-built-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 192,
+        "exact_replay": true,
+        "identity_sha256": "3b87d3e0a8d5e6c8114ec92ff570778b4cef3744552a68689416c3e018ccf8d3",
+        "policy_checks_passed": true,
+        "profile": "core-b1",
+        "prompt_bytes": 791,
+        "prompt_sha256": "fae7a10b2594452e7f1bfb3ecbb9a6609c40b710dbad0f3a44d96379307f2e69"
+      },
+      "resume_evidence": "test_built_module_is_current_only_with_consumed_preparation_identity",
+      "scenario": "built-b1",
+      "selector": "b1/b1-baseline-past-present",
+      "transitions": [
+        {
+          "event": "PREPARATION_IDENTITY_MISSING",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "afb6b56c3877c3baac1d74e1ba7289b342f6eceaf7723b7b12343dd52b88cf26",
+      "disposition": "preparation-rebuild-required",
+      "entry": {
+        "module_state": "built",
+        "next_action": "prepare",
+        "preparation_state": "stale",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "current",
+      "id": "b2-built-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 188,
+        "exact_replay": true,
+        "identity_sha256": "1040d40898695505b8636909bff8fa493921fdb935bdb41be443ae35a1859177",
+        "policy_checks_passed": true,
+        "profile": "core-b2",
+        "prompt_bytes": 757,
+        "prompt_sha256": "07089e0ca64b2d5df7c76c7004f43f88bbfd44106f3a5b0a6bd10b8544bed85f"
+      },
+      "resume_evidence": "test_built_module_is_current_only_with_consumed_preparation_identity",
+      "scenario": "built-b2",
+      "selector": "b2/passive-voice-system",
+      "transitions": [
+        {
+          "event": "PREPARATION_IDENTITY_MISSING",
+          "from": "built-preparation-drift",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "772ba3bb1fd0ac52c33d3ebb1ad7963eb5c09bd7b56fea6f46e44b0d8e7e4afa",
+      "disposition": "build-required",
+      "entry": {
+        "module_state": "unbuilt",
+        "next_action": "build",
+        "preparation_state": "current",
+        "state": "prepared-plan"
+      },
+      "freshness": "current",
+      "id": "bio-unbuilt-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 188,
+        "exact_replay": true,
+        "identity_sha256": "ae5212ca2d76a7fa2d1f353e1d0fbfa3ad9c3e5efea56be687a3759c069acd2b",
+        "policy_checks_passed": true,
+        "profile": "seminar-bio",
+        "prompt_bytes": 827,
+        "prompt_sha256": "a05ea525a776ad94642f8daa33e33d487840d2432218ecc8cd825c534ed0a7a1"
+      },
+      "resume_evidence": "test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources",
+      "scenario": "unbuilt-bio-prepare",
+      "selector": "bio/borys-hrinchenko",
+      "transitions": [
+        {
+          "event": "PREPARE_PASSED",
+          "from": "prepared-plan",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "c99ffca64de7d3ac07537dcee368c15bccdb2ccc4ed8fa2a65c23459676160db",
+      "disposition": "plan-review-required",
+      "entry": {
+        "module_state": "unbuilt",
+        "next_action": "plan",
+        "preparation_state": "missing",
+        "state": "preparation-required"
+      },
+      "freshness": "current",
+      "id": "c1-unbuilt-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 183,
+        "exact_replay": true,
+        "identity_sha256": "80bec1e4b1fd42c81956a5ce013943333cefcc521695445d6c01f3c1fac9bb66",
+        "policy_checks_passed": true,
+        "profile": "core-c1",
+        "prompt_bytes": 750,
+        "prompt_sha256": "bf9f68a1b218f65268d1037a61d2381168f2f9b01aa8a481d9a124da1a191095"
+      },
+      "resume_evidence": "test_unbuilt_core_and_generic_seminar_profile_seams",
+      "scenario": "unbuilt-c1",
+      "selector": "c1/b2-review-bridge",
+      "transitions": [
+        {
+          "event": "PLAN_MISSING",
+          "from": "preparation-required",
+          "to": "plan-review-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "a39829da8c8d64aae004fe409f56ee9c56c3f61b258744c06531177fefca4864",
+      "disposition": "plan-review-required",
+      "entry": {
+        "module_state": "unbuilt",
+        "next_action": "plan",
+        "preparation_state": "missing",
+        "state": "preparation-required"
+      },
+      "freshness": "current",
+      "id": "c2-unbuilt-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 187,
+        "exact_replay": true,
+        "identity_sha256": "0f9881cce30d1b320317a1f3a6003b67003b1fc14be21301a381225a7a015932",
+        "policy_checks_passed": true,
+        "profile": "core-c2",
+        "prompt_bytes": 758,
+        "prompt_sha256": "2885ca09e4f41f67cf893f28ad864e8d5d04bdd2a7c0e36da6356c8ca58a6a57"
+      },
+      "resume_evidence": "test_unbuilt_core_and_generic_seminar_profile_seams",
+      "scenario": "unbuilt-c2",
+      "selector": "c2/c1-bridge-assessment",
+      "transitions": [
+        {
+          "event": "PLAN_MISSING",
+          "from": "preparation-required",
+          "to": "plan-review-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "8277f3cf956ef4bfef261f9c4593b81ec884f13517507218a1a2e58088a1a647",
+      "disposition": "build-required",
+      "entry": {
+        "module_state": "unbuilt",
+        "next_action": "build",
+        "preparation_state": "current",
+        "state": "prepared-plan"
+      },
+      "freshness": "current",
+      "id": "seminar-unbuilt-shadow",
+      "kind": "repository",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": {
+        "context_bytes": 196,
+        "exact_replay": true,
+        "identity_sha256": "e6fb2238886c1910cb6620c41410b58ffa850a2470918d31738dae931aae7fbc",
+        "policy_checks_passed": true,
+        "profile": "seminar-generic",
+        "prompt_bytes": 799,
+        "prompt_sha256": "b8c316c288ee49a6889d233fcca31bafc1c2da5d730cd1bdddbe398b13456776"
+      },
+      "resume_evidence": "test_unbuilt_core_and_generic_seminar_profile_seams",
+      "scenario": "unbuilt-seminar",
+      "selector": "hist/trypillian-civilization",
+      "transitions": [
+        {
+          "event": "PREPARE_PASSED",
+          "from": "prepared-plan",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "2409e3870b953a6da87d830210099813d9dbbd571aa7489ee9f81df068c568cd",
+      "disposition": "paused-built-artifact-owner",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "recover",
+        "preparation_state": "fixture",
+        "state": "partial-recovery-required"
+      },
+      "freshness": "fixture-current",
+      "id": "partial-ambiguous-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_partial_bundle_stops_for_built_artifact_recovery",
+      "scenario": "partial-ambiguous",
+      "selector": "fixture/partial-ambiguous",
+      "transitions": [
+        {
+          "event": "PARTIAL_BUNDLE_DETECTED",
+          "from": "partial",
+          "to": "partial-recovery-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "9688f0a1bdeea5f948f61c8380d7cb86876f120c6f33538394af76df08dc32e6",
+      "disposition": "downstream-evidence-invalidated",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "rebuild",
+        "preparation_state": "fixture",
+        "state": "built-preparation-drift"
+      },
+      "freshness": "fixture-current",
+      "id": "preparation-drift-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_preparation_change_invalidates_build_pbr_and_qg_identities",
+      "scenario": "preparation-drift",
+      "selector": "fixture/preparation-drift",
+      "transitions": [
+        {
+          "event": "PREPARATION_IDENTITY_CHANGED",
+          "from": "built-current",
+          "to": "build-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "a8ae930505b9ef9586adb489685580756fbfae7e5303ab4427634ec4941ace38",
+      "disposition": "stale-pbr-rejected",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "certify",
+        "preparation_state": "fixture",
+        "state": "post-build-review-required"
+      },
+      "freshness": "fixture-current",
+      "id": "pbr-stale-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_projection_uses_only_bound_canonical_pbr_review",
+      "scenario": "pbr-stale",
+      "selector": "fixture/pbr-stale",
+      "transitions": [
+        {
+          "event": "PBR_IDENTITY_STALE",
+          "from": "pbr-current",
+          "to": "post-build-review-required"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "not-required",
+      "dependency_identity": "8d50ea97067e32fdc54af0b4002595557ba3620266391ccd080661b92c5bab07",
+      "disposition": "provisional-not-final",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "hold",
+        "preparation_state": "fixture",
+        "state": "pbr-pass-qg-pending"
+      },
+      "freshness": "fixture-current",
+      "id": "production-qg-pending-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_certification_profile_selection_is_level_sensitive_and_unarmed",
+      "scenario": "production-qg-pending",
+      "selector": "fixture/production-qg-pending",
+      "transitions": [
+        {
+          "event": "PBR_PASSED_QG_PENDING",
+          "from": "post-build-review-required",
+          "to": "pbr-pass-qg-pending"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "not-required",
+      "dependency_identity": "c15913bcebb20a2441617d533c60cd4016afc2cb080daa985bcac777131aa9c9",
+      "disposition": "qg-disabled-by-profile",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "complete",
+        "preparation_state": "fixture",
+        "state": "certified-final"
+      },
+      "freshness": "fixture-current",
+      "id": "production-qg-disarmed-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_certification_profile_selection_is_level_sensitive_and_unarmed",
+      "scenario": "production-qg-disarmed",
+      "selector": "fixture/production-qg-disarmed",
+      "transitions": [
+        {
+          "event": "PBR_PASSED_QG_DISABLED",
+          "from": "post-build-review-required",
+          "to": "certified-final"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "812ba4846750eaf09d8fe97640a20c7b1e515e03720c10daef3d1bd7302f748c",
+      "disposition": "paused-audit-tooling-owner",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "adjudicate",
+        "preparation_state": "fixture",
+        "state": "reviewer-instability"
+      },
+      "freshness": "fixture-current",
+      "id": "reviewer-instability-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_unchanged_source_material_flip_enters_and_exits_instability",
+      "scenario": "reviewer-instability",
+      "selector": "fixture/reviewer-instability",
+      "transitions": [
+        {
+          "event": "UNCHANGED_SOURCE_DISAGREEMENT",
+          "from": "post-build-review-required",
+          "to": "reviewer-instability"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "0bbad170d835558affcd218e5f75e674590b6db1f2ed0a81d0f11dadfc7cfe79",
+      "disposition": "resumed-idempotently",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "resume",
+        "preparation_state": "fixture",
+        "state": "module-active"
+      },
+      "freshness": "fixture-current",
+      "id": "crash-resume-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_finish_retry_heals_cleanup_after_crash",
+      "scenario": "crash-resume",
+      "selector": "fixture/crash-resume",
+      "transitions": [
+        {
+          "event": "LEDGER_REPLAYED",
+          "from": "module-active",
+          "to": "module-active"
+        }
+      ]
+    },
+    {
+      "cleanup_state": "unchanged",
+      "dependency_identity": "8174787362feaa0b2d8d46d705cb83549cd507b42b91d416457b270cd27b3447",
+      "disposition": "paused-without-mutation",
+      "entry": {
+        "module_state": "fixture",
+        "next_action": "resume",
+        "preparation_state": "fixture",
+        "state": "paused-health"
+      },
+      "freshness": "fixture-current",
+      "id": "quota-pause-fixture",
+      "kind": "fixture",
+      "mutation_detected": false,
+      "passed": true,
+      "prompt": null,
+      "resume_evidence": "test_health_pause_resume_serial_waves_and_no_change",
+      "scenario": "quota-pause",
+      "selector": "fixture/quota-pause",
+      "transitions": [
+        {
+          "event": "HEALTH_HEADROOM_UNAVAILABLE",
+          "from": "queued",
+          "to": "paused-health"
+        }
+      ]
+    }
+  ],
+  "schema_version": "curriculum-lifecycle-pilot-report.v1",
+  "source_commit": "34d6ec01321ddec3b52b934401d1a9a00df8985e",
+  "source_tree_sha256": "7229034652ab954fa24c8494d8071be289cf4ee129f69b73a11f0217d60c1267",
+  "verdict": "PASS"
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-lifecycle-pilot-authorization.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision",
+    "actor_type",
+    "actor_id",
+    "approval_id",
+    "matrix_sha256",
+    "report_sha256",
+    "report_identity_sha256",
+    "reviewed_commit",
+    "review",
+    "scope",
+    "production_qg_armed"
+  ],
+  "properties": {
+    "schema_version": {"const": "curriculum-lifecycle-pilot-authorization.v1"},
+    "decision": {"const": "LIVE_PILOT_AUTHORIZED"},
+    "actor_type": {"const": "human"},
+    "actor_id": {"type": "string", "minLength": 1},
+    "approval_id": {"type": "string", "minLength": 1},
+    "matrix_sha256": {"$ref": "#/$defs/sha"},
+    "report_sha256": {"$ref": "#/$defs/sha"},
+    "report_identity_sha256": {"$ref": "#/$defs/sha"},
+    "reviewed_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "author_family", "reviewer_family", "receipt", "reviewed_report_sha256"],
+      "properties": {
+        "verdict": {"const": "PASS"},
+        "author_family": {"type": "string", "minLength": 1},
+        "reviewer_family": {"type": "string", "minLength": 1},
+        "receipt": {"type": "string", "minLength": 1},
+        "reviewed_report_sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row_ids", "selectors", "maximum_mutating_modules"],
+      "properties": {
+        "row_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+        },
+        "selectors": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"}
+        },
+        "maximum_mutating_modules": {"const": 1}
+      }
+    },
+    "production_qg_armed": {"const": false}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

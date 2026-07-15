@@ -10,23 +10,11 @@ import yaml
 from scripts.orchestration import prompt_contracts as contracts
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = Path(
-    "agents_extensions/shared/prompt-contracts/manifests/"
-    "curriculum-lifecycle.module.v1.yaml"
-)
-PROFILES = Path(
-    "agents_extensions/shared/prompt-contracts/profiles/"
-    "curriculum-lifecycle.v1.yaml"
-)
+MANIFEST = Path("agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml")
+PROFILES = Path("agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml")
 REGISTRY = Path("agents_extensions/shared/prompt-contracts/registry.v1.yaml")
-INPUT_SCHEMA = Path(
-    "agents_extensions/shared/prompt-contracts/schema/"
-    "curriculum-lifecycle-input.v1.schema.json"
-)
-COMMON_FRAGMENT = Path(
-    "agents_extensions/shared/prompt-contracts/fragments/"
-    "curriculum-lifecycle-common.md"
-)
+INPUT_SCHEMA = Path("agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json")
+COMMON_FRAGMENT = Path("agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-common.md")
 GOLDEN_ROOT = REPO_ROOT / "tests/fixtures/prompt_contracts"
 
 CORE_CONTEXT = {
@@ -45,6 +33,73 @@ SEMINAR_CONTEXT = {
     "module_state": "built",
     "evidence_identity": "b" * 64,
 }
+
+QUALIFICATION_PROFILES = (
+    (
+        "core-a1",
+        "a1",
+        "core",
+        "A1 CORE policy",
+        "A2 CORE policy",
+        "f551ca42295b8fd7f5e675919c5d0c71e96bd1c57dffa1a65062c48045d759d0",
+    ),
+    (
+        "core-a2",
+        "a2",
+        "core",
+        "A2 CORE policy",
+        "A1 CORE policy",
+        "9c467a36ac927fd7995911ede4ceb438243aea38f4204d3fdcef564a4c51c3d5",
+    ),
+    (
+        "core-b1",
+        "b1",
+        "core",
+        "B1 CORE policy",
+        "B2 CORE policy",
+        "767ec0a4f22068b405697bf5625c4b1716118c28cbf86872ddfaa19492962910",
+    ),
+    (
+        "core-b2",
+        "b2",
+        "core",
+        "B2 CORE policy",
+        "B1 CORE policy",
+        "199e1dd75d0a434ee1733b03b28fd3222366455ae6e76a5ea40f847e4bb63a2c",
+    ),
+    (
+        "core-c1",
+        "c1",
+        "core",
+        "C1 CORE policy",
+        "C2 CORE policy",
+        "1135b02e5a1d34fac272520e36cbde732eeff1db3ce9ffcaa9f9f78b30d110a3",
+    ),
+    (
+        "core-c2",
+        "c2",
+        "core",
+        "C2 CORE policy",
+        "C1 CORE policy",
+        "528ff17188bf18d6c8dac22330d0462eb9c32de03ad7d317aaac4841cf1a8f86",
+    ),
+    (
+        "seminar-bio",
+        "bio",
+        "seminar",
+        "BIO seminar policy",
+        "FOLK seminar policy",
+        "8bd17b01de7d9d470dd53cde7228353b9cfdf57a4ba75250ea7425b1a448e3f5",
+    ),
+    (
+        "seminar-folk",
+        "folk",
+        "seminar",
+        "FOLK seminar policy",
+        "BIO seminar policy",
+        "f2014bfd5d5b3e56c1eef4d7c15b23d962202035f75a9eb44d2785e3c6bd9e74",
+    ),
+)
 
 
 def _copy_contract_repo(destination: Path) -> Path:
@@ -120,6 +175,57 @@ def test_core_and_seminar_exact_byte_goldens(
     assert resolved.rendered_prompt.encode("utf-8") == golden_bytes
     assert resolved.prompt_sha256 == expected_sha256
     assert hashlib.sha256(golden_bytes).hexdigest() == expected_sha256
+
+
+@pytest.mark.parametrize(
+    ("variant", "context"),
+    [("core", CORE_CONTEXT), ("seminar", SEMINAR_CONTEXT)],
+)
+def test_current_contract_keeps_generic_variant_compatibility(
+    variant: str,
+    context: dict,
+) -> None:
+    resolved = contracts.resolve_prompt(
+        "curriculum-lifecycle.module",
+        variant=variant,
+        context=context,
+        repo_root=REPO_ROOT,
+    )
+
+    assert resolved.version == "1.1.0"
+
+
+@pytest.mark.parametrize(
+    ("profile_id", "track", "family", "required_marker", "forbidden_marker", "expected_sha256"),
+    QUALIFICATION_PROFILES,
+)
+def test_qualification_profiles_have_exact_level_or_track_policy_without_cross_leakage(
+    profile_id: str,
+    track: str,
+    family: str,
+    required_marker: str,
+    forbidden_marker: str,
+    expected_sha256: str,
+) -> None:
+    context = {
+        "track": track,
+        "slug": "pilot",
+        "family": family,
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+
+    resolved = contracts.resolve_profile(profile_id, context=context, repo_root=REPO_ROOT)
+
+    assert resolved.version == "1.1.0"
+    assert resolved.prompt_sha256 == expected_sha256
+    assert required_marker in resolved.rendered_prompt
+    assert forbidden_marker not in resolved.rendered_prompt
+    assert resolved.fragment_ids == (
+        "contract.base",
+        profile_id.replace("seminar-", "track.seminar-").replace("core-", "level.core-"),
+    )
 
 
 def test_resolution_is_identical_across_clean_repository_roots(tmp_path: Path) -> None:

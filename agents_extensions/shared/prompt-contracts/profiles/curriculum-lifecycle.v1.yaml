@@ -8,3 +8,39 @@ profiles:
     prompt_id: curriculum-lifecycle.module
     prompt_version: 1.0.0
     variant: seminar
+  core-a1:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-a1
+  core-a2:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-a2
+  core-b1:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-b1
+  core-b2:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-b2
+  core-c1:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-c1
+  core-c2:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: core-c2
+  seminar-bio:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: seminar-bio
+  seminar-folk:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: seminar-folk
+  seminar-generic:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.1.0
+    variant: seminar-generic
