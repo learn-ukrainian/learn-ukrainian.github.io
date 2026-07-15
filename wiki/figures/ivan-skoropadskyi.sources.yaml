@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/ivan-skoropadskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://history.org.ua/?termin=Skoropadskyj_I
+    type: external
+    title: Скоропадський Іван Ілліч
+    url: https://history.org.ua/?termin=Skoropadskyj_I
+    domain: history.org.ua
+  - id: S2
+    file: https://history.org.ua/?termin=Reshetylivski_statti_1709
+    type: external
+    title: Решетилівські статті 1709
+    url: https://history.org.ua/?termin=Reshetylivski_statti_1709
+    domain: history.org.ua

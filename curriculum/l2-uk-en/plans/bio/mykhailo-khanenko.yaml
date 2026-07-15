@@ -82,21 +82,32 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Ханенка від ярлика «польський ставленик», тримаючи видимими і його козацько-правову риторику, і ціну острозького курсу
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Відокремити документовані уряди, угоду 1670 року й арешт 1677 року від пізнішого ярлика «польський ставленик»."
   rationale: "Біографічний якір для роботи з ярликом «польський ставленик»: учень відокремлює уманську полкову базу, претендентську булаву, Острозьку угоду й арешт 1677 року."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Khanenko_M"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Khanenko_M"
   title: "Ханенко Михайло Степанович"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Khanenko_M"
 - hosting: link-only
   language: uk
+  learner_task: "Назвати, які умови Острозької угоди залишали козацькій стороні простір дії, а які звужували її автономію."
   rationale: "Документальний контекст Острозької угоди: учень визначає, які автономні права вона лишала, а які звужувала під протекцією Речі Посполитої."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Ostrozkyj_dohovir_1670"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Ostrozkyj_dohovir_1670"
   title: "Острозька угода 1670"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Ostrozkyj_dohovir_1670"
 references:
 - note: 'Стаття ЕІУ (Т. Чухліб): уманський полковник, підтримка Юрія Хмельницького, обрання 1669 року, Острозька угода, Бучач, поступка булави 1674 року, арешт 1677 року'
   path: https://www.history.org.ua/?termin=Khanenko_M
@@ -134,6 +145,13 @@ slug: mykhailo-khanenko
 subtitle: 'Mykhailo Khanenko: The Right-Bank Claimant''s Mace'
 title: 'Михайло Ханенко: Претендентська булава Правобережжя'
 version: '4.1'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Доступні портрети є пізніми реконструкціями або мають неперевірені права;
+    індивідуальну ліцензію на файл у цьому джерельному проході не підтверджено.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: гетьман, визнаний лише частиною козацтва й країни; Ханенка обрала рада від частини Правобережжя
   pos: ч.

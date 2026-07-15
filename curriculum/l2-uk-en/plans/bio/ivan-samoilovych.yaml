@@ -82,21 +82,32 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Самойловича від ярликів «московський клієнт» і «оборонець автономії», тримаючи видимими і його консолідацію інституцій, і примус Великого згону
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Відтворити шлях Самойловича від генерального судді до усунення 1687 року та позначити, де джерело описує його власні рішення, а де — тиск союзників і старшини."
   rationale: "Біографічний якір для читання про консолідацію Лівобережжя, претензію на обидва береги, родинно-центрований уряд і падіння після кримського походу 1687 року."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Samojlovych_I"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Samojlovych_I"
   title: "Самойлович Іван Самійлович"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Samojlovych_I"
 - hosting: link-only
   language: uk
+  learner_task: "Проаналізувати Великий згін як воєнно-адміністративне рішення з різними наслідками для гетьманського уряду, переселених громад і Правобережжя."
   rationale: "Тематичне читання про Великий згін: учень фіксує примусовість переселення й знищення поселень, а не пом'якшує подію до добровільної міграції."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=velykyj_zgin_1678_1679"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=velykyj_zgin_1678_1679"
   title: "Великий згін 1678-1679"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=velykyj_zgin_1678_1679"
 references:
 - note: 'Стаття ЕІУ (Т. Чухліб): невідомий рік народження, ходорківське походження, освіта, ранні уряди, гетьманство 1672-1687, правобережна політика, роль у чигиринських війнах, Великий згін, заперечення Бахчисарая й Вічного миру, підпорядкування митрополії, падіння 1687 року'
   path: https://www.history.org.ua/?termin=Samojlovych_I
@@ -138,6 +149,13 @@ slug: ivan-samoilovych
 subtitle: 'Ivan Samoilovych: The Both-Banks Mace and the Great Expulsion'
 title: 'Іван Самойлович: Булава обох боків і Великий згін'
 version: '4.1'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Поширені зображення є пізніми портретними традиціями; індивідуальну
+    ліцензію на придатний для курсу файл у цьому джерельному проході не підтверджено.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: виборний очільник Війська Запорозького; Самойлович був гетьманом Лівобережжя в 1672-1687 роках
   pos: ч.

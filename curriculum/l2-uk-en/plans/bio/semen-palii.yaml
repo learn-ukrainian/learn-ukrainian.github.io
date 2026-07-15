@@ -82,21 +82,32 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Палія від героя-месника народної пам'яті, тримаючи видимими і правобережне відновлення, і міждержавний примус, який його зламав
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Простежити перехід від правобережного відновлення й повстання 1702-1704 років до арешту та заслання, не зводячи Палія до фольклорного героя."
   rationale: "Біографічний якір для правобережного відновлення: учень простежує шлях від Борзни й Січі до Фастова, повстання 1702-1704 років, арешту й Тобольська."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Palij_S"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Palij_S"
   title: "Палій (Гурко) Семен Пилипович"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Palij_S"
 - hosting: link-only
   language: uk
+  learner_task: "Пояснити, як Нарвський договір перетворив міста й фортеці, здобуті Палієм, на предмет московсько-варшавської домовленості."
   rationale: "Договірний контекст арешту Палія: учень пояснює, як Нарвський договір перетворив здобуті правобережні міста на предмет московсько-варшавського примусу."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Narvskyj_myrnyj_1704"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Narvskyj_myrnyj_1704"
   title: "Нарвський договір 1704"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Narvskyj_myrnyj_1704"
 references:
 - note: 'Стаття ЕІУ (Т. Чухліб): ім''я й прізвище Гурко, борзнянське походження, ніжинський і чортомлицький шари, фастівське та білоцерківське полковництво, реколонізація, повстання 1702-1704 років, арешт, заслання до Тобольська, повернення, меценатство, поховання, пам''ять'
   path: https://www.history.org.ua/?termin=Palij_S
@@ -138,6 +149,13 @@ slug: semen-palii
 subtitle: 'Semen Palii: The Right-Bank Uprising and Siberian Exile'
 title: 'Семен Палій: Правобережне повстання й Тобольське заслання'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Індивідуальні права на наявні портретні файли не були підтверджені
+    прямою сторінкою файлу; безпечний варіант на цій стадії — текст без портрета.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: командир козацького полку; Палій був фастівським, а потім білоцерківським полковником
   pos: ч.
