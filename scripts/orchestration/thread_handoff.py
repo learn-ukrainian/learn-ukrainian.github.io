@@ -31,12 +31,16 @@ from typing import Any
 try:
     from scripts import context_canary
     from scripts.orchestration import thread_handoff_canary
+    from scripts.orchestration.task_family import codex_state as task_family_codex_state
+    from scripts.orchestration.task_family import rollover as task_family_rollover
 except ModuleNotFoundError as exc:
     if __package__ or exc.name != "scripts":
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import context_canary
     import thread_handoff_canary
+    from orchestration.task_family import codex_state as task_family_codex_state
+    from orchestration.task_family import rollover as task_family_rollover
 
 SCHEMA_VERSION = 2
 DEFAULT_MONITOR_BASE_URL = "http://127.0.0.1:8765"
@@ -671,6 +675,10 @@ def prepare_state(
     active_automation_id: str | None,
     context_percent: float | None,
     force_new_replacement: bool,
+    epic_title: str | None = None,
+    goal: str | None = None,
+    phase: str | None = None,
+    next_phase: str | None = None,
 ) -> dict[str, Any]:
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("schema v2 state is required; migrate v1 explicitly before preparing")
@@ -727,6 +735,19 @@ def prepare_state(
     generation = int((prepared["active"] or {}).get("generation", 0)) + 1
     rollover_id = new_rollover_id()
     packet_paths = replacement_packet_paths(agent, lineage_id, generation, rollover_id)
+    intended_title, title_source, display_metadata = task_family_rollover.rollover_title(
+        agent=agent,
+        lineage_id=lineage_id,
+        generation=generation,
+        epic_title=epic_title,
+        goal=goal,
+        phase=phase,
+        next_phase=next_phase,
+    )
+    family_id, operation_id = task_family_rollover.transition_identity(
+        lineage_id=lineage_id,
+        generation=generation,
+    )
     replacement = {
         "rollover_id": rollover_id,
         "lineage_id": lineage_id,
@@ -735,6 +756,18 @@ def prepare_state(
         "prepared_at": isoformat_z(now),
         "thread_id": None,
         "canary_challenge": new_canary_challenge(),
+        "display": {
+            **display_metadata,
+            "title": intended_title,
+            "title_source": title_source,
+        },
+        "native_lifecycle": {
+            "family_id": family_id,
+            "operation_id": operation_id,
+            "source_thread_id": requested_thread_id,
+            "replacement_thread_id": None,
+            "status": "awaiting_native_create",
+        },
         **packet_paths,
     }
     prepared["replacement"] = replacement
@@ -806,6 +839,28 @@ def validate_live_lease(
         binding_error = source_checkout_binding_error(replacement)
         if binding_error:
             return None, binding_error
+        if "display" in replacement or "native_lifecycle" in replacement:
+            display = replacement.get("display")
+            if (
+                not isinstance(display, dict)
+                or not isinstance(display.get("title"), str)
+                or not display["title"].strip()
+                or len(display["title"]) > 60
+                or display["title"].casefold() in {"resume codex rollover", "rollover"}
+            ):
+                return None, "replacement display metadata is missing, generic, or malformed"
+            expected_family_id, expected_operation_id = task_family_rollover.transition_identity(
+                lineage_id=lineage_id,
+                generation=generation,
+            )
+            native = replacement.get("native_lifecycle")
+            if (
+                not isinstance(native, dict)
+                or native.get("family_id") != expected_family_id
+                or native.get("operation_id") != expected_operation_id
+                or native.get("source_thread_id") != active["thread_id"]
+            ):
+                return None, "replacement native lifecycle identity is missing, forged, or malformed"
         expected_paths = replacement_packet_paths(agent, lineage_id, generation, rollover_id)
         for key, expected in expected_paths.items():
             if replacement.get(key) != expected:
@@ -907,10 +962,16 @@ def confirm_started(
 
     confirmed = dict(state)
     replacement = dict(confirmed["replacement"])
+    active = confirmed.get("active")
+    if not isinstance(active, dict) or not isinstance(active.get("thread_id"), str) or not active["thread_id"].strip():
+        raise ValueError("confirmed rollover has no exact predecessor thread identity")
     if replacement.get("status") != "resumed":
         raise ValueError("replacement must be resumed through the rollover packet before confirmation")
     if replacement.get("resumed_thread_id") != new_thread_id.strip():
         raise ValueError("--new-thread-id does not match the thread that resumed this rollover")
+    native = replacement.get("native_lifecycle")
+    if isinstance(native, dict) and native.get("replacement_thread_id") != new_thread_id.strip():
+        raise ValueError("--new-thread-id does not match the exact native-created replacement")
     proof, proof_error = thread_handoff_canary.load_and_validate_pass_proof(
         canary_proof,
         rollover_id=str(replacement.get("rollover_id") or ""),
@@ -932,6 +993,11 @@ def confirm_started(
         replacement["automation_id"] = new_automation_id
     replacement["canary_proof"] = proof
     replacement["strict_verdict"] = strict_evidence
+    if isinstance(native, dict):
+        native = dict(native)
+        native["status"] = "confirmed_started"
+        native["confirmed_at"] = isoformat_z(now)
+        replacement["native_lifecycle"] = native
     confirmed["replacement"] = replacement
 
     cleanup = dict(confirmed.get("cleanup") or {})
@@ -958,6 +1024,13 @@ def resume_state(
     thread_id = replacement_thread_id.strip()
     if not thread_id:
         raise ValueError("--replacement-thread-id is required")
+    native = replacement.get("native_lifecycle")
+    if isinstance(native, dict):
+        bound_thread_id = native.get("replacement_thread_id")
+        if not isinstance(bound_thread_id, str) or not bound_thread_id.strip():
+            raise ValueError("native-created replacement must be registered before resume")
+        if bound_thread_id != thread_id:
+            raise ValueError("--replacement-thread-id does not match the exact native-created replacement")
     existing = replacement.get("resumed_thread_id")
     if existing and existing != thread_id:
         raise ValueError("pending rollover is already bound to a different replacement thread")
@@ -966,6 +1039,11 @@ def resume_state(
     replacement["status"] = "resumed"
     replacement["resumed_thread_id"] = thread_id
     replacement.setdefault("resumed_at", isoformat_z(now))
+    if isinstance(native, dict):
+        native = dict(native)
+        native["status"] = "resumed"
+        native["resumed_at"] = replacement["resumed_at"]
+        replacement["native_lifecycle"] = native
     resumed = dict(state)
     resumed["replacement"] = replacement
     resumed["updated_at"] = isoformat_z(now)
@@ -1088,6 +1166,7 @@ def render_bootstrap_prompt(
     github = snapshot["github"]
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
+    display = replacement.get("display") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or "unknown"
     handoff_path = handoff_path or Path(replacement.get("handoff_path") or "unknown")
     role_handoff_path = role_handoff_path or default_handoff_path(agent)
@@ -1119,6 +1198,7 @@ def render_bootstrap_prompt(
                 f"Work locally in {git.get('repo_root')}.",
                 "",
                 f"You are the replacement {agent_label} thread.",
+                f"Task title: {display.get('title', 'unknown')}",
                 f"Replacement generation: {replacement_generation}",
                 f"Rollover id: {rollover_id}",
                 f"Previous active generation: {active_generation}",
@@ -1140,6 +1220,8 @@ def render_bootstrap_prompt(
                 "- Do not edit generated status/audit/review artifacts, linter configs, or .python-version.",
                 "- Do not write docs/session-state/current.md for thread rollover.",
                 "- Do not delete or migrate the old heartbeat automation until the confirm-started command below has succeeded.",
+                "- Do not archive the predecessor unless the exact post-confirmation native action is authorized with idle and unpinned app evidence.",
+                "- The predecessor app task must register and title this exact native replacement before resume. If registration is not yet visible, preserve this task and retry the same packet; never create or select another task.",
                 "",
                 *first_turn_checklist_lines(
                     repo_root=str(git.get("repo_root")),
@@ -1163,6 +1245,8 @@ def render_bootstrap_prompt(
                 f".venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id {rollover_id} --replacement-thread-id <replacement-thread-id> --challenge {canary_challenge} --proof-file {canary_proof_path.as_posix()}",
                 f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --new-thread-id <replacement-thread-id> --canary-proof {canary_proof_path.as_posix()} --strict-probe {strict_probe_path.as_posix()} --strict-verdict {strict_verdict_path.as_posix()}",
                 "```",
+                "",
+                "After confirmation, read the exact predecessor through the native app. Run `native-action --action archive` with its authoritative status and pin facts. If either fact is absent, use `unknown`; the durable receipt must block and preserve the predecessor. Only an actionable response authorizes `set_thread_archived` for the returned exact UUID, followed by `record-native-result` and `reconcile-native`.",
                 "",
                 "Only after that command reports old_automation_ready_to_delete=true may the old heartbeat automation be deleted or paused.",
                 "",
@@ -1528,6 +1612,10 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             active_automation_id=args.active_automation_id,
             context_percent=args.context_percent,
             force_new_replacement=args.force_new_replacement,
+            epic_title=args.epic_title,
+            goal=args.goal,
+            phase=args.phase,
+            next_phase=args.next_phase,
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
@@ -1598,6 +1686,9 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             "strict_answers_file": replacement["strict_answers_path"],
             "strict_verdict_file": replacement["strict_verdict_path"],
             "canary_proof_file": replacement["canary_proof_path"],
+            "intended_title": replacement["display"]["title"],
+            "title_source": replacement["display"]["title_source"],
+            "native_lifecycle": replacement["native_lifecycle"],
             "bootstrap_prompt": prompt,
         }
         print(json.dumps(output, indent=2))
@@ -1606,6 +1697,34 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     write_text_atomic(bootstrap_path, prompt)
     write_text_atomic(handoff_path, handoff_md)
     write_json_atomic(state_path, prepared_state)
+    try:
+        native_transition = task_family_rollover.prepare_transition(
+            repo_root=state_root,
+            agent=agent,
+            lineage_id=lineage_id,
+            rollover_id=replacement["rollover_id"],
+            generation=replacement["generation"],
+            source_thread_id=prepared_state["active"]["thread_id"],
+            intended_title=replacement["display"]["title"],
+            title_source=replacement["display"]["title_source"],
+            bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
+        )
+    except (OSError, ValueError) as exc:
+        replacement["native_lifecycle"]["status"] = "intent_persistence_failed"
+        replacement["native_lifecycle"]["error"] = str(exc)
+        prepared_state["replacement"] = replacement
+        write_json_atomic(state_path, prepared_state)
+        print(
+            json.dumps(
+                {
+                    "error": f"native rollover intent persistence failed: {exc}",
+                    "state_file": rel(state_path, state_root),
+                    "old_automation_ready_to_delete": False,
+                },
+                indent=2,
+            )
+        )
+        return 2
     wrote_router = False
     if args.write_current:
         write_text_atomic(router_path, router_md)
@@ -1631,9 +1750,216 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         "strict_answers_file": replacement["strict_answers_path"],
         "strict_verdict_file": replacement["strict_verdict_path"],
         "canary_proof_file": replacement["canary_proof_path"],
+        "intended_title": replacement["display"]["title"],
+        "title_source": replacement["display"]["title_source"],
+        "native_lifecycle": native_transition,
+        "next_native_action": {
+            "tool": "create_thread",
+            "title_after_create": replacement["display"]["title"],
+            "source_thread_id": prepared_state["active"]["thread_id"],
+        },
     }
     print(json.dumps(output, indent=2))
     return 0
+
+
+def _native_command_context(
+    args: argparse.Namespace,
+) -> tuple[Path, Path, str, Path, dict[str, Any], dict[str, Any]]:
+    repo_root, state_root = resolve_roots(args.repo_root)
+    agent = normalize_agent_name(args.agent)
+    if not args.lineage_id and not args.state_file:
+        raise ValueError("--lineage-id or --state-file is required to locate an isolated rollover")
+    state_path = resolve_state_path(
+        repo_root=repo_root,
+        state_root=state_root,
+        supplied_state_file=args.state_file,
+        default_path=default_state_path(agent, args.lineage_id) if args.lineage_id else None,
+    )
+    state = load_state(state_path)
+    state_error = state_error_payload(state, state_path, state_root)
+    if state_error:
+        raise ValueError(state_error["error"])
+    replacement = state.get("replacement") or {}
+    if replacement.get("rollover_id") != args.rollover_id:
+        raise ValueError("--rollover-id does not match the isolated rollover")
+    native = replacement.get("native_lifecycle")
+    if not isinstance(native, dict) or not native.get("family_id") or not native.get("operation_id"):
+        raise ValueError("rollover has no durable native lifecycle plan")
+    generation = replacement.get("generation")
+    lineage_id = replacement.get("lineage_id")
+    if not isinstance(generation, int) or generation < 1 or not isinstance(lineage_id, str):
+        raise ValueError("rollover native lifecycle identity is malformed")
+    expected_family_id, expected_operation_id = task_family_rollover.transition_identity(
+        lineage_id=lineage_id,
+        generation=generation,
+    )
+    if native.get("family_id") != expected_family_id or native.get("operation_id") != expected_operation_id:
+        raise ValueError("rollover native lifecycle identity does not match its durable lineage")
+    if native.get("source_thread_id") != (state.get("active") or {}).get("thread_id"):
+        raise ValueError("rollover native predecessor does not match the active lease identity")
+    bound_replacement_id = native.get("replacement_thread_id")
+    resumed_replacement_id = replacement.get("resumed_thread_id") or replacement.get("thread_id")
+    if bound_replacement_id and resumed_replacement_id and bound_replacement_id != resumed_replacement_id:
+        raise ValueError("rollover native replacement does not match the resumed lease identity")
+    return repo_root, state_root, agent, state_path, state, native
+
+
+def _write_native_status(
+    state_path: Path,
+    state: dict[str, Any],
+    *,
+    status: str,
+    replacement_thread_id: str | None = None,
+) -> None:
+    replacement = dict(state["replacement"])
+    native = dict(replacement["native_lifecycle"])
+    native["status"] = status
+    if replacement_thread_id is not None:
+        native["replacement_thread_id"] = replacement_thread_id
+    replacement["native_lifecycle"] = native
+    state["replacement"] = replacement
+    state["updated_at"] = isoformat_z(utc_now())
+    write_json_atomic(state_path, state)
+
+
+def cmd_register_created(args: argparse.Namespace) -> int:
+    state_root: Path | None = None
+    native: dict[str, Any] | None = None
+    try:
+        _, state_root, _, state_path, state, native = _native_command_context(args)
+        db_path = task_family_rollover.resolve_db(args.db)
+        source_id = native["source_thread_id"]
+        replacement_id = args.replacement_thread_id.strip()
+        source = task_family_codex_state.read_thread_record(db_path, task_id=source_id)
+        replacement = task_family_codex_state.read_thread_record(db_path, task_id=replacement_id)
+        binding = task_family_rollover.bind_replacement(
+            repo_root=state_root,
+            family_id=native["family_id"],
+            operation_id=native["operation_id"],
+            source=source,
+            replacement=replacement,
+            db_path=db_path,
+            evidence=args.evidence,
+        )
+        _write_native_status(
+            state_path,
+            state,
+            status="replacement_created_bound",
+            replacement_thread_id=replacement_id,
+        )
+    except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
+        blocker_error: str | None = None
+        if state_root is not None and native is not None:
+            try:
+                task_family_rollover.record_blocker(
+                    repo_root=state_root,
+                    family_id=native["family_id"],
+                    operation_id=native["operation_id"],
+                    action="create",
+                    error=str(exc),
+                    evidence=getattr(args, "evidence", "native create binding") or "native create binding",
+                )
+            except (OSError, ValueError) as blocker_exc:
+                blocker_error = str(blocker_exc)
+        payload = {"error": str(exc), "action": "register-created"}
+        if blocker_error is not None:
+            payload["receipt_error"] = blocker_error
+        print(json.dumps(payload, indent=2))
+        return 2
+    print(
+        json.dumps(
+            {
+                "status": "replacement_created_bound",
+                "source_thread_id": binding["source_thread_id"],
+                "replacement_thread_id": binding["replacement_thread_id"],
+                "intended_title": binding["intended_title"],
+                "relations": binding["relations"],
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+def cmd_native_action(args: argparse.Namespace) -> int:
+    try:
+        _, state_root, _, state_path, state, native = _native_command_context(args)
+        if args.action == "create":
+            result = task_family_rollover.request_create_action(
+                repo_root=state_root,
+                family_id=native["family_id"],
+                operation_id=native["operation_id"],
+            )
+        else:
+            try:
+                db_path = task_family_rollover.resolve_db(args.db)
+            except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
+                result = task_family_rollover.record_blocker(
+                    repo_root=state_root,
+                    family_id=native["family_id"],
+                    operation_id=native["operation_id"],
+                    action=args.action,
+                    error=str(exc),
+                    evidence="Codex DB discovery preflight",
+                )
+            else:
+                result = task_family_rollover.request_action(
+                    repo_root=state_root,
+                    family_id=native["family_id"],
+                    operation_id=native["operation_id"],
+                    action=args.action,
+                    db_path=db_path,
+                    state=state if args.action == "archive" else None,
+                    source_status=args.source_status,
+                    pin_state=args.pin_state,
+                    evidence=args.evidence,
+                )
+        _write_native_status(state_path, state, status=str(result["status"]))
+    except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
+        print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
+        return 2
+    print(json.dumps(result, indent=2))
+    return 0 if result.get("ok") else 2
+
+
+def cmd_record_native_result(args: argparse.Namespace) -> int:
+    try:
+        _, state_root, _, state_path, state, native = _native_command_context(args)
+        result = task_family_rollover.record_native_result(
+            repo_root=state_root,
+            family_id=native["family_id"],
+            operation_id=native["operation_id"],
+            action=args.action,
+            succeeded=args.succeeded,
+            evidence=args.evidence,
+            error=args.error,
+        )
+        _write_native_status(state_path, state, status=str(result["status"]))
+    except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
+        print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
+        return 2
+    print(json.dumps(result, indent=2))
+    return 0 if result["ok"] else 2
+
+
+def cmd_reconcile_native(args: argparse.Namespace) -> int:
+    try:
+        _, state_root, _, state_path, state, native = _native_command_context(args)
+        db_path = task_family_rollover.resolve_db(args.db)
+        result = task_family_rollover.reconcile_action(
+            repo_root=state_root,
+            family_id=native["family_id"],
+            operation_id=native["operation_id"],
+            action=args.action,
+            db_path=db_path,
+        )
+        _write_native_status(state_path, state, status=str(result["status"]))
+    except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
+        print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
+        return 2
+    print(json.dumps(result, indent=2))
+    return 0 if result["ok"] else 2
 
 
 def cmd_confirm_started(args: argparse.Namespace) -> int:
@@ -1712,7 +2038,10 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
                 "state_file": rel(state_path, state_root),
                 "replacement_status": confirmed["replacement"]["status"],
                 "replacement_thread_id": confirmed["replacement"]["thread_id"],
+                "predecessor_thread_id": confirmed["active"]["thread_id"],
+                "native_lifecycle": confirmed["replacement"].get("native_lifecycle"),
                 "old_automation_ready_to_delete": confirmed["cleanup"]["old_automation_ready_to_delete"],
+                "next_native_action": "Run native-action --action archive with authoritative idle and unpinned app evidence; unknown state preserves the predecessor.",
             },
             indent=2,
         )
@@ -1990,6 +2319,10 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("--current-file", type=Path, help="Override the shared docs/session-state/current.md router.")
     prepare.add_argument("--active-thread-id")
     prepare.add_argument("--active-automation-id")
+    prepare.add_argument("--epic-title", help="Durable human epic label for the replacement title.")
+    prepare.add_argument("--goal", help="Durable current goal for the replacement title.")
+    prepare.add_argument("--phase", help="Durable current phase for the replacement title.")
+    prepare.add_argument("--next-phase", help="Optional next phase rendered after an arrow.")
     prepare.add_argument("--context-percent", type=float)
     prepare.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     prepare.add_argument("--force-new-replacement", action="store_true")
@@ -2013,6 +2346,62 @@ def build_parser() -> argparse.ArgumentParser:
     )
     prepare.add_argument("--dry-run", action="store_true", help="Print the generated packet without writing files.")
     prepare.set_defaults(func=cmd_prepare)
+
+    register = subparsers.add_parser(
+        "register-created",
+        help="Bind the exact native-created replacement UUID and typed Task Family Manager relations.",
+    )
+    register.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    register.add_argument("--lineage-id", type=argparse_lineage_id)
+    register.add_argument("--state-file", type=Path)
+    register.add_argument("--rollover-id", required=True)
+    register.add_argument("--replacement-thread-id", required=True)
+    register.add_argument("--db", default="auto")
+    register.add_argument("--evidence", required=True)
+    register.set_defaults(func=cmd_register_created)
+
+    native_action = subparsers.add_parser(
+        "native-action",
+        help="Reconcile first, then emit at most one exact native title/archive action.",
+    )
+    native_action.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    native_action.add_argument("--lineage-id", type=argparse_lineage_id)
+    native_action.add_argument("--state-file", type=Path)
+    native_action.add_argument("--rollover-id", required=True)
+    native_action.add_argument("--action", choices=("create", "title", "archive"), required=True)
+    native_action.add_argument("--db", default="auto")
+    native_action.add_argument("--source-status", default="unknown")
+    native_action.add_argument("--pin-state", choices=("unpinned", "pinned", "unknown"), default="unknown")
+    native_action.add_argument("--evidence", default="")
+    native_action.set_defaults(func=cmd_native_action)
+
+    native_result = subparsers.add_parser(
+        "record-native-result",
+        help="Persist one native tool acknowledgement or failure before read-back reconciliation.",
+    )
+    native_result.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    native_result.add_argument("--lineage-id", type=argparse_lineage_id)
+    native_result.add_argument("--state-file", type=Path)
+    native_result.add_argument("--rollover-id", required=True)
+    native_result.add_argument("--action", choices=tuple(sorted(task_family_rollover.NATIVE_ACTIONS)), required=True)
+    native_result.add_argument("--evidence", required=True)
+    native_result.add_argument("--error", default="")
+    native_result_group = native_result.add_mutually_exclusive_group(required=True)
+    native_result_group.add_argument("--succeeded", dest="succeeded", action="store_true")
+    native_result_group.add_argument("--failed", dest="succeeded", action="store_false")
+    native_result.set_defaults(func=cmd_record_native_result)
+
+    reconcile_native = subparsers.add_parser(
+        "reconcile-native",
+        help="Verify one exact native title/archive target and update the durable receipt.",
+    )
+    reconcile_native.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    reconcile_native.add_argument("--lineage-id", type=argparse_lineage_id)
+    reconcile_native.add_argument("--state-file", type=Path)
+    reconcile_native.add_argument("--rollover-id", required=True)
+    reconcile_native.add_argument("--action", choices=("title", "archive"), required=True)
+    reconcile_native.add_argument("--db", default="auto")
+    reconcile_native.set_defaults(func=cmd_reconcile_native)
 
     confirm = subparsers.add_parser("confirm-started", help="Confirm that the replacement agent thread is running.")
     confirm.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
