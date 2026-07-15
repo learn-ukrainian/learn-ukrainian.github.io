@@ -39,14 +39,14 @@
 #   in routing_guard.py for direct routing, but the old fallback routes here
 #   BYPASSED that guard and leeched a fresh OpenRouter top-up (2026-07-07).
 #   The chain config must honor the same order as the guard.
-# - grok work belongs on the grok-build seat (native grok app CLI,
-#   subscription). grok-4.* via OpenRouter has no measured niche and
-#   402-drains the OR balance. The hermes xai seat remains reachable as a
-#   plain single route (no chain needed for that).
+# - grok work belongs on the `grok` seat (native grok app CLI, subscription;
+#   historical alias: grok-build). grok-4.* via OpenRouter has no measured niche
+#   and 402-drains the OR balance. The demoted hermes path is `grok-hermes`
+#   (plain single route; no chain needed).
 # A single-route lane is NOT a failover chain (loader requires >= 2 routes),
 # so no chains are declared. On a lane fault the ORCHESTRATOR reroutes BY
-# SEAT per model-assignment.md (review stall -> grok-build; deepseek fault ->
-# grok-build/codex), never by silently burning API credit.
+# SEAT per model-assignment.md (review stall -> grok; deepseek fault ->
+# grok/codex), never by silently burning API credit.
 # The chain machinery itself stays (tests + probe cover it) for any future
 # chain the user explicitly approves.
 chains: {}

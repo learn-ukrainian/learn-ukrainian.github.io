@@ -634,25 +634,24 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(
 
 
 def test_shipped_config_declares_no_grok_chain():
-    """Pin the shipped config: grok has NO failover chain (user order
-    2026-07-07 — grok work belongs on the grok-build native-app seat;
-    grok-4.* via OpenRouter has no measured niche and 402-drained the OR
-    balance). Supersedes the #4583 in-family-via-openrouter pin. The hermes
-    xai seat stays reachable as a plain single route without a chain."""
+    """Pin the shipped config: native ``grok`` has NO failover chain (user
+    order 2026-07-07 — work belongs on the native-app seat; grok-4.* via
+    OpenRouter has no measured niche and 402-drained the OR balance). The
+    demoted hermes path ``grok-hermes`` stays a plain single route too."""
     from agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
     )
 
-    chain = load_failover_chain(
-        "grok",
-        effective_model="grok-4.5",
-        path=default_failover_config_path(),
-    )
-
-    assert chain is None, (
-        "grok must have NO failover chain (grok-build is the seat, user "
-        f"order 2026-07-07); got routes: {[r.provider for r in chain.routes]}"
-        if chain is not None
-        else ""
-    )
+    for lane in ("grok", "grok-build", "grok-hermes"):
+        chain = load_failover_chain(
+            lane,
+            effective_model="grok-4.5",
+            path=default_failover_config_path(),
+        )
+        assert chain is None, (
+            f"{lane} must have NO failover chain (user order 2026-07-07); "
+            f"got routes: {[r.provider for r in chain.routes]}"
+            if chain is not None
+            else ""
+        )

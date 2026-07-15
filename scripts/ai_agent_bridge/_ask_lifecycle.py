@@ -256,7 +256,8 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> No
         from ._agy import process_for_agy
 
         process_for_agy(message_id, new_session, no_timeout, review=review)
-    elif target == "grok-build":
+    elif target in {"grok", "grok-build"}:
+        # Canonical native seat is `grok`; `grok-build` is a permanent alias.
         from ._grok_build import process_for_grok_build
 
         process_for_grok_build(message_id, new_session, no_timeout, review)

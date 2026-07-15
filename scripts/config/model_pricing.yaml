@@ -44,5 +44,11 @@ subscription_agents:
     billing_model: subscription
   cursor:
     billing_model: subscription
+  grok:
+    billing_model: subscription
   grok-build:
+    # Historical alias of the native grok seat — keep for cost lookups on
+    # past usage records that still attribute agent=grok-build.
+    billing_model: subscription
+  grok-hermes:
     billing_model: subscription

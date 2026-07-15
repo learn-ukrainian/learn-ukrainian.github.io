@@ -48,6 +48,11 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+try:
+    from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+except ImportError:
+    from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
@@ -183,7 +188,24 @@ def _load_budget_extras(budgets: dict[str, Any]) -> dict[str, Any]:
 
 
 def _agent_key(raw_agent: str | None) -> str | None:
+    """Map a usage-record agent string onto a subscription lane.
+
+    Permanent alias: historical ``grok-build`` usage rows dual-READ into the
+    canonical ``grok`` subscription bucket so budget burn is not orphaned.
+    """
     agent = (raw_agent or "").lower().strip()
+    if not agent:
+        return None
+    # Inline permanent native-seat alias so dual-READ cannot depend on import
+    # path resolution order between `api.*` and `scripts.api.*` during tests.
+    if agent in {"grok", "grok-build"} or agent.startswith("grok ") or agent.startswith("grok("):
+        return "grok"
+    canonical = normalize_seat(agent)
+    if canonical in AGENT_NAMES:
+        return canonical
+    for lane in AGENT_NAMES:
+        if agent in seat_read_aliases(lane):
+            return lane
     for name in AGENT_NAMES:
         if agent == name or agent.startswith(f"{name} ") or agent.startswith(f"{name}("):
             return name

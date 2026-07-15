@@ -130,8 +130,30 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "grok": {
-        # Hermes-backed Grok 4.5 via the OAuth API path.
-        # DISTINCT from "grok-build" below, which drives the native grok CLI.
+        # Native `grok` CLI seat (preferred Grok transport). Named by role
+        # (native CLI), not model version — model is a swappable attribute
+        # (currently grok-4.5). Historical alias: "grok-build" (see
+        # agent_identity.SEAT_ALIASES); dual-READ only, prefer-WRITE "grok".
+        # DISTINCT from "grok-hermes" below (disfavored Hermes/OpenRouter path).
+        "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
+        "default_model": "grok-4.5",
+        "default_effort": "high",
+        "cost_tier": "medium",
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "debugging",
+            }
+        ),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
+    "grok-hermes": {
+        # Hermes-backed Grok 4.5 via the OAuth API path (disfavored for judges;
+        # looser, more false-ACCEPTs). Demoted from the clean name "grok" so
+        # that name can mean the preferred native CLI seat. V7 grok-tools
+        # still routes here explicitly (content writer path).
         "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
         "default_model": "grok-4.5",
         "cost_tier": "low",
@@ -146,10 +168,11 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "grok-build": {
-        # Native `grok` CLI ("Grok Build") in headless single-turn mode — a
-        # Claude-Code-shaped agentic coding CLI. Separate from the Hermes
-        # `grok` entry above (different transport, different use: coding vs
-        # content). Uses ~/.grok OAuth.
+        # PERMANENT alias for the native "grok" seat. Keep forever so old
+        # X-Agent trailers, inbox rows, budget usage, and `--agent grok-build`
+        # keep resolving. Prefer-WRITE is "grok"; this entry exists so bare
+        # registry lookups of the historical key still succeed without every
+        # caller remembering to normalize first.
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
         "default_model": "grok-4.5",
         "default_effort": "high",
@@ -233,11 +256,23 @@ AGENTS: dict[str, AgentEntry] = {
 def get_agent_entry(name: str) -> AgentEntry:
     """Look up an agent entry by name.
 
+    Permanent aliases (e.g. ``grok-build`` → ``grok``) resolve to the
+    canonical seat when the alias key is absent, but both keys are kept in
+    ``AGENTS`` so historical callers that look up the alias string directly
+    still succeed.
+
     Raises:
         KeyError: If ``name`` is not in AGENTS. Runner catches this and
             converts to AgentUnavailableError with a friendlier message.
     """
-    return AGENTS[name]
+    from .agent_identity import normalize_seat
+
+    if name in AGENTS:
+        return AGENTS[name]
+    canonical = normalize_seat(name)
+    if canonical is not None and canonical in AGENTS:
+        return AGENTS[canonical]
+    raise KeyError(name)
 
 
 def available_agents() -> list[str]:

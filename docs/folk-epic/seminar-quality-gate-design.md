@@ -18,7 +18,7 @@
 This is the methodology's spine, not a nicety. It applies in **three** concrete ways:
 
 1. **Writing = ensemble bake-off.** Multiple fleet writers (claude / codex / agy / cursor /
-   grok-build) draft the same module/wiki; the best advances (or we merge best-of). Never a
+   grok) draft the same module/wiki; the best advances (or we merge best-of). Never a
    single writer for content that must be beautiful.
 2. **Verification = cross-model, adversarial.** Every module/finding is checked by a
    *different* model than wrote it (deepseek high-volume; codex green-team). Self-review is
@@ -151,7 +151,7 @@ its existing wiki/dossier. If it can't converge, fixing the loop is priority #0.
 
 | Role | Agents | Notes |
 |------|--------|-------|
-| Module/wiki/dossier WRITERS (bake-off → pick best per item) | claude-tools, codex-tools, agy(gemini), cursor, grok-build, grok-4.* | Maximize quality via multi-writer bake-off; the gate scores all, best advances. |
+| Module/wiki/dossier WRITERS (bake-off → pick best per item) | claude-tools, codex-tools, agy(gemini), cursor, grok, grok-4.* | Maximize quality via multi-writer bake-off; the gate scores all, best advances. |
 | High-volume REVIEW | **deepseek** (cheapest) | Routine content/code review. |
 | Adversarial / green-team | codex | Hole-hunting (it caught 3 real holes in the liveness gate this week). |
 | Taste / architecture / final judgment-in-the-loop | claude (in-session, me) | Design + spot-checks; NOT a headless claude reviewer (quota). |

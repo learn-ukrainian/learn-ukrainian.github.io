@@ -191,19 +191,24 @@ def test_parse_plain_fallback():
     assert r.response == "just plain text"
 
 
-def test_registry_grok_build_distinct_from_hermes_grok():
-    gb = registry.get_agent_entry("grok-build")
-    g = registry.get_agent_entry("grok")
-    assert "grok_build:GrokBuildAdapter" in gb["adapter"]
-    assert "hermes_grok:HermesGrokAdapter" in g["adapter"]
-    assert gb["adapter"] != g["adapter"]
-    assert gb["default_model"] == GROK_BUILD_DEFAULT_MODEL
-    assert gb["default_effort"] == GROK_BUILD_DEFAULT_EFFORT
-    assert "code_writing" in gb["capabilities"]
+def test_registry_native_grok_distinct_from_hermes_grok():
+    native = registry.get_agent_entry("grok")
+    alias = registry.get_agent_entry("grok-build")
+    hermes = registry.get_agent_entry("grok-hermes")
+    assert "grok_build:GrokBuildAdapter" in native["adapter"]
+    assert "grok_build:GrokBuildAdapter" in alias["adapter"]
+    assert "hermes_grok:HermesGrokAdapter" in hermes["adapter"]
+    assert native["adapter"] != hermes["adapter"]
+    assert native["default_model"] == GROK_BUILD_DEFAULT_MODEL
+    assert native["default_effort"] == GROK_BUILD_DEFAULT_EFFORT
+    assert "code_writing" in native["capabilities"]
+    assert "grok" in registry.available_agents()
     assert "grok-build" in registry.available_agents()
+    assert "grok-hermes" in registry.available_agents()
 
 
 def test_grok_build_lane_defaults_to_grok_45():
+    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.5"
     assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.5"
     assert GROK_BUILD_DEFAULT_MODEL == "grok-4.5"
 

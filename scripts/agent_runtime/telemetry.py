@@ -178,11 +178,13 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
 def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     if agent_name == "codex":
         return _config_override(plan.cmd, "model_reasoning_effort")
-    if agent_name in {"claude", "grok-build"}:
+    from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
+
+    if agent_name == "claude" or is_native_grok_seat(agent_name):
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
-    if agent_name in ("grok", "deepseek", "qwen"):
+    if agent_name in ("deepseek", "qwen") or is_hermes_grok_seat(agent_name):
         # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
         # not surfaced on the command line. Adapter logs a warning when the
         # caller's request disagrees with the config — telemetry has nothing
@@ -212,7 +214,7 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name in ("grok", "deepseek", "qwen"):
+    if agent_name in ("grok-hermes", "deepseek", "qwen"):
         return _default_model_for(agent_name)
     if agent_name == "claude":
         return _default_model_for(agent_name)
@@ -223,9 +225,11 @@ def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None)
     # These CLIs do not expose a per-invocation effort value.  A deliberate
     # marker is observability, not an error: warning on every dispatch made
     # routine task state look broken (#4837).
+    from .agent_identity import is_hermes_grok_seat
+
     if agent_name in {"agy", "cursor", "gemini"}:
         return _NOT_EXPOSED
-    if agent_name in {"grok", "deepseek", "qwen"}:
+    if agent_name in {"deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
     if requested_effort:
         return requested_effort
@@ -348,11 +352,13 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "cursor":
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
         return cursor_cli_version(prefix)
-    if agent_name == "grok-build":
-        # Native `grok` CLI (Grok Build) — NOT hermes-backed; probe it directly.
+    from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
+
+    if is_native_grok_seat(agent_name):
+        # Native `grok` CLI — NOT hermes-backed; probe it directly.
         return _probe_version(("grok",))
-    if agent_name in ("grok", "deepseek"):
-        # Both grok and deepseek run through hermes; one shared version probe.
+    if agent_name == "deepseek" or is_hermes_grok_seat(agent_name):
+        # Hermes-backed seats share one version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
         return _probe_version(prefix)
     return None

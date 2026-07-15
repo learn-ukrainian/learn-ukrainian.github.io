@@ -44,9 +44,9 @@ class HermesGrokParseResult(ParseResult):
 
 
 class HermesGrokAdapter:
-    """Adapter for the Hermes CLI using Grok 4.5."""
+    """Adapter for the Hermes CLI using Grok 4.5 (registry seat: grok-hermes)."""
 
-    name: str = "grok"
+    name: str = "grok-hermes"
     default_model: str = "grok-4.5"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 

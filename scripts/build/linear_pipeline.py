@@ -3931,7 +3931,11 @@ def _runtime_tool_config(
             "grok-tools / deepseek-tools / qwen-tools / agy-tools."
         )
 
-    canonical_agent = agent_label.split("-", 1)[0]
+    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+
+    # Explicit map — never split("-")[0] for grok-tools (that would land on
+    # the native `grok` seat after the seat rename; grok-tools stays hermes).
+    canonical_agent = tools_writer_runtime_agent(agent_label)
     mcp_dict, diagnostics = build_mcp_tool_config(canonical_agent, **agent_kwargs)
     if canonical_agent in {"claude", "gemini"}:
         diagnostics = _mcp_config_server_name_diagnostics(
@@ -4032,9 +4036,11 @@ def invoke_writer(
     if invoker is None:
         from scripts.agent_runtime.runner import invoke as invoker
 
+    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+
     defaults = WRITER_DEFAULTS[writer]
     resolved_effort = effort if effort is not None else defaults["effort"]
-    agent_name = writer.split("-", 1)[0]
+    agent_name = tools_writer_runtime_agent(writer)
     result = invoker(
         agent_name,
         prompt,
@@ -5085,8 +5091,10 @@ def invoke_reviewer_dim(
     if invoker is None:
         from scripts.agent_runtime.runner import invoke as invoker
 
+    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+
     defaults = REVIEWER_DEFAULTS[reviewer]
-    agent_name = reviewer.split("-", 1)[0]
+    agent_name = tools_writer_runtime_agent(reviewer)
     result = invoker(
         agent_name,
         prompt,

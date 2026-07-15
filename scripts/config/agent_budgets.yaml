@@ -28,8 +28,11 @@ gemini:
 # API-billed (deepseek etc.) absent from this snapshot BY DESIGN — absence ≠ unavailable.
 # For lanes without numeric cap here, status="unknown" (data lives in user's external CodexBar snapshot).
 grok:
-  # grok-build native CLI is the subscription lane for grok; appears in CodexBar (5h windows)
+  # Native grok CLI seat (canonical). Historical alias: grok-build (dual-READ in
+  # usage aggregation). Appears in CodexBar (5h windows). Distinct from the
+  # demoted Hermes path (grok-hermes) — do not merge budget accounting.
   # cap value not duplicated here to avoid drift with user's live tracking.
+# grok-hermes is API/Hermes-path and intentionally ABSENT from subscription caps.
 cursor:
   # cursor composer subscription lane
   # cap value not duplicated here to avoid drift with user's live tracking.

@@ -67,9 +67,10 @@ def test_build_mcp_tool_config_gemini_without_servers_returns_none() -> None:
     assert diagnostics["resolution_status"] == "config_empty"
 
 
-def test_build_mcp_tool_config_grok_build_uses_native_config() -> None:
+@pytest.mark.parametrize("agent", ["grok", "grok-build"])
+def test_build_mcp_tool_config_native_grok_uses_native_config(agent: str) -> None:
     tool_config, diagnostics = build_mcp_tool_config(
-        "grok-build",
+        agent,
         mcp_servers=["sources"],
     )
 
@@ -78,6 +79,17 @@ def test_build_mcp_tool_config_grok_build_uses_native_config() -> None:
         "mcp_server_names": ["sources"],
     }
     assert diagnostics["config_path"] == str(Path.home() / ".grok" / "mcp.json")
+    assert diagnostics["resolution_status"] == "ok"
+
+
+def test_build_mcp_tool_config_grok_hermes_uses_hermes_config() -> None:
+    tool_config, diagnostics = build_mcp_tool_config(
+        "grok-hermes",
+        mcp_servers=["sources"],
+    )
+
+    assert tool_config == {"hermes_mcp_servers": ["sources"]}
+    assert diagnostics["config_path"] == str(Path.home() / ".hermes" / "config.yaml")
     assert diagnostics["resolution_status"] == "ok"
 
 

@@ -116,7 +116,7 @@ def test_process_grok_build_invokes_native_registry_key(monkeypatch):
     _grok_build.process_for_grok_build(7)
 
     args, kwargs = invoke_calls[0]
-    assert args[0] == "grok-build"
+    assert args[0] == "grok"  # prefer-WRITE canonical seat
     assert kwargs["model"] == "grok-4.5"
     assert kwargs["effort"] == _grok_build.GROK_BUILD_DEFAULT_EFFORT
     assert kwargs["entrypoint"] == "bridge"
@@ -166,10 +166,11 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
 
 
 def test_grok_build_registry_key_resolves_native_adapter():
-    entry = get_agent_entry("grok-build")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-    assert entry["default_model"] == "grok-4.5"
-    assert entry["default_effort"] == "high"
+    for key in ("grok", "grok-build"):
+        entry = get_agent_entry(key)
+        assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
+        assert entry["default_model"] == "grok-4.5"
+        assert entry["default_effort"] == "high"
 
 
 def test_grok_build_dispatch_start_telemetry_has_defaults():
@@ -179,11 +180,11 @@ def test_grok_build_dispatch_start_telemetry_has_defaults():
     ):
         from scripts.agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
-        telemetry = resolve_dispatch_start_telemetry(
-            agent_name="grok-build",
-            requested_model=None,
-            requested_effort=None,
-        )
-
-    assert telemetry.model == "grok-4.5"
-    assert telemetry.effort == "high"
+        for agent_name in ("grok", "grok-build"):
+            telemetry = resolve_dispatch_start_telemetry(
+                agent_name=agent_name,
+                requested_model=None,
+                requested_effort=None,
+            )
+            assert telemetry.model == "grok-4.5"
+            assert telemetry.effort == "high"

@@ -10,6 +10,11 @@ from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+except ImportError:
+    from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+
 logger = logging.getLogger("lane_health")
 
 # Constants per specification
@@ -49,15 +54,21 @@ def is_spawn_phase_failure(record: dict[str, Any], duration_threshold_s: int = D
 def normalize_agent_name(raw_agent: str | None) -> str | None:
     """Normalize agent name to match standard subscription/API lane names.
 
-    Matches _agent_key from state_router.py.
+    Matches _agent_key from state_router.py. Permanent alias: grok-build → grok.
     """
     if not raw_agent:
         return None
     agent = str(raw_agent).lower().strip()
+    # Permanent native-seat alias (see agent_identity.SEAT_ALIASES).
+    if agent in {"grok", "grok-build"} or agent.startswith("grok ") or agent.startswith("grok("):
+        return "grok"
+    canonical = normalize_seat(agent)
     for name in ("claude", "codex", "gemini", "grok", "cursor", "deepseek"):
+        if canonical == name or agent in seat_read_aliases(name):
+            return name
         if agent == name or agent.startswith(f"{name} ") or agent.startswith(f"{name}("):
             return name
-    return agent
+    return canonical or agent
 
 
 def compute_lane_health(

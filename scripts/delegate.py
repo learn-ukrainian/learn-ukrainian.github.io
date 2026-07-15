@@ -127,7 +127,17 @@ _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substi
 # Single source for dispatchable agents: argparse choices AND the hard-sub
 # validation in _resolve_agent_with_budget_guard (a yaml typo must never
 # dispatch a nonexistent adapter).
-_DISPATCH_AGENT_CHOICES = ("codex", "gemini", "claude", "grok", "grok-build", "deepseek", "agy", "cursor")
+_DISPATCH_AGENT_CHOICES = (
+    "codex",
+    "gemini",
+    "claude",
+    "grok",  # canonical native CLI seat
+    "grok-build",  # permanent alias → grok
+    "grok-hermes",  # demoted Hermes path
+    "deepseek",
+    "agy",
+    "cursor",
+)
 _MONITOR_API_BASE_URL = "http://localhost:8765"
 _logger = logging.getLogger(__name__)
 
@@ -2997,7 +3007,7 @@ def build_parser() -> argparse.ArgumentParser:
         # while the routing guard rejects it at dispatch is a UX trap. The
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
-        "grok-build (native grok CLI), deepseek, agy, or cursor.",
+        "grok (native CLI; grok-build=alias), grok-hermes, deepseek, agy, or cursor.",
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")

@@ -451,7 +451,19 @@ _SESSION_COLUMNS = {
 # resumable agent whose _SESSION_COLUMNS entry was forgotten — that would otherwise
 # silently never persist).
 _ALWAYS_FRESH_AGENTS = frozenset(
-    {"grok-build", "agy", "cursor", "hermes", "deepseek-v4-pro", "qwen", "opencode", "pool", "glm"}
+    {
+        "grok",  # canonical native seat
+        "grok-build",  # permanent alias — keep dual-READ for set_session
+        "grok-hermes",
+        "agy",
+        "cursor",
+        "hermes",
+        "deepseek-v4-pro",
+        "qwen",
+        "opencode",
+        "pool",
+        "glm",
+    }
 )
 
 
