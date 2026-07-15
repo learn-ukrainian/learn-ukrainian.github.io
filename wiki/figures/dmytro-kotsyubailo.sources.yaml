@@ -1,41 +1,20 @@
-# Source registry for wiki/figures/dmytro-kotsyubailo.md
-# Referenced inline as [S1], [S2], ...
+# Direct sources for wiki/figures/dmytro-kotsyubailo.md
 sources:
 - id: S1
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Короткий зміст'
+  file: https://www.president.gov.ua/documents/6082021-40761
+  type: external
+  title: Указ Президента України №608/2021
+  url: https://www.president.gov.ua/documents/6082021-40761
+  notes: Primary state record; directly inspected 2026-07-15.
 - id: S2
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Основний-зміст-Дмитро-Коцюбайло-та-бойовий-шлях-67-ї-окремої-механізованої-бригади
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Основний зміст > Дмитро Коцюбайло та бойовий шлях 67-ї окремої механізованої
-    бригади'
+  file: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
+  type: external
+  title: 7 березня 2023 року під Бахмутом в бою загинув Дмитро «Да Вінчі» Коцюбайло
+  url: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
+  notes: Institutional death notice; directly inspected 2026-07-15.
 - id: S3
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Основний-зміст-Історіографічний-концепт-героя-від-архаїчного-міфу-до-сучасної-реальності
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Основний зміст > Історіографічний концепт героя: від архаїчного міфу до сучасної
-    реальності'
-- id: S4
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Деколонізаційна перспектива'
-- id: S5
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Основний-зміст-Еволюція-волонтерства-як-фундаменту-добровольчого-руху
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Основний зміст > Еволюція волонтерства як фундаменту добровольчого руху'
-- id: S6
-  file: ukrainian_wiki/dmytro-kotsyubailo_Біографія-Дмитро-Да-Вінчі-Коцюбайло-Символ-покоління-добровольців-Основний-зміст-Цивілізаційний-вимір-війни-та-ціна-свободи
-  type: ukrainian_wiki
-  title: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-  section_path: 'Біографія: Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців
-    > Основний зміст > Цивілізаційний вимір війни та ціна свободи'
+  file: https://memorial.ua/obituaries/militaries/kotsiubailo-dmytro-1181
+  type: external
+  title: 'Дмитро Коцюбайло: військовий, 67 ОМБр — Меморіал'
+  url: https://memorial.ua/obituaries/militaries/kotsiubailo-dmytro-1181
+  notes: Memorial corroboration; directly inspected 2026-07-15.
