@@ -4513,7 +4513,14 @@ def _kaikki_etymology_text_is_usable(text: str) -> bool:
 # "Belarusian …" Kaikki etymology is rejected (section falls to honestly `uncovered`) rather than
 # surfaced with imperial framing.
 _KAIKKI_IMPERIAL_COMPARISON_RE = re.compile(
-    r"\b(Russian|Belarusian|Belorussian|Byelorussian)\b", re.IGNORECASE
+    # English base country names, adjectives, and plurals (Russia/Russian/Russians, Belarus/…),
+    r"\b(Russia|Russian|Russians|Belarus|Belarusian|Belarusians|Belorussia|Belorussian|Byelorussia|Byelorussian)\b"
+    # plus embedded Cyrillic imperial references (Kaikki etymology prose often embeds them, e.g.
+    # рф → "Російська Федерація"). Word-anchored (\b) so it does NOT false-positive on Амвросій
+    # (Ambrose) or on legitimate Moscow-referent words (москва/москвич), which carry honest
+    # compositional etymologies rather than imperial framing of a Ukrainian concept.
+    r"|\b(росі[яюї]|російськ|росіян|малоросі|рф|білорус)",
+    re.IGNORECASE,
 )
 
 

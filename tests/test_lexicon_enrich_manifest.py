@@ -1858,15 +1858,35 @@ def test_etymology_has_no_kaikki_cognate_fallback(monkeypatch) -> None:
 
 def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
     # The Kaikki fallback surfaces clean/decolonized etymologies but rejects Russian/Belarusian
-    # comparison framing (#M-13 / ukrainian-linguistics.md §1,§6).
+    # framing — English adjective/noun/plural AND embedded Cyrillic (#M-13 / ukrainian-linguistics.md
+    # §1,§6). Regression cases from the #5264 cross-family review (agy: base names/plurals leaked;
+    # codex: Cyrillic leaked) plus the false-positives that a naive broadening would introduce.
     monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
-    clean = {"дім": {"ipa": [], "etymology_text": "From Proto-Slavic *domъ.", "pos": ["noun"]}}
-    imperial = {"дім": {"ipa": [], "etymology_text": "Compare Russian дом (dom).", "pos": ["noun"]}}
 
-    result = _etymology(conn, "дім", clean)
-    assert result is not None and result["source"] == KAIKKI_SOURCE
-    assert _etymology(conn, "дім", imperial) is None
+    def ety(text: str):
+        return _etymology(conn, "проба", {"проба": {"ipa": [], "etymology_text": text, "pos": ["noun"]}})
+
+    # REJECTED — imperial framing (English adjective/noun/plural + embedded Cyrillic) → uncovered:
+    for imperial in [
+        "Compare Russian дом (dom).",
+        "cf. Belarusian ба́завы.",
+        "Named after the emperor Paul I of Russia.",       # base country name (was leaking)
+        "See орк for the usage referring to Russians.",    # plural (was leaking)
+        "Initialism of Російська Федерація.",              # Cyrillic (was leaking)
+        "Back-formation from Малоро́сія (little Russia).",
+    ]:
+        assert ety(imperial) is None, imperial
+
+    # PASSED — clean/decolonized etymologies surface, source-marked non-authoritative:
+    for clean in [
+        "From Proto-Slavic *domъ.",
+        "From Old East Slavic мѣсто.",
+        "From Амвросій (Amvrosij, male given name) + -ївка.",  # NOT imperial (Ambrose ≠ Russia)
+        "Inherited from Old Ruthenian москва.",               # Moscow-referent word, honest etymology
+    ]:
+        r = ety(clean)
+        assert r is not None and r["source"] == KAIKKI_SOURCE, clean
 
 
 def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
