@@ -36,3 +36,14 @@ sources:
   title: 'Історії незламних: Герой України Дмитро "Да Вінчі" Коцюбайло'
   url: https://gluzd.org.ua/articles/istorii-nezlamnykh-heroi-ukrainy-dmytro-da-vinchi-kotsiubailo/
   notes: Ukrainian outlet biographical profile covering 2014-2023 service arc and posthumous award; directly inspected 2026-07-15.
+- id: S7
+  preserved_from_meta: true
+  file: https://commons.wikimedia.org/wiki/File:Da_vinci_wolves_oath_01.jpg
+  type: external
+  title: Da vinci wolves oath 01.jpg — CC BY 4.0 contextual memorial image
+  url: https://commons.wikimedia.org/wiki/File:Da_vinci_wolves_oath_01.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Da_vinci_wolves_oath_01.jpg
+    license: CC BY 4.0
+    attribution: Батальйон «Вовки Да Вінчі»
