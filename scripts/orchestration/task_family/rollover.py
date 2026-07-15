@@ -987,7 +987,7 @@ def _confirmation_blockers(state: dict[str, Any], binding: dict[str, Any]) -> li
         blockers.append("existing confirmation cleanup proof gate is still locked")
     proof = replacement.get("canary_proof") or {}
     verdict = replacement.get("strict_verdict") or {}
-    if proof.get("verdict") != "PASS":
+    if proof.get("status") != "PASS":
         blockers.append("script canary proof is not PASS")
     if verdict.get("verdict") != "PASS" or verdict.get("correct") != 10 or verdict.get("k") != 10:
         blockers.append("strict recall verdict is not PASS 10/10")

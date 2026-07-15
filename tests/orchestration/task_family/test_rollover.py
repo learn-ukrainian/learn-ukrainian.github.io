@@ -92,7 +92,7 @@ def _confirmed_state(data: dict[str, object]) -> dict[str, object]:
             "thread_id": replacement_id,
             "resumed_thread_id": replacement_id,
             "confirmed_at": "2026-07-15T10:00:00Z",
-            "canary_proof": {"verdict": "PASS", "task": replacement_id},
+            "canary_proof": {"status": "PASS", "replacement_thread_id": replacement_id},
             "strict_verdict": {"verdict": "PASS", "correct": 10, "k": 10},
         },
         "cleanup": {"old_automation_ready_to_delete": True},
@@ -574,6 +574,27 @@ def test_running_pinned_and_unknown_predecessors_are_preserved(
     )
     assert result["ok"] is False
     assert any(expected in blocker for blocker in result["blockers"])
+    assert codex_state.read_thread_record(Path(data["db"]), task_id=str(data["source_id"])).archived is False
+
+
+def test_non_pass_canary_status_preserves_predecessor(tmp_path: Path) -> None:
+    data = _transition(tmp_path)
+    _title_reconciled(tmp_path, data)
+    prepared = data["prepared"]
+    assert isinstance(prepared, dict)
+    state = _confirmed_state(data)
+    state["replacement"]["canary_proof"]["status"] = "FAIL"
+    result = rollover.authorize_archive(
+        repo_root=tmp_path,
+        family_id=str(prepared["family_id"]),
+        operation_id=str(prepared["operation_id"]),
+        state=state,
+        source_status="idle",
+        pin_state="unpinned",
+        evidence="native read_thread response",
+    )
+    assert result["ok"] is False
+    assert "script canary proof is not PASS" in result["blockers"]
     assert codex_state.read_thread_record(Path(data["db"]), task_id=str(data["source_id"])).archived is False
 
 
