@@ -4524,8 +4524,14 @@ _KAIKKI_IMPERIAL_COMPARISON_RE = re.compile(
 )
 
 
+# Ukrainian dictionary prose marks stress with combining acute/grave (Малоро́сія, Росі́я). Strip only
+# those before the imperial-comparison match so accented Cyrillic still matches; the precomposed
+# letters ї/й (U+0457/U+0439) are untouched — only U+0301/U+0300 are removed.
+_KAIKKI_STRESS_MARKS = str.maketrans("", "", "́̀")  # combining acute + grave (stress)
+
+
 def _kaikki_etymology_is_decolonized(text: str) -> bool:
-    return not _KAIKKI_IMPERIAL_COMPARISON_RE.search(text)
+    return not _KAIKKI_IMPERIAL_COMPARISON_RE.search(text.translate(_KAIKKI_STRESS_MARKS))
 
 
 def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | None:

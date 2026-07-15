@@ -1875,6 +1875,7 @@ def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
         "See орк for the usage referring to Russians.",    # plural (was leaking)
         "Initialism of Російська Федерація.",              # Cyrillic (was leaking)
         "Coined during the war with Росією.",              # Cyrillic instrumental case (paradigm gap)
+        "From Росі́я (Rosíja) + -ський.",             # stress-marked Cyrillic (combining acute)
         "Back-formation from Малоро́сія (little Russia).",
     ]:
         assert ety(imperial) is None, imperial
@@ -1888,6 +1889,12 @@ def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
     ]:
         r = ety(clean)
         assert r is not None and r["source"] == KAIKKI_SOURCE, clean
+
+    # Stress marks are stripped ONLY for the imperial-comparison match; the STORED etymology text
+    # must preserve them (word stress is pedagogically load-bearing).
+    accented = ety("From Old East Slavic мѣ́сто.")
+    assert accented is not None
+    assert "́" in accented["text"]  # combining acute retained in the saved value
 
 
 def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
