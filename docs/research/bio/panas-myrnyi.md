@@ -100,6 +100,8 @@ Source: Panas Myrnyi, *Дума про військо Ігореве*, Myslene D
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
+- Л. Ушкалов. «Мирний Панас». *Енциклопедія Сучасної України*. 2018.
+  https://esu.com.ua/article-64548 | accessed 2026-07-15
 - UINP historical calendar, "1849, 13 травня - народився Панас Мирний" | https://www.uinp.gov.ua/istorychnyy-kalendar/traven/13/1849-narodyvsya-panas-myrnyy-pysmennyk-dramaturg | accessed 2026-05-30
 - UINP historical calendar, "1876, 30 травня - Емський указ" | https://www.uinp.gov.ua/istorychnyy-kalendar/traven/30/1876-emskyy-ukaz | accessed 2026-05-30
 
@@ -126,3 +128,6 @@ Source: Panas Myrnyi, *Дума про військо Ігореве*, Myslene D
 - [x] Existing curriculum paths verified
 - [x] Russian-imperial naming excluded from body text
 - [x] Publication gaps treated as censorship evidence, not author delay
+- [x] ЕСУ і НБУВ перевірено повторно 2026-07-15; українськомовне женевське
+  видання 1880 року подано як документований видавничий факт, а не як привід
+  вигадувати персональну поліційну справу.

@@ -1,0 +1,22 @@
+---
+sources:
+- id: S1
+  file: https://esu.com.ua/article-64548
+  type: external
+  title: Мирний Панас — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-64548
+- id: S2
+  file: https://nbuv.gov.ua/node/6526
+  type: external
+  title: Панас Мирний (1849–1920). До 175-річчя від дня народження — НБУВ
+  url: https://nbuv.gov.ua/node/6526
+- id: S3
+  file: https://uinp.gov.ua/istorychnyy-kalendar/traven/13/1849-narodyvsya-panas-myrnyy-pysmennyk-dramaturg
+  type: external
+  title: 1849 — народився Панас Мирний — УІНП
+  url: https://uinp.gov.ua/istorychnyy-kalendar/traven/13/1849-narodyvsya-panas-myrnyy-pysmennyk-dramaturg
+- id: S4
+  file: https://www.ukrlib.com.ua/books/printit.php?tid=983
+  type: external
+  title: Хіба ревуть воли, як ясла повні? — УкрЛіб
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=983

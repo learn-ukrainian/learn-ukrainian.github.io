@@ -130,17 +130,49 @@ persona:
     імперські механізми стримування мови без вигадування репресивних деталей.
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  reason: >-
+    У цій перевірці не встановлено індивідуальної ліцензії на конкретний
+    портрет; категорії та результати пошуку не є доказом прав.
+  verified_on: '2026-07-15'
+readings_contract_version: 2
 readings:
-- source_name: "Панас Мирний (Мислене древо)"
-  source_url: "https://www.myslenedrevo.com.ua/uk/Lit/M/MyrnyP.html"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted material; link to authoritative digital library Myslene Drevo."
-- source_name: "1849, 13 травня — народився Панас Мирний (УІНП)"
-  source_url: "https://www.uinp.gov.ua/istorychnyy-kalendar/traven/13/1849-narodyvsya-panas-myrnyy-pysmennyk-dramaturg"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Official government material (UINP), link-only to ensure correctness and respect terms."
+- title: Мирний Панас
+  language: uk
+  type: encyclopedia
+  role: primary-bio
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-64548
+  hosting: link-only
+  learner_task: Виписати перевірені біографічні віхи та жанровий діапазон автора.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-64548
+    note: Зовнішнє посилання на енциклопедичну статтю; повний текст не відтворюється.
+- title: Панас Мирний (1849–1920). До 175-річчя від дня народження
+  language: uk
+  type: institutional-biography
+  role: publication-history
+  source_name: Національна бібліотека України імені В. І. Вернадського
+  source_url: https://nbuv.gov.ua/node/6526
+  hosting: link-only
+  learner_task: Простежити співавторство братів Рудченків і шлях роману до женевського видання.
+  rights:
+    basis: external-link
+    evidence_url: https://nbuv.gov.ua/node/6526
+    note: Зовнішнє посилання на бібліотечну виставку; повний текст не відтворюється.
+- title: Хіба ревуть воли, як ясла повні?
+  language: uk
+  type: primary-text
+  role: literary-analysis
+  source_name: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=983
+  hosting: link-only
+  learner_task: Проаналізувати, як соціальна нерівність і моральний вибір формують оповідь про Чіпку.
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrlib.com.ua/books/printit.php?tid=983
+    note: Твір доступний лише за зовнішнім посиланням; повний текст не хоститься в курсі.
 references:
 - note: Календарна стаття про народження письменника.
   path: https://www.uinp.gov.ua/istorychnyy-kalendar/traven/13/1849-narodyvsya-panas-myrnyy-pysmennyk-dramaturg
