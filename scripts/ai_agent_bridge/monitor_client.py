@@ -200,7 +200,10 @@ class MonitorClient:
         """
         url = self.base_url + path
         merged_headers = dict(headers or {})
-        if self.session_id and "X-Session-Id" not in merged_headers:
+        # Only inject when the caller has not already supplied the header in ANY case — urllib
+        # title-cases header keys, so a caller's ``x-session-id`` would otherwise collide with and
+        # be clobbered by the injected value. An explicit caller header always wins.
+        if self.session_id and not any(k.lower() == "x-session-id" for k in merged_headers):
             merged_headers["X-Session-Id"] = self.session_id
         req = urllib.request.Request(url, headers=merged_headers)
         try:

@@ -320,3 +320,9 @@ def test_monitor_client_injects_session_id_header(monkeypatch):
     monkeypatch.delenv("CLAUDE_CODE_SESSION_ID", raising=False)
     monitor_client.MonitorClient()._get("/api/x")
     assert captured["req"].get_header("X-session-id") is None
+
+    # 4. A caller-supplied header wins in ANY case — urllib title-cases keys, so a lowercase
+    #    x-session-id must not be clobbered by the injected session id.
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "sid-env")
+    monitor_client.MonitorClient()._get("/api/x", headers={"x-session-id": "caller-explicit"})
+    assert captured["req"].get_header("X-session-id") == "caller-explicit"
