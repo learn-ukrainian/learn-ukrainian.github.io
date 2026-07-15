@@ -52,7 +52,7 @@ rate-limit headroom checks, mode validation, cwd enforcement.
 ## Session resume policy — the rule that matters
 
 | Path | Resume? | Why |
-|---|---|---|
+| --- | --- | --- |
 | Your interactive Claude Code | not affected by runtime | Keep `--continue`, handoffs, etc. The runtime doesn't touch your session. |
 | Bridge `_claude.py` / `_gemini.py` | **yes** | Cache economics — 95% of our tokens are cache reads. Dropping resume here would reproduce the 2026-03-21 cost fiasco (5.8B tokens in 2 days, rate-limited for a week). |
 | Bridge `_codex.py` | **no** | Codex quota is per-message, not per-token. Resume saves nothing. And cross-worktree session carry-over is the #1 footgun (Codex's own warning, msg #28506). |
@@ -70,7 +70,7 @@ If you need to change this policy, edit `registry.py`, not the call site.
 Three modes, same meaning across all adapters:
 
 | Mode | Meaning | Typical use |
-|---|---|---|
+| --- | --- | --- |
 | `read-only` | CLI runs with read-only filesystem sandbox | Consultation, questions, reviews |
 | `workspace-write` | CLI can write files in cwd | Coding tasks, refactors, batch fixes |
 | `danger` | Sandbox bypassed entirely | Only when explicitly needed (e.g., setup scripts) |
@@ -177,7 +177,7 @@ provider/model substitution is forbidden.
 v1 adapter coverage:
 
 | Lane | Route override support |
-|---|---|
+| --- | --- |
 | `deepseek`, `qwen`, `grok` | Hermes provider + model via runner route metadata and `--provider` when forced. |
 | `agy` | Model override through the existing `--model` mapping; provider is informational unless encoded by the CLI model label. |
 | Other adapters | Model-only chains work when the adapter's existing `model` argument can express the route. |
@@ -192,7 +192,7 @@ private git worktree so its writes are isolated from the main checkout.
 Two layouts are currently supported:
 
 | Layout | Path | Status | Triggered by |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
 | flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
 | custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
@@ -200,12 +200,11 @@ Two layouts are currently supported:
 `delegate.py list` and `delegate.py status` print a deprecation notice
 when they encounter a flat-layout worktree.
 
-Two non-dispatch worktrees live alongside these and are **out of scope**
-for delegate lifecycle — don't prune or rename:
-- `.worktrees/codex-interactive/` — the persistent interactive session
-  from `start-codex.sh` (detached HEAD, symlinks to `.venv`, `data/`,
-  `starlight/node_modules`).
-- Any operator-created `.worktrees/*` that predates the dispatch layout.
+Operator-created non-dispatch worktrees may live alongside these and are **out
+of scope** for delegate lifecycle; do not prune or rename them without proving
+ownership. `start-codex.sh` itself runs from the canonical `main` checkout and
+does not own a persistent worktree. Legacy `.worktrees/codex-interactive/`
+checkouts remain protected as operator-created state until explicitly removed.
 
 ### Stale-base safety (the actual #1476 bug)
 
@@ -244,7 +243,7 @@ Task-ids that already include the agent name (our common convention:
 normalizer strips a leading `{agent}-` or `{agent}/` before prefixing:
 
 | Agent | Task-id | Branch |
-|---|---|---|
+| --- | --- | --- |
 | codex | `codex-1472-foo` | `codex/1472-foo` |
 | codex | `codex/1472-foo` | `codex/1472-foo` |
 | codex | `1472-foo` | `codex/1472-foo` |
