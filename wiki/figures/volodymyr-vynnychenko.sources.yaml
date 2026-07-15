@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/volodymyr-vynnychenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://esu.com.ua/article-34033
+  type: external
+  title: Винниченко Володимир Кирилович — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-34033
+  notes: Ukrainian institutional encyclopaedia; biography, political activity, and literary work.
+- id: S2
+  file: https://www.history.org.ua/?termin=Vynnychenko_V
+  type: external
+  title: ВИННИЧЕНКО Володимир Кирилович — Енциклопедія історії України
+  url: https://www.history.org.ua/?termin=Vynnychenko_V
+  notes: Ukrainian institutional history reference; vital-data and political-biography chronology.
+- id: S3
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CY%5CVynnychenkoVolodymyr.htm
+  type: external
+  title: Vynnychenko, Volodymyr — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CY%5CVynnychenkoVolodymyr.htm
+  notes: CIUS encyclopaedia entry; used to identify, rather than conceal, vital-date disagreement.

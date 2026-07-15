@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/natalia-livytska-kholodna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://esu.com.ua/article-55405
+  type: external
+  title: Лівицька-Холодна Наталя Андріївна — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-55405
+  notes: Ukrainian institutional encyclopaedia; biography, works, diaspora activity, and literary characterisation.
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLivytska6KholodnaNataliia.htm
+  type: external
+  title: Livytska-Kholodna, Nataliia — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLivytska6KholodnaNataliia.htm
+  notes: CIUS encyclopaedia entry; supports the Prague, Warsaw, DP, and US chronology.

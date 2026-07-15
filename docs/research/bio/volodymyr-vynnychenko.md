@@ -23,19 +23,17 @@
 
 - **Full name (UA, canonical):** Володимир Кирилович Винниченко. [T1: IEU — Vynnychenko, Volodymyr; T3: Вікіпедія]
 - **Pseudonyms / aliases:** Винниченко Володимир Кирилович (academic order). Forbidden in body text except in the naming section: "Vladimir Vinnichenko," "Vladimir Kirillovich Vinnichenko," "Владимир Кириллович Винниченко."
-- **Born:** **26 липня 1880** (modern UA sources) | село Великий Кут, Єлисаветградський повіт, Херсонська губернія, Russian Empire (now Кіровоградська область, Україна). **IEU gives 27 July 1880** — flag the one-day disagreement; do not silently collapse it. [T1: IEU; T3: Вікіпедія]
-- **Died:** **6 березня 1951** | Mougins (Мужен), Provence, France, at his estate "Закуток" (Le Closon) | natural causes. [T1: IEU; T3: Вікіпедія]
+- **Born:** **16(28) липня 1880** за ЕСУ; ЕІУ подає 28(16) липня, а IEU — 27 липня. ЕІУ називає Веселий Кут Єлисаветградського повіту, ЕСУ — Єлисаветград, IEU — Велику Куту; розбіжності не зводити до однієї «точної» версії без нового джерела. [T1: ЕСУ; T2: ЕІУ; T3: IEU]
+- **Died:** у Мужені, Франція, в березні 1951 року; ЕСУ подає 5 березня, ЕІУ та IEU — 6 березня. Не додавати причину смерті без прямої опори. [T1: ЕСУ; T2: ЕІУ; T3: IEU]
 - **Family / education key facts:** Began law studies at Kyiv University in **1901**; expelled in **1902** for "revolutionary" activity and never completed the degree. Member of the **Революційна українська партія (РУП)** and then the executive of the **Українська соціал-демократична робітнича партія (УСДРП)**, editing its organ *Боротьба*. Married Rozalia Lifshyts (a physician). A self-taught painter in emigration. [T1: IEU; T3: Вікіпедія]
 
 ## 2. Oppression mechanism — forced emigration + a blocked return + 70-year erasure
 
-Винниченко is the **paradigmatic first-wave émigré-statesman**: the first head of the UNR government, driven into exile by the Bolshevik conquest of Ukraine, who tried once to return and was refused real power, then proscribed and erased inside the USSR for some seventy years.
+Винниченко — діяч першої хвилі української політичної еміграції, чия біографія поєднала роботу в інституціях УНР, переговори 1920 року та подальшу працю за кордоном. Формули про повну тривалість радянської проскрипції або єдиний механізм «стирання» потребують окремого джерела, тому не мають подаватися тут як установлені факти.
 
-- **What happened:** forced into emigration after the defeat of the Українська Народна Республіка; a 1920 attempt to return and serve was deliberately frustrated; thereafter permanent exile and total Soviet proscription of his name and works. [T1: IEU; T5: Радіо Свобода — corroborated]
-- **When:** first left for Vienna in **1919**; arrived in Moscow in **late May 1920**; left Kharkiv (then the Soviet Ukrainian capital) in **September 1920** and went abroad for good; proscribed in Soviet Ukraine **until the late 1980s**. [T1: IEU]
-- **By whom:** the Bolshevik leadership and the Soviet party-state. In 1920 he negotiated personally with Lenin's circle — Trotsky, Kamenev, Zinoviev, and Rakovsky — and was offered the post of **deputy chairman of the Council of People's Commissars of the Ukrainian SSR with the foreign-affairs portfolio**. [T5: Радіо Свобода / ІстПравда — corroborated by IEU on the fact of return and departure]
-- **Mechanism specifics:** Винниченко demanded a seat on the Politburo of the CC CP(b)U so that Soviet power in Ukraine would be genuinely national; he was refused. Observing that Bolshevik policy in the Ukrainian countryside met fierce resistance that was being brutally suppressed, he concluded that he was wanted "in the dark" — to be deployed as a Ukrainian face against his own people. He refused the government and emigrated. [T5: ІстПравда / Радіо Свобода — corroborated]
-- **The erasure:** as the author of **all the Universals, declarations, and legislative drafts of the UNR**, the first premier of the Ukrainian government, and the first head of the Директорія, Винниченко was precisely the figure the USSR most needed to delete. For roughly seven decades his name was either unprintable or vilified; an entire Soviet-educated readership grew up without him. [T1: IEU; T3: Вікіпедія]
+- **What happened:** після виходу зі складу Директорії 1919 року жив за кордоном; у травні–вересні 1920 року вів переговори з більшовицьким урядом, після яких повернувся за кордон. [T1: ЕСУ; T2: ЕІУ]
+- **Institutional point:** ЕСУ подає його вимогу незалежної соборної України, пропозицію посади наркома закордонних справ України та відмову включити його до Політбюро ЦК КП(б)У. Не замінювати це непідтвердженою пропозицією посади заступника голови уряду. [T1: ЕСУ]
+- **Interpretive limit:** його формула про «українську одежу» більшовизму є авторською позицією, а не нейтральним описом; не виводити з неї без додаткового джерела історію про «український фасад» або спостереження за селянським опором. [T1: ЕСУ]
 
 **What survived / what was destroyed:** his manuscripts, diaries (*Щоденник*), and the late novels survived in the diaspora and at the family estate; the UNESCO-era restoration came only after 1991. What was destroyed was his place in the political and literary memory of Soviet Ukraine.
 
@@ -54,23 +52,9 @@
 - **1971 (posthumous)** — *Слово за тобою, Сталіне!*, роман. [T3: Вікіпедія]
 - **Posthumous** — *Щоденник* (multi-volume diary), foundational primary source for the revolution and the emigration.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotation disposition
 
-> **Honesty note (#M-4):** `verify_quote` returns no corpus match for Винниченко — his political/memoir prose is not indexed in the project's literary corpus (which holds his contemporaries' verse, e.g. `ukrlib-oles`, `ukrlib-osmachka`). The two quotes below are therefore cited to their **printed sources**, not claimed as corpus hits.
-
-### Quote 1 — the indictment of Moscow's rule (political testament)
-
-> **«Вся історія відносин між Москвою та Україною протягом більше, як 250 літ, … є планомірне, безоглядне, безсоромне, нахабне нищення української нації…»**
-
-*Source:* *Заповіт борцям за визволення* (1949). [T3: Вікіцитати; printed: Винниченко В. *Заповіт борцям за визволення*. — Київ: Криниця, 1991 (repr.)]
-*Pedagogical note:* a C1-level decolonial primary text — the first premier of the UNR naming the long arc of Russian colonial destruction. Pairs directly with HIST repression modules.
-
-### Quote 2 — the famous aphorism on Ukrainian history
-
-> **«Читати українську історію треба з бромом…»**
-
-*Source:* attributed to Винниченко's *Щоденник* / *Відродження нації*; among the most-cited lines in Ukrainian historiography. [T3: Вікіцитати — attribution flagged]
-*Pedagogical note:* a one-line gateway to the historiographical theme of repeated national defeat; teachable at B2 with framing. Present the *attribution* honestly (diary vs. memoir-history is debated) rather than fixing a false exact citation.
+No direct quotation is adopted for this packet. The project corpus does not index the relevant political and memoir prose, and the familiar aphorism about reading Ukrainian history has unstable attribution across secondary quotation sites. The completed wiki therefore paraphrases only the institutional sources and marks the 1920 formula as a position reported by ЕСУ. A future quotation requires an identified edition and page or a directly verifiable digital facsimile.
 
 ## 5. Language register
 
@@ -124,11 +108,9 @@
 - Internet Encyclopedia of Ukraine (CIUS). "Vynnychenko, Volodymyr." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CY%5CVynnychenkoVolodymyr.htm. Accessed 2026-05-29.
 
 **Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Винниченко Володимир Кирилович." https://uk.wikipedia.org/wiki/Винниченко_Володимир_Кирилович. Accessed 2026-05-29. Used for navigation; dates cross-checked against IEU (note the 26 vs. 27 July disagreement).
 - Вікіцитати (uk.wikiquote). "Володимир Винниченко." Accessed 2026-05-29 — quote attribution leads, flagged.
 
 **Tier 5 (general web — corroboration only):**
-- Радіо Свобода. "Постать Володимира Винниченка: український революціонер у полоні соціалістичних ідеалів." https://www.radiosvoboda.org/a/30748066.html — corroborates the 1920 Moscow negotiation and refusal.
 - Історична правда / Служба зовнішньої розвідки feature "Володимир Винниченко. 'За яку Україну?'" — corroborating detail on the 1920 return.
 
 **Primary-source documents accessed (printed):**

@@ -23,22 +23,19 @@
 
 - **Full name (UA, canonical):** Іван Павлович Лозов'яга (also recorded Лозов'ягін — a Soviet Russifying alteration of the surname). Літературний псевдонім — **Іван Багряний** (adopted under the influence of Микола Хвильовий's favoured epithet "багряний"). [T1: ЕІУ — Багряний Іван Павлович; T3: Вікіпедія]
 - **Pseudonyms / aliases:** Іван Багряний; І. Полярний (early, used for *Чорні силуети*, 1925); Лозов'яга / Лозов'ягін. Forbidden in body text except in the naming section: "Ivan Bagrjanyj," "Иван Багряный," "Лозовягин" as a Russified imposition.
-- **Born:** **19 вересня / 2 жовтня 1906** | Охтирка, Харківська губернія, Russian Empire (now Сумська область, Україна). [T1: ЕІУ; T3: Вікіпедія]
-- **Died:** **25 серпня 1963** | place of death disagreement: **IEU gives Sankt Blasien** (sanatorium, Black Forest), **uk.wiki gives Новий Ульм (Neu-Ulm)**, Bavaria. Buried in **Neu-Ulm** (Neu-Ulmer Friedhof; monument by sculptor Лео Мол, consecrated 3 October 1965). Cause: long illness (tuberculosis/heart), aggravated by years of imprisonment. [T1: IEU; T3: Вікіпедія]
+- **Born:** **19 вересня / 2 жовтня 1906**; ЕСУ подає Охтирку, а ЕІУ — Куземин, тому місце народження слід називати з атрибуцією. [T1: ЕСУ; T2: ЕІУ]
+- **Died:** **25 серпня 1963**; ЕСУ подає Новий Ульм, IEU — Санкт-Блазієн, а ЕСУ фіксує поховання в Новому Ульмі. Не додавати причину смерті без окремого медичного або біографічного джерела. [T1: ЕСУ; T3: IEU]
 - **Family / education key facts:** Son of a mason, Павло Лозов'яга. Studied at the **Київський художній інститут (КХІ)** 1926–1930 but could not graduate (lack of funds + hostile administration). Member of the peasant-writers' union «Плуг», then of the opposition group **МАРС** ("Майстерня революційного слова"), where he was close to Підмогильний, Плужник, Антоненко-Давидович, Косинка, and Осьмачка. [T1: ЕІУ; T3: Вікіпедія]
 
 **Foundational trauma (1920):** when Багряний was a boy, Bolsheviks murdered his 92-year-old grandfather and an uncle (a participant in the Українська революція) in the family's own garden. [T3: Вікіпедія]
 
 ## 2. Oppression mechanism — GULAG, then forced DP emigration, then a Soviet manhunt abroad
 
-Багряний's case spans **all three** Block-C mechanisms: physical Soviet repression (arrests, camps), forced post-war emigration, and continued Soviet/MGB pursuit of him in the diaspora.
+Біографія Багряного документує радянські арешти, ув'язнення та заслання, а після війни — еміграційну літературну, журналістську й політичну діяльність. Твердження про постійне переслідування МГБ за кордоном потребує окремої архівної опори й не має бути шаблонним поясненням усієї еміграції.
 
-- **First arrest:** **16 April 1932**, Kharkiv. Charged with "counter-revolutionary agitation" in his literary works — the long poem *Ave Maria*, the verse-novel *Скелька*, and the poems *Тінь*, *Вандея*, *Ґутенберг*, and the satire *Батіг*. Held roughly a year in a **solitary death-row cell of the internal ГПУ prison in Kharkiv**. [T3: Вікіпедія]
-- **Sentence:** **25 October 1932** — three years of special settlement in the Far East (1932–1937; the Okhotsk Sea coast, the taiga, among the Ukrainians of the Зелений Клин). He **escaped**, was recaptured en route to Ukraine, and received a new three-year term in the **БАМТАБ** (BAM) camp system. [T3: Вікіпедія]
-- **Second arrest:** **16 June 1938**, held in the Kharkiv УДБ–НКВС prison on Холодна Гора; accused of leading a "nationalist counter-revolutionary organization." Despite many days of torture and interrogation he **refused, on 26 March 1939, to sign the conclusion of the investigation**. A resolution of **1 April 1940** conceded that all evidence dated to 1928–1932 (already punished) and that "no other data on anti-Soviet activity of Bahriany-Lozoviaha was obtained by the investigation." He was released, ill and broken, to Okhtyrka **"під нагляд"** (under surveillance). [T3: Вікіпедія]
-- **By whom:** ГПУ / НКВС of the Ukrainian SSR.
-- **WWII and flight:** Багряний joined the Ukrainian underground, worked in insurgent (OUN/UPA) propaganda, helped draft the programmatic documents of the **Українська головна визвольна рада (УГВР)**, and was nearly shot by the Nazis in 1942. When Soviet forces retook Okhtyrka in 1944 and the НКВС took interest in his occupation-era activity, he fled west. [T3: Вікіпедія]
-- **The manhunt abroad:** in emigration the MGB and Soviet propaganda continued to target him; his life's spine became the refusal to be repatriated (see Quote 2). [T3: Вікіпедія; T1: IEU]
+- **First arrest:** 16 квітня 1932 року; ЕІУ подає одинадцять місяців у харківській внутрішній тюрмі, п'ять років таборів і заслання на Далекий Схід. ЕСУ також фіксує арешт і заслання. [T1: ЕСУ; T2: ЕІУ]
+- **Repeated persecution:** ЕІУ повідомляє про повторний арешт менш ніж через рік після повернення та звільнення 1940 року через тяжку хворобу легень. Не додавати табірні маршрути, строки або подробиці допитів без архівного видання. [T2: ЕІУ]
+- **War and emigration:** ЕІУ фіксує редакторську працю в «Голосі Охтирщини», виїзд до Галичини 1943 року, участь у створенні УГВР, а потім еміграцію через Словаччину й Австрію до Німеччини. Не приписувати йому неперевірену працю в УПА-пропаганді, авторство програмних документів або епізод розстрілу. [T2: ЕІУ]
 
 **What survived / what was destroyed:** the novels he wrote *from* the experience — *Тигролови* and *Сад Гетсиманський* — survived and circulated worldwide; his early poem *Ґутенберг* and parts of the satirical epic *Комета* were lost in the early 1930s, and he himself burned the manuscript of the novel *Люба*. His ДПУ/НКВС case files survive and were published in the 1990s (В. Миронець, *Розбудова держави*, 1995). [T3: Вікіпедія]
 
@@ -57,21 +54,9 @@
 
 In 1963 the Chicago branch of ОДУМ began a campaign to nominate Багряний for the **Nobel Prize in Literature** — he had written two major GULAG novels two decades before Solzhenitsyn's *Archipelago* — but his sudden death ended it. **1992**: posthumous Shevchenko Prize for *Сад Гетсиманський* and *Тигролови*. [T3: Вікіпедія]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotation disposition
 
-### Quote 1 — the survival maxim (*Тигролови*)
-
-> **«Ліпше вмирати біжучи, ніж жити гниючи!»**
-
-*Source:* novel *Тигролови* (1944/1946). Verified with `verify_quote` against the Ukrainian literary corpus (`ukrlib-bahryanyi`, confidence 0.94 — matched within the novel's prison-line scene).
-*Pedagogical note:* the credo of the escapee Григорій Многогрішний and of the book itself; a teachable B2 maxim that condenses the whole anti-totalitarian ethic of the émigré GULAG novel.
-
-### Quote 2 — the refusal to return (1946 pamphlet)
-
-> **«Я вернусь до своєї Вітчизни з мільйонами своїх братів і сестер … тоді, коли тоталітарна система буде знесена так, як і гітлерівська. Коли НКВД піде вслід за гестапо, коли червоний російський фашизм щезне так, як щез фашизм німецький…»**
-
-*Source:* памфлет *«Чому я не хочу вертатись до СРСР?»* (1946). [printed; T3: Вікіпедія reproduces the passage] — `verify_quote` does not index his publicistic prose, so this is cited to the pamphlet itself, not claimed as a corpus hit.
-*Pedagogical note:* the founding text of post-war Ukrainian political emigration; explicitly equates "червоний російський фашизм" with Nazism — a C1 decolonial primary source that anticipates today's framing of Russian aggression.
+No direct quotation is adopted in the completed wiki. The dossier retains *Тигролови* and the 1946 pamphlet as primary works for study, but a short corpus match or a bibliographic record is not sufficient to reproduce an exact passage without checking the displayed edition. The National Library record for the 1946 pamphlet establishes the work's metadata; any future excerpt must be verified against its digitized text and labelled as Багряний's polemical 1946 language rather than neutral narration.
 
 ## 5. Language register
 
@@ -127,7 +112,6 @@ In 1963 the Chicago branch of ОДУМ began a campaign to nominate Багрян
 - В. Миронець. "Слідчі справи Івана Багряного (за матеріалами архівів ДПУ)." *Розбудова держави*, 1995, № 1, с. 51–60 — publication of the case files.
 
 **Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Іван Багряний." https://uk.wikipedia.org/wiki/Іван_Багряний. Accessed 2026-05-29. Detailed arrest chronology cross-checked against ЕІУ; place-of-death disagreement (Neu-Ulm vs. Sankt Blasien) flagged against IEU.
 
 **Primary-source documents accessed:**
 - `verify_quote` corpus match (`ukrlib-bahryanyi`, 0.94) for "Ліпше вмирати біжучи, ніж жити гниючи."
