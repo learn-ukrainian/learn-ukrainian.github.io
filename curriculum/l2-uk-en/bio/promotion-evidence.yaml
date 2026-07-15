@@ -6,36 +6,43 @@ entries:
   borys-hrinchenko:
     dossier_grounding:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
     reading_rights:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
       disposition: link-only-approved
     wiki_grounding:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
     wiki_quote_verification:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
     image_rights:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Грінченко_Борис.jpg
       disposition: approved
     cohort_promotion:
       status: pass
-      reviewer_family: mixed
-      date: 2026-07-10
-      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930922102
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
   hnat-khotkevych:
     dossier_grounding:
       status: pass
@@ -2755,3 +2762,85 @@ entries:
       disposition: exception-approved
     cohort_promotion: *cohort_driver_89b642_c3_review
     hold: *cohort_driver_89b642_c3_hold
+  kyrylo-rozumovskyi:
+    dossier_grounding: &cohort_driver_89b642_c4_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_89b642_c4_review
+    wiki_quote_verification: *cohort_driver_89b642_c4_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Kyrylo_Rozumovsky_(Portrait,_1766,_Pompeo_Batoni).jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_89b642_c4_review
+    hold: &cohort_driver_89b642_c4_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  maik-yohansen:
+    dossier_grounding: *cohort_driver_89b642_c4_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_89b642_c4_review
+    wiki_quote_verification: *cohort_driver_89b642_c4_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Mayk_Yohansen.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_89b642_c4_review
+    hold: *cohort_driver_89b642_c4_hold
+  dmytro-falkivskyi:
+    dossier_grounding: *cohort_driver_89b642_c4_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_89b642_c4_review
+    wiki_quote_verification: *cohort_driver_89b642_c4_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://uk.wikisource.org/wiki/Файл:Dmytro_Falkivskiy.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_89b642_c4_review
+    hold: *cohort_driver_89b642_c4_hold
+  yevhen-pluzhnyk:
+    dossier_grounding: *cohort_driver_89b642_c4_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4982954407
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_89b642_c4_review
+    wiki_quote_verification: *cohort_driver_89b642_c4_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Плужник_Євген_Павлович.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_89b642_c4_review
+    hold: *cohort_driver_89b642_c4_hold
