@@ -249,7 +249,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправте професію
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Наталя працює вчителька.", "errorWord": "вчителька", "correctForm": "Наталя працює вчителькою.", "options": ["Наталя працює вчителькою.", "Наталя працює вчителька."], "explanation": "Працювати ким? - вчителькою."}, {"sentence": "Андрій цікавиться історія.", "errorWord": "історія", "correctForm": "Андрій цікавиться історією.", "options": ["Андрій цікавиться історією.", "Андрій цікавиться історія."], "explanation": "Цікавитися чим? - історією."}, {"sentence": "Вона стала журналістка.", "errorWord": "журналістка", "correctForm": "Вона стала журналісткою.", "options": ["Вона стала журналісткою.", "Вона стала журналістка."], "explanation": "Стати ким? - журналісткою."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Наталя працює вчителька.", "errorWord": "вчителька", "correctForm": "вчителькою", "options": ["вчителькою", "вчителька"], "explanation": "Працювати ким? - вчителькою."}, {"sentence": "Андрій цікавиться історія.", "errorWord": "історія", "correctForm": "історією", "options": ["історією", "історія"], "explanation": "Цікавитися чим? - історією."}, {"sentence": "Вона стала журналістка.", "errorWord": "журналістка", "correctForm": "журналісткою", "options": ["журналісткою", "журналістка"], "explanation": "Стати ким? - журналісткою."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">

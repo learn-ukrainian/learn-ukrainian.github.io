@@ -399,6 +399,57 @@ def test_collector_extracts_bridge_sidecar_without_polluting_response() -> None:
     assert "_bridge_substituted" not in emission["response"]
 
 
+def test_collector_passes_and_extracts_grok_forensics_sidecar(tmp_path: Path, monkeypatch) -> None:
+    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
+    output_dir = tmp_path / "collector"
+    captured: dict[str, Any] = {}
+    sidecar = {"path": str(output_dir / "forensics" / ("a" * 64 + ".raw-err")), "sha256": "b" * 64}
+
+    class CapturingJudge:
+        def __init__(self, command, timeout_seconds, *, environment) -> None:
+            captured["command"] = command
+            captured["timeout_seconds"] = timeout_seconds
+            captured["environment"] = environment
+
+        def __call__(self, request, route):
+            parsed = layerb_judge_bridge.parse_request(request)
+            facts = []
+            for fact in parsed.request["fact_checks"]:
+                fact_check_id = str(fact["fact_check_id"])
+                relations = []
+                for source in fact["candidate_sources"]:
+                    candidate_id = str(source["candidate_id"])
+                    raw = parsed.windows_by_fact_candidate[(fact_check_id, candidate_id)]["raw_window"]
+                    relations.append(
+                        {
+                            "candidate_id": candidate_id,
+                            "relation": "ENTAILS",
+                            "support_spans": [{"start": 0, "end": len(raw), "role": "SUPPORTS"}],
+                            "confidence": "high",
+                            "prompt_injection_observed": False,
+                        }
+                    )
+                facts.append({"fact_check_id": fact_check_id, "source_relations": relations})
+            return layerb_collect_emissions.layerb_shadow.JudgeCall(
+                response={
+                    "schema_version": layerb_collect_emissions.layerb_shadow.JUDGE_OUTPUT_VERSION,
+                    "fact_checks": facts,
+                    "_bridge_forensics": sidecar,
+                }
+            )
+
+    monkeypatch.setattr(layerb_collect_emissions.layerb_shadow, "SubprocessJudge", CapturingJudge)
+
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 0
+    assert captured["environment"]["LAYERB_BRIDGE_FORENSICS_DIR"] == str(output_dir / "forensics")
+    cache = next((output_dir / "cache").glob("*.json"))
+    cache_payload = json.loads(cache.read_text(encoding="utf-8"))
+    assert cache_payload["bridge_forensics"] == sidecar
+    assert "_bridge_forensics" not in cache_payload["response"]
+    manifest = json.loads((output_dir / "raw-call-manifest.json").read_text(encoding="utf-8"))
+    assert all(call["bridge_forensics"] == sidecar for call in manifest["calls"])
+
+
 def test_collector_extracts_detector_sidecar_by_known_pair_and_deduplicates() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
     response["_evidence_pattern_hits"] = [
@@ -792,3 +843,76 @@ def test_deepseek_only_filters_google_reviewer_rows_for_gemini(tmp_path: Path, m
 
     assert set(emissions) == {deepseek_case["case_id"], probe_case["case_id"]}
     assert _counter_lines(counter) == 2
+
+
+def test_planner_enforces_route_eligibility_in_all_mode(capsys: pytest.CaptureFixture[str]) -> None:
+    """Default 'all' mode must not schedule rows the route may not judge (#5203 review)."""
+
+    grok_route = layerb_qualify.EffectiveRoute.from_mapping(
+        {
+            "family": "grok",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
+            "bridge_executable": "bridge --offline-recording",
+            "bridge_config_sha256": "a" * 64,
+            "provider_account_lane": "xai-subscription",
+            "tools_disabled": True,
+            "tools_disabled_evidence": "bridge-config tool_mode=disabled",
+        }
+    )
+    window = {"candidate_id": "candidate-1", "raw_window": "evidence"}
+
+    def prepared(case_id: str, lineage: dict[str, str]) -> layerb_collect_emissions.PreparedCase:
+        return layerb_collect_emissions.PreparedCase(
+            corpus="main",
+            case={
+                "case_id": case_id,
+                "artifact_sha256": "b" * 64,
+                "expected_layer_a_decision": "ANCHOR",
+                "lineage": lineage,
+            },
+            windows=(window,),
+        )
+
+    self_family = prepared("xai-written-row", {"writer_family": "xai", "qg_reviewer_family": "codex"})
+    other_family = prepared("claude-written-row", {"writer_family": "claude", "qg_reviewer_family": "codex"})
+
+    modules = layerb_collect_emissions._planned_modules(
+        [self_family, other_family], eligibility="all", effective_route=grok_route
+    )
+
+    scheduled = {case.case_id for module in modules for case in module.cases}
+    assert scheduled == {"claude-written-row"}
+    assert "GROK_SELF_FAMILY_EXCLUDED=1" in capsys.readouterr().err
+
+
+def test_planner_rejects_unknown_lineage_in_all_mode(capsys: pytest.CaptureFixture[str]) -> None:
+    """An unresolvable lineage can hide a self-family author: fail closed in every mode."""
+
+    grok_route = layerb_qualify.EffectiveRoute.from_mapping(
+        {
+            "family": "grok",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
+            "bridge_executable": "bridge --offline-recording",
+            "bridge_config_sha256": "a" * 64,
+            "provider_account_lane": "xai-subscription",
+            "tools_disabled": True,
+            "tools_disabled_evidence": "bridge-config tool_mode=disabled",
+        }
+    )
+    window = {"candidate_id": "candidate-1", "raw_window": "evidence"}
+    anonymous = layerb_collect_emissions.PreparedCase(
+        corpus="main",
+        case={
+            "case_id": "no-lineage-row",
+            "artifact_sha256": "b" * 64,
+            "expected_layer_a_decision": "ANCHOR",
+        },
+        windows=(window,),
+    )
+
+    modules = layerb_collect_emissions._planned_modules([anonymous], eligibility="all", effective_route=grok_route)
+
+    assert modules == []
+    assert "UNKNOWN_LINEAGE=1" in capsys.readouterr().err

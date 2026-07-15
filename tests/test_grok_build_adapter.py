@@ -1,7 +1,7 @@
 """GrokBuildAdapter tests — native `grok` CLI headless adapter.
 
 Kept deliberately separate from the Hermes-backed `grok` agent
-(HermesGrokAdapter, grok-4.3/4.20). These tests don't require the grok binary
+(HermesGrokAdapter, grok-4.5). These tests don't require the grok binary
 to be installed — `shutil.which` is mocked.
 """
 from __future__ import annotations
@@ -79,14 +79,14 @@ def test_unsupported_mode_raises(tmp_path):
 
 
 def test_model_and_effort_flags(tmp_path):
-    plan = _build("x", tmp_path, model="grok-build", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-build"
+    plan = _build("x", tmp_path, model="grok-4.5", effort="high")
+    assert _val(plan.cmd, "-m") == "grok-4.5"
     assert _val(plan.cmd, "--effort") == "high"
 
 
 def test_default_effort_is_applied(tmp_path):
     plan = _build("x", tmp_path)
-    assert "-m" not in plan.cmd
+    assert _val(plan.cmd, "-m") == GROK_BUILD_DEFAULT_MODEL
     assert _val(plan.cmd, "--effort") == GROK_BUILD_DEFAULT_EFFORT
 
 
@@ -203,9 +203,14 @@ def test_registry_grok_build_distinct_from_hermes_grok():
     assert "grok-build" in registry.available_agents()
 
 
-def test_grok_build_default_model_is_native_cli_model_id():
-    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-build"
-    assert GROK_BUILD_DEFAULT_MODEL == "grok-build"
+def test_grok_build_lane_defaults_to_grok_45():
+    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.5"
+    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.5"
+
+
+def test_grok_build_rejects_retired_model_pin(tmp_path):
+    with pytest.raises(ValueError, match="unsupported Grok model"):
+        _build("x", tmp_path, model="grok-build", effort="high")
 
 
 def test_grok_build_default_model_is_listed_by_cli():

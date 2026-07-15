@@ -170,7 +170,7 @@ orchestration, and authoring precise dispatch briefs.
   (codex, agy-pro, cursor) caught real defects no single seat saw (severity-as-data, the attestation-
   whitelist bug, wrong search-extraction target).
 - **Infra discussion panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** ·
-  **gpt-5.5** (codex) · **cursor** (auto) · **grok-build** · **deepseek-v4-pro**. The full rosters (incl.
+  **gpt-5.5** (codex) · **cursor** (auto) · **grok-4.5** (`grok-build` lane; xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197) · **deepseek-v4-pro**. The full rosters (incl.
   the module-content panel), the bridge invocation cheat-sheet (`ask-codex` / `ask-agy --to-model
   gemini-3.1-pro-high` / `ask-cursor --model auto` / `ask-grok-build`; deepseek via `delegate.py --agent
   deepseek --model deepseek-v4-pro`; replies arrive as inbox messages), and the "models are examples, not

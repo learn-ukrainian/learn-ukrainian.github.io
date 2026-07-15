@@ -101,6 +101,8 @@ def test_bio_profile_expresses_complete_preparation_without_track_branches() -> 
     assert config["profiles"]["core"]["prompt_profile"] == "core"
     assert config["profiles"]["seminar"]["prompt_profile"] == "seminar"
     assert bio["prompt_profile"] == "seminar"
+    assert set(config["profiles"]) == {"core", "seminar", "bio"}
+    assert all("certification" not in profile for profile in config["profiles"].values())
     engine_source = (REPO_ROOT / "scripts/orchestration/curriculum_readiness.py").read_text(encoding="utf-8")
     assert 'track == "bio"' not in engine_source
     assert "llm_qg" not in engine_source
@@ -320,6 +322,18 @@ def test_config_rejects_raw_prose_and_unknown_selector(tmp_path: Path) -> None:
     config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
 
     with pytest.raises(readiness.ReadinessError, match="unknown profile"):
+        readiness.load_config(repo_root=repo_root)
+
+
+def test_readiness_contract_rejects_certification_policy_declarations(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    _copy_contracts(repo_root)
+    config_path = repo_root / readiness.CONFIG_PATH
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["profiles"]["core"]["certification"] = {"production_qg": {"mode": "armed-canary"}}
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(readiness.ReadinessError, match="Additional properties"):
         readiness.load_config(repo_root=repo_root)
 
 

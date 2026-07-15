@@ -122,7 +122,11 @@ SPAN_ROLES: Mapping[str, frozenset[str]] = {
     "EXPLICITLY_UNCERTAIN": frozenset({"UNCERTAINTY"}),
     "MIXED": frozenset({"SUPPORTS", "CONTRADICTS", "UNCERTAINTY"}),
 }
-ROUTE_LINEAGES = {"claude": "claude", "gemini": "google", "gpt": "gpt"}
+# family → provider lineage. The lineage is what author-family exclusion
+# compares against: a route may never judge content its own lineage wrote.
+# grok/xai authored no production content, so the grok route is the
+# all-rows third-family candidate (#5197).
+ROUTE_LINEAGES = {"claude": "claude", "gemini": "google", "gpt": "gpt", "grok": "xai"}
 
 
 class QualificationError(ValueError):
@@ -224,10 +228,7 @@ def _fail_closed_integrity_failures(failures: Mapping[str, Any]) -> dict[str, in
         if isinstance(failure, str)
         and isinstance(count, int)
         and not isinstance(count, bool)
-        and (
-            failure in FAIL_CLOSED_INTEGRITY_FAILURES
-            or failure.startswith(FAIL_CLOSED_INTEGRITY_PREFIXES)
-        )
+        and (failure in FAIL_CLOSED_INTEGRITY_FAILURES or failure.startswith(FAIL_CLOSED_INTEGRITY_PREFIXES))
     }
 
 
@@ -650,7 +651,22 @@ def route_eligibility(case: Mapping[str, Any], route: EffectiveRoute) -> dict[st
             "eligible": False,
             "reason": "GEMINI_SAME_VENDOR_REVIEWER_EXCLUDED",
         }
+    # The grok route's third-family status is GUARDED, not assumed: any case
+    # whose writer or reviewer normalizes into the grok/cursor/xai lineage
+    # ("grok-cursor" in layerb_shadow.normalize_lineage_family's domain) is
+    # self-judgment and fails closed. Today's labels contain no such rows, so
+    # this changes nothing operationally — it exists so future grok/cursor-
+    # authored content can never be judged by its own lineage silently.
+    if route.family == "grok" and "grok-cursor" in {writer, reviewer}:
+        return {
+            "case_id": case_id,
+            "writer_family": writer,
+            "reviewer_family": reviewer,
+            "eligible": False,
+            "reason": "GROK_SELF_FAMILY_EXCLUDED",
+        }
     # v2.1 fact correction: GPT is a valid all-row third candidate, not deferred.
+    # (claude=all is likewise a recorded run-plan decision, not an oversight.)
     return {
         "case_id": case_id,
         "writer_family": writer,

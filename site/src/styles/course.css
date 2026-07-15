@@ -1226,7 +1226,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--lu-yellow-dark);
+  /* --lu-yellow-dark (#E6B800) fails WCAG AA on --lu-yellow-light (1.77:1). */
+  color: var(--lu-on-yellow);
 }
 
 .rule-box-icon {

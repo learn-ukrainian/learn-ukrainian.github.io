@@ -142,9 +142,12 @@ class SubprocessJudge:
     has no access to an in-process tool client.
     """
 
-    def __init__(self, command: Sequence[str], timeout_seconds: float) -> None:
+    def __init__(
+        self, command: Sequence[str], timeout_seconds: float, *, environment: Mapping[str, str] | None = None
+    ) -> None:
         self._command = tuple(command)
         self._timeout_seconds = timeout_seconds
+        self._environment = dict(environment) if environment is not None else None
 
     def __call__(self, request: Mapping[str, Any], route: JudgeRoute) -> JudgeCall:
         started = time.monotonic()
@@ -155,6 +158,7 @@ class SubprocessJudge:
             capture_output=True,
             timeout=self._timeout_seconds,
             check=False,
+            env=self._environment,
         )
         if completed.returncode != 0:
             raise RuntimeError(f"judge command exited {completed.returncode}: {completed.stderr.strip()[:300]}")

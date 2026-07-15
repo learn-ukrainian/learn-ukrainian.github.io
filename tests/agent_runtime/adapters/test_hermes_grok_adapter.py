@@ -28,7 +28,7 @@ def _build(prompt: str, tmp_path: Path):
         prompt=prompt,
         mode="workspace-write",
         cwd=tmp_path,
-        model="grok-4.3",
+        model="grok-4.5",
         task_id=None,
         session_id=None,
         tool_config={"hermes_mcp_servers": ["sources"]},
@@ -41,7 +41,7 @@ def test_grok_adapter_invokes_hermes_z_with_correct_argv(tmp_path, monkeypatch):
 
     plan = _build("Write the module.", tmp_path)
 
-    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "grok-4.3"]
+    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "grok-4.5"]
     assert plan.cwd == tmp_path
     assert plan.stdin_payload == ""
 
@@ -85,7 +85,7 @@ def test_grok_adapter_handles_missing_hermes_binary(tmp_path):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.3",
+            model="grok-4.5",
             entrypoint="dispatch",
             effort="medium",
         )
@@ -110,7 +110,7 @@ def test_grok_adapter_honors_timeout(tmp_path, monkeypatch):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.3",
+            model="grok-4.5",
             entrypoint="dispatch",
             hard_timeout=1,
         )
@@ -145,7 +145,7 @@ def test_runner_preserves_unknown_grok_tool_call_total(tmp_path, monkeypatch):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.3",
+            model="grok-4.5",
             entrypoint="dispatch",
             effort="medium",
         )

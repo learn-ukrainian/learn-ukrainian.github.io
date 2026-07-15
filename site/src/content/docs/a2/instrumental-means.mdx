@@ -262,7 +262,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправте речення
 
-<ErrorCorrection client:only='react' instruction="Оберіть природний варіант." items={JSON.parse(`[{"sentence": "Він ріже хліб з ножем.", "errorWord": "з ножем", "correctForm": "Він ріже хліб ножем.", "options": ["Він ріже хліб ножем.", "Він ріже хліб з ножем."], "explanation": "Ніж є знаряддям, тому без прийменника."}, {"sentence": "Ми їдемо з автобусом.", "errorWord": "з автобусом", "correctForm": "Ми їдемо автобусом.", "options": ["Ми їдемо автобусом.", "Ми їдемо з автобусом."], "explanation": "Автобус є транспортом."}, {"sentence": "Ліна малює олівець.", "errorWord": "олівець", "correctForm": "Ліна малює олівцем.", "options": ["Ліна малює олівцем.", "Ліна малює олівець."], "explanation": "Чим малює? - олівцем."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть природний варіант." items={JSON.parse(`[{"sentence": "Він ріже хліб з ножем.", "errorWord": "з ножем", "correctForm": "ножем", "options": ["ножем", "з ножем"], "explanation": "Ніж є знаряддям, тому без прийменника."}, {"sentence": "Ми їдемо з автобусом.", "errorWord": "з автобусом", "correctForm": "автобусом", "options": ["автобусом", "з автобусом"], "explanation": "Автобус є транспортом."}, {"sentence": "Ліна малює олівець.", "errorWord": "олівець", "correctForm": "олівцем", "options": ["олівцем", "олівець"], "explanation": "Чим малює? - олівцем."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">

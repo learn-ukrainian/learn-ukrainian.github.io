@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Calibrate Grok 4.3 (via Hermes OAuth) as a Russianism judge.
+"""Calibrate Grok 4.5 (via Hermes OAuth) as a Russianism judge.
 
 Standalone test harness — does NOT depend on PR #2006 being merged.
 
@@ -14,7 +14,7 @@ Auth: reads the OAuth ``access_token`` from ``~/.hermes/auth.json``
 printed; only the leading 8 chars + ``...`` appear in error messages.
 
 Output:
-    audit/2026-05-15-grok-4.3-judge-calibration/
+    audit/2026-07-15-grok-4.5-judge-calibration/
         judgments.jsonl       one row per case (verdict + raw + duration)
         REPORT.md             F1 / P / R + per-case breakdown
         leaderboard-row.json  one row ready to drop into the 4-judge table
@@ -22,7 +22,7 @@ Output:
 Usage:
     .venv/bin/python scripts/audit/grok_judge_calibration.py
     .venv/bin/python scripts/audit/grok_judge_calibration.py --dry-run
-    .venv/bin/python scripts/audit/grok_judge_calibration.py --model grok-4.3-fast
+    .venv/bin/python scripts/audit/grok_judge_calibration.py --model grok-4.5
 
 Refs: PR #2006 (russianism_judge harness), issue #1975 (m20 RED),
 calibration study at ``audit/2026-05-15-russianism-judge-calibration/``
@@ -68,7 +68,7 @@ except ModuleNotFoundError:
 
 HERMES_AUTH = Path.home() / ".hermes" / "auth.json"
 
-# Hermes CLI provides the OAuth-authenticated path to Grok 4.3.
+# Hermes CLI provides the OAuth-authenticated path to Grok 4.5.
 # Direct calls to api.x.ai/v1 return 403 (token has session-level scope,
 # not bearer-style API access). Hermes' own `proxy` subcommand only
 # supports the `nous` upstream right now (`hermes proxy providers`), so
@@ -81,7 +81,7 @@ HERMES_BIN = "hermes"
 # don't spuriously kill slow calls.
 REQUEST_TIMEOUT_S = 480
 
-OUT_DIR = PROJECT_ROOT / "audit" / "2026-05-15-grok-4.3-judge-calibration"
+OUT_DIR = PROJECT_ROOT / "audit" / "2026-07-15-grok-4.5-judge-calibration"
 
 
 def load_hermes_oauth_token() -> str:
@@ -111,7 +111,7 @@ def load_hermes_oauth_token() -> str:
 
 
 def call_grok(prompt: str, model: str) -> dict:
-    """Invoke Grok 4.3 through the Hermes CLI's one-shot mode.
+    """Invoke Grok 4.5 through the Hermes CLI's one-shot mode.
 
     Returns a dict with at minimum a ``verdict`` key. On subprocess or
     parse error, ``verdict`` is ``"judge_error"`` or ``"json_parse_error"``
@@ -161,7 +161,7 @@ def call_grok(prompt: str, model: str) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--model", default="grok-4.3", help="xAI model id (default: grok-4.3)")
+    parser.add_argument("--model", default="grok-4.5", help="xAI model id (default: grok-4.5)")
     parser.add_argument("--dry-run", action="store_true", help="Print plan + skip API calls")
     parser.add_argument(
         "--out-dir",

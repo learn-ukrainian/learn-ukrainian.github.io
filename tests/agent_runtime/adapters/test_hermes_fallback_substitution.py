@@ -193,7 +193,7 @@ def test_hermes_parse_hard_fails_actual_zai_glm_route(tmp_path):
     plan = _plan_with_metadata(
         tmp_path,
         requested_provider="xai",
-        requested_model="grok-4.3",
+        requested_model="grok-4.5",
     )
 
     result = HermesGrokAdapter().parse_response(

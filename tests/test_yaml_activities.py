@@ -422,6 +422,28 @@ class TestMDXGeneration:
         assert '"sentence": "Я є студент."' in mdx
         assert "<ErrorCorrectionItem" not in mdx
 
+    def test_error_correction_mdx_uses_replacement_spans(self, parser, tmp_path):
+        """The generated embed gives the UI forms, not full sentence variants."""
+        yaml_file = tmp_path / "error_correction_replacement.yaml"
+        yaml_file.write_text(
+            "- type: error-correction\n"
+            "  title: Виправлення\n"
+            "  items:\n"
+            "    - sentence: Вона вчителька.\n"
+            "      error: вчителька\n"
+            "      correction: Вона вчитель.\n"
+            "      options:\n"
+            "        - Вона вчитель.\n"
+            "        - Вона вчителька.\n"
+            "        - вчитель\n",
+            encoding="utf-8",
+        )
+
+        mdx = parser.to_mdx(parser.parse(yaml_file))
+
+        assert '"correctForm": "вчитель"' in mdx
+        assert '"options": ["вчитель", "вчителька", "вчитель"]' in mdx
+
 
 # =============================================================================
 # INTEGRATION TESTS
