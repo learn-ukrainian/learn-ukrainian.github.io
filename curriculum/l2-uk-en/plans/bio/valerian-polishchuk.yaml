@@ -94,31 +94,47 @@ persona:
     Модератор семінару, який досліджує український авангард та конструктивізм, уникаючи мокри та спрощеної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: link-only
+- title: 'Книга повстань: поезії 1919–1921 років'
+  source_name: Wikimedia Commons
+  source_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%9A%D0%BD%D0%B8%D0%B3%D0%B0_%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%8C_(1922).pdf
   language: uk
+  genre: поетична збірка
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: PDM-1.0 / PD-old-80-expired
   learner_task: >-
-    Ознайомтеся зі статтею про Валер'яна Поліщука. Зверніть увагу на його роль як лідера та ідеолога літературної групи «Авангард».
-  license: copyrighted
-  notes: >-
-    Енциклопедична стаття про поета-конструктивіста та його модерністський доробок.
-  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
-  role: primary
-  source_name: Енциклопедія сучасної України (ЕСУ)
-  source_type: article
-  source_url: https://esu.com.ua/article-881253
-- hosting: link-only
+    Прочитати добірку в оригінальному виданні 1922 року й простежити, як ліричний
+    голос поєднує історичний досвід із формальним експериментом.
+  rights:
+    basis: external-link
+    evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%9A%D0%BD%D0%B8%D0%B3%D0%B0_%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%8C_(1922).pdf
+    note: Публічнодоменний скан доступний лише за зовнішнім посиланням; текст не відтворюється в курсі.
+- title: 'Радіо в житах: поезії 1922–1923'
+  source_name: Wikimedia Commons
+  source_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%A0%D0%B0%D0%B4%D1%96%D0%BE_%D0%B2_%D0%B6%D0%B8%D1%82%D0%B0%D1%85_(1923).pdf
   language: uk
+  genre: поетична збірка
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: PDM-1.0 / PD-old-80-expired
   learner_task: >-
-    Прочитайте статтю «Читомо» про Валер'яна Поліщука. Випишіть один приклад, який ускладнює простий мартирологічний портрет автора.
-  license: copyrighted
-  notes: >-
-    Журнальний україномовний матеріал підтримує антиагіографічне читання та не підміняє біографію лише датою розстрілу.
-  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
-  role: reading
-  source_name: Читомо
-  source_type: article
-  source_url: https://archive.chytomo.com/uncategorized/pershij-ukraiinskij-poet-shho-postrazhdav-za-pornografiyu
+    Вибрати образ техніки або ландшафту й пояснити його функцію в поетиці
+    конструктивізму.
+  rights:
+    basis: external-link
+    evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%A0%D0%B0%D0%B4%D1%96%D0%BE_%D0%B2_%D0%B6%D0%B8%D1%82%D0%B0%D1%85_(1923).pdf
+    note: Публічнодоменний скан доступний лише за зовнішнім посиланням; текст не відтворюється в курсі.
+portrait:
+  url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92%D0%B0%D0%BB%D0%B5%D1%80%27%D1%8F%D0%BD.jpg
+  license: PDM-1.0 / PD-Art (PD-old-70)
+  attribution: Wikimedia Commons, anonymous historical portrait
+  caption_uk: Валер'ян Поліщук, дата невідома
+  caption_en: Valerian Polishchuk, date unknown
+  verified_on: '2026-07-15'
 references:
 - note: Енциклопедична стаття.
   path: https://esu.com.ua/article-881253

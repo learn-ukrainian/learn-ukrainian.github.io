@@ -56,17 +56,7 @@ The Sandarmokh sequence shows the two-stage mechanism clearly. First, the writer
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — "Народження поета", in *Геніяльні кристали*, 1927:**
-
-> **Почеплена на гвіздочку зорі**
-
-The image is strange but teachable: a cosmic object is made tactile and domestic. It is useful for showing how avant-garde metaphor can be concrete rather than vague.
-
-**Quote 2 — "Можливості", in *Геніяльні кристали*, 1927:**
-
-> **Ходило тихе море, як любов північна.**
-
-This line is a good B2/C1 transition example: grammatically legible, but semantically modernist. It opens discussion of simile, motion, and emotional abstraction.
+The earlier dossier quoted *Геніяльні кристали* without an identified, directly inspected edition; those quotations are withdrawn. The verified primary-text leads are external scans of *Книга повстань* (1922) and *Радіо в житах* (1923). Any learner-facing quotation must first be transcribed from one of those exact scans.
 
 ## 5. Language register
 
@@ -126,3 +116,6 @@ This balance should be checked in review: one industrial passage, one lyric-phil
 - **[T5]** Wikisource texts from *Геніяльні кристали*, used for primary quotes and corroborated by Tier 1 biography.
 - **[T5]** Wikimedia Commons portrait page, image lead only.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
+- **[T1]** Український інститут національної пам'яті. «Список розстріляних українців у Сандармосі». https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
+- **[Primary]** Валер'ян Поліщук. *Книга повстань: поезії 1919–1921 років*. Харків, 1922. https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%9A%D0%BD%D0%B8%D0%B3%D0%B0_%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%8C_(1922).pdf
+- **[Primary]** Валер'ян Поліщук. *Радіо в житах: поезії 1922–1923*. Харків, 1923. https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%A0%D0%B0%D0%B4%D1%96%D0%BE_%D0%B2_%D0%B6%D0%B8%D1%82%D0%B0%D1%85_(1923).pdf

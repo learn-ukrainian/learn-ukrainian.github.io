@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/sofiia-nalepynska-boichuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-esu-sofiia-nalepynska-boichuk
+  type: external
+  title: Налепинська-Бойчук Софія
+  url: https://esu.com.ua/article-70885
+- id: S2
+  file: ext-uinp-nalepynska-boichuk
+  type: external
+  title: Софія Налепинська-Бойчук, художниця
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lypen/30/1884-narodylasya-sofiya-nalepynska-boychuk-hudozhnycya
+- id: S3
+  file: ext-lviv-gallery-podruhy
+  type: external
+  title: Подруги (1927)
+  url: https://collection-lvivgallery.org.ua/uk/works/3776-podruhy

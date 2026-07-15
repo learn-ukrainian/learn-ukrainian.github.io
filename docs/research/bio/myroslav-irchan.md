@@ -48,7 +48,7 @@ This is not a simple story of an anti-Soviet outsider. Irchan had worked in expl
 - **1923** — *Дванайцять / Дванадцять*, work with variant spelling in sources.
 - **1923/1928** — *Трагедія Першого травня*, drama; publication/edition history needs exact edition citation.
 - **1924** — *Карпатська ніч*, prose; western-Ukrainian and emigration themes.
-- **1925** — *Родина щіткарів*, drama; important for workers' theater and staging notes.
+- **1927** — *Родина щіткарів*, drama; the directly inspected National Library of Ukraine edition is the Kharkiv publication of 1927, distinct from the Winnipeg edition of 1925.
 - **1925** — *В бур'янах*, prose.
 - **1926** — *Лі-Юнк-Шан*, drama/prose with international revolutionary setting.
 - **1929** — *Радій*, play; modern technology and social conflict.
@@ -56,17 +56,7 @@ This is not a simple story of an anti-Soviet outsider. Irchan had worked in expl
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — *Родина щіткарів*, 1925, preface/staging note:**
-
-> **Завданням робітничих Драмгуртків не тільки грати на сцені**
-
-This excerpt shows theater as pedagogy and collective formation. It is useful because the prose voice names audience education as part of the dramatic project.
-
-**Quote 2 — *Родина щіткарів*, 1925, staging note:**
-
-> **поведінка їх цілком инша, як видючих людей.**
-
-The quotation preserves interwar orthography and practical stage instruction. It can teach learners why historical spelling and stage directions require contextual reading rather than automatic modernization.
+The previous excerpts were not transcribed from an identified page of the edition. They are withdrawn pending page-level verification in the National Library of Ukraine scan of *Родина щіткарів* (Kharkiv, 1927). The scan visibly includes «Вказівки для режисера» and four acts, which is a source lead rather than permission to reproduce unverified lines.
 
 ## 5. Language register
 
@@ -128,3 +118,5 @@ For lesson design, include at least one Canadian or Prague reference before the 
 - **[T2]** NBUV event page on Розстріляне Відродження. https://www.nbuv.gov.ua/node/4199
 - **[T5]** Wikimedia Commons scans of *Родина щіткарів* and other Irchan works, used for primary text access.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
+- **[Primary]** Мирослав Ірчан. *Родина щіткарів: п'єса*. Харків: Укр. робітник, 1927. Національна бібліотека України імені Ярослава Мудрого. https://elib.nlu.org.ua/object.html?id=11670
+- **[T2]** НБУВ, документальна публікація про Соловецький етап, с. 167–168. https://irbis-nbuv.gov.ua/E_LIB/PDF/er-0004119.pdf

@@ -127,19 +127,47 @@ persona:
     аналізом радянської репресивної процедури.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "ЕСУ"
-  title: "Крушельницький Антін"
-  url: "https://esu.com.ua/article-221"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "Вінницький державний педагогічний університет"
-  title: "Крушельницький Антін Владиславович"
-  url: "https://vspu.edu.ua/faculty/filolog/ukr/persons/kryshelnuckii-antin.html"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
+- title: 'Рубають ліс: повість'
+  source_name: Національна бібліотека України імені Ярослава Мудрого
+  source_url: https://elib.nlu.org.ua/object.html?id=8916
+  language: uk
+  genre: повість
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: copyrighted
+  learner_task: >-
+    Прочитати фрагмент видання 1914 року та визначити, як оповідь пов'язує освіту,
+    суспільний конфлікт і локальну спільноту.
+  rights:
+    basis: external-link
+    evidence_url: https://elib.nlu.org.ua/object.html?id=8916
+    note: Автор посмертно реабілітований 1957 року; строк охорони за статтею 31(6) триває, тому доступ лише за зовнішнім посиланням.
+- title: Крушельницький Антін
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-221
+  language: uk
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  license: copyrighted
+  learner_task: >-
+    Зіставити педагогічну, видавничу та державну працю Крушельницького з його
+    пізнішою радянською еміграцією, не приписуючи йому незадокументованих мотивів.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-221
+    note: Зовнішнє посилання на україномовну статтю; текст не відтворюється в курсі.
+portrait_fallback:
+  reason: >-
+    Індивідуальний портрет у Commons посилається на джерело без незалежного підтвердження
+    передумов заявленої ліцензії; безпечна ліцензія на використання не доведена.
+  candidate_url: https://commons.wikimedia.org/wiki/File:%D0%90%D0%BD%D1%82%D1%96%D0%BD_%D0%9A%D1%80%D1%83%D1%88%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9.png
+  evidence_url: https://commons.wikimedia.org/wiki/File:%D0%90%D0%BD%D1%82%D1%96%D0%BD_%D0%9A%D1%80%D1%83%D1%88%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9.png
+  disposition: no-portrait-until-rights-verified
 
 references:
 - note: Основна українська енциклопедична стаття про Антіна Крушельницького.

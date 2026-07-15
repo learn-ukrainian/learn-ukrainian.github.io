@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/myroslav-irchan.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-esu-myroslav-irchan
+  type: external
+  title: Ірчан Мирослав
+  url: https://esu.com.ua/article-12635
+- id: S2
+  file: ext-nlu-rodyna-shchitkariv
+  type: external
+  title: Родина щіткарів (1927)
+  url: https://elib.nlu.org.ua/object.html?id=11670
+- id: S3
+  file: ext-nbuv-solovky-source-edition
+  type: external
+  title: Розстріляне відродження. Антологія документів
+  url: https://irbis-nbuv.gov.ua/E_LIB/PDF/er-0004119.pdf

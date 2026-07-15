@@ -57,17 +57,7 @@ The family dimension is central. The Soviet state did not only remove an individ
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — letter, 20 October 1926, quoted in modern publication:**
-
-> **кулями люди хочуть чи доходити своїх прав**
-
-The line is important because it shows a civic voice troubled by violence and political escalation. It should be taught as letter evidence, not polished fiction.
-
-**Quote 2 — letter to Maria, 24 October 1926:**
-
-> **молитися за Собінського.**
-
-The phrase matters because it opens the Polish/Jewish/Ukrainian civic complexity around Galician public life and the Sobinski assassination context. It needs teacher framing and should not be isolated from the letter.
+The earlier letter fragments were retained from a modern publication without a directly inspected manuscript or critical edition; they are withdrawn. The verified primary lead is the National Library of Ukraine scan of *Рубають ліс* (1914). A second directly inspected primary text is required before this dossier can again claim a two-quotation packet.
 
 ## 5. Language register
 
@@ -128,3 +118,5 @@ The phrase matters because it opens the Polish/Jewish/Ukrainian civic complexity
 - **[T5]** Zbruch publication of letters, used for primary-voice excerpts pending archival edition. https://zbruc.eu/node/119400
 - **[T5]** Diasporiana scans of *Перемога / Як пригорне земля*, primary text access.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
+- **[Primary]** Антін Крушельницький. *Рубають ліс: повість*. Київ; Ляйпціг: Укр. накладня, 1914. Національна бібліотека України імені Ярослава Мудрого. https://elib.nlu.org.ua/object.html?id=8916
+- **[T1/T2]** Інститут історії України НАН України. Покажчик документів про соловецькі справи. https://resource.history.org.ua/item/0013480

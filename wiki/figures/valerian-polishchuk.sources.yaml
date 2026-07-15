@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/valerian-polishchuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-esu-polishchuk
+  type: external
+  title: Поліщук Валер'ян Львович
+  url: https://esu.com.ua/article-881253
+- id: S2
+  file: ext-uinp-sandarmokh-list
+  type: external
+  title: Список розстріляних українців у Сандармоху
+  url: https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
+- id: S3
+  file: ext-commons-polishchuk-radio-v-zhytakh
+  type: external
+  title: Радіо в житах (1923)
+  url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%A0%D0%B0%D0%B4%D1%96%D0%BE_%D0%B2_%D0%B6%D0%B8%D1%82%D0%B0%D1%85_(1923).pdf

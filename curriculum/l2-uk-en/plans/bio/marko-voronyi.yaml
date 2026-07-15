@@ -124,19 +124,47 @@ persona:
     голос автора, і точну хронологію репресій.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "ЕСУ"
-  title: "Вороний Марко Миколайович"
-  url: "https://esu.com.ua/article-29782"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "Музей-заповідник М. Коцюбинського"
-  title: "Співець трагічної епохи..."
-  url: "https://kotsubinsky.org/news/spivec_tragichnoji_epokhi_do_115_richchja_z_dnja_narodzhennja_marka_voronogo_18_03_1904_3_11_1937/2019-03-18-1381"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
+- title: Ставок
+  source_name: Національна бібліотека України для дітей
+  source_url: https://chl.kiev.ua/default.aspx?id=3062
+  language: uk
+  genre: дитяча книжка
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: copyrighted-or-unclear
+  learner_task: >-
+    Прочитати скан видання 1930 року та описати, як автор працює з дитячою
+    перспективою й образами природи.
+  rights:
+    basis: external-link
+    evidence_url: https://chl.kiev.ua/default.aspx?id=3062
+    note: Зовнішній бібліотечний скан без підтвердженої ліцензії на відтворення; текст не відтворюється в курсі.
+- title: Вороний Марко Миколайович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-29782
+  language: uk
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  license: copyrighted
+  learner_task: >-
+    Скласти коротку хронологію власного літературного шляху Марка Вороного,
+    відокремивши її від біографії його батька.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-29782
+    note: Зовнішнє посилання на україномовну статтю; текст не відтворюється в курсі.
+portrait:
+  url: https://commons.wikimedia.org/wiki/File:%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D0%BE%D0%B9.jpg
+  license: PD-Ukraine
+  attribution: Wikimedia Commons, author unknown
+  caption_uk: Марко Вороний, 1926–1929
+  caption_en: Marko Voronyi, 1926–1929
+  verified_on: '2026-07-15'
 
 references:
 - note: Основна українська енциклопедична стаття про Марка Вороного.

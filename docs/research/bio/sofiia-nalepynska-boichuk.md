@@ -59,17 +59,11 @@ Her execution belongs with the murders of Mykhailo Boichuk, Ivan Padalka, Vasyl 
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — letter to Mykhailo Boichuk, 1910s, quoted in modern art-historical article:**
+**Recorded statement, interrogation protocol of 28 October 1937, published by UINP:**
 
-> **Може волієш, щобим по французьки писала?**
+> **У пред’явленому мені звинуваченні винною себе я не визнаю. В антисовєцькій націонал-фашистській організації я участі не брала й шпигунської роботи не провадила.**
 
-This line matters because it shows her multilingual reality and self-conscious movement into Ukrainian artistic life. It should be used with explanation, not as a language-error joke.
-
-**Quote 2 — interrogation protocol, 1937:**
-
-> **Українка, батьки — поляки.**
-
-This direct recorded statement is the key identity quote. It is a police-document context, but it counters later simplifications that make birth origin override self-identification and artistic belonging.
+This is a denial recorded in a police document, not a neutral account of the case. The previously unqualified letter and identity fragments are withdrawn: the Local History article may be cited for its attribution, but it is not treated as a direct archival transcription.
 
 ## 5. Language register
 
@@ -131,3 +125,4 @@ At least one future activity should ask learners to describe a work visually bef
 - **[T2]** Львівська національна галерея мистецтв. Object page: *Подруги*. https://collection-lvivgallery.org.ua/uk/works/3776-podruhy
 - **[T5]** Wikimedia Commons file pages for Nalepynska-Boichuk images, used only as image leads.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
+- **[T1]** Український інститут національної пам'яті. «1884 — народилася Софія Налепинська-Бойчук, художниця». https://uinp.gov.ua/istorychnyy-kalendar/lypen/30/1884-narodylasya-sofiya-nalepynska-boychuk-hudozhnycya

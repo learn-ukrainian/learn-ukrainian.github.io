@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/marko-voronyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-esu-marko-voronyi
+  type: external
+  title: Вороний Марко Миколайович
+  url: https://esu.com.ua/article-29782
+- id: S2
+  file: ext-iiu-marko-voronyi-source-edition
+  type: external
+  title: Матеріали до історії політичних процесів 1930-х років
+  url: https://history.org.ua/LiberUA/5-333-01078-1/5-333-01078-1.pdf
+- id: S3
+  file: ext-nbuc-stavok
+  type: external
+  title: Ставок (1930)
+  url: https://chl.kiev.ua/default.aspx?id=3062

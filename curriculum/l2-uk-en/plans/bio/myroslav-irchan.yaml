@@ -124,13 +124,31 @@ persona:
     видань і політичних виборів, не підміняючи її радянськими ярликами.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "ЕСУ"
-  title: "Ірчан Мирослав"
-  url: "https://esu.com.ua/article-12635"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
+- title: 'Родина щіткарів: п''єса'
+  source_name: Національна бібліотека України імені Ярослава Мудрого
+  source_url: https://elib.nlu.org.ua/object.html?id=11670
+  language: uk
+  genre: п'єса
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: copyrighted
+  learner_task: >-
+    Прочитати режисерські вказівки й одну дію в київсько-харківському виданні 1927 року,
+    досліджуючи сценічну мову та колективного героя.
+  rights:
+    basis: external-link
+    evidence_url: https://elib.nlu.org.ua/object.html?id=11670
+    note: Автор посмертно реабілітований 1956 року; строк охорони за статтею 31(6) триває, тому доступ лише за зовнішнім посиланням.
+portrait_fallback:
+  reason: >-
+    Виявлений портрет має неповні відомості про фотографа й позначку Commons, що потребує
+    додаткового підтвердження для США; індивідуально перевіреної ліцензії немає.
+  candidate_url: https://commons.wikimedia.org/wiki/File:Myroslav_Irchan.jpg
+  evidence_url: https://commons.wikimedia.org/wiki/File:Myroslav_Irchan.jpg
+  disposition: no-portrait-until-rights-verified
 
 references:
 - note: Основна українська енциклопедична стаття про Ірчана.

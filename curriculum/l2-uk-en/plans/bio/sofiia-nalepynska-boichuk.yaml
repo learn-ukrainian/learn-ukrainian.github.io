@@ -136,19 +136,47 @@ persona:
     бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "ЕСУ"
-  title: "Налепинська-Бойчук Софія"
-  url: "https://esu.com.ua/article-70885"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "Локальна історія"
-  title: "Традиції нашого штрихарства"
-  url: "https://localhistory.org.ua/rubrics/painting/traditsiyi-nashogo-shtrikharstva-derevoriti-sofiyi-nalepinskoyi-boichuk/"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
+- title: Протокол допиту Софії Налепинської-Бойчук від 28 жовтня 1937 року (уривок)
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/lypen/30/1884-narodylasya-sofiya-nalepynska-boychuk-hudozhnycya
+  language: uk
+  genre: архівний протокол
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: public-record-link-only
+  learner_task: >-
+    Прочитати опублікований уривок протоколу, відділивши заперечення художниці від
+    мови висунутого їй обвинувачення.
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/lypen/30/1884-narodylasya-sofiya-nalepynska-boychuk-hudozhnycya
+    note: Зовнішнє посилання на опублікований уривок протоколу; повний документ не відтворюється в курсі.
+- title: Подруги
+  source_name: Львівська національна галерея мистецтв
+  source_url: https://collection-lvivgallery.org.ua/uk/works/3776-podruhy
+  language: uk
+  genre: музейна об'єктна картка / візуальне першоджерело
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  license: rights-reserved
+  learner_task: >-
+    Розглянути дереворит 1927 року й описати, як матеріал, лінія та композиція
+    працюють у самостійному авторському висловлюванні.
+  rights:
+    basis: external-link
+    evidence_url: https://collection-lvivgallery.org.ua/uk/works/3776-podruhy
+    note: Зовнішня музейна картка без ліцензії на відтворення зображення; зображення не копіюється в курс.
+portrait:
+  url: https://commons.wikimedia.org/wiki/File:%D0%A1%D0%BE%D1%84%D1%8C%D1%8F_%D0%9D%D0%B0%D0%BB%D0%B5%D0%BF%D0%B8%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_(cropped).jpg
+  license: PDM-1.0
+  attribution: Wikimedia Commons, photographer unknown
+  caption_uk: Софія Налепинська-Бойчук, дата невідома
+  caption_en: Sofiia Nalepynska-Boichuk, date unknown
+  verified_on: '2026-07-15'
 
 references:
 - note: Основна стаття про життя та мистецький доробок художниці.

@@ -55,17 +55,7 @@ The 1936 sentence to eight years did not mean survival. Like many Solovki prison
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — "Церкви і янголи", museum transcription dated 22 January 1925:**
-
-> **Ідуть два янголи вгорі.**
-
-This line shows the contemplative and religious-symbolic register that complicates a purely children's-writer label.
-
-**Quote 2 — "Отчизна", museum transcription:**
-
-> **Судилась крізь війну в віках дорога.**
-
-The line is useful for advanced learners because it compresses history, fate, and homeland into one syntactic movement. It should be taught as high lyric, not everyday Ukrainian.
+The earlier dossier quoted adult lyrics through a museum transcription without a directly inspected primary edition; those quotations are withdrawn. The verified primary lead is the National Library of Ukraine for Children scan of *Ставок* (Kyiv, 1930). A second direct primary text is still required before a two-quotation packet can be claimed.
 
 ## 5. Language register
 
@@ -127,3 +117,5 @@ The line is useful for advanced learners because it compresses history, fate, an
 - **[T2]** NBUV/IRBIS record for Marko Voronyi material. https://irbis-nbuv.gov.ua/ulib/item/REF0006792
 - **[T5]** UINP Sandarmokh list used as execution-list cross-check where needed.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
+- **[T1/T2]** Інститут історії України НАН України. Digitized source edition, pp. 108–112. https://history.org.ua/LiberUA/5-333-01078-1/5-333-01078-1.pdf
+- **[Primary]** Марко Вороний. *Ставок*. Київ: Культура, 1930. Національна бібліотека України для дітей. https://chl.kiev.ua/default.aspx?id=3062

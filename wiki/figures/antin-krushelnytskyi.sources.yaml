@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/antin-krushelnytskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-esu-antin-krushelnytskyi
+  type: external
+  title: Крушельницький Антін
+  url: https://esu.com.ua/article-221
+- id: S2
+  file: ext-nlu-rubaiut-lis
+  type: external
+  title: Рубають ліс (1914)
+  url: https://elib.nlu.org.ua/object.html?id=8916
+- id: S3
+  file: ext-iiu-solovky-source-edition
+  type: external
+  title: Документи про Соловецький етап
+  url: https://resource.history.org.ua/item/0013480
