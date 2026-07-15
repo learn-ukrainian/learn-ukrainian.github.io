@@ -1,11 +1,11 @@
 # Direct sources for wiki/figures/dmytro-kotsyubailo.md
 sources:
 - id: S1
-  file: https://www.president.gov.ua/documents/6082021-40761
+  file: https://zakon.rada.gov.ua/laws/show/608/2021?lang=uk
   type: external
-  title: Указ Президента України №608/2021
-  url: https://www.president.gov.ua/documents/6082021-40761
-  notes: Primary state record; directly inspected 2026-07-15.
+  title: Про присвоєння Д. Коцюбайлу звання Герой України — Указ №608/2021
+  url: https://zakon.rada.gov.ua/laws/show/608/2021?lang=uk
+  notes: Official text in the Verkhovna Rada legislation database; directly inspected 2026-07-15.
 - id: S2
   file: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
   type: external

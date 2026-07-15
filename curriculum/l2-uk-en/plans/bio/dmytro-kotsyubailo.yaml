@@ -81,9 +81,9 @@ persona:
 phase: BIO
 readings_contract_version: 2
 readings:
-- title: Указ Президента України №608/2021
-  source_name: Офіційне інтернет-представництво Президента України
-  source_url: https://www.president.gov.ua/documents/6082021-40761
+- title: Про присвоєння Д. Коцюбайлу звання Герой України
+  source_name: База даних «Законодавство України» / Верховна Рада України
+  source_url: https://zakon.rada.gov.ua/laws/show/608/2021?lang=uk
   language: uk
   role: primary-document
   source_type: state_record
@@ -91,8 +91,8 @@ readings:
   learner_task: Визначити, яку саме відзнаку та кому присвоює указ; не робити з державної нагороди оцінки всієї біографії.
   rights:
     basis: external-link
-    evidence_url: https://www.president.gov.ua/documents/6082021-40761
-    note: Офіційний документ подано посиланням; повний текст не відтворюється в курсі.
+    evidence_url: https://zakon.rada.gov.ua/laws/show/608/2021?lang=uk
+    note: Офіційний текст указу подано посиланням із бази Верховної Ради; повний текст не відтворюється в курсі.
 - title: 7 березня 2023 року під Бахмутом в бою загинув Дмитро «Да Вінчі» Коцюбайло
   source_name: Донецька обласна державна адміністрація
   source_url: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
