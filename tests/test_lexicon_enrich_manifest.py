@@ -1874,6 +1874,7 @@ def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
         "Named after the emperor Paul I of Russia.",       # base country name (was leaking)
         "See орк for the usage referring to Russians.",    # plural (was leaking)
         "Initialism of Російська Федерація.",              # Cyrillic (was leaking)
+        "Coined during the war with Росією.",              # Cyrillic instrumental case (paradigm gap)
         "Back-formation from Малоро́сія (little Russia).",
     ]:
         assert ety(imperial) is None, imperial

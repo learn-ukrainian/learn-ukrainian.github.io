@@ -4519,7 +4519,7 @@ _KAIKKI_IMPERIAL_COMPARISON_RE = re.compile(
     # рф → "Російська Федерація"). Word-anchored (\b) so it does NOT false-positive on Амвросій
     # (Ambrose) or on legitimate Moscow-referent words (москва/москвич), which carry honest
     # compositional etymologies rather than imperial framing of a Ukrainian concept.
-    r"|\b(росі[яюї]|російськ|росіян|малоросі|рф|білорус)",
+    r"|\b(росі[яюїє]|російськ|росіян|малоросі|рф|білорус)",
     re.IGNORECASE,
 )
 
