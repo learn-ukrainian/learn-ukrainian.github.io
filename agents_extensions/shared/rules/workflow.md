@@ -28,10 +28,14 @@ functional role.
 Shell equivalent:
 
 ```bash
-curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
-curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
+# Pass your session id on the telemetry-bearing endpoints (manifest/rules/orient) so responses
+# carry live context-window telemetry (_telemetry.ctx) instead of null. Claude Code exports it as
+# $CLAUDE_CODE_SESSION_ID; empty is fine (the API falls back to a best-effort newest-transcript hint).
+S="${CLAUDE_CODE_SESSION_ID:-}"
+curl -s "http://localhost:8765/api/state/manifest?session=$S"           # ~1 KB index
+curl -s "http://localhost:8765/api/rules?format=markdown&session=$S"    # only if hash changed
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed
-curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+curl -s "http://localhost:8765/api/orient?lean=true&session=$S"         # lean, always-fresh, has meta
 # Known functional role only: replace `quality` with the assigned role.
 curl -s 'http://localhost:8765/api/knowledge/cold-start?role=quality'  # role-scoped pointers
 # Generic or genuinely role-unknown session: skip the role-scoped request; remain pointer-free.

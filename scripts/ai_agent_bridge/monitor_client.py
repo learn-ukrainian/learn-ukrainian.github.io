@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -166,9 +167,15 @@ class MonitorClient:
         base_url: str = DEFAULT_BASE_URL,
         *,
         timeout_s: float = DEFAULT_TIMEOUT_S,
+        session_id: str | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.timeout_s = timeout_s
+        # Send the caller's session id (Claude Code exports $CLAUDE_CODE_SESSION_ID) as the
+        # X-Session-Id header on every request, so telemetry-bearing responses carry live
+        # context-window telemetry (_telemetry.ctx) instead of null. Empty/absent is fine — the
+        # API degrades to a best-effort newest-transcript hint.
+        self.session_id = session_id or os.environ.get("CLAUDE_CODE_SESSION_ID") or None
 
     # -- low-level HTTP --------------------------------------------
 
@@ -192,7 +199,13 @@ class MonitorClient:
         ``bootstrap()`` with an unhandled ``HTTPError``.
         """
         url = self.base_url + path
-        req = urllib.request.Request(url, headers=headers or {})
+        merged_headers = dict(headers or {})
+        # Only inject when the caller has not already supplied the header in ANY case — urllib
+        # title-cases header keys, so a caller's ``x-session-id`` would otherwise collide with and
+        # be clobbered by the injected value. An explicit caller header always wins.
+        if self.session_id and not any(k.lower() == "x-session-id" for k in merged_headers):
+            merged_headers["X-Session-Id"] = self.session_id
+        req = urllib.request.Request(url, headers=merged_headers)
         try:
             with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
                 body = resp.read().decode("utf-8", errors="replace")

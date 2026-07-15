@@ -76,17 +76,22 @@ ETag and cache semantics are unchanged.
 **Recommended cold-start sequence (GH #1309, since P1):**
 
 ```bash
+# Pass your session id on telemetry-bearing endpoints (manifest/rules/orient) so responses carry
+# live context-window telemetry (_telemetry.ctx) instead of null. Claude Code exports it as
+# $CLAUDE_CODE_SESSION_ID; empty is fine (falls back to a best-effort newest-transcript hint).
+S="${CLAUDE_CODE_SESSION_ID:-}"
+
 # 1. Tiny index of per-component hashes — decide what to fetch.
-curl -s http://localhost:8765/api/state/manifest
+curl -s "http://localhost:8765/api/state/manifest?session=$S"
 
 # 2. Only fetch components whose hash changed since last session.
-curl -s http://localhost:8765/api/rules?format=markdown     # ~1.3 KB
+curl -s "http://localhost:8765/api/rules?format=markdown&session=$S"     # ~1.3 KB
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # ~1-3 KB
 
 # 3. Lean cold-start orient — git, runtime, delegate, bridge, governance, health, hints.
 #    Skips the heavy pipeline/issues/wiki sections (fetch those on demand once you have a
 #    lane, e.g. ?sections=pipeline). Drop ?lean=true for the full legacy payload.
-curl -s 'http://localhost:8765/api/orient?lean=true'
+curl -s "http://localhost:8765/api/orient?lean=true&session=$S"
 # Use ?fresh=true right after you committed or filed an issue.
 
 # 4. Optional: do I have unread channel deliveries?

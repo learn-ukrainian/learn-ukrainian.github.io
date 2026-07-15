@@ -35,6 +35,18 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 # ---------------------------------------------------------------------
 
 
+@pytest.fixture(autouse=True)
+def _disable_telemetry_footer(monkeypatch):
+    """Keep these SDK/ETag assertions hermetic against the telemetry footer.
+
+    In a live agent session LEARN_UKRAINIAN_TELEMETRY_FOOTER=1 is set, which appends a
+    ``_telemetry`` footer to /api/rules + /api/session/current responses and perturbs the ETag /
+    304 assertions (they read raw headers). CI runs with the footer off; pin it off here so the
+    tests pass regardless of the ambient env instead of failing only inside an agent session.
+    """
+    monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
+
+
 @pytest.fixture
 def stub_rules(monkeypatch, tmp_path):
     rule = tmp_path / "rule.md"
@@ -264,3 +276,53 @@ def test_sdk_survives_session_404(monkeypatch, tmp_path):
     )
     assert result.body == ""
     assert result.hash == ""
+
+
+def test_monitor_client_injects_session_id_header(monkeypatch):
+    """The SDK sends the caller's session id as X-Session-Id so telemetry-bearing responses
+    carry _telemetry.ctx (explicit arg wins; else $CLAUDE_CODE_SESSION_ID; else no header)."""
+    import urllib.request as _urllib
+
+    captured: dict[str, object] = {}
+
+    class _Resp:
+        status = 200
+
+        @property
+        def headers(self) -> dict[str, str]:
+            return {}
+
+        def read(self) -> bytes:
+            return b"{}"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_a) -> bool:
+            return False
+
+    def _fake_urlopen(req, timeout=None):
+        captured["req"] = req
+        return _Resp()
+
+    monkeypatch.setattr(_urllib, "urlopen", _fake_urlopen)
+
+    # 1. Explicit session_id is sent (urllib title-cases the header key on the Request).
+    monitor_client.MonitorClient(session_id="sid-explicit")._get("/api/x")
+    assert captured["req"].get_header("X-session-id") == "sid-explicit"
+
+    # 2. Falls back to $CLAUDE_CODE_SESSION_ID when no explicit id is given.
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "sid-env")
+    monitor_client.MonitorClient()._get("/api/x")
+    assert captured["req"].get_header("X-session-id") == "sid-env"
+
+    # 3. No session id anywhere → no header (the API degrades to a best-effort hint).
+    monkeypatch.delenv("CLAUDE_CODE_SESSION_ID", raising=False)
+    monitor_client.MonitorClient()._get("/api/x")
+    assert captured["req"].get_header("X-session-id") is None
+
+    # 4. A caller-supplied header wins in ANY case — urllib title-cases keys, so a lowercase
+    #    x-session-id must not be clobbered by the injected session id.
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "sid-env")
+    monitor_client.MonitorClient()._get("/api/x", headers={"x-session-id": "caller-explicit"})
+    assert captured["req"].get_header("X-session-id") == "caller-explicit"

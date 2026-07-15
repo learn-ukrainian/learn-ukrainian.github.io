@@ -47,7 +47,7 @@ def test_known_role_bootstrap_contract_is_explicit_in_source() -> None:
     assert "http://localhost:8765/api/knowledge/cold-start?role=quality" in content
     assert "replace `quality` with the assigned role" in content
     assert "Generic or genuinely role-unknown session: skip the role-scoped request; remain pointer-free." in content
-    assert "curl -s http://localhost:8765/api/orient                 # always-fresh, has meta" in content
+    assert 'curl -s "http://localhost:8765/api/orient?lean=true&session=$S"' in content
     assert "/api/orient?role=" not in content
 
     # Deployment is verified separately by scripts/check_rules_deployment.sh;
