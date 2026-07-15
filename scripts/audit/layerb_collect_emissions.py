@@ -753,6 +753,11 @@ def _route_metadata(
         "tools": [],
         "tool_access": {"enabled": False, "mcp": False},
     }
+    # Fresh output directories and no --resume remain a defence-in-depth
+    # operational rule for Grok qualification. This identity fold independently
+    # prevents a response cache from crossing a flat-contract revision.
+    if str(args.judge_family).casefold() == "grok":
+        bridge_config["family_internal_sha"] = layerb_judge_bridge.grok_flat_contract_fingerprint()
     route_data = {
         "family": args.judge_family,
         "resolved_model": args.judge_model,
@@ -896,7 +901,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--dry-run", action="store_true", help="Reconstruct and serialize windows without calling the judge."
     )
-    parser.add_argument("--resume", action="store_true", help="Reuse validated per-module response cache entries.")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help=(
+            "Reuse validated per-module response cache entries. Grok qualification must use a fresh output directory "
+            "without --resume; the flat-contract identity fold is defence in depth."
+        ),
+    )
     return parser.parse_args(argv)
 
 

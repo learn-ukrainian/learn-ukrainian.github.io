@@ -521,6 +521,37 @@ def test_route_identity_hashes_bridge_version(tmp_path: Path) -> None:
     )
 
 
+def test_grok_route_identity_adds_only_the_flat_contract_fingerprint(tmp_path: Path) -> None:
+    non_grok_args = layerb_collect_emissions.parse_args(
+        _collector_args(tmp_path / "main.json", tmp_path / "probe.json", tmp_path / "non-grok-output", calls=1)
+    )
+    grok_args = layerb_collect_emissions.parse_args(
+        _collector_args(
+            tmp_path / "main.json", tmp_path / "probe.json", tmp_path / "grok-output", calls=1, family="GROK"
+        )
+    )
+
+    non_grok_route, _non_grok_judge_route, _non_grok_seat_key, _non_grok_seat_metadata = (
+        layerb_collect_emissions._route_metadata(non_grok_args)
+    )
+    grok_route, _grok_judge_route, _grok_seat_key, _grok_seat_metadata = layerb_collect_emissions._route_metadata(
+        grok_args
+    )
+
+    assert grok_route.bridge_config_sha256 != non_grok_route.bridge_config_sha256
+    assert grok_route.bridge_config_sha256 == layerb_collect_emissions._sha256_json(
+        {
+            "argv": [str(VENV_PYTHON), str(STUB)],
+            "bridge_version": layerb_judge_bridge.BRIDGE_VERSION,
+            "judge_input_version": layerb_collect_emissions.layerb_shadow.JUDGE_INPUT_VERSION,
+            "prompt_version": layerb_collect_emissions.layerb_shadow.PROMPT_VERSION,
+            "tools": [],
+            "tool_access": {"enabled": False, "mcp": False},
+            "family_internal_sha": layerb_judge_bridge.grok_flat_contract_fingerprint(),
+        }
+    )
+
+
 def test_happy_path_emission_shape_matches_scorer_response_contract(tmp_path: Path, monkeypatch) -> None:
     main_path, probe_path, main_case, _probe_case = _datasets(tmp_path)
     counter = tmp_path / "calls.log"
