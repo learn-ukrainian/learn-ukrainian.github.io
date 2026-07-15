@@ -1473,3 +1473,28 @@ def test_grok_print_config_rejects_retired_model_pin(capsys: pytest.CaptureFixtu
         ["--judge-family", "grok", "--judge-model", "grok-build", "--print-config"]
     ) == 2
     assert "Grok Layer-B judges must use grok-4.5" in capsys.readouterr().err
+
+
+def test_codex_trace_keys_normalization(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A model_id-style key (e.g., model_id, model_version, resolved_model) should match and accept
+    for key in ("model_id", "model_version", "resolved_model", "model"):
+        _stub_codex(
+            monkeypatch,
+            output=_result(),
+            events=[{"type": "session_meta", key: PINNED_CODEX_MODEL}, {"type": "task_complete"}],
+        )
+        response = layerb_judge_bridge.run_bridge(_request(), _config())
+        assert _relation(response)["relation"] == "ENTAILS", f"Failed to match key: {key}"
+        assert response.get("_bridge_conservative_reason") is None
+
+    # An unknown model under a model_id-style key must still be rejected (fail-closed, model_pin)
+    for key in ("model_id", "model_version", "resolved_model", "model"):
+        _stub_codex(
+            monkeypatch,
+            output=_result(),
+            events=[{"type": "session_meta", key: "gpt-5.6-other"}, {"type": "task_complete"}],
+        )
+        response = layerb_judge_bridge.run_bridge(_request(), _config())
+        assert _relation(response)["relation"] == "ABSTAIN", f"Failed to reject wrong model with key: {key}"
+        assert response.get("_bridge_conservative_reason") == "model_pin", f"Failed to reject wrong model with key: {key}"
+
