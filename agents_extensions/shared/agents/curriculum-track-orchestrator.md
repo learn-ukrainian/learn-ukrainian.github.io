@@ -12,19 +12,30 @@ initialPrompt: |
 
   ## COLD-START (API mode — do this BEFORE anything else)
   1. Read the task prompt / user message → which track are you helping this session?
-  2. Orient via the Monitor API (127.0.0.1:8765), not long files:
-     - `curl -s --max-time 2 http://127.0.0.1:8765/api/state/manifest` (hashes for cache reuse)
-     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/rules?format=markdown'` — the BINDING
-       shared rule set (operator contract · critical · non-negotiable · workflow ·
-       model-assignment). Re-fetch only when the manifest hash changed. API down → say so and
-       read the offline fallback `agents_extensions/shared/rules/*.md`.
+  2. Orient via the Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
+     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$CLAUDE_CODE_SESSION_ID"`
+       — small (hashes + identity). The `?session=` param is how you get `_telemetry.ctx` (your live
+       context-TOKEN count, not a %); MEASURE ctx from it, never estimate. (Known gap #5265: an
+       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null,
+       and the response OMITS the `newest_transcript` sidecar. Until it lands, if `caller_match` is
+       false re-request the manifest WITHOUT `?session=` and read `_telemetry.newest_transcript.ctx`
+       — that sidecar is present ONLY on no-session requests — yours when you're the only session here.)
+     - **Do NOT bulk-fetch `/api/rules` at cold-start.** The operator-contract digest is ALREADY
+       injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. The full
+       endpoint is ~76 KB and, with the telemetry footer enabled (the live config), returns a full
+       body + no ETag/304 on a matching `If-None-Match` — so re-pulling it every cold-start is pure
+       duplication. Fetch it (or `docs/best-practices/agent-activity-matrix.md`)
+       ON-DEMAND, once, before your FIRST dispatch (for the live model-assignment/routing table), and
+       re-pull only when the manifest `rules.hash` changed. API down → offline fallback
+       `agents_extensions/shared/rules/*.md`.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` — verify claimed
        in-flight dispatches before believing the handoff.
      - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude'` — read
        TRACK-UPDATE / MAIN-ACK traffic for YOUR track; leave other lanes' messages unacked.
      Do NOT load the main orchestrator's session (`/api/orient`, `/api/session/current`,
      `docs/session-state/current*.md`, auto-injected SessionStart "orchestrator handoff" briefs) —
-     that is main's state, not yours.
+     that is main's state, not yours. (This lane-scoping IS the "optimal shape" the orchestrator
+     cold-start still needs — keep it; do not adopt the global orient.)
   3. Load YOUR session memory layered (the #4426 pattern): read the track handoff
      `.claude/<track>-epic/CLAUDE-DRIVER-HANDOFF.md` FIRST — gitignored LOCAL state, the freshest
      and only copy (survives `npm run agents:deploy` via ORPHAN_PATHS_CLAUDE). Resume from its
@@ -71,10 +82,16 @@ initialPrompt: |
     capability via `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` / the
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
-  - Watch: `Monitor` on `/api/delegate/active` → terminal → read the result file under
-    `batch_state/tasks/`. Transient failure (rc=1 / no result) → remove worktree+branch, re-fire
-    with a `-retry` task id. Check the worktree for finished-but-unpushed work before declaring a
-    dispatch dead (silent-exit class).
+  - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
+    result file on terminal. **Match the runtime's terminal vocab — `done` (the SUCCESS state, NOT
+    "completed"), plus `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on
+    any status NOT in {spawning,running,dry_run,""}** (a dispatch persists `spawning` before it forks
+    the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
+    "completed" silently times out on
+    a finished task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks
+    (#5207), so trust the task-state file, not the active list. Transient failure (rc=1 / no result) →
+    remove worktree+branch, re-fire with a `-retry` task id. Check the worktree for finished-but-
+    unpushed work before declaring a dispatch dead (silent-exit class).
   - Per batch: READ ≥1 produced artifact (CONTENT, not just validators — judging on metrics alone
     is how a bad artifact ships), confirm `git -C <wt> diff --name-status origin/main...HEAD` rows
     are expected, then `gh pr create` (no merge).
