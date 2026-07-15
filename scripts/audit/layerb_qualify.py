@@ -122,7 +122,11 @@ SPAN_ROLES: Mapping[str, frozenset[str]] = {
     "EXPLICITLY_UNCERTAIN": frozenset({"UNCERTAINTY"}),
     "MIXED": frozenset({"SUPPORTS", "CONTRADICTS", "UNCERTAINTY"}),
 }
-ROUTE_LINEAGES = {"claude": "claude", "gemini": "google", "gpt": "gpt"}
+# family → provider lineage. The lineage is what author-family exclusion
+# compares against: a route may never judge content its own lineage wrote.
+# grok/xai authored no production content, so the grok route is the
+# all-rows third-family candidate (#5197).
+ROUTE_LINEAGES = {"claude": "claude", "gemini": "google", "gpt": "gpt", "grok": "xai"}
 
 
 class QualificationError(ValueError):
@@ -224,10 +228,7 @@ def _fail_closed_integrity_failures(failures: Mapping[str, Any]) -> dict[str, in
         if isinstance(failure, str)
         and isinstance(count, int)
         and not isinstance(count, bool)
-        and (
-            failure in FAIL_CLOSED_INTEGRITY_FAILURES
-            or failure.startswith(FAIL_CLOSED_INTEGRITY_PREFIXES)
-        )
+        and (failure in FAIL_CLOSED_INTEGRITY_FAILURES or failure.startswith(FAIL_CLOSED_INTEGRITY_PREFIXES))
     }
 
 

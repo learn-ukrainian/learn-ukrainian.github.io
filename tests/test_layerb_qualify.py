@@ -798,6 +798,26 @@ def test_route_matrix_is_lineage_aware_and_gpt_v21_is_not_deferred() -> None:
     assert layerb_qualify.route_eligibility(gemma, gpt)["eligible"] is True
 
 
+def test_grok_route_is_supported_and_all_rows_eligible() -> None:
+    """grok/xai authored no production content: the all-rows third family (#5197)."""
+
+    grok = layerb_qualify.EffectiveRoute.from_mapping(
+        {**ROUTE.to_dict(), "family": "grok", "resolved_model": "grok-build", "resolved_model_version": "grok-build"}
+    )
+
+    assert grok.family == "grok"
+    assert grok.to_dict()["normalized_family"] == "xai"
+    deepseek = _case("openrouter-deepseek-deepseek-v4-pro__row", "raw")
+    gemma = _case("openrouter-google-gemma-4-31b-it__row", "raw")
+    assert layerb_qualify.route_eligibility(deepseek, grok)["eligible"] is True
+    assert layerb_qualify.route_eligibility(gemma, grok)["eligible"] is True
+
+
+def test_unknown_route_family_still_refused() -> None:
+    with pytest.raises(layerb_qualify.QualificationError, match="unsupported judge route family"):
+        layerb_qualify.EffectiveRoute.from_mapping({**ROUTE.to_dict(), "family": "mistral"})
+
+
 def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> None:
     labels = tmp_path / "labels.json"
     corpus_manifest = tmp_path / "corpus.json"
