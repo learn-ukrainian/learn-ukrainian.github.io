@@ -833,3 +833,35 @@ def test_planner_enforces_route_eligibility_in_all_mode(capsys: pytest.CaptureFi
     scheduled = {case.case_id for module in modules for case in module.cases}
     assert scheduled == {"claude-written-row"}
     assert "GROK_SELF_FAMILY_EXCLUDED=1" in capsys.readouterr().err
+
+
+def test_planner_rejects_unknown_lineage_in_all_mode(capsys: pytest.CaptureFixture[str]) -> None:
+    """An unresolvable lineage can hide a self-family author: fail closed in every mode."""
+
+    grok_route = layerb_qualify.EffectiveRoute.from_mapping(
+        {
+            "family": "grok",
+            "resolved_model": "grok-build",
+            "resolved_model_version": "grok-build",
+            "bridge_executable": "bridge --offline-recording",
+            "bridge_config_sha256": "a" * 64,
+            "provider_account_lane": "xai-subscription",
+            "tools_disabled": True,
+            "tools_disabled_evidence": "bridge-config tool_mode=disabled",
+        }
+    )
+    window = {"candidate_id": "candidate-1", "raw_window": "evidence"}
+    anonymous = layerb_collect_emissions.PreparedCase(
+        corpus="main",
+        case={
+            "case_id": "no-lineage-row",
+            "artifact_sha256": "b" * 64,
+            "expected_layer_a_decision": "ANCHOR",
+        },
+        windows=(window,),
+    )
+
+    modules = layerb_collect_emissions._planned_modules([anonymous], eligibility="all", effective_route=grok_route)
+
+    assert modules == []
+    assert "UNKNOWN_LINEAGE=1" in capsys.readouterr().err

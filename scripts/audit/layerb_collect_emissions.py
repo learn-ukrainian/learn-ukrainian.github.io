@@ -370,18 +370,17 @@ def _planned_modules(
         if not prepared.windows:
             raise CollectionError(f"{prepared.case_id}: an ANCHOR row has no candidate windows")
         if prepared.corpus == "main":
-            # Family SELF-EXCLUSIONS bind in EVERY mode: filtering only under
+            # Route eligibility binds in EVERY mode: filtering only under
             # --eligibility deepseek-only let the default 'all' mode schedule
             # rows the route may never judge (e.g. a grok-lineage-authored row
             # on the grok route) — the exclusion existed but nothing enforced
             # it at planning time (PR #5203 review finding). UNKNOWN_LINEAGE
-            # keeps its historical semantics: schedulable in 'all' mode
-            # (recorded in the eligibility matrix), excluded only under the
-            # stricter deepseek-only mode.
+            # is likewise fail-closed here: an unresolvable lineage can hide a
+            # self-family author, and the frozen r2 labels resolve lineage for
+            # all 535 rows, so this costs nothing operationally.
             matrix = layerb_qualify.route_eligibility(prepared.case, effective_route)
-            reason = str(matrix.get("reason") or "INELIGIBLE")
-            if matrix.get("eligible") is not True and (eligibility == "deepseek-only" or reason.endswith("_EXCLUDED")):
-                skipped[reason] += 1
+            if matrix.get("eligible") is not True:
+                skipped[str(matrix.get("reason") or "INELIGIBLE")] += 1
                 continue
         grouped[(prepared.corpus, prepared.artifact_sha256)].append(prepared)
     if skipped:
