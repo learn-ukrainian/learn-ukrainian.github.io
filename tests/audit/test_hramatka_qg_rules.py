@@ -3,10 +3,11 @@
 Each check must FIRE on its planted known-bad fixture and a clean lesson must PASS.
 A green on a lesson carrying a planted fault is a test failure.
 
-DB-backed detectors (style_guide / PULS CEFR / ukrajinet / VESUM / heritage) are
-monkeypatched so CI's stripped sources.db cannot rubber-stamp or crash the suite.
-Follows the repo pattern used by textbook_grounding / ulif tests: mock the lookup,
-assert the gate behavior.
+Data-dependent detectors (style_guide / PULS CEFR / ukrajinet / VESUM / heritage)
+run against CONTROLLED temporary SQLite DBs — never ambient sources.db fullness.
+CI and local therefore exercise the same real SQL + gate logic. Production still
+gracefully degrades when tables are missing; tests never rely on that path for
+load-bearing clean→PASS / planted→FAIL assertions.
 """
 
 from __future__ import annotations
@@ -17,6 +18,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.audit import hramatka_qg_rules as hq
 from scripts.audit.curriculum_qg_harness import main as harness_main
@@ -39,34 +41,20 @@ FIXTURE_FILE = PROJECT_ROOT / "tests" / "fixtures" / "hramatka_qg" / "fixtures.y
 ACTIVITY_KIT_LESSON = (
     PROJECT_ROOT / "packages" / "activity-kit" / "src" / "fixtures" / "lu.lesson.v1.fixture.json"
 )
-SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+HERITAGE_SAMPLE_DB = PROJECT_ROOT / "tests" / "fixtures" / "heritage_sample.db"
 
-# Planted non-forms / shadow forms that must stay VESUM-absent under mocks.
+# Planted non-forms that must stay VESUM-absent under the controlled fixture DB.
 _PLANTED_NON_VESUM = frozenset(
     {
         "зделати",
         "жмурклея",
         "ффффффф",
-        "кушати",  # russian-shadow in planted-russianism fixture
+        "кушати",
     }
 )
-_PLANTED_RUSSIAN_SHADOW = frozenset({"зделати", "кушати"})
-# Fixture CEFR over-level token from planted-overlevel-task (чигати, with г).
 _OVERLEVEL_TOKEN = "чигати"
-_CEFR_OVERLEVEL = {_OVERLEVEL_TOKEN: "c1"}
-# Synonym pair planted in planted-bad-distractors.
-_SYNONYM_PAIRS: dict[str, set[str]] = {
-    "великий": {"видатний"},
-    "видатний": {"великий"},
-}
 
-# Real SQL helpers (captured before autouse mocks replace them).
-_REAL_ANTONENKO_TITLE_HIT = hq._antonenko_title_hit
-_REAL_CEFR_LEVEL_FOR = hq._cefr_level_for
-_REAL_SYNONYM_LEMMAS = hq._synonym_lemmas
-_REAL_SOURCES_CONN = hq._sources_conn
-
-_CYR_OK = re.compile(r"[а-яіїєґ'ʼ’\-]+", re.IGNORECASE)
+_CYR_TOKEN_RE = re.compile(r"[А-Яа-яЁёІіЇїЄєҐґ][А-Яа-яЁёІіЇїЄєҐґ'ʼ’\-]*")
 
 
 def _by_id(report: dict) -> dict[str, dict]:
@@ -77,90 +65,168 @@ def _issue_ids(evidence: dict) -> set[str]:
     return {f["issue_id"] for f in all_findings(evidence)}
 
 
-def _mock_vesum_hits(token: str) -> list[dict]:
-    key = token.casefold()
-    if key in _PLANTED_NON_VESUM:
-        return []
-    # Accept ordinary Cyrillic surface forms as real under the mock.
-    if _CYR_OK.fullmatch(key) and not re.fullmatch(r"ф+", key):
-        return [{"lemma": key, "pos": "unknown", "tags": "mock-vesum"}]
-    return []
+def _collect_fixture_tokens() -> set[str]:
+    """Surface tokens from synthetic fixtures + hard-coded clean lessons in this file."""
+    data = yaml.safe_load(FIXTURE_FILE.read_text(encoding="utf-8"))
+    tokens: set[str] = set()
+    for entry in data.get("fixtures") or []:
+        lesson = entry.get("lesson_json") or {}
+        adapted = adapt_lesson_json(lesson, slug=str(entry.get("id") or "x"))
+        for _path, text in adapted.learner_strings:
+            for tok in _CYR_TOKEN_RE.findall(text or ""):
+                tokens.add(tok.casefold())
+    # Hard-coded clean lessons used by CLI / dispatch / direct-scan tests.
+    extras = (
+        "CLI урок",
+        "Ми вчимося мови.",
+        "Перевірте.",
+        "Ми вчимося.",
+        "Диспетчер",
+        "Ми читаємо.",
+        "Правда",
+        "Прямий скан",
+        "Ми говоримо українською.",
+        "Ми говоримо.",
+        "Чистий",
+        "Калибр",
+        "Треба зделати роботу і приймати участь.",
+        "Участь",
+        "Студенти хочуть приймати участь у святі.",
+        "Вони хочуть приймати участь.",
+        # Proper-noun precision probe (must not false-positive when absent from VESUM).
+        "Львів",
+        "Оля",
+        "НАТО",
+    )
+    for text in extras:
+        for tok in _CYR_TOKEN_RE.findall(text):
+            tokens.add(tok.casefold())
+    return tokens
 
 
-def _mock_classify_token(token: str) -> dict:
-    key = token.casefold()
-    if key in _PLANTED_RUSSIAN_SHADOW:
-        return {
-            "classification": "unknown",
-            "attestations": [],
-            "is_russianism": False,
-            "russian_shadow": True,
-            "vesum_attested": False,
-            "sovietization_risk": 0,
-            "calque_warning": {
-                "type": "russian_shadow_only",
-                "note": "mock planted russian-shadow",
-            },
-        }
-    if key == "жмурклея":
-        return {
-            "classification": "unknown",
-            "attestations": [],
-            "is_russianism": False,
-            "russian_shadow": False,
-            "vesum_attested": False,
-            "sovietization_risk": 0,
-            "calque_warning": None,
-        }
-    if _mock_vesum_hits(token):
-        return {
-            "classification": "standard",
-            "attestations": [{"source": "vesum", "ref": token}],
-            "is_russianism": False,
-            "russian_shadow": False,
-            "vesum_attested": True,
-            "sovietization_risk": 0,
-            "calque_warning": None,
-        }
-    return {
-        "classification": "unknown",
-        "attestations": [],
-        "is_russianism": False,
-        "russian_shadow": False,
-        "vesum_attested": False,
-        "sovietization_risk": 0,
-        "calque_warning": None,
-    }
+def _build_controlled_vesum(path: Path) -> None:
+    """Minimal VESUM forms table: clean tokens present, planted non-forms absent."""
+    tokens = sorted(
+        t
+        for t in _collect_fixture_tokens()
+        if t not in _PLANTED_NON_VESUM and not re.fullmatch(r"ф+", t)
+    )
+    conn = sqlite3.connect(str(path))
+    try:
+        conn.execute(
+            "CREATE TABLE forms (word_form TEXT NOT NULL, lemma TEXT NOT NULL, "
+            "tags TEXT NOT NULL, pos TEXT NOT NULL)"
+        )
+        rows = [(tok, tok, "fixture:mock", "unknown") for tok in tokens]
+        conn.executemany(
+            "INSERT INTO forms(word_form, lemma, tags, pos) VALUES (?, ?, ?, ?)",
+            rows,
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 
-def _mock_cefr_level_for(word: str) -> str | None:
-    return _CEFR_OVERLEVEL.get(word.casefold())
-
-
-def _mock_synonym_lemmas(word: str) -> set[str]:
-    return set(_SYNONYM_PAIRS.get(word.casefold().strip(), set()))
-
-
-def _mock_antonenko_title_hit(text: str) -> list[str]:
-    folded = text.casefold()
-    if "приймати участь" in folded:
-        return ["Приймати участь – брати участь"]
-    return []
+def _build_controlled_sources(path: Path) -> None:
+    """Minimal sources.db: style_guide + PULS CEFR + ukrajinet rows the fixtures need."""
+    conn = sqlite3.connect(str(path))
+    try:
+        conn.executescript(
+            """
+            CREATE TABLE style_guide (
+                id INTEGER PRIMARY KEY,
+                word TEXT,
+                section TEXT,
+                text TEXT,
+                source TEXT,
+                word_lower TEXT,
+                excerpt_full TEXT,
+                page TEXT,
+                russianism_pattern TEXT
+            );
+            CREATE TABLE puls_cefr (
+                id INTEGER PRIMARY KEY,
+                word TEXT,
+                guideword TEXT,
+                level TEXT,
+                pos TEXT,
+                type TEXT,
+                text TEXT,
+                source TEXT
+            );
+            CREATE TABLE ukrajinet (
+                id INTEGER PRIMARY KEY,
+                synset_id TEXT,
+                words TEXT,
+                text TEXT,
+                source TEXT
+            );
+            """
+        )
+        conn.execute(
+            "INSERT INTO style_guide(word, section, text, source) VALUES (?, ?, ?, ?)",
+            (
+                "Приймати участь – брати участь",
+                "ДІЄСЛОВА",
+                "fixture calque title",
+                "Antonenko-Davydovych",
+            ),
+        )
+        # Over-level planted token (C1) + level-appropriate baselines that must NOT warn.
+        cefr_rows = [
+            (_OVERLEVEL_TOKEN, "c1"),
+            ("речення", "a1"),
+            ("хліб", "a1"),
+            ("ми", "a1"),
+            ("слово", "a1"),
+            ("читаємо", "a1"),
+            ("великий", "a2"),
+            ("квартира", "a2"),
+        ]
+        for word, level in cefr_rows:
+            conn.execute(
+                "INSERT INTO puls_cefr(word, level, text, source) VALUES (?, ?, ?, ?)",
+                (word, level, f"{word} ({level})", "PULS-fixture"),
+            )
+        conn.execute(
+            "INSERT INTO ukrajinet(synset_id, words, text, source) VALUES (?, ?, ?, ?)",
+            (
+                "fixture-syn-1",
+                json.dumps(["великий", "видатний"], ensure_ascii=False),
+                "Синоніми: великий, видатний",
+                "Ukrajinet-fixture",
+            ),
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 @pytest.fixture(autouse=True)
-def _mock_sources_backed_detectors(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Deterministic DB-backed lookups for CI's stripped sources.db.
+def _controlled_data_layer(monkeypatch: pytest.MonkeyPatch, tmp_path_factory: pytest.TempPathFactory):
+    """Point hramatka QG at controlled SQLite DBs (real SQL paths, known rows).
 
-    Keeps load-bearing planted-fault → FAIL assertions independent of which
-    tables the runner's sources.db actually contains. Structural / regex checks
-    (placeholders, cloze, MC, curated RUSSICISM_DETECTED) stay live.
+    Exercises the same helpers production uses — not ambient-db degradation.
+    Heritage classifier uses the repo's small sample DB (table shape only);
+    VESUM attestation is forced through the controlled forms table.
     """
-    monkeypatch.setattr(hq, "_vesum_hits", _mock_vesum_hits)
-    monkeypatch.setattr(hq, "_classify_token", _mock_classify_token)
-    monkeypatch.setattr(hq, "_cefr_level_for", _mock_cefr_level_for)
-    monkeypatch.setattr(hq, "_synonym_lemmas", _mock_synonym_lemmas)
-    monkeypatch.setattr(hq, "_antonenko_title_hit", _mock_antonenko_title_hit)
+    root = tmp_path_factory.mktemp("hramatka_qg_controlled")
+    sources = root / "sources.db"
+    vesum = root / "vesum.db"
+    _build_controlled_sources(sources)
+    _build_controlled_vesum(vesum)
+
+    monkeypatch.setattr(hq, "_SOURCES_DB_OVERRIDE", sources)
+    monkeypatch.setattr(hq, "_VESUM_DB_OVERRIDE", vesum)
+    # Prefer sample heritage tables when present; else controlled sources (empty heritage).
+    heritage = HERITAGE_SAMPLE_DB if HERITAGE_SAMPLE_DB.exists() else sources
+    monkeypatch.setattr(hq, "_HERITAGE_DB_OVERRIDE", heritage)
+
+    yield {
+        "sources": sources,
+        "vesum": vesum,
+        "heritage": heritage,
+    }
 
 
 def test_hramatka_fixture_suite_load_bearing() -> None:
@@ -222,6 +288,116 @@ def test_clean_lesson_has_no_findings() -> None:
     clean = _by_id(report)["clean-b1-lesson"]
     assert clean["actual_verdict"] == "PASS"
     assert all_findings(clean["evidence"]) == []
+
+
+def test_controlled_sql_helpers_exercise_real_logic() -> None:
+    """Prove CEFR / synonym / Antonenko hit the controlled rows (not stubs)."""
+    assert hq._cefr_level_for(_OVERLEVEL_TOKEN) == "c1"
+    assert hq._cefr_level_for("речення") == "a1"
+    assert "видатний" in hq._synonym_lemmas("великий")
+    hits = hq._antonenko_title_hit("Студенти хочуть приймати участь у святі.")
+    assert hits, "controlled style_guide must flag 'приймати участь'"
+    assert hq._vesum_hits("квартиру"), "controlled VESUM must attest clean tokens"
+    assert not hq._vesum_hits("жмурклея"), "planted invented form must stay VESUM-absent"
+    assert not hq._vesum_hits("зделати"), "planted russian-shadow form must stay VESUM-absent"
+
+
+def test_proper_noun_and_capitalized_name_not_invented() -> None:
+    """Invented-form must not flag place names / names (Львів-type)."""
+    # Ensure these are ABSENT from controlled VESUM for this assertion.
+    assert not hq._vesum_hits("Харків")  # not in fixture token set
+    assert hq._is_probable_proper_noun("Львів")
+    assert hq._is_probable_proper_noun("Оля")
+    assert hq._is_probable_proper_noun("НАТО")
+    assert not hq._is_invented_form("Львів")
+    assert not hq._is_invented_form("Оля")
+    assert not hq._is_invented_form("НАТО")
+
+    evidence = scan_hramatka_lesson(
+        {
+            "title": "Львів",
+            "level": "B1",
+            "anchor": {"text": "Оля була у Львові біля парку."},
+            "blocks": [
+                {
+                    "type": "true-false",
+                    "activity": {
+                        "type": "true-false",
+                        "title": "Правда",
+                        "payload": {
+                            "type": "true-false",
+                            "instruction": "Перевірте.",
+                            "items": [{"statement": "Оля була у Львові.", "correct": True}],
+                        },
+                        "answer_key": {"items": [{"index": 0, "correct": True}]},
+                    },
+                    "answer_key": "1 П",
+                }
+            ],
+        },
+        slug="proper-noun-clean",
+    )
+    assert evidence["verdict"] == "PASS"
+    assert "NON_VESUM_FORM" not in _issue_ids(evidence)
+
+
+def test_cefr_only_flags_clear_overlevel_in_task_language() -> None:
+    """CEFR must stay quiet for level-appropriate task words; fire only on planted C1."""
+    # A1 lesson with only A1 task words → PASS (no false WARN).
+    clean_a1 = scan_hramatka_lesson(
+        {
+            "title": "Хліб",
+            "level": "A1",
+            "anchor": {"text": "Я їм хліб."},
+            "blocks": [
+                {
+                    "type": "true-false",
+                    "activity": {
+                        "type": "true-false",
+                        "title": "Перевірка",
+                        "payload": {
+                            "type": "true-false",
+                            "instruction": "Чи це хліб?",
+                            "items": [{"statement": "Я їм хліб.", "correct": True}],
+                        },
+                        "answer_key": {"items": [{"index": 0, "correct": True}]},
+                    },
+                    "answer_key": "1 П",
+                }
+            ],
+        },
+        slug="cefr-clean-a1",
+    )
+    assert clean_a1["verdict"] == "PASS"
+    assert "TASK_CEFR_OVERLEVEL" not in _issue_ids(clean_a1)
+
+    # Same level with planted C1 task verb → WARN.
+    over = scan_hramatka_lesson(
+        {
+            "title": "Просте",
+            "level": "A1",
+            "anchor": {"text": "Я їм хліб."},
+            "blocks": [
+                {
+                    "type": "true-false",
+                    "activity": {
+                        "type": "true-false",
+                        "title": "Перевірка",
+                        "payload": {
+                            "type": "true-false",
+                            "instruction": "Чи можна чигати за дверима?",
+                            "items": [{"statement": "Я їм хліб.", "correct": True}],
+                        },
+                        "answer_key": {"items": [{"index": 0, "correct": True}]},
+                    },
+                    "answer_key": "1 П",
+                }
+            ],
+        },
+        slug="cefr-over",
+    )
+    assert over["verdict"] == "WARN"
+    assert "TASK_CEFR_OVERLEVEL" in _issue_ids(over)
 
 
 def test_adapter_excludes_internal_fields_and_keeps_learner_surface(tmp_path: Path) -> None:
@@ -396,6 +572,7 @@ def test_harness_cli_lesson_json(tmp_path: Path) -> None:
     assert code == 0
     assert payload["rule_set"] == RULE_SET_ID
     assert payload["verdict"] == "PASS"
+    assert all_findings(payload) == []
 
 
 def test_curriculum_phrase_rules_do_not_rubber_stamp_hramatka_faults(tmp_path: Path) -> None:
@@ -492,11 +669,11 @@ def test_missing_style_guide_and_cefr_tables_do_not_crash(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    """Simulate CI stripped sources.db: no style_guide / puls_cefr / ukrajinet.
+    """Production robustness: missing tables → detector_unavailable, no crash.
 
-    Real SQL helpers hit the stripped DB and must mark detector_unavailable
-    without crashing. Load-bearing CEFR/synonym/VESUM mocks stay so planted
-    fixture assertions still hold deterministically.
+    Load-bearing planted/clean assertions still run against controlled data
+    restored after the stripped-DB probe (autouse fixture remains active for
+    the suite; this test only temporarily points sources at a stripped file).
     """
     stripped = tmp_path / "sources.db"
     conn = sqlite3.connect(str(stripped))
@@ -504,17 +681,7 @@ def test_missing_style_guide_and_cefr_tables_do_not_crash(
     conn.commit()
     conn.close()
 
-    def _stripped_conn():
-        c = sqlite3.connect(str(stripped))
-        c.row_factory = sqlite3.Row
-        return c
-
-    monkeypatch.setattr(hq, "_sources_conn", _stripped_conn)
-    # Exercise real SQL helpers against the stripped schema.
-    monkeypatch.setattr(hq, "_antonenko_title_hit", _REAL_ANTONENKO_TITLE_HIT)
-    # Keep CEFR + synonym mocks so load-bearing fixture expectations stay deterministic.
-    monkeypatch.setattr(hq, "_cefr_level_for", _mock_cefr_level_for)
-    monkeypatch.setattr(hq, "_synonym_lemmas", _mock_synonym_lemmas)
+    monkeypatch.setattr(hq, "_SOURCES_DB_OVERRIDE", stripped)
 
     clean = scan_hramatka_lesson(
         {
@@ -540,29 +707,15 @@ def test_missing_style_guide_and_cefr_tables_do_not_crash(
         },
         slug="stripped-clean",
     )
+    # VESUM still controlled → clean PASS; style_guide/CEFR mark unavailable.
     assert clean["verdict"] == "PASS"
     status = clean.get("detector_status") or {}
     assert "antonenko_style_guide" in status
     assert status["antonenko_style_guide"]["status"] == "detector_unavailable"
     assert "no such table" in status["antonenko_style_guide"]["reason"].casefold()
 
-    # Real Antonenko SQL against stripped schema returns empty (no crash).
-    assert _REAL_ANTONENKO_TITLE_HIT("приймати участь у святі") == []
-    # CEFR mock still drives over-level fixture deterministically.
-    assert hq._cefr_level_for(_OVERLEVEL_TOKEN) == "c1"
-
-    report = run_fixtures(FIXTURE_FILE)
-    assert report["summary"]["failed"] == 0, {
-        row["id"]: row.get("missing_findings") or row.get("actual_verdict")
-        for row in report["results"]
-        if not row["passed"]
-    }
-    by_id = _by_id(report)
-    assert by_id["planted-russianism"]["actual_verdict"] == "FAIL"
-    assert by_id["planted-placeholder-key"]["actual_verdict"] == "FAIL"
-    assert by_id["planted-overlevel-task"]["actual_verdict"] == "WARN"
-    assert by_id["planted-bad-distractors"]["actual_verdict"] == "FAIL"
-    assert by_id["clean-b1-lesson"]["actual_verdict"] == "PASS"
+    assert hq._antonenko_title_hit("приймати участь у святі") == []
+    assert hq._cefr_level_for(_OVERLEVEL_TOKEN) is None
 
 
 def test_stripped_cefr_and_synonym_tables_mark_unavailable(
@@ -576,15 +729,7 @@ def test_stripped_cefr_and_synonym_tables_mark_unavailable(
     conn.commit()
     conn.close()
 
-    def _stripped_conn():
-        c = sqlite3.connect(str(stripped))
-        c.row_factory = sqlite3.Row
-        return c
-
-    monkeypatch.setattr(hq, "_sources_conn", _stripped_conn)
-    monkeypatch.setattr(hq, "_cefr_level_for", _REAL_CEFR_LEVEL_FOR)
-    monkeypatch.setattr(hq, "_synonym_lemmas", _REAL_SYNONYM_LEMMAS)
-    monkeypatch.setattr(hq, "_antonenko_title_hit", _REAL_ANTONENKO_TITLE_HIT)
+    monkeypatch.setattr(hq, "_SOURCES_DB_OVERRIDE", stripped)
 
     unavailable: dict[str, str] = {}
     token = hq._ACTIVE_UNAVAILABLE.set(unavailable)
@@ -602,34 +747,48 @@ def test_stripped_cefr_and_synonym_tables_mark_unavailable(
         assert "no such table" in unavailable[name].casefold()
 
 
-def _full_db_has_style_guide() -> bool:
-    if not SOURCES_DB.exists():
-        return False
-    try:
-        conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
-        try:
-            row = conn.execute(
-                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='style_guide' LIMIT 1"
-            ).fetchone()
-            return row is not None
-        finally:
-            conn.close()
-    except sqlite3.Error:
-        return False
+def test_vesum_unavailable_does_not_flood_invented_forms(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """When VESUM is missing, NON_VESUM_FORM must stay quiet (cannot prove absence)."""
+    missing = tmp_path / "no-vesum.db"
+    # Do not create the file — verify_word raises FileNotFoundError.
+    monkeypatch.setattr(hq, "_VESUM_DB_OVERRIDE", missing)
+
+    evidence = scan_hramatka_lesson(
+        {
+            "title": "Чистий",
+            "level": "B1",
+            "anchor": {"text": "Ми вчимося мови."},
+            "blocks": [
+                {
+                    "type": "true-false",
+                    "activity": {
+                        "type": "true-false",
+                        "title": "Правда",
+                        "payload": {
+                            "type": "true-false",
+                            "instruction": "Перевірте.",
+                            "items": [{"statement": "Ми вчимося.", "correct": True}],
+                        },
+                        "answer_key": {"items": [{"index": 0, "correct": True}]},
+                    },
+                    "answer_key": "1 П",
+                }
+            ],
+        },
+        slug="vesum-missing-clean",
+    )
+    assert evidence["verdict"] == "PASS"
+    assert "NON_VESUM_FORM" not in _issue_ids(evidence)
+    assert "RUSSIAN_SHADOW_RUSSICISM" not in _issue_ids(evidence)
+    status = evidence.get("detector_status") or {}
+    assert "vesum" in status
 
 
-@pytest.mark.skipif(
-    not _full_db_has_style_guide(),
-    reason="full sources.db with style_guide not present (CI stripped build)",
-)
-def test_live_antonenko_smoke_when_full_db_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Optional live-data smoke: real style_guide detector when the full DB exists."""
-    monkeypatch.setattr(hq, "_sources_conn", _REAL_SOURCES_CONN)
-    monkeypatch.setattr(hq, "_antonenko_title_hit", _REAL_ANTONENKO_TITLE_HIT)
-
-    hits = hq._antonenko_title_hit("Студенти хочуть приймати участь у святі.")
-    assert hits, "full style_guide should flag 'приймати участь'"
-
+def test_antonenko_calque_fires_via_controlled_style_guide() -> None:
+    """Deterministic Antonenko path: controlled style_guide row + real SQL helper."""
     evidence = scan_hramatka_lesson(
         {
             "title": "Участь",
@@ -652,10 +811,9 @@ def test_live_antonenko_smoke_when_full_db_present(monkeypatch: pytest.MonkeyPat
                 }
             ],
         },
-        slug="live-antonenko-smoke",
+        slug="antonenko-controlled",
     )
-    # Live style_guide / curated regex fire as warnings; terminal may be WARN or FAIL.
     assert evidence["verdict"] in {"WARN", "FAIL"}
     issues = _issue_ids(evidence)
+    assert "ANTONENKO_CALQUE" in issues
     assert "RUSSICISM_DETECTED" in issues or "ANTONENKO_CALQUE" in issues
-    assert "ANTONENKO_CALQUE" in issues, "live style_guide must surface ANTONENKO_CALQUE"

@@ -500,6 +500,13 @@ def _apostrophe_variants(token: str) -> list[str]:
     return variants
 
 
+# Optional path overrides — tests inject controlled SQLite DBs so CI never
+# depends on ambient sources.db / vesum.db fullness. Production leaves these None.
+_SOURCES_DB_OVERRIDE: Path | None = None
+_VESUM_DB_OVERRIDE: Path | None = None
+_HERITAGE_DB_OVERRIDE: Path | None = None
+
+
 def _vesum_hits(token: str) -> list[dict]:
     """VESUM lookup tolerant of apostrophe orthography and proper-noun case.
 
@@ -507,7 +514,7 @@ def _vesum_hits(token: str) -> list[dict]:
     """
     try:
         for variant in _apostrophe_variants(token):
-            hits = verify_word(variant)
+            hits = verify_word(variant, db_path=_VESUM_DB_OVERRIDE)
             if hits:
                 return hits
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
@@ -516,11 +523,24 @@ def _vesum_hits(token: str) -> list[dict]:
     return []
 
 
+def _vesum_detector_unavailable() -> bool:
+    """True when this scan already recorded VESUM as unavailable."""
+    store = _ACTIVE_UNAVAILABLE.get()
+    return bool(store and "vesum" in store)
+
+
 def _is_probable_proper_noun(token: str) -> bool:
-    """Capitalized tokens are proper-noun candidates (skip invented/russianism)."""
+    """Capitalized / title-case tokens are proper-noun or sentence-initial candidates.
+
+    Invented-form and russian-shadow gates must not flag place names (Львів),
+    personal names (Оля), or sentence-initial ordinary words that look capitalized.
+    ALL-CAPS acronyms are also excluded (not ordinary invented lemmas).
+    """
     if not token:
         return False
-    return token[0].isupper() and not token.isupper()
+    if token.isupper() and len(token) >= 2:
+        return True
+    return token[0].isupper()
 
 
 def _normalize_option(text: str) -> str:
@@ -636,8 +656,8 @@ def _classify_token(token: str) -> dict[str, Any]:
             "calque_warning": None,
         }
     if _is_probable_proper_noun(token):
-        # Proper nouns absent from VESUM are not russianisms; content lane may still
-        # review them. Deterministic gate stays quiet.
+        # Proper nouns / capitalized names absent from VESUM are not russianisms
+        # or invented forms; content lane may still review them.
         return {
             "classification": "proper_noun",
             "attestations": [],
@@ -649,7 +669,11 @@ def _classify_token(token: str) -> dict[str, Any]:
         }
     # heritage_classifier always overrides when it attests; russian-shadow is a signal.
     try:
-        return classify_surface_form(token.casefold())
+        return classify_surface_form(
+            token.casefold(),
+            db_path=_HERITAGE_DB_OVERRIDE,
+            vesum_db_path=_VESUM_DB_OVERRIDE,
+        )
     except (FileNotFoundError, OSError, sqlite3.Error) as exc:
         _mark_detector_unavailable("heritage_classifier", str(exc))
         return _unknown_token_status()
@@ -659,24 +683,37 @@ def _is_russianism_token(token: str, status: Mapping[str, Any] | None = None) ->
     """Return True when token is a russianism after heritage override."""
     if _is_probable_proper_noun(token):
         return False
+    # Without VESUM we cannot assert "VESUM-absent ∧ russian-shadow".
+    if _vesum_detector_unavailable():
+        return False
     status = status or _classify_token(token)
     if status.get("is_russianism"):
         return True
     if _heritage_safe(status):
         return False
-    if status.get("classification") == "proper_noun":
+    if status.get("classification") in {"proper_noun", "borrowing"}:
         return False
     # VESUM-absent AND russian-shadow AND NOT heritage → russianism
     return bool((not status.get("vesum_attested")) and status.get("russian_shadow"))
 
 
 def _is_invented_form(token: str, status: Mapping[str, Any] | None = None) -> bool:
+    """Flag only lower-case non-proper forms that fail VESUM + heritage gates.
+
+    Precision rules (noisy gate is useless):
+    - Proper nouns / capitalized names / ALL-CAPS → never invented.
+    - Heritage-safe (standard/borrowing/dialect/archaism/historism) → never invented.
+    - VESUM unavailable this scan → stay quiet (cannot prove absence).
+    - Russian-shadow forms route to RUSSIAN_SHADOW_RUSSICISM, not NON_VESUM_FORM.
+    """
     if _is_probable_proper_noun(token):
+        return False
+    if _vesum_detector_unavailable():
         return False
     status = status or _classify_token(token)
     if _heritage_safe(status):
         return False
-    if status.get("classification") == "proper_noun":
+    if status.get("classification") in {"proper_noun", "borrowing"}:
         return False
     if status.get("is_russianism") or status.get("russian_shadow"):
         return False
@@ -713,7 +750,7 @@ def _is_missing_table_error(exc: BaseException) -> bool:
 
 
 def _sources_conn():
-    db = PROJECT_ROOT / "data" / "sources.db"
+    db = _SOURCES_DB_OVERRIDE or (PROJECT_ROOT / "data" / "sources.db")
     if not db.exists():
         return None
     conn = sqlite3.connect(str(db))
@@ -1532,7 +1569,11 @@ def check_empty_learner_surface(ctx: _ScanContext) -> list[dict[str, Any]]:
 
 
 def check_task_language_cefr(ctx: _ScanContext) -> list[dict[str, Any]]:
-    """Tier-2: CEFR of INSTRUCTIONS/ITEMS only; never grade the teacher anchor."""
+    """Tier-2: CEFR of INSTRUCTIONS/ITEMS only; never grade the teacher anchor.
+
+    Lenient by design: only flag words clearly ≥2 CEFR bands above the lesson,
+    only in task language (instruction / item prompts), never proper nouns.
+    """
     findings: list[dict[str, Any]] = []
     lesson_level = _normalize_level(ctx.level)
     act_text = ctx.texts.get("activities.yaml") or ""
@@ -1561,6 +1602,12 @@ def check_task_language_cefr(ctx: _ScanContext) -> list[dict[str, Any]]:
     seen: set[str] = set()
     for path, text in task_strings:
         for token in _cyrillic_tokens(text):
+            # Proper nouns / names are not CEFR-vocab items.
+            if _is_probable_proper_noun(token):
+                continue
+            # Skip very short tokens (particles, answer-key letters).
+            if len(token) < 3:
+                continue
             word_level = _cefr_level_for(token)
             if not word_level:
                 continue

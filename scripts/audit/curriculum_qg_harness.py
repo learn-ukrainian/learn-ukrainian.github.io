@@ -45,14 +45,15 @@ RULE_SETS = (RULE_SET_CURRICULUM, RULE_SET_HRAMATKA)
 def _hramatka_rules():
     """Lazy-load the separate hramatka rule module (never merge with PHRASE_RULES).
 
-    Imported on demand so ``python scripts/audit/curriculum_qg_harness.py`` keeps
-    working when AUDIT_DIR is on ``sys.path`` (avoids ``scripts.audit`` package
-    __init__ circular imports at module import time).
+    Always resolve via ``scripts.audit.hramatka_qg_rules`` so test monkeypatches
+    and path overrides apply to the same module object as direct imports.
+    Falls back to a sibling import only when the package path is unavailable
+    (CLI invoked with ``scripts/audit`` alone on ``sys.path``).
     """
     try:
-        import hramatka_qg_rules as mod  # type: ignore
-    except ImportError:  # pragma: no cover
         from scripts.audit import hramatka_qg_rules as mod
+    except ImportError:  # pragma: no cover - CLI path with AUDIT_DIR only
+        import hramatka_qg_rules as mod  # type: ignore
     return mod
 DIMENSION_ORDER = (
     "surface_leakage",
