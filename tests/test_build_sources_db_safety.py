@@ -78,6 +78,40 @@ def _make_populated_db(path: Path, *, with_wiki: bool = False) -> None:
     conn.close()
 
 
+def _add_ulif_dictua_cache(path: Path) -> None:
+    """Add a minimal valid official DictUA cache to an existing legacy DB."""
+    from wiki import sources_db as sdb
+
+    conn = sqlite3.connect(str(path))
+    sdb.ensure_ulif_dictua_schema(conn)
+    conn.execute(
+        "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
+        ("a" * 64, b"<html>cached</html>", "text/html", "2026-07-15T00:00:00+00:00"),
+    )
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_entries
+            (id, normalized_query, canonical_headword, raw_response_ref,
+             retrieved_at, response_sha256, parser_version, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            7, "привіт", "привіт", f"sha256:{'a' * 64}",
+            "2026-07-15T00:00:00+00:00", "a" * 64, "ulif-dictua-v1", "ok",
+        ),
+    )
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_sections
+            (id, entry_id, kind, source_order, sense_or_group_id, payload_json)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (11, 7, "paradigm", 0, "paradigm:1", '{"rows":[["Називний","привіт"]]}'),
+    )
+    conn.commit()
+    conn.close()
+
+
 # ──────────────────────────────────────────────────────────────────────
 # _db_is_populated
 # ──────────────────────────────────────────────────────────────────────
@@ -415,6 +449,36 @@ class TestWikipediaPreservation:
             conn.close()
         assert wiki_count == 0
         assert neg_count == 0
+
+    def test_ulif_cache_survives_force_rebuild(self, tmp_path):
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        _add_ulif_dictua_cache(p)
+
+        with patch.object(bs, "_ingest_jsonl", return_value=0):
+            empty_gd = tmp_path / "empty_gd"
+            empty_gd.mkdir()
+            (empty_gd / "textbook_chunks").mkdir()
+            (empty_gd / "literary_texts").mkdir()
+            empty_ext = tmp_path / "empty_ext"
+            empty_ext.mkdir()
+            with patch.object(bs, "GDRIVE_DATA", empty_gd), \
+                 patch.object(bs, "EXTERNAL_DIR", empty_ext):
+                bs.build(db_path=p, force=True)
+
+        conn = sqlite3.connect(str(p))
+        try:
+            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 1
+            entry = conn.execute(
+                "SELECT id, normalized_query, status FROM ulif_dictua_entries"
+            ).fetchone()
+            assert entry == (7, "привіт", "ok")
+            section = conn.execute(
+                "SELECT entry_id, kind FROM ulif_dictua_sections"
+            ).fetchone()
+            assert section == (7, "paradigm")
+        finally:
+            conn.close()
 
 
 # ──────────────────────────────────────────────────────────────────────

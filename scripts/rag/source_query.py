@@ -27,11 +27,13 @@ Usage:
 """
 
 import re
-from html.parser import HTMLParser
-from typing import Any, ClassVar
+import time
+from datetime import UTC, datetime
+from typing import Any
 from urllib.parse import quote
 
 import requests
+from bs4 import BeautifulSoup, Tag
 
 try:
     from wiki import slovnyk_me as _slovnyk_me
@@ -396,111 +398,450 @@ def grac_collocations(
 
 
 # ══════════════════════════════════════════════════════════════════
-# ULIF — Ukrainian Lingua-Information Fund (paradigm tables)
+# ULIF — Ukrainian Lingua-Information Fund / DictUA
 # ══════════════════════════════════════════════════════════════════
 
 ULIF_BASE = "https://lcorp.ulif.org.ua/dictua"
+ULIF_PARSER_VERSION = "ulif-dictua-v1"
+# DictUA returns 403 under aggressive access patterns; a cache miss makes at
+# most four POSTs, each spaced far enough apart to keep that sequence polite.
+ULIF_REQUEST_DELAY_SECONDS = 1.0
+ULIF_SECTIONS = ("paradigm", "synonyms", "antonyms", "phraseology")
+_ULIF_TAB_CONTROLS = {
+    "synonyms": "ctl00$ContentPlaceHolder1$syn",
+    "phraseology": "ctl00$ContentPlaceHolder1$phras",
+    "antonyms": "ctl00$ContentPlaceHolder1$ant",
+}
+_ULIF_REGISTER_RE = re.compile(
+    r"\b(розм\.?|зах\.?|фам\.?|рідше|діал\.?|книжн\.?|заст\.?|жарт\.?|перев\.?)\b",
+    re.IGNORECASE,
+)
+_ULIF_CASE_LABELS = {
+    "називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний",
+}
 
 
-class _UlifParadigmParser(HTMLParser):
-    """Extract paradigm table from ULIF HTML.
+def _ulif_sources_db():
+    """Import the SQLite owner lazily to keep the live-query module one-way."""
+    try:
+        from wiki import sources_db
+    except ImportError:  # pragma: no cover - direct package import fallback
+        from scripts.wiki import sources_db
+    return sources_db
 
-    ULIF pages have multiple tables. The paradigm table is identified
-    by containing case labels (називний, родовий, etc.).
-    We collect all tables, then keep only the one with case data.
-    """
 
-    CASE_LABELS: ClassVar[set[str]] = {"називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"}
+def _ulif_retrieved_at() -> str:
+    return datetime.now(UTC).isoformat()
 
-    def __init__(self):
-        super().__init__()
-        self._in_table = False
-        self._in_cell = False
-        self._table_idx = 0
-        self._current_row: list[str] = []
-        self._all_tables: list[list[list[str]]] = []
-        self._current_table: list[list[str]] = []
-        self._cell_text = ""
 
-    def handle_starttag(self, tag, attrs):
-        if tag == "table":
-            self._in_table = True
-            self._current_table = []
-        elif self._in_table and tag in ("td", "th"):
-            self._in_cell = True
-            self._cell_text = ""
+def _ulif_text(node: Tag) -> str:
+    return re.sub(r"\s+", " ", node.get_text(" ", strip=True)).strip()
 
-    def handle_endtag(self, tag):
-        if tag == "table" and self._in_table:
-            self._in_table = False
-            if self._current_row:
-                self._current_table.append(self._current_row)
-                self._current_row = []
-            self._all_tables.append(self._current_table)
-            self._current_table = []
-        elif self._in_table and tag in ("td", "th"):
-            self._in_cell = False
-            self._current_row.append(self._cell_text.strip())
-        elif self._in_table and tag == "tr":
-            if self._current_row:
-                self._current_table.append(self._current_row)
-            self._current_row = []
 
-    def handle_data(self, data):
-        if self._in_cell:
-            self._cell_text += data
+def _ulif_raw_response_ref_placeholder() -> str:
+    """Use a stable empty value until sources_db assigns the raw manifest ref."""
+    return ""
 
-    def get_paradigm_rows(self) -> list[list[str]]:
-        """Return rows from the table containing case labels."""
-        for table in self._all_tables:
-            for row in table:
-                if any(cell.lower() in self.CASE_LABELS for cell in row):
-                    # Filter out empty/header rows
-                    return [r for r in table if any(c.strip() for c in r) and len(r) > 1]
+
+def _ulif_register_labels(node: Tag) -> list[str]:
+    labels: list[str] = []
+    for italic in node.find_all("i"):
+        for match in _ULIF_REGISTER_RE.finditer(_ulif_text(italic)):
+            label = match.group(1)
+            base_label = label.rstrip(".")
+            if base_label.casefold() in {
+                "розм", "зах", "фам", "діал", "книжн", "заст", "жарт", "перев",
+            }:
+                label = f"{base_label}."
+            if label not in labels:
+                labels.append(label)
+    return labels
+
+
+def _ulif_parentheticals(node: Tag) -> list[str]:
+    return [
+        re.sub(r"\s+", " ", value).strip()
+        for value in re.findall(r"\(([^()]*)\)", _ulif_text(node))
+        if value.strip()
+    ]
+
+
+def _ulif_terms(node: Tag) -> list[dict[str, str]]:
+    """Capture emphasized dictionary forms without collapsing their group."""
+    terms: list[dict[str, str]] = []
+    for bold in node.find_all("b"):
+        text = _ulif_text(bold)
+        if text and any(char.isalpha() for char in text):
+            terms.append({"text": text, "raw_html": str(bold)})
+    return terms
+
+
+def _parse_ulif_paradigm(html: str) -> dict[str, object] | None:
+    """Parse a noun/adjective or verb paradigm table from a DictUA response."""
+    soup = BeautifulSoup(html, "html.parser")
+    for table in soup.find_all("table"):
+        rows: list[list[str]] = []
+        for tr in table.find_all("tr", recursive=False):
+            cells = tr.find_all(["td", "th"], recursive=False)
+            row = [_ulif_text(cell) for cell in cells]
+            if row and any(row):
+                rows.append(row)
+        labels = {cell.casefold() for row in rows for cell in row}
+        if labels & _ULIF_CASE_LABELS or "інфінітив" in labels:
+            return {"rows": rows, "raw_html": str(table)}
+    return None
+
+
+def _parse_ulif_relation_groups(html: str, kind: str) -> list[dict]:
+    """Parse ordered DictUA relation groups while retaining their source HTML."""
+    soup = BeautifulSoup(html, "html.parser")
+    panel = soup.select_one("div.p_cl")
+    if panel is None:
         return []
 
+    if kind == "antonyms":
+        groups: list[dict] = []
+        for table_index, table in enumerate(panel.select("table.tab_ant"), start=1):
+            rows: list[dict] = []
+            for source_order, tr in enumerate(table.find_all("tr", recursive=False)):
+                cells = tr.find_all("td", recursive=False)
+                if len(cells) == 2:
+                    rows.append({
+                        "source_order": source_order,
+                        "kind": "paired_sense",
+                        "left": {
+                            "text": _ulif_text(cells[0]),
+                            "terms": _ulif_terms(cells[0]),
+                            "register_labels": _ulif_register_labels(cells[0]),
+                            "citations": _ulif_parentheticals(cells[0]),
+                            "raw_html": str(cells[0]),
+                        },
+                        "right": {
+                            "text": _ulif_text(cells[1]),
+                            "terms": _ulif_terms(cells[1]),
+                            "register_labels": _ulif_register_labels(cells[1]),
+                            "citations": _ulif_parentheticals(cells[1]),
+                            "raw_html": str(cells[1]),
+                        },
+                    })
+                elif len(cells) == 1:
+                    rows.append({
+                        "source_order": source_order,
+                        "kind": "relation_note",
+                        "text": _ulif_text(cells[0]),
+                        "terms": _ulif_terms(cells[0]),
+                        "register_labels": _ulif_register_labels(cells[0]),
+                        "citations": _ulif_parentheticals(cells[0]),
+                        "raw_html": str(cells[0]),
+                    })
+            if rows:
+                groups.append({
+                    "sense_or_group_id": f"antonyms:{table_index}",
+                    "source_order": table_index - 1,
+                    "rows": rows,
+                    "raw_html": str(table),
+                })
+        return groups
 
-def ulif_paradigm(word: str) -> dict[str, Any] | None:
-    """Fetch declension/conjugation paradigm from ULIF.
+    groups = []
+    for source_order, paragraph in enumerate(panel.find_all("p", recursive=False)):
+        text = _ulif_text(paragraph)
+        if not text:
+            continue
+        groups.append({
+            "sense_or_group_id": f"{kind}:{source_order + 1}",
+            "source_order": source_order,
+            "terms": _ulif_terms(paragraph),
+            "register_labels": _ulif_register_labels(paragraph),
+            # Keeping every parenthetical prevents citations and usage notes
+            # from being discarded or mistaken for relation tokens.
+            "citations": _ulif_parentheticals(paragraph),
+            "text": text,
+            "raw_html": str(paragraph),
+        })
+    return groups
 
-    ULIF is an ASP.NET WebForms app — requires a two-step process:
-    1. GET the page to obtain ViewState/EventValidation tokens
-    2. POST with the word in the search field (image button needs .x/.y)
 
-    Returns dict with keys: word, rows (list of lists representing
-    the paradigm table — header row + case rows) or None on failure.
+def _ulif_webforms_tokens(html: str) -> dict[str, str] | None:
+    soup = BeautifulSoup(html, "html.parser")
+    values: dict[str, str] = {}
+    for name in ("__VIEWSTATE", "__VIEWSTATEGENERATOR", "__EVENTVALIDATION"):
+        control = soup.find("input", attrs={"name": name})
+        if control and control.get("value") is not None:
+            values[name] = str(control["value"])
+    return values if values.get("__VIEWSTATE") and values.get("__EVENTVALIDATION") else None
+
+
+def _ulif_has_control(html: str, control_name: str) -> bool:
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.find("input", attrs={"name": control_name}) is not None
+
+
+def _ulif_headword(html: str, requested_word: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    article = soup.find(id="ContentPlaceHolder1_article")
+    if article is not None:
+        article_text = _ulif_text(article)
+        match = re.match(r"^(.+?)\s+[–—-]\s+", article_text)
+        if match:
+            return match.group(1).strip()
+    input_control = soup.find(
+        "input", attrs={"name": "ctl00$ContentPlaceHolder1$tsearch"}
+    )
+    return str(input_control.get("value", requested_word)).strip() if input_control else requested_word
+
+
+def _ulif_search_result_matches(html: str, requested_word: str) -> bool | None:
+    """Return whether DictUA's result list actually contains *requested_word*.
+
+    DictUA responds to a miss with HTTP 200 and an unrelated alphabetic entry,
+    so a successful status plus a paradigm table is not enough evidence of a
+    lookup hit.  The list is the server's only reliable match signal.
     """
+    soup = BeautifulSoup(html, "html.parser")
+    result_list = soup.find(id="ContentPlaceHolder1_dgv")
+    if result_list is None:
+        return None
+    normalized_query = requested_word.replace("\u0301", "").casefold()
+    candidates = {
+        _ulif_text(link).replace("\u0301", "").casefold()
+        for link in result_list.find_all("a")
+    }
+    return normalized_query in candidates
+
+
+def _ulif_post(data: dict[str, str]) -> requests.Response:
+    """Post one WebForms form with a small inter-request courtesy pause."""
+    time.sleep(ULIF_REQUEST_DELAY_SECONDS)
+    return _SESSION.post(f"{ULIF_BASE}/", data=data, timeout=REQUEST_TIMEOUT)
+
+
+def _ulif_result_stub(word: str, status: str, retrieved_at: str) -> dict[str, object]:
+    sources_db = _ulif_sources_db()
+    return {
+        "word": word,
+        "canonical_headword": word,
+        "normalized_query": sources_db.normalize_ulif_dictua_query(word),
+        "raw_response_ref": _ulif_raw_response_ref_placeholder(),
+        "sections": {},
+        "source_id": sources_db.ULIF_DICTUA_SOURCE_ID,
+        "official_url": sources_db.ULIF_DICTUA_OFFICIAL_URL,
+        "attribution_label": sources_db.ULIF_DICTUA_ATTRIBUTION_LABEL,
+        "retrieved_at": retrieved_at,
+        "content_sha256": "",
+        "parser_version": ULIF_PARSER_VERSION,
+        "status": status,
+    }
+
+
+def ulif_lookup(word: str) -> dict[str, object]:
+    """Fetch and persist a complete DictUA record for *word*.
+
+    DictUA's image-button tabs are independent WebForms postbacks.  A cache
+    miss therefore obtains every available tab in this one request sequence;
+    later paradigm/synonym/antonym/phraseology wrappers all read the same
+    unified SQLite entry and never trigger their own POSTs.
+    """
+    requested_word = " ".join(word.split())
+    retrieved_at = _ulif_retrieved_at()
+    if not requested_word:
+        return _ulif_result_stub(word, "not_found", retrieved_at)
+
+    sources_db = _ulif_sources_db()
+    cached = sources_db.get_ulif_dictua_entry(requested_word)
+    if cached is not None and not (
+        cached["status"] == "parse_error"
+        and cached["parser_version"] != ULIF_PARSER_VERSION
+    ):
+        return cached
+
+    raw_responses: dict[str, str] = {}
     try:
-        # Step 1: GET to obtain ASP.NET tokens
-        r1 = _get(ULIF_BASE)
-        r1.raise_for_status()
+        initial = _get(ULIF_BASE)
+        initial.raise_for_status()
+        tokens = _ulif_webforms_tokens(initial.text)
+        if tokens is None:
+            result = _ulif_result_stub(requested_word, "parse_error", retrieved_at)
+            stored = sources_db.store_ulif_dictua_entry(
+                word=requested_word,
+                canonical_headword=requested_word,
+                sections={},
+                raw_responses={},
+                retrieved_at=retrieved_at,
+                parser_version=ULIF_PARSER_VERSION,
+                status="parse_error",
+            )
+            return stored or result
 
-        vs_m = re.search(r'name="__VIEWSTATE"[^>]*value="([^"]*)"', r1.text)
-        vsgen_m = re.search(r'name="__VIEWSTATEGENERATOR"[^>]*value="([^"]*)"', r1.text)
-        ev_m = re.search(r'name="__EVENTVALIDATION"[^>]*value="([^"]*)"', r1.text)
-        if not vs_m or not ev_m:
-            return None
-
-        # Step 2: POST with search word (image button sends .x/.y)
-        data = {
-            "__VIEWSTATE": vs_m.group(1),
-            "__VIEWSTATEGENERATOR": vsgen_m.group(1) if vsgen_m else "",
-            "__EVENTVALIDATION": ev_m.group(1),
-            "ctl00$ContentPlaceHolder1$tsearch": word,
+        search_data = {
+            **tokens,
+            "ctl00$ContentPlaceHolder1$tsearch": requested_word,
             "ctl00$ContentPlaceHolder1$search.x": "10",
             "ctl00$ContentPlaceHolder1$search.y": "10",
         }
-        r2 = _SESSION.post(f"{ULIF_BASE}/", data=data, timeout=REQUEST_TIMEOUT)
-        r2.raise_for_status()
+        search_response = _ulif_post(search_data)
+        if search_response.status_code == 404:
+            result = _ulif_result_stub(requested_word, "not_found", retrieved_at)
+            stored = sources_db.store_ulif_dictua_entry(
+                word=requested_word,
+                canonical_headword=requested_word,
+                sections={},
+                raw_responses={},
+                retrieved_at=retrieved_at,
+                parser_version=ULIF_PARSER_VERSION,
+                status="not_found",
+            )
+            return stored or result
+        search_response.raise_for_status()
+        search_html = search_response.text
+        raw_responses["paradigm"] = search_html
+        search_match = _ulif_search_result_matches(search_html, requested_word)
+        if search_match is None:
+            result = _ulif_result_stub(requested_word, "parse_error", retrieved_at)
+            stored = sources_db.store_ulif_dictua_entry(
+                word=requested_word,
+                canonical_headword=requested_word,
+                sections={},
+                raw_responses=raw_responses,
+                retrieved_at=retrieved_at,
+                parser_version=ULIF_PARSER_VERSION,
+                status="parse_error",
+            )
+            return stored or result
+        if not search_match:
+            result = _ulif_result_stub(requested_word, "not_found", retrieved_at)
+            stored = sources_db.store_ulif_dictua_entry(
+                word=requested_word,
+                canonical_headword=requested_word,
+                sections={},
+                raw_responses=raw_responses,
+                retrieved_at=retrieved_at,
+                parser_version=ULIF_PARSER_VERSION,
+                status="not_found",
+            )
+            return stored or result
+        canonical_headword = _ulif_headword(search_html, requested_word)
 
-        parser = _UlifParadigmParser()
-        parser.feed(r2.text)
-        rows = parser.get_paradigm_rows()
-        if not rows:
-            return None
-        return {"word": word, "rows": rows}
+        sections: dict[str, object] = {}
+        paradigm = _parse_ulif_paradigm(search_html)
+        if paradigm is not None:
+            sections["paradigm"] = paradigm
+
+        tab_tokens = _ulif_webforms_tokens(search_html)
+        if tab_tokens is None:
+            result = _ulif_result_stub(requested_word, "parse_error", retrieved_at)
+            stored = sources_db.store_ulif_dictua_entry(
+                word=requested_word,
+                canonical_headword=canonical_headword,
+                sections=sections,
+                raw_responses=raw_responses,
+                retrieved_at=retrieved_at,
+                parser_version=ULIF_PARSER_VERSION,
+                status="parse_error",
+            )
+            return stored or result
+
+        for kind, control_name in _ULIF_TAB_CONTROLS.items():
+            if not _ulif_has_control(search_html, control_name):
+                continue
+            tab_data = {
+                **tab_tokens,
+                "ctl00$ContentPlaceHolder1$tsearch": canonical_headword,
+                f"{control_name}.x": "10",
+                f"{control_name}.y": "10",
+            }
+            tab_response = _ulif_post(tab_data)
+            tab_response.raise_for_status()
+            raw_responses[kind] = tab_response.text
+            groups = _parse_ulif_relation_groups(tab_response.text, kind)
+            # A visible tab can legitimately have no entries for a headword.
+            # Preserve its raw response, but do not confuse empty data with a
+            # malformed response or turn an otherwise valid lookup into an
+            # error cache row.
+            if groups:
+                sections[kind] = groups
+            next_tokens = _ulif_webforms_tokens(tab_response.text)
+            if next_tokens is None:
+                result = _ulif_result_stub(requested_word, "parse_error", retrieved_at)
+                stored = sources_db.store_ulif_dictua_entry(
+                    word=requested_word,
+                    canonical_headword=canonical_headword,
+                    sections=sections,
+                    raw_responses=raw_responses,
+                    retrieved_at=retrieved_at,
+                    parser_version=ULIF_PARSER_VERSION,
+                    status="parse_error",
+                )
+                return stored or result
+            # DictUA returns fresh WebForms state after every tab switch.
+            # Reuse that state for the next switch instead of relying on an
+            # earlier page's token remaining valid in the same ASP.NET session.
+            tab_tokens = next_tokens
+
+        if not sections:
+            status = "not_found"
+        elif "paradigm" not in sections:
+            status = "parse_error"
+        else:
+            status = "ok"
+        stored = sources_db.store_ulif_dictua_entry(
+            word=requested_word,
+            canonical_headword=canonical_headword,
+            sections=sections if status in {"ok", "parse_error"} else {},
+            raw_responses=raw_responses,
+            retrieved_at=retrieved_at,
+            parser_version=ULIF_PARSER_VERSION,
+            status=status,
+        )
+        return stored or _ulif_result_stub(requested_word, status, retrieved_at)
     except requests.RequestException:
+        # Do not poison the persistent cache with a transient failure.
+        return _ulif_result_stub(requested_word, "transient_error", retrieved_at)
+
+
+def query_ulif(
+    word: str,
+    sections: tuple[str, ...] | list[str] = ("paradigm",),
+) -> dict[str, object]:
+    """Return the requested sections from a unified DictUA record."""
+    requested_sections = tuple(dict.fromkeys(sections))
+    unknown = set(requested_sections) - set(ULIF_SECTIONS)
+    if unknown:
+        raise ValueError(f"Unknown ULIF sections: {', '.join(sorted(unknown))}")
+    result = ulif_lookup(word)
+    selected = {
+        kind: result["sections"][kind]
+        for kind in requested_sections
+        if kind in result["sections"]
+    }
+    return {**result, "sections": selected}
+
+
+def query_ulif_synonyms(word: str) -> dict[str, object]:
+    """Return DictUA synonym groups for *word*."""
+    return query_ulif(word, ("synonyms",))
+
+
+def query_ulif_antonyms(word: str) -> dict[str, object]:
+    """Return DictUA antonym groups for *word*."""
+    return query_ulif(word, ("antonyms",))
+
+
+def query_ulif_phraseology(word: str) -> dict[str, object]:
+    """Return DictUA phraseological groups for *word*."""
+    return query_ulif(word, ("phraseology",))
+
+
+def ulif_paradigm(word: str) -> dict[str, Any] | None:
+    """Backward-compatible ``{'word', 'rows'}`` ULIF paradigm lookup."""
+    result = query_ulif(word, ("paradigm",))
+    paradigm = result["sections"].get("paradigm")
+    if result["status"] not in {"ok", "parse_error"} or not isinstance(paradigm, dict):
         return None
+    rows = paradigm.get("rows")
+    if not isinstance(rows, list):
+        return None
+    return {"word": word, "rows": rows}
 
 
 # ══════════════════════════════════════════════════════════════════

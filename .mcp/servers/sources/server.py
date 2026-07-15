@@ -554,18 +554,56 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="query_ulif",
             description=(
-                "Get declension/conjugation paradigm table from ULIF (Ukrainian Lingua-Information Fund). "
-                "Returns full paradigm with all case forms for nouns/adjectives or conjugation for verbs."
+                "Query official DictUA data from ULIF. Omit sections for the legacy plain paradigm "
+                "table or no-result text; pass sections explicitly for structured source-attributed JSON."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Ukrainian word to look up paradigm for (e.g., 'стіл', 'писати')"
+                        "description": "Ukrainian word to look up (e.g., 'стіл', 'писати')"
+                    },
+                    "sections": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": ["paradigm", "synonyms", "antonyms", "phraseology"],
+                        },
+                        "description": (
+                            "Requested DictUA sections. When supplied, including ['paradigm'], "
+                            "the response is structured source-attributed JSON."
+                        ),
                     },
                 },
                 "required": ["word"]
+            },
+        ),
+        Tool(
+            name="query_ulif_synonyms",
+            description="Return official DictUA synonym groups as structured, source-attributed JSON.",
+            inputSchema={
+                "type": "object",
+                "properties": {"word": {"type": "string"}},
+                "required": ["word"],
+            },
+        ),
+        Tool(
+            name="query_ulif_antonyms",
+            description="Return official DictUA antonym groups as structured, source-attributed JSON.",
+            inputSchema={
+                "type": "object",
+                "properties": {"word": {"type": "string"}},
+                "required": ["word"],
+            },
+        ),
+        Tool(
+            name="query_ulif_phraseology",
+            description="Return official DictUA phraseology groups as structured, source-attributed JSON.",
+            inputSchema={
+                "type": "object",
+                "properties": {"word": {"type": "string"}},
+                "required": ["word"],
             },
         ),
         Tool(
@@ -1250,6 +1288,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
+            "query_ulif_synonyms": lambda: handle_query_ulif_synonyms(arguments),
+            "query_ulif_antonyms": lambda: handle_query_ulif_antonyms(arguments),
+            "query_ulif_phraseology": lambda: handle_query_ulif_phraseology(arguments),
             "query_r2u": lambda: handle_query_r2u(arguments),
             "query_e2u": lambda: handle_query_e2u(arguments),
             "query_sum20": lambda: handle_query_sum20(arguments),
@@ -1838,17 +1879,42 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
 
 async def handle_query_ulif(args: dict) -> list[TextContent]:
     word = args["word"]
+    if "sections" not in args:
+        from rag.source_query import ulif_paradigm
 
-    from rag.source_query import ulif_paradigm
-    result = await asyncio.to_thread(ulif_paradigm, word)
+        result = await asyncio.to_thread(ulif_paradigm, word)
+        if not result:
+            return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
-    if not result:
-        return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
+        lines = [f"Paradigm for '{word}':\n"]
+        for row in result["rows"]:
+            lines.append(" | ".join(cell for cell in row))
+        return [TextContent(type="text", text="\n".join(lines))]
 
-    lines = [f"Paradigm for '{word}':\n"]
-    for row in result["rows"]:
-        lines.append(" | ".join(cell for cell in row))
-    return [TextContent(type="text", text="\n".join(lines))]
+    from rag.source_query import query_ulif
+    result = await asyncio.to_thread(query_ulif, word, args["sections"])
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+
+async def handle_query_ulif_synonyms(args: dict) -> list[TextContent]:
+    from rag.source_query import query_ulif_synonyms
+
+    result = await asyncio.to_thread(query_ulif_synonyms, args["word"])
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+
+async def handle_query_ulif_antonyms(args: dict) -> list[TextContent]:
+    from rag.source_query import query_ulif_antonyms
+
+    result = await asyncio.to_thread(query_ulif_antonyms, args["word"])
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+
+async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
+    from rag.source_query import query_ulif_phraseology
+
+    result = await asyncio.to_thread(query_ulif_phraseology, args["word"])
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
 
 async def handle_query_r2u(args: dict) -> list[TextContent]:
