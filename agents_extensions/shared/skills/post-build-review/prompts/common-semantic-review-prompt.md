@@ -55,6 +55,10 @@ location. Do not reuse a generic compliment as evidence across dimensions.
 `INCOMPLETE` may omit excerpts only when its finding explains why the evidence
 could not be inspected.
 
+Before returning, mechanically search every quality-dimension `excerpt` in its
+referenced target file. Each excerpt must be one contiguous, byte-for-byte
+substring; never splice fragments, normalize punctuation, or add an ellipsis.
+
 Use stable uppercase-underscore `issue_id` values for semantic findings.
 Known calibration classes include `ENGLISH_LEAKAGE`,
 `AWKWARD_PASSIVE_RESULT_STATE`, `UNNATURAL_ANTHROPOMORPHISM`,
@@ -82,6 +86,11 @@ low/info findings and complete required coverage.
 Return exactly one JSON object and no Markdown wrapper, preface, duplicate
 object, or trailing commentary. The orchestrator hashes and parses the exact
 response bytes. It must not repair, merge, reconcile, or normalize this output.
+The first non-whitespace response byte must be `{` and the last must be `}`.
+Do not narrate source checks, reasoning, or the verdict outside that object.
+Recount both ledgers after the object is complete: every declared total must
+equal the corresponding array length and every checked/supported count must
+equal the statuses actually present in that array.
 
 ```json
 {

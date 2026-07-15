@@ -834,6 +834,81 @@ def test_cross_family_review_gate_and_publication(
     assert ledger["run"]["status"] == "completed"
 
 
+def test_integration_drift_can_be_recorded_and_restarts_post_build_review(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "a1/core-unbuilt")
+    run_id = ledger["run"]["run_id"]
+    plan_evidence = tmp_path / "plan-review.json"
+    plan_evidence.write_text('{"verdict":"PASS"}\n', encoding="utf-8")
+    tc.record_plan_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        verdict="PASS",
+        evidence=plan_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _write_bundle(repo, "a1", "core-unbuilt", "# Модуль\n\nСвіжий навчальний матеріал.\n")
+    _, ledger = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
+    passing = _result(snapshot, repo, status="PASS", reviewer_family="codex")
+    passing["semantic_response"] = {"raw_sha256": "f" * 64}
+    result_path = _result_file(tmp_path, "integration-pass.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: passing)
+    _, ledger = tc.record_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        result_path=result_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    review_evidence = tmp_path / "independent-review.md"
+    review_evidence.write_text("Independent review passed.\n", encoding="utf-8")
+    _, ledger = tc.record_independent_review(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        reviewer_family="anthropic",
+        verdict="PASS",
+        evidence=review_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert ledger["state"] == "INTEGRATION_REQUIRED"
+
+    content = repo / snapshot.review_files["content"]
+    content.write_text(content.read_text(encoding="utf-8") + "Інтеграційне виправлення.\n", encoding="utf-8")
+    _, ledger = tc.record_change(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        owner_kind="built_artifact",
+        author_family="codex",
+        summary="Regenerated the learner surface after the integration gate exposed drift.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert ledger["current_identity"]["sha256"] == tc.build_identity(
+        tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path)),
+        repo_root=repo,
+        config=tc.load_config(config_path),
+    )["sha256"]
+    assert ledger["history"][-1]["event"] == "CHANGE_RECORDED"
+
+
 def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path, Path]) -> None:
     repo, config_path, _ledger_root = fake_repo
     legacy = repo / "curriculum/l2-uk-en/bio/seminar-built/llm_qg.json"
