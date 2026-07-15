@@ -18,3 +18,27 @@ sources:
   title: Андрій Пільщиков загинув під час виконання бойового завдання — Меморіал
   url: https://memorial.ua/obituaries/people-who-brought-victory-closer/pilshchykov-andrii-1085
   notes: Memorial record used only for corroboration of death and burial facts.
+- id: S4
+  file: https://militarnyi.com/en/articles/born-for-the-sky-andrii-juice-pilshchykov-obituary/
+  type: external
+  title: "Born for the sky: Andrii \"Juice\" Pilshchykov obituary — Militarnyi"
+  url: https://militarnyi.com/en/articles/born-for-the-sky-andrii-juice-pilshchykov-obituary/
+  notes: Detailed English-language defence-affairs obituary; directly inspected 2026-07-15.
+- id: S5
+  file: https://www.washingtontimes.com/news/2022/jun/26/ukrainian-fighter-pilots-washington-appeal-person-/
+  type: external
+  title: Ukrainian fighter pilots in Washington to appeal in person for advanced aircraft for war effort — Washington Times
+  url: https://www.washingtontimes.com/news/2022/jun/26/ukrainian-fighter-pilots-washington-appeal-person-/
+  notes: Independent US press coverage with on-the-record quotes from Pilshchykov during the June 2022 Washington visit; directly inspected 2026-07-15.
+- id: S6
+  file: https://war.obozrevatel.com/ukr/komanduvach-ps-zsu-oleschuk-dotrimav-slova-yake-dav-materi-zagiblogo-dzhusa-video.htm
+  type: external
+  title: "Загибель Андрія Пільщикова «Джуса» — командувач ПС ЗСУ Олещук дотримав слова, яке дав матері загиблого пілота — OBOZ.UA"
+  url: https://war.obozrevatel.com/ukr/komanduvach-ps-zsu-oleschuk-dotrimav-slova-yake-dav-materi-zagiblogo-dzhusa-video.htm
+  notes: Names the two other pilots killed and reports the fulfilled promise to his mother; directly inspected 2026-07-15.
+- id: S7
+  file: https://novynarnia.com/2023/08/29/u-kyyevi-poproshhalysya-2/
+  type: external
+  title: "У Києві попрощалися із пілотом ЗСУ Андрієм Пільщиковим «Джусом». Поховання – на Аскольдовій могилі — Novynarnia"
+  url: https://novynarnia.com/2023/08/29/u-kyyevi-poproshhalysya-2/
+  notes: Named-outlet report on the 29 August 2023 farewell ceremony in Kyiv; directly inspected 2026-07-15.
