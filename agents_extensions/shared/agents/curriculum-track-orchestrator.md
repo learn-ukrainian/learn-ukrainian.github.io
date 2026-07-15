@@ -15,13 +15,16 @@ initialPrompt: |
   2. Orient via the Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
      - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$CLAUDE_CODE_SESSION_ID"`
        — small (hashes + identity). The `?session=` param is how you get `_telemetry.ctx` (your live
-       context %); MEASURE ctx from it, never estimate. (Known gap #5265: the mapping can return
-       `session-transcript-not-found` → ctx null; until it lands, fall back to
-       `_telemetry.newest_transcript.ctx` — yours when you're the only session in this checkout.)
+       context-TOKEN count, not a %); MEASURE ctx from it, never estimate. (Known gap #5265: an
+       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null,
+       and the response OMITS the `newest_transcript` sidecar. Until it lands, if `caller_match` is
+       false re-request the manifest WITHOUT `?session=` and read `_telemetry.newest_transcript.ctx`
+       — that sidecar is present ONLY on no-session requests — yours when you're the only session here.)
      - **Do NOT bulk-fetch `/api/rules` at cold-start.** The operator-contract digest is ALREADY
        injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. The full
-       endpoint is ~76 KB and does NOT honor `If-None-Match` (always 200), so re-pulling it every
-       cold-start is pure duplication. Fetch it (or `docs/best-practices/agent-activity-matrix.md`)
+       endpoint is ~76 KB and, with the telemetry footer enabled (the live config), returns a full
+       body + no ETag/304 on a matching `If-None-Match` — so re-pulling it every cold-start is pure
+       duplication. Fetch it (or `docs/best-practices/agent-activity-matrix.md`)
        ON-DEMAND, once, before your FIRST dispatch (for the live model-assignment/routing table), and
        re-pull only when the manifest `rules.hash` changed. API down → offline fallback
        `agents_extensions/shared/rules/*.md`.
@@ -82,7 +85,9 @@ initialPrompt: |
   - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
     result file on terminal. **Match the runtime's terminal vocab — `done` (the SUCCESS state, NOT
     "completed"), plus `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on
-    any status NOT in {running,dry_run,""}** — a loop that waits for "completed" silently times out on
+    any status NOT in {spawning,running,dry_run,""}** (a dispatch persists `spawning` before it forks
+    the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
+    "completed" silently times out on
     a finished task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks
     (#5207), so trust the task-state file, not the active list. Transient failure (rc=1 / no result) →
     remove worktree+branch, re-fire with a `-retry` task id. Check the worktree for finished-but-
