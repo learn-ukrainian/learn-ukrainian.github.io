@@ -2,6 +2,8 @@ workflow_version: 1.0.0
 ledger_schema_version: track-completion.ledger.v1
 config_schema_version: track-completion.config.v1
 manifest_path: curriculum/l2-uk-en/curriculum.yaml
+certification_profiles_path: agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml
+certification_profiles_schema_path: agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json
 runtime_root: batch_state/track-completion
 lease_seconds: 86400
 
@@ -112,6 +114,10 @@ identity_paths:
   - agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml
   - agents_extensions/shared/skills/track-completion/schema/progress-ledger.v1.schema.json
   - agents_extensions/shared/skills/track-completion/schema/track-completion-config.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml
+  - agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/certification-evidence.v1.schema.json
+  - agents_extensions/shared/skills/track-completion/scripts/certification_evidence.py
   - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
   - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
   - agents_extensions/shared/skills/post-build-review/contracts/combined-disposition-policy.md
@@ -138,3 +144,49 @@ identity_paths:
   - scripts/validate/lint_seminar_quality.py
   - scripts/validate_plan_config.py
   - scripts/validate_plan_ordering.py
+
+# These are class-specific, exhaustive declarations.  Certification never
+# classifies paths by substrings and fails closed when a declared input is absent.
+certification_identity_paths:
+  pbr:
+    - agents_extensions/shared/skills/post-build-review/SKILL.md
+    - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
+    - agents_extensions/shared/skills/post-build-review/contracts/combined-disposition-policy.md
+    - agents_extensions/shared/skills/post-build-review/contracts/deterministic-audit-contract.md
+    - agents_extensions/shared/skills/post-build-review/contracts/evidence-derived-size-policy-contract.md
+    - agents_extensions/shared/skills/post-build-review/prompts/common-semantic-review-prompt.md
+    - agents_extensions/shared/skills/post-build-review/prompts/core-semantic-review-prompt.md
+    - agents_extensions/shared/skills/post-build-review/prompts/seminar-semantic-review-prompt.md
+    - agents_extensions/shared/skills/post-build-review/schema/review-result.v3.schema.json
+    - scripts/audit/post_build_review.py
+    - scripts/audit/track_deterministic_audit.py
+    - scripts/audit/module_size_policy_audit.py
+    - scripts/audit/track_deterministic_audit_config.yaml
+  production_qg:
+    gate: [scripts/audit/qg_workflow.py]
+    profile:
+      - agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml
+      - agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json
+    prompt: [scripts/audit/prompts/reviewer_prompt.md]
+    checker:
+      - scripts/audit/llm_reviewer.py
+      - scripts/audit/qg_adapters.py
+      - scripts/audit/checks/russicism_detection.py
+      - scripts/audit/checks/prose_quality.py
+      - scripts/pipeline/semantic_russianisms.py
+      - data/russianism-patterns-ua-gec.csv
+    checker_config: [scripts/audit/curriculum_qg_harness.py]
+    policy: [scripts/audit/content_surface_gates.py]
+    schema: [scripts/audit/qg_schema.py]
+    tool:
+      - scripts/audit/grounding_gate_v2.py
+      - scripts/audit/anchor_primitives.py
+    routing: [scripts/audit/llm_reviewer_dispatch.py]
+    canary:
+      - scripts/audit/qg_tier2_canary_check.py
+      - scripts/audit/tier2_canary_allowlist.json
+      - scripts/audit/llm_qg_canaries.py
+      - scripts/api/config.py
+    cost: [scripts/audit/llm_qg_store.py]
+    circuit: [scripts/audit/llm_qg_store.py]
+    resume: [scripts/audit/qg_workflow.py]

@@ -17,7 +17,7 @@ import tempfile
 import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import suppress
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
@@ -25,7 +25,7 @@ from uuid import uuid4
 
 import yaml
 
-from scripts.audit import llm_qg_canaries, llm_reviewer, qg_schema
+from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -233,9 +233,12 @@ class DispatchResult:
     tool_call_count: int = 0
     tools_used: tuple[str, ...] = ()
     tool_events: tuple[Mapping[str, Any], ...] = ()
+    execution_provenance: Mapping[str, Any] | None = None
+    author_lineage: Mapping[str, Any] | None = None
+    cross_family_validated: bool = False
 
     def metadata(self) -> dict[str, Any]:
-        return {
+        metadata = {
             "reviewer_model_id": self.reviewer_model_id,
             "reviewer_family": self.reviewer_family,
             "route_name": self.route_name,
@@ -247,6 +250,17 @@ class DispatchResult:
             "tools_used": list(self.tools_used),
             "tool_events": [dict(event) for event in self.tool_events],
         }
+        # Preserve the established metadata/artifact bytes for offline and
+        # injected callers.  Certification provenance is additive only when a
+        # dispatcher actually supplied it; live dispatches populate all three
+        # fields together after resolving author lineage and route separation.
+        if self.execution_provenance is not None:
+            metadata["execution_provenance"] = dict(self.execution_provenance)
+        if self.author_lineage is not None:
+            metadata["author_lineage"] = dict(self.author_lineage)
+        if self.execution_provenance is not None or self.author_lineage is not None or self.cross_family_validated:
+            metadata["cross_family_validated"] = self.cross_family_validated
+        return metadata
 
 
 @dataclass(frozen=True, slots=True)
@@ -697,7 +711,25 @@ class LiveReviewerDispatcher:
             or result.route_name != route.route_name
         ):
             raise ReviewerProviderError("provider returned mismatched reviewer identity")
-        return result
+        # This metadata is emitted only after this dispatcher itself resolved
+        # module lineage and accepted the route as cross-family.  QG workflow
+        # captures additionally bind it to this concrete dispatcher path; a
+        # caller-provided callback cannot promote itself by supplying fields
+        # with the same names.
+        return replace(
+            result,
+            execution_provenance={
+                "kind": "live_reviewer_dispatcher",
+                "dispatcher": "LiveReviewerDispatcher",
+                "route_name": route.route_name,
+            },
+            author_lineage={
+                "family": lineage.family,
+                "source": lineage.source,
+                "evidence": lineage.evidence,
+            },
+            cross_family_validated=True,
+        )
 
 
 def invoke_bridge_route(
@@ -1546,9 +1578,26 @@ def _requires_grounded_tools(policy_family: str, dispatch_meta: Mapping[str, Any
     return str(policy_family).strip().lower() == "seminar" or route_name == FRONTIER_OPENCODE_ROUTE.route_name
 
 
+def is_source_tool(tool: str) -> bool:
+    """Return whether a transport spelling names a configured sources tool.
+
+    The check intentionally preserves the dispatcher's historical accepted
+    spellings while normalizing MCP/server wrappers through the shared anchor
+    primitive.  Consumers that need the same source-tool trust boundary (such
+    as certification replay) must use this predicate rather than reimplement
+    literal transport-prefix checks.
+    """
+    clean = str(tool or "").strip().casefold()
+    canonical = anchor_primitives.canonical_tool_name(clean)
+    return (
+        clean.startswith(_SOURCE_TOOL_PREFIXES)
+        or canonical.startswith(("search_", "query_"))
+    )
+
+
 def _is_source_tool(tool: str) -> bool:
-    clean = tool.strip().lower()
-    return clean.startswith(_SOURCE_TOOL_PREFIXES) or clean.startswith("search_") or clean.startswith("query_")
+    """Backward-compatible private spelling for existing gate helpers."""
+    return is_source_tool(tool)
 
 
 def _source_event_relevant(event: Mapping[str, Any], claim_tokens: set[str]) -> bool:

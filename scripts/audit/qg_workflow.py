@@ -196,6 +196,7 @@ def review_module(
         }
     )
 
+    workflow_run_id = f"qg-workflow-{uuid4().hex}"
     tier2 = _run_tier2(
         target=target,
         level=level,
@@ -211,6 +212,8 @@ def review_module(
         store_path=store_path,
         budget=effective_budget,
     )
+    if effective_options.capture_tier2:
+        tier2["result"]["workflow_run_id"] = workflow_run_id
     tier_results.append(tier2["result"])
     all_findings.extend(tier2["findings"])
 
@@ -236,6 +239,7 @@ def review_module(
         reviewer_model_id=str(tier2.get("reviewer_model_id") or effective_options.reviewer_model_id),
         reviewer_family=str(tier2.get("reviewer_family") or effective_options.reviewer_family),
         options=effective_options,
+        workflow_run_id=workflow_run_id,
     )
 
 
@@ -813,13 +817,12 @@ def _run_tier2(
     )
     if cached is not None:
         cached_payload = dict(cached.payload)
-        cached_meta = {
-            "tool_call_count": cached.tool_call_count,
-            "tools_used": list(cached.tools_used),
-            "route_name": cached.route_name,
-        }
+        cached_meta = dict(cached.dispatch_metadata or {})
+        cached_meta.setdefault("tool_call_count", cached.tool_call_count)
+        cached_meta.setdefault("tools_used", list(cached.tools_used))
+        cached_meta.setdefault("route_name", cached.route_name)
         if cached.tool_events is not None:
-            cached_meta["tool_events"] = [dict(event) for event in cached.tool_events]
+            cached_meta.setdefault("tool_events", [dict(event) for event in cached.tool_events])
             try:
                 llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
                 cache_gate = _run_reviewer_gate_sequence(
@@ -841,17 +844,26 @@ def _run_tier2(
                 grounding_gate = cache_gate.grounding_gate or llm_reviewer_dispatch.GroundingGateResult(
                     payload=cache_gate.payload
                 )
+                replay_capture = _complete_cached_capture(
+                    cached,
+                    replayed_payload=cache_gate.payload,
+                    cache_gate=cache_gate,
+                )
+                result = {
+                    **base_result,
+                    "status": "cache_hit" if cache_gate.status == "ran" else cache_gate.status,
+                    "completion_status": "COMPLETE",
+                    "findings": len(findings),
+                    "cache_run_id": cached.run_id,
+                    "cache_regate": "replayed",
+                    "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+                    "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
+                }
+                if options.capture_tier2 and replay_capture is not None:
+                    result.update(replay_capture)
                 return {
                     "findings": findings,
-                    "result": {
-                        **base_result,
-                        "status": "cache_hit" if cache_gate.status == "ran" else cache_gate.status,
-                        "findings": len(findings),
-                        "cache_run_id": cached.run_id,
-                        "cache_regate": "replayed",
-                        "invalid_fact_checks": grounding_gate.invalid_fact_checks,
-                        "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
-                    },
+                    "result": result,
                     "llm_used": True,
                     "workflow_verdict": cache_gate.workflow_override,
                     "reviewer_model_id": reviewer_model_id,
@@ -968,6 +980,7 @@ def _run_tier2(
             "reviewer_family": reviewer_family,
         }
 
+    live_dispatcher = isinstance(effective_reviewer, llm_reviewer_dispatch.LiveReviewerDispatcher)
     attempt_prompt = prompt
     theatre_retried = False
     deep_read_retried = False
@@ -1007,17 +1020,47 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
         response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
-        if options.capture_tier2:
-            capture_attempts.append(
-                {
-                    "attempt": len(capture_attempts) + 1,
-                    "raw_response": response_text,
-                    "dispatch": dict(dispatch_meta),
-                }
-            )
         actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
         actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
         actual_route_name = str(dispatch_meta.get("route_name") or route_name)
+        dispatcher_provenance = dispatch_meta.get("execution_provenance")
+        dispatch_meta = {
+            **dispatch_meta,
+            "reviewer_model_id": actual_model_id,
+            "reviewer_family": actual_family,
+            "route_name": actual_route_name,
+            # This names the deterministic reviewer route identity.  It is
+            # deliberately not author-lineage evidence.
+            "route_lineage_id": _route_lineage_id(
+                family=actual_family,
+                model=actual_model_id,
+                route=actual_route_name,
+            ),
+            "execution_provenance": (
+                {
+                    "capture_path": "qg_workflow.live_reviewer_dispatcher",
+                    "mode": "live",
+                    "dispatcher": "LiveReviewerDispatcher",
+                    "dispatcher_provenance": dict(dispatcher_provenance)
+                    if isinstance(dispatcher_provenance, Mapping)
+                    else {},
+                }
+                if live_dispatcher
+                else {
+                    "capture_path": "qg_workflow.injected_or_offline",
+                    "mode": "offline",
+                    "dispatcher": None,
+                }
+            ),
+        }
+        capture_attempts.append(
+            {
+                "attempt": len(capture_attempts) + 1,
+                "raw_response": response_text,
+                "raw_response_sha256": llm_qg_store._sha256_bytes(response_text.encode("utf-8")),
+                "dispatch": dict(dispatch_meta),
+            }
+        )
         observed_cost = _observed_cost(dispatch_meta)
         budget.record_spend(estimate, observed_cost_usd=observed_cost)
         if route is not None:
@@ -1224,6 +1267,13 @@ def _run_tier2(
         reason=workflow_override,
     )
     tier2_run_id = f"qg-workflow-{uuid4().hex}"
+    gate_outcomes = _capture_gate_outcomes(
+        status=tier2_status,
+        workflow_override=workflow_override,
+        theatre_retried=theatre_retried,
+        deep_read_retried=deep_read_retried,
+        grounding_gate=grounding_gate,
+    )
     if options.persist_llm_qg:
         llm_qg_store.record_llm_qg(
             level=level,
@@ -1240,6 +1290,12 @@ def _run_tier2(
             tool_call_count=llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch_meta),
             tools_used=[str(tool) for tool in (dispatch_meta.get("tools_used") or ())],
             tool_events=llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch_meta),
+            raw_response=response_text,
+            raw_response_sha256=llm_qg_store._sha256_bytes(response_text.encode("utf-8")),
+            dispatch_metadata=dispatch_meta,
+            retry_history=capture_attempts,
+            gate_outcomes=gate_outcomes,
+            attempt_id=len(capture_attempts),
             source="qg_workflow",
             run_id=tier2_run_id,
             path=store_path,
@@ -1247,6 +1303,7 @@ def _run_tier2(
     result = {
         **base_result,
         "status": tier2_status,
+        "completion_status": "COMPLETE",
         "findings": len(findings),
         "estimate": estimate,
         "dispatch": dispatch_meta,
@@ -1256,22 +1313,14 @@ def _run_tier2(
     if options.capture_tier2:
         result.update(
             {
+                "source": "qg_workflow",
                 "tier2_run_id": tier2_run_id,
+                "attempt_id": len(capture_attempts),
                 "payload": payload,
                 "raw_response": response_text,
+                "raw_response_sha256": llm_qg_store._sha256_bytes(response_text.encode("utf-8")),
                 "retry_history": capture_attempts,
-                "gate_outcomes": {
-                    "status": tier2_status,
-                    "workflow_override": workflow_override,
-                    "theatre_retried": theatre_retried,
-                    "deep_read_retried": deep_read_retried,
-                    "grounding": {
-                        "ungrounded_findings": grounding_gate.ungrounded_findings,
-                        "required_ungrounded_findings": grounding_gate.required_ungrounded_findings,
-                        "invalid_fact_checks": grounding_gate.invalid_fact_checks,
-                        "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
-                    },
-                },
+                "gate_outcomes": gate_outcomes,
             }
         )
     return {
@@ -1391,6 +1440,94 @@ def _coerce_reviewer_response(raw_response: Any) -> tuple[str, dict[str, Any]]:
                 return response, dict(dispatch)
         return json.dumps(raw_response, ensure_ascii=False), {}
     return str(raw_response), {}
+
+
+def _route_lineage_id(*, family: str, model: str, route: str) -> str:
+    """Return the deterministic route identity, distinct from author lineage."""
+    return f"{family}:{model}:{route}"
+
+
+def _capture_gate_outcomes(
+    *,
+    status: str,
+    workflow_override: str | None,
+    theatre_retried: bool,
+    deep_read_retried: bool,
+    grounding_gate: llm_reviewer_dispatch.GroundingGateResult,
+) -> dict[str, Any]:
+    """Build the strict replay-grade record of the gates that actually ran."""
+    return {
+        "status": status,
+        "workflow_override": workflow_override,
+        "theatre_retried": theatre_retried,
+        "deep_read_retried": deep_read_retried,
+        "grounding": {
+            "ungrounded_findings": grounding_gate.ungrounded_findings,
+            "required_ungrounded_findings": grounding_gate.required_ungrounded_findings,
+            "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+            "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
+        },
+    }
+
+
+def _complete_cached_capture(
+    cached: llm_qg_store.StoredQG,
+    *,
+    replayed_payload: Mapping[str, Any],
+    cache_gate: _ReviewerGateOutcome,
+) -> dict[str, Any] | None:
+    """Return a cache replay only when the original capture is replay-grade.
+
+    SQLite is only an execution cache.  This copies no parsed values into
+    missing fields: legacy/incomplete rows remain useful for ordinary workflow
+    behavior but cannot become a production-certification capture.
+    """
+    dispatch = cached.dispatch_metadata
+    history = cached.retry_history
+    gate = cached.gate_outcomes
+    if (
+        cached.source != "qg_workflow"
+        or not isinstance(cached.raw_response, str)
+        or not cached.raw_response
+        or not isinstance(cached.raw_response_sha256, str)
+        or cached.raw_response_sha256 != llm_qg_store._sha256_bytes(cached.raw_response.encode("utf-8"))
+        or not isinstance(dispatch, Mapping)
+        or not isinstance(history, tuple)
+        or not history
+        or not isinstance(gate, Mapping)
+        or not isinstance(cached.attempt_id, int)
+        or cached.attempt_id < 1
+        or dict(replayed_payload) != cached.payload
+    ):
+        return None
+    stored_events = llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch)
+    if (
+        cached.tool_events is None
+        or tuple(stored_events) != tuple(cached.tool_events)
+        or tuple(str(tool) for tool in dispatch.get("tools_used") or ()) != cached.tools_used
+        or llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch) != cached.tool_call_count
+    ):
+        return None
+    grounding_gate = cache_gate.grounding_gate or llm_reviewer_dispatch.GroundingGateResult(payload=dict(replayed_payload))
+    replay_dispatch = dict(dispatch)
+    replay_dispatch["cache_run_id"] = cached.run_id
+    return {
+        "source": "qg_workflow",
+        "tier2_run_id": cached.run_id,
+        "attempt_id": cached.attempt_id,
+        "dispatch": replay_dispatch,
+        "payload": dict(replayed_payload),
+        "raw_response": cached.raw_response,
+        "raw_response_sha256": cached.raw_response_sha256,
+        "retry_history": [dict(item) for item in history],
+        "gate_outcomes": _capture_gate_outcomes(
+            status=cache_gate.status,
+            workflow_override=cache_gate.workflow_override,
+            theatre_retried=bool(gate.get("theatre_retried")),
+            deep_read_retried=bool(gate.get("deep_read_retried")),
+            grounding_gate=grounding_gate,
+        ),
+    }
 
 
 def _observed_cost(dispatch_meta: Mapping[str, Any]) -> float | None:
@@ -1646,6 +1783,7 @@ def _build_evidence_record(
     reviewer_model_id: str,
     reviewer_family: str,
     options: WorkflowOptions,
+    workflow_run_id: str | None = None,
 ) -> dict[str, Any]:
     dimensions = dimensions_from_findings(findings)
     aggregate = _aggregate_from_dimensions(dimensions)
@@ -1687,7 +1825,7 @@ def _build_evidence_record(
         content_sha=content_sha,
         provenance={
             "created_at": _now_z(),
-            "run_id": f"qg-workflow-{uuid4().hex}",
+            "run_id": workflow_run_id or f"qg-workflow-{uuid4().hex}",
             "source": "qg_workflow",
             "module_dir": str(target.module_dir),
         },

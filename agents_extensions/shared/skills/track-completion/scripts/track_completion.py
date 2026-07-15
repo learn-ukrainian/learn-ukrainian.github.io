@@ -22,10 +22,26 @@ import yaml
 from filelock import FileLock, Timeout
 from jsonschema import Draft202012Validator
 
+try:  # The script is also loaded directly by focused tests.
+    from . import certification_evidence as certification
+except ImportError:
+    import importlib.util
+
+    _CERTIFICATION_SPEC = importlib.util.spec_from_file_location(
+        "track_completion_certification_evidence",
+        Path(__file__).with_name("certification_evidence.py"),
+    )
+    assert _CERTIFICATION_SPEC is not None and _CERTIFICATION_SPEC.loader is not None
+    certification = importlib.util.module_from_spec(_CERTIFICATION_SPEC)
+    sys.modules[_CERTIFICATION_SPEC.name] = certification
+    _CERTIFICATION_SPEC.loader.exec_module(certification)
+
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.orchestration import curriculum_readiness
+
 DEFAULT_CONFIG_PATH = SKILL_ROOT / "config" / "track-completion.v1.yaml"
 CONFIG_SCHEMA_PATH = SKILL_ROOT / "schema" / "track-completion-config.v1.schema.json"
 LEDGER_SCHEMA_PATH = SKILL_ROOT / "schema" / "progress-ledger.v1.schema.json"
@@ -87,8 +103,7 @@ def _validate(value: object, schema_path: Path, label: str) -> None:
     errors = sorted(Draft202012Validator(schema).iter_errors(value), key=lambda item: list(item.path))
     if errors:
         detail = "; ".join(
-            f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
-            for error in errors[:8]
+            f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}" for error in errors[:8]
         )
         raise CompletionError(f"Invalid {label}: {detail}")
 
@@ -191,7 +206,9 @@ def resolve_target(
         layout = (
             "directory"
             if content is not None and content.name == "module.md" and content.parent == module_dir.resolve()
-            else "flat" if content is not None else "none"
+            else "flat"
+            if content is not None
+            else "none"
         )
 
     sidecar_candidates: dict[str, list[Path]] = {
@@ -235,13 +252,10 @@ def resolve_target(
         "plan_review_skill": family_config["plan_review_skill"],
         "plan_fix_skill": family_config["plan_fix_skill"],
         "plan_validation_commands": [
-            _render_command(command, track, slug)
-            for command in family_config["plan_validation_commands"]
+            _render_command(command, track, slug) for command in family_config["plan_validation_commands"]
         ],
         "build_command": _render_command(family_config["build_command"], track, slug),
-        "shippability_command": _render_command(
-            family_config["shippability_command"], track, slug
-        ),
+        "shippability_command": _render_command(family_config["shippability_command"], track, slug),
     }
     override = dict(config.get("track_overrides", {}).get(track) or {})
     return TargetSnapshot(
@@ -266,8 +280,7 @@ def build_identity(
 ) -> dict[str, Any]:
     config = dict(config or load_config())
     target_hashes = {
-        name: sha256_file(_repo_path(repo_root, path))
-        for name, path in sorted(snapshot.observed_files.items())
+        name: sha256_file(_repo_path(repo_root, path)) for name, path in sorted(snapshot.observed_files.items())
     }
     workflow_hashes: dict[str, str] = {}
     manifest_path = str(config["manifest_path"])
@@ -295,6 +308,7 @@ def inspect_target(
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     identity = build_identity(snapshot, repo_root=repo_root, config=config)
+    profile = certification_profile_for(snapshot, repo_root=repo_root, config=config)
     return {
         "target": {
             "selector": snapshot.selector,
@@ -308,21 +322,189 @@ def inspect_target(
         "observed_files": snapshot.observed_files,
         "commands": snapshot.commands,
         "track_policy": snapshot.track_policy,
+        "certification_profile": profile,
         "identity": identity,
     }
 
 
+def certification_profile_for(
+    snapshot: TargetSnapshot, *, repo_root: Path, config: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Resolve only a registered, schema-valid profile; absent profiles are unsafe."""
+    profile_path = _repo_path(repo_root, str(config["certification_profiles_path"]))
+    schema_path = _repo_path(repo_root, str(config["certification_profiles_schema_path"]))
+    if not profile_path.is_file() or not schema_path.is_file():
+        raise CompletionError("Certification profile contract is missing")
+    value = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise CompletionError("Certification profile contract must be a mapping")
+    _validate(value, schema_path, "certification profiles")
+    for selector_group in value["selectors"].values():
+        for configured_profile_id in selector_group.values():
+            if configured_profile_id not in value["profiles"]:
+                raise CompletionError(f"Certification selector references unknown profile: {configured_profile_id}")
+    manifest = _manifest(config, repo_root)
+    manifest_type = str(manifest["levels"][snapshot.track].get("type") or "")
+    selectors = value["selectors"]
+    profile_id = selectors["tracks"].get(snapshot.track) or selectors["manifest_types"].get(manifest_type)
+    if not isinstance(profile_id, str) or profile_id not in value["profiles"]:
+        raise CompletionError("No registered certification profile applies to this target")
+    profile = value["profiles"][profile_id]
+    if profile["family"] != snapshot.family:
+        raise CompletionError("Certification profile family does not match the resolved target family")
+    qg = profile["production_qg"]
+    if qg["mode"] == "armed-canary":
+        for key in ("qualification_artifact", "human_arming_artifact"):
+            artifact = _repo_path(repo_root, str(qg[key]))
+            if not artifact.is_file():
+                raise CompletionError(f"Armed certification profile requires {key}")
+    return {
+        "id": profile_id,
+        "version": profile["version"],
+        "family": profile["family"],
+        "readiness_profile": profile["readiness_profile"],
+        "pbr": profile["pbr"],
+        "independent_review": profile["independent_review"],
+        "integration": profile["integration"],
+        "production_qg": profile["production_qg"],
+    }
+
+
+def _declared_hashes(repo_root: Path, paths: Sequence[str], *, label: str) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for raw in paths:
+        path = _repo_path(repo_root, raw)
+        if not path.is_file():
+            raise CompletionError(f"Missing declared {label} identity input: {raw}")
+        hashes[str(raw)] = sha256_file(path)
+    return hashes
+
+
+def _identity(hashes: Mapping[str, str]) -> str:
+    return sha256_bytes(stable_json(dict(sorted(hashes.items()))).encode("utf-8"))
+
+
+def _consumed_preparation_identity(ledger: Mapping[str, Any] | None) -> str | None:
+    """Return the preparation identity consumed by the latest recorded build."""
+    if ledger is None:
+        return None
+    for event in reversed(ledger.get("history", [])):
+        if event.get("event") != "BUILD_RECORDED":
+            continue
+        details = event.get("details")
+        if not isinstance(details, Mapping):
+            return None
+        value = details.get("preparation_identity")
+        if value is None:
+            return None  # Pre-identity build records remain deliberately stale.
+        if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+            raise CompletionError("Recorded build preparation identity is malformed")
+        return value
+    return None
+
+
+def certification_inputs(
+    selector: str,
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Derive current certification bindings from source, never caller input."""
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    profile = certification_profile_for(snapshot, repo_root=repo_root, config=config)
+    consumed_preparation_identity = _consumed_preparation_identity(ledger)
+    try:
+        readiness = curriculum_readiness.evaluate_preparation(
+            snapshot.track,
+            snapshot.slug,
+            consumed_preparation_identity=consumed_preparation_identity,
+            repo_root=repo_root,
+        )
+    except curriculum_readiness.ReadinessError as exc:
+        raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
+    if (
+        readiness["family"] != snapshot.family
+        or profile["family"] != snapshot.family
+        or readiness["profile_id"] != profile["readiness_profile"]
+    ):
+        raise CompletionError("Readiness profile contradicts the completion target family/profile")
+    if readiness["state"] != "built-current" or readiness["next_action"] != "certify":
+        findings = ", ".join(
+            f"{item['id']}:{item['owner']}" for item in readiness["findings"]
+        ) or "no-readiness-finding"
+        raise CompletionError(
+            f"Current preparation is not certification-ready ({readiness['state']}; {findings})"
+        )
+    if not readiness["preparation_identity"] or not all(item["passed"] for item in readiness["requirements"]):
+        raise CompletionError("Current declared preparation and plan requirements must pass")
+    learner_hashes = {
+        name: sha256_file(_repo_path(repo_root, raw))
+        for name, raw in sorted(snapshot.review_files.items())
+        if name != "plan"
+    }
+    if not learner_hashes:
+        raise CompletionError("Certification requires a complete learner bundle")
+    mutation_events = (
+        []
+        if ledger is None
+        else [
+            event for event in ledger.get("history", []) if event.get("event") in {"BUILD_RECORDED", "CHANGE_RECORDED"}
+        ]
+    )
+    mutation_identity = sha256_bytes(
+        stable_json(
+            {"authors": [] if ledger is None else ledger.get("author_families", []), "events": mutation_events}
+        ).encode("utf-8")
+    )
+    declarations = config["certification_identity_paths"]
+    pbr_workflow_hashes = _declared_hashes(repo_root, declarations["pbr"], label="PBR")
+    qg_identity = {
+        name: _identity(_declared_hashes(repo_root, paths, label=f"production-QG {name}"))
+        for name, paths in declarations["production_qg"].items()
+    }
+    return {
+        "target": snapshot.selector,
+        "profile": {"id": profile["id"], "version": profile["version"]},
+        "preparation_identity": readiness["preparation_identity"],
+        "learner_hashes": learner_hashes,
+        "plan_hash": sha256_file(_repo_path(repo_root, snapshot.review_files["plan"])),
+        "workflow_hashes": pbr_workflow_hashes,
+        "pbr_dependency_identity": curriculum_readiness.dependent_evidence_identity(
+            "post-build", readiness["preparation_identity"], pbr_workflow_hashes
+        ),
+        "mutation_identity": mutation_identity,
+        "qg_identity": qg_identity,
+        "profile_config": profile,
+    }
+
+
 def _primary_checkout(repo_root: Path) -> Path:
+    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     result = subprocess.run(
         ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
         capture_output=True,
         check=False,
         text=True,
+        env=git_env,
     )
     if result.returncode != 0:
         return repo_root.resolve()
     common = Path(result.stdout.strip()).resolve()
     return common.parent if common.name == ".git" else repo_root.resolve()
+
+
+def _require_outside_common_repository(path: Path, *, repo_root: Path, label: str) -> None:
+    """Reject runtime evidence from the active, primary, or sibling worktrees."""
+    resolved = path.resolve()
+    repository_roots = {repo_root.resolve(), _primary_checkout(repo_root)}
+    for repository_root in repository_roots:
+        try:
+            resolved.relative_to(repository_root)
+        except ValueError:
+            continue
+        raise CompletionError(f"{label} must remain outside the common repository")
 
 
 def ledger_path_for(
@@ -476,12 +658,8 @@ def start_run(
                         _renew_lease(existing, config)
                         _atomic_write_json(path, existing)
                         return path, existing
-                    raise CompletionError(
-                        f"Module lease is held by {run['owner']} until {run['lease_expires_at']}"
-                    )
-                raise CompletionError(
-                    "A prior ledger exists; resume its exact run id or archive it after adjudication"
-                )
+                    raise CompletionError(f"Module lease is held by {run['owner']} until {run['lease_expires_at']}")
+                raise CompletionError("A prior ledger exists; resume its exact run id or archive it after adjudication")
             now = _now()
             state = _initial_state(snapshot.module_state)
             ledger: dict[str, Any] = {
@@ -494,15 +672,14 @@ def start_run(
                     "status": "active",
                     "started_at": _iso(now),
                     "updated_at": _iso(now),
-                    "lease_expires_at": _iso(
-                        now + timedelta(seconds=int(config["lease_seconds"]))
-                    ),
+                    "lease_expires_at": _iso(now + timedelta(seconds=int(config["lease_seconds"]))),
                 },
                 "state": state,
                 "current_identity": identity,
                 "author_families": [],
                 "history": [],
                 "reviews": [],
+                "certification_evidence": [],
                 "routing": None,
                 "publication": None,
             }
@@ -537,28 +714,48 @@ def resume_run(
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     identity = build_identity(snapshot, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    prior = _read_ledger(path)
+    reopening_state: str | None = None
+    if prior is not None and prior.get("run", {}).get("run_id") == run_id and prior["run"].get("status") == "completed":
+        projection = certification_projection(
+            selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+        )
+        candidate = str(projection["state"])
+        if candidate in {
+            "POST_BUILD_REVIEW_REQUIRED",
+            "INDEPENDENT_REVIEW_REQUIRED",
+            "INTEGRATION_REQUIRED",
+            "PBR_PASS_QG_PENDING",
+            "PRODUCTION_QG_REQUIRED",
+        }:
+            reopening_state = candidate
     try:
         with _with_lock(path):
             ledger = _read_ledger(path)
             if ledger is None or ledger["run"]["run_id"] != run_id:
                 raise CompletionError("No matching completion run to resume")
+            resumed_state = ledger["state"]
             if ledger["run"]["status"] != "active":
-                raise CompletionError("Completed runs cannot be resumed")
+                if reopening_state is None:
+                    raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
+                ledger["run"]["status"] = "active"
+                resumed_state = reopening_state
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
             if drifted and ledger["state"] not in MUTATING_STATES:
-                raise CompletionError(
-                    "Unrecorded identity drift outside a mutation state; adjudicate stale evidence"
-                )
+                raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
             _renew_lease(ledger, config)
-            eid = _event_id("RESUMED", {"run_id": run_id, "identity": identity["sha256"]})
+            eid = _event_id(
+                "CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
+                {"run_id": run_id, "identity": identity["sha256"], "state": reopening_state},
+            )
             if not _event_exists(ledger, eid):
                 _append_event(
                     ledger,
                     event_id=eid,
-                    event="RESUMED",
-                    to_state=ledger["state"],
+                    event="CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
+                    to_state=resumed_state,
                     identity=ledger["current_identity"] if drifted else identity,
-                    details={"pending_identity_drift": drifted},
+                    details={"pending_identity_drift": drifted, "reopened_for_certification": reopening_state is not None},
                 )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
@@ -639,9 +836,7 @@ def record_plan_review(
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
 
 
-def _record_author(
-    ledger: dict[str, Any], family: str, config: Mapping[str, Any]
-) -> None:
+def _record_author(ledger: dict[str, Any], family: str, config: Mapping[str, Any]) -> None:
     normalized = family.strip().lower()
     if not normalized or normalized in {"unknown", "mixed"}:
         raise CompletionError("Record one known author model family")
@@ -716,6 +911,91 @@ def record_change(
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
 
 
+def request_preparation_rebuild(
+    selector: str,
+    *,
+    run_id: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Route a stale built bundle through a real rebuild without backfilling evidence."""
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            config, snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            consumed_preparation_identity = _consumed_preparation_identity(ledger)
+            try:
+                readiness = curriculum_readiness.evaluate_preparation(
+                    snapshot.track,
+                    snapshot.slug,
+                    consumed_preparation_identity=consumed_preparation_identity,
+                    repo_root=repo_root,
+                )
+            except curriculum_readiness.ReadinessError as exc:
+                raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
+            current_preparation_identity = readiness["preparation_identity"]
+            eid = _event_id(
+                "PREPARATION_REBUILD_REQUIRED",
+                {
+                    "consumed_preparation_identity": consumed_preparation_identity,
+                    "current_preparation_identity": current_preparation_identity,
+                },
+            )
+            if _event_exists(ledger, eid):
+                return path, ledger
+            allowed_states = {
+                "POST_BUILD_REVIEW_REQUIRED",
+                "INDEPENDENT_REVIEW_REQUIRED",
+                "INTEGRATION_REQUIRED",
+                "PBR_PASS_QG_PENDING",
+                "PRODUCTION_QG_REQUIRED",
+            }
+            if ledger["state"] not in allowed_states:
+                raise CompletionError(
+                    f"Preparation rebuild routing is not allowed from {ledger['state']}"
+                )
+            if snapshot.module_state != "BUILT":
+                raise CompletionError("Preparation rebuild routing requires a complete built bundle")
+            if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
+                raise CompletionError(
+                    "Unrecorded learner-artifact drift must be adjudicated before preparation rebuild"
+                )
+            if readiness["state"] != "built-preparation-drift":
+                raise CompletionError("Current preparation does not require a rebuild")
+            if not current_preparation_identity or not all(
+                item["passed"] for item in readiness["requirements"]
+            ):
+                raise CompletionError(
+                    "Preparation requirements must pass before routing the bundle to rebuild"
+                )
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="PREPARATION_REBUILD_REQUIRED",
+                to_state="BUILD_REQUIRED",
+                identity=identity,
+                details={
+                    "consumed_preparation_identity": consumed_preparation_identity,
+                    "current_preparation_identity": current_preparation_identity,
+                    "findings": [
+                        {"id": item["id"], "owner": item["owner"]}
+                        for item in readiness["findings"]
+                    ],
+                },
+            )
+            ledger["routing"] = None
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
 def record_build(
     selector: str,
     *,
@@ -733,8 +1013,24 @@ def record_build(
             config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
+            try:
+                readiness = curriculum_readiness.evaluate_preparation(
+                    snapshot.track, snapshot.slug, repo_root=repo_root
+                )
+            except curriculum_readiness.ReadinessError as exc:
+                raise CompletionError(f"Built preparation cannot be evaluated: {exc}") from exc
+            preparation_identity = readiness["preparation_identity"]
+            if not preparation_identity or not all(
+                item["passed"] for item in readiness["requirements"]
+            ):
+                raise CompletionError("Build cannot consume incomplete preparation requirements")
             eid = _event_id(
-                "BUILD_RECORDED", {"identity": identity["sha256"], "author_family": author_family}
+                "BUILD_RECORDED",
+                {
+                    "identity": identity["sha256"],
+                    "author_family": author_family,
+                    "preparation_identity": preparation_identity,
+                },
             )
             if _event_exists(ledger, eid):
                 return path, ledger
@@ -751,7 +1047,10 @@ def record_build(
                 event="BUILD_RECORDED",
                 to_state="POST_BUILD_REVIEW_REQUIRED",
                 identity=identity,
-                details={"author_family": author_family.strip().lower()},
+                details={
+                    "author_family": author_family.strip().lower(),
+                    "preparation_identity": preparation_identity,
+                },
             )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
@@ -771,9 +1070,7 @@ def _load_post_build_result(result_path: Path) -> dict[str, Any]:
     except Exception as exc:
         raise CompletionError(f"Invalid canonical post-build result: {exc}") from exc
     if result.get("schema_version") != pbr.CURRENT_RESULT_SCHEMA_VERSION:
-        raise CompletionError(
-            "Post-build result is historical; allocate and finalize a current review"
-        )
+        raise CompletionError("Post-build result is historical; allocate and finalize a current review")
     policy = pbr.load_track_policy()
     for version_field in (
         "review_protocol_version",
@@ -782,15 +1079,11 @@ def _load_post_build_result(result_path: Path) -> dict[str, Any]:
         "track_policy_version",
     ):
         if str(result.get(version_field)) != str(policy[version_field]):
-            raise CompletionError(
-                f"Post-build result {version_field} is not current"
-            )
+            raise CompletionError(f"Post-build result {version_field} is not current")
     return result
 
 
-def _review_stability_key(
-    result: Mapping[str, Any], target_identity_sha256: str
-) -> str:
+def _review_stability_key(result: Mapping[str, Any], target_identity_sha256: str) -> str:
     reviewer = result["reviewer"]
     payload = {
         "source_hashes": result["source_hashes"],
@@ -895,12 +1188,11 @@ def record_review(
     ledger_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     resolved_result = result_path.resolve()
-    try:
-        resolved_result.relative_to(repo_root.resolve())
-    except ValueError:
-        pass
-    else:
-        raise CompletionError("Canonical post-build result must remain outside the repository")
+    _require_outside_common_repository(
+        resolved_result,
+        repo_root=repo_root,
+        label="Canonical post-build result",
+    )
     result = _load_post_build_result(resolved_result)
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
@@ -928,11 +1220,23 @@ def record_review(
             if dict(result["target"]["files"]) != snapshot.review_files:
                 raise CompletionError("Post-build result file set is stale or does not match the target")
             current_source_hashes = {
-                name: sha256_file(_repo_path(repo_root, raw))
-                for name, raw in sorted(snapshot.review_files.items())
+                name: sha256_file(_repo_path(repo_root, raw)) for name, raw in sorted(snapshot.review_files.items())
             }
             if dict(result["source_hashes"]) != current_source_hashes:
                 raise CompletionError("Post-build result source hashes are stale")
+            semantic = result.get("semantic_response")
+            inputs: dict[str, Any] | None = None
+            if result["combined_disposition"]["status"] == "PASS":
+                try:
+                    inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
+                except CompletionError:
+                    # The legacy process cursor remains usable, but a record without
+                    # the derived bindings is never certification authority.
+                    inputs = None
+                if inputs is not None and (
+                    not isinstance(semantic, Mapping) or not isinstance(semantic.get("raw_sha256"), str)
+                ):
+                    raise CompletionError("Current PBR result has no exact raw semantic response hash")
 
             stability_key = _review_stability_key(result, identity["sha256"])
             fingerprint = _material_fingerprint(result)
@@ -947,10 +1251,24 @@ def record_review(
                 "reviewer_family": reviewer["family"],
                 "reviewer_model": reviewer["model"],
                 "target_identity_sha256": identity["sha256"],
+                **(
+                    {
+                        "certification": {
+                            "profile": inputs["profile"],
+                            "preparation_identity": inputs["preparation_identity"],
+                            "learner_hashes": inputs["learner_hashes"],
+                            "plan_hash": current_source_hashes["plan"],
+                            "raw_response_sha256": semantic["raw_sha256"],
+                            "dependency_hashes": inputs["workflow_hashes"],
+                            "dependency_identity": inputs["pbr_dependency_identity"],
+                        }
+                    }
+                    if inputs is not None
+                    else {}
+                ),
             }
             unstable = any(
-                prior["stability_key"] == stability_key
-                and prior["material_fingerprint"] != fingerprint
+                prior["stability_key"] == stability_key and prior["material_fingerprint"] != fingerprint
                 for prior in ledger["reviews"]
             )
             ledger["reviews"].append(review_record)
@@ -963,15 +1281,17 @@ def record_review(
                 if ledger["author_families"]:
                     to_state = "INDEPENDENT_REVIEW_REQUIRED"
                 else:
-                    to_state = "COMPLETE"
-                    ledger["run"]["status"] = "completed"
+                    mode = inputs["profile_config"]["production_qg"]["mode"] if inputs else "pending"
+                    to_state = {
+                        "disabled": "CERTIFIED_FINAL",
+                        "pending": "PBR_PASS_QG_PENDING",
+                        "armed-canary": "PRODUCTION_QG_REQUIRED",
+                    }[mode]
+                    if to_state == "CERTIFIED_FINAL":
+                        ledger["run"]["status"] = "completed"
             else:
                 routing = route_findings(result, config=config)
-                to_state = (
-                    "AUDIT_TOOLING_REQUIRED"
-                    if routing["owners"] == ["audit_tooling"]
-                    else "REPAIR_REQUIRED"
-                )
+                to_state = "AUDIT_TOOLING_REQUIRED" if routing["owners"] == ["audit_tooling"] else "REPAIR_REQUIRED"
             ledger["routing"] = routing
             _append_event(
                 ledger,
@@ -1017,9 +1337,7 @@ def record_instability_adjudication(
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     evidence_record = _evidence_record(evidence)
-    eid = _event_id(
-        "INSTABILITY_ADJUDICATED", {"summary": summary.strip(), **evidence_record}
-    )
+    eid = _event_id("INSTABILITY_ADJUDICATED", {"summary": summary.strip(), **evidence_record})
     try:
         with _with_lock(path):
             config, snapshot, identity, path, ledger = _load_for_update(
@@ -1032,13 +1350,9 @@ def record_instability_adjudication(
             if _event_exists(ledger, eid):
                 return path, ledger
             if ledger["state"] != "REVIEWER_INSTABILITY":
-                raise CompletionError(
-                    f"Instability adjudication is not allowed from {ledger['state']}"
-                )
+                raise CompletionError(f"Instability adjudication is not allowed from {ledger['state']}")
             if identity["sha256"] != ledger["current_identity"]["sha256"]:
-                raise CompletionError(
-                    "Record audit_tooling changes before adjudicating reviewer instability"
-                )
+                raise CompletionError("Record audit_tooling changes before adjudicating reviewer instability")
             _append_event(
                 ledger,
                 event_id=eid,
@@ -1118,7 +1432,7 @@ def record_independent_review(
             if allowed_groups and reviewer_group not in allowed_groups:
                 raise CompletionError(f"Reviewer group is not allowed for {snapshot.track}")
             if verdict == "PASS":
-                to_state = "PUBLISH_REQUIRED"
+                to_state = "INTEGRATION_REQUIRED"
                 routing = None
             else:
                 routing = {"owners": [owner_kind], "findings": []}
@@ -1172,7 +1486,7 @@ def record_published(
             )
             if _event_exists(ledger, eid):
                 return path, ledger
-            if ledger["state"] != "PUBLISH_REQUIRED":
+            if ledger["state"] not in {"PUBLISH_REQUIRED", "INTEGRATION_REQUIRED"}:
                 raise CompletionError(f"Publication is not allowed from {ledger['state']}")
             if identity["sha256"] != ledger["current_identity"]["sha256"]:
                 raise CompletionError("Target/workflow changed after the independent review")
@@ -1192,6 +1506,360 @@ def record_published(
             return path, ledger
     except Timeout as exc:
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def record_certification_evidence(
+    selector: str,
+    *,
+    run_id: str,
+    evidence: Path,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Append one strictly parsed evidence artifact; projection decides its authority."""
+    artifact = certification.read_evidence(evidence)
+    _require_outside_common_repository(
+        artifact.path,
+        repo_root=repo_root,
+        label="Runtime certification evidence",
+    )
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    eid = _event_id("CERTIFICATION_EVIDENCE_RECORDED", {"sha256": artifact.sha256})
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if not _event_exists(ledger, eid):
+                record = {"path": str(artifact.path), "sha256": artifact.sha256, "value": artifact.value}
+                ledger.setdefault("certification_evidence", []).append(record)
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="CERTIFICATION_EVIDENCE_RECORDED",
+                    to_state=ledger["state"],
+                    identity=identity,
+                    details={"evidence": {"kind": artifact.value["kind"], "sha256": artifact.sha256}},
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+    return _advance_certification_cursor(
+        selector,
+        run_id=run_id,
+        evidence_sha256=artifact.sha256,
+        repo_root=repo_root,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+
+def _advance_certification_cursor(
+    selector: str,
+    *,
+    run_id: str,
+    evidence_sha256: str,
+    repo_root: Path,
+    config_path: Path,
+    ledger_root: Path | None,
+) -> tuple[Path, dict[str, Any]]:
+    """Advance only to a freshly derived certification state after recording evidence."""
+    projection = certification_projection(
+        selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
+    desired = str(projection["state"])
+    allowed_from = {
+        "INTEGRATION_REQUIRED": {"INDEPENDENT_REVIEW_REQUIRED"},
+        "PBR_PASS_QG_PENDING": {"INTEGRATION_REQUIRED"},
+        "PRODUCTION_QG_REQUIRED": {"INTEGRATION_REQUIRED"},
+        "CERTIFIED_FINAL": {"INTEGRATION_REQUIRED", "PBR_PASS_QG_PENDING", "PRODUCTION_QG_REQUIRED"},
+    }
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            if ledger["state"] not in allowed_from.get(desired, set()):
+                return path, ledger
+            eid = _event_id(
+                "CERTIFICATION_CURSOR_ADVANCED",
+                {"evidence_sha256": evidence_sha256, "state": desired},
+            )
+            if not _event_exists(ledger, eid):
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="CERTIFICATION_CURSOR_ADVANCED",
+                    to_state=desired,
+                    identity=identity,
+                    details={"evidence_sha256": evidence_sha256, "projection": projection},
+                )
+                if desired == "CERTIFIED_FINAL":
+                    ledger["run"]["status"] = "completed"
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
+def _ledger_artifacts(ledger: Mapping[str, Any], kind: str) -> list[certification.EvidenceArtifact]:
+    artifacts: list[certification.EvidenceArtifact] = []
+    for item in ledger.get("certification_evidence", []):
+        value = item.get("value")
+        if isinstance(value, dict) and value.get("kind") == kind:
+            artifacts.append(certification.EvidenceArtifact(Path(str(item["path"])), str(item["sha256"]), value))
+    return artifacts
+
+
+def _current_pbr_reviews(ledger: Mapping[str, Any], inputs: Mapping[str, Any]) -> tuple[bool, str, bool]:
+    """Return PASS/current-state/instability from canonical PBR review records only."""
+    fingerprints: dict[str, set[str]] = {}
+    passed = False
+    state = "missing"
+    for review in ledger.get("reviews", []):
+        binding = review.get("certification")
+        if not isinstance(binding, Mapping):
+            continue  # v1 ledger compatibility: legacy review is deliberately provisional.
+        if (
+            binding.get("profile") != inputs["profile"]
+            or binding.get("preparation_identity") != inputs["preparation_identity"]
+            or binding.get("learner_hashes") != inputs["learner_hashes"]
+            or binding.get("plan_hash") != inputs["plan_hash"]
+            or binding.get("dependency_hashes") != inputs["workflow_hashes"]
+            or binding.get("dependency_identity") != inputs["pbr_dependency_identity"]
+            or not re.fullmatch(r"[0-9a-f]{64}", str(binding.get("raw_response_sha256", "")))
+        ):
+            state = "stale"
+            continue
+        key = str(review.get("stability_key", ""))
+        fingerprint = str(review.get("material_fingerprint", ""))
+        fingerprints.setdefault(key, set()).add(fingerprint)
+        if review.get("status") == "PASS":
+            passed, state = True, "current"
+        else:
+            state = "fail"
+    return passed, state, any(len(values) > 1 for values in fingerprints.values())
+
+
+def certification_projection(
+    selector: str,
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> dict[str, Any]:
+    """Derive the certification state afresh; no cursor state or publication is authority."""
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    ledger = _read_ledger(path)
+    if ledger is None:
+        raise CompletionError(f"No completion ledger for {selector}")
+    try:
+        inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
+    except CompletionError as exc:
+        return {
+            "state": "POST_BUILD_REVIEW_REQUIRED",
+            "post_build": "preparation-stale",
+            "independent_review": "pending",
+            "integration": "pending",
+            "production_qg": "pending",
+            "final": "not-certified",
+            "reason": str(exc),
+        }
+    profile = inputs["profile_config"]
+    expected = {key: inputs[key] for key in ("target", "profile", "preparation_identity", "learner_hashes")}
+
+    pbr_ok, pbr_state, pbr_unstable = _current_pbr_reviews(ledger, inputs)
+    if pbr_unstable:
+        return {
+            "state": "REVIEWER_INSTABILITY",
+            "post_build": "instability",
+            "independent_review": "pending",
+            "integration": "pending",
+            "production_qg": "pending",
+            "final": "not-certified",
+        }
+    if not pbr_ok:
+        return {
+            "state": "POST_BUILD_REVIEW_REQUIRED",
+            "post_build": pbr_state,
+            "independent_review": "pending",
+            "integration": "pending",
+            "production_qg": "pending",
+            "final": "not-certified",
+        }
+
+    mutation_required = bool(ledger.get("author_families"))
+    author_groups = {_review_group(family, config) for family in ledger.get("author_families", [])}
+    independent_ok = not mutation_required
+    independent_state = "not-required" if not mutation_required else "pending"
+    if mutation_required:
+        current_independent: list[certification.EvidenceArtifact] = []
+        unresolved_material = False
+        for artifact in _ledger_artifacts(ledger, "independent-review"):
+            try:
+                certification.require_current(artifact, kind="independent-review", expected=expected)
+                if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
+                    independent_state = "stale"
+                else:
+                    current_independent.append(artifact)
+                    review = artifact.value["review"]
+                    if any(
+                        item["severity"] in MATERIAL_SEVERITIES and not item["resolved"]
+                        for item in review["material_findings"]
+                    ):
+                        unresolved_material = True
+                    elif certification.independent_review_passes(
+                        artifact,
+                        author_groups=author_groups,
+                        author_families=set(ledger.get("author_families", [])),
+                        config=config,
+                        track_policy=snapshot.track_policy,
+                    ):
+                        independent_ok, independent_state = True, "current"
+                    else:
+                        independent_state = "unresolved"
+            except certification.CertificationEvidenceError:
+                independent_state = "malformed"
+        if unresolved_material:
+            independent_ok, independent_state = False, "unresolved"
+    if not independent_ok:
+        return {
+            "state": "INDEPENDENT_REVIEW_REQUIRED",
+            "post_build": "current",
+            "independent_review": independent_state,
+            "integration": "pending",
+            "production_qg": "pending",
+            "final": "not-certified",
+        }
+
+    integration_ok = not mutation_required
+    integration_state = "not-required" if not mutation_required else "pending"
+    if mutation_required:
+        independent_shas: dict[str, str] = {}
+        for artifact in _ledger_artifacts(ledger, "independent-review"):
+            try:
+                certification.require_current(artifact, kind="independent-review", expected=expected)
+                if (
+                    artifact.value.get("mutation_identity") == inputs["mutation_identity"]
+                    and artifact.value.get("diff_sha256")
+                    and certification.independent_review_passes(
+                        artifact,
+                        author_groups=author_groups,
+                        author_families=set(ledger.get("author_families", [])),
+                        config=config,
+                        track_policy=snapshot.track_policy,
+                    )
+                ):
+                    independent_shas[artifact.sha256] = str(artifact.value["diff_sha256"])
+            except certification.CertificationEvidenceError:
+                continue
+        for artifact in _ledger_artifacts(ledger, "integration"):
+            try:
+                certification.require_current(artifact, kind="integration", expected=expected)
+                if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
+                    integration_state = "stale"
+                elif (
+                    certification.integration_passes(artifact)
+                    and artifact.value.get("diff_sha256")
+                    and independent_shas.get(artifact.value.get("independent_evidence_sha256"))
+                    == artifact.value.get("diff_sha256")
+                ):
+                    integration_ok, integration_state = True, "current"
+                else:
+                    integration_state = "malformed"
+            except certification.CertificationEvidenceError:
+                integration_state = "malformed"
+    if not integration_ok:
+        return {
+            "state": "INTEGRATION_REQUIRED",
+            "post_build": "current",
+            "independent_review": independent_state,
+            "integration": integration_state,
+            "production_qg": "pending",
+            "final": "not-certified",
+        }
+
+    qg = profile["production_qg"]
+    if qg["mode"] == "disabled":
+        return {
+            "state": "CERTIFIED_FINAL",
+            "post_build": "current",
+            "independent_review": independent_state,
+            "integration": integration_state,
+            "production_qg": "disabled",
+            "final": "final",
+        }
+    if qg["mode"] == "pending":
+        return {
+            "state": "PBR_PASS_QG_PENDING",
+            "post_build": "current",
+            "independent_review": independent_state,
+            "integration": integration_state,
+            "production_qg": "pending",
+            "final": "provisional",
+        }
+
+    passing = False
+    qg_state = "required"
+    fingerprints: dict[str, set[str]] = {}
+    module_dir = repo_root / "curriculum" / "l2-uk-en" / snapshot.track / snapshot.slug
+    try:
+        qg_facts = certification.current_qg_facts(target=snapshot.selector, module_dir=module_dir)
+    except certification.CertificationEvidenceError:
+        qg_facts = None
+    for artifact in _ledger_artifacts(ledger, "production-qg"):
+        try:
+            certification.require_current(artifact, kind="production-qg", expected=expected)
+            authorization = certification.load_authorization(
+                qg, repo_root=repo_root, expected_profile=inputs["profile"], expected_identity=inputs["qg_identity"]
+            )
+            if (
+                artifact.value["authorization"]["qualification_sha256"] != authorization["qualification_sha256"]
+                or artifact.value["authorization"]["human_arming_sha256"] != authorization["human_arming_sha256"]
+            ):
+                qg_state = "stale"
+                continue
+            qg_key = certification.production_qg_stability_key(artifact)
+            fingerprints.setdefault(qg_key, set()).add(certification.production_qg_material_fingerprint(artifact))
+            if qg_facts is not None and certification.production_qg_passes(
+                artifact,
+                expected_identity=inputs["qg_identity"],
+                expected_facts=qg_facts,
+                seminar=profile["family"] == "seminar",
+                authorization=authorization,
+            ):
+                passing, qg_state = True, "pass"
+            else:
+                qg_state = "fail"
+        except certification.CertificationEvidenceError:
+            qg_state = "malformed"
+    if any(len(values) > 1 for values in fingerprints.values()):
+        return {
+            "state": "REVIEWER_INSTABILITY",
+            "post_build": "current",
+            "independent_review": independent_state,
+            "integration": integration_state,
+            "production_qg": "instability",
+            "final": "not-certified",
+        }
+    return {
+        "state": "CERTIFIED_FINAL" if passing else "PRODUCTION_QG_REQUIRED",
+        "post_build": "current",
+        "independent_review": independent_state,
+        "integration": integration_state,
+        "production_qg": qg_state,
+        "final": "final" if passing else "not-certified",
+    }
 
 
 def status_run(
@@ -1215,6 +1883,9 @@ def status_run(
         "identity_drift": identity["sha256"] != ledger["current_identity"]["sha256"],
         "lease_expired": _parse_time(ledger["run"]["lease_expires_at"]) <= _now(),
     }
+    result["certification"] = certification_projection(
+        selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+    )
     return path, result
 
 
@@ -1248,11 +1919,15 @@ def build_parser() -> argparse.ArgumentParser:
     change = subparsers.add_parser("record-change", help="Record one routed repair mutation")
     _add_common_options(change)
     change.add_argument("--run-id", required=True)
-    change.add_argument(
-        "--owner-kind", required=True, choices=("built_artifact", "plan_workflow", "audit_tooling")
-    )
+    change.add_argument("--owner-kind", required=True, choices=("built_artifact", "plan_workflow", "audit_tooling"))
     change.add_argument("--author-family", required=True)
     change.add_argument("--summary", required=True)
+    rebuild = subparsers.add_parser(
+        "request-preparation-rebuild",
+        help="Route a preparation-stale built bundle through a fresh rebuild",
+    )
+    _add_common_options(rebuild)
+    rebuild.add_argument("--run-id", required=True)
     build = subparsers.add_parser("record-build", help="Record a completed fresh module build")
     _add_common_options(build)
     build.add_argument("--run-id", required=True)
@@ -1280,18 +1955,22 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(independent)
     independent.add_argument("--run-id", required=True)
     independent.add_argument("--reviewer-family", required=True)
-    independent.add_argument(
-        "--verdict", required=True, choices=("PASS", "CHANGES_REQUESTED")
-    )
+    independent.add_argument("--verdict", required=True, choices=("PASS", "CHANGES_REQUESTED"))
     independent.add_argument("--evidence", required=True, type=Path)
-    independent.add_argument(
-        "--owner-kind", choices=("built_artifact", "plan_workflow", "audit_tooling")
-    )
+    independent.add_argument("--owner-kind", choices=("built_artifact", "plan_workflow", "audit_tooling"))
     published = subparsers.add_parser("record-published", help="Record merged PR evidence and complete")
     _add_common_options(published)
     published.add_argument("--run-id", required=True)
     published.add_argument("--pr", required=True, type=int)
     published.add_argument("--merge-sha", required=True)
+    evidence = subparsers.add_parser("record-certification-evidence", help="Append one strict certification artifact")
+    _add_common_options(evidence)
+    evidence.add_argument("--run-id", required=True)
+    evidence.add_argument("--evidence", required=True, type=Path)
+    projection = subparsers.add_parser(
+        "certification-status", help="Recompute the authoritative certification projection"
+    )
+    _add_common_options(projection)
     return parser
 
 
@@ -1333,10 +2012,14 @@ def main(argv: list[str] | None = None) -> int:
                 summary=args.summary,
                 **common,
             )
-        elif args.command == "record-build":
-            path, value = record_build(
-                args.target, run_id=args.run_id, author_family=args.author_family, **common
+        elif args.command == "request-preparation-rebuild":
+            path, value = request_preparation_rebuild(
+                args.target,
+                run_id=args.run_id,
+                **common,
             )
+        elif args.command == "record-build":
+            path, value = record_build(args.target, run_id=args.run_id, author_family=args.author_family, **common)
         elif args.command == "record-review":
             path, value = record_review(
                 args.target,
@@ -1367,6 +2050,13 @@ def main(argv: list[str] | None = None) -> int:
             path, value = record_published(
                 args.target, run_id=args.run_id, pr=args.pr, merge_sha=args.merge_sha, **common
             )
+        elif args.command == "record-certification-evidence":
+            path, value = record_certification_evidence(
+                args.target, run_id=args.run_id, evidence=args.evidence, **common
+            )
+        elif args.command == "certification-status":
+            value = certification_projection(args.target, **common)
+            path = None
         else:
             raise CompletionError(f"Unknown command: {args.command}")
     except (CompletionError, OSError, json.JSONDecodeError, yaml.YAMLError) as exc:

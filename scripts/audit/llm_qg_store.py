@@ -69,6 +69,12 @@ class StoredQG:
     tools_used: tuple[str, ...] = ()
     route_name: str | None = None
     tool_events: tuple[dict[str, Any], ...] | None = None
+    raw_response: str | None = None
+    raw_response_sha256: str | None = None
+    dispatch_metadata: dict[str, Any] | None = None
+    retry_history: tuple[dict[str, Any], ...] | None = None
+    gate_outcomes: dict[str, Any] | None = None
+    attempt_id: int | None = None
 
     def is_current_for(self, module_dir: Path) -> bool:
         return self.content_sha == content_sha_for_module(module_dir)
@@ -372,6 +378,14 @@ def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
         "tool_call_count": "INTEGER",
         "tools_used_json": "TEXT",
         "tool_events_json": "TEXT",
+        # Nullable replay data preserves backward compatibility for existing
+        # workflow caches.  Missing values make an old row non-production.
+        "raw_response": "TEXT",
+        "raw_response_sha256": "TEXT",
+        "dispatch_json": "TEXT",
+        "retry_history_json": "TEXT",
+        "gate_outcomes_json": "TEXT",
+        "attempt_id": "INTEGER",
     }
     for name, column_type in additions.items():
         if name not in existing:
@@ -438,6 +452,12 @@ def record_llm_qg(
     tool_call_count: int = 0,
     tools_used: Sequence[str] = (),
     tool_events: Sequence[Mapping[str, Any]] = (),
+    raw_response: str | None = None,
+    raw_response_sha256: str | None = None,
+    dispatch_metadata: Mapping[str, Any] | None = None,
+    retry_history: Sequence[Mapping[str, Any]] | None = None,
+    gate_outcomes: Mapping[str, Any] | None = None,
+    attempt_id: int | None = None,
     source: str = "pipeline",
     run_id: str | None = None,
     path: Path | None = None,
@@ -454,6 +474,13 @@ def record_llm_qg(
     tools_used_tuple = tuple(str(tool) for tool in tools_used)
     tool_call_count_int = int(tool_call_count)
     normalized_tool_events = _normalize_tool_events(tool_events)
+    normalized_dispatch = dict(dispatch_metadata) if isinstance(dispatch_metadata, Mapping) else None
+    normalized_history = (
+        [dict(item) for item in retry_history if isinstance(item, Mapping)]
+        if retry_history is not None
+        else None
+    )
+    normalized_gate_outcomes = dict(gate_outcomes) if isinstance(gate_outcomes, Mapping) else None
 
     with closing(connect_sqlite(str(resolved))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
@@ -465,10 +492,12 @@ def record_llm_qg(
                 prompt_hash, checker_version, level_policy_family,
                 reviewer_model, reviewer_family, route_name,
                 tool_call_count, tools_used_json, tool_events_json,
+                raw_response, raw_response_sha256, dispatch_json,
+                retry_history_json, gate_outcomes_json, attempt_id,
                 source, verdict, terminal_verdict,
                 min_score, min_dim, payload_json
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 created_at = excluded.created_at,
                 level = excluded.level,
@@ -484,6 +513,12 @@ def record_llm_qg(
                 tool_call_count = excluded.tool_call_count,
                 tools_used_json = excluded.tools_used_json,
                 tool_events_json = excluded.tool_events_json,
+                raw_response = excluded.raw_response,
+                raw_response_sha256 = excluded.raw_response_sha256,
+                dispatch_json = excluded.dispatch_json,
+                retry_history_json = excluded.retry_history_json,
+                gate_outcomes_json = excluded.gate_outcomes_json,
+                attempt_id = excluded.attempt_id,
                 source = excluded.source,
                 verdict = excluded.verdict,
                 terminal_verdict = excluded.terminal_verdict,
@@ -507,6 +542,12 @@ def record_llm_qg(
                 tool_call_count_int,
                 _json_dumps(list(tools_used_tuple)),
                 _json_dumps(list(normalized_tool_events)),
+                raw_response,
+                raw_response_sha256,
+                _json_dumps(normalized_dispatch) if normalized_dispatch is not None else None,
+                _json_dumps(normalized_history) if normalized_history is not None else None,
+                _json_dumps(normalized_gate_outcomes) if normalized_gate_outcomes is not None else None,
+                attempt_id,
                 source,
                 aggregate.get("verdict"),
                 aggregate.get("terminal_verdict"),
@@ -556,6 +597,12 @@ def record_llm_qg(
         tools_used=tools_used_tuple,
         route_name=route_name,
         tool_events=normalized_tool_events,
+        raw_response=raw_response,
+        raw_response_sha256=raw_response_sha256,
+        dispatch_metadata=normalized_dispatch,
+        retry_history=tuple(normalized_history) if normalized_history is not None else None,
+        gate_outcomes=normalized_gate_outcomes,
+        attempt_id=attempt_id,
     )
 
 
@@ -593,6 +640,30 @@ def _tool_events_from_row(row: sqlite3.Row) -> tuple[dict[str, Any], ...] | None
     return _normalize_tool_events(item for item in loaded if isinstance(item, Mapping))
 
 
+def _mapping_from_row(row: sqlite3.Row, column: str) -> dict[str, Any] | None:
+    raw = _row_key(row, column)
+    if raw is None:
+        return None
+    try:
+        loaded = json.loads(str(raw))
+    except (json.JSONDecodeError, ValueError):
+        return None
+    return dict(loaded) if isinstance(loaded, Mapping) else None
+
+
+def _history_from_row(row: sqlite3.Row) -> tuple[dict[str, Any], ...] | None:
+    raw = _row_key(row, "retry_history_json")
+    if raw is None:
+        return None
+    try:
+        loaded = json.loads(str(raw))
+    except (json.JSONDecodeError, ValueError):
+        return None
+    if not isinstance(loaded, list) or not all(isinstance(item, Mapping) for item in loaded):
+        return None
+    return tuple(dict(item) for item in loaded)
+
+
 def _row_to_record(row: sqlite3.Row) -> StoredQG:
     raw_tool_count = _row_key(row, "tool_call_count")
     return StoredQG(
@@ -613,6 +684,12 @@ def _row_to_record(row: sqlite3.Row) -> StoredQG:
         tools_used=_tools_used_from_row(row),
         route_name=_row_key(row, "route_name"),
         tool_events=_tool_events_from_row(row),
+        raw_response=_row_key(row, "raw_response"),
+        raw_response_sha256=_row_key(row, "raw_response_sha256"),
+        dispatch_metadata=_mapping_from_row(row, "dispatch_json"),
+        retry_history=_history_from_row(row),
+        gate_outcomes=_mapping_from_row(row, "gate_outcomes_json"),
+        attempt_id=(int(_row_key(row, "attempt_id")) if _row_key(row, "attempt_id") is not None else None),
     )
 
 

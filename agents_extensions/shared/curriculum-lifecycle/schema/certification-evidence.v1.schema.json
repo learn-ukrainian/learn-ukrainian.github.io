@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-certification-evidence.v1",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/independentReview"
+    },
+    {
+      "$ref": "#/$defs/integration"
+    },
+    {
+      "$ref": "#/$defs/productionQG"
+    }
+  ],
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "shortSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,64}$"
+    },
+    "base": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "kind",
+        "target",
+        "profile",
+        "preparation_identity",
+        "learner_hashes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "certification-evidence.v1"
+        },
+        "kind": {
+          "enum": [
+            "independent-review",
+            "integration",
+            "production-qg"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+        },
+        "profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            }
+          }
+        },
+        "preparation_identity": {
+          "$ref": "#/$defs/sha"
+        },
+        "learner_hashes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/sha"
+          }
+        }
+      }
+    },
+    "independentReview": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mutation_identity",
+            "diff_sha256",
+            "review"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "independent-review"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "mutation_identity": {
+              "$ref": "#/$defs/sha"
+            },
+            "diff_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "author_families",
+                "reviewer_family",
+                "verdict",
+                "material_findings",
+                "resolution_state",
+                "raw_response_sha256"
+              ],
+              "properties": {
+                "author_families": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "reviewer_family": {
+                  "type": "string"
+                },
+                "verdict": {
+                  "enum": [
+                    "PASS",
+                    "CHANGES_REQUESTED"
+                  ]
+                },
+                "material_findings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "severity",
+                      "resolved"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "severity": {
+                        "enum": [
+                          "blocker",
+                          "high",
+                          "medium",
+                          "low"
+                        ]
+                      },
+                      "resolved": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "resolution_state": {
+                  "enum": [
+                    "RESOLVED",
+                    "UNRESOLVED"
+                  ]
+                },
+                "raw_response_sha256": {
+                  "$ref": "#/$defs/sha"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "integration": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mutation_identity",
+            "diff_sha256",
+            "independent_evidence_sha256",
+            "integration"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "integration"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "mutation_identity": {
+              "$ref": "#/$defs/sha"
+            },
+            "diff_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "independent_evidence_sha256": {
+              "$ref": "#/$defs/sha"
+            },
+            "integration": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "issue",
+                "branch",
+                "worktree",
+                "commit",
+                "pr",
+                "ci_gate",
+                "review_gate",
+                "merge_sha",
+                "telemetry",
+                "cleanup"
+              ],
+              "properties": {
+                "issue": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "branch": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "worktree": {
+                  "type": "string",
+                  "pattern": "^\\.worktrees/dispatch/[a-z0-9-]+/[a-z0-9-]+$"
+                },
+                "commit": {
+                  "$ref": "#/$defs/shortSha"
+                },
+                "pr": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "ci_gate": {
+                  "const": "PASS"
+                },
+                "review_gate": {
+                  "const": "PASS"
+                },
+                "merge_sha": {
+                  "$ref": "#/$defs/shortSha"
+                },
+                "telemetry": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "applicable",
+                    "receipt"
+                  ],
+                  "properties": {
+                    "applicable": {
+                      "type": "boolean"
+                    },
+                    "receipt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "cleanup": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "state"
+                  ],
+                  "properties": {
+                    "state": {
+                      "const": "COMPLETE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "productionQG": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "arm",
+            "authorization",
+            "canonical_record",
+            "tier2"
+          ],
+          "properties": {
+            "schema_version": true,
+            "kind": {
+              "const": "production-qg"
+            },
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "arm": {
+              "const": "production-qualified"
+            },
+            "authorization": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "identity",
+                "qualification_sha256",
+                "human_arming_sha256"
+              ],
+              "properties": {
+                "identity": {
+                  "$ref": "#/$defs/qgIdentity"
+                },
+                "qualification_sha256": {
+                  "$ref": "#/$defs/sha"
+                },
+                "human_arming_sha256": {
+                  "$ref": "#/$defs/sha"
+                }
+              }
+            },
+            "canonical_record": {
+              "type": "object"
+            },
+            "tier2": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source",
+                "workflow_run_id",
+                "tier2_run_id",
+                "attempt_id",
+                "canonical_tier_index",
+                "status",
+                "completion_status",
+                "dispatch",
+                "payload",
+                "raw_response",
+                "raw_response_sha256",
+                "retry_history",
+                "gate_outcomes"
+              ],
+              "properties": {
+                "source": {"const": "qg_workflow"},
+                "workflow_run_id": {"type": "string", "minLength": 1},
+                "tier2_run_id": {"type": "string", "minLength": 1},
+                "attempt_id": {"type": "integer", "minimum": 1},
+                "canonical_tier_index": {"const": 2},
+                "status": {
+                  "enum": ["ran", "cache_hit"]
+                },
+                "cache_regate": {"type": "string"},
+                "completion_status": {
+                  "const": "COMPLETE"
+                },
+                "dispatch": {
+                  "type": "object"
+                },
+                "payload": {
+                  "type": "object"
+                },
+                "raw_response": {"type": "string"},
+                "raw_response_sha256": {
+                  "$ref": "#/$defs/sha"
+                },
+                "retry_history": {
+                  "type": "array"
+                },
+                "gate_outcomes": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "qgIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate", "profile", "prompt", "checker", "checker_config", "policy", "schema",
+        "tool", "routing", "canary", "cost", "circuit", "resume"
+      ],
+      "properties": {
+        "gate": {"$ref": "#/$defs/sha"}, "profile": {"$ref": "#/$defs/sha"},
+        "prompt": {"$ref": "#/$defs/sha"}, "checker": {"$ref": "#/$defs/sha"},
+        "checker_config": {"$ref": "#/$defs/sha"}, "policy": {"$ref": "#/$defs/sha"},
+        "schema": {"$ref": "#/$defs/sha"}, "tool": {"$ref": "#/$defs/sha"},
+        "routing": {"$ref": "#/$defs/sha"}, "canary": {"$ref": "#/$defs/sha"},
+        "cost": {"$ref": "#/$defs/sha"}, "circuit": {"$ref": "#/$defs/sha"},
+        "resume": {"$ref": "#/$defs/sha"}
+      }
+    }
+  }
+}
