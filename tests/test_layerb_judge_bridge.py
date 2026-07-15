@@ -234,6 +234,7 @@ def _validate_single(response: dict[str, Any], raw: str) -> dict[str, Any]:
     returned.pop("_shadow_observed", None)
     returned.pop("_bridge_substituted", None)
     returned.pop("_bridge_conservative_reason", None)
+    returned.pop("_bridge_forensics", None)
     returned.pop("_evidence_pattern_hits", None)
     return layerb_shadow._validate_judge_response(
         returned,
@@ -332,6 +333,56 @@ def test_parse_request_decodes_unicode_window_and_rejects_wrong_schema() -> None
         layerb_judge_bridge.parse_request(request)
 
 
+def test_grok_pinned_schema_uses_request_ordered_draft4_tuples_and_id_enums() -> None:
+    request = _two_candidate_request()
+    first_sources = request["fact_checks"][0]["candidate_sources"]
+    request["fact_checks"].append(
+        {
+            "fact_check_id": "fact-2",
+            "claim": "A second fact preserves a different candidate order.",
+            "candidate_sources": [dict(first_sources[1]), dict(first_sources[0])],
+        }
+    )
+
+    schema = layerb_judge_bridge.output_json_schema_for_request(layerb_judge_bridge.parse_request(request))
+    generic = layerb_judge_bridge.output_json_schema()
+    fact_checks = schema["properties"]["fact_checks"]
+
+    assert fact_checks["minItems"] == fact_checks["maxItems"] == 2
+    assert fact_checks["additionalItems"] is False
+    assert [fact["properties"]["fact_check_id"]["enum"] for fact in fact_checks["items"]] == [
+        ["fact-1"],
+        ["fact-2"],
+    ]
+    assert all("const" not in fact["properties"]["fact_check_id"] for fact in fact_checks["items"])
+    assert fact_checks["items"][0]["properties"]["source_relations"]["items"] != []
+    assert [
+        relation["properties"]["candidate_id"]["enum"]
+        for relation in fact_checks["items"][0]["properties"]["source_relations"]["items"]
+    ] == [["candidate-1"], ["candidate-2"]]
+    assert [
+        relation["properties"]["candidate_id"]["enum"]
+        for relation in fact_checks["items"][1]["properties"]["source_relations"]["items"]
+    ] == [["candidate-2"], ["candidate-1"]]
+    for fact in fact_checks["items"]:
+        relations = fact["properties"]["source_relations"]
+        assert relations["minItems"] == relations["maxItems"] == 2
+        assert relations["additionalItems"] is False
+        for relation in relations["items"]:
+            assert (
+                relation["properties"]["relation"]
+                == generic["properties"]["fact_checks"]["items"]["properties"]["source_relations"]["items"][
+                    "properties"
+                ]["relation"]
+            )
+            assert (
+                relation["properties"]["support_spans"]
+                == generic["properties"]["fact_checks"]["items"]["properties"]["source_relations"]["items"][
+                    "properties"
+                ]["support_spans"]
+            )
+
+
 def test_codex_prompt_is_policy_first_and_reasserts_before_untrusted_block() -> None:
     raw = "evidence-only: ordinary source text"
     parsed = layerb_judge_bridge.parse_request(_request(raw))
@@ -388,7 +439,9 @@ def test_grok_happy_path_uses_strict_envelope_scoped_home_and_complete_tool_free
         layerb_judge_bridge.build_codex_prompt(layerb_judge_bridge.parse_request(request)),
     ]
     assert argv[argv.index("--output-format") + 1] == "json"
-    assert json.loads(argv[argv.index("--json-schema") + 1]) == layerb_judge_bridge.output_json_schema()
+    assert json.loads(argv[argv.index("--json-schema") + 1]) == layerb_judge_bridge.output_json_schema_for_request(
+        layerb_judge_bridge.parse_request(request)
+    )
     assert argv[argv.index("--max-turns") + 1] == "1"
     assert argv[argv.index("-m") + 1] == PINNED_GROK_MODEL
     assert argv[argv.index("--tools") + 1] == ""
@@ -893,6 +946,44 @@ def test_bridge_envelope_failures_remain_module_fatal(monkeypatch: pytest.Monkey
     assert response["_bridge_conservative_reason"] == "envelope_alignment"
 
 
+def test_grok_envelope_failure_writes_raw_stdout_forensics_when_configured(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    request = _request()
+    malformed = _result()
+    malformed["fact_checks"][0]["fact_check_id"] = "wrong-fact-id"
+    _stub_grok(monkeypatch, output=malformed)
+    forensics_dir = tmp_path / "forensics"
+    monkeypatch.setenv("LAYERB_BRIDGE_FORENSICS_DIR", str(forensics_dir))
+
+    response = layerb_judge_bridge.run_bridge(request, _config("grok"))
+
+    request_sha256 = layerb_judge_bridge._sha256_json(layerb_judge_bridge.parse_request(request).request)
+    sidecar = response["_bridge_forensics"]
+    path = Path(sidecar["path"])
+    assert response["_bridge_conservative_reason"] == "envelope_alignment"
+    assert path == forensics_dir / f"{request_sha256}.raw-err"
+    assert path.read_text(encoding="utf-8")
+    assert sidecar["sha256"] == layerb_judge_bridge._sha256_text(path.read_text(encoding="utf-8"))
+    assert json.loads(path.read_text(encoding="utf-8"))["text"] == json.dumps(malformed, ensure_ascii=False)
+
+
+def test_grok_envelope_failure_skips_forensics_when_unconfigured(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    request = _request()
+    malformed = _result()
+    malformed["fact_checks"][0]["fact_check_id"] = "wrong-fact-id"
+    _stub_grok(monkeypatch, output=malformed)
+    monkeypatch.delenv("LAYERB_BRIDGE_FORENSICS_DIR", raising=False)
+
+    response = layerb_judge_bridge.run_bridge(request, _config("grok"))
+
+    assert response["_bridge_conservative_reason"] == "envelope_alignment"
+    assert "_bridge_forensics" not in response
+    assert list(tmp_path.iterdir()) == []
+
+
 def test_digit_17_not_18_round_trips_bridge_and_collector_with_contradiction_intact(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -1209,7 +1300,7 @@ def test_print_config_attests_subscription_isolation_and_no_fabricated_tokens(
     assert config["seat_transport"]["argv_sha256"]
     assert config["seat_transport"]["tokens"] is None
     assert config["tool_access"]["mcp"] is False
-    assert config["config_sha256"]
+    assert config["config_sha256"] == "a899fc88762f117f5f4ca4f5d16bd6eb4bfecc333629ede8a0a158b9059fc505"
 
 
 def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
