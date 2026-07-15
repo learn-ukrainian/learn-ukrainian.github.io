@@ -478,6 +478,8 @@ class TestModelFamily:
         from audit.checks.review_gaming import _model_family
         assert _model_family("composer-2.5") == "cursor-composer"
         assert _model_family("cursor-agent") == "cursor-composer"
+        # Historical reviews retain the retired model ID in immutable metadata.
+        assert _model_family("grok-4.20-reasoning") == "cursor-grok"
         assert _model_family("grok-4.5") == "cursor-grok"
 
     def test_unknown_family(self):
