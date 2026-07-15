@@ -4507,12 +4507,28 @@ def _kaikki_etymology_text_is_usable(text: str) -> bool:
     return not _KAIKKI_GARBLED_ETYMOLOGY_RE.search(text)
 
 
+# Decolonization guard (#M-13 / .claude/rules/ukrainian-linguistics.md §1,§6): a Ukrainian etymology
+# must never be framed via Russian/Belarusian comparison. "Old East Slavic" / "East Slavic" are the
+# correct decolonized terms and contain neither marker, so they pass; a "Compare Russian …" /
+# "Belarusian …" Kaikki etymology is rejected (section falls to honestly `uncovered`) rather than
+# surfaced with imperial framing.
+_KAIKKI_IMPERIAL_COMPARISON_RE = re.compile(
+    r"\b(Russian|Belarusian|Belorussian|Byelorussian)\b", re.IGNORECASE
+)
+
+
+def _kaikki_etymology_is_decolonized(text: str) -> bool:
+    return not _KAIKKI_IMPERIAL_COMPARISON_RE.search(text)
+
+
 def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | None:
     row = _kaikki_row(lookup, lemma)
     if not row:
         return None
     text = clean_html_entities(str(row.get("etymology_text") or "").strip()[:600])
     if not _kaikki_etymology_text_is_usable(text):
+        return None
+    if not _kaikki_etymology_is_decolonized(text):
         return None
     return {"text": text, "source": KAIKKI_SOURCE}
 
@@ -4609,11 +4625,13 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
 def _etymology(
     conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
 ) -> dict | None:
-    """Offline ЕСУМ etymology from mphdict; no mirror or Wiktionary fallback."""
+    """ЕСУМ etymology from offline mphdict (primary, authoritative); falls back to a decolonized,
+    source-marked Kaikki/Wiktionary etymology for lemmas mphdict lacks (Option C, #5263). The Горох
+    mirror and the legacy ЕСУМ FTS table stay OFF (mirror labels banned; ЕСУМ redundant with mphdict)."""
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
-    return _mphdict_etymology(lemma)
+    return _mphdict_etymology(lemma) or _kaikki_etymology(kaikki_lookup or {}, lemma)
 
 
 _GRAC_FREQUENCY_CACHE_DATA: dict[str, Any] | None = None
