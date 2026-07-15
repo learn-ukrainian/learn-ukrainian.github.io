@@ -651,7 +651,22 @@ def route_eligibility(case: Mapping[str, Any], route: EffectiveRoute) -> dict[st
             "eligible": False,
             "reason": "GEMINI_SAME_VENDOR_REVIEWER_EXCLUDED",
         }
+    # The grok route's third-family status is GUARDED, not assumed: any case
+    # whose writer or reviewer normalizes into the grok/cursor/xai lineage
+    # ("grok-cursor" in layerb_shadow.normalize_lineage_family's domain) is
+    # self-judgment and fails closed. Today's labels contain no such rows, so
+    # this changes nothing operationally — it exists so future grok/cursor-
+    # authored content can never be judged by its own lineage silently.
+    if route.family == "grok" and "grok-cursor" in {writer, reviewer}:
+        return {
+            "case_id": case_id,
+            "writer_family": writer,
+            "reviewer_family": reviewer,
+            "eligible": False,
+            "reason": "GROK_SELF_FAMILY_EXCLUDED",
+        }
     # v2.1 fact correction: GPT is a valid all-row third candidate, not deferred.
+    # (claude=all is likewise a recorded run-plan decision, not an oversight.)
     return {
         "case_id": case_id,
         "writer_family": writer,
