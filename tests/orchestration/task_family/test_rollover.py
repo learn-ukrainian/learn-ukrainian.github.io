@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import subprocess
+import time
 from pathlib import Path
 from uuid import uuid4
 
@@ -11,7 +13,7 @@ import pytest
 
 from scripts.orchestration.task_family import codex_state, rollover
 from scripts.orchestration.task_family.model import RelationType
-from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
 
 
 def _write_db(path: Path, rows: list[tuple[str, str, str, int, str | None, str]]) -> None:
@@ -164,6 +166,219 @@ def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> No
         )
 
 
+def test_transition_identity_is_stable_per_packet_without_splitting_the_family() -> None:
+    first_family, first_operation = rollover.transition_identity(
+        lineage_id="lineage-1234567890abcdef12345678",
+        generation=1,
+        rollover_id="rollover-first",
+    )
+    retry_family, retry_operation = rollover.transition_identity(
+        lineage_id="lineage-1234567890abcdef12345678",
+        generation=1,
+        rollover_id="rollover-first",
+    )
+    second_family, second_operation = rollover.transition_identity(
+        lineage_id="lineage-1234567890abcdef12345678",
+        generation=1,
+        rollover_id="rollover-second",
+    )
+
+    assert first_family == retry_family == second_family
+    assert first_operation == retry_operation
+    assert first_operation != second_operation
+
+
+def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> None:
+    lock_path = tmp_path / "lineage" / ".native-intent.lock"
+    ready_path = tmp_path / "child-ready"
+    acquired_path = tmp_path / "child-acquired"
+    code = (
+        "import sys\n"
+        "from pathlib import Path\n"
+        "from scripts.orchestration.task_family.storage import advisory_lock\n"
+        "lock_path, ready_path, acquired_path = map(Path, sys.argv[1:])\n"
+        "ready_path.write_text('ready', encoding='utf-8')\n"
+        "with advisory_lock(lock_path):\n"
+        "    acquired_path.write_text('acquired', encoding='utf-8')\n"
+    )
+    repo_root = Path(__file__).resolve().parents[3]
+    with advisory_lock(lock_path):
+        child = subprocess.Popen(
+            [".venv/bin/python", "-c", code, str(lock_path), str(ready_path), str(acquired_path)],
+            cwd=repo_root,
+        )
+        deadline = time.monotonic() + 5
+        while not ready_path.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert ready_path.exists()
+        assert acquired_path.exists() is False
+        assert child.poll() is None
+    stdout, stderr = child.communicate(timeout=5)
+    assert child.returncode == 0, (stdout, stderr)
+    assert acquired_path.read_text(encoding="utf-8") == "acquired"
+
+
+def test_pristine_transition_supersession_is_durable_idempotent_and_blocks_old_create(tmp_path: Path) -> None:
+    source_id = str(uuid4())
+    common = {
+        "repo_root": tmp_path,
+        "agent": "codex",
+        "lineage_id": "lineage-1234567890abcdef12345678",
+        "generation": 1,
+        "source_thread_id": source_id,
+        "intended_title": "Infrastructure — P1 repair rollover",
+        "title_source": "durable_metadata",
+        "bootstrap_prompt_path": "bootstrap.md",
+    }
+    old = rollover.prepare_transition(**common, rollover_id="rollover-old")
+    supersedes = {
+        "family_id": str(old["family_id"]),
+        "operation_id": str(old["operation_id"]),
+        "rollover_id": "rollover-old",
+    }
+    successor = rollover.prepare_transition(**common, rollover_id="rollover-new", supersedes=supersedes)
+    old_storage = TaskFamilyStorage(tmp_path, str(old["family_id"]), str(old["operation_id"]))
+    old_plan = old_storage.rollover_plan_path.read_bytes()
+    kwargs = {
+        "repo_root": tmp_path,
+        "family_id": str(old["family_id"]),
+        "operation_id": str(old["operation_id"]),
+        "lineage_id": common["lineage_id"],
+        "generation": 1,
+        "source_thread_id": source_id,
+        "successor_rollover_id": "rollover-new",
+        "successor_operation_id": str(successor["operation_id"]),
+        "evidence": "No native create was authorized or invoked.",
+        "expected_rollover_id": "rollover-old",
+    }
+
+    first = rollover.supersede_unexecuted_transition(**kwargs)
+    retry = rollover.supersede_unexecuted_transition(**kwargs)
+    activated = rollover.activate_superseding_transition(
+        repo_root=tmp_path,
+        family_id=str(successor["family_id"]),
+        operation_id=str(successor["operation_id"]),
+    )
+
+    assert first["status"] == "superseded"
+    assert retry["status"] == "already_superseded"
+    assert activated["status"] == "awaiting_native_create"
+    assert old_storage.rollover_plan_path.read_bytes() == old_plan
+    assert old_storage.rollover_supersession_path.exists()
+    assert old_storage.load_state()["details"]["status"] == "superseded_before_native_create"
+    receipt = old_storage.load_receipt()
+    assert receipt.actual == ()
+    assert {item.action for item in receipt.skipped} == {item.action for item in receipt.planned}
+    old_action = rollover.request_create_action(
+        repo_root=tmp_path,
+        family_id=str(old["family_id"]),
+        operation_id=str(old["operation_id"]),
+    )
+    assert old_action["needs_native_action"] is False
+    assert old_action["status"] == "superseded_before_native_create"
+    with pytest.raises(ValueError, match="different exact successor"):
+        rollover.assert_transition_supersedable(
+            repo_root=tmp_path,
+            family_id=str(old["family_id"]),
+            operation_id=str(old["operation_id"]),
+            lineage_id=common["lineage_id"],
+            generation=1,
+            source_thread_id=source_id,
+            successor_rollover_id="rollover-other",
+            successor_operation_id=str(uuid4()),
+            expected_rollover_id="rollover-old",
+        )
+
+
+def test_superseding_transition_stays_blocked_until_exact_predecessor_is_superseded(tmp_path: Path) -> None:
+    source_id = str(uuid4())
+    common = {
+        "repo_root": tmp_path,
+        "agent": "codex",
+        "lineage_id": "lineage-1234567890abcdef12345678",
+        "generation": 1,
+        "source_thread_id": source_id,
+        "intended_title": "Infrastructure — P1 activation gate",
+        "title_source": "durable_metadata",
+        "bootstrap_prompt_path": "bootstrap.md",
+    }
+    old = rollover.prepare_transition(**common, rollover_id="rollover-old")
+    supersedes = {
+        "family_id": str(old["family_id"]),
+        "operation_id": str(old["operation_id"]),
+        "rollover_id": "rollover-old",
+    }
+    successor = rollover.prepare_transition(**common, rollover_id="rollover-new", supersedes=supersedes)
+
+    blocked = rollover.request_create_action(
+        repo_root=tmp_path,
+        family_id=str(successor["family_id"]),
+        operation_id=str(successor["operation_id"]),
+    )
+    assert blocked["status"] == "supersession_pending"
+    assert blocked["needs_native_action"] is False
+    with pytest.raises(ValueError, match="has not been durably superseded"):
+        rollover.activate_superseding_transition(
+            repo_root=tmp_path,
+            family_id=str(successor["family_id"]),
+            operation_id=str(successor["operation_id"]),
+        )
+    with pytest.raises(ValueError, match="supersedes must contain"):
+        rollover.prepare_transition(
+            **common,
+            rollover_id="rollover-malformed",
+            supersedes={"operation_id": str(old["operation_id"])},
+        )
+
+
+@pytest.mark.parametrize("unsafe_state", ["binding", "failed_ack", "success_ack", "authorization"])
+def test_supersession_refuses_bound_partial_or_authorized_native_create(
+    tmp_path: Path,
+    unsafe_state: str,
+) -> None:
+    source_id = str(uuid4())
+    transition = rollover.prepare_transition(
+        repo_root=tmp_path,
+        agent="codex",
+        lineage_id="lineage-1234567890abcdef12345678",
+        rollover_id=f"rollover-{unsafe_state}",
+        generation=1,
+        source_thread_id=source_id,
+        intended_title="Infrastructure — P1 fail closed",
+        title_source="durable_metadata",
+        bootstrap_prompt_path="bootstrap.md",
+    )
+    storage = TaskFamilyStorage(tmp_path, str(transition["family_id"]), str(transition["operation_id"]))
+    operation = {
+        "repo_root": tmp_path,
+        "family_id": str(transition["family_id"]),
+        "operation_id": str(transition["operation_id"]),
+    }
+    if unsafe_state == "binding":
+        storage.write_immutable_json(storage.rollover_binding_path, {"binding": "exists"})
+    elif unsafe_state == "authorization":
+        assert rollover.request_create_action(**operation)["needs_native_action"] is True
+    else:
+        rollover.record_native_result(
+            **operation,
+            action="create",
+            succeeded=unsafe_state == "success_ack",
+            evidence="native create response",
+            error="partial failure" if unsafe_state == "failed_ack" else "",
+        )
+
+    with pytest.raises(ValueError, match=r"cannot be superseded|untouched native-create intent"):
+        rollover.assert_transition_supersedable(
+            **operation,
+            lineage_id="lineage-1234567890abcdef12345678",
+            generation=1,
+            source_thread_id=source_id,
+            successor_rollover_id="rollover-successor",
+            successor_operation_id=str(uuid4()),
+            expected_rollover_id=f"rollover-{unsafe_state}",
+        )
+
+
 def test_prepare_and_bind_persist_exact_ids_typed_relations_and_receipt(tmp_path: Path) -> None:
     data = _transition(tmp_path)
     prepared = data["prepared"]
@@ -179,7 +394,9 @@ def test_prepare_and_bind_persist_exact_ids_typed_relations_and_receipt(tmp_path
     assert {relation.source_id for relation in manifest.relations} == {data["replacement_id"]}
     assert {relation.target_id for relation in manifest.relations} == {data["source_id"]}
     receipt = storage.load_receipt()
-    assert any(item.action == "create_replacement" and item.resource_id == data["replacement_id"] for item in receipt.actual)
+    assert any(
+        item.action == "create_replacement" and item.resource_id == data["replacement_id"] for item in receipt.actual
+    )
     assert storage.rollover_binding_path.exists()
     assert "Resume codex rollover" not in storage.read_json(storage.rollover_plan_path)["intended_title"]
     retry = rollover.request_create_action(

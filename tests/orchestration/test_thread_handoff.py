@@ -11,6 +11,8 @@ import pytest
 
 from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
+from scripts.orchestration.task_family import rollover
+from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 
 def sample_snapshot(tmp_path: Path) -> dict:
@@ -190,6 +192,7 @@ def test_direct_script_help_from_repository_root():
     assert "Prepare and guard agent-specific thread handoffs." in completed.stdout
     for command in (
         "prepare",
+        "repair-native-intent",
         "register-created",
         "native-action",
         "record-native-result",
@@ -334,7 +337,10 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "If either fact is absent, use `unknown`" in prompt
     assert "Only an actionable response authorizes `set_thread_archived`" in prompt
     assert "must register and title this exact native replacement before resume" in prompt
-    assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)." in prompt
+    assert (
+        "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)."
+        in prompt
+    )
     assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
     assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
 
@@ -451,6 +457,7 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     def make_is_ancestor(ancestry_map):
         def is_ancestor(expected, current):
             return ancestry_map.get((expected, current))
+
         return is_ancestor
 
     # 1. Descent accepted: prepared is ancestor of current
@@ -458,27 +465,29 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     assert th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_ok) is None
 
     # 2. Divergence rejected: neither is ancestor
-    is_ancestor_diverged = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): False,
-    })
+    is_ancestor_diverged = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): False,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_diverged)
     assert f"invoking checkout HEAD {current_head} has diverged from prepared HEAD {prepared_head}" in err
 
     # 3. Rewind rejected: current is strict ancestor of prepared
-    is_ancestor_rewind = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): True,
-    })
+    is_ancestor_rewind = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): True,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_rewind)
-    assert f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {prepared_head})" in err
+    assert (
+        f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {prepared_head})" in err
+    )
 
     # 4. Dirty-at-descent rejected: prepared is ancestor, but tree is dirty
-    dirty_state = {
-        **clean,
-        "full_head": current_head,
-        "modified_files": [{"status": "M", "path": "tracked.txt"}]
-    }
+    dirty_state = {**clean, "full_head": current_head, "modified_files": [{"status": "M", "path": "tracked.txt"}]}
     err = th.checkout_continuity_error(replacement, dirty_state, is_ancestor=is_ancestor_ok)
     assert "invoking checkout must be clean" in err
 
@@ -492,10 +501,12 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     assert "does not match prepared HEAD" in err
     assert "ancestry undeterminable" in err
 
-    is_ancestor_partial_none = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): None,
-    })
+    is_ancestor_partial_none = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): None,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_partial_none)
     assert "does not match prepared HEAD" in err
     assert "ancestry undeterminable" in err
@@ -569,7 +580,8 @@ def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: 
     payload = json.loads(capsys.readouterr().out)
     assert "source checkout must be clean before prepare" in payload["error"]
     assert payload["old_automation_ready_to_delete"] is False
-    assert not (tmp_path / ".agent/thread-rollovers").exists()
+    rollover_root = tmp_path / ".agent/thread-rollovers"
+    assert [path for path in rollover_root.rglob("*") if path.is_file() and path.name != ".native-intent.lock"] == []
 
 
 def test_register_created_context_failure_reports_cleanly(tmp_path: Path, capsys):
@@ -621,6 +633,208 @@ def test_native_create_action_is_retry_gate_without_db(tmp_path: Path, capsys, m
     assert action["tool"] == "create_thread"
     assert action["needs_native_action"] is True
     assert action["bootstrap_prompt_path"] == prepared_payload["bootstrap_file"]
+
+
+def test_forced_prepare_supersedes_only_pristine_exact_predecessor_intent(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    command = ["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]
+    assert th.main(command) == 0
+    first = json.loads(capsys.readouterr().out)
+
+    assert th.main([*command, "--force-new-replacement"]) == 0
+    second = json.loads(capsys.readouterr().out)
+
+    assert second["rollover_id"] != first["rollover_id"]
+    assert second["native_lifecycle"]["operation_id"] != first["native_lifecycle"]["operation_id"]
+    old_storage = TaskFamilyStorage(
+        tmp_path,
+        first["native_lifecycle"]["family_id"],
+        first["native_lifecycle"]["operation_id"],
+    )
+    assert old_storage.load_state()["details"]["status"] == "superseded_before_native_create"
+    assert old_storage.rollover_supersession_path.exists()
+    assert old_storage.load_receipt().actual == ()
+    lease = json.loads((tmp_path / second["state_file"]).read_text(encoding="utf-8"))
+    assert lease["replacement"]["rollover_id"] == second["rollover_id"]
+    assert lease["replacement"]["native_lifecycle"]["status"] == "awaiting_native_create"
+    assert "Resume codex rollover" not in second["intended_title"]
+
+
+def test_legacy_receipt_collision_repairs_current_packet_and_never_creates_from_mismatch(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    state = prepared(agent="codex", thread_id="old-thread")
+    replacement = state["replacement"]
+    current_rollover_id = replacement["rollover_id"]
+    current_bootstrap = replacement["bootstrap_prompt_path"]
+    lineage_id = state["lineage_id"]
+    legacy_family_id, legacy_operation_id = rollover.legacy_transition_identity(
+        lineage_id=lineage_id,
+        generation=1,
+    )
+    original_identity = rollover.transition_identity
+    monkeypatch.setattr(
+        rollover,
+        "transition_identity",
+        lambda **kwargs: (legacy_family_id, legacy_operation_id),
+    )
+    rollover.prepare_transition(
+        repo_root=tmp_path,
+        agent="codex",
+        lineage_id=lineage_id,
+        rollover_id="rollover-superseded-packet",
+        generation=1,
+        source_thread_id="old-thread",
+        intended_title=replacement["display"]["title"],
+        title_source=replacement["display"]["title_source"],
+        bootstrap_prompt_path="stale-bootstrap.md",
+    )
+    monkeypatch.setattr(rollover, "transition_identity", original_identity)
+    replacement["native_lifecycle"] = {
+        "family_id": legacy_family_id,
+        "operation_id": legacy_operation_id,
+        "source_thread_id": "old-thread",
+        "replacement_thread_id": None,
+        "status": "needs_native_action",
+        "error": "immutable operation document mismatch: rollover-plan.json",
+    }
+    state_path = th.default_state_path("codex", lineage_id)
+    th.write_json_atomic(tmp_path / state_path, state)
+
+    native_command = [
+        "--repo-root",
+        str(tmp_path),
+        "native-action",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        lineage_id,
+        "--rollover-id",
+        current_rollover_id,
+        "--action",
+        "create",
+    ]
+    assert th.main(native_command) == 2
+    assert "does not match its durable lineage" in json.loads(capsys.readouterr().out)["error"]
+    legacy_storage = TaskFamilyStorage(tmp_path, legacy_family_id, legacy_operation_id)
+    assert [event.kind for event in legacy_storage.load_events()] == ["rollover_native_intent_prepared"]
+
+    repair_command = [
+        "--repo-root",
+        str(tmp_path),
+        "repair-native-intent",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        lineage_id,
+        "--rollover-id",
+        current_rollover_id,
+        "--evidence",
+        "App stopped before create_thread; receipt and binding are pristine.",
+    ]
+    assert th.main(repair_command) == 0
+    repaired = json.loads(capsys.readouterr().out)
+    assert repaired["status"] == "native_intent_repaired"
+    repaired_state = json.loads((tmp_path / state_path).read_text(encoding="utf-8"))
+    repaired_native = repaired_state["replacement"]["native_lifecycle"]
+    expected_family, expected_operation = original_identity(
+        lineage_id=lineage_id,
+        generation=1,
+        rollover_id=current_rollover_id,
+    )
+    assert repaired_native["family_id"] == expected_family
+    assert repaired_native["operation_id"] == expected_operation
+    assert repaired_native["status"] == "awaiting_native_create"
+    assert repaired_state["replacement"]["bootstrap_prompt_path"] == current_bootstrap
+    assert legacy_storage.load_state()["details"]["status"] == "superseded_before_native_create"
+    current_storage = TaskFamilyStorage(tmp_path, expected_family, expected_operation)
+    assert current_storage.read_json(current_storage.rollover_plan_path)["rollover_id"] == current_rollover_id
+    validated, error = th.validate_live_lease(repaired_state, agent="codex", state_path=tmp_path / state_path)
+    assert error is None
+    assert validated is not None
+
+    assert th.main(repair_command) == 0
+    retry = json.loads(capsys.readouterr().out)
+    assert retry["status"] == "native_intent_repaired"
+    assert th.main(native_command) == 0
+    action = json.loads(capsys.readouterr().out)
+    assert action["needs_native_action"] is True
+    assert action["bootstrap_prompt_path"] == current_bootstrap
+
+
+def test_prepare_plan_failure_does_not_publish_a_live_lease(tmp_path: Path, capsys, monkeypatch) -> None:
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setattr(
+        th.task_family_rollover,
+        "prepare_transition",
+        lambda **kwargs: (_ for _ in ()).throw(ValueError("simulated persistence failure")),
+    )
+
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert "simulated persistence failure" in payload["error"]
+    assert not (
+        tmp_path / th.default_state_path("orchestrator", th.lineage_id_for("orchestrator", "old-thread"))
+    ).exists()
+
+
+def test_prepare_repair_and_create_authorization_share_one_lineage_lock(tmp_path: Path) -> None:
+    lineage_id = "lineage-1234567890abcdef12345678"
+    parser = th.build_parser()
+    prepare_args = parser.parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "prepare",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            lineage_id,
+            "--active-thread-id",
+            "old-thread",
+        ]
+    )
+    repair_args = parser.parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "repair-native-intent",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            lineage_id,
+            "--rollover-id",
+            "rollover-current",
+            "--evidence",
+            "no native call",
+        ]
+    )
+    create_args = parser.parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "native-action",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            lineage_id,
+            "--rollover-id",
+            "rollover-current",
+            "--action",
+            "create",
+        ]
+    )
+
+    expected = tmp_path / th.default_state_path("codex", lineage_id).parent / ".native-intent.lock"
+    assert th._rollover_mutation_lock_path(prepare_args) == expected
+    assert th._rollover_mutation_lock_path(repair_args) == expected
+    assert th._rollover_mutation_lock_path(create_args) == expected
 
 
 def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: Path, capsys, monkeypatch):
@@ -1041,6 +1255,10 @@ def test_pending_prepare_refuses_unless_explicitly_forced():
         force_new_replacement=True,
     )
     assert forced["replacement"]["rollover_id"] != state["replacement"]["rollover_id"]
+    assert (
+        forced["replacement"]["native_lifecycle"]["operation_id"]
+        != state["replacement"]["native_lifecycle"]["operation_id"]
+    )
 
 
 def test_resume_is_deterministic_and_refuses_a_different_thread():
