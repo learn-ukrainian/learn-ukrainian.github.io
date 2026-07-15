@@ -2353,3 +2353,103 @@ entries:
       disposition: approved
     cohort_promotion: *cohort_next10_2_c1_review
     hold: *cohort_next10_2_c1_hold
+  yuriy-ruf:
+    dossier_grounding: &cohort_next10_2_c2_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c2_review
+    wiki_quote_verification: *cohort_next10_2_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Yuriy_Ruf_cropped.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c2_review
+    hold: &cohort_next10_2_c2_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  kateryna-handziuk:
+    dossier_grounding: *cohort_next10_2_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c2_review
+    wiki_quote_verification: *cohort_next10_2_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Kateryna_Handziuk_8869.jpg
+      disposition: exception-approved
+    cohort_promotion: *cohort_next10_2_c2_review
+    hold: *cohort_next10_2_c2_hold
+  victoria-amelina:
+    dossier_grounding: *cohort_next10_2_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c2_review
+    wiki_quote_verification: *cohort_next10_2_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Amelina_Victoria.JPG
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c2_review
+    hold: *cohort_next10_2_c2_hold
+  maksym-kryvtsov:
+    dossier_grounding: *cohort_next10_2_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c2_review
+    wiki_quote_verification: *cohort_next10_2_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: exception-approved
+    cohort_promotion: *cohort_next10_2_c2_review
+    hold: *cohort_next10_2_c2_hold
+  illia-chernilevskyi:
+    dossier_grounding: *cohort_next10_2_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c2_review
+    wiki_quote_verification: *cohort_next10_2_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975946682
+      disposition: exception-approved
+    cohort_promotion: *cohort_next10_2_c2_review
+    hold: *cohort_next10_2_c2_hold

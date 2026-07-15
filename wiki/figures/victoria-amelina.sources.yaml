@@ -2,47 +2,18 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
-  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
-    > Короткий зміст'
+  file: https://pen.org.ua/members/amelina-viktoriya
+  type: external
+  title: Амеліна Вікторія
+  url: https://pen.org.ua/members/amelina-viktoriya
 - id: S2
-  file: ukrainian_wiki/victoria-amelina_Біографія-Вікторія-Амеліна-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Вікторія Амеліна'
-  section_path: 'Біографія: Вікторія Амеліна > Деколонізаційна перспектива'
+  file: https://pen.org.ua/ne-stalo-viktoriyi-amelinoyi-ukrayinskoyi-pysmennyci-ta-nashoyi-dorohoyi-kolehy
+  type: external
+  title: Не стало Вікторії Амеліної, української письменниці та нашої дорогої колеги
+  url: https://pen.org.ua/ne-stalo-viktoriyi-amelinoyi-ukrayinskoyi-pysmennyci-ta-nashoyi-dorohoyi-kolehy
 - id: S3
-  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Основний-зміст-Жіноче-обличчя-українського-літературного-канону-та-витоки-Нового-Відродження
-  type: ukrainian_wiki
-  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
-  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
-    > Основний зміст > Жіноче обличчя українського літературного канону та витоки
-    Нового Відродження'
-- id: S4
-  file: ukrainian_wiki/victoria-amelina_Біографія-Вікторія-Амеліна-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Вікторія Амеліна'
-  section_path: 'Біографія: Вікторія Амеліна > Короткий зміст'
-- id: S5
-  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
-  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
-    > Деколонізаційна перспектива'
-- id: S6
-  file: wikipedia/Амеліна Вікторія Юріївна
-  type: wikipedia
-  title: Амеліна Вікторія Юріївна
-  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BC%D0%B5%D0%BB%D1%96%D0%BD%D0%B0%20%D0%92%D1%96%D0%BA%D1%82%D0%BE%D1%80%D1%96%D1%8F%20%D0%AE%D1%80%D1%96%D1%97%D0%B2%D0%BD%D0%B0
-- id: S7
-  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Основний-зміст-Шлях-від-монументалізму-Київської-держави-до-сучасного-міфу
-  type: ukrainian_wiki
-  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
-  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
-    > Основний зміст > Шлях від монументалізму Київської держави до сучасного міфу'
-- id: S8
-  file: wave9-skhidnoslov-hramatyky_c0049
-  type: literary
-  title: Східнослов'янські граматики XVI-XVII ст. (статті)
-  author: Колектив
+  file: https://commons.wikimedia.org/wiki/File:Amelina_Victoria.JPG
+  type: external
+  title: 'File:Amelina Victoria.JPG'
+  url: https://commons.wikimedia.org/wiki/File:Amelina_Victoria.JPG
+  notes: Osabadash; own work; 1 September 2015; CC BY-SA 4.0.

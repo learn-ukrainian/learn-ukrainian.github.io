@@ -1,152 +1,84 @@
-# Вікторія Юріївна Амеліна — Research Dossier
+# Вікторія Амеліна — дослідницьке досьє
 
 **Slug:** `victoria-amelina`
-**Block:** G (writer and war-crimes documenter; killed by a Russian missile strike, 2023)
-**Tier:** 5 (build-order: contemporary war-killed) / source-authority Tier 1–2 still applied to core facts
-**Issue:** #2535 (original-180 ghost-wiki dossier uplift — Russo-Ukrainian-war wave)
-**Researcher:** Claude Opus 4.8 (`claude-opus-4-8`)
-**Completed:** 2026-06-04
+**Канонічне ім'я:** Вікторія Юріївна Амеліна
+**Джерельний пакет:** D1 — профіль Українського ПЕН; D2 — повідомлення Українського ПЕН від 2 липня 2023 року; D3 — Wikimedia Commons, `File:Amelina Victoria.JPG`
+**Дата перевірки:** 2026-07-15
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] Source-pack note: a too-recent figure for ЕІУ/ЕСУ articles; core facts anchored on PEN Ukraine [T2], her published books [primary], and corroborated quality media [T5] — see §10
-- [x] Oppression mechanism is specific (dated strike, place, missile, hospital, death date)
-- [x] ≥2 primary-source quotes (war-poetry from «Поміж сирен»; her 2022 recorded statement)
-- [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-04
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Предмет і межі
 
-> **Framing note (read first).** This is a recent war death and the duty is **dignified factual precision, not myth-padding**. Amelina was a novelist who, after February 2022, became a war-crimes documenter; she was **wounded by a Russian missile strike on a Kramatorsk restaurant on 27 June 2023 and died of her wounds in Dnipro on 1 July 2023**. The dossier states the killing exactly and resists generic "women's-leadership" filler.
+Досьє створює джерельну основу для біографічного семінару про письменницю Вікторію Амеліну. Воно спирається на дві сторінки однієї інституції з різними функціями. D1 — профіль членкині Українського ПЕН, який систематизує освіту, професійний перехід, книжки, відзнаки та міжнародну присутність. D2 — датоване повідомлення колег про її смерть, де також описано документування російських воєнних злочинів і роботу з архівом Володимира Вакуленка. Спільне інституційне походження джерел вимагає обережності: узгодженість не є незалежною подвійною перевіркою.
 
----
+Досьє не відтворює художні тексти й не використовує неперевірені цитати. Воно не робить з обставин смерті єдиний ключ до прочитання творчості. Твердження про воєнний злочин подається як позиція Українського ПЕН та Truth Hounds, зафіксована в D2, а не як самостійний юридичний висновок навчального матеріалу.
 
-## 1. Verified facts
+## 2. Перевірна біографічна хронологія
 
-- **Full name (UA, canonical):** Вікто́рія Ю́ріївна Амелі́на (до шлюбу — **Шаламай**). [T3: uk.wikipedia — "Амеліна Вікторія Юріївна"; T2: PEN Ukraine]
-- **Pseudonyms / aliases:** none literary; née Шаламай. Forbidden Russified form in §8.
-- **Born:** **1 січня 1986** | **Львів** | Українська РСР, СРСР. [T3: uk.wikipedia — "1 січня 1986, Львів"]
-- **Died:** **1 липня 2023** | **Дніпро**, лікарня ім. Мечникова | Україна | померла від поранень, отриманих **27 червня 2023 у Краматорську** під час російського ракетного удару. [T3: uk.wikipedia — §"Біографія"; T5: Українська правда, 03.07.2023]
-- **Family / education key facts:** Born in Lviv; **emigrated to Canada at 14**, then returned to Ukraine. Master's in **computer science at Lviv Polytechnic (НУ «Львівська політехніка»)**; worked as a programmer and manager in international IT companies until **2015**, when she left IT for writing. Member of **Українського ПЕН**. Founded the **Нью-Йоркський літературний фестиваль** (2021) in the village of New York, Bakhmut district, Donetsk oblast. Left a 10-year-old son; buried in Lviv (Личаківський цвинтар, поле 78). [T3: uk.wikipedia]
+D1 подає Амеліну як українську письменницю та членкиню ПЕН, описує її освіту й попередню роботу в технологічній галузі. Цей професійний перехід важливий для хронології, але не повинен ставати романтизованою формулою про «справжнє покликання». Джерело дозволяє сказати, що вона працювала в іншій сфері, а згодом зосередилася на літературі. Мотиви та внутрішній досвід переходу без прямого джерела не реконструюються.
 
-## 2. Oppression mechanism
+Профіль містить бібліографічні відомості про прозові та дитячі книжки, переклади й відзнаки [D1]. У модулі їх можна використовувати для побудови часової шкали та розрізнення жанрів. Сам перелік премій не доводить універсального канонічного статусу, а наявність перекладів не пояснює рецепції в кожній країні. Для літературного аналізу потрібні первинні тексти та окремі критичні джерела.
 
-This is a **documented Russian war crime** — the killing of a civilian by a missile strike.
+Після початку повномасштабного вторгнення Амеліна долучилася до документування російських воєнних злочинів разом із Truth Hounds [D2]. Це нова професійно-громадська лінія, яку варто називати конкретно. D2 також пов'язує її з виявленням і збереженням щоденника письменника Володимира Вакуленка. Формулювання має залишатися в межах того, що повідомляє ПЕН, без створення детективної легенди чи приписування одній людині всієї подальшої архівної роботи.
 
-- **What happened:** on **27 червня 2023**, Amelina was in **Краматорськ** with a delegation of Colombian journalists and writers, dining at a city-centre restaurant (the **«Ria Pizza»**), when **Russian forces struck the building with a missile**. She was **severely wounded**. [T3: uk.wikipedia — §"Біографія"; T5: Суспільне / Українська правда]
-- **When / where she died:** despite surgery she **died on 1 липня 2023 of her wounds at the Mechnikov hospital in Dnipro** — **not** in Kramatorsk. [T3: uk.wikipedia — "1 липня 2023 року Вікторія Амеліна померла від отриманих ран в лікарні Мечникова у Дніпрі"]
-- **By whom (specific):** the **armed forces of the Russian Federation**, in a strike on a civilian target that killed **13 people** (among them the teenage Kravets sisters) and wounded dozens — investigated as a war crime.
-- **The cruel irony in the record:** Amelina had spent the previous year **documenting exactly this category of crime** with **Truth Hounds**, and had recovered the buried diary of the murdered writer **Володимир Вакуленко** (see §3, §7). She was killed by the violence she chronicled.
-- **What survived / what was destroyed:** her notebooks and unfinished nonfiction survived and were edited into her posthumous English book (§3); her poems were collected as **«Свідчення»** (2024). Posthumous honours include the **орден «За заслуги» III ст.** (2024), the Norwegian Writers' Union freedom-of-expression prize (2024, first-ever posthumous award), Prix Voltaire special distinction (2024), and the **George Orwell Prize for Political Non-fiction (2025)**. [T3: uk.wikipedia — §"Нагороди"]
+## 3. Літературна діяльність
 
-## 3. Major works
+D1 є достатнім для орієнтаційного переліку книжок, жанрових позначок і відзнак. Він не є достатнім для докладної інтерпретації стилю. Модуль може запропонувати студентам розподілити твердження на бібліографічні й критичні: «книжка вийшла» — факт профілю; «книжка радикально змінила жанр» — оцінка, яка потребує літературознавчого джерела.
 
-- `2014` — **«Синдром листопаду, або Homo Compatiens»** (Discursus; reissued Vivat 2015) — debut novel; preface by Yuri Izdryk; short-listed for the Valerii Shevchuk Prize. [T3]
-- `2016` — **«Хтось, або Водяне Серце»** (Видавництво Старого Лева) — children's book. [T3]
-- `2017` — **«Дім для Дома»** (Видавництво Старого Лева) — novel set in a Lviv flat once inhabited by Stanisław Lem; named best Ukrainian prose book of 2017 at Запорізька книжкова толока; long-listed for the EU Prize for Literature and the UNESCO City of Literature prize. [T3]
-- `2021` — **«Е-е-есторії екскаватора Еки»** (Видавництво Старого Лева) — children's book. [T3]
-- `2024` (posthumous) — **«Свідчення»** (Видавництво Старого Лева) — collected poems. [T3]
-- `2025` (posthumous, English) — **«Looking at Women Looking at War»** (укр. «Дивлячись на жінок, які дивляться на війну») — her war-diary/nonfiction, awarded the **George Orwell Prize 2025**. [T3]
-- contributions to war-poetry anthologies, incl. **«Поміж сирен. Нові вірші війни»** (Vivat, 2023). [T3]
+Важливо уникнути ретроспективної воєнної рамки для всього доробку. Твори, написані до 2022 року, виникли у власних історичних і літературних контекстах. Пізніша документаторська праця не надає автоматично кожному попередньому текстові статусу свідчення про повномасштабну війну. У біографічному модулі доречно говорити про послідовність ролей і про їхнє часткове накладання, а не про одну наперед визначену траєкторію.
 
-She was also a **2021 Joseph Conrad Prize** laureate and Coronation of the Word (2014) winner.
+## 4. Документування злочинів і архів Вакуленка
 
-## 4. Primary-source quotes (≥2 required)
+D2 називає співпрацю Амеліної з Truth Hounds та її участь у документуванні російських воєнних злочинів. Для точності слово «документування» краще за загальне «розслідування», якщо джерело не надає процесуальної ролі слідчого. Зібрані свідчення мають власні етичні й правові режими, тому навчальний матеріал не перетворює їх на видовищні подробиці.
 
-> Amelina is not in the project literary corpus; both quotes are cited to attested published/recorded sources and corroborated.
+Повідомлення ПЕН також згадує щоденник Володимира Вакуленка, закопаний під час російської окупації та згодом переданий на збереження. Амелінина участь є значущою для теми культурної пам'яті. Однак модуль повинен відрізняти факт знаходження, факт ідентифікації, архівне збереження й подальшу публікацію. D2 підтримує базову лінію, але не всі можливі деталі історії рукопису.
 
-**Quote 1 — war poems from the anthology «Поміж сирен» (Vivat, 2023):**
+## 5. Удар по Краматорську і смерть
 
-> «Уламки мови / схожі на поезію / але це не вона.»
-> «реальність війни / з'їдає пунктуацію / зв'язність сюжету.»
+27 червня 2023 року Вікторія Амеліна зазнала тяжких поранень унаслідок російського ракетного удару по Краматорську. Вона померла 1 липня 2023 року в лікарні у Дніпрі; Український ПЕН повідомив про смерть 2 липня [D2]. Дати події, смерті й публікації не можна змішувати.
 
-Her late spare style: language itself fractured by war, "fragments that look like poetry but are not it." [T3: uk.wikipedia — §"Вірші періоду повномасштабного вторгнення", quoting «Поміж сирен», 2023]
+D2 повідомляє, що ПЕН разом із Truth Hounds називає удар воєнним злочином. Навчальний текст має зберігати цю атрибуцію. Він не імітує судове рішення і не додає невстановлених технічних деталей ракети, цілі чи ланцюга командування. Водночас пасивна формула «померла після нещасного випадку» була б неправдивою: джерело прямо називає російський ракетний удар.
 
-**Quote 2 — recorded statement on documenting the war (Kharkiv, summer 2022):**
+## 6. Цитати й авторське право
 
-> «Великий роман про війну не має бути один, цих історій має бути багато. Наша сила — у різноманітності, багатоголоссі історій, треба збирати всі свідчення, розповіді. Такою горизонтальною стане наша література.»
+Обидві сторінки ПЕН використовуються як зовнішні посилання. Досьє переказує лише необхідні факти й не копіює великі фрагменти. У схваленому пакеті немає локованої первинної цитати Амеліної, яку треба було б дослівно включати. Навіть якщо D2 містить слова колег або раніші висловлювання, їхнє повторення не потрібне для навчальної мети.
 
-Her programme — plural testimony over a single grand narrative — which is also what drove her Truth Hounds documentation. [T3: uk.wikipedia — §"Біографія", quoting a 2022 Український ПЕН discussion at Kharkiv Media]
+Мовні вправи будуються з авторських речень про атрибуцію: «Профіль ПЕН перелічує…», «У повідомленні від 2 липня інституція зазначає…», «Організації кваліфікують удар як…». Це дає змогу тренувати непряму мову та епістемічну обережність без удаваної цитатності.
 
-## 5. Language register
+## 7. Обмеження та ризики
 
-- **Register:** **contemporary literary Ukrainian** — clear, modern prose in the novels; **spare, fragmented free verse** in the war poems, where she thematises the breakdown of "пунктуація / зв'язність сюжету."
-- **CEFR readiness for full reading:** **B2–C1** for the prose; her war poetry is short and accessible (**B1–B2** as excerpts), well-suited to a careful war-literature unit.
-- **Lexicon notes:** standard modern lexicon; war-vocabulary (тривога, сирени, уламки, свідчення) and documentation register (воєнні злочини, свідчення, документування).
-- **Stylistic features:** in the late work, deliberate fragmentation, enjambment and silence; the documentary impulse (testimony, witness) bleeding into the lyric.
+Головне обмеження — обидва біографічні джерела належать Українському ПЕН. Профіль і некрологічне повідомлення мають інституційну близькість до героїні. Вони авторитетні для членства, бібліографії та позиції організації, але їх не слід називати незалежним консенсусом. Модуль має відверто пояснити цю спорідненість.
 
-## 6. Contested points
+Не підтримано психологічні твердження про те, чому Амеліна змінила професію або долучилася до документування. Не підтримано оцінку всього доробку через одну подію. Не підтримано остаточний юридичний висновок щодо конкретних виконавців удару. Не слід перебільшувати її одноосібну роль у збереженні архіву Вакуленка або стирати роботу інших людей та інституцій.
 
-- **Recency, stated honestly.** Amelina is **too recent for ЕІУ/ЕСУ articles**; this dossier therefore anchors core facts on PEN Ukraine, her published books, and corroborated quality media, per the source-tier policy's recency clause. Time-sensitive claims (posthumous awards) are dated.
-- **Literature vs documentation.** Her last year poses a real question her own words frame: the move from fiction to **war-crimes documentation** (Truth Hounds) and "horizontal," plural testimony — a deliberate ethics of authorship under invasion, not a falling-silent. This is the substantive point, and it should be developed instead of generic "woman writer" or Ostroh-school filler. [T3; T2: PEN Ukraine]
-- **Russian disinformation.** Russia routinely denies targeting civilians; the **Kramatorsk restaurant strike** that killed her is exactly such a case — Russian sources framed it as a "military target," whereas it killed civilians, including children. Naming the strike precisely is the corrective. [T5: Суспільне / international reporting]
-- **Polish/Jewish-perspective thread (organic, not padding).** «Дім для Дома» engages the **Polish-Jewish layer of Lviv** (Stanisław Lem's flat) — a genuine multi-ethnic-memory dimension of her work, worth one line, not inflation.
+## 8. Деколонізаційна перспектива
 
-## 7. Cross-track links
+Деколонізаційна рамка називає російське насильство прямо й водночас зберігає Амеліну як суб'єктку, а не лише жертву. Її літературна праця, міжнародні контакти та документування мають власну історію. Російська агресія перервала цю діяльність, але не створила її цінність заднім числом.
 
-> Every path under **Existing** was verified with `test -e` on 2026-06-04.
+Робота з рукописом Вакуленка показує, що знищення людей і загроза культурним архівам пов'язані, проте не тотожні. Модуль може аналізувати інфраструктуру пам'яті: хто знаходить, перевіряє, зберігає й публікує документ. Такий фокус протидіє імперській звичці бачити українську культуру лише як матеріал для чужого опису.
 
-- **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/volodymyr-vakulenko.yaml` — the murdered writer whose buried occupation diary Amelina recovered in 2022; the two biographies are directly linked.
-  - `curriculum/l2-uk-en/plans/bio/oleksandra-matviichuk.yaml` — human-rights documenter (Center for Civil Liberties, Nobel 2022); the documentation-of-atrocity through-line.
-  - `curriculum/l2-uk-en/plans/bio/serhiy-zhadan.yaml` — contemporary writer of the war, Kharkiv literary milieu.
-  - `curriculum/l2-uk-en/plans/bio/oksana-zabuzhko.yaml` — senior contemporary writer / public intellectual of the same PEN milieu.
-  - `curriculum/l2-uk-en/plans/bio/oleg-sentsov.yaml` — political prisoner she publicly campaigned for.
-  - `curriculum/l2-uk-en/plans/bio/iryna-tsybukh.yaml` — another young woman killed in the full-scale war (war-dead pairing).
-  - `curriculum/l2-uk-en/plans/bio/viktoriia-roshchyna.yaml` — journalist who died in Russian captivity (documenter / war-dead pairing).
-- **Existing HIST plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/hist/povnomasshtabne-vtorhnessnia.yaml` — the full-scale invasion that frames her last year and death.
-  - `curriculum/l2-uk-en/plans/hist/bucha-irpin.yaml` — the war-crimes context her Truth Hounds work documented.
-  - `curriculum/l2-uk-en/plans/hist/revoliutsiia-hidnosti.yaml` — the 2013–14 turn that preceded the war she chronicled.
-- **Candidate cross-track connections (Phase 2+, NOT existing files):**
-  - A LIT module on **war literature & testimony (2022– )** pairing Amelina, Zhadan, Vakulenko and the «Поміж сирен» anthology — no plan yet.
-  - A HIST/method module on **documenting war crimes** (Truth Hounds, the Vakulenko diary) — no plan yet.
-- **Potential additions surfaced (file as `bio-expansion-followup`):**
-  - A reception note on her posthumous English book and the **George Orwell Prize 2025**.
+## 9. Називання
 
-## 8. Naming-canonical
+Канонічна форма — «Вікторія Амеліна»; при потребі в першій згадці — «Вікторія Юріївна Амеліна». Англомовні форми можуть з'являтися лише в бібліографічному контексті. Російська форма імені не потрібна. Назви Truth Hounds та Українського ПЕН зберігаються відповідно до офіційного вжитку.
 
-- **Slug:** `victoria-amelina` (project slug uses "victoria")
-- **EN canonical:** Victoria Amelina (her own anglicised byline; cf. transliteration "Viktoriia Amelina")
-- **UA canonical (with patronymic):** Вікторія Юріївна Амеліна
-- **Aliases to track (`aliases:` YAML field):** Victoria Amelina; Viktoriia Amelina; Вікторія Шаламай (née).
-- **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Виктория Амелина; "Victoria Shalamay" used as if Russian.
+У формулюванні смерті вживаються точні географічні назви: Краматорськ і Дніпро. Не слід називати датою смерті 27 червня; це дата удару й поранення. Дата смерті — 1 липня 2023 року [D2].
 
-## 9. Image candidates
+## 10. Зображення
 
-- **Best PD/CC portrait:** recent photographs are **copyrighted**; the best path is a **CC-BY image from Український ПЕН / a literary festival** with explicit license, or a Wikimedia Commons file with a verified free license on its **file page**.
-- **Backup candidates:**
-  - Publisher author-photos (Видавництво Старого Лева / Vivat) — require permission; not free by default.
-  - Book covers of «Дім для Дома» / «Свідчення» as context images — verify publisher rights.
-- **If no PD/CC portrait clears review:** note the rights gap and propose a **licensed image request to PEN Ukraine** or use a neutral context image (e.g. the Lychakiv memorial plaque, 2024) with rights checked.
+D3 — точний Commons-портрет `File:Amelina Victoria.JPG`, створений користувачем Osabadash 1 вересня 2015 року як власна робота й ліцензований CC BY-SA 4.0. Використання потребує атрибуції, назви файла, ліцензії та посилання. Портрет не підтверджує бібліографію, документаторську працю чи обставини смерті.
 
-## 10. Sources used
+Підпис має бути нейтральним: ім'я, рік фотографування, автор і ліцензія. Не треба пов'язувати вираз обличчя або композицію фото з пізнішими подіями.
 
-**Source-pack recency note:** per `bio-research-source-tiers.md`, a figure this recent has no ЕІУ/ЕСУ article; core facts are therefore anchored on Tier 2 institutional and primary sources with Tier 5 corroboration, and time-sensitive claims are dated.
+## 11. Навчальна архітектура
 
-**Tier 2 (institutional):**
-- **Український ПЕН (PEN Ukraine)** — member profile and obituary materials; biographical baseline and the documentation-of-war framing.
+Перший блок відділяє профіль від меморіального повідомлення. Другий будує хронологію професій і книжок. Третій розглядає документування та архівну працю. Четвертий точно встановлює послідовність удару, поранення, смерті й повідомлення. П'ятий тренує атрибуцію юридичної оцінки. Завершення повертає питання: як говорити про спадщину, не зводячи її до насильницької смерті?
 
-**Tier 3 (encyclopedic — freshly fetched 2026-06-04):**
-- Українська Вікіпедія. "Амеліна Вікторія Юріївна." https://uk.wikipedia.org/wiki/Амеліна_Вікторія_Юріївна — chronology, the Kramatorsk-strike/Dnipro-death narrative, the Vakulenko-diary recovery, bibliography, awards, and the §4 quotes. Accessed 2026-06-04.
+Контрольні питання: Яке джерело підтримує бібліографію? Хто саме називає удар воєнним злочином? Чому два джерела ПЕН не є незалежною подвійною перевіркою? Які деталі історії щоденника залишаються поза пакетом? Яку функцію має D3?
 
-**Tier 5 (general web, corroborated):**
-- Українська правда — Пушнова Т. "Протиотрута. Пам'яті Вікторії Амеліної." 03.07.2023 (death corroboration).
-- Суспільне / international reporting on the **27 June 2023 Kramatorsk «Ria Pizza» strike** (the war-crime context).
+Корисне підсумкове завдання — перетворити п'ять біографічних тверджень на картки з полями «хто повідомляє», «коли оприлюднено», «який жанр» і «чого твердження не доводить». Така вправа робить атрибуцію видимою та не дозволяє змішати профіль, меморіальне повідомлення, правову оцінку й зображення.
 
-**Primary-source documents accessed (her own work):**
-- Амеліна В. *Дім для Дома* (ВСЛ, 2017); *Свідчення* (ВСЛ, 2024); *Looking at Women Looking at War* (2025); poems in *Поміж сирен* (Vivat, 2023) — quoted/relied upon in §3–§4.
+## 12. Джерела й диспозиція
 
----
+- **[D1]** Український ПЕН. «Амеліна Вікторія». Профіль для освіти, професійної хронології, книжок, перекладів і відзнак.
+- **[D2]** Український ПЕН. «Не стало Вікторії Амеліної, української письменниці та нашої дорогої колеги». Повідомлення 2 липня 2023 року про документування, Вакуленків щоденник, удар, смерть і позицію організацій.
+- **[D3]** Wikimedia Commons. `File:Amelina Victoria.JPG`. Osabadash; 1 вересня 2015 року; CC BY-SA 4.0.
 
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing — the killing is named as a **Russian missile strike / war crime**, dated and located precisely.
-- [x] No Russian-imperial transliterations in body text — confined to §8, labelled FORBIDDEN.
-- [x] No Russocentric periodization — повномасштабне вторгнення / Russo-Ukrainian war.
-- [x] No uncritical Soviet/Russian propaganda terms — the Russian "military target" claim named only as disinformation (§6).
-- [x] No "died in Kramatorsk" error — corrected: **wounded in Kramatorsk 27 June, died in Dnipro 1 July 2023**.
-- [x] Modern UA place names — Львів, Краматорськ, Дніпро, New York (Donetsk obl.).
-- [N/A] Holodomor / Crimea — not central to her arc (though her war work touches the post-2014 frame).
-- [x] Russian aggression framing — central and explicit; the war-crime context is the spine of §2/§6.
-- [x] **No myth-padding / no generic women's-leadership or Ostroh-school filler** — the documentation-ethics theme carries §6 instead.
+Досьє придатне для побудови модуля за умови чіткої атрибуції інституційних тверджень і відсутності неперевірених цитат. Художня інтерпретація потребуватиме окремого первинного корпусу.

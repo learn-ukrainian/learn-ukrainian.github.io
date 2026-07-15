@@ -2,52 +2,17 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Основний-зміст-Роль-мистецтва-у-подоланні-історичних-травм
-  type: ukrainian_wiki
-  title: 'Біографія: Ілля Чернілевський'
-  section_path: 'Біографія: Ілля Чернілевський > Основний зміст > Роль мистецтва у
-    подоланні історичних травм'
+  file: https://killedculturemakers.pen.org.ua/monitoring
+  type: external
+  title: Моніторинг втрат
+  url: https://killedculturemakers.pen.org.ua/monitoring
 - id: S2
-  file: ukrainian_wiki/syntez-rozstriliane_Історіографія-Розстріляне-відродження-як-культурний-геноцид-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Історіографія: Розстріляне відродження як культурний геноцид'
-  section_path: 'Історіографія: Розстріляне відродження як культурний геноцид > Короткий
-    зміст'
+  file: https://suspilne.media/vinnytsia/695604-a-ptah-miz-tenet-u-vinnici-vidbulasa-prezentacia-zbirki-virsiv-zagiblogo-oboronca-illi-cernilevskogo/
+  type: external
+  title: '"Я птах між тенет": у Вінниці відбулася презентація збірки віршів загиблого оборонця Іллі Чернілевського'
+  url: https://suspilne.media/vinnytsia/695604-a-ptah-miz-tenet-u-vinnici-vidbulasa-prezentacia-zbirki-virsiv-zagiblogo-oboronca-illi-cernilevskogo/
 - id: S3
-  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Ілля Чернілевський'
-  section_path: 'Біографія: Ілля Чернілевський > Деколонізаційна перспектива'
-- id: S4
-  file: 11-klas-istoriya-ukr-gisem-2024_s0902
-  type: textbook
-  title: § 5. культура україни в повоєнний період
-  page: 42
-  grade: 11
-- id: S5
-  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Ілля Чернілевський'
-  section_path: 'Біографія: Ілля Чернілевський > Короткий зміст'
-- id: S6
-  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Основний-зміст-Світоглядна-трансформація-відмова-від-російської-мови
-  type: ukrainian_wiki
-  title: 'Біографія: Ілля Чернілевський'
-  section_path: 'Біографія: Ілля Чернілевський > Основний зміст > Світоглядна трансформація:
-    відмова від російської мови'
-- id: S7
-  file: wikipedia/Дронь Артур Віталійович
-  type: wikipedia
-  title: Дронь Артур Віталійович
-  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%BD%D1%8C%20%D0%90%D1%80%D1%82%D1%83%D1%80%20%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
-- id: S8
-  file: ukrainian_wiki/continuity-of-cultural-genocide_Історіографія-Тяглість-культурного-геноциду-в-Україні-1937-vs-2022-Основний-зміст-Історіографічний-вимір-та-збереження-пам-яті
-  type: ukrainian_wiki
-  title: 'Історіографія: Тяглість культурного геноциду в Україні (1937 vs 2022)'
-  section_path: 'Історіографія: Тяглість культурного геноциду в Україні (1937 vs 2022)
-    > Основний зміст > Історіографічний вимір та збереження пам''яті'
-- id: S9
-  file: wave7-heroes-ukr-kultura_c0294
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: docs/best-practices/bio-image-rights.md
+  type: unknown
+  title: Bio Image Rights Policy
+  notes: Text-only fallback is allowed when no acceptable PD/CC portrait is located; family, mural, and news photographs are not copied.
