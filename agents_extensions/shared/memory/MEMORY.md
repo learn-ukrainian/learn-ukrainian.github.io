@@ -141,7 +141,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
-**Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-build dispatch + Hermes), DeepSeek (cheap review), Cursor, pool, glm. Caps ~2 per top lane. Use full fleet for parallel work.
+**Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-4.5 via grok-build dispatch + Hermes; xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197), DeepSeek (cheap review), Cursor, pool, glm. Caps ~2 per top lane. Use full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
 - One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build, ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)

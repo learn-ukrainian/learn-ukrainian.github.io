@@ -15,6 +15,12 @@ from typing import Any, Union
 import yaml
 
 try:
+    # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
+    from scripts.build.activity_renderer import error_correction_render_values
+except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
+    from build.activity_renderer import error_correction_render_values
+
+try:
     import jsonschema
     HAS_JSONSCHEMA = True
 except ImportError:
@@ -1857,11 +1863,17 @@ class ActivityParser:
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity, is_ukrainian_forced: bool = False) -> str:
         items = []
         for i in activity.items:
+            correct_form, options = error_correction_render_values(
+                str(i.sentence),
+                i.error,
+                str(i.answer),
+                [str(option) for option in i.options],
+            )
             items.append({
                 "sentence": str(i.sentence),
                 "errorWord": str(i.error) if i.error is not None else None,
-                "correctForm": str(i.answer),
-                "options": [str(opt) for opt in i.options],
+                "correctForm": correct_form,
+                "options": options,
                 "explanation": str(i.explanation),
             })
         instruction_prop = (

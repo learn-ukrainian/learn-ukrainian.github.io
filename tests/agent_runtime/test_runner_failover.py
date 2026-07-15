@@ -646,7 +646,7 @@ def test_shipped_config_declares_no_grok_chain():
 
     chain = load_failover_chain(
         "grok",
-        effective_model="grok-4.3",
+        effective_model="grok-4.5",
         path=default_failover_config_path(),
     )
 

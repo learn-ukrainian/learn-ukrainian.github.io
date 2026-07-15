@@ -306,6 +306,8 @@ def load_existing_ledger_keys(*, project_root: Path = PROJECT_ROOT) -> set[str]:
     root = project_root.resolve()
     keys: set[str] = set()
     for path in sorted((root / "data" / "lexicon" / "source-inventory-review-decisions").glob("*.yaml")):
+        if "ohoiko-corpus-intake-batch-" in path.name:
+            continue
         payload = load_yaml_mapping(path, label="source decision ledger")
         if payload.get("kind") != LEDGER_KIND:
             continue

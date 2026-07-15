@@ -57,16 +57,16 @@ def test_chat_completions_grok_via_hermes(monkeypatch):
     def backend(model, messages, **kwargs):
         return proxy.CompletionResponse(content="hello from grok")
 
-    monkeypatch.setitem(proxy._ROUTABLE_MODELS, "grok-4.3", _route_with_backend("grok-4.3", backend))
+    monkeypatch.setitem(proxy._ROUTABLE_MODELS, "grok-4.5", _route_with_backend("grok-4.5", backend))
 
     response = _client().post(
         "/v1/chat/completions",
-        json={"model": "grok-4.3", "messages": [{"role": "user", "content": "hello"}]},
+        json={"model": "grok-4.5", "messages": [{"role": "user", "content": "hello"}]},
     )
 
     body = response.json()
     assert response.status_code == 200
-    assert body["model"] == "grok-4.3"
+    assert body["model"] == "grok-4.5"
     assert body["choices"][0]["message"]["content"] == "hello from grok"
     assert body["choices"][0]["finish_reason"] == "stop"
 

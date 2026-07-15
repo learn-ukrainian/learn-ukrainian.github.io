@@ -65,6 +65,7 @@ _CALLER_IDENTITY_ENV_HINTS = (
     "SESSION_HANDOFF_AGENT",
     "CLAUDE_AGENT_NAME",
     "CODEX_SESSION",
+    "GROK_AGENT",
     "CLAUDE_PROJECT_DIR",
     "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
     "GEMINI_SESSION",
@@ -96,6 +97,19 @@ def _detect_caller_identity_from_env() -> str | None:
         return claude_name.strip().lower()
     if os.environ.get("CODEX_SESSION"):
         return "codex"
+    # The native `grok` CLI hardcodes `export GROK_AGENT=1` in every tool-shell
+    # bootstrap (verified 2026-07-15 in the grok-0.2.101 binary's
+    # xai_grok_tools::computer::local::shell_state; model-independent — grok-4.5,
+    # grok-5, … all inherit it), and it is the only grok-intrinsic identity
+    # marker available: GROK_HOME, GROK_SESSION*, XAI_*, AI_AGENT, and
+    # SESSION_HANDOFF_AGENT are all unset in grok shells. The native CLI IS the
+    # `grok-build` lane. Match the sentinel EXACTLY ("1"): GROK_AGENT is also a
+    # documented agent-profile *name* selector, so a truthy check would
+    # false-positive on `GROK_AGENT=my-custom-agent`. Checked BEFORE the soft
+    # CLAUDE_PROJECT_DIR heuristic so a leaked CLAUDE_* var can't misroute a grok
+    # caller to the claude inbox (the "grok asked claude, got empty" class).
+    if os.environ.get("GROK_AGENT") == "1":
+        return "grok-build"
     if os.environ.get("CLAUDE_PROJECT_DIR") or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"):
         return "claude"
     if os.environ.get("GEMINI_SESSION"):
@@ -404,6 +418,13 @@ def _handle_codex_usage(args) -> None:
 
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
+    # Recipient/inbox choices must cover EVERY valid agent, not just the
+    # original claude/gemini/codex trio — otherwise grok-build, grok, agy, and
+    # cursor cannot be targeted by `send --to`, listed by `inbox --for`, or
+    # cleared by `ack-all`, which silently second-classes those lanes.
+    from ._channels import VALID_RECIPIENT_AGENTS
+
+    recipient_choices = sorted(VALID_RECIPIENT_AGENTS)
     parser = argparse.ArgumentParser(
         description=(
             "Bridge CLI for Claude, Gemini, and Codex message passing.\n"
@@ -433,7 +454,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--for",
         dest="for_llm",
         default="gemini",
-        choices=["gemini", "claude", "codex"],
+        choices=recipient_choices,
         help="Check inbox for which agent (default: gemini)",
     )
 
@@ -448,7 +469,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--to",
         dest="to_llm",
         default="claude",
-        choices=["claude", "gemini", "codex"],
+        choices=recipient_choices,
         help="Target agent (default: claude)",
     )
     send_parser.add_argument("--from", dest="from_llm", default="gemini", help="Sender agent name (default: gemini)")
@@ -464,7 +485,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ack-all
     ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
-    ack_all_parser.add_argument("agent", choices=["claude", "gemini", "codex"], help="Agent whose inbox to clear")
+    ack_all_parser.add_argument("agent", choices=recipient_choices, help="Agent whose inbox to clear")
 
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
@@ -544,8 +565,10 @@ def _build_parser() -> argparse.ArgumentParser:
     asks_parser.add_argument("--task-id", help="Only show asks for this task ID")
 
     # ask-claude
-    ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step)")
-    ask_claude_parser.add_argument("content", help="Message content")
+    ask_claude_parser = subparsers.add_parser(
+        "ask-claude", help="Send message AND invoke Claude (one-step; use '-' to read from stdin)"
+    )
+    ask_claude_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_claude_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_claude_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
@@ -1290,11 +1313,16 @@ def _handle_ask_claude(args):
     data = None
     if args.data:
         data = Path(args.data).read_text()
+    # Parity with every other ask-* handler: `-` reads the message body from
+    # stdin. Without this, `ask-claude - --task-id X < prompt.md` sent the
+    # literal string "-" as the message, so Claude received an empty prompt and
+    # the caller got an empty/unhelpful reply (the grok "empty result" bug).
+    content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     kwargs.update(_review_target_kwargs(args))
     from_llm = _resolve_from_llm(args)
     ask_claude(
-        args.content,
+        content,
         args.task_id,
         args.type,
         data,

@@ -15,6 +15,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from build import activity_validator
 from build.activity_repair import repair_activities
 from build.activity_validator import validate_activities
 
@@ -547,6 +548,77 @@ def test_validator_flags_dict_quiz_duplicates_and_malformed_structures(tmp_path)
     assert any(message == "items is not a list: str" for message in messages)
     assert any(message == "pairs is not a list: dict" for message in messages)
     assert any(message == "pair entry is not a mapping: str" for message in messages)
+
+
+def test_validator_allows_error_correction_passthroughs(tmp_path):
+    data = {
+        "inline": [
+            {
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "Вона вчителька.",
+                        "error": "вчителька",
+                        "correction": "Вона вчитель.",
+                    },
+                    {
+                        "sentence": "Вона вчителька?",
+                        "error": "?",
+                        "correction": "Вона вчителька.",
+                    },
+                    {
+                        "sentence": "Вона вчителька?",
+                        "error": "?",
+                        "correction": ".",
+                    },
+                    {
+                        "sentence": "Вона вчителька.",
+                        "error": "вчителька",
+                        "correction": "Учитель працює.",
+                    },
+                ],
+            },
+        ],
+        "workbook": [],
+    }
+    path = _write_yaml(tmp_path, "test-mod", data)
+
+    issues = validate_activities(path)
+
+    rendered_form_issues = [
+        issue for issue in issues if "rendered correctForm" in issue.message
+    ]
+    assert rendered_form_issues == []
+
+
+def test_validator_blocks_unshortened_derivable_correct_form(tmp_path, monkeypatch):
+    data = {
+        "inline": [{
+            "type": "error-correction",
+            "items": [{
+                "sentence": "Вона вчителька.",
+                "error": "вчителька",
+                "correction": "Вона вчитель.",
+            }],
+        }],
+        "workbook": [],
+    }
+    path = _write_yaml(tmp_path, "test-mod", data)
+
+    monkeypatch.setattr(
+        activity_validator,
+        "error_correction_render_values",
+        lambda sentence, error, correction, options: (correction, options),
+    )
+
+    issues = validate_activities(path)
+
+    rendered_form_issues = [
+        issue for issue in issues if "rendered correctForm" in issue.message
+    ]
+    assert len(rendered_form_issues) == 1
+    assert rendered_form_issues[0].item_index == 0
+    assert rendered_form_issues[0].severity == "error"
 
 
 if __name__ == "__main__":

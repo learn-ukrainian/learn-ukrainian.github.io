@@ -130,10 +130,10 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "grok": {
-        # Hermes-backed Grok (grok-4.3 / grok-4.20) via the OAuth API path.
+        # Hermes-backed Grok 4.5 via the OAuth API path.
         # DISTINCT from "grok-build" below, which drives the native grok CLI.
         "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
-        "default_model": "grok-4.3",
+        "default_model": "grok-4.5",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
@@ -151,7 +151,7 @@ AGENTS: dict[str, AgentEntry] = {
         # `grok` entry above (different transport, different use: coding vs
         # content). Uses ~/.grok OAuth.
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
-        "default_model": "grok-build",
+        "default_model": "grok-4.5",
         "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset(

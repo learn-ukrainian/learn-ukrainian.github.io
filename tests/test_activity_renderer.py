@@ -150,6 +150,78 @@ class TestErrorCorrection:
         assert parsed[0]["errorWord"] == "моя"
         assert parsed[0]["correctForm"] == "мій"
 
+    def test_derives_word_and_sentence_shaped_options(self):
+        act = {
+            "type": "error-correction",
+            "items": [{
+                "sentence": "Вона вчителька.",
+                "error": "вчителька",
+                "correction": "Вона вчитель.",
+                "options": [
+                    "Вона вчитель.",
+                    "Вона вчителька.",
+                    "вчитель",
+                ],
+            }],
+        }
+
+        parsed = _extract_prop(render_activity_to_jsx(act), "items")
+        assert parsed[0]["correctForm"] == "вчитель"
+        assert parsed[0]["options"] == ["вчитель", "вчителька", "вчитель"]
+
+    def test_derives_phrase_replacement(self):
+        act = {
+            "type": "error-correction",
+            "items": [{
+                "sentence": "Моє ім'я є Олена.",
+                "error": "Моє ім'я є",
+                "correction": "Мене звати Олена.",
+            }],
+        }
+
+        parsed = _extract_prop(render_activity_to_jsx(act), "items")
+        assert parsed[0]["correctForm"] == "Мене звати"
+
+    def test_preserves_shared_error_boundary_words(self):
+        act = {
+            "type": "error-correction",
+            "items": [{
+                "sentence": "Я бачу гарна дівчину.",
+                "error": "гарна дівчину",
+                "correction": "Я бачу гарну дівчину.",
+            }],
+        }
+
+        parsed = _extract_prop(render_activity_to_jsx(act), "items")
+        assert parsed[0]["correctForm"] == "гарну дівчину"
+
+    def test_punctuation_and_non_derivable_items_pass_through(self):
+        act = {
+            "type": "error-correction",
+            "items": [
+                {
+                    "sentence": "Вона вчителька?",
+                    "error": "?",
+                    "correction": "Вона вчителька.",
+                },
+                {
+                    "sentence": "Вона вчителька?",
+                    "error": "?",
+                    "correction": ".",
+                },
+                {
+                    "sentence": "Вона вчителька.",
+                    "error": "вчителька",
+                    "correction": "Учитель працює.",
+                },
+            ],
+        }
+
+        parsed = _extract_prop(render_activity_to_jsx(act), "items")
+        assert parsed[0]["correctForm"] == "Вона вчителька."
+        assert parsed[1]["correctForm"] == "."
+        assert parsed[2]["correctForm"] == "Учитель працює."
+
 
 class TestAnagram:
     def test_letters_joined(self):

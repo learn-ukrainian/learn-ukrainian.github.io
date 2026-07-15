@@ -822,5 +822,105 @@ def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
     assert _cli._detect_caller_identity_from_env() == "claude"
 
 
+def _clear_identity_env(monkeypatch) -> None:
+    for var in (
+        "SESSION_HANDOFF_AGENT",
+        "CLAUDE_AGENT_NAME",
+        "CODEX_SESSION",
+        "GROK_AGENT",
+        "CLAUDE_PROJECT_DIR",
+        "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
+        "GEMINI_SESSION",
+    ):
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_detect_caller_identity_grok_agent_maps_to_grok_build(monkeypatch):
+    # The native grok CLI exports GROK_AGENT for every tool shell it spawns
+    # (model-independent). It must auto-detect as the grok-build lane so a grok
+    # session can `ab ask-claude` without --from and get the reply back.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+
+    assert _cli._detect_caller_identity_from_env() == "grok-build"
+
+
+def test_detect_caller_identity_grok_agent_beats_soft_claude_heuristic(monkeypatch):
+    # A grok session that inherited a stray CLAUDE_* var must still resolve to
+    # grok-build, never misroute to the claude inbox (the "empty result" class).
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "grok-build"
+
+
+def test_detect_caller_identity_grok_agent_profile_name_is_not_a_false_positive(monkeypatch):
+    # GROK_AGENT doubles as an agent-profile *name* selector; only the tool-shell
+    # sentinel value "1" means "spawned by a grok CLI shell". A profile name must
+    # NOT be mistaken for the grok-build lane — it falls through to normal detect.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "my-custom-agent")
+
+    assert _cli._detect_caller_identity_from_env() is None
+
+
+def test_detect_caller_identity_explicit_handoff_still_wins_over_grok_agent(monkeypatch):
+    # An explicit, validated SESSION_HANDOFF_AGENT is authoritative over the
+    # weaker GROK_AGENT marker.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
+
+    assert _cli._detect_caller_identity_from_env() == "codex"
+
+
+def test_grok_build_is_valid_agent():
+    assert "grok-build" in _channels.VALID_AGENTS
+
+
 def test_claude_infra_is_valid_agent():
     assert "claude-infra" in _channels.VALID_AGENTS
+
+
+def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
+    # Regression for the grok "empty result" bug: ask-claude used args.content
+    # directly, so `ask-claude - < prompt.md` sent the literal "-" as the body.
+    # Every other ask-* handler resolves "-" to stdin; ask-claude must too.
+    captured: dict[str, object] = {}
+
+    def _fake_ask_claude(content, *_args, **_kwargs):
+        captured["content"] = content
+
+    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "the real question body"))
+
+    exit_code = _run_cli(["ask-claude", "-", "--task-id", "t-stdin", "--from", "grok-build"])
+
+    assert exit_code == 0
+    assert captured["content"] == "the real question body"
+
+
+def test_ask_claude_literal_content_is_not_treated_as_stdin(monkeypatch):
+    captured: dict[str, object] = {}
+
+    def _fake_ask_claude(content, *_args, **_kwargs):
+        captured["content"] = content
+
+    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "SHOULD-NOT-BE-USED"))
+
+    exit_code = _run_cli(["ask-claude", "a literal question", "--task-id", "t-lit", "--from", "grok-build"])
+
+    assert exit_code == 0
+    assert captured["content"] == "a literal question"
+
+
+def test_recipient_choices_cover_every_valid_agent():
+    # Regression: inbox --for / send --to / ack-all hardcoded {claude,gemini,codex},
+    # silently second-classing grok-build, grok, agy, and cursor.
+    parser = _cli._build_parser()
+    for agent in ("grok-build", "grok", "agy", "cursor"):
+        assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
+        assert parser.parse_args(["ack-all", agent]).agent == agent
+        assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent

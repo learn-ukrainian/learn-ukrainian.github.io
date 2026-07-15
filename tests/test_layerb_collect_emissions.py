@@ -399,6 +399,57 @@ def test_collector_extracts_bridge_sidecar_without_polluting_response() -> None:
     assert "_bridge_substituted" not in emission["response"]
 
 
+def test_collector_passes_and_extracts_grok_forensics_sidecar(tmp_path: Path, monkeypatch) -> None:
+    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
+    output_dir = tmp_path / "collector"
+    captured: dict[str, Any] = {}
+    sidecar = {"path": str(output_dir / "forensics" / ("a" * 64 + ".raw-err")), "sha256": "b" * 64}
+
+    class CapturingJudge:
+        def __init__(self, command, timeout_seconds, *, environment) -> None:
+            captured["command"] = command
+            captured["timeout_seconds"] = timeout_seconds
+            captured["environment"] = environment
+
+        def __call__(self, request, route):
+            parsed = layerb_judge_bridge.parse_request(request)
+            facts = []
+            for fact in parsed.request["fact_checks"]:
+                fact_check_id = str(fact["fact_check_id"])
+                relations = []
+                for source in fact["candidate_sources"]:
+                    candidate_id = str(source["candidate_id"])
+                    raw = parsed.windows_by_fact_candidate[(fact_check_id, candidate_id)]["raw_window"]
+                    relations.append(
+                        {
+                            "candidate_id": candidate_id,
+                            "relation": "ENTAILS",
+                            "support_spans": [{"start": 0, "end": len(raw), "role": "SUPPORTS"}],
+                            "confidence": "high",
+                            "prompt_injection_observed": False,
+                        }
+                    )
+                facts.append({"fact_check_id": fact_check_id, "source_relations": relations})
+            return layerb_collect_emissions.layerb_shadow.JudgeCall(
+                response={
+                    "schema_version": layerb_collect_emissions.layerb_shadow.JUDGE_OUTPUT_VERSION,
+                    "fact_checks": facts,
+                    "_bridge_forensics": sidecar,
+                }
+            )
+
+    monkeypatch.setattr(layerb_collect_emissions.layerb_shadow, "SubprocessJudge", CapturingJudge)
+
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 0
+    assert captured["environment"]["LAYERB_BRIDGE_FORENSICS_DIR"] == str(output_dir / "forensics")
+    cache = next((output_dir / "cache").glob("*.json"))
+    cache_payload = json.loads(cache.read_text(encoding="utf-8"))
+    assert cache_payload["bridge_forensics"] == sidecar
+    assert "_bridge_forensics" not in cache_payload["response"]
+    manifest = json.loads((output_dir / "raw-call-manifest.json").read_text(encoding="utf-8"))
+    assert all(call["bridge_forensics"] == sidecar for call in manifest["calls"])
+
+
 def test_collector_extracts_detector_sidecar_by_known_pair_and_deduplicates() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
     response["_evidence_pattern_hits"] = [
@@ -466,6 +517,37 @@ def test_route_identity_hashes_bridge_version(tmp_path: Path) -> None:
             "prompt_version": layerb_collect_emissions.layerb_shadow.PROMPT_VERSION,
             "tools": [],
             "tool_access": {"enabled": False, "mcp": False},
+        }
+    )
+
+
+def test_grok_route_identity_adds_only_the_flat_contract_fingerprint(tmp_path: Path) -> None:
+    non_grok_args = layerb_collect_emissions.parse_args(
+        _collector_args(tmp_path / "main.json", tmp_path / "probe.json", tmp_path / "non-grok-output", calls=1)
+    )
+    grok_args = layerb_collect_emissions.parse_args(
+        _collector_args(
+            tmp_path / "main.json", tmp_path / "probe.json", tmp_path / "grok-output", calls=1, family="GROK"
+        )
+    )
+
+    non_grok_route, _non_grok_judge_route, _non_grok_seat_key, _non_grok_seat_metadata = (
+        layerb_collect_emissions._route_metadata(non_grok_args)
+    )
+    grok_route, _grok_judge_route, _grok_seat_key, _grok_seat_metadata = layerb_collect_emissions._route_metadata(
+        grok_args
+    )
+
+    assert grok_route.bridge_config_sha256 != non_grok_route.bridge_config_sha256
+    assert grok_route.bridge_config_sha256 == layerb_collect_emissions._sha256_json(
+        {
+            "argv": [str(VENV_PYTHON), str(STUB)],
+            "bridge_version": layerb_judge_bridge.BRIDGE_VERSION,
+            "judge_input_version": layerb_collect_emissions.layerb_shadow.JUDGE_INPUT_VERSION,
+            "prompt_version": layerb_collect_emissions.layerb_shadow.PROMPT_VERSION,
+            "tools": [],
+            "tool_access": {"enabled": False, "mcp": False},
+            "family_internal_sha": layerb_judge_bridge.grok_flat_contract_fingerprint(),
         }
     )
 
@@ -800,8 +882,8 @@ def test_planner_enforces_route_eligibility_in_all_mode(capsys: pytest.CaptureFi
     grok_route = layerb_qualify.EffectiveRoute.from_mapping(
         {
             "family": "grok",
-            "resolved_model": "grok-build",
-            "resolved_model_version": "grok-build",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
             "bridge_executable": "bridge --offline-recording",
             "bridge_config_sha256": "a" * 64,
             "provider_account_lane": "xai-subscription",
@@ -841,8 +923,8 @@ def test_planner_rejects_unknown_lineage_in_all_mode(capsys: pytest.CaptureFixtu
     grok_route = layerb_qualify.EffectiveRoute.from_mapping(
         {
             "family": "grok",
-            "resolved_model": "grok-build",
-            "resolved_model_version": "grok-build",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
             "bridge_executable": "bridge --offline-recording",
             "bridge_config_sha256": "a" * 64,
             "provider_account_lane": "xai-subscription",

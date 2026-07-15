@@ -39,6 +39,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from hashlib import sha256
@@ -56,9 +57,11 @@ from scripts.audit import layerb_shadow
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
+GROK_FLAT_SCHEMA_BUILDER_VERSION = "qg-layer-b-judge-grok-flat-schema.v1"
+GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v1"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
-    "grok": "grok-build",
+    "grok": "grok-4.5",
     "gemini": "gemini-3.5-flash-high",
 }
 CODEX_DISABLED_FEATURES = (
@@ -187,6 +190,32 @@ FLATTENED_PROMPT_TEMPLATE_MATERIAL = "\n\n".join(
     (SYSTEM_PROMPT_TEMPLATE, IMMOVABLE_POLICY_BOUNDARY, UNTRUSTED_REASSERTION)
 )
 
+GROK_FLAT_OUTPUT_SHAPE_INSTRUCTION = """OUTPUT-SHAPE — GROK FLAT CONTRACT
+For this Grok request, return one bare top-level JSON array, not an object and
+not a nested envelope. The array has exactly one row for every requested
+(fact_check_id, candidate_id) pair. Every row must use these canonical field
+names: fact_check_id, candidate_id, relation, support_spans, confidence, and
+prompt_injection_observed. Omitting confidence is invalid; confidence must be
+"high".
+
+Do not use the key `spans`; the key must be `support_spans`.
+
+This is a shape-only example; do not copy its relation or spans unless the
+candidate evidence supports them:
+{example_row}
+
+Return only the JSON array. Do not return schema_version, fact_checks,
+source_relations, prose, Markdown, or code fences."""
+
+GROK_FLAT_PROMPT_TEMPLATE_MATERIAL = "\n\n".join(
+    (
+        SYSTEM_PROMPT_TEMPLATE,
+        GROK_FLAT_OUTPUT_SHAPE_INSTRUCTION,
+        IMMOVABLE_POLICY_BOUNDARY,
+        UNTRUSTED_REASSERTION,
+    )
+)
+
 _UNTRUSTED_BLOCK_RE = re.compile(
     r"\A<<<BEGIN_UNTRUSTED_TOOL_OUTPUT\n"
     r"nonce=(?P<nonce>[^\n]+)\n"
@@ -211,6 +240,10 @@ class BridgeInvocationError(RuntimeError):
             raise ValueError(f"unknown conservative reason {reason!r}")
         self.reason = reason
         super().__init__(reason)
+
+
+class GrokFlatLiftError(ValueError):
+    """The flat Grok response cannot be safely regrouped into an envelope."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -265,14 +298,22 @@ class BridgeConfig:
             tool_enforcement = "unqualified transport is never invoked"
             disabled_features = []
             config_overrides = []
-        return {
+        if self.family == "grok":
+            grok_flat_contract = grok_flat_contract_material()
+            prompt_template_version = grok_flat_contract["prompt_template_version"]
+            prompt_template_sha256 = grok_flat_contract["prompt_template_sha256"]
+        else:
+            grok_flat_contract = None
+            prompt_template_version = PROMPT_TEMPLATE_VERSION
+            prompt_template_sha256 = _sha256_text(FLATTENED_PROMPT_TEMPLATE_MATERIAL)
+        material = {
             "bridge_version": BRIDGE_VERSION,
             "family": self.family,
             "model": self.model,
             "model_version": self.model_version,
             "transport": self.transport,
-            "prompt_template_version": PROMPT_TEMPLATE_VERSION,
-            "prompt_template_sha256": _sha256_text(FLATTENED_PROMPT_TEMPLATE_MATERIAL),
+            "prompt_template_version": prompt_template_version,
+            "prompt_template_sha256": prompt_template_sha256,
             "judge_input_version": layerb_shadow.JUDGE_INPUT_VERSION,
             "judge_output_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
             "seat_transport": {
@@ -308,6 +349,9 @@ class BridgeConfig:
                 "note": "Neither subscription CLI exposes a judge-specific setting; unavailable values are attested, not fabricated.",
             },
         }
+        if grok_flat_contract is not None:
+            material["grok_flat_contract"] = grok_flat_contract
+        return material
 
     def to_dict(self) -> dict[str, Any]:
         material = self.material()
@@ -330,6 +374,7 @@ class ModelResult:
 
     text: str
     observed: dict[str, Any] | None = None
+    raw_stdout: str | None = None
 
 
 def _canonical_json(value: Any) -> str:
@@ -342,6 +387,22 @@ def _sha256_text(value: str) -> str:
 
 def _sha256_json(value: Any) -> str:
     return _sha256_text(_canonical_json(value))
+
+
+def grok_flat_contract_material() -> dict[str, str]:
+    """Return the Grok-only request-contract inputs that must invalidate cache reuse."""
+
+    return {
+        "schema_builder_version": GROK_FLAT_SCHEMA_BUILDER_VERSION,
+        "prompt_template_version": GROK_PROMPT_TEMPLATE_VERSION,
+        "prompt_template_sha256": _sha256_text(GROK_FLAT_PROMPT_TEMPLATE_MATERIAL),
+    }
+
+
+def grok_flat_contract_fingerprint() -> str:
+    """Hash the Grok-only request contract without changing Codex attestation bytes."""
+
+    return _sha256_json(grok_flat_contract_material())
 
 
 def _require_string(value: Mapping[str, Any], key: str, context: str) -> str:
@@ -496,6 +557,31 @@ def build_codex_prompt(parsed: ParsedRequest) -> str:
     )
 
 
+def build_grok_prompt(parsed: ParsedRequest) -> str:
+    """Build the Grok-only flat-output prompt without changing Codex material."""
+
+    first_fact = parsed.request["fact_checks"][0]
+    first_source = first_fact["candidate_sources"][0]
+    example_row = _canonical_json(
+        {
+            "fact_check_id": str(first_fact["fact_check_id"]),
+            "candidate_id": str(first_source["candidate_id"]),
+            "relation": "ABSTAIN",
+            "support_spans": [],
+            "confidence": "high",
+            "prompt_injection_observed": False,
+        }
+    )
+    return "\n\n".join(
+        (
+            build_system_prompt(parsed.request),
+            GROK_FLAT_OUTPUT_SHAPE_INSTRUCTION.format(example_row=example_row),
+            IMMOVABLE_POLICY_BOUNDARY,
+            build_user_message(parsed),
+        )
+    )
+
+
 def _flattened_injection_screen(parsed: ParsedRequest) -> bool:
     """Reject only injection-shaped canonical metadata before a flattened prompt runs."""
 
@@ -576,6 +662,92 @@ def output_json_schema() -> dict[str, Any]:
     }
 
 
+def output_json_schema_for_request(parsed: ParsedRequest) -> dict[str, Any]:
+    """Bind the generic output schema's envelope identifiers to one request.
+
+    Grok's constraint grammar needs a Draft-4 tuple form here: ``const`` and
+    2020-12 tuple keywords are not reliably honored by subscription CLIs.
+    The normalizer remains the authoritative validation boundary; this only
+    reduces avoidable identifier-transcription failures before it runs.
+    """
+
+    schema = output_json_schema()
+    properties = dict(schema["properties"])
+    generic_facts = properties["fact_checks"]
+    generic_fact = generic_facts["items"]
+    generic_fact_properties = generic_fact["properties"]
+    generic_source_relations = generic_fact_properties["source_relations"]
+    generic_source_relation = generic_source_relations["items"]
+
+    pinned_facts: list[dict[str, Any]] = []
+    for request_fact in parsed.request["fact_checks"]:
+        fact_check_id = str(request_fact["fact_check_id"])
+        pinned_relations: list[dict[str, Any]] = []
+        for source in request_fact["candidate_sources"]:
+            candidate_properties = dict(generic_source_relation["properties"])
+            candidate_properties["candidate_id"] = {"type": "string", "enum": [str(source["candidate_id"])]}
+            pinned_relations.append({**generic_source_relation, "properties": candidate_properties})
+
+        relation_tuple = {
+            **generic_source_relations,
+            "items": pinned_relations,
+            "additionalItems": False,
+            "minItems": len(pinned_relations),
+            "maxItems": len(pinned_relations),
+        }
+        fact_properties = dict(generic_fact_properties)
+        fact_properties["fact_check_id"] = {"type": "string", "enum": [fact_check_id]}
+        fact_properties["source_relations"] = relation_tuple
+        pinned_facts.append({**generic_fact, "properties": fact_properties})
+
+    properties["fact_checks"] = {
+        **generic_facts,
+        "items": pinned_facts,
+        "additionalItems": False,
+        "minItems": len(pinned_facts),
+        "maxItems": len(pinned_facts),
+    }
+    return {**schema, "properties": properties}
+
+
+def grok_flat_output_schema() -> dict[str, Any]:
+    """Return Grok's generic flat row contract for config attestation only."""
+
+    canonical = output_json_schema()
+    source_relation = canonical["properties"]["fact_checks"]["items"]["properties"]["source_relations"]["items"]
+    row_properties = {"fact_check_id": {"type": "string"}, **source_relation["properties"]}
+    return {
+        "type": "array",
+        "items": {
+            **source_relation,
+            "properties": row_properties,
+            "required": ["fact_check_id", *source_relation["required"]],
+        },
+    }
+
+
+def grok_flat_output_schema_for_request(parsed: ParsedRequest) -> dict[str, Any]:
+    """Pin Grok's Draft-4 flat row tuple to a parsed request's identifiers."""
+
+    generic = grok_flat_output_schema()
+    generic_row = generic["items"]
+    rows: list[dict[str, Any]] = []
+    for fact in parsed.request["fact_checks"]:
+        fact_check_id = str(fact["fact_check_id"])
+        for source in fact["candidate_sources"]:
+            properties = dict(generic_row["properties"])
+            properties["fact_check_id"] = {"type": "string", "enum": [fact_check_id]}
+            properties["candidate_id"] = {"type": "string", "enum": [str(source["candidate_id"])]}
+            rows.append({**generic_row, "properties": properties})
+    return {
+        "type": "array",
+        "items": rows,
+        "additionalItems": False,
+        "minItems": len(rows),
+        "maxItems": len(rows),
+    }
+
+
 def build_codex_judge_argv(
     *, config: BridgeConfig, scratch_dir: Path, schema_path: Path, output_path: Path
 ) -> list[str]:
@@ -602,7 +774,14 @@ def build_codex_judge_argv(
     return argv
 
 
-def build_grok_judge_argv(*, config: BridgeConfig, scratch_dir: Path, session_id: str, prompt: str) -> list[str]:
+def build_grok_judge_argv(
+    *,
+    config: BridgeConfig,
+    scratch_dir: Path,
+    session_id: str,
+    prompt: str,
+    parsed: ParsedRequest | None = None,
+) -> list[str]:
     """Build the complete native Grok CLI command with a zero-tool policy."""
 
     argv = [
@@ -612,7 +791,7 @@ def build_grok_judge_argv(*, config: BridgeConfig, scratch_dir: Path, session_id
         "--output-format",
         "json",
         "--json-schema",
-        _canonical_json(output_json_schema()),
+        _canonical_json(grok_flat_output_schema_for_request(parsed) if parsed is not None else grok_flat_output_schema()),
         "--no-alt-screen",
         "--verbatim",
         "--max-turns",
@@ -905,6 +1084,85 @@ def _grok_trace_models(*, updates: Sequence[Mapping[str, Any]], events: Sequence
     return models
 
 
+_GROK_CANONICAL_ROW_FIELDS = (
+    "candidate_id",
+    "relation",
+    "support_spans",
+    "confidence",
+    "prompt_injection_observed",
+)
+_GROK_TRAILING_FENCE_RE = re.compile(r"\s*(?:```(?:json)?\s*)?\Z", re.IGNORECASE)
+
+# The #5208 live smoke emitted canonical support_spans and confidence="high".
+# Therefore spans -> support_spans stays disabled: this lift must remain a
+# pure structural regroup with no field aliases, defaults, or coercions.
+
+
+def _strict_grok_json_value(text: str) -> Any:
+    """Extract one Grok JSON value while rejecting non-fence trailing prose."""
+
+    decoder = json.JSONDecoder()
+    for matched in re.finditer(r"[\[{]", text):
+        candidate = text[matched.start() :]
+        try:
+            decoded, end = decoder.raw_decode(candidate)
+        except json.JSONDecodeError:
+            continue
+        if _GROK_TRAILING_FENCE_RE.fullmatch(candidate[end:]) is None:
+            raise BridgeInvocationError("output_decode")
+        return decoded
+    raise BridgeInvocationError("output_decode")
+
+
+def _lift_grok_flat_rows(rows: Sequence[Any], parsed: ParsedRequest) -> dict[str, Any]:
+    """Purely regroup the verified Grok flat row multiset into the public envelope."""
+
+    try:
+        expected_pairs = [
+            (str(fact["fact_check_id"]), str(source["candidate_id"]))
+            for fact in parsed.request["fact_checks"]
+            for source in fact["candidate_sources"]
+        ]
+    except (KeyError, TypeError) as exc:
+        raise GrokFlatLiftError("parsed request has no complete flat-row identifiers") from exc
+
+    observed_pairs: list[tuple[str, str]] = []
+    rows_by_pair: dict[tuple[str, str], Mapping[str, Any]] = {}
+    try:
+        for index, row in enumerate(rows):
+            if not isinstance(row, Mapping):
+                raise GrokFlatLiftError(f"flat row {index} is not an object")
+            fact_check_id = row.get("fact_check_id")
+            candidate_id = row.get("candidate_id")
+            if not isinstance(fact_check_id, str) or not fact_check_id:
+                raise GrokFlatLiftError(f"flat row {index} has no fact_check_id")
+            if not isinstance(candidate_id, str) or not candidate_id:
+                raise GrokFlatLiftError(f"flat row {index} has no candidate_id")
+            pair = (fact_check_id, candidate_id)
+            if pair in rows_by_pair:
+                raise GrokFlatLiftError(f"flat rows contain duplicate identifier pair {pair!r}")
+            observed_pairs.append(pair)
+            rows_by_pair[pair] = row
+    except (KeyError, TypeError) as exc:
+        raise GrokFlatLiftError("flat rows cannot be structurally inspected") from exc
+
+    if Counter(observed_pairs) != Counter(expected_pairs):
+        raise GrokFlatLiftError("flat-row identifier multiset differs from the request")
+
+    try:
+        facts = []
+        for fact in parsed.request["fact_checks"]:
+            fact_check_id = str(fact["fact_check_id"])
+            source_relations = []
+            for source in fact["candidate_sources"]:
+                row = rows_by_pair[(fact_check_id, str(source["candidate_id"]))]
+                source_relations.append({field: row[field] for field in _GROK_CANONICAL_ROW_FIELDS if field in row})
+            facts.append({"fact_check_id": fact_check_id, "source_relations": source_relations})
+    except (KeyError, TypeError) as exc:
+        raise GrokFlatLiftError("flat rows cannot be regrouped in request order") from exc
+    return {"schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION, "fact_checks": facts}
+
+
 def _strict_grok_stdout(stdout: str, *, expected_session_id: str) -> str:
     """Require the one documented Grok JSON envelope for the planned session."""
 
@@ -1019,7 +1277,8 @@ def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
                 config=config,
                 scratch_dir=scratch_dir,
                 session_id=session_id,
-                prompt=build_codex_prompt(parsed),
+                prompt=build_grok_prompt(parsed),
+                parsed=parsed,
             ),
             text=True,
             capture_output=True,
@@ -1040,7 +1299,24 @@ def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
             scratch_dir=scratch_dir,
             session_id=session_id,
         )
-        return ModelResult(text=text)
+        return ModelResult(text=text, raw_stdout=completed.stdout)
+
+
+def _write_grok_validation_forensics(parsed: ParsedRequest, raw_stdout: str | None) -> dict[str, str] | None:
+    """Best-effort quarantine write for a clean Grok response that fails validation."""
+
+    directory = os.environ.get("LAYERB_BRIDGE_FORENSICS_DIR")
+    if not directory or raw_stdout is None:
+        return None
+    request_sha256 = _sha256_json(parsed.request)
+    try:
+        path = Path(directory) / f"{request_sha256}.raw-err"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(raw_stdout, encoding="utf-8")
+        content_sha256 = _sha256_text(raw_stdout)
+    except (OSError, UnicodeError):
+        return None
+    return {"path": str(path), "sha256": content_sha256}
 
 
 def conservative_response(
@@ -1102,12 +1378,29 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
             raise BridgeInvocationError("transport_exit")
         else:
             raise BridgeInvocationError("transport_exit")
-        try:
-            decoded = json.loads(model_result.text)
-        except json.JSONDecodeError as exc:
-            raise BridgeInvocationError("output_decode") from exc
-        if not isinstance(decoded, Mapping):
-            raise BridgeInvocationError("output_decode")
+        if config.family == "grok":
+            decoded = _strict_grok_json_value(model_result.text)
+            if not isinstance(decoded, list):
+                raise BridgeInvocationError("output_decode")
+            try:
+                decoded = _lift_grok_flat_rows(decoded, parsed)
+            except GrokFlatLiftError:
+                response = conservative_response(
+                    parsed, reason="envelope_alignment", evidence_pattern_hits=evidence_pattern_hits
+                )
+                forensics = _write_grok_validation_forensics(parsed, model_result.raw_stdout)
+                if forensics is not None:
+                    response["_bridge_forensics"] = forensics
+                if model_result.observed:
+                    response["_shadow_observed"] = model_result.observed
+                return response
+        else:
+            try:
+                decoded = json.loads(model_result.text)
+            except json.JSONDecodeError as exc:
+                raise BridgeInvocationError("output_decode") from exc
+            if not isinstance(decoded, Mapping):
+                raise BridgeInvocationError("output_decode")
         try:
             response, substitutions = layerb_shadow.normalize_judge_module_response(
                 decoded, expected_windows_by_fact=_expected_windows_by_fact(parsed)
@@ -1116,6 +1409,10 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
             response = conservative_response(
                 parsed, reason="envelope_alignment", evidence_pattern_hits=evidence_pattern_hits
             )
+            if config.family == "grok":
+                forensics = _write_grok_validation_forensics(parsed, model_result.raw_stdout)
+                if forensics is not None:
+                    response["_bridge_forensics"] = forensics
         else:
             if substitutions:
                 response["_bridge_substituted"] = substitutions
@@ -1150,6 +1447,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def _config_from_args(args: argparse.Namespace) -> BridgeConfig:
     model = args.judge_model or DEFAULT_MODELS[args.judge_family]
     model_version = args.judge_model_version or model
+    if args.judge_family == "grok" and (model != "grok-4.5" or model_version != "grok-4.5"):
+        raise BridgeInputError("Grok Layer-B judges must use grok-4.5")
     if args.timeout_seconds <= 0:
         raise BridgeInputError("--timeout-seconds must be positive")
     return BridgeConfig(

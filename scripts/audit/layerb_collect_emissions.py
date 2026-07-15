@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -587,6 +588,25 @@ def _evidence_pattern_hits_by_case(
     return dict(by_case)
 
 
+def _bridge_forensics_sidecar(response: Mapping[str, Any]) -> dict[str, str] | None:
+    """Extract a bridge-owned forensic pointer without admitting it to scoring payloads."""
+
+    sidecar = response.get("_bridge_forensics")
+    if not isinstance(sidecar, Mapping):
+        return None
+    path = sidecar.get("path")
+    content_sha256 = sidecar.get("sha256")
+    if (
+        not isinstance(path, str)
+        or not path
+        or not isinstance(content_sha256, str)
+        or len(content_sha256) != 64
+        or any(character not in "0123456789abcdef" for character in content_sha256)
+    ):
+        return None
+    return {"path": path, "sha256": content_sha256}
+
+
 def _failure_response(prepared: PreparedCase) -> dict[str, Any]:
     return {
         "schema_version": layerb_shadow.JUDGE_OUTPUT_VERSION,
@@ -733,6 +753,11 @@ def _route_metadata(
         "tools": [],
         "tool_access": {"enabled": False, "mcp": False},
     }
+    # Fresh output directories and no --resume remain a defence-in-depth
+    # operational rule for Grok qualification. This identity fold independently
+    # prevents a response cache from crossing a flat-contract revision.
+    if str(args.judge_family).casefold() == "grok":
+        bridge_config["family_internal_sha"] = layerb_judge_bridge.grok_flat_contract_fingerprint()
     route_data = {
         "family": args.judge_family,
         "resolved_model": args.judge_model,
@@ -876,7 +901,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--dry-run", action="store_true", help="Reconstruct and serialize windows without calling the judge."
     )
-    parser.add_argument("--resume", action="store_true", help="Reuse validated per-module response cache entries.")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help=(
+            "Reuse validated per-module response cache entries. Grok qualification must use a fresh output directory "
+            "without --resume; the flat-contract identity fold is defence in depth."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -978,7 +1010,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         emissions: dict[str, list[dict[str, Any]]] = {}
         manifest: list[dict[str, Any]] = []
         ledger = layerb_shadow.BudgetLedger(args.max_usd, seat_caps, args.max_judge_calls)
-        judge = layerb_shadow.SubprocessJudge(shlex.split(args.judge_command), args.judge_timeout_seconds)
+        judge_environment = dict(os.environ)
+        judge_environment["LAYERB_BRIDGE_FORENSICS_DIR"] = str(output_dir / "forensics")
+        judge = layerb_shadow.SubprocessJudge(
+            shlex.split(args.judge_command), args.judge_timeout_seconds, environment=judge_environment
+        )
         for module, (request, serialized_window_hashes), module_route in zip(
             modules, module_requests, request_routes, strict=True
         ):
@@ -989,6 +1025,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             module_id = _module_id(module)
             call: layerb_shadow.JudgeCall | None = None
             response: Mapping[str, Any] | None = None
+            bridge_forensics: dict[str, str] | None = None
             status = "completed"
             error: str | None = None
             cache_hit = cached is not None
@@ -1003,6 +1040,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     observed = _observed(None, module_route)
                 else:
                     response = dict(response_value)
+                    bridge_forensics = _bridge_forensics_sidecar({"_bridge_forensics": cached.get("bridge_forensics")})
                     call = layerb_shadow.JudgeCall(
                         response=response,
                         prompt_tokens=int(observed_value["prompt_tokens"])
@@ -1021,6 +1059,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 try:
                     call = judge(request, module_route)
                     response = dict(call.response)
+                    bridge_forensics = _bridge_forensics_sidecar(response)
+                    response.pop("_bridge_forensics", None)
                     observed = _observed(call, module_route)
                     ledger.settle(seat_key, reservation, call.cost_usd)
                     atomic_write_json(
@@ -1029,6 +1069,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "cache_identity_version": CACHE_VERSION,
                             "request_sha256": request_hash,
                             "response": response,
+                            "bridge_forensics": bridge_forensics,
                             "observed": observed,
                             "route": effective_route.to_dict(),
                             "created_at": _utc_now(),
@@ -1079,6 +1120,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "case_ids": sorted(module_emissions),
                     "request_sha256": request_hash,
                     "raw_response": dict(response) if response is not None else None,
+                    "bridge_forensics": bridge_forensics,
                     "window_sha256": {
                         window["candidate_id"]: window["raw_window_sha256"]
                         for prepared_case in module.cases

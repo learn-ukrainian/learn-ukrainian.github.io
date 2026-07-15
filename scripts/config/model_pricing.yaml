@@ -5,6 +5,14 @@
 # input/output blend.
 
 models:
+  # Source: xAI Grok 4.5 model page (2026-07-15): $2.00/M input, $6.00/M output.
+  # Runtime Grok calls use the subscription lane, so no blended per-token price is inferred.
+  # https://docs.x.ai/developers/models/grok-4.5
+  grok-4.5:
+    billing_model: subscription
+    input_usd_per_1m_tokens: 2.00
+    output_usd_per_1m_tokens: 6.00
+
   # Source: OpenAI model page, text-embedding-3-small "Embeddings / Per 1M tokens / Cost $0.02"
   # https://developers.openai.com/api/docs/models/text-embedding-3-small
   text-embedding-3-small:

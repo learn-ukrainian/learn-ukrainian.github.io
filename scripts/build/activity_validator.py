@@ -40,6 +40,12 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from build.activity_renderer import (
+    derive_error_correction_replacement,
+    error_correction_render_values,
+    is_punctuation_error_correction,
+)
+
 
 @dataclass
 class ActivityIssue:
@@ -473,6 +479,27 @@ def _check_error_correction(
             issues.append(ActivityIssue(
                 slug, section, "error-correction", i, "error",
                 f"correction = error \"{error}\" — nothing to fix",
+            ))
+
+        derived_form = derive_error_correction_replacement(sent, error, correction)
+        if (
+            not isinstance(correction, str)
+            or derived_form is None
+            or is_punctuation_error_correction(sent, error, correction)
+        ):
+            continue
+        correct_form, _ = error_correction_render_values(
+            sent, error, correction, item.get("options", [])
+        )
+        if not isinstance(correct_form, str) or correct_form == correction:
+            issues.append(ActivityIssue(
+                slug, section, "error-correction", i, "error",
+                "rendered correctForm still equals the corrected sentence",
+            ))
+        elif correct_form.rstrip().endswith((".", "?", "!")):
+            issues.append(ActivityIssue(
+                slug, section, "error-correction", i, "error",
+                f"rendered correctForm ends with sentence punctuation: \"{correct_form}\"",
             ))
 
     return issues
