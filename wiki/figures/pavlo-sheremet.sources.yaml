@@ -1,50 +1,31 @@
-# Source registry for wiki/figures/pavlo-sheremet.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: https://www.youtube.com/watch?v=rntSFMf5ySc
+  file: https://cpj.org/data/people/pavel-sheremet/
   type: external
-  title: КЛІМКІН ПРО ВОЛИНСЬКУ ТРАГЕДІЮ
-  url: https://www.youtube.com/watch?v=rntSFMf5ySc
+  title: Pavel Sheremet
+  url: https://cpj.org/data/people/pavel-sheremet/
 - id: S2
-  file: ukrainian_wiki/pavlo-sheremet_Біографія-Павло-Шеремет-Журналістика-як-місія-свободи-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Павло Шеремет: Журналістика як місія свободи'
-  section_path: 'Біографія: Павло Шеремет: Журналістика як місія свободи > Короткий
-    зміст'
+  file: >-
+    https://cpj.org/wp-content/uploads/2017/07/cpj_justicedenied_ukr_webJuly26.pdf
+  type: external
+  title: 'Відмова від правосуддя: розслідування вбивства Павла Шеремета в Україні не дало результатів'
+  url: >-
+    https://cpj.org/wp-content/uploads/2017/07/cpj_justicedenied_ukr_webJuly26.pdf
 - id: S3
-  file: ukrainian_wiki/zakhidni-media_Історіографія-Західні-медіа-та-російська-дезінформація-Основний-зміст-Війна-на-сході-України-в-контексті-гібридної-агресії
-  type: ukrainian_wiki
-  title: 'Історіографія: Західні медіа та російська дезінформація'
-  section_path: 'Історіографія: Західні медіа та російська дезінформація > Основний
-    зміст > Війна на сході України в контексті гібридної агресії'
+  file: https://www.pravda.com.ua/articles/2022/07/20/7359064/
+  type: external
+  title: 6 років тому вбили Павла Шеремета. Що він писав про війну, росіян та українців
+  url: https://www.pravda.com.ua/articles/2022/07/20/7359064/
 - id: S4
-  file: ukrainian_wiki/pavlo-sheremet_Біографія-Павло-Шеремет-Журналістика-як-місія-свободи-Основний-зміст-Балто-Чорноморська-вісь-перешкоди-та-потенціал
-  type: ukrainian_wiki
-  title: 'Біографія: Павло Шеремет: Журналістика як місія свободи'
-  section_path: 'Біографія: Павло Шеремет: Журналістика як місія свободи > Основний
-    зміст > Балто-Чорноморська вісь: перешкоди та потенціал'
-- id: S5
-  file: ukrainian_wiki/pavlo-sheremet_Біографія-Павло-Шеремет-Журналістика-як-місія-свободи-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Павло Шеремет: Журналістика як місія свободи'
-  section_path: 'Біографія: Павло Шеремет: Журналістика як місія свободи > Деколонізаційна
-    перспектива'
-- id: S6
-  file: ukrainian_wiki/hazova-zbroia_Історіографія-Економічний-тиск-та-гібридна-агресія-у-російсько-українських-відносинах-1991-2022-Основний-зміст-Еволюція-концептуального-апарату-в-українській-історіографії
-  type: ukrainian_wiki
-  title: 'Історіографія: Економічний тиск та гібридна агресія у російсько-українських
-    відносинах (1991–2022)'
-  section_path: 'Історіографія: Економічний тиск та гібридна агресія у російсько-українських
-    відносинах (1991–2022) > Основний зміст > Еволюція концептуального апарату в українській
-    історіографії'
-- id: S7
-  file: wikipedia/Російська пропаганда
-  type: wikipedia
-  title: Російська пропаганда
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D1%80%D0%BE%D0%BF%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0
-- id: S8
-  file: wikipedia/Літературна журналістика
-  type: wikipedia
-  title: Літературна журналістика
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0
+  file: >-
+    https://commons.wikimedia.org/wiki/File:Sheremet_at_Open_Library_debate_140928.jpg
+  type: external
+  title: 'File:Sheremet at Open Library debate 140928.jpg'
+  url: >-
+    https://commons.wikimedia.org/wiki/File:Sheremet_at_Open_Library_debate_140928.jpg
+  rights:
+    basis: licensed
+    evidence_url: >-
+      https://commons.wikimedia.org/wiki/File:Sheremet_at_Open_Library_debate_140928.jpg
+    license: CC BY-SA 4.0
+    attribution: Okras

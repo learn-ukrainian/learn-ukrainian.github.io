@@ -1,41 +1,23 @@
-# Source registry for wiki/figures/kuzma-skryabin.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/kuzma-skryabin_Біографія-Кузьма-Скрябін-Голос-народу-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Кузьма Скрябін: Голос народу'
-  section_path: 'Біографія: Кузьма Скрябін: Голос народу > Короткий зміст'
+  file: https://esu.com.ua/article-1503
+  type: external
+  title: Кузьма (Кузьменко Андрій Вікторович)
+  url: https://esu.com.ua/article-1503
 - id: S2
-  file: ukrainian_wiki/kuzma-skryabin_Біографія-Кузьма-Скрябін-Голос-народу-Основний-зміст-Фольклорне-виконавство-як-жива-модель-взаємодії-з-аудиторією
-  type: ukrainian_wiki
-  title: 'Біографія: Кузьма Скрябін: Голос народу'
-  section_path: 'Біографія: Кузьма Скрябін: Голос народу > Основний зміст > Фольклорне
-    виконавство як жива модель взаємодії з аудиторією'
+  file: >-
+    https://suspilne.media/culture/101527-absolutna-energia-spivzasnovnik-gurtu-skrabin-podilivsa-spogadami-pro-kuzmu/
+  type: external
+  title: '«Абсолютна енергія». Співзасновник гурту «Скрябін» поділився спогадами про Кузьму'
+  url: >-
+    https://suspilne.media/culture/101527-absolutna-energia-spivzasnovnik-gurtu-skrabin-podilivsa-spogadami-pro-kuzmu/
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0567
-  type: textbook
-  title: § 2. Проблема екології української мови. «Мовний суржик»
-  page: 7
-  grade: 10
-- id: S4
-  file: wikipedia/Фольклор
-  type: wikipedia
-  title: Фольклор
-  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80
-- id: S5
-  file: ukrainian_wiki/kuzma-skryabin_Біографія-Кузьма-Скрябін-Голос-народу-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Кузьма Скрябін: Голос народу'
-  section_path: 'Біографія: Кузьма Скрябін: Голос народу > Деколонізаційна перспектива'
-- id: S6
-  file: ukrainian_wiki/kuzma-skryabin_Біографія-Кузьма-Скрябін-Голос-народу-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Кузьма Скрябін: Голос народу'
-  section_path: 'Біографія: Кузьма Скрябін: Голос народу > Мовні зразки'
-- id: S7
-  file: ukrainian_wiki/kuzma-skryabin_Біографія-Кузьма-Скрябін-Голос-народу-Основний-зміст-Світоглядний-імператив-та-відповідальність-за-простір
-  type: ukrainian_wiki
-  title: 'Біографія: Кузьма Скрябін: Голос народу'
-  section_path: 'Біографія: Кузьма Скрябін: Голос народу > Основний зміст > Світоглядний
-    імператив та відповідальність за простір'
+  file: https://commons.wikimedia.org/wiki/File:Andriy_Kuzmenko.jpg
+  type: external
+  title: 'File:Andriy Kuzmenko.jpg'
+  url: https://commons.wikimedia.org/wiki/File:Andriy_Kuzmenko.jpg
+  rights:
+    basis: licensed
+    evidence_url: https://commons.wikimedia.org/wiki/File:Andriy_Kuzmenko.jpg
+    license: CC BY-SA 3.0
+    attribution: DENAMAX

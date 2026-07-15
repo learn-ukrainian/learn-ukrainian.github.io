@@ -2251,3 +2251,105 @@ entries:
       disposition: approved
     cohort_promotion: *cohort_next10_c2_review
     hold: *cohort_next10_c2_hold
+  vitaly-portnikov:
+    dossier_grounding: &cohort_next10_2_c1_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c1_review
+    wiki_quote_verification: *cohort_next10_2_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Vitaliy_Portnikov_2011.06.06.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c1_review
+    hold: &cohort_next10_2_c1_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  kuzma-skryabin:
+    dossier_grounding: *cohort_next10_2_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c1_review
+    wiki_quote_verification: *cohort_next10_2_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Andriy_Kuzmenko.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c1_review
+    hold: *cohort_next10_2_c1_hold
+  pavlo-sheremet:
+    dossier_grounding: *cohort_next10_2_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c1_review
+    wiki_quote_verification: *cohort_next10_2_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: >-
+        https://commons.wikimedia.org/wiki/File:Sheremet_at_Open_Library_debate_140928.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c1_review
+    hold: *cohort_next10_2_c1_hold
+  serhiy-zhadan:
+    dossier_grounding: *cohort_next10_2_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c1_review
+    wiki_quote_verification: *cohort_next10_2_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Serhiy_Zhadan_2015.jpg
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c1_review
+    hold: *cohort_next10_2_c1_hold
+  oleg-sentsov:
+    dossier_grounding: *cohort_next10_2_c1_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4975505560
+      disposition: link-only-approved
+    wiki_grounding: *cohort_next10_2_c1_review
+    wiki_quote_verification: *cohort_next10_2_c1_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: >-
+        https://commons.wikimedia.org/wiki/File:Oleg_Sentsov,_Ukrainian_political_prisoner_in_Russia,_2015.JPG
+      disposition: approved
+    cohort_promotion: *cohort_next10_2_c1_review
+    hold: *cohort_next10_2_c1_hold

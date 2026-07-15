@@ -1,47 +1,23 @@
-# Source registry for wiki/figures/vitaly-portnikov.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/vitaly-portnikov_Біографія-Віталій-Портников-Журналіст-і-аналітик-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Віталій Портников: Журналіст і аналітик'
-  section_path: 'Біографія: Віталій Портников: Журналіст і аналітик > Короткий зміст'
+  file: >-
+    https://www.radiosvoboda.org/author/%D0%B2%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9-%D0%BF%D0%BE%D1%80%D1%82%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2/g_b_qt
+  type: external
+  title: Віталій Портников
+  url: >-
+    https://www.radiosvoboda.org/author/%D0%B2%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9-%D0%BF%D0%BE%D1%80%D1%82%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2/g_b_qt
 - id: S2
-  file: ukrainian_wiki/vitaly-portnikov_Біографія-Віталій-Портников-Журналіст-і-аналітик-Основний-зміст-Підсумки-фахового-поля
-  type: ukrainian_wiki
-  title: 'Біографія: Віталій Портников: Журналіст і аналітик'
-  section_path: 'Біографія: Віталій Портников: Журналіст і аналітик > Основний зміст
-    > Підсумки фахового поля'
+  file: https://knpu.gov.ua/winners/portnikov-vitalij-eduardovych/
+  type: external
+  title: Портніков Віталій Едуардович
+  url: https://knpu.gov.ua/winners/portnikov-vitalij-eduardovych/
 - id: S3
-  file: ukrainian_wiki/vitaly-portnikov_Біографія-Віталій-Портников-Журналіст-і-аналітик-Основний-зміст-Інформаційні-та-аналітичні-жанри-в-журналістиці
-  type: ukrainian_wiki
-  title: 'Біографія: Віталій Портников: Журналіст і аналітик'
-  section_path: 'Біографія: Віталій Портников: Журналіст і аналітик > Основний зміст
-    > Інформаційні та аналітичні жанри в журналістиці'
-- id: S4
-  file: ukrainian_wiki/vitaly-portnikov_Біографія-Віталій-Портников-Журналіст-і-аналітик-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Віталій Портников: Журналіст і аналітик'
-  section_path: 'Біографія: Віталій Портников: Журналіст і аналітик > Деколонізаційна
-    перспектива'
-- id: S5
-  file: ukrainian_wiki/roman-ratushny_Біографія-Роман-Ратушний-Громадянин-активіст-воїн-Основний-зміст-Концепція-національної-аристократії-В-ячеслава-Липинського
-  type: ukrainian_wiki
-  title: 'Біографія: Роман Ратушний: Громадянин, активіст, воїн'
-  section_path: 'Біографія: Роман Ратушний: Громадянин, активіст, воїн > Основний
-    зміст > Концепція національної аристократії В''ячеслава Липинського'
-- id: S6
-  file: wikipedia/Російська пропаганда
-  type: wikipedia
-  title: Російська пропаганда
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D1%80%D0%BE%D0%BF%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0
-- id: S7
-  file: wikipedia/Театр під час війни (2022–2024)
-  type: wikipedia
-  title: Театр під час війни (2022–2024)
-  url: https://uk.wikipedia.org/wiki/%D0%A2%D0%B5%D0%B0%D1%82%D1%80%20%D0%BF%D1%96%D0%B4%20%D1%87%D0%B0%D1%81%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B8%20%282022%E2%80%932024%29
-- id: S8
-  file: wikipedia/Літературна журналістика
-  type: wikipedia
-  title: Літературна журналістика
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0
+  file: https://commons.wikimedia.org/wiki/File:Vitaliy_Portnikov_2011.06.06.jpg
+  type: external
+  title: 'File:Vitaliy Portnikov 2011.06.06.jpg'
+  url: https://commons.wikimedia.org/wiki/File:Vitaliy_Portnikov_2011.06.06.jpg
+  rights:
+    basis: public-domain
+    evidence_url: https://commons.wikimedia.org/wiki/File:Vitaliy_Portnikov_2011.06.06.jpg
+    license: Public domain (U.S. federal government work)
+    attribution: U.S. Embassy Kyiv Ukraine

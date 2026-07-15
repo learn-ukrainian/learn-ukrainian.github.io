@@ -1,117 +1,179 @@
 # Сергій Вікторович Жадан — Research Dossier
 
 **Slug:** `serhiy-zhadan`
-**Block:** J (Contemporary / Living Figures)
-**Tier:** 1a
-**Issue:** #2535
-**Researcher:** Gemini 3.1 Pro
-**Completed:** 2026-06-04
+**Track:** BIO
+**Packet status:** catalog-source readiness repair, 2026-07-15
+**Evidence key:** D1 — Енциклопедія Сучасної України; D2 — Український ПЕН;
+D3 — Премія миру німецьких книгарів; D4 — Wikimedia Commons.
 
-## 1. Verified facts
+## 1. Межа між біографією, твором і рецепцією
 
-- **Full name (UA, canonical):** Сергій Вікторович Жадан. [T3: uk.wikipedia]
-- **Pseudonyms / aliases:** none. Russian-imperial forms (forbidden in body text, listed only in §8): Сергей Викторович Жадан.
-- **Born:** 23 August 1974 | Старобільськ, Ворошиловградська область (now Луганська область), Українська РСР | The Soviet Union held Ukraine at the time. [T3: uk.wikipedia]
-- **Died:** [N/A — Living]
-- **Family / education key facts:** Grew up in Starobilsk, but spent significant time in Kharkiv with his aunt, the poet and translator Oleksandra Kovalova, who introduced him to the dissident and pro-independence intelligentsia. He moved to Kharkiv for university, graduating from the Kharkiv National Pedagogical University (1996). In 2000, he defended his Candidate of Sciences (kandydat) dissertation on the philosophy and aesthetics of Ukrainian futurist Mykhail Semenko. He taught at his alma mater until 2004. [T3: uk.wikipedia]
+Цей пакет підтримує два українські зовнішні читання й додаткову сторінку
+міжнародної премії. D1 є енциклопедичною статтею з останньою редакцією у
+грудні 2009 року. D2 — профіль члена Українського ПЕН, який містить пізніші
+відомості про громадську діяльність. D3 — сторінка лауреата 2022 року з
+рішенням і оцінною заявою журі.
 
-## 2. Oppression mechanism
+Жодне з цих джерел не замінює тексту роману, поетичної збірки або фахової
+рецензії. Біографічний факт про автора не є доказом інтерпретації твору, а
+нагородна характеристика не є консенсусом усіх критиків. Пакет зберігає ці
+рівні окремо.
 
-This is the load-bearing section. Zhadan's opposition to the Russian state and its proxies has led to both physical violence and institutional harassment.
+## 2. Ім'я, походження й освіта
 
-- **What happened:** Physical assault during civic defense, institutional detention abroad, and eventual military mobilization to defend against existential erasure.
-- **When (specific dates):** 1 March 2014 (assault in Kharkiv); 11 February 2017 (detention in Minsk); March 2024 (mobilization).
-- **By whom (specific Russian/Soviet/RF agency):** Pro-Russian militants (2014); Belarusian state security acting on Russian-aligned blacklists (2017); the Russian Armed Forces (2022–present, prompting his mobilization).
-- **Document references:** Widely documented in Ukrainian and international media, as well as official statements from the Kharkiv City Council and the Ministry of Foreign Affairs of Ukraine regarding his Minsk detention. [T3: uk.wikipedia; T5: Suspilne, RFE/RL]
-- **Mechanism specifics:** During the 2014 Euromaidan revolution, Zhadan was physically assaulted and severely beaten (suffering a concussion and a fractured nose) by pro-Russian militants while defending the Kharkiv regional state administration building. In 2017, he was detained in a hotel in Minsk, Belarus, and briefly banned from entering the country due to a Russian-aligned mandate accusing him of "involvement in terrorist activities" (a cynical designation for his pro-Ukrainian cultural and civic activism). Ultimately, responding to the 2022 full-scale Russian invasion, Zhadan mobilized into the 13th NGU brigade «Хартія» in March 2024, transitioning from a cultural ambassador and volunteer to an active combatant to physically defend the Ukrainian state against destruction.
-- **What survived / what was destroyed:** His literary output and cultural influence have only grown stronger; he remains a central, unifying voice of Ukrainian resistance and cultural vitality.
+Канонічна форма — **Сергій Вікторович Жадан**. D1 і D2 повідомляють, що він
+народився 23 серпня 1974 року в Старобільську [D1, D2]. D1 називає його
+письменником і перекладачем, а D2 — поетом, прозаїком, перекладачем та
+громадським активістом [D1, D2].
 
-## 3. Major works
+Обидва українські профілі фіксують навчання в Харківському педагогічному
+університеті. D2 уточнює факультет українсько-німецької філології,
+аспірантуру й дисертацію про філософсько-естетичні погляди Михайля Семенка
+[D2]. Це підтримує зв'язок із дослідженням українського футуризму, але не
+дозволяє пояснювати всю пізнішу поетику одним академічним інтересом.
 
-A prolific novelist, poet, and frontman for the rock band «Жадан і Собаки».
+## 3. Старобільськ і Харків без регіонального спрощення
 
-- `1995` — *Цитатник*, poetry collection. His breakthrough into the 1990s poetry scene. [T3: uk.wikipedia]
-- `2004` — *Депеш Мод*, novel. A gritty, coming-of-age story set in the transitionary 1990s. [T3: uk.wikipedia]
-- `2005` — *Anarchy in the UKR*, novel. [T3: uk.wikipedia]
-- `2010` — *Ворошиловград*, novel. A magical-realist road trip through the Donbas; awarded BBC Ukrainian Book of the Decade in 2014. [T3: uk.wikipedia]
-- `2014` — *Месопотамія*, novel in stories and poems. An homage to Kharkiv. [T3: uk.wikipedia]
-- `2017` — *Інтернат*, novel. A haunting narrative following a teacher traversing the frontlines of the Russo-Ukrainian War in the Donbas. [T3: uk.wikipedia]
-- `2024` — *Арабески*, poetry collection. Winner of the Book of the Year 2024 rating. [T3: uk.wikipedia]
+Попередня назва плану `Голос Донбасу` перетворювала складну географію на
+єдиний ярлик. Старобільськ і Харків мають різні локальні історії, а `схід
+України` не є однорідним мовним або культурним простором. D1–D3 не дають
+підстави називати Жадана представником усіх мешканців регіону.
 
-## 4. Primary-source quotes (≥2 required)
+Коректна рамка описує конкретні міста, освітні інституції, літературні
+середовища й твори. D3 зазначає, що значна частина письма й соціальної
+діяльності Жадана пов'язана з Харковом та східною Україною [D3]. Це
+спостереження нагородної інституції, а не ліцензія на географічні метафори
+без текстового аналізу.
 
-**Quote 1 — from the poem «Пливи, рибо, пливи»:**
-> «Пливи, рибо, пливи – / ось твої острови»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-zhadan`). Pedagogically valuable: captures the rhythmic, incantatory quality of Zhadan's poetry, which often merges modern anxiety with almost liturgical repetition. [Primary: corpus-verified]
+## 4. Ранні літературні середовища
 
-**Quote 2 — from the poem «Пливи, рибо, пливи»:**
-> «Любов варта всього – / варта болю твого, / варта твоїх розлук, / варта відрази й мук»
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-zhadan`). Pedagogically valuable: highlights the recurring themes of endurance, visceral emotion, and raw humanity that define his generation's literary voice. [Primary: corpus-verified]
+D2 повідомляє, що 1991 року Жадан був одним з організаторів харківського
+неофутуристського угруповання «Червона Фіра» [D2]. Цей факт можна поєднати з
+академічним інтересом до Семенка, але причинний зв'язок потребує додаткового
+джерела. Слово `неофутуристський` має бути визначене через програмні тексти
+або практики групи, а не через загальну репутацію авангарду.
 
-## 5. Language register
+D1 перелічує ранні поетичні збірки й прозові книжки та характеризує окремі
+тематичні й стильові зв'язки [D1]. Оскільки стаття завершена 2009 роком, її
+не можна використовувати як повну бібліографію пізнішого доробку. Для
+семінару список працює як початкова карта, яку редактор оновлює за каталогом
+видавця або бібліотеки.
 
-- **Register:** A unique fusion of street vernacular, colloquial slang (including profanity and Surzhyk in dialogue for realism), and high-lyrical, deeply rhythmic phrasing. His prose frequently shifts between gritty naturalism and soaring, poetic observations.
-- **CEFR readiness for full reading:** **B2–C1**. The heavy use of slang, cultural references, and complex metaphorical structures requires an advanced understanding of modern spoken Ukrainian.
-- **Lexicon notes:** street slang, post-industrial vocabulary, military/volunteer terminology (in later works). Terms to pre-teach: футуризм, волонтер, мобілізація, сленг, інтернат.
-- **Stylistic features:** Syncopated, driving rhythms in poetry; cinematic, highly visual descriptions in prose; deep empathy for marginalized characters.
+## 5. Перекладацька й викладацька робота
 
-## 6. Contested points
+D1 називає переклади Жадана з німецької, англійської, білоруської та
+російської літератур і перелічує мови перекладів його власних творів [D1].
+Профіль також згадує викладацьку роботу після захисту дисертації [D1]. Ці
+відомості розширюють біографію поза образом `панк-поета`.
 
-- **Factual Guard (Nobel Peace Prize):** Popular social media frequently conflates his awards. Zhadan was awarded the **Peace Prize of the German Book Trade (Премія миру німецьких книгарів)** in 2022. He was also nominated for the **Nobel Prize in Literature** by the Polish Academy of Sciences in 2022. There is **NO Nobel Peace Prize nomination**; stating otherwise is a factual fabrication.
-- **Language and Profanity:** Conservative critics occasionally push back against his extensive use of profanity and raw, unvarnished depictions of societal underbellies. However, mainstream scholarship defends this as a necessary, authentic reflection of post-Soviet transitional reality.
-- **The "Leftist" Label:** He historically sympathized with anarchism and leftist aesthetics, focusing on the working class and post-industrial decay. Russian propaganda sometimes attempts to distort his early anti-establishment stances, ignoring his staunchly pro-Ukrainian, state-defending evolution.
+Однак перелік мов не показує перекладацького методу, якості чи обсягу. Для
+аналізу потрібне конкретне видання, вихідний текст і переклад. Так само
+викладацька посада не доводить змісту курсів. Catalog-source пакет не
+заповнює ці прогалини припущеннями.
 
-## 7. Cross-track links
+## 6. Громадська й гуманітарна діяльність
 
-> Every path under **Existing** was verified with `test -e` on 2026-06-04. Forward-looking ties are under **Candidate**.
+D2 повідомляє про участь у харківському Євромайдані, волонтерську діяльність
+від початку російської війни проти України, заснування благодійного фонду
+2017 року й проєкт «Схід читає» [D2]. Це профіль самої організації, членом
+якої є Жадан, тому дані придатні для хронології, але позитивна презентаційна
+рамка має бути видимою.
 
-- **Existing BIO plans:** none yet.
-- **Existing HIST plans:** none yet.
-- **Existing LIT plans:** none yet.
-- **Candidate cross-track connections (Phase 2+):**
-  - `plans/hist/russo-ukrainian-war.yaml` — Zhadan is a crucial primary witness, volunteer, and combatant in the ongoing war.
-  - `plans/lit/kharkiv-text.yaml` — connecting Zhadan's *Mesopotamia* with the broader Kharkiv literary tradition (Khvylovy, Semenko).
+Модуль не повинен перетворювати волонтерство на доказ художньої якості або
+навпаки. Учні можуть порівняти типи відповідальності: літературний текст
+оцінюють за мовою й композицією, гуманітарний проєкт — за метою, діями й
+звітністю, публічну заяву — за аргументом і доказами.
 
-## 8. Naming-canonical
+## 7. Премія миру 2022 року
 
-- **Slug:** `serhiy-zhadan`
-- **EN canonical (BGN/PCGN 2010):** Serhiy Zhadan
-- **UA canonical (with patronymic):** Сергій Вікторович Жадан
-- **Aliases (track these for `aliases:` YAML field):** Serhiy Zhadan
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Сергей Викторович Жадан, Sergey Zhadan.
+D3 прямо повідомляє, що Сергій Жадан став лауреатом Премії миру німецьких
+книгарів 2022 року й що церемонія відбулася 23 жовтня у Франкфурті [D3].
+Сторінка містить заяву журі, яке оцінює мистецьку й гуманітарну діяльність
+лауреата [D3]. Це сильний доказ рішення установи та її аргументації.
 
-## 9. Image candidates
+Заяву журі треба передавати як `журі відзначило`, а не як безособову істину.
+Так само премія не є Нобелівською премією і не підтримує формулу `номінант на
+Нобелівську премію миру`, яка була в попередньому плані без прямого джерела.
+Цю формулу вилучено.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Serhiy Zhadan"** holds high-quality CC-BY-SA portraits from festivals (e.g., Meridian Czernowitz, Book Arsenal). Use the individual **file page** for the final license proof. [Commons category: `Serhiy Zhadan`]
-- **Backup candidates:** Official press photos from his publisher (Folio or Meridian Czernowitz) with educational use permission.
-- **Era-appropriate context image:** A photograph of Zhadan in his NGU «Хартія» military uniform (2024), illustrating his mobilization during the full-scale invasion.
+## 8. Війна в письмі й межа джерел
 
-## 10. Sources used
+D3 описує твори Жадана як такі, що показують вплив війни й руйнування на
+життя людей [D3]. Це оцінка журі. Щоб аналізувати `Інтернат`,
+`Ворошиловград` або окремий вірш, потрібен законно доступний текст із точним
+виданням. Профіль не дає права вигадувати сюжетні тези або називати роман
+`пророцтвом`.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Жадан Сергій Вікторович." https://esu.com.ua/article-20235. Accessed 2026-06-04.
+Для майбутнього модуля найкраща процедура — вибрати один дозволений уривок,
+визначити оповідача, простір, часові маркери й лексику, а потім зіставити з
+датою написання. Біографічні події автора можуть бути контекстом, але не
+автоматичним ключем до наміру кожного персонажа.
 
-**Tier 2 (institutional):**
-- Український ПЕН (PEN Ukraine). Profile: Serhiy Zhadan. Accessed 2026-06-04.
+## 9. Жива особа й поточний статус
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Жадан Сергій Вікторович." https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович. Accessed 2026-06-04. Used for recent chronological updates (mobilization, recent awards); cross-checked against Tier 1.
+D2 і D3 містять відомості, актуальні на момент створення або оновлення
+сторінок. Вони не дають безстрокового підтвердження будь-якої поточної
+військової ролі у 2026 році. Попередня wiki містила маркери VERIFY навколо
+таких тверджень; поточний пакет їх вилучає, а не вгадує оновлення.
 
-**Tier 4 (modern scholarly post-1991):**
-- Дзюба І. *Чорний романтик: Сергій Жадан*. Київ: Либідь, 2017. (Referenced for stylistic and literary analysis).
+Якщо роль після 2022 року необхідна для модуля, редактор має знайти офіційне
+або пряме датоване джерело, перевірити безпекову доречність і назвати дату.
+Навіть тоді статус не слід переносити на раніші твори як їхнє пояснення.
 
-**Primary-source documents accessed:**
-- Corpus `ukrlib-zhadan` (project literary index): poem «Пливи, рибо, пливи» — `verify_quote`-confirmed (§4), confidence 1.0.
+## 10. Деколонізаційна рамка
 
----
+Українськомовне письмо зі Старобільська й Харкова є частиною української
+культури, а не винятком, який треба пояснювати через `переважно
+російськомовне середовище`. D3 згадує мовний контекст, але навчальний пакет
+не робить російську мову природною нормою регіону й не оцінює українську як
+несподіваний вибір [D3].
 
-## Decolonization self-check (run before submitting)
+Деколонізація також не означає проголошення автора єдиним `голосом` сходу.
+Така метафора стирає інших письменників, мови, міста й соціальні групи.
+Суб'єктність показують через конкретні тексти, інституції та дії, а не через
+монополію одного відомого імені на регіональний досвід.
 
-- [x] No Russocentric framing — his identity is framed exclusively within the Ukrainian literary tradition and civic resistance.
-- [x] No Russian-imperial transliterations in body text (only allowed in `aliases:` field labeled FORBIDDEN).
-- [x] No Russocentric periodization.
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms for documented executions (N/A, living).
-- [x] All place names use modern UA canonical form (Kharkiv, Starobilsk, Luhansk).
-- [x] Holodomor referenced as Holodomor (N/A).
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable (his defense of Kharkiv in 2014 and mobilization in 2024 are clearly stated).
+## 11. Anti-hagiography і quotation disposition
+
+Нагороди, переклади й волонтерство можуть створити образ безпомилкового
+морального авторитета. Пакет відмовляється від цього образу. Він також не
+вигадує негативну противагу: `бренд Жадан`, `епатаж заради уваги` або
+психологічний тягар публічності не доведені D1–D3.
+
+Жодної персональної цитати й жодного літературного уривка для відтворення не
+схвалено. Назви творів є бібліографічними даними. D1–D3 використовуються як
+зовнішні читання; майбутня цитата потребуватиме законного тексту, видання,
+сторінки або таймкоду й окремої правової перевірки.
+
+## 12. Image rights, матриця й disposition
+
+Схвалений портрет — **File:Serhiy Zhadan 2015.jpg** [D4]. Commons описує
+Сергія Жадана на Місяці авторських читань 2015 року у Вроцлаві, називає
+автора Rafał Komorowski, джерело `own work` і ліцензію CC BY-SA 4.0 [D4].
+Підпис: `Сергій Жадан, Вроцлав, 2015; фото Rafał Komorowski; CC BY-SA 4.0;
+Wikimedia Commons`. Потрібні атрибуція, ліцензійне посилання, позначення змін
+і share-alike.
+
+| Claim family | Evidence | Disposition |
+|---|---|---|
+| Ім'я, народження, освіта, ранній доробок | D1, D2 | Схвалено з датами джерел |
+| Волонтерство, фонд і «Схід читає» | D2 | Схвалено в межах профілю |
+| Премія миру 2022 року | D3 | Схвалено; оцінки атрибутувати журі |
+| Аналіз конкретних романів і віршів | — | Потребує текстів видань |
+| Поточний військовий статус | — | Не схвалено |
+| Портрет і права | D4 | Схвалено для точного файла |
+
+### Редакторська повторна перевірка
+
+Перед побудовою уроку редактор повторно відкриває D1–D4 і фіксує дати
+профілів. Бібліографію після 2009 року звіряють за прямим каталогом, а не
+дописують із пам'яті. Кожний літературний уривок отримує видання, сторінку й
+правову підставу; нагородна сторінка не замінює першотвору. Поточні ролі
+живої особи перевіряються наново й не стають поясненням раннього письма.
+Якщо змінюється назва або доступність джерела, реєстр оновлюють лише після
+прямого відкриття, зберігаючи попередню часову межу.
+
+Пакет придатний до catalog-source promotion. Він дає два прямі українські
+читання, окрему міжнародну нагородну рамку й ліцензований портрет, усуває
+непідтверджену Нобелівську номінацію та не зводить автора до `голосу`
+однорідного регіону.
