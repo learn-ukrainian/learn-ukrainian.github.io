@@ -824,3 +824,46 @@ def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
 
 def test_claude_infra_is_valid_agent():
     assert "claude-infra" in _channels.VALID_AGENTS
+
+
+def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
+    # Regression for the grok "empty result" bug: ask-claude used args.content
+    # directly, so `ask-claude - < prompt.md` sent the literal "-" as the body.
+    # Every other ask-* handler resolves "-" to stdin; ask-claude must too.
+    captured: dict[str, object] = {}
+
+    def _fake_ask_claude(content, *_args, **_kwargs):
+        captured["content"] = content
+
+    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "the real question body"))
+
+    exit_code = _run_cli(["ask-claude", "-", "--task-id", "t-stdin", "--from", "grok-build"])
+
+    assert exit_code == 0
+    assert captured["content"] == "the real question body"
+
+
+def test_ask_claude_literal_content_is_not_treated_as_stdin(monkeypatch):
+    captured: dict[str, object] = {}
+
+    def _fake_ask_claude(content, *_args, **_kwargs):
+        captured["content"] = content
+
+    monkeypatch.setattr(_cli, "ask_claude", _fake_ask_claude)
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "SHOULD-NOT-BE-USED"))
+
+    exit_code = _run_cli(["ask-claude", "a literal question", "--task-id", "t-lit", "--from", "grok-build"])
+
+    assert exit_code == 0
+    assert captured["content"] == "a literal question"
+
+
+def test_recipient_choices_cover_every_valid_agent():
+    # Regression: inbox --for / send --to / ack-all hardcoded {claude,gemini,codex},
+    # silently second-classing grok-build, grok, agy, and cursor.
+    parser = _cli._build_parser()
+    for agent in ("grok-build", "grok", "agy", "cursor"):
+        assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
+        assert parser.parse_args(["ack-all", agent]).agent == agent
+        assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
