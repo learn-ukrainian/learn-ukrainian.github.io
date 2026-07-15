@@ -245,6 +245,69 @@ class TestSourcesDb:
         results = search_synonyms("великий")
         assert len(results) >= 1
 
+    def test_ulif_materialized_relations_take_priority_over_fallbacks(self, sample_data, monkeypatch):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki import sources_db as sdb
+
+        stored = sdb.store_ulif_dictua_entry(
+            word="великий",
+            canonical_headword="великий",
+            sections={
+                "synonyms": [{
+                    "sense_or_group_id": "synonyms:1",
+                    "terms": [{"text": "величезний"}],
+                    "register_labels": ["розм."],
+                    "citations": ["Леся Українка"],
+                }],
+            },
+            raw_responses={"synonyms": "<html>official synonym group</html>"},
+            retrieved_at="2026-07-15T00:00:00+00:00",
+            parser_version="ulif-dictua-v1",
+            status="ok",
+        )
+
+        assert stored is not None
+        assert sdb.resolve_ulif_dictua_raw_response(stored["raw_response_ref"])
+        results = sdb.search_synonyms("великий", limit=5)
+        assert results[0]["source_id"] == "ulif_dictua"
+        assert results[0]["attribution_label"] == (
+            "«Словники України» (Український мовно-інформаційний фонд НАН України)"
+        )
+        assert results[0]["sections"]["synonyms"][0]["terms"][0]["text"] == "величезний"
+        assert results[1]["synset_id"] == "s1"
+
+        conn = sqlite3.connect(str(sample_data["db_path"]))
+        try:
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")
+            }
+            assert {
+                "normalized_query", "canonical_headword", "raw_response_ref", "retrieved_at",
+                "response_sha256", "parser_version", "status",
+            } <= columns
+            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_sections").fetchone()[0] == 1
+        finally:
+            conn.close()
+
+        sdb.store_ulif_dictua_entry(
+            word="вода",
+            canonical_headword="вода",
+            sections={
+                "phraseology": [{
+                    "sense_or_group_id": "phraseology:1",
+                    "terms": [{"text": "води в рот набрати"}],
+                    "text": "води в рот набрати",
+                }],
+            },
+            raw_responses={"phraseology": "<html>official phraseology group</html>"},
+            retrieved_at="2026-07-15T00:00:00+00:00",
+            parser_version="ulif-dictua-v1",
+            status="ok",
+        )
+        idioms = sdb.search_idioms("вода", limit=5)
+        assert idioms[0]["source_id"] == "ulif_dictua"
+        assert idioms[0]["sections"]["phraseology"][0]["terms"][0]["text"] == "води в рот набрати"
+
     def test_query_cefr_level(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import query_cefr_level

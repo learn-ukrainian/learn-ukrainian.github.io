@@ -28,7 +28,8 @@ Usage:
 By default, `--force` rebuilds everything EXCEPT the wikipedia and
 wikipedia_negative_cache tables — those are populated separately by
 scripts/wiki/fetch_wikipedia.py and are expensive to refetch (Wikipedia
-API rate-limits). Pass --no-preserve-wiki to opt out of the preservation.
+API rate-limits) — and the official DictUA live-query cache. Pass
+--no-preserve-wiki to opt out of the Wikipedia preservation only.
 """
 
 import argparse
@@ -61,12 +62,22 @@ if __package__ in {None, ""}:
     from wiki.config import GDRIVE_DATA
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
+    from wiki.sources_db import (
+        ensure_ulif_dictua_schema,
+        extract_ulif_dictua_snapshot,
+        restore_ulif_dictua_snapshot,
+    )
     from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT, subject_for_source_file
     from wiki.ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 else:
     from .config import GDRIVE_DATA
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
+    from .sources_db import (
+        ensure_ulif_dictua_schema,
+        extract_ulif_dictua_snapshot,
+        restore_ulif_dictua_snapshot,
+    )
     from .textbook_subjects import AUTHOR_UK_BY_TRANSLIT, subject_for_source_file
     from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 
@@ -645,6 +656,8 @@ def build(db_path: Path | None = None,
       wikipedia_negative_cache tables before dropping the DB and re-inserts
       them into the fresh schema — wikipedia API data is expensive to
       refetch.
+    - The DictUA live-query cache is always snapshotted and restored. It is
+      content-addressed, official-source data and must survive corpus rebuilds.
 
     Failure-atomicity (#4859): the rebuild is ingested and validated in a
     sibling temp file next to `db_path` (same filesystem, so the final
@@ -695,6 +708,12 @@ def build(db_path: Path | None = None,
         if wiki_rows or neg_rows:
             print(f"  💾 Preserving wikipedia snapshot: "
                   f"{len(wiki_rows)} articles, {len(neg_rows)} negative-cache entries")
+    ulif_raw_rows, ulif_entry_rows, ulif_section_rows = extract_ulif_dictua_snapshot(db)
+    if ulif_entry_rows:
+        print(
+            "  💾 Preserving DictUA snapshot: "
+            f"{len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections"
+        )
 
     db.parent.mkdir(parents=True, exist_ok=True)
 
@@ -721,6 +740,7 @@ def build(db_path: Path | None = None,
         # ignored (SQLite defaults foreign_keys OFF per-connection).
         conn.execute("PRAGMA foreign_keys=ON")
         conn.executescript(SCHEMA)
+        ensure_ulif_dictua_schema(conn)
         ensure_ukrainian_wiki_schema(conn)
 
         expected_counts: dict[str, int] = {
@@ -732,6 +752,15 @@ def build(db_path: Path | None = None,
             conn.commit()
             print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + "
                   f"{len(neg_rows)} negative-cache entries")
+        if ulif_raw_rows or ulif_entry_rows or ulif_section_rows:
+            restore_ulif_dictua_snapshot(
+                conn, ulif_raw_rows, ulif_entry_rows, ulif_section_rows
+            )
+            conn.commit()
+            print(
+                "  ✅ Restored DictUA snapshot: "
+                f"{len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections"
+            )
 
         total = 0
 

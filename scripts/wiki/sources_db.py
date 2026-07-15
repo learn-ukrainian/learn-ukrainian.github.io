@@ -19,6 +19,8 @@ Indexed tables (dictionary headword lookup):
 - lookup_by_url() — external article URL lookup
 """
 
+import hashlib
+import json
 import sqlite3
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -58,6 +60,406 @@ TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 _MAX_PATH_PROBE_BYTES = 255
 
 _conn: sqlite3.Connection | None = None
+
+
+# ── ULIF DictUA cache -------------------------------------------------
+
+ULIF_DICTUA_SOURCE_ID = "ulif_dictua"
+ULIF_DICTUA_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua"
+ULIF_DICTUA_ATTRIBUTION_LABEL = (
+    "«Словники України» (Український мовно-інформаційний фонд НАН України)"
+)
+ULIF_DICTUA_SECTION_KINDS = ("paradigm", "synonyms", "antonyms", "phraseology")
+
+# DictUA is a live ASP.NET source.  The source DB stores the parsed material
+# and its exact HTML separately: keeping only the parsed JSON made cache rows
+# impossible to audit or re-parse after a parser upgrade.
+ULIF_DICTUA_SCHEMA = """
+CREATE TABLE IF NOT EXISTS ulif_dictua_raw_responses (
+    response_sha256 TEXT PRIMARY KEY,
+    body BLOB NOT NULL,
+    content_type TEXT NOT NULL DEFAULT 'text/html; charset=utf-8',
+    stored_at TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS ulif_dictua_entries (
+    id INTEGER PRIMARY KEY,
+    normalized_query TEXT NOT NULL UNIQUE,
+    canonical_headword TEXT NOT NULL DEFAULT '',
+    raw_response_ref TEXT NOT NULL DEFAULT '',
+    retrieved_at TEXT NOT NULL DEFAULT '',
+    response_sha256 TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL CHECK (status IN ('ok', 'not_found', 'transient_error', 'parse_error'))
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
+    ON ulif_dictua_entries(status, normalized_query);
+
+CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
+    id INTEGER PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK (kind IN ('paradigm', 'synonyms', 'antonyms', 'phraseology')),
+    source_order INTEGER NOT NULL CHECK (source_order >= 0),
+    sense_or_group_id TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL,
+    UNIQUE(entry_id, kind, source_order)
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
+    ON ulif_dictua_sections(entry_id, kind, source_order);
+"""
+
+
+def normalize_ulif_dictua_query(word: str) -> str:
+    """Return DictUA's stable, case-insensitive cache key for *word*."""
+    return " ".join(word.split()).casefold()
+
+
+def ensure_ulif_dictua_schema(conn: sqlite3.Connection) -> None:
+    """Create the live DictUA cache schema on new and legacy sources DBs."""
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.executescript(ULIF_DICTUA_SCHEMA)
+
+
+def _ulif_dictua_conn(
+    db_path: str | Path | None = None,
+    *,
+    create: bool = False,
+) -> sqlite3.Connection | None:
+    """Open a dedicated connection and ensure the DictUA cache schema exists."""
+    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    if not path.exists():
+        if not create:
+            return None
+        path.parent.mkdir(parents=True, exist_ok=True)
+    conn = _open_conn(path)
+    ensure_ulif_dictua_schema(conn)
+    conn.commit()
+    return conn
+
+
+def _ulif_dictua_payloads(payload: object) -> list[dict]:
+    if isinstance(payload, list):
+        return [item for item in payload if isinstance(item, dict)]
+    if isinstance(payload, dict):
+        return [payload]
+    return []
+
+
+def _ulif_dictua_provenance(row: sqlite3.Row) -> dict:
+    return {
+        "source_id": ULIF_DICTUA_SOURCE_ID,
+        "official_url": ULIF_DICTUA_OFFICIAL_URL,
+        "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
+        "retrieved_at": row["retrieved_at"],
+        "content_sha256": row["response_sha256"],
+        "parser_version": row["parser_version"],
+        "status": row["status"],
+    }
+
+
+def _materialize_ulif_dictua_entry(
+    conn: sqlite3.Connection,
+    entry: sqlite3.Row,
+) -> dict:
+    """Hydrate one DictUA entry without flattening its relation groups."""
+    section_rows = conn.execute(
+        """
+        SELECT kind, source_order, sense_or_group_id, payload_json
+        FROM ulif_dictua_sections
+        WHERE entry_id = ?
+        ORDER BY kind, source_order
+        """,
+        (entry["id"],),
+    ).fetchall()
+    sections: dict[str, list[dict]] = {}
+    for row in section_rows:
+        try:
+            payload = json.loads(row["payload_json"])
+        except json.JSONDecodeError:
+            payload = {"raw_payload_json": row["payload_json"]}
+        if not isinstance(payload, dict):
+            payload = {"value": payload}
+        payload.setdefault("source_order", row["source_order"])
+        payload.setdefault("sense_or_group_id", row["sense_or_group_id"])
+        sections.setdefault(row["kind"], []).append(payload)
+
+    materialized_sections: dict[str, object] = {}
+    for kind, payloads in sections.items():
+        # Paradigms are one structured table; relation kinds deliberately
+        # remain ordered groups rather than a bag of individual words.
+        materialized_sections[kind] = payloads[0] if kind == "paradigm" else payloads
+
+    word = entry["canonical_headword"] or entry["normalized_query"]
+    section_summary = ", ".join(materialized_sections) or "entry"
+    definition = f"Official DictUA {section_summary} for {word}."
+
+    return {
+        "word": word,
+        "canonical_headword": entry["canonical_headword"],
+        "normalized_query": entry["normalized_query"],
+        # These conventional dictionary keys keep ULIF rows consumable by
+        # existing dictionary renderers without replacing their nested data.
+        "source": ULIF_DICTUA_ATTRIBUTION_LABEL,
+        "definition": definition,
+        "text": definition,
+        "raw_response_ref": entry["raw_response_ref"],
+        "sections": materialized_sections,
+        **_ulif_dictua_provenance(entry),
+    }
+
+
+def get_ulif_dictua_entry(
+    word: str,
+    *,
+    db_path: str | Path | None = None,
+) -> dict | None:
+    """Return a cached, materialized DictUA lookup for *word*, if present."""
+    normalized = normalize_ulif_dictua_query(word)
+    if not normalized:
+        return None
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return None
+    try:
+        entry = conn.execute(
+            "SELECT * FROM ulif_dictua_entries WHERE normalized_query = ?",
+            (normalized,),
+        ).fetchone()
+        return _materialize_ulif_dictua_entry(conn, entry) if entry else None
+    finally:
+        conn.close()
+
+
+def resolve_ulif_dictua_raw_response(
+    raw_response_ref: str,
+    *,
+    db_path: str | Path | None = None,
+) -> bytes | None:
+    """Resolve a ``sha256:<digest>`` raw-response reference from the cache."""
+    digest = raw_response_ref.removeprefix("sha256:")
+    if len(digest) != 64:
+        return None
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return None
+    try:
+        row = conn.execute(
+            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
+            (digest,),
+        ).fetchone()
+        return bytes(row["body"]) if row else None
+    finally:
+        conn.close()
+
+
+def store_ulif_dictua_entry(
+    *,
+    word: str,
+    canonical_headword: str,
+    sections: dict[str, object],
+    raw_responses: dict[str, str | bytes],
+    retrieved_at: str,
+    parser_version: str,
+    status: str,
+    db_path: str | Path | None = None,
+) -> dict | None:
+    """Persist one complete DictUA response and return its materialized form.
+
+    Transient failures are intentionally never persisted: a network outage is
+    not evidence that a Ukrainian word does not exist.
+    """
+    if status == "transient_error":
+        return None
+    if status not in {"ok", "not_found", "parse_error"}:
+        raise ValueError(f"Unsupported DictUA cache status: {status}")
+    normalized = normalize_ulif_dictua_query(word)
+    if not normalized:
+        return None
+
+    conn = _ulif_dictua_conn(db_path, create=True)
+    assert conn is not None
+    try:
+        raw_refs: dict[str, str] = {}
+        for kind, response in sorted(raw_responses.items()):
+            if kind not in ULIF_DICTUA_SECTION_KINDS:
+                continue
+            body = response.encode("utf-8") if isinstance(response, str) else response
+            digest = hashlib.sha256(body).hexdigest()
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO ulif_dictua_raw_responses
+                    (response_sha256, body, stored_at)
+                VALUES (?, ?, ?)
+                """,
+                (digest, body, retrieved_at),
+            )
+            raw_refs[kind] = f"sha256:{digest}"
+
+        manifest = json.dumps(raw_refs, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        response_sha256 = hashlib.sha256(manifest).hexdigest()
+        conn.execute(
+            """
+            INSERT OR IGNORE INTO ulif_dictua_raw_responses
+                (response_sha256, body, content_type, stored_at)
+            VALUES (?, ?, 'application/json', ?)
+            """,
+            (response_sha256, manifest, retrieved_at),
+        )
+        raw_response_ref = f"sha256:{response_sha256}"
+
+        conn.execute(
+            """
+            INSERT INTO ulif_dictua_entries
+                (normalized_query, canonical_headword, raw_response_ref,
+                 retrieved_at, response_sha256, parser_version, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(normalized_query) DO UPDATE SET
+                canonical_headword = excluded.canonical_headword,
+                raw_response_ref = excluded.raw_response_ref,
+                retrieved_at = excluded.retrieved_at,
+                response_sha256 = excluded.response_sha256,
+                parser_version = excluded.parser_version,
+                status = excluded.status
+            """,
+            (
+                normalized,
+                canonical_headword,
+                raw_response_ref,
+                retrieved_at,
+                response_sha256,
+                parser_version,
+                status,
+            ),
+        )
+        entry = conn.execute(
+            "SELECT * FROM ulif_dictua_entries WHERE normalized_query = ?",
+            (normalized,),
+        ).fetchone()
+        assert entry is not None
+        conn.execute("DELETE FROM ulif_dictua_sections WHERE entry_id = ?", (entry["id"],))
+        if status in {"ok", "parse_error"}:
+            for kind in ULIF_DICTUA_SECTION_KINDS:
+                for source_order, payload in enumerate(_ulif_dictua_payloads(sections.get(kind))):
+                    payload.setdefault("source_order", source_order)
+                    payload.setdefault("sense_or_group_id", f"{kind}:{source_order + 1}")
+                    raw_ref = raw_refs.get(kind)
+                    if raw_ref:
+                        payload.setdefault("raw_response_ref", raw_ref)
+                    conn.execute(
+                        """
+                        INSERT INTO ulif_dictua_sections
+                            (entry_id, kind, source_order, sense_or_group_id, payload_json)
+                        VALUES (?, ?, ?, ?, ?)
+                        """,
+                        (
+                            entry["id"],
+                            kind,
+                            source_order,
+                            str(payload["sense_or_group_id"]),
+                            json.dumps(payload, ensure_ascii=False, sort_keys=True),
+                        ),
+                    )
+        conn.commit()
+        return _materialize_ulif_dictua_entry(conn, entry)
+    finally:
+        conn.close()
+
+
+def extract_ulif_dictua_snapshot(
+    db_path: str | Path,
+) -> tuple[list[tuple], list[tuple], list[tuple]]:
+    """Read cache rows for an atomic sources.db rebuild, tolerating legacy DBs."""
+    path = Path(db_path)
+    if not path.exists():
+        return [], [], []
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = _open_conn(path)
+        raw_rows = list(conn.execute(
+            """
+            SELECT response_sha256, body, content_type, stored_at
+            FROM ulif_dictua_raw_responses
+            ORDER BY response_sha256
+            """
+        ))
+        entry_rows = list(conn.execute(
+            """
+            SELECT id, normalized_query, canonical_headword, raw_response_ref,
+                   retrieved_at, response_sha256, parser_version, status
+            FROM ulif_dictua_entries
+            ORDER BY id
+            """
+        ))
+        section_rows = list(conn.execute(
+            """
+            SELECT id, entry_id, kind, source_order, sense_or_group_id, payload_json
+            FROM ulif_dictua_sections
+            ORDER BY id
+            """
+        ))
+        return raw_rows, entry_rows, section_rows
+    except sqlite3.Error:
+        return [], [], []
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def restore_ulif_dictua_snapshot(
+    conn: sqlite3.Connection,
+    raw_rows: list[tuple],
+    entry_rows: list[tuple],
+    section_rows: list[tuple],
+) -> None:
+    """Restore DictUA cache rows in foreign-key-safe dependency order."""
+    ensure_ulif_dictua_schema(conn)
+    if raw_rows:
+        conn.executemany(
+            """
+            INSERT OR IGNORE INTO ulif_dictua_raw_responses
+                (response_sha256, body, content_type, stored_at)
+            VALUES (?, ?, ?, ?)
+            """,
+            raw_rows,
+        )
+    if entry_rows:
+        conn.executemany(
+            """
+            INSERT OR IGNORE INTO ulif_dictua_entries
+                (id, normalized_query, canonical_headword, raw_response_ref,
+                 retrieved_at, response_sha256, parser_version, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            entry_rows,
+        )
+    if section_rows:
+        conn.executemany(
+            """
+            INSERT OR IGNORE INTO ulif_dictua_sections
+                (id, entry_id, kind, source_order, sense_or_group_id, payload_json)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            section_rows,
+        )
+
+
+def search_ulif_dictua_sections(
+    word: str,
+    kind: str,
+    *,
+    limit: int = 20,
+    db_path: str | Path | None = None,
+) -> list[dict]:
+    """Return an ordered, structured DictUA relation result for a cached word."""
+    if kind not in ULIF_DICTUA_SECTION_KINDS or limit < 1:
+        return []
+    record = get_ulif_dictua_entry(word, db_path=db_path)
+    if not record or record["status"] != "ok" or not record["sections"].get(kind):
+        return []
+    record["matched_section"] = kind
+    # Keep the original nested group payload in metadata instead of reducing
+    # relations to an unattributed comma-separated word list.
+    return [record]
 
 
 #: Max wait (ms) for SQLite to acquire a shared read lock when another
@@ -1406,16 +1808,18 @@ def _dict_lookup(
 
     try:
         # Exact match first, then prefix match
-        rows = conn.execute(
-            f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
-            (word, limit),
-        ).fetchall()
-
-        if not rows:
+        try:
             rows = conn.execute(
-                f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
-                (f"{word}%", limit),
+                f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
+                (word, limit),
             ).fetchall()
+            if not rows:
+                rows = conn.execute(
+                    f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
+                    (f"{word}%", limit),
+                ).fetchall()
+        except sqlite3.OperationalError:
+            return []
 
         return [dict(r) for r in rows]
     finally:
@@ -1598,23 +2002,29 @@ def translate_en_uk(word: str, limit: int = 10) -> list[dict]:
 
 
 def search_idioms(word: str, limit: int = 10) -> list[dict]:
-    """Look up idioms/expressions in Фразеологічний."""
-    return _dict_lookup("frazeolohichnyi", word, limit)
+    """Look up idioms, preferring structured official DictUA results."""
+    ulif_results = search_ulif_dictua_sections(word, "phraseology", limit=limit)
+    fallback = _dict_lookup("frazeolohichnyi", word, limit)
+    return (ulif_results + fallback)[:limit]
 
 
 def search_synonyms(word: str, limit: int = 20) -> list[dict]:
-    """Look up synonyms in Ukrajinet WordNet."""
+    """Look up synonyms, preferring structured official DictUA results."""
+    ulif_results = search_ulif_dictua_sections(word, "synonyms", limit=limit)
     try:
         conn = _get_conn()
     except FileNotFoundError:
-        return []
+        return ulif_results
 
     # Search in the 'words' field (comma-separated synset members)
-    rows = conn.execute(
-        "SELECT * FROM ukrajinet WHERE words LIKE ? COLLATE NOCASE LIMIT ?",
-        (f"%{word}%", limit),
-    ).fetchall()
-    return [dict(r) for r in rows]
+    try:
+        rows = conn.execute(
+            "SELECT * FROM ukrajinet WHERE words LIKE ? COLLATE NOCASE LIMIT ?",
+            (f"%{word}%", limit),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return ulif_results
+    return (ulif_results + [dict(r) for r in rows])[:limit]
 
 
 def query_cefr_level(word: str, limit: int = 5) -> list[dict]:

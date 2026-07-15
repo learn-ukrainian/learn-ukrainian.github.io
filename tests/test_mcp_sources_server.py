@@ -50,7 +50,8 @@ class TestListTools:
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_source_attribution", "verify_words", "verify_lemma", "verify_quote", "check_modern_form",
-            "query_wikipedia", "query_grac", "query_ulif",
+            "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
+            "query_ulif_antonyms", "query_ulif_phraseology",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
             "query_pravopys", "query_cefr_level",
             "search_style_guide", "search_definitions", "search_grinchenko_1907",
@@ -77,6 +78,52 @@ class TestListTools:
         vw = next(t for t in tools if t.name == "verify_word")
         assert "word" in vw.inputSchema["required"]
         assert "word" in vw.inputSchema["properties"]
+
+    def test_query_ulif_schema_accepts_structured_sections(self, server_module):
+        tools = _run(server_module.list_tools())
+        ulif = next(tool for tool in tools if tool.name == "query_ulif")
+        sections = ulif.inputSchema["properties"]["sections"]
+        assert "default" not in sections
+        assert sections["items"]["enum"] == [
+            "paradigm", "synonyms", "antonyms", "phraseology",
+        ]
+        assert "When supplied" in sections["description"]
+
+
+class TestUlifHandlers:
+    def test_query_ulif_without_sections_renders_legacy_paradigm(self, server_module):
+        paradigm = {"word": "великий", "rows": [["Називний", "великий"]]}
+        with patch("rag.source_query.ulif_paradigm", return_value=paradigm) as query:
+            result = _run(server_module.handle_query_ulif({"word": "великий"}))
+
+        query.assert_called_once_with("великий")
+        assert result[0].text == "Paradigm for 'великий':\n\nНазивний | великий"
+
+    def test_query_ulif_without_sections_renders_legacy_no_result(self, server_module):
+        with patch("rag.source_query.ulif_paradigm", return_value=None) as query:
+            result = _run(server_module.handle_query_ulif({"word": "відсутнє"}))
+
+        query.assert_called_once_with("відсутнє")
+        assert result[0].text == "No ULIF paradigm found for: 'відсутнє'"
+
+    def test_query_ulif_renders_structured_source_metadata(self, server_module):
+        expected = {
+            "source_id": "ulif_dictua",
+            "official_url": "https://lcorp.ulif.org.ua/dictua",
+            "attribution_label": "«Словники України» (Український мовно-інформаційний фонд НАН України)",
+            "retrieved_at": "2026-07-15T00:00:00+00:00",
+            "content_sha256": "a" * 64,
+            "parser_version": "ulif-dictua-v1",
+            "status": "ok",
+            "sections": {"paradigm": {"rows": [["Називний", "великий"]]}},
+        }
+        with patch("rag.source_query.query_ulif", return_value=expected) as query:
+            result = _run(server_module.handle_query_ulif({
+                "word": "великий", "sections": ["paradigm"],
+            }))
+
+        query.assert_called_once_with("великий", ["paradigm"])
+        assert json.loads(result[0].text) == expected
 
     def test_search_text_subject_schema(self, server_module):
         tools = _run(server_module.list_tools())
