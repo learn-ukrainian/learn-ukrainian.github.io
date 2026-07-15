@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
@@ -24,6 +25,16 @@ import yaml
 from jsonschema import Draft202012Validator
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.orchestration.curriculum_lifecycle_config import (
+    LifecycleConfigError,
+    load_active_tracks,
+    reject_stale_track_keys,
+    resolve_profile_selectors,
+)
+
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SKILL_ROOT = PROJECT_ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
 POLICY_PATH = SKILL_ROOT / "config" / "track-policy.v1.yaml"
@@ -112,7 +123,11 @@ def read_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
-def load_track_policy(path: Path = POLICY_PATH) -> dict[str, Any]:
+def load_track_policy(
+    path: Path = POLICY_PATH,
+    *,
+    repo_root: Path = PROJECT_ROOT,
+) -> dict[str, Any]:
     policy = read_yaml(path)
     required = {
         "review_protocol_version",
@@ -120,11 +135,36 @@ def load_track_policy(path: Path = POLICY_PATH) -> dict[str, Any]:
         "semantic_prompt_version",
         "track_policy_version",
         "families",
-        "tracks",
+        "selectors",
+        "track_overrides",
     }
     missing = sorted(required - set(policy))
     if missing:
         raise ReviewProtocolError(f"Track policy missing: {', '.join(missing)}")
+    if "tracks" in policy:
+        raise ReviewProtocolError("Track policy must derive active tracks from curriculum.yaml")
+    families = policy.get("families")
+    overrides = policy.get("track_overrides")
+    if not isinstance(families, Mapping) or not isinstance(overrides, Mapping):
+        raise ReviewProtocolError("Track policy families and track_overrides must be mappings")
+    try:
+        active_tracks = load_active_tracks(repo_root)
+        resolved = resolve_profile_selectors(
+            selectors=policy["selectors"],
+            profile_families={str(family): str(family) for family in families},
+            active_tracks=active_tracks,
+            label="post-build track policy",
+        )
+        reject_stale_track_keys(overrides, active_tracks, label="post-build track override")
+    except LifecycleConfigError as exc:
+        raise ReviewProtocolError(str(exc)) from exc
+    tracks: dict[str, dict[str, Any]] = {}
+    for track, family in resolved.items():
+        override = overrides.get(track, {})
+        if not isinstance(override, Mapping) or "family" in override:
+            raise ReviewProtocolError(f"Track override must be policy data without family: {track}")
+        tracks[track] = {"family": family, **dict(override)}
+    policy["tracks"] = tracks
     return policy
 
 
@@ -180,7 +220,9 @@ def resolve_target(
     track = track.lower()
     if not re.fullmatch(r"[a-z0-9-]+", track) or not re.fullmatch(r"[a-z0-9-]+", slug):
         raise ReviewProtocolError(f"Invalid target selector: {selector!r}")
-    policy = policy or load_track_policy(repo_root / POLICY_PATH.relative_to(PROJECT_ROOT))
+    policy = policy or load_track_policy(
+        repo_root / POLICY_PATH.relative_to(PROJECT_ROOT), repo_root=repo_root
+    )
     track_policy = resolve_track_policy(track, policy)
     curriculum = repo_root / "curriculum" / "l2-uk-en"
     plan = curriculum / "plans" / track / f"{slug}.yaml"
@@ -767,7 +809,7 @@ def prepare_review(
     runner: RunCommand = subprocess.run,
 ) -> dict[str, Any]:
     policy_path = repo_root / POLICY_PATH.relative_to(PROJECT_ROOT)
-    policy = load_track_policy(policy_path)
+    policy = load_track_policy(policy_path, repo_root=repo_root)
     target = resolve_target(selector, repo_root=repo_root, policy=policy)
     track_policy = resolve_track_policy(str(target["track"]), policy)
     source_hashes = hash_target_files(target, repo_root=repo_root)
@@ -825,7 +867,9 @@ def source_drift_findings(packet: Mapping[str, Any], *, repo_root: Path = PROJEC
 
 
 def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PROJECT_ROOT) -> list[dict[str, Any]]:
-    policy = load_track_policy(repo_root / POLICY_PATH.relative_to(PROJECT_ROOT))
+    policy = load_track_policy(
+        repo_root / POLICY_PATH.relative_to(PROJECT_ROOT), repo_root=repo_root
+    )
     track_policy = resolve_track_policy(str(packet["target"]["track"]), policy)
     expected_prompt, expected_paths = assemble_semantic_prompt(
         packet["target"],

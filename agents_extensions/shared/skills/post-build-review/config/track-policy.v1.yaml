@@ -1,7 +1,7 @@
 review_protocol_version: 3.0.0
 deterministic_contract_version: 1.2.1
 semantic_prompt_version: 3.0.0
-track_policy_version: 1.4.0
+track_policy_version: 1.5.0
 
 defaults:
   semantic_requirements:
@@ -102,27 +102,11 @@ families:
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
 
-tracks:
-  a1: {family: core}
-  a2: {family: core}
-  b1: {family: core}
-  b2: {family: core}
-  c1: {family: core}
-  c2: {family: core}
-  folk: {family: seminar}
-  hist: {family: seminar}
-  history: {family: seminar}
-  bio: {family: seminar, semantic_mode: biography}
-  istorio: {family: seminar}
-  lit: {family: seminar}
-  lit-crimea: {family: seminar}
-  lit-doc: {family: seminar}
-  lit-drama: {family: seminar}
-  lit-essay: {family: seminar}
-  lit-fantastika: {family: seminar}
-  lit-hist-fic: {family: seminar}
-  lit-humor: {family: seminar}
-  lit-war: {family: seminar}
-  lit-youth: {family: seminar}
-  oes: {family: seminar}
-  ruth: {family: seminar}
+selectors:
+  tracks: {}
+  manifest_types:
+    core: core
+    track: seminar
+track_overrides:
+  bio:
+    semantic_mode: biography

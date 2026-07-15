@@ -10,7 +10,6 @@ profiles:
   core:
     version: 1.0.0
     family: core
-    prompt_profile: core
     requirements:
       - id: plan
         owner: plan
@@ -20,7 +19,6 @@ profiles:
   seminar:
     version: 1.0.0
     family: seminar
-    prompt_profile: seminar
     requirements:
       - id: plan
         owner: plan
@@ -30,7 +28,6 @@ profiles:
   bio:
     version: 1.0.0
     family: seminar
-    prompt_profile: seminar
     requirements:
       - id: dossier
         owner: preparation

@@ -107,6 +107,7 @@ def _copy_contract_repo(destination: Path) -> Path:
         Path("agents_extensions/shared/prompt-contracts"),
         Path("agents_extensions/shared/rules/operator-expectations.md"),
         Path("agents_extensions/shared/rules/workflow.md"),
+        Path("curriculum/l2-uk-en/curriculum.yaml"),
     ):
         source = REPO_ROOT / relative
         target = destination / relative
@@ -144,6 +145,80 @@ def test_contract_audit_consumes_complete_p0_responsibility_inventory() -> None:
     assert report["classified_inventory_count"] == 39
     assert report["unclassified_inventory"] == []
     assert report["legacy_entry_points_removed"] == 0
+    assert report["legacy_entry_points_deprecated"] == 39
+    assert report["legacy_operator_entry_points"] == 0
+    assert report["canonical_invocation"] == "Use $curriculum-lifecycle for <track>."
+
+
+def test_legacy_migration_hashes_fail_on_silent_prompt_drift(tmp_path: Path) -> None:
+    migration = contracts.load_legacy_migration(repo_root=REPO_ROOT)
+    legacy_root = tmp_path / "orchestrators"
+    shutil.copytree(REPO_ROOT / contracts.LEGACY_PROMPT_ROOT, legacy_root)
+
+    rogue = legacy_root / "unregistered.txt"
+    rogue.write_text("not migration-classified\n", encoding="utf-8")
+    with pytest.raises(contracts.PromptContractError, match="inventory drift"):
+        contracts.validate_legacy_prompt_files(migration, legacy_root)
+    rogue.unlink()
+
+    assert len(contracts.validate_legacy_prompt_files(migration, legacy_root)) == 39
+    target = legacy_root / "hist/suite-orchestrator.md"
+    target.write_text(target.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+
+    with pytest.raises(contracts.PromptContractError, match="byte hashes changed"):
+        contracts.validate_legacy_prompt_files(migration, legacy_root)
+
+
+def test_active_tracks_resolve_from_manifest_without_a_second_roster() -> None:
+    manifest = _load_yaml(REPO_ROOT, Path("curriculum/l2-uk-en/curriculum.yaml"))
+    resolved = contracts.active_track_profiles(repo_root=REPO_ROOT)
+
+    assert set(resolved) == set(manifest["levels"])
+    assert resolved["a1"] == "core-a1"
+    assert resolved["c2"] == "core-c2"
+    assert resolved["bio"] == "seminar-bio"
+    assert resolved["folk"] == "seminar-folk"
+    assert resolved["hist"] == "seminar-generic"
+    assert {"history", "lit-doc", "lit-crimea"}.isdisjoint(resolved)
+
+
+def test_new_manifest_track_uses_typed_family_default(tmp_path: Path) -> None:
+    repo_root = _copy_contract_repo(tmp_path / "repo")
+    manifest_path = Path("curriculum/l2-uk-en/curriculum.yaml")
+    manifest = _load_yaml(repo_root, manifest_path)
+    manifest["levels"]["new-seminar"] = {"type": "track", "modules": ["pilot"]}
+    _write_yaml(repo_root, manifest_path, manifest)
+
+    resolved = contracts.active_track_profiles(repo_root=repo_root)
+
+    assert resolved["new-seminar"] == "seminar-generic"
+
+
+def test_stale_prompt_track_selector_fails_closed(tmp_path: Path) -> None:
+    repo_root = _copy_contract_repo(tmp_path / "repo")
+    manifest_path = Path("curriculum/l2-uk-en/curriculum.yaml")
+    manifest = _load_yaml(repo_root, manifest_path)
+    del manifest["levels"]["folk"]
+    _write_yaml(repo_root, manifest_path, manifest)
+
+    with pytest.raises(contracts.PromptContractError, match="inactive tracks: folk"):
+        contracts.active_track_profiles(repo_root=repo_root)
+
+
+def test_track_resolution_uses_exact_selected_profile() -> None:
+    context = {
+        "track": "a1",
+        "slug": "pilot",
+        "family": "core",
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+
+    resolved = contracts.resolve_track_profile("a1", context=context, repo_root=REPO_ROOT)
+
+    assert resolved.profile_id == "core-a1"
+    assert "A1 CORE policy" in resolved.rendered_prompt
 
 
 @pytest.mark.parametrize(

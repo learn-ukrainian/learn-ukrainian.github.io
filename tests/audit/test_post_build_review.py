@@ -208,17 +208,26 @@ def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> 
     assert resolved.is_symlink()
 
 
-def test_track_policy_covers_curriculum_manifest_and_api_registry() -> None:
-    from scripts.api.config import SEMINAR_TRACK_IDS
-
+def test_track_policy_is_derived_exactly_from_curriculum_manifest() -> None:
     policy = pbr.load_track_policy()
     manifest = yaml.safe_load((ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text(encoding="utf-8"))
+    assert set(policy["tracks"]) == set(manifest["levels"])
     for track, config in manifest["levels"].items():
-        assert track in policy["tracks"], f"manifest track missing from review policy: {track}"
         expected = "core" if config["type"] == "core" else "seminar"
         assert policy["tracks"][track]["family"] == expected
-    assert set(policy["tracks"]) >= SEMINAR_TRACK_IDS
-    assert all(policy["tracks"][track]["family"] == "seminar" for track in SEMINAR_TRACK_IDS)
+    assert {"history", "lit-doc", "lit-crimea"}.isdisjoint(policy["tracks"])
+    raw_policy = yaml.safe_load((SKILL / "config/track-policy.v1.yaml").read_text(encoding="utf-8"))
+    assert "tracks" not in raw_policy
+
+
+def test_track_policy_rejects_stale_track_overrides(tmp_path: Path) -> None:
+    raw_policy = yaml.safe_load((SKILL / "config/track-policy.v1.yaml").read_text(encoding="utf-8"))
+    raw_policy["track_overrides"]["lit-doc"] = {}
+    path = tmp_path / "track-policy.yaml"
+    path.write_text(yaml.safe_dump(raw_policy, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(pbr.ReviewProtocolError, match="inactive tracks: lit-doc"):
+        pbr.load_track_policy(path, repo_root=ROOT)
 
 
 def test_target_resolution_routes_core_and_bio_families() -> None:

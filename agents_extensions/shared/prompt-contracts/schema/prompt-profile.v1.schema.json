@@ -3,9 +3,18 @@
   "$id": "prompt-profile.v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["profile_schema_version", "profiles"],
+  "required": ["profile_schema_version", "selectors", "profiles"],
   "properties": {
     "profile_schema_version": {"const": "prompt-profile.v1"},
+    "selectors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tracks", "manifest_types"],
+      "properties": {
+        "tracks": {"$ref": "#/$defs/selectorMap"},
+        "manifest_types": {"$ref": "#/$defs/selectorMap"}
+      }
+    },
     "profiles": {
       "type": "object",
       "minProperties": 1,
@@ -17,6 +26,13 @@
   },
   "$defs": {
     "semver": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "selectorMap": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]+$": {"type": "string", "pattern": "^[a-z][a-z0-9.-]+$"}
+      },
+      "additionalProperties": false
+    },
     "profile": {
       "type": "object",
       "additionalProperties": false,

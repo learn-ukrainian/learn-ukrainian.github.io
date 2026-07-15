@@ -7,6 +7,11 @@ import pytest
 import yaml
 
 from scripts.orchestration import curriculum_readiness as readiness
+from scripts.orchestration import prompt_contracts
+from scripts.orchestration.curriculum_lifecycle_config import (
+    load_active_tracks,
+    resolve_profile_selectors,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BIO_SLUG = "borys-hrinchenko"
@@ -57,6 +62,24 @@ def _write_manifest(repo_root: Path, track: str, manifest_type: str, slug: str) 
         ),
         encoding="utf-8",
     )
+    profiles_path = repo_root / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
+    profiles = yaml.safe_load(profiles_path.read_text(encoding="utf-8"))
+    selected = profiles["selectors"]["tracks"].get(track)
+    profiles["selectors"]["tracks"] = {track: selected} if selected else {}
+    profiles["selectors"]["manifest_types"] = {
+        manifest_type: profiles["selectors"]["manifest_types"][manifest_type]
+    }
+    profiles_path.write_text(yaml.safe_dump(profiles, sort_keys=False), encoding="utf-8")
+    readiness_path = repo_root / readiness.CONFIG_PATH
+    readiness_config = yaml.safe_load(readiness_path.read_text(encoding="utf-8"))
+    readiness_selected = readiness_config["selectors"]["tracks"].get(track)
+    readiness_config["selectors"]["tracks"] = (
+        {track: readiness_selected} if readiness_selected else {}
+    )
+    readiness_config["selectors"]["manifest_types"] = {
+        manifest_type: readiness_config["selectors"]["manifest_types"][manifest_type]
+    }
+    readiness_path.write_text(yaml.safe_dump(readiness_config, sort_keys=False), encoding="utf-8")
 
 
 def _create_bundle(repo_root: Path, track: str, slug: str) -> None:
@@ -98,15 +121,49 @@ def test_bio_profile_expresses_complete_preparation_without_track_branches() -> 
         "bio-wiki-subject",
         "bio-discovery-integrity",
     } <= validators
-    assert config["profiles"]["core"]["prompt_profile"] == "core"
-    assert config["profiles"]["seminar"]["prompt_profile"] == "seminar"
-    assert bio["prompt_profile"] == "seminar"
     assert set(config["profiles"]) == {"core", "seminar", "bio"}
     assert all("certification" not in profile for profile in config["profiles"].values())
     engine_source = (REPO_ROOT / "scripts/orchestration/curriculum_readiness.py").read_text(encoding="utf-8")
     assert 'track == "bio"' not in engine_source
     assert "llm_qg" not in engine_source
     assert "sqlite" not in engine_source
+
+
+def test_all_active_tracks_resolve_readiness_certification_and_prompt_profiles() -> None:
+    active = load_active_tracks(REPO_ROOT)
+    readiness_config = readiness.load_config(repo_root=REPO_ROOT)
+    readiness_profiles = resolve_profile_selectors(
+        selectors=readiness_config["selectors"],
+        profile_families={
+            profile_id: profile["family"]
+            for profile_id, profile in readiness_config["profiles"].items()
+        },
+        active_tracks=active,
+        label="readiness test",
+    )
+    certification_path = (
+        REPO_ROOT
+        / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
+    )
+    certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
+    certification_profiles = resolve_profile_selectors(
+        selectors=certification["selectors"],
+        profile_families={
+            profile_id: profile["family"]
+            for profile_id, profile in certification["profiles"].items()
+        },
+        active_tracks=active,
+        label="certification test",
+    )
+    semantic_profiles = prompt_contracts.active_track_profiles(repo_root=REPO_ROOT)
+
+    assert set(readiness_profiles) == set(active)
+    assert set(certification_profiles) == set(active)
+    assert set(semantic_profiles) == set(active)
+    assert readiness_profiles["bio"] == "bio"
+    assert certification_profiles["bio"] == "bio-pending"
+    assert semantic_profiles["a1"] == "core-a1"
+    assert semantic_profiles["folk"] == "seminar-folk"
 
 
 def test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources(tmp_path: Path) -> None:
@@ -322,6 +379,19 @@ def test_config_rejects_raw_prose_and_unknown_selector(tmp_path: Path) -> None:
     config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
 
     with pytest.raises(readiness.ReadinessError, match="unknown profile"):
+        readiness.load_config(repo_root=repo_root)
+
+
+def test_readiness_config_rejects_retired_track_selector(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    _copy_contracts(repo_root)
+    _copy(repo_root, "curriculum/l2-uk-en/curriculum.yaml")
+    config_path = repo_root / readiness.CONFIG_PATH
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["selectors"]["tracks"]["lit-doc"] = "seminar"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(readiness.ReadinessError, match="inactive tracks: lit-doc"):
         readiness.load_config(repo_root=repo_root)
 
 
