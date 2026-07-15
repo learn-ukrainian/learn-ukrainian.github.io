@@ -2453,3 +2453,105 @@ entries:
       disposition: exception-approved
     cohort_promotion: *cohort_next10_2_c2_review
     hold: *cohort_next10_2_c2_hold
+  anatolii-kos-anatolskyi:
+    dossier_grounding: &cohort_driver_a9bff_c2_review
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_a9bff_c2_review
+    wiki_quote_verification: *cohort_driver_a9bff_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_a9bff_c2_review
+    hold: &cohort_driver_a9bff_c2_hold
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  dmytro-hnatiuk:
+    dossier_grounding: *cohort_driver_a9bff_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_a9bff_c2_review
+    wiki_quote_verification: *cohort_driver_a9bff_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Дмитро_Гнатюк.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_a9bff_c2_review
+    hold: *cohort_driver_a9bff_c2_hold
+  anatolii-solovianenko:
+    dossier_grounding: *cohort_driver_a9bff_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_a9bff_c2_review
+    wiki_quote_verification: *cohort_driver_a9bff_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: >-
+        https://commons.wikimedia.org/wiki/File:Anatoliy_Solovianenko_-_Soviet_Life,_October_1984.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_a9bff_c2_review
+    hold: *cohort_driver_a9bff_c2_hold
+  myroslav-skoryk:
+    dossier_grounding: *cohort_driver_a9bff_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_a9bff_c2_review
+    wiki_quote_verification: *cohort_driver_a9bff_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://commons.wikimedia.org/wiki/File:Skoryk3_(cropped).jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_a9bff_c2_review
+    hold: *cohort_driver_a9bff_c2_hold
+  ivan-karabyts:
+    dossier_grounding: *cohort_driver_a9bff_c2_review
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4980292473
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_a9bff_c2_review
+    wiki_quote_verification: *cohort_driver_a9bff_c2_review
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-15
+      evidence_url: >-
+        https://commons.wikimedia.org/wiki/File:%D0%86._%D0%9A%D0%B0%D1%80%D0%B0%D0%B1%D0%B8%D1%86%D1%8C_1986.jpg
+      disposition: approved
+    cohort_promotion: *cohort_driver_a9bff_c2_review
+    hold: *cohort_driver_a9bff_c2_hold
