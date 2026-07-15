@@ -798,6 +798,52 @@ def test_route_matrix_is_lineage_aware_and_gpt_v21_is_not_deferred() -> None:
     assert layerb_qualify.route_eligibility(gemma, gpt)["eligible"] is True
 
 
+def _grok_route() -> layerb_qualify.EffectiveRoute:
+    return layerb_qualify.EffectiveRoute.from_mapping(
+        {**ROUTE.to_dict(), "family": "grok", "resolved_model": "grok-build", "resolved_model_version": "grok-build"}
+    )
+
+
+def test_grok_route_is_supported_and_other_family_rows_eligible() -> None:
+    """grok/xai authored no production content: the third-family candidate (#5197)."""
+
+    grok = _grok_route()
+
+    assert grok.family == "grok"
+    assert grok.to_dict()["normalized_family"] == "xai"
+    deepseek = _case("openrouter-deepseek-deepseek-v4-pro__row", "raw")
+    gemma = _case("openrouter-google-gemma-4-31b-it__row", "raw")
+    assert layerb_qualify.route_eligibility(deepseek, grok)["eligible"] is True
+    assert layerb_qualify.route_eligibility(gemma, grok)["eligible"] is True
+
+
+def test_grok_route_self_family_rows_fail_closed() -> None:
+    """The third-family status is a GUARD, not an assumption (#5203 review)."""
+
+    grok = _grok_route()
+    gpt = layerb_qualify.EffectiveRoute.from_mapping({**ROUTE.to_dict(), "family": "gpt"})
+
+    xai_written = _case("xai-written-row", "raw")
+    xai_written["lineage"] = {"writer_family": "xai", "qg_reviewer_family": "codex"}
+    cursor_reviewed = _case("cursor-reviewed-row", "raw")
+    cursor_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "cursor"}
+    grok_reviewed = _case("grok-reviewed-row", "raw")
+    grok_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "grok"}
+
+    for case in (xai_written, cursor_reviewed, grok_reviewed):
+        row = layerb_qualify.route_eligibility(case, grok)
+        assert row["eligible"] is False, case["case_id"]
+        assert row["reason"] == "GROK_SELF_FAMILY_EXCLUDED", case["case_id"]
+        # The same rows stay eligible for a non-grok route: the exclusion is
+        # self-judgment, not a blanket ban on grok-lineage content.
+        assert layerb_qualify.route_eligibility(case, gpt)["eligible"] is True, case["case_id"]
+
+
+def test_unknown_route_family_still_refused() -> None:
+    with pytest.raises(layerb_qualify.QualificationError, match="unsupported judge route family"):
+        layerb_qualify.EffectiveRoute.from_mapping({**ROUTE.to_dict(), "family": "mistral"})
+
+
 def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> None:
     labels = tmp_path / "labels.json"
     corpus_manifest = tmp_path / "corpus.json"

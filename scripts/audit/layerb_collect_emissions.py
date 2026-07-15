@@ -20,7 +20,7 @@ import json
 import shlex
 import subprocess
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
@@ -363,16 +363,33 @@ def _planned_modules(
     attempt: int = 0,
 ) -> list[ModuleEnvelope]:
     grouped: dict[tuple[str, str], list[PreparedCase]] = defaultdict(list)
+    skipped: Counter[str] = Counter()
     for prepared in prepared_cases:
         if prepared.case.get("expected_layer_a_decision") != "ANCHOR":
             continue
         if not prepared.windows:
             raise CollectionError(f"{prepared.case_id}: an ANCHOR row has no candidate windows")
-        if prepared.corpus == "main" and eligibility == "deepseek-only":
+        if prepared.corpus == "main":
+            # Route eligibility binds in EVERY mode: filtering only under
+            # --eligibility deepseek-only let the default 'all' mode schedule
+            # rows the route may never judge (e.g. a grok-lineage-authored row
+            # on the grok route) — the exclusion existed but nothing enforced
+            # it at planning time (PR #5203 review finding). UNKNOWN_LINEAGE
+            # is likewise fail-closed here: an unresolvable lineage can hide a
+            # self-family author, and the frozen r2 labels resolve lineage for
+            # all 535 rows, so this costs nothing operationally.
             matrix = layerb_qualify.route_eligibility(prepared.case, effective_route)
             if matrix.get("eligible") is not True:
+                skipped[str(matrix.get("reason") or "INELIGIBLE")] += 1
                 continue
         grouped[(prepared.corpus, prepared.artifact_sha256)].append(prepared)
+    if skipped:
+        # No silent caps: an operator must see exactly what the route was
+        # not allowed to judge.
+        print(
+            "route-eligibility skips: " + ", ".join(f"{reason}={count}" for reason, count in sorted(skipped.items())),
+            file=sys.stderr,
+        )
     return [
         ModuleEnvelope(
             corpus=corpus,
