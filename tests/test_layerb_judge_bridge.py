@@ -81,6 +81,16 @@ def _result(
     }
 
 
+def _flat_rows(envelope: dict[str, Any]) -> list[dict[str, Any]]:
+    """Flatten a canonical test envelope exactly as Grok is required to emit it."""
+
+    return [
+        {"fact_check_id": fact["fact_check_id"], **relation}
+        for fact in envelope["fact_checks"]
+        for relation in fact["source_relations"]
+    ]
+
+
 def _model_trace(model: str = PINNED_CODEX_MODEL) -> list[dict[str, Any]]:
     return [{"type": "session_meta", "model": model}, {"type": "task_complete"}]
 
@@ -207,7 +217,11 @@ def _stub_grok(
             "\n".join(json.dumps(event) for event in trace_updates), encoding="utf-8"
         )
         if outer_stdout is None:
-            serialized = output if isinstance(output, str) else json.dumps(output, ensure_ascii=False)
+            serialized = (
+                output
+                if isinstance(output, str)
+                else json.dumps(_flat_rows(output) if isinstance(output, dict) else output, ensure_ascii=False)
+            )
             stdout = json.dumps(
                 {
                     "text": serialized,
@@ -344,43 +358,34 @@ def test_grok_pinned_schema_uses_request_ordered_draft4_tuples_and_id_enums() ->
         }
     )
 
-    schema = layerb_judge_bridge.output_json_schema_for_request(layerb_judge_bridge.parse_request(request))
-    generic = layerb_judge_bridge.output_json_schema()
-    fact_checks = schema["properties"]["fact_checks"]
+    schema = layerb_judge_bridge.grok_flat_output_schema_for_request(layerb_judge_bridge.parse_request(request))
+    generic = layerb_judge_bridge.grok_flat_output_schema()
 
-    assert fact_checks["minItems"] == fact_checks["maxItems"] == 2
-    assert fact_checks["additionalItems"] is False
-    assert [fact["properties"]["fact_check_id"]["enum"] for fact in fact_checks["items"]] == [
-        ["fact-1"],
-        ["fact-2"],
+    assert schema["type"] == "array"
+    assert schema["minItems"] == schema["maxItems"] == 4
+    assert schema["additionalItems"] is False
+    assert [
+        (row["properties"]["fact_check_id"]["enum"], row["properties"]["candidate_id"]["enum"])
+        for row in schema["items"]
+    ] == [
+        (["fact-1"], ["candidate-1"]),
+        (["fact-1"], ["candidate-2"]),
+        (["fact-2"], ["candidate-2"]),
+        (["fact-2"], ["candidate-1"]),
     ]
-    assert all("const" not in fact["properties"]["fact_check_id"] for fact in fact_checks["items"])
-    assert fact_checks["items"][0]["properties"]["source_relations"]["items"] != []
-    assert [
-        relation["properties"]["candidate_id"]["enum"]
-        for relation in fact_checks["items"][0]["properties"]["source_relations"]["items"]
-    ] == [["candidate-1"], ["candidate-2"]]
-    assert [
-        relation["properties"]["candidate_id"]["enum"]
-        for relation in fact_checks["items"][1]["properties"]["source_relations"]["items"]
-    ] == [["candidate-2"], ["candidate-1"]]
-    for fact in fact_checks["items"]:
-        relations = fact["properties"]["source_relations"]
-        assert relations["minItems"] == relations["maxItems"] == 2
-        assert relations["additionalItems"] is False
-        for relation in relations["items"]:
-            assert (
-                relation["properties"]["relation"]
-                == generic["properties"]["fact_checks"]["items"]["properties"]["source_relations"]["items"][
-                    "properties"
-                ]["relation"]
-            )
-            assert (
-                relation["properties"]["support_spans"]
-                == generic["properties"]["fact_checks"]["items"]["properties"]["source_relations"]["items"][
-                    "properties"
-                ]["support_spans"]
-            )
+    for row in schema["items"]:
+        assert row["additionalProperties"] is False
+        assert row["required"] == [
+            "fact_check_id",
+            "candidate_id",
+            "relation",
+            "support_spans",
+            "confidence",
+            "prompt_injection_observed",
+        ]
+        assert "const" not in row["properties"]["fact_check_id"]
+        assert row["properties"]["relation"] == generic["items"]["properties"]["relation"]
+        assert row["properties"]["support_spans"] == generic["items"]["properties"]["support_spans"]
 
 
 def test_codex_prompt_is_policy_first_and_reasserts_before_untrusted_block() -> None:
@@ -395,6 +400,21 @@ def test_codex_prompt_is_policy_first_and_reasserts_before_untrusted_block() -> 
     assert prompt.index("<<<BEGIN_UNTRUSTED_TOOL_OUTPUT") < prompt.index(raw)
     for relation in layerb_shadow.ALLOWED_RELATIONS:
         assert relation in prompt
+
+
+def test_grok_prompt_keeps_shared_safety_policy_and_hardens_the_flat_contract() -> None:
+    parsed = layerb_judge_bridge.parse_request(_request())
+
+    prompt = layerb_judge_bridge.build_grok_prompt(parsed)
+
+    assert prompt.startswith(layerb_judge_bridge.build_system_prompt(parsed.request))
+    assert layerb_judge_bridge.GROK_FLAT_OUTPUT_SHAPE_INSTRUCTION.splitlines()[0] in prompt
+    assert 'Do not use the key `spans`; the key must be `support_spans`.' in prompt
+    assert '"support_spans":[]' in prompt
+    assert '"confidence":"high"' in prompt
+    assert prompt.index(layerb_judge_bridge.IMMOVABLE_POLICY_BOUNDARY) < prompt.index(
+        "<<<BEGIN_UNTRUSTED_TOOL_OUTPUT"
+    )
 
 
 def test_codex_happy_path_uses_output_file_strict_schema_scoped_home_and_trace(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -436,10 +456,10 @@ def test_grok_happy_path_uses_strict_envelope_scoped_home_and_complete_tool_free
     assert argv[:3] == [
         "grok",
         "-p",
-        layerb_judge_bridge.build_codex_prompt(layerb_judge_bridge.parse_request(request)),
+        layerb_judge_bridge.build_grok_prompt(layerb_judge_bridge.parse_request(request)),
     ]
     assert argv[argv.index("--output-format") + 1] == "json"
-    assert json.loads(argv[argv.index("--json-schema") + 1]) == layerb_judge_bridge.output_json_schema_for_request(
+    assert json.loads(argv[argv.index("--json-schema") + 1]) == layerb_judge_bridge.grok_flat_output_schema_for_request(
         layerb_judge_bridge.parse_request(request)
     )
     assert argv[argv.index("--max-turns") + 1] == "1"
@@ -450,6 +470,112 @@ def test_grok_happy_path_uses_strict_envelope_scoped_home_and_complete_tool_free
     for flag in layerb_judge_bridge.GROK_CONFIG_FLAGS:
         assert flag in argv
     assert seen["scoped_config"] == "# Layer-B judge scoped home: intentionally no MCP or plugin configuration.\n"
+
+
+def test_grok_lift_regroups_flat_rows_by_request_ids_not_emission_order() -> None:
+    parsed = layerb_judge_bridge.parse_request(_two_candidate_request())
+    emitted = _flat_rows(_two_candidate_result())[::-1]
+
+    lifted = layerb_judge_bridge._lift_grok_flat_rows(emitted, parsed)
+
+    relations = lifted["fact_checks"][0]["source_relations"]
+    assert [relation["candidate_id"] for relation in relations] == ["candidate-1", "candidate-2"]
+    assert relations[0]["relation"] == "CONTRADICTS"
+    assert "probe_marker" not in relations[0]
+
+
+def test_grok_missing_canonical_field_reaches_the_unchanged_wall_as_abstain(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rows = _flat_rows(_two_candidate_result())
+    rows[1].pop("confidence")
+    _stub_grok(monkeypatch, output=rows)
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config("grok"))
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0]["relation"] == "CONTRADICTS"
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-2"
+
+
+def test_grok_spans_alias_remains_disabled_after_the_canonical_name_smoke(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rows = _flat_rows(_two_candidate_result())
+    rows[0]["spans"] = rows[0].pop("support_spans")
+    _stub_grok(monkeypatch, output=rows)
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config("grok"))
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0] == layerb_shadow.conservative_candidate_response("candidate-1")
+    assert relations[1]["relation"] == "ENTAILS"
+
+
+@pytest.mark.parametrize("case", ("missing", "duplicate", "unknown", "non_mapping"))
+def test_grok_flat_identifier_multiset_failures_are_module_fatal(
+    monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    rows: list[Any] = _flat_rows(_two_candidate_result())
+    if case == "missing":
+        rows.pop()
+    elif case == "duplicate":
+        rows[1] = dict(rows[0])
+    elif case == "unknown":
+        rows[1]["candidate_id"] = "unexpected-candidate"
+    else:
+        rows[1] = "not-an-object"
+    _stub_grok(monkeypatch, output=rows)
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config("grok"))
+
+    assert response["_bridge_conservative_reason"] == "envelope_alignment"
+    assert response["fact_checks"][0]["source_relations"] == [
+        layerb_shadow.conservative_candidate_response("candidate-1"),
+        layerb_shadow.conservative_candidate_response("candidate-2"),
+    ]
+
+
+def test_grok_preserves_literal_injection_true_when_a_sibling_has_malformed_spans(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_grok(monkeypatch, output=_flat_rows(_two_candidate_result(first_injection=True, second_bad_span=True)))
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config("grok"))
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0]["prompt_injection_observed"] is True
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-2"
+
+
+def test_grok_strict_parser_accepts_fenced_json_after_leading_prose(monkeypatch: pytest.MonkeyPatch) -> None:
+    rows = json.dumps(_flat_rows(_result()), ensure_ascii=False)
+    _stub_grok(monkeypatch, output=f"Here is the required output:\n```json\n{rows}\n```")
+
+    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
+
+    assert _relation(response)["relation"] == "ENTAILS"
+
+
+def test_grok_strict_parser_rejects_non_whitespace_after_the_first_json_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rows = json.dumps(_flat_rows(_result()), ensure_ascii=False)
+    _stub_grok(monkeypatch, output=f"{rows}\nThis prose must not be accepted.")
+
+    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
+
+    assert response["_bridge_conservative_reason"] == "output_decode"
+
+
+def test_grok_non_array_response_is_conservative(monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_grok(monkeypatch, output=json.dumps(_result(), ensure_ascii=False))
+
+    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
+
+    assert response["_bridge_conservative_reason"] == "output_decode"
 
 
 @pytest.mark.parametrize(
@@ -965,7 +1091,7 @@ def test_grok_envelope_failure_writes_raw_stdout_forensics_when_configured(
     assert path == forensics_dir / f"{request_sha256}.raw-err"
     assert path.read_text(encoding="utf-8")
     assert sidecar["sha256"] == layerb_judge_bridge._sha256_text(path.read_text(encoding="utf-8"))
-    assert json.loads(path.read_text(encoding="utf-8"))["text"] == json.dumps(malformed, ensure_ascii=False)
+    assert json.loads(path.read_text(encoding="utf-8"))["text"] == json.dumps(_flat_rows(malformed), ensure_ascii=False)
 
 
 def test_grok_envelope_failure_skips_forensics_when_unconfigured(
@@ -1309,13 +1435,15 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
 
     # config_sha256 covers the complete canonical attestation, including the
     # argv template, schema, trace proof, and every disabled-tool control.
-    assert config["config_sha256"] == "90c19658c5e1f82e9b0adb2049db63dcabb88e96b205fdd6b067c7b555f21fe1"
+    assert config["config_sha256"] == "0c775127ddc6f82ca55cb042e6d08ae4f4c66348efee6c1b136772f987b0e442"
     assert config["family"] == "grok"
     assert config["model"] == PINNED_GROK_MODEL
     assert config["model_version"] == PINNED_GROK_MODEL
     assert config["transport"] == "grok-build-subscription-traced.v1"
+    assert config["grok_flat_contract"] == layerb_judge_bridge.grok_flat_contract_material()
+    assert config["prompt_template_version"] == layerb_judge_bridge.GROK_PROMPT_TEMPLATE_VERSION
     assert config["seat_transport"] == {
-        "argv_sha256": "8c2013d41cdf7fc094e3680f5713f564d6dbf26b5ad6b4847d7a7dabb7dc5af0",
+        "argv_sha256": "79a0f7024e5225971fe64c6a917adcb875e9a67b8d9174285c27363a4478941e",
         "argv_template": config["seat_transport"]["argv_template"],
         "auth": "user-auth.json symlink only",
         "minimal_config_has_mcp_servers": False,
