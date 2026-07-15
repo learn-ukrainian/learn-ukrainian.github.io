@@ -52,7 +52,9 @@ def _seed_sources_mcp_config(
         ("claude-tools", "claude"),
         ("gemini-tools", "gemini"),
         ("codex-tools", "codex"),
-        ("grok-tools", "grok"),
+        # The grok WRITER uses the Hermes seat (renamed grok → grok-hermes in
+        # #5251); the native grok CLI seat is a separate coding/review/judge lane.
+        ("grok-tools", "grok-hermes"),
         ("cursor-tools", "cursor"),
         ("deepseek-tools", "deepseek"),
         ("qwen-tools", "qwen"),
