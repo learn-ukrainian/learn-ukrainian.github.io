@@ -1409,74 +1409,6 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
         )
 
 
-def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
-    """#5201: --epic harness must resolve to claude-infra and surface its packet.
-
-    Regression: handoff_identity_for_epic used to invent ``claude-harness``, so
-    SessionStart reported COLD START while a validated pending_start packet sat
-    under ``claude-infra``. Identity guardrail stays intact — a packet bound to
-    another thread is still a stop condition (covered elsewhere).
-    """
-    import subprocess
-
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-
-    # Launcher mapping: --epic harness → claude-infra (not phantom claude-harness).
-    identity_sh = Path(__file__).resolve().parents[2] / "scripts" / "lib" / "handoff_identity.sh"
-    mapped = subprocess.check_output(
-        ["bash", "-c", f'source "{identity_sh}" && handoff_identity_for_epic harness'],
-        text=True,
-    ).strip()
-    assert mapped == "claude-infra", f"--epic harness must map to claude-infra, got {mapped!r}"
-    assert mapped != "claude-harness"
-
-    # Real lane packet lives under claude-infra (prepare as the lane does).
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "prepare",
-                "--agent",
-                "claude-infra",
-                "--active-thread-id",
-                "old-infra-thread",
-            ]
-        )
-        == 0
-    )
-    prepared_payload = json.loads(capsys.readouterr().out)
-    assert prepared_payload["agent"] == "claude-infra"
-
-    # Phantom slot: silent miss (the pre-fix failure mode).
-    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-harness"]) == 0
-    assert json.loads(capsys.readouterr().out) == {"agent": "claude-harness", "status": "none"}
-
-    # Resolved slot (post-fix): SessionStart must surface the pending packet.
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "detect",
-                "--agent",
-                mapped,
-                "--format",
-                "session-start",
-                "--current-thread-id",
-                "new-infra-thread",
-            ]
-        )
-        == 0
-    )
-    startup = capsys.readouterr().out
-    assert "PENDING THREAD ROLLOVER DETECTED" in startup
-    assert "COLD START: NO LIVE THREAD ROLLOVER" not in startup
-    assert "--agent claude-infra" in startup
-    assert prepared_payload["lineage_id"] in startup
-    assert prepared_payload["rollover_id"] in startup
-
-
 def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_path: Path, capsys, monkeypatch):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
     assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
@@ -1792,3 +1724,71 @@ def test_confirmation_revalidates_probe_before_handwritten_pass_can_unlock_clean
     assert resumed == before_confirmation
     assert resumed["replacement"]["status"] == "resumed"
     assert resumed["cleanup"]["old_automation_ready_to_delete"] is False
+
+
+def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
+    """#5201: --epic harness must resolve to claude-infra and surface its packet.
+
+    Regression: handoff_identity_for_epic used to invent ``claude-harness``, so
+    SessionStart reported COLD START while a validated pending_start packet sat
+    under ``claude-infra``. Identity guardrail stays intact — a packet bound to
+    another thread is still a stop condition (covered elsewhere).
+    """
+    import subprocess
+
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    # Launcher mapping: --epic harness → claude-infra (not phantom claude-harness).
+    identity_sh = Path(__file__).resolve().parents[2] / "scripts" / "lib" / "handoff_identity.sh"
+    mapped = subprocess.check_output(
+        ["bash", "-c", f'source "{identity_sh}" && handoff_identity_for_epic harness'],
+        text=True,
+    ).strip()
+    assert mapped == "claude-infra", f"--epic harness must map to claude-infra, got {mapped!r}"
+    assert mapped != "claude-harness"
+
+    # Real lane packet lives under claude-infra (prepare as the lane does).
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude-infra",
+                "--active-thread-id",
+                "old-infra-thread",
+            ]
+        )
+        == 0
+    )
+    prepared_payload = json.loads(capsys.readouterr().out)
+    assert prepared_payload["agent"] == "claude-infra"
+
+    # Phantom slot: silent miss (the pre-fix failure mode).
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-harness"]) == 0
+    assert json.loads(capsys.readouterr().out) == {"agent": "claude-harness", "status": "none"}
+
+    # Resolved slot (post-fix): SessionStart must surface the pending packet.
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "detect",
+                "--agent",
+                mapped,
+                "--format",
+                "session-start",
+                "--current-thread-id",
+                "new-infra-thread",
+            ]
+        )
+        == 0
+    )
+    startup = capsys.readouterr().out
+    assert "PENDING THREAD ROLLOVER DETECTED" in startup
+    assert "COLD START: NO LIVE THREAD ROLLOVER" not in startup
+    assert "--agent claude-infra" in startup
+    assert prepared_payload["lineage_id"] in startup
+    assert prepared_payload["rollover_id"] in startup

@@ -43,10 +43,9 @@ initialPrompt: |
      - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$CLAUDE_CODE_SESSION_ID"`
        — small (hashes + identity). The `?session=` param is how you get `_telemetry.ctx` (your live
        context-TOKEN count, not a %); MEASURE ctx from it, never estimate. (Known gap #5265: an
-       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null,
-       and the response OMITS the `newest_transcript` sidecar. Until it lands, if `caller_match` is
-       false re-request the manifest WITHOUT `?session=` and read `_telemetry.newest_transcript.ctx`
-       — that sidecar is present ONLY on no-session requests — yours when you're the only session here.)
+       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null.
+       If caller-matched telemetry is unavailable, state that it is unavailable rather than adopting
+       another session's telemetry.)
      - **Do NOT bulk-fetch `/api/rules` at cold-start.** The operator-contract digest is ALREADY
        injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. The full
        endpoint is ~76 KB and, with the telemetry footer enabled (the live config), returns a full
@@ -55,8 +54,9 @@ initialPrompt: |
        ON-DEMAND, once, before your FIRST dispatch (for the live model-assignment/routing table), and
        re-pull only when the manifest `rules.hash` changed. API down → offline fallback
        `agents_extensions/shared/rules/*.md`.
-     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?session=$CLAUDE_CODE_SESSION_ID"`
-       — live queue / PR / worktree orient; pass `?session=` so `_telemetry.ctx` is populated.
+     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$CLAUDE_CODE_SESSION_ID"`
+       — lean cold-start orientation; pull only critical signals (active worktree and PR targets).
+       Preserve full orient or explicit sections as ON-DEMAND only.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` — verify claimed in-flight
        dispatches before believing the handoff.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/worktrees`
