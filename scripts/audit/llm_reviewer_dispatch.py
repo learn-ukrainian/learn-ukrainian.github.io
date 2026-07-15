@@ -238,7 +238,7 @@ class DispatchResult:
     cross_family_validated: bool = False
 
     def metadata(self) -> dict[str, Any]:
-        return {
+        metadata = {
             "reviewer_model_id": self.reviewer_model_id,
             "reviewer_family": self.reviewer_family,
             "route_name": self.route_name,
@@ -249,10 +249,18 @@ class DispatchResult:
             "tool_call_count": self.tool_call_count,
             "tools_used": list(self.tools_used),
             "tool_events": [dict(event) for event in self.tool_events],
-            "execution_provenance": dict(self.execution_provenance or {}),
-            "author_lineage": dict(self.author_lineage or {}),
-            "cross_family_validated": self.cross_family_validated,
         }
+        # Preserve the established metadata/artifact bytes for offline and
+        # injected callers.  Certification provenance is additive only when a
+        # dispatcher actually supplied it; live dispatches populate all three
+        # fields together after resolving author lineage and route separation.
+        if self.execution_provenance is not None:
+            metadata["execution_provenance"] = dict(self.execution_provenance)
+        if self.author_lineage is not None:
+            metadata["author_lineage"] = dict(self.author_lineage)
+        if self.execution_provenance is not None or self.author_lineage is not None or self.cross_family_validated:
+            metadata["cross_family_validated"] = self.cross_family_validated
+        return metadata
 
 
 @dataclass(frozen=True, slots=True)

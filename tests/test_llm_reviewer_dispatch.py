@@ -292,6 +292,27 @@ def test_dispatch_result_metadata_carries_tool_telemetry() -> None:
     meta = result.metadata()
     assert meta["tool_call_count"] == 7
     assert meta["tools_used"] == ["sources_query_wikipedia", "sources_search_heritage"]
+    assert "execution_provenance" not in meta
+    assert "author_lineage" not in meta
+    assert "cross_family_validated" not in meta
+
+
+def test_dispatch_result_metadata_carries_supplied_certification_provenance() -> None:
+    result = llm_reviewer_dispatch.DispatchResult(
+        response_text="{}",
+        reviewer_model_id="m",
+        reviewer_family="google",
+        route_name="opencode_frontier",
+        execution_provenance={"kind": "live_reviewer_dispatcher"},
+        author_lineage={"family": "codex", "source": "explicit", "evidence": "codex"},
+        cross_family_validated=True,
+    )
+
+    meta = result.metadata()
+
+    assert meta["execution_provenance"] == {"kind": "live_reviewer_dispatcher"}
+    assert meta["author_lineage"] == {"family": "codex", "source": "explicit", "evidence": "codex"}
+    assert meta["cross_family_validated"] is True
 
 
 def test_invoke_bridge_route_opencode_populates_tool_fields() -> None:
