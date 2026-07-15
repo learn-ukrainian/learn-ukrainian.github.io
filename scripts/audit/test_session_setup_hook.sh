@@ -413,6 +413,32 @@ assert_contains "$output" "Thread rollover health (read-only)" "post compact hea
 assert_contains "$output" '\"status\": \"pending_start\"' "post compact packet"
 assert_not_contains "$output" "confirm-started" "post compact no confirmation"
 
+# 17. #5201: --epic harness resolves to the claude-infra slot. A live
+#     pending_start packet under claude-infra MUST surface at SessionStart —
+#     never a silent cold start under the phantom claude-harness slot.
+# shellcheck source=scripts/lib/handoff_identity.sh
+source "$REPO_ROOT/scripts/lib/handoff_identity.sh"
+harness_slot="$(handoff_identity_for_epic harness)"
+eq_slot() {
+  # local assert: harness epic must resolve to claude-infra
+  if [[ "$1" != "$2" ]]; then
+    fail "#5201 harness slot: expected [$2], got [$1]"
+  fi
+}
+eq_slot "$harness_slot" "claude-infra"
+setup_fixture "$fixture_root"
+prepare_fixture "$fixture_root" claude-infra old-infra-harness
+# Phantom slot: if the launcher still exported claude-harness, SessionStart
+# would cold-start past the live infra packet. Prove the bug path is cold.
+output_phantom="$(run_hook "$fixture_root" 0 claude-harness)"
+assert_contains "$output_phantom" "COLD START: NO LIVE THREAD ROLLOVER" "phantom claude-harness is blind (#5201)"
+assert_not_contains "$output_phantom" "PENDING THREAD ROLLOVER DETECTED" "phantom claude-harness is blind (#5201)"
+# Canonical slot (what --epic harness must export): live packet is surfaced.
+output_harness="$(run_hook "$fixture_root" 0 "$harness_slot")"
+assert_contains "$output_harness" "PENDING THREAD ROLLOVER DETECTED" "epic harness surfaces claude-infra packet (#5201)"
+assert_contains "$output_harness" "--agent claude-infra" "epic harness surfaces claude-infra packet (#5201)"
+assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epic harness surfaces claude-infra packet (#5201)"
+
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"
 printf 'fallback_warn_count=%s\n' "$fallback_warn_count"
 printf 'ok - session setup hook handoff fixtures passed\n'

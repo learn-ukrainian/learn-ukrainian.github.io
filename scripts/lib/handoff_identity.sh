@@ -123,12 +123,21 @@ epic_name_valid() {
 }
 
 # handoff_identity_for_epic "<epic-name>"
-# Echo the per-epic SESSION_HANDOFF_AGENT slot (claude-<epic>), or nothing when
-# no epic is given. An explicit epic BEATS the agent-type mapping: two sessions
-# of the same agent type on different epics must not share a handoff slot
+# Echo the per-epic SESSION_HANDOFF_AGENT slot, or nothing when no epic is given.
+# Default: claude-<epic>. An explicit epic BEATS the agent-type mapping so two
+# sessions of the same agent type on different epics never share a handoff slot
 # (root cause of the 2026-07-13 atlas/hramatka/main lane collision).
+#
+# Canonical-slot aliases: some epics are NOT free-standing lanes — they already
+# have a durable handoff identity elsewhere. Mapping them to a phantom
+# claude-<epic> slot hides live packets and causes silent cold starts (#5201).
+# harness (infra & fleet reliability / --epic harness) → claude-infra, the same
+# slot as --agent infra-orchestrator (lineage dir, session-state, inbox).
 handoff_identity_for_epic() {
   local epic="${1:-}"
   [ -n "$epic" ] || return 0
-  printf 'claude-%s' "$epic"
+  case "$epic" in
+    harness|infra) printf '%s' 'claude-infra' ;;
+    *) printf 'claude-%s' "$epic" ;;
+  esac
 }

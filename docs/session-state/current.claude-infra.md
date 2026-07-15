@@ -4,19 +4,23 @@
 > harness, Atlas/lexicon. SEPARATE from the folk/seminar Claude (agent `claude`) and from
 > the curriculum track-orchestrators.
 >
-> **Handoff identity:** `claude-infra`. Launch with **`./start-claude.sh --agent infra-orchestrator`**:
-> the launcher derives `SESSION_HANDOFF_AGENT=claude-infra` from the `--agent` selection (via
-> `scripts/lib/handoff_identity.sh`), so the SessionStart hook routes cold-start to this lane's own slot
-> (`.agent/claude-infra-thread-handoff.md`) instead of the shared `claude` slot. A bare `claude` /
-> `./start-claude.sh` with no `--agent` (or `--agent curriculum-orchestrator`) defaults to agent `claude`,
-> which the folk driver and track-orchestrators also use — that shared slot is the cold-start collision
-> this lane was created to avoid. (One launcher, one agent flag — there is no separate `start-claude-infra.sh`.)
+> **Handoff identity:** `claude-infra`. Launch with **`./start-claude.sh --agent infra-orchestrator`**
+> and/or **`--epic harness`**: the launcher derives `SESSION_HANDOFF_AGENT=claude-infra` from either
+> flag (via `scripts/lib/handoff_identity.sh` — harness is a canonical alias for this lane, not a
+> phantom `claude-harness` slot; #5201), so the SessionStart hook routes cold-start to this lane's own
+> slot (`.agent/claude-infra-thread-handoff.md` + `.agent/thread-rollovers/claude-infra/`) instead of
+> the shared `claude` slot. A bare `claude` / `./start-claude.sh` with no `--agent` (or
+> `--agent curriculum-orchestrator`) defaults to agent `claude`, which the folk driver and
+> track-orchestrators also use — that shared slot is the cold-start collision this lane was created
+> to avoid. (One launcher, one agent/epic flag — there is no separate `start-claude-infra.sh`.)
 
 ## Cold-start
 1. `git fetch origin`
 2. `gh pr list --search 'author:@me' --state open`
-3. `curl -sS http://127.0.0.1:8765/api/orient`
-4. Read the live queue: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local — START HERE).
+3. Use the validated automatic SessionStart rollover output as authoritative. Do not manually parse flat handoff files or leases if a rollover packet was surfaced at startup.
+4. If the SessionStart hook output is unavailable, or the API is down, or the hook explicitly surfaces the legacy file, use the legacy flat file fallback: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local).
+5. Orient via Monitor API (lean cold-start mode): `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$CLAUDE_CODE_SESSION_ID"`
+
 
 ## Lane boundaries
 - Infra/code only. Do NOT touch the folk/seminar content lane

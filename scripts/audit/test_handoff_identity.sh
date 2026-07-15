@@ -55,7 +55,17 @@ eq "$(handoff_epic_from_argv)" "" "empty argv (epic)"
 # --- epic → slot mapping: epic beats agent-type; empty epic maps to nothing ---
 eq "$(handoff_identity_for_epic atlas)" "claude-atlas" "epic atlas → claude-atlas"
 eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → claude-hramatka"
+eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
+eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
+
+# --- e2e: --epic harness resolves the infra lane slot (not phantom claude-harness) ---
+epic="$(handoff_epic_from_argv --epic harness --agent infra-orchestrator)"
+eq "$(handoff_identity_for_epic "$epic")" "claude-infra" "e2e: --epic harness → claude-infra"
+# Phantom claude-harness must NEVER be the resolved slot for this lane.
+if [[ "$(handoff_identity_for_epic harness)" == "claude-harness" ]]; then
+  fail "harness epic must not invent phantom claude-harness slot (#5201)"
+fi
 
 # --- strip: --epic (both forms) removed, everything else preserved in order ---
 stripped="$(strip_epic_from_argv --chrome --epic atlas --agent curriculum-orchestrator | tr '\0' ' ')"
