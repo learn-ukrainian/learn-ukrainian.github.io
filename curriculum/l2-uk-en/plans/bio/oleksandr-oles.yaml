@@ -110,17 +110,28 @@ persona:
     Модератор семінару першої хвилі еміграції, який називає радянське стирання репресією і не романтизує емігрантську сатиру без контексту.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source_name: "Олександр Олесь (Енциклопедія історії України)"
+- title: "Олесь Олександр: енциклопедична стаття"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-76384"
+  language: uk
+  hosting: link-only
+  learner_task: "Простежити в енциклопедичній статті зв'язок між поезією, еміграцією та празьким періодом."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-76384"
+    note: "Авторськоправний матеріал ЕСУ доступний лише як зовнішнє посилання."
+- title: "Олександр Олесь: поетичний і драматургічний доробок"
+  source_name: "Енциклопедія історії України"
   source_url: "http://www.history.org.ua/?termin=Oles_O"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted material; link to official EIU page."
-- source_name: "Олександр Олесь (Вікіпедія)"
-  source_url: "https://uk.wikipedia.org/wiki/Олександр_Олесь"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "CC BY-SA 3.0 license; linking to article to ensure proper attribution."
+  language: uk
+  hosting: link-only
+  learner_task: "Назвати твори, які стаття відрізняє від біографічних переказів."
+  rights:
+    basis: external-link
+    evidence_url: "http://www.history.org.ua/?termin=Oles_O"
+    note: "Доступ зберігається на сайті Інституту історії України; локальне відтворення не дозволене."
 references:
 - note: Authoritative English-language encyclopedia entry; emigration, ban, works.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlesOleksander.htm
@@ -146,9 +157,21 @@ references:
   work: Чужиною
 sequence: 221
 slug: oleksandr-oles
+aliases:
+- "Олександр Олесь (canonical pen name)"
+- "Олександр Іванович Кандиба (legal name)"
+- "Oleksandr Oles (canonical EN)"
+- "Александр Олесь (Russian form; FORBIDDEN in body text)"
 subtitle: The Symbolist Poet Erased by Soviet Censorship and Exiled by Revolution's Defeat
 title: 'Олександр Олесь: Символізм, еміграція та стирання'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Доступні портретні зображення не мають у перевіреному пакеті індивідуально
+    підтвердженої вільної ліцензії; зображення не обирається за категорією чи пошуком.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: літературний напрям кінця XIX — початку XX ст., що використовує символи та музичність вірша
   pos: ч.

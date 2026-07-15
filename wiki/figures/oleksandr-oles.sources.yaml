@@ -1,0 +1,13 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-76384
+  type: external
+  title: Олесь Олександр — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-76384
+  notes: Ukrainian-language authoritative biographical entry.
+- id: S2
+  file: http://www.history.org.ua/?termin=Oles_O
+  type: external
+  title: Олесь Олександр — Енциклопедія історії України
+  url: http://www.history.org.ua/?termin=Oles_O
+  notes: Ukrainian institutional history reference.

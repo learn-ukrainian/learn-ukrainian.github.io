@@ -70,17 +70,18 @@ persona:
   role: Модератор семінару, який досліджує жіночий голос Празької школи та механізми радянського стирання еміграційно-державної традиції.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: link-only
-  language: uk
-  rights_note: "Creative Commons Attribution-ShareAlike"
-  source_name: "Лівицька-Холодна Наталя Андріївна (Вікіпедія)"
-  source_url: "https://uk.wikipedia.org/wiki/Лівицька-Холодна_Наталя_Андріївна"
-- hosting: link-only
-  language: uk
-  rights_note: "Educational use / Public access"
-  source_name: "Наталя Лівицька-Холодна (УкрЛіб)"
+- title: "Наталя Лівицька-Холодна: біографічна довідка"
+  source_name: "Українська бібліотека (УкрЛіб)"
   source_url: "https://www.ukrlib.com.ua/bio/author.php?id=302"
+  language: uk
+  hosting: link-only
+  learner_task: "Виписати перевірювані відомості про освіту, міграцію та книжки, не підміняючи їх легендою."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.ukrlib.com.ua/bio/author.php?id=302"
+    note: "Біографічний матеріал читається на зовнішньому сайті; повний текст не переноситься локально."
 references:
 - author: Р. М. Коваль
   note: Стаття в Енциклопедії Сучасної України (esu.com.ua) про життя та творчість поетки.
@@ -105,9 +106,20 @@ references:
   type: reference
 sequence: 229
 slug: natalia-livytska-kholodna
+aliases:
+- "Наталя Андріївна Лівицька-Холодна (canonical UA)"
+- "Natalia Livytska-Kholodna (canonical EN)"
+- "Наталия Левицкая-Холодная (Russian form; FORBIDDEN in body text)"
 subtitle: The Last Great Voice of the Prague School
 title: 'Наталя Лівицька-Холодна: «Червоне й чорне» доньки УНР'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Авторка померла 2005 року, а конкретний ранній портрет із підтвердженим
+    суспільним надбанням або вільною ліцензією у перевіреному пакеті не знайдено.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: вимушене переселення за межі батьківщини; спільнота переселенців
   pos: ж.

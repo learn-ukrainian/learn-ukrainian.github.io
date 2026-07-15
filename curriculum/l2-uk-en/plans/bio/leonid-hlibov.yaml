@@ -128,17 +128,28 @@ persona:
     цензурною історією, без романтизації і без вигаданих архівів.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source_name: "Леонід Глібов (Херсонська обласна бібліотека)"
+- title: "Леонід Глібов: біографічна та бібліографічна довідка"
+  source_name: "Херсонська обласна універсальна наукова бібліотека"
   source_url: "https://lib.kherson.ua/leonid-glibov.htm"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted educational material; link to regional library page."
-- source_name: "Леонід Глібов (1827–1893) (UkrLit)"
+  language: uk
+  hosting: link-only
+  learner_task: "Зіставити ролі вчителя, редактора й байкаря з поданою хронологією."
+  rights:
+    basis: external-link
+    evidence_url: "https://lib.kherson.ua/leonid-glibov.htm"
+    note: "Сторінка не відтворюється у репозиторії; доступ надається лише за зовнішнім посиланням."
+- title: "Леонід Глібов (1827–1893): огляд життя і творчості"
+  source_name: "Українська література (UkrLit)"
   source_url: "https://ukrlit.net/info/history_xix/22.html"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted material; link to external literary resource."
+  language: uk
+  hosting: link-only
+  learner_task: "Виписати окремо відомості про байку, лірику та редакторську працю."
+  rights:
+    basis: external-link
+    evidence_url: "https://ukrlit.net/info/history_xix/22.html"
+    note: "Матеріал лишається на сайті правовласника; повний текст локально не розміщується."
 references:
 - note: Стаття «Глібов Леонід Іванович» в Українській літературній енциклопедії.
   path: wave8-ukr-lit-entsyklopediia
@@ -168,9 +179,20 @@ references:
   work: Бджола і Мухи
 sequence: 220
 slug: leonid-hlibov
+aliases:
+- "Леонід Іванович Глібов (canonical UA)"
+- "Leonid Hlibov (canonical EN)"
+- "Леонид Глебов (Russian form; FORBIDDEN in body text)"
 subtitle: The Fabulist-Editor Who Worked Under Imperial Censorship
 title: 'Леонід Глібов: Байки, газета та Валуєвський циркуляр'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    У перевірених джерелах не встановлено індивідуальну PD або CC ліцензію для
+    конкретного портретного файлу; неперевірене зображення не використовується.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: короткий оповідний твір з моральним висновком, часто з тваринними персонажами
   pos: ж.

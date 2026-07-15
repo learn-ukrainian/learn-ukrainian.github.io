@@ -152,17 +152,28 @@ persona:
     літературу та деколоніальне читання радянського стирання.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source_name: "Винниченко Володимир Кирилович (ЕІУ)"
+- title: "Винниченко Володимир Кирилович: енциклопедична стаття"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-34033"
+  language: uk
+  hosting: link-only
+  learner_task: "Розділити в нотатках літературні, державні та еміграційні етапи життя."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-34033"
+    note: "Авторськоправний матеріал ЕСУ доступний лише за зовнішнім посиланням."
+- title: "Винниченко Володимир Кирилович: довідка ЕІУ"
+  source_name: "Енциклопедія історії України"
   source_url: "http://www.history.org.ua/?termin=Vynnychenko_V"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted material; link to official EIU article."
-- source_name: "Постать Володимира Винниченка (Радіо Свобода)"
-  source_url: "https://www.radiosvoboda.org/a/30748066.html"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted journalistic material; link provided to Radio Svoboda."
+  language: uk
+  hosting: link-only
+  learner_task: "Позначити, які державні ролі підтверджує довідка, не додаючи мотивів поза джерелом."
+  rights:
+    basis: external-link
+    evidence_url: "http://www.history.org.ua/?termin=Vynnychenko_V"
+    note: "Доступ здійснюється на сайті Інституту історії України; локального передруку немає."
 references:
 - note: Основна англомовна енциклопедична стаття про життя, політичну діяльність і літературний доробок.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CY%5CVynnychenkoVolodymyr.htm
@@ -188,9 +199,20 @@ references:
   work: Відродження нації
 sequence: 222
 slug: volodymyr-vynnychenko
+aliases:
+- "Володимир Кирилович Винниченко (canonical UA)"
+- "Volodymyr Vynnychenko (canonical EN)"
+- "Владимир Винниченко (Russian form; FORBIDDEN in body text)"
 subtitle: The Modernist Statesman Erased by the Soviet Canon
 title: 'Володимир Винниченко: Письменник, прем''єр і вигнанець'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    У перевіреному наборі джерел немає конкретного портретного файлу з
+    індивідуально підтвердженою вільною ліцензією.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: вимушений або добровільний виїзд за межі батьківщини, часто через політичний тиск
   pos: ж.

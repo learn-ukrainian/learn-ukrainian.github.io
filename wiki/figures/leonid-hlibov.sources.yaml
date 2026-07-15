@@ -1,0 +1,19 @@
+sources:
+- id: S1
+  file: https://lib.kherson.ua/leonid-glibov.htm
+  type: external
+  title: Леонід Глібов — Херсонська обласна універсальна наукова бібліотека
+  url: https://lib.kherson.ua/leonid-glibov.htm
+  notes: Ukrainian-language biographical and bibliographical entry.
+- id: S2
+  file: https://litopys.org.ua/krypcult/krcult24.htm
+  type: external
+  title: Леонід Глібов — Іван Крип'якевич, Історія української культури
+  url: https://litopys.org.ua/krypcult/krcult24.htm
+  notes: Ukrainian literary-history source; project corpus record consulted.
+- id: S3
+  file: https://ukrlit.net/info/history_xix/22.html
+  type: external
+  title: Леонід Глібов (1827–1893) — UkrLit
+  url: https://ukrlit.net/info/history_xix/22.html
+  notes: Ukrainian-language literature overview.

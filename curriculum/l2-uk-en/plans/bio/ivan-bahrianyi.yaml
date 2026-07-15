@@ -1,15 +1,26 @@
 ---
+readings_contract_version: 2
 readings:
-- source_name: "Іван Багряний (Енциклопедія Сучасної України)"
+- title: "Багряний Іван: енциклопедична стаття"
+  source_name: "Енциклопедія Сучасної України"
   source_url: "https://esu.com.ua/article-38762"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, educational use"
-- source_name: "Іван Багряний (Вікіпедія)"
-  source_url: "https://uk.wikipedia.org/wiki/Іван_Багряний"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "CC BY-SA 4.0"
+  language: uk
+  hosting: link-only
+  learner_task: "Скласти окрему хронологію літературної праці, репресії та повоєнної еміграції."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-38762"
+    note: "Авторськоправний текст ЕСУ не копіюється до репозиторію."
+- title: "Багряний Іван Павлович: довідкова стаття"
+  source_name: "Енциклопедія історії України"
+  source_url: "http://www.history.org.ua/?termin=Bahrianyi_I"
+  language: uk
+  hosting: link-only
+  learner_task: "Відокремити названі в довідці документи й твори від пізніших оцінок."
+  rights:
+    basis: external-link
+    evidence_url: "http://www.history.org.ua/?termin=Bahrianyi_I"
+    note: "Сторінка Інституту історії України лишається зовнішнім джерелом."
 activity_hints:
 - after_section: 'Розминка'
   focus: Перевірка фактів про ім'я Лозов'яга, псевдонім Багряний і дату народження за двома календарями
@@ -199,9 +210,21 @@ references:
   work: Чому я не хочу вертатись до СРСР?
 sequence: 223
 slug: ivan-bahrianyi
+aliases:
+- "Іван Багряний (canonical pen name)"
+- "Іван Павлович Лозов'яга (legal name)"
+- "Ivan Bahrianyi (canonical EN)"
+- "Лозов'ягін (Russified form; FORBIDDEN except when documented)"
 subtitle: The Soviet Camp Survivor Who Refused Repatriation
 title: 'Іван Багряний: Табір, втеча і право не повертатися'
 version: '4.3'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Жоден конкретний портретний файл у перевірених джерелах не має індивідуально
+    підтвердженої PD або CC ліцензії; категорія чи результат пошуку не є доказом прав.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: вигадане або вибране ім'я, під яким автор друкує твори
   pos: ч.
