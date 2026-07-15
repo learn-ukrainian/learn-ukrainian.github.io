@@ -65,6 +65,7 @@ _CALLER_IDENTITY_ENV_HINTS = (
     "SESSION_HANDOFF_AGENT",
     "CLAUDE_AGENT_NAME",
     "CODEX_SESSION",
+    "GROK_AGENT",
     "CLAUDE_PROJECT_DIR",
     "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
     "GEMINI_SESSION",
@@ -96,6 +97,15 @@ def _detect_caller_identity_from_env() -> str | None:
         return claude_name.strip().lower()
     if os.environ.get("CODEX_SESSION"):
         return "codex"
+    # The native `grok` CLI exports GROK_AGENT for every tool shell it spawns
+    # (tool-verified 2026-07-15; model-independent — grok-4.5, grok-5, … all set
+    # it), and it is the only grok-intrinsic identity marker available: GROK_HOME,
+    # GROK_SESSION*, XAI_*, AI_AGENT, and SESSION_HANDOFF_AGENT are all unset in
+    # grok shells. The native CLI IS the `grok-build` lane. Checked BEFORE the
+    # soft CLAUDE_PROJECT_DIR heuristic so a leaked CLAUDE_* var can't misroute a
+    # grok caller to the claude inbox (the "grok asked claude, got empty" class).
+    if os.environ.get("GROK_AGENT"):
+        return "grok-build"
     if os.environ.get("CLAUDE_PROJECT_DIR") or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"):
         return "claude"
     if os.environ.get("GEMINI_SESSION"):

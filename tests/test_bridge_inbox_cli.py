@@ -822,6 +822,53 @@ def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
     assert _cli._detect_caller_identity_from_env() == "claude"
 
 
+def _clear_identity_env(monkeypatch) -> None:
+    for var in (
+        "SESSION_HANDOFF_AGENT",
+        "CLAUDE_AGENT_NAME",
+        "CODEX_SESSION",
+        "GROK_AGENT",
+        "CLAUDE_PROJECT_DIR",
+        "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
+        "GEMINI_SESSION",
+    ):
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_detect_caller_identity_grok_agent_maps_to_grok_build(monkeypatch):
+    # The native grok CLI exports GROK_AGENT for every tool shell it spawns
+    # (model-independent). It must auto-detect as the grok-build lane so a grok
+    # session can `ab ask-claude` without --from and get the reply back.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+
+    assert _cli._detect_caller_identity_from_env() == "grok-build"
+
+
+def test_detect_caller_identity_grok_agent_beats_soft_claude_heuristic(monkeypatch):
+    # A grok session that inherited a stray CLAUDE_* var must still resolve to
+    # grok-build, never misroute to the claude inbox (the "empty result" class).
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "grok-build"
+
+
+def test_detect_caller_identity_explicit_handoff_still_wins_over_grok_agent(monkeypatch):
+    # An explicit, validated SESSION_HANDOFF_AGENT is authoritative over the
+    # weaker GROK_AGENT marker.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
+
+    assert _cli._detect_caller_identity_from_env() == "codex"
+
+
+def test_grok_build_is_valid_agent():
+    assert "grok-build" in _channels.VALID_AGENTS
+
+
 def test_claude_infra_is_valid_agent():
     assert "claude-infra" in _channels.VALID_AGENTS
 
