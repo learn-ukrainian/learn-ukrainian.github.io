@@ -1,5 +1,5 @@
 {
-  "fingerprint": "f700011287c77809bc9c96094e627f72d71562cf8ea032bf8d3d341d57f8d30f",
+  "fingerprint": "2a46adcb1a36885761236c594d7f7b84f2d4a3f93d0b69906426351bb625ea9f",
   "inputs": {
     "lexicon_code": [
       {
@@ -60,7 +60,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "adc7a12cce7be834d8188d71f9c456117119343ccd18ade88cb0ab799e381275"
+        "sha256": "90dd4f057d58be7adbb994ddb127e719bf01c7910e61c20ee70af28a701ad176"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
