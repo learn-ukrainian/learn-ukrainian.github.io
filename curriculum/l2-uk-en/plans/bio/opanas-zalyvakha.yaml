@@ -86,16 +86,31 @@ readings:
   source_name: "Енциклопедія Сучасної України"
   source_url: "https://esu.com.ua/article-14749"
   language: "uk"
-  role: "reference"
+  source_type: biography
+  role: contextual-reading
   hosting: "link-only"
-  rights_note: "Open-access Ukrainian biography entry."
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-14749
+    note: Стаття ЕСУ доступна лише через зовнішнє посилання.
+  learner_task: Побудувати хронологію мистецьких практик, заборон і табірної праці, розрізняючи адміністративний тиск та кримінальне переслідування.
 - title: "ЗАЛИВАХА ОПАНАС ІВАНОВИЧ"
   source_name: "КХПГ Музей"
   source_url: "https://museum.khpg.org/1113910802"
   language: "uk"
-  role: "historical-archive"
+  source_type: oral-history
+  role: primary-context
   hosting: "link-only"
-  rights_note: "Museum-hosted Ukrainian-language oral-history and documentation page."
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113910802
+    note: Музейна сторінка читається лише за зовнішнім посиланням; запис і текст не відтворюються в курсі.
+  learner_task: Зіставити усне свідчення з енциклопедичною довідкою та позначити, де потрібне окреме документальне підтвердження.
+readings_contract_version: 2
+portrait_fallback:
+  type: text-only
+  reason: Індивідуально ліцензованого портретного файла не підтверджено; музейна чи пошукова картинка не встановлює прав.
+  verified_on: '2026-07-15'
 version: '1.1'
 vocabulary_hints:
 - word: вітраж

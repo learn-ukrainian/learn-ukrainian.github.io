@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-75699
+  type: external
+  title: Орест Михайло
+  url: https://esu.com.ua/article-75699
+- id: S2
+  file: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/
+  type: external
+  title: Держава слова
+  url: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/

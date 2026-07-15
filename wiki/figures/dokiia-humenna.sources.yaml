@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-24663
+  type: external
+  title: Гуменна Докія Кузьмівна
+  url: https://esu.com.ua/article-24663
+- id: S2
+  file: https://diasporiana.org.ua/proza/7593-gumenna-d-dar-evdoteyi-t-1/
+  type: external
+  title: Дар Евдотеї. Том 1
+  url: https://diasporiana.org.ua/proza/7593-gumenna-d-dar-evdoteyi-t-1/

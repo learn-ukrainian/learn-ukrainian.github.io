@@ -190,22 +190,34 @@ vocabulary_hints:
   pos: с.
   word: перепоховання
 word_target: 5200
+readings_contract_version: 2
 readings:
-- hosting: esu.com.ua
+- title: Орест Михайло
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-75699
   language: uk
-  note: Оглядова стаття про життя та творчість Михайла Ореста.
-  role: biography
-  source: https://esu.com.ua/article-75699
-  title: Орест Михайло
-- hosting: tyktor.media
+  source_type: biography
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-75699
+    note: Стаття ЕСУ доступна лише на зовнішньому сайті.
+  learner_task: Виписати окремо факти про два арешти, видавничу працю й власну поезію, не зводячи автора до родинного зв'язку.
+- title: Держава слова
+  author: Михайло Орест
+  source_name: Diasporiana електронна бібліотека
+  source_url: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/
   language: uk
-  note: Аналітична стаття про роль Ореста як самостійного поета та збереження спадщини брата.
-  role: analysis
-  source: https://tyktor.media/ktytor/mykhajlo-orest/
-  title: Михайло Орест. Недооцінений талант у тіні брата Миколи Зерова
-- hosting: diasporiana.org.ua
-  language: uk
-  note: Поетична збірка для ознайомлення з його неокласичною поетикою.
-  role: primary
-  source: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/
-  title: Держава слова
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/
+    note: Скан видання доступний лише за зовнішнім посиланням; курс не розміщує повний текст.
+  learner_task: Простежити, як формальна поетична мова та перекладацька оптика відрізняються від біографічного документа.
+portrait_fallback:
+  type: text-only
+  reason: Індивідуально ліцензованого портретного файла не підтверджено; доступність зображення не дорівнює ліцензії.
+  verified_on: '2026-07-15'

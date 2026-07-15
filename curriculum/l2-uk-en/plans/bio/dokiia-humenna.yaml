@@ -190,22 +190,34 @@ vocabulary_hints:
   pos: ж.
   word: діаспора
 word_target: 5200
+readings_contract_version: 2
 readings:
-- hosting: esu.com.ua
+- title: Гуменна Докія Кузьмівна
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-24663
   language: uk
-  note: Енциклопедичний огляд життя та доробку Докії Гуменної з української перспективи.
-  role: biography
-  source: https://esu.com.ua/article-24663
-  title: Гуменна Докія Кузьмівна
-- hosting: diasporiana.org.ua
+  source_type: biography
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-24663
+    note: Стаття доступна лише на сайті ЕСУ; текст не відтворюється в курсі.
+  learner_task: Зіставити енциклопедичну хронологію з переліком творів і позначити, де джерело не дає підстав для психологічних висновків.
+- title: Дар Евдотеї. Том 1
+  author: Докія Гуменна
+  source_name: Diasporiana електронна бібліотека
+  source_url: https://diasporiana.org.ua/proza/7593-gumenna-d-dar-evdoteyi-t-1/
   language: uk
-  note: Автобіографічна проза. Читати фрагменти для розуміння її рефлексій про минуле.
-  role: primary
-  source: https://diasporiana.org.ua/proza/7593-gumenna-d-dar-evdoteyi-t-1/
-  title: Дар Евдотеї (Том 1)
-- hosting: ukrlib.com.ua
-  language: uk
-  note: Роман-хроніка окупаційного Києва.
-  role: primary
-  source: https://www.ukrlib.com.ua/books/printit.php?tid=14190
-  title: Хрещатий Яр
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/proza/7593-gumenna-d-dar-evdoteyi-t-1/
+    note: Цифрове видання читається за зовнішнім посиланням; повний текст не хостується в курсі.
+  learner_task: Прочитати вибраний фрагмент як авторську пам'ять і відокремити факт, оцінку та пізнішу реконструкцію.
+portrait_fallback:
+  type: text-only
+  reason: Індивідуально ліцензованого портретного файла не підтверджено; пошук і категорії не є доказом прав.
+  verified_on: '2026-07-15'

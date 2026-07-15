@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-14749
+  type: external
+  title: Заливаха Опанас Іванович
+  url: https://esu.com.ua/article-14749
+- id: S2
+  file: https://museum.khpg.org/1113910802
+  type: external
+  title: ЗАЛИВАХА ОПАНАС ІВАНОВИЧ
+  url: https://museum.khpg.org/1113910802

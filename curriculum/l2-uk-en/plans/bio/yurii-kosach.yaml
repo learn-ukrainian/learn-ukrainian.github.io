@@ -193,22 +193,34 @@ vocabulary_hints:
   pos: ж.
   word: відповідальність
 word_target: 5200
+readings_contract_version: 2
 readings:
-- hosting: esu.com.ua
+- title: Косач Юрій Миколайович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-5498
   language: uk
-  note: Енциклопедична стаття про Юрія Косача, його родину та життєвий шлях.
-  role: biography
-  source: https://esu.com.ua/article-5498
-  title: Косач Юрій Миколайович
-- hosting: history.org.ua
+  source_type: biography
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-5498
+    note: Стаття ЕСУ використовується лише через зовнішнє посилання.
+  learner_task: Побудувати окремі лінії для родинного походження, літературної праці, ув'язнення і пізньої політичної публіцистики.
+- title: Еней і життя інших
+  author: Юрій Косач
+  source_name: Diasporiana електронна бібліотека
+  source_url: https://diasporiana.org.ua/proza/kosach-yu-enej-i-zhyttya-inshyh/
   language: uk
-  note: Історичний огляд діяльності Косача від Енциклопедії історії України.
-  role: history
-  source: http://history.org.ua/?termin=Kosach_Yu
-  title: Косач Юрій Миколайович
-- hosting: litgazeta.com.ua
-  language: uk
-  note: Повість про модерністське відчуття вигнанця.
-  role: primary
-  source: https://litgazeta.com.ua/chytaty-onlayn/kosach-urij-enej-ta-zitta-inshih/
-  title: Еней і життя інших
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/proza/kosach-yu-enej-i-zhyttya-inshyh/
+    note: Діаспорне видання доступне за зовнішнім посиланням; повний текст не відтворюється в курсі.
+  learner_task: Прочитати уривок як художній текст і не переносити його голос автоматично на всі політичні рішення автора.
+portrait_fallback:
+  type: text-only
+  reason: Індивідуально ліцензованого портретного файла не підтверджено; категорії та пошукові результати не є доказом прав.
+  verified_on: '2026-07-15'

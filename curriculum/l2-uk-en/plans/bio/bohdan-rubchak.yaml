@@ -108,19 +108,6 @@ persona:
     вільної української науки, уникаючи як радянського стирання, так і глорифікації.
   voice: Intellectual Historian
 phase: BIO
-readings:
-- hosting: istpravda.com.ua
-  language: uk
-  note: Короткий некролог із викладом біографічних фактів та значення постаті.
-  role: biography-overview
-  source: 'In memoriam. Помер Богдан Рубчак (Історична правда)'
-  url: https://www.istpravda.com.ua/short/2018/09/24/152978/
-- hosting: ukrlit.net
-  language: uk
-  note: Оглядова стаття про поетику та наукову спадщину Рубчака, придатна для читання уривками.
-  role: literary-analysis
-  source: 'Поезія української діаспори: Богдан Рубчак (ukrlit.net)'
-  url: https://ukrlit.net/info/diaspora/27.html
 references:
 - note: Internet Encyclopedia of Ukraine; біографія, дати, доробок.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRubchakBohdan.htm
@@ -178,3 +165,34 @@ vocabulary_hints:
   pos: ж.
   word: діаспора
 word_target: 5200
+readings_contract_version: 2
+readings:
+- title: Рубчак Богдан-Тиміш Ярославович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-889288
+  language: uk
+  source_type: biography
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-889288
+    note: Стаття ЕСУ доступна лише через зовнішнє посилання.
+  learner_task: Відокремити хронологію переміщення від аналізу поезії та від пізнішої академічної діяльності.
+- title: Особиста Кліо
+  author: Богдан Рубчак
+  source_name: Diasporiana електронна бібліотека
+  source_url: https://diasporiana.org.ua/poeziya/rubchak-b-osobysta-klio/
+  language: uk
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/poeziya/rubchak-b-osobysta-klio/
+    note: Видання читається за зовнішнім посиланням; повний текст не хостується в курсі.
+  learner_task: Розглянути образ, ритм і культурну алюзію в одному вірші, не приписуючи текстові не підтверджений біографічний намір.
+portrait_fallback:
+  type: text-only
+  reason: Індивідуально ліцензованого портретного файла не підтверджено; пошукова сторінка не є доказом прав.
+  verified_on: '2026-07-15'

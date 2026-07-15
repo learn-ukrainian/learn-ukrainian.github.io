@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-5498
+  type: external
+  title: Косач Юрій Миколайович
+  url: https://esu.com.ua/article-5498
+- id: S2
+  file: https://diasporiana.org.ua/proza/kosach-yu-enej-i-zhyttya-inshyh/
+  type: external
+  title: Еней і життя інших
+  url: https://diasporiana.org.ua/proza/kosach-yu-enej-i-zhyttya-inshyh/
