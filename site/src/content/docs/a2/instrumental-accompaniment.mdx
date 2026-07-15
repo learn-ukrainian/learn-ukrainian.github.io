@@ -252,7 +252,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправте форму
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я говорю з Олег.", "errorWord": "Олег", "correctForm": "Я говорю з Олегом.", "options": ["Я говорю з Олегом.", "Я говорю з Олег."], "explanation": "Ім'я Олег отримує форму Олегом."}, {"sentence": "Мені чай з лимон.", "errorWord": "лимон", "correctForm": "Мені чай з лимоном.", "options": ["Мені чай з лимоном.", "Мені чай з лимон."], "explanation": "З чим? - з лимоном."}, {"sentence": "Вона живе із сестра.", "errorWord": "сестра", "correctForm": "Вона живе із сестрою.", "options": ["Вона живе із сестрою.", "Вона живе із сестра."], "explanation": "Із ким? - із сестрою."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я говорю з Олег.", "errorWord": "Олег", "correctForm": "Олегом", "options": ["Олегом", "Олег"], "explanation": "Ім'я Олег отримує форму Олегом."}, {"sentence": "Мені чай з лимон.", "errorWord": "лимон", "correctForm": "лимоном", "options": ["лимоном", "лимон"], "explanation": "З чим? - з лимоном."}, {"sentence": "Вона живе із сестра.", "errorWord": "сестра", "correctForm": "сестрою", "options": ["сестрою", "сестра"], "explanation": "Із ким? - із сестрою."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
