@@ -8,7 +8,7 @@ query_keywords:
 - 'скасування гетьманства 1764 Друга Малоросійська колегія'
 warning: >-
   Direct institutional-source refresh for BIO catalog-source readiness, 2026-07-15:
-  EIU, CDIAK, NBUV, and the Institute of History electronic library were inspected;
+  EIU, IEU, NBUV, and the Institute of History electronic library were inspected;
   no Wikipedia or Russian-state source is retained as evidence.
 videos: []
 blogs: []
@@ -22,13 +22,14 @@ rag_chunks:
     повернути Гетьманщині права, вольності й привілеї та встановити спадкове
     гетьманство Розумовських.
   task_attribution: 'codex/bio-89b642-cohort4-wiki-r2'
-- chunk_id: cdiak-hetmanate-restoration-1764
-  source_type: archival-institution
-  source_name: 'ЦДІАК України — «265 років відновлення гетьманату в Україні»'
-  url: 'https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php'
+- chunk_id: ieu-rozumovskyi-kyrylo
+  source_type: institutional-encyclopedia
+  source_name: 'Internet Encyclopedia of Ukraine — «Rozumovsky, Kyrylo»'
+  url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CO%5CRozumovskyKyrylo.htm'
   text: >-
-    Указ 1747 року відновив гетьманство за імперською процедурою; уряд Катерини II
-    посилив тиск і 1764 року змусив Розумовського зректися посади.
+    Відновлення гетьманства 1750 року залежало від імперського двору; у 1754–1756
+    роках уряд звузив фінансові, митні й кадрові повноваження Гетьманщини, а 1764
+    року Катерина II використала спадкову петицію як привід для примусової відставки.
   task_attribution: 'codex/bio-89b642-cohort4-wiki-r2'
 rag_literary: []
 rag_images: []

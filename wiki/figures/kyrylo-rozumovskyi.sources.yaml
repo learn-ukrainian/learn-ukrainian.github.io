@@ -12,10 +12,10 @@ sources:
   title: 'Глухівські ради 1750, 1763 — Енциклопедія історії України'
   url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Glukhivski_rady&Z21ID=
 - id: S3
-  file: https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CO%5CRozumovskyKyrylo.htm
   type: external
-  title: '265 років відновлення гетьманату в Україні — ЦДІАК України'
-  url: https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php
+  title: 'Rozumovsky, Kyrylo — Internet Encyclopedia of Ukraine'
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CO%5CRozumovskyKyrylo.htm
 - id: S4
   file: https://www.history.org.ua/?termin=Rozumovskyj_K
   type: external
