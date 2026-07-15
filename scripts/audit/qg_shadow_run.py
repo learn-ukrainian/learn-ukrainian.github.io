@@ -31,6 +31,7 @@ sys.path[:0] = [str(PROJECT_ROOT), str(SCRIPTS_DIR)]
 from scripts.audit import layerb_shadow, llm_qg_shadow_store, llm_reviewer_dispatch, qg_workflow
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
+from scripts.common.repo_root import resolve_repo_root
 
 SHADOW_ARTIFACT_ARM = "production_shadow"
 
@@ -42,6 +43,7 @@ class ShadowRunResult:
     tier2_run_id: str
     shadow_run_id: str
     artifact_path: Path
+    artifact_sha256: str
     layerb_report_path: Path
     markdown_path: Path
     layerb_exit_code: int
@@ -347,13 +349,14 @@ def run_shadow_module(
         report_path=layerb_report_path,
         report=layerb_report,
     )
+    artifact_sha256 = _sha256(artifact_path)
     shadow_run_id = llm_qg_shadow_store.record_shadow_run(
         tier2_run_id=tier2_run_id,
         level=target.level,
         slug=target.slug,
         content_sha=str(record.get("content_sha") or ""),
         artifact_path=artifact_path,
-        artifact_sha256=_sha256(artifact_path),
+        artifact_sha256=artifact_sha256,
         layerb_report_path=layerb_report_path,
         writer_family=str(lineage.family),
         qg_reviewer_family=str(tier2.get("reviewer_family") or ""),
@@ -366,10 +369,44 @@ def run_shadow_module(
         tier2_run_id=tier2_run_id,
         shadow_run_id=shadow_run_id,
         artifact_path=artifact_path,
+        artifact_sha256=artifact_sha256,
         layerb_report_path=layerb_report_path,
         markdown_path=markdown_path,
         layerb_exit_code=layerb_exit_code,
     )
+
+
+def verify_artifact_survival(result: ShadowRunResult) -> list[str]:
+    """Re-verify the replay-grade evidence still matches what the DB recorded.
+
+    The first live shadow run's artifact tree vanished within ~2 minutes of a
+    clean exit while the DB row kept pointing at it (#5195).  This probe runs
+    at the last possible moment before the process exits so any deletion or
+    split-universe path resolution (#5171 class) becomes a loud non-zero exit
+    instead of a silently dangling DB row.
+    """
+
+    failures: list[str] = []
+    for label, path in (
+        ("shadow artifact", result.artifact_path),
+        ("layer-b report", result.layerb_report_path),
+        ("evidence markdown", result.markdown_path),
+    ):
+        if not path.is_file():
+            failures.append(f"{label} missing at exit: {path}")
+    # Hash-read under try: the whole point of this probe is that evidence can
+    # vanish at ANY moment, including between the is_file() check and the read
+    # (review finding: an uncaught OSError here would crash with rc=1 instead
+    # of reporting the loss).
+    if result.artifact_path.is_file():
+        try:
+            recomputed = _sha256(result.artifact_path)
+        except OSError as exc:
+            failures.append(f"shadow artifact unreadable at exit: {result.artifact_path} ({exc})")
+        else:
+            if recomputed != result.artifact_sha256:
+                failures.append(f"shadow artifact content drifted between DB record and exit: {result.artifact_path}")
+    return failures
 
 
 def _canary_artifacts(values: Sequence[str]) -> dict[str, Path]:
@@ -407,8 +444,26 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _anchor_to_repo_root(path: Path) -> Path:
+    """Resolve a relative operator path against the PRIMARY checkout root.
+
+    The shadow DB default is already primary-root-anchored; resolving
+    ``--audit-dir``/``--shadow-db`` against the process cwd instead lets one
+    run split its evidence across two universes (DB row in the primary,
+    artifact tree wherever cwd happened to be — the #5171 class, suspected in
+    the #5195 vanished-artifact incident).  Absolute paths pass through
+    untouched, so operators can still target anywhere explicitly.
+    """
+
+    if path.is_absolute():
+        return path
+    return resolve_repo_root(Path(__file__), 2) / path
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    args.audit_dir = _anchor_to_repo_root(args.audit_dir)
+    args.shadow_db = _anchor_to_repo_root(args.shadow_db)
     target = qg_workflow.ReviewTarget(
         level=args.level,
         slug=args.slug or args.module_dir.name,
@@ -441,6 +496,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"Shadow artifact: {result.artifact_path}")
     print(f"Layer-B report: {result.layerb_report_path}")
     print(f"Local evidence: {result.markdown_path}")
+    survival_failures = verify_artifact_survival(result)
+    if survival_failures:
+        for failure in survival_failures:
+            print(f"qg shadow evidence lost: {failure}", file=sys.stderr)
+        # rc=4, NOT 3: layerb_shadow already uses 3 for a partial (capped)
+        # run, which propagates through layerb_exit_code — an orchestrator
+        # must be able to tell "partial but healthy" from "evidence lost".
+        return 4
     return result.layerb_exit_code
 
 

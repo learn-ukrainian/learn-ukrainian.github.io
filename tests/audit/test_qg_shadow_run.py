@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -146,3 +147,90 @@ def test_shadow_driver_rejects_unresolvable_writer_lineage(tmp_path: Path) -> No
             max_cost_usd=1.0,
             layerb_dry_run=True,
         )
+
+
+def test_artifact_survival_probe_passes_then_fails_on_loss_and_drift(tmp_path: Path) -> None:
+    """#5195: evidence loss after a clean run must be loud, never a dangling DB row."""
+
+    module_dir = _module(tmp_path)
+    result = qg_shadow_run.run_shadow_module(
+        _target(module_dir),
+        audit_dir=tmp_path / "audit",
+        shadow_db=tmp_path / "shadow.db",
+        author_family="openai",
+        reviewer=_dispatch,
+        live_reviewer=False,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        max_cost_usd=1.0,
+        layerb_dry_run=True,
+    )
+
+    assert qg_shadow_run.verify_artifact_survival(result) == []
+
+    result.artifact_path.write_text(result.artifact_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    drifted = qg_shadow_run.verify_artifact_survival(result)
+    assert len(drifted) == 1 and "drifted" in drifted[0]
+
+    result.artifact_path.unlink()
+    result.markdown_path.unlink()
+    missing = qg_shadow_run.verify_artifact_survival(result)
+    assert len(missing) == 2
+    assert any("shadow artifact missing" in failure for failure in missing)
+    assert any("evidence markdown missing" in failure for failure in missing)
+
+
+def test_relative_operator_paths_anchor_to_primary_root() -> None:
+    """#5171 class: relative --audit-dir/--shadow-db must never split evidence across cwds."""
+
+    anchored = qg_shadow_run._anchor_to_repo_root(Path("audit/local-qg-shadow"))
+    assert anchored.is_absolute()
+    assert anchored.as_posix().endswith("audit/local-qg-shadow")
+    # The anchor must be the PRIMARY checkout root (owns the real .git dir) —
+    # not coupled to any branch-dependent file existing there.
+    assert (anchored.parent.parent / ".git").is_dir()
+
+    absolute = Path("/tmp/explicit-operator-target")
+    assert qg_shadow_run._anchor_to_repo_root(absolute) == absolute
+
+
+def test_main_exits_4_when_evidence_vanishes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The survival contract holds at the CLI boundary, not just in the helper."""
+
+    module_dir = _module(tmp_path)
+
+    real_run = qg_shadow_run.run_shadow_module
+
+    def run_and_lose_evidence(*args: Any, **kwargs: Any) -> qg_shadow_run.ShadowRunResult:
+        # Never let the CLI default reach the live reviewer in tests.
+        kwargs["reviewer"] = _dispatch
+        kwargs["live_reviewer"] = False
+        kwargs["reviewer_model_id"] = "test-reviewer"
+        kwargs["reviewer_family"] = "test-family"
+        result = real_run(*args, **kwargs)
+        result.artifact_path.unlink()
+        return result
+
+    monkeypatch.setattr(qg_shadow_run, "run_shadow_module", run_and_lose_evidence)
+
+    rc = qg_shadow_run.main(
+        [
+            "--module-dir",
+            str(module_dir),
+            "--level",
+            "folk",
+            "--slug",
+            "vesnianky-shadow",
+            "--author-family",
+            "openai",
+            "--audit-dir",
+            str(tmp_path / "audit"),
+            "--shadow-db",
+            str(tmp_path / "shadow.db"),
+            "--max-cost-usd",
+            "1.0",
+            "--layerb-dry-run",
+        ]
+    )
+
+    assert rc == 4
