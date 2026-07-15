@@ -24,17 +24,22 @@ Project-local wrappers for interactive agent sessions:
 `start-codex.sh` launches Codex with:
 
 - interactive Codex in dangerous bypass mode
+- live web search and multi-agent support enabled
 - `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session
-- default target `worktree`, with `--main` or `CODEX_TARGET=main` available when Codex must work directly in the primary main checkout
+- the canonical `main` checkout as its working root; the launcher does not create or refresh a detached interactive worktree
+- generated Codex config and rollover state bootstrapped before launch
 - repo subprocess defaults unchanged unless you explicitly override env vars
 
 Override before launch if needed:
 
 ```bash
 CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
-./start-codex.sh --main
-CODEX_TARGET=main ./start-codex.sh
 ```
+
+Implementation work still follows `AGENTS.md`: create a scoped dispatch
+worktree instead of editing or committing from the primary checkout. The
+launcher also sets `GIT_OPTIONAL_LOCKS=0` so read-oriented Git commands do not
+refresh the primary index unnecessarily.
 
 ---
 

@@ -74,21 +74,29 @@ out="$(deploy_agent_extensions "$WORK_DIR/empty" agents:deploy)" \
 contains "$out" "not found" "missing package.json warns instead of failing"
 
 # --- launchers actually use the helper (regression guard on the wiring) ---
-for launcher in start-claude.sh; do
-  grep -q 'deploy_extensions.sh' "$REPO_ROOT/$launcher" \
-    || fail "$launcher no longer sources deploy_extensions.sh"
-  grep -q 'deploy_agent_extensions' "$REPO_ROOT/$launcher" \
-    || fail "$launcher no longer calls deploy_agent_extensions"
-  # ^[^#]* keeps the guard from false-positiving on comments that merely
-  # describe the old pattern (deepseek review recommendation, PR #4843).
-  if grep -E '^[^#]*npm run [a-z:]*deploy.*(\|\| true|2>/dev/null)' "$REPO_ROOT/$launcher" >/dev/null; then
-    fail "$launcher reintroduced a fail-silent npm deploy"
-  fi
-done
+launcher=start-claude.sh
+grep -q 'deploy_extensions.sh' "$REPO_ROOT/$launcher" \
+  || fail "$launcher no longer sources deploy_extensions.sh"
+grep -q 'deploy_agent_extensions' "$REPO_ROOT/$launcher" \
+  || fail "$launcher no longer calls deploy_agent_extensions"
+# ^[^#]* keeps the guard from false-positiving on comments that merely
+# describe the old pattern (deepseek review recommendation, PR #4843).
+if grep -E '^[^#]*npm run [a-z:]*deploy.*(\|\| true|2>/dev/null)' "$REPO_ROOT/$launcher" >/dev/null; then
+  fail "$launcher reintroduced a fail-silent npm deploy"
+fi
 
 grep -q 'thread_rollover_link.sh' "$REPO_ROOT/start-codex.sh" \
   || fail "start-codex.sh no longer sources the Codex checkout bootstrap"
 grep -q 'bootstrap_codex_checkout' "$REPO_ROOT/start-codex.sh" \
   || fail "start-codex.sh no longer bootstraps the target checkout"
+grep -q -- '--git-common-dir' "$REPO_ROOT/start-codex.sh" \
+  || fail "start-codex.sh no longer resolves the canonical checkout"
+grep -q 'branch --show-current' "$REPO_ROOT/start-codex.sh" \
+  || fail "start-codex.sh no longer requires canonical main"
+grep -q 'GIT_OPTIONAL_LOCKS=0' "$REPO_ROOT/start-codex.sh" \
+  || fail "start-codex.sh no longer suppresses optional primary-index locks"
+if grep -Eq 'codex-interactive|git worktree add|checkout --detach' "$REPO_ROOT/start-codex.sh"; then
+  fail "start-codex.sh reintroduced a detached interactive worktree"
+fi
 
 echo "ok - deploy extensions fixtures passed"
