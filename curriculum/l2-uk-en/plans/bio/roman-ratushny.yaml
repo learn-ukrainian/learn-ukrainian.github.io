@@ -140,6 +140,14 @@ slug: roman-ratushny
 subtitle: 'The Voice of Protasiy Yar: From Activist to Soldier'
 title: 'Роман Ратушний: Громадянин, активіст, воїн'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    The reviewed source packet contains no individual PD or CC portrait with
+    verified rights; keep the bio text-only rather than reuse family, activist,
+    news, military, or memorial imagery without explicit clearance.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: здатність людини чи спільноти бути активним, свідомим і вільним діячем, творцем свого життя та історії
   pos: ж.

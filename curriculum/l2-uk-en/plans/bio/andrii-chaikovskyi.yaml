@@ -128,6 +128,14 @@ slug: andrii-chaikovskyi
 subtitle: The Nation's Advocate
 title: 'Андрій Чайковський: Адвокат нації'
 version: '4.1'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    The reviewed source packet contains no individual portrait with a
+    source-specific PD or CC license; keep the bio text-only until an exact
+    file and its provenance are independently verified.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: процес створення та зміцнення інститутів незалежної держави
   pos: с.

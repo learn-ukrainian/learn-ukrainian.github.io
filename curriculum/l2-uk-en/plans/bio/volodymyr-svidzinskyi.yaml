@@ -160,6 +160,14 @@ slug: volodymyr-svidzinskyi
 subtitle: The Poet of Silence Burned Alive by the NKVD
 title: 'Володимир Свідзінський: Внутрішня еміграція і знищення поета'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    The reviewed source packet contains no individual portrait with a
+    source-specific PD or CC license; keep the bio text-only rather than reuse
+    an unverified archival or memorial image.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: метафоричне визначення стану людини в тоталітарному суспільстві, коли вона
     відмежовується від публічного життя та офіційної ідеології

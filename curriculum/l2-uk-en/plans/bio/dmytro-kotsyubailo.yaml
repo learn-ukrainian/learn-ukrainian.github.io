@@ -131,6 +131,21 @@ slug: dmytro-kotsyubailo
 subtitle: 'Dmytro "Da Vinci" Kotsiubailo: Symbol of the Volunteer Generation'
 title: 'Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
 version: '4.2'
+portrait_fallback:
+  type: era-context
+  url: https://commons.wikimedia.org/wiki/File:Da_vinci_wolves_oath_01.jpg
+  license: CC-BY-4.0
+  attribution: Батальйон «Вовки Да Вінчі» / ArmyInform / Wikimedia Commons
+  caption_uk: >-
+    Батальйон «Вовки Да Вінчі» складає присягу на могилі Дмитра Коцюбайла,
+    7 березня 2024 року
+  caption_en: >-
+    The Da Vinci Wolves Battalion takes its oath at Dmytro Kotsiubailo's
+    grave, 7 March 2024
+  reason: >-
+    This licensed contextual memorial image does not depict Kotsiubailo and
+    must never be labeled or rendered as his portrait.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: особа, яка за власним бажанням, без примусу, зголосилася до військової служби або іншої суспільно важливої діяльності
   pos: ч.

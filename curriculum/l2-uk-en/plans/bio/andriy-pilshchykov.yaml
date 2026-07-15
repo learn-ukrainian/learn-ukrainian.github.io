@@ -124,6 +124,14 @@ slug: andriy-pilshchykov
 subtitle: 'Andriy "Juice" Pilshchykov: Defender of the Sky and Voice of Aviation'
 title: 'Андрій «Juice» Пільщиков: Захисник неба та голос авіації'
 version: '4.1'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    The reviewed source packet contains no individual PD or CC portrait with
+    verified rights; keep the bio text-only rather than reuse modern service,
+    family, news, or memorial imagery without explicit clearance.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: бойовий літак, призначений для знищення повітряних цілей
   pos: ч.
