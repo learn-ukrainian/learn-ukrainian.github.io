@@ -6,8 +6,8 @@ domain: figures
 tracks: [bio]
 compiled: 2026-07-10
 generated_by_model: codex
-portrait_disposition: text-only
-note: Hand-authored BIO catalog-source base-prep packet. It contains paraphrase only; no portrait, audio, or score asset is included.
+portrait_disposition: commons-licensed
+note: Individual Commons portrait rights checked; learner-facing use still requires the recorded attribution.
 -->
 
 ## Короткий зміст
@@ -21,6 +21,9 @@ note: Hand-authored BIO catalog-source base-prep packet. It contains paraphrase 
 біографія придатна для розмови не про одну впізнавану мелодію, а про зв'язок
 освіти, викладання, композиції, інституційної роботи й музичної пам'яті [S1]
 [S2] [S3] [S4].
+
+Для портретного використання зафіксовано окремий файл Commons із ліцензією
+CC BY-SA 4.0 та зазначеним автором; інші зображення потребують власної перевірки [S5].
 
 Енциклопедичні джерела фіксують, що 1947 року родину Скориків було заслано до
 Сибіру, а до Львова вона повернулася 1955 року [S1] [S2]. Цей факт має

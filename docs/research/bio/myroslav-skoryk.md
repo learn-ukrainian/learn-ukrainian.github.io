@@ -1,5 +1,6 @@
 # Мирослав Михайлович Скорик — Research Dossier
 
+**Packet status:** catalog-source readiness repair, 2026-07-15
 **Slug:** `myroslav-skoryk`
 **Block:** +77 expansion — "Music / modern Ukrainian concert music" group (2026-06-29 memo)
 **Tier:** 2
@@ -97,10 +98,9 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** No cleared PD/CC portrait selected in this pass. Skoryk died in 2020; portraits and performance photographs are presumptively copyright-sensitive unless a specific free license is verified.
-- **Backup candidates:** IEU and НСКУ pages display portraits but do not by themselves establish reuse rights. Wikimedia/Commons results require separate license review before use.
-- **Fallback strategy:** text-only module is acceptable; later media pass could use rights-cleared contextual images of Lviv music institutions, public-domain Franko/Shevchenko textual sources, or licensed concert-program material if directly tied to the lesson.
-- **Era-appropriate context image:** a rights-cleared `Тіні забутих предків` / Hutsul music context image would be pedagogically useful, but only after license verification.
+- **Best PD/CC portrait:** Wikimedia Commons `File:Skoryk3 (cropped).jpg`; Hryhorii Hanzburh; CC BY-SA 4.0. The individual file page identifies the photographer, own-work credit and license.
+- **Backup candidates:** IEU and НСКУ portraits remain reference-only; their pages do not establish reuse rights for the displayed images.
+- **Era-appropriate context image:** a separately rights-checked `Тіні забутих предків` or Hutsul-music image may be useful later, but is not adopted here.
 
 ## 10. Sources used
 

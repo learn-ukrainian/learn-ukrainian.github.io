@@ -195,105 +195,32 @@ references:
     note: Структуроване досьє з перевіреними фактами, технічною лексикою і деколонізаційною рамкою.
     path: docs/research/bio/ivan-karabyts.md
     type: dossier
+readings_contract_version: 2
 readings:
-  - title: Карабиць Іван Федорович (ЕСУ)
+  - title: Карабиць Іван Федорович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-9552
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія Сучасної України
-    source_url: >-
-      https://esu.com.ua/article-9552
-    license: copyrighted
-    rights_note: >-
-      Енциклопедичний матеріал має авторське обмеження; використовувати як
-      link-only на рівні фактологічних орієнтирів.
+    type: encyclopedia
+    role: context
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Сформувати карту етапів творення: композиція, педагогіка, організаційна
-      діяльність.
-    caveats: >-
-      Розбіжності в датуванні певних виставок/фестивалів потрібні для окремої
-      валідації в класних матеріалах.
-  - title: Карабиць Іван Федорович (ЕІУ)
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-9552
+      note: Зовнішнє посилання; текст енциклопедичної статті не відтворюється в курсі.
+    learner_task: Зіставити композиторську, педагогічну й організаційну ролі з датами, поданими в ЕСУ.
+  - title: Іван Федорович Карабиць
+    source_name: Бібліотека Національної музичної академії України
+    source_url: https://lib.knmau.com.ua/%D0%BA%D0%B0%D1%80%D0%B0%D0%B1%D0%B8%D1%86%D1%8C/
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія історії України
-    source_url: >-
-      https://www.history.org.ua/?termin=Karabyc_I
-    license: copyrighted
-    rights_note: >-
-      Матеріал посилює фактологічний каркас; посилання використовувати з
-      обережністю до дат постановок.
+    type: institutional-profile
+    role: text-analysis
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Перевірити, як різні довідники описують роль Карабиця в перехідний період між
-      радянськими інституціями та незалежними форматами.
-    caveats: >-
-      У різних редакціях розходження з приводу фестивальних періодів можуть
-      змінювати акценти уроку.
-  - title: "Національна спілка композиторів України: профіль Івана Карабиць"
-    language: uk
-    genre: Профіль установи / інституційна довідка
-    source_type: reference
-    role: orientation
-    source: Національна спілка композиторів України
-    source_url: >-
-      https://composersukraine.org/index.php?id=2400
-    license: copyrighted
-    rights_note: >-
-      Інституційний портал має захищений контент; доцільно використовувати лише
-      навігаційний link-only доступ.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Знайти, які проєкти Карабиця пов'язує з фестивальною й інституційною
-      діяльністю, і порівняти з біографією плану.
-    caveats: >-
-      Офіційні каталоги не завжди дають повні списки творів; додайте додаткові
-      підтверджені джерела за потреби.
-  - title: Першоджерельні тексти й свідчення про творчість Карабиця
-    language: uk
-    genre: Первинні тексти / спогади
-    source_type: primary
-    role: primary
-    source: 'reading-needed: karabyts-primary-compositions-and-documents'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: знайти ліцензовані або публічні видання текстів, листів,
-      спогадів або записів, що безпечно передаються студентам.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Підготувати 2-3 цитатних фокусних витяги, що розкривають міст між твором,
-      інституцією і музичною пам'яттю.
-    caveats: >-
-      Якщо правові умови обмежують повний текст, використовувати короткі
-      фрагменти з чітким зазначенням меж цитування.
-  - title: Архівні записи фестивальних проектів та виконань
-    language: uk
-    genre: Запис / концертний матеріал
-    source_type: performance
-    role: performance
-    source: 'reading-needed: karabyts-festival-recordings'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: перед використанням перевірити статус прав на аудіо- та
-      відеоматеріали з фестивалів і камерних виконань.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Підтвердити роль Карабиця як "будівничого простору звучання" через 1-2
-      легально доступних фрагменти виконання його творів.
-    caveats: >-
-      Регіональна доступність фестивальних матеріалів різна; відсутність
-      матеріалів замінити на офіційні огляди та програми.
+    rights:
+      basis: external-link
+      evidence_url: https://lib.knmau.com.ua/%D0%BA%D0%B0%D1%80%D0%B0%D0%B1%D0%B8%D1%86%D1%8C/
+      note: Зовнішнє посилання на віртуальну бібліотечну виставку; текст і зображення не відтворюються в курсі.
+    learner_task: Відрізнити бібліографічний опис і музейну пам'ять від тверджень, що потребують окремої партитури або архівного документа.
 sequence: 379
 slug: ivan-karabyts
 subtitle: Композитор інституційної пам'яті

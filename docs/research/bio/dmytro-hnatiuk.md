@@ -1,5 +1,6 @@
 # Дмитро Михайлович Гнатюк — Research Dossier
 
+**Packet status:** catalog-source readiness repair, 2026-07-15
 **Slug:** `dmytro-hnatiuk`
 **Block:** +77 expansion — "Music / opera and song-canon performance"
 **Tier:** 2
@@ -173,20 +174,9 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 Per `docs/best-practices/bio-image-rights.md` (#2316):
 
-- **Best PD/CC portrait:** TSDAEA exhibition "Дмитро Гнатюк. З Україною в
-  серці" includes photodocuments from archive holdings and states page
-  content is available under Creative Commons Attribution 4.0 International
-  unless otherwise noted. Use only after checking the specific image
-  caption and metadata.
-- **Backup candidates:** ЕСУ, National Opera, and Rada pages include
-  portraits, but reuse licenses are not established here; treat as
-  reference-only until verified.
-- **Fallback strategy:** If no portrait metadata is safe enough, ship a
-  text-led module with a CC-BY TSDAEA archive link or a rights-cleared
-  National Opera context image, not an AI portrait.
-- **Era-appropriate context image:** TSDAEA phonodocument or film listings
-  may support a lesson focused on recorded song memory better than a generic
-  portrait.
+- **Best PD/CC portrait:** Wikimedia Commons `File:Дмитро Гнатюк.jpg`; Melnikov v n; CC BY 3.0. The individual file page identifies the work, author and license.
+- **Backup candidates:** ЕСУ and National Opera portraits remain reference-only unless an individual file page establishes reuse rights.
+- **Era-appropriate context image:** TSDAEA phonodocument or film listings may support a lesson focused on recorded song memory, but no additional visual is adopted here.
 
 ## 10. Sources used
 

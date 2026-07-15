@@ -6,8 +6,8 @@ domain: figures
 tracks: [bio]
 compiled: 2026-07-10
 generated_by_model: codex
-portrait: text-only
-note: Hand-authored biography base-prep packet. It is not a final reading and contains no visual asset.
+portrait: commons-licensed
+note: Individual Commons portrait rights checked; learner-facing use still requires the recorded attribution.
 -->
 
 ## Короткий зміст
@@ -18,6 +18,10 @@ note: Hand-authored biography base-prep packet. It is not a final reading and co
 київських культурних інституціях [S1, S2, S4]. Кожна з них документована
 енциклопедичними або інституційними джерелами, тому жодна не має зникати заради
 простішого образу лише популярного співака [S1, S2, S4].
+
+Для портретного використання в пакеті зафіксовано окремий файл Commons із
+ліцензією CC BY 3.0 та вказаним автором; це не переносить прав на інші світлини
+співака [S5].
 
 У цій версії немає ані лірики пісень, ані першоособових цитат, ані аудіо чи
 візуального матеріалу. Це обережна межа пакета, а не твердження про відсутність

@@ -31,3 +31,14 @@ sources:
     notes: >-
       Tier-2 institutional profile; supports the National Opera soloist period,
       repertoire, touring, and recordings context.
+  - id: S5
+    preserved_from_meta: true
+    file: https://commons.wikimedia.org/wiki/File:Anatoliy_Solovianenko_-_Soviet_Life,_October_1984.jpg
+    type: external
+    title: Anatoliy Solovianenko - Soviet Life, October 1984.jpg — public domain
+    url: https://commons.wikimedia.org/wiki/File:Anatoliy_Solovianenko_-_Soviet_Life,_October_1984.jpg
+    rights:
+      basis: public-domain
+      evidence_url: https://commons.wikimedia.org/wiki/File:Anatoliy_Solovianenko_-_Soviet_Life,_October_1984.jpg
+      license: Public domain
+      attribution: Soviet Life, October 1984; photographer uncredited

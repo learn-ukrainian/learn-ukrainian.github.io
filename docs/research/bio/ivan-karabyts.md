@@ -1,5 +1,6 @@
 # Іван Федорович Карабиць — Research Dossier
 
+**Packet status:** catalog-source readiness repair, 2026-07-15
 **Slug:** `ivan-karabyts`
 **Block:** +77 expansion — "Music / modern Ukrainian concert music" group (2026-06-29 memo)
 **Tier:** 2
@@ -89,7 +90,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons `File:І. Карабиць 1976.jpg`; photographer Yu. Mosenzhnyk; Central State Audiovisual and Electronic Archive of Ukraine; accession no. 2-213144; licensed CC BY 4.0. The file page states Kyiv, 1976, and identifies Karabyts at work.
+- **Best PD/CC portrait:** Wikimedia Commons `File:І. Карабиць 1986.jpg`; Yu. Mosenzhnyk; CC BY 4.0. The individual file page credits the Central State Audiovisual and Electronic Archive of Ukraine source and identifies the June 1986 image.
 - **Backup candidates:** Commons category `Ivan Karabyts` includes other archival portraits and work photographs from the 1970s-1990s. Each file page must be checked before reuse; do not assume the whole category is equally usable.
 - **Era-appropriate context image:** `Kyiv Camerata performs Karabits.jpg`, if license-confirmed, could support an institution-building module better than another portrait.
 
@@ -120,7 +121,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 **Image-rights source:**
 
-- Wikimedia Commons. `File:І. Карабиць 1976.jpg`. https://commons.wikimedia.org/wiki/File:І._Карабиць_1976.jpg. Accessed 2026-06-30.
+- Wikimedia Commons. `File:І. Карабиць 1986.jpg`. https://commons.wikimedia.org/wiki/File:І._Карабиць_1986.jpg. Accessed 2026-07-15.
 
 **Primary-source text anchors:**
 

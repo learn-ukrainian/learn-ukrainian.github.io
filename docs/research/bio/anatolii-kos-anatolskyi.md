@@ -1,5 +1,6 @@
 # Анатолій Йосипович Кос-Анатольський — Research Dossier
 
+**Packet status:** catalog-source readiness repair, 2026-07-15
 **Slug:** `anatolii-kos-anatolskyi`
 **Block:** +77 expansion — "Music / Galician song-stage bridge" group
 **Tier:** 2
@@ -86,9 +87,9 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons `File:Кос-Анатольский Анатолий Иосифович (конверт).jpg`, a 1989 Soviet postal cover portrait. Commons lists a public-domain rationale for the postal stationery item. Use the full envelope image unless a separate portrait crop is rights-checked.
-- **Backup candidates:** NMAU virtual exhibition images and score covers are useful identification leads but were not license-confirmed in this pass. Local library or museum portraits require separate rights review.
-- **Era-appropriate context image:** A rights-cleared Lviv/Kolomyia music-institution image or score/cover scan could serve better than the Soviet postal envelope if licensing is verified later.
+- **Portrait disposition:** text-only. The direct Commons search on 2026-07-15 located a CC BY-SA 4.0 photograph of his grave, not an individually licensed portrait. A grave or a category result is not a portrait-rights substitute.
+- **Backup candidates:** NMAU exhibition images and score covers remain identification leads only; their reuse rights were not established in this pass.
+- **Era-appropriate context image:** a separately rights-checked Lviv or Kolomyia music-institution image could later be used as context, but it is not adopted here.
 
 ## 10. Sources used
 
@@ -119,7 +120,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 **Image-rights source:**
 
-- Wikimedia Commons. `File:Кос-Анатольский Анатолий Иосифович (конверт).jpg`. https://commons.wikimedia.org/wiki/File:Кос-Анатольский_Анатолий_Иосифович_(конверт).jpg. Accessed 2026-06-30.
+- Wikimedia Commons. `File:Mogyla-kos-anatolsky-01.jpg`. https://commons.wikimedia.org/wiki/File:Mogyla-kos-anatolsky-01.jpg. Accessed 2026-07-15. Its CC BY-SA 4.0 page verifies a context photograph, not a portrait; therefore the packet remains text-only.
 
 **Primary-source text anchors:**
 

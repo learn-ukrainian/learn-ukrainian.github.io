@@ -1,5 +1,6 @@
 # Анатолій Борисович Солов’яненко — Research Dossier
 
+**Packet status:** catalog-source readiness repair, 2026-07-15
 **Slug:** `anatolii-solovianenko`
 **Block:** +77 expansion — "Music / opera and song-canon performance"
 **Tier:** 2
@@ -180,11 +181,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 Per `docs/best-practices/bio-image-rights.md` (#2316):
 
-- **Best PD/CC portrait:** Wikimedia Commons
-  `File:Anatoliy Solovianenko - Soviet Life, October 1984.jpg`; Commons marks
-  it public domain in the United States because the source magazine was
-  published in the U.S. without notice. Use only after Phase 4 rights review
-  checks non-U.S./Ukraine implications.
+- **Best PD/CC portrait:** Wikimedia Commons `File:Anatoliy Solovianenko - Soviet Life, October 1984.jpg`; the individual file page marks the file public domain and identifies the publication source.
 - **Backup candidates:** Wikimedia Commons Kyiv monument photo
   `File:Пам'ятник А. Б. Солов'яненку.jpg`, CC-BY-SA-4.0, author
   AlexanderCh. CSAMM archival photographs from fonds 1409 and National Opera /

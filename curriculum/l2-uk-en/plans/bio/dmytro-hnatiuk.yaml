@@ -190,105 +190,32 @@ references:
     note: Структуроване досьє з перевіреними фактами, ризиками і архівними записами.
     path: docs/research/bio/dmytro-hnatiuk.md
     type: dossier
+readings_contract_version: 2
 readings:
-  - title: Дмитро Гнатюк (ЕСУ)
+  - title: Гнатюк Дмитро Михайлович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-30632
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія Сучасної України
-    source_url: >-
-      https://esu.com.ua/article-30632
-    license: copyrighted
-    rights_note: >-
-      Охоронюваний веб-ресурс; використовувати лише як link-only довідковий
-      матеріал.
+    type: encyclopedia
+    role: context
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Підготувати коротку біографічну карту з акцентом на перехід від сцени до
-      інституційної ролі.
-    caveats: >-
-      Для моделі деколонізації важливо не ототожнювати офіційну сценічну
-      славу з універсальною оцінкою його культурної ролі.
-  - title: Дмитро Гнатюк (ЕІУ)
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-30632
+      note: Зовнішнє посилання; текст енциклопедичної статті не відтворюється в курсі.
+    learner_task: Простежити документований рух від вокальної сцени до режисури й педагогіки.
+  - title: Гнатюк Дмитро
+    source_name: Національна опера України
+    source_url: https://www.opera.com.ua/persons/gnatyuk-dmitro
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія історії України
-    source_url: >-
-      https://www.history.org.ua/?termin=Gnatyuk_D
-    license: copyrighted
-    rights_note: >-
-      Link-only джерело; використовувати тільки фактологічні дані, перевірені з
-      іншими довідками.
+    type: institutional-profile
+    role: text-analysis
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Порівняти опис оперних робіт, педагогічної діяльності й публічної
-      присутності між різними довідковими джерелами.
-    caveats: >-
-      Рекомендується перевіряти розбіжності в датах постановок та депутатських
-      етапів окремо.
-  - title: Біографічна довідка Національної опери України
-    language: uk
-    genre: Профіль установи / мистецька біографія
-    source_type: reference
-    role: orientation
-    source: Національна опера України
-    source_url: >-
-      https://opera.com.ua/persons/gnatyuk-dmitro
-    license: copyrighted
-    rights_note: >-
-      Інституційний профіль має правовий захист; використовувати лише як
-      навігаційне link-only посилання.
-    hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Перевірити, як офіційний профіль описує репертуарні напрями й роль Гнатюка
-      у пам'яті інституції.
-    caveats: >-
-      Офіційні сайти можуть подавати відбіркові списки; це не завжди покриває
-      повну історію гастролей і записів.
-  - title: Уривки записів, дисків і концертних матеріалів
-    language: uk
-    genre: Запис / виконання
-    source_type: performance
-    role: performance
-    source: 'reading-needed: hnatiuk-archival-recordings'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: знайти ліцензовані уривки фонодокументів або публічних
-      записів, які можна безпечно викладати на учбовий рівні.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Визначити, як різні записи демонструють зміни вокальної манери та сценічного
-      репертуару в часі.
-    caveats: >-
-      Якщо повного доступу до аудіо немає, використовувати лише анотації з
-      підтверджених каталогів.
-  - title: Особисті листи, рецензії, публічні виступи
-    language: uk
-    genre: Інтерв'ю / документ
-    source_type: interview
-    role: primary
-    source: 'reading-needed: hnatiuk-primary-interview-documents'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: перевірити права на використання першоджерельних матеріалів
-      перед включенням у модульні завдання.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Знайти 1-2 джерела, що показують взаємозв'язок між артистичною діяльністю
-      і публічною культурною політикою.
-    caveats: >-
-      Матеріали можуть бути фрагментарними; у такому разі підкреслювати
-      межі наявного доказового базису.
+    rights:
+      basis: external-link
+      evidence_url: https://www.opera.com.ua/persons/gnatyuk-dmitro
+      note: Зовнішнє посилання на інституційний профіль; текст і зображення не відтворюються в курсі.
+    learner_task: Порівняти українські оперні партії та режисерські постановки в пам'яті театру.
 sequence: 373
 slug: dmytro-hnatiuk
 subtitle: Баритон української сцени

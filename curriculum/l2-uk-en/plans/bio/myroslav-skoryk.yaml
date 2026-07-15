@@ -176,103 +176,32 @@ references:
   note: Структуроване дослідницьке досьє з верифікованими фактами та деколонізаційною рамкою.
   path: docs/research/bio/myroslav-skoryk.md
   type: dossier
+readings_contract_version: 2
 readings:
-- title: Skoryk, Myroslav
-  language: en
-  genre: Encyclopaedia entry / biography
-  source_type: reference
-  role: primary_bio
-  source: Internet Encyclopedia of Ukraine
-  source_url: >-
-    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CK%5CSkorykMyroslav.htm
-  license: copyrighted
-  rights_note: >-
-    IEU подає загальний англомовний огляд; для точних українських деталей треба
-    зіставляти з локальними джерелами та інституційними матеріалами.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Зіставити англомовний виклад із українськими джерелами щодо ролі Скорика у
-    школі Людкевича й механізмів передачі музично-педагогічної лінії.
-  caveats: >-
-    Стаття може спрощувати позицію щодо радянської та пострадянської рецепції
-    його творів.
-- title: Скорик Мирослав Михайлович
+- title: СКОРИК Мирослав Михайлович
+  source_name: Національна спілка композиторів України
+  source_url: https://www.composersukraine.org/index.php?id=1371
   language: uk
-  genre: Енциклопедична стаття / біографічна довідка
-  source_type: reference
-  role: supplementary-reading
-  source: Енциклопедія історії України
-  source_url: https://www.history.org.ua/?termin=Skoryk
-  license: copyrighted
-  rights_note: >-
-    ЕІУ використовується як основний інституційний довідковий текст; для
-    дебатних блоків брати також відомості про роботи, жанри й педагогіку з
-    додаткових джерел.
+  type: institutional-profile
+  role: context
   hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Виписати періоди навчання, основні жанри, ключові твори та формулювання про
-    роль Скорика в професійній музиці України.
-  caveats: >-
-    Історична доба та політичний фон подаються стисло; ризик вторинних редукцій
-    без джерельних уточнень.
-- title: Myroslav Skoryk
-  language: en
-  genre: Wikipedia / базова біографія
-  source_type: reference
-  role: supplementary-reading
-  source: Wikipedia
-  source_url: https://en.wikipedia.org/wiki/Myroslav_Skoryk
-  license: CC-BY-SA-4.0
-  rights_note: >-
-    Це вхідний орієнтир за ліцензією CC-BY-SA-4.0; для навчального модуля
-    посилання мають бути перевірені за каталогами й академічними джерелами.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Перевірити, чи збігаються відомі дати, твори та освітній маршрут із даними з
-    енциклопедій.
-  caveats: >-
-    Стаття є вторинною і може містити прогалини або невідображені уточнення.
-- title: Мирослав Скорик. Дослідницьке досьє
+  rights:
+    basis: external-link
+    evidence_url: https://www.composersukraine.org/index.php?id=1371
+    note: Зовнішнє посилання на інституційний профіль; текст і зображення не відтворюються в курсі.
+  learner_task: Простежити львівську освіту, професійні ролі та перелік творів у джерелі Спілки.
+- title: СКОРИК Мирослав
+  source_name: Національна опера України
+  source_url: https://www.opera.com.ua/persons/kerivnictvo-hudozhnie-kerivnictvo/skorik-miroslav
   language: uk
-  genre: Internal research dossier / source risk summary
-  source_type: secondary
-  role: critical-supplement
-  source: Документ дослідницького блоку
-  source_url: docs/research/bio/myroslav-skoryk.md
-  license: unknown
-  rights_note: >-
-    Досьє допомагає з ризиковими полями для модуля, але не замінює авторитетних
-    джерел для цитат і фактчеків.
+  type: institutional-profile
+  role: text-analysis
   hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Проаналізувати розділ «ризики» з досьє та виписати, які твердження
-    потребують першоджерельного підтвердження.
-  caveats: >-
-    Локальний документ слід оновлювати окремо; не використовувати як єдине
-    підтверджувальне джерело.
-- title: «Мелодія», «Тіні забутих предків» (аудіо/ноти)
-  language: uk
-  genre: Первинний твір / кіномузичний матеріал
-  source_type: primary
-  role: primary-work
-  source: Мирослав Скорик
-  source_url: reading-needed
-  license: reading-needed
-  rights_note: >-
-    Аудіоверсії й повні партитури потребують точного правового статусу; на цьому
-    етапі потрібен лише опис доступності й правових умов.
-  hosting: reading-needed
-  cefr_min: C1
-  learner_task: >-
-    Підготувати перелік доступних відкритих фрагментів творів та окремо
-    позначити, де потрібне отримання дозволу або посилання на ліцензований архів.
-  caveats: >-
-    Без перевірки ліцензії неможливо включати повні аудіо/нотові завантаження до
-    навчального пакету.
+  rights:
+    basis: external-link
+    evidence_url: https://www.opera.com.ua/persons/kerivnictvo-hudozhnie-kerivnictvo/skorik-miroslav
+    note: Зовнішнє посилання на профіль Національної опери; текст і зображення не відтворюються в курсі.
+  learner_task: Відокремити документовану роботу в опері від ширшої композиторської та педагогічної спадщини.
 sequence: 376
 slug: myroslav-skoryk
 subtitle: The Voice of the Carpathians in Modern Ukrainian Concert Music

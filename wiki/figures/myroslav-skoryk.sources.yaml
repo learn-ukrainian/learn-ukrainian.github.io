@@ -29,3 +29,14 @@ sources:
     type: external
     url: https://knpu.gov.ua/winners/skoryk-myroslav-mykhajlovych/
     notes: Tier-2 institutional profile; supports awards and a major-works inventory.
+  - id: S5
+    preserved_from_meta: true
+    file: https://commons.wikimedia.org/wiki/File:Skoryk3_(cropped).jpg
+    type: external
+    title: Skoryk3 (cropped).jpg — CC BY-SA 4.0
+    url: https://commons.wikimedia.org/wiki/File:Skoryk3_(cropped).jpg
+    rights:
+      basis: licensed
+      evidence_url: https://commons.wikimedia.org/wiki/File:Skoryk3_(cropped).jpg
+      license: CC BY-SA 4.0
+      attribution: Hryhorii Hanzburh

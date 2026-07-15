@@ -202,85 +202,32 @@ references:
     path: https://www.history.org.ua/?termin=Kos_Anatolskii_A
     type: reference
     work: Енциклопедія історії України
+readings_contract_version: 2
 readings:
-  - title: Анатолій Кос-Анатольський (ЕСУ)
+  - title: Кос-Анатольський Анатолій Йосипович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-5473
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія Сучасної України
-    source_url: >-
-      https://esu.com.ua/article-5473
-    license: copyrighted
-    rights_note: >-
-      Енциклопедія Сучасної України має охоронюваний текст; використовувати як
-      link-only академічний довідковий матеріал.
+    type: encyclopedia
+    role: context
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Виписати основну хронологію життя: навчання, основні інституційні етапи
-      та авторську спадщину Кос-Анатольського.
-    caveats: >-
-      Перевіряйте розбіжності в датах навчання між джерелами; уникати
-      автоматичних висновків про його ролі в інституціях без додаткових доказів.
-  - title: Анатолій Кос-Анатольський (ЕІУ)
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-5473
+      note: Зовнішнє посилання; текст енциклопедичної статті не відтворюється в курсі.
+    learner_task: Виписати підтверджені етапи освіти, львівської праці й жанри творчого доробку.
+  - title: Кос-Анатольський Анатолій Йосипович
+    source_name: Комітет з Національної премії України імені Тараса Шевченка
+    source_url: https://knpu.gov.ua/winners/kos-anatolskyj-anatolij-josypovych/
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія історії України
-    source_url: >-
-      https://www.history.org.ua/?termin=Kos_Anatolskii_A
-    license: copyrighted
-    rights_note: >-
-      Link-only довідкова сторінка; не переносити фрагменти повного тексту без
-      перевірки правового статусу.
+    type: institutional-profile
+    role: text-analysis
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Зіставити, як ЕІУ описує інституційну активність на тлі радянського
-      контексту, і визначити, які дані потребують додаткового підтвердження.
-    caveats: >-
-      У різних довідниках розбіжності у формулюваннях щодо інституційних ролей
-      і періодизації; зафіксувати їх як робочі гіпотези.
-  - title: Листи, свідчення та тексти про культурну діяльність Кос-Анатольського
-    language: uk
-    genre: Листи / документальна публікація
-    source_type: primary
-    role: primary
-    source: 'reading-needed: kos-anatolskyi-primary-documents'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: знайти легальний доступ до першоджерел (листів, спогадів,
-      програм/текстів) перед тим, як робити повноконтентні витяги для модулю.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Вибрати 2-3 підтверджені фрагменти, які показують, як композитор поєднував
-      творчу і інституційну роботу.
-    caveats: >-
-      Модуль має працювати з уривками з перевірених випусків; повний текст
-      ланцюжків листів і публікацій не хостити.
-  - title: Записи й сценічні версії творів Кос-Анатольського
-    language: uk
-    genre: Запис / вистава
-    source_type: performance
-    role: performance
-    source: 'reading-needed: kos-anatolskyi-recorded-performance'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: правозабезпечений доступ до ліцензованих аудіо-/відеозаписів
-      та сторінок концертів має бути верифікований перед учбовим використанням.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Порівняти сценічну візію «Сойчине крило»/балетів за доступними легальними
-      фрагментами з біографічними даними.
-    caveats: >-
-      Матеріали можуть бути розподілені між державними й приватними архівами;
-      для короткого учбового використання достатні уривки.
+    rights:
+      basis: external-link
+      evidence_url: https://knpu.gov.ua/winners/kos-anatolskyj-anatolij-josypovych/
+      note: Зовнішнє посилання на профіль лауреата; текст і зображення не відтворюються в курсі.
+    learner_task: Зіставити перелік вокальних творів із біографічною довідкою, не приписуючи їм непідтверджених мотивів.
 sequence: 370
 slug: anatolii-kos-anatolskyi
 subtitle: Galician Song and Stage Through Soviet Institutions

@@ -190,86 +190,32 @@ references:
     note: Структуроване досьє з перевіреними фактами, розбіжностями джерел і деколонізаційною рамкою.
     path: docs/research/bio/anatolii-solovianenko.md
     type: dossier
+readings_contract_version: 2
 readings:
-  - title: Анатолій Солов'яненко (Інститут історії України)
+  - title: Солов'яненко Анатолій
+    source_name: Національна опера України
+    source_url: https://www.opera.com.ua/en/node/6216
     language: uk
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Енциклопедія історії України
-    source_url: >-
-      https://www.history.org.ua/?termin=Solovianenko_A
-    license: copyrighted
-    rights_note: >-
-      Доступне як довідкова сторінка; використовувати як link-only інформаційне
-      джерело без повного переказу тексту.
+    type: institutional-profile
+    role: context
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Виписати ключові етапи кар'єри, ролей і репертуару, порівнявши офіційні
-      та медіа-інтерпретації.
-    caveats: >-
-      У довідкових матеріалах різні редакції мають різні акценти на роки стажування
-      та гастролі; перевіряти неузгоджені дати.
-  - title: Solovianenko, Anatolii (IEU)
-    language: en
-    genre: Енциклопедична біографічна довідка
-    source_type: reference
-    role: orientation
-    source: Internet Encyclopedia of Ukraine
-    source_url: >-
-      https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CO%5CSolovianenkoAnatolii.htm
-    license: copyrighted
-    rights_note: >-
-      Англомовна довідкова стаття — link-only; при потребі використання цитат
-      уточнити дозволи.
+    rights:
+      basis: external-link
+      evidence_url: https://www.opera.com.ua/en/node/6216
+      note: Зовнішнє посилання на інституційний профіль; текст і зображення не відтворюються в курсі.
+    learner_task: Визначити документовані межі репертуару, стажування і праці в українській опері.
+  - title: Солов'яненко Анатолій Борисович
+    source_name: Комітет з Національної премії України імені Тараса Шевченка
+    source_url: https://knpu.gov.ua/winners/solov-ianenko-anatolij-borysovych/
+    language: uk
+    type: institutional-profile
+    role: text-analysis
     hosting: link-only
-    cefr_min: C1
-    learner_task: >-
-      Порівняти міжнародно-орієнтовану біографічну розповідь із українськими
-      довідками, виділивши розходження.
-    caveats: >-
-      Енциклопедична форма фокусується на кар'єрних віхах, а не на регіональній
-      складовій; для цього глибше додати матеріали про Донбас.
-  - title: Архівні афіші, афішні оголошення та інтерв'ю (контекст виконання)
-    language: uk
-    genre: Інтерв'ю / афіша / документ
-    source_type: interview
-    role: primary
-    source: 'reading-needed: solovianenko-interview-and-programs'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: знайти правозабезпечені джерела для коротких уривків
-      інтерв'ю й концертних матеріалів; перевіряти правовий статус перед
-      учбовим використанням.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Знайти матеріали про контекст виступів, що допоможуть довести зв'язок між
-      голосовою технікою та інституційною пам'яттю.
-    caveats: >-
-      У багатьох джерелах змішується реклама, фанатська пам'ять і фактологія;
-      верифікувати все через основні довідки.
-  - title: Лірико-оперний репертуар Солов'яненка (слухові фрагменти)
-    language: uk
-    genre: Запис / виконання
-    source_type: performance
-    role: performance
-    source: 'reading-needed: solovianenko-operatic-recordings'
-    source_url: reading-needed
-    license: unknown
-    rights_note: >-
-      reading-needed: перевірити правовий статус конкретних записів/трансляцій перед
-      додаванням матеріалів у урок.
-    hosting: reading-needed
-    cefr_min: C1
-    learner_task: >-
-      Вибрати 2 короткі записи для порівняння техніки в українському й
-      міжнародному репертуарі.
-    caveats: >-
-      Доступність легальних записів може бути нерівномірною; за відсутності
-      ліцензованих версій зосередитися на довідкових висновках.
+    rights:
+      basis: external-link
+      evidence_url: https://knpu.gov.ua/winners/solov-ianenko-anatolij-borysovych/
+      note: Зовнішнє посилання на профіль лауреата; текст і зображення не відтворюються в курсі.
+    learner_task: Зіставити український камерний репертуар зі світовими оперними ролями без героїчних узагальнень.
 sequence: 375
 slug: anatolii-solovianenko
 subtitle: Донбаський тенор української опери

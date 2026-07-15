@@ -4,10 +4,10 @@
 slug: ivan-karabyts
 domain: figures
 tracks: [bio]
-portrait: text-only
+portrait: commons-licensed
 compiled: 2026-07-10
 generated_by_model: codex
-note: Hand-authored BIO catalog-source base-prep packet. Text-only portrait disposition; no visual asset is supplied.
+note: Individual Commons portrait rights checked; learner-facing use still requires the recorded attribution.
 -->
 
 ## Короткий зміст
@@ -31,10 +31,8 @@ note: Hand-authored BIO catalog-source base-prep packet. Text-only portrait disp
 енциклопедичних та інституційних джерелах вона не має підтвердження [S1]
 [S2] [S3].
 
-Портретний режим цього пакета — **text-only**. Жодного зображення, файлу,
-посилання на медіа чи твердження про права на відтворення тут не додано. Це
-обмеження не заважає роботі з біографією, творами та інституційною історією,
-які документують джерела реєстру.
+Для портретного використання зафіксовано окремий файл Commons із ліцензією
+CC BY 4.0 та зазначеним автором; це не поширює дозвіл на інші архівні світлини [S5].
 
 ## Основний зміст
 

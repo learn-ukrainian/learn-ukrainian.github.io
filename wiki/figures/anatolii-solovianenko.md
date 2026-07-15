@@ -6,8 +6,8 @@ domain: figures
 tracks: [bio]
 compiled: 2026-07-10
 generated_by_model: codex
-portrait_disposition: text-only
-note: Hand-authored BIO catalog-source base-prep packet. It contains paraphrase only; no portrait or audio asset is included.
+portrait_disposition: commons-licensed
+note: Individual Commons portrait rights checked; learner-facing use still requires the recorded attribution.
 -->
 
 ## Короткий зміст
@@ -20,6 +20,9 @@ note: Hand-authored BIO catalog-source base-prep packet. It contains paraphrase 
 української географії: Донецьк тут не периферійна примітка до іншої культурної
 історії, а один із пунктів професійної біографії українського виконавця [S1]
 [S3].
+
+Для портретного використання зафіксовано окремий файл Commons із позначкою
+public domain; це не є правовим висновком щодо інших світлин співака [S5].
 
 Солов'яненко не зводиться ані до образу знаменитого голосу, ані до формули
 про міжнародний успіх [S1] [S2] [S4]. Енциклопедичні й інституційні довідки
