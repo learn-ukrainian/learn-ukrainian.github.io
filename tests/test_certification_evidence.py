@@ -379,7 +379,6 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
     slug = "adjectives-comparative"
     (repo / "curriculum/l2-uk-en/plans/b1").mkdir(parents=True)
     shutil.copy2(ROOT / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml", repo / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml")
-    shutil.copytree(ROOT / f"curriculum/l2-uk-en/b1/{slug}", repo / f"curriculum/l2-uk-en/b1/{slug}")
     manifest = {"levels": {"b1": {"type": "core", "modules": [slug]}}}
     (repo / "curriculum/l2-uk-en/curriculum.yaml").write_text(yaml.safe_dump(manifest), encoding="utf-8")
     config_path = repo / "agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml"
@@ -387,7 +386,26 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
     _, ledger = tc.start_run(
         f"b1/{slug}", owner="codex/test", repo_root=repo, config_path=config_path, ledger_root=ledger_root
     )
-    ledger["author_families"] = ["codex"]
+    plan_evidence = tmp_path / "plan-review.json"
+    plan_evidence.write_text('{"verdict":"PASS"}\n', encoding="utf-8")
+    _, ledger = tc.record_plan_review(
+        f"b1/{slug}",
+        run_id=ledger["run"]["run_id"],
+        verdict="PASS",
+        evidence=plan_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    shutil.copytree(ROOT / f"curriculum/l2-uk-en/b1/{slug}", repo / f"curriculum/l2-uk-en/b1/{slug}")
+    _, ledger = tc.record_build(
+        f"b1/{slug}",
+        run_id=ledger["run"]["run_id"],
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
     inputs = tc.certification_inputs(f"b1/{slug}", repo_root=repo, config_path=config_path, ledger=ledger)
     pbr = {
         "result_path": "/outside/pbr.json",

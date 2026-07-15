@@ -384,6 +384,25 @@ def _identity(hashes: Mapping[str, str]) -> str:
     return sha256_bytes(stable_json(dict(sorted(hashes.items()))).encode("utf-8"))
 
 
+def _consumed_preparation_identity(ledger: Mapping[str, Any] | None) -> str | None:
+    """Return the preparation identity consumed by the latest recorded build."""
+    if ledger is None:
+        return None
+    for event in reversed(ledger.get("history", [])):
+        if event.get("event") != "BUILD_RECORDED":
+            continue
+        details = event.get("details")
+        if not isinstance(details, Mapping):
+            return None
+        value = details.get("preparation_identity")
+        if value is None:
+            return None  # Pre-identity build records remain deliberately stale.
+        if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+            raise CompletionError("Recorded build preparation identity is malformed")
+        return value
+    return None
+
+
 def certification_inputs(
     selector: str,
     *,
@@ -395,8 +414,14 @@ def certification_inputs(
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     profile = certification_profile_for(snapshot, repo_root=repo_root, config=config)
+    consumed_preparation_identity = _consumed_preparation_identity(ledger)
     try:
-        readiness = curriculum_readiness.evaluate_preparation(snapshot.track, snapshot.slug, repo_root=repo_root)
+        readiness = curriculum_readiness.evaluate_preparation(
+            snapshot.track,
+            snapshot.slug,
+            consumed_preparation_identity=consumed_preparation_identity,
+            repo_root=repo_root,
+        )
     except curriculum_readiness.ReadinessError as exc:
         raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
     if (
@@ -405,6 +430,13 @@ def certification_inputs(
         or readiness["profile_id"] != profile["readiness_profile"]
     ):
         raise CompletionError("Readiness profile contradicts the completion target family/profile")
+    if readiness["state"] != "built-current" or readiness["next_action"] != "certify":
+        findings = ", ".join(
+            f"{item['id']}:{item['owner']}" for item in readiness["findings"]
+        ) or "no-readiness-finding"
+        raise CompletionError(
+            f"Current preparation is not certification-ready ({readiness['state']}; {findings})"
+        )
     if not readiness["preparation_identity"] or not all(item["passed"] for item in readiness["requirements"]):
         raise CompletionError("Current declared preparation and plan requirements must pass")
     learner_hashes = {
@@ -879,6 +911,91 @@ def record_change(
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
 
 
+def request_preparation_rebuild(
+    selector: str,
+    *,
+    run_id: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Route a stale built bundle through a real rebuild without backfilling evidence."""
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            config, snapshot, identity, path, ledger = _load_for_update(
+                selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+            )
+            consumed_preparation_identity = _consumed_preparation_identity(ledger)
+            try:
+                readiness = curriculum_readiness.evaluate_preparation(
+                    snapshot.track,
+                    snapshot.slug,
+                    consumed_preparation_identity=consumed_preparation_identity,
+                    repo_root=repo_root,
+                )
+            except curriculum_readiness.ReadinessError as exc:
+                raise CompletionError(f"Current preparation cannot be evaluated: {exc}") from exc
+            current_preparation_identity = readiness["preparation_identity"]
+            eid = _event_id(
+                "PREPARATION_REBUILD_REQUIRED",
+                {
+                    "consumed_preparation_identity": consumed_preparation_identity,
+                    "current_preparation_identity": current_preparation_identity,
+                },
+            )
+            if _event_exists(ledger, eid):
+                return path, ledger
+            allowed_states = {
+                "POST_BUILD_REVIEW_REQUIRED",
+                "INDEPENDENT_REVIEW_REQUIRED",
+                "INTEGRATION_REQUIRED",
+                "PBR_PASS_QG_PENDING",
+                "PRODUCTION_QG_REQUIRED",
+            }
+            if ledger["state"] not in allowed_states:
+                raise CompletionError(
+                    f"Preparation rebuild routing is not allowed from {ledger['state']}"
+                )
+            if snapshot.module_state != "BUILT":
+                raise CompletionError("Preparation rebuild routing requires a complete built bundle")
+            if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
+                raise CompletionError(
+                    "Unrecorded learner-artifact drift must be adjudicated before preparation rebuild"
+                )
+            if readiness["state"] != "built-preparation-drift":
+                raise CompletionError("Current preparation does not require a rebuild")
+            if not current_preparation_identity or not all(
+                item["passed"] for item in readiness["requirements"]
+            ):
+                raise CompletionError(
+                    "Preparation requirements must pass before routing the bundle to rebuild"
+                )
+            _append_event(
+                ledger,
+                event_id=eid,
+                event="PREPARATION_REBUILD_REQUIRED",
+                to_state="BUILD_REQUIRED",
+                identity=identity,
+                details={
+                    "consumed_preparation_identity": consumed_preparation_identity,
+                    "current_preparation_identity": current_preparation_identity,
+                    "findings": [
+                        {"id": item["id"], "owner": item["owner"]}
+                        for item in readiness["findings"]
+                    ],
+                },
+            )
+            ledger["routing"] = None
+            _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+
+
 def record_build(
     selector: str,
     *,
@@ -896,7 +1013,25 @@ def record_build(
             config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            eid = _event_id("BUILD_RECORDED", {"identity": identity["sha256"], "author_family": author_family})
+            try:
+                readiness = curriculum_readiness.evaluate_preparation(
+                    snapshot.track, snapshot.slug, repo_root=repo_root
+                )
+            except curriculum_readiness.ReadinessError as exc:
+                raise CompletionError(f"Built preparation cannot be evaluated: {exc}") from exc
+            preparation_identity = readiness["preparation_identity"]
+            if not preparation_identity or not all(
+                item["passed"] for item in readiness["requirements"]
+            ):
+                raise CompletionError("Build cannot consume incomplete preparation requirements")
+            eid = _event_id(
+                "BUILD_RECORDED",
+                {
+                    "identity": identity["sha256"],
+                    "author_family": author_family,
+                    "preparation_identity": preparation_identity,
+                },
+            )
             if _event_exists(ledger, eid):
                 return path, ledger
             if ledger["state"] not in {"BUILD_REQUIRED", "PARTIAL_RECOVERY_REQUIRED"}:
@@ -912,7 +1047,10 @@ def record_build(
                 event="BUILD_RECORDED",
                 to_state="POST_BUILD_REVIEW_REQUIRED",
                 identity=identity,
-                details={"author_family": author_family.strip().lower()},
+                details={
+                    "author_family": author_family.strip().lower(),
+                    "preparation_identity": preparation_identity,
+                },
             )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
@@ -1773,7 +1911,6 @@ def build_parser() -> argparse.ArgumentParser:
     resume.add_argument("--run-id", required=True)
     status = subparsers.add_parser("status", help="Read the durable ledger and current drift status")
     _add_common_options(status)
-    status.add_argument("--preparation-identity")
     plan_review = subparsers.add_parser("record-plan-review", help="Record family plan-review evidence")
     _add_common_options(plan_review)
     plan_review.add_argument("--run-id", required=True)
@@ -1785,6 +1922,12 @@ def build_parser() -> argparse.ArgumentParser:
     change.add_argument("--owner-kind", required=True, choices=("built_artifact", "plan_workflow", "audit_tooling"))
     change.add_argument("--author-family", required=True)
     change.add_argument("--summary", required=True)
+    rebuild = subparsers.add_parser(
+        "request-preparation-rebuild",
+        help="Route a preparation-stale built bundle through a fresh rebuild",
+    )
+    _add_common_options(rebuild)
+    rebuild.add_argument("--run-id", required=True)
     build = subparsers.add_parser("record-build", help="Record a completed fresh module build")
     _add_common_options(build)
     build.add_argument("--run-id", required=True)
@@ -1867,6 +2010,12 @@ def main(argv: list[str] | None = None) -> int:
                 owner_kind=args.owner_kind,
                 author_family=args.author_family,
                 summary=args.summary,
+                **common,
+            )
+        elif args.command == "request-preparation-rebuild":
+            path, value = request_preparation_rebuild(
+                args.target,
+                run_id=args.run_id,
                 **common,
             )
         elif args.command == "record-build":

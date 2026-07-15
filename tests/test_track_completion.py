@@ -92,17 +92,23 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _install_certification_profiles(repo: Path) -> None:
-    for relative in (
-        "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
-        "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
-        "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml",
-        "agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json",
-    ):
-        source = ROOT / relative
-        target = repo / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+def _write_bundle(repo: Path, track: str, slug: str, content: str) -> None:
+    directory = repo / "curriculum/l2-uk-en" / track / slug
+    _write(directory / "module.md", content)
+    for filename in ("activities.yaml", "vocabulary.yaml", "resources.yaml"):
+        _write(directory / filename, "[]\n")
+
+
+def _install_lifecycle_contracts(repo: Path) -> None:
+    shutil.copytree(
+        ROOT / "agents_extensions/shared/curriculum-lifecycle",
+        repo / "agents_extensions/shared/curriculum-lifecycle",
+        dirs_exist_ok=True,
+    )
+    shutil.copytree(
+        ROOT / "agents_extensions/shared/prompt-contracts",
+        repo / "agents_extensions/shared/prompt-contracts",
+    )
 
 
 @pytest.fixture
@@ -131,11 +137,32 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
         for sequence, slug in enumerate(slugs, start=1):
             _write(
                 repo / f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml",
-                yaml.safe_dump({"level": track, "slug": slug, "sequence": sequence}),
+                yaml.safe_dump(
+                    {
+                        "module": f"{track}-{sequence:03d}",
+                        "level": track.upper(),
+                        "sequence": sequence,
+                        "slug": slug,
+                        "title": "Навчальний модуль",
+                        "subtitle": "Перевірка життєвого циклу",
+                        "word_target": 100,
+                        "content_outline": [
+                            {
+                                "section": "Зміст",
+                                "words": 100,
+                                "points": ["Перевірити перехід між станами."],
+                            }
+                        ],
+                        "references": [{"title": "Тестове джерело"}],
+                    },
+                    sort_keys=False,
+                ),
             )
     for track, slug in (("a1", "core-built"), ("bio", "seminar-built"), ("folk", "folk-built")):
-        _write(
-            repo / f"curriculum/l2-uk-en/{track}/{slug}/module.md",
+        _write_bundle(
+            repo,
+            track,
+            slug,
             f"# {slug}\n\nНавчальний текст для перевірки завершення.\n",
         )
     _write(
@@ -143,7 +170,7 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
         "[]\n",
     )
     _write(repo / "workflow.txt", "workflow-v1\n")
-    _install_certification_profiles(repo)
+    _install_lifecycle_contracts(repo)
     config_path = tmp_path / "track-completion.yaml"
     config_path.write_text(yaml.safe_dump(_config(), sort_keys=False), encoding="utf-8")
     return repo, config_path, ledger_root
@@ -347,8 +374,10 @@ def test_unbuilt_plan_build_transitions_are_leased_and_idempotent(
     )
     assert ledger["state"] == "BUILD_REQUIRED"
 
-    _write(
-        repo / "curriculum/l2-uk-en/a1/core-unbuilt/module.md",
+    _write_bundle(
+        repo,
+        "a1",
+        "core-unbuilt",
         "# Новий модуль\n\nЗавершений навчальний текст.\n",
     )
     _, ledger = tc.record_build(
@@ -361,6 +390,196 @@ def test_unbuilt_plan_build_transitions_are_leased_and_idempotent(
     )
     assert ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
     assert ledger["author_families"] == ["codex"]
+    build_event = next(item for item in ledger["history"] if item["event"] == "BUILD_RECORDED")
+    consumed_identity = build_event["details"]["preparation_identity"]
+    assert len(consumed_identity) == 64
+
+    history_length = len(ledger["history"])
+    _, replayed = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert len(replayed["history"]) == history_length
+    inputs = tc.certification_inputs(
+        "a1/core-unbuilt",
+        repo_root=repo,
+        config_path=config_path,
+        ledger=replayed,
+    )
+    assert inputs["preparation_identity"] == consumed_identity
+    with pytest.raises(tc.CompletionError, match="Current preparation does not require a rebuild"):
+        tc.request_preparation_rebuild(
+            "a1/core-unbuilt",
+            run_id=run_id,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+    profiles = repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
+    profiles.write_text(profiles.read_text(encoding="utf-8") + "# preparation drift\n", encoding="utf-8")
+    with pytest.raises(
+        tc.CompletionError,
+        match="built-preparation-drift; PREPARATION_IDENTITY_DRIFT:preparation",
+    ):
+        tc.certification_inputs(
+            "a1/core-unbuilt",
+            repo_root=repo,
+            config_path=config_path,
+            ledger=replayed,
+        )
+
+    _, rebuild_required = tc.request_preparation_rebuild(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert rebuild_required["state"] == "BUILD_REQUIRED"
+    rebuild_event = rebuild_required["history"][-1]
+    assert rebuild_event["event"] == "PREPARATION_REBUILD_REQUIRED"
+    assert rebuild_event["details"]["consumed_preparation_identity"] == consumed_identity
+    assert rebuild_event["details"]["current_preparation_identity"] != consumed_identity
+    _, rebuild_replay = tc.request_preparation_rebuild(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert len(rebuild_replay["history"]) == len(rebuild_required["history"])
+
+    with pytest.raises(tc.CompletionError, match="Build produced no fresh target/workflow identity"):
+        tc.record_build(
+            "a1/core-unbuilt",
+            run_id=run_id,
+            author_family="codex",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    content = repo / "curriculum/l2-uk-en/a1/core-unbuilt/module.md"
+    content.write_text(content.read_text(encoding="utf-8") + "Оновлений матеріал.\n", encoding="utf-8")
+    _, rebuilt = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    rebuilt_inputs = tc.certification_inputs(
+        "a1/core-unbuilt",
+        repo_root=repo,
+        config_path=config_path,
+        ledger=rebuilt,
+    )
+    assert rebuilt_inputs["preparation_identity"] == rebuild_event["details"][
+        "current_preparation_identity"
+    ]
+
+
+def test_certification_rejects_built_bundle_without_consumed_preparation_identity(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "a1/core-built")
+
+    with pytest.raises(
+        tc.CompletionError,
+        match="built-preparation-drift; PREPARATION_IDENTITY_MISSING:audit_tooling",
+    ):
+        tc.certification_inputs(
+            "a1/core-built",
+            repo_root=repo,
+            config_path=config_path,
+            ledger=ledger,
+        )
+
+    projection = tc.certification_projection(
+        "a1/core-built",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert projection["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert projection["post_build"] == "preparation-stale"
+    assert projection["final"] == "not-certified"
+
+    _, rebuild_required = tc.request_preparation_rebuild(
+        "a1/core-built",
+        run_id=ledger["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert rebuild_required["state"] == "BUILD_REQUIRED"
+    assert rebuild_required["history"][-1]["details"]["consumed_preparation_identity"] is None
+
+    with pytest.raises(tc.CompletionError, match="Build produced no fresh target/workflow identity"):
+        tc.record_build(
+            "a1/core-built",
+            run_id=ledger["run"]["run_id"],
+            author_family="codex",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    content = repo / "curriculum/l2-uk-en/a1/core-built/module.md"
+    content.write_text(content.read_text(encoding="utf-8") + "Перебудований матеріал.\n", encoding="utf-8")
+    _, rebuilt = tc.record_build(
+        "a1/core-built",
+        run_id=ledger["run"]["run_id"],
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    inputs = tc.certification_inputs(
+        "a1/core-built",
+        repo_root=repo,
+        config_path=config_path,
+        ledger=rebuilt,
+    )
+    assert len(inputs["preparation_identity"]) == 64
+
+
+def test_preparation_rebuild_routing_rejects_incomplete_inputs_and_learner_drift(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, bio_ledger = _start(fake_repo, "bio/seminar-built")
+    with pytest.raises(
+        tc.CompletionError,
+        match="Preparation requirements must pass before routing the bundle to rebuild",
+    ):
+        tc.request_preparation_rebuild(
+            "bio/seminar-built",
+            run_id=bio_ledger["run"]["run_id"],
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+    _, core_ledger = _start(fake_repo, "a1/core-built")
+    content = repo / "curriculum/l2-uk-en/a1/core-built/module.md"
+    content.write_text(content.read_text(encoding="utf-8") + "Незаписана зміна.\n", encoding="utf-8")
+    with pytest.raises(
+        tc.CompletionError,
+        match="Unrecorded learner-artifact drift must be adjudicated",
+    ):
+        tc.request_preparation_rebuild(
+            "a1/core-built",
+            run_id=core_ledger["run"]["run_id"],
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
 
 
 def test_review_rejects_unrecorded_drift_and_routes_plan_findings(
@@ -435,7 +654,7 @@ def _fresh_fixture_from(tmp_path: Path) -> tuple[Path, Path, Path]:
         "# Семінар\n\nНавчальний текст для перевірки.\n",
     )
     _write(repo / "workflow.txt", "workflow-v1\n")
-    _install_certification_profiles(repo)
+    _install_lifecycle_contracts(repo)
     config_path = tmp_path / "track-completion.yaml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(yaml.safe_dump(_config(), sort_keys=False), encoding="utf-8")
@@ -513,8 +732,10 @@ def test_cross_family_review_gate_and_publication(
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    _write(
-        repo / "curriculum/l2-uk-en/a1/core-unbuilt/module.md",
+    _write_bundle(
+        repo,
+        "a1",
+        "core-unbuilt",
         "# Модуль\n\nСвіжий навчальний матеріал.\n",
     )
     _, ledger = tc.record_build(
@@ -527,6 +748,7 @@ def test_cross_family_review_gate_and_publication(
     )
     snapshot = tc.resolve_target("a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path))
     passing = _result(snapshot, repo, status="PASS")
+    passing["semantic_response"] = {"raw_sha256": "f" * 64}
     result_path = _result_file(tmp_path, "pass.json")
     monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: passing)
     _, ledger = tc.record_review(
@@ -669,3 +891,4 @@ def test_projection_uses_only_bound_canonical_pbr_review(
 def test_projection_has_no_caller_controlled_preparation_identity() -> None:
     assert "preparation_identity" not in tc.certification_projection.__annotations__
     assert "preparation_identity" not in tc.certification_inputs.__annotations__
+    assert "preparation_identity" not in tc.request_preparation_rebuild.__annotations__
