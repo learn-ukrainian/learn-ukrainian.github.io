@@ -1,0 +1,27 @@
+# Source registry for wiki/figures/ivan-manzhura.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: eiu-manzhura-ivan-ivanovych
+  type: external
+  title: Манжура Іван Іванович
+  url: https://www.history.org.ua/?termin=Manzhura_I_I
+  notes: ЕІУ; біографічна рамка, фольклорна праця, Потебня і твори.
+- id: S2
+  file: dnipro-city-libraries-ivan-manzhura
+  type: external
+  title: Іван Манжура
+  url: https://library.dp.ua/?id=518
+  notes: Дніпровські міські публічні бібліотеки; освітня хронологія та професійний профіль.
+- id: S3
+  file: dnipro-library-stepovi-dumy-ta-spivy
+  type: external
+  title: Іван Манжура «Степові думи та співи» (1889)
+  url: https://www.dnipro.libr.dp.ua/stepovi_dumi
+  notes: ОУНБ; видавнича історія, зміст і атрибутовані відомості про цензуру.
+- id: S4
+  file: nlu-stepovi-dumy-ta-spivy-1889
+  type: external
+  title: Степові думи та співи [Електронна копія]
+  url: https://elib.nlu.org.ua/object.html?id=14830
+  notes: Каталог НБУ ім. Ярослава Мудрого для бібліотечної копії першодруку; зовнішнє посилання.

@@ -126,25 +126,52 @@ persona:
     репресію, відрізняючи засвідчені джерелами факти від пізнішого міфу.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "Енциклопедія історії України"
-  title: "Костомаров Микола Іванович"
-  url: "https://www.history.org.ua/?termin=Kostomarov_M"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "Вікіджерела"
-  title: "Книги битія українського народу"
-  url: "https://uk.wikisource.org/wiki/Книги_битія_українського_народу"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Public domain text, hosted externally"
-- source: "Вікіджерела"
-  title: "Дві руські народності"
-  url: "https://uk.wikisource.org/wiki/Дві_руські_народності"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Public domain text, hosted externally"
+- title: "Книги битія українського народу"
+  author: Микола Костомарів
+  source_name: Національна бібліотека України імені В. І. Вернадського
+  source_url: https://irbis-nbuv.gov.ua/ulib/item/UKR0005366
+  language: uk
+  genre: програмний текст
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  license: source-site-restricted
+  rights_note: >-
+    Цифровий запис НБУВ доступний лише за посиланням; повний скан у курсі не відтворюється.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/ulib/item/UKR0005366
+    note: Текст не відтворюється у курсі.
+  cefr_min: C1
+  learner_task: >-
+    Простежити біблійний паралелізм програмного тексту й відрізнити його історичну
+    федералістську мову від сучасних політичних категорій.
+  caveats: Цифровий запис — видання 1921 року, а не архівний рукопис 1840-х.
+- title: "Дві руські народності"
+  author: Микола Костомаров
+  translator: Олександр Кониський
+  source_name: Національна бібліотека України імені В. І. Вернадського
+  source_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000025845
+  language: uk
+  genre: історіософська розвідка, український переклад
+  source_type: primary-translation
+  role: supplementary-reading
+  hosting: link-only
+  license: source-site-restricted
+  rights_note: >-
+    Це український переклад Олександра Кониського, виданий 1923 року, а не
+    україномовний авторський оригінал; цифровий ресурс НБУВ використовується лише за посиланням.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000025845
+    note: Текст не відтворюється у курсі.
+  cefr_min: C1
+  learner_task: >-
+    Визначити, які твердження тексту є історичною типологією XIX століття, а не
+    сучасною соціологічною класифікацією.
+  caveats: Переклад має бути названий перекладом; НБУВ радить враховувати російську цензуру.
 
 references:
 - note: Стаття про життя, братство та репресію; джерело розбіжності щодо дати народження.
@@ -152,20 +179,27 @@ references:
   title: Костомаров Микола Іванович (ЕІУ)
   type: reference
 - author: Микола Костомаров
-  note: Біблійно-пророчий маніфест братства, львівське видання 1921 року на Вікіджерелах.
-  path: https://uk.wikisource.org/wiki/Книги_битія_українського_народу
+  note: Видання 1921 року; програмний текст братства, написаний наприкінці 1845 — на початку 1846 року.
+  path: https://irbis-nbuv.gov.ua/ulib/item/UKR0005366
   title: Книги битія українського народу
   type: primary
   work: Книги битія українського народу
 - author: Микола Костомаров
-  note: Есей, що протиставляє українську й російську історико-політичні культури.
-  path: https://uk.wikisource.org/wiki/Дві_руські_народності
+  note: Український переклад Олександра Кониського, Лейпциг, 1923; не авторський україномовний оригінал.
+  path: https://irbis-nbuv.gov.ua/ulib/item/ukr0000025845
   title: Дві руські народності
   type: primary
   work: Дві руські народності
-- note: Опис політичної програми Кирило-Мефодіївського братства та "Книг битія".
-  title: Енциклопедія українознавства — Кирило-Мефодіївське братство
+- note: Енциклопедична стаття про життя, братство, академічну й видавничу роботу.
+  path: https://www.history.org.ua/?termin=Kostomarov_M
+  title: Костомаров Микола Іванович (ЕІУ)
   type: reference
+image:
+  url: https://commons.wikimedia.org/wiki/File:Nikola_i_Ivanovich_Kostomarov,_head-and-shoulders_portrait,_facing_front_LCCN99615560.jpg
+  source: Library of Congress, 1880; Vezenberg & Co.
+  license: public-domain
+  rights_evidence_url: https://commons.wikimedia.org/wiki/File:Nikola_i_Ivanovich_Kostomarov,_head-and-shoulders_portrait,_facing_front_LCCN99615560.jpg
+  caption_uk: Микола Костомаров, фотографія Vezenberg & Co., 1880.
 sequence: 216
 slug: mykola-kostomarov
 subtitle: The Historian and Brotherhood Founder Imprisoned for Imagining a Free Ukraine

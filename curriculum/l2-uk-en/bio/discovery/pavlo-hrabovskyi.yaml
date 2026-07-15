@@ -1,0 +1,33 @@
+---
+discovered_at: '2026-07-15T00:00:00+00:00'
+query_keywords:
+- Павло Грабовський
+- Павло Грабовський Пролісок 1894 НІБУ
+- Павло Грабовський Чорний переділ Карійська трагедія
+error: null
+warning: >-
+  Джерельний запис відновлено з прямої перевірки ЕІУ, ЕСУ та НІБУ; не використовувати
+  Вікіпедію, згенеровані сторінки чи неперевірену поліцейську світлину як доказ.
+videos: []
+blogs:
+- url: https://www.history.org.ua/?termin=Grabovsky_P
+  title: ГРАБОВСЬКИЙ ПАВЛО АРСЕНОВИЧ — Енциклопедія історії України
+  source: Інститут історії України НАН України
+  relevance_score: 1.0
+  topics: [життєпис, арешти, заслання, видання]
+  content_type: encyclopedia
+- url: https://esu.com.ua/article-26782
+  title: Грабовський Павло Арсенович — Енциклопедія Сучасної України
+  source: ЕСУ
+  relevance_score: 1.0
+  topics: [поезія, переклад, українська мова, поселення]
+  content_type: encyclopedia
+- url: https://omeka.nibu.kyiv.ua/s/nibu/item/6760
+  title: "Пролісок : твори Павла Граба"
+  source: Національна історична бібліотека України
+  relevance_score: 1.0
+  topics: [першоджерело, українська мова, 1894]
+  content_type: primary_source
+rag_chunks: []
+rag_images: []
+rag_literary: []

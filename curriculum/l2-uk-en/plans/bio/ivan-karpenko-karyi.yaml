@@ -71,11 +71,14 @@ content_outline:
     [!anti-hagiography] Репресія перервала кар'єру саме на перетині театру, української
     публічної культури й антиімперського товариського життя.
   - >-
-    Механізм: 1883 року Тобілевича звільнили зі служби за зв'язки з українськими
-    революційними колами та за допомогу в наданні паспортів революціонерам.
+    Механізм: 1883 року Тобілевича звільнили зі служби й розпочали слідство
+    після того, як він надав притулок Софії Русовій, що перебувала під гласним
+    наглядом поліції.
   - >-
-    Заслання й нагляд: трирічне заслання до Новочеркаська, після якого, за джерелами,
-    відкритий поліційний нагляд перейшов у таємне стеження, що тривало до 1895 року.
+    Заслання й нагляд: 1884 року — трирічне заслання до Новочеркаська під
+    гласним наглядом; після арештів в українофільському гуртку Єлисаветграда
+    його продовжили до грудня 1888 року, а відтоді до 1895 року був негласний
+    нагляд і заборона жити в обох столицях та Санкт-Петербурзькій губернії.
   - >-
     [!epistemic-humility] Джерела (ЕІУ та ЕСУ) дають звільнення, заслання й пізніше
     стеження, але не подають ні звинувачувального акта, ні номера справи — тож архівних
@@ -126,17 +129,45 @@ persona:
     досліджує імперський поліційний нагляд, не зводячи театр корифеїв до провінційної розваги.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source_name: "Карпенко-Карий Іван (ЕІУ)"
-  source_url: "https://www.history.org.ua/?termin=Karpenko_Kary"
+- title: "Мартин Боруля"
+  source_name: "Електронна бібліотека «Культура України»"
+  source_url: "https://elib.nlu.org.ua/object.html?id=6622"
   language: "uk"
+  genre: "трагікомедія"
+  source_type: primary
+  role: primary-reading
   hosting: "link-only"
-  rights_note: "Copyrighted material; link provided to the official Encyclopedia of History of Ukraine."
-- source_name: "Карпенко-Карий Іван (ЕСУ)"
+  learner_task: >-
+    Прочитати обрану сцену й простежити, як слова про чин, папери та дворянство
+    створюють сатиру на станове самопіднесення.
+  rights:
+    basis: external-link
+    evidence_url: "https://elib.nlu.org.ua/object.html?id=6622"
+    note: "Бібліотечний скан українського видання; повний текст не відтворюється в курсі."
+- title: "Карпенко-Карий Іван"
+  source_name: "Енциклопедія Сучасної України"
   source_url: "https://esu.com.ua/article-10051"
   language: "uk"
+  genre: "енциклопедична стаття"
+  source_type: reference
+  role: contextual-reading
   hosting: "link-only"
-  rights_note: "Copyrighted material; link provided to the official Encyclopedia of Modern Ukraine."
+  learner_task: >-
+    Скласти хронологію звільнення, заслання та двох форм поліційного нагляду,
+    не додаючи непідтверджених обвинувачень.
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-10051"
+    note: "Зовнішнє посилання на україномовну енциклопедичну статтю; текст не відтворюється в курсі."
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    У перевіреному пакеті немає окремо підтверджених автора, походження та ліцензії
+    придатного портретного файла; категорія або пошук не є доказом прав.
+  verified_on: '2026-07-15'
 references:
 - note: Стаття про життя, репресію та драматургію.
   path: https://www.history.org.ua/?termin=Karpenko_Kary

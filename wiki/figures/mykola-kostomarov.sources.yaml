@@ -1,0 +1,31 @@
+# Source registry for wiki/figures/mykola-kostomarov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: eiu-kostomarov-mykola-ivanovych
+  type: external
+  title: КОСТОМАРОВ МИКОЛА ІВАНОВИЧ — Енциклопедія історії України
+  url: https://www.history.org.ua/?termin=Kostomarov_M
+- id: S2
+  file: nbuv-kostomarov-historian
+  type: external
+  title: Народився Микола Костомаров, новатор і класик української історичної науки — НБУВ
+  url: https://www.nbuv.gov.ua/node/4065
+- id: S3
+  file: nbuv-knyhy-bytiia-1921
+  type: external
+  title: Книги битія українського народу (1921) — НБУВ
+  url: https://irbis-nbuv.gov.ua/ulib/item/UKR0005366
+  notes: "НБУВ: видання 1921 року; доступне для читання лише за зовнішнім посиланням."
+- id: S4
+  file: nbuv-dvi-ruski-narodnosti-1923
+  type: external
+  title: Дві руські народності (1923) — НБУВ
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000025845
+  notes: Український переклад 1923 року; доступний лише за зовнішнім посиланням.
+- id: S5
+  file: commons-kostomarov-lccn99615560
+  type: external
+  title: File Nikola i Ivanovich Kostomarov, head-and-shoulders portrait, facing front LCCN99615560.jpg
+  url: https://commons.wikimedia.org/wiki/File:Nikola_i_Ivanovich_Kostomarov,_head-and-shoulders_portrait,_facing_front_LCCN99615560.jpg
+  notes: Історичний портрет; правовий статус перевіряється на сторінці файла.

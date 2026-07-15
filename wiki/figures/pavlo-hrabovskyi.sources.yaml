@@ -1,0 +1,24 @@
+# Source registry for wiki/figures/pavlo-hrabovskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: eiu-hrabovskyi-pavlo-arsenovych
+  type: external
+  title: ГРАБОВСЬКИЙ ПАВЛО АРСЕНОВИЧ — Енциклопедія історії України
+  url: https://www.history.org.ua/?termin=Grabovsky_P
+- id: S2
+  file: esu-hrabovskyi-pavlo-arsenovych
+  type: external
+  title: Грабовський Павло Арсенович — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-26782
+- id: S3
+  file: nibu-prolisok-pavlo-hrab
+  type: external
+  title: "Пролісок : твори Павла Граба — НІБУ"
+  url: https://omeka.nibu.kyiv.ua/s/nibu/item/6760
+  notes: Бібліотечний запис і цифрова копія; використовувати лише як зовнішнє посилання.
+- id: S4
+  file: nlu-prolisok
+  type: external
+  title: Пролісок — Електронна бібліотека Культура України
+  url: https://elib.nlu.org.ua/object.html?id=9470

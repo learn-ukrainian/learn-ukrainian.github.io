@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/ivan-karpenko-karyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: esu-karpenko-karyi-ivan
+  type: external
+  title: Карпенко-Карий Іван
+  url: https://esu.com.ua/article-10051
+  notes: Україномовна стаття ЕСУ; дати, біографія, нагляд, репертуар і цензура.
+- id: S2
+  file: nlu-martyn-borulia-1926
+  type: external
+  title: Мартин Боруля [Електронна копія]
+  url: https://elib.nlu.org.ua/object.html?id=6622
+  notes: Бібліотечна електронна копія українського видання 1926 року; зовнішнє посилання.

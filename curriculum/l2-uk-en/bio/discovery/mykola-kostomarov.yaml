@@ -1,0 +1,33 @@
+---
+discovered_at: '2026-07-15T00:00:00+00:00'
+query_keywords:
+- Микола Костомаров
+- Книги битія українського народу НБУВ 1921
+- Дві руські народності переклад Кониського НБУВ
+error: null
+warning: >-
+  Розрізняти український текст «Книг битія» та український переклад Кониського
+  «Двох руських народностей»; останній не називати україномовним оригіналом Костомарова.
+videos: []
+blogs:
+- url: https://www.history.org.ua/?termin=Kostomarov_M
+  title: КОСТОМАРОВ МИКОЛА ІВАНОВИЧ — Енциклопедія історії України
+  source: Інститут історії України НАН України
+  relevance_score: 1.0
+  topics: [життєпис, братство, заслання, академічна праця]
+  content_type: encyclopedia
+- url: https://irbis-nbuv.gov.ua/ulib/item/UKR0005366
+  title: Книги битія українського народу (1921)
+  source: НБУВ
+  relevance_score: 1.0
+  topics: [першоджерело, братство, федералізм]
+  content_type: primary_source
+- url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000025845
+  title: Дві руські народності (1923)
+  source: НБУВ
+  relevance_score: 1.0
+  topics: [переклад, історіософія, цензура]
+  content_type: primary_source
+rag_chunks: []
+rag_images: []
+rag_literary: []

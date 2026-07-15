@@ -134,25 +134,30 @@ persona:
     російського імперського заслання, не зводячи поета до мученицького епізоду.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- source: "Енциклопедія історії України"
-  title: "Грабовський Павло Арсенович"
-  url: "https://www.history.org.ua/?termin=Grabovsky_P"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "ЕСУ"
-  title: "Грабовський Павло Арсенович"
-  url: "https://esu.com.ua/article-26782"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Copyrighted, link only"
-- source: "Вікіджерела"
-  title: "Швачка (Пролїсок)"
-  url: "https://uk.wikisource.org/wiki/Пролїсок/Швачка"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "Public domain text, hosted externally"
+- title: "Пролісок : твори Павла Граба"
+  author: Павло Грабовський
+  source_name: Національна історична бібліотека України
+  source_url: https://omeka.nibu.kyiv.ua/s/nibu/item/6760
+  language: uk
+  genre: поетична збірка
+  source_type: primary
+  role: close-reading
+  hosting: link-only
+  license: source-site-restricted
+  rights_note: >-
+    НІБУ дозволяє освітнє й наукове некомерційне використання з посиланням, але
+    застерігає від повторного відтворення повного тексту; використовується лише посилання.
+  rights:
+    basis: external-link
+    evidence_url: https://omeka.nibu.kyiv.ua/s/nibu/item/6760
+    note: Текст не відтворюється у курсі.
+  cefr_min: C1
+  learner_task: >-
+    Прочитати один вірш у цифровому виданні й простежити, як соціальна деталь та
+    звертання формують громадянську інтонацію.
+  caveats: Історичний правопис і всі цитати перевіряти за точною сторінкою скану.
 
 references:
 - note: Стаття про життя, репресії та літературний доробок поета.
@@ -164,17 +169,20 @@ references:
   title: Грабовський Павло Арсенович (ЕСУ)
   type: reference
 - author: Павло Грабовський
-  note: Програмовий вірш "Швачка" зі збірки "Пролїсок" (Львів, 1894), скан Вікіджерел.
-  path: https://uk.wikisource.org/wiki/Пролїсок/Швачка
-  title: Швачка (Пролїсок)
+  note: Україномовна поетична збірка, Львів, 1894; бібліотечний цифровий запис.
+  path: https://omeka.nibu.kyiv.ua/s/nibu/item/6760
+  title: "Пролісок : твори Павла Граба"
   type: primary
   work: Пролїсок
-- author: Павло Грабовський
-  note: Перекладна поетична збірка (Львів, 1895), скан сторінки Вікіджерел.
-  path: https://uk.wikisource.org/wiki/Сторінка:Павло_Грабовський._З_чужого_поля_(1895).djvu/29
-  title: З чужого поля
-  type: primary
-  work: З чужого поля
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Нібито поліцейська світлина має невідомого автора, походить із допису Facebook і
+    не містить повної правової підстави для США; портрет не використовуємо.
+  candidate_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE_%D0%93%D1%80%D0%B0%D0%B1%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9.jpg
+  evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE_%D0%93%D1%80%D0%B0%D0%B1%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9.jpg
+  disposition: no-portrait-until-rights-verified
 sequence: 215
 slug: pavlo-hrabovskyi
 subtitle: The Civic Poet and Translator Exiled to Siberia by the Empire
