@@ -106,6 +106,21 @@ class TaskFamilyStorage:
         return self.root / "rename-plan.json"
 
     @property
+    def rollover_plan_path(self) -> Path:
+        """Immutable exact-ID plan for one native rollover transition."""
+        return self.root / "rollover-plan.json"
+
+    @property
+    def rollover_binding_path(self) -> Path:
+        """Immutable native-created replacement identity and typed relations."""
+        return self.root / "rollover-binding.json"
+
+    @property
+    def rollover_archive_authorization_path(self) -> Path:
+        """Immutable post-confirmation authorization for one predecessor archive."""
+        return self.root / "rollover-archive-authorization.json"
+
+    @property
     def lock_path(self) -> Path:
         return self.root / ".operation.lock"
 
