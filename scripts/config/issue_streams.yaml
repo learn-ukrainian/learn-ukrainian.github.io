@@ -14,7 +14,7 @@ streams:
     epics: [4387, 4700]        # umbrella + UX-quality-wave child board
   atlas-intake:
     title: "Word Atlas full-corpus intake"
-    epics: [4220, 4378]        # intake epic + entry-model DB epic
+    epics: [4220, 4378, 5224]        # intake epic + entry-model DB epic
   corpus-channels:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]
