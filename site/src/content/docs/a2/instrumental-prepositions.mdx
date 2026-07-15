@@ -648,7 +648,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправте фразу
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Лавка під дерево.", "errorWord": "під дерево", "correctForm": "Лавка під деревом.", "options": ["Лавка під деревом.", "Лавка під дерево."], "explanation": "Де? Під деревом."}, {"sentence": "Кафе за музей.", "errorWord": "за музей", "correctForm": "Кафе за музеєм.", "options": ["Кафе за музеєм.", "Кафе за музей."], "explanation": "За музеєм описує місце позаду музею."}, {"sentence": "Ми говоримо перед урок.", "errorWord": "перед урок", "correctForm": "Ми говоримо перед уроком.", "options": ["Ми говоримо перед уроком.", "Ми говоримо перед урок."], "explanation": "Перед уроком - часове значення з орудним."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Лавка під дерево.", "errorWord": "під дерево", "correctForm": "під деревом", "options": ["під деревом", "під дерево"], "explanation": "Де? Під деревом."}, {"sentence": "Кафе за музей.", "errorWord": "за музей", "correctForm": "за музеєм", "options": ["за музеєм", "за музей"], "explanation": "За музеєм описує місце позаду музею."}, {"sentence": "Ми говоримо перед урок.", "errorWord": "перед урок", "correctForm": "перед уроком", "options": ["перед уроком", "перед урок"], "explanation": "Перед уроком - часове значення з орудним."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">

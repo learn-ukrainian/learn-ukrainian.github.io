@@ -511,7 +511,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправ форму
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант речення." items={JSON.parse(`[{"sentence": "Я пишу тебе повідомлення.", "errorWord": "тебе", "correctForm": "Я пишу тобі повідомлення.", "options": ["Я пишу тобі повідомлення.", "Я пишу тебе повідомлення."], "explanation": "Писати кому? - тобі."}, {"sentence": "Її холодно.", "errorWord": "Її", "correctForm": "Їй холодно.", "options": ["Їй холодно.", "Її холодно."], "explanation": "Для стану потрібен давальний займенник."}, {"sentence": "Покажи нас фото.", "errorWord": "нас", "correctForm": "Покажи нам фото.", "options": ["Покажи нам фото.", "Покажи нас фото."], "explanation": "Показати кому? - нам."}, {"sentence": "Я бачу тобі.", "errorWord": "тобі", "correctForm": "Я бачу тебе.", "options": ["Я бачу тебе.", "Я бачу тобі."], "explanation": "Бачити кого? - тебе."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант речення." items={JSON.parse(`[{"sentence": "Я пишу тебе повідомлення.", "errorWord": "тебе", "correctForm": "тобі", "options": ["тобі", "тебе"], "explanation": "Писати кому? - тобі."}, {"sentence": "Її холодно.", "errorWord": "Її", "correctForm": "Їй", "options": ["Їй", "Її"], "explanation": "Для стану потрібен давальний займенник."}, {"sentence": "Покажи нас фото.", "errorWord": "нас", "correctForm": "нам", "options": ["нам", "нас"], "explanation": "Показати кому? - нам."}, {"sentence": "Я бачу тобі.", "errorWord": "тобі", "correctForm": "тебе", "options": ["тебе", "тобі"], "explanation": "Бачити кого? - тебе."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
