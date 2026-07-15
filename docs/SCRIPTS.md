@@ -18,8 +18,36 @@ Project-local wrappers for interactive agent sessions:
 
 ```bash
 ./start-claude.sh
+./start-claudex.sh
 ./start-codex.sh
 ```
+
+`start-claudex.sh` keeps Claude Code's interface while routing the lead model
+to GPT-5.6 Sol through a local CLIProxyAPI server. Its subagents default to Sol;
+select a lower-cost tier without changing the lead:
+
+```bash
+./start-claudex.sh --subagent terra
+./start-claudex.sh --subagent luna --epic harness
+CLAUDEX_SUBAGENT=terra ./start-claudex.sh
+```
+
+On macOS, install and connect CLIProxyAPI once before launching:
+
+```bash
+brew install cliproxyapi
+brew services start cliproxyapi
+cliproxyapi --codex-login
+```
+
+See the [CLIProxyAPI quick start](https://help.router-for.me/introduction/quick-start)
+for upstream installation details.
+
+The launcher uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
+client token by default. Override them with `CLAUDEX_BASE_URL` and
+`CLAUDEX_AUTH_TOKEN`; credentials are inherited only by the launched process
+and are never written to the repository. `--subagent` accepts `sol`, `terra`,
+or `luna` (and their full `gpt-5.6-*` model IDs).
 
 `start-codex.sh` launches Codex with:
 
