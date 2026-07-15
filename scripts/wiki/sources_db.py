@@ -38,6 +38,14 @@ from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
 from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
 from .query_builder import build_query_buckets
+from .sum20_official import (
+    PARSER_VERSION as SUM20_PARSER_VERSION,
+)
+from .sum20_official import (
+    SUM20_ATTRIBUTION_LABEL,
+    SUM20_SOURCE_ID,
+    normalize_sum20_lookup,
+)
 from .textbook_subjects import normalize_subject_slug
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -1831,6 +1839,103 @@ def search_slovnyk_me(
             rows.append(row)
     rows.sort(key=lambda row: row["score"], reverse=True)
     return rows[:limit]
+
+
+def _json_object(value: object) -> dict[str, object]:
+    try:
+        decoded = yaml.safe_load(str(value or "{}"))
+    except yaml.YAMLError:
+        return {}
+    return decoded if isinstance(decoded, dict) else {}
+
+
+def _json_string_list(value: object) -> list[str]:
+    try:
+        decoded = yaml.safe_load(str(value or "[]"))
+    except yaml.YAMLError:
+        return []
+    return [str(item) for item in decoded] if isinstance(decoded, list) else []
+
+
+def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
+    """Return every exact-matching article from the offline official СУМ-20 collection.
+
+    The collection is populated only by ``sum20_official_ingest.py``.  This
+    reader deliberately has no live fallback, so its returned provenance is
+    always the official stored ``wordid`` record.
+    """
+    normalized_lookup_key = normalize_sum20_lookup(query)
+    if not normalized_lookup_key or not _table_columns("sum20_articles", db_path):
+        return []
+    conn = _get_conn_for(db_path)
+    try:
+        articles = conn.execute(
+            """
+            SELECT *
+            FROM sum20_articles
+            WHERE normalized_lookup_key = ?
+            ORDER BY wordid
+            """,
+            (normalized_lookup_key,),
+        ).fetchall()
+        records: list[dict] = []
+        for article in articles:
+            article_id = int(article["id"])
+            senses = [
+                {
+                    "sense_order": int(sense["sense_order"]),
+                    "definition": str(sense["definition"]),
+                    "register_labels": _json_string_list(sense["register_labels"]),
+                }
+                for sense in conn.execute(
+                    """
+                    SELECT sense_order, definition, register_labels
+                    FROM sum20_senses
+                    WHERE article_id = ?
+                    ORDER BY sense_order
+                    """,
+                    (article_id,),
+                ).fetchall()
+            ]
+            citations = [
+                {
+                    "sense_ref": int(citation["sense_ref"]),
+                    "order": int(citation["order"]),
+                    "citation_text": str(citation["citation_text"]),
+                    "parsed_bib_fields": _json_object(citation["parsed_bib_fields"]),
+                }
+                for citation in conn.execute(
+                    """
+                    SELECT sense_ref, "order", citation_text, parsed_bib_fields
+                    FROM sum20_citations
+                    WHERE article_id = ?
+                    ORDER BY "order"
+                    """,
+                    (article_id,),
+                ).fetchall()
+            ]
+            records.append(
+                {
+                    "source_id": SUM20_SOURCE_ID,
+                    "source_record_id": str(article["wordid"]),
+                    "headword": str(article["headword"]),
+                    "stressed_headword": str(article["stressed_headword"]),
+                    "pos": str(article["pos"]),
+                    "grammar": str(article["grammar"]),
+                    "article_text": str(article["article_text"]),
+                    "senses": senses,
+                    "citations": citations,
+                    "official_url": str(article["official_url"]),
+                    "retrieved_at": str(article["fetched_at"]),
+                    "content_sha256": str(article["content_sha256"]),
+                    "parser_version": str(article["parser_version"] or SUM20_PARSER_VERSION),
+                    "status": "ok",
+                    "attribution_label": SUM20_ATTRIBUTION_LABEL,
+                }
+            )
+        return records
+    finally:
+        _close_if_temporary(conn, db_path)
 
 
 def _heritage_text(hit: dict) -> str:

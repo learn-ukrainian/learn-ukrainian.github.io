@@ -225,6 +225,39 @@ class TestCallToolDispatch:
             assert '"status": "not_implemented"' in result[0].text
             assert "goroh.pp.ua/Етимологія/тест" in result[0].text
 
+    def test_query_sum20_formats_offline_official_records(self, server_module):
+        record = {
+            "source_id": "sum20_official",
+            "source_record_id": "5",
+            "stressed_headword": "АБАЖУ́Р",
+            "pos": "ч.",
+            "grammar": "а, ч.",
+            "attribution_label": (
+                "Словник української мови у 20 томах (УМІФ НАН України; "
+                "Інститут мовознавства ім. О. О. Потебні НАН України)"
+            ),
+            "official_url": "https://sum20ua.com/?wordid=5",
+            "retrieved_at": "2026-07-15T10:00:00+00:00",
+            "content_sha256": "abc123",
+            "parser_version": "sum20_official_v1",
+            "status": "ok",
+            "senses": [{"sense_order": 1, "definition": "Частина світильника", "register_labels": []}],
+            "citations": [
+                {
+                    "citation_text": "На столику стояла свічка під абажуром",
+                    "parsed_bib_fields": {"author": "Леся Українка"},
+                }
+            ],
+        }
+        with patch("wiki.sources_db.query_sum20", return_value=[record]) as mock:
+            result = _run(server_module.handle_query_sum20({"word": "абажур"}))
+
+        mock.assert_called_once_with("абажур")
+        text = result[0].text
+        assert "https://sum20ua.com/?wordid=5" in text
+        assert "Леся Українка" in text
+        assert "slovnyk.me" not in text
+
 
 class TestVerifyWordHandler:
     """Test verify_word handler formatting."""
