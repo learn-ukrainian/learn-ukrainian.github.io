@@ -91,6 +91,9 @@ _TRACE_ACTIVITY_RE = re.compile(
     r"(?:^|[^a-z0-9])(tool|function|mcp|web|browser|terminal|shell|computer)(?:$|[^a-z0-9])", re.I
 )
 _TRACE_MODEL_KEYS = frozenset({"model", "model_id", "model_version", "modelversion", "resolved_model"})
+# _TRACE_MODEL_KEYS mixes raw and normalized spellings; normalize the set once
+# so keys like "model_id" (→ "modelid") actually match after normalization.
+_NORMALIZED_TRACE_MODEL_KEYS = frozenset(re.sub(r"[^a-z0-9]", "", key) for key in _TRACE_MODEL_KEYS)
 _TRACE_METADATA_KEYS = frozenset(
     {"type", "event", "kind", "name", "namespace", "tool", "toolname", "function", "category", "operation"}
 )
@@ -921,7 +924,7 @@ def _resolved_models(events: Sequence[Mapping[str, Any]]) -> set[str]:
         for payload in _mapping_values(event):
             for key, value in payload.items():
                 normalized_key = re.sub(r"[^a-z0-9]", "", str(key).lower())
-                if normalized_key in _TRACE_MODEL_KEYS and isinstance(value, str) and value.strip():
+                if normalized_key in _NORMALIZED_TRACE_MODEL_KEYS and isinstance(value, str) and value.strip():
                     models.add(value.strip())
     return models
 
@@ -1053,9 +1056,6 @@ def _grok_updates_allowlisted(updates: Sequence[Mapping[str, Any]]) -> bool:
     return True
 
 
-# _TRACE_MODEL_KEYS mixes raw and normalized spellings; normalize the set once
-# so keys like "model_id" (→ "modelid") actually match after normalization.
-_NORMALIZED_TRACE_MODEL_KEYS = frozenset(re.sub(r"[^a-z0-9]", "", key) for key in _TRACE_MODEL_KEYS)
 
 
 def _collect_grok_trace_models(value: Any, models: set[str]) -> None:
