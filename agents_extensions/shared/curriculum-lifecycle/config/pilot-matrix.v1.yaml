@@ -1,0 +1,495 @@
+---
+schema_version: curriculum-lifecycle-pilot-matrix.v1
+mode: shadow
+identity_paths:
+  - agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml
+  - agents_extensions/shared/curriculum-lifecycle/config/pilot-matrix.v1.yaml
+  - agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml
+  - agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/pilot-authorization.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/pilot-matrix.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/pilot-report.v1.schema.json
+  - agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-common.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a1.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b1.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c1.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-bio.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-folk.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar.md
+  - agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v2.yaml
+  - agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml
+  - agents_extensions/shared/prompt-contracts/registry.v1.yaml
+  - agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json
+  - agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-output.v1.schema.json
+  - agents_extensions/shared/rules/operator-expectations.md
+  - agents_extensions/shared/rules/workflow.md
+  - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
+  - agents_extensions/shared/skills/post-build-review/schema/review-result.v2.schema.json
+  - agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml
+  - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
+  - scripts/audit/post_build_review.py
+  - scripts/orchestration/curriculum_coordinator.py
+  - scripts/orchestration/curriculum_lifecycle_pilot.py
+  - scripts/orchestration/curriculum_readiness.py
+  - scripts/orchestration/prompt_contracts.py
+  - tests/fixtures/post_build_review/bio-oleksandr-bilash.result.v2.json
+  - tests/orchestration/test_curriculum_coordinator.py
+  - tests/orchestration/test_curriculum_lifecycle_pilot.py
+  - tests/orchestration/test_curriculum_readiness.py
+  - tests/test_certification_evidence.py
+  - tests/test_track_completion.py
+rows:
+  - id: folk-m01-shadow
+    kind: repository
+    scenario: built-folk-m01
+    selector: folk/narodna-kultura-yak-systema
+    family: seminar
+    prompt_profile: seminar-folk
+    prompt_assertions:
+      required: [FOLK seminar policy, learner to create a recording]
+      forbidden: [BIO seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-repair-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_STALE
+        from: built-preparation-drift
+        to: preparation-required
+    resume_evidence: test_preparation_change_invalidates_build_pbr_and_qg_identities
+    wave: {id: folk-m01-m03, position: 1}
+  - id: folk-m02-shadow
+    kind: repository
+    scenario: built-folk-wave
+    selector: folk/kalendarna-obriadovist-zvychai
+    family: seminar
+    prompt_profile: seminar-folk
+    prompt_assertions:
+      required: [FOLK seminar policy]
+      forbidden: [BIO seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_STALE
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_certification_rejects_built_bundle_without_consumed_preparation_identity
+    wave: {id: folk-m01-m03, position: 2}
+  - id: folk-m03-shadow
+    kind: repository
+    scenario: built-folk-wave
+    selector: folk/koliadky-shchedrivky
+    family: seminar
+    prompt_profile: seminar-folk
+    prompt_assertions:
+      required: [FOLK seminar policy]
+      forbidden: [BIO seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_STALE
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_certification_rejects_built_bundle_without_consumed_preparation_identity
+    wave: {id: folk-m01-m03, position: 3}
+  - id: folk-material-repair-history
+    kind: historical
+    scenario: built-folk-material-repair
+    selector: folk/narodna-kultura-yak-systema
+    family: seminar
+    prompt_profile: seminar-folk
+    prompt_assertions:
+      required: [FOLK seminar policy]
+      forbidden: [BIO seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: material-repair-pass
+      cleanup_state: not-required
+    transitions:
+      - event: REVIEW_BLOCKED
+        from: post-build-review-required
+        to: repair-required
+      - event: REPAIR_REVIEWED
+        from: repair-required
+        to: certified-final
+    resume_evidence: issue-5090-pr-5093
+    provenance:
+      issue: 5090
+      pull_request: 5093
+      merge_sha: b348d4823f3b4f8d13e8e02db1bc3fdc0ef491cc
+      outcome: material-repair-pass
+  - id: folk-minimal-repair-history
+    kind: historical
+    scenario: built-folk-minimal-repair
+    selector: folk/narodna-kultura-yak-systema
+    family: seminar
+    prompt_profile: seminar-folk
+    prompt_assertions:
+      required: [FOLK seminar policy]
+      forbidden: [BIO seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: minimal-repair-pass
+      cleanup_state: not-required
+    transitions:
+      - event: REVIEW_PASSED
+        from: post-build-review-required
+        to: certified-final
+    resume_evidence: issue-5105-pr-5116
+    provenance:
+      issue: 5105
+      pull_request: 5116
+      merge_sha: b3fcf5190674a869353e2767db955787c952914d
+      outcome: minimal-repair-pass
+  - id: bio-built-shadow
+    kind: repository
+    scenario: built-bio
+    selector: bio/oleksandr-bilash
+    family: seminar
+    prompt_profile: seminar-bio
+    prompt_assertions:
+      required: [BIO seminar policy, biographical claims]
+      forbidden: [FOLK seminar policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-repair-required
+      cleanup_state: unchanged
+    transitions:
+      - event: BIO_PREPARATION_STALE
+        from: built-preparation-drift
+        to: preparation-required
+    resume_evidence: test_missing_bio_evidence_fails_closed_with_preparation_owner
+    evidence:
+      path: tests/fixtures/post_build_review/bio-oleksandr-bilash.result.v2.json
+      kind: post-build-review-pass
+  - id: a1-built-shadow
+    kind: repository
+    scenario: built-a1
+    selector: a1/sounds-letters-and-hello
+    family: core
+    prompt_profile: core-a1
+    prompt_assertions:
+      required: [A1 CORE policy, English scaffolding]
+      forbidden: [A2 CORE policy, near-complete Ukrainian immersion]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_IDENTITY_MISSING
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_built_module_is_current_only_with_consumed_preparation_identity
+  - id: a2-built-shadow
+    kind: repository
+    scenario: built-a2
+    selector: a2/a2-bridge
+    family: core
+    prompt_profile: core-a2
+    prompt_assertions:
+      required: [A2 CORE policy, never increase English]
+      forbidden: [A1 CORE policy, near-complete Ukrainian immersion]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_IDENTITY_MISSING
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_built_module_is_current_only_with_consumed_preparation_identity
+  - id: b1-built-shadow
+    kind: repository
+    scenario: built-b1
+    selector: b1/b1-baseline-past-present
+    family: core
+    prompt_profile: core-b1
+    prompt_assertions:
+      required: [B1 CORE policy, Ukrainian-led]
+      forbidden: [A1 CORE policy, B2 CORE policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_IDENTITY_MISSING
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_built_module_is_current_only_with_consumed_preparation_identity
+  - id: b2-built-shadow
+    kind: repository
+    scenario: built-b2
+    selector: b2/passive-voice-system
+    family: core
+    prompt_profile: core-b2
+    prompt_assertions:
+      required: [B2 CORE policy, near-complete Ukrainian immersion]
+      forbidden: [A1 CORE policy, C1 CORE policy]
+    expected:
+      module_state: built
+      preparation_state: stale
+      state: built-preparation-drift
+      next_action: prepare
+      disposition: preparation-rebuild-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_IDENTITY_MISSING
+        from: built-preparation-drift
+        to: build-required
+    resume_evidence: test_built_module_is_current_only_with_consumed_preparation_identity
+  - id: bio-unbuilt-shadow
+    kind: repository
+    scenario: unbuilt-bio-prepare
+    selector: bio/borys-hrinchenko
+    family: seminar
+    prompt_profile: seminar-bio
+    prompt_assertions:
+      required: [BIO seminar policy]
+      forbidden: [FOLK seminar policy]
+    expected:
+      module_state: unbuilt
+      preparation_state: current
+      state: prepared-plan
+      next_action: build
+      disposition: build-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARE_PASSED
+        from: prepared-plan
+        to: build-required
+    resume_evidence: test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources
+  - id: c1-unbuilt-shadow
+    kind: repository
+    scenario: unbuilt-c1
+    selector: c1/b2-review-bridge
+    family: core
+    prompt_profile: core-c1
+    prompt_assertions:
+      required: [C1 CORE policy, academic and professional]
+      forbidden: [C2 CORE policy]
+    expected:
+      module_state: unbuilt
+      preparation_state: missing
+      state: preparation-required
+      next_action: plan
+      disposition: plan-review-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PLAN_MISSING
+        from: preparation-required
+        to: plan-review-required
+    resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
+  - id: c2-unbuilt-shadow
+    kind: repository
+    scenario: unbuilt-c2
+    selector: c2/c1-bridge-assessment
+    family: core
+    prompt_profile: core-c2
+    prompt_assertions:
+      required: [C2 CORE policy, near-native stylistic control]
+      forbidden: [C1 CORE policy]
+    expected:
+      module_state: unbuilt
+      preparation_state: missing
+      state: preparation-required
+      next_action: plan
+      disposition: plan-review-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PLAN_MISSING
+        from: preparation-required
+        to: plan-review-required
+    resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
+  - id: seminar-unbuilt-shadow
+    kind: repository
+    scenario: unbuilt-seminar
+    selector: hist/trypillian-civilization
+    family: seminar
+    prompt_profile: seminar-generic
+    prompt_assertions:
+      required: [Seminar family policy]
+      forbidden: [BIO seminar policy, FOLK seminar policy]
+    expected:
+      module_state: unbuilt
+      preparation_state: current
+      state: prepared-plan
+      next_action: build
+      disposition: build-required
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARE_PASSED
+        from: prepared-plan
+        to: build-required
+    resume_evidence: test_unbuilt_core_and_generic_seminar_profile_seams
+  - id: partial-ambiguous-fixture
+    kind: fixture
+    scenario: partial-ambiguous
+    selector: fixture/partial-ambiguous
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: partial-recovery-required
+      next_action: recover
+      disposition: paused-built-artifact-owner
+      cleanup_state: unchanged
+    transitions:
+      - event: PARTIAL_BUNDLE_DETECTED
+        from: partial
+        to: partial-recovery-required
+    resume_evidence: test_partial_bundle_stops_for_built_artifact_recovery
+  - id: preparation-drift-fixture
+    kind: fixture
+    scenario: preparation-drift
+    selector: fixture/preparation-drift
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: built-preparation-drift
+      next_action: rebuild
+      disposition: downstream-evidence-invalidated
+      cleanup_state: unchanged
+    transitions:
+      - event: PREPARATION_IDENTITY_CHANGED
+        from: built-current
+        to: build-required
+    resume_evidence: test_preparation_change_invalidates_build_pbr_and_qg_identities
+  - id: pbr-stale-fixture
+    kind: fixture
+    scenario: pbr-stale
+    selector: fixture/pbr-stale
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: post-build-review-required
+      next_action: certify
+      disposition: stale-pbr-rejected
+      cleanup_state: unchanged
+    transitions:
+      - event: PBR_IDENTITY_STALE
+        from: pbr-current
+        to: post-build-review-required
+    resume_evidence: test_projection_uses_only_bound_canonical_pbr_review
+  - id: production-qg-pending-fixture
+    kind: fixture
+    scenario: production-qg-pending
+    selector: fixture/production-qg-pending
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: pbr-pass-qg-pending
+      next_action: hold
+      disposition: provisional-not-final
+      cleanup_state: not-required
+    transitions:
+      - event: PBR_PASSED_QG_PENDING
+        from: post-build-review-required
+        to: pbr-pass-qg-pending
+    resume_evidence: test_certification_profile_selection_is_level_sensitive_and_unarmed
+  - id: production-qg-disarmed-fixture
+    kind: fixture
+    scenario: production-qg-disarmed
+    selector: fixture/production-qg-disarmed
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: certified-final
+      next_action: complete
+      disposition: qg-disabled-by-profile
+      cleanup_state: not-required
+    transitions:
+      - event: PBR_PASSED_QG_DISABLED
+        from: post-build-review-required
+        to: certified-final
+    resume_evidence: test_certification_profile_selection_is_level_sensitive_and_unarmed
+  - id: reviewer-instability-fixture
+    kind: fixture
+    scenario: reviewer-instability
+    selector: fixture/reviewer-instability
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: reviewer-instability
+      next_action: adjudicate
+      disposition: paused-audit-tooling-owner
+      cleanup_state: unchanged
+    transitions:
+      - event: UNCHANGED_SOURCE_DISAGREEMENT
+        from: post-build-review-required
+        to: reviewer-instability
+    resume_evidence: test_unchanged_source_material_flip_enters_and_exits_instability
+  - id: crash-resume-fixture
+    kind: fixture
+    scenario: crash-resume
+    selector: fixture/crash-resume
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: module-active
+      next_action: resume
+      disposition: resumed-idempotently
+      cleanup_state: unchanged
+    transitions:
+      - event: LEDGER_REPLAYED
+        from: module-active
+        to: module-active
+    resume_evidence: test_finish_retry_heals_cleanup_after_crash
+  - id: quota-pause-fixture
+    kind: fixture
+    scenario: quota-pause
+    selector: fixture/quota-pause
+    family: fixture
+    expected:
+      module_state: fixture
+      preparation_state: fixture
+      state: paused-health
+      next_action: resume
+      disposition: paused-without-mutation
+      cleanup_state: unchanged
+    transitions:
+      - event: HEALTH_HEADROOM_UNAVAILABLE
+        from: queued
+        to: paused-health
+    resume_evidence: test_health_pause_resume_serial_waves_and_no_change

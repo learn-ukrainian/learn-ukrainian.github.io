@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-lifecycle-pilot-report.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mode",
+    "verdict",
+    "matrix_sha256",
+    "source_commit",
+    "source_tree_sha256",
+    "identity_sha256",
+    "contract_sources",
+    "learner_tree",
+    "rows",
+    "metrics",
+    "live_authorization"
+  ],
+  "properties": {
+    "schema_version": {"const": "curriculum-lifecycle-pilot-report.v1"},
+    "mode": {"const": "shadow"},
+    "verdict": {"enum": ["PASS", "HOLD"]},
+    "matrix_sha256": {"$ref": "#/$defs/sha"},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "source_tree_sha256": {"$ref": "#/$defs/sha"},
+    "identity_sha256": {"$ref": "#/$defs/sha"},
+    "contract_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "learner_tree": {"$ref": "#/$defs/learnerTree"},
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/row"}
+    },
+    "metrics": {"$ref": "#/$defs/metrics"},
+    "live_authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible", "reason", "production_qg_armed"],
+      "properties": {
+        "eligible": {"const": false},
+        "reason": {"const": "separate-exact-report-review-and-human-authorization-required"},
+        "production_qg_armed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "selector": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "learnerTree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_sha256", "after_sha256", "unchanged", "file_count"],
+      "properties": {
+        "before_sha256": {"$ref": "#/$defs/sha"},
+        "after_sha256": {"$ref": "#/$defs/sha"},
+        "unchanged": {"type": "boolean"},
+        "file_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_state", "preparation_state", "state", "next_action"],
+      "properties": {
+        "module_state": {"type": "string", "minLength": 1},
+        "preparation_state": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "next_action": {"type": "string", "minLength": 1}
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event", "from", "to"],
+      "properties": {
+        "event": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "from": {"$ref": "#/$defs/id"},
+        "to": {"$ref": "#/$defs/id"}
+      }
+    },
+    "prompt": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "identity_sha256",
+        "prompt_sha256",
+        "prompt_bytes",
+        "context_bytes",
+        "exact_replay",
+        "policy_checks_passed"
+      ],
+      "properties": {
+        "profile": {"$ref": "#/$defs/id"},
+        "identity_sha256": {"$ref": "#/$defs/sha"},
+        "prompt_sha256": {"$ref": "#/$defs/sha"},
+        "prompt_bytes": {"type": "integer", "minimum": 1},
+        "context_bytes": {"type": "integer", "minimum": 1},
+        "exact_replay": {"type": "boolean"},
+        "policy_checks_passed": {"type": "boolean"}
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "scenario",
+        "selector",
+        "kind",
+        "entry",
+        "dependency_identity",
+        "transitions",
+        "disposition",
+        "resume_evidence",
+        "cleanup_state",
+        "prompt",
+        "freshness",
+        "mutation_detected",
+        "passed"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "scenario": {"$ref": "#/$defs/id"},
+        "selector": {"$ref": "#/$defs/selector"},
+        "kind": {"enum": ["repository", "historical", "fixture"]},
+        "entry": {"$ref": "#/$defs/entry"},
+        "dependency_identity": {"$ref": "#/$defs/sha"},
+        "transitions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/transition"}
+        },
+        "disposition": {"$ref": "#/$defs/id"},
+        "resume_evidence": {"type": "string", "minLength": 1},
+        "cleanup_state": {"enum": ["unchanged", "not-required"]},
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "freshness": {"enum": ["current", "historical-current", "fixture-current"]},
+        "mutation_detected": {"type": "boolean"},
+        "passed": {"type": "boolean"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row_count",
+        "prompt_bytes",
+        "context_bytes",
+        "model_calls",
+        "provider_cost_usd",
+        "resolver_requests",
+        "resolver_exact_replays",
+        "external_cache_used",
+        "false_positive_checks",
+        "false_positive_failures",
+        "evidence_freshness"
+      ],
+      "properties": {
+        "row_count": {"type": "integer", "minimum": 1},
+        "prompt_bytes": {"type": "integer", "minimum": 0},
+        "context_bytes": {"type": "integer", "minimum": 0},
+        "model_calls": {"const": 0},
+        "provider_cost_usd": {"const": 0},
+        "resolver_requests": {"type": "integer", "minimum": 0},
+        "resolver_exact_replays": {"type": "integer", "minimum": 0},
+        "external_cache_used": {"const": false},
+        "false_positive_checks": {"type": "integer", "minimum": 0},
+        "false_positive_failures": {"type": "integer", "minimum": 0},
+        "evidence_freshness": {"enum": ["current", "stale"]}
+      }
+    }
+  }
+}
