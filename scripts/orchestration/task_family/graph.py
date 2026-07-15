@@ -22,8 +22,11 @@ def _display_role(role: str) -> str:
     return role
 
 
-def _bounded_title(base_title: str, roles: tuple[str, ...]) -> str:
+def bounded_title(base_title: str, roles: tuple[str, ...] = ()) -> str:
+    """Bound display text without changing the exact-ID identity model."""
     base = base_title.strip()
+    if not base:
+        raise ValueError("title must be non-empty")
     suffix = " · ".join(_display_role(role) for role in roles)
     if not suffix:
         available = CODEX_TITLE_MAX_CHARS
@@ -238,6 +241,6 @@ def rename_mapping(graph: FamilyGraph, base_title: str) -> tuple[TitleRename, ..
     changes: list[TitleRename] = []
     for node in sorted(graph.nodes_by_id.values(), key=lambda item: item.task_id):
         roles = graph.roles_by_task[node.task_id]
-        new_title = _bounded_title(base_title, roles)
+        new_title = bounded_title(base_title, roles)
         changes.append(TitleRename(node.task_id, node.title, new_title, roles))
     return tuple(changes)

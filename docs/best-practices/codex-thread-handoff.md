@@ -5,12 +5,16 @@ or orchestrator heartbeat thread approaches the auto-compaction zone.
 
 ## Verified Capabilities
 
-Verified locally on 2026-05-30:
+Verified locally through 2026-07-15:
 
-- Codex app tools are exposed in this environment for `create_thread`,
-  `list_threads`, `read_thread`, `send_message_to_thread`,
-  `set_thread_title`, `set_thread_pinned`, `set_thread_archived`, and
-  `automation_update`.
+- Codex app tools can expose `create_thread`, `list_threads`, `read_thread`,
+  `send_message_to_thread`, `set_thread_title`, `set_thread_pinned`,
+  `set_thread_archived`, and `automation_update`. Availability is runtime
+  dependent and must be checked in the app-capable task.
+- Native `read_thread` status is suitable for exact-identity reconciliation,
+  but the current response does not provide authoritative pin state. A missing
+  pin field is `unknown`, not proof of `unpinned`, so automatic predecessor
+  archive remains blocked unless another native app fact supplies it.
 - Those app tools are not callable from a repo-local Python subprocess.
   Local automation must therefore generate state, prompts, and guardrails
   without depending on them.
@@ -35,12 +39,16 @@ The handoff system has three separate layers:
 - Worker inbox: delegate task state and result excerpts collected from
   `batch_state/tasks/`.
 
-The thread rollover layer uses a local thread lease plus a generated bootstrap
-prompt, scoped by agent name:
+The thread rollover layer uses a lineage-scoped lease, a generated bootstrap
+prompt, and a Task Family Manager transition operation:
 
-- Lease state: `.agent/<agent>-thread-lease.json` (gitignored)
-- Bootstrap prompt: `.agent/<agent>-thread-bootstrap.md` (gitignored)
-- Thread rollover packet: `.agent/<agent>-thread-handoff.md` (gitignored)
+- Lease state: `.agent/thread-rollovers/<agent>/<lineage-id>/lease.json`
+  (gitignored)
+- Packet directory:
+  `.agent/thread-rollovers/<agent>/<lineage-id>/generation-NNNN/<rollover-id>/`
+  (gitignored)
+- Native transition plan, binding, events, and receipts:
+  `.agent/task-families/<family-id>/operations/<operation-id>/` (gitignored)
 - Durable Codex orchestrator handoff:
   `docs/session-state/codex-orchestrator-handoff.md`
 - Codex role handoff pointer:
@@ -68,7 +76,10 @@ The lease records:
 - active orchestrator generation and thread id, when known
 - active heartbeat automation id, when known
 - replacement generation
-- replacement status: `pending_start` or `started`
+- replacement status: `pending_start`, `resumed`, or `started`
+- deterministic intended title and its durable source metadata
+- exact source/replacement native IDs and typed `replacement_of` plus
+  `rollover_generation_of` relations after native creation
 - bootstrap prompt path
 - cleanup guard: `old_automation_ready_to_delete`
 
@@ -84,6 +95,11 @@ zone:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
   --agent orchestrator \
+  --active-thread-id <current-thread-id> \
+  --epic-title "<durable epic label>" \
+  --goal "<current goal>" \
+  --phase "<current phase>" \
+  --next-phase "<next phase>" \
   --context-percent 86
 ```
 
@@ -97,18 +113,49 @@ If the active thread id or automation id is known, include them:
   --context-percent 86
 ```
 
-This writes:
-
-- `.agent/orchestrator-thread-lease.json`
-- `.agent/orchestrator-thread-bootstrap.md`
-- `.agent/orchestrator-thread-handoff.md`
+This writes the lineage-scoped lease and packet plus an immutable Task Family
+Manager transition plan and receipt. `intended_title` is human-readable when
+the durable metadata is supplied. Without all three required fields, the safe
+fallback includes lineage and generation. `Resume codex rollover` is forbidden.
 
 It does not modify git-tracked handoff files by default.
 
-The generated prompt is the exact replacement-thread bootstrap. If the Codex
-app `create_thread` tool is available to the current agent, use it with that
-prompt. If it is not available, create one new Codex UI thread manually and
-paste the generated prompt. That is the only unavoidable UI action.
+The generated prompt is the exact replacement-thread bootstrap. The
+app-capable path first runs `native-action --action create` and calls native
+`create_thread` only when authorized. It must obtain a real `threadId`; a queued
+`clientThreadId` is not sufficient to bind identity. It immediately records
+the successful native result, then runs `register-created` with the exact
+replacement UUID and asks
+`native-action --action title` for the exact mutation, calls native
+`set_thread_title` only when authorized, records the acknowledgement or
+failure, and reconciles native read-back. If an app API is absent, record the
+failure and preserve the durable operation for retry rather than creating or
+choosing another task by title.
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+  --agent orchestrator --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> --action create
+# After native create_thread returns an exact threadId:
+.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+  --agent orchestrator --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> --action create --succeeded \
+  --evidence "create_thread returned exact threadId"
+.venv/bin/python scripts/orchestration/thread_handoff.py register-created \
+  --agent orchestrator --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> \
+  --replacement-thread-id <exact-replacement-thread-id> \
+  --evidence "native create_thread result"
+.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+  --agent orchestrator --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> --action title
+```
+
+Use the returned exact `arguments` with native `set_thread_title`, then run
+`record-native-result --action title --succeeded --evidence "..."` and
+`reconcile-native --action title`. For a failed native call, use `--failed
+--error "..."`. Always retry through `native-action`; its receipt and read-back
+logic prevent duplicate successful mutations.
 
 The bootstrap starts with a checklist that is deliberately hard to skip:
 
@@ -135,19 +182,35 @@ The replacement thread reads both durable role state and thread rollover state:
 - durable role state:
   `docs/session-state/codex-orchestrator-handoff.md`
 - local thread rollover packet:
-  `.agent/orchestrator-thread-handoff.md`
+  the exact `handoff_file` under
+  `.agent/thread-rollovers/orchestrator/<lineage-id>/generation-NNNN/<rollover-id>/`
 
 After the replacement thread is visibly running, confirm it:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
   --agent orchestrator \
-  --new-thread-id <replacement-thread-id>
+  --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> \
+  --new-thread-id <replacement-thread-id> \
+  --canary-proof <reserved-canary-proof-path> \
+  --strict-probe <reserved-strict-probe-path> \
+  --strict-verdict <reserved-strict-verdict-path>
 ```
 
 Only if the output shows `"old_automation_ready_to_delete": true` may the old
 heartbeat automation be deleted or paused through the Codex app
-`automation_update` tool.
+`automation_update` tool. This existing proof gate is independent from and not
+weakened by task archival.
+
+After confirmation, inspect the exact `predecessor_thread_id` through the app.
+Run `native-action --action archive` with authoritative status and pin facts.
+The command authorizes native `set_thread_archived` only when the exact bound
+predecessor is idle and unpinned, the replacement title is reconciled, and the
+canary plus strict 10/10 recall and cleanup proofs all pass. Pinned, running,
+ambiguous, unrelated, or unconfirmed tasks are preserved. Unknown status or pin
+state is a durable blocker. Record and reconcile an authorized archive exactly
+as for title.
 
 ## Non-Orchestrator Agent Rollover
 
@@ -159,10 +222,9 @@ Agents other than the orchestrator write only their own handoff by default:
   --context-percent 86
 ```
 
-That writes `.agent/codex-thread-lease.json`,
-`.agent/codex-thread-bootstrap.md`, and
-`.agent/codex-thread-handoff.md`. It does not modify
-`docs/session-state/current.md` and does not touch durable role handoff files.
+That writes only the Codex lineage-scoped runtime packet and Task Family
+Manager operation. It does not modify `docs/session-state/current.md` and does
+not touch durable role handoff files.
 
 `--write-current` is deprecated and rejected unless paired with
 `--allow-git-router`. Use that pair only for an explicitly approved
@@ -174,7 +236,12 @@ Confirm the replacement with the same agent name:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
   --agent codex \
-  --new-thread-id <replacement-thread-id>
+  --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> \
+  --new-thread-id <replacement-thread-id> \
+  --canary-proof <reserved-canary-proof-path> \
+  --strict-probe <reserved-strict-probe-path> \
+  --strict-verdict <reserved-strict-verdict-path>
 ```
 
 ## Safety Checks
@@ -236,11 +303,20 @@ source_head=$(git rev-parse HEAD)
   --agent codex \
   --active-thread-id <predecessor-task-id> \
   --active-automation-id <predecessor-automation-id> \
+  --epic-title "Rollover smoke" \
+  --goal "restart verification" \
+  --phase "claim" \
+  --next-phase "confirm" \
   | tee "$evidence/prepare.json"
 lineage_id=$(jq -r .lineage_id "$evidence/prepare.json")
 rollover_id=$(jq -r .rollover_id "$evidence/prepare.json")
 lease_rel=$(jq -r .state_file "$evidence/prepare.json")
 lease="$canonical/$lease_rel"
+.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" --action create \
+  | tee "$evidence/create-action.json"
+test "$(jq -r .needs_native_action "$evidence/create-action.json")" = true
 ```
 
 Create one genuinely fresh Codex app project task and record its new task id
@@ -254,6 +330,30 @@ fresh=<absolute-app-worktree-path>
 initial_replacement_task_id=<fresh-task-id>
 printf '%s\n' "$initial_replacement_task_id" \
   > "$evidence/initial-replacement-task-id.txt"
+.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" --action create --succeeded \
+  --evidence "smoke create_thread returned $initial_replacement_task_id"
+.venv/bin/python scripts/orchestration/thread_handoff.py register-created \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" \
+  --replacement-thread-id "$initial_replacement_task_id" \
+  --evidence "fresh smoke create_thread result" \
+  | tee "$evidence/register-created.json"
+.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" --action title \
+  | tee "$evidence/title-action.json"
+# The app-capable agent calls set_thread_title with title-action.json's exact
+# arguments, then persists its acknowledgement before read-back.
+.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" --action title --succeeded \
+  --evidence "smoke set_thread_title acknowledgement"
+.venv/bin/python scripts/orchestration/thread_handoff.py reconcile-native \
+  --agent codex --lineage-id "$lineage_id" \
+  --rollover-id "$rollover_id" --action title \
+  | tee "$evidence/title-reconcile.json"
 bash "$fresh/scripts/lib/thread_rollover_link.sh" "$canonical" "$fresh" \
   | tee "$evidence/fresh-bootstrap.txt"
 git -C "$canonical" worktree list | tee "$evidence/worktrees.txt"
@@ -357,8 +457,10 @@ worktree. First require both checkouts to remain clean and at `source_head`, the
 restore the canonical checkout with `git -C "$canonical" switch main`. Treat an
 index lock as live unless `lsof` proves no process owns it; remove only a proven
 stale lock before switching. Stop for manual recovery if either checkout is
-dirty or any Git process still owns the lock. Archive the smoke tasks and remove
-only their clean app worktrees.
+dirty or any Git process still owns the lock. Archive the exact confirmed
+predecessor only through the authorized native archive sequence above. Preserve
+every task whose status, pin state, identity, or relation is unknown, and remove
+only clean app worktrees whose exact ownership is proven.
 
 Keep all captured evidence under `/tmp/rollover-smoke-*`; the packet itself
 stays under gitignored `.agent/thread-rollovers/`. Delete or pause the

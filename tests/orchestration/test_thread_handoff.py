@@ -78,8 +78,20 @@ def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> d
     return state
 
 
+def bind_native_replacement(state: dict, thread_id: str) -> None:
+    state["replacement"]["native_lifecycle"]["replacement_thread_id"] = thread_id
+    state["replacement"]["native_lifecycle"]["status"] = "replacement_created_bound"
+
+
+def bind_native_lease(state_path: Path, thread_id: str) -> None:
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    bind_native_replacement(state, thread_id)
+    th.write_json_atomic(state_path, state)
+
+
 def resumed_with_proof(tmp_path: Path, state: dict, thread_id: str = "new-thread") -> tuple[dict, Path]:
     replacement = state["replacement"]
+    bind_native_replacement(state, thread_id)
     resumed = th.resume_state(
         state,
         rollover_id=replacement["rollover_id"],
@@ -176,8 +188,69 @@ def test_direct_script_help_from_repository_root():
 
     assert completed.returncode == 0, completed.stderr
     assert "Prepare and guard agent-specific thread handoffs." in completed.stdout
-    for command in ("prepare", "confirm-started", "resume", "check", "audit"):
+    for command in (
+        "prepare",
+        "register-created",
+        "native-action",
+        "record-native-result",
+        "reconcile-native",
+        "confirm-started",
+        "resume",
+        "check",
+        "audit",
+    ):
         assert command in completed.stdout
+
+
+def test_prepare_state_records_meaningful_title_and_native_identity():
+    state = th.prepare_state(
+        {"schema_version": th.SCHEMA_VERSION},
+        agent="codex",
+        now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
+        active_thread_id="source-thread",
+        active_automation_id=None,
+        context_percent=86.0,
+        force_new_replacement=False,
+        epic_title="Curriculum lifecycle",
+        goal="CI unblock",
+        phase="P5",
+        next_phase="P6",
+    )
+
+    replacement = state["replacement"]
+    assert replacement["display"]["title"] == "Curriculum lifecycle — P5 CI unblock → P6"
+    assert replacement["display"]["title_source"] == "durable_metadata"
+    assert replacement["native_lifecycle"] == {
+        "family_id": replacement["native_lifecycle"]["family_id"],
+        "operation_id": replacement["native_lifecycle"]["operation_id"],
+        "source_thread_id": "source-thread",
+        "replacement_thread_id": None,
+        "status": "awaiting_native_create",
+    }
+    assert "Resume codex rollover" not in replacement["display"]["title"]
+
+
+def test_prepare_state_uses_unique_non_generic_fallback():
+    state = prepared(agent="codex", thread_id="source-thread")
+
+    title = state["replacement"]["display"]["title"]
+    assert state["lineage_id"] in title
+    assert "g0001" in title
+    assert title.casefold() != "resume codex rollover"
+
+
+def test_prepare_state_rejects_partial_title_metadata():
+    with pytest.raises(ValueError, match="must be supplied together"):
+        th.prepare_state(
+            {"schema_version": th.SCHEMA_VERSION},
+            agent="codex",
+            now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
+            active_thread_id="source-thread",
+            active_automation_id=None,
+            context_percent=None,
+            force_new_replacement=False,
+            epic_title="Curriculum lifecycle",
+        )
 
 
 def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
@@ -207,6 +280,26 @@ def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
     assert confirmed["cleanup"]["old_automation_ready_to_delete"] is True
 
 
+def test_confirm_started_requires_exact_predecessor_identity(tmp_path: Path):
+    state = prepared()
+    resumed, proof_path = resumed_with_proof(tmp_path, state)
+    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
+    resumed.pop("active")
+
+    with pytest.raises(ValueError, match="no exact predecessor"):
+        th.confirm_started(
+            resumed,
+            new_thread_id="new-thread",
+            new_automation_id=None,
+            confirmed_by="tester",
+            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
+            canary_proof=proof_path,
+            strict_probe=strict_probe,
+            strict_verdict=strict_verdict,
+            state_root=tmp_path,
+        )
+
+
 def test_confirm_started_rejects_missing_pending_replacement():
     with pytest.raises(ValueError, match="run prepare first"):
         th.confirm_started(
@@ -228,6 +321,7 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     prompt = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, context_threshold=82.0)
 
     assert "You are the replacement Codex orchestrator thread." in prompt
+    assert f"Task title: {state['replacement']['display']['title']}" in prompt
     assert "Role handoff: docs/session-state/codex-orchestrator-handoff.md" in prompt
     assert "Thread handoff: .agent/thread-rollovers/" in prompt
     assert "Global router:" not in prompt
@@ -237,6 +331,9 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "git worktree list" in prompt
     assert "confirm-started --agent orchestrator --lineage-id" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
+    assert "If either fact is absent, use `unknown`" in prompt
+    assert "Only an actionable response authorizes `set_thread_archived`" in prompt
+    assert "must register and title this exact native replacement before resume" in prompt
     assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)." in prompt
     assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
     assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
@@ -442,6 +539,26 @@ def test_live_lease_requires_binding_but_started_history_remains_compatible():
     assert replacement["status"] == "started"
 
 
+def test_live_lease_keeps_legacy_v2_pending_packet_compatible():
+    state = prepared(agent="codex")
+    state["replacement"].pop("display")
+    state["replacement"].pop("native_lifecycle")
+    state_path = th.default_state_path("codex", state["lineage_id"])
+
+    replacement, error = th.validate_live_lease(state, agent="codex", state_path=state_path)
+
+    assert error is None
+    assert replacement is not None
+    assert replacement["status"] == "pending_start"
+    resumed = th.resume_state(
+        state,
+        rollover_id=replacement["rollover_id"],
+        replacement_thread_id="legacy-replacement",
+        now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
+    )
+    assert resumed["replacement"]["resumed_thread_id"] == "legacy-replacement"
+
+
 def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: Path, capsys, monkeypatch):
     dirty_snapshot = sample_snapshot(tmp_path)
     dirty_snapshot["git"]["modified_files"] = [{"status": "??", "path": "untracked.txt"}]
@@ -455,12 +572,64 @@ def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: 
     assert not (tmp_path / ".agent/thread-rollovers").exists()
 
 
+def test_register_created_context_failure_reports_cleanly(tmp_path: Path, capsys):
+    rc = th.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "register-created",
+            "--lineage-id",
+            "lineage-1234567890abcdef12345678",
+            "--rollover-id",
+            "rollover-missing",
+            "--replacement-thread-id",
+            "00000000-0000-0000-0000-000000000002",
+            "--evidence",
+            "native create result",
+        ]
+    )
+
+    assert rc == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["action"] == "register-created"
+    assert "isolated rollover" in payload["error"]
+    assert "NameError" not in payload["error"]
+
+
+def test_native_create_action_is_retry_gate_without_db(tmp_path: Path, capsys, monkeypatch):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 0
+    prepared_payload = json.loads(capsys.readouterr().out)
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "native-action",
+                "--lineage-id",
+                prepared_payload["lineage_id"],
+                "--rollover-id",
+                prepared_payload["rollover_id"],
+                "--action",
+                "create",
+            ]
+        )
+        == 0
+    )
+    action = json.loads(capsys.readouterr().out)
+    assert action["tool"] == "create_thread"
+    assert action["needs_native_action"] is True
+    assert action["bootstrap_prompt_path"] == prepared_payload["bootstrap_file"]
+
+
 def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: Path, capsys, monkeypatch):
     clean = sample_snapshot(tmp_path)["git"]
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
     assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 0
     packet = json.loads(capsys.readouterr().out)
     state_path = tmp_path / packet["state_file"]
+    bind_native_lease(state_path, "new-thread")
 
     monkeypatch.setattr(th, "gather_git_state", lambda root: {**clean, "full_head": "wrong-head"})
     resume_command = [
@@ -666,6 +835,7 @@ def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
     orchestrator_path = tmp_path / th.default_state_path("orchestrator", orchestrator_state["lineage_id"])
     claude_path = tmp_path / th.default_state_path("claude", claude_state["lineage_id"])
     th.write_json_atomic(orchestrator_path, orchestrator_state)
+    bind_native_replacement(claude_state, "new-claude")
     resumed = th.resume_state(
         claude_state,
         rollover_id=claude_state["replacement"]["rollover_id"],
@@ -876,6 +1046,14 @@ def test_pending_prepare_refuses_unless_explicitly_forced():
 def test_resume_is_deterministic_and_refuses_a_different_thread():
     state = prepared()
     rollover_id = state["replacement"]["rollover_id"]
+    with pytest.raises(ValueError, match="must be registered"):
+        th.resume_state(
+            state,
+            rollover_id=rollover_id,
+            replacement_thread_id="new-thread",
+            now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
+        )
+    bind_native_replacement(state, "new-thread")
     resumed = th.resume_state(
         state,
         rollover_id=rollover_id,
@@ -890,7 +1068,7 @@ def test_resume_is_deterministic_and_refuses_a_different_thread():
     )
 
     assert repeated == resumed
-    with pytest.raises(ValueError, match="different replacement thread"):
+    with pytest.raises(ValueError, match="does not match"):
         th.resume_state(
             resumed,
             rollover_id=rollover_id,
@@ -971,6 +1149,7 @@ def test_cli_requires_exact_rollover_and_reserved_canary_proof(tmp_path: Path, c
     prepared_payload = json.loads(capsys.readouterr().out)
     state_path = tmp_path / prepared_payload["state_file"]
     state = json.loads(state_path.read_text(encoding="utf-8"))
+    bind_native_lease(state_path, "new-thread")
 
     assert (
         th.main(
@@ -1200,6 +1379,7 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
             strict_verdict=tmp_path / "strict-verdict.json",
             state_root=tmp_path,
         )
+    bind_native_replacement(state, "bound-thread")
     resumed = th.resume_state(
         state,
         rollover_id=replacement["rollover_id"],
@@ -1313,6 +1493,7 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
         th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]) == 0
     )
     packet = json.loads(capsys.readouterr().out)
+    bind_native_lease(tmp_path / packet["state_file"], "new-thread")
     assert (
         th.main(
             [
@@ -1406,6 +1587,7 @@ def test_confirmation_rejects_nine_of_ten_and_wrong_reserved_paths(tmp_path: Pat
         th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]) == 0
     )
     packet = json.loads(capsys.readouterr().out)
+    bind_native_lease(tmp_path / packet["state_file"], "new-thread")
     assert (
         th.main(
             [
