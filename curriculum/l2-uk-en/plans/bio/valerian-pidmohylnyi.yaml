@@ -219,13 +219,32 @@ vocabulary_hints:
   pos: ж.
   word: реабілітація
 word_target: 5200
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
+- title: "Підмогильний Валер’ян Петрович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-879628"
   language: uk
-  role: Контекст
-  source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Ознайомитися з біографією та творчим шляхом Валер'яна Підмогильного.
-  title: Підмогильний Валер'ян Петрович
-  url: https://esu.com.ua/article-879628
+  hosting: link-only
+  learner_task: "Простежити зв'язок між біографією, перекладацькою працею та романами «Місто» і «Невеличка драма» за текстом статті."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-879628"
+    note: "Енциклопедичний матеріал доступний лише за зовнішнім посиланням; повний текст не розміщується локально."
+- title: "Валер’ян Петрович Підмогильний (1901–1937)"
+  source_name: "Центральний державний архів-музей літератури і мистецтва України"
+  source_url: "https://csamm.archives.gov.ua/2021/02/02/valerian-pidmohylnyi-1901-1937/"
+  language: uk
+  hosting: link-only
+  learner_task: "Зіставити архівну довідку про твори, ув'язнення і розстріл із хронологією досьє."
+  rights:
+    basis: external-link
+    evidence_url: "https://csamm.archives.gov.ua/2021/02/02/valerian-pidmohylnyi-1901-1937/"
+    note: "Архівна сторінка використовується лише за зовнішнім посиланням; зображення і текст не копіюються."
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Архівна сторінка містить фотографію, але прямого підтвердження ліцензії на
+    конкретний файл немає; до встановлення прав біографія лишається без портрета.
+  verified_on: '2026-07-15'

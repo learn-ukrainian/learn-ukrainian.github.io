@@ -2,32 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-entsyklopediia-ukrainoznavstva_c2019
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
+  type: external
+  title: Shkurupii, Geo
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
 - id: S2
-  file: shkurupii-skarha-trybunal-1935
-  type: unknown
-  title: shkurupii-skarha-trybunal-1935
+  file: https://tyzhden.ua/shkurupij-vid-a-do-ia/
+  type: external
+  title: Шкурупій від А до Я
+  url: https://tyzhden.ua/shkurupij-vid-a-do-ia/
 - id: S3
-  file: ukrlib-sosyura_c0262
-  type: literary
-  title: Володимир Сосюра. Третя рота
-  author: Сосюра В.
+  file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#futurysm
+  type: external
+  title: Шкурупій від А до Я — футуризм
+  url: https://tyzhden.ua/shkurupij-vid-a-do-ia/
 - id: S4
-  file: ieu-shkurupii-biography
-  type: unknown
-  title: ieu-shkurupii-biography
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm#biography
+  type: external
+  title: Shkurupii, Geo — biography
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
 - id: S5
-  file: uk-wikipedia-shkurupii-zhyttiepys-aresht
-  type: wikipedia
-  title: uk-wikipedia-shkurupii-zhyttiepys-aresht
+  file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#life
+  type: external
+  title: Шкурупій від А до Я — життєпис
+  url: https://tyzhden.ua/shkurupij-vid-a-do-ia/
 - id: S6
-  file: uk-wikipedia-shkurupii-sud-zahybel
-  type: wikipedia
-  title: uk-wikipedia-shkurupii-sud-zahybel
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm#repression
+  type: external
+  title: Shkurupii, Geo — repression
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
 - id: S7
-  file: uk-wikipedia-shkurupii-tvorchist
-  type: wikipedia
-  title: uk-wikipedia-shkurupii-tvorchist
+  file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#works
+  type: external
+  title: Шкурупій від А до Я — твори
+  url: https://tyzhden.ua/shkurupij-vid-a-do-ia/

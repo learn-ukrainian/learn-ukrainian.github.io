@@ -80,16 +80,25 @@ persona:
   role: Модератор військово-історичного семінару, що вимагає відмовитись від чорно-білих оцінок і аналізувати лідера в контексті його епохи — "war is hell".
   voice: Military-Historian-Realist
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: "Академічна енциклопедична стаття (УВАГА: тема містить складні питання воєнної пам'яті)."
-  hosting: external
+- title: "Шухевич Роман Осипович"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shukhevych_R&Z21ID="
   language: uk
-  role: Контекст
-  source_name: Енциклопедія історії України
-  source_type: Енциклопедія
-  task: Ознайомитися з академічним викладом біографії Романа Шухевича та його діяльності.
-  title: Шухевич Роман Осипович
-  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shukhevych_R&Z21ID=
+  hosting: link-only
+  learner_task: "Прочитати академічний життєпис, відокремивши документовану політичну діяльність від оцінок і не зводячи історію до одного героя чи злочинця."
+  rights:
+    basis: external-link
+    evidence_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shukhevych_R&Z21ID="
+    note: "Академічна довідка доступна лише за зовнішнім посиланням; текст не копіюється на сайт."
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Не знайдено конкретного портретного файлу з перевіреною індивідуальною PD або
+    CC ліцензією; текстовий варіант не підміняє історичну складність меморіальним образом.
+  verified_on: '2026-07-15'
 references:
 - title: Roman Shukhevych
   note: Compiled summary from primary sources listed below and academic papers on UPA.

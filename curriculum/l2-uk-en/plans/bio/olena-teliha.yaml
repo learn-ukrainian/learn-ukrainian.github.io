@@ -190,14 +190,22 @@ vocabulary_hints:
   pos: ж.
   word: hagiography
 word_target: 5200
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття; тема потребує уважного читання без іконізації.
-  hosting: external
+- title: "Теліга Олена Іванівна"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Teliha_O&Z21ID="
   language: uk
-  role: Контекст
-  source_name: Енциклопедія історії України
-  source_type: Енциклопедія
-  task: Ознайомитися з життям і творчістю Олени Теліги, звернувши увагу на її
-    діяльність під час Другої світової війни.
-  title: Теліга Олена Іванівна
-  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Teliha_O&Z21ID=
+  hosting: link-only
+  learner_task: "Прочитати академічну довідку та розрізнити діяльність ОУН, німецьку окупацію Києва і нацистський механізм убивства без іконізації."
+  rights:
+    basis: external-link
+    evidence_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Teliha_O&Z21ID="
+    note: "Академічна довідка доступна лише за зовнішнім посиланням; текст не копіюється на сайт."
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Без індивідуальної сторінки файлу з підтвердженою PD або CC ліцензією портрет
+    не використовується; це також унеможливлює некритичне повторення меморіальних фото.
+  verified_on: '2026-07-15'

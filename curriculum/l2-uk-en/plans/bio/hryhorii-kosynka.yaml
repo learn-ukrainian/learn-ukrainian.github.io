@@ -148,13 +148,35 @@ persona:
     і механізмом тоталітарного терору.
   voice: Literary Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - title: "Косинка Григорій Михайлович"
-  url: "https://esu.com.ua/article-3797"
-  note: "Стаття в Енциклопедії Сучасної України, що висвітлює життя та творчий шлях новеліста."
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-3797"
+  language: uk
+  hosting: link-only
+  learner_task: "Зіставити біографічні дати та назви збірок із досьє, не переносячи з довідки неперевірені деталі."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-3797"
+    note: "Матеріал використовується лише за зовнішнім посиланням; текст не відтворюється на сайті."
 - title: "1899 — народився Григорій Стрілець, письменник"
-  url: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/29/1899-narodyvsya-grygoriy-strilec-pysmennyk"
-  note: "Матеріал Українського інституту національної пам'яті про Григорія Косинку."
+  source_name: "Український інститут національної пам'яті"
+  source_url: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/29/1899-narodyvsya-grygoriy-strilec-pysmennyk"
+  language: uk
+  hosting: link-only
+  learner_task: "Виписати факти про походження та репресивний механізм і позначити, що потребує звіряння з архівним джерелом."
+  rights:
+    basis: external-link
+    evidence_url: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/29/1899-narodyvsya-grygoriy-strilec-pysmennyk"
+    note: "Матеріал використовується лише за зовнішнім посиланням; текст не відтворюється на сайті."
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    У безпосередньо перевірених джерелах не встановлено конкретного портретного
+    файлу з індивідуально підтвердженою ліцензією PD або CC; біографію лишено без портрета.
+  verified_on: '2026-07-15'
 references:
 - note: Стаття про життя та творчість письменника (автор — М. К. Наєнко).
   path: https://esu.com.ua/article-3797
