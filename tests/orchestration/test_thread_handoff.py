@@ -334,7 +334,10 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "If either fact is absent, use `unknown`" in prompt
     assert "Only an actionable response authorizes `set_thread_archived`" in prompt
     assert "must register and title this exact native replacement before resume" in prompt
-    assert "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)." in prompt
+    assert (
+        "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)."
+        in prompt
+    )
     assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
     assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
 
@@ -451,6 +454,7 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     def make_is_ancestor(ancestry_map):
         def is_ancestor(expected, current):
             return ancestry_map.get((expected, current))
+
         return is_ancestor
 
     # 1. Descent accepted: prepared is ancestor of current
@@ -458,27 +462,29 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     assert th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_ok) is None
 
     # 2. Divergence rejected: neither is ancestor
-    is_ancestor_diverged = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): False,
-    })
+    is_ancestor_diverged = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): False,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_diverged)
     assert f"invoking checkout HEAD {current_head} has diverged from prepared HEAD {prepared_head}" in err
 
     # 3. Rewind rejected: current is strict ancestor of prepared
-    is_ancestor_rewind = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): True,
-    })
+    is_ancestor_rewind = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): True,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_rewind)
-    assert f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {prepared_head})" in err
+    assert (
+        f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {prepared_head})" in err
+    )
 
     # 4. Dirty-at-descent rejected: prepared is ancestor, but tree is dirty
-    dirty_state = {
-        **clean,
-        "full_head": current_head,
-        "modified_files": [{"status": "M", "path": "tracked.txt"}]
-    }
+    dirty_state = {**clean, "full_head": current_head, "modified_files": [{"status": "M", "path": "tracked.txt"}]}
     err = th.checkout_continuity_error(replacement, dirty_state, is_ancestor=is_ancestor_ok)
     assert "invoking checkout must be clean" in err
 
@@ -492,10 +498,12 @@ def test_checkout_continuity_ff_descent_and_failure_modes():
     assert "does not match prepared HEAD" in err
     assert "ancestry undeterminable" in err
 
-    is_ancestor_partial_none = make_is_ancestor({
-        (prepared_head, current_head): False,
-        (current_head, prepared_head): None,
-    })
+    is_ancestor_partial_none = make_is_ancestor(
+        {
+            (prepared_head, current_head): False,
+            (current_head, prepared_head): None,
+        }
+    )
     err = th.checkout_continuity_error(replacement, git_state, is_ancestor=is_ancestor_partial_none)
     assert "does not match prepared HEAD" in err
     assert "ancestry undeterminable" in err
@@ -1399,6 +1407,74 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
             strict_verdict=strict_verdict,
             state_root=tmp_path,
         )
+
+
+def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
+    """#5201: --epic harness must resolve to claude-infra and surface its packet.
+
+    Regression: handoff_identity_for_epic used to invent ``claude-harness``, so
+    SessionStart reported COLD START while a validated pending_start packet sat
+    under ``claude-infra``. Identity guardrail stays intact — a packet bound to
+    another thread is still a stop condition (covered elsewhere).
+    """
+    import subprocess
+
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    # Launcher mapping: --epic harness → claude-infra (not phantom claude-harness).
+    identity_sh = Path(__file__).resolve().parents[2] / "scripts" / "lib" / "handoff_identity.sh"
+    mapped = subprocess.check_output(
+        ["bash", "-c", f'source "{identity_sh}" && handoff_identity_for_epic harness'],
+        text=True,
+    ).strip()
+    assert mapped == "claude-infra", f"--epic harness must map to claude-infra, got {mapped!r}"
+    assert mapped != "claude-harness"
+
+    # Real lane packet lives under claude-infra (prepare as the lane does).
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude-infra",
+                "--active-thread-id",
+                "old-infra-thread",
+            ]
+        )
+        == 0
+    )
+    prepared_payload = json.loads(capsys.readouterr().out)
+    assert prepared_payload["agent"] == "claude-infra"
+
+    # Phantom slot: silent miss (the pre-fix failure mode).
+    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-harness"]) == 0
+    assert json.loads(capsys.readouterr().out) == {"agent": "claude-harness", "status": "none"}
+
+    # Resolved slot (post-fix): SessionStart must surface the pending packet.
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "detect",
+                "--agent",
+                mapped,
+                "--format",
+                "session-start",
+                "--current-thread-id",
+                "new-infra-thread",
+            ]
+        )
+        == 0
+    )
+    startup = capsys.readouterr().out
+    assert "PENDING THREAD ROLLOVER DETECTED" in startup
+    assert "COLD START: NO LIVE THREAD ROLLOVER" not in startup
+    assert "--agent claude-infra" in startup
+    assert prepared_payload["lineage_id"] in startup
+    assert prepared_payload["rollover_id"] in startup
 
 
 def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_path: Path, capsys, monkeypatch):
