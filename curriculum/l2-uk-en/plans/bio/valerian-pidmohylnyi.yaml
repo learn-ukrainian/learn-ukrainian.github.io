@@ -231,20 +231,20 @@ readings:
     basis: external-link
     evidence_url: "https://esu.com.ua/article-879628"
     note: "Енциклопедичний матеріал доступний лише за зовнішнім посиланням; повний текст не розміщується локально."
-- title: "Валер’ян Петрович Підмогильний (1901–1937)"
-  source_name: "Центральний державний архів-музей літератури і мистецтва України"
-  source_url: "https://csamm.archives.gov.ua/2021/02/02/valerian-pidmohylnyi-1901-1937/"
+- title: "Були елітою нації… До роковин розстрілів в урочищі Сандармох"
+  source_name: "Український інститут національної пам'яті"
+  source_url: "https://uinp.gov.ua/informaciyni-materialy/vchytelyam/metodychni-rekomendaciyi/buly-elitoyu-naciyi-do-rokovyn-rozstriliv-v-urochyshchi-sandarmoh"
   language: uk
   hosting: link-only
-  learner_task: "Зіставити архівну довідку про твори, ув'язнення і розстріл із хронологією досьє."
+  learner_task: "Простежити, як матеріал УІНП називає Підмогильного серед в'язнів, розстріляних у Сандармосі, і відокремити цей підтверджений факт від ширших біографічних інтерпретацій."
   rights:
     basis: external-link
-    evidence_url: "https://csamm.archives.gov.ua/2021/02/02/valerian-pidmohylnyi-1901-1937/"
-    note: "Архівна сторінка використовується лише за зовнішнім посиланням; зображення і текст не копіюються."
+    evidence_url: "https://uinp.gov.ua/informaciyni-materialy/vchytelyam/metodychni-rekomendaciyi/buly-elitoyu-naciyi-do-rokovyn-rozstriliv-v-urochyshchi-sandarmoh"
+    note: "Матеріал УІНП використовується лише за зовнішнім посиланням; його текст і зображення не копіюються."
 portrait_fallback:
   type: text-only
   license: not-applicable
   reason: >-
-    Архівна сторінка містить фотографію, але прямого підтвердження ліцензії на
-    конкретний файл немає; до встановлення прав біографія лишається без портрета.
+    Не знайдено конкретного портретного файлу з перевіреною індивідуальною PD або
+    CC ліцензією; до встановлення прав біографія лишається без портрета.
   verified_on: '2026-07-15'

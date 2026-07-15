@@ -14,25 +14,25 @@ sources:
 - id: S3
   file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#futurysm
   type: external
-  title: Шкурупій від А до Я — футуризм
+  title: Шкурупій від А до Я
   url: https://tyzhden.ua/shkurupij-vid-a-do-ia/
 - id: S4
   file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm#biography
   type: external
-  title: Shkurupii, Geo — biography
+  title: Shkurupii, Geo
   url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
 - id: S5
   file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#life
   type: external
-  title: Шкурупій від А до Я — життєпис
+  title: Шкурупій від А до Я
   url: https://tyzhden.ua/shkurupij-vid-a-do-ia/
 - id: S6
   file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm#repression
   type: external
-  title: Shkurupii, Geo — repression
+  title: Shkurupii, Geo
   url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShkurupiiGeo.htm
 - id: S7
   file: https://tyzhden.ua/shkurupij-vid-a-do-ia/#works
   type: external
-  title: Шкурупій від А до Я — твори
+  title: Шкурупій від А до Я
   url: https://tyzhden.ua/shkurupij-vid-a-do-ia/

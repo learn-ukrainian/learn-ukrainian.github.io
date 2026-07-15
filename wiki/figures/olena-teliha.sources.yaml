@@ -8,34 +8,33 @@ sources:
   page: 216
   grade: 7
 - id: S2
-  file: ukrainian_wiki/olena-teliha_Біографія-Олена-Теліга-Вогняна-муза-чину-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Теліга: Вогняна муза чину'
-  section_path: 'Біографія: Олена Теліга: Вогняна муза чину > Короткий зміст'
+  file: https://www.history.org.ua/?termin=Teliha_O
+  type: external
+  title: ТЕЛІГА ОЛЕНА
+  url: https://www.history.org.ua/?termin=Teliha_O
 - id: S3
-  file: wave9-rusanivsky-ist-lit-movy_c0432
-  type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
+  file: https://uinp.gov.ua/istorychnyy-kalendar/lypen/21/1906-narodylasya-poetka-chlen-oun-olena-teliga-u-divoctvi-shovgeneva
+  type: external
+  title: 1906, народилася поетка, член ОУН Олена Теліга (у дівоцтві – Шовгенева)
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lypen/21/1906-narodylasya-poetka-chlen-oun-olena-teliga-u-divoctvi-shovgeneva
 - id: S4
-  file: ukrainian_wiki/teliha-poetry_Українська-література-Поезія-Олени-Теліги-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Поезія Олени Теліги'
-  section_path: 'Українська література: Поезія Олени Теліги > Короткий зміст'
+  file: https://ww2.uinp.gov.ua/olena-teliga-u-poshukah-svoyeyi-ukrayiny/
+  type: external
+  title: Олена Теліга. У пошуках «своєї» України
+  url: https://ww2.uinp.gov.ua/olena-teliga-u-poshukah-svoyeyi-ukrayiny/
 - id: S5
-  file: ukrainian_wiki/olena-teliha_Біографія-Олена-Теліга-Вогняна-муза-чину-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Теліга: Вогняна муза чину'
-  section_path: 'Біографія: Олена Теліга: Вогняна муза чину > Деколонізаційна перспектива'
+  file: https://ww2.uinp.gov.ua/olena-teliga-u-poshukah-svoyeyi-ukrayiny/
+  type: external
+  title: Олена Теліга. У пошуках «своєї» України
+  url: https://ww2.uinp.gov.ua/olena-teliga-u-poshukah-svoyeyi-ukrayiny/
 - id: S6
-  file: ukrainian_wiki/olena-teliha_Біографія-Олена-Теліга-Вогняна-муза-чину-Основний-зміст-Поетичний-всесвіт-між-радістю-буття-та-суворим-обов-язком
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Теліга: Вогняна муза чину'
-  section_path: 'Біографія: Олена Теліга: Вогняна муза чину > Основний зміст > Поетичний
-    всесвіт: між радістю буття та суворим обов''язком'
+  file: 7-klas-ukrlit-mishhenko-2015_s3684
+  type: textbook
+  title: розділ 4. ОЛЕНА ТЕЛІГА
+  page: 216
+  grade: 7
 - id: S7
-  file: ukrainian_wiki/malaniuk-poetry_Українська-література-Євген-Маланюк-Поезія-залізного-імператора-Основний-зміст-Літературний-контекст-еміграції-та-загальнонаціональне-значення
-  type: ukrainian_wiki
-  title: 'Українська література: Євген Маланюк: Поезія залізного імператора'
-  section_path: 'Українська література: Євген Маланюк: Поезія залізного імператора
-    > Основний зміст > Літературний контекст еміграції та загальнонаціональне значення'
+  file: https://www.history.org.ua/?termin=Teliha_O
+  type: external
+  title: ТЕЛІГА ОЛЕНА
+  url: https://www.history.org.ua/?termin=Teliha_O
