@@ -4,20 +4,54 @@ from __future__ import annotations
 
 import logging
 import sys
+from importlib import import_module
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.base import InvocationPlan
+from agent_runtime.registry import AGENTS
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import invoke
 from agent_runtime.telemetry import (
     _reset_version_cache_for_tests,
+    _resolve_model_from_defaults,
     resolve_dispatch_start_telemetry,
     resolve_invocation_telemetry,
 )
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
+
+
+def test_resolve_model_from_defaults_uses_registry_for_grok_build():
+    """Regression for #5215: never pass the lane name to native Grok."""
+    assert _resolve_model_from_defaults("grok-build", None) == "grok-4.5"
+
+
+def test_gemini_default_resolution_falls_back_to_registry(monkeypatch):
+    """A missing local config must not make telemetry disagree with its adapter."""
+    monkeypatch.setattr("agent_runtime.telemetry._gemini_settings", lambda: {})
+
+    assert _resolve_model_from_defaults("gemini", None) == AGENTS["gemini"]["default_model"]
+
+
+@pytest.mark.parametrize("agent_name", sorted(AGENTS))
+def test_every_registry_default_matches_no_override_resolution_and_adapter(agent_name, monkeypatch):
+    """Registry defaults are the no-override dispatch contract for every lane."""
+    monkeypatch.setattr("agent_runtime.telemetry._gemini_settings", lambda: {})
+    entry = AGENTS[agent_name]
+    module_name, class_name = entry["adapter"].split(":", 1)
+    adapter_class = getattr(import_module(module_name.removeprefix("scripts.")), class_name)
+
+    resolved_model = _resolve_model_from_defaults(agent_name, None)
+
+    assert resolved_model == entry["default_model"]
+    # Each adapter uses ``model or self.default_model``; equality guarantees
+    # the no-override value reaches the adapter as its accepted default rather
+    # than leaking an agent registry key (for example, ``grok-build``).
+    assert resolved_model == adapter_class.default_model
 
 
 def test_resolve_dispatch_start_telemetry_codex_model_from_registry_effort_from_config(tmp_path, monkeypatch):

@@ -84,8 +84,9 @@ def test_model_and_effort_flags(tmp_path):
     assert _val(plan.cmd, "--effort") == "high"
 
 
-def test_default_effort_is_applied(tmp_path):
+def test_no_override_builds_explicit_registry_default_model(tmp_path):
     plan = _build("x", tmp_path)
+    assert _val(plan.cmd, "-m") == registry.get_agent_entry("grok-build")["default_model"]
     assert _val(plan.cmd, "-m") == GROK_BUILD_DEFAULT_MODEL
     assert _val(plan.cmd, "--effort") == GROK_BUILD_DEFAULT_EFFORT
 
@@ -209,7 +210,10 @@ def test_grok_build_lane_defaults_to_grok_45():
 
 
 def test_grok_build_rejects_retired_model_pin(tmp_path):
-    with pytest.raises(ValueError, match="unsupported Grok model"):
+    with pytest.raises(
+        ValueError,
+        match=r"^GrokBuildAdapter: unsupported Grok model 'grok-build'; allowed: \['grok-4\.5'\]$",
+    ):
         _build("x", tmp_path, model="grok-build", effort="high")
 
 

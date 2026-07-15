@@ -208,14 +208,14 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
         value = _codex_config().get("model")
         return str(value).strip() if isinstance(value, str) and str(value).strip() else None
     if agent_name == "gemini":
-        return _nested_lookup(
+        configured_model = _nested_lookup(
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name in ("grok", "deepseek", "qwen"):
-        return _default_model_for(agent_name)
-    if agent_name == "claude":
-        return _default_model_for(agent_name)
+        # The adapter always passes ``model or self.default_model``.  When
+        # no local Gemini setting is readable, record the registry default
+        # that the adapter will actually receive instead of "unknown".
+        return configured_model or _default_model_for(agent_name)
     return _default_model_for(agent_name)
 
 
