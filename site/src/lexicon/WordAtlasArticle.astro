@@ -39,6 +39,23 @@ interface SourcedText {
   stages?: Array<{ period: string; word: string; note?: string }>;
 }
 
+interface SynonymGloss {
+  text: string;
+}
+
+interface SynonymMember {
+  lemma: string;
+  stressed: string;
+  gloss?: SynonymGloss;
+}
+
+interface SynonymSet {
+  id: number;
+  pos?: string;
+  gloss?: SynonymGloss;
+  members: SynonymMember[];
+}
+
 interface NounParadigm {
   kind: "noun";
   cases: Record<string, { singular: string; plural: string }>;
@@ -134,7 +151,7 @@ interface HeritageStatus {
 }
 
 interface LexiconSections {
-  synonyms?: { items: string[]; source: string; source_urls?: string[] };
+  synonyms?: { items: string[]; source: string; source_urls?: string[]; synsets?: SynonymSet[] };
   antonyms?: { items: string[]; source: string; source_urls?: string[] };
   homonyms?: {
     items: Array<{ word: string; gloss: string; pos?: string; homonym_no?: number }>;
@@ -192,6 +209,7 @@ const {
 } = Astro.props as Props;
 const enrichment = entry.enrichment ?? null;
 const sections = entry.sections ?? null;
+const synonymSets = sections?.synonyms?.synsets ?? [];
 const heritage = entry.heritage_status ?? null;
 const rawDefinitionCards = enrichment?.definition_cards ?? [];
 const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard);
@@ -928,9 +946,30 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           {(sections?.synonyms?.items.length ?? 0) > 0 && (
             <div>
               <div class="chip-label">Синоніми:</div>
-              <div class="chip-row">
-                {sections.synonyms.items.map((item) => <span class="chip">{item}</span>)}
-              </div>
+              {synonymSets.length > 0 ? (
+                <div class="synonym-sets">
+                  {synonymSets.map((synset) => (
+                    <div class="synonym-set">
+                      {(synset.pos || synset.gloss?.text) && (
+                        <div class="synonym-set-context">
+                          {[synset.pos, synset.gloss?.text].filter(Boolean).join(" · ")}
+                        </div>
+                      )}
+                      <div class="chip-row">
+                        {synset.members
+                          .filter((member) => member.lemma !== entry.lemma)
+                          .map((member) => (
+                            <span class="chip" title={member.gloss?.text}>{member.stressed}</span>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div class="chip-row">
+                  {sections.synonyms.items.map((item) => <span class="chip">{item}</span>)}
+                </div>
+              )}
             </div>
           )}
           {(sections?.antonyms?.items.length ?? 0) > 0 && (

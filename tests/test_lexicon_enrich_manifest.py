@@ -1750,7 +1750,8 @@ def test_kaikki_meaning_uses_direct_glosses() -> None:
     }
 
 
-def test_kaikki_etymology_is_final_fallback() -> None:
+def test_etymology_has_no_kaikki_fallback_when_mphdict_has_no_root(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
         "місто": {
@@ -1760,12 +1761,11 @@ def test_kaikki_etymology_is_final_fallback() -> None:
         }
     }
 
-    etymology = _etymology(conn, "місто", lookup)
-
-    assert etymology == {"text": "From Old East Slavic мѣсто.", "source": KAIKKI_SOURCE}
+    assert _etymology(conn, "місто", lookup) is None
 
 
-def test_etymology_does_not_fall_back_to_derived_base_forms() -> None:
+def test_etymology_does_not_fall_back_to_derived_base_forms(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     conn.execute(
         """
@@ -1792,7 +1792,8 @@ def test_etymology_lookup_variants_include_normalised_apostrophe_and_v_u_alterna
     assert "вв'язнення" in variants
 
 
-def test_esum_etymology_uses_normalised_variant_match() -> None:
+def test_etymology_does_not_read_the_legacy_esum_table(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     conn.execute(
         """
@@ -1810,12 +1811,7 @@ def test_esum_etymology_uses_normalised_variant_match() -> None:
         ("ув'язнення", "Fixture ЕСУМ etymology for ув'язнення.", "[]", "1", "42"),
     )
 
-    etymology = _etymology(conn, "Ув’язнення", {})
-
-    assert etymology == {
-        "text": "Fixture ЕСУМ etymology for ув'язнення.",
-        "source": "ЕСУМ, т. 1, с. 42",
-    }
+    assert _etymology(conn, "Ув’язнення", {}) is None
 
 
 def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
@@ -1838,7 +1834,8 @@ def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
     assert _etymology(conn, "До побачення!", {}) is None
 
 
-def test_kaikki_etymology_allows_direct_cognate_comparisons() -> None:
+def test_etymology_has_no_kaikki_cognate_fallback(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
         "базовий": {
@@ -1848,13 +1845,11 @@ def test_kaikki_etymology_allows_direct_cognate_comparisons() -> None:
         }
     }
 
-    assert _etymology(conn, "базовий", lookup) == {
-        "text": "From ба́за. Compare Russian ба́зовый (bázovyj), Belarusian ба́завы.",
-        "source": KAIKKI_SOURCE,
-    }
+    assert _etymology(conn, "базовий", lookup) is None
 
 
-def test_kaikki_etymology_skips_garbled_tree_text() -> None:
+def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
         "японія": {
@@ -1867,7 +1862,8 @@ def test_kaikki_etymology_skips_garbled_tree_text() -> None:
     assert _etymology(conn, "Японія", lookup) is None
 
 
-def test_kaikki_etymology_does_not_treat_labor_as_garbled_marker() -> None:
+def test_etymology_has_no_legacy_wiktionary_fallback(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
         "робота": {
@@ -1877,13 +1873,11 @@ def test_kaikki_etymology_does_not_treat_labor_as_garbled_marker() -> None:
         }
     }
 
-    assert _etymology(conn, "робота", lookup) == {
-        "text": "Old East Slavic робота (robota, “labor, work”), itself from Proto-Slavic *orbota.",
-        "source": KAIKKI_SOURCE,
-    }
+    assert _etymology(conn, "робота", lookup) is None
 
 
-def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
+def test_etymology_has_no_goroh_mirror_fallback(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     conn.execute(
         """
@@ -1907,13 +1901,7 @@ def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
         }
     }
 
-    etymology = _etymology(conn, "книга", lookup)
-
-    assert etymology == {
-        "text": "Goroh etymology text.",
-        "source": "Горох (за ЕСУМ)",
-        "source_url": "https://goroh.pp.ua/Етимологія/книга",
-    }
+    assert _etymology(conn, "книга", lookup) is None
 
 
 def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_path) -> None:
@@ -1953,17 +1941,6 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     conn.commit()
     conn.close()
 
-    cache = {
-        "lookups": {
-            "synonyms": {
-                "dictionary_slug": "synonyms",
-                "dictionary_label": "Словник синонімів української мови",
-                "source_url": "https://slovnyk.me/dict/synonyms/робота",
-                "word": "робота",
-                "text": "робота ПРАЦЯ. Джерело: тест",
-            }
-        }
-    }
     verify_calls: list[str] = []
 
     def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
@@ -1976,7 +1953,29 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     monkeypatch.setattr(enrich_manifest_module, "MANIFEST", manifest_path)
     monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
     monkeypatch.setattr(enrich_manifest_module, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: {"lookups": {}})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "mphdict_synonyms",
+        lambda lemma: {
+            "lemma": lemma,
+            "synsets": [
+                {
+                    "id": 1,
+                    "members": [
+                        {"lemma": "робота", "stressed": "робо́та"},
+                        {"lemma": "праця", "stressed": "пра́ця"},
+                    ],
+                }
+            ],
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_synonyms_available", lambda: True)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_etymology",
+        lambda *args, **kwargs: {"text": "Fixture mphdict etymology for робота.", "source": "ЕСУМ fixture"},
+    )
     monkeypatch.setattr(
         enrich_manifest_module,
         "classify_lemma",
@@ -2006,7 +2005,7 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     enriched = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
     assert enriched["lemma"] == "робота / працювати"
     assert enriched["sections"]["synonyms"]["items"] == ["праця"]
-    assert enriched["enrichment"]["etymology"]["text"] == "Goroh etymology for робота."
+    assert enriched["enrichment"]["etymology"]["text"] == "Fixture mphdict etymology for робота."
     assert enriched["enrichment"]["morphology"]["forms"] == [{"form": "робота", "label": "однина, жін., називний"}]
     assert verify_calls == ["робота"]
 
@@ -2075,6 +2074,13 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
     monkeypatch.setattr(enrich_manifest_module, "_load_kaikki_lookup", lambda: {})
     monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: {"lookups": {}})
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_synonyms_available", lambda: True)
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_synonyms", lambda lemma: {"lemma": lemma, "synsets": []})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_etymology",
+        lambda *args, **kwargs: {"text": "Fixture mphdict etymology for ув'язнення.", "source": "ЕСУМ fixture"},
+    )
     monkeypatch.setattr(
         enrich_manifest_module,
         "classify_lemma",
@@ -2110,8 +2116,8 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     assert enriched["sections"]["antonyms"]["items"] == ["воля"]
     assert enriched["sections"]["idioms"]["items"][0]["phrase"] == "ув'язнення духу"
     assert enriched["enrichment"]["etymology"] == {
-        "text": "Fixture ЕСУМ etymology for ув'язнення.",
-        "source": "ЕСУМ, т. 1, с. 42",
+        "text": "Fixture mphdict etymology for ув'язнення.",
+        "source": "ЕСУМ fixture",
     }
 
 
@@ -3447,8 +3453,8 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
     assert relations["кав'ярня"][0]["direction"] == "reciprocal"
 
 
-def test_ключ_drops_ukrajinet_targets_and_keeps_karavansky_synonym(monkeypatch) -> None:
-    """The rendered manifest must never reopen the auto-translated WordNet vein."""
+def test_ключ_does_not_read_ukrajinet_and_uses_mphdict_synonyms(monkeypatch) -> None:
+    """The enrichment route never reads the retired auto-translation table."""
     _patch_synonym_vesum(monkeypatch, {"ключ", "джерело", "живець", "відмикач"})
     conn = _conn()
     conn.execute("CREATE TABLE ukrajinet (words TEXT NOT NULL, text TEXT NOT NULL)")
@@ -3473,12 +3479,14 @@ def test_ключ_drops_ukrajinet_targets_and_keeps_karavansky_synonym(monkeypat
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(
         enrich_manifest_module,
-        "_synonyms_slovnyk",
+        "_synonyms_mphdict",
         lambda *args, **kwargs: {
             "items": ["відмикач"],
-            "source": "slovnyk.me: Словник синонімів Караванського",
+            "synsets": [],
+            "source": "mphdict fixture",
         },
     )
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_synonyms_available", lambda: True)
     monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda *args, **kwargs: "")
@@ -3694,10 +3702,9 @@ def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) ->
 
 
 # --- #5077 preserve-vs-retract section gate semantics ------------------------------
-# enrich_entry recomputes gated sections each run. Offline (or after a schema-version
-# cache reset) a gate that CANNOT run must PRESERVE the previously-confirmed section
-# rather than silently overwrite it with an empty recomputation. Only a gate that RAN
-# may retract items (e.g. WordNet auto-translation junk). See scripts/lexicon/README.md.
+# enrich_entry recomputes gated sections each run. When the authoritative source
+# cannot run, it must preserve the previously-confirmed section rather than
+# silently overwrite it with an empty recomputation.
 from scripts.lexicon.manifest_io import (
     GATE_ANNOTATIONS_CARRIED,
     GATE_REJECTED,
@@ -3749,8 +3756,12 @@ def _run_synonyms_gate(monkeypatch, *, offline, cache, new_synonyms, existing_sy
     _stub_section_producers(monkeypatch)
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: offline)
     monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
-    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", lambda *a, **k: new_synonyms)
-    monkeypatch.setattr(enrich_manifest_module, "_merge_synonym_relations", lambda syn, rel: syn)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_mphdict", lambda *a, **k: new_synonyms)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "mphdict_synonyms_available",
+        lambda: not offline or "synonyms" in cache.get("lookups", {}),
+    )
 
     entry = {"lemma": "ключ", "pos": "noun", "sections": {"synonyms": existing_synonyms}}
     enrich_manifest_module.enrich_entry(
@@ -3865,8 +3876,12 @@ def _run_enrich_entry(monkeypatch, entry, *, offline, cache):
     _stub_section_producers(monkeypatch)
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: offline)
     monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
-    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", lambda *a, **k: None)
-    monkeypatch.setattr(enrich_manifest_module, "_merge_synonym_relations", lambda syn, rel: syn)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_mphdict", lambda *a, **k: None)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "mphdict_synonyms_available",
+        lambda: not offline or "synonyms" in cache.get("lookups", {}),
+    )
     return entry
 
 
