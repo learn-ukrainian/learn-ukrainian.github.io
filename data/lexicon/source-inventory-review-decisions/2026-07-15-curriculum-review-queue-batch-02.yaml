@@ -1,0 +1,3290 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: curriculum-review-queue-2026-07-15-batch-02
+batch_label: Curriculum review-queue batch 2 (150 rows, v2 filters)
+reviewer: agy-4222-proposer
+reviewed_at: '2026-07-15'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 19081
+  approved_in_queue: 150
+  promotion_batch_size: 150
+production_outputs_updated: []
+decisions:
+- lemma: ковальчук
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: A Ukrainian surname, Kovalchuk (proper noun)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КОВАЛЬЧУ́К, а, ч. 1. Підмайстер коваля.
+    Змалку сиротою лишився [коваль], змалку...'
+  source_inventory:
+    key: e37897672d524d63
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/vocative-expanded/activities.yaml::inline[2].groups[0].items[2]
+    source_id: curriculum-595d0223efb4c1b2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ковальчук'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: правити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: rule (to regulate, be in charge of, make decisions for, reign over)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПРА́ВИТИ¹, влю, виш; мн. пра́влять;
+    недок. 1. перех. і неперех., ким, чим, рідко...'
+  source_inventory:
+    key: 313a1b89ab13b5cd
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/phrases-word-combinations/activities.yaml::inline[0].pairs[6].left
+    source_id: curriculum-7fce280afaa79aa4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword правити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ян
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: a male given name, Yan, from Polish [in turn from Ancient Greek],
+    equivalent to English John (proper noun)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: af8a4014b06b2e23
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/special-signs/activities.yaml::inline[4].items[2].answer
+    source_id: curriculum-f61f10a480d9b774
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ян'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: бринза
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bryndza (cheese)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: БРИ́НЗА, діал. БРИ́НДЗА, и, ж. Сир з
+    овечого молока. Малай варили з просяного бо...'
+  source_inventory:
+    key: 301f3333e9206539
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/genitive-nuances/module.md::module_body
+    source_id: curriculum-6fe90a5743d625e8
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword бринза'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: роздратування
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: vexation (state of being vexed or irritated)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РОЗДРАТУВА́ННЯ, РОЗДРАТО́ВАННЯ, я, с.
+    Дія і стан за знач. роздратува́ти, роздрат...'
+  source_inventory:
+    key: a312f23a84ef4afb
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/dative-advanced/module.md::module_body
+    source_id: curriculum-873d8371bc68e4a2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword роздратування'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: рятувальник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lifeguard (attendant)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РЯТУВА́ЛЬНИК, а, ч. Той, хто займається
+    рятуванням кого-, чого-небудь.- Раніше м...'
+  source_inventory:
+    key: 98e56d9f55e1ac94
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/gerunds-perfective/module.md::module_body
+    source_id: curriculum-a699e581463ac986
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword рятувальник'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: слугувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (intransitive) to serve (to act as a servant)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СЛУГУВА́ТИ, у́ю, у́єш, недок. 1. Бути
+    слугою (у 1 знач.), прислугою у кого-небуд...'
+  source_inventory:
+    key: 86c31792576b248a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/academic-writing/activities.yaml::inline[1].items[4].answer
+    source_id: curriculum-2160664c034ddfc7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword слугувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: софа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sofa (upholstered seat)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СОФА́, и́, ж. М’який широкий диван з
+    поручнями і низькою спинкою. Крісла й софа...'
+  source_inventory:
+    key: 50393ff024590048
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/genitive-prepositions-source/module.md::module_body
+    source_id: curriculum-776cbf1053272073
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword софа'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: трудитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: work (to do a specific task)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ТРУДИ́ТИСЯ, труджу́ся, тру́дишся, недок.
+    1. Наполегливо, старанно працювати (про...'
+  source_inventory:
+    key: 9602c1737e5ff150
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-lexicology-ii/module.md::module_body
+    source_id: curriculum-bcc09f8b25e605d5
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword трудитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: шок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shock (something surprising)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ШОК, у, ч. Загальний тяжкий розлад життєво
+    важливих функцій організму, викликани...'
+  source_inventory:
+    key: 8b85907ffdfc2962
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/society-and-media/activities.yaml::inline[3].items[0].error
+    source_id: curriculum-8257d60b2a8a07a3
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword шок'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: вегетаріанський
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: relating to the type of diet eaten by vegetarians
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВЕГЕТАРІА́НСЬКИЙ, а, е. Прикм. до вегетаріа́нство
+    і вегетаріа́нець. — Ну, от, си...'
+  source_inventory:
+    key: 7ce3d518f212325c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/at-the-cafe/module.md::module_body
+    source_id: curriculum-255790447c91aac8
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword вегетаріанський'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: видра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: otter (mammal)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВИ́ДРА, и, ж. 1. Хижий ссавець, з цінним
+    хутром темно-бурого кольору. По тих нет...'
+  source_inventory:
+    key: 7730a06c973e9a9f
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/activities.yaml::inline[2].pairs[4].left
+    source_id: curriculum-44eabe76fda03995
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword видра'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: виплатити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to pay, to pay out (:money)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВИ́ПЛАТИТИ див. випла́чувати.'
+  source_inventory:
+    key: 04e623a7d67ec02a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/law-justice-vocabulary/activities.yaml::inline[3].items[6].error
+    source_id: curriculum-e731a3f4762fa957
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword виплатити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: відновлюваний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: renewable (able to be renewed)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВІДНО́ВЛЮВАНИЙ, а, е. Дієпр. пас. теп.
+    і мин. ч. до відно́влювати.'
+  source_inventory:
+    key: 7f6b43763d318f82
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/complex-syntax-ellipsis-parcelling/activities.yaml::inline[1].items[2].explanation
+    source_id: curriculum-2408023406fd8550
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword відновлюваний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: грамотний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: literate (able to read, having literacy)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ГРА́МОТНИЙ, а, е. 1. Який вміє читати
+    і писати. Він грамотний, він письменний (М...'
+  source_inventory:
+    key: c14005bc4aaeda8a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-text-register/activities.yaml::workbook[2].instruction
+    source_id: curriculum-a673238bbfeaa53d
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword грамотний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: грошовий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: pecuniary (of or relating to money)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ГРОШОВИ́Й, а́, е́, розм., рідко ГРОШЕ́ВИЙ,
+    а, е. Прикм. до гро́ші. Петровська гр...'
+  source_inventory:
+    key: ba322861b8f3c221
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/economics-business-vocabulary/module.md::module_body
+    source_id: curriculum-d4c4bbaf8778a348
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword грошовий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: депутатка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: deputy (legislator)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДЕПУТА́ТКА, и, ж. Жін. до депута́т.
+    — Слово для доповіді.. надається депутатці С...'
+  source_inventory:
+    key: 7fe6858092d884fc
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/direct-indirect-speech/activities.yaml::inline[2].items[4].answer
+    source_id: curriculum-36783edc604f647b
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword депутатка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: дистанційний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) distance (attributive)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДИСТАНЦІ́ЙНИЙ, а, е. 1. Прикм. до диста́нція.
+    2. Який здійснюється або діє на пе...'
+  source_inventory:
+    key: b20953527f7b103f
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/motion-prefixes-transit/module.md::module_body
+    source_id: curriculum-ee468ecdf47dbec2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword дистанційний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: дієтичний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: dietary (of, or relating to diet)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДІЄТИ́ЧНИЙ, а, е. Прикм. до діє́та.
+    Свіжа риба є цінним продуктом дієтичного хар...'
+  source_inventory:
+    key: 464691c6dcca29ea
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/kharchuvannia-i-kukhnia/activities.yaml::inline[1].groups[3].name
+    source_id: curriculum-c7012bcfc63c7175
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword дієтичний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: забруднений
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: polluted (defiled)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАБРУ́ДНЕНИЙ, а, е. Дієпр. пас. мин.
+    ч. до забрудни́ти. Одежа, руки в них забруд...'
+  source_inventory:
+    key: e7ab04f399ed5a99
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/activities.yaml::inline[4].items[11].sentence
+    source_id: curriculum-44eabe76fda03995
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword забруднений'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: завдавати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to inflict, to cause (:damage, injury, loss, detriment)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАВДАВА́ТИ, даю́, дає́ш, недок., ЗАВДА́ТИ,
+    да́м, даси́, док., перех. 1. чого, рі...'
+  source_inventory:
+    key: df2840b060cc4ddb
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/module.md::module_body
+    source_id: curriculum-0f0c146a0f334cdd
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword завдавати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: закінчений
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: over (ended)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАКІ́НЧЕНИЙ, а, е. 1. Дієпр. пас. мин.
+    ч. до закінчи́ти. По сей бік муру канал у...'
+  source_inventory:
+    key: 6ac16b23e60ea277
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/a2-comprehensive-review/module.md::module_body
+    source_id: curriculum-134d149a57eb9609
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword закінчений'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: засипати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: fall asleep (to pass into sleep)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАСИ́ПАТИ див. засипа́ти¹. ЗАСИПА́ТИ¹,
+    а́ю, а́єш, недок., ЗАСИ́ПАТИ, плю, плеш;...'
+  source_inventory:
+    key: fee72277afb71836
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/b2-impersonal-passive/module.md::module_body
+    source_id: curriculum-4679a52d051bc6e2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword засипати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зекономити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: save (to economize)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗЕКОНО́МИТИ, млю, миш; мн. зеконо́млять;
+    док., перех. Економно витрачаючи, збере...'
+  source_inventory:
+    key: 0ca25e85102af493
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/aspect-in-vocabulary/module.md::module_body
+    source_id: curriculum-40c4ffe96cb6a2d4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зекономити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: знайтися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'passive of знайти́: to be found'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗНАЙТИ́СЯ див. знахо́дитися.'
+  source_inventory:
+    key: d5cea95053a259c6
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/telling-stories-and-travel/module.md::module_body
+    source_id: curriculum-10b1d8093b05f975
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword знайтися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: кавовий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) coffee
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КА́ВОВИЙ, а, е. Прикм. до ка́ва¹. Набравши
+    в обидві руки кавових зерен, стала [м...'
+  source_inventory:
+    key: 936eda856b5375bc
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/word-formation-adjective-adverbs/module.md::module_body
+    source_id: curriculum-50a420bd91adf400
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword кавовий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: категоризація
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: categorization
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 524e02ce8f964fa4
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/synonymy-practice-precision/activities.yaml::workbook[3].model_answers[0]
+    source_id: curriculum-02af3678ee4adce7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword категоризація'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: клієнтський
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) client, customer (attributive)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КЛІЄ́НТСЬКИЙ, а, е. Прикм. до кліє́нт
+    2, 3.'
+  source_inventory:
+    key: 6f74deef60f1cd0e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-cases-morphology/module.md::module_body
+    source_id: curriculum-1a1c7129cf865382
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword клієнтський'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: людяний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: humane (with regard for the health and well-being of another)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЛЮ́ДЯНИЙ, а, е. 1. Який щиро, доброзичливо,
+    чуйно ставиться до інших; уважний до...'
+  source_inventory:
+    key: ad09c49d4ce1a431
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/a2-bridge/module.md::module_body
+    source_id: curriculum-2c617df8ad788ce0
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword людяний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: модний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: fashionable, modish, trendy
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МО́ДНИЙ, а, е. 1. Зробл., вигот. за
+    модою; який відповідає моді (у 1 знач.). [Хр...'
+  source_inventory:
+    key: 2c1ad42e940c72d8
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-lexicology-i/module.md::module_body
+    source_id: curriculum-f808e19e7c08d3e7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword модний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: мотивований
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: motivated (enthusiastic; having motivation)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МОТИВО́ВАНИЙ, а, е. Дієпр. пас. мин.
+    ч. до мотивува́ти. Мета, на досягнення якої...'
+  source_inventory:
+    key: 04def977a02e4939
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/emphasis-and-inversion/activities.yaml::inline[0].items[3].question
+    source_id: curriculum-c0c5e332270b398d
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword мотивований'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: особистість
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: identity (the difference or character that marks off an individual
+    or group from the rest)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОСОБИ́СТІСТЬ, тості, ж., книжн. Конкретна
+    людина з погляду її культури, особливо...'
+  source_inventory:
+    key: a0634dbee06c05c7
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/a2-practice-exam/module.md::module_body
+    source_id: curriculum-2e410275f4c0c4ca
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword особистість'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: римський
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: Roman (of or from Rome)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РИ́МСЬКИЙ, а, е. Прикм. до ри́мляни
+    і Рим. Колись то ще, во время оно, Помпілій...'
+  source_inventory:
+    key: ba52a10a367edee1
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/cases-with-ordinal-numerals/activities.yaml::inline[0].items[11].explanation
+    source_id: curriculum-bd7f2f1ac03d25d1
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword римський'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: садівник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gardener (one who gardens)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: САДІВНИ́К, а́, ч. Фахівець із садівництва,
+    особа, що вирощує та доглядає садові...'
+  source_inventory:
+    key: 765b01c744bb359c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/participles-active/module.md::module_body
+    source_id: curriculum-e71eb97e4c7c0380
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword садівник'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: тактовний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: tactful (possessing tact)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ТАКТО́ВНИЙ, а, е. Який володіє почуттям
+    міри, такту ( див. такт²). Він є тонкий,...'
+  source_inventory:
+    key: 8f74c92a25fe40c8
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/people-and-relationships/module.md::module_body
+    source_id: curriculum-9309dd8a56f88451
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword тактовний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: учитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: study (to take a course)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: УЧИ́ТИСЯ (ВЧИ́ТИСЯ), учу́ся, у́чишся,
+    недок., чого, чому. Засвоювати які-небудь...'
+  source_inventory:
+    key: a5012e5cf2b84817
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/numeral-declension-time-dates/module.md::module_body
+    source_id: curriculum-11c47bf2489e0622
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword учитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: художниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: artist (person who creates art)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ХУДО́ЖНИЦЯ, і, ж. Жін. до худо́жник.
+    Зоставшися самотою, професор надумався та й...'
+  source_inventory:
+    key: 5d62cf0bff9f8912
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/instrumental-nuances/module.md::module_body
+    source_id: curriculum-e3aebec40726659e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword художниця'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: чайка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gull (seabird)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЧА́ЙКА¹, и, ж. 1. (Vanellus vanellus
+    L.). Морський водоплавний птах родини сивко...'
+  source_inventory:
+    key: 352e374a7c184096
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/motion-flight-swim/module.md::module_body
+    source_id: curriculum-5e39de44672adb42
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword чайка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: івано-франківський
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) Ivano-Frankivsk (city in Ukraine)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: a633e6609ccdd46c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/telling-stories-and-travel/activities.yaml::workbook[2].items[4].sentence
+    source_id: curriculum-efdd92619a683534
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword івано-франківський'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: винуватість
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: guilt (legal)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВИНУВА́ТІСТЬ, тості, ж. Абстр. ім. до
+    винува́тий 1, 2. Попросив старий Гайдак по...'
+  source_inventory:
+    key: a54cc2ca7d41257e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/law-justice-vocabulary/module.md::module_body
+    source_id: curriculum-b39cfd93f8ec01a0
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword винуватість'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: газовий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: gaseous (relating to, or existing as, gas)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ГА́ЗОВИЙ¹, а, е. 1. Прикм. до газ¹ 1.
+    Відкриті нові великі газові родовища у При...'
+  source_inventory:
+    key: 10fd10408e210483
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/emergencies/activities.yaml::inline[1].pairs[4].right
+    source_id: curriculum-354aa5fc351fb7a3
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword газовий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: делегація
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: delegation (a group of delegates)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДЕЛЕГА́ЦІЯ, ї, ж. Група делегатів від
+    якої-небудь організації, установи, колекти...'
+  source_inventory:
+    key: d3942c93e4b5bf4c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/dative-nuances/module.md::module_body
+    source_id: curriculum-609841379d10568d
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword делегація'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: економний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: thrifty (given to, or evincing, thrift)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЕКОНО́МНИЙ, а, е. 1. Який бережливо,
+    ощадливо витрачає що-небудь; //Точно розрах...'
+  source_inventory:
+    key: 47f057620e9fb203
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/figurative-motion/module.md::module_body
+    source_id: curriculum-bdce42e19507ab63
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword економний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: занедбаний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: neglected, abandoned, forsaken
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 78e30923aca56bb8
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/homogeneous-members/module.md::module_body
+    source_id: curriculum-5902d12d33fc62ed
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword занедбаний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: запекти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (transitive) to bake
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАПЕКТИ́ див. запіка́ти.'
+  source_inventory:
+    key: 71902dc42ea91a85
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/kharchuvannia-i-kukhnia/activities.yaml::workbook[0].text
+    source_id: curriculum-c7012bcfc63c7175
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword запекти'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: запровадити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: introduce (to bring into practice)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАПРОВА́ДИТИ див. запрова́джувати.'
+  source_inventory:
+    key: 8383f2d586ecdf03
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/debate-and-opinion/module.md::module_body
+    source_id: curriculum-9921f095912c84b8
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword запровадити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: концентрувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: concentrate (bring to, or direct toward, a common center)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КОНЦЕНТРУВА́ТИ, у́ю, у́єш, недок., перех.
+    1. Збирати, скупчувати, зосереджувати...'
+  source_inventory:
+    key: 8d8dca2b52adadae
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/academic-writing/module.md::module_body
+    source_id: curriculum-6dd6d97282b83e45
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword концентрувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: лотерея
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lottery (scheme for the distribution of prizes by lot or chance)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЛОТЕРЕ́Я, ї, ж. Розігрування речей або
+    грошових сум по білетах. Вирішено було ор...'
+  source_inventory:
+    key: 16530b59fee015a5
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-conditionals/activities.yaml::inline[3].pairs[6].left
+    source_id: curriculum-6b3d88bc69ef8937
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword лотерея'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: милозвучний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: soft-sounding, pleasant-sounding
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МИЛОЗВУ́ЧНИЙ, а, е. Приємний для слуху.
+    Під голубим небом розсівалися жайворонки...'
+  source_inventory:
+    key: 4f0606b6e4dedd02
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-morphophonemics/module.md::module_body
+    source_id: curriculum-4d474d57973e8c96
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword милозвучний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: мотор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: engine (mechanical device)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МОТО́Р, а, ч. Машина, що перетворює
+    різні види енергії на механічну; двигун (у 1...'
+  source_inventory:
+    key: 8205ab6986438e90
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/alternation-vowels/activities.yaml::inline[2].groups[3].items[0]
+    source_id: curriculum-85ad8aadc0024479
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword мотор'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: новизна
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: novelty, newness (state of being new)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НОВИЗНА́, и́, ж. 1. Властивість і якість
+    за знач. нови́й. Оригінальність, новизн...'
+  source_inventory:
+    key: 501b04ca377cf57a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/academic-writing/module.md::module_body
+    source_id: curriculum-6dd6d97282b83e45
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword новизна'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: обмежувальний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: restrictive (confining; limiting)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОБМЕ́ЖУВАЛЬНИЙ, а, е. 1. Який передбачає
+    обмеження чогось; признач. для обмеженн...'
+  source_inventory:
+    key: 6b05f590bd0b8d6b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-subordinate-condition/activities.yaml::workbook[0].groups[3].label
+    source_id: curriculum-022b2ea9ca5a8ee8
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword обмежувальний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: обігрівати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: heat (to cause an increase in temperature of an object or space)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОБІГРІВА́ТИ, а́ю, а́єш, недок., ОБІГРІ́ТИ,
+    і́ю, і́єш, док., перех. 1. Насичувати...'
+  source_inventory:
+    key: 27b9c45f639ca0b6
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/word-formation-place-object-names/activities.yaml::inline[2].items[0].sentence
+    source_id: curriculum-7ac8b96594d577ba
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword обігрівати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: операційний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational, computing, military, surgery, etc.) operation, operations,
+    operating (all attributive), operational (of or relating to operations of various
+    kinds)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОПЕРАЦІ́ЙНИЙ, а, е. Прикм. до опера́ція
+    1, 3, 4. [Лікар:] Я, простіть, вашої нов...'
+  source_inventory:
+    key: 9feb7e845663a467
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md::module_body
+    source_id: curriculum-90cd4bb9b00e9218
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword операційний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: оптимізм
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: optimism (a tendency to expect the best)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОПТИМІ́ЗМ, у, ч. Світосприймання, перейняте
+    бадьорістю, життєрадісністю, твердою...'
+  source_inventory:
+    key: 7cff2fa875572dd9
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/lexical-stylistic-devices/module.md::module_body
+    source_id: curriculum-d48f089653ce9654
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword оптимізм'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: оригінал
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: original (object from which all later copies and variations are
+    derived)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОРИГІНА́Л, у, ч. 1. Те, що є основою
+    для відтворення, копіювання, переробки і т....'
+  source_inventory:
+    key: f56b8db87bcbb166
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-conditionals/module.md::module_body
+    source_id: curriculum-8e106eee50a36b7b
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword оригінал'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: покроковий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: piecemeal (Made or done in pieces or one stage at a time)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 929c20c7a83947dc
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-imperatives/module.md::module_body
+    source_id: curriculum-3ee7a05dda9e0861
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword покроковий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: попередньо
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: tentatively (of, or having to do with being tentative)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПОПЕРЕ́ДНЬО. Присл. до попере́дній 2.
+    Нут або горох варять, попередньо його розм...'
+  source_inventory:
+    key: c209a8aaaa2ea187
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-communication/activities.yaml::inline[2].target_text
+    source_id: curriculum-bf44bc23b3c750ed
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword попередньо'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: поцікавитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be curious, to be interested, to show interest, to take an interest
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПОЦІКА́ВИТИСЯ, влюся, вишся; мн. поціка́вляться;
+    док. Виявити цікавість, інтерес...'
+  source_inventory:
+    key: bd2cb59c58818335
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/reported-speech/activities.yaml::inline[1].groups[2].items[1]
+    source_id: curriculum-483b445a240bb372
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword поцікавитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: призупинити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (transitive) to suspend (temporarily stop)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 3f6b8b0ce2666e8c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/register-formal-written/activities.yaml::workbook[3].items[5].sentence
+    source_id: curriculum-b72a4042382be1d4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword призупинити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: прохолодний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: cool (having a slightly low temperature)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 39438caf8f83d53a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/vocabulary.yaml::[26].usage
+    source_id: curriculum-94f895631c3f70aa
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword прохолодний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: піджак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: coat (outer garment covering the upper torso and arms)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПІДЖА́К, а́, ч. Верхня частина чоловічого
+    костюма у вигляді куртки з рукавами й...'
+  source_inventory:
+    key: 727698b07dc049cb
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/people-and-relationships/activities.yaml::workbook[10].items[5].correction
+    source_id: curriculum-09a3ef0cbcb97fd2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword піджак'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: розкритикувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: slate (criticise/criticize harshly)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РОЗКРИТИКУВА́ТИ див. розкритико́вувати.'
+  source_inventory:
+    key: 1705530ed295d896
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-register-domain/activities.yaml::inline[4].items[5].answer
+    source_id: curriculum-1a07221f1f1371e2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword розкритикувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: сеча
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: urine
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СЕ́ЧА, і, ж. Рідина, що виділяється
+    нирками людини й хребетних тварин як продукт...'
+  source_inventory:
+    key: 9d20756110f8ccfd
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/health-at-the-doctor/activities.yaml::inline[2].pairs[9].right
+    source_id: curriculum-e67007c4bc69eee6
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword сеча'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: спускатися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: go down (descend)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СПУСКА́ТИСЯ, а́юся, а́єшся, недок.,
+    СПУСТИ́ТИСЯ, спущу́ся, спу́стишся, док. 1. П...'
+  source_inventory:
+    key: 66d2af9a5724744b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/places-and-locations/module.md::module_body
+    source_id: curriculum-380dd3d3af8debb3
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword спускатися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: сфотографувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: shoot (take a picture)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СФОТОГРАФУВА́ТИ, у́ю, у́єш, перех. Док.
+    до фотографува́ти. — Знаєте що, чоловіче...'
+  source_inventory:
+    key: 98993c6813869878
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/sviy-and-sebe/module.md::module_body
+    source_id: curriculum-a2fce2f68491adfe
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword сфотографувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: туристка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tourist (someone who travels for pleasure)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ТУРИ́СТКА, и, ж. Жін. до тури́ст. Може
+    будуть коли щасливіші часи, тоді поїду в...'
+  source_inventory:
+    key: 2dbe5e95d347ebae
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/a2-finale/module.md::module_body
+    source_id: curriculum-cb1024eed904e0b2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword туристка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: тусовка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: party (social gathering)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: a8087a813508a3d1
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/synonymy-in-registers/activities.yaml::workbook[1].pairs[7].right
+    source_id: curriculum-06c2fce6aaded60f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword тусовка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: фіскальний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: fiscal (related to the treasury)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ФІСКА́ЛЬНИЙ, а, е. Стос. до фіску, до
+    інтересів фіску. Фіскальні доходи.'
+  source_inventory:
+    key: a61ddacf821e0451
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/economics-business-vocabulary/activities.yaml::inline[1].pairs[6].left
+    source_id: curriculum-96c2b2dfe6fd7581
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword фіскальний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: щастити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: lucky (of people, having good fortune)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЩАСТИ́ТИ, ти́ть, недок., кому. 1. безос.
+    Ітися на щастя, на успіх кому-небудь; у...'
+  source_inventory:
+    key: 978c1555e9230606
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/imperative-complete/module.md::module_body
+    source_id: curriculum-876203cd7f9e02a2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword щастити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: інтерактивний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: interactive (acting with each other)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 4da999dfcccc25c9
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/comprehensive-b1-review/module.md::module_body
+    source_id: curriculum-f2d522f154e22d23
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword інтерактивний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: атмосферний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: aerial (taking place in the air)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: АТМОСФЕ́РНИЙ, а, е. Прикм. до атмосфе́ра
+    1. Атмосферний азот; // Який виникає, в...'
+  source_inventory:
+    key: 68c6b045b2fafc33
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/reading-literature/module.md::module_body
+    source_id: curriculum-082307d25b54b67f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword атмосферний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: багатокомпонентний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: multicomponent (having multiple components)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 3d36922c9d01f755
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/multi-clause-sentences/activities.yaml::inline[4].instruction
+    source_id: curriculum-6e239c7dcc164f4d
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword багатокомпонентний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ваза
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: vase (container used mainly for displaying flowers)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВА́ЗА, и, ж. Різноманітної форми посудина,
+    що використовується для квітів, фрукт...'
+  source_inventory:
+    key: e6a149a5f9777583
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/colors/activities.yaml::inline[0].items[6].explanation
+    source_id: curriculum-206b0945b227e7a4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ваза'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: визначний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: notable, noteworthy, prominent, remarkable (worthy of note due to
+    positive features or importance)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВИЗНАЧНИ́Й, а́, е́. 1. Який відзначається
+    своїми позитивними рисами; видатний. В...'
+  source_inventory:
+    key: e1b4bdba675f2f0d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/all-cases-practice/activities.yaml::inline[2].pairs[4].right
+    source_id: curriculum-e88230e6cf2db6e7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword визначний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: водогін
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: water pipe (water conduit)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВОДОГІ́Н, го́ну, ч. Те саме, що водопрові́д.
+    Там і тут вилискували проти сонця н...'
+  source_inventory:
+    key: 75badfecad3459bd
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/register-public-discourse/activities.yaml::workbook[0].text
+    source_id: curriculum-2be997a16035a7f6
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword водогін'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: врівноважувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: Alternative form of урівнова́жувати
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВРІВНОВА́ЖЕНИЙ, ВРІВНОВА́ЖЕНІСТЬ, ВРІВНОВА́ЖЕННЯ,
+    ВРІВНОВА́ЖЕНО, ВРІВНОВА́ЖИТИ,...'
+  source_inventory:
+    key: ea3ce559cfddcfac
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-compound/module.md::module_body
+    source_id: curriculum-77847f7b0640e68e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword врівноважувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: відсотковий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) percentage (attributive)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 3d5fbe03f8cdd143
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/economics-business-vocabulary/activities.yaml::inline[2].items[6].answer
+    source_id: curriculum-96c2b2dfe6fd7581
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword відсотковий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: доза
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dose (measured portion of medicine)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДО́ЗА, и, ж. Певна кількість ліків,
+    признач. для одноразового або добового введе...'
+  source_inventory:
+    key: c3bdded1428cb596
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md::module_body
+    source_id: curriculum-90cd4bb9b00e9218
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword доза'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: елегантний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: smart (good-looking)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЕЛЕГА́НТНИЙ, а, е. Вишукано-витончений.
+    Вона скинула з себе пальто і опинилася п...'
+  source_inventory:
+    key: ea96f6596719b170
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/figurative-motion/module.md::module_body
+    source_id: curriculum-bdce42e19507ab63
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword елегантний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: емодзі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: emoji (digital graphic icon)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 15001c141168ebb6
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/text-register-formal/module.md::module_body
+    source_id: curriculum-a7b3e15e39e48c49
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword емодзі'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зареєстрований
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: registered (having had one's name added to an official list)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАРЕЄСТРО́ВАНИЙ, а, е. Дієпр. пас. мин.
+    ч. до зареєструва́ти. Всі зареєстровані...'
+  source_inventory:
+    key: 0127d4a7eefab7ee
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-passive-voice/module.md::module_body
+    source_id: curriculum-9e5c7f4fc657fd43
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зареєстрований'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: застерегти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: admonish (warn against danger or an offense)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАСТЕРЕГТИ́ див. застеріга́ти.'
+  source_inventory:
+    key: f18797a3d7e65a00
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/b2-final-exam/module.md::module_body
+    source_id: curriculum-a1c0767f4ed78f8b
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword застерегти'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: затвердження
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: approval (permission)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАТВЕ́РДЖЕННЯ, я, с. 1. Дія за знач.
+    затве́рдити. Держплан розробляє і подає на...'
+  source_inventory:
+    key: d8f9d8a3a7a8eeaf
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-passive-voice/module.md::module_body
+    source_id: curriculum-9e5c7f4fc657fd43
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword затвердження'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зауважити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (transitive) to note, to notice, to observe, to remark (on/upon/that)
+    (make a comment or observation)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАУВА́ЖИТИ див. заува́жувати.'
+  source_inventory:
+    key: 612a5b0a352ab92e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/reported-speech/activities.yaml::workbook[2].pairs[7].left
+    source_id: curriculum-483b445a240bb372
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зауважити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: заучувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (transitive) to learn (off) by heart, to memorize
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАУ́ЧУВАТИ див. завча́ти.'
+  source_inventory:
+    key: 21fd034bb765a312
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/a2-bridge/activities.yaml::workbook[5].items[3].explanation
+    source_id: curriculum-7fa3340b212ee058
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword заучувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: захищатися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to defend oneself
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАХИЩА́ТИСЯ, а́юся, а́єшся, недок.,
+    ЗАХИСТИ́ТИСЯ, ищу́ся, исти́шся, док. 1. Обор...'
+  source_inventory:
+    key: f5fce5644c25974b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/lexical-stylistic-devices/module.md::module_body
+    source_id: curriculum-d48f089653ce9654
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword захищатися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: кисло-солодкий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: sweet-and-sour (between sweet and sour taste)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КИ́СЛО-СОЛО́ДКИЙ, а, е. Який має кислуватий
+    і солодкуватий смак; винний ( див. в...'
+  source_inventory:
+    key: c15c9392558acc8a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/adjectives-comparative/module.md::module_body
+    source_id: curriculum-b809ffc71225215f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword кисло-солодкий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: констатувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: state (declare to be a fact)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КОНСТАТУВА́ТИ, у́ю, у́єш, недок. і док.,
+    перех. Установлювати, відзначати наявні...'
+  source_inventory:
+    key: ca29090c82d52755
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-negation/activities.yaml::workbook[5].text
+    source_id: curriculum-af4b5e46fbf3af67
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword констатувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: купюра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: banknote (paper or polymer currency)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КУПЮ́РА¹, и, ж. Скорочення в тексті
+    літературного або музичного твору. Якщо моя...'
+  source_inventory:
+    key: 371343f46d0da426
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/pluralia-tantum/activities.yaml::workbook[0].items[7].explanation
+    source_id: curriculum-2910c4feab1a298a
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword купюра'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: мазати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (transitive) to smear, to spread
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МА́ЗАТИ, ма́жу, ма́жеш; наказ. сп. маж;
+    недок. 1. перех. Покривати шаром чогось...'
+  source_inventory:
+    key: ee3fcce896677e51
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/proverbs-nature-time-caution/module.md::module_body
+    source_id: curriculum-0e1b61ccbbd34c48
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword мазати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: надійність
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: quality (degree to which a man-made object or system is free from
+    bugs and flaws)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НАДІ́ЙНІСТЬ, ності, ж. Абстр. ім. до
+    надійний. Від його кремезної постаті, неспі...'
+  source_inventory:
+    key: c6c1b82b0d124103
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/noun-subclasses-feminine/module.md::module_body
+    source_id: curriculum-a04835caf65ecc7a
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword надійність'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: наповнюватися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: fill up (to become full)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НАПО́ВНЮВАТИСЯ, ююся, юєшся і НАПОВНЯ́ТИСЯ
+    , я́юся, я́єшся, недок., НАПО́ВНИТИСЯ...'
+  source_inventory:
+    key: df8ed0a7aebdcde1
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-compound/activities.yaml::workbook[2].text
+    source_id: curriculum-2e94816b980d63da
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword наповнюватися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: направити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: route (to direct along a particular course)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НАПРА́ВИТИ див. направля́ти.'
+  source_inventory:
+    key: 4daa7b052be264e6
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/health-at-the-doctor/activities.yaml::inline[1].items[7].explanation
+    source_id: curriculum-e67007c4bc69eee6
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword направити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: невпевнено
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: tentatively (of, or having to do with being tentative)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НЕВПЕ́ВНЕНО. Присл. до невпе́внений.
+    Із хат невпевнено, з якоюсь тужливою провин...'
+  source_inventory:
+    key: 00f3c0d23b7336e4
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/euphony-advanced/module.md::module_body
+    source_id: curriculum-ecfa453c61e9a8a0
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword невпевнено'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: невідповідний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: unsuitable, incongruous, inappropriate
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НЕВІДПОВІ́ДНИЙ, а, е. 1. Який не відповідає
+    кому-, чому-небудь. Бувало й так, що...'
+  source_inventory:
+    key: 1ce12db47266798b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/proverbs-nature-time-caution/activities.yaml::inline[0].model_answers[1]
+    source_id: curriculum-b32abc817c3bb5b7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword невідповідний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: обурений
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: resentful (full of resentment)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОБУ́РЕНИЙ¹, а, е. 1. Дієпр. пас. мин.
+    ч. до обу́рити¹. Чого шука отся ватага Раб...'
+  source_inventory:
+    key: e8586b0fb5bb9066
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/politics-government-vocabulary/module.md::module_body
+    source_id: curriculum-d9c689a4210b4c96
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword обурений'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: обчислити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: calculate ((transitive) to determine the value or solution of sth.)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОБЧИ́СЛИТИ див. обчи́слювати.'
+  source_inventory:
+    key: 056bb1c6633311e2
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/numeral-declension-time-dates/module.md::module_body
+    source_id: curriculum-11c47bf2489e0622
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword обчислити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: однокурсник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: coursemate (one who is taking the same academic course)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОДНОКУ́РСНИК, а, ч. Той, хто навчається
+    або навчався на одному курсі з ким-небуд...'
+  source_inventory:
+    key: bdb9be887c02196f
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/who-am-i/activities.yaml::inline[0].items[0].prompt
+    source_id: curriculum-b44a2e30e0d22c5e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword однокурсник'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: одягнутися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: dress (to put on clothes)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ОДЯГНУ́ТИСЯ див. одяга́тися.'
+  source_inventory:
+    key: af090dd700e09b89
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-in-narration/module.md::module_body
+    source_id: curriculum-c4330011cdd0f739
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword одягнутися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: офісний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) office (attributive)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: c03442cd6dd60de8
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/aspect-in-vocabulary/module.md::module_body
+    source_id: curriculum-40c4ffe96cb6a2d4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword офісний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: плин
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: flow (the movement of a fluid)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПЛИН, у, ч. 1. Дія за знач. пли́нути
+    1, 3-5. Не хочу сну і супокою, Хай буде біг...'
+  source_inventory:
+    key: af78243e4b7d8440
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-motion/activities.yaml::inline[4].items[10].explanation
+    source_id: curriculum-675c676730d554ae
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword плин'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: повечеряти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: dine (to eat; to eat dinner or supper)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПОВЕЧЕ́РЯТИ, яю, яєш, док. Поїсти ввечері.
+    Напились ми чаю, повечеряли — і почал...'
+  source_inventory:
+    key: c2b446ffdbd2a43a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/aspect-in-past/activities.yaml::workbook[0].groups[1].items[2]
+    source_id: curriculum-5dc44f19307d849e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword повечеряти'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: подвоювати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: double (to multiply by two)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПОДВО́ЮВАТИ, юю, юєш, недок., ПОДВО́ЇТИ,
+    о́ю, о́їш; наказ. сп. подво́юй і подві́...'
+  source_inventory:
+    key: 2fc68e8f261ac563
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-future-tense/module.md::module_body
+    source_id: curriculum-b30ddd63d7b121ca
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword подвоювати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: припинитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: stop (not to continue)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ПРИПИНИ́ТИСЯ див. припиня́тися.'
+  source_inventory:
+    key: 9b9e02026674b977
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-subordinate-condition/activities.yaml::inline[2].pairs[9].left
+    source_id: curriculum-022b2ea9ca5a8ee8
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword припинитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: реєстраційний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) registration (attributive)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РЕЄСТРАЦІ́ЙНИЙ, а, е. Стос. до реєстрації.'
+  source_inventory:
+    key: b22c6140f0a6d721
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/advanced-conjunctions-ii/activities.yaml::inline[5].items[1].question
+    source_id: curriculum-c31e47813c72d0e2
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword реєстраційний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ровесник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: peer (someone of same age)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: РОВЕ́СНИК, а, ч. Людина, яка має однаковий
+    з ким-небудь вік. Вони були одного ро...'
+  source_inventory:
+    key: a8494f2efefeaa8b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/checkpoint-first-contact/activities.yaml::inline[0].items[0].explanation
+    source_id: curriculum-634571f8cf51a5ab
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ровесник'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: світлофор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic light, or an intersection controlled by one
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СВІТЛОФО́Р, а, ч. Сигнальний електричний
+    ліхтар із різнобарвними стеклами для ре...'
+  source_inventory:
+    key: 4593434ec7d70f9d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/motion-prefixes-transit/activities.yaml::workbook[7].model_answer
+    source_id: curriculum-849ae3bd0f770502
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword світлофор'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ситний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: of food, that satisfies the appetite by filling the stomach
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СИ́ТНИЙ¹, а, е. 1. Який, маючи багато
+    поживних речовин, добре насичує (про страв...'
+  source_inventory:
+    key: b3276eb3325864bb
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/leisure-culture-festivals/module.md::module_body
+    source_id: curriculum-8fe61fba06396bca
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ситний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: скелет
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: skeleton (system that provides support to an organism)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СКЕЛЕ́Т, а, ч. 1. Сукупність кісток,
+    що становлять тверду основу тіла людини та...'
+  source_inventory:
+    key: 9a621e5344d5a1d1
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/narrative-mastery/module.md::module_body
+    source_id: curriculum-8db89ade33114709
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword скелет'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: спеція
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: spice (plant matter used to season or flavour food)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СПЕ́ЦІЯ, ї, ж. 1. перев. мн. Прянощі,
+    які додають до страви для поліпшення смаку...'
+  source_inventory:
+    key: da718e1126e6d305
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/restaurant-and-food/activities.yaml::workbook[5].items[8].statement
+    source_id: curriculum-1951faf3ba1f3ef1
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword спеція'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: сповільнитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: decelerate (to go slower)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СПОВІ́ЛЬНИТИСЯ див. спові́льнюватися.'
+  source_inventory:
+    key: b88bbbfb05ec1a1e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-communication/module.md::module_body
+    source_id: curriculum-a34114fae1bf421a
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword сповільнитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: спікер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: speaker (one who speaks)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СПІ́КЕР, а, ч. 1. Голова палати парламенту
+    в ряді країн (напр., в Англії — палат...'
+  source_inventory:
+    key: d139f30300386139
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-syntax/module.md::module_body
+    source_id: curriculum-65eba915bafc4fb7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword спікер'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: стенд
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: stand (device to hold something upright or aloft)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: СТЕНД, а, ч. 1. Щит, на якому виставляються
+    для огляду які-небудь експонати, вив...'
+  source_inventory:
+    key: 9aea9e45bb288079
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-subordinate-relative/module.md::module_body
+    source_id: curriculum-125304d770e67112
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword стенд'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: тренажер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: simulator (machine or system)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ТРЕНАЖЕ́Р, а, ч., ав. Навчальний прилад,
+    на якому вчаться керувати літальним апа...'
+  source_inventory:
+    key: 08a8264caca4029d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/shopping-and-health/module.md::module_body
+    source_id: curriculum-aedecbcfe786e532
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword тренажер'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: уперед
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: along (onward, forward)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: УПЕ́НЬ, УПЕ́РВЕ, УПЕРВИ́НУ, УПЕРЕБІ́ЖКУ,
+    УПЕРЕГІ́Н, УПЕРЕ́Д див. впень, впе́рве...'
+  source_inventory:
+    key: 64cad2f0413442bf
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/aspect-concept/module.md::module_body
+    source_id: curriculum-7016ccbb51b7b001
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword уперед'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: хаотично
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: higgledy-piggledy (in a disordered way)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ХАОТИ́ЧНО. Присл. до хаоти́чний. Очерети
+    по Удаю — мов дикий праліс. Проростають...'
+  source_inventory:
+    key: 484ddf051277a712
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/word-order-emphasis/module.md::module_body
+    source_id: curriculum-c6d8f988e3f0894b
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword хаотично'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: хвилинка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: moment (very brief period of time)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ХВИЛИ́НКА, и, ж. 1. Зменш.-пестл. до
+    хвили́на. Ти сказав мені: — Мати пішли… Ско...'
+  source_inventory:
+    key: 1f48be451620bc18
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/at-the-cafe/activities.yaml::inline[3].items[5].answer
+    source_id: curriculum-29d276b0f3581b7c
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword хвилинка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: шахрайський
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: 'crooked (figurative: dishonest, illegal)'
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ШАХРА́ЙСЬКИЙ, а, е. Власт. шахраєві.
+    На другій дільниці якийсь бригадир шахрайсь...'
+  source_inventory:
+    key: aa6fdb8a2436888d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-lexicology-i/module.md::module_body
+    source_id: curriculum-f808e19e7c08d3e7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword шахрайський'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: щочетверга
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: Thursdays (every Thursday)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЩОЧЕТВЕРГА́, присл. Кожного четверга;
+    протягом кожного четверга. То було В місте...'
+  source_inventory:
+    key: 5fd6738637514a5b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/dozvillia-i-khobi/module.md::module_body
+    source_id: curriculum-0dac557bf6abfb4e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword щочетверга'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ідентифікація
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: identification (the act of identifying, or proving to be the same)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ІДЕНТИФІКА́ЦІЯ, ї, ж., книжн. Дія за
+    знач. ідентифікува́ти.'
+  source_inventory:
+    key: 5def14bfb69c2755
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a1/where-from/module.md::module_body
+    source_id: curriculum-f991a7638f1132d3
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ідентифікація'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: амбулаторія
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: clinic (medical facility)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: АМБУЛАТО́РІЯ, ї, ж. Невеликий лікувальний
+    заклад, що подає медичну допомогу прих...'
+  source_inventory:
+    key: c419dcaa2e698c9d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md::module_body
+    source_id: curriculum-90cd4bb9b00e9218
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword амбулаторія'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: антикорупційний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: anticorruption (opposed to or combating corruption)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: b5e70647e9155097
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/word-formation-adjectives/activities.yaml::inline[3].groups[2].items[1]
+    source_id: curriculum-73e400f1b60ab8b4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword антикорупційний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: блакитноокий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: blue-eyed (having blue eyes)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: БЛАКИТНОО́КИЙ, а, е. Який має блакитні
+    очі. Бачила себе Івга блакитноокою, з рус...'
+  source_inventory:
+    key: f5a87b4fa2f04e60
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/liudyna-i-stosunky/activities.yaml::inline[3].groups[1].items[3]
+    source_id: curriculum-241563d08a17646f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword блакитноокий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: ведмежий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: ursine (of or relating to bears)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВЕДМЕ́ЖИЙ, а, е. 1. Прикм. до ведмі́дь
+    1. Давали Надаремне сто талярів За ведмеж...'
+  source_inventory:
+    key: 1953a90171b564d5
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/idioms-animals/activities.yaml::inline[2].items[0].answer
+    source_id: curriculum-c3977e51649c4e31
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword ведмежий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: висаджувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to disembark, to drop off, to land, to set down
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВИСА́ДЖУВАТИ, ую, уєш, недок., ВИ́САДИТИ,
+    джу, диш, док., перех. 1. Допомагати а...'
+  source_inventory:
+    key: 7dad9e910770cc8d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/activities.yaml::workbook[1].items[8].answer
+    source_id: curriculum-44eabe76fda03995
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword висаджувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: вкрити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: cover (to conceal or protect)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВКРА́ЯТИ, ВКРЕСА́ТИ, ВКРИВА́ЛО, ВКРИВА́ЛЬЦЕ,
+    ВКРИВА́ННЯ, ВКРИВА́ТИ, ВКРИВА́ТИСЯ,...'
+  source_inventory:
+    key: e8b309cfe906b9a1
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/nature-and-environment/vocabulary.yaml::[4].usage
+    source_id: curriculum-94f895631c3f70aa
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword вкрити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: водойма
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: body of water (significant accumulation of water)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВОДО́ЙМА, и, ж. Те саме, що водо́ймище.
+    В штучних водоймах воду затримують за до...'
+  source_inventory:
+    key: 17c35f5f6a9c48b7
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-motion/activities.yaml::inline[4].items[7].explanation
+    source_id: curriculum-675c676730d554ae
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword водойма'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: відвідувачка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: visitor (guest)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ВІДВІ́ДУВАЧКА, и, ж. Жін. до відві́дувач.
+    Віктор відклав книжку, здивовано гляну...'
+  source_inventory:
+    key: cd9ade39ee9acb88
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/instrumental-prepositions/module.md::module_body
+    source_id: curriculum-dbc4c98d2495c3ba
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword відвідувачка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: гребля
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dam (structure placed across a flowing body of water)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ГРЕ́БЛЯ, і, ж. Гідротехнічна споруда,
+    що перегороджує річку або інший водотік дл...'
+  source_inventory:
+    key: 90b7d4805e3a13bc
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/proverbs-nature-time-caution/activities.yaml::inline[0].target_text
+    source_id: curriculum-b32abc817c3bb5b7
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword гребля'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: греко-католицький
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: of or relating to the Greek Catholic Church
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 48104b0d2a4a828b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/religion-in-ukraine/activities.yaml::inline[0].text
+    source_id: curriculum-c73909a1b4680c90
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword греко-католицький'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: делікатний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: tender (soft and easily chewed)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДЕЛІКА́ТНИЙ, а, е. 1. Ввічливий, люб’язний,
+    завжди готовий виявити увагу, зробит...'
+  source_inventory:
+    key: 8b3d5fa5445c46ff
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-aspect/module.md::module_body
+    source_id: curriculum-744558de4713ccb6
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword делікатний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: досьє
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: file (collection of papers)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДОСЬЄ́, невідм., с., спец. Зібрання
+    документів, що стосуються якого-небудь питан...'
+  source_inventory:
+    key: ca2ec7c210772748
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/b2-final-exam/activities.yaml::inline[4].title
+    source_id: curriculum-0aed4480bba26db0
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword досьє'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: дощовий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: rainy (abounding with rain)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДОЩОВИ́Й, а́, е́. 1. Прикм. до дощ.
+    Між двома шпичастими горами було видно прова...'
+  source_inventory:
+    key: d8dc873b3d8f8a04
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/checkpoint-motion/activities.yaml::workbook[4].pairs[0].right
+    source_id: curriculum-675c676730d554ae
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword дощовий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: діаграма
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: graph of a function
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ДІАГРА́МА, и, ж. 1. Графічне зображення,
+    що наочно у вигляді певних геометричних...'
+  source_inventory:
+    key: e74ff23234dcceae
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/idioms-somatic/activities.yaml::workbook[3].items[7].sentence
+    source_id: curriculum-bafc8505682ebd2c
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword діаграма'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: дієвий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: effective, efficacious
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: ab4ef7679885fee5
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/academic-writing/module.md::module_body
+    source_id: curriculum-6dd6d97282b83e45
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword дієвий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: завеликий
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: too big
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАВЕЛИ́КИЙ, а, е. Більший, ніж звичайно
+    або потрібно; надто великий. Ця одіж бул...'
+  source_inventory:
+    key: de5c1e0e18b9497b
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/adjectives-comparative/module.md::module_body
+    source_id: curriculum-b809ffc71225215f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword завеликий'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: заворушення
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: (in the plural) unrest, rioting, disturbances, upheaval
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАВОРУ́ШЕННЯ, я, с., перев. мн. 1. Масовий
+    вияв невдоволення кимсь, чимсь, проте...'
+  source_inventory:
+    key: 33c61b3a84b64d1f
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/synonymy-in-registers/activities.yaml::inline[3].model_answers[0]
+    source_id: curriculum-06c2fce6aaded60f
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword заворушення'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: заплутувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: (literally) to entangle, to ravel, to tangle
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАПЛУ́ТУВАТИ, ую, уєш, недок., ЗАПЛУ́ТАТИ,
+    аю, аєш, док., перех. 1. Безладно пер...'
+  source_inventory:
+    key: a05813ce9ceae120
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/academic-writing/module.md::module_body
+    source_id: curriculum-6dd6d97282b83e45
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword заплутувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зачепити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to hook
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗАЧЕПИ́ТИ¹ див. зачіпа́ти. ЗАЧЕПИ́ТИ²
+    див. зачі́плювати.'
+  source_inventory:
+    key: e1db38b55c252462
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/checkpoint-communication/activities.yaml::workbook[4].model_answer
+    source_id: curriculum-bf44bc23b3c750ed
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зачепити'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зважувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to determine the weight of an object
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗВА́ЖУВАТИ, ую, уєш, недок., ЗВА́ЖИТИ,
+    жу, жиш, док., перех. 1. Визначати вагу к...'
+  source_inventory:
+    key: f4ba33284cde2505
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/advanced-conjunctions-i/module.md::module_body
+    source_id: curriculum-8a09c17fee118c10
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зважувати'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: зірочка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: star (asterisk)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЗІ́РОЧКА, и, ж. 1. Зменш.-пестл. до
+    зі́рка 1, 3-5. Синє небо темніє, виблискуючи...'
+  source_inventory:
+    key: 84445e96d2f67139
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/a2/plural-genitive/module.md::module_body
+    source_id: curriculum-987291baba64ca24
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword зірочка'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: крутитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: spin (to turn around quickly)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: КРУТИ́ТИСЯ, кручу́ся, кру́тишся, недок.
+    1. Робити обертові, колові рухи; обертат...'
+  source_inventory:
+    key: 4b35a036ab7dca14
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b2/idioms-animals/activities.yaml::inline[0].groups[2].items[2]
+    source_id: curriculum-c3977e51649c4e31
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword крутитися'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: лимонний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: (relational) lemon
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: ЛИМО́ННИЙ, а, е. 1. Прикм. до лимо́н.
+    Біля морських берегів [Середземномор’я] тя...'
+  source_inventory:
+    key: 7cec213f43360c2c
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/word-formation-adjectives/activities.yaml::inline[2].items[6].explanation
+    source_id: curriculum-73e400f1b60ab8b4
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword лимонний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: марність
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: futility, vanity
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МА́РНІСТЬ, ності, ж. Абстр. ім. до ма́рний¹.
+    Три залпи дали по ньому гайдамаки й...'
+  source_inventory:
+    key: 521e28b274299acd
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-subordinate-concess/activities.yaml::inline[3].pairs[1].right
+    source_id: curriculum-f9d066e52f64651e
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword марність'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: медик
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: physician (medical doctor)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МЕ́ДИК, а, ч. Фахівець з медицини. Борис
+    був медик і з замилування гігієніст (Фр...'
+  source_inventory:
+    key: 4ee8f7e94056810d
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/gerund-phrases/activities.yaml::workbook[2].pairs[10].left
+    source_id: curriculum-13a48cdd4fddd2a6
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword медик'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: мести
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: sweep (to clean using a broom or brush)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: МЕСТИ́, мету́, мете́ш; мин. ч. мів,
+    мела́, мело́; наказ. сп. мети́, меті́м (меті...'
+  source_inventory:
+    key: 66d3c94aaf0bf30a
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/aspect-future-tense/module.md::module_body
+    source_id: curriculum-b30ddd63d7b121ca
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword мести'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: неважливо
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: (it) does not matter (it is) unimportant (predicative)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: no entry'
+  source_inventory:
+    key: 9271501c57d14b35
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/advanced-pronouns/module.md::module_body
+    source_id: curriculum-5b7a972309a3a01b
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword неважливо'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: no entry'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: невимушений
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: unforced, relaxed, casual
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НЕВИ́МУШЕНИЙ, а, е. Який здійснюється
+    відповідно до бажання, потреби, без будь-я...'
+  source_inventory:
+    key: a18d87b20fcda23e
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/gerunds-imperfective/activities.yaml::inline[0].items[10].explanation
+    source_id: curriculum-5efd5d2a37e6b5a1
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword невимушений'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
+- lemma: несумісний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: incompatible (impossible to coexist; irreconcilable)
+  sense_note: 'Curriculum context; see source_inventory.locator. Exact dmklinger UK→EN
+    dictionary gloss. UA-GEC: 0 rows; СУМ-11: НЕСУМІ́СНИЙ, а, е. Якого не можна одночасно
+    поєднати, сумістити з чим-небудь інш...'
+  source_inventory:
+    key: dd55f211359fdf67
+    path: data/lexicon/source-inventory/curriculum-full-text-intake.json
+    locator: curriculum/l2-uk-en/b1/complex-compound/vocabulary.yaml::[12].usage
+    source_id: curriculum-3aa2f49a306e8e75
+    source_family: curriculum
+  evidence_refs:
+  - 'curriculum context: source_inventory.locator'
+  - 'data/sources.db: dmklinger_uk_en stress-normalized exact headword несумісний'
+  - 'VESUM: unique lemma+POS'
+  - 'heritage_classifier: standard; russianism=false; russian_shadow=false; sovietization_risk=0'
+  - 'ua_gec: 0 rows'
+  - 'sum11: clean'
+  review_queue_reasons:
+  - missing_english_anchor
