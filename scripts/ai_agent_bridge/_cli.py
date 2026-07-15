@@ -97,14 +97,18 @@ def _detect_caller_identity_from_env() -> str | None:
         return claude_name.strip().lower()
     if os.environ.get("CODEX_SESSION"):
         return "codex"
-    # The native `grok` CLI exports GROK_AGENT for every tool shell it spawns
-    # (tool-verified 2026-07-15; model-independent — grok-4.5, grok-5, … all set
-    # it), and it is the only grok-intrinsic identity marker available: GROK_HOME,
-    # GROK_SESSION*, XAI_*, AI_AGENT, and SESSION_HANDOFF_AGENT are all unset in
-    # grok shells. The native CLI IS the `grok-build` lane. Checked BEFORE the
-    # soft CLAUDE_PROJECT_DIR heuristic so a leaked CLAUDE_* var can't misroute a
-    # grok caller to the claude inbox (the "grok asked claude, got empty" class).
-    if os.environ.get("GROK_AGENT"):
+    # The native `grok` CLI hardcodes `export GROK_AGENT=1` in every tool-shell
+    # bootstrap (verified 2026-07-15 in the grok-0.2.101 binary's
+    # xai_grok_tools::computer::local::shell_state; model-independent — grok-4.5,
+    # grok-5, … all inherit it), and it is the only grok-intrinsic identity
+    # marker available: GROK_HOME, GROK_SESSION*, XAI_*, AI_AGENT, and
+    # SESSION_HANDOFF_AGENT are all unset in grok shells. The native CLI IS the
+    # `grok-build` lane. Match the sentinel EXACTLY ("1"): GROK_AGENT is also a
+    # documented agent-profile *name* selector, so a truthy check would
+    # false-positive on `GROK_AGENT=my-custom-agent`. Checked BEFORE the soft
+    # CLAUDE_PROJECT_DIR heuristic so a leaked CLAUDE_* var can't misroute a grok
+    # caller to the claude inbox (the "grok asked claude, got empty" class).
+    if os.environ.get("GROK_AGENT") == "1":
         return "grok-build"
     if os.environ.get("CLAUDE_PROJECT_DIR") or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"):
         return "claude"

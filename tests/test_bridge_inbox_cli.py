@@ -855,6 +855,16 @@ def test_detect_caller_identity_grok_agent_beats_soft_claude_heuristic(monkeypat
     assert _cli._detect_caller_identity_from_env() == "grok-build"
 
 
+def test_detect_caller_identity_grok_agent_profile_name_is_not_a_false_positive(monkeypatch):
+    # GROK_AGENT doubles as an agent-profile *name* selector; only the tool-shell
+    # sentinel value "1" means "spawned by a grok CLI shell". A profile name must
+    # NOT be mistaken for the grok-build lane — it falls through to normal detect.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "my-custom-agent")
+
+    assert _cli._detect_caller_identity_from_env() is None
+
+
 def test_detect_caller_identity_explicit_handoff_still_wins_over_grok_agent(monkeypatch):
     # An explicit, validated SESSION_HANDOFF_AGENT is authoritative over the
     # weaker GROK_AGENT marker.
