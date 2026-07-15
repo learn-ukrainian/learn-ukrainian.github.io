@@ -1,0 +1,34 @@
+discovered_at: '2026-07-15T00:00:00+00:00'
+error: null
+query_keywords:
+- 'Кирило Розумовський: останній гетьман Лівобережної Гетьманщини'
+- 'Розумовський Кирило Григорович Енциклопедія історії України'
+- 'Глухівські ради 1750 1763 чолобитна спадкове гетьманство'
+- 'універсал Кирила Розумовського 1763 статутові суди'
+- 'скасування гетьманства 1764 Друга Малоросійська колегія'
+warning: >-
+  Direct institutional-source refresh for BIO catalog-source readiness, 2026-07-15:
+  EIU, CDIAK, NBUV, and the Institute of History electronic library were inspected;
+  no Wikipedia or Russian-state source is retained as evidence.
+videos: []
+blogs: []
+rag_chunks:
+- chunk_id: eiu-rozumovskyi-kyrylo
+  source_type: institutional-encyclopedia
+  source_name: 'Енциклопедія історії України — «Розумовський Кирило Григорович»'
+  url: 'https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozumovskyj_K&Z21ID='
+  text: >-
+    Останній гетьман України (1750–1764); наприкінці 1763 року старшина просила
+    повернути Гетьманщині права, вольності й привілеї та встановити спадкове
+    гетьманство Розумовських.
+  task_attribution: 'codex/bio-89b642-cohort4-wiki-r2'
+- chunk_id: cdiak-hetmanate-restoration-1764
+  source_type: archival-institution
+  source_name: 'ЦДІАК України — «265 років відновлення гетьманату в Україні»'
+  url: 'https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php'
+  text: >-
+    Указ 1747 року відновив гетьманство за імперською процедурою; уряд Катерини II
+    посилив тиск і 1764 року змусив Розумовського зректися посади.
+  task_attribution: 'codex/bio-89b642-cohort4-wiki-r2'
+rag_literary: []
+rag_images: []

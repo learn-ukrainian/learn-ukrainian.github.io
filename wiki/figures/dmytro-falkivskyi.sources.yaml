@@ -25,17 +25,20 @@ sources:
   type: unknown
   title: eiu-falkivskyi-biohrafiia
 - id: S6
-  file: uk-wikipedia-falkivskyi-zhyttiepys
-  type: wikipedia
-  title: uk-wikipedia-falkivskyi-zhyttiepys
+  file: https://www.history.org.ua/?termin=Falkivskyj_D
+  type: external
+  title: 'Фальківський Дмитро Никанорович — Енциклопедія історії України'
+  url: https://www.history.org.ua/?termin=Falkivskyj_D
 - id: S7
-  file: uk-wikipedia-falkivskyi-terror-zahybel
-  type: wikipedia
-  title: uk-wikipedia-falkivskyi-terror-zahybel
+  file: https://resource.history.org.ua/item/11213
+  type: external
+  title: 'З порога смерті: Письменники України — жертви сталінських репресій — Інститут історії України НАН України'
+  url: https://resource.history.org.ua/item/11213
 - id: S8
-  file: uk-wikipedia-falkivskyi-tvorchist
-  type: wikipedia
-  title: uk-wikipedia-falkivskyi-tvorchist
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozstriliane_vidrodzhennia&Z21ID=
+  type: external
+  title: 'Розстріляне відродження — Енциклопедія історії України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozstriliane_vidrodzhennia&Z21ID=
 - id: S9
   file: wave8-ukr-lit-entsyklopediia_c3775
   type: literary

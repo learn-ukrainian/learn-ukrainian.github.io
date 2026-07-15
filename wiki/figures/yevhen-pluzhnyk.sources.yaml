@@ -12,22 +12,26 @@ sources:
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
 - id: S3
-  file: pluzhnyk-aforyzmy
-  type: unknown
-  title: pluzhnyk-aforyzmy
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID=
+  type: external
+  title: 'Плужник Євген Павлович — Енциклопедія історії України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID=
 - id: S4
   file: eiu-pluzhnyk-biohrafiia
   type: unknown
   title: eiu-pluzhnyk-biohrafiia
 - id: S5
-  file: uk-wikipedia-pluzhnyk-zhyttiepys
-  type: wikipedia
-  title: uk-wikipedia-pluzhnyk-zhyttiepys
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozstriliane_vidrodzhennia&Z21ID=
+  type: external
+  title: 'Розстріляне відродження — Енциклопедія історії України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozstriliane_vidrodzhennia&Z21ID=
 - id: S6
-  file: uk-wikipedia-pluzhnyk-aresht-smert
-  type: wikipedia
-  title: uk-wikipedia-pluzhnyk-aresht-smert
+  file: https://resource.history.org.ua/item/11213
+  type: external
+  title: 'З порога смерті: Письменники України — жертви сталінських репресій — Інститут історії України НАН України'
+  url: https://resource.history.org.ua/item/11213
 - id: S7
-  file: uk-wikipedia-pluzhnyk-literaturna-diialnist
-  type: wikipedia
-  title: uk-wikipedia-pluzhnyk-literaturna-diialnist
+  file: https://www.history.org.ua/?termin=Pluzhnyk_Y
+  type: external
+  title: 'Плужник Євген Павлович — Інститут історії України НАН України'
+  url: https://www.history.org.ua/?termin=Pluzhnyk_Y

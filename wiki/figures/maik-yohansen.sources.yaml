@@ -2,7 +2,12 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wikipedia/Майк Йогансен
-  type: wikipedia
-  title: Майк Йогансен
-  url: https://uk.wikipedia.org/wiki/%D0%9C%D0%B0%D0%B9%D0%BA%20%D0%99%D0%BE%D0%B3%D0%B0%D0%BD%D1%81%D0%B5%D0%BD
+  file: https://esu.com.ua/pdf/file/12974.pdf
+  type: external
+  title: 'Йогансен Майк — Енциклопедія Сучасної України'
+  url: https://esu.com.ua/pdf/file/12974.pdf
+- id: S2
+  file: https://esu.com.ua/pdf/file/33109.pdf
+  type: external
+  title: 'ВАПЛІТЕ — Енциклопедія Сучасної України'
+  url: https://esu.com.ua/pdf/file/33109.pdf

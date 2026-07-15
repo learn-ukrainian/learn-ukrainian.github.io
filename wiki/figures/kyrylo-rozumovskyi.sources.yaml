@@ -1,0 +1,28 @@
+# Source registry for wiki/figures/kyrylo-rozumovskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozumovskyj_K&Z21ID=
+  type: external
+  title: 'Розумовський Кирило Григорович — Енциклопедія історії України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rozumovskyj_K&Z21ID=
+- id: S2
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Glukhivski_rady&Z21ID=
+  type: external
+  title: 'Глухівські ради 1750, 1763 — Енциклопедія історії України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Glukhivski_rady&Z21ID=
+- id: S3
+  file: https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php
+  type: external
+  title: '265 років відновлення гетьманату в Україні — ЦДІАК України'
+  url: https://cdiak.archives.gov.ua/v_265_rokiv_Hetmanatu.php
+- id: S4
+  file: https://www.history.org.ua/?termin=Rozumovskyj_K
+  type: external
+  title: 'Розумовський Кирило Григорович — Інститут історії України НАН України'
+  url: https://www.history.org.ua/?termin=Rozumovskyj_K
+- id: S5
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=2&I21DBN=ELIB&P21DBN=ELIB&Image_file_name=book/0018830.pdf&IMAGE_FILE_DOWNLOAD=0
+  type: external
+  title: 'Універсал Кирила Розумовського 1763 року про Статутові суди — електронна бібліотека ІІУ НАН України'
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=2&I21DBN=ELIB&P21DBN=ELIB&Image_file_name=book/0018830.pdf&IMAGE_FILE_DOWNLOAD=0
