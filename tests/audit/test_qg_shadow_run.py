@@ -102,6 +102,49 @@ def test_shadow_driver_captures_lifecycle_and_advisory_verdicts(tmp_path: Path) 
     assert _count(tmp_path / "shadow.db", "llm_qg_shadow_findings") == len(report["records"])
 
 
+def test_shadow_driver_threads_writer_family_from_module_metadata(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    (module_dir / "writer_meta.json").write_text('{"writer_family": "anthropic"}\n', encoding="utf-8")
+
+    result = qg_shadow_run.run_shadow_module(
+        _target(module_dir),
+        audit_dir=tmp_path / "audit",
+        shadow_db=tmp_path / "shadow.db",
+        reviewer=_dispatch,
+        live_reviewer=False,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        max_cost_usd=1.0,
+        layerb_dry_run=True,
+    )
+
+    artifact = json.loads(result.artifact_path.read_text(encoding="utf-8"))
+    assert artifact["writer_family"] == "anthropic"
+    assert artifact["writer_lineage"]["source"].endswith("writer_meta.json")
+    assert artifact["writer_family"] != "fixture"
+
+
+def test_shadow_driver_rejects_tau_other_than_attested_value(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(qg_shadow_run.layerb_shadow, "DEFAULT_TAU", 0.74)
+
+    with pytest.raises(RuntimeError, match=r"pinned tau=0\.75"):
+        qg_shadow_run.run_shadow_module(
+            _target(_module(tmp_path)),
+            audit_dir=tmp_path / "audit",
+            shadow_db=tmp_path / "shadow.db",
+            author_family="openai",
+            reviewer=_dispatch,
+            live_reviewer=False,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            max_cost_usd=1.0,
+            layerb_dry_run=True,
+        )
+
+
 def test_shadow_driver_never_writes_canonical_llm_qg_runs(tmp_path: Path) -> None:
     module_dir = _module(tmp_path)
     canonical_db = tmp_path / "llm_qg.db"
