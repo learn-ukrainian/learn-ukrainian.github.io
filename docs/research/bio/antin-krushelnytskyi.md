@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited
 - [x] Oppression mechanism is specific
-- [x] ≥2 primary-source quotes from his own letters/work
+- [ ] ≥2 primary-source quotes from his own letters/work — pending directly inspected manuscript or critical edition
 - [x] Cross-track links to LIT/HIST tracks checked
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified

@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited
 - [x] Oppression mechanism is specific
-- [x] ≥2 primary-source quotes / recorded direct statements
+- [ ] ≥2 primary-source quotes / recorded direct statements — one published protocol excerpt is verified; a second direct source is required
 - [x] Cross-track links to LIT/HIST tracks checked
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -25,25 +25,25 @@
 - **Pseudonyms / aliases:** Софія Налепинська; Zofia Nalepińska; Софія Бойчук; Sofiia Nalepynska-Boichuk. Forbidden in body text except here: Sofya Nalepinskaya, Софья Налепинская, Russianized `Boichuk` via Russian identity framing.
 - **Born:** 30 July 1884 | Łódź, then Russian Empire; now Poland. [T1: ЕСУ; T1: IEU]
 - **Died:** sentenced 6 December 1937, executed 11 December 1937 | Kyiv, Ukrainian SSR | shot by NKVD in the Boychukist repression case. [T1: ЕСУ; T2: Local History]
-- **Family / education key facts:** Polish-born artist who studied in European art centers, married Михайло Бойчук, became a major Ukrainian graphic artist and professor associated with the Boychukist school. In interrogation she identified herself as Ukrainian while naming Polish parents. [T1: IEU; T2: Local History]
+- **Family / education key facts:** Polish-born artist who studied in European art centers, married Михайло Бойчук, and became a major Ukrainian graphic artist and professor associated with the Boychukist school. The UINP account reports that she called herself Ukrainian during interrogation, but does not supply the exact identity formula used elsewhere. [T1: IEU; T1: UINP]
 
-**Source disagreement note:** The main distortion is identity, not basic dates. Some summaries flatten her into a Polish artist because of birth/family origin; modern Ukrainian art-historical framing treats her as Polish-born and Ukrainian by artistic affiliation and recorded self-identification. Keep both facts visible. [T1: ЕСУ; T2: Local History]
+**Source disagreement note:** The main distortion is identity, not basic dates. Some summaries flatten her into a Polish artist because of birth/family origin; modern Ukrainian art-historical framing supports a Polish-born artist associated with Ukrainian art institutions, and UINP reports her Ukrainian self-description during interrogation. Keep the evidence boundary visible: the unverified exact identity formula is not reproduced. [T1: ЕСУ; T1: UINP]
 
 ## 2. Oppression mechanism
 
 - **What happened:** NKVD arrest in the Boychukist case, fabricated nationalist/terror and foreign-intelligence accusation, death sentence, execution in Kyiv.
 - **When:** arrested 12 June 1937; sentenced to death 6 December 1937; executed 11 December 1937. [T1: ЕСУ; T2: Local History]
 - **By whom:** NKVD organs in Soviet Ukraine; Soviet judicial/security apparatus handling the Boychukist case.
-- **Document references:** interrogation record includes the direct identity statement "Українка, батьки — поляки"; accusation framed participation in an anti-Soviet nationalist terrorist organization and foreign-intelligence cooperation. [T2: Local History]
+- **Document references:** UINP publishes an interrogation-denial excerpt and reports her Ukrainian self-description; the exact identity formula reproduced by a secondary article is not treated as a direct archival transcription. The accusation framed participation in an anti-Soviet nationalist terrorist organization and foreign-intelligence cooperation. [T1: UINP; T2: Local History]
 - **Mechanism specifics:** The case targeted the Boychukist school as an alleged nationalist formation. Nалепинська-Бойчук's art and teaching were read through the police fantasy of conspiracy: a collective visual language, European training, and Ukrainian monumental ambitions became grounds for terror. [T1: ЕСУ; T1: IEU]
 
 Her execution belongs with the murders of Mykhailo Boichuk, Ivan Padalka, Vasyl Sedliar, and the wider destruction of the Boychukist circle. The mechanism was cultural liquidation: not just removing artists, but making a style and school seem politically criminal. [T1: IEU; curriculum plan `mykhailo-boichuk.yaml`]
 
-**What survived / what was destroyed:** Graphic works survived in museum collections, but many monumental Boychukist works were physically destroyed, painted over, or lost. Her letters and interrogation fragments preserve direct voice; the art itself preserves an even stronger visual voice through woodcuts and social-documentary themes. [T2: Local History; T2: Lviv National Art Gallery]
+**What survived / what was destroyed:** Graphic works survived in museum collections, but many monumental Boychukist works were physically destroyed, painted over, or lost. The published interrogation denial is a direct voice; reported letters require direct transcription before they can be quoted. The art itself preserves an even stronger visual voice through woodcuts and social-documentary themes. [T1: UINP; T2: Lviv National Art Gallery]
 
 ## 3. Major works
 
-- **1910s** — letters to Mykhailo Boichuk; direct evidence of multilingual and artistic formation.
+- **1910s** — correspondence with Mykhailo Boichuk is reported in secondary discussion; no letter fragment is used as a direct quotation without archival transcription.
 - **1920s** — *В. Еллан-Блакитний*, graphic portrait / woodcut tradition. [T1: ЕСУ]
 - **1920s** — *Фабзаєць*, graphic work linked to worker/student themes.
 - **1920s** — *Мені тринадцятий минало...*, Shevchenko-themed graphic work.
@@ -67,22 +67,22 @@ This is a denial recorded in a police document, not a neutral account of the cas
 
 ## 5. Language register
 
-- **Register:** private multilingual letter register; police-protocol direct statement; visual art register is disciplined modernist / Boychukist, monumental, graphic, and social-documentary.
-- **CEFR readiness for full reading:** B2/C1 for letter snippets; C1 for art-historical prose around Boychukism.
-- **Lexicon notes:** Art vocabulary (дереворит, штрихарство, графіка, монументалізм), identity terms, and multilingual interference in private writing.
+- **Register:** police-protocol direct statement; visual art register is disciplined modernist / Boychukist, monumental, graphic, and social-documentary. Private letters require direct transcription before register claims or excerpts are used.
+- **CEFR readiness for full reading:** C1 for art-historical prose around Boychukism; any letter excerpt requires separate primary-text verification.
+- **Lexicon notes:** Art vocabulary (дереворит, штрихарство, графіка, монументалізм) and evidence-bounded identity terms.
 - **Stylistic features:** compressed line, strong contour, social types, education/labor themes, and the Boychukist synthesis of Byzantine, folk, and modern monumental principles.
 
 ## 6. Contested points
 
-- **Modern UA scholarly debate:** The key debate is identity and school affiliation: Polish-born European-trained artist, Ukrainian by self-identification and by Boychukist work. Avoid both erasure of Polish origin and erasure of Ukrainian belonging. [T1: IEU; T2: Local History]
+- **Modern UA scholarly debate:** The key debate is identity and school affiliation: Polish-born European-trained artist associated with Ukrainian art institutions and the Boychukist school. Avoid both erasure of Polish origin and erasure of Ukrainian cultural belonging; do not turn a secondary paraphrase into an archival quotation. [T1: IEU; T1: UINP]
 - **Execution sequence:** Sources may say "shot in Kyiv" or give sentence/execution dates separately. Use the two-step sequence: 6 December sentence, 11 December execution.
-- **What gets simplified:** She is often reduced to "Boichuk's wife." The dossier must foreground her own graphic work, teaching, and direct statements.
+- **What gets simplified:** She is often reduced to "Boichuk's wife." The dossier must foreground her own graphic work, teaching, and the published interrogation denial.
 - **Russian/Soviet disinformation angle:** The police framing of "nationalist terrorist organization" and foreign intelligence is not reliable biography. It is the mechanism of criminalizing a Ukrainian art school.
 - **Polish / other-perspective considerations:** Polish birth and family are part of the biography. They should be taught as a cross-cultural formation, not as a reason to remove her from Ukrainian art history.
 
-**Additional research cautions:** Налепинська-Бойчук requires a different kind of dossier discipline because the "major works" are visual rather than literary. Future module writers should not apologize for that or force her into a writer template. The primary evidence can include letters, interrogation statements, object records, exhibition descriptions, and reproductions of woodcuts. The pedagogical center is visual language: line, labor, women students, hunger, and monumental simplification. That still fits the bio track because the figure's life and oppression are the curriculum object.
+**Additional research cautions:** Налепинська-Бойчук requires a different kind of dossier discipline because the "major works" are visual rather than literary. Future module writers should not apologize for that or force her into a writer template. Primary evidence can include directly transcribed letters, published interrogation statements, object records, exhibition descriptions, and reproductions of woodcuts. The pedagogical center is visual language: line, labor, women students, hunger, and monumental simplification. That still fits the bio track because the figure's life and oppression are the curriculum object.
 
-**Source-handling note:** Identity wording must be exact. "Polish-born Ukrainian artist" is defensible; "Polish artist" alone is incomplete; "Ukrainian by birth" is false. Her recorded statement "Українка, батьки — поляки" is useful because it lets the dossier avoid both nationalist overcorrection and external erasure. If a later source uses Russianized `Софья Налепинская`, keep it only in aliases/forbidden forms or in a note about source language.
+**Source-handling note:** Identity wording must be evidence-bounded. "Polish-born artist associated with Ukrainian art institutions" is defensible; "Polish artist" alone is incomplete; "Ukrainian by birth" is false. UINP reports that she called herself Ukrainian during interrogation, but the exact identity formula reproduced in a secondary article is not used without archival transcription. If a later source uses Russianized `Софья Налепинская`, keep it only in aliases/forbidden forms or in a note about source language.
 
 **Pedagogical bridge:** This dossier should connect to Mykhailo Boichuk but not disappear behind him. A strong activity can compare one Boichuk school principle with one Nalepynska-Boichuk woodcut and ask what the individual artist contributes inside a collective style. That frame respects the communal nature of Boychukism while preserving her authorship.
 
@@ -107,7 +107,7 @@ At least one future activity should ask learners to describe a work visually bef
 - **EN canonical:** Sofiia Nalepynska-Boichuk.
 - **UA canonical:** Софія Олександрівна Налепинська-Бойчук.
 - **Aliases to track:** Софія Налепинська; Zofia Nalepińska; Софія Бойчук; Sofiia Nalepynska.
-- **Forbidden Russian-imperial / Russified forms:** Sofya Nalepinskaya; Софья Налепинская; any phrasing that treats "Polish-born" as "not Ukrainian" against her recorded self-identification.
+- **Forbidden Russian-imperial / Russified forms:** Sofya Nalepinskaya; Софья Налепинская; any phrasing that treats "Polish-born" as incompatible with her documented Ukrainian art-world affiliation or reported self-description.
 
 ## 9. Image candidates
 

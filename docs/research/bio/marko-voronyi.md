@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited
 - [x] Oppression mechanism is specific
-- [x] ≥2 primary-source quotes from his own work
+- [ ] ≥2 primary-source quotes from his own work — a second directly inspected primary text is required
 - [x] Cross-track links to LIT/HIST tracks checked
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -74,15 +74,15 @@ The earlier dossier quoted adult lyrics through a museum transcription without a
 
 **Additional research cautions:** Marko Voronyi is the shortest and most easily erased dossier in this Block A set, so future writers need deliberate scaffolding. The correct response is not to inflate his corpus beyond evidence, but to explain why a smaller corpus still matters. He represents the second generation of a Ukrainian literary family, children's print culture of the early 1930s, and a religious-symbolic lyric strand that does not fit the stereotype of Soviet youth literature. Those three angles are enough for a meaningful bio module.
 
-**Source-handling note:** His children's titles should be verified through library records before a lesson chooses excerpts. The museum page gives a strong institutional narrative and quotes adult lyric; the NBUV record gives bibliographic support. Do not infer that all titles are available in classroom-ready text. Also avoid normalizing the pen name Антіох out of existence: it helps distinguish the adult lyric voice from the child-facing titles.
+**Source-handling note:** His children's titles should be verified through library records before a lesson chooses excerpts. The museum page gives a strong institutional narrative, while the NBUV record gives bibliographic support; neither substitutes for a directly inspected primary edition of adult lyric. Do not infer that all titles are available in classroom-ready text. Also avoid normalizing the pen name Антіох out of existence: it helps distinguish the adult lyric voice from the child-facing titles.
 
-**Pedagogical bridge:** Marko should be cross-linked to Mykola Voronyi, but a future activity can make the family link productive rather than biographical decoration. Students can compare Mykola's symbolist elevation with Marko's "янголи" imagery and then trace how both generations were processed by different Soviet terror mechanisms. This makes the father-son relationship a lens on cultural continuity and rupture.
+**Pedagogical bridge:** Marko should be cross-linked to Mykola Voronyi, but a future activity can make the family link productive rather than biographical decoration. Students can compare Mykola's symbolist elevation with Marko's documented adult-lyric register only after an exact primary text is selected, then trace how both generations were processed by different Soviet terror mechanisms. This makes the father-son relationship a lens on cultural continuity and rupture.
 
 **Execution-context note:** The timeline matters: arrest in 1935, sentence in 1936, execution in 1937. That sequence shows that the camp sentence was not a stable punishment but a holding stage before mass murder. This should be explicit in any Sandarmokh lesson.
 
 **Assessment note:** Marko Voronyi should be considered for a smaller, carefully framed module rather than a large literary-survey lesson. His value may be strongest in a family-and-generation unit, a Sandarmokh unit, or a children's-literature-under-terror unit. That is not a downgrade. It is a way to preserve proportionality while still resisting erasure. A 10-minute excerpt activity around one adult lyric line and one children's title could teach more honestly than a forced full-author lecture.
 
-**Source expansion note:** Before Phase 2, verify whether any digitized editions of *Форвард* or the children's books are available with stable page references. If not, the module should rely on museum-quoted lyric and bibliographic discussion rather than invented close readings. This dossier intentionally avoids quoting titles whose text was not available in the current research pass.
+**Source expansion note:** Before Phase 2, verify whether any digitized editions of *Форвард* or the children's books are available with stable page references. If not, the module should rely on institutional narrative and bibliographic discussion rather than invented close readings. This dossier intentionally avoids quoting titles whose text was not available in the current research pass.
 
 **Reviewer note:** Marko's dossier should be judged by evidence density, not by celebrity weight. If a later plan needs to choose between a full standalone module and a paired family module, the paired format may be stronger. The key acceptance criterion is that Marko remains a named author with his own works, not an anonymous appendix to his father.
 

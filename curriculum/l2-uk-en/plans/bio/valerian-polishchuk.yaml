@@ -14,7 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — "Почеплена на гвіздочку зорі" (*Геніяльні кристали*, 1927) як космічно-побутовий образ
+    Аналіз того, як назви збірок і зовнішні скани 1922–1923 років дають змогу досліджувати
+    поєднання технічної та ландшафтної образності без неперевіреної цитати
   placement: workbook
   type: critical-analysis
 - focus: Чому радянська влада перетворила літературну біографію на організаційну злочину?
@@ -128,13 +129,13 @@ readings:
     basis: external-link
     evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92._%D0%A0%D0%B0%D0%B4%D1%96%D0%BE_%D0%B2_%D0%B6%D0%B8%D1%82%D0%B0%D1%85_(1923).pdf
     note: Публічнодоменний скан доступний лише за зовнішнім посиланням; текст не відтворюється в курсі.
-portrait:
-  url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92%D0%B0%D0%BB%D0%B5%D1%80%27%D1%8F%D0%BD.jpg
-  license: PDM-1.0 / PD-Art (PD-old-70)
-  attribution: Wikimedia Commons, anonymous historical portrait
-  caption_uk: Валер'ян Поліщук, дата невідома
-  caption_en: Valerian Polishchuk, date unknown
-  verified_on: '2026-07-15'
+portrait_fallback:
+  reason: >-
+    Точна сторінка файлу Commons має анонімне авторство, а досьє не містить незалежного
+    підтвердження походження, автора чи індивідуальної ліцензії для цього портрета.
+  candidate_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92%D0%B0%D0%BB%D0%B5%D1%80%27%D1%8F%D0%BD.jpg
+  evidence_url: https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92%D0%B0%D0%BB%D0%B5%D1%80%27%D1%8F%D0%BD.jpg
+  disposition: no-portrait-until-rights-verified
 references:
 - note: Енциклопедична стаття.
   path: https://esu.com.ua/article-881253

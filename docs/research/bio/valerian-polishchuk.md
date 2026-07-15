@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited
 - [x] Oppression mechanism is specific
-- [x] ≥2 primary-source quotes from his own work
+- [ ] ≥2 primary-source quotes from his own work — pending direct transcription from identified pages
 - [x] Cross-track links to LIT/HIST tracks checked
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -113,7 +113,7 @@ This balance should be checked in review: one industrial passage, one lyric-phil
 - **[T1]** "Поліщук Валер'ян Львович." *Енциклопедія Сучасної України*. https://esu.com.ua/article-881253
 - **[T1]** "Polishchuk, Valeriian." *Internet Encyclopedia of Ukraine*. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CO%5CPolishchukValeriian.htm
 - **[T2]** ЦДАМЛМ України archival-museum note on repressed Ukrainian writers, including Polishchuk. https://old-csam.archives.gov.ua/ukr/vchiteli/
-- **[T5]** Wikisource texts from *Геніяльні кристали*, used for primary quotes and corroborated by Tier 1 biography.
+- **[T5]** Wikisource texts from *Геніяльні кристали*, navigation leads only; not evidence for learner-facing quotations without an identified, directly inspected edition.
 - **[T5]** Wikimedia Commons portrait page, image lead only.
 - **[T3]** Ukrainian Wikipedia extract for navigation only.
 - **[T1]** Український інститут національної пам'яті. «Список розстріляних українців у Сандармосі». https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
