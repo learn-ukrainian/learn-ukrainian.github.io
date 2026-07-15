@@ -46,6 +46,13 @@ CORRECTION_DICTIONARIES_LABEL = "Словники мовних поправок"
 GRAC_LABEL = "Генеральний регіонально анотований корпус української мови (ГРАК)"
 MIYKLAS_LABEL = "навчальні матеріали МійКлас (корпусні пари)"
 GRINCHENKO_LABEL = "Словарь української мови Б. Грінченка (1907–1909)"
+MPHDICT_SYNONYMS_LABEL = (
+    "mphdict (ODbL/DbCL): Словник синонімів української мови та Орфографічний словник"
+)
+ESUM_LABEL = (
+    "«Етимологічний словник української мови» "
+    "(ЕСУМ, Ін-т мовознавства ім. О. О. Потебні НАН України; mphdict ODbL/DbCL)"
+)
 
 RELATION_PAIRS_PREFIX = "relation_pairs/"
 UNMAPPED_SOURCE_PATTERN = re.compile(r"relation_pairs/", re.IGNORECASE)
@@ -95,6 +102,8 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         GRAC_LABEL,
         MIYKLAS_LABEL,
         GRINCHENKO_LABEL,
+        MPHDICT_SYNONYMS_LABEL,
+        ESUM_LABEL,
     }
 )
 

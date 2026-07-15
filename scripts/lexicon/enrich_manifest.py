@@ -14,16 +14,14 @@ no fabrication):
 - **cefr** — PULS CEFR lookup when available, otherwise a visibly labelled
   GRAC-frequency estimate for entries outside PULS.
 - **literary_attestation** — exact-form literary corpus hit when available.
-- **synonyms** — source-attested Ukrainian candidates from clean slovnyk.me
-  synonym dictionaries, with noisy legacy sources kept A1-sense allowlisted.
-- **sections.synonyms / sections.antonyms / sections.idioms** — slovnyk.me
-  per-lemma lookup cache and local dictionary rows (Караванський + Словник
-  синонімів; Вікісловник antonyms; Фразеологічний).
+- **synonyms** — sense-separated offline mphdict groups from the Ukrainian
+  synonym database, preserving their original set boundaries.
+- **sections.synonyms / sections.antonyms / sections.idioms** — mphdict synonym
+  groups and local dictionary rows (Вікісловник antonyms; Фразеологічний).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович, «Неправильно-правильно», Штепа чужослів).
-- **etymology** — Goroh cached extracts first, ЕСУМ fallback, uk.wiktionary
-  dump fallback for remaining single-word gaps
-  (``data/sources.db``; deterministic local lookup only).
+- **etymology** — offline mphdict ЕСУМ roots, with the source volume/page
+  citation and bibliography retained from the dictionary export.
 
 Every field carries its ``source`` so the UI can attribute it. Lemmas with no
 dictionary hit simply get an empty enrichment and the UI keeps its honest
@@ -87,6 +85,8 @@ from scripts.lexicon.manifest_io import (
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     CORRECTION_DICTIONARIES_LABEL,
+    ESUM_LABEL,
+    MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
     SLUG_ACADEMIC_LABELS,
     SUM20_ACADEMIC_LABEL,
@@ -99,6 +99,7 @@ from scripts.lexicon.source_attribution import (
     official_url_for_slug,
     remap_url_list,
 )
+from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
@@ -172,7 +173,12 @@ _GRAC_CORPUS = "grac19a"
 _GRAC_BATCH_SIZE = 25
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = dict(SLUG_ACADEMIC_LABELS)
-_SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
+# Synonym slugs are retired from the active cache.  Atlas synonym enrichment
+# is mphdict-only; keeping those mirror fetches here would silently continue
+# the replaced scraper even though its result is no longer rendered.
+_SLOVNYK_LOOKUP_SLUGS = tuple(
+    slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms", "synonyms_karavansky"}
+)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
@@ -1604,6 +1610,42 @@ def _synonyms_slovnyk(
     if mirror_urls:
         block["mirror_source_urls"] = mirror_urls
     return block
+
+
+def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
+    """Return offline mphdict synonym groups without flattening sense boundaries."""
+    result = mphdict_synonyms(lemma)
+    if not result:
+        return None
+    synsets = result.get("synsets")
+    if not isinstance(synsets, list) or not synsets:
+        return None
+
+    lookup_key = _lookup_key(lemma)
+    items: list[str] = []
+    seen: set[str] = set()
+    for synset in synsets:
+        if not isinstance(synset, dict):
+            continue
+        members = synset.get("members")
+        if not isinstance(members, list):
+            continue
+        for member in members:
+            if not isinstance(member, dict):
+                continue
+            member_lemma = str(member.get("lemma") or "").strip()
+            if not member_lemma or _lookup_key(member_lemma) == lookup_key:
+                continue
+            if member_lemma not in seen:
+                seen.add(member_lemma)
+                items.append(member_lemma)
+    if not items:
+        return None
+    return {
+        "items": items[:24],
+        "synsets": synsets,
+        "source": MPHDICT_SYNONYMS_LABEL,
+    }
 
 
 def _clean_atlas_chip_candidate(candidate: str, lemma: str) -> str | None:
@@ -4515,6 +4557,47 @@ def _source_etymology(
     )
 
 
+def _mphdict_etymology(lemma: str) -> dict[str, Any] | None:
+    """Adapt the rich mphdict root query to the compact Atlas etymology block."""
+    result = mphdict_etymology(lemma)
+    if not result:
+        return None
+    roots = result.get("roots")
+    if not isinstance(roots, list) or not roots:
+        return None
+    root = roots[0]
+    if not isinstance(root, dict):
+        return None
+    citation = root.get("citation")
+    citation_display = citation.get("display") if isinstance(citation, dict) else ""
+    source = ESUM_LABEL
+    if citation_display:
+        source = f"{source}, {citation_display}"
+    etymons = root.get("etymons")
+    headword = ""
+    etymon_count = 0
+    if isinstance(etymons, list):
+        etymon_count = len(etymons)
+        for etymon in etymons:
+            if isinstance(etymon, dict) and etymon.get("is_head"):
+                headword = str(etymon.get("stressed") or etymon.get("lemma") or "").strip()
+                break
+    match = root.get("match")
+    direct_headword = isinstance(match, dict) and bool(match.get("is_direct_headword"))
+    article_kind = "Стаття ЕСУМ" if direct_headword else "Зіставлення у статті ЕСУМ"
+    label = f"{article_kind}: {headword or lemma}; етимонів: {etymon_count}."
+    return {
+        "text": label,
+        "source": source,
+        "mphdict_root": {
+            "id": root.get("id"),
+            "match": root.get("match"),
+            "citation": citation,
+            "bibliography": root.get("bibliography", []),
+        },
+    }
+
+
 def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
     labeled = dict(etymology)
     source = str(labeled.get("source") or "").strip()
@@ -4526,11 +4609,11 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
 def _etymology(
     conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
 ) -> dict | None:
-    """Cached etymology by direct per-lemma authority order."""
+    """Offline ЕСУМ etymology from mphdict; no mirror or Wiktionary fallback."""
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
-    return _source_etymology(conn, lemma, kaikki_lookup)
+    return _mphdict_etymology(lemma)
 
 
 _GRAC_FREQUENCY_CACHE_DATA: dict[str, Any] | None = None
@@ -5519,7 +5602,7 @@ def _resolve_gated_section(
       * gate ran, no confirmed item lost   -> ran-and-confirmed: take the new section
         (additions welcome); no provenance marker (default, keeps the diff minimal).
       * gate ran, confirmed item(s) dropped -> ran-and-rejected: the retraction is
-        authoritative (e.g. WordNet auto-translation junk ключ->джерело/живець); take
+        authoritative (for example, a rejected cross-sense legacy relation); take
         the new section (may be ``None`` when everything was retracted); mark ``rejected``.
       * gate did NOT run -> did-not-run: never retract a confirmed item (PRESERVE the
         existing section when the recomputation would drop one), and ALWAYS mark
@@ -5704,12 +5787,10 @@ def enrich_entry(
     # instead of silently overwriting it with an offline-empty recomputation.
     existing_sections = entry.get("sections")
     baseline_sections = existing_sections if isinstance(existing_sections, dict) else {}
-    # "Did the gate run" is decided per RELEVANT slug set (#5077 review finding 1):
-    # synonyms depend on the slovnyk synonym dictionaries, idioms on the phraseology
-    # dictionary. Homonyms/antonyms/paronyms are db/pointer-driven local sections with
-    # no slovnyk dependency, so their gate always runs (finding 2) — an offline run
-    # must let their authoritative local data update, not freeze a stale section.
-    synonyms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_SYNONYM_SLUGS)
+    # mphdict synonym groups are a local primary source.  A missing database is
+    # the only did-not-run state; a present database with no matching set is an
+    # authoritative empty result and may retract stale legacy chips.
+    synonyms_gate_ran = mphdict_synonyms_available()
     idioms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
     sections: dict[str, object] = {}
     gate_provenance: dict[str, str] = {}
@@ -5723,22 +5804,11 @@ def enrich_entry(
         if outcome:
             gate_provenance[name] = outcome
 
-    synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry_pos)
+    synonyms = _synonyms_mphdict(base)
     if not synonyms and fallback_base:
-        synonyms = _synonyms_slovnyk(fallback_base, entry_pos=entry_pos)
+        synonyms = _synonyms_mphdict(fallback_base)
         if synonyms:
             synonyms = _with_base_source_label(synonyms, fallback_base)
-    pointer_relations = (
-        pointer_synonym_relations
-        if pointer_synonym_relations is not None
-        else _definition_pointer_relations(
-            conn,
-            lemma,
-            has_sum11_flags=has_sum11_flags,
-            cache=slovnyk_cache,
-        )
-    )
-    synonyms = _merge_synonym_relations(synonyms, pointer_relations)
     _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
     if not antonyms and fallback_base:

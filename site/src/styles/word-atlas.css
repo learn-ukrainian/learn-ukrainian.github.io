@@ -1001,6 +1001,22 @@
   margin: 8px 0;
 }
 
+.synonym-sets {
+  display: grid;
+  gap: 10px;
+}
+
+.synonym-set {
+  border-left: 2px solid var(--gray-300);
+  padding-left: 10px;
+}
+
+.synonym-set-context {
+  color: var(--gray-700);
+  font-size: 0.84rem;
+  margin-bottom: 5px;
+}
+
 .chip {
   padding: 6px 14px;
   border: 1px solid var(--teal);
