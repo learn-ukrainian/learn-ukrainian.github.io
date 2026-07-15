@@ -394,8 +394,18 @@ def verify_artifact_survival(result: ShadowRunResult) -> list[str]:
     ):
         if not path.is_file():
             failures.append(f"{label} missing at exit: {path}")
-    if result.artifact_path.is_file() and _sha256(result.artifact_path) != result.artifact_sha256:
-        failures.append(f"shadow artifact content drifted between DB record and exit: {result.artifact_path}")
+    # Hash-read under try: the whole point of this probe is that evidence can
+    # vanish at ANY moment, including between the is_file() check and the read
+    # (review finding: an uncaught OSError here would crash with rc=1 instead
+    # of reporting the loss).
+    if result.artifact_path.is_file():
+        try:
+            recomputed = _sha256(result.artifact_path)
+        except OSError as exc:
+            failures.append(f"shadow artifact unreadable at exit: {result.artifact_path} ({exc})")
+        else:
+            if recomputed != result.artifact_sha256:
+                failures.append(f"shadow artifact content drifted between DB record and exit: {result.artifact_path}")
     return failures
 
 
@@ -490,7 +500,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     if survival_failures:
         for failure in survival_failures:
             print(f"qg shadow evidence lost: {failure}", file=sys.stderr)
-        return 3
+        # rc=4, NOT 3: layerb_shadow already uses 3 for a partial (capped)
+        # run, which propagates through layerb_exit_code — an orchestrator
+        # must be able to tell "partial but healthy" from "evidence lost".
+        return 4
     return result.layerb_exit_code
 
 
