@@ -79,25 +79,32 @@ persona:
   role: Модератор семінару, що аналізує не лише біографію, а й вплив однієї людини на стратегію та міжнародні відносини в умовах війни
   voice: Aviation Analyst
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Стаття-спогад з детальним аналізом його зусиль щодо F-16.
-  hosting: external
+- title: Пільщиков Андрій Борисович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-886448
   language: uk
-  role: Контекст
-  source_name: Українська правда
-  source_type: Стаття
-  task: Дізнатися про роль Андрія Пільщикова в лобіюванні західних винищувачів для України.
-  title: Джус і його мрія
-  url: https://www.pravda.com.ua/articles/2023/08/29/7417537/
-- caveats: Некролог від профільного видання.
-  hosting: external
+  role: orientation
+  source_type: encyclopedia
+  hosting: link-only
+  learner_task: Виписати окремо підтверджені відомості про службу, публічну адвокацію та обставини загибелі льотчика.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-886448
+    note: Стаття ЕСУ захищена авторським правом; у курсі дозволено лише посилання на сторінку.
+- title: Захоплювався «Топ Ґаном» і мріяв літати на F-16
+  source_name: hromadske
+  source_url: https://hromadske.ua/posts/zahoplyuvavsya-top-ganom-i-mriyav-litati-na-f-16-rozpovidi-dzhusa-pro-povitryani-boyi-ta-zahidnu-tehniku
   language: uk
-  role: Контекст
-  source_name: Мілітарний
-  source_type: Стаття
-  task: Ознайомитися з професійним шляхом та досягненнями пілота.
-  title: 'Андрій Пільщиков: як загинув та ким був пілот на позивний "Juice"'
-  url: https://mil.in.ua/uk/news/zahynuv-pilot-andriy-pilshchykov-na-pozyvnyy-juice/
+  role: primary-voice
+  source_type: interview
+  hosting: link-only
+  learner_task: Зіставити власні пояснення Пільщикова про повітряну війну з енциклопедичним життєписом, не перетворюючи смерть на сюжетний фінал.
+  rights:
+    basis: external-link
+    evidence_url: https://hromadske.ua/posts/zahoplyuvavsya-top-ganom-i-mriyav-litati-na-f-16-rozpovidi-dzhusa-pro-povitryani-boyi-ta-zahidnu-tehniku
+    note: Матеріал медіа захищений авторським правом; доступний тільки як зовнішнє посилання.
 references:
 - title: Андрій Пільщиков (Wikipedia UA)
   name: Андрій Пільщиков (Wikipedia UA)

@@ -97,25 +97,32 @@ persona:
   role: Модератор дискусії, який спонукає студентів бачити не ікону, а складну особистість в історичному контексті
   voice: Критичний біограф
 phase: BIO.4
+readings_contract_version: 2
 readings:
-- caveats: Стаття містить детальний огляд його громадської діяльності.
-  hosting: external
+- title: 'Віталій Кличко: У Києві створили ландшафтний заказник «Протасів Яр»'
+  source_name: Київська міська рада
+  source_url: https://kmr.gov.ua/news/vitaliy-klichko-u-kievi-stvorili-landshaftniy-zakaznik-protasiv-yar
   language: uk
-  role: Контекст
-  source_name: Українська правда
-  source_type: Стаття
-  task: Дізнатися про боротьбу за Протасів Яр та становлення Романа як громадського діяча.
-  title: Роман Ратушний. Історія київського активіста
-  url: https://www.pravda.com.ua/articles/2022/06/18/7353272/
-- caveats: Короткий новинний формат з реакцією спільноти.
-  hosting: external
+  role: primary-document
+  source_type: municipal_record
+  hosting: link-only
+  learner_task: Простежити, яке рішення міська влада ухвалила щодо Протасового Яру, і відокремити його від біографічних оцінок Ратушного.
+  rights:
+    basis: external-link
+    evidence_url: https://kmr.gov.ua/news/vitaliy-klichko-u-kievi-stvorili-landshaftniy-zakaznik-protasiv-yar
+    note: Офіційна сторінка КМР використовується лише як зовнішнє посилання.
+- title: 'Роман Ратушний: військовий, 93 ОМБр'
+  source_name: Меморіал
+  source_url: https://memorial.ua/obituaries/militaries/ratushnyi-roman-6598
   language: uk
-  role: Контекст
-  source_name: Суспільне Новини
-  source_type: Стаття
-  task: Ознайомитися з фактами військового шляху Ратушного в 93-й ОМБр.
-  title: Загинув лідер ГО "Захистимо Протасів Яр", розвідник 93-ї ОМБр Роман Ратушний
-  url: https://suspilne.media/250269-zaginuv-lider-go-zahistimo-protasiv-ar-rozvidnik-93-i-ombr-holodnij-ar-roman-ratusnij/
+  role: evidence
+  source_type: memorial_record
+  hosting: link-only
+  learner_task: Позначити, які дані про військову службу й загибель подані як факти, а які є спогадами або оцінками.
+  rights:
+    basis: external-link
+    evidence_url: https://memorial.ua/obituaries/militaries/ratushnyi-roman-6598
+    note: Меморіальна сторінка захищена авторським правом і не є джерелом для повного передруку.
 references:
 - note: Загальна біографічна довідка, хронологія подій
   title: Роман Ратушний (Wikipedia UA)

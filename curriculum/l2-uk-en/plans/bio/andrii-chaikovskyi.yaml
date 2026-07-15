@@ -82,25 +82,32 @@ persona:
   role: Спеціаліст з історії галицької державності, який розглядає біографію Чайковського як case study про можливості та трагедії української інтелігенції на зламі епох.
   voice: Senior Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Академічний матеріал з детальним аналізом життя та творчості.
-  hosting: external
-  language: uk
-  role: Контекст
-  source_name: Локальна історія
-  source_type: Стаття
-  task: Прочитати про вплив Чайковського на галицьке суспільство та його літературний доробок.
-  title: Андрій Чайковський. Адвокат і письменник, який створив міф про козаків
-  url: https://localhistory.org.ua/texts/statti/andrii-chaikovskii-advokat-i-pismennik-iakii-stvoriv-mif-pro-kozakiv/
-- caveats: Енциклопедична стаття з основними фактами.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Чайковський Андрій Якович
   source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Ознайомитися з хронологією життя та державницькою діяльністю письменника.
-  title: Чайковський Андрій Якович
-  url: https://esu.com.ua/article-37142
+  source_url: https://esu.com.ua/article-886862
+  language: uk
+  role: orientation
+  source_type: encyclopedia
+  hosting: link-only
+  learner_task: Встановити послідовність правничої, громадської та літературної праці Чайковського за енциклопедичною статтею.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-886862
+    note: Авторське право на статтю ЕСУ не дає підстав для її передруку; доступ надається посиланням.
+- title: Адвокат Андрій Чайковський — симпатик і рятівник галицького театру
+  source_name: Вісник Національної асоціації адвокатів України
+  source_url: https://unba.org.ua/assets/uploads/news/vidannya/2024-06-28-vidannya-v-snik-6-2024_667ea0bd88227.pdf
+  language: uk
+  role: context
+  source_type: institutional_pdf
+  hosting: link-only
+  learner_task: Порівняти інституційний нарис про правничу працю з енциклопедичними відомостями та назвати межі такого джерела.
+  rights:
+    basis: external-link
+    evidence_url: https://unba.org.ua/assets/uploads/news/vidannya/2024-06-28-vidannya-v-snik-6-2024_667ea0bd88227.pdf
+    note: PDF видання використовується тільки як зовнішнє посилання; повний текст не хостується.
 references:
 - title: Andrii Chaikovskyi
   note: Compiled from Wikipedia UA, biography sites, and analysis of his major works.

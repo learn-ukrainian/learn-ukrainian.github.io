@@ -79,25 +79,32 @@ persona:
   role: Модератор семінару, що досліджує феномен сучасного українського героїзму, уникаючи плаского захоплення та шукаючи складність, ціну та значення за яскравим символом.
   voice: Nuanced-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Велика стаття з детальним описом бойового шляху.
-  hosting: external
+- title: Указ Президента України №608/2021
+  source_name: Офіційне інтернет-представництво Президента України
+  source_url: https://www.president.gov.ua/documents/6082021-40761
   language: uk
-  role: Контекст
-  source_name: Історична правда
-  source_type: Стаття
-  task: Дослідити шлях Дмитра Коцюбайла від учасника Революції Гідності до командира батальйону.
-  title: Да Вінчі. Історія Героя
-  url: https://www.istpravda.com.ua/articles/2023/03/9/162788/
-- caveats: Некролог з основними біографічними відомостями.
-  hosting: external
+  role: primary-document
+  source_type: state_record
+  hosting: link-only
+  learner_task: Визначити, яку саме відзнаку та кому присвоює указ; не робити з державної нагороди оцінки всієї біографії.
+  rights:
+    basis: external-link
+    evidence_url: https://www.president.gov.ua/documents/6082021-40761
+    note: Офіційний документ подано посиланням; повний текст не відтворюється в курсі.
+- title: 7 березня 2023 року під Бахмутом в бою загинув Дмитро «Да Вінчі» Коцюбайло
+  source_name: Донецька обласна державна адміністрація
+  source_url: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
   language: uk
-  role: Контекст
-  source_name: Суспільне Новини
-  source_type: Стаття
-  task: Ознайомитися з реакцією суспільства на загибель Да Вінчі.
-  title: На війні загинув командир "Вовків Да Вінчі" Дмитро Коцюбайло
-  url: https://suspilne.media/407338-na-vijni-zaginuv-komandir-vovkiv-da-vinci-dmitro-kocubajlo/
+  role: evidence
+  source_type: institutional_notice
+  hosting: link-only
+  learner_task: Відокремити задокументовану обставину загибелі від меморіальної риторики довкола неї.
+  rights:
+    basis: external-link
+    evidence_url: https://dn.gov.ua/news/7-bereznya-2023-roku-pid-bahmutom-v-boyu-zaginuv-dmitro-da-vinchi-kocyubajlo
+    note: Інституційне повідомлення доступне тільки за зовнішнім посиланням.
 references:
 - title: Дмитро Коцюбайло (Да Вінчі) в програмі «Рандеву з Яніною Соколовою»
   name: Дмитро Коцюбайло (Да Вінчі) в програмі «Рандеву з Яніною Соколовою»
