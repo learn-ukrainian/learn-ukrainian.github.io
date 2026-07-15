@@ -1,0 +1,126 @@
+manifest_version: prompt-manifest.v1
+prompt_id: curriculum-lifecycle.module
+version: 1.2.0
+input_schema: agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json
+output_schema: agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-output.v1.schema.json
+policy_ids:
+  operator-contract: agents_extensions/shared/rules/operator-expectations.md
+  workflow: agents_extensions/shared/rules/workflow.md
+compatible:
+  families: [core, seminar]
+  routes: [tool-capable]
+fragments:
+  contract.base:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-common.md
+    section: contract-base
+    includes: []
+  family.core:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-a1:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a1.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-a2:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-a2.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-b1:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b1.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-b2:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-b2.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-c1:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c1.md
+    section: family-policy
+    includes: [contract.base]
+  level.core-c2:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c2.md
+    section: family-policy
+    includes: [contract.base]
+  family.seminar:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-v1-2.md
+    section: seminar-policy
+    includes: [contract.base]
+  track.seminar-bio:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-bio-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-hist:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-hist-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-istorio:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-istorio-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-lit:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-lit-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-folk:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-folk-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-oes:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-oes-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+  track.seminar-ruth:
+    path: agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-ruth-v1-2.md
+    section: track-policy
+    includes: [family.seminar]
+variants:
+  core:
+    family: core
+    roots: [family.core]
+  core-a1:
+    family: core
+    roots: [level.core-a1]
+  core-a2:
+    family: core
+    roots: [level.core-a2]
+  core-b1:
+    family: core
+    roots: [level.core-b1]
+  core-b2:
+    family: core
+    roots: [level.core-b2]
+  core-c1:
+    family: core
+    roots: [level.core-c1]
+  core-c2:
+    family: core
+    roots: [level.core-c2]
+  seminar-bio:
+    family: seminar
+    roots: [track.seminar-bio]
+  seminar-hist:
+    family: seminar
+    roots: [track.seminar-hist]
+  seminar-istorio:
+    family: seminar
+    roots: [track.seminar-istorio]
+  seminar-lit:
+    family: seminar
+    roots: [track.seminar-lit]
+  seminar-folk:
+    family: seminar
+    roots: [track.seminar-folk]
+  seminar-oes:
+    family: seminar
+    roots: [track.seminar-oes]
+  seminar-ruth:
+    family: seminar
+    roots: [track.seminar-ruth]
+  seminar-generic:
+    family: seminar
+    roots: [family.seminar]
+  seminar:
+    family: seminar
+    roots: [family.seminar]
+deprecation: null

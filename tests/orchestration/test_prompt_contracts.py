@@ -84,22 +84,82 @@ QUALIFICATION_PROFILES = (
         "C1 CORE policy",
         "528ff17188bf18d6c8dac22330d0462eb9c32de03ad7d317aaac4841cf1a8f86",
     ),
+)
+
+SEMINAR_PROFILES = (
     (
         "seminar-bio",
         "bio",
-        "seminar",
-        "BIO seminar policy",
-        "FOLK seminar policy",
-        "8bd17b01de7d9d470dd53cde7228353b9cfdf57a4ba75250ea7425b1a448e3f5",
+        "BIO seminar direction",
+        "sourced life story",
+        "daa9a78c0057d31aa9324cd2551555ce4d670813554e8cdac485bedd14ed256d",
+    ),
+    (
+        "seminar-hist",
+        "hist",
+        "HIST seminar direction",
+        "historical problem",
+        "e2b7a0aa234efdcd81f4a4cc9f84550ac60a31096060920bab80284ee035167f",
+    ),
+    (
+        "seminar-istorio",
+        "istorio",
+        "ISTORIO seminar direction",
+        "construction of historical knowledge",
+        "b493dfe6794d578e83bb661e9e253609646dc3dcf393b4b9d21a8cb2e919014c",
+    ),
+    (
+        "seminar-lit",
+        "lit",
+        "LIT seminar direction",
+        "Center the primary work",
+        "ef8e2d04f05bb3f3771fde170a1123300ff4520fecaabc15c716634bd301c5c9",
     ),
     (
         "seminar-folk",
         "folk",
-        "seminar",
-        "FOLK seminar policy",
-        "BIO seminar policy",
-        "f2014bfd5d5b3e56c1eef4d7c15b23d962202035f75a9eb44d2785e3c6bd9e74",
+        "FOLK seminar direction",
+        "oral, variable, situated performance",
+        "3f34507a678cd26131648a9afacbc33886a7e0bfad27c3ef3ce1c2f86718d5f5",
     ),
+    (
+        "seminar-oes",
+        "oes",
+        "OES seminar direction",
+        "primary-text philology",
+        "670460aac2f0add90b3c0d7a5ceb498c0c42070aca59b9fdd09b0a71a3404f27",
+    ),
+    (
+        "seminar-ruth",
+        "ruth",
+        "RUTH seminar direction",
+        "14th–18th-century",
+        "b3fbf5a8b55059916a01269e83b6b33f6efe70d4e2ce8106011d5da6e4f039c8",
+    ),
+)
+
+ACTIVE_LIT_TRACKS = (
+    "lit",
+    "lit-essay",
+    "lit-hist-fic",
+    "lit-fantastika",
+    "lit-war",
+    "lit-humor",
+    "lit-youth",
+    "lit-drama",
+)
+
+BIO_ONLY_MARKERS = (
+    "BIO only: make the learner exposition a sourced life story",
+    "Check the subject's vital status",
+    "living person, forbid obituary-style framing",
+)
+
+SHARED_SEMINAR_MARKERS = (
+    "complete learner-facing module",
+    "canonical `model_answer` or `model_answers` entry",
+    "semantic-transfer",
+    "Track narrative and argumentative forms are boundaries",
 )
 
 
@@ -178,8 +238,13 @@ def test_active_tracks_resolve_from_manifest_without_a_second_roster() -> None:
     assert resolved["a1"] == "core-a1"
     assert resolved["c2"] == "core-c2"
     assert resolved["bio"] == "seminar-bio"
+    assert resolved["hist"] == "seminar-hist"
+    assert resolved["istorio"] == "seminar-istorio"
     assert resolved["folk"] == "seminar-folk"
-    assert resolved["hist"] == "seminar-generic"
+    assert resolved["oes"] == "seminar-oes"
+    assert resolved["ruth"] == "seminar-ruth"
+    assert all(resolved[track] == "seminar-lit" for track in ACTIVE_LIT_TRACKS)
+    assert "seminar-generic" not in resolved.values()
     assert {"history", "lit-doc", "lit-crimea"}.isdisjoint(resolved)
 
 
@@ -193,6 +258,21 @@ def test_new_manifest_track_uses_typed_family_default(tmp_path: Path) -> None:
     resolved = contracts.active_track_profiles(repo_root=repo_root)
 
     assert resolved["new-seminar"] == "seminar-generic"
+    context = {
+        "track": "new-seminar",
+        "slug": "pilot",
+        "family": "seminar",
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+    prompt = contracts.resolve_track_profile(
+        "new-seminar",
+        context=context,
+        repo_root=repo_root,
+    )
+    assert "Shared seminar experience policy" in prompt.rendered_prompt
+    assert "seminar direction" not in prompt.rendered_prompt
 
 
 def test_frozen_legacy_linter_does_not_require_a_suite_for_new_tracks(
@@ -296,14 +376,14 @@ def test_current_contract_keeps_generic_variant_compatibility(
         repo_root=REPO_ROOT,
     )
 
-    assert resolved.version == "1.1.0"
+    assert resolved.version == "1.2.0"
 
 
 @pytest.mark.parametrize(
     ("profile_id", "track", "family", "required_marker", "forbidden_marker", "expected_sha256"),
     QUALIFICATION_PROFILES,
 )
-def test_qualification_profiles_have_exact_level_or_track_policy_without_cross_leakage(
+def test_core_qualification_profiles_have_exact_level_policy_without_cross_leakage(
     profile_id: str,
     track: str,
     family: str,
@@ -330,6 +410,108 @@ def test_qualification_profiles_have_exact_level_or_track_policy_without_cross_l
         "contract.base",
         profile_id.replace("seminar-", "track.seminar-").replace("core-", "level.core-"),
     )
+
+
+@pytest.mark.parametrize(
+    ("profile_id", "track", "direction_marker", "discipline_marker", "expected_sha256"),
+    SEMINAR_PROFILES,
+)
+def test_seminar_profiles_compose_shared_and_exact_direction_without_bio_leakage(
+    profile_id: str,
+    track: str,
+    direction_marker: str,
+    discipline_marker: str,
+    expected_sha256: str,
+) -> None:
+    context = {
+        "track": track,
+        "slug": "pilot",
+        "family": "seminar",
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+
+    resolved = contracts.resolve_profile(profile_id, context=context, repo_root=REPO_ROOT)
+
+    assert resolved.version == "1.2.0"
+    assert resolved.prompt_sha256 == expected_sha256
+    assert "Shared seminar experience policy" in resolved.rendered_prompt
+    assert all(marker in resolved.rendered_prompt for marker in SHARED_SEMINAR_MARKERS)
+    assert direction_marker in resolved.rendered_prompt
+    assert discipline_marker in resolved.rendered_prompt
+    other_direction_markers = {
+        profile[2]
+        for profile in SEMINAR_PROFILES
+        if profile[0] != profile_id
+    }
+    assert all(marker not in resolved.rendered_prompt for marker in other_direction_markers)
+    assert resolved.fragment_ids == (
+        "contract.base",
+        "family.seminar",
+        f"track.{profile_id}",
+    )
+    if track == "bio":
+        assert all(marker in resolved.rendered_prompt for marker in BIO_ONLY_MARKERS)
+    else:
+        assert all(marker not in resolved.rendered_prompt for marker in BIO_ONLY_MARKERS)
+
+
+@pytest.mark.parametrize("track", ACTIVE_LIT_TRACKS)
+def test_every_active_lit_subtrack_receives_lit_direction(track: str) -> None:
+    context = {
+        "track": track,
+        "slug": "pilot",
+        "family": "seminar",
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+
+    resolved = contracts.resolve_track_profile(track, context=context, repo_root=REPO_ROOT)
+
+    assert resolved.profile_id == "seminar-lit"
+    assert "LIT seminar direction" in resolved.rendered_prompt
+
+
+@pytest.mark.parametrize(
+    ("variant", "track", "expected_sha256"),
+    [
+        (
+            "seminar-bio",
+            "bio",
+            "8bd17b01de7d9d470dd53cde7228353b9cfdf57a4ba75250ea7425b1a448e3f5",
+        ),
+        (
+            "seminar-folk",
+            "folk",
+            "f2014bfd5d5b3e56c1eef4d7c15b23d962202035f75a9eb44d2785e3c6bd9e74",
+        ),
+    ],
+)
+def test_historical_seminar_contract_bytes_remain_stable(
+    variant: str,
+    track: str,
+    expected_sha256: str,
+) -> None:
+    context = {
+        "track": track,
+        "slug": "pilot",
+        "family": "seminar",
+        "phase": "build",
+        "module_state": "unbuilt",
+        "evidence_identity": "a" * 64,
+    }
+
+    resolved = contracts.resolve_prompt(
+        "curriculum-lifecycle.module",
+        version="1.1.0",
+        variant=variant,
+        context=context,
+        repo_root=REPO_ROOT,
+    )
+
+    assert resolved.prompt_sha256 == expected_sha256
 
 
 def test_resolution_is_identical_across_clean_repository_roots(tmp_path: Path) -> None:

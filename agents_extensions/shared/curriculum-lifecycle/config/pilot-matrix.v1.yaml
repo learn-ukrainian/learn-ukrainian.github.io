@@ -19,9 +19,18 @@ identity_paths:
   - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c1.md
   - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-core-c2.md
   - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-bio.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-bio-v1-2.md
   - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-folk.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-folk-v1-2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-hist-v1-2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-istorio-v1-2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-lit-v1-2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-oes-v1-2.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-ruth-v1-2.md
   - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar.md
+  - agents_extensions/shared/prompt-contracts/fragments/curriculum-lifecycle-seminar-v1-2.md
   - agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v2.yaml
+  - agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v3.yaml
   - agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml
   - agents_extensions/shared/prompt-contracts/registry.v1.yaml
   - agents_extensions/shared/prompt-contracts/schema/curriculum-lifecycle-input.v1.schema.json
@@ -51,8 +60,8 @@ rows:
     family: seminar
     prompt_profile: seminar-folk
     prompt_assertions:
-      required: [FOLK seminar policy, learner to create a recording]
-      forbidden: [BIO seminar policy]
+      required: [Shared seminar experience policy, FOLK seminar direction, Audio or visual evidence exists only]
+      forbidden: ['BIO only: make the learner exposition a sourced life story']
     expected:
       module_state: built
       preparation_state: stale
@@ -73,8 +82,8 @@ rows:
     family: seminar
     prompt_profile: seminar-folk
     prompt_assertions:
-      required: [FOLK seminar policy]
-      forbidden: [BIO seminar policy]
+      required: [Shared seminar experience policy, FOLK seminar direction]
+      forbidden: ['BIO only: make the learner exposition a sourced life story']
     expected:
       module_state: built
       preparation_state: stale
@@ -95,8 +104,8 @@ rows:
     family: seminar
     prompt_profile: seminar-folk
     prompt_assertions:
-      required: [FOLK seminar policy]
-      forbidden: [BIO seminar policy]
+      required: [Shared seminar experience policy, FOLK seminar direction]
+      forbidden: ['BIO only: make the learner exposition a sourced life story']
     expected:
       module_state: built
       preparation_state: stale
@@ -117,8 +126,8 @@ rows:
     family: seminar
     prompt_profile: seminar-folk
     prompt_assertions:
-      required: [FOLK seminar policy]
-      forbidden: [BIO seminar policy]
+      required: [Shared seminar experience policy, FOLK seminar direction]
+      forbidden: ['BIO only: make the learner exposition a sourced life story']
     expected:
       module_state: built
       preparation_state: stale
@@ -146,8 +155,8 @@ rows:
     family: seminar
     prompt_profile: seminar-folk
     prompt_assertions:
-      required: [FOLK seminar policy]
-      forbidden: [BIO seminar policy]
+      required: [Shared seminar experience policy, FOLK seminar direction]
+      forbidden: ['BIO only: make the learner exposition a sourced life story']
     expected:
       module_state: built
       preparation_state: stale
@@ -172,8 +181,8 @@ rows:
     family: seminar
     prompt_profile: seminar-bio
     prompt_assertions:
-      required: [BIO seminar policy, biographical claims]
-      forbidden: [FOLK seminar policy]
+      required: [Shared seminar experience policy, BIO seminar direction, sourced life story, vital status]
+      forbidden: [FOLK seminar direction]
     expected:
       module_state: built
       preparation_state: stale
@@ -280,8 +289,8 @@ rows:
     family: seminar
     prompt_profile: seminar-bio
     prompt_assertions:
-      required: [BIO seminar policy]
-      forbidden: [FOLK seminar policy]
+      required: [Shared seminar experience policy, BIO seminar direction, sourced life story, vital status]
+      forbidden: [FOLK seminar direction]
     expected:
       module_state: unbuilt
       preparation_state: current
@@ -341,10 +350,10 @@ rows:
     scenario: unbuilt-seminar
     selector: hist/trypillian-civilization
     family: seminar
-    prompt_profile: seminar-generic
+    prompt_profile: seminar-hist
     prompt_assertions:
-      required: [Seminar family policy]
-      forbidden: [BIO seminar policy, FOLK seminar policy]
+      required: [Shared seminar experience policy, HIST seminar direction, historical problem]
+      forbidden: ['BIO only: make the learner exposition a sourced life story', FOLK seminar direction]
     expected:
       module_state: unbuilt
       preparation_state: current

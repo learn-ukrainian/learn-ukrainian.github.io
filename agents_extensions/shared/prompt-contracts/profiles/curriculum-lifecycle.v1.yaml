@@ -7,7 +7,19 @@ selectors:
     b2: core-b2
     c1: core-c1
     c2: core-c2
+    hist: seminar-hist
     bio: seminar-bio
+    lit: seminar-lit
+    istorio: seminar-istorio
+    oes: seminar-oes
+    ruth: seminar-ruth
+    lit-essay: seminar-lit
+    lit-hist-fic: seminar-lit
+    lit-fantastika: seminar-lit
+    lit-war: seminar-lit
+    lit-humor: seminar-lit
+    lit-youth: seminar-lit
+    lit-drama: seminar-lit
     folk: seminar-folk
   manifest_types:
     core: core
@@ -47,13 +59,33 @@ profiles:
     variant: core-c2
   seminar-bio:
     prompt_id: curriculum-lifecycle.module
-    prompt_version: 1.1.0
+    prompt_version: 1.2.0
     variant: seminar-bio
+  seminar-hist:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.2.0
+    variant: seminar-hist
+  seminar-istorio:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.2.0
+    variant: seminar-istorio
+  seminar-lit:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.2.0
+    variant: seminar-lit
   seminar-folk:
     prompt_id: curriculum-lifecycle.module
-    prompt_version: 1.1.0
+    prompt_version: 1.2.0
     variant: seminar-folk
+  seminar-oes:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.2.0
+    variant: seminar-oes
+  seminar-ruth:
+    prompt_id: curriculum-lifecycle.module
+    prompt_version: 1.2.0
+    variant: seminar-ruth
   seminar-generic:
     prompt_id: curriculum-lifecycle.module
-    prompt_version: 1.1.0
+    prompt_version: 1.2.0
     variant: seminar-generic
