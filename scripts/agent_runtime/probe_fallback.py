@@ -18,7 +18,7 @@ from agent_runtime.runner import invoke
 
 DEFAULT_MODELS = {
     "deepseek": "deepseek-v4-pro",
-    "grok": "grok-4.3",
+    "grok": "grok-4.5",
     "qwen": "qwen/qwen3.6-plus",
 }
 

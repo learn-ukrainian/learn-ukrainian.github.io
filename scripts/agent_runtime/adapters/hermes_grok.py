@@ -1,4 +1,4 @@
-"""HermesGrokAdapter — wraps ``hermes -z PROMPT -m grok-4.3``.
+"""HermesGrokAdapter — wraps ``hermes -z PROMPT -m grok-4.5``.
 
 Hermes resolves MCP tool calls inside its own session loop using the user's
 ``~/.hermes/config.yaml`` registration. In ``-z`` mode the adapter only sees
@@ -34,6 +34,8 @@ from .hermes_common import (
 
 _logger = logging.getLogger(__name__)
 
+GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
+
 @dataclass(frozen=True)
 class HermesGrokParseResult(ParseResult):
     """Parse result with explicit unknown tool-call telemetry."""
@@ -42,10 +44,10 @@ class HermesGrokParseResult(ParseResult):
 
 
 class HermesGrokAdapter:
-    """Adapter for the Hermes CLI using Grok 4.3."""
+    """Adapter for the Hermes CLI using Grok 4.5."""
 
     name: str = "grok"
-    default_model: str = "grok-4.3"
+    default_model: str = "grok-4.5"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -80,6 +82,11 @@ class HermesGrokAdapter:
             )
 
         requested_model = model or self.default_model
+        if requested_model not in GROK_ALLOWED_MODELS:
+            raise ValueError(
+                f"HermesGrokAdapter: unsupported Grok model {requested_model!r}; "
+                f"allowed: {sorted(GROK_ALLOWED_MODELS)}"
+            )
         requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
             tool_config=tool_config,
             default_provider="xai",

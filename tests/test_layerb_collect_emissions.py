@@ -851,8 +851,8 @@ def test_planner_enforces_route_eligibility_in_all_mode(capsys: pytest.CaptureFi
     grok_route = layerb_qualify.EffectiveRoute.from_mapping(
         {
             "family": "grok",
-            "resolved_model": "grok-build",
-            "resolved_model_version": "grok-build",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
             "bridge_executable": "bridge --offline-recording",
             "bridge_config_sha256": "a" * 64,
             "provider_account_lane": "xai-subscription",
@@ -892,8 +892,8 @@ def test_planner_rejects_unknown_lineage_in_all_mode(capsys: pytest.CaptureFixtu
     grok_route = layerb_qualify.EffectiveRoute.from_mapping(
         {
             "family": "grok",
-            "resolved_model": "grok-build",
-            "resolved_model_version": "grok-build",
+            "resolved_model": "grok-4.5",
+            "resolved_model_version": "grok-4.5",
             "bridge_executable": "bridge --offline-recording",
             "bridge_config_sha256": "a" * 64,
             "provider_account_lane": "xai-subscription",

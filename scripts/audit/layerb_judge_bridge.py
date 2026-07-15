@@ -58,7 +58,7 @@ BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
-    "grok": "grok-build",
+    "grok": "grok-4.5",
     "gemini": "gemini-3.5-flash-high",
 }
 CODEX_DISABLED_FEATURES = (
@@ -1228,6 +1228,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def _config_from_args(args: argparse.Namespace) -> BridgeConfig:
     model = args.judge_model or DEFAULT_MODELS[args.judge_family]
     model_version = args.judge_model_version or model
+    if args.judge_family == "grok" and (model != "grok-4.5" or model_version != "grok-4.5"):
+        raise BridgeInputError("Grok Layer-B judges must use grok-4.5")
     if args.timeout_seconds <= 0:
         raise BridgeInputError("--timeout-seconds must be positive")
     return BridgeConfig(

@@ -69,7 +69,7 @@ TOKEN_STOPWORDS = {
 }
 
 FAMILY_MODELS: dict[str, tuple[str, ...]] = {
-    "xai": ("grok-4.3",),
+    "xai": ("grok-4.5",),
     "anthropic": (
         "claude-opus-4-7",
         "claude-opus-4-6",
@@ -106,7 +106,7 @@ DEFAULT_EFFORTS: dict[str, tuple[str, ...]] = {
 }
 
 SMOKE_CELLS = (
-    ("xai", "grok-4.3", "hermes", "medium", "with_mcp"),
+    ("xai", "grok-4.5", "hermes", "medium", "with_mcp"),
     ("anthropic", "claude-haiku-4-5-20251001", "native_cli", "medium", "with_mcp"),
     ("openai", "gpt-5.4-mini", "native_cli", "medium", "with_mcp"),
     ("openai", "gpt-5.5", "hermes", "medium", "with_mcp"),

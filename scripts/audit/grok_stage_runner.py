@@ -2,7 +2,7 @@
 """Run a single Grok-via-Hermes stage test at a specified reasoning_effort.
 
 Atomically edits ``~/.hermes/config.yaml`` for the duration of one call,
-runs ``hermes -z PROMPT -m grok-4.3``, captures the result, and restores
+runs ``hermes -z PROMPT -m grok-4.5``, captures the result, and restores
 the config. Used to sweep stage tests across {medium, high, xhigh}
 without disturbing the user's other Hermes session for more than one
 call at a time.
@@ -41,7 +41,7 @@ HERMES_CFG = Path.home() / ".hermes" / "config.yaml"
 HERMES_CFG_BAK = Path.home() / ".hermes" / "config.yaml.stage-runner-backup"
 
 HERMES_BIN = "hermes"
-GROK_MODEL = "grok-4.3"
+GROK_MODEL = "grok-4.5"
 HERMES_TIMEOUT_S = 600  # xhigh on stage 2/4 may take >2min for code-gen
 
 VALID_EFFORTS = ("medium", "high", "xhigh")

@@ -13,7 +13,7 @@ from scripts.ai_agent_bridge import openai_proxy as proxy
     [
         (proxy._gemini_backend, "gemini-3.1-pro-preview"),
         (proxy._claude_backend, "claude-sonnet-4-7"),
-        (proxy._hermes_backend, "grok-4.3"),
+        (proxy._hermes_backend, "grok-4.5"),
     ],
 )
 def test_large_prompt_is_passed_via_stdin(
