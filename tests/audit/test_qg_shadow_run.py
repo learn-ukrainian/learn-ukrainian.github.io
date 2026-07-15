@@ -146,3 +146,46 @@ def test_shadow_driver_rejects_unresolvable_writer_lineage(tmp_path: Path) -> No
             max_cost_usd=1.0,
             layerb_dry_run=True,
         )
+
+
+def test_artifact_survival_probe_passes_then_fails_on_loss_and_drift(tmp_path: Path) -> None:
+    """#5195: evidence loss after a clean run must be loud, never a dangling DB row."""
+
+    module_dir = _module(tmp_path)
+    result = qg_shadow_run.run_shadow_module(
+        _target(module_dir),
+        audit_dir=tmp_path / "audit",
+        shadow_db=tmp_path / "shadow.db",
+        author_family="openai",
+        reviewer=_dispatch,
+        live_reviewer=False,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        max_cost_usd=1.0,
+        layerb_dry_run=True,
+    )
+
+    assert qg_shadow_run.verify_artifact_survival(result) == []
+
+    result.artifact_path.write_text(result.artifact_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    drifted = qg_shadow_run.verify_artifact_survival(result)
+    assert len(drifted) == 1 and "drifted" in drifted[0]
+
+    result.artifact_path.unlink()
+    result.markdown_path.unlink()
+    missing = qg_shadow_run.verify_artifact_survival(result)
+    assert len(missing) == 2
+    assert any("shadow artifact missing" in failure for failure in missing)
+    assert any("evidence markdown missing" in failure for failure in missing)
+
+
+def test_relative_operator_paths_anchor_to_primary_root() -> None:
+    """#5171 class: relative --audit-dir/--shadow-db must never split evidence across cwds."""
+
+    anchored = qg_shadow_run._anchor_to_repo_root(Path("audit/local-qg-shadow"))
+    assert anchored.is_absolute()
+    assert anchored.as_posix().endswith("audit/local-qg-shadow")
+    assert (anchored.parent.parent / "scripts" / "audit" / "qg_shadow_run.py").is_file()
+
+    absolute = Path("/tmp/explicit-operator-target")
+    assert qg_shadow_run._anchor_to_repo_root(absolute) == absolute
