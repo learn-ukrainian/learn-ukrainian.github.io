@@ -888,6 +888,7 @@ def record_change(
                 "REPAIR_REQUIRED",
                 "AUDIT_TOOLING_REQUIRED",
                 "REVIEWER_INSTABILITY",
+                "INTEGRATION_REQUIRED",
             }
             if ledger["state"] not in allowed_states:
                 raise CompletionError(f"A repair change is not allowed from {ledger['state']}")
