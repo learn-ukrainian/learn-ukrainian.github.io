@@ -856,20 +856,24 @@ def pravopys_lookup(topic: str) -> dict[str, Any] | None:
     return None
 
 
-# ══════════════════════════════════════════════════════════════════
-# SUM-20 — superseded
-#
-# The legacy sum_definition() pointed at sum20ua.com but its parser
-# matched the wrong entry (sum20ua.com returns search-results pages
-# with alphabetically adjacent words). Replaced 2026-05-04 by
-# slovnyk_me_lookup(word, "newsum") below — slovnyk.me has clean
-# direct-entry URLs for the same СУМ-20 content.
-# ══════════════════════════════════════════════════════════════════
+def query_sum20(word: str, *, db_path: str | None = None) -> list[dict[str, Any]]:
+    """Read exact official СУМ-20 records from the offline sources collection.
+
+    This function deliberately has no network path or alternate-source
+    fallback.  Its output is therefore limited to locally ingested official
+    ``sum20ua.com`` records and preserves their fetch provenance.
+    """
+    try:
+        from wiki.sources_db import query_sum20 as offline_query_sum20
+    except ImportError:  # pragma: no cover - direct package import fallback
+        from scripts.wiki.sources_db import query_sum20 as offline_query_sum20
+
+    return offline_query_sum20(word, db_path=db_path)
 
 
 # ══════════════════════════════════════════════════════════════════
 # slovnyk.me — multi-dictionary aggregator with clean per-word URLs
-# Hosts СУМ-20, СУМ-11, Antonenko-Davydovych, Karavansky synonyms,
+# Hosts СУМ-11, Antonenko-Davydovych, Karavansky synonyms,
 # phraseology, orthography, orthoepy, foreign-words
 # (Мельничук), and Ukrainian↔Russian / Ukrainian↔Polish bilinguals.
 # ══════════════════════════════════════════════════════════════════
@@ -877,19 +881,19 @@ def pravopys_lookup(topic: str) -> dict[str, Any] | None:
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 
 
-def slovnyk_me_lookup(word: str, dict_slug: str = "newsum") -> dict[str, Any] | None:
+def slovnyk_me_lookup(word: str, dict_slug: str = "vts") -> dict[str, Any] | None:
     """Look up a word on slovnyk.me in the named dictionary.
 
     Returns dict with keys: word, dict, url, text (entry body) or None on failure.
 
     URL pattern: /dict/{dict_slug}/{url-encoded-word}. Direct entry pages,
-    not search-results — much cleaner than sum20ua.com.
+    not search-results.
 
     Per-query live fetch with citation. NO bulk crawl. NO DB caching.
     License posture: slovnyk.me publishes with © notice but no explicit
     terms-of-use; per-query lookup with attribution is fair use.
 
-    Issue: #1667 (SUM-20 modern definitional baseline).
+    This remains for non-СУМ-20 dictionaries only.
     """
     canonical_slug = resolve_slovnyk_me_dict_slug(dict_slug)
     if canonical_slug not in SLOVNYK_ME_DICTS:

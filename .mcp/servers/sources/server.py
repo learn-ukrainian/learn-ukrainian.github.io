@@ -817,19 +817,12 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="query_sum20",
             description=(
-                "Live query СУМ-20 (Словник української мови у 20 томах) via "
-                "slovnyk.me/dict/newsum — modern post-Soviet academic Ukrainian "
-                "explanatory dictionary, ULIF NAS Ukraine, 2010–ongoing. "
+                "Query the offline official СУМ-20 (Словник української мови у 20 томах) "
+                "collection built from sum20ua.com sequential wordid articles. "
                 "Coverage: volumes 1–16 (А–Р); vols 17–20 (С–Я) not yet "
-                "published online. **Per-query live fetch with citation**, no "
-                "bulk-ingest, no DB caching. Use as the **modern definitional "
-                "baseline** to REPLACE Sovietized СУМ-11 entries (#1659): when "
-                "`search_definitions` returns `sovietization_risk > 0`, fall "
-                "back to `query_sum20`. Backed by slovnyk.me's clean per-word "
-                "URLs (replaces the broken sum20ua.com search-page parser). "
-                "License posture: per-query lookup with attribution only; "
-                "no bulk crawl and no DB caching. Prefer official ULIF "
-                "routes for authoritative СУМ-20 when available. Issue: #1667."
+                "published online. Results are exact offline matches only: this tool never "
+                "performs a live lookup or falls back to another dictionary. Each article "
+                "includes its official URL, retrieval time, content hash, and parser version."
             ),
             inputSchema={
                 "type": "object",
@@ -848,7 +841,6 @@ async def list_tools() -> list[Tool]:
                 "СУМ-20. Per-query live fetch with citation, no bulk crawl, "
                 "no DB caching.\n\n"
                 "Available `dict` values:\n"
-                "- `newsum` — СУМ-20 (modern, 2010–) — DEFAULT for definitions\n"
                 "- `sum` — СУМ-11 (Sovietized, 1970–80) — fallback only\n"
                 "- `davydov` (`antonenko` alias) — Antonenko-Davydovych «Як ми говоримо»\n"
                 "- `synonyms_karavansky` (`karavansky` alias) — Karavansky synonyms\n"
@@ -861,6 +853,7 @@ async def list_tools() -> list[Tool]:
                 "- `vts` — Великий тлумачний словник сучасної мови (alternate modern)\n"
                 "- `foreign_melnychuk` — foreign-words dictionary (Мельничук)\n"
                 "- `ukrrus` / `rusukr` / `engukr` — bilinguals\n\n"
+                "For official СУМ-20, use `query_sum20`, not this live tool.\n\n"
                 "License posture: slovnyk.me © notice plus third-party source "
                 "rights; per-query lookup with attribution only, no bulk crawl "
                 "and no DB caching. Issue: #1667."
@@ -871,8 +864,8 @@ async def list_tools() -> list[Tool]:
                     "word": {"type": "string", "description": "Ukrainian word to look up"},
                     "dict": {
                         "type": "string",
-                        "description": "Dictionary slug (newsum, sum, davydov, synonyms_karavansky, franko, slang_lviv, holoskevych, phraseology, orthography, orthoepy, vts, foreign_melnychuk, ukrrus, rusukr, engukr). Backward aliases antonenko, karavansky, ukr_rus, rus_ukr, eng_ukr are accepted.",
-                        "default": "newsum",
+                        "description": "Dictionary slug (sum, davydov, synonyms_karavansky, franko, slang_lviv, holoskevych, phraseology, orthography, orthoepy, vts, foreign_melnychuk, ukrrus, rusukr, engukr). Backward aliases antonenko, karavansky, ukr_rus, rus_ukr, eng_ukr are accepted.",
+                        "default": "vts",
                     },
                 },
                 "required": ["word"]
@@ -887,8 +880,8 @@ async def list_tools() -> list[Tool]:
                 "slovnyk.me /search, /terms, or sitemap. Returns dictionary slug, "
                 "source URL, bounded text/snippet, `is_modern`, `is_dialect`, "
                 "`is_russianism`, `sovietization_risk`, and ranking score. Use this "
-                "when a prompt needs slovnyk.me specifically, especially СУМ-20 or "
-                "regional dictionaries. Dictionaries already indexed locally "
+                "when a prompt needs a supported regional dictionary specifically. "
+                "Dictionaries already indexed locally "
                 "(СУМ-11, Грінченко, Антоненко-Давидович, phraseology, EN→UK) "
                 "are blocked here; use their canonical tools. For heritage-defense "
                 "decisions, prefer `search_heritage`."
@@ -1889,39 +1882,46 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
 
 
 async def handle_query_sum20(args: dict) -> list[TextContent]:
-    """Live single-query lookup of СУМ-20 via slovnyk.me/dict/newsum.
-
-    Backed by slovnyk.me's clean per-word URLs (#1677 routes around the
-    broken sum20ua.com search-page parser). Per-query live fetch with
-    citation. NO bulk crawl, NO DB persist. Issue: #1667.
-    """
+    """Read every exact-match official СУМ-20 article from sources.db."""
     word = args["word"]
 
-    from rag.source_query import slovnyk_me_lookup
-    result = await asyncio.to_thread(slovnyk_me_lookup, word, "newsum")
+    from wiki import sources_db as sdb
 
-    if not result:
+    records = await asyncio.to_thread(sdb.query_sum20, word)
+    if not records:
         return [TextContent(
             type="text",
             text=(
-                f"No СУМ-20 entry found for '{word}'. "
-                f"Note: СУМ-20 covers vols 1–16 (А–Р) only — words starting "
-                f"С–Я are not yet published. For СУМ-11 (1970–1980, partially "
-                f"Sovietized) fallback, use `search_definitions` or "
-                f"`query_slovnyk_me(word, dict='sum')`."
+                f"No official offline СУМ-20 entry is currently ingested for '{word}'. "
+                "This tool does not make a live request or use a fallback source."
             ),
         )]
 
-    return [TextContent(
-        type="text",
-        text=(
-            f"**СУМ-20 entry for '{word}'**\n"
-            f"**URL**: {result['url']}\n"
-            f"**Source**: {result['dict_label']} (via slovnyk.me — © Slovnyk.me; "
-            f"original © Український мовно-інформаційний фонд НАН України)\n\n"
-            f"{result['text'][:3000]}"
-        ),
-    )]
+    lines = [f"**Official СУМ-20 entries for '{word}'**"]
+    for record in records:
+        lines.extend(
+            [
+                "",
+                f"**{record['stressed_headword']}** ({record['pos'] or record['grammar']})",
+                f"**Source**: {record['attribution_label']}",
+                f"**URL**: {record['official_url']}",
+                (
+                    f"**Record**: {record['source_record_id']} · retrieved "
+                    f"{record['retrieved_at']} · sha256 {record['content_sha256']} · "
+                    f"{record['parser_version']} · {record['status']}"
+                ),
+            ]
+        )
+        for sense in record["senses"]:
+            labels = ", ".join(sense["register_labels"])
+            prefix = f"{labels} " if labels else ""
+            lines.append(f"{sense['sense_order']}. {prefix}{sense['definition']}")
+        for citation in record["citations"]:
+            fields = citation["parsed_bib_fields"]
+            source = fields.get("author") or fields.get("source")
+            suffix = f" ({source})" if source else ""
+            lines.append(f"— {citation['citation_text']}{suffix}")
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
@@ -1932,11 +1932,13 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
     per-query lookup with attribution only. Issue: #1667.
     """
     word = args["word"]
-    dict_slug = args.get("dict", "newsum")
+    dict_slug = args.get("dict", "vts")
 
     from rag.source_query import SLOVNYK_ME_DICTS, resolve_slovnyk_me_dict_slug, slovnyk_me_lookup
 
     canonical_slug = resolve_slovnyk_me_dict_slug(dict_slug)
+    if canonical_slug == "newsum":
+        return await handle_query_sum20(args)
     if canonical_slug not in SLOVNYK_ME_DICTS:
         valid = ", ".join(sorted(SLOVNYK_ME_DICTS.keys()))
         return [TextContent(
