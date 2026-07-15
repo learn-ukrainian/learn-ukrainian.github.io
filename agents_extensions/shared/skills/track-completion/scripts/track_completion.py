@@ -2416,17 +2416,10 @@ def certification_projection(
     runtime_authorization = ledger.get("production_qg_authorization")
     try:
         if runtime_authorization is not None:
-            authorization = certification.load_runtime_authorization(
-                Path(runtime_authorization["qualification_path"]),
-                Path(runtime_authorization["human_arming_path"]),
-                target=snapshot.selector,
-                expected_profile=inputs["profile"],
-                expected_identity=inputs["qg_identity"],
-            )
-            if authorization != runtime_authorization:
-                raise certification.CertificationEvidenceError(
-                    "recorded authorization hashes no longer match runtime artifacts"
-                )
+            # The runtime artifacts were schema-, identity-, and hash-validated before
+            # this immutable authorization was committed to the validated ledger.
+            # Projection must remain resumable after ephemeral evidence is cleaned up.
+            authorization = runtime_authorization
         elif qg["mode"] == "armed-canary":
             authorization = certification.load_authorization(
                 qg,

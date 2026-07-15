@@ -1526,6 +1526,17 @@ def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempoten
         item["event"] == "PRODUCTION_QG_AUTHORIZED" for item in armed["history"]
     ) == 1
 
+    qualification_path.unlink()
+    arming_path.unlink()
+    resumed_projection = tc.certification_projection(
+        inputs["target"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert resumed_projection["state"] == "PRODUCTION_QG_REQUIRED"
+    assert resumed_projection["production_qg"] == "required"
+
     same_family = copy.deepcopy(qualification)
     same_family["route"]["family"] = "codex"
     same_family_path = _write_external_evidence(
