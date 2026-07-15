@@ -10,7 +10,7 @@ selectors:
     c2: core-pending
     bio: bio-pending
   manifest_types:
-    core: core-disabled
+    core: core-pending
     track: seminar-pending
     seminar: seminar-pending
 profiles:

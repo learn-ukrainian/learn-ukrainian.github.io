@@ -254,11 +254,18 @@ def current_qg_facts(*, target: str, module_dir: Path) -> dict[str, str]:
 
 
 def _canonical_route(dispatch: Mapping[str, Any]) -> dict[str, str] | None:
+    """Return qualification route identity, never author-lineage evidence.
+
+    ``route_lineage_id`` is the deterministic family/model/route identifier
+    that a qualification artifact binds.  It deliberately does not establish
+    who authored the learner material; that evidence is separately captured by
+    the live dispatcher in ``author_lineage``.
+    """
     values = {
         "family": dispatch.get("reviewer_family"),
         "model": dispatch.get("reviewer_model_id"),
         "route": dispatch.get("route_name"),
-        "lineage": dispatch.get("lineage"),
+        "lineage": dispatch.get("route_lineage_id"),
     }
     if any(not isinstance(value, str) or not value.strip() for value in values.values()):
         return None
@@ -270,8 +277,7 @@ def _captured_source_events(dispatch: Mapping[str, Any]) -> tuple[dict[str, Any]
 
     source_events: list[dict[str, Any]] = []
     for event in llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch):
-        tool = str(event.get("tool") or "").strip().casefold()
-        if not tool.startswith(("mcp__sources__", "mcp_sources__")):
+        if not llm_reviewer_dispatch.is_source_tool(str(event.get("tool") or "")):
             continue
         if str(event.get("status") or "").strip().casefold() != "completed":
             return ()
@@ -283,6 +289,83 @@ def _captured_source_events(dispatch: Mapping[str, Any]) -> tuple[dict[str, Any]
             return ()
         source_events.append(event)
     return tuple(source_events)
+
+
+def _live_author_lineage_passes(dispatch: Mapping[str, Any]) -> bool:
+    """Require repository-owned live-dispatch and resolved author provenance."""
+    from scripts.audit import llm_reviewer_dispatch
+
+    execution = dispatch.get("execution_provenance")
+    lineage = dispatch.get("author_lineage")
+    if not isinstance(execution, Mapping) or not isinstance(lineage, Mapping):
+        return False
+    dispatcher_provenance = execution.get("dispatcher_provenance")
+    if not isinstance(dispatcher_provenance, Mapping):
+        return False
+    if (
+        execution.get("capture_path") != "qg_workflow.live_reviewer_dispatcher"
+        or execution.get("mode") != "live"
+        or execution.get("dispatcher") != "LiveReviewerDispatcher"
+        or dispatcher_provenance.get("kind") != "live_reviewer_dispatcher"
+        or dispatcher_provenance.get("dispatcher") != "LiveReviewerDispatcher"
+    ):
+        return False
+    author_family = llm_reviewer_dispatch.normalize_family(lineage.get("family"))
+    reviewer_family = llm_reviewer_dispatch.normalize_family(dispatch.get("reviewer_family"))
+    if not author_family or not reviewer_family or author_family == reviewer_family:
+        return False
+    return all(isinstance(lineage.get(key), str) and lineage[key].strip() for key in ("source", "evidence"))
+
+
+def _raw_response_matches_payload(raw_response: str, payload: Mapping[str, Any]) -> bool:
+    """Bind the persisted raw reviewer bytes to the canonical parsed payload."""
+    from scripts.audit import llm_reviewer_dispatch, qg_workflow
+
+    try:
+        parsed = llm_reviewer_dispatch._json_payload_from_response(raw_response)
+        return qg_workflow._payload_from_reviewer_payload(parsed) == dict(payload)
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return False
+
+
+def _replay_capture_is_coherent(tier2: Mapping[str, Any]) -> bool:
+    """Verify raw, retry, dispatch, and cache linkage without consulting SQLite."""
+    from scripts.audit import llm_reviewer_dispatch
+
+    dispatch = tier2.get("dispatch")
+    history = tier2.get("retry_history")
+    raw_response = tier2.get("raw_response")
+    if not isinstance(dispatch, Mapping) or not isinstance(history, list) or not history:
+        return False
+    if not isinstance(raw_response, str) or not raw_response or not _raw_response_matches_payload(
+        raw_response, tier2["payload"]
+    ):
+        return False
+    final_attempt = history[-1]
+    if not isinstance(final_attempt, Mapping):
+        return False
+    if (
+        final_attempt.get("attempt") != tier2.get("attempt_id")
+        or final_attempt.get("raw_response") != raw_response
+        or final_attempt.get("raw_response_sha256") != tier2.get("raw_response_sha256")
+        or not isinstance(final_attempt.get("dispatch"), Mapping)
+    ):
+        return False
+    attempt_dispatch = dict(final_attempt["dispatch"])
+    replay_dispatch = dict(dispatch)
+    replay_dispatch.pop("cache_run_id", None)
+    if attempt_dispatch != replay_dispatch:
+        return False
+    events = llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch)
+    tools_used = tuple(str(tool) for tool in dispatch.get("tools_used") or ())
+    if (
+        not events
+        or not tools_used
+        or any(str(event.get("tool") or "") not in tools_used for event in events)
+        or llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch) < len(events)
+    ):
+        return False
+    return tier2.get("status") != "cache_hit" or dispatch.get("cache_run_id") == tier2.get("tier2_run_id")
 
 
 def _positive_fact_checks_have_captured_sources(
@@ -410,6 +493,8 @@ def production_qg_passes(
         return False
     if tier2["raw_response_sha256"] != _sha256(tier2["raw_response"].encode("utf-8")):
         return False
+    if not _live_author_lineage_passes(tier2["dispatch"]) or not _replay_capture_is_coherent(tier2):
+        return False
     if _contains_forbidden_workflow_state(tier2["dispatch"]) or _contains_forbidden_workflow_state(
         tier2["gate_outcomes"]
     ):
@@ -417,7 +502,11 @@ def production_qg_passes(
     if tier2["status"] == "ran":
         if tier2.get("cache_regate") is not None or tier2["dispatch"].get("cache_run_id") is not None:
             return False
-    elif tier2["status"] != "cache_hit" or tier2.get("cache_regate") != "replayed":
+    elif (
+        tier2["status"] != "cache_hit"
+        or tier2.get("cache_regate") != "replayed"
+        or tier2["dispatch"].get("cache_run_id") != tier2["tier2_run_id"]
+    ):
         return False
     gate = tier2["gate_outcomes"]
     if not isinstance(gate, Mapping) or gate.get("status") != "ran":

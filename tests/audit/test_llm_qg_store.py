@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 from pathlib import Path
 
@@ -228,9 +229,24 @@ def test_legacy_db_without_tool_columns_migrates_on_read(tmp_path: Path) -> None
     assert record.tools_used == ()
     assert record.tool_events is None
     assert record.route_name is None
+    assert record.raw_response is None
+    assert record.dispatch_metadata is None
+    assert record.retry_history is None
+    assert record.gate_outcomes is None
 
     cols = {row[1] for row in sqlite3.connect(db_path).execute("PRAGMA table_info(llm_qg_runs)")}
-    assert {"route_name", "tool_call_count", "tools_used_json", "tool_events_json"} <= cols
+    assert {
+        "route_name",
+        "tool_call_count",
+        "tools_used_json",
+        "tool_events_json",
+        "raw_response",
+        "raw_response_sha256",
+        "dispatch_json",
+        "retry_history_json",
+        "gate_outcomes_json",
+        "attempt_id",
+    } <= cols
 
     # WRITE through the new code path on the migrated DB: also must not raise.
     event = {
@@ -283,6 +299,17 @@ def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
         tool_call_count=7,
         tools_used=("sources_search_heritage", "sources_query_wikipedia"),
         tool_events=(event,),
+        raw_response='{"findings": []}',
+        raw_response_sha256=hashlib.sha256(b'{"findings": []}').hexdigest(),
+        dispatch_metadata={
+            "route_name": "opencode_frontier",
+            "tool_call_count": 7,
+            "tools_used": ["sources_search_heritage", "sources_query_wikipedia"],
+            "tool_events": [event],
+        },
+        retry_history=[{"attempt": 1, "raw_response": '{"findings": []}', "dispatch": {"route_name": "opencode_frontier"}}],
+        gate_outcomes={"status": "ran"},
+        attempt_id=1,
         path=db_path,
     )
     record = latest_llm_qg("b1", "aspect-in-imperatives", path=db_path)
@@ -299,6 +326,14 @@ def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
             "output": {"rows": ["heritage result"]},
         },
     )
+    assert record.raw_response == '{"findings": []}'
+    assert record.raw_response_sha256 == hashlib.sha256(b'{"findings": []}').hexdigest()
+    assert record.dispatch_metadata is not None
+    assert record.retry_history == (
+        {"attempt": 1, "raw_response": '{"findings": []}', "dispatch": {"route_name": "opencode_frontier"}},
+    )
+    assert record.gate_outcomes == {"status": "ran"}
+    assert record.attempt_id == 1
 
 
 def test_composite_cache_key_includes_route_name(tmp_path: Path) -> None:

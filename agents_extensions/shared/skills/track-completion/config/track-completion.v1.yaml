@@ -168,13 +168,25 @@ certification_identity_paths:
       - agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml
       - agents_extensions/shared/curriculum-lifecycle/schema/certification-profiles.v1.schema.json
     prompt: [scripts/audit/prompts/reviewer_prompt.md]
-    checker: [scripts/audit/llm_reviewer.py]
-    checker_config: [scripts/audit/tier2_canary_allowlist.json]
-    policy: [agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml]
+    checker:
+      - scripts/audit/llm_reviewer.py
+      - scripts/audit/qg_adapters.py
+      - scripts/audit/checks/russicism_detection.py
+      - scripts/audit/checks/prose_quality.py
+      - scripts/pipeline/semantic_russianisms.py
+      - data/russianism-patterns-ua-gec.csv
+    checker_config: [scripts/audit/curriculum_qg_harness.py]
+    policy: [scripts/audit/content_surface_gates.py]
     schema: [scripts/audit/qg_schema.py]
-    tool: [scripts/audit/grounding_gate_v2.py]
+    tool:
+      - scripts/audit/grounding_gate_v2.py
+      - scripts/audit/anchor_primitives.py
     routing: [scripts/audit/llm_reviewer_dispatch.py]
-    canary: [scripts/audit/qg_tier2_canary_check.py]
+    canary:
+      - scripts/audit/qg_tier2_canary_check.py
+      - scripts/audit/tier2_canary_allowlist.json
+      - scripts/audit/llm_qg_canaries.py
+      - scripts/api/config.py
     cost: [scripts/audit/llm_qg_store.py]
     circuit: [scripts/audit/llm_qg_store.py]
     resume: [scripts/audit/qg_workflow.py]

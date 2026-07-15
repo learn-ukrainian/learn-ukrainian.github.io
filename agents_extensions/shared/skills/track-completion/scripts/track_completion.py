@@ -449,16 +449,30 @@ def certification_inputs(
 
 
 def _primary_checkout(repo_root: Path) -> Path:
+    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     result = subprocess.run(
         ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
         capture_output=True,
         check=False,
         text=True,
+        env=git_env,
     )
     if result.returncode != 0:
         return repo_root.resolve()
     common = Path(result.stdout.strip()).resolve()
     return common.parent if common.name == ".git" else repo_root.resolve()
+
+
+def _require_outside_common_repository(path: Path, *, repo_root: Path, label: str) -> None:
+    """Reject runtime evidence from the active, primary, or sibling worktrees."""
+    resolved = path.resolve()
+    repository_roots = {repo_root.resolve(), _primary_checkout(repo_root)}
+    for repository_root in repository_roots:
+        try:
+            resolved.relative_to(repository_root)
+        except ValueError:
+            continue
+        raise CompletionError(f"{label} must remain outside the common repository")
 
 
 def ledger_path_for(
@@ -688,11 +702,12 @@ def resume_run(
             ledger = _read_ledger(path)
             if ledger is None or ledger["run"]["run_id"] != run_id:
                 raise CompletionError("No matching completion run to resume")
+            resumed_state = ledger["state"]
             if ledger["run"]["status"] != "active":
                 if reopening_state is None:
                     raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
                 ledger["run"]["status"] = "active"
-                ledger["state"] = reopening_state
+                resumed_state = reopening_state
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
             if drifted and ledger["state"] not in MUTATING_STATES:
                 raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
@@ -706,7 +721,7 @@ def resume_run(
                     ledger,
                     event_id=eid,
                     event="CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
-                    to_state=ledger["state"],
+                    to_state=resumed_state,
                     identity=ledger["current_identity"] if drifted else identity,
                     details={"pending_identity_drift": drifted, "reopened_for_certification": reopening_state is not None},
                 )
@@ -1035,12 +1050,11 @@ def record_review(
     ledger_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     resolved_result = result_path.resolve()
-    try:
-        resolved_result.relative_to(repo_root.resolve())
-    except ValueError:
-        pass
-    else:
-        raise CompletionError("Canonical post-build result must remain outside the repository")
+    _require_outside_common_repository(
+        resolved_result,
+        repo_root=repo_root,
+        label="Canonical post-build result",
+    )
     result = _load_post_build_result(resolved_result)
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
@@ -1367,12 +1381,11 @@ def record_certification_evidence(
 ) -> tuple[Path, dict[str, Any]]:
     """Append one strictly parsed evidence artifact; projection decides its authority."""
     artifact = certification.read_evidence(evidence)
-    try:
-        artifact.path.relative_to(repo_root.resolve())
-    except ValueError:
-        pass
-    else:
-        raise CompletionError("Runtime certification evidence must remain outside the repository")
+    _require_outside_common_repository(
+        artifact.path,
+        repo_root=repo_root,
+        label="Runtime certification evidence",
+    )
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)

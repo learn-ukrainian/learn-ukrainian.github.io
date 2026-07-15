@@ -587,6 +587,60 @@ def test_pre_change_cache_row_without_tool_events_is_marked_unavailable(tmp_path
     assert calls == 0
 
 
+def test_legacy_cache_row_without_raw_capture_never_emits_certification_wrapper(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="legacy-raw-capture",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="legacy-raw-capture",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="legacy-raw-capture",
+        module_dir=seminar_dir,
+        payload=qg_workflow._payload_from_reviewer_payload(json.loads(_seminar_response())),
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        route_name=None,
+        tool_call_count=1,
+        tools_used=("sources_query_wikipedia",),
+        tool_events=(_wiki_event(mode="section"),),
+        source="qg_workflow",
+        path=db_path,
+    )
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="legacy-raw-capture"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            capture_tier2=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        store_path=db_path,
+    )
+
+    tier2 = _tier(record, 2)
+    assert tier2["status"] == "cache_hit"
+    assert tier2["cache_regate"] == "replayed"
+    assert "raw_response" not in tier2
+    assert "dispatch" not in tier2
+    assert "retry_history" not in tier2
+
+
 def test_live_and_cache_paths_use_shared_reviewer_gate_helper(tmp_path: Path, monkeypatch: Any) -> None:
     seminar_dir = _write_module(
         tmp_path,
