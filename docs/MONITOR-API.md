@@ -83,8 +83,10 @@ curl -s http://localhost:8765/api/state/manifest
 curl -s http://localhost:8765/api/rules?format=markdown     # ~1.3 KB
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # ~1-3 KB
 
-# 3. Always-fresh: git, pipeline, runtime, wiki, health, hints — with meta.
-curl -s http://localhost:8765/api/orient
+# 3. Lean cold-start orient — git, runtime, delegate, bridge, governance, health, hints.
+#    Skips the heavy pipeline/issues/wiki sections (fetch those on demand once you have a
+#    lane, e.g. ?sections=pipeline). Drop ?lean=true for the full legacy payload.
+curl -s 'http://localhost:8765/api/orient?lean=true'
 # Use ?fresh=true right after you committed or filed an issue.
 
 # 4. Optional: do I have unread channel deliveries?

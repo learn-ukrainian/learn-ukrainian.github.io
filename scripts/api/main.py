@@ -249,6 +249,22 @@ ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
 
 ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
 
+# Lean cold-start preset (``?lean=true``): the small, lane-agnostic sections an agent needs to
+# orient BEFORE it has selected work — tree state (git), active dispatches (delegate), pending
+# bridge asks, blocking decisions (governance), health, and the handoff pointers / current goal
+# (session_hints). Excludes the three heavy sections — ``pipeline`` (~2k module stats),
+# ``issues`` (full gh list), ``wiki`` (per-track coverage) — which are fetched on demand via
+# ``?sections=...``. Cuts the default cold-start payload sharply (codex cold-start review; #4728).
+LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
+    "git",
+    "runtime",
+    "delegate",
+    "bridge_pending",
+    "governance",
+    "health",
+    "session_hints",
+)
+
 # Orient sync collectors use a dedicated executor instead of the loop's
 # shared default pool. This isolates cheap orient reads from unrelated
 # ``asyncio.to_thread()`` backlog elsewhere in the process, which was
@@ -750,13 +766,18 @@ async def _cached_orient_section(
     return value, meta
 
 
-def _parse_orient_sections(sections_param: str | None) -> list[str]:
-    """Validate and expand the optional ``sections`` query param."""
+def _parse_orient_sections(sections_param: str | None, *, lean: bool = False) -> list[str]:
+    """Validate and expand the optional ``sections`` query param.
+
+    An explicit ``sections`` list always wins. When it is absent, ``lean`` selects the
+    lightweight cold-start preset (``LEAN_ORIENT_SECTIONS``); otherwise the full payload.
+    """
+    default = list(LEAN_ORIENT_SECTIONS if lean else ORIENT_SECTION_KEYS)
     if sections_param is None:
-        return list(ORIENT_SECTION_KEYS)
+        return default
     keys = [part.strip() for part in sections_param.split(",") if part.strip()]
     if not keys:
-        return list(ORIENT_SECTION_KEYS)
+        return default
     unknown = [key for key in keys if key not in ORIENT_SECTION_TTLS]
     if unknown:
         valid = ", ".join(ORIENT_SECTION_KEYS)
@@ -798,6 +819,12 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
 async def orient(
     request: Request,
     fresh: bool = False,
+    lean: bool = Query(
+        False,
+        description="Lean cold-start preset: return only the lightweight sections "
+        "(git, runtime, delegate, bridge_pending, governance, health, session_hints), "
+        "skipping the heavy pipeline/issues/wiki. Ignored when 'sections' is given.",
+    ),
     sections: str | None = Query(
         None,
         description="Comma-separated subset of orient sections to collect.",
@@ -829,7 +856,7 @@ async def orient(
     if fresh:
         cache_invalidate("orient_")
 
-    selected = _parse_orient_sections(sections)
+    selected = _parse_orient_sections(sections, lean=lean)
     section_specs = _orient_section_specs()
     gather_results = await asyncio.gather(
         *[

@@ -137,6 +137,23 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
     assert expected <= set(data)
 
 
+def test_parse_orient_sections_lean_preset_excludes_heavy_sections():
+    # The lean cold-start preset returns only the lightweight sections; the heavy
+    # pipeline/issues/wiki are excluded (fetched on demand). Tested at the pure-function
+    # level: the /api/orient handler is a thin passthrough to this selector.
+    lean = api_main._parse_orient_sections(None, lean=True)
+    assert lean == list(api_main.LEAN_ORIENT_SECTIONS)
+    assert not ({"pipeline", "issues", "wiki"} & set(lean))
+    assert {"git", "delegate", "governance", "health", "session_hints"} <= set(lean)
+
+
+def test_parse_orient_sections_explicit_list_overrides_lean():
+    # An explicit sections list always wins over the lean preset...
+    assert api_main._parse_orient_sections("pipeline", lean=True) == ["pipeline"]
+    # ...and with neither lean nor an explicit list, the full payload is returned.
+    assert api_main._parse_orient_sections(None, lean=False) == list(api_main.ORIENT_SECTION_KEYS)
+
+
 def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path):
     original_git_collector = api_main._collect_git_orient_data
     repo = _init_orient_git_repo(tmp_path)
