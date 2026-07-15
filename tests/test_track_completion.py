@@ -1068,7 +1068,10 @@ def test_projection_has_no_caller_controlled_preparation_identity() -> None:
 
 def test_pages_deploy_installs_schema_runtime_and_emits_exact_head_marker() -> None:
     workflow = (ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
+    trigger_block = workflow.split("on:\n", 1)[1].split("permissions:\n", 1)[0]
 
     assert "jsonschema==4.26.0" in workflow
     assert "learn-ukrainian-deployment-${GITHUB_SHA}.txt" in workflow
     assert "printf '%s\\n' \"$GITHUB_SHA\"" in workflow
+    assert "workflow_dispatch:" in trigger_block
+    assert "push:" not in trigger_block

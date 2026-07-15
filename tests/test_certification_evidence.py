@@ -1618,8 +1618,13 @@ def test_deployment_receipt_requires_exact_merge_sha_and_target_marker() -> None
             "workflow": {
                 "name": "Deploy to GitHub Pages",
                 "path": ".github/workflows/deploy-pages.yml",
+                "event": "workflow_dispatch",
+                "branch": "main",
                 "run_id": 29435984531,
                 "head_sha": "a" * 40,
+                "created_at": "2026-07-15T00:01:00+00:00",
+                "certified_at": "2026-07-15T00:00:00+00:00",
+                "post_certification": "PASS",
                 "publication_ancestor": "PASS",
                 "conclusion": "success",
             },
@@ -1650,6 +1655,13 @@ def test_deployment_receipt_requires_exact_merge_sha_and_target_marker() -> None
         publication={"pr": 5255, "merge_sha": "a" * 40},
         expected_workflow_identity=_sha("deploy-workflow"),
     )
+    value["deployment"]["workflow"]["created_at"] = "2026-07-14T23:59:00+00:00"
+    assert not ce.deployment_passes(
+        artifact,
+        publication={"pr": 5255, "merge_sha": "a" * 40},
+        expected_workflow_identity=_sha("deploy-workflow"),
+    )
+    value["deployment"]["workflow"]["created_at"] = "2026-07-15T00:01:00+00:00"
     value["deployment"]["workflow"]["publication_ancestor"] = "FAIL"
     assert not ce.deployment_passes(
         artifact,
@@ -1778,8 +1790,13 @@ def test_deploy_terminal_stays_active_until_exact_receipt(
             "workflow": {
                 "name": "Deploy to GitHub Pages",
                 "path": ".github/workflows/deploy-pages.yml",
+                "event": "workflow_dispatch",
+                "branch": "main",
                 "run_id": 29435984531,
                 "head_sha": "b" * 40,
+                "created_at": "2026-07-15T00:01:00+00:00",
+                "certified_at": "2026-07-15T00:00:00+00:00",
+                "post_certification": "PASS",
                 "publication_ancestor": "PASS",
                 "conclusion": "success",
             },
@@ -1833,6 +1850,18 @@ def test_deployment_verifier_queries_exact_run_and_production_bytes(
     repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
     ledger["terminal_goal"] = "deploy"
     ledger["state"] = "DEPLOYMENT_REQUIRED"
+    ledger["history"].append(
+        {
+            "sequence": len(ledger["history"]) + 1,
+            "event_id": "certification-cursor-deployment-required",
+            "event": "CERTIFICATION_CURSOR_ADVANCED",
+            "at": "2026-07-15T00:00:00+00:00",
+            "from_state": "PRODUCTION_QG_REQUIRED",
+            "to_state": "DEPLOYMENT_REQUIRED",
+            "identity_sha256": ledger["current_identity"]["sha256"],
+            "details": {"projection": {"production_qg": "pass"}},
+        }
+    )
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
     workflow_run_id = 29435984531
@@ -1840,7 +1869,10 @@ def test_deployment_verifier_queries_exact_run_and_production_bytes(
         "id": workflow_run_id,
         "name": "Deploy to GitHub Pages",
         "path": ".github/workflows/deploy-pages.yml",
+        "event": "workflow_dispatch",
+        "head_branch": "main",
         "head_sha": "c" * 40,
+        "created_at": "2026-07-15T00:01:00+00:00",
         "conclusion": "success",
         "html_url": "https://github.com/example/actions/runs/29435984531",
     }
@@ -1899,6 +1931,33 @@ def test_deployment_verifier_queries_exact_run_and_production_bytes(
         == workflow_payload["head_sha"]
     )
     assert json.loads(out.read_text(encoding="utf-8")) == receipt
+
+    workflow_payload["event"] = "push"
+    with pytest.raises(tc.CompletionError, match="successful canonical run"):
+        tc.verify_deployment_receipt(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            workflow_run_id=workflow_run_id,
+            url="https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            out=tmp_path / "outside-evidence/push-deployment.json",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    workflow_payload["event"] = "workflow_dispatch"
+    workflow_payload["created_at"] = "2026-07-14T23:59:00+00:00"
+    with pytest.raises(tc.CompletionError, match="before production QG"):
+        tc.verify_deployment_receipt(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            workflow_run_id=workflow_run_id,
+            url="https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            out=tmp_path / "outside-evidence/pre-qg-deployment.json",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    workflow_payload["created_at"] = "2026-07-15T00:01:00+00:00"
 
     def stale_marker_urlopen(request: Any, **_kwargs: Any) -> Response:
         if "/.well-known/" in request.full_url:

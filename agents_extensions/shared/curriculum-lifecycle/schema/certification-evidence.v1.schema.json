@@ -457,13 +457,19 @@
                   "type": "object",
                   "additionalProperties": false,
                   "required": [
-                    "name", "path", "run_id", "head_sha", "publication_ancestor", "conclusion"
+                    "name", "path", "event", "branch", "run_id", "head_sha", "created_at",
+                    "certified_at", "post_certification", "publication_ancestor", "conclusion"
                   ],
                   "properties": {
                     "name": {"const": "Deploy to GitHub Pages"},
                     "path": {"const": ".github/workflows/deploy-pages.yml"},
+                    "event": {"const": "workflow_dispatch"},
+                    "branch": {"const": "main"},
                     "run_id": {"type": "integer", "minimum": 1},
                     "head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                    "created_at": {"type": "string", "format": "date-time"},
+                    "certified_at": {"type": "string", "format": "date-time"},
+                    "post_certification": {"const": "PASS"},
                     "publication_ancestor": {"const": "PASS"},
                     "conclusion": {"const": "success"}
                   }

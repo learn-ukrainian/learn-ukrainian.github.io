@@ -1869,6 +1869,19 @@ def verify_deployment_receipt(
     publication = ledger.get("publication")
     if publication is None:
         raise CompletionError("Deployment verification requires recorded publication")
+    certification_event = next(
+        (
+            item
+            for item in reversed(ledger.get("history", []))
+            if item.get("event") == "CERTIFICATION_CURSOR_ADVANCED"
+            and item.get("to_state") == "DEPLOYMENT_REQUIRED"
+            and item.get("details", {}).get("projection", {}).get("production_qg") == "pass"
+        ),
+        None,
+    )
+    if certification_event is None:
+        raise CompletionError("Deployment requires a recorded production-QG pass")
+    certified_at = str(certification_event["at"])
     command = [
         "gh",
         "api",
@@ -1893,11 +1906,21 @@ def verify_deployment_receipt(
         workflow.get("id") != workflow_run_id
         or workflow.get("name") != "Deploy to GitHub Pages"
         or workflow.get("path") != ".github/workflows/deploy-pages.yml"
+        or workflow.get("event") != "workflow_dispatch"
+        or workflow.get("head_branch") != "main"
         or workflow.get("conclusion") != "success"
     ):
         raise CompletionError(
             "Deployment workflow is not the successful canonical run for the recorded merge SHA"
         )
+    created_at = workflow.get("created_at")
+    try:
+        workflow_created_at = _parse_time(str(created_at))
+        certification_completed_at = _parse_time(certified_at)
+    except ValueError as exc:
+        raise CompletionError("Deployment workflow timestamps are malformed") from exc
+    if workflow_created_at < certification_completed_at:
+        raise CompletionError("Deployment workflow started before production QG passed")
     compare_command = [
         "gh",
         "api",
@@ -1981,8 +2004,13 @@ def verify_deployment_receipt(
             "workflow": {
                 "name": workflow["name"],
                 "path": workflow["path"],
+                "event": workflow["event"],
+                "branch": workflow["head_branch"],
                 "run_id": workflow["id"],
                 "head_sha": workflow["head_sha"],
+                "created_at": workflow["created_at"],
+                "certified_at": certified_at,
+                "post_certification": "PASS",
                 "publication_ancestor": "PASS",
                 "conclusion": workflow["conclusion"],
             },

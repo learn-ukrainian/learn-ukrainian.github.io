@@ -2,14 +2,8 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Auto-deploy on content/site changes to main, path-scoped so pure-infra,
-  # test, script, and docs merges don't trigger a full prod rebuild. Manual
-  # deploy via workflow_dispatch (Actions tab) stays available as a gate.
-  push:
-    branches: [main]
-    paths:
-      - 'site/**'
-      - '.github/workflows/deploy-pages.yml'
+  # The curriculum lifecycle dispatches this only after production QG reaches
+  # CERTIFIED_FINAL. A push trigger would deploy provisional merged content.
   workflow_dispatch:
 
 permissions:

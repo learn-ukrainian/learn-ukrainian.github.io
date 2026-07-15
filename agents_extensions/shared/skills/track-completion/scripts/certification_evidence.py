@@ -6,6 +6,7 @@ import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -322,12 +323,25 @@ def deployment_passes(
     deployment = value["deployment"]
     workflow = deployment["workflow"]
     verification = deployment["verification"]
+    try:
+        workflow_created_at = datetime.fromisoformat(workflow["created_at"])
+        certified_at = datetime.fromisoformat(workflow["certified_at"])
+    except (TypeError, ValueError):
+        return False
+    if workflow_created_at.tzinfo is None:
+        workflow_created_at = workflow_created_at.replace(tzinfo=UTC)
+    if certified_at.tzinfo is None:
+        certified_at = certified_at.replace(tzinfo=UTC)
     return bool(
         value["workflow_identity"] == expected_workflow_identity
         and value["publication"]["pr"] == publication.get("pr")
         and value["publication"]["merge_sha"] == publication.get("merge_sha")
         and workflow["name"] == "Deploy to GitHub Pages"
         and workflow["path"] == ".github/workflows/deploy-pages.yml"
+        and workflow["event"] == "workflow_dispatch"
+        and workflow["branch"] == "main"
+        and workflow["post_certification"] == "PASS"
+        and workflow_created_at >= certified_at
         and workflow["publication_ancestor"] == "PASS"
         and workflow["conclusion"] == "success"
         and deployment["environment"] == "github-pages"
