@@ -12,7 +12,7 @@ from agent_runtime.adapters.agy import (
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, AGY_CLI
 
-GROK_BUILD_DEFAULT_MODEL = "grok-build"
+GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
 GROK_BUILD_DEFAULT_EFFORT = "high"
 
 DEFAULT_CHECK_MODEL_TIMEOUT = int(os.environ.get("AB_CHECK_MODEL_TIMEOUT", "90"))

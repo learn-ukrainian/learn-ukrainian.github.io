@@ -315,7 +315,7 @@ _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
-    "grok-4.3": ModelRoute(family="xai", backend=_hermes_backend),
+    "grok-4.5": ModelRoute(family="xai", backend=_hermes_backend),
 }
 
 

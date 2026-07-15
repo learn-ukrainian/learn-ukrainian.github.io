@@ -1,7 +1,7 @@
 """GrokBuildAdapter — wraps the native ``grok`` CLI (Grok Build) headless.
 
 DISTINCT from the Hermes-backed ``grok`` agent (``HermesGrokAdapter``,
-``grok-4.3`` / ``grok-4.20`` via the Hermes OAuth API path). This adapter drives
+``grok-4.5`` via the Hermes OAuth API path). This adapter drives
 the local ``grok`` CLI binary (``~/.local/bin/grok`` — "Grok Build TUI") in
 single-turn headless mode:
 
@@ -67,7 +67,8 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
     "search_replace",
     "Bash",
 )
-GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-build")
+GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
+GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 
 
@@ -101,6 +102,12 @@ class GrokBuildAdapter:
             raise RuntimeError(
                 "grok CLI (Grok Build) not found on PATH. Install the xAI grok "
                 "CLI (provides `grok`) to dispatch the grok-build agent."
+            )
+        requested_model = model or self.default_model
+        if requested_model not in GROK_ALLOWED_MODELS:
+            raise ValueError(
+                f"GrokBuildAdapter: unsupported Grok model {requested_model!r}; "
+                f"allowed: {sorted(GROK_ALLOWED_MODELS)}"
             )
         tc = tool_config or {}
         if "sources" in (tc.get("mcp_server_names") or []):
@@ -142,8 +149,7 @@ class GrokBuildAdapter:
                 cmd.extend(["--deny", rule])
 
         effective_effort = effort or self.default_effort
-        if model:
-            cmd.extend(["-m", model])
+        cmd.extend(["-m", requested_model])
         if effective_effort:
             # grok accepts the same levels as the runtime: low|medium|high|xhigh|max
             cmd.extend(["--effort", effective_effort])
@@ -165,7 +171,7 @@ class GrokBuildAdapter:
             task_id,
             mode,
             _MODE_PERMISSION[mode],
-            model,
+            requested_model,
             effective_effort,
         )
 

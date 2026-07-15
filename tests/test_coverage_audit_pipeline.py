@@ -443,7 +443,7 @@ class TestCheckCrossAgentReview:
         orch_dir.mkdir(parents=True)
         state = {"phases": {"B": {"model": "composer-2.5"}}}
         (orch_dir / "state-v3.json").write_text(json.dumps(state))
-        review = "**Reviewed-By:** grok-4.20-reasoning"
+        review = "**Reviewed-By:** grok-4.5"
         violations = check_cross_agent_review(review, str(md))
         assert not any(v["type"] == "SELF_REVIEW_DETECTED" for v in violations)
 
@@ -478,7 +478,7 @@ class TestModelFamily:
         from audit.checks.review_gaming import _model_family
         assert _model_family("composer-2.5") == "cursor-composer"
         assert _model_family("cursor-agent") == "cursor-composer"
-        assert _model_family("grok-4.20-reasoning") == "cursor-grok"
+        assert _model_family("grok-4.5") == "cursor-grok"
 
     def test_unknown_family(self):
         from audit.checks.review_gaming import _model_family
