@@ -1,0 +1,364 @@
+schema_version: hramatka_ua_qg_fixtures.v1
+rule_set: hramatka
+fixtures:
+  # Clean lesson — every check must stay quiet (PASS).
+  - id: clean-b1-lesson
+    level: b1
+    slug: clean-b1-lesson
+    expected_verdict: PASS
+    lesson_json:
+      title: Квартира біля парку
+      level: B1
+      anchor:
+        text: >
+          Ми шукали квартиру біля парку. Перша квартира була світла й тепла.
+          Друга була дешевша, але темна. Ми обрали третю — вона менша, зате ближча до центру.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Правда чи ні
+            payload:
+              type: true-false
+              instruction: Перевірте за текстом.
+              items:
+                - statement: Вони шукали квартиру біля парку.
+                  correct: true
+                - statement: Перша квартира була темна.
+                  correct: false
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+                - index: 1
+                  correct: false
+          answer_key: "1 П · 2 Н"
+        - type: multiple-choice
+          activity:
+            type: multiple-choice
+            title: Оберіть відповідь
+            payload:
+              type: multiple-choice
+              instruction: Оберіть відповідь.
+              items:
+                - prompt: Де була квартира?
+                  options:
+                    - а) біля парку
+                    - б) біля моря
+                    - в) за містом
+            answer_key:
+              items:
+                - index: 0
+                  correct: а
+          answer_key: "1 — а"
+        - type: cloze
+          activity:
+            type: cloze
+            title: Вставте слово
+            payload:
+              type: cloze
+              instruction: Вставте слово.
+              text: "Нова квартира [___:1], ніж стара."
+              blanks:
+                - id: 1
+                  answer: менша
+            answer_key:
+              blanks:
+                - id: 1
+                  answer: менша
+          answer_key: "1 менша"
+
+  # Planted russianism / calque (curated regex + Antonenko).
+  - id: planted-russianism
+    level: b1
+    slug: planted-russianism
+    expected_verdict: FAIL
+    lesson_json:
+      title: Участь у святі
+      level: B1
+      anchor:
+        text: Студенти хочуть приймати участь у святі і кушати борщ.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Перевірка
+            payload:
+              type: true-false
+              instruction: Перевірте речення.
+              items:
+                - statement: Вони хочуть приймати участь.
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+    expected_findings:
+      - issue_id: RUSSICISM_DETECTED
+        excerpt: приймати участь
+        dimension: russianism_calque
+
+  # Russian-shadow + non-VESUM (not heritage) → RUSSIAN_SHADOW_RUSSICISM
+  - id: planted-russian-shadow
+    level: b1
+    slug: planted-russian-shadow
+    expected_verdict: FAIL
+    lesson_json:
+      title: Тінь форми
+      level: B1
+      anchor:
+        text: Треба зделати роботу швидко.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Перевірка
+            payload:
+              type: true-false
+              instruction: Прочитайте речення.
+              items:
+                - statement: Треба зделати роботу.
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+    expected_findings:
+      - issue_id: RUSSIAN_SHADOW_RUSSICISM
+        excerpt: зделати
+        dimension: russianism_calque
+        severity: critical
+
+  # Non-word distractor + synonym collision.
+  - id: planted-bad-distractors
+    level: b1
+    slug: planted-bad-distractors
+    expected_verdict: FAIL
+    lesson_json:
+      title: Відволікачі
+      level: B1
+      anchor:
+        text: Великий дім стоїть біля річки.
+      blocks:
+        - type: multiple-choice
+          activity:
+            type: multiple-choice
+            title: Оберіть слово
+            payload:
+              type: multiple-choice
+              instruction: Оберіть правильне слово.
+              items:
+                - prompt: Який дім?
+                  options:
+                    - а) великий
+                    - б) видатний
+                    - в) ффффффф
+            answer_key:
+              items:
+                - index: 0
+                  correct: а
+          answer_key: "1 — а"
+    expected_findings:
+      - issue_id: SYNONYM_DISTRACTOR
+        excerpt: видатний
+        dimension: distractor_quality
+        severity: critical
+      - issue_id: NON_VESUM_DISTRACTOR
+        excerpt: ффффффф
+        dimension: distractor_quality
+        severity: critical
+
+  # Placeholder answer key.
+  - id: planted-placeholder-key
+    level: b1
+    slug: planted-placeholder-key
+    expected_verdict: FAIL
+    lesson_json:
+      title: Порожня відповідь
+      level: B1
+      anchor:
+        text: Ми читаємо текст.
+      blocks:
+        - type: multiple-choice
+          activity:
+            type: multiple-choice
+            title: Питання
+            payload:
+              type: multiple-choice
+              instruction: Оберіть відповідь.
+              items:
+                - prompt: Що ми робимо?
+                  options:
+                    - а) читаємо
+                    - б) пишемо
+            answer_key: TODO
+          answer_key: TODO
+    expected_findings:
+      - issue_id: ANSWER_KEY_PLACEHOLDER
+        excerpt: TODO
+        dimension: answer_key_integrity
+        severity: critical
+
+  # Broken cloze blank count.
+  - id: planted-broken-cloze
+    level: b1
+    slug: planted-broken-cloze
+    expected_verdict: FAIL
+    lesson_json:
+      title: Дірка в клозе
+      level: B1
+      anchor:
+        text: Кіт сидить на вікні.
+      blocks:
+        - type: cloze
+          activity:
+            type: cloze
+            title: Вставте
+            payload:
+              type: cloze
+              instruction: Вставте слова.
+              text: "Кіт [___:1] на [___:2]."
+              blanks:
+                - id: 1
+                  answer: сидить
+                - id: 2
+                  answer: вікні
+            answer_key:
+              blanks:
+                - id: 1
+                  answer: сидить
+          answer_key: "1 сидить"
+    expected_findings:
+      - issue_id: CLOZE_BLANK_MISMATCH
+        excerpt: "blanks=2 answers=1"
+        dimension: activity_structure
+        severity: critical
+
+  # Over-level task word (A1 lesson, C1 task verb).
+  - id: planted-overlevel-task
+    level: a1
+    slug: planted-overlevel-task
+    expected_verdict: WARN
+    lesson_json:
+      title: Просте завдання
+      level: A1
+      anchor:
+        text: Я їм хліб.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Перевірка
+            payload:
+              type: true-false
+              instruction: Чи можна чигати за дверима?
+              items:
+                - statement: Я їм хліб.
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+    expected_findings:
+      - issue_id: TASK_CEFR_OVERLEVEL
+        excerpt: чигати
+        dimension: task_cefr
+        severity: warning
+
+  # Invented non-VESUM form (not russian-shadow, not heritage).
+  - id: planted-invented-form
+    level: b1
+    slug: planted-invented-form
+    expected_verdict: WARN
+    lesson_json:
+      title: Вигадана форма
+      level: B1
+      anchor:
+        text: У місті з'явилася нова жмурклея біля річки.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: Перевірка
+            payload:
+              type: true-false
+              instruction: Прочитайте речення.
+              items:
+                - statement: У місті є жмурклея.
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+    expected_findings:
+      - issue_id: NON_VESUM_FORM
+        excerpt: жмурклея
+        dimension: invented_form
+        severity: warning
+
+  # Empty learner surface (blank title).
+  - id: planted-empty-surface
+    level: b1
+    slug: planted-empty-surface
+    expected_verdict: FAIL
+    lesson_json:
+      title: "   "
+      level: B1
+      anchor:
+        text: Текст уроку є.
+      blocks:
+        - type: true-false
+          activity:
+            type: true-false
+            title: ""
+            payload:
+              type: true-false
+              instruction: ""
+              items:
+                - statement: ""
+                  correct: true
+            answer_key:
+              items:
+                - index: 0
+                  correct: true
+          answer_key: "1 П"
+    expected_findings:
+      - issue_id: EMPTY_LEARNER_SURFACE
+        dimension: learner_surface
+        severity: critical
+
+  # MC with fewer than 2 options.
+  - id: planted-mc-too-few
+    level: b1
+    slug: planted-mc-too-few
+    expected_verdict: FAIL
+    lesson_json:
+      title: Мало варіантів
+      level: B1
+      anchor:
+        text: Ми вчимо мову.
+      blocks:
+        - type: multiple-choice
+          activity:
+            type: multiple-choice
+            title: Питання
+            payload:
+              type: multiple-choice
+              instruction: Оберіть.
+              items:
+                - prompt: Що ми робимо?
+                  options:
+                    - а) вчимо
+            answer_key:
+              items:
+                - index: 0
+                  correct: а
+          answer_key: "1 — а"
+    expected_findings:
+      - issue_id: MC_TOO_FEW_OPTIONS
+        dimension: activity_structure
+        severity: critical

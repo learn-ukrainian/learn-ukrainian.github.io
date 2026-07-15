@@ -37,6 +37,24 @@ from llm_qg_store import CONTENT_FILES, content_sha_for_module
 FIXTURE_SCHEMA_VERSION = "curriculum_ua_qg_fixtures.v1"
 EVIDENCE_SCHEMA_VERSION = "curriculum_ua_qg_evidence.v1"
 CHECKER_VERSION = "curriculum_ua_qg_harness.v1"
+RULE_SET_CURRICULUM = "curriculum"
+RULE_SET_HRAMATKA = "hramatka"
+RULE_SETS = (RULE_SET_CURRICULUM, RULE_SET_HRAMATKA)
+
+
+def _hramatka_rules():
+    """Lazy-load the separate hramatka rule module (never merge with PHRASE_RULES).
+
+    Always resolve via ``scripts.audit.hramatka_qg_rules`` so test monkeypatches
+    and path overrides apply to the same module object as direct imports.
+    Falls back to a sibling import only when the package path is unavailable
+    (CLI invoked with ``scripts/audit`` alone on ``sys.path``).
+    """
+    try:
+        from scripts.audit import hramatka_qg_rules as mod
+    except ImportError:  # pragma: no cover - CLI path with AUDIT_DIR only
+        import hramatka_qg_rules as mod  # type: ignore
+    return mod
 DIMENSION_ORDER = (
     "surface_leakage",
     "level_policy",
@@ -374,8 +392,23 @@ def scan_curriculum_module(
     level: str,
     slug: str | None = None,
     fixture_id: str | None = None,
+    rule_set: str = RULE_SET_CURRICULUM,
 ) -> dict[str, Any]:
-    """Scan one module directory and return compact deterministic evidence."""
+    """Scan one module directory and return compact deterministic evidence.
+
+    ``rule_set`` selects the checker family:
+    - ``curriculum`` (default): writer-failure PHRASE_RULES + surface gates
+    - ``hramatka``: structural/generative checks in ``hramatka_qg_rules``
+    """
+    clean_rule_set = (rule_set or RULE_SET_CURRICULUM).strip().lower()
+    if clean_rule_set == RULE_SET_HRAMATKA:
+        return _hramatka_rules().scan_hramatka_module(
+            module_dir,
+            level=level,
+            slug=slug,
+            fixture_id=fixture_id,
+        )
+
     module_dir = module_dir.resolve()
     clean_level = level.strip().lower()
     clean_slug = slug or module_dir.name
@@ -393,6 +426,7 @@ def scan_curriculum_module(
     config_hash = checker_config_hash()
     return {
         "schema_version": EVIDENCE_SCHEMA_VERSION,
+        "rule_set": RULE_SET_CURRICULUM,
         "module_id": f"{clean_level}/{clean_slug}",
         "level": clean_level,
         "slug": clean_slug,
@@ -403,6 +437,7 @@ def scan_curriculum_module(
         "checker_config": {
             "version": CHECKER_VERSION,
             "config_hash": config_hash,
+            "rule_set": RULE_SET_CURRICULUM,
         },
         "content_sha": content_sha_for_module(module_dir),
         "verdict": aggregate["verdict"],
@@ -532,13 +567,25 @@ def evaluate_fixture(fixture: Mapping[str, Any], *, temp_root: Path) -> dict[str
     }
 
 
-def run_fixtures(path: Path) -> dict[str, Any]:
-    """Run a fixture YAML file and return result rows plus summary."""
+def run_fixtures(path: Path, *, rule_set: str | None = None) -> dict[str, Any]:
+    """Run a fixture YAML file and return result rows plus summary.
+
+    Hramatka fixtures use schema ``hramatka_ua_qg_fixtures.v1`` and are
+    dispatched to ``hramatka_qg_rules.run_fixtures`` (separate rule set).
+    """
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, Mapping):
         raise ValueError("fixture file must be a mapping")
-    if data.get("schema_version") != FIXTURE_SCHEMA_VERSION:
-        raise ValueError(f"unsupported fixture schema: {data.get('schema_version')}")
+    schema = data.get("schema_version")
+    requested = (rule_set or data.get("rule_set") or RULE_SET_CURRICULUM)
+    requested = str(requested).strip().lower()
+
+    hramatka = _hramatka_rules()
+    if schema == hramatka.FIXTURE_SCHEMA_VERSION or requested == RULE_SET_HRAMATKA:
+        return hramatka.run_fixtures(path)
+
+    if schema != FIXTURE_SCHEMA_VERSION:
+        raise ValueError(f"unsupported fixture schema: {schema}")
     fixtures = data.get("fixtures")
     if not isinstance(fixtures, list):
         raise ValueError("fixture file must contain a fixtures list")
@@ -553,6 +600,7 @@ def run_fixtures(path: Path) -> dict[str, Any]:
     passed = sum(1 for result in results if result["passed"])
     return {
         "schema_version": FIXTURE_SCHEMA_VERSION,
+        "rule_set": RULE_SET_CURRICULUM,
         "fixture_file": str(path),
         "summary": {
             "total": len(results),
@@ -564,10 +612,17 @@ def run_fixtures(path: Path) -> dict[str, Any]:
 
 
 def _summary_text(payload: Mapping[str, Any]) -> str:
+    rule_set = str(payload.get("rule_set") or RULE_SET_CURRICULUM)
     if "results" in payload:
         summary = payload["summary"]
+        label = (
+            "Hramatka Ukrainian QG Fixtures"
+            if rule_set == RULE_SET_HRAMATKA
+            else "Curriculum Ukrainian QG Fixtures"
+        )
         lines = [
-            "Curriculum Ukrainian QG Fixtures",
+            label,
+            f"Rule set: {rule_set}",
             f"Total: {summary['total']}",
             f"Passed: {summary['passed']}",
             f"Failed: {summary['failed']}",
@@ -579,8 +634,14 @@ def _summary_text(payload: Mapping[str, Any]) -> str:
             )
         return "\n".join(lines)
     aggregate = payload["aggregate"]
+    label = (
+        "Hramatka Ukrainian QG Evidence"
+        if rule_set == RULE_SET_HRAMATKA
+        else "Curriculum Ukrainian QG Evidence"
+    )
     return (
-        "Curriculum Ukrainian QG Evidence\n"
+        f"{label}\n"
+        f"Rule set: {rule_set}\n"
         f"Module: {payload['module_id']}\n"
         f"Verdict: {payload['verdict']}\n"
         f"Min score: {aggregate['min_score']} ({aggregate['min_dim']})"
@@ -592,8 +653,22 @@ def build_parser() -> argparse.ArgumentParser:
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--module-dir", type=Path, help="Module directory to scan.")
     source.add_argument("--fixtures", type=Path, help="Fixture YAML file to run.")
+    source.add_argument(
+        "--lesson-json",
+        type=Path,
+        help="Hramatka lesson_json file (implies --rule-set hramatka).",
+    )
     parser.add_argument("--level", help="Level for --module-dir, e.g. b1.")
     parser.add_argument("--slug", help="Slug for --module-dir. Defaults to directory name.")
+    parser.add_argument(
+        "--rule-set",
+        choices=RULE_SETS,
+        default=RULE_SET_CURRICULUM,
+        help=(
+            "Selectable rule set: 'curriculum' (writer PHRASE_RULES) or "
+            "'hramatka' (structural/generative lesson checks). Default: curriculum."
+        ),
+    )
     parser.add_argument("--format", choices=("json", "summary"), default="summary")
     parser.add_argument("--output", type=Path, help="Optional output path.")
     return parser
@@ -603,15 +678,23 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         if args.fixtures:
-            payload = run_fixtures(args.fixtures)
+            payload = run_fixtures(args.fixtures, rule_set=args.rule_set)
             failed = int(payload["summary"]["failed"])
+        elif args.lesson_json is not None:
+            lesson = json.loads(args.lesson_json.read_text(encoding="utf-8"))
+            payload = _hramatka_rules().scan_hramatka_lesson(
+                lesson,
+                slug=args.slug,
+            )
+            failed = 0 if payload["terminal_verdict"] == "PASS" else 1
         else:
-            if not args.level:
+            if not args.level and args.rule_set != RULE_SET_HRAMATKA:
                 raise ValueError("--module-dir requires --level")
             payload = scan_curriculum_module(
                 args.module_dir,
-                level=args.level,
+                level=args.level or "b1",
                 slug=args.slug,
+                rule_set=args.rule_set,
             )
             failed = 0 if payload["terminal_verdict"] == "PASS" else 1
     except (OSError, ValueError, yaml.YAMLError, json.JSONDecodeError) as exc:
