@@ -130,7 +130,7 @@
     },
     {
       "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "sha256": "7cfebaf2d0072ab437b65a36a025b497f1a3811d69fe421e6ecc477f0ad6e1eb"
+      "sha256": "ba6754c19b42d11715a59cefda6fdddd47685b7d71c82e8aa0239af34d9c0a65"
     },
     {
       "path": "scripts/orchestration/curriculum_readiness.py",
@@ -150,7 +150,7 @@
     },
     {
       "path": "tests/orchestration/test_curriculum_lifecycle_pilot.py",
-      "sha256": "e7812d04f7b96bccfc59553031e6e256997e82e4fc53bab64ac75799b1912056"
+      "sha256": "2b14dd3bc09a8244248ce1c18e5b0991c36a952e4bc8f29230f45c6b121077c0"
     },
     {
       "path": "tests/orchestration/test_curriculum_readiness.py",
@@ -165,7 +165,7 @@
       "sha256": "a9cfa8279749e45a50e0e1ae0e38b879ee1cede34c60d6c3d5c3cb9b14d1f913"
     }
   ],
-  "identity_sha256": "9164b8f62e394a76149b6b9a0d26206bda508ba5f4fdfa2844d819a61cea72af",
+  "identity_sha256": "09c38dfd5ca2fb79143796e08be6c733afd59cf9f69e5885a87ac6784b39e5fd",
   "learner_tree": {
     "after_sha256": "cdc9ed2c16616755a5014e2825c0aa361ebf19acb9bc7c70089f71a4fb7d0091",
     "before_sha256": "cdc9ed2c16616755a5014e2825c0aa361ebf19acb9bc7c70089f71a4fb7d0091",
@@ -906,7 +906,7 @@
     }
   ],
   "schema_version": "curriculum-lifecycle-pilot-report.v1",
-  "source_commit": "4d481e7db772900617bcd8fadcf84202bb734a8d",
-  "source_tree_sha256": "6e9025b9d75e00b6890469d6b11fe593935f565640e6b7d7fd81cd5e68e69bd4",
+  "source_commit": "34d6ec01321ddec3b52b934401d1a9a00df8985e",
+  "source_tree_sha256": "7229034652ab954fa24c8494d8071be289cf4ee129f69b73a11f0217d60c1267",
   "verdict": "PASS"
 }
