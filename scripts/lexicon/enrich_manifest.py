@@ -4507,12 +4507,41 @@ def _kaikki_etymology_text_is_usable(text: str) -> bool:
     return not _KAIKKI_GARBLED_ETYMOLOGY_RE.search(text)
 
 
+# Decolonization guard (#M-13 / .claude/rules/ukrainian-linguistics.md §1,§6): a Ukrainian etymology
+# must never be framed via Russian/Belarusian comparison. "Old East Slavic" / "East Slavic" are the
+# correct decolonized terms and contain neither marker, so they pass; a "Compare Russian …" /
+# "Belarusian …" Kaikki etymology is rejected (section falls to honestly `uncovered`) rather than
+# surfaced with imperial framing.
+_KAIKKI_IMPERIAL_COMPARISON_RE = re.compile(
+    # English base country names, adjectives, and plurals (Russia/Russian/Russians, Belarus/…),
+    r"\b(Russia|Russian|Russians|Belarus|Belarusian|Belarusians|Belorussia|Belorussian|Byelorussia|Byelorussian)\b"
+    # plus embedded Cyrillic imperial references (Kaikki etymology prose often embeds them, e.g.
+    # рф → "Російська Федерація"). Word-anchored (\b) so it does NOT false-positive on Амвросій
+    # (Ambrose) or on legitimate Moscow-referent words (москва/москвич), which carry honest
+    # compositional etymologies rather than imperial framing of a Ukrainian concept.
+    r"|\b(росі[яюїє]|російськ|росіян|малоросі|рф|білорус)",
+    re.IGNORECASE,
+)
+
+
+# Ukrainian dictionary prose marks stress with combining acute/grave (Малоро́сія, Росі́я). Strip only
+# those before the imperial-comparison match so accented Cyrillic still matches; the precomposed
+# letters ї/й (U+0457/U+0439) are untouched — only U+0301/U+0300 are removed.
+_KAIKKI_STRESS_MARKS = str.maketrans("", "", "́̀")  # combining acute + grave (stress)
+
+
+def _kaikki_etymology_is_decolonized(text: str) -> bool:
+    return not _KAIKKI_IMPERIAL_COMPARISON_RE.search(text.translate(_KAIKKI_STRESS_MARKS))
+
+
 def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | None:
     row = _kaikki_row(lookup, lemma)
     if not row:
         return None
     text = clean_html_entities(str(row.get("etymology_text") or "").strip()[:600])
     if not _kaikki_etymology_text_is_usable(text):
+        return None
+    if not _kaikki_etymology_is_decolonized(text):
         return None
     return {"text": text, "source": KAIKKI_SOURCE}
 
@@ -4609,11 +4638,13 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
 def _etymology(
     conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
 ) -> dict | None:
-    """Offline ЕСУМ etymology from mphdict; no mirror or Wiktionary fallback."""
+    """ЕСУМ etymology from offline mphdict (primary, authoritative); falls back to a decolonized,
+    source-marked Kaikki/Wiktionary etymology for lemmas mphdict lacks (Option C, #5263). The Горох
+    mirror and the legacy ЕСУМ FTS table stay OFF (mirror labels banned; ЕСУМ redundant with mphdict)."""
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
-    return _mphdict_etymology(lemma)
+    return _mphdict_etymology(lemma) or _kaikki_etymology(kaikki_lookup or {}, lemma)
 
 
 _GRAC_FREQUENCY_CACHE_DATA: dict[str, Any] | None = None

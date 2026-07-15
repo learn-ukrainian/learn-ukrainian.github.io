@@ -1750,7 +1750,9 @@ def test_kaikki_meaning_uses_direct_glosses() -> None:
     }
 
 
-def test_etymology_has_no_kaikki_fallback_when_mphdict_has_no_root(monkeypatch) -> None:
+def test_etymology_falls_back_to_marked_kaikki_when_mphdict_has_no_root(monkeypatch) -> None:
+    # Option C (#5263): on an mphdict miss, a clean/decolonized Kaikki etymology is surfaced,
+    # source-marked non-authoritative (upgradeable) — no longer suppressed.
     monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
@@ -1761,7 +1763,11 @@ def test_etymology_has_no_kaikki_fallback_when_mphdict_has_no_root(monkeypatch) 
         }
     }
 
-    assert _etymology(conn, "місто", lookup) is None
+    result = _etymology(conn, "місто", lookup)
+    assert result is not None
+    assert result["source"] == KAIKKI_SOURCE
+    assert "Old East Slavic" in result["text"]
+    assert "Russian" not in result["text"]
 
 
 def test_etymology_does_not_fall_back_to_derived_base_forms(monkeypatch) -> None:
@@ -1845,7 +1851,50 @@ def test_etymology_has_no_kaikki_cognate_fallback(monkeypatch) -> None:
         }
     }
 
+    # Option C (#5263): rejected now by the DECOLONIZATION guard (Russian/Belarusian comparison),
+    # not by "no fallback". A cognate-comparison etymology must never be surfaced (#M-13).
     assert _etymology(conn, "базовий", lookup) is None
+
+
+def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
+    # The Kaikki fallback surfaces clean/decolonized etymologies but rejects Russian/Belarusian
+    # framing — English adjective/noun/plural AND embedded Cyrillic (#M-13 / ukrainian-linguistics.md
+    # §1,§6). Regression cases from the #5264 cross-family review (agy: base names/plurals leaked;
+    # codex: Cyrillic leaked) plus the false-positives that a naive broadening would introduce.
+    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
+    conn = _conn()
+
+    def ety(text: str):
+        return _etymology(conn, "проба", {"проба": {"ipa": [], "etymology_text": text, "pos": ["noun"]}})
+
+    # REJECTED — imperial framing (English adjective/noun/plural + embedded Cyrillic) → uncovered:
+    for imperial in [
+        "Compare Russian дом (dom).",
+        "cf. Belarusian ба́завы.",
+        "Named after the emperor Paul I of Russia.",       # base country name (was leaking)
+        "See орк for the usage referring to Russians.",    # plural (was leaking)
+        "Initialism of Російська Федерація.",              # Cyrillic (was leaking)
+        "Coined during the war with Росією.",              # Cyrillic instrumental case (paradigm gap)
+        "From Росі́я (Rosíja) + -ський.",             # stress-marked Cyrillic (combining acute)
+        "Back-formation from Малоро́сія (little Russia).",
+    ]:
+        assert ety(imperial) is None, imperial
+
+    # PASSED — clean/decolonized etymologies surface, source-marked non-authoritative:
+    for clean in [
+        "From Proto-Slavic *domъ.",
+        "From Old East Slavic мѣсто.",
+        "From Амвросій (Amvrosij, male given name) + -ївка.",  # NOT imperial (Ambrose ≠ Russia)
+        "Inherited from Old Ruthenian москва.",               # Moscow-referent word, honest etymology
+    ]:
+        r = ety(clean)
+        assert r is not None and r["source"] == KAIKKI_SOURCE, clean
+
+    # Stress marks are stripped ONLY for the imperial-comparison match; the STORED etymology text
+    # must preserve them (word stress is pedagogically load-bearing).
+    accented = ety("From Old East Slavic мѣ́сто.")
+    assert accented is not None
+    assert "́" in accented["text"]  # combining acute retained in the saved value
 
 
 def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
@@ -1862,7 +1911,9 @@ def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
     assert _etymology(conn, "Японія", lookup) is None
 
 
-def test_etymology_has_no_legacy_wiktionary_fallback(monkeypatch) -> None:
+def test_etymology_falls_back_to_marked_wiktionary_via_kaikki(monkeypatch) -> None:
+    # Option C (#5263): a clean Wiktionary-derived (Kaikki) etymology IS surfaced when mphdict has no
+    # root, source-marked non-authoritative. (The legacy wiktionary_etymology DB TABLE stays unused.)
     monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
     conn = _conn()
     lookup = {
@@ -1873,7 +1924,10 @@ def test_etymology_has_no_legacy_wiktionary_fallback(monkeypatch) -> None:
         }
     }
 
-    assert _etymology(conn, "робота", lookup) is None
+    result = _etymology(conn, "робота", lookup)
+    assert result is not None
+    assert result["source"] == KAIKKI_SOURCE
+    assert "Proto-Slavic" in result["text"]
 
 
 def test_etymology_has_no_goroh_mirror_fallback(monkeypatch) -> None:
@@ -1896,12 +1950,16 @@ def test_etymology_has_no_goroh_mirror_fallback(monkeypatch) -> None:
     lookup = {
         "книга": {
             "ipa": [],
-            "etymology_text": "Kaikki etymology text that must not win.",
+            "etymology_text": "Kaikki fallback etymology for книга.",
             "pos": ["noun"],
         }
     }
 
-    assert _etymology(conn, "книга", lookup) is None
+    # Option C (#5263): the Горох MIRROR still never wins; the decolonized Kaikki fallback does, marked.
+    result = _etymology(conn, "книга", lookup)
+    assert result is not None
+    assert result["source"] == KAIKKI_SOURCE
+    assert "Goroh" not in result["text"]
 
 
 def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_path) -> None:
