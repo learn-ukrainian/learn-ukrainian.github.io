@@ -115,10 +115,69 @@ resume_fixture() {
   local state_file="$3"
   local replacement_thread_id="$4"
   local rollover_id
+  local source_thread_id
+  local intended_title
+  local db_path
 
   rollover_id=$("$REPO_ROOT/.venv/bin/python" -c \
     'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["replacement"]["rollover_id"])' \
     "$state_file")
+  source_thread_id=$("$REPO_ROOT/.venv/bin/python" -c \
+    'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["active"]["thread_id"])' \
+    "$state_file")
+  intended_title=$("$REPO_ROOT/.venv/bin/python" -c \
+    'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["replacement"]["display"]["title"])' \
+    "$state_file")
+  db_path="$root/state_session-fixture.sqlite"
+
+  "$REPO_ROOT/.venv/bin/python" - "$db_path" "$source_thread_id" "$replacement_thread_id" "$root" <<'PYEOF'
+import sqlite3
+import sys
+
+db_path, source_id, replacement_id, cwd = sys.argv[1:]
+with sqlite3.connect(db_path) as connection:
+    connection.execute(
+        "CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, "
+        "archived INTEGER, archived_at TEXT, host TEXT)"
+    )
+    connection.executemany(
+        "INSERT INTO threads VALUES (?, ?, ?, ?, ?, ?)",
+        [
+            (source_id, "confirmed predecessor", cwd, 0, None, "fixture"),
+            (replacement_id, "Resume codex rollover", cwd, 0, None, "fixture"),
+        ],
+    )
+PYEOF
+
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --action create >/dev/null
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --action create --succeeded \
+    --evidence "fixture create_thread returned $replacement_thread_id" >/dev/null
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 register-created --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --replacement-thread-id "$replacement_thread_id" \
+    --db "$db_path" --evidence "fixture exact native create result" >/dev/null
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
+  "$REPO_ROOT/.venv/bin/python" - "$db_path" "$replacement_thread_id" "$intended_title" <<'PYEOF'
+import sqlite3
+import sys
+
+db_path, replacement_id, intended_title = sys.argv[1:]
+with sqlite3.connect(db_path) as connection:
+    connection.execute("UPDATE threads SET title = ? WHERE id = ?", (intended_title, replacement_id))
+PYEOF
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --action title --succeeded \
+    --evidence "fixture set_thread_title acknowledged" >/dev/null
+  "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    --repo-root "$root" --monitor-base-url http://127.0.0.1:1 reconcile-native --agent "$agent" \
+    --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
 
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
     "$REPO_ROOT/.venv/bin/python" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
@@ -332,16 +391,19 @@ assert_contains "$output" "Multiple live pending rollovers found for agent codex
 
 # 15. Resumed packet for current thread allowed; mismatch blocks.
 setup_fixture "$fixture_root"
-prepare_fixture "$fixture_root" codex old-thread
+source_thread_id="00000000-0000-4000-8000-000000000011"
+replacement_thread_id="00000000-0000-4000-8000-000000000012"
+other_thread_id="00000000-0000-4000-8000-000000000013"
+prepare_fixture "$fixture_root" codex "$source_thread_id"
 state_file="$(find_rollover_lease "$fixture_root" codex)"
-resume_fixture "$fixture_root" codex "$state_file" old-thread
-output="$(run_hook "$fixture_root" 0 codex old-thread)"
+resume_fixture "$fixture_root" codex "$state_file" "$replacement_thread_id"
+output="$(run_hook "$fixture_root" 0 codex "$replacement_thread_id")"
 assert_contains "$output" "RESUMED THREAD ROLLOVER DETECTED" "resumed same thread"
 assert_not_contains "$output" "PENDING THREAD ROLLOVER DETECTED" "resumed same thread"
 
-output="$(run_hook "$fixture_root" 0 codex other-thread)"
+output="$(run_hook "$fixture_root" 0 codex "$other_thread_id")"
 assert_contains "$output" "live rollover is already bound to a different replacement thread" "resumed bound other thread"
-assert_contains "$output" "old-thread" "resumed bound other thread"
+assert_contains "$output" "$replacement_thread_id" "resumed bound other thread"
 
 # 16. PostCompact remains read-only and surfaces packet health only.
 setup_fixture "$fixture_root"

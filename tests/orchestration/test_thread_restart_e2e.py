@@ -1,4 +1,4 @@
-"""End-to-end acceptance for packet-only Codex thread replacement.
+"""End-to-end acceptance for durable Codex thread replacement.
 
 These tests deliberately cross subprocess, Git-worktree, shell-helper, hook,
 and strict-canary seams. Unit-level state-machine cases remain in
@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import sqlite3
 import subprocess
 from pathlib import Path
 
@@ -20,6 +21,10 @@ REPO_PYTHON = REPO_ROOT / ".venv/bin/python"
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
 HANDOFF_CANARY = REPO_ROOT / "scripts/orchestration/thread_handoff_canary.py"
 CONTEXT_CANARY = REPO_ROOT / "scripts/context_canary.py"
+SOURCE_THREAD_ID = "00000000-0000-4000-8000-000000000001"
+REPLACEMENT_THREAD_ID = "00000000-0000-4000-8000-000000000002"
+SECOND_SOURCE_THREAD_ID = "00000000-0000-4000-8000-000000000003"
+SECOND_REPLACEMENT_THREAD_ID = "00000000-0000-4000-8000-000000000004"
 
 
 def run(
@@ -77,6 +82,10 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         "scripts/orchestration/thread_handoff.py",
         "scripts/orchestration/thread_handoff_canary.py",
     ]
+    sources.extend(
+        str(path.relative_to(REPO_ROOT))
+        for path in sorted((REPO_ROOT / "scripts/orchestration/task_family").glob("*.py"))
+    )
     if bootstrap_sources:
         sources.extend(
             [
@@ -123,7 +132,7 @@ def checkout_handoff_command(checkout: Path, *args: str) -> list[str | Path]:
     ]
 
 
-def prepare(primary: Path, *, active_thread_id: str = "old-thread") -> dict:
+def prepare(primary: Path, *, active_thread_id: str = SOURCE_THREAD_ID) -> dict:
     completed = run(
         handoff_command(
             primary,
@@ -149,7 +158,98 @@ def assert_cleanup_locked(primary: Path, packet: dict) -> None:
     assert load_lease(primary, packet)["cleanup"]["old_automation_ready_to_delete"] is False
 
 
-def resume(primary: Path, packet: dict, replacement_thread_id: str = "fresh-thread") -> dict:
+def register_native_replacement(primary: Path, packet: dict, replacement_thread_id: str) -> None:
+    """Simulate the exact native create/title acknowledgements around the local adapter."""
+    lease = load_lease(primary, packet)
+    source_thread_id = lease["active"]["thread_id"]
+    db_path = primary.parent / f"state_{packet['lineage_id']}.sqlite"
+    with sqlite3.connect(db_path) as connection:
+        connection.execute(
+            "CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, "
+            "archived INTEGER, archived_at TEXT, host TEXT)"
+        )
+        connection.executemany(
+            "INSERT INTO threads VALUES (?, ?, ?, ?, ?, ?)",
+            [
+                (source_thread_id, "Confirmed predecessor", str(primary), 0, None, "test"),
+                (replacement_thread_id, "Resume codex rollover", str(primary), 0, None, "test"),
+            ],
+        )
+
+    common = [
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+    ]
+    authorized = run(
+        handoff_command(primary, "native-action", *common, "--action", "create"),
+        cwd=primary,
+        check=True,
+    )
+    assert json.loads(authorized.stdout)["needs_native_action"] is True
+    run(
+        handoff_command(
+            primary,
+            "record-native-result",
+            *common,
+            "--action",
+            "create",
+            "--succeeded",
+            "--evidence",
+            f"fixture create_thread returned {replacement_thread_id}",
+        ),
+        cwd=primary,
+        check=True,
+    )
+    run(
+        handoff_command(
+            primary,
+            "register-created",
+            *common,
+            "--replacement-thread-id",
+            replacement_thread_id,
+            "--db",
+            db_path,
+            "--evidence",
+            "fixture exact native create result",
+        ),
+        cwd=primary,
+        check=True,
+    )
+    title_action = run(
+        handoff_command(primary, "native-action", *common, "--action", "title", "--db", db_path),
+        cwd=primary,
+        check=True,
+    )
+    intended_title = json.loads(title_action.stdout)["arguments"]["title"]
+    with sqlite3.connect(db_path) as connection:
+        connection.execute("UPDATE threads SET title = ? WHERE id = ?", (intended_title, replacement_thread_id))
+    run(
+        handoff_command(
+            primary,
+            "record-native-result",
+            *common,
+            "--action",
+            "title",
+            "--succeeded",
+            "--evidence",
+            "fixture set_thread_title acknowledged",
+        ),
+        cwd=primary,
+        check=True,
+    )
+    run(
+        handoff_command(primary, "reconcile-native", *common, "--action", "title", "--db", db_path),
+        cwd=primary,
+        check=True,
+    )
+
+
+def resume(primary: Path, packet: dict, replacement_thread_id: str = REPLACEMENT_THREAD_ID) -> dict:
+    register_native_replacement(primary, packet, replacement_thread_id)
     completed = run(
         handoff_command(
             primary,
@@ -279,7 +379,7 @@ def canary_proof(primary: Path, packet: dict, *, challenge: str | None = None) -
             "--rollover-id",
             packet["rollover_id"],
             "--replacement-thread-id",
-            "fresh-thread",
+            REPLACEMENT_THREAD_ID,
             "--challenge",
             challenge or replacement["canary_challenge"],
             "--proof-file",
@@ -309,7 +409,7 @@ def confirm_command(
         "--rollover-id",
         packet["rollover_id"],
         "--new-thread-id",
-        "fresh-thread",
+        REPLACEMENT_THREAD_ID,
         "--canary-proof",
         str(proof),
         "--strict-probe",
@@ -319,7 +419,7 @@ def confirm_command(
     )
 
 
-def test_packet_only_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_path: Path) -> None:
+def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path)
     packet = prepare(primary)
     assert_cleanup_locked(primary, packet)
@@ -336,11 +436,12 @@ def test_packet_only_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup
     assert "thread_handoff.py confirm-started" in bootstrap
     assert "codex exec resume" not in bootstrap
     assert not list(primary.glob(".agent/**/*state_5.sqlite"))
-    assert not list(primary.glob(".agent/**/*.jsonl"))
+    receipts = list(primary.glob(".agent/task-families/**/events.jsonl"))
+    assert len(receipts) == 1
 
     resumed = resume(primary, packet)
-    assert resumed["replacement_thread_id"] == "fresh-thread"
-    assert resumed["replacement_thread_id"] != "old-thread"
+    assert resumed["replacement_thread_id"] == REPLACEMENT_THREAD_ID
+    assert resumed["replacement_thread_id"] != SOURCE_THREAD_ID
     validated = run(
         handoff_command(
             primary,
@@ -383,7 +484,7 @@ def test_pre_confirmation_failures_leave_cleanup_locked(tmp_path: Path, case: st
                 "--agent",
                 "codex",
                 "--active-thread-id",
-                "old-thread",
+                SOURCE_THREAD_ID,
             ),
             cwd=primary,
         )
@@ -399,7 +500,7 @@ def test_pre_confirmation_failures_leave_cleanup_locked(tmp_path: Path, case: st
                 "--rollover-id",
                 "rollover-wrong",
                 "--replacement-thread-id",
-                "fresh-thread",
+                REPLACEMENT_THREAD_ID,
             ),
             cwd=primary,
         )
@@ -465,8 +566,8 @@ def test_failed_replacement_proofs_leave_cleanup_locked(tmp_path: Path, case: st
 
 def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path)
-    first = prepare(primary, active_thread_id="old-a")
-    second = prepare(primary, active_thread_id="old-b")
+    first = prepare(primary, active_thread_id=SOURCE_THREAD_ID)
+    second = prepare(primary, active_thread_id=SECOND_SOURCE_THREAD_ID)
     assert first["lineage_id"] != second["lineage_id"]
     assert first["rollover_id"] != second["rollover_id"]
     assert first["state_file"] != second["state_file"]
@@ -483,7 +584,7 @@ def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(tmp_path:
             "--rollover-id",
             second["rollover_id"],
             "--replacement-thread-id",
-            "cross-claim",
+            SECOND_REPLACEMENT_THREAD_ID,
         ),
         cwd=primary,
     )
@@ -502,7 +603,7 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Pat
             "--agent",
             "codex",
             "--active-thread-id",
-            "old-thread",
+            SOURCE_THREAD_ID,
             "--active-automation-id",
             "automation-old-thread",
         ),
@@ -510,6 +611,7 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Pat
         check=True,
     )
     packet = json.loads(prepared.stdout)
+    register_native_replacement(primary, packet, REPLACEMENT_THREAD_ID)
     resumed = run(
         checkout_handoff_command(
             replacement,
@@ -521,7 +623,7 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Pat
             "--rollover-id",
             packet["rollover_id"],
             "--replacement-thread-id",
-            "fresh-thread",
+            REPLACEMENT_THREAD_ID,
         ),
         cwd=replacement,
         check=True,
@@ -544,7 +646,7 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Pat
             "--rollover-id",
             packet["rollover_id"],
             "--new-thread-id",
-            "fresh-thread",
+            REPLACEMENT_THREAD_ID,
             "--canary-proof",
             str(proof),
             "--strict-probe",
