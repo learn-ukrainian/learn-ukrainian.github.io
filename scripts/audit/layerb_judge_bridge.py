@@ -104,7 +104,20 @@ CONSERVATIVE_REASONS = frozenset(
         "model_pin",
         "envelope_alignment",
         "trace_missing",
+        "trace_unrecognized",
     }
+)
+
+# Closed allowlists of the benign trace shapes this grok CLI version writes for
+# a single tool-disabled judge turn (inventoried from live traces, 2 independent
+# runs, 2026-07-15 — PR #5200). ANY record outside these shapes makes the trace
+# unprovable-tool-free and fails closed as trace_unrecognized: the screen is an
+# allowlist, not a blocklist, so unknown future shapes can never pass silently.
+GROK_EVENT_TYPES_BENIGN = frozenset({"turn_started", "loop_started", "first_token", "phase_changed", "turn_ended"})
+GROK_PHASES_BENIGN = frozenset({"waiting_for_model", "streaming_reasoning", "streaming_text"})
+GROK_UPDATE_METHODS_BENIGN = frozenset({"session/update", "_x.ai/session/update"})
+GROK_SESSION_UPDATES_BENIGN = frozenset(
+    {"user_message_chunk", "agent_thought_chunk", "agent_message_chunk", "turn_completed"}
 )
 
 # This template is intentionally static. Raw tool output is inserted only in
@@ -832,6 +845,66 @@ def _grok_trace_has_tool_activity(*, updates: Sequence[Mapping[str, Any]], event
     return False
 
 
+def _grok_events_allowlisted(events: Sequence[Mapping[str, Any]]) -> bool:
+    """Accept only the closed set of benign single-turn event shapes."""
+
+    for event in events:
+        event_type = event.get("type")
+        if event_type not in GROK_EVENT_TYPES_BENIGN:
+            return False
+        if event_type == "phase_changed" and event.get("phase") not in GROK_PHASES_BENIGN:
+            return False
+    return True
+
+
+def _grok_updates_allowlisted(updates: Sequence[Mapping[str, Any]]) -> bool:
+    """Accept only the documented ACP session/update record shapes."""
+
+    for record in updates:
+        if record.get("method") not in GROK_UPDATE_METHODS_BENIGN:
+            return False
+        params = record.get("params")
+        if not isinstance(params, Mapping):
+            return False
+        update = params.get("update")
+        if not isinstance(update, Mapping):
+            return False
+        if update.get("sessionUpdate") not in GROK_SESSION_UPDATES_BENIGN:
+            return False
+    return True
+
+
+# _TRACE_MODEL_KEYS mixes raw and normalized spellings; normalize the set once
+# so keys like "model_id" (→ "modelid") actually match after normalization.
+_NORMALIZED_TRACE_MODEL_KEYS = frozenset(re.sub(r"[^a-z0-9]", "", key) for key in _TRACE_MODEL_KEYS)
+
+
+def _collect_grok_trace_models(value: Any, models: set[str]) -> None:
+    """Collect every model identifier recorded anywhere in a trace value."""
+
+    if isinstance(value, Mapping):
+        for key, nested in value.items():
+            normalized_key = re.sub(r"[^a-z0-9]", "", str(key).lower())
+            if normalized_key in _NORMALIZED_TRACE_MODEL_KEYS and isinstance(nested, str) and nested.strip():
+                models.add(nested.strip())
+            if normalized_key == "modelusage" and isinstance(nested, Mapping):
+                models.update(str(model_key) for model_key in nested)
+            _collect_grok_trace_models(nested, models)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            _collect_grok_trace_models(item, models)
+
+
+def _grok_trace_models(*, updates: Sequence[Mapping[str, Any]], events: Sequence[Mapping[str, Any]]) -> set[str]:
+    """Return the set of model identifiers attested across both traces."""
+
+    models: set[str] = set()
+    for stream in (events, updates):
+        for record in stream:
+            _collect_grok_trace_models(record, models)
+    return models
+
+
 def _strict_grok_stdout(stdout: str, *, expected_session_id: str) -> str:
     """Require the one documented Grok JSON envelope for the planned session."""
 
@@ -870,8 +943,19 @@ def _validate_grok_trace(*, config: BridgeConfig, scoped_home: Path, scratch_dir
         raise BridgeInvocationError("transport_exit")
     if turns_started[0].get("model_id") != config.model_version:
         raise BridgeInvocationError("model_pin")
+    # Known-bad screen first (specific reason), then the closed allowlist:
+    # a trace record outside the inventoried benign shapes is unprovable
+    # tool-free and must fail closed rather than pass unrecognized.
     if _grok_trace_has_tool_activity(updates=updates, events=events):
         raise BridgeInvocationError("rollout_tool_activity")
+    if not _grok_events_allowlisted(events) or not _grok_updates_allowlisted(updates):
+        raise BridgeInvocationError("trace_unrecognized")
+    # Every model identifier attested anywhere in either trace must be the
+    # pinned model — mirrors the Codex _resolved_models whole-trace sweep so a
+    # mid-session fallback recorded outside turn_started cannot pass the pin.
+    trace_models = _grok_trace_models(updates=updates, events=events)
+    if trace_models and trace_models != {config.model_version}:
+        raise BridgeInvocationError("model_pin")
 
 
 def invoke_codex(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:

@@ -88,7 +88,38 @@ def _model_trace(model: str = PINNED_CODEX_MODEL) -> list[dict[str, Any]]:
 def _grok_trace(model: str = PINNED_GROK_MODEL) -> list[dict[str, Any]]:
     return [
         {"type": "turn_started", "session_id": "{session_id}", "model_id": model},
+        {"type": "loop_started", "loop_index": 0},
+        {"type": "first_token"},
+        {"type": "phase_changed", "phase": "streaming_text"},
         {"type": "turn_ended", "outcome": "completed"},
+    ]
+
+
+def _grok_updates(model: str = PINNED_GROK_MODEL) -> list[dict[str, Any]]:
+    """Mirror the documented ACP session/update records the real CLI writes."""
+
+    return [
+        {
+            "method": "session/update",
+            "timestamp": 1,
+            "params": {
+                "sessionId": "{session_id}",
+                "update": {"sessionUpdate": "agent_message_chunk", "content": {"type": "text", "text": "…"}},
+            },
+        },
+        {
+            "method": "_x.ai/session/update",
+            "timestamp": 2,
+            "params": {
+                "sessionId": "{session_id}",
+                "update": {
+                    "sessionUpdate": "turn_completed",
+                    "prompt_id": "prompt-stub",
+                    "stop_reason": "end_turn",
+                    "usage": {"modelCalls": 1, "modelUsage": {model: {"modelCalls": 1}}},
+                },
+            },
+        },
     ]
 
 
@@ -171,7 +202,7 @@ def _stub_grok(
         (trace_dir / "events.jsonl").write_text(
             "\n".join(json.dumps(event) for event in trace_events), encoding="utf-8"
         )
-        trace_updates = updates if updates is not None else [{"type": "assistant", "tool_calls": []}]
+        trace_updates = replace_session_id(updates if updates is not None else _grok_updates(trace_model), session_id)
         (trace_dir / "updates.jsonl").write_text(
             "\n".join(json.dumps(event) for event in trace_updates), encoding="utf-8"
         )
@@ -386,6 +417,21 @@ def test_grok_happy_path_uses_strict_envelope_scoped_home_and_complete_tool_free
         ("model_mismatch", _result(), None, "grok-build-other", None, "model_pin"),
         ("malformed_cli_json", _result(), None, PINNED_GROK_MODEL, "not-json", "output_decode"),
         ("malformed_model_json", "not-json", None, PINNED_GROK_MODEL, None, "output_decode"),
+        (
+            "stdout_session_id_mismatch",
+            _result(),
+            None,
+            PINNED_GROK_MODEL,
+            json.dumps(
+                {
+                    "text": json.dumps(_result(), ensure_ascii=False),
+                    "stopReason": "EndTurn",
+                    "sessionId": "some-other-session",
+                    "requestId": "request-stub",
+                }
+            ),
+            "transport_exit",
+        ),
     ),
 )
 def test_grok_transport_anomalies_fail_closed_to_abstain(
@@ -455,6 +501,214 @@ def test_grok_missing_trace_fails_closed_as_trace_missing(monkeypatch: pytest.Mo
 
     assert _relation(response)["relation"] == "ABSTAIN"
     assert response["_bridge_conservative_reason"] == "trace_missing"
+
+
+@pytest.mark.parametrize(
+    ("label", "events", "updates", "reason"),
+    (
+        (
+            "unknown_event_type",
+            [
+                {"type": "turn_started", "session_id": "{session_id}", "model_id": PINNED_GROK_MODEL},
+                {"type": "telemetry_ping"},
+                {"type": "turn_ended", "outcome": "completed"},
+            ],
+            None,
+            "trace_unrecognized",
+        ),
+        (
+            "unknown_phase",
+            [
+                {"type": "turn_started", "session_id": "{session_id}", "model_id": PINNED_GROK_MODEL},
+                {"type": "phase_changed", "phase": "waiting_for_tool"},
+                {"type": "turn_ended", "outcome": "completed"},
+            ],
+            None,
+            "trace_unrecognized",
+        ),
+        (
+            "acp_tool_call_update",
+            None,
+            [
+                {
+                    "method": "session/update",
+                    "timestamp": 1,
+                    "params": {
+                        "sessionId": "{session_id}",
+                        "update": {
+                            "sessionUpdate": "tool_call",
+                            "toolCallId": "call-1",
+                            "title": "run_terminal_cmd",
+                        },
+                    },
+                }
+            ],
+            "rollout_tool_activity",
+        ),
+        (
+            "unknown_session_update_kind",
+            None,
+            [
+                {
+                    "method": "session/update",
+                    "timestamp": 1,
+                    "params": {"sessionId": "{session_id}", "update": {"sessionUpdate": "plan", "entries": []}},
+                }
+            ],
+            "trace_unrecognized",
+        ),
+        (
+            "unknown_update_method",
+            None,
+            [
+                {
+                    "method": "session/exec",
+                    "timestamp": 1,
+                    "params": {
+                        "sessionId": "{session_id}",
+                        "update": {"sessionUpdate": "agent_message_chunk", "content": {}},
+                    },
+                }
+            ],
+            "trace_unrecognized",
+        ),
+        (
+            "foreign_model_in_usage",
+            None,
+            [
+                {
+                    "method": "_x.ai/session/update",
+                    "timestamp": 1,
+                    "params": {
+                        "sessionId": "{session_id}",
+                        "update": {
+                            "sessionUpdate": "turn_completed",
+                            "prompt_id": "prompt-stub",
+                            "stop_reason": "end_turn",
+                            "usage": {"modelCalls": 2, "modelUsage": {"grok-4-fast": {"modelCalls": 1}}},
+                        },
+                    },
+                }
+            ],
+            "model_pin",
+        ),
+    ),
+)
+def test_grok_trace_allowlist_and_model_sweep_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    label: str,
+    events: list[dict[str, Any]] | None,
+    updates: list[dict[str, Any]] | None,
+    reason: str,
+) -> None:
+    """Unrecognized trace shapes and off-pin models never pass silently."""
+
+    _stub_grok(monkeypatch, output=_result(), events=events, updates=updates)
+
+    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
+
+    assert _relation(response)["relation"] == "ABSTAIN", label
+    assert response["_bridge_conservative_reason"] == reason, label
+
+
+def _write_grok_tree(
+    scoped_home: Path,
+    scratch_dir: Path,
+    session_id: str,
+    *,
+    summary: dict[str, Any] | None = None,
+    events: list[dict[str, Any]] | None = None,
+    updates: list[dict[str, Any]] | None = None,
+) -> None:
+    trace_dir = layerb_judge_bridge._grok_session_dir(scoped_home, scratch_dir, session_id)
+    trace_dir.mkdir(parents=True)
+    if summary is None:
+        summary = {"grok_home": str(scoped_home), "current_model_id": PINNED_GROK_MODEL}
+    (trace_dir / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+    if events is None:
+        events = [
+            {"type": "turn_started", "session_id": session_id, "model_id": PINNED_GROK_MODEL},
+            {"type": "turn_ended", "outcome": "completed"},
+        ]
+    (trace_dir / "events.jsonl").write_text("\n".join(json.dumps(event) for event in events), encoding="utf-8")
+    if updates is None:
+        updates = [
+            {
+                "method": "session/update",
+                "timestamp": 1,
+                "params": {
+                    "sessionId": session_id,
+                    "update": {"sessionUpdate": "agent_message_chunk", "content": {}},
+                },
+            }
+        ]
+    (trace_dir / "updates.jsonl").write_text("\n".join(json.dumps(record) for record in updates), encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("label", "overrides", "reason"),
+    (
+        (
+            "grok_home_mismatch",
+            {"summary": {"grok_home": "/somewhere/else", "current_model_id": PINNED_GROK_MODEL}},
+            "transport_exit",
+        ),
+        (
+            "events_session_id_mismatch",
+            {
+                "events": [
+                    {"type": "turn_started", "session_id": "another-session", "model_id": PINNED_GROK_MODEL},
+                    {"type": "turn_ended", "outcome": "completed"},
+                ]
+            },
+            "transport_exit",
+        ),
+        (
+            "zero_turns",
+            {"events": [{"type": "first_token"}]},
+            "transport_exit",
+        ),
+        (
+            "double_turn_start",
+            {
+                "events": [
+                    {"type": "turn_started", "session_id": "{sid}", "model_id": PINNED_GROK_MODEL},
+                    {"type": "turn_started", "session_id": "{sid}", "model_id": PINNED_GROK_MODEL},
+                    {"type": "turn_ended", "outcome": "completed"},
+                ]
+            },
+            "transport_exit",
+        ),
+        ("empty_events_file", {"events": []}, "transport_exit"),
+    ),
+)
+def test_validate_grok_trace_negative_shapes(
+    tmp_path: Path, label: str, overrides: dict[str, Any], reason: str
+) -> None:
+    """Each documented trace binding failure raises its exact conservative reason."""
+
+    scoped_home = tmp_path / "grok-home"
+    scoped_home.mkdir()
+    scratch_dir = tmp_path / "scratch"
+    scratch_dir.mkdir()
+    session_id = "session-under-test"
+    events = overrides.get("events")
+    if events is not None:
+        events = [
+            {key: (session_id if value == "{sid}" else value) for key, value in event.items()} for event in events
+        ]
+        overrides = {**overrides, "events": events}
+    _write_grok_tree(scoped_home, scratch_dir, session_id, **overrides)
+
+    with pytest.raises(layerb_judge_bridge.BridgeInvocationError) as excinfo:
+        layerb_judge_bridge._validate_grok_trace(
+            config=_config("grok"),
+            scoped_home=scoped_home,
+            scratch_dir=scratch_dir,
+            session_id=session_id,
+        )
+
+    assert str(excinfo.value) == reason, label
 
 
 def test_collector_module_envelope_multiple_candidates_uses_each_decoded_window(
