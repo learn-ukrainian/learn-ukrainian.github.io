@@ -635,12 +635,20 @@ def load_report(
     return report
 
 
-def _authorized_selectors(passed_rows: Mapping[str, Mapping[str, Any]], row_ids: Sequence[str]) -> list[str]:
+def _authorized_selectors(
+    passed_rows: Mapping[str, Mapping[str, Any]],
+    row_ids: Sequence[str],
+    *,
+    maximum_mutating_modules: int,
+) -> list[str]:
     if any(row_id not in passed_rows for row_id in row_ids):
         raise PilotError("authorization scope includes an absent or non-PASS row")
     if any(passed_rows[row_id]["kind"] != "repository" for row_id in row_ids):
         raise PilotError("live authorization scope may contain repository rows only")
-    return sorted({str(passed_rows[row_id]["selector"]) for row_id in row_ids})
+    selectors = sorted({str(passed_rows[row_id]["selector"]) for row_id in row_ids})
+    if len(selectors) > maximum_mutating_modules:
+        raise PilotError("authorization scope exceeds its maximum mutating modules")
+    return selectors
 
 
 def verify_authorization(
@@ -691,9 +699,14 @@ def verify_authorization(
     if _sha256_bytes(reviewed_bytes) != report_sha256:
         raise PilotError("reviewed commit does not contain the exact authorized report")
     passed_rows = {row["id"]: row for row in report["rows"] if row["passed"]}
-    row_ids = authorization["scope"]["row_ids"]
-    selectors = authorization["scope"]["selectors"]
-    expected_selectors = _authorized_selectors(passed_rows, row_ids)
+    scope = authorization["scope"]
+    row_ids = scope["row_ids"]
+    selectors = scope["selectors"]
+    expected_selectors = _authorized_selectors(
+        passed_rows,
+        row_ids,
+        maximum_mutating_modules=scope["maximum_mutating_modules"],
+    )
     if sorted(selectors) != expected_selectors:
         raise PilotError("authorization selectors do not exactly match its repository row scope")
     if authorization["production_qg_armed"]:

@@ -178,13 +178,41 @@ def test_live_scope_rejects_fixture_historical_and_nonpassing_rows() -> None:
     rows = {row["id"]: row for row in _report()["rows"]}
 
     with pytest.raises(pilot.PilotError, match="repository rows only"):
-        pilot._authorized_selectors(rows, ["partial-ambiguous-fixture"])
+        pilot._authorized_selectors(
+            rows,
+            ["partial-ambiguous-fixture"],
+            maximum_mutating_modules=1,
+        )
     with pytest.raises(pilot.PilotError, match="repository rows only"):
-        pilot._authorized_selectors(rows, ["folk-material-repair-history"])
+        pilot._authorized_selectors(
+            rows,
+            ["folk-material-repair-history"],
+            maximum_mutating_modules=1,
+        )
     rows["a1-built-shadow"]["passed"] = False
     passed = {row_id: row for row_id, row in rows.items() if row["passed"]}
     with pytest.raises(pilot.PilotError, match="absent or non-PASS"):
-        pilot._authorized_selectors(passed, ["a1-built-shadow"])
+        pilot._authorized_selectors(
+            passed,
+            ["a1-built-shadow"],
+            maximum_mutating_modules=1,
+        )
+
+
+def test_live_scope_enforces_maximum_mutating_modules() -> None:
+    rows = {
+        row["id"]: row
+        for row in _report()["rows"]
+        if row["passed"] and row["kind"] == "repository"
+    }
+    row_ids = list(rows)[:2]
+
+    with pytest.raises(pilot.PilotError, match="maximum mutating modules"):
+        pilot._authorized_selectors(
+            rows,
+            row_ids,
+            maximum_mutating_modules=1,
+        )
 
 
 def test_matrix_override_must_remain_repository_backed(tmp_path: Path) -> None:
