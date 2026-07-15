@@ -321,10 +321,21 @@ def load_config(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
         for profile_id in selector_group.values():
             if profile_id not in profiles:
                 raise ReadinessError(f"readiness selector references unknown profile: {profile_id}")
+    try:
+        prompt_contracts.resolve_profile_selectors(
+            selectors=config["selectors"],
+            profile_families={profile_id: str(profile["family"]) for profile_id, profile in profiles.items()},
+            active_tracks=prompt_contracts.load_active_tracks(repo_root),
+            label="curriculum readiness profiles",
+        )
+        prompt_contracts.active_track_profiles(repo_root=repo_root)
+    except (prompt_contracts.LifecycleConfigError, prompt_contracts.PromptContractError) as exc:
+        raise ReadinessError(str(exc)) from exc
     for profile_id, profile in profiles.items():
         if profile["prompt_profile"] not in registered_prompt_profiles:
             raise ReadinessError(
-                f"readiness profile {profile_id} selects unknown prompt profile: {profile['prompt_profile']}"
+                f"readiness profile {profile_id} selects unknown prompt profile: "
+                f"{profile['prompt_profile']}"
             )
         ids = [requirement["id"] for requirement in profile["requirements"]]
         duplicates = sorted({item for item in ids if ids.count(item) > 1})

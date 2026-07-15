@@ -28,6 +28,10 @@ PROMPT_SCAN_DIRS = [
 
 ORCHESTRATOR_PROMPT_ROOT = PROJECT_ROOT / "docs" / "prompts" / "orchestrators"
 CURRICULUM_MANIFEST = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+LEGACY_PROMPT_MIGRATION = (
+    PROJECT_ROOT
+    / "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
+)
 
 # Directories to scan for curriculum research files (--curriculum mode)
 CURRICULUM_RESEARCH_DIRS = [
@@ -561,6 +565,8 @@ def check_orchestrator_track_coverage(
     manifest_path: Path,
     prompt_track_dirs: set[str],
     suite_tracks: set[str],
+    *,
+    legacy_frozen: bool = False,
 ) -> list[dict]:
     """Validate prompt dirs and suites against active curriculum tracks."""
     violations: list[dict] = []
@@ -574,19 +580,20 @@ def check_orchestrator_track_coverage(
             root / track,
         ))
 
-    for track in sorted(active_tracks - prompt_track_dirs):
-        violations.append(make_violation(
-            "ORCH_ACTIVE_TRACK_MISSING_PROMPT",
-            f"Active curriculum.yaml level has no orchestrator prompt dir: {track}",
-            manifest_display,
-        ))
+    if not legacy_frozen:
+        for track in sorted(active_tracks - prompt_track_dirs):
+            violations.append(make_violation(
+                "ORCH_ACTIVE_TRACK_MISSING_PROMPT",
+                f"Active curriculum.yaml level has no orchestrator prompt dir: {track}",
+                manifest_display,
+            ))
 
-    for track in sorted((active_tracks - LEGACY_NON_SUITE_PROMPT_TRACKS) - suite_tracks):
-        violations.append(make_violation(
-            "ORCH_ACTIVE_TRACK_MISSING_SUITE",
-            f"Active non-legacy track has no suite-orchestrator.md: {track}",
-            root / track,
-        ))
+        for track in sorted((active_tracks - LEGACY_NON_SUITE_PROMPT_TRACKS) - suite_tracks):
+            violations.append(make_violation(
+                "ORCH_ACTIVE_TRACK_MISSING_SUITE",
+                f"Active non-legacy track has no suite-orchestrator.md: {track}",
+                root / track,
+            ))
 
     for stale_track in ["lit-crimea", "lit-doc"]:
         if stale_track in prompt_track_dirs:
@@ -601,10 +608,15 @@ def check_orchestrator_track_coverage(
 def scan_orchestrator_suites(
     root: Path = ORCHESTRATOR_PROMPT_ROOT,
     manifest_path: Path = CURRICULUM_MANIFEST,
+    migration_path: Path | None = None,
 ) -> list[dict]:
     """Validate orchestrator prompt suite coverage and contracts."""
     if not root.exists():
         return []
+
+    if migration_path is None and root.resolve() == ORCHESTRATOR_PROMPT_ROOT.resolve():
+        migration_path = LEGACY_PROMPT_MIGRATION
+    legacy_frozen = migration_path is not None and migration_path.is_file()
 
     violations: list[dict] = []
     prompt_track_dirs = {
@@ -624,6 +636,7 @@ def scan_orchestrator_suites(
         manifest_path,
         prompt_track_dirs,
         suite_tracks,
+        legacy_frozen=legacy_frozen,
     ))
 
     for filepath in sorted(root.glob("*/suite-orchestrator.md")):

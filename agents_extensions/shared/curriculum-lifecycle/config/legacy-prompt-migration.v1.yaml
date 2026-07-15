@@ -1,0 +1,276 @@
+config_version: curriculum-lifecycle-legacy-prompt-migration.v1
+legacy_root: docs/prompts/orchestrators
+canonical_replacement:
+  skill: curriculum-lifecycle
+  invocation: Use $curriculum-lifecycle for <track>.
+  source: agents_extensions/shared/skills/curriculum-lifecycle/SKILL.md
+  pilot_report: docs/architecture/curriculum-lifecycle-pilot-report.v1.json
+owner_paths:
+  CODE:
+    - scripts/orchestration/curriculum_coordinator.py
+    - scripts/orchestration/curriculum_readiness.py
+    - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
+    - scripts/audit/post_build_review.py
+  CONFIG:
+    - agents_extensions/shared/curriculum-lifecycle/config/coordinator.v1.yaml
+    - agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml
+    - agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml
+  PROMPT:
+    - agents_extensions/shared/prompt-contracts/registry.v1.yaml
+    - agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml
+  POLICY:
+    - agents_extensions/shared/rules/operator-expectations.md
+    - agents_extensions/shared/rules/workflow.md
+    - agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml
+  REFERENCE:
+    - docs/architecture/curriculum-lifecycle-prompt-responsibility-parity.md
+    - docs/architecture/adr/adr-012-code-driven-curriculum-lifecycle.md
+  RETAIN-EVAL:
+    - docs/prompts/orchestrators
+rationales:
+  semantic-oracle: >-
+    Frozen semantic comparison oracle; canonical completion authority is the
+    registered lifecycle, while the historical catches remain available for
+    parity evaluation.
+  canonical-reference: >-
+    Repeated execution mechanics are superseded by canonical code, strict
+    configuration, prompt contracts, or binding policy and remain historical
+    reference only.
+  migration-index: >-
+    Navigation is generated from the active manifest and migration contract;
+    this document only explains the retained historical suite.
+entries:
+  a1/quality-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: 9d3947ca1a179c0aec6301253579755695d7e6f151fdfba88924407fcd322acf
+  a1/remediation-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 44d84b7605ecaa81a20d42397c858701ea8fb196629c3d2a638827ec7c492082
+  a2/quality-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: b1f7869d5ee4985042dc0b017ee43c51e283b28d4ba419447fbe911d1b16c3ee
+  a2/remediation-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 1bbd53fd0b2c68bc23c6bdd8193ed5cbac0532d364c59fb5da308b3894504f4a
+  b1/finale-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT]
+    rationale_id: canonical-reference
+    content_sha256: bddb56fec574326490ba13efbe90b0fafb2e8d292841b0a125a73affafa8018a
+  b1/quality-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: 234939aea2a6aeb679fbd3e38972113edd0ee22d0615a3bb97550a3ab8c73aa4
+  b1/remediation-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 5577d11b352404a45b269149e592e63d575b05530a00919c63965ef6a8deaabb
+  b2/preflight-readiness-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [CODE, CONFIG, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: 4cfb5e6ee89dfa3b05fc9f03febbaba3fbd21efef99ee3cfe1567216d47d3653
+  b2/production-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 641a7bbbbdae54dcde3d7417aefd509d43e17474eaede508ebc03ee171197eac
+  b2/quality-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: 1cedd96c9c1a3354d789e84c50448f4557781fab043327fb255c2b4dc51351ff
+  bio/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [CODE, CONFIG, PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: ab7b395acfe36e28184d864d199c23e56031d2a503c27a081a5b2fe16d54f769
+  c1/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 4bd1dfb9a6a6a1397466530b72d7f9b5823a15d6d9714046063a170f1ca19ade
+  c2/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 8543f7b0a09ce9ffd246c5da45e3fe9455c151fd9b90055defa88c99610e0cc7
+  folk/preflight-readiness-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [CODE, CONFIG, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: ee09b64f42951303426c988f5442259fd07c586850eab4f060a6fc7f88d8ba6f
+  folk/production-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 6d526cfccd3a9584787550d571a922a940fd081182f0a592549983d863f4da35
+  folk/quality-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: retained-eval
+    owners: [PROMPT, POLICY, RETAIN-EVAL]
+    rationale_id: semantic-oracle
+    content_sha256: b9ea5ec213986b8db743ad0681bb26227bcce5ac764b7e876857e722caa08f4e
+  folk/remediation-build-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY]
+    rationale_id: canonical-reference
+    content_sha256: 57fe0114dc4ee97aa51bd189df54bff5569ce343a81c495a8649f0df672fcfd2
+  hist/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: f54de2eea81a88df8291ec3121cf32a39a8ced63dea255bfdd58f9ec52243e9b
+  istorio/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 93412cf128adf1f9ad76ee9fbaf96ba5653bf7f3f59fc6d32934f7994cdae0c0
+  lit-drama/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 19325ff7f37717103e340402b4ef29302b0a05421a233bc075bd8fc98b9e5bb5
+  lit-essay/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: ea9f6a5b2133dd5865b101c208473b70d8a5e993858c3484b103cd059a64ed50
+  lit-fantastika/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 1d880b3fa0eaf8b852361842477315e0f9c562ddda378fd4b5a3d2a554e15550
+  lit-hist-fic/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: f67bbec2618fe721d8f4bb95a599882c4a3f7b19c2f90f6c3dd06a80d375db49
+  lit-humor/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 82ed620e965e65e5c60287cffeca6f16edf3c4a1c4bc510445f55c7f69d30866
+  lit-war/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 01d589872e76e1c0c7d2d88db1a8b792ae0d94a468722732002934626c955807
+  lit-youth/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: dfda2cd2d22877c4e9947a8bf158c832719b8c518135486f2204f6432a44f406
+  lit/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 357a08514b523dbf351b3509e438003f8ef6aea59ed323bba8aefdfd8eab7646
+  oes/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 6afeb964345be205e05f668598cf163923c6fc135cb969018ea7a6d51eada5b9
+  README.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [REFERENCE]
+    rationale_id: migration-index
+    content_sha256: fe3c264ef302770afb21e49a19f03f3e641e6878c0354f02dae04a3a22ce3381
+  ruth/suite-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 3d0281e27a86494551a110c9d52523dffcc440a4e0fe1de34b6b61b79a0b5696
+  shared/deterministic-track-audit-orchestrator.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 95e81917eba2495bcb6ef7aa6537b3fb2284ea63553b17e8cb34d8430bbe057f
+  shared/reading-catalog-template.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CONFIG, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 0d4ff1e3b78332f8d06955065369067249c63f7995e94296f472d98413e2e638
+  shared/reading-section-rules.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: da6d40893dfbae3f2a31cb5b7eab9129668542524123412e301c3ca44551f084
+  shared/repo-rules.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 4265d3d57fe696535dbebb044c13748f1b60c01d3366824a645b552b94afe1d2
+  shared/review-output-schema.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: ae1ff3398014ba83e6779587e4e67261c282564c276ad421edc326705c20cd64
+  shared/seminar-source-rules.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 29f8e6f0fc03e17a84908e37418dc9be23bc420bc53e711e9e1750fb6c363639
+  shared/seminar-track-checklists.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CONFIG, PROMPT, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 930d847f9bcc426a841b93ddda273f82e23ab0a8c43611e0f03df374539d45bb
+  shared/telemetry-and-pr.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, POLICY, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 64a2b8afa25c4f42caa0541d2fbee7c21038f18d06cfa7409bde3d358f273433
+  shared/validation-checklist.md:
+    operator_entry_point: false
+    disposition: reference-only
+    owners: [CODE, CONFIG, REFERENCE]
+    rationale_id: canonical-reference
+    content_sha256: 6eb9f0d2c94521b2ca88e4c611321fcaec92acf94f68947ace63bbdbcfc44bb9

@@ -1,4 +1,17 @@
 profile_schema_version: prompt-profile.v1
+selectors:
+  tracks:
+    a1: core-a1
+    a2: core-a2
+    b1: core-b1
+    b2: core-b2
+    c1: core-c1
+    c2: core-c2
+    bio: seminar-bio
+    folk: seminar-folk
+  manifest_types:
+    core: core
+    track: seminar-generic
 profiles:
   core:
     prompt_id: curriculum-lifecycle.module

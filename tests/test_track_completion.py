@@ -109,6 +109,27 @@ def _install_lifecycle_contracts(repo: Path) -> None:
         ROOT / "agents_extensions/shared/prompt-contracts",
         repo / "agents_extensions/shared/prompt-contracts",
     )
+    active = set(yaml.safe_load((repo / "curriculum/l2-uk-en/curriculum.yaml").read_text())["levels"])
+    prompt_profiles_path = (
+        repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
+    )
+    prompt_profiles = yaml.safe_load(prompt_profiles_path.read_text(encoding="utf-8"))
+    prompt_profiles["selectors"]["tracks"] = {
+        track: profile
+        for track, profile in prompt_profiles["selectors"]["tracks"].items()
+        if track in active
+    }
+    prompt_profiles_path.write_text(yaml.safe_dump(prompt_profiles, sort_keys=False), encoding="utf-8")
+    certification_path = (
+        repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
+    )
+    certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
+    certification["selectors"]["tracks"] = {
+        track: profile
+        for track, profile in certification["selectors"]["tracks"].items()
+        if track in active
+    }
+    certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
 
 
 @pytest.fixture
@@ -122,7 +143,7 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
                 "type": "track",
                 "modules": ["seminar-built", "seminar-unbuilt", "seminar-partial"],
             },
-            "folk": {"type": "seminar", "modules": ["folk-built"]},
+            "folk": {"type": "track", "modules": ["folk-built"]},
         }
     }
     _write(
@@ -215,7 +236,7 @@ def _result(
         "review_protocol_version": "3.0.0",
         "deterministic_contract_version": "1.2.1",
         "semantic_prompt_version": "3.0.0",
-        "track_policy_version": "1.4.0",
+        "track_policy_version": "1.5.0",
         "prompt_sha256": "1" * 64,
         "reproducibility_key": "2" * 64,
         "target": {
@@ -331,6 +352,21 @@ def test_resolution_covers_core_and_seminar_built_unbuilt_partial(
     assert not ledger_root.exists()
     with pytest.raises(tc.CompletionError, match="not active"):
         tc.inspect_target("retired/ghost", repo_root=repo, config_path=config_path)
+
+
+def test_certification_config_rejects_retired_track_selector(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, _ledger_root = fake_repo
+    certification_path = (
+        repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
+    )
+    certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
+    certification["selectors"]["tracks"]["lit-doc"] = "seminar-pending"
+    certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(tc.CompletionError, match="inactive tracks: lit-doc"):
+        tc.inspect_target("a1/core-built", repo_root=repo, config_path=config_path)
 
 
 def test_unbuilt_plan_build_transitions_are_leased_and_idempotent(

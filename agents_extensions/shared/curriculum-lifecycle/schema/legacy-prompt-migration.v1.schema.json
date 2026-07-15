@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "curriculum-lifecycle-legacy-prompt-migration.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_version",
+    "legacy_root",
+    "canonical_replacement",
+    "owner_paths",
+    "rationales",
+    "entries"
+  ],
+  "properties": {
+    "config_version": {"const": "curriculum-lifecycle-legacy-prompt-migration.v1"},
+    "legacy_root": {"const": "docs/prompts/orchestrators"},
+    "canonical_replacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill", "invocation", "source", "pilot_report"],
+      "properties": {
+        "skill": {"const": "curriculum-lifecycle"},
+        "invocation": {"const": "Use $curriculum-lifecycle for <track>."},
+        "source": {"$ref": "#/$defs/repositoryPath"},
+        "pilot_report": {"$ref": "#/$defs/repositoryPath"}
+      }
+    },
+    "owner_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["CODE", "CONFIG", "PROMPT", "POLICY", "REFERENCE", "RETAIN-EVAL"],
+      "properties": {
+        "CODE": {"$ref": "#/$defs/pathList"},
+        "CONFIG": {"$ref": "#/$defs/pathList"},
+        "PROMPT": {"$ref": "#/$defs/pathList"},
+        "POLICY": {"$ref": "#/$defs/pathList"},
+        "REFERENCE": {"$ref": "#/$defs/pathList"},
+        "RETAIN-EVAL": {"$ref": "#/$defs/pathList"}
+      }
+    },
+    "rationales": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9-]+$": {"type": "string", "minLength": 20}
+      },
+      "additionalProperties": false
+    },
+    "entries": {
+      "type": "object",
+      "minProperties": 39,
+      "maxProperties": 39,
+      "patternProperties": {
+        "^(?:[a-z0-9-]+/)*(?:[A-Za-z0-9-]+)\\.md$": {"$ref": "#/$defs/entry"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "pathList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/repositoryPath"}
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_entry_point",
+        "disposition",
+        "owners",
+        "rationale_id",
+        "content_sha256"
+      ],
+      "properties": {
+        "operator_entry_point": {"const": false},
+        "disposition": {"enum": ["retained-eval", "reference-only"]},
+        "owners": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["CODE", "CONFIG", "PROMPT", "POLICY", "REFERENCE", "RETAIN-EVAL"]}
+        },
+        "rationale_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

@@ -381,6 +381,16 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
     shutil.copy2(ROOT / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml", repo / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml")
     manifest = {"levels": {"b1": {"type": "core", "modules": [slug]}}}
     (repo / "curriculum/l2-uk-en/curriculum.yaml").write_text(yaml.safe_dump(manifest), encoding="utf-8")
+    for relative in (
+        "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
+        "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml",
+        "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml",
+    ):
+        selector_path = repo / relative
+        selector_config = yaml.safe_load(selector_path.read_text(encoding="utf-8"))
+        selected = selector_config["selectors"]["tracks"].get("b1")
+        selector_config["selectors"]["tracks"] = {"b1": selected} if selected else {}
+        selector_path.write_text(yaml.safe_dump(selector_config, sort_keys=False), encoding="utf-8")
     config_path = repo / "agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml"
     ledger_root = tmp_path / "ledgers"
     _, ledger = tc.start_run(

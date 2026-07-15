@@ -17,6 +17,9 @@ import yaml
 from jsonschema import Draft202012Validator
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 CONTRACT_ROOT = Path("agents_extensions/shared/prompt-contracts")
 REGISTRY_PATH = CONTRACT_ROOT / "registry.v1.yaml"
 REGISTRY_SCHEMA_PATH = CONTRACT_ROOT / "schema/prompt-registry.v1.schema.json"
@@ -25,13 +28,26 @@ PROFILE_SCHEMA_PATH = CONTRACT_ROOT / "schema/prompt-profile.v1.schema.json"
 PROFILE_PATH = CONTRACT_ROOT / "profiles/curriculum-lifecycle.v1.yaml"
 PARITY_PATH = Path("docs/architecture/curriculum-lifecycle-prompt-responsibility-parity.md")
 LEGACY_PROMPT_ROOT = Path("docs/prompts/orchestrators")
+CURRICULUM_MANIFEST_PATH = Path("curriculum/l2-uk-en/curriculum.yaml")
+MANIFEST_TYPE_FAMILIES = {"core": "core", "track": "seminar"}
+MIGRATION_PATH = Path(
+    "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
+)
+MIGRATION_SCHEMA_PATH = Path(
+    "agents_extensions/shared/curriculum-lifecycle/schema/legacy-prompt-migration.v1.schema.json"
+)
 
 _PLACEHOLDER_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)\}\}")
 _PARITY_ROW_RE = re.compile(r"^\| `([^`]+\.md)` \|", re.MULTILINE)
+_LIFECYCLE_IDENTIFIER_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
 class PromptContractError(ValueError):
     """Raised when prompt contract source or resolved evidence is invalid."""
+
+
+class LifecycleConfigError(ValueError):
+    """Raised when manifest authority and lifecycle selectors disagree."""
 
 
 class _StrictLoader(yaml.SafeLoader):
@@ -151,6 +167,94 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
+def load_active_tracks(
+    repo_root: Path,
+    manifest_path: str | Path = CURRICULUM_MANIFEST_PATH,
+) -> dict[str, str]:
+    """Return the active ``track -> manifest type`` map from curriculum.yaml."""
+    try:
+        manifest = _load_yaml(_repo_file(repo_root, manifest_path))
+    except PromptContractError as exc:
+        raise LifecycleConfigError(str(exc)) from exc
+    levels = manifest.get("levels")
+    if not isinstance(levels, Mapping) or not levels:
+        raise LifecycleConfigError("curriculum manifest must contain a non-empty levels mapping")
+    active: dict[str, str] = {}
+    for raw_track, raw_record in levels.items():
+        if not isinstance(raw_track, str) or not _LIFECYCLE_IDENTIFIER_RE.fullmatch(raw_track):
+            raise LifecycleConfigError(f"invalid active curriculum track: {raw_track!r}")
+        if not isinstance(raw_record, Mapping):
+            raise LifecycleConfigError(f"manifest levels.{raw_track} must be a mapping")
+        manifest_type = raw_record.get("type")
+        modules = raw_record.get("modules")
+        if not isinstance(manifest_type, str) or not _LIFECYCLE_IDENTIFIER_RE.fullmatch(
+            manifest_type
+        ):
+            raise LifecycleConfigError(f"manifest levels.{raw_track}.type is invalid")
+        if not isinstance(modules, list) or not all(
+            isinstance(slug, str) and _LIFECYCLE_IDENTIFIER_RE.fullmatch(slug)
+            for slug in modules
+        ):
+            raise LifecycleConfigError(
+                f"manifest levels.{raw_track}.modules must be a list of repository slugs"
+            )
+        if len(modules) != len(set(modules)):
+            raise LifecycleConfigError(f"manifest levels.{raw_track}.modules contains duplicates")
+        active[raw_track] = manifest_type
+    return active
+
+
+def reject_stale_track_keys(
+    keys: Mapping[str, Any] | set[str],
+    active_tracks: Mapping[str, str],
+    *,
+    label: str,
+) -> None:
+    """Reject track-keyed config that names anything outside the active manifest."""
+    stale = sorted(set(keys) - set(active_tracks))
+    if stale:
+        raise LifecycleConfigError(f"{label} references inactive tracks: {', '.join(stale)}")
+
+
+def resolve_profile_selectors(
+    *,
+    selectors: Mapping[str, Any],
+    profile_families: Mapping[str, str],
+    active_tracks: Mapping[str, str],
+    label: str,
+    manifest_type_families: Mapping[str, str] = MANIFEST_TYPE_FAMILIES,
+) -> dict[str, str]:
+    """Resolve every active track through strict overrides or manifest-type defaults."""
+    track_selectors = selectors.get("tracks")
+    type_selectors = selectors.get("manifest_types")
+    if not isinstance(track_selectors, Mapping) or not isinstance(type_selectors, Mapping):
+        raise LifecycleConfigError(f"{label} selectors must contain tracks and manifest_types mappings")
+    reject_stale_track_keys(track_selectors, active_tracks, label=f"{label} track selector")
+
+    resolved: dict[str, str] = {}
+    for track, manifest_type in active_tracks.items():
+        expected_family = manifest_type_families.get(manifest_type)
+        if expected_family is None:
+            raise LifecycleConfigError(
+                f"{label} has no family contract for active manifest type {manifest_type!r}"
+            )
+        profile_id = track_selectors.get(track) or type_selectors.get(manifest_type)
+        if not isinstance(profile_id, str):
+            raise LifecycleConfigError(
+                f"{label} has no profile for active track={track} type={manifest_type}"
+            )
+        profile_family = profile_families.get(profile_id)
+        if profile_family is None:
+            raise LifecycleConfigError(f"{label} selects unknown profile {profile_id!r} for {track}")
+        if profile_family != expected_family:
+            raise LifecycleConfigError(
+                f"{label} profile {profile_id!r} has family {profile_family!r}; "
+                f"active track {track!r} requires {expected_family!r}"
+            )
+        resolved[track] = profile_id
+    return resolved
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     raw = _read_bytes(path)
     try:
@@ -217,6 +321,118 @@ def load_profiles(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
     profiles = _load_yaml(_repo_file(repo_root, PROFILE_PATH))
     _validate(profiles, schema, "prompt profiles")
     return profiles
+
+
+def _repo_existing(repo_root: Path, relative: str | Path, label: str) -> Path:
+    raw = str(relative)
+    path = Path(raw)
+    if not raw or path.is_absolute() or ".." in path.parts:
+        raise PromptContractError(f"{label} path must be repository-relative: {raw!r}")
+    root = repo_root.resolve()
+    candidate = (root / path).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError as exc:
+        raise PromptContractError(f"{label} path escapes repository root: {raw!r}") from exc
+    if not candidate.exists():
+        raise PromptContractError(f"{label} path is missing: {raw}")
+    return candidate
+
+
+def load_legacy_migration(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
+    """Load the hash-frozen legacy disposition and canonical owner registry."""
+    migration = _load_yaml(_repo_file(repo_root, MIGRATION_PATH))
+    schema = _load_json(_repo_file(repo_root, MIGRATION_SCHEMA_PATH))
+    _validate(migration, schema, "legacy prompt migration")
+    _repo_existing(
+        repo_root,
+        migration["canonical_replacement"]["source"],
+        "canonical replacement",
+    )
+    _repo_existing(
+        repo_root,
+        migration["canonical_replacement"]["pilot_report"],
+        "pilot report",
+    )
+    for owner, paths in migration["owner_paths"].items():
+        for path in paths:
+            _repo_existing(repo_root, path, f"{owner} owner")
+    rationale_ids = set(migration["rationales"])
+    unknown_rationales = sorted(
+        {
+            entry["rationale_id"]
+            for entry in migration["entries"].values()
+            if entry["rationale_id"] not in rationale_ids
+        }
+    )
+    if unknown_rationales:
+        raise PromptContractError(
+            f"legacy prompt migration uses unknown rationales: {', '.join(unknown_rationales)}"
+        )
+    return migration
+
+
+def validate_legacy_prompt_files(
+    migration: Mapping[str, Any],
+    legacy_root: Path,
+) -> list[str]:
+    """Require exact legacy inventory and bytes without modifying retained files."""
+    inventory = sorted(
+        path.relative_to(legacy_root).as_posix()
+        for path in legacy_root.rglob("*")
+        if path.is_file()
+    )
+    migration_entries = migration["entries"]
+    migration_missing = sorted(set(inventory) - set(migration_entries))
+    migration_extra = sorted(set(migration_entries) - set(inventory))
+    if migration_missing or migration_extra:
+        raise PromptContractError(
+            "legacy prompt migration inventory drift: "
+            f"missing={migration_missing} extra={migration_extra}"
+        )
+    hash_drift = sorted(
+        relative
+        for relative, entry in migration_entries.items()
+        if _sha256_bytes((legacy_root / relative).read_bytes()) != entry["content_sha256"]
+    )
+    if hash_drift:
+        raise PromptContractError(
+            f"legacy prompt migration byte hashes changed: {', '.join(hash_drift)}"
+        )
+    return inventory
+
+
+def _profile_families(
+    profiles: Mapping[str, Any],
+    *,
+    repo_root: Path,
+) -> dict[str, str]:
+    families: dict[str, str] = {}
+    for profile_id, profile in profiles["profiles"].items():
+        manifest, _, _ = _load_manifest(
+            str(profile["prompt_id"]),
+            str(profile["prompt_version"]),
+            repo_root=repo_root,
+        )
+        variant = manifest["variants"].get(profile["variant"])
+        if not isinstance(variant, Mapping):
+            raise PromptContractError(f"profile {profile_id} selects an unregistered variant")
+        families[str(profile_id)] = str(variant["family"])
+    return families
+
+
+def active_track_profiles(*, repo_root: Path = PROJECT_ROOT) -> dict[str, str]:
+    """Resolve exact semantic profiles from the active curriculum manifest."""
+    profiles = load_profiles(repo_root=repo_root)
+    try:
+        return resolve_profile_selectors(
+            selectors=profiles["selectors"],
+            profile_families=_profile_families(profiles, repo_root=repo_root),
+            active_tracks=load_active_tracks(repo_root),
+            label="curriculum prompt profiles",
+        )
+    except LifecycleConfigError as exc:
+        raise PromptContractError(str(exc)) from exc
 
 
 def _load_manifest(
@@ -423,6 +639,23 @@ def resolve_profile(
     )
 
 
+def resolve_track_profile(
+    track: str,
+    *,
+    context: Mapping[str, Any],
+    route: str = "tool-capable",
+    repo_root: Path = PROJECT_ROOT,
+) -> ResolvedPrompt:
+    """Resolve one active track through the manifest-derived profile map."""
+    normalized = track.strip().lower()
+    if context.get("track") != normalized:
+        raise PromptContractError("prompt context track does not match requested active track")
+    profile_id = active_track_profiles(repo_root=repo_root).get(normalized)
+    if profile_id is None:
+        raise PromptContractError(f"curriculum manifest has no active track: {normalized}")
+    return resolve_profile(profile_id, context=context, route=route, repo_root=repo_root)
+
+
 def validate_output(resolved: ResolvedPrompt, payload: Mapping[str, Any], *, repo_root: Path = PROJECT_ROOT) -> None:
     manifest, _, _ = _load_manifest(resolved.prompt_id, resolved.version, repo_root=repo_root)
     output_schema = _load_json(_repo_file(repo_root, manifest["output_schema"]))
@@ -470,7 +703,8 @@ def audit_contracts(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
                 variants.append(f"{prompt_id}@{version}:{variant}")
             prompt_versions.append(f"{prompt_id}@{version}")
 
-    profiles = load_profiles(repo_root=repo_root)["profiles"]
+    profile_document = load_profiles(repo_root=repo_root)
+    profiles = profile_document["profiles"]
     for profile_id, profile in profiles.items():
         manifest, _, _ = _load_manifest(
             str(profile["prompt_id"]),
@@ -481,8 +715,11 @@ def audit_contracts(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
         if not isinstance(variant, Mapping):
             raise PromptContractError(f"profile {profile_id} selects an unregistered variant")
 
+    track_profiles = active_track_profiles(repo_root=repo_root)
+    migration = load_legacy_migration(repo_root=repo_root)
     legacy_root = repo_root / LEGACY_PROMPT_ROOT
-    inventory = sorted(path.relative_to(legacy_root).as_posix() for path in legacy_root.rglob("*") if path.is_file())
+    inventory = validate_legacy_prompt_files(migration, legacy_root)
+    migration_entries = migration["entries"]
     parity_text = _repo_file(repo_root, PARITY_PATH).read_text(encoding="utf-8")
     classified = _PARITY_ROW_RE.findall(parity_text)
     duplicate_classifications = sorted({item for item in classified if classified.count(item) > 1})
@@ -500,10 +737,20 @@ def audit_contracts(*, repo_root: Path = PROJECT_ROOT) -> dict[str, Any]:
         "registered_prompt_versions": prompt_versions,
         "registered_variants": variants,
         "registered_profiles": sorted(profiles),
+        "active_track_profiles": track_profiles,
+        "legacy_migration_version": migration["config_version"],
+        "canonical_invocation": migration["canonical_replacement"]["invocation"],
         "legacy_inventory_count": len(inventory),
         "classified_inventory_count": len(classified),
         "unclassified_inventory": missing,
         "legacy_entry_points_removed": 0,
+        "legacy_entry_points_deprecated": len(migration_entries),
+        "legacy_operator_entry_points": sum(
+            bool(entry["operator_entry_point"]) for entry in migration_entries.values()
+        ),
+        "legacy_retained_eval_count": sum(
+            entry["disposition"] == "retained-eval" for entry in migration_entries.values()
+        ),
     }
 
 
@@ -519,6 +766,12 @@ def build_parser() -> argparse.ArgumentParser:
     resolve_parser.add_argument("--profile", required=True)
     resolve_parser.add_argument("--context", required=True, help="Repository-relative JSON context path")
     resolve_parser.add_argument("--route", default="tool-capable")
+    resolve_track_parser = subparsers.add_parser(
+        "resolve-track", help="Resolve one active manifest track to exact prompt bytes"
+    )
+    resolve_track_parser.add_argument("--track", required=True)
+    resolve_track_parser.add_argument("--context", required=True, help="Repository-relative JSON context path")
+    resolve_track_parser.add_argument("--route", default="tool-capable")
     subparsers.add_parser("audit", help="Validate contracts and report P0 responsibility parity")
     return parser
 
@@ -529,6 +782,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "resolve":
             payload = resolve_profile(
                 args.profile,
+                context=_context_from_file(args.context, PROJECT_ROOT),
+                route=args.route,
+            ).to_record()
+        elif args.command == "resolve-track":
+            payload = resolve_track_profile(
+                args.track,
                 context=_context_from_file(args.context, PROJECT_ROOT),
                 route=args.route,
             ).to_record()

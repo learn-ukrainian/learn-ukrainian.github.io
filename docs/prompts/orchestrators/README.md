@@ -1,11 +1,26 @@
-# Orchestrator Prompt Suite
+# Legacy Orchestrator Prompt Suite
 
-Prompt suite version: 0.4
-Last reviewed: 2026-06-22
+Prompt suite version: 0.5
+Last reviewed: 2026-07-15
 
-This directory contains reusable prompts for future core-track and seminar-track orchestration threads. They are templates, not source-of-truth curriculum policy. Every production thread that uses them must inspect the current local repository before acting, especially `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `curriculum/l2-uk-en/curriculum.yaml`, `scripts/config.py`, `scripts/audit/config.py`, and the target level files.
+This directory is retained as hash-checked evaluation and historical reference
+material. It is not executable lifecycle authority and its files must not be
+pasted as production entry points.
 
-## Lifecycle
+The canonical shared entry point is:
+
+```text
+Use $curriculum-lifecycle for <track>.
+```
+
+`$curriculum-lifecycle` derives active tracks and order from
+`curriculum/l2-uk-en/curriculum.yaml`, uses the deterministic coordinator, and
+delegates one acquired module at a time to `$track-completion`. Exact semantic
+prompts come from `agents_extensions/shared/prompt-contracts`. The versioned
+legacy migration registry records every file's canonical owners, disposition,
+replacement, and frozen byte hash.
+
+## Historical lifecycle reference
 
 1. Preflight where needed: B2 and seminar tracks use readiness audits before production because their plans, discovery files, wiki/source coverage, and reading coverage must be checked before module writing starts.
 2. Build: create or update only the scoped modules, in small sequential batches, with module-tailored instructions.
@@ -63,13 +78,14 @@ FOLK is the pilot seminar track. Its prompts should be treated as the model for 
 
 ## Automated Prompt Guards
 
-`scripts/lint/lint_prompts.py` validates the suite prompt surface in CI. It
-checks active-track coverage against `curriculum/l2-uk-en/curriculum.yaml`,
-rejects stale prompt directories such as `lit-crimea` and `lit-doc`, and enforces
-required suite sections, worktree sanity commands, forbidden-write markers,
-seminar reading coverage, telemetry fields, and independent-review fields.
+`scripts/lint/lint_prompts.py` continues to validate the retained prompt surface.
+`scripts/orchestration/prompt_contracts.py audit` additionally verifies exact
+inventory, migration disposition, replacement metadata, and byte hashes. Active
+track/profile coverage comes only from `curriculum.yaml`; stale track overrides
+such as `lit-crimea` and `lit-doc` fail closed.
 
-Each level prompt references these shared files, but also restates the critical rules so it remains usable when pasted alone into Codex, Gemini, or Claude.
+The old prompts remain intact as comparison oracles. Their repeated mechanics
+are superseded by canonical code, config, prompt contracts, and binding policy.
 
 ## Helper And Swarm Policy
 

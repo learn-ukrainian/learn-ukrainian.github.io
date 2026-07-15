@@ -23,28 +23,26 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.orchestration.prompt_contracts import (
+    LifecycleConfigError,
+    load_active_tracks,
+)
+
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 RESEARCH_ROOT = PROJECT_ROOT / "docs" / "research"
 
-CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
+try:
+    _ACTIVE_TRACK_TYPES = load_active_tracks(PROJECT_ROOT)
+except LifecycleConfigError as exc:
+    raise RuntimeError(f"cannot derive module-size track families: {exc}") from exc
+CORE_TRACKS = {
+    track for track, manifest_type in _ACTIVE_TRACK_TYPES.items() if manifest_type == "core"
+}
 SEMINAR_TRACKS = {
-    "bio",
-    "folk",
-    "hist",
-    "history",
-    "istorio",
-    "lit",
-    "lit-crimea",
-    "lit-doc",
-    "lit-drama",
-    "lit-essay",
-    "lit-fantastika",
-    "lit-hist-fic",
-    "lit-humor",
-    "lit-war",
-    "lit-youth",
-    "oes",
-    "ruth",
+    track for track, manifest_type in _ACTIVE_TRACK_TYPES.items() if manifest_type == "track"
 }
 CORE_RESEARCH_TRACKS = CORE_TRACKS
 

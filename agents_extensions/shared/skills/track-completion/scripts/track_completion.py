@@ -41,6 +41,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[5]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.orchestration import curriculum_readiness
+from scripts.orchestration.prompt_contracts import (
+    LifecycleConfigError,
+    load_active_tracks,
+    resolve_profile_selectors,
+)
 
 DEFAULT_CONFIG_PATH = SKILL_ROOT / "config" / "track-completion.v1.yaml"
 CONFIG_SCHEMA_PATH = SKILL_ROOT / "schema" / "track-completion-config.v1.schema.json"
@@ -339,15 +344,20 @@ def certification_profile_for(
     if not isinstance(value, dict):
         raise CompletionError("Certification profile contract must be a mapping")
     _validate(value, schema_path, "certification profiles")
-    for selector_group in value["selectors"].values():
-        for configured_profile_id in selector_group.values():
-            if configured_profile_id not in value["profiles"]:
-                raise CompletionError(f"Certification selector references unknown profile: {configured_profile_id}")
-    manifest = _manifest(config, repo_root)
-    manifest_type = str(manifest["levels"][snapshot.track].get("type") or "")
-    selectors = value["selectors"]
-    profile_id = selectors["tracks"].get(snapshot.track) or selectors["manifest_types"].get(manifest_type)
-    if not isinstance(profile_id, str) or profile_id not in value["profiles"]:
+    try:
+        resolved = resolve_profile_selectors(
+            selectors=value["selectors"],
+            profile_families={
+                profile_id: str(profile["family"])
+                for profile_id, profile in value["profiles"].items()
+            },
+            active_tracks=load_active_tracks(repo_root, str(config["manifest_path"])),
+            label="curriculum certification profiles",
+        )
+    except LifecycleConfigError as exc:
+        raise CompletionError(str(exc)) from exc
+    profile_id = resolved.get(snapshot.track)
+    if profile_id is None:
         raise CompletionError("No registered certification profile applies to this target")
     profile = value["profiles"][profile_id]
     if profile["family"] != snapshot.family:
