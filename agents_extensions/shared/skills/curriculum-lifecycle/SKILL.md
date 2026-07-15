@@ -29,12 +29,16 @@ active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
    ```bash
    .venv/bin/python scripts/orchestration/curriculum_coordinator.py start \
      --track <track> --owner <agent/task> --scope <scope> \
+     --terminal-goal <merge|certify|deploy> \
      [--module <slug>] [--start <slug-or-position>] \
      [--end <slug-or-position>] [--wave-size <n>]
    ```
 
    Preserve the returned `run_id` and ledger path. Do not create a replacement
    run to bypass a lease, health pause, or manifest drift.
+   The goal is immutable authority, not a progress label. A legacy run without
+   one must use `migrate-terminal-goal` on its exact run id; never infer intent
+   from `complete` or `PBR_PASS_QG_PENDING` history.
 3. Resume only the exact recorded run:
 
    ```bash
@@ -72,19 +76,23 @@ active tracks and order only from `curriculum/l2-uk-en/curriculum.yaml`.
    its exact ledger on resume. It owns plan review, build/recovery, read-only
    `$post-build-review`, repair routing, reviewer-instability handling,
    independent review, PR/CI/merge, publication evidence, and cleanup.
-4. Record the module outcome only after `$track-completion` reaches a proven
-   terminal disposition:
+4. Record the module outcome only after `$track-completion` reaches `COMPLETE`
+   with `terminal_satisfied=true` for the coordinator's exact goal:
 
    ```bash
    .venv/bin/python scripts/orchestration/curriculum_coordinator.py record-module \
      --run-id <run-id> --owner <agent/task> --module <slug> \
      --disposition <complete|no-change|blocked> \
-     --integration-json '<canonical integration evidence JSON>'
+     --integration-json '<integration JSON including track_ledger and track_run_id>'
    ```
 
-   `complete` requires issue, aligned dispatch worktree/branch, PR, merge SHA,
-   review/CI evidence, and completed cleanup. `no-change` must not fabricate an
-   issue or PR. `blocked` must record the genuine owner and next action.
+   The coordinator reads and hashes the authoritative track ledger; a
+   free-form projection string is not evidence. `complete` requires issue,
+   aligned dispatch worktree/branch, PR, merge SHA, review/CI evidence, and
+   completed cleanup. `no-change` must not fabricate an issue or PR. `blocked`
+   must record the genuine owner and next action. A certification-only track
+   ledger cannot satisfy goal `deploy`, and a migrated historical module is
+   reacquired until its exact goal is proven.
 5. Repeat acquisition serially until the coordinator reports `complete`.
    Module-at-a-time mutation remains mandatory; a wave groups health and review
    capacity but does not authorize concurrent learner writes.

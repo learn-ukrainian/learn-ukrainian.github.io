@@ -20,7 +20,10 @@ def repo(tmp_path: Path) -> Path:
     manifest = {
         "levels": {
             "folk": {"type": "track", "modules": ["alpha", "bravo", "charlie", "delta"]},
-            "bio": {"type": "track", "modules": ["echo", "foxtrot"]},
+            "bio": {
+                "type": "track",
+                "modules": ["echo", "foxtrot", "andrii-malyshko"],
+            },
         }
     }
     path = root / "curriculum/l2-uk-en/curriculum.yaml"
@@ -636,6 +639,8 @@ def test_one_line_cli_start_and_status_use_compact_contract(
                 "one",
                 "--module",
                 "alpha",
+                "--terminal-goal",
+                "merge",
             ]
         )
         == 0
@@ -660,4 +665,131 @@ def test_one_line_cli_start_and_status_use_compact_contract(
     )
     status = json.loads(capsys.readouterr().out)
     assert status["event_count"] == 1
+
+
+def test_bio_371_deploy_goal_rejects_pending_and_certification_only_track_ledger(
+    repo: Path, tmp_path: Path
+) -> None:
+    incident = {
+        "track_run_id": "0b4b92fcc5ca4653a33fb89b68c7cfc8",
+        "coordinator_run_id": "clc-d571995205b4c2773fc9c2a1",
+        "pr": 5255,
+        "merge_sha": "ba5e43d42922d6c08ec3f4b5e0f558e18ac74041",
+    }
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(
+        repo,
+        runtime,
+        track="bio",
+        scope="one",
+        module="andrii-malyshko",
+        terminal_goal="deploy",
+    )
+    run_id = ledger["run_id"]
+    _acquire(repo, runtime, run_id)
+    track_run_id = incident["track_run_id"]
+    track_path = tmp_path / "track-completion.json"
+    track_ledger = {
+        "target": {"selector": "bio/andrii-malyshko"},
+        "run": {"run_id": track_run_id, "status": "active"},
+        "terminal_goal": "deploy",
+        "state": "PBR_PASS_QG_PENDING",
+        "publication": {
+            "pr": incident["pr"],
+            "merge_sha": incident["merge_sha"],
+        },
+        "certification_evidence": [],
+    }
+    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
+    integration = {
+        "evidence": f"BIO-371 coordinator:{incident['coordinator_run_id']}",
+        "track_ledger": str(track_path),
+        "track_run_id": track_run_id,
+    }
+    with pytest.raises(coordinator.CoordinatorError, match="not satisfied"):
+        coordinator.record_module(
+            run_id,
+            owner="sol",
+            slug="andrii-malyshko",
+            disposition="no-change",
+            integration=integration,
+            repo_root=repo,
+            runtime_root=runtime,
+        )
+    track_ledger["run"]["status"] = "completed"
+    track_ledger["state"] = "COMPLETE"
+    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
+    with pytest.raises(coordinator.CoordinatorError, match="deployment receipt"):
+        coordinator.record_module(
+            run_id,
+            owner="sol",
+            slug="andrii-malyshko",
+            disposition="no-change",
+            integration=integration,
+            repo_root=repo,
+            runtime_root=runtime,
+        )
+    track_ledger["certification_evidence"] = [
+        {"value": {"kind": "deployment"}}
+    ]
+    track_path.write_text(json.dumps(track_ledger), encoding="utf-8")
+    _path, complete = coordinator.record_module(
+        run_id,
+        owner="sol",
+        slug="andrii-malyshko",
+        disposition="no-change",
+        integration=integration,
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    _path, replayed = coordinator.record_module(
+        run_id,
+        owner="sol",
+        slug="andrii-malyshko",
+        disposition="no-change",
+        integration=integration,
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    assert coordinator.compact_status(complete)["terminal_satisfied"] is True
+    assert replayed == complete
+
+
+def test_pages_deploy_installs_audit_import_dependencies() -> None:
+    workflow = (coordinator.PROJECT_ROOT / ".github/workflows/deploy-pages.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "PyYAML==6.0.3 jsonschema==4.26.0" in workflow
+
+
+def test_legacy_completed_run_migration_reopens_unproven_module(
+    repo: Path, tmp_path: Path
+) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    run_id = ledger["run_id"]
+    _acquire(repo, runtime, run_id)
+    _path, legacy_complete = _no_change(repo, runtime, run_id)
+    assert coordinator.compact_status(legacy_complete)["status"] == "complete"
+
+    _path, migrated = coordinator.migrate_terminal_goal(
+        run_id,
+        owner="sol",
+        terminal_goal="deploy",
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    status = coordinator.compact_status(migrated)
+    assert status["status"] == "blocked"
+    assert status["terminal_goal"] == "deploy"
+    assert status["terminal_satisfied"] is False
+    _path, resumed = coordinator.resume_run(
+        run_id,
+        owner="sol",
+        repo_root=repo,
+        runtime_root=runtime,
+    )
+    assert coordinator.compact_status(resumed)["status"] == "blocked"
+    _path, _ledger, acquired = _acquire(repo, runtime, run_id)
+    assert acquired is not None and acquired["slug"] == "alpha"
     assert "queue" not in status

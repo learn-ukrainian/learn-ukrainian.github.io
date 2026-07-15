@@ -19,6 +19,7 @@
   "properties": {
     "schema_version": {"const": "track-completion.ledger.v1"},
     "workflow_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "terminal_goal": {"enum": ["merge", "certify", "deploy"]},
     "target": {"$ref": "#/$defs/target"},
     "run": {"$ref": "#/$defs/run"},
     "state": {
@@ -34,8 +35,11 @@
         "INDEPENDENT_REVIEW_REQUIRED",
         "INTEGRATION_REQUIRED",
         "PBR_PASS_QG_PENDING",
+        "AWAITING_PRODUCTION_QG_ARMING",
         "PRODUCTION_QG_REQUIRED",
         "CERTIFIED_FINAL",
+        "DEPLOYMENT_REQUIRED",
+        "MIGRATION_REQUIRED",
         "PUBLISH_REQUIRED",
         "COMPLETE"
       ]
@@ -67,6 +71,27 @@
         }
       }
     },
+    "production_qg_authorization": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "qualification_path", "qualification_sha256", "human_arming_path",
+            "human_arming_sha256", "approval_id", "route"
+          ],
+          "properties": {
+            "qualification_path": {"type": "string", "minLength": 1},
+            "qualification_sha256": {"$ref": "#/$defs/sha"},
+            "human_arming_path": {"type": "string", "minLength": 1},
+            "human_arming_sha256": {"$ref": "#/$defs/sha"},
+            "approval_id": {"type": "string", "minLength": 1},
+            "route": {"type": "object"}
+          }
+        }
+      ]
+    },
     "routing": {
       "oneOf": [
         {"type": "null"},
@@ -94,7 +119,7 @@
           "required": ["pr", "merge_sha", "recorded_at"],
           "properties": {
             "pr": {"type": "integer", "minimum": 1},
-            "merge_sha": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+            "merge_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
             "recorded_at": {"$ref": "#/$defs/timestamp"}
           }
         }

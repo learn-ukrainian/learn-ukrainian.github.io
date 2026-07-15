@@ -198,12 +198,17 @@ def fake_repo(tmp_path: Path) -> tuple[Path, Path, Path]:
 
 
 def _start(
-    fake_repo: tuple[Path, Path, Path], selector: str, *, owner: str = "codex/test"
+    fake_repo: tuple[Path, Path, Path],
+    selector: str,
+    *,
+    owner: str = "codex/test",
+    terminal_goal: str = "certify",
 ) -> tuple[Path, dict[str, Any]]:
     repo, config_path, ledger_root = fake_repo
     return tc.start_run(
         selector,
         owner=owner,
+        terminal_goal=terminal_goal,
         repo_root=repo,
         config_path=config_path,
         ledger_root=ledger_root,
@@ -292,7 +297,6 @@ def _certification_artifact(
                 "review": {
                     "author_families": ["codex"],
                     "reviewer_family": "gemini",
-                    "reviewer_group": "google",
                     "verdict": "PASS",
                     "material_findings": [],
                     "resolution_state": "RESOLVED",
@@ -312,6 +316,17 @@ def _certification_artifact(
                     "pr": 5156,
                     "ci_gate": "PASS",
                     "review_gate": "PASS",
+                    "premerge": {
+                        "mdx_drift": "PASS",
+                        "source_parity": "PASS",
+                        "forward_parity": "PASS",
+                        "verify_shippable": "PASS",
+                        "deterministic_audits": "PASS",
+                        "focused_tests": "PASS",
+                        "artifact_scope": "PASS",
+                        "agent_trailer": "PASS",
+                        "forbidden_files": "PASS",
+                    },
                     "merge_sha": "d" * 40,
                     "telemetry": {"applicable": False, "receipt": None},
                     "cleanup": {"state": "COMPLETE"},
@@ -755,7 +770,7 @@ def test_cross_family_review_gate_and_publication(
     fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo, config_path, ledger_root = fake_repo
-    _, ledger = _start(fake_repo, "a1/core-unbuilt")
+    _, ledger = _start(fake_repo, "a1/core-unbuilt", terminal_goal="merge")
     run_id = ledger["run"]["run_id"]
     plan_evidence = tmp_path / "plan.json"
     plan_evidence.write_text("{}\n", encoding="utf-8")
@@ -820,12 +835,48 @@ def test_cross_family_review_gate_and_publication(
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    assert ledger["state"] == "INTEGRATION_REQUIRED"
+    assert ledger["state"] == "INDEPENDENT_REVIEW_REQUIRED"
+    inputs = tc.certification_inputs(
+        "a1/core-unbuilt", repo_root=repo, config_path=config_path, ledger=ledger
+    )
+    independent = _certification_artifact(
+        tmp_path,
+        "strict-independent.json",
+        inputs,
+        "independent-review",
+        diff_sha256="e" * 64,
+    )
+    _, ledger = tc.record_certification_evidence(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        evidence=independent,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert ledger["state"] == "PUBLISH_REQUIRED"
     _, ledger = tc.record_published(
         "a1/core-unbuilt",
         run_id=run_id,
-        pr=5144,
-        merge_sha="a" * 40,
+        pr=5156,
+        merge_sha="d" * 40,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert ledger["state"] == "INTEGRATION_REQUIRED"
+    integration = _certification_artifact(
+        tmp_path,
+        "strict-integration.json",
+        inputs,
+        "integration",
+        diff_sha256="e" * 64,
+        independent_evidence_sha256=tc.sha256_file(independent),
+    )
+    _, ledger = tc.record_certification_evidence(
+        "a1/core-unbuilt",
+        run_id=run_id,
+        evidence=integration,
         repo_root=repo,
         config_path=config_path,
         ledger_root=ledger_root,
@@ -885,7 +936,17 @@ def test_integration_drift_can_be_recorded_and_restarts_post_build_review(
         config_path=config_path,
         ledger_root=ledger_root,
     )
-    assert ledger["state"] == "INTEGRATION_REQUIRED"
+    assert ledger["state"] == "INDEPENDENT_REVIEW_REQUIRED"
+    ledger["state"] = "INTEGRATION_REQUIRED"
+    tc._atomic_write_json(
+        tc.ledger_path_for(
+            snapshot,
+            repo_root=repo,
+            config=tc.load_config(config_path),
+            ledger_root=ledger_root,
+        ),
+        ledger,
+    )
 
     content = repo / snapshot.review_files["content"]
     content.write_text(content.read_text(encoding="utf-8") + "Інтеграційне виправлення.\n", encoding="utf-8")
@@ -993,7 +1054,7 @@ def test_projection_uses_only_bound_canonical_pbr_review(
         tc.certification_projection("a1/core-built", repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
             "state"
         ]
-        == "CERTIFIED_FINAL"
+        == "AWAITING_PRODUCTION_QG_ARMING"
     )
     updated["reviews"][-1]["certification"]["dependency_identity"] = "4" * 64
     assert tc._current_pbr_reviews(updated, inputs)[0] is False
@@ -1003,3 +1064,14 @@ def test_projection_has_no_caller_controlled_preparation_identity() -> None:
     assert "preparation_identity" not in tc.certification_projection.__annotations__
     assert "preparation_identity" not in tc.certification_inputs.__annotations__
     assert "preparation_identity" not in tc.request_preparation_rebuild.__annotations__
+
+
+def test_pages_deploy_installs_schema_runtime_and_emits_exact_head_marker() -> None:
+    workflow = (ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
+    trigger_block = workflow.split("on:\n", 1)[1].split("permissions:\n", 1)[0]
+
+    assert "jsonschema==4.26.0" in workflow
+    assert "learn-ukrainian-deployment-${GITHUB_SHA}.txt" in workflow
+    assert "printf '%s\\n' \"$GITHUB_SHA\"" in workflow
+    assert "workflow_dispatch:" in trigger_block
+    assert "push:" not in trigger_block

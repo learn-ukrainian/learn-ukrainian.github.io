@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import urllib.request
 import uuid
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -53,6 +54,7 @@ LEDGER_SCHEMA_PATH = SKILL_ROOT / "schema" / "progress-ledger.v1.schema.json"
 
 SELECTOR_RE = re.compile(r"^(?P<track>[a-z0-9-]+)/(?P<slug>[a-z0-9-]+)$")
 MATERIAL_SEVERITIES = frozenset({"blocker", "high", "medium"})
+TERMINAL_GOALS = frozenset({"merge", "certify", "deploy"})
 MUTATING_STATES = frozenset(
     {
         "PLAN_REPAIR_REQUIRED",
@@ -646,12 +648,16 @@ def start_run(
     selector: str,
     *,
     owner: str,
+    terminal_goal: str = "certify",
     repo_root: Path = PROJECT_ROOT,
     config_path: Path = DEFAULT_CONFIG_PATH,
     ledger_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     if not owner.strip():
         raise CompletionError("Ledger owner must be non-empty")
+    terminal_goal = terminal_goal.strip().lower()
+    if terminal_goal not in TERMINAL_GOALS:
+        raise CompletionError("Terminal goal must be one of merge, certify, or deploy")
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     identity = build_identity(snapshot, repo_root=repo_root, config=config)
@@ -660,6 +666,14 @@ def start_run(
         with _with_lock(path):
             existing = _read_ledger(path)
             if existing is not None:
+                if existing.get("terminal_goal") is None:
+                    raise CompletionError(
+                        "Existing ledger has no terminal goal; run migrate-terminal-goal"
+                    )
+                if existing["terminal_goal"] != terminal_goal:
+                    raise CompletionError(
+                        f"Existing ledger terminal goal is {existing['terminal_goal']}; refusing {terminal_goal}"
+                    )
                 run = existing["run"]
                 if run["status"] == "completed" and existing["current_identity"]["sha256"] == identity["sha256"]:
                     return path, existing
@@ -675,6 +689,7 @@ def start_run(
             ledger: dict[str, Any] = {
                 "schema_version": str(config["ledger_schema_version"]),
                 "workflow_version": str(config["workflow_version"]),
+                "terminal_goal": terminal_goal,
                 "target": _target_record(snapshot),
                 "run": {
                     "run_id": uuid.uuid4().hex,
@@ -690,6 +705,7 @@ def start_run(
                 "history": [],
                 "reviews": [],
                 "certification_evidence": [],
+                "production_qg_authorization": None,
                 "routing": None,
                 "publication": None,
             }
@@ -702,7 +718,11 @@ def start_run(
                     "from_state": None,
                     "to_state": state,
                     "identity_sha256": identity["sha256"],
-                    "details": {"module_state": snapshot.module_state, "owner": owner},
+                    "details": {
+                        "module_state": snapshot.module_state,
+                        "owner": owner,
+                        "terminal_goal": terminal_goal,
+                    },
                 }
             )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
@@ -725,6 +745,8 @@ def resume_run(
     identity = build_identity(snapshot, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     prior = _read_ledger(path)
+    if prior is not None and prior.get("terminal_goal") is None:
+        raise CompletionError("Existing ledger has no terminal goal; run migrate-terminal-goal")
     reopening_state: str | None = None
     if prior is not None and prior.get("run", {}).get("run_id") == run_id and prior["run"].get("status") == "completed":
         projection = certification_projection(
@@ -736,7 +758,11 @@ def resume_run(
             "INDEPENDENT_REVIEW_REQUIRED",
             "INTEGRATION_REQUIRED",
             "PBR_PASS_QG_PENDING",
+            "AWAITING_PRODUCTION_QG_ARMING",
             "PRODUCTION_QG_REQUIRED",
+            "DEPLOYMENT_REQUIRED",
+            "REPAIR_REQUIRED",
+            "AUDIT_TOOLING_REQUIRED",
         }:
             reopening_state = candidate
     try:
@@ -795,6 +821,8 @@ def _load_for_update(
     ledger = _read_ledger(path)
     if ledger is None:
         raise CompletionError("Start the completion ledger before recording progress")
+    if ledger.get("terminal_goal") is None:
+        raise CompletionError("Existing ledger has no terminal goal; run migrate-terminal-goal")
     _require_run(ledger, run_id, config)
     if ledger["target"] != _target_record(snapshot):
         raise CompletionError("Ledger target does not match the resolved target")
@@ -915,6 +943,8 @@ def record_change(
                 },
             )
             ledger["routing"] = None
+            ledger["publication"] = None
+            ledger["production_qg_authorization"] = None
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
             return path, ledger
@@ -1292,14 +1322,13 @@ def record_review(
                 if ledger["author_families"]:
                     to_state = "INDEPENDENT_REVIEW_REQUIRED"
                 else:
-                    mode = inputs["profile_config"]["production_qg"]["mode"] if inputs else "pending"
-                    to_state = {
-                        "disabled": "CERTIFIED_FINAL",
-                        "pending": "PBR_PASS_QG_PENDING",
-                        "armed-canary": "PRODUCTION_QG_REQUIRED",
-                    }[mode]
-                    if to_state == "CERTIFIED_FINAL":
+                    if ledger["terminal_goal"] == "merge":
+                        to_state = "COMPLETE"
                         ledger["run"]["status"] = "completed"
+                    elif ledger["terminal_goal"] == "deploy":
+                        to_state = "PUBLISH_REQUIRED"
+                    else:
+                        to_state = "AWAITING_PRODUCTION_QG_ARMING"
             else:
                 routing = route_findings(result, config=config)
                 to_state = "AUDIT_TOOLING_REQUIRED" if routing["owners"] == ["audit_tooling"] else "REPAIR_REQUIRED"
@@ -1330,6 +1359,23 @@ def _review_group(family: str, config: Mapping[str, Any]) -> str:
     if not group:
         raise CompletionError(f"Unknown review family: {family}")
     return str(group)
+
+
+def _require_track_reviewer_policy(
+    *, reviewer_family: str, reviewer_group: str, track_policy: Mapping[str, Any]
+) -> None:
+    forbidden = {
+        str(item).strip().lower()
+        for item in track_policy.get("forbidden_reviewer_families", [])
+    }
+    allowed = {
+        str(item).strip().lower()
+        for item in track_policy.get("allowed_reviewer_groups", [])
+    }
+    if reviewer_family.strip().lower() in forbidden or (
+        allowed and reviewer_group.strip().lower() not in allowed
+    ):
+        raise CompletionError("Reviewer violates the track reviewer policy")
 
 
 def record_instability_adjudication(
@@ -1443,7 +1489,9 @@ def record_independent_review(
             if allowed_groups and reviewer_group not in allowed_groups:
                 raise CompletionError(f"Reviewer group is not allowed for {snapshot.track}")
             if verdict == "PASS":
-                to_state = "INTEGRATION_REQUIRED"
+                # The process receipt is not the strict certification artifact.
+                # Stay here until record-certification-evidence validates it.
+                to_state = "INDEPENDENT_REVIEW_REQUIRED"
                 routing = None
             else:
                 routing = {"owners": [owner_kind], "findings": []}
@@ -1484,39 +1532,506 @@ def record_published(
     config_path: Path = DEFAULT_CONFIG_PATH,
     ledger_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
-    if pr <= 0 or re.fullmatch(r"[0-9a-f]{7,40}", merge_sha) is None:
-        raise CompletionError("Publication requires a PR number and 7-40 character merge SHA")
+    if pr <= 0 or re.fullmatch(r"[0-9a-f]{40}", merge_sha) is None:
+        raise CompletionError("Publication requires a PR number and exact 40-character merge SHA")
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     eid = _event_id("PUBLISHED", {"pr": pr, "merge_sha": merge_sha})
     try:
         with _with_lock(path):
+            completed = _read_ledger(path)
+            if (
+                completed is not None
+                and completed["run"]["run_id"] == run_id
+                and completed["run"]["status"] == "completed"
+                and _event_exists(completed, eid)
+            ):
+                return path, completed
             config, snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            if _event_exists(ledger, eid):
-                return path, ledger
-            if ledger["state"] not in {"PUBLISH_REQUIRED", "INTEGRATION_REQUIRED"}:
-                raise CompletionError(f"Publication is not allowed from {ledger['state']}")
-            if identity["sha256"] != ledger["current_identity"]["sha256"]:
-                raise CompletionError("Target/workflow changed after the independent review")
-            recorded_at = _iso(_now())
-            ledger["publication"] = {"pr": pr, "merge_sha": merge_sha, "recorded_at": recorded_at}
+            if not _event_exists(ledger, eid):
+                if ledger["state"] != "PUBLISH_REQUIRED":
+                    raise CompletionError(f"Publication is not allowed from {ledger['state']}")
+                if identity["sha256"] != ledger["current_identity"]["sha256"]:
+                    raise CompletionError("Target/workflow changed after the independent review")
+                recorded_at = _iso(_now())
+                ledger["publication"] = {"pr": pr, "merge_sha": merge_sha, "recorded_at": recorded_at}
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="PUBLISHED",
+                    to_state="INTEGRATION_REQUIRED",
+                    identity=identity,
+                    details={"pr": pr, "merge_sha": merge_sha},
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+    return _advance_certification_cursor(
+        selector,
+        run_id=run_id,
+        evidence_sha256=sha256_bytes(stable_json({"pr": pr, "merge_sha": merge_sha}).encode("utf-8")),
+        evidence_kind="publication",
+        repo_root=repo_root,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+
+def migrate_terminal_goal(
+    selector: str,
+    *,
+    run_id: str,
+    terminal_goal: str,
+    pr: int | None = None,
+    merge_sha: str | None = None,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Idempotently migrate a legacy provisional ledger without inferring intent."""
+    terminal_goal = terminal_goal.strip().lower()
+    if terminal_goal not in TERMINAL_GOALS:
+        raise CompletionError("Terminal goal must be one of merge, certify, or deploy")
+    if (pr is None) != (merge_sha is None):
+        raise CompletionError("Legacy publication migration requires both PR and merge SHA")
+    if merge_sha is not None and (
+        pr is None or pr < 1 or re.fullmatch(r"[0-9a-f]{40}", merge_sha) is None
+    ):
+        raise CompletionError("Legacy publication migration requires an exact PR and merge SHA")
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    identity = build_identity(snapshot, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            ledger = _read_ledger(path)
+            if ledger is None or ledger["run"]["run_id"] != run_id:
+                raise CompletionError("No matching legacy completion run to migrate")
+            existing_goal = ledger.get("terminal_goal")
+            if existing_goal is not None and existing_goal != terminal_goal:
+                raise CompletionError(
+                    f"Ledger terminal goal is already {existing_goal}; refusing {terminal_goal}"
+                )
+            if existing_goal is not None:
+                if ledger["state"] != "MIGRATION_REQUIRED":
+                    return path, ledger
+                publication = ledger.get("publication")
+                if publication is not None and (
+                    pr != publication["pr"] or merge_sha != publication["merge_sha"]
+                ):
+                    raise CompletionError(
+                        "Migration replay must repeat the exact publication PR and merge SHA"
+                    )
+                # Re-run the pre-cursor portion idempotently after a crash. The
+                # existing migration event prevents a duplicate history entry.
+                ledger.pop("terminal_goal")
+            if ledger["state"] == "PBR_PASS_QG_PENDING" and ledger.get("publication") is None:
+                if pr is None or merge_sha is None:
+                    raise CompletionError(
+                        "PBR_PASS_QG_PENDING migration requires explicit publication PR and merge SHA"
+                    )
+                ledger["publication"] = {
+                    "pr": pr,
+                    "merge_sha": merge_sha,
+                    "recorded_at": _iso(_now()),
+                }
+            ledger["terminal_goal"] = terminal_goal
+            ledger.setdefault("production_qg_authorization", None)
+            ledger["run"]["status"] = "active"
+            _renew_lease(ledger, config)
+            drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
+            desired = "AUDIT_TOOLING_REQUIRED" if drifted else "MIGRATION_REQUIRED"
+            if drifted:
+                ledger["routing"] = {
+                    "owners": ["audit_tooling"],
+                    "findings": [
+                        {
+                            "id": "terminal-goal-workflow-migration",
+                            "reason": "workflow identity changed during terminal-goal repair",
+                        }
+                    ],
+                }
+            eid = _event_id(
+                "TERMINAL_GOAL_MIGRATED",
+                {
+                    "terminal_goal": terminal_goal,
+                    "pr": pr,
+                    "merge_sha": merge_sha,
+                    "workflow_drift": drifted,
+                },
+            )
             _append_event(
                 ledger,
                 event_id=eid,
-                event="PUBLISHED",
-                to_state="COMPLETE",
-                identity=identity,
-                details={"pr": pr, "merge_sha": merge_sha},
+                event="TERMINAL_GOAL_MIGRATED",
+                to_state=desired,
+                identity=ledger["current_identity"],
+                details={
+                    "terminal_goal": terminal_goal,
+                    "publication": ledger.get("publication"),
+                    "workflow_drift": drifted,
+                },
             )
-            ledger["run"]["status"] = "completed"
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
-            return path, ledger
+            if drifted:
+                return path, ledger
     except Timeout as exc:
         raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+    return _advance_certification_cursor(
+        selector,
+        run_id=run_id,
+        evidence_sha256=sha256_bytes(
+            stable_json({"terminal_goal": terminal_goal, "pr": pr, "merge_sha": merge_sha}).encode(
+                "utf-8"
+            )
+        ),
+        evidence_kind="migration",
+        repo_root=repo_root,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+
+def production_qg_decision_card(
+    selector: str,
+    *,
+    run_id: str,
+    qualification: Path,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> dict[str, Any]:
+    """Return the exact card a human must approve; do not arm the route."""
+    _require_outside_common_repository(
+        qualification, repo_root=repo_root, label="Production-QG qualification"
+    )
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    ledger = _read_ledger(path)
+    if ledger is None or ledger["run"]["run_id"] != run_id:
+        raise CompletionError("No matching completion run for the QG decision card")
+    if ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
+        raise CompletionError(f"Production-QG decision card is not allowed from {ledger['state']}")
+    inputs = certification_inputs(
+        selector, repo_root=repo_root, config_path=config_path, ledger=ledger
+    )
+    card = certification.qg_decision_card(
+        qualification,
+        target=snapshot.selector,
+        expected_profile=inputs["profile"],
+        expected_identity=inputs["qg_identity"],
+    )
+    reviewer_group = _review_group(card["proposed_reviewer"]["family"], config)
+    author_groups = {
+        _review_group(family, config) for family in ledger.get("author_families", [])
+    }
+    if reviewer_group in author_groups:
+        raise CompletionError("Production-QG proposed reviewer is from an author model family")
+    _require_track_reviewer_policy(
+        reviewer_family=card["proposed_reviewer"]["family"],
+        reviewer_group=reviewer_group,
+        track_policy=snapshot.track_policy,
+    )
+    return card
+
+
+def record_qg_authorization(
+    selector: str,
+    *,
+    run_id: str,
+    qualification: Path,
+    human_arming: Path,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Record a separate qualified-route artifact and exact human approval."""
+    for artifact, label in (
+        (qualification, "Production-QG qualification"),
+        (human_arming, "Production-QG human arming"),
+    ):
+        _require_outside_common_repository(artifact, repo_root=repo_root, label=label)
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    try:
+        with _with_lock(path):
+            _config, _snapshot, identity, path, ledger = _load_for_update(
+                selector,
+                run_id,
+                repo_root=repo_root,
+                config_path=config_path,
+                ledger_root=ledger_root,
+            )
+            inputs = certification_inputs(
+                selector, repo_root=repo_root, config_path=config_path, ledger=ledger
+            )
+            authorization = certification.load_runtime_authorization(
+                qualification,
+                human_arming,
+                target=snapshot.selector,
+                expected_profile=inputs["profile"],
+                expected_identity=inputs["qg_identity"],
+            )
+            reviewer_group = _review_group(authorization["route"]["family"], config)
+            author_groups = {
+                _review_group(family, config) for family in ledger.get("author_families", [])
+            }
+            if reviewer_group in author_groups:
+                raise CompletionError(
+                    "Production-QG reviewer must be independent of every author model family"
+                )
+            _require_track_reviewer_policy(
+                reviewer_family=authorization["route"]["family"],
+                reviewer_group=reviewer_group,
+                track_policy=snapshot.track_policy,
+            )
+            eid = _event_id(
+                "PRODUCTION_QG_AUTHORIZED",
+                {
+                    "qualification": authorization["qualification_sha256"],
+                    "arming": authorization["human_arming_sha256"],
+                    "approval_id": authorization["approval_id"],
+                },
+            )
+            already_recorded = (
+                _event_exists(ledger, eid)
+                and ledger.get("production_qg_authorization") == authorization
+            )
+            if already_recorded and ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
+                return path, ledger
+            if ledger["state"] != "AWAITING_PRODUCTION_QG_ARMING":
+                raise CompletionError(
+                    f"Production-QG authorization is not allowed from {ledger['state']}"
+                )
+            if not already_recorded:
+                ledger["production_qg_authorization"] = authorization
+                _append_event(
+                    ledger,
+                    event_id=eid,
+                    event="PRODUCTION_QG_AUTHORIZED",
+                    to_state=ledger["state"],
+                    identity=identity,
+                    details={
+                        "qualification_sha256": authorization["qualification_sha256"],
+                        "human_arming_sha256": authorization["human_arming_sha256"],
+                        "approval_id": authorization["approval_id"],
+                    },
+                )
+                _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
+                _atomic_write_json(path, ledger)
+    except Timeout as exc:
+        raise CompletionError(f"Concurrent ledger update in progress: {path}") from exc
+    return _advance_certification_cursor(
+        selector,
+        run_id=run_id,
+        evidence_sha256=authorization["human_arming_sha256"],
+        evidence_kind="authorization",
+        repo_root=repo_root,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+
+def verify_deployment_receipt(
+    selector: str,
+    *,
+    run_id: str,
+    workflow_run_id: int,
+    url: str,
+    out: Path,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    ledger_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Verify GitHub Actions plus production bytes and write a strict receipt."""
+    if workflow_run_id < 1:
+        raise CompletionError("Deployment verification requires a workflow run id")
+    if not url.startswith("https://learn-ukrainian.github.io/"):
+        raise CompletionError("Deployment verification requires the canonical production URL")
+    _require_outside_common_repository(
+        out, repo_root=repo_root, label="Deployment receipt"
+    )
+    config = load_config(config_path)
+    snapshot = resolve_target(selector, repo_root=repo_root, config=config)
+    path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
+    ledger = _read_ledger(path)
+    if ledger is None or ledger["run"]["run_id"] != run_id:
+        raise CompletionError("No matching completion run for deployment verification")
+    if ledger["run"]["status"] != "active" or ledger["state"] != "DEPLOYMENT_REQUIRED":
+        raise CompletionError(f"Deployment verification is not allowed from {ledger['state']}")
+    publication = ledger.get("publication")
+    if publication is None:
+        raise CompletionError("Deployment verification requires recorded publication")
+    certification_event = next(
+        (
+            item
+            for item in reversed(ledger.get("history", []))
+            if item.get("event") == "CERTIFICATION_CURSOR_ADVANCED"
+            and item.get("to_state") == "DEPLOYMENT_REQUIRED"
+            and item.get("details", {}).get("projection", {}).get("production_qg") == "pass"
+        ),
+        None,
+    )
+    if certification_event is None:
+        raise CompletionError("Deployment requires a recorded production-QG pass")
+    certified_at = str(certification_event["at"])
+    command = [
+        "gh",
+        "api",
+        f"repos/{{owner}}/{{repo}}/actions/runs/{workflow_run_id}",
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=repo_root,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if completed.returncode != 0:
+        raise CompletionError(
+            f"Cannot verify deployment workflow run {workflow_run_id}: {completed.stderr.strip()}"
+        )
+    try:
+        workflow = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        raise CompletionError("GitHub deployment workflow response is not JSON") from exc
+    if (
+        workflow.get("id") != workflow_run_id
+        or workflow.get("name") != "Deploy to GitHub Pages"
+        or workflow.get("path") != ".github/workflows/deploy-pages.yml"
+        or workflow.get("event") != "workflow_dispatch"
+        or workflow.get("head_branch") != "main"
+        or workflow.get("conclusion") != "success"
+    ):
+        raise CompletionError(
+            "Deployment workflow is not the successful canonical run for the recorded merge SHA"
+        )
+    created_at = workflow.get("created_at")
+    try:
+        workflow_created_at = _parse_time(str(created_at))
+        certification_completed_at = _parse_time(certified_at)
+    except ValueError as exc:
+        raise CompletionError("Deployment workflow timestamps are malformed") from exc
+    if workflow_created_at < certification_completed_at:
+        raise CompletionError("Deployment workflow started before production QG passed")
+    compare_command = [
+        "gh",
+        "api",
+        (
+            "repos/{owner}/{repo}/compare/"
+            f"{publication['merge_sha']}...{workflow['head_sha']}"
+        ),
+    ]
+    compared = subprocess.run(
+        compare_command,
+        cwd=repo_root,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if compared.returncode != 0:
+        raise CompletionError(
+            f"Cannot verify deployment ancestry: {compared.stderr.strip()}"
+        )
+    try:
+        comparison = json.loads(compared.stdout)
+    except json.JSONDecodeError as exc:
+        raise CompletionError("GitHub deployment ancestry response is not JSON") from exc
+    if (
+        comparison.get("status") not in {"ahead", "identical"}
+        or comparison.get("merge_base_commit", {}).get("sha") != publication["merge_sha"]
+    ):
+        raise CompletionError(
+            "Deployment workflow head does not contain the recorded publication merge"
+        )
+    deployment_marker_url = (
+        "https://learn-ukrainian.github.io/.well-known/"
+        f"learn-ukrainian-deployment-{workflow['head_sha']}.txt"
+    )
+    marker_request = urllib.request.Request(
+        deployment_marker_url,
+        headers={"User-Agent": "learn-ukrainian-deployment-verifier/1"},
+    )
+    try:
+        with urllib.request.urlopen(marker_request, timeout=30) as response:
+            marker_status = int(response.status)
+            deployment_marker_body = response.read()
+    except OSError as exc:
+        raise CompletionError(f"Cannot fetch the immutable deployment marker: {exc}") from exc
+    expected_marker_body = f"{workflow['head_sha']}\n".encode()
+    if marker_status != 200 or deployment_marker_body != expected_marker_body:
+        raise CompletionError(
+            "Production does not expose the immutable marker for the exact workflow head"
+        )
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "learn-ukrainian-deployment-verifier/1"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            status = int(response.status)
+            body = response.read()
+    except OSError as exc:
+        raise CompletionError(f"Cannot fetch the production deployment URL: {exc}") from exc
+    marker = selector
+    if status != 200 or marker.encode("utf-8") not in body:
+        raise CompletionError(
+            "Production response must be HTTP 200 and contain the exact module target marker"
+        )
+    inputs = certification_inputs(
+        selector, repo_root=repo_root, config_path=config_path, ledger=ledger
+    )
+    receipt = {
+        "schema_version": "certification-evidence.v1",
+        "kind": "deployment",
+        "target": inputs["target"],
+        "profile": inputs["profile"],
+        "preparation_identity": inputs["preparation_identity"],
+        "learner_hashes": inputs["learner_hashes"],
+        "workflow_identity": sha256_file(repo_root / ".github/workflows/deploy-pages.yml"),
+        "publication": {
+            "pr": publication["pr"],
+            "merge_sha": publication["merge_sha"],
+        },
+        "deployment": {
+            "workflow": {
+                "name": workflow["name"],
+                "path": workflow["path"],
+                "event": workflow["event"],
+                "branch": workflow["head_branch"],
+                "run_id": workflow["id"],
+                "head_sha": workflow["head_sha"],
+                "created_at": workflow["created_at"],
+                "certified_at": certified_at,
+                "post_certification": "PASS",
+                "publication_ancestor": "PASS",
+                "conclusion": workflow["conclusion"],
+            },
+            "environment": "github-pages",
+            "url": url,
+            "verification": {
+                "target": selector,
+                "http_status": status,
+                "marker": marker,
+                "marker_sha256": sha256_bytes(marker.encode("utf-8")),
+                "body_sha256": sha256_bytes(body),
+                "deployment_marker_url": deployment_marker_url,
+                "deployed_head_sha": workflow["head_sha"],
+                "deployment_marker_body_sha256": sha256_bytes(deployment_marker_body),
+                "verified_at": _iso(_now()),
+            },
+        },
+    }
+    certification.validate_evidence_value(receipt)
+    _atomic_write_json(out, receipt)
+    return out.resolve(), receipt
 
 
 def record_certification_evidence(
@@ -1541,10 +2056,38 @@ def record_certification_evidence(
     eid = _event_id("CERTIFICATION_EVIDENCE_RECORDED", {"sha256": artifact.sha256})
     try:
         with _with_lock(path):
+            completed = _read_ledger(path)
+            if (
+                completed is not None
+                and completed["run"]["run_id"] == run_id
+                and completed["run"]["status"] == "completed"
+                and _event_exists(completed, eid)
+            ):
+                return path, completed
             _config, _snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
             if not _event_exists(ledger, eid):
+                allowed_state = {
+                    "independent-review": "INDEPENDENT_REVIEW_REQUIRED",
+                    "integration": "INTEGRATION_REQUIRED",
+                    "production-qg": "PRODUCTION_QG_REQUIRED",
+                    "deployment": "DEPLOYMENT_REQUIRED",
+                }[artifact.value["kind"]]
+                if ledger["state"] != allowed_state:
+                    raise CompletionError(
+                        f"{artifact.value['kind']} evidence is not allowed from {ledger['state']}"
+                    )
+                if artifact.value["kind"] == "integration":
+                    publication = ledger.get("publication")
+                    integration = artifact.value["integration"]
+                    if publication is None or (
+                        integration["pr"] != publication["pr"]
+                        or integration["merge_sha"] != publication["merge_sha"]
+                    ):
+                        raise CompletionError(
+                            "Integration evidence must bind the recorded publication PR and merge SHA"
+                        )
                 record = {"path": str(artifact.path), "sha256": artifact.sha256, "value": artifact.value}
                 ledger.setdefault("certification_evidence", []).append(record)
                 _append_event(
@@ -1563,6 +2106,7 @@ def record_certification_evidence(
         selector,
         run_id=run_id,
         evidence_sha256=artifact.sha256,
+        evidence_kind=artifact.value["kind"],
         repo_root=repo_root,
         config_path=config_path,
         ledger_root=ledger_root,
@@ -1574,6 +2118,7 @@ def _advance_certification_cursor(
     *,
     run_id: str,
     evidence_sha256: str,
+    evidence_kind: str,
     repo_root: Path,
     config_path: Path,
     ledger_root: Path | None,
@@ -1584,10 +2129,13 @@ def _advance_certification_cursor(
     )
     desired = str(projection["state"])
     allowed_from = {
-        "INTEGRATION_REQUIRED": {"INDEPENDENT_REVIEW_REQUIRED"},
-        "PBR_PASS_QG_PENDING": {"INTEGRATION_REQUIRED"},
-        "PRODUCTION_QG_REQUIRED": {"INTEGRATION_REQUIRED"},
-        "CERTIFIED_FINAL": {"INTEGRATION_REQUIRED", "PBR_PASS_QG_PENDING", "PRODUCTION_QG_REQUIRED"},
+        "independent-review": {"INDEPENDENT_REVIEW_REQUIRED"},
+        "integration": {"INTEGRATION_REQUIRED"},
+        "production-qg": {"PRODUCTION_QG_REQUIRED"},
+        "deployment": {"DEPLOYMENT_REQUIRED"},
+        "migration": {"MIGRATION_REQUIRED", "PBR_PASS_QG_PENDING"},
+        "authorization": {"AWAITING_PRODUCTION_QG_ARMING"},
+        "publication": {"INTEGRATION_REQUIRED"},
     }
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
@@ -1597,7 +2145,9 @@ def _advance_certification_cursor(
             _config, _snapshot, identity, path, ledger = _load_for_update(
                 selector, run_id, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
             )
-            if ledger["state"] not in allowed_from.get(desired, set()):
+            if ledger["state"] == desired:
+                return path, ledger
+            if ledger["state"] not in allowed_from.get(evidence_kind, set()):
                 return path, ledger
             eid = _event_id(
                 "CERTIFICATION_CURSOR_ADVANCED",
@@ -1612,7 +2162,9 @@ def _advance_certification_cursor(
                     identity=identity,
                     details={"evidence_sha256": evidence_sha256, "projection": projection},
                 )
-                if desired == "CERTIFIED_FINAL":
+                if projection.get("routing") is not None:
+                    ledger["routing"] = dict(projection["routing"])
+                if desired == "COMPLETE":
                     ledger["run"]["status"] = "completed"
                 _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
                 _atomic_write_json(path, ledger)
@@ -1667,122 +2219,170 @@ def certification_projection(
     config_path: Path = DEFAULT_CONFIG_PATH,
     ledger_root: Path | None = None,
 ) -> dict[str, Any]:
-    """Derive the certification state afresh; no cursor state or publication is authority."""
+    """Derive terminal authority afresh from current, ordered evidence."""
     config = load_config(config_path)
     snapshot = resolve_target(selector, repo_root=repo_root, config=config)
     path = ledger_path_for(snapshot, repo_root=repo_root, config=config, ledger_root=ledger_root)
     ledger = _read_ledger(path)
     if ledger is None:
         raise CompletionError(f"No completion ledger for {selector}")
-    try:
-        inputs = certification_inputs(selector, repo_root=repo_root, config_path=config_path, ledger=ledger)
-    except CompletionError as exc:
-        return {
-            "state": "POST_BUILD_REVIEW_REQUIRED",
-            "post_build": "preparation-stale",
-            "independent_review": "pending",
-            "integration": "pending",
-            "production_qg": "pending",
-            "final": "not-certified",
-            "reason": str(exc),
-        }
-    profile = inputs["profile_config"]
-    expected = {key: inputs[key] for key in ("target", "profile", "preparation_identity", "learner_hashes")}
+    goal = ledger.get("terminal_goal")
 
+    def result(
+        state: str,
+        *,
+        post_build: str,
+        independent_review: str,
+        integration: str,
+        production_qg: str,
+        final: str,
+        deployment: str = "pending",
+        reason: str | None = None,
+        routing: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "state": state,
+            "terminal_goal": goal,
+            "terminal_satisfied": state == "COMPLETE",
+            "post_build": post_build,
+            "independent_review": independent_review,
+            "integration": integration,
+            "production_qg": production_qg,
+            "deployment": deployment,
+            "final": final,
+        }
+        if reason:
+            payload["reason"] = reason
+        if routing:
+            payload["routing"] = dict(routing)
+        return payload
+
+    if goal not in TERMINAL_GOALS:
+        return result(
+            "MIGRATION_REQUIRED",
+            post_build="unknown",
+            independent_review="unknown",
+            integration="unknown",
+            production_qg="unknown",
+            deployment="unknown",
+            final="not-certified",
+            reason="ledger has no explicit terminal goal",
+        )
+    try:
+        inputs = certification_inputs(
+            selector, repo_root=repo_root, config_path=config_path, ledger=ledger
+        )
+    except CompletionError as exc:
+        return result(
+            "POST_BUILD_REVIEW_REQUIRED",
+            post_build="preparation-stale",
+            independent_review="pending",
+            integration="pending",
+            production_qg="pending",
+            final="not-certified",
+            reason=str(exc),
+        )
+    profile = inputs["profile_config"]
+    expected = {
+        key: inputs[key]
+        for key in ("target", "profile", "preparation_identity", "learner_hashes")
+    }
     pbr_ok, pbr_state, pbr_unstable = _current_pbr_reviews(ledger, inputs)
     if pbr_unstable:
-        return {
-            "state": "REVIEWER_INSTABILITY",
-            "post_build": "instability",
-            "independent_review": "pending",
-            "integration": "pending",
-            "production_qg": "pending",
-            "final": "not-certified",
-        }
+        return result(
+            "REVIEWER_INSTABILITY",
+            post_build="instability",
+            independent_review="pending",
+            integration="pending",
+            production_qg="pending",
+            final="not-certified",
+        )
     if not pbr_ok:
-        return {
-            "state": "POST_BUILD_REVIEW_REQUIRED",
-            "post_build": pbr_state,
-            "independent_review": "pending",
-            "integration": "pending",
-            "production_qg": "pending",
-            "final": "not-certified",
-        }
+        return result(
+            "POST_BUILD_REVIEW_REQUIRED",
+            post_build=pbr_state,
+            independent_review="pending",
+            integration="pending",
+            production_qg="pending",
+            final="not-certified",
+        )
 
     mutation_required = bool(ledger.get("author_families"))
-    author_groups = {_review_group(family, config) for family in ledger.get("author_families", [])}
+    author_families = set(ledger.get("author_families", []))
+    author_groups = {_review_group(family, config) for family in author_families}
     independent_ok = not mutation_required
     independent_state = "not-required" if not mutation_required else "pending"
+    independent_shas: dict[str, str] = {}
     if mutation_required:
-        current_independent: list[certification.EvidenceArtifact] = []
         unresolved_material = False
         for artifact in _ledger_artifacts(ledger, "independent-review"):
             try:
-                certification.require_current(artifact, kind="independent-review", expected=expected)
+                certification.require_current(
+                    artifact, kind="independent-review", expected=expected
+                )
                 if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
                     independent_state = "stale"
+                    continue
+                review = artifact.value["review"]
+                if any(
+                    item["severity"] in MATERIAL_SEVERITIES and not item["resolved"]
+                    for item in review["material_findings"]
+                ):
+                    unresolved_material = True
+                    continue
+                if certification.independent_review_passes(
+                    artifact,
+                    author_groups=author_groups,
+                    author_families=author_families,
+                    config=config,
+                    track_policy=snapshot.track_policy,
+                ):
+                    independent_ok, independent_state = True, "current"
+                    independent_shas[artifact.sha256] = str(artifact.value["diff_sha256"])
                 else:
-                    current_independent.append(artifact)
-                    review = artifact.value["review"]
-                    if any(
-                        item["severity"] in MATERIAL_SEVERITIES and not item["resolved"]
-                        for item in review["material_findings"]
-                    ):
-                        unresolved_material = True
-                    elif certification.independent_review_passes(
-                        artifact,
-                        author_groups=author_groups,
-                        author_families=set(ledger.get("author_families", [])),
-                        config=config,
-                        track_policy=snapshot.track_policy,
-                    ):
-                        independent_ok, independent_state = True, "current"
-                    else:
-                        independent_state = "unresolved"
+                    independent_state = "unresolved"
             except certification.CertificationEvidenceError:
                 independent_state = "malformed"
         if unresolved_material:
             independent_ok, independent_state = False, "unresolved"
     if not independent_ok:
-        return {
-            "state": "INDEPENDENT_REVIEW_REQUIRED",
-            "post_build": "current",
-            "independent_review": independent_state,
-            "integration": "pending",
-            "production_qg": "pending",
-            "final": "not-certified",
-        }
+        return result(
+            "INDEPENDENT_REVIEW_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration="pending",
+            production_qg="pending",
+            final="not-certified",
+        )
+
+    publication = ledger.get("publication")
+    if (mutation_required or goal == "deploy") and publication is None:
+        return result(
+            "PUBLISH_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration="pending",
+            production_qg="pending",
+            final="not-certified",
+        )
 
     integration_ok = not mutation_required
     integration_state = "not-required" if not mutation_required else "pending"
     if mutation_required:
-        independent_shas: dict[str, str] = {}
-        for artifact in _ledger_artifacts(ledger, "independent-review"):
-            try:
-                certification.require_current(artifact, kind="independent-review", expected=expected)
-                if (
-                    artifact.value.get("mutation_identity") == inputs["mutation_identity"]
-                    and artifact.value.get("diff_sha256")
-                    and certification.independent_review_passes(
-                        artifact,
-                        author_groups=author_groups,
-                        author_families=set(ledger.get("author_families", [])),
-                        config=config,
-                        track_policy=snapshot.track_policy,
-                    )
-                ):
-                    independent_shas[artifact.sha256] = str(artifact.value["diff_sha256"])
-            except certification.CertificationEvidenceError:
-                continue
         for artifact in _ledger_artifacts(ledger, "integration"):
             try:
                 certification.require_current(artifact, kind="integration", expected=expected)
+                recorded = artifact.value["integration"]
                 if artifact.value.get("mutation_identity") != inputs["mutation_identity"]:
                     integration_state = "stale"
                 elif (
-                    certification.integration_passes(artifact)
-                    and artifact.value.get("diff_sha256")
-                    and independent_shas.get(artifact.value.get("independent_evidence_sha256"))
+                    publication is not None
+                    and recorded["pr"] == publication["pr"]
+                    and recorded["merge_sha"] == publication["merge_sha"]
+                    and certification.integration_passes(artifact)
+                    and independent_shas.get(
+                        artifact.value.get("independent_evidence_sha256")
+                    )
                     == artifact.value.get("diff_sha256")
                 ):
                     integration_ok, integration_state = True, "current"
@@ -1791,57 +2391,100 @@ def certification_projection(
             except certification.CertificationEvidenceError:
                 integration_state = "malformed"
     if not integration_ok:
-        return {
-            "state": "INTEGRATION_REQUIRED",
-            "post_build": "current",
-            "independent_review": independent_state,
-            "integration": integration_state,
-            "production_qg": "pending",
-            "final": "not-certified",
-        }
+        return result(
+            "INTEGRATION_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg="pending",
+            final="not-certified",
+        )
+    if goal == "merge":
+        return result(
+            "COMPLETE",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg="not-required",
+            deployment="not-required",
+            final="not-required",
+        )
 
     qg = profile["production_qg"]
-    if qg["mode"] == "disabled":
-        return {
-            "state": "CERTIFIED_FINAL",
-            "post_build": "current",
-            "independent_review": independent_state,
-            "integration": integration_state,
-            "production_qg": "disabled",
-            "final": "final",
-        }
-    if qg["mode"] == "pending":
-        return {
-            "state": "PBR_PASS_QG_PENDING",
-            "post_build": "current",
-            "independent_review": independent_state,
-            "integration": integration_state,
-            "production_qg": "pending",
-            "final": "provisional",
-        }
+    authorization: dict[str, Any] | None = None
+    authorization_reason: str | None = None
+    runtime_authorization = ledger.get("production_qg_authorization")
+    try:
+        if runtime_authorization is not None:
+            # The runtime artifacts were schema-, identity-, and hash-validated before
+            # this immutable authorization was committed to the validated ledger.
+            # Projection must remain resumable after ephemeral evidence is cleaned up.
+            authorization = runtime_authorization
+        elif qg["mode"] == "armed-canary":
+            authorization = certification.load_authorization(
+                qg,
+                repo_root=repo_root,
+                expected_profile=inputs["profile"],
+                expected_identity=inputs["qg_identity"],
+            )
+        else:
+            authorization_reason = "qualified route requires explicit human arming"
+        if authorization is not None:
+            route_family = str(authorization["route"]["family"])
+            route_group = _review_group(route_family, config)
+            forbidden = {
+                str(item).lower()
+                for item in snapshot.track_policy.get("forbidden_reviewer_families", [])
+            }
+            allowed = set(snapshot.track_policy.get("allowed_reviewer_groups", []))
+            if (
+                route_group in author_groups
+                or route_family.lower() in forbidden
+                or (allowed and route_group not in allowed)
+            ):
+                authorization = None
+                authorization_reason = "production-QG reviewer is not independent of the author family"
+    except (certification.CertificationEvidenceError, KeyError) as exc:
+        authorization = None
+        authorization_reason = str(exc)
+    if authorization is None:
+        return result(
+            "AWAITING_PRODUCTION_QG_ARMING",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg="awaiting-human-arming",
+            final="not-certified",
+            reason=authorization_reason,
+        )
 
     passing = False
+    material_failure = False
+    malformed_failure = False
     qg_state = "required"
     fingerprints: dict[str, set[str]] = {}
     module_dir = repo_root / "curriculum" / "l2-uk-en" / snapshot.track / snapshot.slug
     try:
-        qg_facts = certification.current_qg_facts(target=snapshot.selector, module_dir=module_dir)
+        qg_facts = certification.current_qg_facts(
+            target=snapshot.selector, module_dir=module_dir
+        )
     except certification.CertificationEvidenceError:
         qg_facts = None
     for artifact in _ledger_artifacts(ledger, "production-qg"):
         try:
             certification.require_current(artifact, kind="production-qg", expected=expected)
-            authorization = certification.load_authorization(
-                qg, repo_root=repo_root, expected_profile=inputs["profile"], expected_identity=inputs["qg_identity"]
-            )
             if (
-                artifact.value["authorization"]["qualification_sha256"] != authorization["qualification_sha256"]
-                or artifact.value["authorization"]["human_arming_sha256"] != authorization["human_arming_sha256"]
+                artifact.value["authorization"]["qualification_sha256"]
+                != authorization["qualification_sha256"]
+                or artifact.value["authorization"]["human_arming_sha256"]
+                != authorization["human_arming_sha256"]
             ):
                 qg_state = "stale"
                 continue
             qg_key = certification.production_qg_stability_key(artifact)
-            fingerprints.setdefault(qg_key, set()).add(certification.production_qg_material_fingerprint(artifact))
+            fingerprints.setdefault(qg_key, set()).add(
+                certification.production_qg_material_fingerprint(artifact)
+            )
             if qg_facts is not None and certification.production_qg_passes(
                 artifact,
                 expected_identity=inputs["qg_identity"],
@@ -1850,27 +2493,94 @@ def certification_projection(
                 authorization=authorization,
             ):
                 passing, qg_state = True, "pass"
+            elif artifact.value["canonical_record"].get("terminal_verdict") != "PASS":
+                material_failure, qg_state = True, "material-failure"
             else:
-                qg_state = "fail"
+                malformed_failure, qg_state = True, "malformed"
         except certification.CertificationEvidenceError:
-            qg_state = "malformed"
+            malformed_failure, qg_state = True, "malformed"
     if any(len(values) > 1 for values in fingerprints.values()):
-        return {
-            "state": "REVIEWER_INSTABILITY",
-            "post_build": "current",
-            "independent_review": independent_state,
-            "integration": integration_state,
-            "production_qg": "instability",
-            "final": "not-certified",
-        }
-    return {
-        "state": "CERTIFIED_FINAL" if passing else "PRODUCTION_QG_REQUIRED",
-        "post_build": "current",
-        "independent_review": independent_state,
-        "integration": integration_state,
-        "production_qg": qg_state,
-        "final": "final" if passing else "not-certified",
-    }
+        return result(
+            "REVIEWER_INSTABILITY",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg="instability",
+            final="not-certified",
+        )
+    if material_failure:
+        return result(
+            "REPAIR_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg=qg_state,
+            final="not-certified",
+            routing={"owners": ["built_artifact"], "findings": []},
+        )
+    if malformed_failure:
+        return result(
+            "AUDIT_TOOLING_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg=qg_state,
+            final="not-certified",
+            routing={"owners": ["audit_tooling"], "findings": []},
+        )
+    if not passing:
+        return result(
+            "PRODUCTION_QG_REQUIRED",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg=qg_state,
+            final="not-certified",
+        )
+    if goal == "certify":
+        return result(
+            "COMPLETE",
+            post_build="current",
+            independent_review=independent_state,
+            integration=integration_state,
+            production_qg="pass",
+            deployment="not-required",
+            final="final",
+        )
+
+    deployment_state = "required"
+    for artifact in _ledger_artifacts(ledger, "deployment"):
+        try:
+            certification.require_current(artifact, kind="deployment", expected=expected)
+            if publication is not None and certification.deployment_passes(
+                artifact,
+                publication=publication,
+                expected_workflow_identity=sha256_file(
+                    repo_root / ".github/workflows/deploy-pages.yml"
+                ),
+            ):
+                deployment_state = "current"
+                return result(
+                    "COMPLETE",
+                    post_build="current",
+                    independent_review=independent_state,
+                    integration=integration_state,
+                    production_qg="pass",
+                    deployment=deployment_state,
+                    final="final",
+                )
+            deployment_state = "stale"
+        except certification.CertificationEvidenceError:
+            deployment_state = "malformed"
+    return result(
+        "DEPLOYMENT_REQUIRED",
+        post_build="current",
+        independent_review=independent_state,
+        integration=integration_state,
+        production_qg="pass",
+        deployment=deployment_state,
+        final="certified",
+    )
 
 
 def status_run(
@@ -1917,6 +2627,15 @@ def build_parser() -> argparse.ArgumentParser:
     start = subparsers.add_parser("start", help="Create or idempotently reopen a module ledger")
     _add_common_options(start)
     start.add_argument("--owner", required=True)
+    start.add_argument("--terminal-goal", required=True, choices=sorted(TERMINAL_GOALS))
+    migrate = subparsers.add_parser(
+        "migrate-terminal-goal", help="Explicitly migrate one legacy provisional ledger"
+    )
+    _add_common_options(migrate)
+    migrate.add_argument("--run-id", required=True)
+    migrate.add_argument("--terminal-goal", required=True, choices=sorted(TERMINAL_GOALS))
+    migrate.add_argument("--pr", type=int)
+    migrate.add_argument("--merge-sha")
     resume = subparsers.add_parser("resume", help="Renew the exact recorded run lease")
     _add_common_options(resume)
     resume.add_argument("--run-id", required=True)
@@ -1969,7 +2688,9 @@ def build_parser() -> argparse.ArgumentParser:
     independent.add_argument("--verdict", required=True, choices=("PASS", "CHANGES_REQUESTED"))
     independent.add_argument("--evidence", required=True, type=Path)
     independent.add_argument("--owner-kind", choices=("built_artifact", "plan_workflow", "audit_tooling"))
-    published = subparsers.add_parser("record-published", help="Record merged PR evidence and complete")
+    published = subparsers.add_parser(
+        "record-published", help="Record merged PR evidence before integration"
+    )
     _add_common_options(published)
     published.add_argument("--run-id", required=True)
     published.add_argument("--pr", required=True, type=int)
@@ -1978,6 +2699,27 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_options(evidence)
     evidence.add_argument("--run-id", required=True)
     evidence.add_argument("--evidence", required=True, type=Path)
+    decision = subparsers.add_parser(
+        "qg-decision-card", help="Render the exact human arming decision card"
+    )
+    _add_common_options(decision)
+    decision.add_argument("--run-id", required=True)
+    decision.add_argument("--qualification", required=True, type=Path)
+    authorization = subparsers.add_parser(
+        "record-qg-authorization", help="Record qualification plus separate human arming"
+    )
+    _add_common_options(authorization)
+    authorization.add_argument("--run-id", required=True)
+    authorization.add_argument("--qualification", required=True, type=Path)
+    authorization.add_argument("--human-arming", required=True, type=Path)
+    deployment = subparsers.add_parser(
+        "verify-deployment", help="Verify the canonical Pages run and write a strict receipt"
+    )
+    _add_common_options(deployment)
+    deployment.add_argument("--run-id", required=True)
+    deployment.add_argument("--workflow-run-id", required=True, type=int)
+    deployment.add_argument("--url", required=True)
+    deployment.add_argument("--out", required=True, type=Path)
     projection = subparsers.add_parser(
         "certification-status", help="Recompute the authoritative certification projection"
     )
@@ -2005,7 +2747,18 @@ def main(argv: list[str] | None = None) -> int:
             value = inspect_target(args.target, repo_root=common["repo_root"], config_path=common["config_path"])
             path = None
         elif args.command == "start":
-            path, value = start_run(args.target, owner=args.owner, **common)
+            path, value = start_run(
+                args.target, owner=args.owner, terminal_goal=args.terminal_goal, **common
+            )
+        elif args.command == "migrate-terminal-goal":
+            path, value = migrate_terminal_goal(
+                args.target,
+                run_id=args.run_id,
+                terminal_goal=args.terminal_goal,
+                pr=args.pr,
+                merge_sha=args.merge_sha,
+                **common,
+            )
         elif args.command == "resume":
             path, value = resume_run(args.target, run_id=args.run_id, **common)
         elif args.command == "status":
@@ -2065,12 +2818,43 @@ def main(argv: list[str] | None = None) -> int:
             path, value = record_certification_evidence(
                 args.target, run_id=args.run_id, evidence=args.evidence, **common
             )
+        elif args.command == "qg-decision-card":
+            value = production_qg_decision_card(
+                args.target,
+                run_id=args.run_id,
+                qualification=args.qualification,
+                **common,
+            )
+            path = None
+        elif args.command == "record-qg-authorization":
+            path, value = record_qg_authorization(
+                args.target,
+                run_id=args.run_id,
+                qualification=args.qualification,
+                human_arming=args.human_arming,
+                **common,
+            )
+        elif args.command == "verify-deployment":
+            path, value = verify_deployment_receipt(
+                args.target,
+                run_id=args.run_id,
+                workflow_run_id=args.workflow_run_id,
+                url=args.url,
+                out=args.out,
+                **common,
+            )
         elif args.command == "certification-status":
             value = certification_projection(args.target, **common)
             path = None
         else:
             raise CompletionError(f"Unknown command: {args.command}")
-    except (CompletionError, OSError, json.JSONDecodeError, yaml.YAMLError) as exc:
+    except (
+        CompletionError,
+        certification.CertificationEvidenceError,
+        OSError,
+        json.JSONDecodeError,
+        yaml.YAMLError,
+    ) as exc:
         print(f"track-completion: {exc}", file=sys.stderr)
         return 2
     print(json.dumps(_result_payload(path, value), ensure_ascii=False, indent=2, sort_keys=True))
