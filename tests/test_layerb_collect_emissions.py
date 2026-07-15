@@ -399,6 +399,57 @@ def test_collector_extracts_bridge_sidecar_without_polluting_response() -> None:
     assert "_bridge_substituted" not in emission["response"]
 
 
+def test_collector_passes_and_extracts_grok_forensics_sidecar(tmp_path: Path, monkeypatch) -> None:
+    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
+    output_dir = tmp_path / "collector"
+    captured: dict[str, Any] = {}
+    sidecar = {"path": str(output_dir / "forensics" / ("a" * 64 + ".raw-err")), "sha256": "b" * 64}
+
+    class CapturingJudge:
+        def __init__(self, command, timeout_seconds, *, environment) -> None:
+            captured["command"] = command
+            captured["timeout_seconds"] = timeout_seconds
+            captured["environment"] = environment
+
+        def __call__(self, request, route):
+            parsed = layerb_judge_bridge.parse_request(request)
+            facts = []
+            for fact in parsed.request["fact_checks"]:
+                fact_check_id = str(fact["fact_check_id"])
+                relations = []
+                for source in fact["candidate_sources"]:
+                    candidate_id = str(source["candidate_id"])
+                    raw = parsed.windows_by_fact_candidate[(fact_check_id, candidate_id)]["raw_window"]
+                    relations.append(
+                        {
+                            "candidate_id": candidate_id,
+                            "relation": "ENTAILS",
+                            "support_spans": [{"start": 0, "end": len(raw), "role": "SUPPORTS"}],
+                            "confidence": "high",
+                            "prompt_injection_observed": False,
+                        }
+                    )
+                facts.append({"fact_check_id": fact_check_id, "source_relations": relations})
+            return layerb_collect_emissions.layerb_shadow.JudgeCall(
+                response={
+                    "schema_version": layerb_collect_emissions.layerb_shadow.JUDGE_OUTPUT_VERSION,
+                    "fact_checks": facts,
+                    "_bridge_forensics": sidecar,
+                }
+            )
+
+    monkeypatch.setattr(layerb_collect_emissions.layerb_shadow, "SubprocessJudge", CapturingJudge)
+
+    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 0
+    assert captured["environment"]["LAYERB_BRIDGE_FORENSICS_DIR"] == str(output_dir / "forensics")
+    cache = next((output_dir / "cache").glob("*.json"))
+    cache_payload = json.loads(cache.read_text(encoding="utf-8"))
+    assert cache_payload["bridge_forensics"] == sidecar
+    assert "_bridge_forensics" not in cache_payload["response"]
+    manifest = json.loads((output_dir / "raw-call-manifest.json").read_text(encoding="utf-8"))
+    assert all(call["bridge_forensics"] == sidecar for call in manifest["calls"])
+
+
 def test_collector_extracts_detector_sidecar_by_known_pair_and_deduplicates() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
     response["_evidence_pattern_hits"] = [

@@ -330,6 +330,7 @@ class ModelResult:
 
     text: str
     observed: dict[str, Any] | None = None
+    raw_stdout: str | None = None
 
 
 def _canonical_json(value: Any) -> str:
@@ -576,6 +577,54 @@ def output_json_schema() -> dict[str, Any]:
     }
 
 
+def output_json_schema_for_request(parsed: ParsedRequest) -> dict[str, Any]:
+    """Bind the generic output schema's envelope identifiers to one request.
+
+    Grok's constraint grammar needs a Draft-4 tuple form here: ``const`` and
+    2020-12 tuple keywords are not reliably honored by subscription CLIs.
+    The normalizer remains the authoritative validation boundary; this only
+    reduces avoidable identifier-transcription failures before it runs.
+    """
+
+    schema = output_json_schema()
+    properties = dict(schema["properties"])
+    generic_facts = properties["fact_checks"]
+    generic_fact = generic_facts["items"]
+    generic_fact_properties = generic_fact["properties"]
+    generic_source_relations = generic_fact_properties["source_relations"]
+    generic_source_relation = generic_source_relations["items"]
+
+    pinned_facts: list[dict[str, Any]] = []
+    for request_fact in parsed.request["fact_checks"]:
+        fact_check_id = str(request_fact["fact_check_id"])
+        pinned_relations: list[dict[str, Any]] = []
+        for source in request_fact["candidate_sources"]:
+            candidate_properties = dict(generic_source_relation["properties"])
+            candidate_properties["candidate_id"] = {"type": "string", "enum": [str(source["candidate_id"])]}
+            pinned_relations.append({**generic_source_relation, "properties": candidate_properties})
+
+        relation_tuple = {
+            **generic_source_relations,
+            "items": pinned_relations,
+            "additionalItems": False,
+            "minItems": len(pinned_relations),
+            "maxItems": len(pinned_relations),
+        }
+        fact_properties = dict(generic_fact_properties)
+        fact_properties["fact_check_id"] = {"type": "string", "enum": [fact_check_id]}
+        fact_properties["source_relations"] = relation_tuple
+        pinned_facts.append({**generic_fact, "properties": fact_properties})
+
+    properties["fact_checks"] = {
+        **generic_facts,
+        "items": pinned_facts,
+        "additionalItems": False,
+        "minItems": len(pinned_facts),
+        "maxItems": len(pinned_facts),
+    }
+    return {**schema, "properties": properties}
+
+
 def build_codex_judge_argv(
     *, config: BridgeConfig, scratch_dir: Path, schema_path: Path, output_path: Path
 ) -> list[str]:
@@ -602,7 +651,14 @@ def build_codex_judge_argv(
     return argv
 
 
-def build_grok_judge_argv(*, config: BridgeConfig, scratch_dir: Path, session_id: str, prompt: str) -> list[str]:
+def build_grok_judge_argv(
+    *,
+    config: BridgeConfig,
+    scratch_dir: Path,
+    session_id: str,
+    prompt: str,
+    parsed: ParsedRequest | None = None,
+) -> list[str]:
     """Build the complete native Grok CLI command with a zero-tool policy."""
 
     argv = [
@@ -612,7 +668,7 @@ def build_grok_judge_argv(*, config: BridgeConfig, scratch_dir: Path, session_id
         "--output-format",
         "json",
         "--json-schema",
-        _canonical_json(output_json_schema()),
+        _canonical_json(output_json_schema_for_request(parsed) if parsed is not None else output_json_schema()),
         "--no-alt-screen",
         "--verbatim",
         "--max-turns",
@@ -1020,6 +1076,7 @@ def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
                 scratch_dir=scratch_dir,
                 session_id=session_id,
                 prompt=build_codex_prompt(parsed),
+                parsed=parsed,
             ),
             text=True,
             capture_output=True,
@@ -1040,7 +1097,24 @@ def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
             scratch_dir=scratch_dir,
             session_id=session_id,
         )
-        return ModelResult(text=text)
+        return ModelResult(text=text, raw_stdout=completed.stdout)
+
+
+def _write_grok_validation_forensics(parsed: ParsedRequest, raw_stdout: str | None) -> dict[str, str] | None:
+    """Best-effort quarantine write for a clean Grok response that fails validation."""
+
+    directory = os.environ.get("LAYERB_BRIDGE_FORENSICS_DIR")
+    if not directory or raw_stdout is None:
+        return None
+    request_sha256 = _sha256_json(parsed.request)
+    try:
+        path = Path(directory) / f"{request_sha256}.raw-err"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(raw_stdout, encoding="utf-8")
+        content_sha256 = _sha256_text(raw_stdout)
+    except (OSError, UnicodeError):
+        return None
+    return {"path": str(path), "sha256": content_sha256}
 
 
 def conservative_response(
@@ -1116,6 +1190,10 @@ def run_bridge(request: Mapping[str, Any], config: BridgeConfig) -> dict[str, An
             response = conservative_response(
                 parsed, reason="envelope_alignment", evidence_pattern_hits=evidence_pattern_hits
             )
+            if config.family == "grok":
+                forensics = _write_grok_validation_forensics(parsed, model_result.raw_stdout)
+                if forensics is not None:
+                    response["_bridge_forensics"] = forensics
         else:
             if substitutions:
                 response["_bridge_substituted"] = substitutions
