@@ -5,13 +5,17 @@ Phase 2 writes ``data/lexicon/grow_candidates.json`` with a confidence split:
 ``auto_merge`` entries are dictionary-grounded and safe to promote, while
 ``needs_review`` entries are held for a human. This script promotes only the
 clean bucket, validates the prospective manifest before writing it, and leaves
-the held set as a local PR-body artifact.
+the held set as a local PR-body artifact.  Entries still lacking a learner-English
+anchor remain visible promotion debt: the curation ledger records it, while the
+#5138 publish gate enforces the downstream ``old_gate_no_english_anchor``
+richness-regression backstop against the live baseline.
 """
 
 from __future__ import annotations
 
 import argparse
 import bisect
+import hashlib
 import json
 import sys
 import tempfile
@@ -21,6 +25,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -28,6 +34,12 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.audit.check_atlas_manifest_enrichment import check_enrichment
 from scripts.lexicon import verify_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
+from scripts.lexicon.enrich_manifest import (
+    _entry_has_learner_english_anchor,
+    _fill_learner_english_anchor_from_slovnyk_cache,
+    _load_slovnyk_cache_file,
+    _slovnyk_cache_path,
+)
 from scripts.lexicon.fill_from_content import ModuleInfo, _load_manifest, _manifest_entry
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import (
@@ -41,6 +53,7 @@ DEFAULT_CANDIDATES = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_NEEDS_REVIEW = PROJECT_ROOT / "data" / "lexicon" / "grow_needs_review.json"
 PRIMARY_SOURCE = "content_lexicon_grow"
+APPROVAL_LEDGER_KIND = "atlas_grow_promotion_ledger"
 _OPTIONAL_CANDIDATE_FIELDS = (
     "heritage_status",
     "enrichment",
@@ -72,6 +85,9 @@ class PromotionResult:
     promoted: tuple[str, ...]
     skipped_existing: tuple[str, ...]
     held: tuple[HeldLemma, ...]
+    # Deterministic per input order (canonical for the sorted content-grower path).
+    cached_anchor_fills: tuple[str, ...]
+    anchorless_promoted: tuple[str, ...]
     lemmas_total: int | None
     manifest_written: bool
     fingerprint_written: bool
@@ -93,6 +109,7 @@ def promote_grow_candidates(
     manifest_path: Path = DEFAULT_MANIFEST,
     needs_review_path: Path = DEFAULT_NEEDS_REVIEW,
     fingerprint_path: Path = DEFAULT_FINGERPRINT,
+    approval_ledger_path: Path | None = None,
     write: bool = False,
     self_check: SelfCheck | None = None,
     fingerprint_writer: FingerprintWriter | None = None,
@@ -102,6 +119,8 @@ def promote_grow_candidates(
     manifest_path = _resolve_path(manifest_path)
     needs_review_path = _resolve_path(needs_review_path)
     fingerprint_path = _resolve_path(fingerprint_path)
+    if approval_ledger_path is not None:
+        approval_ledger_path = _resolve_path(approval_ledger_path)
     self_check = self_check or verify_prospective_manifest
     fingerprint_writer = fingerprint_writer or _write_fingerprint_sidecar
 
@@ -111,6 +130,8 @@ def promote_grow_candidates(
             promoted=(),
             skipped_existing=(),
             held=(),
+            cached_anchor_fills=(),
+            anchorless_promoted=(),
             lemmas_total=None,
             manifest_written=False,
             fingerprint_written=False,
@@ -120,6 +141,13 @@ def promote_grow_candidates(
 
     candidates = _load_candidates(candidates_path)
     held = tuple(_held_lemmas(candidates.get("needs_review", [])))
+    auto_merge = _candidate_entries(candidates.get("auto_merge", []))
+    if approval_ledger_path is not None:
+        auto_merge = _approved_candidate_entries(
+            auto_merge,
+            candidates_path=candidates_path,
+            approval_ledger_path=approval_ledger_path,
+        )
     manifest = _load_manifest(manifest_path)
     entries = manifest["entries"]
     existing_keys = _manifest_lemma_keys(entries)
@@ -127,7 +155,8 @@ def promote_grow_candidates(
 
     promoted: list[str] = []
     skipped_existing: list[str] = []
-    for candidate in _candidate_entries(candidates.get("auto_merge", [])):
+    newly_promoted_entries: list[dict[str, Any]] = []
+    for candidate in auto_merge:
         lemma = strip_acute_stress(_candidate_lemma(candidate))
         key = _lemma_key(lemma)
         if key in existing_keys:
@@ -137,6 +166,13 @@ def promote_grow_candidates(
         _insert_manifest_entry(entries, sorted_keys, entry)
         existing_keys.add(key)
         promoted.append(lemma)
+        newly_promoted_entries.append(entry)
+
+    # Fill before validation: the prospective gate must inspect the exact post-fill
+    # manifest state that would ship, including its translation/source enrichment.
+    cached_anchor_fills, anchorless_promoted = _fill_cached_anchors_for_new_entries(
+        newly_promoted_entries
+    )
 
     if promoted:
         _refresh_manifest_metadata(manifest)
@@ -160,6 +196,8 @@ def promote_grow_candidates(
         promoted=tuple(promoted),
         skipped_existing=tuple(skipped_existing),
         held=held,
+        cached_anchor_fills=cached_anchor_fills,
+        anchorless_promoted=anchorless_promoted,
         lemmas_total=len(entries),
         manifest_written=manifest_written,
         fingerprint_written=fingerprint_written,
@@ -222,12 +260,19 @@ def format_summary(result: PromotionResult, *, report: bool = False, candidates_
             f"Promoted: {len(result.promoted)}",
             f"Skipped existing: {len(result.skipped_existing)}",
             f"Held for review: {len(result.held)}",
+            f"Cached learner-English anchors filled: {len(result.cached_anchor_fills)}",
+            f"Promoted entries still without learner-English anchor: {len(result.anchorless_promoted)}",
             f"New lemmas_total: {result.lemmas_total}",
             f"Manifest written: {str(result.manifest_written).lower()}",
             f"Fingerprint written: {str(result.fingerprint_written).lower()}",
             f"Needs-review written: {str(result.needs_review_written).lower()}",
         ]
     )
+    if result.anchorless_promoted:
+        lines.append(
+            "Backstop: #5138 publish gate blocks old_gate_no_english_anchor regression "
+            "against the live baseline unless --allow-richness-regression has a recorded reason."
+        )
     if report:
         if result.promoted:
             lines.append("Promoted lemmas:")
@@ -238,6 +283,9 @@ def format_summary(result: PromotionResult, *, report: bool = False, candidates_
         if result.held:
             lines.append("Held lemmas:")
             lines.extend(f"- {item.lemma}: {item.reason}" for item in result.held)
+        if result.anchorless_promoted:
+            lines.append("Promoted entries without learner-English anchor:")
+            lines.extend(f"- {lemma}" for lemma in result.anchorless_promoted)
     return "\n".join(lines)
 
 
@@ -247,6 +295,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--needs-review", type=Path, default=DEFAULT_NEEDS_REVIEW)
     parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
+    parser.add_argument(
+        "--approval-ledger",
+        type=Path,
+        help=(
+            "Require an exact, checksum-bound atlas_grow_promotion_ledger; "
+            "only its approve decisions are promoted"
+        ),
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--write", action="store_true", help="Write the manifest and held-review report")
     mode.add_argument("--dry-run", action="store_true", help="Report what would change without writing")
@@ -263,11 +319,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             manifest_path=args.manifest,
             needs_review_path=args.needs_review,
             fingerprint_path=args.fingerprint,
+            approval_ledger_path=args.approval_ledger,
             write=args.write,
         )
-    except SelfCheckError as exc:
+    except (SelfCheckError, ValueError) as exc:
         print(f"error: {exc}; no files written", file=sys.stderr)
-        return exc.exit_code
+        return exc.exit_code if isinstance(exc, SelfCheckError) else 2
     print(format_summary(result, report=args.report, candidates_path=args.candidates))
     return 0
 
@@ -288,6 +345,119 @@ def _candidate_entries(raw_entries: object) -> list[Mapping[str, Any]]:
     if not isinstance(raw_entries, list):
         return []
     return [entry for entry in raw_entries if isinstance(entry, Mapping)]
+
+
+def _approved_candidate_entries(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    candidates_path: Path,
+    approval_ledger_path: Path,
+) -> list[Mapping[str, Any]]:
+    """Return only explicitly approved candidates from a bound triage ledger.
+
+    A grow run can be deterministic while still surfacing an unsafe systematic
+    class.  The ledger is therefore an additional fail-closed decision gate:
+    it must cover the exact current auto-merge set and identify the candidate
+    file by SHA-256.  A stale, partial, or mismatched ledger cannot silently
+    broaden promotion.
+    """
+    try:
+        payload = yaml.safe_load(approval_ledger_path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise ValueError(f"could not read approval ledger: {approval_ledger_path}") from exc
+    except yaml.YAMLError as exc:
+        raise ValueError(f"approval ledger is not valid YAML: {approval_ledger_path}") from exc
+    if not isinstance(payload, Mapping):
+        raise ValueError(f"approval ledger must be a mapping: {approval_ledger_path}")
+    if payload.get("kind") != APPROVAL_LEDGER_KIND:
+        raise ValueError(
+            f"approval ledger kind must be {APPROVAL_LEDGER_KIND!r}: {approval_ledger_path}"
+        )
+
+    provenance = payload.get("provenance")
+    if not isinstance(provenance, Mapping):
+        raise ValueError("approval ledger lacks provenance")
+    expected_sha256 = str(provenance.get("candidates_sha256") or "").strip()
+    actual_sha256 = hashlib.sha256(candidates_path.read_bytes()).hexdigest()
+    if expected_sha256 != actual_sha256:
+        raise ValueError(
+            "approval ledger candidate SHA-256 does not match the supplied candidates file"
+        )
+
+    raw_decisions = payload.get("decisions")
+    if not isinstance(raw_decisions, list):
+        raise ValueError("approval ledger decisions must be a list")
+
+    candidate_by_key: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for candidate in candidates:
+        key = _candidate_decision_key(candidate)
+        if key in candidate_by_key:
+            raise ValueError(f"duplicate auto-merge candidate decision key: {key!r}")
+        candidate_by_key[key] = candidate
+
+    decision_by_key: dict[tuple[str, str], str] = {}
+    for row in raw_decisions:
+        if not isinstance(row, Mapping):
+            raise ValueError("approval ledger decision must be a mapping")
+        key = _candidate_decision_key(row)
+        if key in decision_by_key:
+            raise ValueError(f"duplicate approval ledger decision key: {key!r}")
+        decision = str(row.get("decision") or "").strip()
+        if decision not in {"approve", "deferred", "reject"}:
+            raise ValueError(f"invalid approval ledger decision for {key!r}: {decision!r}")
+        decision_by_key[key] = decision
+
+    candidate_keys = set(candidate_by_key)
+    decision_keys = set(decision_by_key)
+    if candidate_keys != decision_keys:
+        missing = sorted(candidate_keys - decision_keys)
+        unexpected = sorted(decision_keys - candidate_keys)
+        details: list[str] = []
+        if missing:
+            details.append(f"missing decisions={len(missing)}")
+        if unexpected:
+            details.append(f"unexpected decisions={len(unexpected)}")
+        raise ValueError(
+            "approval ledger does not exactly cover auto-merge candidates "
+            f"({', '.join(details)})"
+        )
+
+    return [
+        candidate
+        for candidate in candidates
+        if decision_by_key[_candidate_decision_key(candidate)] == "approve"
+    ]
+
+
+def _candidate_decision_key(candidate: Mapping[str, Any]) -> tuple[str, str]:
+    lemma = _lemma_key(strip_acute_stress(_candidate_lemma(candidate)))
+    pos = str(candidate.get("pos") or "").strip().casefold()
+    if not pos:
+        raise ValueError(f"candidate decision key lacks pos: {candidate.get('lemma')!r}")
+    return lemma, pos
+
+
+def _fill_cached_anchors_for_new_entries(
+    entries: Sequence[dict[str, Any]],
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Fill cached English anchors only for this promotion's new entries.
+
+    The helper deliberately reads the pre-existing slovnyk cache and never
+    fetches or invents glosses.  Any remaining lemma is returned so callers
+    must preserve it in the next curation ledger instead of hiding search debt.
+    The #5138 publish gate remains the hard backstop for an
+    ``old_gate_no_english_anchor`` regression against the live baseline.
+    """
+    filled: list[str] = []
+    anchorless: list[str] = []
+    for entry in entries:
+        lemma = _candidate_lemma(entry)
+        cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        if _fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, cache):
+            filled.append(lemma)
+        if not _entry_has_learner_english_anchor(entry):
+            anchorless.append(lemma)
+    return tuple(filled), tuple(anchorless)
 
 
 def _candidate_lemma(candidate: Mapping[str, Any]) -> str:

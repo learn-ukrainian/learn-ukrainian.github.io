@@ -1,5 +1,5 @@
 {
-  "fingerprint": "3132e6d1704e496e6eedfac16bf778b12891c1c2f601dc6eb73cd9df59f8bbcd",
+  "fingerprint": "f700011287c77809bc9c96094e627f72d71562cf8ea032bf8d3d341d57f8d30f",
   "inputs": {
     "lexicon_code": [
       {
@@ -143,6 +143,10 @@
         "sha256": "e3d459ad56d03e8821a46d5de26f8245501ae13ad536442c6734965107ffbae7"
       },
       {
+        "path": "scripts/lexicon/obvious_noise_classifier.py",
+        "sha256": "3118b2c16d6f3c3dab91a6eab5e3455ff9ceb35db33ed9b73d3aa031f002af20"
+      },
+      {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
         "sha256": "d87fafc2b0d0e8e23c6d40c98b1320e79cfe439079ff393787af4eff02e84528"
       },
@@ -152,7 +156,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "27f4226414cc01739107b4ba25cf7311167b03e0a39403a877b8104a8a1b8cc5"
+        "sha256": "86b02e3403b53e0577325f4f0b39e67060e4bef406f24048839b334749ac1ef9"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -191,6 +195,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 46
+    "lexicon_code_files": 47
   }
 }

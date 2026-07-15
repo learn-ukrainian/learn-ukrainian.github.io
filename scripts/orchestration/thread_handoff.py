@@ -21,7 +21,7 @@ import sys
 import urllib.error
 import urllib.request
 import uuid
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -433,26 +433,34 @@ def source_checkout_binding_error(replacement: Mapping[str, Any]) -> str | None:
     binding = replacement.get("source_checkout")
     if not isinstance(binding, dict):
         return "live rollover is missing its source checkout binding"
-    if set(binding) != {"full_head", "clean"}:
+    if set(binding) not in ({"full_head", "clean"}, {"full_head", "clean", "head_advanced_to"}):
         return "live rollover source checkout binding is malformed"
     if binding.get("clean") is not True:
         return "live rollover source checkout binding is not clean"
     full_head = binding.get("full_head")
     if not isinstance(full_head, str) or not full_head.strip():
         return "live rollover source checkout HEAD is malformed"
+    if "head_advanced_to" in binding:
+        head_advanced = binding.get("head_advanced_to")
+        if not isinstance(head_advanced, str) or not head_advanced.strip():
+            return "live rollover source checkout HEAD is malformed"
     return None
 
 
-def checkout_continuity_error(replacement: Mapping[str, Any], current_git_state: Mapping[str, Any]) -> str | None:
+def checkout_continuity_error(
+    replacement: Mapping[str, Any],
+    current_git_state: Mapping[str, Any],
+    *,
+    is_ancestor: Callable[[str, str], bool | None] | None = None,
+) -> str | None:
     binding_error = source_checkout_binding_error(replacement)
     if binding_error:
         return binding_error
+
     current_head = current_git_state.get("full_head")
     if not isinstance(current_head, str) or not current_head.strip():
         return "invoking checkout HEAD could not be determined"
-    expected_head = replacement["source_checkout"]["full_head"]
-    if current_head != expected_head:
-        return f"invoking checkout HEAD {current_head} does not match prepared HEAD {expected_head}"
+
     modified_files = current_git_state.get("modified_files")
     if not isinstance(modified_files, list):
         return "invoking checkout status could not be determined"
@@ -461,13 +469,54 @@ def checkout_continuity_error(replacement: Mapping[str, Any], current_git_state:
             str(item.get("path") or "unknown") if isinstance(item, dict) else "unknown" for item in modified_files[:5]
         )
         return f"invoking checkout must be clean; dirty paths: {paths}"
-    return None
+
+    expected_head = replacement["source_checkout"]["full_head"]
+    if current_head == expected_head:
+        return None
+
+    if is_ancestor is None:
+        return f"invoking checkout HEAD {current_head} does not match prepared HEAD {expected_head} (ancestry undeterminable)"
+
+    expected_is_ancestor = is_ancestor(expected_head, current_head)
+    if expected_is_ancestor is None:
+        return f"invoking checkout HEAD {current_head} does not match prepared HEAD {expected_head} (ancestry undeterminable)"
+    elif expected_is_ancestor is True:
+        return None
+
+    current_is_ancestor = is_ancestor(current_head, expected_head)
+    if current_is_ancestor is True:
+        return f"invoking checkout HEAD {current_head} is a rewind (strict ancestor of prepared HEAD {expected_head})"
+    elif current_is_ancestor is False:
+        return f"invoking checkout HEAD {current_head} has diverged from prepared HEAD {expected_head}"
+    else:
+        return f"invoking checkout HEAD {current_head} does not match prepared HEAD {expected_head} (ancestry undeterminable)"
 
 
 def require_checkout_continuity(replacement: Mapping[str, Any], repo_root: Path) -> None:
-    error = checkout_continuity_error(replacement, gather_git_state(repo_root))
+    def is_ancestor(expected_head: str, current_head: str) -> bool | None:
+        res = run_command(
+            ["git", "merge-base", "--is-ancestor", expected_head, current_head],
+            cwd=repo_root,
+            env=git_environment(),
+        )
+        if res.returncode == 0:
+            return True
+        elif res.returncode == 1:
+            return False
+        else:
+            return None
+
+    current_git_state = gather_git_state(repo_root)
+    error = checkout_continuity_error(replacement, current_git_state, is_ancestor=is_ancestor)
     if error:
         raise ValueError(f"checkout continuity failed: {error}")
+
+    current_head = current_git_state.get("full_head")
+    expected_head = replacement["source_checkout"]["full_head"]
+    if current_head != expected_head and isinstance(replacement, dict):
+        source_checkout = replacement.get("source_checkout")
+        if isinstance(source_checkout, dict):
+            source_checkout["head_advanced_to"] = current_head
 
 
 def gather_monitor_state(base_url: str) -> dict[str, Any]:
@@ -1085,7 +1134,7 @@ def render_bootstrap_prompt(
                 "",
                 "Rules:",
                 "- Continue from the durable packet exactly; do not fork, continue, or resume provider conversation history.",
-                f"- Keep the invoking checkout clean at prepared HEAD {replacement.get('source_checkout', {}).get('full_head', 'unknown')} through resume and confirmation.",
+                f"- Keep the invoking checkout clean at prepared HEAD {replacement.get('source_checkout', {}).get('full_head', 'unknown')} through resume and confirmation (clean fast-forward advances are tolerated).",
                 "- Keep the main checkout read-only; thread rollover state belongs in gitignored .agent/ files.",
                 "- Use dispatch worktrees for implementation work: .worktrees/dispatch/<agent>/<task>/.",
                 "- Do not edit generated status/audit/review artifacts, linter configs, or .python-version.",
