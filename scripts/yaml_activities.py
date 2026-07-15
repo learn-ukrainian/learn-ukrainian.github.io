@@ -13,7 +13,12 @@ from pathlib import Path
 from typing import Any, Union
 
 import yaml
-from build.activity_renderer import error_correction_render_values
+
+try:
+    # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
+    from scripts.build.activity_renderer import error_correction_render_values
+except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
+    from build.activity_renderer import error_correction_render_values
 
 try:
     import jsonschema
