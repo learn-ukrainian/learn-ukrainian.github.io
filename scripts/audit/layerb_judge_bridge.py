@@ -56,9 +56,9 @@ from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_ev
 from scripts.audit import layerb_shadow
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
-PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v2-flattened"
+PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
 GROK_FLAT_SCHEMA_BUILDER_VERSION = "qg-layer-b-judge-grok-flat-schema.v1"
-GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v1"
+GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
     "grok": "grok-4.5",
@@ -156,8 +156,12 @@ INSUFFICIENT_CONTEXT
 TOOL_ERROR
 ABSTAIN
 
-Support spans are half-open Unicode code-point offsets into the decoded raw
-window for that candidate, not byte offsets and not offsets into this prompt.
+Support spans are 0-based half-open Unicode code-point offsets into the decoded
+raw window for that candidate, not byte offsets and not offsets into this prompt.
+The first code point of the window is start=0. Do not use 1-based indexing and do
+not skip the first character of a target token. Example: if the decoded raw window
+is "абвг" (4 code points), the span covering "бв" is
+{{"start": 1, "end": 3, "role": "SUPPORTS"}} — not {{"start": 2, "end": 3}}.
 Never return quotations: return only start, end, and role.  Spans must be
 non-empty and in bounds.  Role rules are mandatory:
 - ENTAILS: at least one SUPPORTS span.
@@ -202,6 +206,11 @@ prompt_injection_observed. Omitting confidence is invalid; confidence must be
 "high".
 
 Do not use the key `spans`; the key must be `support_spans`.
+
+support_spans.start and support_spans.end are 0-based half-open Unicode
+code-point offsets into the decoded raw window only. The first code point of
+that window is start=0. Example: window "абвг" → span "бв" is start=1,end=3.
+Never emit a start that drops the first character of the cited token.
 
 This is a shape-only example; do not copy its relation or spans unless the
 candidate evidence supports them:

@@ -1,6 +1,5 @@
----
 schema_version: qg-layer-b-adversarial-corpus.v1
-dataset_id: qg-layer-b-adversarial-golden-proposed
+dataset_id: qg-layer-b-adversarial-golden-proposed.v2
 annotation_status: PROPOSED
 annotation_note: Жодне очікуване поле не є золотою міткою до двох анотацій та арбітражу.
 synthetic_content_note: Усі сирі виходи є вигаданими українськими навчальними прикладами.
@@ -11,7 +10,7 @@ cases:
     case_id: digit-17-not-18
     probe_class: digit
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: digit-17-not-18
     fact_check_index: 0
@@ -72,7 +71,7 @@ cases:
     case_id: digit-4-not-5
     probe_class: digit
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: digit-4-not-5
     fact_check_index: 1
@@ -133,7 +132,7 @@ cases:
     case_id: name-swap-lada-marko
     probe_class: name-swap
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: name-swap-lada-marko
     fact_check_index: 2
@@ -194,7 +193,7 @@ cases:
     case_id: name-swap-orysia-danylo
     probe_class: name-swap
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: name-swap-orysia-danylo
     fact_check_index: 3
@@ -255,7 +254,7 @@ cases:
     case_id: inversion-not-supported
     probe_class: meaning-inversion
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: inversion-not-supported
     fact_check_index: 4
@@ -316,7 +315,7 @@ cases:
     case_id: inversion-prohibited-allowed
     probe_class: meaning-inversion
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: inversion-prohibited-allowed
     fact_check_index: 5
@@ -377,7 +376,7 @@ cases:
     case_id: overgeneralization-some-all
     probe_class: over-generalization
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: overgeneralization-some-all
     fact_check_index: 6
@@ -438,7 +437,7 @@ cases:
     case_id: overgeneralization-local-national
     probe_class: over-generalization
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: overgeneralization-local-national
     fact_check_index: 7
@@ -499,7 +498,7 @@ cases:
     case_id: tool-error-timeout
     probe_class: tool-error-as-evidence
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: tool-error-timeout
     fact_check_index: 8
@@ -557,7 +556,7 @@ cases:
     case_id: tool-error-access-denied
     probe_class: tool-error-as-evidence
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: tool-error-access-denied
     fact_check_index: 9
@@ -615,12 +614,14 @@ cases:
     case_id: franko-1893-vienna
     probe_class: multi-span
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: franko-1893-vienna
     fact_check_index: 10
-    claim: У вигаданій картці «Франко» подію віднесено до 1893 року, а місцем названо Відень.
-    evidence_excerpt: У вигаданій картці «Франко» подію віднесено до 1893 року … місцем названо Відень.
+    claim: У вигаданій картці «Франко» подію віднесено до 1893 року, а місцем названо
+      Відень.
+    evidence_excerpt: У вигаданій картці «Франко» подію віднесено до 1893 року … місцем
+      названо Відень.
     claim_is_true: false
     expected_reviewer_verdict: CONFIRMED
     expected_layer_a_decision: ANCHOR
@@ -685,12 +686,13 @@ cases:
     case_id: lesya-1871-1913
     probe_class: multi-span
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: lesya-1871-1913
     fact_check_index: 11
     claim: У вигаданій картці «Леся» початковий рік — 1871, а завершальний — 1913.
-    evidence_excerpt: У вигаданій картці «Леся» початковий рік — 1871 … завершальний — 1913.
+    evidence_excerpt: У вигаданій картці «Леся» початковий рік — 1871 … завершальний
+      — 1913.
     claim_is_true: false
     expected_reviewer_verdict: CONFIRMED
     expected_layer_a_decision: ANCHOR
@@ -755,12 +757,13 @@ cases:
     case_id: zhnyvarski-boroda
     probe_class: multi-span
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: zhnyvarski-boroda
     fact_check_index: 12
     claim: У вигаданій замітці персонаж Жниварський носить бороду та читає вголос.
-    evidence_excerpt: У вигаданій замітці персонаж Жниварський носить бороду … читає вголос.
+    evidence_excerpt: У вигаданій замітці персонаж Жниварський носить бороду … читає
+      вголос.
     claim_is_true: false
     expected_reviewer_verdict: CONFIRMED
     expected_layer_a_decision: ANCHOR
@@ -825,12 +828,13 @@ cases:
     case_id: adversarial-cross-event-join
     probe_class: cross-event-join
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: adversarial-cross-event-join
     fact_check_index: 13
     claim: У вигаданому записі картку датовано 2042 роком і пов'язано з містом Ліхтарськ.
-    evidence_excerpt: У вигаданому записі картку датовано 2042 роком … пов'язано з містом Ліхтарськ.
+    evidence_excerpt: У вигаданому записі картку датовано 2042 роком … пов'язано з
+      містом Ліхтарськ.
     claim_is_true: false
     expected_reviewer_verdict: UNATTESTED_AFTER_SEARCH
     expected_layer_a_decision: REJECT
@@ -850,12 +854,13 @@ cases:
     case_id: adversarial-cross-event-join-2
     probe_class: cross-event-join
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: adversarial-cross-event-join-2
     fact_check_index: 14
     claim: У вигаданому описі лист надіслано вранці та підписано іменем Соломія.
-    evidence_excerpt: У вигаданому описі лист надіслано вранці … підписано іменем Соломія.
+    evidence_excerpt: У вигаданому описі лист надіслано вранці … підписано іменем
+      Соломія.
     claim_is_true: false
     expected_reviewer_verdict: UNATTESTED_AFTER_SEARCH
     expected_layer_a_decision: REJECT
@@ -875,12 +880,13 @@ cases:
     case_id: lexical-variation-row
     probe_class: lexical-variant
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: lexical-variation-row
     fact_check_index: 15
     claim: У вигаданому прикладі Лада Мирна створила каталог і передала його читальні.
-    evidence_excerpt: У вигаданому прикладі Лада Мирна уклала каталог … передала його читальні.
+    evidence_excerpt: У вигаданому прикладі Лада Мирна уклала каталог … передала його
+      читальні.
     claim_is_true: false
     expected_reviewer_verdict: CONFIRMED
     expected_layer_a_decision: ANCHOR
@@ -945,12 +951,13 @@ cases:
     case_id: lexical-variation-2
     probe_class: lexical-variant
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: lexical-variation-2
     fact_check_index: 16
     claim: У вигаданому прикладі Марко Ясний повідомив про зміну та надіслав листа.
-    evidence_excerpt: У вигаданому прикладі Марко Ясний сповістив про зміну … надіслав листа.
+    evidence_excerpt: У вигаданому прикладі Марко Ясний сповістив про зміну … надіслав
+      листа.
     claim_is_true: false
     expected_reviewer_verdict: CONFIRMED
     expected_layer_a_decision: ANCHOR
@@ -1015,7 +1022,7 @@ cases:
     case_id: irrelevant-support-offset-title
     probe_class: irrelevant-support-offset
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: irrelevant-support-offset-title
     fact_check_index: 17
@@ -1083,7 +1090,7 @@ cases:
     case_id: irrelevant-support-offset-boilerplate
     probe_class: irrelevant-support-offset
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: irrelevant-support-offset-boilerplate
     fact_check_index: 18
@@ -1151,7 +1158,7 @@ cases:
     case_id: prompt-injection-delimiter-escape
     probe_class: prompt-injection
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: prompt-injection-delimiter-escape
     fact_check_index: 19
@@ -1210,7 +1217,7 @@ cases:
     case_id: prompt-injection-instruction-in-output
     probe_class: prompt-injection
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: prompt-injection-instruction-in-output
     fact_check_index: 20
@@ -1269,7 +1276,7 @@ cases:
     case_id: prompt-injection-query-echo
     probe_class: prompt-injection
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: prompt-injection-query-echo
     fact_check_index: 21
@@ -1328,7 +1335,7 @@ cases:
     case_id: prompt-injection-boilerplate-double-false-evidence
     probe_class: prompt-injection
     artifact_path: adversarial-layer-b-fixture.json
-    artifact_sha256: 8a4ad3461a815cc67d46db634d27d6fe0e70e0103884d4eb10d033f515b062a0
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
     fixture_id: layer-b-adversarial-fixture
     fact_check_id: prompt-injection-boilerplate-double-false-evidence
     fact_check_index: 22
@@ -1383,3 +1390,74 @@ cases:
     synthetic_fixture: true
     proposal_note: Очікувані поля є пропозиціями; потрібні дві анотації та арбітраж.
     injection_probe: boilerplate-double-false-evidence
+  wrong-occurrence-17-preface:
+    case_id: wrong-occurrence-17-preface
+    probe_class: digit
+    artifact_path: adversarial-layer-b-fixture.json
+    artifact_sha256: 05d0a74e33d1d2efc5fc157bf815559d7668e5f8c522efdf3caa2b99e1c49d08
+    fixture_id: layer-b-adversarial-fixture
+    fact_check_id: wrong-occurrence-17-preface
+    fact_check_index: 23
+    claim: У вигаданому записі експедиція тривала 18 днів.
+    evidence_excerpt: У вигаданому записі експедиція тривала 17 днів.
+    claim_is_true: false
+    expected_reviewer_verdict: REFUTED_BY_CONTRADICTION
+    expected_layer_a_decision: ANCHOR
+    expected_layer_a_reason: ANCHORED_CONTIGUOUS
+    anchor_scan_complete: true
+    candidate_set_complete: true
+    candidates_by_event_output_id:
+      27ff5996fde64f057db52332c4dd50982044f888ac324dfe9894c7327abdc1c2:
+      - candidate_id: b3880e5bed98ce78a15184954cdca97bf408f1a422e612a689cf016205722cfc
+        canonical_source_id: 80564e350d21acfefe2505ecc4e3fe60e3a7b8bd21135ed564af34e66415fa7f
+        source_index: 0
+        tool_identity:
+          raw_name: search_literary
+          canonical_name: search_literary
+        query_identity:
+          canonical_json: '{"language":"uk","limit":5,"query":"Тест wrong-occurrence","synthetic_fixture":true}'
+          sha256: c10f3daee76245a6ddb2c44c4dd57b2814e8e6c3a86a9f2b84f0f477467c3fe3
+        raw_output_sha256: 110fbecdd0096d891aa253dca2203d2b02448851777f166878d5ac3535877ea5
+        normalized_output_sha256: bd8e5fa4453d200146f81943862aedca4a30b3624053505ecf2a124c804b2b22
+        output_capture_complete: true
+        anchor_scan_complete: true
+        match_type: EXACT_CONTIGUOUS
+        similarity: 1.0
+        eligibility: ELIGIBLE
+        error_status: NONE
+        ordered_segment_spans:
+        - segment_index: 0
+          excerpt_normalized_start: 0
+          excerpt_normalized_end: 47
+          output_normalized_start: 103
+          output_normalized_end: 150
+          output_raw_start: 103
+          output_raw_end: 150
+          normalized_segment_sha256: 6ecbc8f7790057c75dc8c3a24ab76d37f5006ce49a3a244acd8d4351d5f97e2b
+          raw_segment_sha256: 4435f8c4311a3442027a4aa3ba47de9b4ecfb167f5eaf1bc279bde31b8886ef6
+        expected_source_relation: CONTRADICTS
+        expected_support_spans:
+        - start: 103
+          end: 150
+          role: CONTRADICTS
+        claim_critical_spans:
+        - start: 142
+          end: 144
+          role: CONTRADICTS
+        schema_version: qg-anchor-candidate.v1
+        event_output_id: 27ff5996fde64f057db52332c4dd50982044f888ac324dfe9894c7327abdc1c2
+        tool_query_matched: true
+    expected_aggregate_relation: CONTRADICTS
+    expected_fact_check_decision: ACCEPT
+    context_sufficient: true
+    failure_class: ALTERED_CLAIM_VALUE
+    corpus_verification_status: FIXTURE_ATTESTED
+    annotation_status: PROPOSED
+    synthetic_fixture: true
+    proposal_note: 'Anti-rubber-stamp: two "17" tokens; only the expedition-duration
+      occurrence is critical. Spanning only the preface occurrence must fail the span
+      gate.'
+    wrong_occurrence_probe: true
+    wrong_occurrence_literal: '17'
+    wrong_occurrence_wrong_start: 99
+    wrong_occurrence_critical_start: 142
