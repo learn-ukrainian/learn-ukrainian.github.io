@@ -136,13 +136,35 @@ persona:
     відродження та механізми сталінського терору проти культури.
   voice: Literary Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Плужник Євген Павлович"
-  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID="
-  note: "Стаття в Енциклопедії історії України про життя, творчість та репресії поета."
-- title: "Євген Плужник — Історичний календар"
-  url: "https://uinp.gov.ua/istorychnyy-kalendar/gruden/26/1001"
-  note: "Біографічна довідка Українського інституту національної пам'яті."
+- title: "Дні"
+  source_name: "Вікіджерела"
+  source_url: "https://uk.wikisource.org/wiki/%D0%94%D0%BD%D1%96_(%D0%9F%D0%BB%D1%83%D0%B6%D0%BD%D0%B8%D0%BA,_1926)"
+  language: uk
+  hosting: link-only
+  learner_task: "Прочитати вірш «Сьогодні день» у виданні 1926 року й визначити, як стисла інтонація створює напругу."
+  rights:
+    basis: external-link
+    evidence_url: "https://uk.wikisource.org/wiki/%D0%94%D0%BD%D1%96_(%D0%9F%D0%BB%D1%83%D0%B6%D0%BD%D0%B8%D0%BA,_1926)"
+    note: "Сторінка позначає видання як суспільне надбання в Україні; текст у проєкті не відтворюється."
+- title: "Рання осінь"
+  source_name: "Вікіджерела"
+  source_url: "https://uk.wikisource.org/wiki/%D0%A0%D0%B0%D0%BD%D0%BD%D1%8F_%D0%BE%D1%81%D1%96%D0%BD%D1%8C"
+  language: uk
+  hosting: link-only
+  learner_task: "Порівняти ритм і образність двох віршів зі збірок 1926 та 1927 років."
+  rights:
+    basis: external-link
+    evidence_url: "https://uk.wikisource.org/wiki/%D0%A0%D0%B0%D0%BD%D0%BD%D1%8F_%D0%BE%D1%81%D1%96%D0%BD%D1%8C"
+    note: "Зовнішнє посилання на видання 1927 року; текст у проєкті не відтворюється."
+portrait:
+  url: "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BB%D1%83%D0%B6%D0%BD%D0%B8%D0%BA_%D0%84%D0%B2%D0%B3%D0%B5%D0%BD_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%B8%D1%87.jpg"
+  license: "PD-Ukraine"
+  attribution: "Невідомий автор, 1920-ті / Wikimedia Commons"
+  caption_uk: "Євген Плужник, 1920-ті роки"
+  caption_en: "Yevhen Pluzhnyk, 1920s"
+  verified_on: "2026-07-15"
 references:
 - note: Академічна біографія з життєвими датами, механізмом репресій та переліком творів.
   path: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID=

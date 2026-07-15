@@ -82,21 +82,35 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Розумовського від ярликів «вірний вельможа» й «трагічний останній гетьман», тримаючи видимими і його реформи, і станові привілеї, і примусове скасування уряду
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: link-only
+- title: "З універсалу гетьмана Кирила Розумовського від 19 листопада 1763 року про заснування Статутових судів"
+  source_name: "Інститут історії України НАН України, електронна бібліотека"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=2&I21DBN=ELIB&P21DBN=ELIB&Image_file_name=book/0018830.pdf&IMAGE_FILE_DOWNLOAD=0"
   language: uk
-  note: Детальна енциклопедична довідка про останнього гетьмана, його судові, економічні та адміністративні реформи.
-  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
-  source_type: encyclopedia
-  source_url: http://www.history.org.ua/?termin=Rozumovskyj_K
-  title: Розумовський Кирило Григорович
-- hosting: link-only
+  hosting: link-only
+  learner_task: "Прочитати універсал на с. 105–108 і визначити, які судові інституції він упорядковує."
+  rights:
+    basis: external-link
+    evidence_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=2&I21DBN=ELIB&P21DBN=ELIB&Image_file_name=book/0018830.pdf&IMAGE_FILE_DOWNLOAD=0"
+    note: "Зовнішнє посилання на електронну бібліотеку; текст у проєкті не відтворюється."
+- title: "Розумовський Кирило Григорович"
+  source_name: "Енциклопедія історії України, Інститут історії України НАН України"
+  source_url: "https://www.history.org.ua/?termin=Rozumovskyj_K"
   language: uk
-  note: Огляд Глухівських рад та чолобитних 1763 року щодо спадковості гетьманства.
-  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
-  source_type: encyclopedia
-  source_url: http://www.history.org.ua/?termin=Glukhivski_rady
-  title: Глухівські ради 1750, 1763
+  hosting: link-only
+  learner_task: "Зіставити енциклопедичну довідку з універсалом і назвати межі автономії гетьманського уряду."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Rozumovskyj_K"
+    note: "Зовнішнє посилання на сторінку установи; текст у проєкті не відтворюється."
+portrait:
+  url: "https://commons.wikimedia.org/wiki/File:Kyrylo_Rozumovsky_(Portrait,_1766,_Pompeo_Batoni).jpg"
+  license: "PD-old-100"
+  attribution: "Pompeo Batoni (1766) / Wikimedia Commons, faithful reproduction"
+  caption_uk: "Кирило Розумовський у придворному аристократичному портреті, 1766"
+  caption_en: "Kyrylo Rozumovskyi in a court-aristocratic portrait, 1766"
+  verified_on: "2026-07-15"
 references:
 - note: 'Стаття ЕІУ (О. Путро): народження й смерть, Лемеші, рід, придворне піднесення, європейська освіта, граф/сенатор/президент академії, гетьманство 1750 року, обмеження 1754-1761 років, реформи, чолобитна 1763 року, усунення 1764 року, пізнє життя в Батурині'
   path: https://www.history.org.ua/?termin=Rozumovskyj_K

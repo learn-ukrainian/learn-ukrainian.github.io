@@ -148,13 +148,35 @@ persona:
     митця, який був водночас виконавцем і жертвою радянського терору.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Фальківський Дмитро Никанорович"
-  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=ELIB&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Falkivskyj_D&Z21ID="
-  note: "Енциклопедія історії України. Академічна довідка про життя, творчість, чекістське минуле та розстріл поета."
-- title: "Народився Дмитро Фальківський (Левчук)"
-  url: "https://www.nbuv.gov.ua/node/4387"
-  note: "Національна бібліотека України імені В. І. Вернадського. Україніка в датах із бібліографічними посиланнями."
+- title: "Обрії поезії"
+  source_name: "Wikimedia Commons"
+  source_url: "https://commons.wikimedia.org/wiki/File:%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE_%D0%A4%D0%B0%D0%BB%D1%8C%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9._%D0%9E%D0%B1%D1%80%D1%96%D1%97_%D0%BF%D0%BE%D0%B5%D0%B7%D1%96%D1%97_(1927).djvu"
+  language: uk
+  hosting: link-only
+  learner_task: "Прочитати сторінку 46 видання 1927 року й описати образний рух вибраного вірша без приписування неперевірених цитат."
+  rights:
+    basis: external-link
+    evidence_url: "https://commons.wikimedia.org/wiki/File:%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE_%D0%A4%D0%B0%D0%BB%D1%8C%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9._%D0%9E%D0%B1%D1%80%D1%96%D1%97_%D0%BF%D0%BE%D0%B5%D0%B7%D1%96%D1%97_(1927).djvu"
+    note: "Файл позначено PD-Ukraine, але в проєкті подано лише зовнішнє посилання."
+- title: "Дмитро Никанорович Фальківський (Левчук) (1898–1934)"
+  source_name: "ЦДАМЛМ України"
+  source_url: "https://csamm.archives.gov.ua/2020/05/25/dmytro-nykanorovych-falkivskyi-levchuk-1898-1934/"
+  language: uk
+  hosting: link-only
+  learner_task: "Скласти хронологію арешту, вироку, страти та реабілітації за архівною публікацією."
+  rights:
+    basis: external-link
+    evidence_url: "https://csamm.archives.gov.ua/2020/05/25/dmytro-nykanorovych-falkivskyi-levchuk-1898-1934/"
+    note: "Зовнішнє посилання на архівну публікацію; текст у проєкті не відтворюється."
+portrait:
+  url: "https://uk.wikisource.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:Dmytro_Falkivskiy.jpg"
+  license: "PD-old-95"
+  attribution: "О. Кореневич, 1928 / Вікіджерела"
+  caption_uk: "Дмитро Фальківський, 1928"
+  caption_en: "Dmytro Falkivskyi, 1928"
+  verified_on: "2026-07-15"
 references:
 - note: Англомовна енциклопедична стаття про життя, чекістське минуле й страту поета.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CF%5CA%5CFalkivskyDmytro.htm

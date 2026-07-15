@@ -82,35 +82,38 @@ persona:
   role: Модератор дискусії, що ставить під сумнів очевидні істини про «користь» стандартизації та показує її людську ціну.
   voice: Lexicography-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: Грінченко Борис Дмитрович
+- title: "Грінченко Борис Дмитрович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-31898"
   language: uk
-  source: Енциклопедія історії України (ЕІУ)
-  url: https://www.history.org.ua/?termin=Grinchenko_B
-  type: encyclopedia
-  role: reference
   hosting: link-only
-  task: Ознайомитися з основними етапами створення «Словника української мови».
-- title: Словник української мови (онлайн-версія)
+  learner_task: "Виписати окремо лексикографічну, педагогічну, громадську та літературну працю Грінченка."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-31898"
+    note: "Зовнішнє посилання на енциклопедичну статтю; текст у проєкті не відтворюється."
+- title: "Листи з України Наддніпрянської"
+  source_name: "Цифрова бібліотека Київського столичного університету імені Бориса Грінченка"
+  source_url: "https://dl.kubg.edu.ua/items/show/225"
   language: uk
-  source: Hrinchenko.com
-  url: https://hrinchenko.com/
-  type: reference
-  role: analysis
   hosting: link-only
-  task: Проаналізувати лексикографічні принципи Грінченка та словникові статті.
-- title: Тяжким шляхом (Про українську пресу)
+  learner_task: "Прочитати каталогізоване видання й сформулювати, яку культурну самостійність обстоює автор."
+  rights:
+    basis: external-link
+    evidence_url: "https://dl.kubg.edu.ua/items/show/225"
+    note: "Зовнішнє посилання на бібліотечний запис; текст у проєкті не відтворюється."
+- title: "Тяжким шляхом (Про українську пресу)"
+  source_name: "Wikimedia Commons"
+  source_url: "https://commons.wikimedia.org/wiki/File:%D0%93%D1%80%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%91._%D0%A2%D1%8F%D0%B6%D0%BA%D0%B8%D0%BC_%D1%88%D0%BB%D1%8F%D1%85%D0%BE%D0%BC_(1912).pdf"
   language: uk
-  source: Wikimedia Commons
-  url: https://commons.wikimedia.org/wiki/File:Грінченко_Б._Тяжким_шляхом_(1912).pdf
-  type: primary_text
-  role: primary-voice
-  hosting: public-domain
-  license: PD-old-100-expired
-  rights_note: >-
-    Автор помер 1910 року; видання 1912 року позначене Wikimedia Commons як
-    суспільне надбання в країні походження та США.
-  task: Прочитати вибраний уривок і визначити, як Грінченко описує імперські обмеження українського друку.
+  hosting: link-only
+  learner_task: "Прочитати вибраний уривок і визначити, як Грінченко описує імперські обмеження українського друку."
+  rights:
+    basis: external-link
+    evidence_url: "https://commons.wikimedia.org/wiki/File:%D0%93%D1%80%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%91._%D0%A2%D1%8F%D0%B6%D0%BA%D0%B8%D0%BC_%D1%88%D0%BB%D1%8F%D1%85%D0%BE%D0%BC_(1912).pdf"
+    note: "Файл має позначку PD-old-100-expired, але в проєкті подано лише зовнішнє посилання."
 references:
 - title: Borys Hrinchenko
   note: Compiled from primary and secondary sources on Hrinchenko's life and the history of Ukrainian lexicography.
