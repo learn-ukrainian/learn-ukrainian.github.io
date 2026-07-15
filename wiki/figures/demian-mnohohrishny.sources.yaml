@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/demian-mnohohrishny.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://history.org.ua/?termin=Mnohohrishnyj_D
+    type: external
+    title: Многогрішний Дем'ян Гнатович
+    url: https://history.org.ua/?termin=Mnohohrishnyj_D
+    domain: history.org.ua
+  - id: S2
+    file: https://history.org.ua/?termin=Glukhivski_statti_1669
+    type: external
+    title: Глухівські статті 1669
+    url: https://history.org.ua/?termin=Glukhivski_statti_1669
+    domain: history.org.ua

@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/ivan-samoilovych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://history.org.ua/?termin=Samojlovych_I
+    type: external
+    title: Самойлович Іван Самійлович
+    url: https://history.org.ua/?termin=Samojlovych_I
+    domain: history.org.ua
+  - id: S2
+    file: https://history.org.ua/?termin=velykyj_zgin_1678_1679
+    type: external
+    title: Великий згін 1678-1679
+    url: https://history.org.ua/?termin=velykyj_zgin_1678_1679
+    domain: history.org.ua

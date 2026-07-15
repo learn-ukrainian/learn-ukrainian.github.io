@@ -82,21 +82,32 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Скоропадського від ярликів «слухняний намісник» і «рятівник автономії», тримаючи видимими і післяполтавську втрату поля дії, і обмежену суб'єктність усередині неї
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Відрізнити старшинську процедуру, царський примус, Решетилівські статті та нагляд у Глухові від спрощених ярликів про постать гетьмана."
   rationale: "Біографічний якір для післяполтавського гетьманства: учень відрізняє старшинську процедуру, царський примус, Решетилівські статті, меценатство й нагляд у Глухові."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Skoropadskyj_I"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Skoropadskyj_I"
   title: "Скоропадський Іван Ілліч"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Skoropadskyj_I"
 - hosting: link-only
   language: uk
+  learner_task: "Зіставити 14 Просительних статей із резолюціями Петра I та назвати інструменти контролю, які не були скасовані."
   rationale: "Документальний контекст обмеженої оборони автономії: учень визначає, що просили 14 пунктів і які важелі командування, залог та фіскального контролю лишилися за Петром I."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Reshetylivski_statti_1709"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Reshetylivski_statti_1709"
   title: "Решетилівські статті 1709"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Reshetylivski_statti_1709"
 references:
 - note: Internet Encyclopedia of Ukraine (О. Оглоблин) — 1646/1722, перехід з Умані на Лівобережжя, уряди, місії, стародубське полковництво, глухівське обрання, Решетилівка, Полтава, резидентський нагляд, розквартирування, колегія, тиск на друк і академію, поховання
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CK%5CSkoropadskyIvan.htm
@@ -134,6 +145,13 @@ slug: ivan-skoropadskyi
 subtitle: 'Ivan Skoropadskyi: The Hlukhiv Mace under Oversight'
 title: 'Іван Скоропадський: Глухівська булава під наглядом'
 version: '4.2'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Відомі портрети є пізніми зображеннями або не мають перевіреного права
+    на конкретний файл; індивідуально ліцензований портрет не встановлено.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: виборний очільник Війська Запорозького; Скоропадський був лівобережним гетьманом 1708-1722 років під наглядом
   pos: ч.

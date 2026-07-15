@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/semen-palii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://history.org.ua/?termin=Palij_S
+    type: external
+    title: Палій (Гурко) Семен Пилипович
+    url: https://history.org.ua/?termin=Palij_S
+    domain: history.org.ua
+  - id: S2
+    file: https://history.org.ua/?termin=Narvskyj_myrnyj_1704
+    type: external
+    title: Нарвський договір 1704
+    url: https://history.org.ua/?termin=Narvskyj_myrnyj_1704
+    domain: history.org.ua

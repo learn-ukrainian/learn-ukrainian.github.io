@@ -82,21 +82,32 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Многогрішного від ярликів «московський ставленик» і «мученик автономії», тримаючи видимими і його оборону прав, і його примусові звички
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Побудувати хронологію від чернігівського полковництва до Батуринської змови та заслання, відрізняючи обвинувачення від установлених фактів."
   rationale: "Біографічний якір для читання про чернігівське полковництво, антимосковський поворот 1668 року, Глухівську раду, Батуринську змову й сибірське заслання."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Mnohohrishnyj_D"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Mnohohrishnyj_D"
   title: "Многогрішний Дем'ян Гнатович"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Mnohohrishnyj_D"
 - hosting: link-only
   language: uk
+  learner_task: "Зіставити відступ від Московських статей 1665 року з обмеженнями, які Глухівські статті все ж лишали щодо воєвод, війська й зовнішніх справ."
   rationale: "Контекст головного договору модуля: учень зіставляє відступ від Московських статей 1665 року з новими обмеженнями зовнішньої політики й воєводського нагляду."
-  source: "Енциклопедія історії України"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Glukhivski_statti_1669"
+    note: "Зовнішнє посилання на україномовну статтю; текст у курсі не відтворюється."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Glukhivski_statti_1669"
   title: "Глухівські статті 1669"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Glukhivski_statti_1669"
 references:
 - note: 'Стаття ЕІУ (Ю. Мицик, В. Горобець, З. Хижняк): коропське походження, чернігівське полковництво, призначення Дорошенком, Глухівські статті, політика, Батуринська змова, катування, сибірське заслання, служба в Селенгінську'
   path: https://www.history.org.ua/?termin=Mnohohrishnyj_D
@@ -138,6 +149,13 @@ slug: demian-mnohohrishny
 subtitle: 'Demian Mnohohrishny: The Hlukhiv Mace and Siberian Exile'
 title: 'Дем''ян Многогрішний: Глухівська булава й заслання'
 version: '4.1'
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Доступні зображення не мають у перевірених джерелах індивідуально
+    підтвердженої вільної ліцензії або суспільного надбання.
+  verified_on: '2026-07-15'
 vocabulary_hints:
 - definition: командир козацького полку; з 1665 року Многогрішний був чернігівським полковником
   pos: ч.

@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/mykhailo-khanenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://history.org.ua/?termin=Khanenko_M
+    type: external
+    title: Ханенко Михайло Степанович
+    url: https://history.org.ua/?termin=Khanenko_M
+    domain: history.org.ua
+  - id: S2
+    file: https://history.org.ua/?termin=Ostrozkyj_dohovir_1670
+    type: external
+    title: Острозька угода 1670
+    url: https://history.org.ua/?termin=Ostrozkyj_dohovir_1670
+    domain: history.org.ua
