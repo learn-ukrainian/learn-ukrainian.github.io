@@ -438,6 +438,11 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
         },
     }
     ledger["reviews"] = [pbr]
+    ledger["publication"] = {
+        "pr": 5156,
+        "merge_sha": "b" * 40,
+        "recorded_at": "2026-07-15T00:00:00+00:00",
+    }
     return repo, config_path, ledger_root, ledger, inputs
 
 
@@ -481,6 +486,17 @@ def _integration_value(inputs: dict[str, Any], independent_sha: str) -> dict[str
             "pr": 5156,
             "ci_gate": "PASS",
             "review_gate": "PASS",
+            "premerge": {
+                "mdx_drift": "PASS",
+                "source_parity": "PASS",
+                "forward_parity": "PASS",
+                "verify_shippable": "PASS",
+                "deterministic_audits": "PASS",
+                "focused_tests": "PASS",
+                "artifact_scope": "PASS",
+                "agent_trailer": "PASS",
+                "forbidden_files": "PASS",
+            },
             "merge_sha": "b" * 40,
             "telemetry": {"applicable": False, "receipt": None},
             "cleanup": {"state": "COMPLETE"},
@@ -914,7 +930,7 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(tmp_pa
     projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
-    assert projection["production_qg"] == "pending"
+    assert projection["production_qg"] == "awaiting-human-arming"
 
 
 def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) -> None:
@@ -944,7 +960,7 @@ def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) 
     projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
-    assert projection["production_qg"] == "pending"
+    assert projection["production_qg"] == "awaiting-human-arming"
 
 
 @pytest.mark.parametrize(
@@ -1049,7 +1065,10 @@ def test_cursor_advances_current_independent_evidence_with_true_history_origin(t
 
 @pytest.mark.parametrize(
     ("mode", "expected"),
-    [("pending", "PBR_PASS_QG_PENDING"), ("armed-canary", "PRODUCTION_QG_REQUIRED")],
+    [
+        ("pending", "AWAITING_PRODUCTION_QG_ARMING"),
+        ("armed-canary", "AWAITING_PRODUCTION_QG_ARMING"),
+    ],
 )
 def test_cursor_advances_current_integration_to_the_profile_qg_state(
     tmp_path: Path, mode: str, expected: str
@@ -1154,7 +1173,11 @@ def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority
     ]
     ledger["state"] = "COMPLETE"
     ledger["run"]["status"] = "completed"
-    ledger["publication"] = {"pr": 1, "merge_sha": "a" * 40, "recorded_at": "2026-01-01T00:00:00Z"}
+    ledger["publication"] = {
+        "pr": 5156,
+        "merge_sha": "b" * 40,
+        "recorded_at": "2026-01-01T00:00:00Z",
+    }
     path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
     tc._atomic_write_json(path, ledger)
 
@@ -1168,11 +1191,11 @@ def test_completed_provisional_run_resumes_for_fresh_qg_without_legacy_authority
 
     event = [item for item in resumed["history"] if item["event"] == "CERTIFICATION_RESUMED"][-1]
     assert resumed["run"]["status"] == "active"
-    assert resumed["state"] == "PBR_PASS_QG_PENDING"
+    assert resumed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert event["from_state"] == "COMPLETE"
     assert tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)[
         "final"
-    ] == "provisional"
+    ] == "not-certified"
 
 
 def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evidence(tmp_path: Path) -> None:
@@ -1212,6 +1235,14 @@ def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evi
         config_path=current_config,
         ledger_root=current_ledger_root,
     )
+    current_ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
+    current_path = tc.ledger_path_for(
+        tc.resolve_target(inputs["target"], repo_root=current, config=tc.load_config(current_config)),
+        repo_root=current,
+        config=tc.load_config(current_config),
+        ledger_root=current_ledger_root,
+    )
+    tc._atomic_write_json(current_path, current_ledger)
     value = _independent_value(inputs)
     for _name, evidence in {
         "current": current / "batch_state/current.json",
@@ -1266,4 +1297,636 @@ def test_certification_profile_selection_is_level_sensitive_and_unarmed() -> Non
     assert config["selectors"]["tracks"]["bio"] == "bio-pending"
     assert config["selectors"]["manifest_types"]["core"] == "core-pending"
     assert config["selectors"]["manifest_types"]["track"] == "seminar-pending"
-    assert all(profile["production_qg"]["mode"] != "armed-canary" for profile in config["profiles"].values())
+    assert all(
+        profile["production_qg"]["mode"] != "armed-canary"
+        for profile in config["profiles"].values()
+    )
+
+
+def test_legacy_pending_ledger_migrates_explicit_goal_idempotently(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    independent_sha = _sha("legacy-independent")
+    ledger["certification_evidence"] = [
+        {
+            "path": "/outside/independent.json",
+            "sha256": independent_sha,
+            "value": _independent_value(inputs),
+        },
+        {
+            "path": "/outside/integration.json",
+            "sha256": _sha("legacy-integration"),
+            "value": _integration_value(inputs, independent_sha),
+        },
+    ]
+    ledger.pop("terminal_goal")
+    ledger.pop("production_qg_authorization", None)
+    ledger["publication"] = None
+    ledger["state"] = "PBR_PASS_QG_PENDING"
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+
+    with pytest.raises(tc.CompletionError, match="explicit publication"):
+        tc.migrate_terminal_goal(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            terminal_goal="deploy",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    real_advance = tc._advance_certification_cursor
+    monkeypatch.setattr(
+        tc,
+        "_advance_certification_cursor",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            OSError("simulated crash after migration commit")
+        ),
+    )
+    with pytest.raises(OSError, match="simulated crash"):
+        tc.migrate_terminal_goal(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            terminal_goal="deploy",
+            pr=5156,
+            merge_sha="b" * 40,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    monkeypatch.setattr(tc, "_advance_certification_cursor", real_advance)
+    _, migrated = tc.migrate_terminal_goal(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        terminal_goal="deploy",
+        pr=5156,
+        merge_sha="b" * 40,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _, replayed = tc.migrate_terminal_goal(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        terminal_goal="deploy",
+        pr=5156,
+        merge_sha="b" * 40,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert migrated["terminal_goal"] == "deploy"
+    assert migrated["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    assert replayed == migrated
+    assert sum(
+        item["event"] == "TERMINAL_GOAL_MIGRATED" for item in migrated["history"]
+    ) == 1
+
+
+def test_certification_evidence_crash_replay_advances_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    ledger["publication"] = None
+    ledger["state"] = "INDEPENDENT_REVIEW_REQUIRED"
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+    evidence = _write_external_evidence(
+        tmp_path, "crash-independent.json", _independent_value(inputs)
+    )
+    real_advance = tc._advance_certification_cursor
+
+    def crash_after_commit(*_args: Any, **_kwargs: Any):
+        raise OSError("simulated crash after evidence commit")
+
+    monkeypatch.setattr(tc, "_advance_certification_cursor", crash_after_commit)
+    with pytest.raises(OSError, match="simulated crash"):
+        tc.record_certification_evidence(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            evidence=evidence,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    monkeypatch.setattr(tc, "_advance_certification_cursor", real_advance)
+    _, resumed = tc.record_certification_evidence(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        evidence=evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert resumed["state"] == "PUBLISH_REQUIRED"
+    assert len(resumed["certification_evidence"]) == 1
+    assert sum(
+        item["event"] == "CERTIFICATION_CURSOR_ADVANCED" for item in resumed["history"]
+    ) == 1
+
+
+def test_runtime_qg_decision_card_and_human_arming_are_independent_and_idempotent(
+    qg_capture: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    independent_sha = _sha("arming-independent")
+    ledger["certification_evidence"] = [
+        {
+            "path": "/outside/independent.json",
+            "sha256": independent_sha,
+            "value": _independent_value(inputs),
+        },
+        {
+            "path": "/outside/integration.json",
+            "sha256": _sha("arming-integration"),
+            "value": _integration_value(inputs, independent_sha),
+        },
+    ]
+    ledger["state"] = "AWAITING_PRODUCTION_QG_ARMING"
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+    route = _route(inputs["qg_identity"], qg_capture["tier2"])
+    qualification = {
+        "schema_version": "production-qg-qualification.v1",
+        "verdict": "PASS",
+        "profile": inputs["profile"],
+        "identity": inputs["qg_identity"],
+        "route": route,
+    }
+    qualification_path = _write_external_evidence(
+        tmp_path, "runtime-qualification.json", qualification
+    )
+    card = tc.production_qg_decision_card(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        qualification=qualification_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert card["decision"] == "HUMAN_ARMING_REQUIRED"
+    assert set(card["proposed_reviewer"]) == {"family", "model", "route", "lineage"}
+    assert all(key in card for key in ("canary", "budget", "circuit", "resume"))
+    arming = {
+        "schema_version": "production-qg-human-arming.v1",
+        "decision": "ARMED",
+        "actor_type": "human",
+        "actor_id": "operator-1",
+        "approval_id": card["approval_id"],
+        "qualification_sha256": card["qualification_sha256"],
+        "profile": inputs["profile"],
+        "route": route,
+        "budget": route["budget"],
+    }
+    arming_path = _write_external_evidence(tmp_path, "runtime-arming.json", arming)
+    real_advance = tc._advance_certification_cursor
+    monkeypatch.setattr(
+        tc,
+        "_advance_certification_cursor",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            OSError("simulated crash after arming commit")
+        ),
+    )
+    with pytest.raises(OSError, match="simulated crash"):
+        tc.record_qg_authorization(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            qualification=qualification_path,
+            human_arming=arming_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    monkeypatch.setattr(tc, "_advance_certification_cursor", real_advance)
+    _, armed = tc.record_qg_authorization(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        qualification=qualification_path,
+        human_arming=arming_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _, replayed = tc.record_qg_authorization(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        qualification=qualification_path,
+        human_arming=arming_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert armed["state"] == "PRODUCTION_QG_REQUIRED"
+    assert replayed["state"] == armed["state"]
+    assert replayed["production_qg_authorization"] == armed["production_qg_authorization"]
+    assert sum(
+        item["event"] == "PRODUCTION_QG_AUTHORIZED" for item in armed["history"]
+    ) == 1
+
+    same_family = copy.deepcopy(qualification)
+    same_family["route"]["family"] = "codex"
+    same_family_path = _write_external_evidence(
+        tmp_path, "same-family-qualification.json", same_family
+    )
+    ledger = tc._read_ledger(path)
+    assert ledger is not None
+    ledger["state"] = "AWAITING_PRODUCTION_QG_ARMING"
+    ledger["production_qg_authorization"] = None
+    tc._atomic_write_json(path, ledger)
+    with pytest.raises(tc.CompletionError, match="author model family"):
+        tc.production_qg_decision_card(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            qualification=same_family_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+    policy_qualification = copy.deepcopy(qualification)
+    policy_qualification["route"]["family"] = "deepseek"
+    policy_path = _write_external_evidence(
+        tmp_path, "forbidden-family-qualification.json", policy_qualification
+    )
+    real_resolve_target = tc.resolve_target
+
+    def policy_target(*args: Any, **kwargs: Any):
+        snapshot = real_resolve_target(*args, **kwargs)
+        return replace(
+            snapshot,
+            track_policy={
+                "forbidden_reviewer_families": ["deepseek"],
+                "allowed_reviewer_groups": ["anthropic"],
+            },
+        )
+
+    monkeypatch.setattr(tc, "resolve_target", policy_target)
+    with pytest.raises(tc.CompletionError, match="track reviewer policy"):
+        tc.production_qg_decision_card(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            qualification=policy_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    policy_card = ce.qg_decision_card(
+        policy_path,
+        target=inputs["target"],
+        expected_profile=inputs["profile"],
+        expected_identity=inputs["qg_identity"],
+    )
+    policy_arming = copy.deepcopy(arming)
+    policy_arming.update(
+        {
+            "approval_id": policy_card["approval_id"],
+            "qualification_sha256": policy_card["qualification_sha256"],
+            "route": policy_qualification["route"],
+            "budget": policy_qualification["route"]["budget"],
+        }
+    )
+    policy_arming_path = _write_external_evidence(
+        tmp_path, "forbidden-family-arming.json", policy_arming
+    )
+    with pytest.raises(tc.CompletionError, match="track reviewer policy"):
+        tc.record_qg_authorization(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            qualification=policy_path,
+            human_arming=policy_arming_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+
+def test_deployment_receipt_requires_exact_merge_sha_and_target_marker() -> None:
+    marker = "b1/adjectives-comparative"
+    value = {
+        "schema_version": "certification-evidence.v1",
+        "kind": "deployment",
+        "target": marker,
+        "profile": {"id": "core-pending", "version": "1.0.0"},
+        "preparation_identity": _sha("deploy-preparation"),
+        "learner_hashes": {"content": _sha("deploy-content")},
+        "workflow_identity": _sha("deploy-workflow"),
+        "publication": {"pr": 5255, "merge_sha": "a" * 40},
+        "deployment": {
+            "workflow": {
+                "name": "Deploy to GitHub Pages",
+                "path": ".github/workflows/deploy-pages.yml",
+                "run_id": 29435984531,
+                "head_sha": "a" * 40,
+                "publication_ancestor": "PASS",
+                "conclusion": "success",
+            },
+            "environment": "github-pages",
+            "url": "https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            "verification": {
+                "target": marker,
+                "http_status": 200,
+                "marker": marker,
+                "marker_sha256": hashlib.sha256(marker.encode()).hexdigest(),
+                "body_sha256": _sha("deployed-body"),
+                "deployment_marker_url": (
+                    "https://learn-ukrainian.github.io/.well-known/"
+                    f"learn-ukrainian-deployment-{'a' * 40}.txt"
+                ),
+                "deployed_head_sha": "a" * 40,
+                "deployment_marker_body_sha256": hashlib.sha256(
+                    f"{'a' * 40}\n".encode()
+                ).hexdigest(),
+                "verified_at": "2026-07-15T00:00:00Z",
+            },
+        },
+    }
+    ce.validate_evidence_value(value)
+    artifact = ce.EvidenceArtifact(Path("/outside/deployment.json"), _sha("deployment"), value)
+    assert ce.deployment_passes(
+        artifact,
+        publication={"pr": 5255, "merge_sha": "a" * 40},
+        expected_workflow_identity=_sha("deploy-workflow"),
+    )
+    value["deployment"]["workflow"]["publication_ancestor"] = "FAIL"
+    assert not ce.deployment_passes(
+        artifact,
+        publication={"pr": 5255, "merge_sha": "a" * 40},
+        expected_workflow_identity=_sha("deploy-workflow"),
+    )
+
+
+def test_no_change_deploy_goal_still_requires_publication(tmp_path: Path) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    ledger["terminal_goal"] = "deploy"
+    ledger["author_families"] = []
+    ledger["publication"] = None
+    ledger["certification_evidence"] = []
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+
+    projection = tc.certification_projection(
+        inputs["target"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert projection["state"] == "PUBLISH_REQUIRED"
+    assert projection["terminal_satisfied"] is False
+
+
+def test_deploy_terminal_stays_active_until_exact_receipt(
+    qg_capture: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    ledger["terminal_goal"] = "deploy"
+    independent_sha = _sha("deploy-independent")
+    ledger["certification_evidence"] = [
+        {
+            "path": "/outside/independent.json",
+            "sha256": independent_sha,
+            "value": _independent_value(inputs),
+        },
+        {
+            "path": "/outside/integration.json",
+            "sha256": _sha("deploy-integration"),
+            "value": _integration_value(inputs, independent_sha),
+        },
+    ]
+    route = _route(inputs["qg_identity"], qg_capture["tier2"])
+    qualification = {
+        "schema_version": "production-qg-qualification.v1",
+        "verdict": "PASS",
+        "profile": inputs["profile"],
+        "identity": inputs["qg_identity"],
+        "route": route,
+    }
+    qualification_path = _write_external_evidence(
+        tmp_path, "deploy-qualification.json", qualification
+    )
+    card = ce.qg_decision_card(
+        qualification_path,
+        target=inputs["target"],
+        expected_profile=inputs["profile"],
+        expected_identity=inputs["qg_identity"],
+    )
+    arming = {
+        "schema_version": "production-qg-human-arming.v1",
+        "decision": "ARMED",
+        "actor_type": "human",
+        "actor_id": "operator-1",
+        "approval_id": card["approval_id"],
+        "qualification_sha256": card["qualification_sha256"],
+        "profile": inputs["profile"],
+        "route": route,
+        "budget": route["budget"],
+    }
+    arming_path = _write_external_evidence(tmp_path, "deploy-arming.json", arming)
+    authorization = tc.certification.load_runtime_authorization(
+        qualification_path,
+        arming_path,
+        target=inputs["target"],
+        expected_profile=inputs["profile"],
+        expected_identity=inputs["qg_identity"],
+    )
+    ledger["production_qg_authorization"] = authorization
+    qg_artifact = _artifact(qg_capture, authorization, inputs["qg_identity"])
+    qg_artifact.value.update(
+        {
+            "target": inputs["target"],
+            "profile": inputs["profile"],
+            "preparation_identity": inputs["preparation_identity"],
+            "learner_hashes": inputs["learner_hashes"],
+        }
+    )
+    ledger["certification_evidence"].append(
+        {
+            "path": "/outside/production-qg.json",
+            "sha256": _sha("deploy-qg"),
+            "value": qg_artifact.value,
+        }
+    )
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+    monkeypatch.setattr(tc.certification, "production_qg_passes", lambda *_args, **_kwargs: True)
+    projection = tc.certification_projection(
+        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
+    )
+    assert projection["state"] == "DEPLOYMENT_REQUIRED"
+    assert projection["terminal_satisfied"] is False
+
+    ledger = tc._read_ledger(path)
+    assert ledger is not None
+    ledger["state"] = "DEPLOYMENT_REQUIRED"
+    tc._atomic_write_json(path, ledger)
+    marker = inputs["target"]
+    deployment = {
+        "schema_version": "certification-evidence.v1",
+        "kind": "deployment",
+        "target": inputs["target"],
+        "profile": inputs["profile"],
+        "preparation_identity": inputs["preparation_identity"],
+        "learner_hashes": inputs["learner_hashes"],
+        "workflow_identity": tc.sha256_file(
+            repo / ".github/workflows/deploy-pages.yml"
+        ),
+        "publication": {"pr": 5156, "merge_sha": "b" * 40},
+        "deployment": {
+            "workflow": {
+                "name": "Deploy to GitHub Pages",
+                "path": ".github/workflows/deploy-pages.yml",
+                "run_id": 29435984531,
+                "head_sha": "b" * 40,
+                "publication_ancestor": "PASS",
+                "conclusion": "success",
+            },
+            "environment": "github-pages",
+            "url": "https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            "verification": {
+                "target": marker,
+                "http_status": 200,
+                "marker": marker,
+                "marker_sha256": hashlib.sha256(marker.encode()).hexdigest(),
+                "body_sha256": _sha("deployed-module-body"),
+                "deployment_marker_url": (
+                    "https://learn-ukrainian.github.io/.well-known/"
+                    f"learn-ukrainian-deployment-{'b' * 40}.txt"
+                ),
+                "deployed_head_sha": "b" * 40,
+                "deployment_marker_body_sha256": hashlib.sha256(
+                    f"{'b' * 40}\n".encode()
+                ).hexdigest(),
+                "verified_at": "2026-07-15T00:00:00Z",
+            },
+        },
+    }
+    deployment_path = _write_external_evidence(
+        tmp_path, "deploy-receipt.json", deployment
+    )
+    _, completed = tc.record_certification_evidence(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        evidence=deployment_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _, replayed = tc.record_certification_evidence(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        evidence=deployment_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert completed["state"] == "COMPLETE"
+    assert completed["run"]["status"] == "completed"
+    assert replayed["state"] == "COMPLETE"
+
+
+def test_deployment_verifier_queries_exact_run_and_production_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
+    ledger["terminal_goal"] = "deploy"
+    ledger["state"] = "DEPLOYMENT_REQUIRED"
+    path = _completion_ledger_path(repo, config_path, ledger_root, inputs)
+    tc._atomic_write_json(path, ledger)
+    workflow_run_id = 29435984531
+    workflow_payload = {
+        "id": workflow_run_id,
+        "name": "Deploy to GitHub Pages",
+        "path": ".github/workflows/deploy-pages.yml",
+        "head_sha": "c" * 40,
+        "conclusion": "success",
+        "html_url": "https://github.com/example/actions/runs/29435984531",
+    }
+    monkeypatch.setattr(tc, "_primary_checkout", lambda _repo_root: repo)
+    comparison_payload = {
+        "status": "ahead",
+        "merge_base_commit": {"sha": "b" * 40},
+    }
+
+    def fake_run(args: list[str], **_kwargs: Any) -> subprocess.CompletedProcess[str]:
+        payload = comparison_payload if "/compare/" in args[-1] else workflow_payload
+        return subprocess.CompletedProcess(
+            args=args, returncode=0, stdout=json.dumps(payload), stderr=""
+        )
+
+    monkeypatch.setattr(tc.subprocess, "run", fake_run)
+
+    class Response:
+        status = 200
+
+        def __init__(self, body: bytes) -> None:
+            self.body = body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args: Any) -> None:
+            return None
+
+        def read(self) -> bytes:
+            return self.body
+
+    def fake_urlopen(request: Any, **_kwargs: Any) -> Response:
+        if "/.well-known/" in request.full_url:
+            return Response(f"{workflow_payload['head_sha']}\n".encode())
+        return Response(f"<html>{inputs['target']}</html>".encode())
+
+    monkeypatch.setattr(tc.urllib.request, "urlopen", fake_urlopen)
+    out = tmp_path / "outside-evidence/deployment-verification.json"
+    written, receipt = tc.verify_deployment_receipt(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        workflow_run_id=workflow_run_id,
+        url="https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+        out=out,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert written == out.resolve()
+    assert receipt["publication"]["merge_sha"] == "b" * 40
+    assert receipt["deployment"]["workflow"]["head_sha"] == workflow_payload["head_sha"]
+    assert receipt["deployment"]["verification"]["marker"] == inputs["target"]
+    assert (
+        receipt["deployment"]["verification"]["deployed_head_sha"]
+        == workflow_payload["head_sha"]
+    )
+    assert json.loads(out.read_text(encoding="utf-8")) == receipt
+
+    def stale_marker_urlopen(request: Any, **_kwargs: Any) -> Response:
+        if "/.well-known/" in request.full_url:
+            return Response(f"{'d' * 40}\n".encode())
+        return Response(f"<html>{inputs['target']}</html>".encode())
+
+    monkeypatch.setattr(tc.urllib.request, "urlopen", stale_marker_urlopen)
+    with pytest.raises(tc.CompletionError, match="exact workflow head"):
+        tc.verify_deployment_receipt(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            workflow_run_id=workflow_run_id,
+            url="https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            out=tmp_path / "outside-evidence/stale-marker-deployment.json",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+    comparison_payload["merge_base_commit"]["sha"] = "d" * 40
+    with pytest.raises(tc.CompletionError, match="does not contain"):
+        tc.verify_deployment_receipt(
+            inputs["target"],
+            run_id=ledger["run"]["run_id"],
+            workflow_run_id=workflow_run_id,
+            url="https://learn-ukrainian.github.io/b1/adjectives-comparative/",
+            out=tmp_path / "outside-evidence/stale-deployment.json",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )

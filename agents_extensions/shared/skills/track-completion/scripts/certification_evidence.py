@@ -145,12 +145,14 @@ def _reviewer_group(family: str, config: Mapping[str, Any]) -> str:
 def integration_passes(artifact: EvidenceArtifact) -> bool:
     integration = artifact.value["integration"]
     telemetry = integration["telemetry"]
+    premerge = integration["premerge"]
     worktree = Path(integration["worktree"])
     if worktree.is_absolute() or ".." in worktree.parts:
         return False
     return bool(
         integration["ci_gate"] == "PASS"
         and integration["review_gate"] == "PASS"
+        and all(value == "PASS" for value in premerge.values())
         and integration["cleanup"]["state"] == "COMPLETE"
         and (not telemetry["applicable"] or bool(telemetry["receipt"]))
     )
@@ -219,6 +221,131 @@ def load_authorization(
         "human_arming_sha256": _sha256(paths[1].read_bytes()),
         "route": dict(route),
     }
+
+
+def qg_decision_card(
+    qualification_path: Path,
+    *,
+    target: str,
+    expected_profile: Mapping[str, Any],
+    expected_identity: Mapping[str, str],
+) -> dict[str, Any]:
+    """Build the exact human decision card for one current qualification."""
+    qualification = _load_and_validate_json(
+        qualification_path, QUALIFICATION_SCHEMA_PATH, "qualification"
+    )
+    if (
+        qualification["profile"] != dict(expected_profile)
+        or qualification["identity"] != dict(expected_identity)
+        or not _qualification_route_is_current(qualification["route"], expected_identity)
+    ):
+        raise CertificationEvidenceError(
+            "qualification does not bind the current profile/QG contract"
+        )
+    qualification_sha = _sha256(qualification_path.read_bytes())
+    approval_id = "qg-arm-" + _sha256(
+        _stable(
+            {
+                "target": target,
+                "profile": expected_profile,
+                "identity": expected_identity,
+                "qualification_sha256": qualification_sha,
+            }
+        ).encode("utf-8")
+    )[:24]
+    route = qualification["route"]
+    return {
+        "schema_version": "production-qg-decision-card.v1",
+        "decision": "HUMAN_ARMING_REQUIRED",
+        "target": target,
+        "approval_id": approval_id,
+        "qualification_sha256": qualification_sha,
+        "profile": dict(expected_profile),
+        "proposed_reviewer": {
+            key: route[key] for key in ("family", "model", "route", "lineage")
+        },
+        "canary": dict(route["canary"]),
+        "budget": dict(route["budget"]),
+        "circuit": dict(route["circuit"]),
+        "resume": dict(route["resume"]),
+    }
+
+
+def load_runtime_authorization(
+    qualification_path: Path,
+    arming_path: Path,
+    *,
+    target: str,
+    expected_profile: Mapping[str, Any],
+    expected_identity: Mapping[str, str],
+) -> dict[str, Any]:
+    """Validate separate qualification and human-arming artifacts for one run."""
+    card = qg_decision_card(
+        qualification_path,
+        target=target,
+        expected_profile=expected_profile,
+        expected_identity=expected_identity,
+    )
+    qualification = _load_and_validate_json(
+        qualification_path, QUALIFICATION_SCHEMA_PATH, "qualification"
+    )
+    arming = _load_and_validate_json(arming_path, ARMING_SCHEMA_PATH, "human arming")
+    route = qualification["route"]
+    if (
+        arming["approval_id"] != card["approval_id"]
+        or arming["qualification_sha256"] != card["qualification_sha256"]
+        or arming["profile"] != dict(expected_profile)
+        or arming["route"] != route
+        or arming["budget"] != route["budget"]
+    ):
+        raise CertificationEvidenceError(
+            "human arming does not bind the current decision card/qualification"
+        )
+    return {
+        "qualification_path": str(qualification_path.resolve()),
+        "qualification_sha256": card["qualification_sha256"],
+        "human_arming_path": str(arming_path.resolve()),
+        "human_arming_sha256": _sha256(arming_path.read_bytes()),
+        "approval_id": card["approval_id"],
+        "route": dict(route),
+    }
+
+
+def deployment_passes(
+    artifact: EvidenceArtifact,
+    *,
+    publication: Mapping[str, Any],
+    expected_workflow_identity: str,
+) -> bool:
+    """Require a successful canonical Pages run and verified target marker."""
+    value = artifact.value
+    deployment = value["deployment"]
+    workflow = deployment["workflow"]
+    verification = deployment["verification"]
+    return bool(
+        value["workflow_identity"] == expected_workflow_identity
+        and value["publication"]["pr"] == publication.get("pr")
+        and value["publication"]["merge_sha"] == publication.get("merge_sha")
+        and workflow["name"] == "Deploy to GitHub Pages"
+        and workflow["path"] == ".github/workflows/deploy-pages.yml"
+        and workflow["publication_ancestor"] == "PASS"
+        and workflow["conclusion"] == "success"
+        and deployment["environment"] == "github-pages"
+        and deployment["url"].startswith("https://learn-ukrainian.github.io/")
+        and verification["http_status"] == 200
+        and verification["target"] == value["target"]
+        and verification["marker"] == value["target"]
+        and verification["marker_sha256"]
+        == _sha256(verification["marker"].encode("utf-8"))
+        and verification["deployed_head_sha"] == workflow["head_sha"]
+        and verification["deployment_marker_url"]
+        == (
+            "https://learn-ukrainian.github.io/.well-known/"
+            f"learn-ukrainian-deployment-{workflow['head_sha']}.txt"
+        )
+        and verification["deployment_marker_body_sha256"]
+        == _sha256(f"{workflow['head_sha']}\n".encode())
+    )
 
 
 def current_qg_facts(*, target: str, module_dir: Path) -> dict[str, str]:

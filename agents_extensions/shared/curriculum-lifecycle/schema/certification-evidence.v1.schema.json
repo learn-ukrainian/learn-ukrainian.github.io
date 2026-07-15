@@ -10,6 +10,9 @@
     },
     {
       "$ref": "#/$defs/productionQG"
+    },
+    {
+      "$ref": "#/$defs/deployment"
     }
   ],
   "$defs": {
@@ -39,7 +42,8 @@
           "enum": [
             "independent-review",
             "integration",
-            "production-qg"
+            "production-qg",
+            "deployment"
           ]
         },
         "target": {
@@ -218,6 +222,7 @@
                 "pr",
                 "ci_gate",
                 "review_gate",
+                "premerge",
                 "merge_sha",
                 "telemetry",
                 "cleanup"
@@ -248,8 +253,35 @@
                 "review_gate": {
                   "const": "PASS"
                 },
+                "premerge": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mdx_drift",
+                    "source_parity",
+                    "forward_parity",
+                    "verify_shippable",
+                    "deterministic_audits",
+                    "focused_tests",
+                    "artifact_scope",
+                    "agent_trailer",
+                    "forbidden_files"
+                  ],
+                  "properties": {
+                    "mdx_drift": {"const": "PASS"},
+                    "source_parity": {"const": "PASS"},
+                    "forward_parity": {"const": "PASS"},
+                    "verify_shippable": {"const": "PASS"},
+                    "deterministic_audits": {"const": "PASS"},
+                    "focused_tests": {"const": "PASS"},
+                    "artifact_scope": {"const": "PASS"},
+                    "agent_trailer": {"const": "PASS"},
+                    "forbidden_files": {"const": "PASS"}
+                  }
+                },
                 "merge_sha": {
-                  "$ref": "#/$defs/shortSha"
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
                 },
                 "telemetry": {
                   "type": "object",
@@ -383,6 +415,84 @@
                 },
                 "gate_outcomes": {
                   "type": "object"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "deployment": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["workflow_identity", "publication", "deployment"],
+          "properties": {
+            "schema_version": true,
+            "kind": {"const": "deployment"},
+            "target": true,
+            "profile": true,
+            "preparation_identity": true,
+            "learner_hashes": true,
+            "workflow_identity": {"$ref": "#/$defs/sha"},
+            "publication": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["pr", "merge_sha"],
+              "properties": {
+                "pr": {"type": "integer", "minimum": 1},
+                "merge_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+              }
+            },
+            "deployment": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["workflow", "environment", "url", "verification"],
+              "properties": {
+                "workflow": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name", "path", "run_id", "head_sha", "publication_ancestor", "conclusion"
+                  ],
+                  "properties": {
+                    "name": {"const": "Deploy to GitHub Pages"},
+                    "path": {"const": ".github/workflows/deploy-pages.yml"},
+                    "run_id": {"type": "integer", "minimum": 1},
+                    "head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                    "publication_ancestor": {"const": "PASS"},
+                    "conclusion": {"const": "success"}
+                  }
+                },
+                "environment": {"const": "github-pages"},
+                "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+                "verification": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "target", "http_status", "marker", "marker_sha256", "body_sha256",
+                    "deployment_marker_url", "deployed_head_sha",
+                    "deployment_marker_body_sha256", "verified_at"
+                  ],
+                  "properties": {
+                    "target": {"type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"},
+                    "http_status": {"const": 200},
+                    "marker": {"type": "string", "minLength": 1},
+                    "marker_sha256": {"$ref": "#/$defs/sha"},
+                    "body_sha256": {"$ref": "#/$defs/sha"},
+                    "deployment_marker_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^https://learn-ukrainian\\.github\\.io/\\.well-known/learn-ukrainian-deployment-[0-9a-f]{40}\\.txt$"
+                    },
+                    "deployed_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                    "deployment_marker_body_sha256": {"$ref": "#/$defs/sha"},
+                    "verified_at": {"type": "string", "format": "date-time"}
+                  }
                 }
               }
             }

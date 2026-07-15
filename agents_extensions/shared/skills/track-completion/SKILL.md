@@ -37,13 +37,18 @@ review as an operator completion gate.
    ```bash
    .venv/bin/python \
      agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
-     start <track/slug> --owner <agent/task>
+     start <track/slug> --owner <agent/task> \
+     --terminal-goal <merge|certify|deploy>
    ```
 
    Preserve the returned `run_id` and `ledger_path`. The ledger is durable,
    gitignored runtime state shared across worktrees. A live per-module lease
    rejects concurrent operators. Use `resume --run-id <id>` after interruption;
    never mint a replacement run merely to bypass a lease or stale evidence.
+   A legacy ledger without a goal is non-authoritative. Use
+   `migrate-terminal-goal` with the exact old run id and explicit intent; a
+   `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character
+   merge SHA. Never infer a goal from historical cursor state.
 
 ## Follow the returned state
 
@@ -125,15 +130,65 @@ reviewer family, exact evidence artifact, and `PASS`. Resolve requested changes,
 record `CHANGES_REQUESTED` with its deterministic `--owner-kind`, resolve the
 repair, and rerun post-build review before trying again.
 
+Record both the process receipt and the strict `independent-review`
+certification artifact. Only the strict current artifact advances to
+`PUBLISH_REQUIRED`.
+
 ### `PUBLISH_REQUIRED`
 
-Run configured shippability checks and repository pre-submit gates. Commit with
+Run configured shippability checks and repository pre-submit gates. The strict
+integration receipt must later prove `PASS` for MDX drift, source parity,
+forward parity, `verify_shippable`, deterministic audits, focused tests,
+artifact scope, the `X-Agent` trailer, and forbidden-file checks. Commit with
 the required `X-Agent` trailer, open one scoped PR, attach module-build telemetry
 when the run built a module, wait for the independent review gate, arm
-auto-merge, monitor through merge, close the issue with evidence, and clean the
-branch/worktree. Record the PR and merge SHA with `record-published` before
-cleanup. A current PASS with no build or repair completes as `NO_CHANGE_PASS`
-without creating an empty PR.
+auto-merge, and monitor through merge. Record the PR and exact merge SHA with
+`record-published`; this advances to `INTEGRATION_REQUIRED` and never completes
+the run. Then close the issue with evidence, clean the branch/worktree, and
+record the strict integration artifact bound to the same PR and merge SHA. A
+current PASS with no build or repair may satisfy goal `merge` as
+`NO_CHANGE_PASS` without creating an empty PR; goal `deploy` still needs an
+exact publication identity.
+
+### `INTEGRATION_REQUIRED`
+
+Record the strict current integration artifact only after publication and
+cleanup. Its diff identity must equal the independent-review artifact and its
+PR/merge identity must equal `publication`. Goal `merge` completes here. Goals
+`certify` and `deploy` continue to production QG.
+
+### `AWAITING_PRODUCTION_QG_ARMING`
+
+Production QG is never self-armed. Supply one current qualification artifact
+from outside the repository to `qg-decision-card`. The card shows the proposed
+reviewer family/model/route/lineage, qualification identity, canary, budget,
+circuit, resume contract, and deterministic approval id. A human creates a
+separate `production-qg-human-arming.v1` artifact with that exact approval id.
+Record both with `record-qg-authorization`. The route must be outside every
+author family and pass the track's reviewer policy.
+
+### `PRODUCTION_QG_REQUIRED`
+
+Run only the qualified, human-armed live production route and record its strict
+`production-qg` artifact. A current PASS satisfies goal `certify`; goal
+`deploy` advances to `DEPLOYMENT_REQUIRED`. A material learner finding routes
+to `REPAIR_REQUIRED`; malformed/provenance failures route to
+`AUDIT_TOOLING_REQUIRED`. Any repair changes identity and therefore requires
+fresh PBR, independent review, integration, production QG, and downstream
+evidence.
+
+### `DEPLOYMENT_REQUIRED`
+
+Wait for the canonical `Deploy to GitHub Pages` workflow whose head contains
+the recorded publication merge. Use `verify-deployment --workflow-run-id <id>
+--url <production-url> --out <external-runtime-receipt.json>`, then record that
+strict `deployment` artifact. The verifier queries the exact Actions run,
+proves publication ancestry, and fetches production; it writes a receipt only
+when that run is successful, production exposes the build's unique immutable
+workflow-head marker, and the module response contains the exact target marker. A
+successful workflow for another SHA, a generic HTTP 200, or a stale marker is
+not deployment proof. Completion requires the deployment receipt; certification
+alone is not terminal for goal `deploy`.
 
 ## Invariants
 

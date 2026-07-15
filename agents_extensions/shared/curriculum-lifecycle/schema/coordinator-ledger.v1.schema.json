@@ -19,6 +19,7 @@
     "run_id": {"type": "string", "pattern": "^clc-[0-9a-f]{24}$"},
     "owner": {"type": "string", "minLength": 1},
     "created_at": {"type": "string", "format": "date-time"},
+    "terminal_goal": {"enum": ["merge", "certify", "deploy"]},
     "request": {"$ref": "#/$defs/request"},
     "request_sha256": {"$ref": "#/$defs/hash"},
     "authority": {"$ref": "#/$defs/authority"},
@@ -102,6 +103,7 @@
         "event": {
           "enum": [
             "RUN_STARTED",
+            "TERMINAL_GOAL_MIGRATED",
             "RUN_ABANDONED",
             "RUN_PAUSED",
             "RUN_RESUMED",
@@ -308,7 +310,32 @@
           ]
         },
         "cleanup": {"enum": ["not-required", "pending", "complete"]},
-        "evidence": {"type": "string", "minLength": 1}
+        "evidence": {"type": "string", "minLength": 1},
+        "track_ledger": {"type": ["string", "null"], "minLength": 1},
+        "track_run_id": {
+          "anyOf": [
+            {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+            {"type": "null"}
+          ]
+        },
+        "track_terminal": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["ledger", "sha256", "run_id", "goal", "state", "satisfied"],
+              "properties": {
+                "ledger": {"type": "string", "minLength": 1},
+                "sha256": {"$ref": "#/$defs/hash"},
+                "run_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+                "goal": {"enum": ["merge", "certify", "deploy"]},
+                "state": {"const": "COMPLETE"},
+                "satisfied": {"const": true}
+              }
+            }
+          ]
+        }
       }
     },
     "moduleFinished": {

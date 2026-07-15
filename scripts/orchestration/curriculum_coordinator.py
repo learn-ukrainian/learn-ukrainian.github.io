@@ -42,6 +42,7 @@ LEDGER_SCHEMA_PATH = (
 _TARGET_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _SCOPES = frozenset({"all", "built", "unbuilt", "stale", "one"})
+_TERMINAL_GOALS = frozenset({"merge", "certify", "deploy"})
 _TERMINAL_DISPOSITIONS = frozenset({"complete", "no-change"})
 
 HealthProbe = Callable[[], Mapping[str, Any]]
@@ -284,13 +285,17 @@ def _append_event(ledger: dict[str, Any], event: str, details: Mapping[str, Any]
 
 def _validate_ledger(ledger: Mapping[str, Any]) -> None:
     _validate(ledger, LEDGER_SCHEMA_PATH, "coordinator ledger")
-    expected_request_sha = _sha256(
-        {
-            "owner": ledger["owner"],
-            "request": ledger["request"],
-            "authority": ledger["authority"],
-        }
+    identity_payload = {
+        "owner": ledger["owner"],
+        "request": ledger["request"],
+        "authority": ledger["authority"],
+    }
+    migrated = any(
+        event["event"] == "TERMINAL_GOAL_MIGRATED" for event in ledger["history"]
     )
+    if ledger.get("terminal_goal") is not None and not migrated:
+        identity_payload["terminal_goal"] = ledger["terminal_goal"]
+    expected_request_sha = _sha256(identity_payload)
     if ledger["request_sha256"] != expected_request_sha:
         raise CoordinatorError("coordinator request identity does not match its authority and selector")
     if ledger["run_id"] != f"clc-{expected_request_sha[:24]}":
@@ -322,7 +327,10 @@ def _validate_event_transitions(ledger: Mapping[str, Any]) -> None:
     history: list[Mapping[str, Any]] = []
     queue = ledger["queue"]
     for event in ledger["history"]:
-        state = derive_state({**ledger, "history": history})
+        replay_ledger = {**ledger, "history": history}
+        if not any(item["event"] == "TERMINAL_GOAL_MIGRATED" for item in history):
+            replay_ledger.pop("terminal_goal", None)
+        state = derive_state(replay_ledger)
         name = event["event"]
         details = event["details"]
         incomplete = next(
@@ -542,6 +550,8 @@ def derive_state(ledger: Mapping[str, Any]) -> dict[str, Any]:
         details = event["details"]
         if event["event"] == "RUN_PAUSED":
             paused = True
+        elif event["event"] == "TERMINAL_GOAL_MIGRATED":
+            completed = False
         elif event["event"] == "RUN_RESUMED":
             paused = False
         elif event["event"] == "WAVE_HEALTH_ACCEPTED":
@@ -552,7 +562,20 @@ def derive_state(ledger: Mapping[str, Any]) -> dict[str, Any]:
         elif event["event"] == "MODULE_FINISHED":
             slug = str(details["slug"])
             disposition = str(details["disposition"])
-            modules[slug] = "complete" if disposition in _TERMINAL_DISPOSITIONS else "blocked"
+            terminal = details.get("integration", {}).get("track_terminal")
+            terminal_satisfied = (
+                ledger.get("terminal_goal") is None
+                or (
+                    isinstance(terminal, Mapping)
+                    and terminal.get("satisfied") is True
+                    and terminal.get("goal") == ledger.get("terminal_goal")
+                )
+            )
+            modules[slug] = (
+                "complete"
+                if disposition in _TERMINAL_DISPOSITIONS and terminal_satisfied
+                else "blocked"
+            )
             if current_module == slug:
                 current_module = None
         elif event["event"] == "WAVE_COMPLETED":
@@ -601,6 +624,8 @@ def compact_status(ledger: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "run_id": ledger["run_id"],
         "owner": ledger["owner"],
+        "terminal_goal": ledger.get("terminal_goal"),
+        "terminal_satisfied": ledger.get("terminal_goal") is not None and state["status"] == "complete",
         "track": ledger["request"]["track"],
         "scope": ledger["request"]["scope"],
         "status": state["status"],
@@ -686,6 +711,7 @@ def start_run(
     start: str | None = None,
     end: str | None = None,
     wave_size: int | None = None,
+    terminal_goal: str | None = None,
     repo_root: Path = PROJECT_ROOT,
     config_path: Path = DEFAULT_CONFIG_PATH,
     runtime_root: Path | None = None,
@@ -698,10 +724,13 @@ def start_run(
     module = module.strip().lower() if module else None
     start = start.strip().lower() if start else None
     end = end.strip().lower() if end else None
+    terminal_goal = terminal_goal.strip().lower() if terminal_goal else None
     if not _TARGET_RE.fullmatch(track) or not owner:
         raise CoordinatorError("track and owner must be non-empty repository identifiers")
     if scope not in _SCOPES:
         raise CoordinatorError(f"unsupported curriculum selector scope: {scope}")
+    if terminal_goal is not None and terminal_goal not in _TERMINAL_GOALS:
+        raise CoordinatorError("terminal goal must be one of merge, certify, or deploy")
     config = load_config(config_path)
     selected_wave_size = (
         wave_size if wave_size is not None else int(config["default_wave_size"])
@@ -720,7 +749,10 @@ def start_run(
     }
     manifest_path = Path(str(config["manifest_path"]))
     authority = _manifest_authority(repo_root, track, manifest_path)
-    request_sha = _sha256({"owner": owner, "request": request, "authority": authority})
+    identity_payload = {"owner": owner, "request": request, "authority": authority}
+    if terminal_goal is not None:
+        identity_payload["terminal_goal"] = terminal_goal
+    request_sha = _sha256(identity_payload)
     run_id = f"clc-{request_sha[:24]}"
     root = _runtime_root(repo_root, config, runtime_root)
     path = _ledger_path(root, run_id)
@@ -772,6 +804,7 @@ def start_run(
                 "run_id": run_id,
                 "owner": owner,
                 "created_at": _iso(_now()),
+                **({"terminal_goal": terminal_goal} if terminal_goal is not None else {}),
                 "request": request,
                 "request_sha256": request_sha,
                 "authority": authority,
@@ -865,6 +898,10 @@ def resume_run(
             path, ledger = _load_owned_run(
                 root=root, run_id=run_id, owner=owner, repo_root=repo_root
             )
+            if ledger.get("terminal_goal") is None and derive_state(ledger)["status"] == "complete":
+                raise CoordinatorError(
+                    "coordinator ledger has no terminal goal; run migrate-terminal-goal"
+                )
             state = derive_state(ledger)
             if state["status"] == "complete":
                 _release_owned_lease(
@@ -908,6 +945,60 @@ def resume_run(
             return path, ledger
     except Timeout as exc:
         raise CoordinatorError("curriculum coordinator is busy; retry the exact resume") from exc
+
+
+def migrate_terminal_goal(
+    run_id: str,
+    *,
+    owner: str,
+    terminal_goal: str,
+    repo_root: Path = PROJECT_ROOT,
+    config_path: Path = DEFAULT_CONFIG_PATH,
+    runtime_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Attach explicit intent to one legacy run and reopen unproven outcomes."""
+    terminal_goal = terminal_goal.strip().lower()
+    if terminal_goal not in _TERMINAL_GOALS:
+        raise CoordinatorError("terminal goal must be one of merge, certify, or deploy")
+    config = load_config(config_path)
+    root = _runtime_root(repo_root, config, runtime_root)
+    try:
+        with _locked(root):
+            path, ledger = _load_owned_run(
+                root=root,
+                run_id=run_id,
+                owner=owner,
+                repo_root=repo_root,
+                require_current_authority=False,
+            )
+            existing = ledger.get("terminal_goal")
+            if existing is not None:
+                if existing != terminal_goal:
+                    raise CoordinatorError(
+                        f"coordinator terminal goal is already {existing}; refusing {terminal_goal}"
+                    )
+                return path, ledger
+            ledger["terminal_goal"] = terminal_goal
+            _append_event(
+                ledger,
+                "TERMINAL_GOAL_MIGRATED",
+                {
+                    "terminal_goal": terminal_goal,
+                    "legacy_run_id": run_id,
+                    "reopened_modules": [
+                        slug
+                        for slug, state in derive_state(ledger)["modules"].items()
+                        if state != "complete"
+                    ],
+                },
+            )
+            _validate_ledger(ledger)
+            _atomic_write_json(path, ledger)
+            return path, ledger
+    except Timeout as exc:
+        raise CoordinatorError(
+            "curriculum coordinator is busy; retry the exact terminal-goal migration"
+        ) from exc
 
 
 def adjudicate_run(
@@ -1143,7 +1234,12 @@ def _integration_record(integration: Mapping[str, Any] | None) -> dict[str, Any]
         "merge_sha": None,
         "cleanup": "not-required",
         "evidence": None,
+        "track_ledger": None,
+        "track_run_id": None,
+        "track_terminal": None,
     }
+    if integration is not None and "track_terminal" in integration:
+        raise CoordinatorError("track_terminal is derived from the authoritative ledger")
     record = {**defaults, **dict(integration or {})}
     if set(record) != set(defaults):
         unknown = sorted(set(record) - set(defaults))
@@ -1170,6 +1266,8 @@ def _validate_integration(disposition: str, integration: Mapping[str, Any]) -> N
         if integration["cleanup"] != "complete":
             raise CoordinatorError("completed repair requires proof of post-merge cleanup")
     elif disposition == "blocked":
+        if any(integration[key] is not None for key in ("track_ledger", "track_run_id")):
+            raise CoordinatorError("blocked disposition cannot claim track terminal evidence")
         if integration["cleanup"] not in {"not-required", "pending"}:
             raise CoordinatorError("blocked disposition cleanup must be not-required or pending")
         if integration["merge_sha"] is not None:
@@ -1182,6 +1280,63 @@ def _validate_integration(disposition: str, integration: Mapping[str, Any]) -> N
             if not isinstance(integration["issue"], int) or integration["issue"] < 1:
                 raise CoordinatorError("blocked repair with pending cleanup requires an issue number")
             _validate_dispatch_identity(integration, label="blocked repair")
+
+
+def _track_terminal_proof(
+    integration: Mapping[str, Any],
+    *,
+    track: str,
+    slug: str,
+    terminal_goal: str,
+    repo_root: Path,
+) -> dict[str, Any]:
+    raw_path = integration.get("track_ledger")
+    run_id = integration.get("track_run_id")
+    if not isinstance(raw_path, str) or not raw_path.strip() or not isinstance(run_id, str):
+        raise CoordinatorError(
+            "terminal module disposition requires track_ledger and track_run_id"
+        )
+    ledger_path = Path(raw_path)
+    if not ledger_path.is_absolute():
+        ledger_path = repo_root / ledger_path
+    try:
+        raw = ledger_path.read_bytes()
+        ledger = json.loads(raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CoordinatorError(f"invalid authoritative track-completion ledger: {exc}") from exc
+    if not isinstance(ledger, Mapping):
+        raise CoordinatorError("authoritative track-completion ledger must be an object")
+    target = ledger.get("target")
+    run = ledger.get("run")
+    if (
+        not isinstance(target, Mapping)
+        or target.get("selector") != f"{track}/{slug}"
+        or not isinstance(run, Mapping)
+        or run.get("run_id") != run_id
+        or run.get("status") != "completed"
+        or ledger.get("terminal_goal") != terminal_goal
+        or ledger.get("state") != "COMPLETE"
+    ):
+        raise CoordinatorError(
+            "track-completion ledger has not satisfied the coordinator terminal goal"
+        )
+    if terminal_goal == "deploy":
+        evidence = ledger.get("certification_evidence")
+        if not isinstance(evidence, list) or not any(
+            isinstance(item, Mapping)
+            and isinstance(item.get("value"), Mapping)
+            and item["value"].get("kind") == "deployment"
+            for item in evidence
+        ):
+            raise CoordinatorError("deploy terminal requires a deployment receipt")
+    return {
+        "ledger": str(ledger_path.resolve()),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "run_id": run_id,
+        "goal": terminal_goal,
+        "state": "COMPLETE",
+        "satisfied": True,
+    }
 
 
 def _validate_dispatch_identity(integration: Mapping[str, Any], *, label: str) -> None:
@@ -1240,8 +1395,16 @@ def record_module(
             path, ledger = _load_owned_run(
                 root=root, run_id=run_id, owner=owner, repo_root=repo_root
             )
-            state = derive_state(ledger)
             track = ledger["request"]["track"]
+            if ledger.get("terminal_goal") is not None and disposition in _TERMINAL_DISPOSITIONS:
+                identity["track_terminal"] = _track_terminal_proof(
+                    identity,
+                    track=track,
+                    slug=slug,
+                    terminal_goal=str(ledger["terminal_goal"]),
+                    repo_root=repo_root,
+                )
+            state = derive_state(ledger)
             details: dict[str, Any]
             if state["current_module"] is None:
                 matching = [
@@ -1331,6 +1494,9 @@ def _parser() -> argparse.ArgumentParser:
     start_parser.add_argument("--start")
     start_parser.add_argument("--end")
     start_parser.add_argument("--wave-size", type=int)
+    start_parser.add_argument(
+        "--terminal-goal", required=True, choices=sorted(_TERMINAL_GOALS)
+    )
 
     for command in ("resume", "acquire-next", "status"):
         command_parser = subparsers.add_parser(command)
@@ -1341,6 +1507,13 @@ def _parser() -> argparse.ArgumentParser:
     adjudicate_parser.add_argument("--run-id", required=True)
     adjudicate_parser.add_argument("--owner", required=True)
     adjudicate_parser.add_argument("--reason", required=True)
+
+    migrate_parser = subparsers.add_parser("migrate-terminal-goal")
+    migrate_parser.add_argument("--run-id", required=True)
+    migrate_parser.add_argument("--owner", required=True)
+    migrate_parser.add_argument(
+        "--terminal-goal", required=True, choices=sorted(_TERMINAL_GOALS)
+    )
 
     record_parser = subparsers.add_parser("record-module")
     record_parser.add_argument("--run-id", required=True)
@@ -1368,6 +1541,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 start=args.start,
                 end=args.end,
                 wave_size=args.wave_size,
+                terminal_goal=args.terminal_goal,
                 **common,
             )
             result = {"ledger": str(path), "status": compact_status(ledger)}
@@ -1397,6 +1571,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 reason=args.reason,
                 **common,
             )
+        elif args.command == "migrate-terminal-goal":
+            path, ledger = migrate_terminal_goal(
+                args.run_id,
+                owner=args.owner,
+                terminal_goal=args.terminal_goal,
+                **common,
+            )
+            result = {"ledger": str(path), "status": compact_status(ledger)}
             result = {"ledger": str(path), "status": compact_status(ledger)}
         else:
             result = status_run(args.run_id, owner=args.owner, **common)

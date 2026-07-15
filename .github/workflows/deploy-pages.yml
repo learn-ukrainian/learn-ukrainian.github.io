@@ -1,3 +1,4 @@
+---
 name: Deploy to GitHub Pages
 
 on:
@@ -58,7 +59,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML==6.0.3
+          .venv/bin/python -m pip install PyYAML==6.0.3 jsonschema==4.26.0
 
       - name: Restore Atlas lexicon manifest cache
         id: atlas-manifest-cache
@@ -70,7 +71,13 @@ jobs:
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
         working-directory: .
         run: |
-          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+          .venv/bin/python - <<'PY'
+          import sys
+          sys.path.insert(0, 'scripts')
+          from lexicon.manifest_io import load_manifest
+          load_manifest()
+          print('Atlas manifest verified against pointer')
+          PY
 
       - name: Save Atlas lexicon manifest cache
         if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
@@ -85,6 +92,11 @@ jobs:
       - name: Build Site
         run: npm run build:full
 
+      - name: Emit immutable deployment marker
+        run: |
+          mkdir -p dist/.well-known
+          printf '%s\n' "$GITHUB_SHA" > "dist/.well-known/learn-ukrainian-deployment-${GITHUB_SHA}.txt"
+
       # #4966: published-site size tracking — report MB used vs the 1 GiB GitHub
       # Pages budget + projected headroom at full-vision scale (20k Atlas words),
       # on every release, in the job summary. Warns at >=70% budget.
@@ -95,7 +107,10 @@ jobs:
           SIZE_MB=$(( SIZE_KB / 1024 ))
           BUDGET_MB=1024
           PCT=$(( SIZE_MB * 100 / BUDGET_MB ))
-          ENTRIES=$(node -e "console.log(require('./src/data/lexicon-browse-meta.json').total ?? 0)" 2>/dev/null || echo 0)
+          ENTRIES=$(
+            node -e "console.log(require('./src/data/lexicon-browse-meta.json').total ?? 0)" \
+              2>/dev/null || echo 0
+          )
           {
             echo "## Published-site size (#4966)"
             echo ""
@@ -114,7 +129,8 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           echo "site size: ${SIZE_MB} MB (${PCT}% of ${BUDGET_MB} MB Pages budget), entries=${ENTRIES}"
           if [ "$PCT" -ge 70 ]; then
-            echo "::warning title=Pages budget::Published site is at ${PCT}% of the ${BUDGET_MB} MB budget (${SIZE_MB} MB)."
+            WARNING="Published site is at ${PCT}% of the ${BUDGET_MB} MB budget (${SIZE_MB} MB)."
+            echo "::warning title=Pages budget::${WARNING}"
           fi
 
       - name: Setup Pages
