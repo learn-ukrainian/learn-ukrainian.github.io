@@ -6,6 +6,7 @@ from pathlib import Path
 import yaml
 
 from scripts.audit import module_size_policy_audit as audit
+from scripts.audit import post_build_review as pbr
 
 
 def _patch_roots(monkeypatch, root: Path) -> None:
@@ -506,12 +507,7 @@ def test_mismatch_marker_and_exact_floor_violation_are_both_preserved(
 
 
 def test_all_core_and_seminar_tracks_have_one_size_policy_route() -> None:
-    policy = yaml.safe_load(
-        (
-            audit.PROJECT_ROOT
-            / "agents_extensions/shared/skills/post-build-review/config/track-policy.v1.yaml"
-        ).read_text(encoding="utf-8")
-    )
+    policy = pbr.load_track_policy(repo_root=audit.PROJECT_ROOT)
     core = {
         track
         for track, config in policy["tracks"].items()

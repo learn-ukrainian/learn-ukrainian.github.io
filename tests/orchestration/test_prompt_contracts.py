@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.lint import lint_prompts
 from scripts.orchestration import prompt_contracts as contracts
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -192,6 +193,34 @@ def test_new_manifest_track_uses_typed_family_default(tmp_path: Path) -> None:
     resolved = contracts.active_track_profiles(repo_root=repo_root)
 
     assert resolved["new-seminar"] == "seminar-generic"
+
+
+def test_frozen_legacy_linter_does_not_require_a_suite_for_new_tracks(
+    tmp_path: Path,
+) -> None:
+    legacy_root = tmp_path / "orchestrators"
+    shutil.copytree(REPO_ROOT / "docs/prompts/orchestrators", legacy_root)
+    manifest_path = tmp_path / "curriculum.yaml"
+    manifest = _load_yaml(REPO_ROOT, Path("curriculum/l2-uk-en/curriculum.yaml"))
+    manifest["levels"]["new-seminar"] = {"type": "track", "modules": ["pilot"]}
+    manifest_path.write_text(
+        yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
+    migration_path = tmp_path / "legacy-prompt-migration.v1.yaml"
+    migration_path.write_text("schema_version: 1\n", encoding="utf-8")
+
+    violations = lint_prompts.scan_orchestrator_suites(
+        root=legacy_root,
+        manifest_path=manifest_path,
+        migration_path=migration_path,
+    )
+
+    missing_rules = {
+        "ORCH_ACTIVE_TRACK_MISSING_PROMPT",
+        "ORCH_ACTIVE_TRACK_MISSING_SUITE",
+    }
+    assert missing_rules.isdisjoint({item["rule"] for item in violations})
 
 
 def test_stale_prompt_track_selector_fails_closed(tmp_path: Path) -> None:

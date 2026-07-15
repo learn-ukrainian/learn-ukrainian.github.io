@@ -8,7 +8,7 @@ import yaml
 
 from scripts.orchestration import curriculum_readiness as readiness
 from scripts.orchestration import prompt_contracts
-from scripts.orchestration.curriculum_lifecycle_config import (
+from scripts.orchestration.prompt_contracts import (
     load_active_tracks,
     resolve_profile_selectors,
 )
