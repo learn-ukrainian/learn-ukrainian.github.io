@@ -3,19 +3,15 @@ import sqlite3
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-from scripts.ingest.goroh_etymology_ingest import ensure_goroh_etymology_schema, upsert_goroh_row
 from scripts.ingest.wiktionary_etymology_ingest import (
-    WIKTIONARY_DUMP_DATE,
     WiktionaryPage,
-    content_hash,
     ensure_wiktionary_etymology_schema,
     ingest_wiktionary_etymology,
     is_clean_etymology,
     lookup_key,
     parse_wiktionary_page,
-    upsert_wiktionary_row,
 )
-from scripts.lexicon.enrich_manifest import _etymology, _single_word_etymology_coverage
+from scripts.lexicon.enrich_manifest import _single_word_etymology_coverage
 
 
 def _write_dump(tmp_path: Path, pages: list[tuple[str, str, str]]) -> Path:
@@ -35,37 +31,6 @@ def _write_dump(tmp_path: Path, pages: list[tuple[str, str, str]]) -> Path:
     with bz2.open(path, "wt", encoding="utf-8") as fh:
         fh.write(f'<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/">\n{body}\n</mediawiki>')
     return path
-
-
-def _wiktionary_row(requested_lemma: str, text: str) -> dict[str, str]:
-    return {
-        "requested_lemma": requested_lemma,
-        "headword": requested_lemma,
-        "lang": "uk",
-        "etymology_text": text,
-        "section_raw": text,
-        "source_url": f"https://uk.wiktionary.org/wiki/{requested_lemma}",
-        "dump_date": WIKTIONARY_DUMP_DATE,
-        "retrieved_at": "2026-06-01T00:00:00+00:00",
-        "content_hash": content_hash(text),
-    }
-
-
-def _conn_with_etymology_tables() -> sqlite3.Connection:
-    conn = sqlite3.connect(":memory:")
-    ensure_goroh_etymology_schema(conn)
-    ensure_wiktionary_etymology_schema(conn)
-    conn.execute(
-        """
-        CREATE TABLE esum_etymology (
-            lemma TEXT NOT NULL,
-            etymology_text TEXT NOT NULL DEFAULT '',
-            vol TEXT DEFAULT '',
-            page TEXT DEFAULT ''
-        )
-        """
-    )
-    return conn
 
 
 def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: Path) -> None:
@@ -236,49 +201,10 @@ def test_multilingual_numbered_etymology_extracts_only_ukrainian_section() -> No
     assert "рахунком" in row["etymology_text"]
 
 
-def test_etymology_precedence_and_phrase_skip() -> None:
-    conn = _conn_with_etymology_tables()
-    upsert_goroh_row(
-        conn,
-        {
-            "requested_lemma": "робота",
-            "headword": "робота",
-            "etymology_text": "Горох має першість.",
-            "source_url": "https://goroh.pp.ua/Етимологія/робота",
-            "retrieved_at": "2026-06-01T00:00:00+00:00",
-            "content_hash": "goroh",
-        },
-    )
-    assert _etymology(conn, "робота") == {
-        "text": "Горох має першість.",
-        "source": "Горох (за ЕСУМ)",
-        "source_url": "https://goroh.pp.ua/Етимологія/робота",
-    }
-
-    conn.execute("DELETE FROM goroh_etymology")
-    conn.execute(
-        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?)",
-        ("робота", "ЕСУМ має першість над Вікісловником.", "5", "10"),
-    )
-    assert _etymology(conn, "робота") == {
-        "text": "ЕСУМ має першість над Вікісловником.",
-        "source": "ЕСУМ, т. 5, с. 10",
-    }
-
-    conn.execute("DELETE FROM esum_etymology")
-    upsert_wiktionary_row(
-        conn,
-        _wiktionary_row("комп'ютер", 'Від англ. дієсл. to compute — "обчислити".'),
-    )
-    assert _etymology(conn, "комп'ютер") == {
-        "text": 'Від англ. дієсл. to compute — "обчислити".',
-        "source": "Вікісловник (uk.wiktionary)",
-        "source_url": "https://uk.wiktionary.org/wiki/комп'ютер",
-    }
-
-    upsert_wiktionary_row(conn, _wiktionary_row("Добрий день", "Phrase row should never render."))
-    assert _etymology(conn, "Добрий день") is None
-
+def test_single_word_etymology_coverage_counts_words_only() -> None:
+    # Etymology is now mphdict-only (the goroh/esum/wiktionary fallback chain was
+    # removed in #5252); this guards the coverage counter, which counts single-word
+    # entries with etymology and ignores phrases and null lemmas.
     assert _single_word_etymology_coverage(
         {
             "entries": [
