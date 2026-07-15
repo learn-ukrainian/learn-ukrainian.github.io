@@ -13,6 +13,8 @@ Issue: #1043
 from __future__ import annotations
 
 import json
+import re
+from itertools import pairwise
 from typing import Any
 
 
@@ -242,11 +244,17 @@ def _render_error_correction(act: dict) -> str:
     # ErrorCorrection takes children — we pass items as JSON for the generator
     items = []
     for item in act.get("items", []):
+        correct_form, options = error_correction_render_values(
+            item.get("sentence", ""),
+            item.get("error", ""),
+            item.get("correction", ""),
+            item.get("options", []),
+        )
         entry = {
             "sentence": item.get("sentence", ""),
             "errorWord": item.get("error", ""),
-            "correctForm": item.get("correction", ""),
-            "options": item.get("options", []),
+            "correctForm": correct_form,
+            "options": options,
             "explanation": item.get("explanation", ""),
         }
         items.append(entry)
@@ -254,6 +262,191 @@ def _render_error_correction(act: dict) -> str:
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
     return _component("ErrorCorrection", props)
+
+
+_ERROR_CORRECTION_TOKEN_RE = re.compile(r"\w+(?:[ʼ’'-]\w+)*|[^\w\s]")
+_SENTENCE_PUNCTUATION = frozenset({".", "?", "!"})
+
+
+def _error_correction_middle_tokens(
+    sentence: str, candidate: str
+) -> tuple[list[str], list[str]]:
+    """Return non-overlapping differing token spans for a sentence variant."""
+    sentence_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(sentence)
+    candidate_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(candidate)
+    shared_prefix = 0
+    limit = min(len(sentence_tokens), len(candidate_tokens))
+
+    while (
+        shared_prefix < limit
+        and sentence_tokens[shared_prefix] == candidate_tokens[shared_prefix]
+    ):
+        shared_prefix += 1
+
+    shared_suffix = 0
+    while (
+        shared_suffix < len(sentence_tokens) - shared_prefix
+        and shared_suffix < len(candidate_tokens) - shared_prefix
+        and sentence_tokens[-(shared_suffix + 1)]
+        == candidate_tokens[-(shared_suffix + 1)]
+    ):
+        shared_suffix += 1
+
+    sentence_end = len(sentence_tokens) - shared_suffix if shared_suffix else None
+    candidate_end = len(candidate_tokens) - shared_suffix if shared_suffix else None
+    return (
+        sentence_tokens[shared_prefix:sentence_end],
+        candidate_tokens[shared_prefix:candidate_end],
+    )
+
+
+def _word_tokens(tokens: list[str]) -> list[str]:
+    """Discard standalone punctuation tokens for error-span comparison."""
+    return [token for token in tokens if any(char.isalnum() or char == "_" for char in token)]
+
+
+def _join_error_correction_tokens(tokens: list[str]) -> str:
+    """Rebuild a compact replacement span from tokenized source text."""
+    if not tokens:
+        return ""
+
+    no_space_before = frozenset(".,!?;:…)]}»")
+    no_space_after = frozenset("([{«")
+    output = tokens[0]
+    for previous, token in pairwise(tokens):
+        if token in no_space_before or previous in no_space_after:
+            output += token
+        else:
+            output += f" {token}"
+    return output
+
+
+def _replacement_tokens_for_error(
+    sentence: str,
+    error: str,
+    candidate: str,
+    *,
+    allow_unchanged: bool = False,
+) -> tuple[list[str], list[str]] | None:
+    """Find one prefix/suffix-preserving replacement anchored to ``error``."""
+    sentence_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(sentence)
+    candidate_tokens = _ERROR_CORRECTION_TOKEN_RE.findall(candidate)
+    error_words = _word_tokens(_ERROR_CORRECTION_TOKEN_RE.findall(error))
+    sentence_word_indexes = [
+        index for index, token in enumerate(sentence_tokens)
+        if _word_tokens([token])
+    ]
+    sentence_words = [sentence_tokens[index] for index in sentence_word_indexes]
+    if not error_words or len(error_words) > len(sentence_words):
+        return None
+
+    matches: list[tuple[list[str], list[str]]] = []
+    width = len(error_words)
+    for word_start in range(len(sentence_words) - width + 1):
+        if sentence_words[word_start:word_start + width] != error_words:
+            continue
+        token_start = sentence_word_indexes[word_start]
+        token_end = sentence_word_indexes[word_start + width - 1] + 1
+        prefix = sentence_tokens[:token_start]
+        suffix = sentence_tokens[token_end:]
+        suffix_start = len(candidate_tokens) - len(suffix)
+        if (
+            len(candidate_tokens) < len(prefix) + len(suffix)
+            or candidate_tokens[:len(prefix)] != prefix
+            or candidate_tokens[suffix_start:] != suffix
+        ):
+            continue
+
+        source_middle = sentence_tokens[token_start:token_end]
+        candidate_middle = candidate_tokens[len(prefix):suffix_start]
+        if candidate_middle and (
+            allow_unchanged or candidate_middle != source_middle
+        ):
+            matches.append((source_middle, candidate_middle))
+
+    unique_matches = {
+        (tuple(source_middle), tuple(candidate_middle))
+        for source_middle, candidate_middle in matches
+    }
+    if len(unique_matches) != 1:
+        return None
+    source_middle, candidate_middle = unique_matches.pop()
+    return list(source_middle), list(candidate_middle)
+
+
+def derive_error_correction_replacement(
+    sentence: object,
+    error: object,
+    candidate: object,
+    *,
+    allow_unchanged: bool = False,
+) -> str | None:
+    """Extract a word or phrase replacement from a full-sentence variant.
+
+    Source activities intentionally store a corrected sentence. The UI needs
+    only the replacement for ``errorWord``. A replacement is safe only when
+    the differing source span equals the authored error without punctuation.
+    Ambiguous data stays untouched.
+    """
+    if not all(isinstance(value, str) for value in (sentence, error, candidate)):
+        return None
+
+    replacement_tokens = _replacement_tokens_for_error(
+        sentence, error, candidate, allow_unchanged=allow_unchanged
+    )
+    if replacement_tokens is None:
+        return None
+    sentence_middle, candidate_middle = replacement_tokens
+    if _word_tokens(sentence_middle) != _word_tokens(
+        _ERROR_CORRECTION_TOKEN_RE.findall(error)
+    ):
+        return None
+
+    replacement = _join_error_correction_tokens(candidate_middle)
+    if replacement in _SENTENCE_PUNCTUATION:
+        return None
+    return replacement or None
+
+
+def is_punctuation_error_correction(
+    sentence: object,
+    error: object,
+    correction: object,
+) -> bool:
+    """Return whether this is the explicit sentence-punctuation pass-through."""
+    if not all(isinstance(value, str) for value in (sentence, error, correction)):
+        return False
+
+    if correction.strip() in _SENTENCE_PUNCTUATION:
+        return True
+
+    sentence_middle, correction_middle = _error_correction_middle_tokens(
+        sentence, correction
+    )
+    return (
+        not _word_tokens(sentence_middle)
+        and not _word_tokens(_ERROR_CORRECTION_TOKEN_RE.findall(error))
+        and _join_error_correction_tokens(correction_middle) in _SENTENCE_PUNCTUATION
+    )
+
+
+def error_correction_render_values(
+    sentence: object,
+    error: object,
+    correction: object,
+    options: object,
+) -> tuple[object, object]:
+    """Return ErrorCorrection props while preserving non-derivable input."""
+    correct_form = derive_error_correction_replacement(sentence, error, correction)
+    rendered_options = options
+    if isinstance(options, list):
+        rendered_options = [
+            derive_error_correction_replacement(
+                sentence, error, option, allow_unchanged=True
+            ) or option
+            for option in options
+        ]
+    return correct_form or correction, rendered_options
 
 
 def _render_anagram(act: dict) -> str:

@@ -218,7 +218,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Виправте звертання
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Пан лікар, добрий день.", "errorWord": "Пан лікар", "correctForm": "Пане лікарю, добрий день.", "options": ["Пане лікарю, добрий день.", "Пан лікар, добрий день."], "explanation": "Формальна форма - пане лікарю."}, {"sentence": "Пані вчителька, я не розумію.", "errorWord": "Пані вчителька", "correctForm": "Пані вчителько, я не розумію.", "options": ["Пані вчителько, я не розумію.", "Пані вчителька, я не розумію."], "explanation": "Після пані професія має форму кличного відмінка."}, {"sentence": "Друг мій, слухай.", "errorWord": "Друг мій", "correctForm": "Друже мій, слухай.", "options": ["Друже мій, слухай.", "Друг мій, слухай."], "explanation": "У звертанні друг змінюється на друже."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Пан лікар, добрий день.", "errorWord": "Пан лікар", "correctForm": "Пане лікарю", "options": ["Пане лікарю", "Пан лікар"], "explanation": "Формальна форма - пане лікарю."}, {"sentence": "Пані вчителька, я не розумію.", "errorWord": "Пані вчителька", "correctForm": "Пані вчителько", "options": ["Пані вчителько", "Пані вчителька"], "explanation": "Після пані професія має форму кличного відмінка."}, {"sentence": "Друг мій, слухай.", "errorWord": "Друг мій", "correctForm": "Друже мій", "options": ["Друже мій", "Друг мій"], "explanation": "У звертанні друг змінюється на друже."}]`)} isUkrainian={true} />
 
 ## Типові помилки
 
