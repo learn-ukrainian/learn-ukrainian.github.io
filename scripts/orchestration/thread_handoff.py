@@ -33,6 +33,7 @@ try:
     from scripts.orchestration import thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
+    from scripts.orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
 except ModuleNotFoundError as exc:
     if __package__ or exc.name != "scripts":
         raise
@@ -41,6 +42,7 @@ except ModuleNotFoundError as exc:
     import thread_handoff_canary
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
+    from orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
 
 SCHEMA_VERSION = 2
 DEFAULT_MONITOR_BASE_URL = "http://127.0.0.1:8765"
@@ -214,7 +216,7 @@ def parse_iso_datetime(value: str | None) -> datetime | None:
         return None
     try:
         parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-    except ValueError:
+    except (KeyError, OSError, TypeError, ValueError):
         return None
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=UTC)
@@ -747,6 +749,7 @@ def prepare_state(
     family_id, operation_id = task_family_rollover.transition_identity(
         lineage_id=lineage_id,
         generation=generation,
+        rollover_id=rollover_id,
     )
     replacement = {
         "rollover_id": rollover_id,
@@ -852,6 +855,7 @@ def validate_live_lease(
             expected_family_id, expected_operation_id = task_family_rollover.transition_identity(
                 lineage_id=lineage_id,
                 generation=generation,
+                rollover_id=rollover_id,
             )
             native = replacement.get("native_lifecycle")
             if (
@@ -1512,7 +1516,39 @@ def check_state(
     return facts, warnings
 
 
+def _rollover_mutation_lock_path(args: argparse.Namespace) -> Path | None:
+    """Resolve one lineage lock without replacing command-specific errors."""
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        if getattr(args, "lineage_id", None):
+            return state_root / default_state_path(agent, args.lineage_id).parent / ".native-intent.lock"
+        if getattr(args, "state_file", None):
+            state_path = resolve_state_path(
+                repo_root=state_root,
+                state_root=state_root,
+                supplied_state_file=args.state_file,
+                default_path=None,
+            )
+            return state_path.parent / ".native-intent.lock"
+        active_thread_id = getattr(args, "active_thread_id", None) or active_thread_id_from_env()
+        if active_thread_id:
+            lineage_id = lineage_id_for(agent, active_thread_id)
+            return state_root / default_state_path(agent, lineage_id).parent / ".native-intent.lock"
+    except ValueError:
+        return None
+    return None
+
+
 def cmd_prepare(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_prepare_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_prepare_locked(args)
+
+
+def _cmd_prepare_locked(args: argparse.Namespace) -> int:
     try:
         repo_root, state_root = resolve_roots(args.repo_root)
     except ValueError as exc:
@@ -1603,6 +1639,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             )
         )
         return 2
+    previous_replacement = dict(state.get("replacement") or {})
     try:
         prepared_state = prepare_state(
             state,
@@ -1694,9 +1731,54 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         print(json.dumps(output, indent=2))
         return 0
 
+    supersedes: dict[str, str] | None = None
+    if args.force_new_replacement and previous_replacement.get("status") in {"pending_start", "resumed"}:
+        previous_native = previous_replacement.get("native_lifecycle")
+        if not isinstance(previous_native, dict):
+            print(
+                json.dumps(
+                    {
+                        "error": "existing rollover has no exact native lifecycle receipt to supersede",
+                        "state_file": rel(state_path, state_root),
+                        "old_automation_ready_to_delete": False,
+                    },
+                    indent=2,
+                )
+            )
+            return 2
+        supersedes = {
+            "family_id": str(previous_native.get("family_id") or ""),
+            "operation_id": str(previous_native.get("operation_id") or ""),
+            "rollover_id": str(previous_replacement.get("rollover_id") or ""),
+        }
+        try:
+            task_family_rollover.assert_transition_supersedable(
+                repo_root=state_root,
+                family_id=supersedes["family_id"],
+                operation_id=supersedes["operation_id"],
+                lineage_id=lineage_id,
+                generation=int(previous_replacement["generation"]),
+                source_thread_id=prepared_state["active"]["thread_id"],
+                successor_rollover_id=replacement["rollover_id"],
+                successor_operation_id=replacement["native_lifecycle"]["operation_id"],
+                expected_rollover_id=supersedes["rollover_id"],
+            )
+        except (KeyError, OSError, TypeError, ValueError) as exc:
+            print(
+                json.dumps(
+                    {
+                        "error": f"existing native rollover intent cannot be safely superseded: {exc}",
+                        "recovery": "If the immutable plan belongs to an older packet, run repair-native-intent for the current exact lease.",
+                        "state_file": rel(state_path, state_root),
+                        "old_automation_ready_to_delete": False,
+                    },
+                    indent=2,
+                )
+            )
+            return 2
+
     write_text_atomic(bootstrap_path, prompt)
     write_text_atomic(handoff_path, handoff_md)
-    write_json_atomic(state_path, prepared_state)
     try:
         native_transition = task_family_rollover.prepare_transition(
             repo_root=state_root,
@@ -1708,18 +1790,46 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             intended_title=replacement["display"]["title"],
             title_source=replacement["display"]["title_source"],
             bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
+            supersedes=supersedes,
         )
-    except (OSError, ValueError) as exc:
-        replacement["native_lifecycle"]["status"] = "intent_persistence_failed"
-        replacement["native_lifecycle"]["error"] = str(exc)
-        prepared_state["replacement"] = replacement
+        if supersedes is not None:
+            pending_state = dict(prepared_state)
+            pending_replacement = dict(replacement)
+            pending_native = dict(pending_replacement["native_lifecycle"])
+            pending_native["status"] = "supersession_pending"
+            pending_native["supersedes"] = dict(supersedes)
+            pending_replacement["native_lifecycle"] = pending_native
+            pending_state["replacement"] = pending_replacement
+            write_json_atomic(state_path, pending_state)
+            task_family_rollover.supersede_unexecuted_transition(
+                repo_root=state_root,
+                family_id=supersedes["family_id"],
+                operation_id=supersedes["operation_id"],
+                lineage_id=lineage_id,
+                generation=int(previous_replacement["generation"]),
+                source_thread_id=prepared_state["active"]["thread_id"],
+                successor_rollover_id=replacement["rollover_id"],
+                successor_operation_id=replacement["native_lifecycle"]["operation_id"],
+                evidence="Forced prepare superseded an untouched exact native intent after durable preflight.",
+                expected_rollover_id=supersedes["rollover_id"],
+            )
+            task_family_rollover.activate_superseding_transition(
+                repo_root=state_root,
+                family_id=replacement["native_lifecycle"]["family_id"],
+                operation_id=replacement["native_lifecycle"]["operation_id"],
+            )
+            replacement["native_lifecycle"]["supersedes"] = dict(supersedes)
+            native_transition["status"] = "awaiting_native_create"
+            native_transition["superseded"] = dict(supersedes)
         write_json_atomic(state_path, prepared_state)
+    except (OSError, ValueError) as exc:
         print(
             json.dumps(
                 {
                     "error": f"native rollover intent persistence failed: {exc}",
                     "state_file": rel(state_path, state_root),
                     "old_automation_ready_to_delete": False,
+                    "recovery": "Retry the exact repair or prepare command; never invoke native create while supersession is pending.",
                 },
                 indent=2,
             )
@@ -1793,16 +1903,203 @@ def _native_command_context(
     expected_family_id, expected_operation_id = task_family_rollover.transition_identity(
         lineage_id=lineage_id,
         generation=generation,
+        rollover_id=replacement["rollover_id"],
     )
     if native.get("family_id") != expected_family_id or native.get("operation_id") != expected_operation_id:
         raise ValueError("rollover native lifecycle identity does not match its durable lineage")
+    if native.get("status") == "supersession_pending":
+        raise ValueError("rollover native intent supersession is pending; repair it before any native action")
     if native.get("source_thread_id") != (state.get("active") or {}).get("thread_id"):
         raise ValueError("rollover native predecessor does not match the active lease identity")
+    task_family_rollover.assert_transition_context(
+        repo_root=state_root,
+        family_id=native["family_id"],
+        operation_id=native["operation_id"],
+        lineage_id=lineage_id,
+        rollover_id=replacement["rollover_id"],
+        generation=generation,
+        source_thread_id=native["source_thread_id"],
+    )
     bound_replacement_id = native.get("replacement_thread_id")
     resumed_replacement_id = replacement.get("resumed_thread_id") or replacement.get("thread_id")
     if bound_replacement_id and resumed_replacement_id and bound_replacement_id != resumed_replacement_id:
         raise ValueError("rollover native replacement does not match the resumed lease identity")
     return repo_root, state_root, agent, state_path, state, native
+
+
+def cmd_repair_native_intent(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_repair_native_intent_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_repair_native_intent_locked(args)
+
+
+def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
+    """Reconcile one legacy same-generation receipt collision without native mutation."""
+    try:
+        repo_root, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        if not args.lineage_id and not args.state_file:
+            raise ValueError("--lineage-id or --state-file is required to locate an isolated rollover")
+        state_path = resolve_state_path(
+            repo_root=repo_root,
+            state_root=state_root,
+            supplied_state_file=args.state_file,
+            default_path=default_state_path(agent, args.lineage_id) if args.lineage_id else None,
+        )
+        state = load_state(state_path)
+        state_error = state_error_payload(state, state_path, state_root)
+        if state_error:
+            raise ValueError(state_error["error"])
+        replacement = dict(state.get("replacement") or {})
+        if replacement.get("rollover_id") != args.rollover_id:
+            raise ValueError("--rollover-id does not match the isolated rollover")
+        if replacement.get("status") != "pending_start":
+            raise ValueError("native-intent repair is limited to an unconfirmed pending_start replacement")
+        lineage_id = replacement.get("lineage_id")
+        generation = replacement.get("generation")
+        active = state.get("active") or {}
+        source_thread_id = active.get("thread_id")
+        display = replacement.get("display")
+        native = replacement.get("native_lifecycle")
+        if (
+            not isinstance(lineage_id, str)
+            or not isinstance(generation, int)
+            or generation < 1
+            or not isinstance(source_thread_id, str)
+            or not source_thread_id.strip()
+            or not isinstance(display, dict)
+            or not isinstance(native, dict)
+        ):
+            raise ValueError("rollover lease lacks exact identity or display metadata required for repair")
+        if native.get("source_thread_id") != source_thread_id or native.get("replacement_thread_id") is not None:
+            raise ValueError("native-intent repair refuses a bound or mismatched replacement")
+
+        successor_family_id, successor_operation_id = task_family_rollover.transition_identity(
+            lineage_id=lineage_id,
+            generation=generation,
+            rollover_id=replacement["rollover_id"],
+        )
+        legacy_family_id, legacy_operation_id = task_family_rollover.legacy_transition_identity(
+            lineage_id=lineage_id,
+            generation=generation,
+        )
+        native_supersedes = native.get("supersedes")
+        if native.get("family_id") == successor_family_id and native.get("operation_id") == successor_operation_id:
+            if not isinstance(native_supersedes, dict):
+                raise ValueError("packet-specific transition lacks its exact superseded receipt reference")
+            supersedes = {
+                "family_id": str(native_supersedes.get("family_id") or ""),
+                "operation_id": str(native_supersedes.get("operation_id") or ""),
+                "rollover_id": str(native_supersedes.get("rollover_id") or ""),
+            }
+        elif native.get("family_id") == legacy_family_id and native.get("operation_id") == legacy_operation_id:
+            proof = task_family_rollover.assert_transition_supersedable(
+                repo_root=state_root,
+                family_id=legacy_family_id,
+                operation_id=legacy_operation_id,
+                lineage_id=lineage_id,
+                generation=generation,
+                source_thread_id=source_thread_id,
+                successor_rollover_id=replacement["rollover_id"],
+                successor_operation_id=successor_operation_id,
+            )
+            supersedes = {
+                "family_id": legacy_family_id,
+                "operation_id": legacy_operation_id,
+                "rollover_id": str(proof["plan"]["rollover_id"]),
+            }
+        else:
+            raise ValueError("lease does not reference the exact legacy or packet-specific native intent")
+
+        if supersedes["rollover_id"] == replacement["rollover_id"]:
+            raise ValueError("legacy receipt already belongs to the current packet; no supersession repair is valid")
+        candidate_native = {
+            "family_id": successor_family_id,
+            "operation_id": successor_operation_id,
+            "source_thread_id": source_thread_id,
+            "replacement_thread_id": None,
+            "status": "supersession_pending",
+            "supersedes": dict(supersedes),
+        }
+        candidate_replacement = dict(replacement)
+        candidate_replacement["native_lifecycle"] = candidate_native
+        candidate_state = dict(state)
+        candidate_state["replacement"] = candidate_replacement
+        validated, validation_error = validate_live_lease(candidate_state, agent=agent, state_path=state_path)
+        if validation_error or validated is None:
+            raise ValueError(f"repaired lease validation failed: {validation_error or 'unknown error'}")
+
+        transition = task_family_rollover.prepare_transition(
+            repo_root=state_root,
+            agent=agent,
+            lineage_id=lineage_id,
+            rollover_id=replacement["rollover_id"],
+            generation=generation,
+            source_thread_id=source_thread_id,
+            intended_title=display["title"],
+            title_source=display["title_source"],
+            bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
+            supersedes=supersedes,
+        )
+        write_json_atomic(state_path, candidate_state)
+        superseded = task_family_rollover.supersede_unexecuted_transition(
+            repo_root=state_root,
+            family_id=supersedes["family_id"],
+            operation_id=supersedes["operation_id"],
+            lineage_id=lineage_id,
+            generation=generation,
+            source_thread_id=source_thread_id,
+            successor_rollover_id=replacement["rollover_id"],
+            successor_operation_id=successor_operation_id,
+            evidence=args.evidence,
+            expected_rollover_id=supersedes["rollover_id"],
+        )
+        activated = task_family_rollover.activate_superseding_transition(
+            repo_root=state_root,
+            family_id=successor_family_id,
+            operation_id=successor_operation_id,
+        )
+        candidate_native["status"] = "awaiting_native_create"
+        candidate_replacement["native_lifecycle"] = candidate_native
+        candidate_state["replacement"] = candidate_replacement
+        candidate_state["updated_at"] = isoformat_z(utc_now())
+        write_json_atomic(state_path, candidate_state)
+        _, final_error = validate_live_lease(candidate_state, agent=agent, state_path=state_path)
+        if final_error:
+            raise ValueError(f"persisted repaired lease failed validation: {final_error}")
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        print(
+            json.dumps(
+                {
+                    "error": str(exc),
+                    "action": "repair-native-intent",
+                    "old_automation_ready_to_delete": False,
+                },
+                indent=2,
+            )
+        )
+        return 2
+    print(
+        json.dumps(
+            {
+                "status": "native_intent_repaired",
+                "lineage_id": lineage_id,
+                "rollover_id": replacement["rollover_id"],
+                "source_thread_id": source_thread_id,
+                "superseded": superseded,
+                "native_lifecycle": {
+                    **transition,
+                    "status": activated["status"],
+                    "supersedes": supersedes,
+                },
+                "old_automation_ready_to_delete": False,
+            },
+            indent=2,
+        )
+    )
+    return 0
 
 
 def _write_native_status(
@@ -1883,6 +2180,16 @@ def cmd_register_created(args: argparse.Namespace) -> int:
 
 
 def cmd_native_action(args: argparse.Namespace) -> int:
+    if args.action != "create":
+        return _cmd_native_action_locked(args)
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_native_action_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_native_action_locked(args)
+
+
+def _cmd_native_action_locked(args: argparse.Namespace) -> int:
     try:
         _, state_root, _, state_path, state, native = _native_command_context(args)
         if args.action == "create":
@@ -2346,6 +2653,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     prepare.add_argument("--dry-run", action="store_true", help="Print the generated packet without writing files.")
     prepare.set_defaults(func=cmd_prepare)
+
+    repair_native_intent = subparsers.add_parser(
+        "repair-native-intent",
+        help="Replace one untouched legacy same-generation native receipt with the current packet-specific intent.",
+    )
+    repair_native_intent.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    repair_native_intent.add_argument("--lineage-id", type=argparse_lineage_id)
+    repair_native_intent.add_argument("--state-file", type=Path)
+    repair_native_intent.add_argument("--rollover-id", required=True)
+    repair_native_intent.add_argument(
+        "--evidence",
+        required=True,
+        help="Exact operator/app evidence that the legacy receipt never reached create_thread.",
+    )
+    repair_native_intent.set_defaults(func=cmd_repair_native_intent)
 
     register = subparsers.add_parser(
         "register-created",

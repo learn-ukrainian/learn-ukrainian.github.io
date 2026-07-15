@@ -83,10 +83,24 @@ def rollover_title(
     return title, source, fields
 
 
-def transition_identity(*, lineage_id: str, generation: int) -> tuple[str, str]:
-    """Return stable TFM family and operation IDs for safe retries."""
+def legacy_transition_identity(*, lineage_id: str, generation: int) -> tuple[str, str]:
+    """Return the pre-supersession operation identity for exact repair only."""
     family_id = f"rollover-{lineage_id}-g{generation:04d}"
     operation_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"learn-ukrainian:{family_id}:native-transition"))
+    return family_id, operation_id
+
+
+def transition_identity(*, lineage_id: str, generation: int, rollover_id: str) -> tuple[str, str]:
+    """Return a stable family ID and packet-specific operation ID."""
+    if not rollover_id.strip():
+        raise ValueError("rollover_id must be non-empty")
+    family_id = f"rollover-{lineage_id}-g{generation:04d}"
+    operation_id = str(
+        uuid.uuid5(
+            uuid.NAMESPACE_URL,
+            f"learn-ukrainian:{family_id}:native-transition:{rollover_id}",
+        )
+    )
     return family_id, operation_id
 
 
@@ -113,6 +127,39 @@ def _load_binding(storage: TaskFamilyStorage) -> dict[str, Any]:
     if binding.get("plan_digest") != _load_plan(storage)["digest"]:
         raise ValueError("persisted rollover binding does not match the immutable plan")
     return binding
+
+
+def assert_transition_context(
+    *,
+    repo_root: Path,
+    family_id: str,
+    operation_id: str,
+    lineage_id: str,
+    rollover_id: str,
+    generation: int,
+    source_thread_id: str,
+) -> dict[str, Any]:
+    """Match one native command to the exact immutable packet plan."""
+    expected_family_id, expected_operation_id = transition_identity(
+        lineage_id=lineage_id,
+        generation=generation,
+        rollover_id=rollover_id,
+    )
+    if family_id != expected_family_id or operation_id != expected_operation_id:
+        raise ValueError("native lifecycle operation does not match the packet-specific transition identity")
+    plan = _load_plan(TaskFamilyStorage(repo_root, family_id, operation_id))
+    expected = {
+        "family_id": family_id,
+        "operation_id": operation_id,
+        "lineage_id": lineage_id,
+        "rollover_id": rollover_id,
+        "generation": generation,
+        "source_thread_id": source_thread_id,
+    }
+    for key, value in expected.items():
+        if plan.get(key) != value:
+            raise ValueError(f"immutable native transition plan does not match lease {key}")
+    return plan
 
 
 def _event(
@@ -175,8 +222,19 @@ def prepare_transition(
     intended_title: str,
     title_source: str,
     bootstrap_prompt_path: str,
+    supersedes: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    family_id, operation_id = transition_identity(lineage_id=lineage_id, generation=generation)
+    family_id, operation_id = transition_identity(
+        lineage_id=lineage_id,
+        generation=generation,
+        rollover_id=rollover_id,
+    )
+    if supersedes is not None:
+        required = {"family_id", "operation_id", "rollover_id"}
+        if set(supersedes) != required or any(not supersedes[key].strip() for key in required):
+            raise ValueError("supersedes must contain exact non-empty family_id, operation_id, and rollover_id")
+        if supersedes["operation_id"] == operation_id or supersedes["rollover_id"] == rollover_id:
+            raise ValueError("a rollover transition cannot supersede itself")
     storage = TaskFamilyStorage(repo_root, family_id, operation_id)
     payload: dict[str, Any] = {
         "schema_version": PLAN_SCHEMA_VERSION,
@@ -194,13 +252,23 @@ def prepare_transition(
         "bootstrap_prompt_path": bootstrap_prompt_path,
         "relation_types": [RelationType.REPLACEMENT_OF.value, RelationType.ROLLOVER_GENERATION_OF.value],
     }
+    if supersedes is not None:
+        payload["supersedes"] = dict(supersedes)
     payload["digest"] = _plan_digest(payload)
     storage.write_immutable_json(storage.rollover_plan_path, payload)
     if not storage.receipt_path.exists():
         planned = (
-            ReceiptAction("rollover", rollover_id, (source_thread_id,), "create_replacement", "Use native create_thread once."),
+            ReceiptAction(
+                "rollover", rollover_id, (source_thread_id,), "create_replacement", "Use native create_thread once."
+            ),
             ReceiptAction("rollover", rollover_id, (source_thread_id,), "title_replacement", intended_title),
-            ReceiptAction("task", source_thread_id, (source_thread_id,), "archive_confirmed_predecessor", "Proof and app-state gated."),
+            ReceiptAction(
+                "task",
+                source_thread_id,
+                (source_thread_id,),
+                "archive_confirmed_predecessor",
+                "Proof and app-state gated.",
+            ),
         )
         _event(
             storage,
@@ -220,7 +288,11 @@ def prepare_transition(
         )
         storage.write_state(
             LifecycleState.PLANNED,
-            details={"status": "awaiting_native_create", "plan_digest": payload["digest"]},
+            details={
+                "status": "supersession_pending" if supersedes is not None else "awaiting_native_create",
+                "plan_digest": payload["digest"],
+                **({"supersedes": dict(supersedes)} if supersedes is not None else {}),
+            },
         )
     else:
         receipt = storage.load_receipt()
@@ -233,6 +305,235 @@ def prepare_transition(
         "receipt_path": str(storage.receipt_path),
         "status": storage.load_state()["details"].get("status"),
     }
+
+
+def assert_transition_supersedable(
+    *,
+    repo_root: Path,
+    family_id: str,
+    operation_id: str,
+    lineage_id: str,
+    generation: int,
+    source_thread_id: str,
+    successor_rollover_id: str,
+    successor_operation_id: str,
+    expected_rollover_id: str | None = None,
+) -> dict[str, Any]:
+    """Prove an exact native intent has never reached or authorized a native call."""
+    storage = TaskFamilyStorage(repo_root, family_id, operation_id)
+    plan = _load_plan(storage)
+    expected = {
+        "family_id": family_id,
+        "operation_id": operation_id,
+        "lineage_id": lineage_id,
+        "generation": generation,
+        "source_thread_id": source_thread_id,
+    }
+    for key, value in expected.items():
+        if plan.get(key) != value:
+            raise ValueError(f"superseded transition {key} does not match the exact predecessor intent")
+    if expected_rollover_id is not None and plan.get("rollover_id") != expected_rollover_id:
+        raise ValueError("superseded transition rollover_id does not match the exact predecessor intent")
+    if plan.get("rollover_id") == successor_rollover_id or operation_id == successor_operation_id:
+        raise ValueError("successor identity must differ from the superseded transition")
+
+    state = storage.load_state()
+    details = state["details"]
+    already_superseded = details.get("status") == "superseded_before_native_create"
+    if already_superseded and (
+        details.get("superseded_by_rollover_id") != successor_rollover_id
+        or details.get("superseded_by_operation_id") != successor_operation_id
+    ):
+        raise ValueError("transition was already superseded by a different exact successor")
+
+    supersession: dict[str, Any] | None = None
+    if storage.rollover_supersession_path.exists():
+        supersession = storage.read_json(storage.rollover_supersession_path)
+        if (
+            supersession.get("schema_version") != PLAN_SCHEMA_VERSION
+            or supersession.get("kind") != "rollover_native_intent_supersession"
+            or supersession.get("plan_digest") != plan["digest"]
+            or supersession.get("family_id") != family_id
+            or supersession.get("rollover_id") != plan["rollover_id"]
+            or supersession.get("superseded_by_rollover_id") != successor_rollover_id
+            or supersession.get("superseded_by_operation_id") != successor_operation_id
+        ):
+            raise ValueError("immutable transition supersession does not match the exact successor")
+    if already_superseded and supersession is None:
+        raise ValueError("superseded transition is missing its immutable exact-successor document")
+
+    receipt = storage.load_receipt()
+    if receipt.family_id != family_id or receipt.operation_id != operation_id or receipt.plan_digest != plan["digest"]:
+        raise ValueError("superseded transition receipt identity or digest is inconsistent")
+    if storage.rollover_binding_path.exists():
+        raise ValueError("transition has an exact replacement binding and cannot be superseded")
+    if receipt.actual:
+        raise ValueError("transition has recorded native or reconciled actions and cannot be superseded")
+    if receipt.failures:
+        raise ValueError("transition has partial or ambiguous failures and cannot be superseded")
+    if already_superseded:
+        event_kinds = [event.kind for event in storage.load_events()]
+        if (
+            state.get("state") != LifecycleState.BLOCKED.value
+            or receipt.final_state is not LifecycleState.BLOCKED
+            or "rollover_native_intent_superseded" not in event_kinds
+        ):
+            raise ValueError("superseded transition receipt, event, or state is incomplete")
+        return {"already_superseded": True, "plan": plan, "supersession_started": True}
+    if state.get("state") != LifecycleState.PLANNED.value or details.get("status") != "awaiting_native_create":
+        raise ValueError("transition is not an untouched native-create intent")
+    permitted_events = {"rollover_native_intent_prepared"}
+    if supersession is not None:
+        permitted_events.add("rollover_native_intent_superseded")
+    unsafe_events = [event.kind for event in storage.load_events() if event.kind not in permitted_events]
+    if unsafe_events:
+        raise ValueError("transition has native-action or ambiguous lifecycle events and cannot be superseded")
+    return {"already_superseded": False, "plan": plan, "supersession_started": supersession is not None}
+
+
+def supersede_unexecuted_transition(
+    *,
+    repo_root: Path,
+    family_id: str,
+    operation_id: str,
+    lineage_id: str,
+    generation: int,
+    source_thread_id: str,
+    successor_rollover_id: str,
+    successor_operation_id: str,
+    evidence: str,
+    expected_rollover_id: str | None = None,
+) -> dict[str, Any]:
+    """Close an untouched native intent while preserving its immutable evidence."""
+    if not evidence.strip():
+        raise ValueError("native-intent supersession evidence is required")
+    proof = assert_transition_supersedable(
+        repo_root=repo_root,
+        family_id=family_id,
+        operation_id=operation_id,
+        lineage_id=lineage_id,
+        generation=generation,
+        source_thread_id=source_thread_id,
+        successor_rollover_id=successor_rollover_id,
+        successor_operation_id=successor_operation_id,
+        expected_rollover_id=expected_rollover_id,
+    )
+    storage = TaskFamilyStorage(repo_root, family_id, operation_id)
+    plan = proof["plan"]
+    if proof["already_superseded"]:
+        return {
+            "status": "already_superseded",
+            "rollover_id": plan["rollover_id"],
+            "superseded_by_rollover_id": successor_rollover_id,
+            "superseded_by_operation_id": successor_operation_id,
+            "receipt_path": str(storage.receipt_path),
+        }
+
+    supersession = {
+        "schema_version": PLAN_SCHEMA_VERSION,
+        "kind": "rollover_native_intent_supersession",
+        "plan_digest": plan["digest"],
+        "family_id": family_id,
+        "rollover_id": plan["rollover_id"],
+        "operation_id": operation_id,
+        "superseded_by_rollover_id": successor_rollover_id,
+        "superseded_by_operation_id": successor_operation_id,
+        "evidence": evidence.strip(),
+    }
+    storage.write_immutable_json(storage.rollover_supersession_path, supersession)
+    if not any(event.kind == "rollover_native_intent_superseded" for event in storage.load_events()):
+        _event(
+            storage,
+            state=LifecycleState.BLOCKED,
+            kind="rollover_native_intent_superseded",
+            details={
+                "rollover_id": plan["rollover_id"],
+                "superseded_by_rollover_id": successor_rollover_id,
+                "superseded_by_operation_id": successor_operation_id,
+                "evidence": evidence.strip(),
+            },
+        )
+    receipt = storage.load_receipt()
+    skipped_keys = {_action_key(item) for item in receipt.skipped}
+    skipped = tuple(
+        item
+        for item in (
+            ReceiptAction(
+                planned.resource_type,
+                planned.resource_id,
+                planned.task_ids,
+                planned.action,
+                f"Superseded before native creation by {successor_rollover_id}; no native mutation was authorized.",
+            )
+            for planned in receipt.planned
+        )
+        if _action_key(item) not in skipped_keys
+    )
+    storage.write_receipt(
+        replace(
+            receipt,
+            final_state=LifecycleState.BLOCKED,
+            skipped=(*receipt.skipped, *skipped),
+            events=storage.load_events(),
+        )
+    )
+    storage.write_state(
+        LifecycleState.BLOCKED,
+        details={
+            "status": "superseded_before_native_create",
+            "rollover_id": plan["rollover_id"],
+            "superseded_by_rollover_id": successor_rollover_id,
+            "superseded_by_operation_id": successor_operation_id,
+        },
+    )
+    return {
+        "status": "superseded",
+        "rollover_id": plan["rollover_id"],
+        "superseded_by_rollover_id": successor_rollover_id,
+        "superseded_by_operation_id": successor_operation_id,
+        "receipt_path": str(storage.receipt_path),
+    }
+
+
+def activate_superseding_transition(
+    *,
+    repo_root: Path,
+    family_id: str,
+    operation_id: str,
+) -> dict[str, Any]:
+    """Unlock create only after the immutable predecessor intent is superseded."""
+    storage = TaskFamilyStorage(repo_root, family_id, operation_id)
+    plan = _load_plan(storage)
+    supersedes = plan.get("supersedes")
+    if not isinstance(supersedes, dict):
+        raise ValueError("transition is not an explicit superseding intent")
+    old_storage = TaskFamilyStorage(repo_root, supersedes["family_id"], supersedes["operation_id"])
+    old_state = old_storage.load_state()
+    old_details = old_state["details"]
+    if (
+        old_details.get("status") != "superseded_before_native_create"
+        or old_details.get("superseded_by_rollover_id") != plan["rollover_id"]
+        or old_details.get("superseded_by_operation_id") != operation_id
+    ):
+        raise ValueError("exact predecessor intent has not been durably superseded by this transition")
+    state = storage.load_state()
+    if state["details"].get("status") == "awaiting_native_create":
+        return {"status": "already_active", "receipt_path": str(storage.receipt_path)}
+    if state["details"].get("status") != "supersession_pending":
+        raise ValueError("superseding transition is not awaiting exact predecessor reconciliation")
+    if not any(event.kind == "rollover_native_intent_activated" for event in storage.load_events()):
+        _event(
+            storage,
+            state=LifecycleState.PLANNED,
+            kind="rollover_native_intent_activated",
+            details={"superseded_operation_id": supersedes["operation_id"]},
+        )
+        _append_receipt(storage)
+    storage.write_state(
+        LifecycleState.PLANNED,
+        details={"status": "awaiting_native_create", "plan_digest": plan["digest"]},
+    )
+    return {"status": "awaiting_native_create", "receipt_path": str(storage.receipt_path)}
 
 
 def bind_replacement(
@@ -463,6 +764,19 @@ def request_create_action(
     """Return one retry-safe native create decision before exact-ID binding."""
     storage = TaskFamilyStorage(repo_root, family_id, operation_id)
     plan = _load_plan(storage)
+    operation_state = storage.load_state()
+    operation_status = operation_state["details"].get("status")
+    if operation_status in {"supersession_pending", "superseded_before_native_create"}:
+        return {
+            "ok": False,
+            "action": "create",
+            "status": operation_status,
+            "needs_native_action": False,
+            "recovery": (
+                "Finish exact predecessor-intent reconciliation. Never create from a pending or superseded receipt."
+            ),
+            "receipt_path": str(storage.receipt_path),
+        }
     if storage.rollover_binding_path.exists():
         binding = _load_binding(storage)
         skipped = ReceiptAction(
@@ -520,8 +834,16 @@ def request_create_action(
         }
     storage.write_state(
         LifecycleState.PLANNED,
-        details={"status": "awaiting_native_create", "source_thread_id": plan["source_thread_id"]},
+        details={"status": "native_create_authorized", "source_thread_id": plan["source_thread_id"]},
     )
+    if not any(event.kind == "native_create_authorized" for event in storage.load_events()):
+        _event(
+            storage,
+            state=LifecycleState.PLANNED,
+            kind="native_create_authorized",
+            details={"rollover_id": plan["rollover_id"], "source_thread_id": plan["source_thread_id"]},
+        )
+        _append_receipt(storage)
     return {
         "ok": True,
         "action": "create",
@@ -542,9 +864,7 @@ def _exact_record(binding: dict[str, Any], *, action: str, db_path: Path) -> cod
     expected_cwd = binding[f"{endpoint}_cwd"]
     expected_host = binding[f"{endpoint}_host"]
     if record.cwd != expected_cwd or (expected_host is not None and record.host != expected_host):
-        raise codex_state.CodexStateContextError(
-            "exact rollover task cwd or host no longer matches the native binding"
-        )
+        raise codex_state.CodexStateContextError("exact rollover task cwd or host no longer matches the native binding")
     return record
 
 
@@ -698,8 +1018,7 @@ def authorize_archive(
     if blockers:
         message = "; ".join(blockers)
         recovery = (
-            "Retry only after exact idle and unpinned app evidence is available "
-            "for the persisted predecessor UUID."
+            "Retry only after exact idle and unpinned app evidence is available for the persisted predecessor UUID."
         )
         failure = ReceiptAction(
             "task",
@@ -811,9 +1130,7 @@ def request_action(
             error=str(exc),
             evidence="native read-back preflight",
         )
-    target_satisfied = (
-        current.title == binding["intended_title"] if action == "title" else current.archived
-    )
+    target_satisfied = current.title == binding["intended_title"] if action == "title" else current.archived
     if target_satisfied:
         reconciled = reconcile_action(
             repo_root=repo_root,

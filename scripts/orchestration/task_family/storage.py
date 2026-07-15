@@ -116,6 +116,11 @@ class TaskFamilyStorage:
         return self.root / "rollover-binding.json"
 
     @property
+    def rollover_supersession_path(self) -> Path:
+        """Immutable exact successor for an untouched rollover transition."""
+        return self.root / "rollover-supersession.json"
+
+    @property
     def rollover_archive_authorization_path(self) -> Path:
         """Immutable post-confirmation authorization for one predecessor archive."""
         return self.root / "rollover-archive-authorization.json"
@@ -136,7 +141,9 @@ class TaskFamilyStorage:
         if self.manifest_path.exists():
             existing = self.read_json(self.manifest_path)
             if existing != manifest.to_dict():
-                raise ValueError("immutable manifest mismatch; create a new operation instead of replacing this manifest")
+                raise ValueError(
+                    "immutable manifest mismatch; create a new operation instead of replacing this manifest"
+                )
             return
         atomic_write_json(self.manifest_path, manifest.to_dict())
 
@@ -147,7 +154,9 @@ class TaskFamilyStorage:
         if self.plan_path.exists():
             existing = self.read_json(self.plan_path)
             if existing.get("digest") != plan.digest:
-                raise ValueError("immutable plan digest mismatch; create a new operation instead of replacing this plan")
+                raise ValueError(
+                    "immutable plan digest mismatch; create a new operation instead of replacing this plan"
+                )
             return
         atomic_write_json(self.plan_path, plan.to_dict())
 

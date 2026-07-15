@@ -107,6 +107,31 @@ If a native tool is absent or fails, use `record-native-result --failed
 `native-action` first. It reconciles exact native state before authorizing a
 mutation and will not repeat an acknowledged action while read-back is pending.
 
+Each prepared packet has its own deterministic native operation ID, even when
+an explicit `prepare --force-new-replacement` stays in the same generation.
+Forced preparation may supersede only an untouched predecessor intent: no
+binding, create authorization, acknowledgement, actual action, or failure may
+exist. The old immutable plan remains in place; an exact supersession document,
+blocked receipt, and successor reference make retries fail closed. Never edit,
+delete, or reuse an immutable receipt to resolve a collision.
+
+For a legacy lease whose current packet references a pristine immutable plan
+for a different rollover ID, do not create or fork a task. Repair the exact
+receipt collision with app/operator evidence that `create_thread` was never
+called:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py repair-native-intent \
+  --agent codex --lineage-id <lineage-id> --rollover-id <current-rollover-id> \
+  --evidence "App stopped before create_thread; exact receipt and binding are pristine."
+```
+
+The command persists the packet-specific transition first, marks only the exact
+legacy intent `superseded_before_native_create`, and updates the lease last. It
+is idempotent for the same exact successor and refuses ambiguous, partial, or
+already-authorized native state. After success, begin again at `native-action
+--action create`; the repair command itself performs no native mutation.
+
 ## Resume and confirm
 
 In the fresh task, use the exact paths returned by `detect` or `resume`. First

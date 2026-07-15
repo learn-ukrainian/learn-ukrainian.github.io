@@ -117,6 +117,10 @@ This writes the lineage-scoped lease and packet plus an immutable Task Family
 Manager transition plan and receipt. `intended_title` is human-readable when
 the durable metadata is supplied. Without all three required fields, the safe
 fallback includes lineage and generation. `Resume codex rollover` is forbidden.
+The Task Family Manager family remains stable for one lineage generation, while
+the operation ID is deterministic for the exact rollover packet. A forced
+same-generation packet therefore cannot collide with or rewrite an older
+immutable operation.
 
 It does not modify git-tracked handoff files by default.
 
@@ -278,6 +282,41 @@ Dry-run without writing files:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
 ```
+
+### Superseded native-intent recovery
+
+`prepare --force-new-replacement` is fail closed. It supersedes only the exact
+prior intent when its receipt is pristine and no native create was authorized
+or attempted. The successor plan is durable before the live lease can expose
+it. Prepare, legacy repair, and create authorization serialize through the same
+blocking cross-process `fcntl.flock` lineage lock, so competing mutators cannot
+publish different successors. A rejected first prepare may leave only this
+gitignored lock file and its lineage directory; detection considers `lease.json`
+files only. The predecessor immutable plan is never rewritten: its operation gains an
+immutable `rollover-supersession.json`, skipped planned actions, a blocked
+`superseded_before_native_create` state, and the exact successor IDs. Binding,
+actual actions, successful or failed acknowledgements, authorization, and
+ambiguous state all preserve the old packet and block forced replacement.
+
+Older deployments could create a same-generation lease/receipt mismatch. When
+the current lease points to a pristine legacy operation whose immutable plan
+contains a different rollover ID, native creation is forbidden. After verifying
+through the app and receipt that `create_thread` was never called, run:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py repair-native-intent \
+  --agent codex \
+  --lineage-id <lineage-id> \
+  --rollover-id <current-rollover-id> \
+  --evidence "App stopped before create_thread; exact receipt and binding are pristine."
+```
+
+This command performs no Codex app mutation. It creates the correct
+packet-specific transition, receipts the exact untouched legacy operation, and
+updates the lease last while preserving the bootstrap, checkout binding, canary,
+and cleanup=false guard. Retries must use the same successor and evidence. Do
+not manually edit or delete the lease, plan, receipt, or operation directory.
+After a successful repair, restart at `native-action --action create`.
 
 ## Fresh Codex App Task/Restart Smoke
 
