@@ -13,16 +13,30 @@ from ._db import get_db
 
 
 def check_inbox(for_llm: str = "gemini"):
-    """Check inbox for messages addressed to an agent."""
+    """Check inbox for messages addressed to an agent.
+
+    Dual-READ permanent aliases (e.g. ``grok-build`` ↔ ``grok``) so historical
+    rows are not orphaned after the seat rename.
+    """
+    try:
+        from agent_runtime.agent_identity import seat_read_aliases
+
+        recipients = seat_read_aliases(for_llm) or (for_llm,)
+    except Exception:
+        recipients = (for_llm,)
+
     conn = get_db()
     cursor = conn.cursor()
-
-    cursor.execute("""
+    placeholders = ", ".join("?" for _ in recipients)
+    cursor.execute(
+        f"""
         SELECT id, from_llm, message_type, substr(content, 1, 100), timestamp
         FROM messages
-        WHERE to_llm = ? AND acknowledged = 0
+        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
         ORDER BY id ASC
-    """, (for_llm,))
+        """,
+        recipients,
+    )
 
     rows = cursor.fetchall()
     conn.close()
@@ -199,15 +213,26 @@ def acknowledge(message_ids: list[int] | int, quiet: bool = False):
 
 
 def acknowledge_all(for_llm: str):
-    """Acknowledge ALL unread messages for a given agent."""
+    """Acknowledge ALL unread messages for a given agent (dual-READ aliases)."""
+    try:
+        from agent_runtime.agent_identity import seat_read_aliases
+
+        recipients = seat_read_aliases(for_llm) or (for_llm,)
+    except Exception:
+        recipients = (for_llm,)
+
     conn = get_db()
     cursor = conn.cursor()
+    placeholders = ", ".join("?" for _ in recipients)
 
-    cursor.execute("""
+    cursor.execute(
+        f"""
         SELECT id FROM messages
-        WHERE to_llm = ? AND acknowledged = 0
+        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
         ORDER BY id ASC
-    """, (for_llm,))
+        """,
+        recipients,
+    )
 
     rows = cursor.fetchall()
 
@@ -218,10 +243,13 @@ def acknowledge_all(for_llm: str):
 
     msg_ids = [row[0] for row in rows]
 
-    cursor.execute("""
+    cursor.execute(
+        f"""
         UPDATE messages SET acknowledged = 1
-        WHERE to_llm = ? AND acknowledged = 0
-    """, (for_llm,))
+        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+        """,
+        recipients,
+    )
 
     conn.commit()
     conn.close()

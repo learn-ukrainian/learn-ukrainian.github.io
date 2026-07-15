@@ -563,6 +563,7 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
         "codex",
         "grok",
         "grok-build",
+        "grok-hermes",
         "deepseek",
         "qwen",
         "cursor",
@@ -809,6 +810,7 @@ def test_help_includes_model_and_deadline_flags(capsys):
 
 
 def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
+    _clear_identity_env(monkeypatch)
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-infra")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
@@ -816,6 +818,10 @@ def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
 
 
 def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
+    # Clear GROK_AGENT etc. first: when this suite runs under the native grok
+    # CLI (export GROK_AGENT=1), the sentinel would otherwise win over the soft
+    # CLAUDE_PROJECT_DIR heuristic and false-fail the fall-through assertion.
+    _clear_identity_env(monkeypatch)
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "not-a-real-agent")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
@@ -835,24 +841,25 @@ def _clear_identity_env(monkeypatch) -> None:
         monkeypatch.delenv(var, raising=False)
 
 
-def test_detect_caller_identity_grok_agent_maps_to_grok_build(monkeypatch):
+def test_detect_caller_identity_grok_agent_maps_to_canonical_grok(monkeypatch):
     # The native grok CLI exports GROK_AGENT for every tool shell it spawns
-    # (model-independent). It must auto-detect as the grok-build lane so a grok
-    # session can `ab ask-claude` without --from and get the reply back.
+    # (model-independent). It must auto-detect as the canonical `grok` seat
+    # (historical alias: grok-build) so a grok session can `ab ask-claude`
+    # without --from and get the reply back.
     _clear_identity_env(monkeypatch)
     monkeypatch.setenv("GROK_AGENT", "1")
 
-    assert _cli._detect_caller_identity_from_env() == "grok-build"
+    assert _cli._detect_caller_identity_from_env() == "grok"
 
 
 def test_detect_caller_identity_grok_agent_beats_soft_claude_heuristic(monkeypatch):
     # A grok session that inherited a stray CLAUDE_* var must still resolve to
-    # grok-build, never misroute to the claude inbox (the "empty result" class).
+    # the canonical `grok` seat, never misroute to the claude inbox.
     _clear_identity_env(monkeypatch)
     monkeypatch.setenv("GROK_AGENT", "1")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
-    assert _cli._detect_caller_identity_from_env() == "grok-build"
+    assert _cli._detect_caller_identity_from_env() == "grok"
 
 
 def test_detect_caller_identity_grok_agent_profile_name_is_not_a_false_positive(monkeypatch):

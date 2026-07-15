@@ -101,7 +101,8 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "deepseek": {
         "HERMES_HOME",
     },
-    "grok": {
+    # Demoted Hermes Grok path (was bare "grok" before the native-seat rename).
+    "grok-hermes": {
         "HERMES_HOME",
     },
     "qwen": {
@@ -111,8 +112,15 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 
 
 def _normalized_provider(provider: str) -> str:
-    """Map runtime provider names to sanitizer policy keys."""
-    return provider.removesuffix("-tools").lower()
+    """Map runtime provider names to sanitizer policy keys.
+
+    Permanent seat aliases (``grok-build`` → ``grok``) resolve so historical
+    call sites keep matching the native-seat policy.
+    """
+    from .agent_identity import normalize_seat
+
+    bare = provider.removesuffix("-tools").lower()
+    return normalize_seat(bare) or bare
 
 
 def _is_safe_name(name: str) -> bool:

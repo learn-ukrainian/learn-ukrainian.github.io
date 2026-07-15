@@ -2,7 +2,7 @@
 
 Common commands:
   ask-codex, process-codex
-  ask-grok-build, process-grok-build
+  ask-grok / ask-grok-build, process-grok / process-grok-build
   ask-claude, process-claude
   ask-gemini, process
 

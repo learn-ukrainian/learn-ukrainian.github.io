@@ -77,8 +77,9 @@ VALID_AGENTS = (
     "claude-infra",
     "gemini",
     "codex",
-    "grok",
-    "grok-build",
+    "grok",  # canonical native grok CLI seat
+    "grok-build",  # PERMANENT alias → grok (trailers, inbox, dispatch)
+    "grok-hermes",  # demoted Hermes/OpenRouter Grok path
     "deepseek",
     "qwen",
     "cursor",

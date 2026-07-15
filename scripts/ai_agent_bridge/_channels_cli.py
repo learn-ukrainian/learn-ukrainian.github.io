@@ -79,6 +79,7 @@ def _cli_available_agent(agent: str) -> bool:
             "gemini",
             "grok",
             "grok-build",
+            "grok-hermes",
             "deepseek",
             "qwen",
             "cursor",

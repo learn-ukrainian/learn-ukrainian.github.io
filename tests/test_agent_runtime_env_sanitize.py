@@ -197,7 +197,7 @@ def test_hermes_home_override_reaches_hermes_backed_agents():
         {"PATH": "/usr/bin", "HOME": "/Users/example"},
         clear=True,
     ):
-        for provider in ("deepseek", "grok", "qwen"):
+        for provider in ("deepseek", "grok-hermes", "qwen"):
             env = build_agent_env(
                 provider=provider,
                 overrides={"HERMES_HOME": "/tmp/hermes-fallback-probe"},

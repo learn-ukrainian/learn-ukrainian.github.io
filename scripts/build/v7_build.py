@@ -1897,8 +1897,8 @@ def _run(args: argparse.Namespace) -> int:
             # gemini-tools must load .gemini/settings.json from repo root;
             # module_dir cwd would leave its MCP catalog empty. See
             # audit/gemini-tools-review-2026-05-09/REPORT.html E5/E6.
-            # grok-tools gets MCP from ~/.hermes/config.yaml and can run from
-            # the module directory like claude-tools/codex-tools.
+            # grok-tools routes to grok-hermes (Hermes MCP via ~/.hermes/config.yaml)
+            # and can run from the module directory like claude-tools/codex-tools.
             writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
             writer_output = linear_pipeline.invoke_writer(
                 prompt,

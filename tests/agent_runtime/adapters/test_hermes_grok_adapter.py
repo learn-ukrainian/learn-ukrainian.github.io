@@ -81,7 +81,7 @@ def test_grok_adapter_handles_missing_hermes_binary(tmp_path):
         pytest.raises(AgentUnavailableError, match="Popen failed: FileNotFoundError"),
     ):
         invoke(
-            "grok",
+            "grok-hermes",
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
@@ -106,7 +106,7 @@ def test_grok_adapter_honors_timeout(tmp_path, monkeypatch):
         pytest.raises(AgentTimeoutError),
     ):
         invoke(
-            "grok",
+            "grok-hermes",
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
@@ -141,7 +141,7 @@ def test_runner_preserves_unknown_grok_tool_call_total(tmp_path, monkeypatch):
         patch("agent_runtime.runner.write_record"),
     ):
         result = invoke(
-            "grok",
+            "grok-hermes",
             "hello",
             mode="workspace-write",
             cwd=tmp_path,

@@ -1,0 +1,52 @@
+{
+  "verdict": "PASS",
+  "level": "a1",
+  "slug": "my-morning",
+  "checks": {
+    "methodology": {
+      "verdict": "PASS",
+      "detail": "Methodology section is non-empty."
+    },
+    "sequence_steps": {
+      "verdict": "PASS",
+      "actual": 5,
+      "minimum": 5,
+      "detail": "sequence step(s) found in ## Послідовність введення."
+    },
+    "l2_errors": {
+      "verdict": "PASS",
+      "actual": 6,
+      "minimum": 3,
+      "detail": "L2 error table row(s) found."
+    },
+    "decolonization_pairs": {
+      "verdict": "PASS",
+      "actual": 1,
+      "minimum": 1,
+      "detail": "decolonization bad-form pair(s) found."
+    },
+    "vocabulary_minimum": {
+      "verdict": "PASS",
+      "actual": 21,
+      "minimum": 20,
+      "detail": "wiki vocabulary-minimum lemma(s) found."
+    },
+    "textbook_exercises": {
+      "verdict": "PASS",
+      "actual": 5,
+      "minimum": 3,
+      "detail": "textbook exercise format(s) with chunk citations found."
+    },
+    "distractor_inventory": {
+      "verdict": "PASS",
+      "actual": 9,
+      "minimum": 6,
+      "detail": "wrong-form distractor(s) found across L2 errors and decolonization pairs."
+    },
+    "chunk_citations_spot_check": {
+      "verdict": "PASS",
+      "detail": "3/3 source registry ids resolved (verify_quote adapter not configured)"
+    }
+  },
+  "diagnostic": "Wiki completeness gate passed."
+}

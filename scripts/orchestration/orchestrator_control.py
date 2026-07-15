@@ -652,7 +652,18 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument(
         "--agent",
         required=True,
-        choices=["codex", "gemini", "claude", "grok", "deepseek", "qwen", "agy", "cursor"],
+        choices=[
+            "codex",
+            "gemini",
+            "claude",
+            "grok",
+            "grok-build",
+            "grok-hermes",
+            "deepseek",
+            "qwen",
+            "agy",
+            "cursor",
+        ],
     )
     dispatch.add_argument("--prompt")
     dispatch.add_argument("--prompt-file")

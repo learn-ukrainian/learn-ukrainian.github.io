@@ -1,8 +1,9 @@
-"""GrokBuildAdapter — wraps the native ``grok`` CLI (Grok Build) headless.
+"""GrokBuildAdapter — wraps the native ``grok`` CLI headless.
 
-DISTINCT from the Hermes-backed ``grok`` agent (``HermesGrokAdapter``,
+Registry seat id is canonical ``grok`` (historical alias ``grok-build``).
+DISTINCT from the Hermes-backed ``grok-hermes`` agent (``HermesGrokAdapter``,
 ``grok-4.5`` via the Hermes OAuth API path). This adapter drives
-the local ``grok`` CLI binary (``~/.local/bin/grok`` — "Grok Build TUI") in
+the local ``grok`` CLI binary (``~/.local/bin/grok``) in
 single-turn headless mode:
 
     grok -p "<prompt>" --output-format json [-m MODEL] [--effort LEVEL] \
@@ -75,7 +76,7 @@ GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 class GrokBuildAdapter:
     """Adapter for the native ``grok`` CLI in single-turn headless mode."""
 
-    name: str = "grok-build"
+    name: str = "grok"
     default_model: str = GROK_BUILD_DEFAULT_MODEL
     default_effort: str = GROK_BUILD_DEFAULT_EFFORT
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
@@ -100,8 +101,9 @@ class GrokBuildAdapter:
         grok_bin = shutil.which("grok")
         if not grok_bin:
             raise RuntimeError(
-                "grok CLI (Grok Build) not found on PATH. Install the xAI grok "
-                "CLI (provides `grok`) to dispatch the grok-build agent."
+                "grok CLI not found on PATH. Install the xAI grok CLI "
+                "(provides `grok`) to dispatch the native `grok` seat "
+                "(historical alias: `grok-build`)."
             )
         requested_model = model or self.default_model
         if requested_model not in GROK_ALLOWED_MODELS:
@@ -167,7 +169,7 @@ class GrokBuildAdapter:
             cmd.extend(["--resume", session_id])
 
         _logger.debug(
-            "grok-build invocation: task=%s mode=%s permission=%s model=%s effort=%s",
+            "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
             task_id,
             mode,
             _MODE_PERMISSION[mode],

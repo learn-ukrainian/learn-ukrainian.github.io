@@ -103,13 +103,14 @@ def _detect_caller_identity_from_env() -> str | None:
     # grok-5, … all inherit it), and it is the only grok-intrinsic identity
     # marker available: GROK_HOME, GROK_SESSION*, XAI_*, AI_AGENT, and
     # SESSION_HANDOFF_AGENT are all unset in grok shells. The native CLI IS the
-    # `grok-build` lane. Match the sentinel EXACTLY ("1"): GROK_AGENT is also a
-    # documented agent-profile *name* selector, so a truthy check would
-    # false-positive on `GROK_AGENT=my-custom-agent`. Checked BEFORE the soft
-    # CLAUDE_PROJECT_DIR heuristic so a leaked CLAUDE_* var can't misroute a grok
-    # caller to the claude inbox (the "grok asked claude, got empty" class).
+    # canonical `grok` seat (historical alias: `grok-build`). Match the sentinel
+    # EXACTLY ("1"): GROK_AGENT is also a documented agent-profile *name*
+    # selector, so a truthy check would false-positive on
+    # `GROK_AGENT=my-custom-agent`. Checked BEFORE the soft CLAUDE_PROJECT_DIR
+    # heuristic so a leaked CLAUDE_* var can't misroute a grok caller to the
+    # claude inbox (the "grok asked claude, got empty" class).
     if os.environ.get("GROK_AGENT") == "1":
-        return "grok-build"
+        return "grok"
     if os.environ.get("CLAUDE_PROJECT_DIR") or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"):
         return "claude"
     if os.environ.get("GEMINI_SESSION"):
@@ -539,17 +540,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
     )
 
-    # process-grok-build
+    # process-grok (canonical) + process-grok-build (permanent alias)
     proc_grok_build_parser = subparsers.add_parser(
-        "process-grok-build",
-        help="Process message with native Grok Build CLI (headless)",
+        "process-grok",
+        aliases=["process-grok-build"],
+        help="Process message with native grok CLI (headless; alias: process-grok-build)",
     )
-    proc_grok_build_parser.add_argument("message_id", type=int, help="Message ID for Grok Build to process")
+    proc_grok_build_parser.add_argument("message_id", type=int, help="Message ID for grok to process")
     proc_grok_build_parser.add_argument(
         "--new-session",
         dest="new_session",
         action="store_true",
-        help="Accepted for parity; grok-build always starts fresh",
+        help="Accepted for parity; grok always starts fresh",
     )
     proc_grok_build_parser.add_argument(
         "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
@@ -808,10 +810,11 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_cursor_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_cursor_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
-    # ask-grok-build
+    # ask-grok (canonical native seat) + ask-grok-build (permanent alias)
     ask_grok_build_parser = subparsers.add_parser(
-        "ask-grok-build",
-        help="Send message AND invoke native Grok Build one-shot (use '-' to read from stdin)",
+        "ask-grok",
+        aliases=["ask-grok-build"],
+        help="Send message AND invoke native grok CLI one-shot (alias: ask-grok-build)",
     )
     ask_grok_build_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_grok_build_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -821,7 +824,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--new-session",
         dest="new_session",
         action="store_true",
-        help="Accepted for parity; grok-build always starts fresh",
+        help="Accepted for parity; grok always starts fresh",
     )
     ask_grok_build_parser.add_argument(
         "--model",
@@ -1179,7 +1182,7 @@ def _dispatch_command(args):
         process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
     elif args.command == "process-codex":
         process_for_codex(args.message_id, args.new_session, args.no_timeout)
-    elif args.command == "process-grok-build":
+    elif args.command in {"process-grok", "process-grok-build"}:
         process_for_grok_build(args.message_id, args.new_session, args.no_timeout, args.review)
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)
@@ -1205,7 +1208,7 @@ def _dispatch_command(args):
         _handle_ask_gemma(args)
     elif args.command == "ask-cursor":
         _handle_ask_cursor(args)
-    elif args.command == "ask-grok-build":
+    elif args.command in {"ask-grok", "ask-grok-build"}:
         _handle_ask_grok_build(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content

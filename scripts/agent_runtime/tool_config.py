@@ -27,17 +27,34 @@ _CODEX_MCP_SERVER_FIELDS = frozenset(
 
 
 def _canonical_agent_name(agent: str) -> str | None:
-    """Normalize caller-facing agent labels to runtime adapter names."""
+    """Normalize caller-facing agent labels to runtime adapter names.
+
+    Order is load-bearing: ``grok-build`` and ``grok-hermes`` must be matched
+    before the bare ``grok`` prefix, otherwise the permanent alias and the
+    demoted Hermes seat both collapse into the native seat.
+    """
+    from .agent_identity import (
+        HERMES_GROK_SEAT,
+        NATIVE_GROK_SEAT,
+        is_hermes_grok_seat,
+        is_native_grok_seat,
+        normalize_seat,
+    )
+
     if agent.startswith("claude"):
         return "claude"
     if agent.startswith("gemini"):
         return "gemini"
     if agent.startswith("codex"):
         return "codex"
-    if agent.startswith("grok-build"):
-        return "grok-build"
+    # Order-sensitive: longer / more-specific grok* prefixes first.
+    if agent.startswith("grok-build") or is_native_grok_seat(agent):
+        return NATIVE_GROK_SEAT
+    if agent.startswith("grok-hermes") or is_hermes_grok_seat(agent):
+        return HERMES_GROK_SEAT
     if agent.startswith("grok"):
-        return "grok"
+        # Bare / versioned labels such as "grok-4.5-tools" → native seat.
+        return NATIVE_GROK_SEAT
     if agent.startswith("deepseek"):
         return "deepseek"
     if agent.startswith("qwen"):
@@ -46,6 +63,19 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "agy"
     if agent.startswith("cursor"):
         return "cursor"
+    normalized = normalize_seat(agent)
+    if normalized in {
+        "claude",
+        "gemini",
+        "codex",
+        NATIVE_GROK_SEAT,
+        HERMES_GROK_SEAT,
+        "deepseek",
+        "qwen",
+        "agy",
+        "cursor",
+    }:
+        return normalized
     return None
 
 
@@ -341,10 +371,10 @@ def build_mcp_tool_config(
         # actually called.
         return _agy_mcp_servers(_resolved_agy_mcp_config_path(), mcp_servers)
 
-    if canonical_agent in ("grok", "deepseek", "qwen"):
-        # Grok, DeepSeek, and Qwen route through Hermes; tool_config translation
-        # is identical (Hermes reads MCP servers from ~/.hermes/config.yaml,
-        # not from the per-call payload). Diagnostics point at the same file.
+    if canonical_agent in ("grok-hermes", "deepseek", "qwen"):
+        # Hermes-backed seats (grok-hermes / DeepSeek / Qwen): tool_config
+        # translation is identical (Hermes reads MCP servers from
+        # ~/.hermes/config.yaml, not from the per-call payload).
         if not mcp_servers:
             return None, _basic_diagnostics(
                 mcp_config_path=Path.home() / ".hermes" / "config.yaml",
@@ -362,8 +392,8 @@ def build_mcp_tool_config(
             ),
         )
 
-    if canonical_agent == "grok-build":
-        # Native grok-build reads MCP servers from its own local config
+    if canonical_agent == "grok":
+        # Native grok CLI seat reads MCP servers from its own local config
         # (`grok mcp list`), not Hermes. The adapter only needs the requested
         # names for observability and to opt into non-interactive approval.
         if not mcp_servers:

@@ -183,6 +183,7 @@ def test_registry_has_known_agents():
         "gemini",
         "grok",
         "grok-build",
+        "grok-hermes",
         "deepseek",
         "qwen",
         "agy",
@@ -331,10 +332,17 @@ def test_invoke_rejects_tools_suffix_before_adapter_load():
         invoke("codex-tools", "hello", mode="read-only")
 
 
-def test_load_adapter_grok():
+def test_load_adapter_grok_native_seat():
     adapter = _load_adapter("grok")
-    assert adapter.__class__.__name__ == "HermesGrokAdapter"
+    assert adapter.__class__.__name__ == "GrokBuildAdapter"
     assert adapter.name == "grok"
+    assert adapter.default_model == "grok-4.5"
+
+
+def test_load_adapter_grok_hermes_demoted_seat():
+    adapter = _load_adapter("grok-hermes")
+    assert adapter.__class__.__name__ == "HermesGrokAdapter"
+    assert adapter.name == "grok-hermes"
     assert adapter.default_model == "grok-4.5"
 
 
@@ -3640,10 +3648,16 @@ def test_is_temp_file_matches_system_temp_dir(tmp_path):
     assert _is_temp_file(Path(tmpdir) / "codex-out-12345.txt") is True
 
 
-def test_is_temp_file_rejects_non_temp_paths(tmp_path):
-    """Paths outside /tmp and the system temp dir must return False."""
+def test_is_temp_file_rejects_non_temp_paths():
+    """Paths outside /tmp and the system temp dir must return False.
+
+    Do not use pytest's ``tmp_path`` here: when TMPDIR is nested under the
+    system temp root (common in agent worktrees), ``tmp_path`` *is* a temp
+    path and would false-fail this negative assertion.
+    """
     assert _is_temp_file(Path("/home/user/project/output.txt")) is False
-    assert _is_temp_file(tmp_path / "output.txt") is False
+    assert _is_temp_file(Path("/var/log/system.log")) is False
+    assert _is_temp_file(Path("/Users/example/src/output.txt")) is False
 
 
 # ---------------------------------------------------------------------------

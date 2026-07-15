@@ -19,7 +19,7 @@ are local operational state, not committed artifacts.
 | Cursor implementation | `4307-cursor-schema-impl` | danger | `auto` | 59.495s | 2802 | 1683 | Produced schema/test patch and auto-finalized PR #4318. |
 
 The dispatch runtime exposes these delegate agents for this repo:
-`codex`, `gemini`, `claude`, `grok`, `grok-build`, `deepseek`, `qwen`, `agy`,
+`codex`, `gemini`, `claude`, `grok`, `grok-build` (alias), `grok-hermes`, `deepseek`, `qwen`, `agy`,
 and `cursor`. It does not expose a literal `glm` delegate target in
 `scripts/delegate.py` or `scripts/agent_runtime/registry.py` as of this run.
 Older bakeoff docs mention GLM as a model-family participant, but there is no

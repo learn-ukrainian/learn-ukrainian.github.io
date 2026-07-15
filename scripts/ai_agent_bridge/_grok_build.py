@@ -1,8 +1,10 @@
-"""Grok Build bridge integration for the native ``grok`` CLI.
+"""Native ``grok`` CLI bridge integration (canonical seat id: ``grok``).
 
-This is the native Grok Build lane (registry key ``grok-build``), not the
-Hermes-routed ``grok`` agent. Bridge calls use ``agent_runtime.runner.invoke``
-so process management, telemetry, timeouts, and parsing stay centralized.
+Historical registry/bridge key was ``grok-build`` (permanent alias). Prefer
+WRITE of the canonical seat ``grok``; dual-READ accepts messages addressed
+to either id. Distinct from the demoted Hermes path ``grok-hermes``.
+Bridge calls use ``agent_runtime.runner.invoke`` so process management,
+telemetry, timeouts, and parsing stay centralized.
 """
 
 from __future__ import annotations
@@ -81,7 +83,7 @@ def ask_grok_build(
     review_branch: str | None = None,
     review_pr_number: int | None = None,
 ) -> int:
-    """Send message to native Grok Build and invoke it to process the message."""
+    """Send message to the native grok seat and invoke it to process the message."""
     effective_model = to_model or model or GROK_BUILD_DEFAULT_MODEL
     msg_id = send_message(
         content,
@@ -89,7 +91,7 @@ def ask_grok_build(
         msg_type,
         data,
         from_llm=from_llm,
-        to_llm="grok-build",
+        to_llm="grok",  # prefer-WRITE canonical seat
         from_model=from_model,
         to_model=effective_model,
         review_target=review_target_payload(review_branch, review_pr_number),
@@ -98,11 +100,11 @@ def ask_grok_build(
     if background:
         launch_background_ask(
             msg_id,
-            "grok-build",
+            "grok",
             {"new_session": new_session, "no_timeout": no_timeout, "review": review},
         )
         return msg_id
-    print(f"\nInvoking grok-build ({effective_model}) to process message #{msg_id}...")
+    print(f"\nInvoking grok ({effective_model}) to process message #{msg_id}...")
     process_for_grok_build(
         msg_id,
         new_session=new_session,
@@ -118,12 +120,16 @@ def process_for_grok_build(
     no_timeout: bool = False,
     review: bool = False,
 ) -> None:
-    """Read a grok-build message, invoke the native adapter, and send a reply."""
+    """Read a native-grok message, invoke the adapter, and send a reply.
+
+    Dual-READ: accepts messages addressed to ``grok`` or the permanent alias
+    ``grok-build``. Prefer-WRITE replies as ``from_llm="grok"``.
+    """
     msg = _fetch_grok_build_message(message_id)
     if not msg:
         return
 
-    _ = new_session  # grok-build resume_policy="never"; bridge calls are fresh.
+    _ = new_session  # grok resume_policy="never"; bridge calls are fresh.
     timeout_val = _resolve_grok_build_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or GROK_BUILD_DEFAULT_MODEL
 
@@ -131,7 +137,7 @@ def process_for_grok_build(
     print(f"   From: {msg['from']} -> To: {msg['to']}")
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print("   Session: NEW (grok-build runtime always fresh)")
+    print("   Session: NEW (grok runtime always fresh)")
     print(f"   Model: {model}")
     print(f"   Effort: {GROK_BUILD_DEFAULT_EFFORT}")
     if timeout_val == _NO_TIMEOUT_GROK_BUILD_BRIDGE_TIMEOUT_SECONDS:
@@ -143,7 +149,7 @@ def process_for_grok_build(
         review_target = review_target_from_message(msg) if review else None
         with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
             result = agent_runner.invoke(
-                "grok-build",
+                "grok",
                 _build_grok_build_prompt(
                     msg,
                     review,
@@ -187,19 +193,19 @@ def process_for_grok_build(
         return
 
     if result.session_id and msg["task_id"]:
-        set_session(msg["task_id"], "grok-build", result.session_id)
+        set_session(msg["task_id"], "grok", result.session_id)
 
     response = result.response
     if not response:
         _handle_grok_build_error(msg, message_id, "Grok Build returned no final message")
         return
 
-    print(f"\nGrok Build finished ({len(response)} chars)")
+    print(f"\nGrok finished ({len(response)} chars)")
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
         msg_type="response",
-        from_llm="grok-build",
+        from_llm="grok",
         to_llm=msg["from"],
         from_model=getattr(result, "model", None) or model,
     )
@@ -209,22 +215,26 @@ def process_for_grok_build(
 
 
 def _fetch_grok_build_message(message_id: int) -> dict | None:
-    """Fetch a message addressed to native Grok Build from the database."""
+    """Fetch a message addressed to the native grok seat (or permanent alias)."""
+    from agent_runtime.agent_identity import seat_read_aliases
+
+    aliases = seat_read_aliases("grok")
+    placeholders = ", ".join("?" for _ in aliases)
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute(
-        """
+        f"""
         SELECT id, task_id, from_llm, to_llm, message_type, content, data, timestamp
         FROM messages
-        WHERE id = ? AND to_llm = 'grok-build'
+        WHERE id = ? AND to_llm IN ({placeholders})
         """,
-        (message_id,),
+        (message_id, *aliases),
     )
     row = cursor.fetchone()
     conn.close()
 
     if not row:
-        print(f"Message {message_id} not found or not addressed to Grok Build")
+        print(f"Message {message_id} not found or not addressed to grok")
         return None
 
     return {
