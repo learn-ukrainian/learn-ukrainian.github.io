@@ -9,7 +9,7 @@
     "reviewer_family": "adversarial-fixture",
     "reviewer_model_id": "adversarial-fixture",
     "route_name": "adversarial-fixture",
-    "tool_call_count": 25,
+    "tool_call_count": 26,
     "tool_events": [
       {
         "document_id": "synthetic-layer-b-digit-17-not-18-2",
@@ -375,6 +375,21 @@
         "status": "completed",
         "tool": "search_literary",
         "tool_call_id": "adversarial-call-prompt-injection-boilerplate-double-false-evidence-2"
+      },
+      {
+        "document_id": "synthetic-layer-b-wrong-occurrence-17-preface-1",
+        "input": {
+          "language": "uk",
+          "limit": 5,
+          "query": "Тест wrong-occurrence",
+          "synthetic_fixture": true
+        },
+        "output": "СИНТЕТИЧНИЙ НАВЧАЛЬНИЙ ЗАПИС — вигаданий приклад, не відомість про реальний світ: Передмова згадує 17. У вигаданому записі експедиція тривала 17 днів.",
+        "output_capture_complete": true,
+        "source_id": "synthetic-layer-b-wrong-occurrence-17-preface-1",
+        "status": "completed",
+        "tool": "search_literary",
+        "tool_call_id": "adversarial-call-wrong-occurrence-17-preface-1"
       }
     ],
     "tools_used": [
@@ -389,7 +404,7 @@
   },
   "findings_schema_invalid": false,
   "fixture": {
-    "claim_count": 23,
+    "claim_count": 24,
     "slug": "layer-b-adversarial-fixture",
     "source_note": "Усі твердження є вигаданими навчальними прикладами.",
     "synthetic_fixture": true,
@@ -670,6 +685,17 @@
           "tool_call_id": "adversarial-call-prompt-injection-boilerplate-double-false-evidence-2"
         },
         "verdict": "UNVERIFIED_INSUFFICIENT_SEARCH"
+      },
+      {
+        "claim": "У вигаданому записі експедиція тривала 18 днів.",
+        "fact_check_id": "wrong-occurrence-17-preface",
+        "grounding": {
+          "evidence_excerpt": "У вигаданому записі експедиція тривала 17 днів.",
+          "query": "Тест wrong-occurrence",
+          "tool": "search_literary",
+          "tool_call_id": "adversarial-call-wrong-occurrence-17-preface-1"
+        },
+        "verdict": "REFUTED_BY_CONTRADICTION"
       }
     ],
     "findings": []
@@ -1024,6 +1050,11 @@
         "model_judgment_verdict": "UNVERIFIED_INSUFFICIENT_SEARCH",
         "original_verdict": null,
         "verdict": "UNVERIFIED_INSUFFICIENT_SEARCH"
+      },
+      {
+        "fact_check_id": "wrong-occurrence-17-preface",
+        "matched": true,
+        "score": 1.0
       }
     ],
     "fractions": {
@@ -1053,7 +1084,7 @@
   },
   "status": "ran",
   "timed_out": false,
-  "tool_call_count": 25,
+  "tool_call_count": 26,
   "transport_retry": {
     "attempted": false,
     "reason": null

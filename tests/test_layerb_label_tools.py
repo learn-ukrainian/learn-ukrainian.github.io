@@ -472,6 +472,10 @@ def test_select_all_uses_every_source_key_and_projects_no_judgment_fields(tmp_pa
 
 
 def test_adversarial_corpus_select_all_scaffolds_all_cases_without_proposed_labels(tmp_path: Path) -> None:
+    fixture = json.loads(
+        (ADVERSARIAL_CORPUS_DIR / "adversarial-layer-b-fixture.json").read_text(encoding="utf-8")
+    )
+    expected_cases = len(fixture["payload"]["fact_checks"])
     shadow_dir = tmp_path / "shadow"
     shadow_report = ShadowRunner(artifacts_dir=ADVERSARIAL_CORPUS_DIR, audit_dir=shadow_dir).run()
     shadow_path = shadow_dir / "phase1-shadow.json"
@@ -494,10 +498,10 @@ def test_adversarial_corpus_select_all_scaffolds_all_cases_without_proposed_labe
         output_dir=second_dir,
     )
 
-    assert shadow_report["summary"]["groundings_processed"] == 23
-    assert selection_report["matched_rows"] == keyed_document["total_rows"] == 23
-    assert len(first["cases"]) == len(second["cases"]) == 23
-    assert first_manifest["counts"]["keyed_rows"] == first_manifest["counts"]["cases"] == 23
+    assert shadow_report["summary"]["groundings_processed"] == expected_cases
+    assert selection_report["matched_rows"] == keyed_document["total_rows"] == expected_cases
+    assert len(first["cases"]) == len(second["cases"]) == expected_cases
+    assert first_manifest["counts"]["keyed_rows"] == first_manifest["counts"]["cases"] == expected_cases
     assert first_manifest["counts"]["segment_verified_candidates"] > 0
     assert first_manifest["counts"]["judgment_fields_prefilled"] == 0
     _assert_scaffold_judgments_are_null(first["cases"])
@@ -507,7 +511,7 @@ def test_adversarial_corpus_select_all_scaffolds_all_cases_without_proposed_labe
         for packet_path in sorted((first_dir / "packets").glob("shard-*.jsonl"))
         for line in packet_path.read_text(encoding="utf-8").splitlines()
     ]
-    assert len(packet_cases) == 23
+    assert len(packet_cases) == expected_cases
     _assert_scaffold_judgments_are_null(packet_cases)
     assert _tree_sha256(first_dir) == _tree_sha256(second_dir)
     assert first_manifest["scaffold_sha256"] == second_manifest["scaffold_sha256"]

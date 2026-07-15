@@ -509,6 +509,81 @@ def test_decisive_span_requires_role_matched_critical_coverage() -> None:
     assert report["thresholds"]["integrity"]["failures"]["SPAN_GOLD_OVERLAP_FAILURE"] == 1
 
 
+def test_claim_critical_spans_preferred_over_broad_expected_support_spans() -> None:
+    """Narrow claim_critical_spans are the span-agreement target when present."""
+    raw = "Передмова: 17. Експедиція тривала 17 днів."
+    first = raw.index("17")
+    second = raw.index("17", first + 1)
+    assert first != second
+    candidate = _candidate(raw, expected_span=(0, len(raw)))
+    # Broad phrase-level annotation context remains, but critical is the 2nd "17".
+    candidate["expected_support_spans"] = [{"start": 0, "end": len(raw), "role": "SUPPORTS"}]
+    candidate["claim_critical_spans"] = [{"start": second, "end": second + 2, "role": "SUPPORTS"}]
+    case = _case("critical-narrow-pass", raw, candidates=[candidate])
+    emission = _emission(
+        case,
+        {"candidate-1": raw},
+        spans={"candidate-1": [{"start": second, "end": second + 2, "role": "SUPPORTS"}]},
+    )
+    report = _run([case], [], {case["case_id"]: emission})
+    score = report["records"][0]["candidate_scores"][0]
+    assert score["relation_match"] is True
+    assert score["span_match"] is True
+    assert score["agreement"] is True
+    assert layerb_qualify.decisive_span_agreement(
+        candidate, [{"start": second, "end": second + 2, "role": "SUPPORTS"}]
+    )
+    # Without claim_critical_spans, the same narrow return would fail broad coverage.
+    broad_only = {**candidate}
+    del broad_only["claim_critical_spans"]
+    assert not layerb_qualify.decisive_span_agreement(
+        broad_only, [{"start": second, "end": second + 2, "role": "SUPPORTS"}]
+    )
+
+
+def test_wrong_occurrence_span_fails_claim_critical_gate() -> None:
+    """Same literal twice: spanning only the non-critical occurrence is a mismatch."""
+    raw = "Передмова згадує 17. У записі експедиція тривала 17 днів."
+    first = raw.index("17")
+    second = raw.index("17", first + 1)
+    candidate = _candidate(raw, relation="CONTRADICTS", role="CONTRADICTS", expected_span=(second, second + 2))
+    candidate["expected_support_spans"] = [
+        {"start": raw.index("У записі"), "end": len(raw), "role": "CONTRADICTS"}
+    ]
+    candidate["claim_critical_spans"] = [{"start": second, "end": second + 2, "role": "CONTRADICTS"}]
+    assert raw[first : first + 2] == "17"
+    assert raw[second : second + 2] == "17"
+    assert not layerb_qualify.decisive_span_agreement(
+        candidate, [{"start": first, "end": first + 2, "role": "CONTRADICTS"}]
+    )
+    assert layerb_qualify.decisive_span_agreement(
+        candidate, [{"start": second, "end": second + 2, "role": "CONTRADICTS"}]
+    )
+
+    case = _case(
+        "wrong-occurrence-17-preface",
+        raw,
+        relation="CONTRADICTS",
+        reviewer_verdict="REFUTED_BY_CONTRADICTION",
+        decision="ACCEPT",
+        candidates=[candidate],
+    )
+    bad_emission = _emission(
+        case,
+        {"candidate-1": raw},
+        relations={"candidate-1": "CONTRADICTS"},
+        spans={"candidate-1": [{"start": first, "end": first + 2, "role": "CONTRADICTS"}]},
+    )
+    report = _run([], [case], {case["case_id"]: bad_emission})
+    record = report["records"][0]
+    assert record["candidate_scores"][0]["relation_match"] is True
+    assert record["candidate_scores"][0]["span_match"] is False
+    assert record["agreement_successes"] != record["agreement_weight"]
+    assert "SPAN_GOLD_OVERLAP_FAILURE" in record["integrity_failures"]
+    # Probe gate aborts on the span mismatch (anti-rubber-stamp).
+    assert report["thresholds"]["adversarial_probes"]["status"] == "FAIL"
+
+
 def test_invalid_or_hash_mismatched_rows_fail_without_leaving_a_denominator() -> None:
     raw = "immutable evidence"
     invalid = _case("invalid-anchor", raw)

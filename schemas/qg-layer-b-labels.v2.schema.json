@@ -459,6 +459,13 @@
           "items": {
             "$ref": "#/$defs/supportSpan"
           }
+        },
+        "claim_critical_spans": {
+          "type": "array",
+          "description": "Optional narrow claim-critical value/entity spans. When present, decisive span agreement prefers these over expected_support_spans (phrase-level annotation context).",
+          "items": {
+            "$ref": "#/$defs/supportSpan"
+          }
         }
       },
       "allOf": [

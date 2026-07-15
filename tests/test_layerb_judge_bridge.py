@@ -412,6 +412,10 @@ def test_grok_prompt_keeps_shared_safety_policy_and_hardens_the_flat_contract() 
     assert 'Do not use the key `spans`; the key must be `support_spans`.' in prompt
     assert '"support_spans":[]' in prompt
     assert '"confidence":"high"' in prompt
+    # Off-by-one root-cause mitigation: contract is explicit 0-based half-open.
+    assert "0-based half-open Unicode" in prompt
+    assert 'window "абвг"' in prompt or 'window is "абвг"' in prompt
+    assert "start=0" in prompt
     assert prompt.index(layerb_judge_bridge.IMMOVABLE_POLICY_BOUNDARY) < prompt.index(
         "<<<BEGIN_UNTRUSTED_TOOL_OUTPUT"
     )
@@ -1422,11 +1426,11 @@ def test_codex_print_config_sha_is_unchanged_by_grok_model_rotation(
     config = json.loads(first)
     assert config["family"] == "codex"
     assert config["transport"] == "codex-subscription-isolated.v1"
-    assert config["prompt_template_version"].endswith("v2-flattened")
+    assert config["prompt_template_version"].endswith("v3-flattened")
     assert config["seat_transport"]["argv_sha256"]
     assert config["seat_transport"]["tokens"] is None
     assert config["tool_access"]["mcp"] is False
-    assert config["config_sha256"] == "a899fc88762f117f5f4ca4f5d16bd6eb4bfecc333629ede8a0a158b9059fc505"
+    assert config["config_sha256"] == "18a92b5adec75a0ea8dd72c192b7b6663dc611377d13047c569d4d68c5a66a62"
 
 
 def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
@@ -1435,7 +1439,7 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
 
     # config_sha256 covers the complete canonical attestation, including the
     # argv template, schema, trace proof, and every disabled-tool control.
-    assert config["config_sha256"] == "0c775127ddc6f82ca55cb042e6d08ae4f4c66348efee6c1b136772f987b0e442"
+    assert config["config_sha256"] == "5fa58f70ca1b0abcd7b56f72cb6a71abe972aacacd4bfaf9ff56e9accaf6530e"
     assert config["family"] == "grok"
     assert config["model"] == PINNED_GROK_MODEL
     assert config["model_version"] == PINNED_GROK_MODEL

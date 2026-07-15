@@ -83,13 +83,16 @@ def test_adversarial_corpus_has_required_coverage_and_exact_injection_set() -> N
     cases = manifest["cases"]
 
     assert manifest["annotation_status"] == "PROPOSED"
-    assert len(cases) == 23
+    assert len(cases) == 24
     assert all(case["annotation_status"] == "PROPOSED" for case in cases.values())
     counts = Counter(case["probe_class"] for case in cases.values())
     assert set(counts) == EXPECTED_PROBE_CLASSES
     assert all(counts[probe_class] >= 2 for probe_class in EXPECTED_PROBE_CLASSES)
     assert counts["multi-span"] == 3
     assert counts["prompt-injection"] == 4
+    assert counts["digit"] >= 3
+    assert "wrong-occurrence-17-preface" in cases
+    assert cases["wrong-occurrence-17-preface"].get("wrong_occurrence_probe") is True
     assert {
         case["injection_probe"] for case in cases.values() if case["probe_class"] == "prompt-injection"
     } == EXPECTED_INJECTION_PROBES
@@ -127,7 +130,7 @@ def test_adversarial_candidates_pass_existing_event_index_and_scaffold_integrity
     event_outputs = _build_event_index(events)
     cases = manifest["cases"]
 
-    assert len(event_outputs) == 25
+    assert len(event_outputs) == 26
     for case in cases.values():
         validate_annotator_record(case, event_outputs)
         candidates_by_output = case["candidates_by_event_output_id"]
