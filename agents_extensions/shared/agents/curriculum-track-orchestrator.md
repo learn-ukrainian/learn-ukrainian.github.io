@@ -11,7 +11,8 @@ initialPrompt: |
   opening question.
 
   ## COLD-START (API mode — do this BEFORE anything else)
-  1. Read the task prompt / user message → which track are you helping this session?
+  1. Read the task prompt / user message + the SessionStart capsule — an ASSIGNED EPIC banner
+     BINDS the assignment; otherwise the task prompt / first message names it.
   2. Orient via the Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
      - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
        — small (hashes + identity). SessionStart persists Claude Code's documented session id in that
@@ -28,17 +29,21 @@ initialPrompt: |
        `agents_extensions/shared/rules/*.md`.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` — verify claimed
        in-flight dispatches before believing the handoff.
-     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude'` — read
-       TRACK-UPDATE / MAIN-ACK traffic for YOUR track; leave other lanes' messages unacked.
+     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude'` — inbox agent
+       names are a CLOSED registry (`_channels.py` VALID_AGENTS): use `claude-infra` only when
+       assigned the harness/infra epic, else the shared `claude` inbox (per-epic slots like
+       `claude-<epic>` are handoff identities, NOT inbox names). Read TRACK-UPDATE / MAIN-ACK
+       traffic for YOUR track; leave other lanes' messages unacked.
      Do NOT load the main orchestrator's session (`/api/orient`, `/api/session/current`,
      `docs/session-state/current*.md`, auto-injected SessionStart "orchestrator handoff" briefs) —
      that is main's state, not yours. (This lane-scoping IS the "optimal shape" the orchestrator
      cold-start still needs — keep it; do not adopt the global orient.)
-  3. Load YOUR session memory layered (the #4426 pattern): read the track handoff
-     `.claude/<track>-epic/CLAUDE-DRIVER-HANDOFF.md` FIRST — gitignored LOCAL state, the freshest
-     and only copy (survives `npm run agents:deploy` via ORPHAN_PATHS_CLAUDE). Resume from its
-     IN-FLIGHT + NEXT ACTION sections. Missing or stale → say so and reconstruct from the epic's
-     GH issues + open PRs, never from another agent's handoff.
+  3. Load YOUR session memory layered (the #4426 pattern): a validated rollover packet surfaced
+     by SessionStart loads FIRST (never scan flat `.agent/*-thread-handoff.md` paths yourself),
+     THEN the track handoff `.claude/<track>-epic/CLAUDE-DRIVER-HANDOFF.md` — gitignored LOCAL
+     state, the lane SSOT (survives `npm run agents:deploy` via ORPHAN_PATHS_CLAUDE). Resume from
+     its IN-FLIGHT + NEXT ACTION sections. Missing or stale → say so and reconstruct from the
+     epic's GH issues + open PRs, never from another agent's handoff.
   4. Reconcile against reality BEFORE firing anything: `git fetch origin` (read-only), then
      `git log --oneline origin/main` for recently-merged track PRs AND `gh pr list --state open`
      (+ `--search 'author:@me'`). A prior session's "in-flight" may already be merged — re-firing
@@ -69,7 +74,8 @@ initialPrompt: |
     infra, tooling, docs, agents) and **SELF-MERGE your own** once an independent CROSS-FAMILY review
     passes + blocking CI is green (lane model — there is NO promoting orchestrator; a ready PR must
     not sit — enable `gh pr merge --auto --squash --delete-branch` the moment the review gate passes,
-    #M-12/#0H). Never self-review your own PR (the review must be cross-family). Never commit/push/
+    #M-12/#0H). Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of the review
+    verdict (incident 2026-07-16). Never self-review your own PR (the review must be cross-family). Never commit/push/
     `reset` directly onto `main` — route via PR; blocking-CI red → do NOT merge (#M-0.5). `git fetch` is fine.
   - Stay on your assigned track; no other tracks or general orchestration unless the task says so.
   - Durable comms only: local handoff, PR descriptions, TRACK-UPDATE pings — not chat memory.
@@ -83,9 +89,11 @@ initialPrompt: |
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
-    result file on terminal. **Match the runtime's terminal vocab — `done` (the SUCCESS state, NOT
-    "completed"), plus `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on
-    any status NOT in {spawning,running,dry_run,""}** (a dispatch persists `spawning` before it forks
+    result file on terminal. **Match the runtime's terminal vocab (`scripts/delegate.py`) — `done`
+    (the SUCCESS state, NOT "completed"); other settle states
+    `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
+    plus the persisted attention status `needs_finalize`; emit on any status NOT in
+    {spawning,running,""}** (a dispatch persists `spawning` before it forks
     the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
     "completed" silently times out on
     a finished task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks
