@@ -226,7 +226,6 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
     "runtime": 60.0,
     "delegate": 30.0,
     "bridge_pending": 15.0,
-    "rollovers": 0.0,
     "wiki": 120.0,
     "governance": 120.0,
     "health": 15.0,
@@ -240,7 +239,6 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
     "runtime": "fs",
     "delegate": "fs",
     "bridge_pending": "sqlite",
-    "rollovers": "fs",
     "wiki": "fs",
     "governance": "fs",
     "health": "probe",
@@ -262,7 +260,6 @@ LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
     "runtime",
     "delegate",
     "bridge_pending",
-    "rollovers",
     "governance",
     "health",
     "session_hints",
@@ -517,14 +514,6 @@ def _collect_bridge_pending_orient_data() -> dict:
     from scripts.ai_agent_bridge import _channels  # noqa: PLC0415 — optional broker bridge
 
     return _channels.bridge_pending_summary()
-
-
-def _collect_rollovers_orient_data() -> dict[str, Any]:
-    """Expose live rollover identity candidates without selecting or mutating them."""
-    from scripts.orchestration import thread_handoff  # noqa: PLC0415 — avoids API startup coupling
-
-    _, state_root = thread_handoff.resolve_roots(PROJECT_ROOT)
-    return thread_handoff.rollover_identity_snapshot(state_root)
 
 
 def _collect_wiki_orient_data() -> dict:
@@ -808,16 +797,6 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
         "runtime": (_collect_runtime_orient_data, {}, False),
         "delegate": (_collect_delegate_orient_data, {"active_count": 0, "recent": []}, False),
         "bridge_pending": (_collect_bridge_pending_orient_data, {}, False),
-        "rollovers": (
-            _collect_rollovers_orient_data,
-            {
-                "schema_version": "rollover-identity-snapshot.v1",
-                "candidate_count": 0,
-                "candidates": [],
-                "errors": [],
-            },
-            False,
-        ),
         "wiki": (_collect_wiki_orient_data, {"by_track": {}}, False),
         "governance": (
             _collect_governance_orient_data,
@@ -843,7 +822,7 @@ async def orient(
     lean: bool = Query(
         False,
         description="Lean cold-start preset: return only the lightweight sections "
-        "(git, runtime, delegate, bridge_pending, rollovers, governance, health, session_hints), "
+        "(git, runtime, delegate, bridge_pending, governance, health, session_hints), "
         "skipping the heavy pipeline/issues/wiki. Ignored when 'sections' is given.",
     ),
     sections: str | None = Query(
@@ -921,8 +900,6 @@ async def orient(
         response["delegate"] = section_data["delegate"]
     if "bridge_pending" in section_data:
         response["bridge_pending"] = section_data["bridge_pending"]
-    if "rollovers" in section_data:
-        response["rollovers"] = section_data["rollovers"]
     if "wiki" in section_data:
         response["wiki"] = section_data["wiki"]
     if "governance" in section_data:

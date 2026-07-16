@@ -65,16 +65,6 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
     monkeypatch.setattr(
-        api_main,
-        "_collect_rollovers_orient_data",
-        lambda: {
-            "schema_version": "rollover-identity-snapshot.v1",
-            "candidate_count": 0,
-            "candidates": [],
-            "errors": [],
-        },
-    )
-    monkeypatch.setattr(
         api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
     )
     monkeypatch.setattr(
@@ -140,7 +130,6 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
-        "rollovers",
         "wiki",
         "health",
         "session_hints",
@@ -155,32 +144,7 @@ def test_parse_orient_sections_lean_preset_excludes_heavy_sections():
     lean = api_main._parse_orient_sections(None, lean=True)
     assert lean == list(api_main.LEAN_ORIENT_SECTIONS)
     assert not ({"pipeline", "issues", "wiki"} & set(lean))
-    assert {"git", "delegate", "rollovers", "governance", "health", "session_hints"} <= set(lean)
-
-
-def test_orient_rollovers_projects_live_identity_candidates(monkeypatch):
-    _patch_orient_sources(monkeypatch)
-    candidate = {
-        "visible_title": "#5295 — Repair fleet rollover task identity",
-        "github_issue_number": 5295,
-        "terminal_goal": "merge",
-    }
-    monkeypatch.setattr(
-        api_main,
-        "_collect_rollovers_orient_data",
-        lambda: {
-            "schema_version": "rollover-identity-snapshot.v1",
-            "candidate_count": 1,
-            "candidates": [candidate],
-            "errors": [],
-        },
-    )
-
-    response = client.get("/api/orient?sections=rollovers&fresh=true")
-
-    assert response.status_code == 200
-    assert response.json()["rollovers"]["candidates"] == [candidate]
-    assert response.json()["meta"]["rollovers"]["source"] == "fs"
+    assert {"git", "delegate", "governance", "health", "session_hints"} <= set(lean)
 
 
 def test_parse_orient_sections_explicit_list_overrides_lean():
@@ -625,7 +589,6 @@ def test_orient_default_sections_remain_full_payload(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
-        "rollovers",
         "wiki",
         "governance",
         "health",
