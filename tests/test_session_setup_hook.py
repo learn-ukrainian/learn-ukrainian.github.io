@@ -37,6 +37,16 @@ def test_session_setup_hook_handoff_fixtures() -> None:
     assert "ok - session setup hook handoff fixtures passed" in result.stdout
 
 
+def test_legacy_table_parser_avoids_gnu_sed_anchor_escape() -> None:
+    hook = _REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh"
+    parser_line = next(
+        line for line in hook.read_text(encoding="utf-8").splitlines()
+        if "TABLE_BRIEF=$(sed -n" in line
+    )
+
+    assert "\\`" not in parser_line
+
+
 def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     import json
     import os
@@ -106,6 +116,19 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         "XDG_STATE_HOME": str(tmp_path / "xdg-state"),
         "GH_CONFIG_DIR": str(tmp_path / "gh-config"),
         "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
+        "CODEX_CANONICAL_REPO_ROOT": str(project_dir),
+        "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
+        "CLAUDE_PROFILE_RESOLVER_SH": str(
+            _REPO_ROOT / "scripts/lib/profile_resolver.sh"
+        ),
+        "CLAUDE_PROFILE_RESOLVER_PY": str(
+            _REPO_ROOT / "scripts/lib/context_profiles.py"
+        ),
+        "CLAUDE_PROFILE_RESOLVER_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
+        "CLAUDE_SESSION_RECORD_SCRIPT": str(
+            _REPO_ROOT / "scripts/lib/session_record.py"
+        ),
+        "CLAUDE_SESSION_RECORD_PYTHON": str(_REPO_ROOT / ".venv/bin/python"),
     }
 
     result = subprocess.run(

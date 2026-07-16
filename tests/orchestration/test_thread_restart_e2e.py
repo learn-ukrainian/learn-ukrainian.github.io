@@ -81,6 +81,9 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         "scripts/context_canary.py",
         "scripts/orchestration/thread_handoff.py",
         "scripts/orchestration/thread_handoff_canary.py",
+        "scripts/lib/context_profiles.py",
+        "scripts/lib/session_record.py",
+        "scripts/config/context_profiles.yaml",
     ]
     sources.extend(
         str(path.relative_to(REPO_ROOT))
@@ -91,6 +94,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
             [
                 "scripts/lib/thread_rollover_link.sh",
                 "scripts/lib/deploy_extensions.sh",
+                "scripts/lib/profile_resolver.sh",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
             ]

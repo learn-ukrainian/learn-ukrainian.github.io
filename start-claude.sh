@@ -116,11 +116,63 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Autocompact at the full 1M context window (kubedojo parity; raised from 750K 2026-06-08).
-# Soft handoff discipline is separate and EARLIER — see MEMORY #2 (~750K, gated by a
-# context-integrity self-check). Late handoff fails silently, so we hand off well before
-# autocompact rewrites context. Subagents handle isolated work in their own windows.
-export CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000
+# Resolve and validate the main-session route independently of delegated models.
+_selected_model=""
+_prev=""
+for arg in "$@"; do
+    case "$arg" in
+        --model=*)
+            _selected_model="${arg#--model=}"
+            ;;
+    esac
+    if [ "$_prev" = "--model" ]; then
+        _selected_model="$arg"
+    fi
+    _prev="$arg"
+done
+
+# Direct use of this certified wrapper is the native-Claude route. The Claudex
+# supervisor marks only the process it owns; the marker is consumed here so a
+# later nested native launch cannot inherit the proxy route by ambient state.
+_claudex_managed_launch="${LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH:-0}"
+unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH
+if [ "$_claudex_managed_launch" != "1" ] && [ "${LEARN_UKRAINIAN_TRANSPORT:-}" = "claudex" ]; then
+    unset LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
+fi
+_requested_profile="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-native_claude}"
+# shellcheck source=scripts/lib/profile_resolver.sh
+source "$PROJECT_DIR/scripts/lib/profile_resolver.sh"
+if ! resolve_context_profile "$_requested_profile" "$_selected_model"; then
+    echo "Error: failed to resolve main-session context profile '$_requested_profile'." >&2
+    exit 1
+fi
+
+if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
+    echo "Warning: untrusted main-session route ($LEARN_UKRAINIAN_RESOLUTION_REASON); using compact fallback without a fabricated context window." >&2
+    if [ "$LEARN_UKRAINIAN_MODEL_MISMATCH" = "1" ]; then
+        echo "Warning: observed model '${_selected_model:-unknown}' does not match profile '${LEARN_UKRAINIAN_EXPECTED_PROFILE_ID:-unknown}'." >&2
+    fi
+fi
+
+# The certified native route must not inherit Claudex's proxy, delegation,
+# deferred-tool, or supervisor identity state.
+if [ "$LEARN_UKRAINIAN_TRANSPORT" = "native" ]; then
+    unset ANTHROPIC_BASE_URL ANTHROPIC_AUTH_TOKEN CLAUDE_CODE_SUBAGENT_MODEL
+    unset ENABLE_TOOL_SEARCH LEARN_UKRAINIAN_CLAUDEX_RUN_ID
+    unset LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION
+fi
+
+# Only a trusted gateway contract may override Claude Code's compaction point.
+if [ "$LEARN_UKRAINIAN_TRUSTED" = "1" ] && [ -n "$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS" ]; then
+    export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
+else
+    unset CLAUDE_CODE_AUTO_COMPACT_WINDOW
+fi
+
+# One concise diagnostic; no endpoint, authorization, or forwarded arguments.
+echo "Context profile: id=$LEARN_UKRAINIAN_PROFILE_ID model=$LEARN_UKRAINIAN_MAIN_MODEL_ID window=$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS budget=$LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS compact=${LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS:-native} reason=$LEARN_UKRAINIAN_RESOLUTION_REASON"
+unset _claudex_managed_launch _requested_profile _prev
+
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 
 # Launch the NATIVE install directly. (Previously launched via

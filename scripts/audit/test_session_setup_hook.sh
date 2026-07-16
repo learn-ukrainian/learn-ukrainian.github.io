@@ -78,12 +78,28 @@ run_hook() {
   local allow_git_router="${2:-0}"
   local handoff_agent="${3:-claude}"
   local current_thread_id="${4:-}"
+  local hook_json="${5:-}"
+  local requested_profile="${6:-native_claude}"
+  local supervisor_run_id="${7:-}"
+  local supervisor_generation="${8:-}"
 
-  HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
+  printf '%s' "$hook_json" | \
+    HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
     CLAUDE_PROJECT_DIR="$root" \
     CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000 \
     CODEX_THREAD_ID="$current_thread_id" \
     CODEX_CANONICAL_REPO_ROOT="$root" \
+    LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="$requested_profile" \
+    LEARN_UKRAINIAN_CLAUDEX_RUN_ID="$supervisor_run_id" \
+    LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION="$supervisor_generation" \
+    CLAUDEX_SUPERVISOR_TEST_STATE_ROOT="$root" \
+    CLAUDE_PROFILE_RESOLVER_SH="$REPO_ROOT/scripts/lib/profile_resolver.sh" \
+    CLAUDE_PROFILE_RESOLVER_PY="$REPO_ROOT/scripts/lib/context_profiles.py" \
+    CLAUDE_PROFILE_RESOLVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
+    CLAUDE_SESSION_RECORD_PYTHON="$REPO_ROOT/.venv/bin/python" \
+    CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
+    CLAUDEX_SUPERVISOR_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     SESSION_HANDOFF_AGENT="$handoff_agent" \
@@ -438,6 +454,74 @@ output_harness="$(run_hook "$fixture_root" 0 "$harness_slot")"
 assert_contains "$output_harness" "PENDING THREAD ROLLOVER DETECTED" "epic harness surfaces claude-infra packet (#5201)"
 assert_contains "$output_harness" "--agent claude-infra" "epic harness surfaces claude-infra packet (#5201)"
 assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epic harness surfaces claude-infra packet (#5201)"
+
+# 18. Official SessionStart fields drive the native profile and exact transcript record.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/transcripts"
+native_transcript="$fixture_root/transcripts/native transcript.jsonl"
+native_hook_json=$(jq -nc \
+  --arg session_id "official-native-session" \
+  --arg transcript_path "$native_transcript" \
+  '{session_id: $session_id, transcript_path: $transcript_path, source: "startup", model: {id: "claude-opus-4-8"}, agent_type: "infra-orchestrator"}')
+output="$(run_hook "$fixture_root" 0 claude stale-codex-session "$native_hook_json" native_claude)"
+assert_contains "$output" "Profile: native_claude" "official native profile"
+assert_contains "$output" "Declared Window: 1000000" "official native profile"
+assert_contains "$output" "Observed Model: claude-opus-4-8" "official native model object"
+assert_contains "$output" "Session ID: official-native-session" "official session id"
+assert_contains "$output" "api/orient?session=official-native-session" "native full orientation"
+assert_not_contains "$output" "api/orient?lean=true&session=official-native-session" "native full orientation"
+native_record="$fixture_root/.agent/sessions/official-native-session.json"
+[ -f "$native_record" ] || fail "official native session record was not created"
+[ "$(jq -r '.transcript_path' "$native_record")" = "$native_transcript" ] || fail "official transcript path was not preserved exactly"
+[ "$(jq -r '.actual_context_window_tokens' "$native_record")" = "1000000" ] || fail "native record did not keep the certified denominator"
+
+# 19. SessionStart binds a supervised Sol child to the official session identity.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/transcripts"
+sol_transcript="$fixture_root/transcripts/sol.jsonl"
+supervisor_run_id=$("$REPO_ROOT/.venv/bin/python" - "$fixture_root" "$REPO_ROOT" <<'PYEOF'
+import os
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+state_root, repo_root = sys.argv[1:]
+sys.path.insert(0, repo_root)
+from scripts.orchestration.claudex_supervisor import ClaudexSupervisor
+
+env = {
+    "LEARN_UKRAINIAN_PROFILE_ID": "sol_lead",
+    "LEARN_UKRAINIAN_MAIN_MODEL_ID": "gpt-5.6-sol",
+    "LEARN_UKRAINIAN_TRANSPORT": "claudex",
+    "LEARN_UKRAINIAN_TRUSTED": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-5.6-luna",
+}
+supervisor = ClaudexSupervisor(
+    "/bin/true",
+    ["--model", "gpt-5.6-sol", "--agent", "infra-orchestrator", "--epic", "harness"],
+    state_root=Path(state_root),
+    env=env,
+)
+supervisor.child = SimpleNamespace(pid=os.getpid())
+supervisor._write_runtime("running")
+print(supervisor.run_id)
+PYEOF
+)
+sol_hook_json=$(jq -nc \
+  --arg session_id "official-sol-session" \
+  --arg transcript_path "$sol_transcript" \
+  '{session_id: $session_id, transcript_path: $transcript_path, source: "startup", model: "gpt-5.6-sol", agent_type: "infra-orchestrator"}')
+output="$(run_hook "$fixture_root" 0 claude-infra stale-codex-session "$sol_hook_json" sol_lead "$supervisor_run_id" 0)"
+assert_contains "$output" "Profile: sol_lead" "supervised Sol profile"
+assert_contains "$output" "Declared Window: 372000" "supervised Sol window"
+assert_contains "$output" "Cold Start: compact" "supervised Sol compact startup"
+assert_contains "$output" "Budget: 37200" "supervised Sol budget"
+assert_contains "$output" "api/orient?lean=true&session=official-sol-session" "supervised Sol lean orientation"
+assert_not_contains "$output" "CLAUDEX SUPERVISOR BIND FAILED" "supervised Sol binding"
+supervisor_runtime="$fixture_root/.agent/claudex-supervisors/$supervisor_run_id/runtime.json"
+[ "$(jq -r '.session_id' "$supervisor_runtime")" = "official-sol-session" ] || fail "supervisor did not bind the official session id"
+[ "$(jq -r '.session_model_id' "$supervisor_runtime")" = "gpt-5.6-sol" ] || fail "supervisor did not bind the official model"
+[ "$(jq -r '.handoff_agent' "$supervisor_runtime")" = "claude-infra" ] || fail "supervisor did not bind the handoff lane"
 
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"
 printf 'fallback_warn_count=%s\n' "$fallback_warn_count"

@@ -104,3 +104,58 @@ to call the API first and only fall back to direct file reads when
 the API server is unreachable.
 
 ---
+
+## Profile-aware budget gate — 2026-07-16 (#5265)
+
+The measurement contract now follows the lead-session profile instead of the
+stale manifest + full rules + session + full-orient bundle. Each injected or
+fetched source reports bytes, provenance, token-count method, and count. The
+fallback changed from non-conservative `bytes // 4` to
+`ceil(UTF-8 bytes / 3) + 32 tokens per source`; a configured gateway/model token
+endpoint supersedes the estimate. `--transcript` supplies observed first-turn
+input/cache usage, and the larger planned/observed value drives the gate.
+
+Live local measurements (no tokenizer endpoint and no transcript override):
+
+| Lead profile | Delegated model | Startup mode | Sources | Bytes | Conservative tokens | Budget | Window share | Result |
+|---|---|---|---:|---:|---:|---:|---:|---|
+| `sol_lead` / 372K | Terra | compact | 7 | 45,562 | 15,414 | 37,200 | 4.14% | PASS |
+| `native_claude` / 1M | Luna | full | 7 | 45,572 | 15,417 | 100,000 | 1.54% | PASS |
+
+Compact Sol source breakdown:
+
+| Source | Provenance | Bytes | Conservative tokens |
+|---|---|---:|---:|
+| Project instructions | harness-injected `CLAUDE.md` | 12,432 | 4,176 |
+| Session profile capsule | generated from resolved profile | 317 | 138 |
+| Session-bound manifest | Monitor API | 1,082 | 393 |
+| Lean orientation | Monitor API | 16,834 | 5,644 |
+| Active delegates | Monitor API | 770 | 289 |
+| Worktrees | Monitor API | 14,048 | 4,715 |
+| Lane inbox | Monitor API | 79 | 59 |
+
+Changing only Terra/Luna is covered by an invariance test: lead model/window,
+startup mode, budget, warning tiers, source identities, byte counts, and token
+counts remain identical. Missing or mismatched route metadata and incomplete
+source fetches fail the gate rather than passing on zero-byte responses.
+
+### End-to-end Claudex first-turn verification
+
+A real `gpt-5.6-sol` lead session with Terra delegated and the
+`infra-orchestrator` project agent exposed a cost that source-only measurement
+cannot see: Claude Code's own framing and registered tool definitions. The
+Claudex launcher had set `ENABLE_TOOL_SEARCH=false`, which eagerly loaded every
+MCP schema into the first request. Enabling deferred tool search only on the
+Claudex route preserved successful model startup and brought the observed
+first-turn input/cache total under the compact budget:
+
+| Claudex tool loading | Estimated repository sources | Observed first turn | 372K share | 37,200 budget | Result |
+|---|---:|---:|---:|---:|---|
+| Eager (`ENABLE_TOOL_SEARCH=false`) | 14,215 | 41,331 | 11.11% | 111.10% | FAIL |
+| Deferred (`ENABLE_TOOL_SEARCH=true`) | 14,208 | 26,444 | 7.11% | 71.09% | PASS |
+
+The 14,887-token reduction is harness/tool metadata, not a lowered target or a
+reclassified source. The gate still uses the larger of the source estimate and
+observed transcript usage.
+
+---

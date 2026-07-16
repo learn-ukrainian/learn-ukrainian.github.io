@@ -17,15 +17,17 @@ include live context-window telemetry in cold-start responses. Dispatched
 subprocesses set `AGENT_NO_TELEMETRY_FOOTER=1`, which suppresses the
 footer even if the parent process has the opt-in variable set.
 
-The token source is the same deterministic transcript-JSONL path used by
-the Claude statusline: parse assistant `message.usage` records and sum
+Token usage comes from the exact transcript path recorded from the official
+SessionStart payload. Monitor parses assistant `message.usage` records and sums
 `input_tokens`, `cache_read_input_tokens`, and
-`cache_creation_input_tokens` from the latest assistant turn. The
-previous assistant usage record supplies the per-turn delta, and the
-assistant usage record count supplies the monotonic turn number. The
-`.context_window.used_tokens` field is not used because Claude Code
-2.1.139 did not populate it; API headers are unavailable to server-side
-Monitor endpoints.
+`cache_creation_input_tokens` from the latest assistant turn; output tokens are
+not current-context usage. The previous assistant usage record supplies the
+per-turn delta, and the assistant usage record count supplies the monotonic turn
+number. Capacity, profile, trust, and mismatch metadata come from the canonical
+private per-session record. An official statusline
+`context_window.context_window_size` observation wins over the declared launcher
+profile. Unknown capacity remains `null`; Monitor never fabricates a 1M or
+auto-compaction denominator.
 
 Text responses append a tail footer:
 
@@ -40,9 +42,9 @@ the response text. Pass `?session=<uuid>` or header `X-Session-Id`
 
 - Session hit → `_telemetry.ctx` reflects that session's transcript;
   `caller_match: true`.
-- No session param → `_telemetry.ctx` is `null`; consult
-  `_telemetry.newest_transcript` for the newest checkout transcript
-  (may not be the caller's session).
+- No session param → `_telemetry.ctx` is `null`; `_telemetry.newest_transcript`
+  is a compatibility diagnostic only and must never be treated as the caller's
+  context state.
 - Session miss → `reason: "session-transcript-not-found"`.
 
 `LEARN_UKRAINIAN_TRANSCRIPT_PATH` / `CLAUDE_TRANSCRIPT_PATH` remain a
@@ -58,7 +60,17 @@ server-global test hook for the no-session newest-transcript path only.
     "distance_tokens": 13000,
     "distance_label": "to premium",
     "turn": 47,
-    "source": "transcript-jsonl"
+    "source": "transcript-jsonl",
+    "declared_model": "gpt-5.6-sol",
+    "observed_model": "gpt-5.6-sol",
+    "declared_context_limit": 372000,
+    "actual_context_limit": 360000,
+    "selected_profile": "sol_lead",
+    "percentage": 51.94,
+    "provenance": "statusline.context_window.context_window_size",
+    "mismatch": true,
+    "profile_trusted": true,
+    "profile_resolution_reason": "explicit-profile"
   }
 }
 ```
@@ -73,29 +85,31 @@ ETag and cache semantics are unchanged.
 
 ## Agent Quick Start
 
-**Recommended cold-start sequence (GH #1309, since P1):**
+**Recommended cold-start sequence (profile-aware):**
 
 ```bash
-# Pass your session id on telemetry-bearing endpoints (manifest/rules/orient) so responses carry
-# live context-window telemetry (_telemetry.ctx) instead of null. Claude Code exports it as
-# $CLAUDE_CODE_SESSION_ID; empty is fine (falls back to a best-effort newest-transcript hint).
-S="${CLAUDE_CODE_SESSION_ID:-}"
+# SessionStart writes the official id into CLAUDE_ENV_FILE for later Bash calls.
+# If it is unavailable, telemetry must stay caller-unmatched; never guess from the newest transcript.
+S="${LEARN_UKRAINIAN_SESSION_ID:-}"
 
-# 1. Tiny index of per-component hashes — decide what to fetch.
+# 1. Tiny session-bound index: hashes, identity, and trusted context telemetry.
 curl -s "http://localhost:8765/api/state/manifest?session=$S"
 
-# 2. Only fetch components whose hash changed since last session.
-curl -s "http://localhost:8765/api/rules?format=markdown&session=$S"     # ~1.3 KB
-curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # ~1-3 KB
+# 2. Follow the SessionStart capsule's Orientation URL.
+# Compact profiles use lean=true; certified full profiles omit it.
+if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-compact}" = "compact" ]; then
+  curl -s "http://localhost:8765/api/orient?lean=true&session=$S"
+else
+  curl -s "http://localhost:8765/api/orient?session=$S"
+fi
 
-# 3. Lean cold-start orient — git, runtime, delegate, bridge, governance, health, hints.
-#    Skips the heavy pipeline/issues/wiki sections (fetch those on demand once you have a
-#    lane, e.g. ?sections=pipeline). Drop ?lean=true for the full legacy payload.
-curl -s "http://localhost:8765/api/orient?lean=true&session=$S"
-# Use ?fresh=true right after you committed or filed an issue.
+# 3. Pull live operational signals used by the lane.
+curl -s "http://localhost:8765/api/delegate/active"
+curl -s "http://localhost:8765/api/worktrees"
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude-infra"
 
-# 4. Optional: do I have unread channel deliveries?
-curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+# 4. Do NOT fetch the full rules payload at cold start. Fetch it on demand before
+# the first dispatch, and again only when the manifest rules hash changes.
 ```
 
 Agents should keep a small on-disk cache keyed by manifest hash

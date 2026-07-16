@@ -171,11 +171,16 @@ class MonitorClient:
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.timeout_s = timeout_s
-        # Send the caller's session id (Claude Code exports $CLAUDE_CODE_SESSION_ID) as the
-        # X-Session-Id header on every request, so telemetry-bearing responses carry live
-        # context-window telemetry (_telemetry.ctx) instead of null. Empty/absent is fine — the
-        # API degrades to a best-effort newest-transcript hint.
-        self.session_id = session_id or os.environ.get("CLAUDE_CODE_SESSION_ID") or None
+        # SessionStart persists Claude Code's documented ``session_id`` as a
+        # project-private value. Non-Claude callers retain their own explicit thread
+        # identities; no route falls back to another session's newest transcript.
+        self.session_id = (
+            session_id
+            or os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
+            or os.environ.get("CODEX_THREAD_ID")
+            or os.environ.get("CODEX_SESSION_ID")
+            or None
+        )
 
     # -- low-level HTTP --------------------------------------------
 

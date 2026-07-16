@@ -19,7 +19,7 @@
 2. `gh pr list --search 'author:@me' --state open`
 3. Use the validated automatic SessionStart rollover output as authoritative. Do not manually parse flat handoff files or leases if a rollover packet was surfaced at startup.
 4. If the SessionStart hook output is unavailable, or the API is down, or the hook explicitly surfaces the legacy file, use the legacy flat file fallback: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local).
-5. Orient via Monitor API (lean cold-start mode): `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$CLAUDE_CODE_SESSION_ID"`
+5. Orient via Monitor API (lean cold-start mode): `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$LEARN_UKRAINIAN_SESSION_ID"`
 
 
 ## Lane boundaries

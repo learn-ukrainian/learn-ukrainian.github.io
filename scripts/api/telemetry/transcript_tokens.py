@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.session_record import canonical_state_root, read_record
+
 
 @dataclass(frozen=True, slots=True)
 class TranscriptTelemetry:
@@ -79,10 +81,16 @@ def _newest_jsonl(paths: list[Path]) -> Path | None:
     return max(candidates, key=lambda p: (p.stat().st_mtime, str(p)))
 
 
+def read_session_record(project_root: Path, session: str) -> dict[str, Any] | None:
+    """Read one session from the primary checkout shared by linked worktrees."""
+    return read_record(session, state_root=canonical_state_root(project_root))
+
+
 def resolve_transcript_paths(project_root: Path, *, session: str | None = None) -> list[Path]:
     """Resolve candidate Claude transcript paths for this checkout.
 
-    When ``session`` is given, resolve EXACTLY
+    When ``session`` is given, resolve from the SessionStart runtime record first.
+    Otherwise fall back to resolving EXACTLY
     ``~/.claude/projects/<flat-root>/<session>.jsonl`` with no fallback
     globs and no cross-checkout scan.
 
@@ -91,6 +99,13 @@ def resolve_transcript_paths(project_root: Path, *, session: str | None = None) 
     checkout's project dir and legacy ``*learn-ukrainian*`` fallbacks.
     """
     if session:
+        # SessionStart's official path is authoritative. A corrupt record must
+        # stay loud instead of silently selecting a different transcript.
+        rec = read_session_record(project_root, session)
+        if rec and rec.get("transcript_path"):
+            path = Path(rec["transcript_path"])
+            return [path] if path.is_file() else []
+
         exact = Path.home() / ".claude" / "projects" / _claude_project_dir_name(project_root) / f"{session}.jsonl"
         return [exact] if exact.is_file() else []
 
