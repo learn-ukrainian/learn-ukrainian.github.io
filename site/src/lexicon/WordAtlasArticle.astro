@@ -818,7 +818,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
       )}
 
       {enrichment?.etymology && (
-        <section class="atlas-section">
+        <section class="atlas-section" id="etymology">
           <h2>Етимологія</h2>
           <div class="ety-timeline">
             {etymologyStages.map((stage, index) => (

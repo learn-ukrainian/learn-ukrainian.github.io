@@ -34,7 +34,9 @@ export function buildLemmaRoutes(manifest) {
 
     const group = slugGroups[entry.slug] ?? [];
     routes.set(key, {
-      href: `/etymology/${entry.slug}/`,
+      // Per-word /etymology/<slug>/ pages are offline in normal deploys
+      // (#5274 — Pages budget). Deep-link the lexicon article anchor instead.
+      href: `/lexicon/${entry.lemma}/#etymology`,
       lemma: entry.lemma,
       slug: entry.slug,
       polysemy: group.length > 1,
