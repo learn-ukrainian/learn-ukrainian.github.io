@@ -11,6 +11,7 @@ from uuid import uuid4
 
 import pytest
 
+from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import codex_state, rollover
 from scripts.orchestration.task_family.model import RelationType
 from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
@@ -188,6 +189,38 @@ def test_transition_identity_is_stable_per_packet_without_splitting_the_family()
     assert first_family == retry_family == second_family
     assert first_operation == retry_operation
     assert first_operation != second_operation
+
+
+def test_transition_rejects_task_identity_title_mismatch(tmp_path: Path) -> None:
+    identity = task_identity.build_identity(
+        repository=task_identity.DEFAULT_REPOSITORY,
+        stream_epic=4707,
+        stream_epic_url=None,
+        github_issue_number=5295,
+        github_issue_url=None,
+        semantic_title="Repair fleet rollover task identity",
+        task_family="infra-harness",
+        role="orchestrator",
+        predecessor_task_id="source-thread",
+        replacement_task_id=None,
+        lineage_id="lineage-task-identity",
+        generation=1,
+        terminal_goal="merge",
+    )
+
+    with pytest.raises(ValueError, match="visible title does not match the native transition"):
+        rollover.prepare_transition(
+            repo_root=tmp_path,
+            agent="codex",
+            lineage_id="lineage-task-identity",
+            rollover_id="rollover-task-identity",
+            generation=1,
+            source_thread_id="source-thread",
+            intended_title="A different native transition title",
+            title_source="explicit",
+            bootstrap_prompt_path=".agent/thread-rollovers/bootstrap.md",
+            task_identity_envelope=identity,
+        )
 
 
 def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> None:

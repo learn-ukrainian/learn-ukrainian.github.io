@@ -299,6 +299,41 @@ def test_every_harness_uses_the_shared_identity_contract(harness: str, native_su
     assert transition["visible_title"] == identity["visible_title"]
 
 
+def test_title_transition_rejects_non_object_events() -> None:
+    identity = _identity()
+    transition = _transition(identity)
+    transition["events"].append("corrupted-event")
+
+    with pytest.raises(ValueError, match="events must be a list of objects"):
+        task_identity.validate_title_transition(transition, identity)
+
+
+@pytest.mark.parametrize(
+    ("state", "expected_prefix"),
+    [
+        ("awaiting_replacement_binding", "Bind the exact replacement"),
+        ("awaiting_native_title", "Request the exact native title action"),
+        ("title_acknowledged", "Read back only"),
+        ("title_mutation_failed", "Repair the exact title boundary"),
+        ("title_readback_failed", "Repair the exact title boundary"),
+        ("title_reconciled", "Resume only"),
+        ("fallback_recorded", "Resume only"),
+        ("unknown-state", "Inspect the exact receipt"),
+    ],
+)
+def test_safe_recommended_resolution_covers_every_operator_state(
+    state: str,
+    expected_prefix: str,
+) -> None:
+    resolution = task_identity.safe_recommended_resolution(
+        {"state": state, "replacement_task_id": "replacement-2"},
+        rollover_id="rollover-2",
+    )
+
+    assert resolution.startswith(expected_prefix)
+    assert "rollover-2" in resolution or "replacement-2" in resolution
+
+
 def test_legacy_packet_receives_deterministic_identity_backfill() -> None:
     legacy = {
         "schema_version": 2,

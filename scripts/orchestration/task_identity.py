@@ -275,6 +275,8 @@ def validate_title_transition(transition: Mapping[str, Any], identity: Mapping[s
         raise ValueError("title transition replacement ID does not match task identity")
     if not isinstance(transition["events"], list):
         raise ValueError("title transition events must be a list")
+    if not all(isinstance(event, Mapping) for event in transition["events"]):
+        raise ValueError("title transition events must be a list of objects")
     return deepcopy(dict(transition))
 
 
