@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.3 — updated 2026-06-19 (fleet correction, user-sourced). **§2 roster + §8 ranking corrected; the per-task bakeoff SCORE cells (§3–§7) were NOT re-run and predate these lane changes — treat them as STALE per the 30-day rule until re-bakeoffed.** v1.3 deltas: agy is **metered** (not unmetered); **Codex + Claude are the top-priority lanes**; **grok (native CLI; alias grok-build) and grok-hermes (demoted Hermes path) are both active lanes**; **Qwen is EXCLUDED** (too costly, user 2026-05-29); the **Claude dispatch lane is AVAILABLE** (the planned post-2026-06-15 sunset was cancelled); models are now **Opus 4.8 / gpt-5.5**. v1.2 (2026-05-18) added §8 ranking + Qwen integration + codex retraction sync. See §10 Provenance for version history.
+> **Status:** v1.4 — updated 2026-07-16 (Kimi K3 native lane onboarding). **§2 roster + §8.10 inventory corrected; the per-task bakeoff SCORE cells (§3–§7) were NOT re-run and predate this lane — K3 stays canary-only until role-specific bakeoffs land.** v1.4 adds native Kimi Code OAuth (`kimi-code/k3`, 262K, max effort) as a dispatchable subscription worker without promoting it over evidence-backed incumbents. v1.3 corrected the June fleet roster and exclusions. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -31,6 +31,7 @@ Each cell carries:
 | **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | Support lane: existing scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. |
 | **DeepSeek** | deepseek-v4-pro (content review + VESUM via `sources` MCP); deepseek-v4-flash (cheap PR code review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane — use it, don't review inline.** Primary PR-diff + content review. |
 | **Grok** | **`grok`** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`, **file-editing dispatch**, validated 2026-06-14); **grok-4.\*** via demoted Hermes seat (`--agent grok-hermes` / `ask-hermes`) | native grok CLI / Hermes (xai-oauth) | Cheap | **Active.** Prefer the native `grok` seat for coding/review; Hermes `grok-hermes` remains for V7 grok-tools content path. |
+| **Kimi** | K3 (`kimi-code/k3`; 262K context; max effort) | Native Kimi Code CLI OAuth: `scripts/delegate.py dispatch --agent kimi` | Subscription; CodexBar request windows | **Active onboarding lane.** Bounded code/recon/triage and second-opinion canaries only until role bakeoffs; not a sole high-stakes authority and not yet routed to Ukrainian content. |
 | **cursor** | cursor-agent | `scripts/delegate.py dispatch --agent cursor` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
 | **pool** | poolside.ai `laguna-m.1` (`--variant high`/`max`) | `ab ask-pool` (opencode router + lightpanda MCP) | **Free** (poolside sub; watch weekly limits on bursts) | Differentiator = **free** cross-family code review + web-verify *volume*. NOT Ukrainian / translation / prose / pedagogy. Bridge (consult/review) only — no dispatch adapter yet. |
 | **glm** | Zhipu `glm-5.2` | `ab ask-glm` (opencode router + lightpanda MCP) | Z.AI Coding Plan (or `openrouter/z-ai/glm-5.2`) | Differentiator = deep code/security review + **large-context cross-file coherence audits**. ⚠️ **China-hosted (Zhipu/z.ai) → data egresses to China → LOCAL-ONLY, never CI / sensitive data** (`ask-glm` refuses under CI). NOT Ukrainian/prose. Bridge-only. |
@@ -52,6 +53,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors.
+  - **kimi K3:** bounded code/recon/triage canaries while the lane is new; pair consequential output with the normal cross-family review gate and collect bakeoff evidence before promotion.
   - **DeepSeek:** any open PR diff or content+VESUM review — route reviews here off-seat; don't review inline.
   - **grok-4.\* / hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
@@ -391,10 +393,13 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 | Qwen-3.6-max-preview | Chinese (Alibaba) | No | ❓ Untested |
 | Qwen-3.6-flash | Chinese (Alibaba) | No | ❓ Untested |
 | Kimi K2 | Chinese (Moonshot) | No | ⏸ EXCLUDED per user direction 2026-05-18 |
+| Kimi K3 | Chinese (Moonshot) | No | 🧪 Native OAuth lane added 2026-07-16; infrastructure-smoke only, role quality unbenchmarked |
 
 **Honest take:** DeepSeek has earned primary slots on quality, not just cost. Qwen integration just landed; needs role-specific bakeoffs to know if it earns slots or stays runner-up.
 
 **Recommended next bakeoffs to answer "which Chinese model is good enough for which role" (priority order):**
+
+Kimi K3 onboarding requires matched code-implementation, code-review, and Q&A cells before any primary/runner-up promotion. The earlier K2 exclusion remains historical evidence and does not substitute for a K3 result.
 
 1. **Qwen-3.6-plus as V7 module writer at B1+** (codex's tools+register issue at A1 may not exist at B1+ register; qwen plausibly fits well here at low cost) — cost ~$5-10/module
 2. ~~**Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set~~ **DONE 2026-05-19.** Verdict: F1 69%, precision 90%, recall 56%. Rank 5/5; doesn't earn primary. See `audit/2026-05-19-qwen-3.6-judge-calibration/REPORT.md`.
@@ -464,6 +469,7 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 
 ## 10. Provenance
 
+- v1.4: 2026-07-16 by Codex. Added native Kimi K3 as an unranked subscription lane; recorded its 262K/max-effort local capability contract and preserved the no-promotion-without-bakeoff rule.
 - v1.2: 2026-05-18 by orchestrator (Claude inline). Added §8 Ranking-by-role with quality+cost view per user request. Added Qwen-3.6 row to §2 roster (newly wired). Updated §4.1 runner-ups to reflect the codex `tool_calls_total=0` retraction (PR #1907, 2026-05-13). Added DeepSeek + Qwen to writer Open slots pending bakeoff. Excluded Kimi K2 per user direction.
 - v1.1: 2026-05-18 by orchestrator (Claude inline). Added §4.2.a Russianism judge sub-cell from new evidence in `audit/INDEX-bakeoff-evidence.md`. Added promote-protocol round 1 results pointer to #2132.
 - v1: 2026-05-18 by orchestrator (Claude inline) per user direction.

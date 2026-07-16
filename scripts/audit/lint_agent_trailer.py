@@ -45,7 +45,7 @@ Trailer format
 
 Where ``agent`` ∈ {``claude-inline``, ``claude``, ``codex``, ``gemini``,
 ``agy-inline``, ``agy``, ``grok``, ``grok-build``, ``grok-hermes``,
-``deepseek-v4-pro``, ``cursor``, ``dependabot``} and ``task-id`` is the
+``deepseek-v4-pro``, ``cursor``, ``kimi``, ``dependabot``} and ``task-id`` is the
 dispatch task identifier or the ``inline`` literal for orchestrator commits.
 ``grok-build`` is a permanent alias of the native ``grok`` seat (historical
 trailers must keep validating). Examples::
@@ -71,7 +71,7 @@ import subprocess
 import sys
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek-v4-pro|cursor|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek-v4-pro|cursor|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
 

@@ -44,6 +44,8 @@ subscription_agents:
     billing_model: subscription
   cursor:
     billing_model: subscription
+  kimi:
+    billing_model: subscription
   grok:
     billing_model: subscription
   grok-build:

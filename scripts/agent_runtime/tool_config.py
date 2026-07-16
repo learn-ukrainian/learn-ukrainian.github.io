@@ -63,6 +63,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "agy"
     if agent.startswith("cursor"):
         return "cursor"
+    if agent.startswith("kimi"):
+        return "kimi"
     normalized = normalize_seat(agent)
     if normalized in {
         "claude",
@@ -74,6 +76,7 @@ def _canonical_agent_name(agent: str) -> str | None:
         "qwen",
         "agy",
         "cursor",
+        "kimi",
     }:
         return normalized
     return None
@@ -370,6 +373,20 @@ def build_mcp_tool_config(
         # MCP_TOOLS_NEVER_INVOKED catches a configured server that is never
         # actually called.
         return _agy_mcp_servers(_resolved_agy_mcp_config_path(), mcp_servers)
+
+    if canonical_agent == "kimi":
+        # Kimi Code 0.26 reads any MCP configuration from its own persisted
+        # profile and exposes no per-invocation MCP selector. Do not silently
+        # hand it Codex-shaped `.mcp.json` config. Requested servers therefore
+        # fail closed until a scoped Kimi MCP contract is implemented.
+        kimi_config_path = Path.home() / ".kimi-code" / "config.toml"
+        return None, _basic_diagnostics(
+            mcp_config_path=kimi_config_path,
+            requested_servers=mcp_servers,
+            resolved_servers=None,
+            resolution_status="servers_not_found" if mcp_servers else "config_empty",
+            missing_server_names=mcp_servers,
+        )
 
     if canonical_agent in ("grok-hermes", "deepseek", "qwen"):
         # Hermes-backed seats (grok-hermes / DeepSeek / Qwen): tool_config
