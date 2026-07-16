@@ -273,7 +273,7 @@
       "required": ["location", "excerpt", "supports"],
       "properties": {
         "location": {"$ref": "#/$defs/nonempty"},
-        "excerpt": {"type": "string", "minLength": 8},
+        "excerpt": {"type": "string", "minLength": 1},
         "supports": {"type": "string", "minLength": 8}
       }
     },

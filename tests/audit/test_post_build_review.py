@@ -1045,29 +1045,42 @@ def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> 
     assert len(json.dumps(schema, ensure_ascii=False)) < 35_000
 
 
-def test_packet_bound_contract_allows_short_line_only_for_supplied_finding() -> None:
+def test_packet_bound_contract_finalizes_short_supplied_finding(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = pbr.evaluate_mechanical_track_policy
+
+    def with_short_finding(target: dict, track_policy: dict, **kwargs: object) -> list[dict]:
+        findings = original(target, track_policy, **kwargs)
+        content_path = str(target["files"]["content"])
+        repo_root = Path(str(kwargs.get("repo_root", ROOT)))
+        content_lines = (repo_root / content_path).read_text(encoding="utf-8").splitlines()
+        short_line = next(
+            index for index, text in enumerate(content_lines, start=1) if text == ":::"
+        )
+        findings.append(
+            {
+                "id": "short-learner-level-meta",
+                "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
+                "source": "track_policy",
+                "category": "learner_level_meta_leakage",
+                "severity": "medium",
+                "message": "Synthetic short learner-level metadata leakage.",
+                "evidence": "Synthetic exact short-line evidence.",
+                "location": f"{content_path}:{short_line}",
+            }
+        )
+        return findings
+
+    monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_short_finding)
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     content_path = packet["target"]["files"]["content"]
-    content_material = packet["target_materials"]["content"]
-    content_material["lines"][0]["text"] = "Мова C1"
-    content = "\n".join(entry["text"] for entry in content_material["lines"])
-    if content_material["trailing_newline"]:
-        content += "\n"
-    content_material["sha256"] = pbr.sha256_text(content)
-    supplied_finding = {
-        "id": "short-learner-level-meta",
-        "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
-        "source": "track_policy",
-        "category": "learner_level_meta_leakage",
-        "severity": "medium",
-        "message": "Synthetic short learner-level metadata leakage.",
-        "evidence": "Мова C1",
-        "location": f"{content_path}:1",
-    }
-    packet["deterministic"]["policy_findings"].append(supplied_finding)
-    packet["deterministic"]["aggregate"] = pbr.aggregate_deterministic(
-        packet["deterministic"]
+    supplied_finding = next(
+        finding
+        for finding in packet["deterministic"]["policy_findings"]
+        if finding["id"] == "short-learner-level-meta"
     )
+    short_line = int(supplied_finding["location"].rsplit(":", 1)[1])
 
     schema = pbr.semantic_response_schema(packet)
     content_choice = next(
@@ -1075,17 +1088,19 @@ def test_packet_bound_contract_allows_short_line_only_for_supplied_finding() -> 
         for choice in schema["$defs"]["dimensionEvidence"]["oneOf"]
         if choice["properties"]["location"]["const"] == content_path
     )
-    assert 1 in content_choice["properties"]["line"]["enum"]
+    assert short_line in content_choice["properties"]["line"]["enum"]
     assert 2 not in content_choice["properties"]["line"]["enum"]
 
     semantic = _passing_semantic(packet)
-    hydrated = pbr.hydrate_provider_dimension_evidence(semantic, packet)
-    normalized = _normalize_fixture(hydrated, packet=packet)
-    audit = normalized["alignment_audit"]["LEARNER_LEVEL_META_LEAKAGE"]
+    result = pbr.finalize_review(packet, _raw(semantic))
+    audit = result["semantic"]["alignment_audit"]["LEARNER_LEVEL_META_LEAKAGE"]
 
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["combined_disposition"]["status"] == "REVISE"
     assert audit["status"] == "FOUND"
     assert supplied_finding["id"] in audit["finding_ids"]
-    assert any(item["excerpt"] == "Мова C1" for item in audit["evidence"])
+    assert any(item["excerpt"] == ":::" for item in audit["evidence"])
+    pbr.validate_result(result)
 
 
 def test_semantic_prompt_writer_emits_exact_integrity_checked_bytes(
