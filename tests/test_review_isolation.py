@@ -708,6 +708,7 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
     assert "--strict-mcp-config" in plan.cmd
     assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(write / "empty-mcp.json")
     output_schema = json.loads(plan.cmd[plan.cmd.index("--json-schema") + 1])
+    assert "$schema" not in output_schema
     assert set(output_schema["properties"]) == {"schema_version", "overall", "findings"}
     assert output_schema["$defs"]["location"]["properties"]["path"]["enum"] == [
         "scripts/example.py"

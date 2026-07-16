@@ -1366,6 +1366,11 @@ def canonical_isolated_review_schema(changed_paths: Sequence[str]) -> dict[str, 
     if not all(isinstance(path, str) and path for path in paths):
         raise ReviewIsolationError("review_schema_changed_paths_invalid")
     schema = copy.deepcopy(load_schema())
+    # Claude CLI validates --json-schema with an Ajv instance that does not
+    # register the Draft 2020-12 metaschema. The explicit declaration is
+    # transport metadata, not part of the payload contract; removing it keeps
+    # the canonical constraints while allowing the provider to compile them.
+    schema.pop("$schema", None)
     findings = schema["properties"]["findings"]
     if paths:
         schema["$defs"]["location"]["properties"]["path"] = {
