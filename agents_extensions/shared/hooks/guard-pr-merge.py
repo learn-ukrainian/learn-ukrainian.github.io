@@ -45,6 +45,7 @@ import re
 import shlex
 import subprocess
 import sys
+from typing import NamedTuple
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> every merge
@@ -123,6 +124,13 @@ def _command(payload: dict) -> str:
 # so the helpers are copied, not imported. Keep the four copies in
 # guard-branch-switch-in-main.py, guard-admin-merge.py, guard-push-pytest.py,
 # and guard-pr-merge.py in sync.
+#
+# This copy alone splits the tokenizer into _scope_events() with _segments() derived from
+# it: only this hook cares WHERE a subshell begins and ends, because only this hook tracks
+# `cd` (#5333). _segments() still returns exactly what the siblings' version does — the
+# sync target is tokenizing semantics, not line count (guard-branch-switch-in-main.py likewise
+# grew _segments_with_following_operator for what it needed). Do NOT collapse the events
+# back into a flat list to "re-sync": that flattening WAS the bug.
 
 
 def _strip_quotes(token: str) -> str:
@@ -209,34 +217,74 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Quote-aware argv segments, robust to glued shell operators (#4876).
+_PUNCTUATION = ";|&()<>"
 
-    A `gh pr merge` inside a quoted commit body (`git commit -m "... gh pr merge ..."`)
-    stays one argv element — no false block. A `; gh pr merge 5` glued to a preceding
-    token is split into its own segment and inspected — no evasion. Heredoc bodies are
-    stripped (document text is not commands); `\\`-continuations are folded; each
-    logical line parses separately.
+
+def _is_operator(tok: str) -> bool:
+    return bool(tok) and all(c in _PUNCTUATION for c in tok)
+
+
+def _tokenize(line: str) -> list[str] | None:
+    """Quote-aware tokens of one logical line, or None when it does not lex."""
+    try:
+        lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+        lexer.whitespace_split = True
+        return list(lexer)
+    except ValueError:
+        return None
+
+
+def _scope_events(command: str) -> list[tuple[str, list[str]]]:
+    """The command as an ordered event stream: argv segments AND subshell boundaries.
+
+    Quote-aware and robust to glued shell operators (#4876). A `gh pr merge` inside a
+    quoted commit body (`git commit -m "... gh pr merge ..."`) stays one argv element —
+    no false block. A `; gh pr merge 5` glued to a preceding token becomes its own
+    segment and is inspected — no evasion. Heredoc bodies are stripped (document text is
+    not commands); `\\`-continuations are folded; each logical line lexes separately.
+
+    Events, rather than a flat segment list, because `(` and `)` are the only record of a
+    SUBSHELL — and a subshell's `cd` dies at its `)` (#5333). Flattening them away made
+    `(cd /inner && true) && gh pr merge 5` read as if the merge ran in /inner: a
+    false-ALLOW off whatever PR #5 is there. Parens arrive as their own tokens, but glue
+    (`&&(`, `)&&`) packs them WITH neighbouring operators, so each operator token is
+    scanned char by char, in order, to keep boundaries in sequence with the segments.
+
+    `(` also opens a command substitution (`cd $(cat f)`), which reads here as a subshell
+    scope. That is not a coincidence to paper over: `$(...)` really does run in a
+    subshell, so its `cd` really does die at the `)`. Same event, same truth.
+
+    An `("unreadable", [])` event marks a line that does not lex (unbalanced quote —
+    which the real shell rejects too). It cannot be scanned for `cd`, so it must not be
+    passed off as scope-neutral. Only a `segment` event carries argv; the rest carry [].
     """
-    segs: list[list[str]] = []
+    events: list[tuple[str, list[str]]] = []
     for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
-        try:
-            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
-            lexer.whitespace_split = True
-            tokens = list(lexer)
-        except ValueError:
+        tokens = _tokenize(line)
+        if tokens is None:
+            events.append(("unreadable", []))
             continue
         cur: list[str] = []
         for tok in tokens:
-            if tok and all(c in ";|&()<>" for c in tok):
-                if cur:
-                    segs.append(cur)
-                    cur = []
-            else:
+            if not _is_operator(tok):
                 cur.append(tok)
+                continue
+            if cur:
+                events.append(("segment", cur))
+                cur = []
+            for char in tok:
+                if char == "(":
+                    events.append(("open", []))
+                elif char == ")":
+                    events.append(("close", []))
         if cur:
-            segs.append(cur)
-    return segs
+            events.append(("segment", cur))
+    return events
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Just the argv segments of `command`, scope boundaries discarded."""
+    return [argv for kind, argv in _scope_events(command) if kind == "segment" and argv]
 
 
 def _is_env_assignment(tok: str) -> bool:
@@ -354,18 +402,44 @@ _UNPARSED = ["gh", "pr", "merge", _UNREADABLE_MARKER]
 _CD_UNREADABLE = object()
 
 
+# bash's `cd` options (`cd -LP@ /x` is one legal cluster), minus `-` which is a TARGET.
+_CD_FLAG_CHARS = set("LPe@")
+
+
+def _is_cd_flag(tok: str) -> bool:
+    return len(tok) >= 2 and tok[0] == "-" and set(tok[1:]) <= _CD_FLAG_CHARS
+
+
 def _cd_target(seg: list[str]):
     """The literal directory a `cd` segment changes into, expanded.
 
     Returns None when the segment is not a cd; _CD_UNREADABLE when it is a cd the
-    guard cannot statically resolve (variable/substitution/`cd -`/flags-only). A
-    bare `cd` goes to $HOME, as the shell does. Relative paths resolve against the
-    hook process's cwd — the same base the real command's cd uses.
+    guard cannot statically resolve (variable/substitution/`cd -`). A bare `cd` goes
+    to $HOME, as the shell does. Relative paths resolve against the hook process's
+    cwd — the same base the real command's cd uses.
+
+    Options are stepped over rather than matched literally, and `--` ends them: reading
+    `cd -- /tmp`'s target as `--` (or `cd -LP /tmp`'s as `-LP`) would resolve a path that
+    does not exist, and a wrong path is not a safe one — gh would miss there and the
+    merge would fail closed on a command that is perfectly fine.
+
+    `--` does NOT demote `-` to a plain directory name, though it reads as if it should:
+    `cd -- -` still toggles to $OLDPWD (verified against bash with a real `./-` directory
+    in place, which only `cd -- ./-` reaches). So `-` stays unreadable in both spellings.
     """
     i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "cd":
         return None
-    rest = [a for a in seg[i + 1 :] if a not in {"-P", "-L", "-e", "-@"}]
+    rest: list[str] = []
+    options_done = False
+    for tok in seg[i + 1 :]:
+        if not options_done:
+            if tok == "--":
+                options_done = True
+                continue
+            if _is_cd_flag(tok):
+                continue
+        rest.append(tok)
     if not rest:
         return os.path.expanduser("~")
     target = rest[0]
@@ -374,19 +448,71 @@ def _cd_target(seg: list[str]):
     return os.path.abspath(os.path.expanduser(target))
 
 
-def _judged_segments(command: str, depth: int = 0) -> list[list[str]]:
-    """Every segment worth judging, including those nested in `bash -c` payloads."""
-    segs = _segments(command)
-    out: list[list[str]] = []
-    for seg in segs:
-        out.append(seg)
-        payload = _shell_c_payload(seg)
+class _JudgedSegment(NamedTuple):
+    """One argv segment, with the cwd it actually runs in already resolved."""
+
+    argv: list[str]
+    cwd: str | None
+    cwd_unreadable: bool
+
+
+def _judged_segments(
+    command: str,
+    depth: int = 0,
+    cwd: str | None = None,
+    cwd_unreadable: bool = False,
+) -> list[_JudgedSegment]:
+    """Every segment worth judging, each tagged with the cwd it runs in.
+
+    A `cd` is scoped to the shell level that runs it, so cwd is resolved HERE, during the
+    walk that knows the nesting — not by a caller reading a flattened list, which cannot
+    see where one shell ends and the next begins (#5333). Two boundaries close the leak:
+
+    * subshell `( ... )` — cwd is saved at `(` and restored at `)`.
+    * `bash -c '<payload>'` — the payload INHERITS the spawning shell's cwd (passed down),
+      but its own cds die with it (the recursion's final state is discarded).
+
+    Both leaked in both directions before: an inner `cd` was adopted by an outer merge
+    (`bash -c 'cd /inner && true' && gh pr merge 9` judged 9 in /inner), and an outer
+    merge inherited an inner one it never saw (`cd /outer && bash -c 'cd /inner &&
+    gh pr merge 1' && gh pr merge 2` judged BOTH in /inner, though 2 runs in /outer).
+    Judging a merge in the wrong repo is wrong in both directions, and the dangerous one
+    is the false ALLOW off a same-numbered green PR.
+
+    An unattributable boundary — a `)` with no `(` (a `case` arm, a stray paren) — desyncs
+    the model, so cwd is marked unreadable rather than guessed: the walk no longer knows
+    which shell it is standing in, and _judge never sees a cwd this function is unsure of.
+    """
+    out: list[_JudgedSegment] = []
+    stack: list[tuple[str | None, bool]] = []
+    for kind, argv in _scope_events(command):
+        if kind == "open":
+            stack.append((cwd, cwd_unreadable))
+            continue
+        if kind == "close":
+            if stack:
+                cwd, cwd_unreadable = stack.pop()
+            else:
+                cwd_unreadable = True
+            continue
+        if kind == "unreadable":
+            cwd_unreadable = True
+            continue
+        target = _cd_target(argv)
+        if target is _CD_UNREADABLE:
+            cwd_unreadable = True
+        elif target is not None:
+            # A literal cd RESOLVES the cwd — including after an unreadable one, whose
+            # target no longer matters now that a readable cd has overwritten it.
+            cwd, cwd_unreadable = target, False
+        out.append(_JudgedSegment(argv, cwd, cwd_unreadable))
+        payload = _shell_c_payload(argv)
         if not payload:
             continue
         if depth >= _MAX_SHELL_DEPTH:
-            out.append(list(_UNPARSED))
+            out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
             continue
-        out.extend(_judged_segments(payload, depth + 1))
+        out.extend(_judged_segments(payload, depth + 1, cwd, cwd_unreadable))
     return out
 
 
@@ -810,34 +936,28 @@ def main() -> int:
     probe = command.replace("\\", "").replace("'", "").replace('"', "")
     if "gh" not in probe or "pr" not in probe or "merge" not in probe:
         return 0
-    cwd: str | None = None
-    cwd_unreadable = False
+    # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
+    # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`
+    # judged from the public repo resolves a DIFFERENT PR #203, wrong in BOTH directions
+    # (false block, or worse: false allow off a same-numbered green PR). Scoping that cwd
+    # to its own shell level is _judged_segments' job: it is the only reader that knows
+    # where a subshell or `bash -c` payload begins and ends.
     for seg in _judged_segments(command):
-        # Track `cd <target>` so PR numbers are judged in the repo the MERGE runs in,
-        # not the session's repo. `cd private-repo && gh pr merge 203` judged from the
-        # public repo resolves a DIFFERENT PR #203 — wrong verdict in BOTH directions
-        # (false block, or worse: false allow off a same-numbered green PR).
-        target = _cd_target(seg)
-        if target is _CD_UNREADABLE:
-            cwd_unreadable = True
-        elif target is not None:
-            cwd = target
-            cwd_unreadable = False
-        args = _merge_args(seg)
+        args = _merge_args(seg.argv)
         if args is None:
             continue
-        if cwd_unreadable:
+        if seg.cwd_unreadable:
             sys.stderr.write(
                 _block_msg(
-                    "this merge runs after a `cd` whose target cannot be read "
-                    "(variable, substitution, or `cd -`)",
+                    "this merge's working directory cannot be read (a `cd` to a variable, "
+                    "a substitution, or `cd -`; or a shell nesting this guard cannot follow)",
                     "The guard must judge the PR in the repo the merge actually runs in.\n"
                     "Use a literal `cd /path && gh pr merge ...`, or name the repo with\n"
                     "`-R owner/repo`.",
                 )
             )
             return 2
-        blocked = _judge(args, cwd=cwd)
+        blocked = _judge(args, cwd=seg.cwd)
         if blocked:
             sys.stderr.write(blocked)
             return 2
