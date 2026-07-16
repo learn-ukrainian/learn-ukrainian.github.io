@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
-import { normalize as normalizeAtlasSearchText } from './search';
+import { normalizeAtlasText as normalizeAtlasSearchText } from './normalize.ts';
 
 export interface CourseUsage {
   track: string;

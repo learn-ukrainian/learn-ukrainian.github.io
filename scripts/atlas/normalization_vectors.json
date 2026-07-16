@@ -1,0 +1,24 @@
+{
+  "schema": "atlas-normalization-vectors",
+  "schemaVersion": 1,
+  "rules": {
+    "unicode": "NFC",
+    "stripCodepoints": ["U+0301"],
+    "lowercase": "uk-UA / Unicode lower (Cyrillic + Latin)",
+    "trim": true
+  },
+  "cases": [
+    {"input": "Прапор", "expected": "прапор"},
+    {"input": "  борщ  ", "expected": "борщ"},
+    {"input": "абре́віатура", "expected": "абревіатура"},
+    {"input": "Ілля", "expected": "ілля"},
+    {"input": "Їжак", "expected": "їжак"},
+    {"input": "Європа", "expected": "європа"},
+    {"input": "Ґанок", "expected": "ґанок"},
+    {"input": "ФАЙНИЙ", "expected": "файний"},
+    {"input": "будь-ласка", "expected": "будь-ласка"},
+    {"input": "Hello", "expected": "hello"},
+    {"input": "e\u0301", "expected": "é"},
+    {"input": "\u0418\u0301", "expected": "и"}
+  ]
+}

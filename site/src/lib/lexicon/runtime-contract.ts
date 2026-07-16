@@ -1,4 +1,4 @@
-import type { AtlasEntryModelCounts } from "./atlasDb";
+import type { AtlasEntryModelCounts } from "./atlasDb.ts";
 
 // Matches the committed static practice shard set and
 // scripts/audit/check_static_practice_assets.py::DEFAULT_LEVELS.
