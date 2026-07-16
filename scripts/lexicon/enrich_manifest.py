@@ -6074,6 +6074,7 @@ def enrich() -> tuple[int, int]:
         from scripts.lexicon.runner.offline_engine import enrich_offline_slice
 
         work = ROOT / "data" / "lexicon" / "runner_work"
+        # offline_engine warms GRAC via ``_ensure_grac_frequency_cache`` before seal.
         result = enrich_offline_slice(
             manifest_path=MANIFEST,
             sources_db=SOURCES_DB,
@@ -6088,6 +6089,7 @@ def enrich() -> tuple[int, int]:
 
     from scripts.lexicon.runner.phase_cefr import (
         apply_sealed_cefr_to_engine_cache,
+        cefr_candidate_words,
         load_sealed_cefr_map,
         sealed_cefr_precompute,
     )
@@ -6144,6 +6146,12 @@ def enrich() -> tuple[int, int]:
         _normalize_manifest_entries({"entries": entries})
 
         cefr_path = work_dir / "seals" / "cefr.sqlite"
+        unique_words = cefr_candidate_words(
+            (str(e.get("lemma") or "") for e in entries),
+            puls_cefr_fn=lambda lemma: _puls_cefr(conn, lemma),
+            grac_lookup_key_fn=_grac_lookup_key,
+        )
+        _ensure_grac_frequency_cache(unique_words)
         sealed_cefr_precompute(
             lemmas=(str(e.get("lemma") or "") for e in entries),
             puls_cefr_fn=lambda lemma: _puls_cefr(conn, lemma),

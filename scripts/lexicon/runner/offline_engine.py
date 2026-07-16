@@ -21,7 +21,7 @@ from scripts.lexicon.runner.memory import (
     require_hard_cap_protection,
     run_startup_self_test,
 )
-from scripts.lexicon.runner.phase_cefr import sealed_cefr_precompute
+from scripts.lexicon.runner.phase_cefr import cefr_candidate_words, sealed_cefr_precompute
 from scripts.lexicon.runner.phase_relations import extract_and_close_relations
 from scripts.lexicon.runner.side_db import (
     build_balla_reverse_side_db,
@@ -87,11 +87,30 @@ def enrich_offline_slice(
         def puls_fn(lemma: str) -> dict[str, str] | None:
             return em._puls_cefr(sources, lemma)
 
+        # Warm GRAC before sealing — mirrors legacy ``_prepare_cefr_estimates``.
+        # Without this, missing cache keys silently drop out of quantile ranking.
+        unique_words = cefr_candidate_words(
+            (str(e.get("lemma") or "") for e in entries),
+            puls_cefr_fn=puls_fn,
+            grac_lookup_key_fn=em._grac_lookup_key,
+        )
+        em._ensure_grac_frequency_cache(unique_words)
+        # After warm, prefer the shared cache (ensure mutates it in place).
+        # Caller-injected dicts (tests) are merged so pre-seeded ranks survive.
+        warmed_grac = em._load_grac_frequency_cache()
+        if grac_cache is not warmed_grac:
+            for word in unique_words:
+                if word not in grac_cache and word in warmed_grac:
+                    grac_cache[word] = warmed_grac[word]
+            effective_grac = grac_cache
+        else:
+            effective_grac = warmed_grac
+
         cefr_seal = sealed_cefr_precompute(
             lemmas=(str(e.get("lemma") or "") for e in entries),
             puls_cefr_fn=puls_fn,
             grac_lookup_key_fn=em._grac_lookup_key,
-            grac_cache=grac_cache,
+            grac_cache=effective_grac,
             output_db=work_dir / "seals" / "cefr.sqlite",
         )
 

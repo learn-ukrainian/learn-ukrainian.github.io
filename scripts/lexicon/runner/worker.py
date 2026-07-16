@@ -19,6 +19,7 @@ from scripts.lexicon.runner.memory import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
+VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 
 
 def _worker_main(payload: dict[str, Any], result_path: str) -> None:
@@ -106,7 +107,7 @@ def run_capped_worker(
     try:
         completed = subprocess.run(
             [
-                sys.executable,
+                str(VENV_PYTHON),
                 "-m",
                 "scripts.lexicon.runner.worker",
                 str(payload_path),

@@ -32,7 +32,6 @@ def _iter_batches(
         cursor = conn.execute(sql)
     except sqlite3.OperationalError:
         return
-        yield  # pragma: no cover — make this a generator
     while True:
         rows = cursor.fetchmany(batch_size)
         if not rows:

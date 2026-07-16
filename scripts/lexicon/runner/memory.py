@@ -29,6 +29,7 @@ from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]
 
 ROOT = Path(__file__).resolve().parents[3]
+VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 
 
 @dataclass(frozen=True, slots=True)
@@ -45,11 +46,19 @@ class EnforcementProof:
     max_bytes: int
 
 
+def _is_finite_positive_ceiling(limit: int) -> bool:
+    """True when ``limit`` is a usable RLIMIT ceiling (not 0/negative/RLIM_INFINITY)."""
+    # RLIM_INFINITY is platform-dependent: often 2**63-1 (Darwin) or -1 (some Linux).
+    return limit > 0 and limit != resource.RLIM_INFINITY
+
+
 def _try_set_rlimit_as(max_bytes: int) -> None:
+    if not _is_finite_positive_ceiling(max_bytes):
+        raise ValueError("invalid RLIMIT_AS ceiling")
     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
     new_hard = max_bytes if hard == resource.RLIM_INFINITY else min(hard, max_bytes)
     new_soft = min(soft if soft != resource.RLIM_INFINITY else new_hard, new_hard)
-    if new_soft < 0 or new_hard < 0:
+    if not _is_finite_positive_ceiling(new_soft) or not _is_finite_positive_ceiling(new_hard):
         raise ValueError("invalid RLIMIT_AS ceiling")
     resource.setrlimit(resource.RLIMIT_AS, (new_soft, new_hard))
 
@@ -147,7 +156,7 @@ def run_startup_self_test(
         result_path = Path(tmp) / "self_test.json"
         proc = subprocess.run(
             [
-                sys.executable,
+                str(VENV_PYTHON),
                 "-m",
                 "scripts.lexicon.runner.memory",
                 "--self-test-child",

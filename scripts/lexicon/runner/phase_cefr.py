@@ -29,6 +29,24 @@ def _has_whitespace(text: str) -> bool:
     return any(ch.isspace() for ch in text)
 
 
+def cefr_candidate_words(
+    lemmas: Iterable[str],
+    *,
+    puls_cefr_fn: Callable[[str], dict[str, str] | None],
+    grac_lookup_key_fn: Callable[[str], str],
+) -> list[str]:
+    """Collect unique GRAC lookup keys for the non-PULS CEFR cohort (legacy filter)."""
+    words: list[str] = []
+    for lemma in lemmas:
+        word = grac_lookup_key_fn(lemma)
+        if not word or _has_whitespace(word) or not _UKRAINIAN_WORD_RE.fullmatch(word):
+            continue
+        if puls_cefr_fn(lemma):
+            continue
+        words.append(word)
+    return sorted(set(words), key=str.casefold)
+
+
 def sealed_cefr_precompute(
     *,
     lemmas: Iterable[str],
@@ -38,16 +56,11 @@ def sealed_cefr_precompute(
     output_db: Path,
 ) -> PhaseSeal:
     """Compute sealed CEFR estimates for the complete non-PULS cohort."""
-    words: list[str] = []
-    for lemma in lemmas:
-        word = grac_lookup_key_fn(lemma)
-        if not word or _has_whitespace(word) or not _UKRAINIAN_WORD_RE.fullmatch(word):
-            continue
-        if puls_cefr_fn(lemma):
-            continue
-        words.append(word)
-
-    unique_words = sorted(set(words), key=str.casefold)
+    unique_words = cefr_candidate_words(
+        lemmas,
+        puls_cefr_fn=puls_cefr_fn,
+        grac_lookup_key_fn=grac_lookup_key_fn,
+    )
     scored: list[tuple[str, float, int, str]] = []
     for word in unique_words:
         row = grac_cache.get(word)
@@ -138,7 +151,10 @@ def sealed_cefr_precompute(
 
 def load_sealed_cefr_map(path: Path) -> dict[str, dict[str, Any]]:
     """Load sealed CEFR rows keyed by GRAC word key (same shape as engine cache)."""
-    conn = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(
+        f"file:{path.resolve().as_posix()}?mode=ro&immutable=1",
+        uri=True,
+    )
     try:
         out: dict[str, dict[str, Any]] = {}
         for row in conn.execute(

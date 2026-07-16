@@ -222,12 +222,121 @@ def test_sealed_cefr_matches_legacy_prepare(tmp_path: Path, fixture_paths: dict[
 
     sealed = load_sealed_cefr_map(tmp_path / "cefr.sqlite")
     assert seal.row_count == len(legacy) == len(sealed)
+    # Load-bearing: unwarmed GRAC cache yields zero ranks; this cohort must seal >0.
+    assert seal.row_count > 0
+    assert sum(1 for row in sealed.values() if int(row["rank"]) >= 1 and int(row["freq"]) > 0) > 0
     assert sealed == legacy
     # Band boundaries: ranks must map to the same A1..C1 bands.
     for key, row in sealed.items():
         assert row["level"] == legacy[key]["level"]
         assert row["rank"] == legacy[key]["rank"]
         assert row["total"] == legacy[key]["total"]
+
+
+def test_coordinator_warms_grac_before_cefr_seal(
+    tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unwarmed empty cache must not silently seal zero ranks when legacy has ranks."""
+    from scripts.lexicon.runner.memory import EnforcementProof
+    from scripts.lexicon.runner.offline_engine import enrich_offline_slice
+    from scripts.lexicon.runner.phase_cefr import load_sealed_cefr_map
+
+    entries = json.loads(fixture_paths["input"].read_text(encoding="utf-8"))["entries"]
+    grac = json.loads(fixture_paths["grac"].read_text(encoding="utf-8"))
+    em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
+    em._GRAC_FREQUENCY_CACHE_DATA = {}  # start empty — warm must populate from ensure
+
+    ensure_calls: list[list[str]] = []
+
+    def _fake_ensure(words: list[str]) -> None:
+        ensure_calls.append(list(words))
+        # Simulate online warm: fill the global cache from the fixture slice.
+        cache = em._load_grac_frequency_cache()
+        for word in words:
+            if word in grac:
+                cache[word] = grac[word]
+
+    monkeypatch.setattr(em, "_ensure_grac_frequency_cache", _fake_ensure)
+    monkeypatch.setattr(em, "_vesum_valid_synonym", lambda term: bool(term))
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.offline_engine.run_startup_self_test",
+        lambda **_kwargs: EnforcementProof(
+            kind="rlimit_as",
+            enforced=True,
+            detail="test stub",
+            max_bytes=64 * 1024 * 1024,
+        ),
+    )
+    # Seal phase is under test; skip leaf enrichment (needs full sources.db).
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.worker_enrich.enrich_chunk_payload",
+        lambda _payload: {},
+    )
+
+    # Legacy baseline ranks on this cohort (with warmed fixture GRAC).
+    em._GRAC_FREQUENCY_CACHE_DATA = dict(grac)
+    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        em._prepare_cefr_estimates(conn, {"entries": entries})
+        legacy_count = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
+    finally:
+        conn.close()
+    assert legacy_count > 0
+
+    em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
+    em._GRAC_FREQUENCY_CACHE_DATA = {}
+
+    work = tmp_path / "runner_work"
+    out = tmp_path / "candidate.json"
+    result = enrich_offline_slice(
+        manifest_path=fixture_paths["input"],
+        sources_db=fixture_paths["sources"],
+        kaikki_json=fixture_paths["kaikki"],
+        work_dir=work,
+        output_path=out,
+        grac_cache={},
+        require_memory_self_test=False,
+        skip_workers=True,
+        chunk_size=50,
+    )
+    assert ensure_calls, "coordinator must call _ensure_grac_frequency_cache before seal"
+    assert len(ensure_calls[0]) > 0
+    sealed = load_sealed_cefr_map(work / "seals" / "cefr.sqlite")
+    assert result["cefr_seal"]
+    assert len(sealed) > 0
+    assert len(sealed) == legacy_count
+    assert sum(1 for row in sealed.values() if int(row["rank"]) >= 1) > 0
+
+
+def test_runner_spawns_use_repo_venv_python() -> None:
+    """AGENTS.md: worker/self-test spawns must use ROOT/.venv/bin/python, not sys.executable."""
+    from scripts.lexicon.runner import memory as memory_mod
+    from scripts.lexicon.runner import worker as worker_mod
+
+    expected = worker_mod.ROOT / ".venv" / "bin" / "python"
+    assert expected == worker_mod.VENV_PYTHON
+    assert expected == memory_mod.VENV_PYTHON
+    for rel in (
+        "scripts/lexicon/runner/worker.py",
+        "scripts/lexicon/runner/memory.py",
+    ):
+        text = Path(rel).read_text(encoding="utf-8")
+        assert "sys.executable" not in text, f"{rel} must not spawn via sys.executable"
+
+
+def test_rlimit_ceiling_rejects_infinity_sentinel() -> None:
+    import resource
+
+    from scripts.lexicon.runner.memory import _is_finite_positive_ceiling, _try_set_rlimit_as
+
+    assert _is_finite_positive_ceiling(1024 * 1024) is True
+    assert _is_finite_positive_ceiling(0) is False
+    assert _is_finite_positive_ceiling(-1) is False
+    assert _is_finite_positive_ceiling(resource.RLIM_INFINITY) is False
+    with pytest.raises(ValueError, match="invalid RLIMIT_AS ceiling"):
+        _try_set_rlimit_as(0)
+    with pytest.raises(ValueError, match="invalid RLIMIT_AS ceiling"):
+        _try_set_rlimit_as(resource.RLIM_INFINITY)
 
 
 def test_relation_closure_matches_legacy_by_headword(
@@ -301,6 +410,16 @@ def test_500_lemma_equivalence_cefr_and_relations(
         )
         apply_sealed_cefr_to_engine_cache(load_sealed_cefr_map(tmp_cefr), em._CEFR_ESTIMATE_LEVEL_BY_KEY)
         assert dict(em._CEFR_ESTIMATE_LEVEL_BY_KEY) == baseline["cefr_estimates"]
+        # Load-bearing: sealed CEFR must carry GRAC-derived ranks (unwarmed cache → 0).
+        assert len(em._CEFR_ESTIMATE_LEVEL_BY_KEY) > 0
+        assert (
+            sum(
+                1
+                for row in em._CEFR_ESTIMATE_LEVEL_BY_KEY.values()
+                if int(row["rank"]) >= 1 and float(row["rel_freq"]) > 0.0
+            )
+            > 0
+        )
 
         has_sum11 = em._sum11_has_flag_columns(conn)
         headwords = em._manifest_headwords({"entries": entries})
