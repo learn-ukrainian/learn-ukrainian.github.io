@@ -4043,3 +4043,103 @@ entries:
       disposition: exception-approved
     cohort_promotion: *cohort_driver_8d3b_c17_review
     hold: *cohort_driver_8d3b_c17_hold
+  yurii-yanovskyi:
+    dossier_grounding: &cohort_driver_9bac_c18_review
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+    reading_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_9bac_c18_review
+    wiki_quote_verification: *cohort_driver_9bac_c18_review
+    image_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_9bac_c18_review
+    hold: &cohort_driver_9bac_c18_hold
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  ostap-vyshnia:
+    dossier_grounding: *cohort_driver_9bac_c18_review
+    reading_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_9bac_c18_review
+    wiki_quote_verification: *cohort_driver_9bac_c18_review
+    image_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_9bac_c18_review
+    hold: *cohort_driver_9bac_c18_hold
+  mykola-bazhan:
+    dossier_grounding: *cohort_driver_9bac_c18_review
+    reading_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_9bac_c18_review
+    wiki_quote_verification: *cohort_driver_9bac_c18_review
+    image_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_9bac_c18_review
+    hold: *cohort_driver_9bac_c18_hold
+  zinaida-tulub:
+    dossier_grounding: *cohort_driver_9bac_c18_review
+    reading_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_9bac_c18_review
+    wiki_quote_verification: *cohort_driver_9bac_c18_review
+    image_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_9bac_c18_review
+    hold: *cohort_driver_9bac_c18_hold
+  oleksandr-kovinka:
+    dossier_grounding: *cohort_driver_9bac_c18_review
+    reading_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_9bac_c18_review
+    wiki_quote_verification: *cohort_driver_9bac_c18_review
+    image_rights:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4997406267
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_9bac_c18_review
+    hold: *cohort_driver_9bac_c18_hold
