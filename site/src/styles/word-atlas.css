@@ -141,6 +141,8 @@
   text-align: left;
 }
 
+/* Visually hidden but available to assistive tech (typeahead label + overview state). */
+.sr-only,
 .atlas-typeahead-label.sr-only {
   position: absolute;
   width: 1px;
@@ -715,15 +717,28 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
+  /* button reset (W1 — real <button type="button"> stages) */
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
 }
 
 .ety-stage:hover,
-.ety-stage.active {
+.ety-stage.active,
+.ety-stage:focus-visible {
   border-color: var(--teal);
   box-shadow: var(--shadow);
 }
 
+.ety-stage:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
 .ety-period {
+  display: block;
   margin-bottom: 4px;
   color: var(--gray-600);
   font-size: 11px;
@@ -732,6 +747,7 @@
 }
 
 .ety-word {
+  display: block;
   color: var(--teal);
   font-size: 18px;
   font-weight: 700;
@@ -936,10 +952,12 @@
   box-shadow: var(--shadow-lg);
 }
 
-.resource-card h4 {
+.resource-card h3 {
   margin: 0 0 4px;
   color: var(--gray-900);
   font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .resource-card p {
@@ -1018,6 +1036,10 @@
 }
 
 .chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   padding: 6px 14px;
   border: 1px solid var(--teal);
   border-radius: 20px;
@@ -1028,10 +1050,32 @@
   transition: all 0.2s;
 }
 
+.chip-gloss {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.25;
+  opacity: 0.85;
+}
+
 .chip:hover {
   background: var(--teal-fill);
   color: #ffffff;
   text-decoration: none;
+}
+
+.ext-link-indicator {
+  margin-left: 0.2em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.paradigm-table caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 0.4rem;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .chip.antonym {
@@ -1129,9 +1173,11 @@
   border-left: 4px solid #757575;
 }
 
-.wiki-card h4 {
+.wiki-card h3 {
   margin: 0 0 6px;
   font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .wiki-card .wiki-source {
