@@ -27,7 +27,7 @@ sources:
   type: external
   title: 'Твори. Т. 1: «Людолови», книга 1 (1991)'
   url: https://irbis-nbuv.gov.ua/ulib/item/ukr0010531
-  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}
+  metadata: {publisher: 'Електронна бібліотека «Україніка», НБУВ', language: uk, verified_on: '2026-07-16'}
 - id: S3
   file: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/28/1890-narodylasya-zinayida-tulub-pysmennycya
   type: external
