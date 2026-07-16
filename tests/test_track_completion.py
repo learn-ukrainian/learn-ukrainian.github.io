@@ -940,8 +940,12 @@ def test_cross_family_review_gate_and_publication(
     assert ledger["run"]["status"] == "completed"
 
 
-def test_integration_drift_can_be_recorded_and_restarts_post_build_review(
-    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("repair_state", ["PUBLISH_REQUIRED", "INTEGRATION_REQUIRED"])
+def test_post_review_drift_can_be_recorded_and_restarts_post_build_review(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    repair_state: str,
 ) -> None:
     repo, config_path, ledger_root = fake_repo
     _, ledger = _start(fake_repo, "a1/core-unbuilt")
@@ -992,7 +996,7 @@ def test_integration_drift_can_be_recorded_and_restarts_post_build_review(
         ledger_root=ledger_root,
     )
     assert ledger["state"] == "INDEPENDENT_REVIEW_REQUIRED"
-    ledger["state"] = "INTEGRATION_REQUIRED"
+    ledger["state"] = repair_state
     tc._atomic_write_json(
         tc.ledger_path_for(
             snapshot,
