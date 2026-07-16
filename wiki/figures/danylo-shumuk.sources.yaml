@@ -1,0 +1,11 @@
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-887860
+    type: external
+    title: Шумук Данило Лаврентійович — ЕСУ
+    url: https://esu.com.ua/article-887860
+  - id: S2
+    file: https://catalog.lounb.org.ua/bib/403752
+    type: external
+    title: Пережите й передумане — ЛОУНБ
+    url: https://catalog.lounb.org.ua/bib/403752

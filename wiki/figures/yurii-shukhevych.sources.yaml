@@ -1,0 +1,11 @@
+sources:
+  - id: S1
+    file: https://museum.khpg.org/1114002064
+    type: external
+    title: ШУХЕВИЧ (БЕРЕЗИНСЬКИЙ) ЮРІЙ РОМАНОВИЧ — ХПГ
+    url: https://museum.khpg.org/1114002064
+  - id: S2
+    file: https://people.rada.gov.ua/body/view/mp-rp5_skl8
+    type: external
+    title: Шухевич Юрій-Богдан Романович — Верховна Рада України
+    url: https://people.rada.gov.ua/body/view/mp-rp5_skl8

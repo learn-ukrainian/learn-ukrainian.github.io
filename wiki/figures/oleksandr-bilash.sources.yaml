@@ -1,57 +1,11 @@
----
-# Source registry wiki/figures/oleksandr-bilash.md
-# Referenced inline [S1], [S2], ...
-# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
-# Entries are real external sources; no fabricated sources.db corpus chunk IDs.
 sources:
   - id: S1
     file: https://esu.com.ua/article-39952
-    tier: T1
-    title: Білаш Олександр Іванович — Енциклопедія Сучасної України (ЕСУ)
     type: external
+    title: Білаш Олександр Іванович — ЕСУ
     url: https://esu.com.ua/article-39952
   - id: S2
     file: https://vue.gov.ua/Білаш,_Олександр_Іванович
-    tier: T1
-    title: Білаш, Олександр Іванович — Велика українська енциклопедія (ВУЕ)
     type: external
+    title: Білаш, Олександр Іванович — ВУЕ
     url: https://vue.gov.ua/Білаш,_Олександр_Іванович
-  - id: S3
-    file: https://uk.wikipedia.org/wiki/Білаш_Олександр_Іванович
-    tier: T3
-    title: Білаш Олександр Іванович — Українська Вікіпедія
-    type: external
-    url: https://uk.wikipedia.org/wiki/Білаш_Олександр_Іванович
-  - id: S4
-    file: https://uk.wikipedia.org/wiki/Два_кольори
-    tier: T3
-    title: Два кольори — Українська Вікіпедія
-    type: external
-    url: https://uk.wikipedia.org/wiki/Два_кольори
-  - id: S5
-    file: https://csamm.archives.gov.ua/2021/03/06/oleksandr-ivanovych-bilash-1931-2003/
-    tier: T2
-    title: Олександр Іванович Білаш (1931–2003) — ЦДАМЛМ України
-    type: external
-    url: https://csamm.archives.gov.ua/2021/03/06/oleksandr-ivanovych-bilash-1931-2003/
-  - id: S6
-    file: https://ua.korrespondent.net/bbc/1182970-dmitro-pavlichko-pro-dva-kolori-upa-opoziciyu-i-donku
-    note: Pavlychko recollection; reception context only, not a Bilash biography frame.
-    tier: T5
-    title: Дмитро Павличко про Два кольори, УПА, опозицію і доньку — BBC Україна / Korrespondent
-    type: external
-    url: https://ua.korrespondent.net/bbc/1182970-dmitro-pavlichko-pro-dva-kolori-upa-opoziciyu-i-donku
-  - id: S7
-    file: https://wz.lviv.ua/far-and-near/125474-dmytro-pavlychko-pisniu-dva-kolory-kdb-vvazhalo-himnom-oun
-    note: Pavlychko recollection; use only as optional context for reception of «Два кольори».
-    tier: T5
-    title: Дмитро Павличко про пісню «Два кольори» — Високий Замок
-    type: external
-    url: https://wz.lviv.ua/far-and-near/125474-dmytro-pavlychko-pisniu-dva-kolory-kdb-vvazhalo-himnom-oun
-  - id: S8
-    file: https://www.youtube.com/watch?v=P6_-jd0nvRU
-    note: Суспільне Культура concert for the 95th anniversary of Oleksandr Bilash; modern Ukrainian reception source.
-    tier: T2
-    title: «Два кольори», «Заповідаю вам любов», «Сніг на зеленому листі» | Концерт української ретро-музики
-    type: video
-    url: https://www.youtube.com/watch?v=P6_-jd0nvRU
