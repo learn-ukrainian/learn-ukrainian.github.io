@@ -1,3 +1,5 @@
+import { normalizeAtlasText } from "./normalize";
+
 export interface SearchRow {
   l: string;
   s: string;
@@ -53,17 +55,13 @@ const ESCAPE_MAP: Record<string, string> = {
   "'": "&#39;",
 };
 
-function normalizeText(value: string): string {
-  return value.normalize("NFC").replace(/\u0301/g, "").toLocaleLowerCase("uk-UA");
-}
-
 function escapeHtml(value: string): string {
   return value.replace(ESCAPE_RE, (c) => ESCAPE_MAP[c] ?? c);
 }
 
 function compareByLemma(a: SearchRow, b: SearchRow): number {
-  const left = normalizeText(a.l);
-  const right = normalizeText(b.l);
+  const left = normalizeAtlasText(a.l);
+  const right = normalizeAtlasText(b.l);
   if (left < right) return -1;
   if (left > right) return 1;
   return a.s < b.s ? -1 : a.s > b.s ? 1 : 0;
@@ -80,7 +78,7 @@ function firstTokenChars(value: string | null | undefined): string[] {
 }
 
 export function normalize(q: string): string {
-  return normalizeText(q).trim();
+  return normalizeAtlasText(q);
 }
 
 export function searchShardPrefix(q: string): string | null {
@@ -132,7 +130,7 @@ function matchTier(row: SearchRow, nq: string): number | null {
   const hasCyrillic = CYRILLIC_RE.test(nq);
   const useLemma = hasCyrillic || !hasLatin;
   const useLatin = hasLatin;
-  const lemma = normalizeText(row.l);
+  const lemma = normalizeAtlasText(row.l);
   const romanized = row.r ? normalize(row.r) : "";
   const gloss = row.g ? normalize(row.g) : "";
 
@@ -216,7 +214,7 @@ export function highlight(text: string, q: string): string {
   const needle = normalize(q);
   if (!needle) return escapeHtml(source);
 
-  const haystack = normalizeText(source);
+  const haystack = normalizeAtlasText(source);
   const index = haystack.indexOf(needle);
   if (index < 0) return escapeHtml(source);
 
