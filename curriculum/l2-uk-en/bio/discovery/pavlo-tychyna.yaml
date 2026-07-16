@@ -1,0 +1,19 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Павло Тичина
+- Павло Тичина Український інститут національної пам'яті
+- Павло Тичина ЦДАМЛМ фонд 464
+- Соняшні кларнети 1920 Україніка НБУВ
+- Партія веде 1935 Україніка НБУВ
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://uinp.gov.ua/istorychnyy-kalendar/sichen/23/1891-narodyvsya-pavlo-tychyna-poet
+- https://csamm.archives.gov.ua/2021/01/22/pavlo-hryhorovych-tychyna-1891-1967/
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000024130
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000024621
+warning: >-
+  Біографічні та інституційні твердження обмежено матеріалами УІНП і ЦДАМЛМ.
+  НБУВ засвідчує точні видання «Соняшних кларнетів» і «Партія веде»; тексти
+  збірок не відтворюються.

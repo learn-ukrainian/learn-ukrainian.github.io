@@ -1,167 +1,180 @@
-# Максим Тадейович Рильський — Research Dossier
+# Максим Тадейович Рильський — дослідницьке досьє
 
 **Slug:** `maksym-rylskyi`
-**Block:** D (survived-but-censored / coerced)
-**Tier:** 1a
-**Issue:** #2317
-**Researcher:** gemini 3.1-pro
-**Completed:** 2026-05-28
+**Рівень готовності:** каталог-джерело, до побудови модуля
+**Оновлено:** 2026-07-16
 
----
+## 1. Ідентичність і життєва рамка
 
-## 1. Verified facts
+Максим Тадейович Рильський народився 19 березня 1895 року в Києві й помер
+24 липня 1964 року [S1]. Він був українським поетом, перекладачем,
+літературознавцем, мовознавцем і академіком, належав до кола київських
+неокласиків. Досьє поєднує ранню творчість, арешт, офіційні ролі й повторний
+ідеологічний тиск без морального порівняння з іншими авторами.
 
-- **Full name (UA, canonical):** Максим Тадейович Рильський
-- **Pseudonyms / aliases:** Рильський Максим Тадейович (academic-citation order), Максим Золоте Серце (informal among peers).
-- **Born:** 7 (19) березня 1895 [Julian / Gregorian] | Київ, Київська губернія, Російська імперія (now Україна)
-- **Died:** 24 липня 1964 | Київ, Українська РСР, СРСР | natural causes (cancer)
-- **Family / education key facts:** Born to an aristocratic-intellectual family. His father, Тадей Рильський, was a renowned ethnographer, economist, and son of a Polish noble and a Trubetskoy princess; his mother, Меланія Чуприна, was a Ukrainian peasant. Educated at Naumenko's private gymnasium in Kyiv, then studied at the Medical and Historico-Philological faculties of Kyiv St. Vladimir University, and the Ukrainian People's University (1915–1918), though the revolution prevented his graduation.
+Портрет лишено текстовим: кандидат Commons має застереження щодо правового
+статусу у США, а архівні зображення не мають окремої ліцензії для кожного файла.
 
-## 2. Oppression mechanism
+## 2. Родина, освіта й формування
 
-Like his peer Pavlo Tychyna, Rylskyi’s oppression represents the "покара славою" (punishment by glory) matrix: coerced co-option and psychological breaking to ensure physical survival, followed by lifelong surveillance.
+Батько, Тадей Рильський, був етнографом, публіцистом і діячем громадівського
+руху; мати Меланія Чуприна походила із селянської родини [S1]. Рильський
+навчався в київській гімназії, жив у культурному середовищі родин Миколи
+Лисенка й Олександра Русова, студіював медицину, а потім історію та філологію.
 
-**The 1931 Arrest and Breaking:**
-- **When:** 19 March 1931 (exactly on his 36th birthday) to August 1931.
-- **By whom:** ДПУ (Державне політичне управління / OGPU).
-- **What happened:** Rylskyi, as a leading figure of the "Neoclassicists" (an apolitical, high-art literary movement), was arrested and accused of involvement in a fabricated counter-revolutionary organization, allegedly as the head of a "military branch."
-- **Mechanism specifics:** He was incarcerated in the Лук'янівська в'язниця (Lukyanivska prison) in Kyiv for five months. To humiliate and psychologically break him, the DPU paraded him through the streets of Kyiv with his hands raised. He was kept in a general cell where interrogators demanded he confess to counter-revolutionary activities.
-- **The Ransom:** Rylskyi was released in August 1931 "for lack of evidence," but the true price of his release was his public capitulation. In 1932, he published the collection *Знак терезів* (*Sign of the Scales*), marking his forced transition to Socialist Realism and declaring loyalty to the Soviet regime. This act saved his life—his fellow Neoclassicists (Mykola Zerov, Pavlo Fylypovych, Mykhailo Drai-Khmara) who did not make such ideological concessions were soon arrested and murdered in the camps and at Sandarmokh.
+Навчання перервали революційні події. Рильський учителював і продовжував
+поетичну працю. Генеалогію не використовуємо як готове пояснення естетики:
+родинне середовище є контекстом, а не психологічним вироком.
 
-**Lifelong Surveillance and the "Stavka" Case:**
-- Despite becoming an official Soviet laureate (Academician, Supreme Soviet Deputy), Rylskyi was never trusted. After WWII, MGB Major Anatoliy Shevko opened an operational surveillance case against him codenamed **«Ставка»** ("Stavka").
-- Shevko's reports explicitly noted that Rylskyi was "two-faced," that "rotten threads stretch from his nationalist past," and that he secretly maintained nationalist positions.
-- In October 1947, the newspaper *Радянська Україна* published a devastating article "Про націоналістичні помилки М. Рильського," accusing him of "bourgeois objectivism" and lacking "Bolshevik party spirit," leading to intense public hounding.
+## 3. Неокласицизм і переклад
 
-**What Survived:**
-Unlike Tychyna, whose capitulation largely broke his inner artistic and moral compass, Rylskyi engaged in "silent resistance." He used his high Soviet status to shelter younger writers and camp returnees. He was the only writer who dared bring prison parcels to Yevhen Pluzhnyk. Later, he lent 80,000 rubles to Hryhoriy Kochur (returning from the GULAG) to buy a house in Irpin. He preserved his deep connection to the Ukrainian language primarily through monumental translations of European classics (Mickiewicz, Shakespeare, Pushkin), where ideological censorship was less intrusive.
+Неокласичне коло орієнтувалося на класичні форми, європейську культурну
+пам'ять, переклад і мовну дисципліну [S1]. Воно не було організацією з єдиним
+маніфестом або однаковими політичними рішеннями. Долі Зерова, Филиповича,
+Драй-Хмари, Юрія Клена й Рильського не можна перетворювати на шкалу моралі.
 
-## 3. Major works
+Перекладацька праця Рильського розбудовувала українську літературну мову в
+діалозі з багатьма культурами. Переклад російського автора не робить
+українську традицію другорядною, але й не є автоматичним доказом політичного
+опору.
 
-- **1910** — *На білих островах* (debut poetry collection, published at age 15).
-- **1918** — *Під осінніми зорями* (lyrical poetry; a masterpiece of early Ukrainian modernism).
-- **1922** — *Синя далечінь* (poetry collection, establishing his Neoclassical voice).
-- **1927** — *Пан Тадеуш* (translation of Adam Mickiewicz's epic; considered a peak of Ukrainian translation school).
-- **1929** — *Гомін і відгомін*, *Де сходяться дороги* (collections marking the height and end of his free Neoclassical period).
-- **1932** — *Знак терезів* (The capitulation collection; a mix of forced Soviet odes and deeply coded trauma).
-- **1940** — *Збір винограду* (poetry collection; balancing Soviet themes with classical motifs).
-- **1942** — *Слово про рідну матір* (patriotic wartime poem; permitted during WWII to rally Ukrainian national sentiment).
-- **1957** — *Троянди й виноград* (late philosophical poetry; awarded the Lenin Prize).
-- **1964** — *Голосіївська осінь* (posthumously celebrated collection of his twilight years, returning to pure, autumnal lyricism).
+## 4. «Під осінніми зорями»
 
-## 4. Primary-source quotes (≥2 required)
+Електронна бібліотека «Культура України» описує «Під осінніми зорями» як другу
+книгу лірики 1910–1918 років, перше видання, Київ, видавництво «Грунт»,
+орієнтовно 1918, 126 сторінок [S3]. Знак питання в каталожній даті зберігаємо.
 
-### Quote 1 — The Neoclassical Lyricism (1911)
+Книжка є точним раннім читанням для аналізу форми й композиції. Сайт позначає
+всі права застереженими, тому курс не копіює поетичні рядки. Відкрита сторінка
+підтверджує документ, а не ліцензію на републікацію.
 
-From *Під осінніми зорями* (written in 1911, published 1918):
+## 5. Арешт 1931 року
 
-> **Яблука доспіли, яблука червоні!**
-> **Ми з тобою йдемо стежкою в саду,**
-> **Ти мене, кохана, приведеш до поля,**
-> **Я піду — і може більше не прийду.**
->
-> [...]
-> **Поцілуй востаннє, обніми востаннє;**
-> **Вміє розставатись той, хто вмів любить.**
+ДПУ заарештувало Рильського 19 березня 1931 року. ЕІУ описує допити,
+залякування, шантаж і примус до самообмови; поет провів п'ять місяців у
+Лук'янівській в'язниці [S1]. ЦДАГО показує анкету, витяг із допиту від
+23 березня та постанову про звільнення 19 серпня [S2].
 
-*Pedagogical note:* This quote represents Rylskyi's pure aestheticism, emotional depth, and mastery of form before the Soviet regime demanded industrial slogans. The final line is a celebrated aphorism in Ukrainian literature. It sets the baseline for the voice that was subsequently "broken."
+Архів подає точний шифр кримінальної справи: фонд 263, опис 1, справа 44162,
+з номерами аркушів [S2]. Неперевірені оповіді про проведення вулицями,
+конкретного пізнішого оперативного куратора й назву «Ставка» вилучено.
 
-### Quote 2 — The Coerced Soviet Voice (1932)
+## 6. «Знак терезів» і вимушений злам
 
-From the programmatic poem *Знак терезів* (1932), written after his 5-month imprisonment:
+НБУ ім. Ярослава Мудрого каталогізує «Знак терезів» як книжку віршів, Київ,
+«Рух», 1932, 130 і 2 сторінки [S4]. ЕІУ пов'язує декларацію після арешту та
+цю збірку з вимушеним зламом і новими правилами публічного письма [S1].
 
-> **Знак терезів — доби нової знак...**
-> **Бійці, єднайтесь! Не дрімай, стороже!**
-> **Безкрилу тьму навіки переможе**
-> **Визвольник людства, вільний пролетар.**
+Книжку не називаємо буквальним «викупом за життя». Порівняння з раннім
+виданням може стосуватися композиції, жанрів і публічної мови, але приховану
+травму в кожному рядку треба доводити текстологічно.
 
-*Pedagogical note:* The contrast between Quote 1 and Quote 2 is the core of Rylskyi's pedagogical narrative. The intimate "I" and natural world are replaced by the collective "fighters," "guard," and "proletarian." This is the textual evidence of his capitulation—the ransom paid for his life.
+## 7. Офіційні ролі й кампанія 1947 року
 
-### Quote 3 — Hidden Trauma and Irony (1932)
+Рильський мав академічні й письменницькі посади, очолював інститут і Спілку
+письменників. Офіційний статус не усунув контролю. ЦДАГО подає стенограму
+пленуму 15 вересня 1947 року, матеріали зустрічі 19 вересня, підготовку статті
+Ф. Єневича та її публікацію 30 вересня [S2].
 
-Also from *Знак терезів*, showing the "double-speak" scholars have identified:
+Це комплекс виробництва ідеологічної кампанії через партійні органи, професійну
+спілку й газету. Радянські формули звинувачення не є нейтральним описом
+поета. Водночас повторний тиск не перетворює всі його офіційні дії на таємний
+опір.
 
-> **На сонці мертві та бліді**
-> **Твої ієрогліфи-тайни.**
-> **Хвала залізу і руді.**
-> **Живіть і радуйтесь, комбайни.**
+## 8. Пізня праця й деколонізаційний контроль
 
-*Pedagogical note:* While superficially praising industrialization, the imagery ("dead and pale," "hieroglyphs-secrets") betrays an aesthetic disgust with the mechanical Soviet reality. Vira Aheyeva and other modern scholars teach this as Rylskyi's method of preserving his true self through subtle self-parody and irony.
+Рильський продовжував поетичну, перекладацьку й наукову працю, захищав
+українську мову й підтримував молодших авторів [S1]. Анекдоти про передачі
+ув'язненим або точні суми приватної допомоги вилучено без первинного локатора.
 
-## 5. Language register
+Російськоцентричний канон зводив його до радянського лауреата або перекладача
+російської класики. Деколонізований підхід повертає український неокласицизм,
+багатомовний переклад і репресивний контекст. Офіційні посади не приховуються:
+саме їхнє співіснування з кампаніями показує механізм кооптації.
 
-- **Register:** High modernist and classical. Rylskyi is the master of balance, euphony, and the "strict form" (sonnets, octaves). His pre-1931 poetry is saturated with European cultural allusions and refined philosophical lexicon. His post-1931 Soviet-era verse shifts to a bureaucratic, hortatory register (socialist realism), though his late-life collections return to a serene, autumnal philosophical tone.
-- **CEFR readiness for full reading:**
-  - Early lyrics (e.g., *Під осінніми зорями*): **B2**. The vocabulary is rich but accessible, grounded in natural imagery and emotion.
-  - Neoclassical poems & translations (*Синя далечінь*, *Пан Тадеуш*): **C1 / C2**. Requires understanding of classical mythology, complex syntax, and archaic/poetic vocabulary.
-  - Soviet-laureate collections: **B1+**. Syntactically and lexically simpler, but requires historical context to understand the coerced nature of the text.
-- **Lexicon notes:** Rylskyi successfully merged aristocratic, European literary vocabulary with the organic, folk-based Ukrainian of his mother's village. Watch for elegant archaisms and mythopoetic terms in his early work, contrasted with Sovietisms and bureaucratic calques in his middle period.
-- **Stylistic features:** Master of the octave (октава) and sonnet (сонет). Impeccable meter, rich but unobtrusive rhyme, parallelisms between human emotion and nature.
+## 9. Вилучення, завдання й утримання
 
-## 6. Contested points
+- Вилучено непідтверджену назву оперативної справи «Ставка» з назви модуля.
+- Вилучено імена та формули без архівного локатора.
+- Виправлено дату газетної кампанії на 30 вересня 1947 року.
+- Вилучено моральне порівняння з Тичиною та точні суми допомоги.
+- Розрізнено жертв репресій і еміграційну долю Юрія Клена.
+- Усі поетичні цитати без точного видання й сторінки вилучено.
 
-1. **Capitulation vs. Preservation:** The central debate in Rylskyi's legacy is the moral weight of his 1932 capitulation. Was *Знак терезів* a betrayal of the Neoclassicists who subsequently died for their principles, or a pragmatic necessity that allowed him to preserve the Ukrainian language through his monumental translations and institutional power? Modern UA scholarship (e.g., Vira Aheyeva) frames this as the "art of balance" (мистецтво рівноваги)—a tragic but ultimately fruitful survival strategy that saved a crucial pillar of Ukrainian high culture.
-2. **The "Double Life":** Soviet historiography presented Rylskyi simply as a "bourgeois poet who recognized his errors and embraced the Party." The declassified MGB case "Stavka" proved this false, showing he was in a state of permanent internal emigration and silent resistance, under constant threat of re-arrest.
-3. **Moral Agency:** Unlike Tychyna, whose poetic gift and personal agency seemed entirely hollowed out by fear, Rylskyi maintained his moral compass in private. His secret support for persecuted writers (carrying parcels to Yevhen Pluzhnyk, financing Hryhoriy Kochur's return from the GULAG) contrasts sharply with the public odes to Stalin he was forced to write.
-4. **Russian Disinformation:** Modern Russian and Soviet-nostalgic framing attempts to appropriate Rylskyi as a "friend of Russian culture" (due to his brilliant translations of Pushkin) while erasing the fact that the Russian-Soviet state imprisoned him, murdered his closest friends, and held a gun to his head for 30 years.
+Навчальне завдання будує дві документальні лінії: березень–серпень 1931 року й
+вересень 1947 року. Після цього порівнює каталоги видань до і після арешту,
+не підміняючи бібліографію психологічним читанням. Утримань немає.
 
-## 7. Cross-track links
+## 10. Прийняті джерела і права
 
-- **Existing LIT modules referencing this figure:**
-  - `plans/lit/rylsky-neoclassicism.yaml` — Focuses on the "Kyiv Parnassus" and the 1920s aesthetic height.
-  - `plans/lit/rylsky-liryka.yaml` — Focuses on the 1931 arrest and the psychology of forced socialist realism.
-  - `plans/lit/rylsky-translations.yaml` — Connects to his translation work as a form of cultural preservation.
-- **Potential LIT additions surfaced by this research:**
-  - A module in C1 focusing specifically on his translation work as a form of cultural preservation (e.g., translating Mickiewicz to elevate Ukrainian literary language while original poetry was censored).
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/mekhanizm-teroru.yaml`
-  - `plans/hist/rozstriliane-vidrodzennia.yaml` (Context for the 1947 ideological attacks against him).
-- **Existing bios that connect to this figure:**
-  - `pavlo-tychyna.yaml` — Parallel arc of coercion and survival.
-  - `mykola-zerov.yaml` — Fellow Neoclassicist, whose execution serves as the counter-factual to Rylskyi's survival.
-  - `yevhen-pluzhnyk.yaml` — Received aid from Rylskyi while in prison.
-  - `hryhoriy-kochur.yaml` — Sheltered by Rylskyi post-GULAG.
+- **S1:** ЕІУ, «Рильський Максим Тадейович»;
+  `https://www.history.org.ua/?termin=Rylskyj_Ma`.
+- **S2:** ЦДАГО, «Максим Рильський: тяжка ноша “офіційного” поета»;
+  `https://tsdahou.archives.gov.ua/arhiv-vystavkovyh-proyektiv/vystavkovi-proyekty-czdago-ukrayiny/maksym-rylskyj-tyazhka-nosha-oficzijnogo-poeta/`.
+- **S3:** «Під осінніми зорями»;
+  `https://elib.nlu.org.ua/object.html?id=11810`.
+- **S4:** «Знак терезів»;
+  `https://elib.nlu.org.ua/object.html?id=11744`.
 
-## 8. Naming-canonical
+Усі читання україномовні, публічні й `link-only`; підстава `external-link`,
+URL доказу і джерела однаковий. Сканів та уривків курс не хостить.
 
-- **Slug:** `maksym-rylskyi`
-- **EN canonical (BGN/PCGN 2010):** Maksym Rylskyi
-- **UA canonical (with patronymic):** Максим Тадейович Рильський
-- **Aliases (track these for `aliases:` YAML field):** Рильський Максим Тадейович, Максим Золоте Серце
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Maksim Rylskiy, Rilsky, Rylsky.
+## 11. Розгорнута перевірка доказів
 
-## 9. Image candidates
+Перша перевірка — неокласичне коло. ЕІУ дає змогу назвати його учасників і
+естетичні орієнтири [S1], але не створює спільної біографічної долі. Зеров,
+Филипович і Драй-Хмара стали жертвами різних репресивних траєкторій, Юрій Клен
+емігрував, Рильський був заарештований, звільнений і включений до офіційних
+інституцій. Урок не ранжує ці траєкторії за «мужністю».
 
-- **Best PD/CC portrait:** [File:Maksym_Rylsky.jpg](https://commons.wikimedia.org/wiki/File:Maksym_Rylsky.jpg) (1920s portrait, public domain).
-- **Backup candidates:** Photographs of Rylskyi from the 1950s at his Holosiyivo estate (verify PD-Ukraine status).
-- **Era-appropriate context image:** The cover of the 1932 *Знак терезів* collection, or a scan of the Lukyanivska prison registry/MGB "Stavka" case folder if available in archives.
+Друга перевірка — арешт. ЦДАГО подає конкретні документи й шифри, тому дати
+23 березня та 19 серпня можна прив'язати до допиту і постанови [S2]. Натомість
+яскрава сцена без аркуша не проходить поріг. Архівна точність робить видимим
+механізм слідства без додавання драматургії.
 
-## 10. Sources used
+Третя перевірка — причинність після звільнення. ЕІУ прямо говорить про
+вимушений злам і нові правила публічного письма [S1]. Це дозволяє пов'язувати
+історичний контекст із «Знаком терезів», але не називати збірку договором,
+викупом або платою. Метафора не повинна маскувати відсутність конкретного
+документа про умову звільнення.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, entry «Рильський Максим Тадейович» (esu.com.ua) — accessed 2026-05-28.
-- Енциклопедія історії України (Vol. 9, 2012), entry by E. Solovey — accessed 2026-05-28.
+Четверта перевірка — бібліографічна асиметрія. У «Під осінніми зорями» каталог
+містить орієнтовну дату [S3], тоді як «Знак терезів» має точний 1932 рік [S4].
+Питальність першої дати зберігається в описі. Обидва сайти застерігають права,
+тому завдання працює з композицією й метаданими без копіювання віршів.
 
-**Tier 2 (institutional):**
-- Віра Агеєва, *Мистецтво рівноваги. Максим Рильський і його час* (Київ: Книга, 2012 / Віхола, 2023) — Essential text defining his survival strategy and the "Stavka" KGB case.
+П'ята перевірка — 1947 рік. Архівна виставка дає послідовність партійних,
+спілчанських і газетних документів [S2]. Це дозволяє аналізувати кампанію як
+вироблений процес, а не як одиничну рецензію. Датою газетної публікації є
+30 вересня, тому непевне «у жовтні» замінено точним фактом.
 
-**Tier 3 (encyclopedic):**
-- uk.wikipedia, «Рильський Максим Тадейович» — accessed 2026-05-28.
+Шоста перевірка — пам'ять і портрет. Популярні анекдоти можуть бути правдивими,
+але без прямого локатора вони не входять до каталожного пакета. Візуальний
+кандидат із неповним міжнародним правовим статусом також не прийнятий. Обидва
+рішення спираються на один принцип: публічна відомість не дорівнює доведеному
+походженню.
 
-**Tier 4 (modern scholarly post-1991):**
-- Ігор Коляда, Юлія Коляда, *Максим Рильський* (Харків: Фоліо, 2015).
+## 12. Критерії готовності для наступного етапу
 
-**Tier 5 (general web):**
-- Lektorium.in.ua (analysis of *Знак терезів* and *Яблука доспіли*) — accessed 2026-05-28.
+Будівник модуля має використовувати архівні дати як опорну послідовність, а не
+як декор. Для 1931 року це арешт, допит і постанова про звільнення; для 1947-го
+— пленум, зустріч, підготовка й газетна публікація [S2]. Учень повинен бачити,
+хто створив документ і для якої установи, бо слідчий протокол, партійна
+стенограма та газетна стаття мають різні функції.
 
----
+Порівняння поетичних книжок не має містити уривків без сторінок. Замість цього
+можна зіставити назву, обсяг, видавця, композицію й історичну позицію видань
+[S3, S4]. Якщо пізніше додається точний уривок, потрібні видання, сторінка,
+підстава прав і пояснення, чому цитата необхідна. Назва «Ставка» не повертається
+без прямого архівного або сторінкового локатора.
 
-## Decolonization self-check (run before submitting)
+Перед передачею чотири URL звіряються між планом, discovery та реєстром.
+Старі музейне посилання й каталог «Троянд і винограду» не є частиною прийнятого
+набору: новий корпус навмисно тримає точну пару до і після арешту та окремий
+архівний комплекс [S2, S3, S4]. Якщо пізня лірика стане самостійною метою, її
+джерело додають до всіх п'яти файлів і знову перевіряють права.
 
-- [x] No Russocentric framing (Rylskyi's 1931 arrest by the DPU is explicitly named as coercion; his later Soviet titles are framed as a survival mechanism, not genuine devotion).
-- [x] No Russian-imperial transliterations in body text.
-- [x] No Russocentric periodization.
-- [x] No uncritical Soviet propaganda terms (Socialist Realism is framed as a forced aesthetic).
-- [x] No "lost his life" euphemisms (explicitly state his Neoclassicist peers were murdered/exterminated).
-- [x] All place names use modern UA canonical form (Kyiv, Holosiyivo).
-- [x] Modern UA framing applied throughout.
+Фінальний редактор має уникати слова «викуп» у формулюванні цілей і завдань.
+Воно нав'язує документам буквальний обмін, якого прийнятий корпус не доводить.
+Краще просити учня пояснити документований вимушений злам, назвати межі
+інтерпретації та показати, як офіційний статус співіснував із новим тиском.

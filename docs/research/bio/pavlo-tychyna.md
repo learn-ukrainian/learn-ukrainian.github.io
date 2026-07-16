@@ -1,202 +1,185 @@
-# Павло Григорович Тичина — Research Dossier
+# Павло Григорович Тичина — дослідницьке досьє
 
 **Slug:** `pavlo-tychyna`
-**Block:** D (survived-but-censored / coerced)
-**Tier:** 1a
-**Issue:** #2317 (R1a — Tier 1a research)
-**Researcher:** Claude (worked example for F5 #2314)
-**Completed:** 2026-05-26
+**Рівень готовності:** каталог-джерело, до побудови модуля
+**Оновлено:** 2026-07-16
 
----
+## 1. Ідентичність і рамка
 
-## 1. Verified facts
+Павло Григорович Тичина народився 23 січня 1891 року в Пісках на
+Чернігівщині, помер 16 вересня 1967 року в Києві [S1]. Він був українським
+поетом, перекладачем, музично обдарованим митцем, академіком і державним
+посадовцем УРСР. Досьє не зводить його ні до раннього генія, ні до пізнього
+«зрадника»: оцінюється конкретний документ, дія і контекст.
 
-- **Full name (UA, canonical):** Павло Григорович Тичина
-- **Pseudonyms / aliases:** Тичина Павло Григорович (academic-citation order). Russian-imperial baptismal record reads "Павелъ Григорьевъ Тычининъ" (forbidden in body text).
-- **Born:** 11 (23) January 1891 [Julian / Gregorian] | село Піски, Щаснівська волость, Козелецький повіт, Чернігівська губернія, Russian Empire (now Бобровицька міська об'єднана територіальна громада, Ніжинський район, Чернігівська область, Україна)
-- **Died:** 16 September 1967 | Київ, Ukrainian SSR | natural causes
-- **Father:** Григорій Тимофійович Тичинін (1850–1906), village psalmist and unpaid teacher in a free village school. From село Марківці, Козелецький повіт.
-- **Mother:** Марія Василівна (née Савицька, 1861–1915). 12 siblings; the most notable brother was Євген Тичина, pedagog in Kharkiv.
-- **Education:** Земська початкова школа в Пісках (from 1897, teacher Серафима Морачевська — she gave him Леонід Глібов's «Байки» and Грінченко's «Під землею»); Чернігівське духовне училище (1900–1907); Чернігівська духовна семінарія (1907–1913); Київський комерційний інститут, economic faculty (1913–1917, did not finish).
+Портретний файл не прийнято. Кандидат у Commons має неповний ланцюг авторства
+та походження; архівні й музейні фотографії не створюють автоматичного права
+на повторне використання.
 
-**Note on the birth-date disagreement:** The Українська Радянська Енциклопедія (УРЕ) and Большая советская энциклопедия give 27 (15) січня 1891 — a Julian-to-Gregorian conversion error in those Soviet-era sources. The 11 (23) січня date is confirmed by the metric record per modern UA scholarship and by the Чернігівщина archival materials. **Cite the 11/23 date and flag the Soviet-source error explicitly.**
+## 2. Освіта, музика й рання публікація
 
-## 2. Oppression mechanism — coerced co-option, not physical repression
+Тичина навчався в Чернігові у духовній школі й семінарії, співав у хорі,
+цікавився музикою та образотворчим мистецтвом. 1912 року з'явилися перші
+публікації. У Київському комерційному інституті навчався, але курсу не завершив
+[S1]. Незавершені студії не слід перетворювати на диплом.
 
-This figure's oppression is **structurally distinct** from Розстріляне Відродження peers (Хвильовий, Зеров, Куліш М., Курбас — executed 1933–37). Тичина was **broken via the threat-and-bribe matrix** that Юрій Лавріненко famously named "**покара славою**" ("punishment by glory"): the regime conscripted his talent rather than killing him.
+Музичний досвід допомагає описувати ритм, звук і синестезію ранньої поезії,
+але не є єдиним поясненням усіх образів. Поняття «кларнетизм» — критична рамка,
+а не самоназва установи чи завершена авторська теорія.
 
-**Specific pressure points (documented chronology):**
+## 3. «Соняшні кларнети»
 
-- **Spring 1923:** Брат Євген, регент of a church choir в Новій Басані, arrested by ДПУ. Тичина forced to sign a written guarantee that his brother would not leave without ДПУ permission. **First explicit signal that the family was vulnerable.**
-- **1927–1928:** ВАПЛІТЕ membership under Хвильовий (alongside Куліш М., Рильський, Йогансен, Любченко, Бажан). Тичина attacked for the work «Чистила мати картоплю» — accused of "буржуазний націоналізм." He briefly went silent.
-- **1928:** Олександр Олесь (in emigration) wrote the public rebuke vers «І ти продався їм, Тичино…» — the émigré community's open verdict on his trajectory.
-- **1931:** Збірка «Чернігів» — first "правильно витримана" collection. Critics date the capitulation arc from here.
-- **21 November 1933:** Вірш «Партія веде» printed in *Pravda*. This is the canonical break-point. The accompanying collection (1934) became the symbol of UA literature's surrender to Stalinism.
-- **1933:** Same year Хвильовий shot himself (13 May 1933) and Microsoft Микола Скрипник killed himself (7 July 1933). ВАПЛІТЕ disbanded. Тичина's capitulation came in the aftermath of this destruction — a survivor's strategy, not opportunism.
+НБУВ каталогізує точне читання: Павло Тичина, «Соняшні кларнети», друге
+видання, Київ, видавниче товариство «Друкарь», 1920, 67 і 4 ненумеровані
+сторінки [S3]. Назва «Сонячні кларнети» є дрейфом назви. Друге видання 1920
+року не можна називати першим виданням 1918 року.
 
-**Subsequent absorption into the regime:**
-- 1934: Moved to Київ, lived in Ролiт (Кооператив робітників літератури).
-- 1936–1939, 1941–1943: Director of Інститут літератури АН УРСР.
-- 1941: Сталінська премія.
-- 1943–1948: Народний комісар освіти / Міністр освіти УРСР.
-- 1944: Joined ВКП(б).
-- 1953–1959: Голова Верховної Ради УРСР (2 convocations).
-- 1962: Шевченківська премія.
-- 1967: Герой Соціалістичної Праці.
-- Author of the УРСР anthem text.
+Збірка читається як ранній український модернізм у контексті революції, війни
+й державотворення. Аналіз може охоплювати композицію, музичність, колір і
+жанрову різноманітність. Поетичні рядки не переносяться до курсу: НБУВ надає
+зовнішній доступ, але не дозвіл на подальше відтворення повного тексту.
 
-**Key contested point:** in the 1950s–60s Khrushchev thaw, Тичина did **not** rehabilitate. He criticized the шістдесятники publicly, remained on Stalinist positions. This makes his case structurally distinct from Рильський (who used his late laureate status to shelter younger writers).
+## 4. Літературні мережі й ранній тиск
 
-## 3. Major works
+Тичина був пов'язаний із «Гартом» і ВАПЛІТЕ; ЦДАМЛМ фіксує літературні та
+службові етапи в описі особового фонду [S2]. Участь у ВАПЛІТЕ не означає
+тотожності поглядів усіх учасників, але показує інституційне середовище
+українського модернізму.
 
-- **1912** — «Ви знаєте, як липа шелестить» — debut publication, *Літературно-науковий вісник*, via Грушевський (Коцюбинський forwarded the manuscript).
-- **1918** — *Соняшні кларнети* (зб., out 1919). The foundational кларнетизм book. UA symbolism + експресіонізм + інфантилізм synthesis.
-- **1920** — *Плуг*.
-- **1920** — *Замість сонетів і октав* (verses in prose).
-- **1921** — *В космічному оркестрі*.
-- **1923** — *Прометей* (поема). **First anti-totalitarian work in UA literature**, written before Тичина's own capitulation arc. Pre-empts Замятін's Мы (1924), Орвелл's later anti-utopias.
-- **1924** — *Вітер з України* (dedicated to Хвильовий).
-- **1920–22, unfinished, published posthumously** — *Сковорода* (poem-symphony). Тичина worked on this for 20+ years; **the late-life retrieval of artistic conscience.**
-- **1931** — *Чернігів*. First "правильна" collection.
-- **21 November 1933** — *Партія веде* (вірш, Pravda).
-- **1934** — *Партія веде* (зб.). Capitulation marker.
-- **1934** — *Ку-ку* (controversial collection, later self-suppressed).
-- **1938–1965** — long catalog of Soviet-laureate collections: *Чуття єдиної родини* (1938), *Пісня молодості* (1938), *Сталь і ніжність* (1941), *Ми йдемо на бій* (1941), *Ми — свідомість людства* (1957), *Комунізму далі видні* (1961), etc.
-- **1942** — *Похорон друга* (поема). One of the late-period works where the original poetic talent surfaces beneath the official register.
-- **1970, posthumous** — *В серці у моїм…* — early unpublished/non-collection verses.
+1923 року заарештували брата Євгена. УІНП повідомляє про письмову гарантію
+Павла Тичини [S1]. Це документований родинний тиск. Водночас пакет не дозволяє
+вивести з цієї події єдину причину кожної пізнішої публікації.
 
-## 4. Primary-source quotes (≥2 required)
+## 5. Зміна публічної поетики
 
-### Quote 1 — pre-capitulation, кларнетизм period
+У 1920-х і на початку 1930-х радянська критика атакувала окремі тексти Тичини,
+а поле допустимого письма звужувалося. Попереднє досьє містило неперевірену
+першість «Прометея» як антитоталітарного твору, довгі цитати та однозначну
+моральну дугу. Ці елементи вилучено.
 
-From *Соняшні кларнети* (1918), the foundational stanza of UA symbolism:
+Зміна поетики є видимою в послідовності видань, але внутрішня мотивація не
+встановлюється самим каталогом. Поняття «капітуляція» може бути предметом
+дискусії, а не полем перевіреного факту.
 
-> **Ви знаєте, як липа шелестить
-> У місячні весняні ночі?**
-> **— Кохана спить, кохана спить,**
-> **Піди збуди, цілуй їй очі.**
-> **Кохана спить...**
+## 6. «Партія веде» і точність документа
 
-*Pedagogical note:* this is the lyric Тичина that wrote in 1911 at age 20, before the regime ever touched him. The natural-world musicality, the second-person address to the listener, the assumption that the reader hears "як липа шелестить" — these are the hallmarks of кларнетизм. Reading this quote alongside «Партія веде» (Quote 2 below) is the pedagogical key to the «трагічний злам» framing.
+НБУВ описує книжку «Партія веде»: Київ–Харків, Державне літературне
+видавництво, 1935, 55 і 1 сторінка [S4]. Це окремий документ від газетної
+публікації однойменного твору 21 листопада 1933 року. Дати не можна змішувати.
 
-### Quote 2 — post-capitulation, Soviet-laureate period
+Порівняння з «Соняшними кларнетами» починається з бібліографії, композиції й
+видавничої рамки. Воно не робить дві книжки повним поясненням сімнадцяти років
+біографії. Текст книжки лишається на зовнішньому сайті НБУВ.
 
-From *Партія веде* (Pravda, 21 November 1933), the opening declaration:
+## 7. Офіційні посади й архів
 
-> **Хто там у нас від рук одбився,**
-> **Кому з нас більше всіх боліло —**
-> **Той у партію вступив, той з партією злився:**
-> **Партія веде!**
+Тичина очолював Інститут української літератури, був народним комісаром
+освіти, головою Верховної Ради УРСР, академіком і лауреатом. ЦДАМЛМ описує його
+особовий фонд 464, що містить рукописи, листування, біографічні й службові
+документи [S2].
 
-*Pedagogical note:* the ear is the same (the same syllabic instincts, the same cadence), but the content is wholly inverted — the line "Кому з нас більше всіх боліло — / Той у партію вступив" is a documentary admission that the most-broken were the most-coopted. Lavrinenko's "покара славою" describes exactly this transaction.
+Посади підтверджують участь у радянських інституціях, але не доводять повної
+свободи або повної відсутності агентності. Пакет не повторює категоричних
+тверджень про ставлення Тичини до шістдесятників: прямі матеріали суперечать
+популярним переказам, а точного архівного локатора немає.
 
-### Quote 3 — Маланюк's diagnosis (1924, émigré rebuke)
+## 8. Деколонізаційний та етичний контроль
 
-Євген Маланюк, writing from Прага, on Тичина's trajectory **before the 1933 break-point**:
+Російськоцентрична рамка лишала Тичині роль «радянського поета», стираючи
+український модернізм і самостійне літературне поле. Деколонізований підхід
+повертає ранню творчість до української історії й називає механізми кооптації,
+цензури та родинного тиску [S1, S2].
 
-> **"…від кларнета твого — пофарбована дудка зосталась… в окривавлений жовтень ясна обернулась Весна..."**
+Водночас не приховуються офіційні тексти й посади. Агентність під примусом не
+дорівнює повній свободі, але й не зникає. Моральна оцінка має стосуватися
+конкретної дії, а не випливати з чужої метафори або вигаданої кіносцени.
 
-Тичина admitted in private decades later: «Він єдиний мене розумів, він єдиний сказав мені правду…»
+## 9. Вилучення, завдання й утримання
 
-## 5. Language register
+- Виправлено дату народження за УІНП.
+- Вилучено приписування формули «покара славою» Лавріненкові.
+- Вилучено неперевірену першість «Прометея».
+- Розділено газетний твір 1933 року й книжку 1935 року.
+- Вилучено неприкріплені поетичні та критичні цитати.
+- Відхилено категоричний пізній психологічний портрет.
 
-- **Pre-1931 register:** modernist symbolist, musically saturated. Heavy alliteration, neologism, кларнетизм-specific synesthetic ("color-hearing") effects. Comparable to Trakl, late Verlaine.
-- **Post-1933 register:** Soviet-laureate bureaucratic verse. Hortatory amphibrachs, party-line vocabulary, slogan structures. Stylistically the same ear; semantically wholly other.
-- **CEFR readiness for full reading:**
-  - *Соняшні кларнети* — C1+ (modernist density; symbolist allusion). Selected lyrics workable at B2.
-  - *Прометей* (1923) — C1+ (poem cycle, allusive).
-  - Post-1933 collections — B1+ (vocabulary is simpler, but the pedagogical question of *why* to read these is itself C2-level).
-  - Letters and diaries — B2.
-- **Lexicon notes:** Тичина's neologisms (compounds like «золотогомін») are pedagogically rich. The Russianisms in post-1933 collections (which entered as Soviet bureaucratese leaked into his idiom) are also pedagogically rich — as **negative examples** for the L2 reader.
-- **Stylistic features:** synesthesia (color-sound mapping), heavy alliteration, mixed-metric verse, late embrace of folkloric refrain structures.
+Навчальна рамка: дві паралельні хронології — видання й літературні мережі;
+родинний тиск, посади й архів. Після їх зіставлення учень формулює, що джерела
+підтверджують, а що лишається інтерпретацією. Утримань немає.
 
-## 6. Contested points
+## 10. Прийняті джерела і права
 
-1. **Was 1933 capitulation moral failure or survival rationally chosen?** UA scholarship is divided. Леонід Новиченко framed it as tragic survival; Євген Сверстюк and Василь Стус framed it as failure of nerve. Both framings have textual grounding and should be presented to learners, not arbitrated.
-2. **Was the late work (*Сковорода* poem-symphony, *Похорон друга*, posthumous *В серці у моїм…*) a real artistic resurrection or self-justification?** Стус argued in *Феномен доби* that the original poetic talent survived beneath the capitulation; others read these as further regime-compatible self-mythologization.
-3. **Did he write the УРСР anthem text freely or under duress?** No clear documentary record; the question itself indexes the difficulty of attributing free will to a 1940s Soviet laureate.
-4. **Modern Russian disinformation:** RT and successor outlets occasionally frame Тичина as "a Russian-Soviet poet" — erasing both his Ukrainian identity and the coercion that produced his Soviet-aligned work. Reject this framing while not flipping to hagiography.
-5. **Стус's reading via *Феномен доби*:** Стус wrote this critical study in 1970–1971, the KGB confiscated it on his 1972 arrest, the prosecution used it as evidence against Стус. The fact that **Тичина himself never spoke up to defend Стус** is part of the contested record. The essay surfaced from the КДБ archive only post-1991.
+- **S1:** УІНП, «1891 – народився Павло Тичина, поет»;
+  `https://uinp.gov.ua/istorychnyy-kalendar/sichen/23/1891-narodyvsya-pavlo-tychyna-poet`.
+- **S2:** ЦДАМЛМ, «Павло Григорович Тичина (1891–1967)»;
+  `https://csamm.archives.gov.ua/2021/01/22/pavlo-hryhorovych-tychyna-1891-1967/`.
+- **S3:** НБУВ, «Соняшні кларнети (1920)»;
+  `https://irbis-nbuv.gov.ua/ulib/item/ukr0000024130`.
+- **S4:** НБУВ, «Партія веде (1935)»;
+  `https://irbis-nbuv.gov.ua/ulib/item/ukr0000024621`.
 
-## 7. Cross-track links
+Усі читання україномовні, точні, публічні й `link-only`; правова підстава —
+`external-link`, URL доказу збігається з URL джерела.
 
-- **Existing LIT modules (planned, discovery state):**
-  - `plans/lit/tychyna-clarinets.yaml` — focused on *Соняшні кларнети* (cohort with Зеров's «Київський Парнас»)
-  - `plans/lit/tychyna-tragic-turn.yaml` — focused on the 1931–34 break (connects to `khvylovyi-ideological-choice`)
-  - `plans/lit/tychyna-soviet-period.yaml` — focused on post-1934 Soviet output
-- **Existing modules referencing Тичина:**
-  - `plans/b2/phonetic-stylistic-devices.yaml`
-  - `plans/c1/fonetychni-stylistychni-zasoby.yaml`
-  - `plans/c1/stylistic-phonetics-euphony.yaml`
-  - `plans/c2/rhythm-prosody.yaml`
-  - `plans/lit-essay/stus-phenomenon.yaml` (Стус's *Феномен доби* commentary on Тичина is the spine of this module)
-- **Connected bios already in place:**
-  - `mykola-khvylovyi.yaml` — ВАПЛІТЕ co-member, addressee of *Вітер з України* dedication
-  - `mykola-zerov.yaml` — neighbor in the neoclassicist/modernist cohort
-  - `pavlo-fylypovych.yaml` — Київський Парнас contemporary
-  - `oleksandr-dovzhenko.yaml` — Тичина worked under him at Київський театр ім. Шевченка
-  - `vasyl-stus.yaml` — wrote the canonical critical essay on Тичина
-- **Connected bios newly proposed (this epic):**
-  - `maksym-rylskyi` (Tier 1a) — parallel capitulation arc with retained late agency
-  - `mykola-bazhan` (Tier 1a) — ВАПЛІТЕ co-member, similar pattern
-  - `oleksandr-oles` (Tier 1b) — author of the 1928 rebuke verse
-  - `yevhen-malaniuk` (Tier 1b) — author of the 1924 diagnosis
+## 11. Розгорнута перевірка доказів
 
-## 8. Naming-canonical
+Перша перевірка — календар і освіта. УІНП безпосередньо подає 23 січня 1891
+року та зазначає незавершене навчання в Комерційному інституті [S1]. Тому
+модуль не створює альтернативної старостильної пари без окремого метричного
+джерела й не називає Тичину випускником установи. Точність у простих фактах
+потрібна до складної моральної дискусії.
 
-Per `docs/best-practices/bio-naming-canonical.md` (#2313, pending):
+Друга перевірка — назва ранньої книжки. У каталозі НБУВ прикметник
+«Соняшні» є частиною документа [S3]. Форма «Сонячні» може траплятися в
+критичних працях або пізніх переказах, але в каталожному записі її не
+нормалізуємо. Так само рік 1920 стосується другого видання, а не першої появи
+збірки.
 
-- **Slug:** `pavlo-tychyna`
-- **EN canonical (BGN/PCGN 2010):** Pavlo Tychyna
-- **UA canonical (with patronymic):** Павло Григорович Тичина
-- **Aliases for `aliases:` field:**
-  - Тичина Павло Григорович (academic-citation order)
-- **Forbidden forms (flag in body text):**
-  - "Pavel Tychina" (Russian-imperial transliteration)
-  - "Tychina" (English-via-Russian — missing -y-)
-  - "Тычининъ" (only in primary-source quotation of the 1891 baptismal record)
-  - "Pavel Grigoryevich Tychina" (Russian patronymic form applied to a Ukrainian)
+Третя перевірка — родинний тиск. Арешт Євгена й письмова гарантія Павла є
+підтриманими біографічними фактами [S1]. Але формула «після цього написав» не
+дорівнює «через це написав». Для причинного зв'язку потрібен лист, щоденниковий
+запис або інший прямий документ. Майбутня дискусія має показувати цю різницю.
 
-## 9. Image candidates
+Четверта перевірка — документ «Партія веде». Газетний твір 1933 року і книжка
+1935 року мають різну ідентичність [S4]. Учень може порівняти дати й типи
+публікації, але не цитує захищені рядки. Каталог дає можливість дослідити
+видавця, серію, обсяг і структуру без републікації тексту.
 
-- **Best PD/CC portrait:** [File:Тичина Павло.jpg on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B8%D1%87%D0%B8%D0%BD%D0%B0_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE.jpg) — pre-1934, kept-quietly photo. Verify license tag is PD-Ukraine or PD-old-70.
-- **Backup candidate:** Тичина's 1922 self-portrait (held by Літературно-меморіальний музей-квартира П. Г. Тичини, Київ, Терещенківська 5) — the textbook actually reproduces this; verify museum image-rights policy.
-- **Era-appropriate context image:** cover of *Соняшні кларнети* 1918 edition (PD, used in textbook).
+П'ята перевірка — архів. Фонд 464 показує великий корпус рукописів, листів і
+службових матеріалів [S2]. Загальна наявність фонду не підтверджує кожної
+популярної історії. Твердження про конкретну допомогу, відмову або цензурний
+наказ повинно мати справу й аркуш. Саме тому категорична оповідь про пізнє
+ставлення до шістдесятників вилучена.
 
-## 10. Sources used
+Шоста перевірка — етична мова. «Офіційний статус», «кооптація», «примус» і
+«відповідальність» не є взаємозамінними. Посада — факт; кооптація — опис
+механізму; примус потребує документа; відповідальність є аргументованою
+оцінкою конкретної дії. Така розмітка не ухиляється від оцінки, а робить її
+прозорою й не допускає blame-by-inference.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, entry «Тичина Павло Григорович» (esu.com.ua) — accessed 2026-05-26.
-- Шевченківська енциклопедія, том 6 (Київ: Ін-т літератури ім. Т. Г. Шевченка, 2015) — Тичина entry by С. А. Гальченко.
+## 12. Критерії готовності для наступного етапу
 
-**Tier 2 (institutional):**
-- Юрій Лавріненко, *Розстріляне відродження: Антологія 1917–1933* (Париж: Інститут літературний, 1959; reprint 2002) — frames Тичина alongside Розстріляне Відродження cohort; coins "покара славою."
-- George G. Grabowicz, *Toward a History of Ukrainian Literature* (Harvard URI, 1981) — chapter on 1920s modernism.
+Модуль має зберегти точні книжкові ідентичності в заголовках завдань. Не можна
+просити учня читати «видання 1918 року», а посилати на друге видання 1920-го.
+Не можна називати книжку «Партія веде» 1933 роком, якщо прийнятий каталог
+описує видання 1935-го [S3, S4]. Газетний і книжковий документи мають окремі
+рядки в хронології.
 
-**Tier 3 (encyclopedic):**
-- uk.wikipedia, «Тичина Павло Григорович» — accessed 2026-05-26. Comprehensive on bibliography + state honors.
+Дискусія про відповідальність будується після фактологічної перевірки. Учень
+спершу називає арешт брата, публікації, організації, посади й склад архіву.
+Потім позначає, де джерело мовчить про мотив. Лише після цього формулює
+аргумент, уникаючи слів «безперечно хотів» або «остаточно зрадив». Така
+послідовність дозволяє говорити про примус серйозно, не скасовуючи етичних
+питань і не перетворюючи їх на готовий вирок.
 
-**Tier 4 (modern scholarly post-1991):**
-- Василь Стус, *Феномен доби (сходження на Голгофу слави)*. Written 1970–71; confiscated by КДБ 1972; surfaced from archive post-1991; published in *Літературна Україна* and as standalone monograph.
-- Леонід Новиченко, *Поетичний світ Павла Тичини* (Київ: Дніпро, 1976; updated post-1991 editions). Note: pre-1991 editions reflect Soviet framing, post-1991 editions soften the apology — cite the later edition.
+Перед передачею всі чотири URL мають збігатися в плані, discovery й реєстрі.
+Старі посилання на загальну історію музею або ЕІУ не лишаються прихованими
+читаннями. УІНП і ЦДАМЛМ несуть біографічну та архівну функції, а два каталоги
+НБУВ — книжкову [S1, S2, S3, S4]. Додавання критичного джерела потребуватиме
+повної синхронізації, а не локальної згадки.
 
-**Tier 5 (general web):**
-- Музей-квартира П. Г. Тичини (Київ, Терещенківська 5) website — primarily archival photographs and exhibition catalog references.
-
-**Primary-source documents accessed (or cited in modern scholarship):**
-- Метрична книга, село Піски, січень 1891 — recorded as "Павелъ Григорьевъ Тычининъ" (cited via Шевченківська енциклопедія).
-- Tychyna's diary (Із щоденникових записів, Київ 1981) — used carefully; the published version is censored against the original ms. now held at the museum.
-- Pravda, 21 November 1933 — text of *Партія веде* original publication.
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing (Тичина's coercion is documented, not euphemized)
-- [x] No Russian-imperial transliterations in body text (Тычининъ only in the primary-source quotation context)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms (буржуазний націоналізм only in quotes describing the 1928 attack against him)
-- [x] No "lost his life" euphemisms (he wasn't killed; his oppression is named accurately as coercion-via-bribery)
-- [x] All place names use modern UA canonical form (Чернігів, Київ, Уфа kept as Russian city)
-- [x] Holodomor referenced indirectly (1932–33 was the immediate context for his 1933 capitulation)
-- [x] Modern UA framing applied throughout
+Фінальний редактор також перевіряє, щоб термін «кларнетизм» був пояснений як
+критична рамка, а не як безпосередня самоназва поета. Усі назви творів
+подаються без цитованих рядків. Якщо модуль потребує текстового фрагмента,
+редактор спершу встановлює сторінку в конкретному виданні й окремо фіксує
+допустиму правову підставу.

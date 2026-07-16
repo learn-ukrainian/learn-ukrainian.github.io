@@ -14,7 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — «Звичай, а також мова — це ті найміцніші елементи, що об'єднують окремих людей в один народ, в одну націю.»
+    Аналіз передмови — як автор визначає мету етнографічного нарису на сторінках
+    11–13 першого тому без перенесення захищеного тексту до курсу
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — свідочення голодомору як акт пам'яті
@@ -35,22 +36,26 @@ content_outline:
   words: 400
 - points:
   - >-
-    Народження 9 листопада 1913 року у Одесі; мати загинула від голодомору 1933 року у селі Надлак, Херсонщина.
-    [!decolonization] Свідок голодомору як дільничний агроном у Вінницькій області; відмова повернутися до СРСР.
+    Народження 9 листопада 1913 року в Одесі; ЕСУ засвідчує смерть матері під
+    час Голодомору, але перевірений пакет не уточнює назви села.
+    [!decolonization] Досвід дільничного агронома на Вінниччині та свідчення про
+    Голодомор; переміщення на Захід 1944 року подається без вигаданої мотивації.
     Еміграція до Великобританії (1948).
   section: 'Формування: Одеса і Голодомор'
   words: 1000
 - points:
   - >-
-    Звичаї нашого народу, т. 1 (1958) і т. 2 (1966) — календар народних обрядів.
-    Цитата (переднє слово): «Звичай, а також мова — це ті найміцніші елементи, що об'єднують окремих людей в один народ, в одну націю.».
+    «Звичаї нашого народу», том 1 (1958) і том 2 (1966), — етнографічний нарис
+    про календарні та родинні практики. Передмову першого тому можна аналізувати
+    за точним діапазоном сторінок 11–13, не відтворюючи її текст.
     В дев'ятім крузі (1953) — свідочення голодомору; розширене англомовне видання 1983 року у Гарвардському інституті.
   section: 'Діяльність: Звичаї нашого народу'
   words: 1200
 - points:
   - >-
-    [!anti-hagiography] Книгу критикують як компіляцію, але вона зберегла календар, що режим знищував.
-    Цитата: «Хто його знає, чи не є саме ця близькість звичаїв тим цементуючим матеріялом, що перемагає своєю міццю всі інші сили, які працюють на руйнування єдности нашого народу.».
+    [!anti-hagiography] Нарис слід читати як авторський добір і систематизацію,
+    а не як повний або позачасовий опис усіх українців. Значення збереження
+    матеріалу не скасовує потреби перевіряти походження кожного прикладу.
     [!epistemic-humility] Варіант дати народження (9 листопада проти 10 жовтня) потребує перевірки за ВУЕ.
   section: 'Тінь: Голодомор і заборона етнографії'
   words: 1600
@@ -73,37 +78,65 @@ objectives:
 pedagogy: CBI
 persona:
   role: >-
-    Модератор семінару, який досліджує інтелектуальну історію, уникаючи як радянського стирання, так і бездумної глорифікації.
+    Модератор семінару, який досліджує інтелектуальну історію, уникаючи як
+    радянського стирання, так і бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: esu.com.ua
+- title: Воропай Олекса
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-29877
   language: uk
-  note: Короткий життєпис етнографа та огляд його основних праць.
-  role: encyclopedia
-  source: 'Воропай Олекса (ЕСУ)'
-  url: https://esu.com.ua/article-29877
-- hosting: vue.gov.ua
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Виписати засвідчені форми імені, фахи, етапи еміграції та назви праць,
+    відокремивши біографічні дані від змісту пізніших фольклорних перевидань.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-29877
+    note: Відкрита україномовна сторінка; текст у курсі не відтворюється.
+- title: Олекса Воропай
+  source_name: Інтернет-енциклопедія «Українці у Сполученому Королівстві»
+  source_url: https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
   language: uk
-  note: Велика енциклопедична стаття (Велика українська енциклопедія) про життєвий шлях.
-  role: encyclopedia
-  source: 'Воропай, Олекса Іванович (ВУЕ)'
-  url: https://vue.gov.ua/Воропай,_Олекса_Іванович
-- hosting: reading-needed
+  genre: біографічна довідка діаспорного архіву
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Побудувати хронологію навчання, переміщення до Німеччини й Британії та
+    наукової праці, позначивши, які деталі підтверджує саме ця довідка.
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
+    note: Зовнішнє посилання на україномовний біографічний матеріал.
+- title: Воропай О. Звичаї нашого народу. Том 1
+  source_name: Diasporiana
+  source_url: https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
   language: uk
-  note: Біографічний нарис про життя і діяльність О. Воропая у Великій Британії.
-  role: biography-overview
-  source: 'reading-needed: Олекса Воропай (Українці у Сполученому Королівстві)'
-- hosting: reading-needed
-  language: uk
-  note: Уривок із переднього слова до книги «Звичаї нашого народу» для аналізу ідей про мову та звичаї.
-  role: primary-excerpt
-  source: 'reading-needed: передмова до книги «Звичаї нашого народу»'
+  genre: каталог оцифрованого видання
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: >-
+    За каталожною сторінкою встановити автора, назву, том, місце, рік і обсяг
+    видання; не переносити цитати з передмови без точного локатора.
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
+    note: Скан лишається на зовнішньому сайті; курс не відтворює сторінки або уривки.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Біографічна сторінка містить зображення, але не подає достатнього окремого
+    доказу авторства, походження та ліцензії портретного файла.
+  verified_on: '2026-07-16'
 references:
-- note: Канонічна стаття ВУЕ.
-  path: https://vue.gov.ua/Воропай,_Олекса_Іванович
-  title: Воропай, Олекса Іванович (ВУЕ)
-  type: reference
 - note: Енциклопедічна стаття ЕСУ.
   path: https://esu.com.ua/article-29877
   title: Воропай Олекса (ЕСУ)
@@ -112,15 +145,10 @@ references:
   path: https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
   title: Олекса Воропай (ukrainiansintheuk.info)
   type: reference
-- note: Англомовна енциклопедична стаття.
-  path: https://www.encyclopediaofukraine.com/
-  title: Voropai, Oleksa (IEU)
-  type: reference
-- author: Олекса Воропай
-  note: Канонічний компендіум обрядів, т. 1.
-  title: Звичаї нашого народу
+- note: Каталог точного першого тому етнографічного нарису.
+  path: https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
+  title: Воропай О. Звичаї нашого народу. Том 1
   type: primary
-  work: Звичаї нашого народу
 sequence: 246
 slug: oleksa-voropai
 subtitle: The Ethnographer Who Preserved Ukrainian Village Life in Exile

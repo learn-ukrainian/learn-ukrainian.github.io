@@ -1,0 +1,17 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Олекса Воропай
+- Олекса Воропай Енциклопедія Сучасної України
+- Олекса Воропай Українці у Сполученому Королівстві
+- Звичаї нашого народу том 1 Diasporiana
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-29877
+- https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
+- https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
+warning: >-
+  Запис розрізняє біографічні джерела про Воропая і каталог його конкретної
+  праці. Пізні покликання на етнографічну книжку не використано як доказ
+  життєпису, а неперевірені цитати вилучено.

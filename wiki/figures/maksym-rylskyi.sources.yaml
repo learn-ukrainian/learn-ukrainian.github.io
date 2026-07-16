@@ -1,0 +1,40 @@
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Rylskyj_Ma
+  type: external
+  title: Рильський Максим Тадейович
+  url: https://www.history.org.ua/?termin=Rylskyj_Ma
+  metadata:
+    publisher: Інститут історії України НАН України
+    author: Е. С. Соловей
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: "https://tsdahou.archives.gov.ua/arhiv-vystavkovyh-proyektiv/\
+    vystavkovi-proyekty-czdago-ukrayiny/maksym-rylskyj-tyazhka-nosha-oficzijnogo-poeta/"
+  type: external
+  title: Максим Рильський — тяжка ноша «офіційного» поета
+  url: "https://tsdahou.archives.gov.ua/arhiv-vystavkovyh-proyektiv/\
+    vystavkovi-proyekty-czdago-ukrayiny/maksym-rylskyj-tyazhka-nosha-oficzijnogo-poeta/"
+  metadata:
+    publisher: Центральний державний архів громадських об'єднань та україніки
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://elib.nlu.org.ua/object.html?id=11810
+  type: external
+  title: Під осінніми зорями — лірики, книга друга, 1910–1918
+  url: https://elib.nlu.org.ua/object.html?id=11810
+  metadata:
+    publisher: Електронна бібліотека «Культура України», НБУ ім. Ярослава Мудрого
+    language: uk
+    verified_on: '2026-07-16'
+- id: S4
+  file: https://elib.nlu.org.ua/object.html?id=11744
+  type: external
+  title: Знак терезів — вірші (1932)
+  url: https://elib.nlu.org.ua/object.html?id=11744
+  metadata:
+    publisher: Електронна бібліотека «Культура України», НБУ ім. Ярослава Мудрого
+    language: uk
+    verified_on: '2026-07-16'

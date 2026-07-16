@@ -1,0 +1,19 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Володимир Сосюра
+- Володимир Сосюра Енциклопедія Сучасної України
+- Володимир Сосюра Український інститут національної пам'яті
+- Володимир Сосюра Поезії 1921 Україніка НБУВ
+- Володимир Сосюра ЦДАМЛМ архівні документи
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-889403
+- https://uinp.gov.ua/istorychnyy-kalendar/sichen/6/1898-narodyvsya-poet-volodymyr-sosyura
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000030230
+- https://csamm.archives.gov.ua/2023/01/06/volodymyra-mykolaiovych-sosiura-1898-1965/
+warning: >-
+  Запис спирається на ЕСУ, УІНП, точний каталог ранньої книжки та офіційний
+  архівний матеріал ЦДАМЛМ. Відомі поетичні рядки не переписано без точного
+  первинного локатора.

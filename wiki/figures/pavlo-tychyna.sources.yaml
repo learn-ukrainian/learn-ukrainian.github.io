@@ -1,0 +1,37 @@
+sources:
+- id: S1
+  file: https://uinp.gov.ua/istorychnyy-kalendar/sichen/23/1891-narodyvsya-pavlo-tychyna-poet
+  type: external
+  title: 1891 – народився Павло Тичина, поет
+  url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/23/1891-narodyvsya-pavlo-tychyna-poet
+  metadata:
+    publisher: Український інститут національної пам'яті
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://csamm.archives.gov.ua/2021/01/22/pavlo-hryhorovych-tychyna-1891-1967/
+  type: external
+  title: Павло Григорович Тичина (1891–1967)
+  url: https://csamm.archives.gov.ua/2021/01/22/pavlo-hryhorovych-tychyna-1891-1967/
+  metadata:
+    publisher: Центральний державний архів-музей літератури і мистецтва України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024130
+  type: external
+  title: Тичина П. Г. Соняшні кларнети (1920)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024130
+  metadata:
+    publisher: Електронна бібліотека «Україніка», НБУВ
+    language: uk
+    verified_on: '2026-07-16'
+- id: S4
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024621
+  type: external
+  title: Тичина П. Г. Партія веде (1935)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024621
+  metadata:
+    publisher: Електронна бібліотека «Україніка», НБУВ
+    language: uk
+    verified_on: '2026-07-16'

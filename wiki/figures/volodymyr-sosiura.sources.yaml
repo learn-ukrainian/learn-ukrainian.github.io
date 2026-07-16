@@ -1,0 +1,37 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-889403
+  type: external
+  title: Сосюра Володимир Миколайович
+  url: https://esu.com.ua/article-889403
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://uinp.gov.ua/istorychnyy-kalendar/sichen/6/1898-narodyvsya-poet-volodymyr-sosyura
+  type: external
+  title: 1898, народився поет Володимир Сосюра
+  url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/6/1898-narodyvsya-poet-volodymyr-sosyura
+  metadata:
+    publisher: Український інститут національної пам'яті
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030230
+  type: external
+  title: Сосюра В. М. Поезії (1921)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030230
+  metadata:
+    publisher: Електронна бібліотека «Україніка», НБУВ
+    language: uk
+    verified_on: '2026-07-16'
+- id: S4
+  file: https://csamm.archives.gov.ua/2023/01/06/volodymyra-mykolaiovych-sosiura-1898-1965/
+  type: external
+  title: Володимир Миколайович Сосюра (1898–1965)
+  url: https://csamm.archives.gov.ua/2023/01/06/volodymyra-mykolaiovych-sosiura-1898-1965/
+  metadata:
+    publisher: Центральний державний архів-музей літератури і мистецтва України
+    language: uk
+    verified_on: '2026-07-16'

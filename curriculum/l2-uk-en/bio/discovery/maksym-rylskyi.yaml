@@ -1,0 +1,19 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Максим Рильський
+- Максим Рильський Енциклопедія історії України
+- Максим Рильський ЦДАГО архівна кримінальна справа
+- Під осінніми зорями 1918 Культура України
+- Знак терезів 1932 Культура України
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://www.history.org.ua/?termin=Rylskyj_Ma
+- https://tsdahou.archives.gov.ua/arhiv-vystavkovyh-proyektiv/vystavkovi-proyekty-czdago-ukrayiny/maksym-rylskyj-tyazhka-nosha-oficzijnogo-poeta/
+- https://elib.nlu.org.ua/object.html?id=11810
+- https://elib.nlu.org.ua/object.html?id=11744
+warning: >-
+  Ухвалений набір поєднує статтю ЕІУ, архівну виставку ЦДАГО та каталоги двох
+  точних видань до і після арешту 1931 року. Віршовані рядки без сторінкового
+  локатора не відтворюються.

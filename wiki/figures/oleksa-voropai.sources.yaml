@@ -1,0 +1,29 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-29877
+  type: external
+  title: Воропай Олекса
+  url: https://esu.com.ua/article-29877
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
+  type: external
+  title: Олекса Воропай
+  url: https://www.ukrainiansintheuk.info/ukr/02/woropayo-u.htm
+  metadata:
+    publisher: Інтернет-енциклопедія «Українці у Сполученому Королівстві»
+    author: Ярослав Василюк
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
+  type: external
+  title: Воропай О. Звичаї нашого народу. Том 1
+  url: https://diasporiana.org.ua/folklor/3254-voropay-o-zvichayi-nashogo-narodu-t-1/
+  metadata:
+    publisher: Diasporiana
+    language: uk
+    verified_on: '2026-07-16'

@@ -1,0 +1,28 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-52788
+  type: external
+  title: Лавріненко Юрій Андріянович
+  url: https://esu.com.ua/article-52788
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://nibu.kyiv.ua/exhibitions/839/
+  type: external
+  title: 'Лавріненко Юрій Андріянович (псевдоніми: Ю. Ясен, Ю. Дивнич, Ю. Гайдар) (1905–1987)'
+  url: https://nibu.kyiv.ua/exhibitions/839/
+  metadata:
+    publisher: Національна історична бібліотека України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/UKR0004464
+  type: external
+  title: Розстріляне відродження (2004)
+  url: https://irbis-nbuv.gov.ua/ulib/item/UKR0004464
+  metadata:
+    publisher: Електронна бібліотека «Україніка», НБУВ
+    language: uk
+    verified_on: '2026-07-16'
