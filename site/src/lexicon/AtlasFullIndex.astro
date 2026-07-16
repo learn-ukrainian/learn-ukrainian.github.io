@@ -420,7 +420,7 @@ type BrowseRow = {
     const hasMore = rows.length > visibleRows.length;
     moreButton.hidden = !hasMore;
     overflow.hidden = state.overflow === 0 || hasMore;
-    overflow.textContent = state.overflow > 0 ? `+${state.overflow} more — звузьте запит` : "";
+    overflow.textContent = state.overflow > 0 ? `ще ${atlasEntryCountLabel(state.overflow)} — звузьте запит` : "";
     sentinel.hidden = !hasMore;
     setStatus(rows.length);
       focusHashTarget(rows);

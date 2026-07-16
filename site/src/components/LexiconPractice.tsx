@@ -255,20 +255,6 @@ type VisiblePracticeModeFilter = Extract<
   | 'heritage'
 >;
 
-const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
-  mixed: 'Mixed',
-  flashcards: 'Flashcards',
-  matching: 'Matching',
-  choice: 'Choice',
-  cloze: 'Cloze',
-  stress: 'Stress',
-  classify: 'Classify',
-  paradigm: 'Paradigm',
-  synonym: 'Synonym',
-  paronym: 'Пароніми',
-  heritage: 'Спадщина',
-};
-
 const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
   'mixed',
   'flashcards',
@@ -1016,13 +1002,66 @@ function resolvePracticeIndexItem(
   );
 }
 
-function BilingualPracticeMessage({ uk, en }: { uk: string; en: string }) {
+function BilingualPracticeMessage({
+  uk,
+  en,
+  showEnglishSubtitles,
+}: {
+  uk: string;
+  en: string;
+  showEnglishSubtitles: boolean;
+}) {
   return (
     <>
-      <span lang="uk">{uk}</span>{' '}
-      <span lang="en">/ {en}</span>
+      <span lang="uk">{uk}</span>
+      {showEnglishSubtitles ? (
+        <>
+          {' '}
+          <span lang="en">/ {en}</span>
+        </>
+      ) : null}
     </>
   );
+}
+
+/** Bare hard-stem adjective case labels (`знахідний`) → «у знахідному відмінку». */
+function casePhraseLocative(caseLabel: string): string {
+  if (caseLabel.endsWith('ий')) {
+    return `у ${caseLabel.slice(0, -2)}ому відмінку`;
+  }
+  return `у ${caseLabel} відмінку`;
+}
+
+/** Bare hard-stem adjective case labels (`знахідний`) → «у знахідний відмінок». */
+function casePhraseAccusative(caseLabel: string): string {
+  return `у ${caseLabel} відмінок`;
+}
+
+/** Digit 1–n shortcuts for multiple-choice option lists (drill/choice). */
+function DigitChoiceShortcuts({
+  options,
+  answerLocked,
+  onChoice,
+}: {
+  options: ChoiceOption[];
+  answerLocked: boolean;
+  onChoice(option: ChoiceOption): void;
+}) {
+  useEffect(() => {
+    if (answerLocked || options.length === 0) return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.('button, a, input, textarea, select, [role="button"]')) return;
+      const digit = Number.parseInt(event.key, 10);
+      if (!Number.isFinite(digit) || digit < 1 || digit > options.length) return;
+      event.preventDefault();
+      onChoice(options[digit - 1]!);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [answerLocked, onChoice, options]);
+  return null;
 }
 
 /** Deduped fetch for a practice shard JSON by URL. Concurrent or repeated callers share the promise. */
@@ -1126,6 +1165,10 @@ function LexiconPracticeIsland({
   // double-advance (double-Enter, or Enter+click) before React re-renders resolves to
   // exactly ONE `completeSelection` — the second call reads a null ref and no-ops.
   const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
+  // Correct-answer auto-advance timer — cleared on exit/unmount so a late fire cannot
+  // mutate state after «← Додому» (or remount) and bounce the learner into the summary.
+  const advanceTimerRef = useRef<number | null>(null);
+  const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
   // background lower-level shards). While history length is unchanged we keep returning the
   // prior selection object so a B1 card is not yanked when an A1/A2 shard lands mid-item.
@@ -1427,11 +1470,14 @@ function LexiconPracticeIsland({
 
   // While a wrong answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
-  // the window level rather than on the stage.
+  // the window level rather than on the stage. Bail when focus is already on an
+  // interactive control (Atlas links, «← Додому», the «Далі →» button itself).
   useEffect(() => {
     if (!pendingOutcome) return undefined;
     const handleEnter = (event: KeyboardEvent) => {
       if (event.key !== 'Enter') return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.('button, a, input, textarea, select, [role="button"]')) return;
       event.preventDefault();
       advancePending();
     };
@@ -1439,10 +1485,30 @@ function LexiconPracticeIsland({
     return () => window.removeEventListener('keydown', handleEnter);
   }, [pendingOutcome, selection]);
 
+  // Wrong-answer dwell: move focus to «Далі →» so keyboard/SR users keep their place
+  // after the clicked (now-disabled) option blurs to <body>.
+  useEffect(() => {
+    if (!pendingOutcome) return;
+    advanceButtonRef.current?.focus();
+  }, [pendingOutcome]);
+
   useEffect(() => {
     if (sessionPhase !== 'active') return;
-    document.title = `${MODE_LABELS[visiblePracticeMode(mode)]} Practice - Words of the Day`;
+    const previousTitle = document.title;
+    document.title = `${MODE_META[visiblePracticeMode(mode)].title} — Практика слів дня`;
+    return () => {
+      document.title = previousTitle;
+    };
   }, [mode, sessionPhase]);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current != null) {
+        window.clearTimeout(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
+    };
+  }, []);
 
   async function ensureDeck(
     includeCloze = shouldLoadCloze(mode),
@@ -2052,7 +2118,11 @@ function LexiconPracticeIsland({
       en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
     });
     if (option.correct) {
-      window.setTimeout(() => {
+      if (advanceTimerRef.current != null) {
+        window.clearTimeout(advanceTimerRef.current);
+      }
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
         setAnswerLocked(false);
         completeSelection(selection, outcome);
       }, advanceDelayMs);
@@ -2083,7 +2153,11 @@ function LexiconPracticeIsland({
         textEn: `✓ ${cloze.form} (${translateGrammarTerm(cloze.caseRule.caseLabel)})`,
       });
       setAnswerLocked(true);
-      window.setTimeout(() => {
+      if (advanceTimerRef.current != null) {
+        window.clearTimeout(advanceTimerRef.current);
+      }
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
         setAnswerLocked(false);
         completeSelection(selection, outcome);
       }, advanceDelayMs);
@@ -2098,7 +2172,7 @@ function LexiconPracticeIsland({
       setClozeInput('');
       setClozeFeedback({
         kind: 'case-miss',
-        textUk: `→ Правильне слово. Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
+        textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
         textEn: `→ Correct word. Now put it in the ${translateGrammarTerm(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
       });
       return;
@@ -2184,6 +2258,10 @@ function LexiconPracticeIsland({
   };
 
   function finishPractice() {
+    if (advanceTimerRef.current != null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
     setSessionPhase('idle');
     setFocusWeakness(null);
     setHistory([]);
@@ -2228,7 +2306,7 @@ function LexiconPracticeIsland({
       {storageWarning && (() => {
         const warn = translateStorageWarning(storageWarning);
         return warn ? (
-          <p className="lexicon-practice-warning">
+          <p className="lexicon-practice-warning" role="alert">
             <span lang="uk">{warn.uk}</span>
             {showEnglishSubtitles && warn.en ? (
               <span className="btn-sub" lang="en">/ {warn.en}</span>
@@ -2239,7 +2317,11 @@ function LexiconPracticeIsland({
 
       {focusLookupMiss && (
         <p className="lexicon-practice-warning" role="status" data-testid="practice-lemma-missing">
-          <BilingualPracticeMessage uk={PRACTICE_POOL_MISS_UK} en={PRACTICE_POOL_MISS_EN} />
+          <BilingualPracticeMessage
+            uk={PRACTICE_POOL_MISS_UK}
+            en={PRACTICE_POOL_MISS_EN}
+            showEnglishSubtitles={showEnglishSubtitles}
+          />
         </p>
       )}
 
@@ -2373,6 +2455,13 @@ function LexiconPracticeIsland({
                   type="button"
                   className={sessionBudget === budget ? 'active' : ''}
                   aria-pressed={sessionBudget === budget}
+                  aria-label={
+                    budget === 10
+                      ? '10 карток на сесію'
+                      : budget === 20
+                        ? '20 карток на сесію'
+                        : undefined
+                  }
                   onClick={() => setSessionBudget(budget)}
                 >
                   {budget === 10 ? '10' : budget === 20 ? '20' : (
@@ -2390,6 +2479,7 @@ function LexiconPracticeIsland({
               type="button"
               className="btn btn-accent lexicon-session-primary"
               data-testid="practice-start-session"
+              disabled={loading}
               onClick={() => {
                 setFocusWeakness(null);
                 void startSession(sessionBudget, 'mixed');
@@ -2584,11 +2674,20 @@ function LexiconPracticeIsland({
       {error && !selection && (
         <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
           <p className="lexicon-practice-warning">
-            <BilingualPracticeMessage uk={error} en={PRACTICE_LOAD_ERROR_EN} />
+            <BilingualPracticeMessage
+              uk={error}
+              en={PRACTICE_LOAD_ERROR_EN}
+              showEnglishSubtitles={showEnglishSubtitles}
+            />
           </p>
           <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
-            <span lang="uk">{PRACTICE_RETRY_UK}</span>{' '}
-            <span className="btn-sub" lang="en">{PRACTICE_RETRY_EN}</span>
+            <span lang="uk">{PRACTICE_RETRY_UK}</span>
+            {showEnglishSubtitles ? (
+              <>
+                {' '}
+                <span className="btn-sub" lang="en">{PRACTICE_RETRY_EN}</span>
+              </>
+            ) : null}
           </button>
         </div>
       )}
@@ -2675,6 +2774,7 @@ function LexiconPracticeIsland({
                   {pendingOutcome ? (
                     <div className="lexicon-practice-advance" data-testid="practice-advance">
                       <button
+                        ref={advanceButtonRef}
                         type="button"
                         className="btn btn-accent lexicon-practice-advance-btn"
                         data-testid="practice-advance-button"
@@ -2739,8 +2839,9 @@ function formatNextDueLabel(nextDue: Date | null): { uk: string; en: string } | 
   const minutes = nextDue.getMinutes().toString().padStart(2, '0');
   const remainingMs = nextDue.getTime() - Date.now();
   const remaining = Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1000)));
+  const hoursWord = uaPlural(remaining, { one: 'година', few: 'години', many: 'годин' });
   return {
-    uk: `ще ${remaining} о ${hours}:${minutes}`,
+    uk: `ще ${remaining} ${hoursWord} о ${hours}:${minutes}`,
     en: `in ${remaining}h at ${hours}:${minutes}`,
   };
 }
@@ -2843,6 +2944,11 @@ function PracticeItem({
   if (drillOptions && drillPrompt) {
     return (
       <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
+        <DigitChoiceShortcuts
+          options={drillOptions}
+          answerLocked={answerLocked}
+          onChoice={onChoice}
+        />
         <p className="lexicon-choice-prompt mc-q">
           <span lang="uk">{drillPrompt.promptUk}</span>
           {showEnglishSubtitles ? (
@@ -2930,6 +3036,11 @@ function PracticeItem({
   const prompt = choicePrompt(selection);
   return (
     <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
+      <DigitChoiceShortcuts
+        options={options}
+        answerLocked={answerLocked}
+        onChoice={onChoice}
+      />
       <p className="lexicon-choice-prompt mc-q">
         <span lang="uk">{prompt.uk}</span>
         {showEnglishSubtitles ? (
@@ -3180,9 +3291,9 @@ function PracticeCloze({
   return (
     <div className="lexicon-cloze" data-testid="practice-cloze">
       <p className="cz-task">
-        <span lang="uk">Поставте пропущене слово у правильному відмінку.</span>
+        <span lang="uk">Поставте слово „{selection.lemma.lemma}” у правильному відмінку.</span>
         {showEnglishSubtitles ? (
-          <span className="btn-sub" lang="en">/ Put the missing word in the correct case.</span>
+          <span className="btn-sub" lang="en">/ Put the word „{selection.lemma.lemma}” in the correct case.</span>
         ) : null}
       </p>
       <p className="cz-sentence">
@@ -3190,17 +3301,24 @@ function PracticeCloze({
         <span className={blankClass}>{blankText}</span>
         <span>{after}</span>
       </p>
-      <p className="lexicon-cloze-translation cz-translate">{cloze.clozeEn}</p>
+      {showEnglishSubtitles ? (
+        <p className="lexicon-cloze-translation cz-translate" lang="en">{cloze.clozeEn}</p>
+      ) : null}
       {cloze.attribution ? (
         <p className="lexicon-cloze-attribution">
-          Sentences from{' '}
+          <span lang="uk">Речення з</span>{' '}
           {cloze.attribution.sourceUrl ? (
             <a href={cloze.attribution.sourceUrl}>{cloze.attribution.source}</a>
           ) : (
             cloze.attribution.source
           )}
-          : {cloze.attribution.uk.author} ({cloze.attribution.uk.license}) /{' '}
-          {cloze.attribution.en.author} ({cloze.attribution.en.license})
+          : {cloze.attribution.uk.author} ({cloze.attribution.uk.license})
+          {showEnglishSubtitles ? (
+            <>
+              {' '}
+              / {cloze.attribution.en.author} ({cloze.attribution.en.license})
+            </>
+          ) : null}
         </p>
       ) : null}
       <form
@@ -3216,7 +3334,15 @@ function PracticeCloze({
           disabled={answerLocked}
           placeholder={showEnglishSubtitles ? "наберіть слово у потрібній формі… / type the word in the correct form…" : "наберіть слово у потрібній формі…"}
           autoComplete="off"
-          aria-label={showEnglishSubtitles ? `Відповідь у ${cloze.caseRule.caseLabel} / Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}` : `Відповідь у ${cloze.caseRule.caseLabel}`}
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck={false}
+          lang="uk"
+          aria-label={
+            showEnglishSubtitles
+              ? `Відповідь ${casePhraseLocative(cloze.caseRule.caseLabel)} / Answer in ${translateGrammarTerm(cloze.caseRule.caseLabel)}`
+              : `Відповідь ${casePhraseLocative(cloze.caseRule.caseLabel)}`
+          }
           onChange={(event) => onInput(event.currentTarget.value)}
         />
         <button className="btn btn-accent" type="submit" disabled={answerLocked}>

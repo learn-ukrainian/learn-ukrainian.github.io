@@ -42,7 +42,7 @@ export default function PracticeSessionSummary({
         </div>
         <div>
           <dt>
-            <span lang="uk">З lapses</span>
+            <span lang="uk">Помилки</span>
             {showEnglishSubtitles ? (
               <span className="btn-sub" lang="en">/ Lapsed</span>
             ) : null}
@@ -62,7 +62,7 @@ export default function PracticeSessionSummary({
       {stats.advancedToReview.length > 0 ? (
         <section className="lexicon-session-advanced">
           <h3>
-            <span lang="uk">Перейшли до Review</span>
+            <span lang="uk">Перейшли на повторення</span>
             {showEnglishSubtitles ? (
               <span className="btn-sub" lang="en">/ Advanced to Review</span>
             ) : null}
@@ -85,7 +85,7 @@ export default function PracticeSessionSummary({
       {stats.deferredLemmas.length > 0 ? (
         <section className="lexicon-session-deferred" data-testid="practice-deferred-list">
           <h3>
-            <span lang="uk">повторимо наступного разу</span>
+            <span lang="uk">Повторимо наступного разу</span>
             {showEnglishSubtitles ? (
               <span className="btn-sub" lang="en">/ will repeat next time</span>
             ) : null}
