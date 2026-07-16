@@ -81,7 +81,6 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # forward compat.)
 _SESSION_ID_RE = re.compile(r"session[_-]?id[:=]\s*([0-9a-f-]{8,})", re.IGNORECASE)
 _EFFORT_MIN_VERSION = (2, 1, 98)
-_MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
@@ -138,8 +137,10 @@ def _probe_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, in
 
 def _ensure_supported_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
     """Reject Claude CLI versions with the 2026-04-23 postmortem regressions."""
+    from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION
+
     version = _probe_claude_cli_version(cmd_prefix)
-    if version is not None and version < _MIN_SUPPORTED_CLI_VERSION:
+    if version is not None and version < CLAUDE_MIN_SUPPORTED_CLI_VERSION:
         raise RuntimeError(
             "Claude CLI < 2.1.116 inherits known quality regressions fixed "
             f"on 2026-04-23 (see {_POSTMORTEM_URL}). Upgrade with: "

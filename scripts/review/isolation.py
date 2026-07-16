@@ -41,8 +41,10 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.utils.claude_version import _parse_claude_semver
 
 ISOLATION_POLICY_VERSION = "review-isolation-v2"
+CLAUDE_MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 
 # Process-injection / Git-override variables stripped for every reviewer.
 _PROCESS_INJECTION_ENV_KEYS = frozenset(
@@ -283,6 +285,10 @@ _SECRET_VALUE_RE = re.compile(
 # assignments that only mention design tokens / enums.
 _SECRET_ASSIGNMENT_RE = re.compile(
     r"(?i)(?:^|[\s,{])(?:"
+    r"(?P<assignment_quote>['\"])(?:api[_-]?key|aws[_-]?secret[_-]?access[_-]?key|"
+    r"client[_-]?secret|private[_-]?key|password|passwd|secret[_-]?key|"
+    r"access[_-]?token|refresh[_-]?token|auth[_-]?token|id[_-]?token)"
+    r"(?P=assignment_quote)|"
     r"(?:api[_-]?key|aws[_-]?secret[_-]?access[_-]?key|client[_-]?secret|"
     r"private[_-]?key|password|passwd|secret[_-]?key|"
     r"access[_-]?token|refresh[_-]?token|auth[_-]?token|id[_-]?token)"
@@ -949,9 +955,20 @@ def is_sensitive_path(rel_path: str) -> bool:
 def secret_like_findings(text: str) -> list[str]:
     """Return diagnostic codes for secret-like content (empty if clean)."""
     findings: list[str] = []
-    if _SECRET_VALUE_RE.search(text):
+    value_found = False
+    assignment_found = False
+    # Both patterns are line-bounded. Scanning per line avoids pathological
+    # backtracking and large transient matches on multi-megabyte tracked files.
+    for line in text.splitlines():
+        if not value_found and _SECRET_VALUE_RE.search(line):
+            value_found = True
+        if not assignment_found and _SECRET_ASSIGNMENT_RE.search(line):
+            assignment_found = True
+        if value_found and assignment_found:
+            break
+    if value_found:
         findings.append("secret_value_pattern")
-    if _SECRET_ASSIGNMENT_RE.search(text):
+    if assignment_found:
         findings.append("secret_assignment")
     return findings
 
@@ -1193,6 +1210,22 @@ def probe_engine_help(
         chunks.append(proc.stdout or "")
         chunks.append(proc.stderr or "")
     return "\n".join(chunks)
+
+
+def require_supported_engine_version(engine: str, version_text: str) -> None:
+    """Require a proven supported version for engines with a minimum."""
+    engine_key = normalize_engine_name(engine)
+    if engine_key != "claude":
+        return
+    version = _parse_claude_semver(version_text)
+    if version is None:
+        raise ReviewIsolationError("engine_version_unproven:claude")
+    if version < CLAUDE_MIN_SUPPORTED_CLI_VERSION:
+        rendered = ".".join(str(part) for part in version)
+        minimum = ".".join(str(part) for part in CLAUDE_MIN_SUPPORTED_CLI_VERSION)
+        raise ReviewIsolationError(
+            f"engine_version_unsupported:claude:{rendered}:minimum={minimum}"
+        )
 
 
 def probe_engine_capabilities(
@@ -2616,6 +2649,7 @@ def prepare_isolated_review_launch(
         cwd=snap,
     )
     effective_help = help_text or ""
+    require_supported_engine_version(engine_key, effective_help)
 
     argv_joined = " ".join(abs_argv).lower()
     policy_enforced: dict[str, bool] = {

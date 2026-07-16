@@ -30,6 +30,7 @@ from scripts.review.isolation import (
     preflight_review_inputs,
     prepare_isolated_review_launch,
     require_engine_isolation,
+    require_supported_engine_version,
     resolve_external_executable,
     resolve_trusted_reviewer_executable,
     review_isolation_tool_config,
@@ -46,6 +47,7 @@ from scripts.review.snapshot import (
     DIAG_TRAVERSAL,
     ImmutableFileRecord,
     ReviewSnapshotError,
+    _read_regular_file_stable,
     capture_local_review_state,
     capture_untracked_records,
     cleanup_snapshot_state,
@@ -255,8 +257,19 @@ def test_sensitive_paths_and_benign_tokens() -> None:
 def test_secret_like_content_and_benign_token_word() -> None:
     assert secret_like_findings(f"OPENAI_API_KEY={_secret_openai_sk()}")
     assert secret_like_findings(f"token = '{_secret_ghp()}'")
+    secret_value = _frag("abcdefghijkl", "mnopqrstuv")
+    for key in ("accessToken", "apiKey", "clientSecret", "password"):
+        assert secret_like_findings(json.dumps({key: secret_value}))
     assert not secret_like_findings("The lexer emits a token stream for design tokens.")
     assert not secret_like_findings("export const spacingToken = 4;")
+
+
+def test_claude_isolation_version_gate_fails_closed() -> None:
+    require_supported_engine_version("claude", "2.1.116 (Claude Code)")
+    with pytest.raises(ReviewIsolationError, match="engine_version_unsupported"):
+        require_supported_engine_version("claude", "2.1.115 (Claude Code)")
+    with pytest.raises(ReviewIsolationError, match="engine_version_unproven"):
+        require_supported_engine_version("claude", "unknown build")
 
 
 def test_preflight_rejects_secrets_before_engine() -> None:
@@ -1374,6 +1387,10 @@ def test_launch_path_enforces_env_and_sandbox_denies_host_read(
             textwrap.dedent(
                 """\
                 #!/bin/sh
+                if [ "$1" = "--version" ]; then
+                  echo '2.1.116 (Claude Code)'
+                  exit 0
+                fi
                 if [ "$1" = "--help" ]; then
                   echo '--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema'
                   exit 0
@@ -1465,7 +1482,8 @@ def test_runner_seam_apply_review_isolation(tmp_path: Path) -> None:
     try:
         bin_path = tmp_path / "tool"
         bin_path.write_text(
-            "#!/bin/sh\nif [ \"$1\" = \"--help\" ]; then echo "
+            "#!/bin/sh\nif [ \"$1\" = \"--version\" ]; then echo '2.1.116 (Claude Code)'; "
+            "elif [ \"$1\" = \"--help\" ]; then echo "
             "'--bare --safe-mode --setting-sources --strict-mcp-config --tools --disallowedTools --json-schema'; "
             "else echo hi; fi\n",
             encoding="utf-8",
@@ -1526,7 +1544,7 @@ def test_capability_probe_has_no_auth_and_no_network(
 
     def fake_probe(binary, *, sandbox, env, cwd, **_kwargs):
         observed.update(binary=binary, sandbox=sandbox, env=dict(env), cwd=cwd)
-        return "--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema"
+        return "2.1.116 (Claude Code)\n--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema"
 
     monkeypatch.setattr("scripts.review.isolation.probe_engine_help", fake_probe)
     token = _secret_ant_env()
@@ -1719,6 +1737,10 @@ def test_f7_host_temp_and_home_denied_while_snapshot_readable(tmp_path: Path) ->
             textwrap.dedent(
                 """\
                 #!/bin/sh
+                if [ "$1" = "--version" ]; then
+                  echo '2.1.116 (Claude Code)'
+                  exit 0
+                fi
                 if [ "$1" = "--help" ]; then
                   echo '--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema'
                   exit 0
@@ -2036,7 +2058,8 @@ def test_f10_runner_propagates_isolation_evidence(tmp_path: Path) -> None:
     try:
         bin_path = tmp_path / "tool"
         bin_path.write_text(
-            "#!/bin/sh\nif [ \"$1\" = \"--help\" ]; then echo "
+            "#!/bin/sh\nif [ \"$1\" = \"--version\" ]; then echo '2.1.116 (Claude Code)'; "
+            "elif [ \"$1\" = \"--help\" ]; then echo "
             "'--bare --safe-mode --setting-sources --strict-mcp-config --tools --disallowedTools --json-schema'; "
             "else echo hi; fi\n",
             encoding="utf-8",
@@ -2122,7 +2145,8 @@ def test_f11_no_target_review_uses_sealed_local_not_primary(tmp_path: Path) -> N
         assert checkout.path.resolve() != repo.resolve()
         assert (checkout.path / "src" / "app.py").is_file()
         assert not (checkout.path / "secrets/prod.json").exists()
-        assert not (checkout.path / "README.md").exists()
+        assert (checkout.path / "README.md").read_text(encoding="utf-8") == "hello\n"
+        assert "HOSTILE" in (checkout.path / "AGENTS.md").read_text(encoding="utf-8")
         assert checkout.patch_digest
         patch = (checkout.path / ".review-bundle" / "patch.diff").read_bytes()
         assert patch.strip()
@@ -2526,6 +2550,76 @@ def test_f16_dirty_one_to_dirty_two_content_drift_denied(tmp_path: Path) -> None
             verify_review_acceptance(snap3)
     finally:
         cleanup_snapshot_state(state3)
+
+
+def test_descriptor_pinned_read_does_not_follow_swapped_path(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    target = repo / "target.txt"
+    target.write_text("sealed bytes\n", encoding="utf-8")
+    host = tmp_path / "host-secret.txt"
+    host.write_text("host secret must not leak\n", encoding="utf-8")
+    real_open = os.open
+    swapped = False
+
+    def swapping_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal swapped
+        fd = real_open(path, flags, mode, dir_fd=dir_fd)
+        if path == "target.txt" and dir_fd is not None and not swapped:
+            target.unlink()
+            target.symlink_to(host)
+            swapped = True
+        return fd
+
+    monkeypatch.setattr("scripts.review.snapshot.os.open", swapping_open)
+    data, mode = _read_regular_file_stable(repo, "target.txt")
+    assert swapped
+    assert data == b"sealed bytes\n"
+    assert b"host secret" not in data
+    assert mode & 0o600
+
+
+def test_local_capture_neutralizes_textconv_and_clean_filter_processes(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    tracked = repo / "tracked.txt"
+    tracked.write_text("base\n", encoding="utf-8")
+    (repo / ".gitattributes").write_text(
+        "tracked.txt diff=evil filter=evil\n",
+        encoding="utf-8",
+    )
+    _git(repo, "add", "tracked.txt", ".gitattributes")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "attributes",
+    )
+    marker = tmp_path / "filter-ran"
+    helper = tmp_path / "host-filter"
+    helper.write_text(
+        f"#!/bin/sh\nprintf x >> {marker!s}\n"
+        "if [ \"$#\" -gt 0 ]; then cat \"$1\"; else cat; fi\n",
+        encoding="utf-8",
+    )
+    helper.chmod(0o700)
+    _git(repo, "config", "filter.evil.clean", str(helper))
+    _git(repo, "config", "diff.evil.textconv", str(helper))
+    tracked.write_text("changed\n", encoding="utf-8")
+
+    capture = capture_local_review_state(repo)
+    assert not marker.exists()
+    assert b"+changed" in capture.patch_bytes
 
 
 def test_f18_changed_binary_denied_unchanged_binary_preserved(tmp_path: Path) -> None:

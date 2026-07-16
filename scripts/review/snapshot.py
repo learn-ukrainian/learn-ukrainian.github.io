@@ -21,6 +21,7 @@ into the snapshot for the reviewer.
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import json
 import os
@@ -329,6 +330,62 @@ def resolve_head_identity(
     return sha
 
 
+@contextlib.contextmanager
+def _neutral_local_git_view(
+    repo_root: Path,
+    *,
+    git_bin: Path,
+    head_sha: str,
+) -> Iterator[list[str]]:
+    """Yield Git-dir/work-tree args backed by copied index and neutral config."""
+    index_proc = _run_git(
+        git_bin,
+        ["rev-parse", "--path-format=absolute", "--git-path", "index"],
+        cwd=repo_root,
+    )
+    common_proc = _run_git(
+        git_bin,
+        ["rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=repo_root,
+    )
+    assert isinstance(index_proc.stdout, str)
+    assert isinstance(common_proc.stdout, str)
+    index_path = Path(index_proc.stdout.strip())
+    common_dir = Path(common_proc.stdout.strip())
+    objects_dir = common_dir / "objects"
+    if not index_path.is_absolute() or not objects_dir.is_dir():
+        raise ReviewSnapshotError("neutral_git_source_paths_invalid")
+    index_bytes, _index_mode = _read_regular_file_stable(
+        index_path.parent,
+        index_path.name,
+        allow_binary=True,
+    )
+    neutral_parent = Path(tempfile.mkdtemp(prefix="lu-review-neutral-git-"))
+    neutral = neutral_parent / "git"
+    try:
+        _run_git(
+            git_bin,
+            ["init", "--bare", "--template=", str(neutral)],
+            cwd=neutral_parent,
+        )
+        (neutral / "HEAD").write_text(f"{head_sha}\n", encoding="ascii")
+        (neutral / "index").write_bytes(index_bytes)
+        info = neutral / "objects" / "info"
+        info.mkdir(parents=True, exist_ok=True)
+        (info / "alternates").write_text(
+            f"{objects_dir.resolve()}\n",
+            encoding="utf-8",
+        )
+        yield [
+            f"--git-dir={neutral}",
+            f"--work-tree={repo_root}",
+            "-c",
+            "core.bare=false",
+        ]
+    finally:
+        shutil.rmtree(neutral_parent, ignore_errors=True)
+
+
 _FULL_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -370,28 +427,95 @@ def compute_source_fingerprint(
     return hasher.hexdigest()
 
 
-def _capture_working_tree_bytes(path: Path, *, allow_binary: bool = False) -> bytes:
-    """Read a working-tree path once; deny symlink / non-regular unless allowed."""
+def _read_regular_file_stable(
+    repo_root: Path,
+    rel_path: str,
+    *,
+    allow_binary: bool = False,
+) -> tuple[bytes, int]:
+    """Read through root-anchored no-follow descriptors and return bytes/mode."""
+    rel = _validate_rel_path(rel_path)
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    directory = getattr(os, "O_DIRECTORY", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    if not nofollow or not directory:
+        raise ReviewSnapshotError("stable_read_no_nofollow_support")
+    root_fd = -1
+    current_fd = -1
+    file_fd = -1
     try:
-        st = path.lstat()
+        root_fd = os.open(
+            str(repo_root),
+            os.O_RDONLY | nofollow | directory | cloexec,
+        )
+        current_fd = root_fd
+        parts = Path(rel).parts
+        for component in parts[:-1]:
+            next_fd = os.open(
+                component,
+                os.O_RDONLY | nofollow | directory | cloexec,
+                dir_fd=current_fd,
+            )
+            if current_fd != root_fd:
+                os.close(current_fd)
+            current_fd = next_fd
+        file_fd = os.open(
+            parts[-1],
+            os.O_RDONLY | nofollow | cloexec,
+            dir_fd=current_fd,
+        )
+        before = os.fstat(file_fd)
+        if not stat.S_ISREG(before.st_mode):
+            raise ReviewSnapshotError(f"non_regular_file:{rel}")
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(file_fd, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        after = os.fstat(file_fd)
+        identity_before = (
+            before.st_dev,
+            before.st_ino,
+            stat.S_IFMT(before.st_mode),
+            before.st_size,
+            before.st_mtime_ns,
+            before.st_ctime_ns,
+        )
+        identity_after = (
+            after.st_dev,
+            after.st_ino,
+            stat.S_IFMT(after.st_mode),
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+        )
+        if identity_before != identity_after:
+            raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_read_race:{rel}")
+        data = b"".join(chunks)
+        if len(data) != before.st_size:
+            raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_read_size:{rel}")
+        mode = int(before.st_mode & 0o777)
+    except ReviewSnapshotError:
+        raise
     except OSError as exc:
-        raise ReviewSnapshotError(f"read_failed:{path}:{exc}") from exc
-    if stat.S_ISLNK(st.st_mode):
-        raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{path}")
-    if not stat.S_ISREG(st.st_mode):
-        raise ReviewSnapshotError(f"non_regular_file:{path}")
-    try:
-        data = path.read_bytes()
-    except OSError as exc:
-        raise ReviewSnapshotError(f"read_failed:{path}:{exc}") from exc
+        diagnostic = DIAG_SYMLINK if exc.errno in {errno.ELOOP, errno.ENOTDIR} else "read_failed"
+        raise ReviewSnapshotError(f"{diagnostic}:{rel}:{exc}") from exc
+    finally:
+        if file_fd >= 0:
+            os.close(file_fd)
+        if current_fd >= 0 and current_fd != root_fd:
+            os.close(current_fd)
+        if root_fd >= 0:
+            os.close(root_fd)
     if not allow_binary:
         if b"\x00" in data:
-            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
+            raise ReviewSnapshotError(f"{DIAG_BINARY}:{rel}")
         try:
             data.decode("utf-8")
         except UnicodeDecodeError as exc:
-            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
-    return data
+            raise ReviewSnapshotError(f"{DIAG_BINARY}:{rel}") from exc
+    return data, mode
 
 
 def capture_untracked_records(
@@ -405,18 +529,8 @@ def capture_untracked_records(
     for rel in rel_paths:
         if not rel or ".." in Path(rel).parts or rel.startswith(("/", "\\")):
             raise ReviewSnapshotError(f"{DIAG_TRAVERSAL}:{rel!r}")
-        full = root / rel
-        try:
-            st = full.lstat()
-        except OSError as exc:
-            raise ReviewSnapshotError(f"read_failed:{rel}:{exc}") from exc
-        if stat.S_ISLNK(st.st_mode):
-            raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{rel}")
-        resolved = full.resolve(strict=False)
-        if not is_within(resolved, root):
-            raise ReviewSnapshotError(f"{DIAG_TRAVERSAL}:{rel!r}")
-        data = _capture_working_tree_bytes(full, allow_binary=False)
-        rec = ImmutableFileRecord.from_bytes(rel, data)
+        data, mode = _read_regular_file_stable(root, rel, allow_binary=False)
+        rec = ImmutableFileRecord.from_bytes(rel, data, mode=mode)
         records.append(rec)
         texts[rel] = data.decode("utf-8")
     preflight_review_inputs(paths=[r.rel_path for r in records], texts=texts)
@@ -905,11 +1019,19 @@ def capture_source_state_identity(
         repo_head = repo_head_proc.stdout.strip()
         if mode == "local" and repo_head != head_sha:
             raise ReviewSnapshotError(f"{DIAG_DRIFT}:local_head_at_capture:expected={head_sha}:actual={repo_head}")
-        status_proc = _run_git(
-            git,
-            ["status", "--porcelain", "--untracked-files=all", "-z"],
-            cwd=root,
-        )
+        if mode == "local":
+            with _neutral_local_git_view(root, git_bin=git, head_sha=head_sha) as neutral_git:
+                status_proc = _run_git(
+                    git,
+                    [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
+                    cwd=root,
+                )
+        else:
+            status_proc = _run_git(
+                git,
+                ["status", "--porcelain", "--untracked-files=all", "-z"],
+                cwd=root,
+            )
         assert isinstance(status_proc.stdout, str)
         status_text = status_proc.stdout
     else:
@@ -962,18 +1084,17 @@ def capture_source_state_identity(
     )
 
 
-def _live_path_digest(path: Path) -> tuple[str, int]:
+def _live_path_digest(repo_root: Path, rel_path: str) -> tuple[str, int]:
     """Read a live path once for drift compare; fail closed on specials."""
     try:
-        st = path.lstat()
-    except OSError as exc:
-        raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_missing:{path}") from exc
-    if stat.S_ISLNK(st.st_mode):
-        raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_symlink:{path}")
-    if not stat.S_ISREG(st.st_mode):
-        raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_non_regular:{path}")
-    data = path.read_bytes()
-    return hashlib.sha256(data).hexdigest(), int(st.st_mode & 0o777)
+        data, mode = _read_regular_file_stable(
+            repo_root,
+            rel_path,
+            allow_binary=True,
+        )
+    except ReviewSnapshotError as exc:
+        raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_read:{rel_path}:{exc}") from exc
+    return hashlib.sha256(data).hexdigest(), mode
 
 
 def verify_source_state_identity(
@@ -1039,7 +1160,7 @@ def verify_source_state_identity(
                 if not _captured_replacement(old, old_rel):
                     raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_rename_old_present:{old_rel}")
             continue
-        live_digest, live_mode = _live_path_digest(full)
+        live_digest, live_mode = _live_path_digest(root, entry.path)
         if live_digest != entry.sha256:
             raise ReviewSnapshotError(
                 f"{DIAG_DRIFT}:overlay_content:{entry.path}:expected={entry.sha256}:actual={live_digest}"
@@ -1628,12 +1749,15 @@ def capture_local_review_state(
             raise ReviewSnapshotError(
                 f"{DIAG_DRIFT}:local_head_before_capture:expected={expected_head_sha}:actual={before}"
             )
-    proc = _run_git(
-        git,
-        ["status", "--porcelain", "--untracked-files=all", "-z"],
-        cwd=root,
-    )
+    capture_head = expected_head_sha or resolve_head_identity(root, git_bin=git)
+    with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
+        proc = _run_git(
+            git,
+            [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
+            cwd=root,
+        )
     assert isinstance(proc.stdout, str)
+    captured_status = proc.stdout
     dirty: list[ImmutableFileRecord] = []
     untracked: list[ImmutableFileRecord] = []
     deleted: list[str] = []
@@ -1670,13 +1794,10 @@ def capture_local_review_state(
                     "kind": "rename",
                 }
             )
-            full_new = root / new_p
-            if full_new.is_symlink():
-                raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{new_p}")
-            if not full_new.exists():
-                raise ReviewSnapshotError(f"rename_target_missing:{new_p}")
-            data = _capture_working_tree_bytes(full_new, allow_binary=False)
-            mode = full_new.lstat().st_mode & 0o777
+            try:
+                data, mode = _read_regular_file_stable(root, new_p, allow_binary=False)
+            except ReviewSnapshotError as exc:
+                raise ReviewSnapshotError(f"rename_target_invalid:{new_p}:{exc}") from exc
             rec = ImmutableFileRecord.from_bytes(new_p, data, mode=mode)
             dirty.append(rec)
             overlay_entries.append(
@@ -1706,13 +1827,12 @@ def capture_local_review_state(
             continue
         path = _validate_rel_path(path)
         full = root / path
-        if full.is_symlink() or (full.exists() and full.is_symlink()):
+        if full.is_symlink():
             raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{path}")
 
         xy = status
         if xy == "??":
-            data = _capture_working_tree_bytes(full, allow_binary=False)
-            mode = full.lstat().st_mode & 0o777
+            data, mode = _read_regular_file_stable(root, path, allow_binary=False)
             rec = ImmutableFileRecord.from_bytes(path, data, mode=mode)
             untracked.append(rec)
             changed.append(path)
@@ -1760,8 +1880,7 @@ def capture_local_review_state(
             )
             continue
 
-        data = _capture_working_tree_bytes(full, allow_binary=False)
-        mode = full.lstat().st_mode & 0o777
+        data, mode = _read_regular_file_stable(root, path, allow_binary=False)
         rec = ImmutableFileRecord.from_bytes(path, data, mode=mode)
         dirty.append(rec)
         changed.append(path)
@@ -1777,12 +1896,21 @@ def capture_local_review_state(
         )
 
     # Immutable tracked patch (staged + unstaged vs HEAD), then append untracked.
-    tracked_patch_proc = _run_git(
-        git,
-        ["diff", "HEAD", "--binary", "--find-renames", "--no-ext-diff"],
-        cwd=root,
-        text=False,
-    )
+    with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
+        tracked_patch_proc = _run_git(
+            git,
+            [
+                *neutral_git,
+                "diff",
+                "HEAD",
+                "--binary",
+                "--find-renames",
+                "--no-ext-diff",
+                "--no-textconv",
+            ],
+            cwd=root,
+            text=False,
+        )
     assert isinstance(tracked_patch_proc.stdout, (bytes, bytearray))
     patch_bytes = bytes(tracked_patch_proc.stdout)
     if _patch_contains_binary_markers(patch_bytes):
@@ -1823,6 +1951,15 @@ def capture_local_review_state(
             raise ReviewSnapshotError(
                 f"{DIAG_DRIFT}:local_head_after_capture:expected={expected_head_sha}:actual={after}"
             )
+    with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
+        after_status = _run_git(
+            git,
+            [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
+            cwd=root,
+        )
+    assert isinstance(after_status.stdout, str)
+    if after_status.stdout != captured_status:
+        raise ReviewSnapshotError(f"{DIAG_DRIFT}:local_status_during_capture")
 
     return LocalReviewCapture(
         dirty_tracked=tuple(dirty),

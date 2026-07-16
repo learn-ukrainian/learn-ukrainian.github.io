@@ -92,6 +92,50 @@ printf 'protocol=https\\nhost=github.com\\nusername=x-access-token\\npassword=%s
     assert f"password={token}" in completed.stdout
 
 
+def test_canonical_repository_lookup_is_pinned_outside_checkout_config(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    observed: dict[str, object] = {}
+
+    def fake_run(command, *, cwd, env):
+        observed.update(command=command, cwd=cwd, env=env)
+        return json.dumps(
+            {
+                "nameWithOwner": "learn-ukrainian/learn-ukrainian.github.io",
+                "url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io",
+                "defaultBranchRef": {"name": "main"},
+            }
+        )
+
+    monkeypatch.setattr(review_worktree, "_run_command", fake_run)
+    result = review_worktree._canonical_github_repository(
+        repo_root=tmp_path / "hostile-checkout",
+        gh_bin=Path("/usr/bin/gh"),
+        env={"PATH": "/usr/bin"},
+    )
+    assert result[0] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert observed["command"][3] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert observed["cwd"] != tmp_path / "hostile-checkout"
+
+    def attacker_run(*_args, **_kwargs):
+        return json.dumps(
+            {
+                "nameWithOwner": "attacker/decoy",
+                "url": "https://github.com/attacker/decoy",
+                "defaultBranchRef": {"name": "main"},
+            }
+        )
+
+    monkeypatch.setattr(review_worktree, "_run_command", attacker_run)
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="identity mismatch"):
+        review_worktree._canonical_github_repository(
+            repo_root=tmp_path / "hostile-checkout",
+            gh_bin=Path("/usr/bin/gh"),
+            env={"PATH": "/usr/bin"},
+        )
+
+
 def _prompt_evidence_checkout(
     root: Path,
     *,
@@ -227,6 +271,12 @@ def test_reviewer_view_treats_file_replaced_by_directory_as_deleted(
     child = root / "node" / "child.py"
     child.parent.mkdir(parents=True)
     child.write_text("VALUE = 1\n", encoding="utf-8")
+    (root / "README.md").write_text("safe unchanged context\n", encoding="utf-8")
+    (root / "config.json").write_text(
+        json.dumps({"accessToken": "a" * 22}),
+        encoding="utf-8",
+    )
+    (root / "asset.bin").write_bytes(b"\x00\xff")
     changed = ("node", "node/child.py")
     patch = b"diff --git a/node b/node\ndeleted file mode 100644\n"
     patch_digest = hashlib.sha256(patch).hexdigest()
@@ -269,6 +319,10 @@ def test_reviewer_view_treats_file_replaced_by_directory_as_deleted(
     try:
         assert (view / "node").is_dir()
         assert (view / "node" / "child.py").read_text(encoding="utf-8") == "VALUE = 1\n"
+        assert (view / "README.md").read_text(encoding="utf-8") == "safe unchanged context\n"
+        assert (view / "README.md").stat().st_ino == (root / "README.md").stat().st_ino
+        assert not (view / "config.json").exists()
+        assert not (view / "asset.bin").exists()
         checkout = review_worktree.ProvisionedReviewWorktree(
             path=view,
             branch="feature/review",
@@ -398,7 +452,7 @@ def test_grok_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.Mon
     assert errors and "exact-target-required" in errors[0]
 
 
-def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
+def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: Path) -> None:
     base = "b" * 40
     head = "a" * 40
     patch = "c" * 64
@@ -430,6 +484,9 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
             }
         ],
     }
+    evidence_root = tmp_path / "evidence"
+    (evidence_root / "src").mkdir(parents=True)
+    (evidence_root / "src" / "app.py").write_text("bad = True\n", encoding="utf-8")
     response = json.dumps(payload)
     digest = review_worktree.validate_code_review_response(
         response,
@@ -437,6 +494,8 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
         head_sha=head,
         patch_sha256=patch,
         changed_paths=("src/app.py",),
+        evidence_root=evidence_root,
+        changed_lines={"src/app.py": frozenset({1})},
     )
     assert len(digest) == 64
     with pytest.raises(review_worktree.ReviewWorktreeError, match="trailing_content"):
@@ -446,6 +505,8 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
             head_sha=head,
             patch_sha256=patch,
             changed_paths=("src/app.py",),
+            evidence_root=evidence_root,
+            changed_lines={"src/app.py": frozenset({1})},
         )
     duplicate = response.replace('"schema_version":', '"schema_version":"wrong","schema_version":', 1)
     with pytest.raises(review_worktree.ReviewWorktreeError, match="duplicate_key"):
@@ -455,6 +516,8 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
             head_sha=head,
             patch_sha256=patch,
             changed_paths=("src/app.py",),
+            evidence_root=evidence_root,
+            changed_lines={"src/app.py": frozenset({1})},
         )
     payload["findings"][0]["location"]["path"] = "src/outside.py"
     with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_schema"):
@@ -464,6 +527,22 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound() -> None:
             head_sha=head,
             patch_sha256=patch,
             changed_paths=("src/app.py",),
+            evidence_root=evidence_root,
+            changed_lines={"src/app.py": frozenset({1})},
+        )
+
+    payload["findings"][0]["location"]["path"] = "src/app.py"
+    payload["findings"][0]["location"]["start_line"] = 999
+    payload["findings"][0]["location"]["end_line"] = 999
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_evidence"):
+        review_worktree.validate_code_review_response(
+            json.dumps(payload),
+            base_sha=base,
+            head_sha=head,
+            patch_sha256=patch,
+            changed_paths=("src/app.py",),
+            evidence_root=evidence_root,
+            changed_lines={"src/app.py": frozenset({1})},
         )
 
     legacy = {
