@@ -33,6 +33,7 @@ try:
     from scripts.orchestration import task_identity, thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
+    from scripts.orchestration.task_family import rollover_registry as task_family_rollover_registry
     from scripts.orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
 except ModuleNotFoundError as exc:
     if __package__ or exc.name != "scripts":
@@ -43,6 +44,7 @@ except ModuleNotFoundError as exc:
     import thread_handoff_canary
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
+    from orchestration.task_family import rollover_registry as task_family_rollover_registry
     from orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
 
 SCHEMA_VERSION = 2
@@ -644,8 +646,14 @@ def normalize_identity_state(
     return normalized, migrated
 
 
-def write_rollover_state(state_path: Path, state_root: Path, state: dict[str, Any]) -> None:
-    """Persist the receipt first and the lease last as the transaction commit marker."""
+def write_rollover_state(
+    state_path: Path,
+    state_root: Path,
+    state: dict[str, Any],
+    *,
+    already_locked: bool = False,
+) -> None:
+    """Commit identity receipt and lease, then refresh the recoverable registry projection."""
     replacement = state.get("replacement") or {}
     receipt_value = replacement.get("identity_receipt_path")
     if not isinstance(receipt_value, str) or not receipt_value:
@@ -654,6 +662,12 @@ def write_rollover_state(state_path: Path, state_root: Path, state: dict[str, An
     receipt = task_identity.receipt_payload(state)
     write_json_atomic(receipt_path, receipt)
     write_json_atomic(state_path, state)
+    task_family_rollover_registry.sync_from_lease(
+        state_root,
+        state_path,
+        state,
+        already_locked=already_locked,
+    )
 
 
 def active_thread_id_from_env() -> str | None:
@@ -2200,7 +2214,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             pending_native["supersedes"] = dict(supersedes)
             pending_replacement["native_lifecycle"] = pending_native
             pending_state["replacement"] = pending_replacement
-            write_rollover_state(state_path, state_root, pending_state)
+            write_rollover_state(state_path, state_root, pending_state, already_locked=True)
             task_family_rollover.supersede_unexecuted_transition(
                 repo_root=state_root,
                 family_id=supersedes["family_id"],
@@ -2221,7 +2235,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             native_plan["supersedes"] = dict(supersedes)
             native_transition["status"] = "awaiting_native_create"
             native_transition["superseded"] = dict(supersedes)
-        write_rollover_state(state_path, state_root, prepared_state)
+        write_rollover_state(state_path, state_root, prepared_state, already_locked=True)
     except (OSError, ValueError) as exc:
         print(
             json.dumps(
@@ -2328,7 +2342,7 @@ def _native_command_context(
         raise ValueError(state_error["error"])
     state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
     if migrated:
-        write_rollover_state(state_path, state_root, state)
+        write_rollover_state(state_path, state_root, state, already_locked=True)
     replacement = state.get("replacement") or {}
     if replacement.get("rollover_id") != args.rollover_id:
         raise ValueError("--rollover-id does not match the isolated rollover")
@@ -2388,7 +2402,7 @@ def _identity_command_context(
     if replacement.get("rollover_id") != args.rollover_id:
         raise ValueError("--rollover-id does not match the isolated rollover")
     if migrated:
-        write_rollover_state(state_path, state_root, state)
+        write_rollover_state(state_path, state_root, state, already_locked=True)
     return repo_root, state_root, agent, state_path, state, replacement
 
 
@@ -2510,7 +2524,7 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
             supersedes=supersedes,
             task_identity_envelope=replacement["identity"],
         )
-        write_rollover_state(state_path, state_root, candidate_state)
+        write_rollover_state(state_path, state_root, candidate_state, already_locked=True)
         superseded = task_family_rollover.supersede_unexecuted_transition(
             repo_root=state_root,
             family_id=supersedes["family_id"],
@@ -2532,7 +2546,7 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         candidate_replacement["native_lifecycle"] = candidate_native
         candidate_state["replacement"] = candidate_replacement
         candidate_state["updated_at"] = isoformat_z(utc_now())
-        write_rollover_state(state_path, state_root, candidate_state)
+        write_rollover_state(state_path, state_root, candidate_state, already_locked=True)
         _, final_error = validate_live_lease(candidate_state, agent=agent, state_path=state_path)
         if final_error:
             raise ValueError(f"persisted repaired lease failed validation: {final_error}")
@@ -2585,7 +2599,7 @@ def _write_native_status(
     replacement["native_lifecycle"] = native
     state["replacement"] = replacement
     state["updated_at"] = isoformat_z(utc_now())
-    write_rollover_state(state_path, state_root, state)
+    write_rollover_state(state_path, state_root, state, already_locked=True)
 
 
 def _record_identity_title_ack(
@@ -2659,7 +2673,7 @@ def _cmd_bind_replacement_locked(args: argparse.Namespace) -> int:
         updated_replacement["title_transition"] = bound_transition
         state["replacement"] = updated_replacement
         state["updated_at"] = isoformat_z(utc_now())
-        write_rollover_state(state_path, state_root, state)
+        write_rollover_state(state_path, state_root, state, already_locked=True)
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": str(exc), "action": "bind-replacement"}, indent=2))
         return 2
@@ -2680,6 +2694,14 @@ def _cmd_bind_replacement_locked(args: argparse.Namespace) -> int:
 
 
 def cmd_register_created(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_register_created_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_register_created_locked(args)
+
+
+def _cmd_register_created_locked(args: argparse.Namespace) -> int:
     state_root: Path | None = None
     native: dict[str, Any] | None = None
     try:
@@ -2755,8 +2777,6 @@ def cmd_register_created(args: argparse.Namespace) -> int:
 
 
 def cmd_native_action(args: argparse.Namespace) -> int:
-    if args.action != "create":
-        return _cmd_native_action_locked(args)
     lock_path = _rollover_mutation_lock_path(args)
     if lock_path is None:
         return _cmd_native_action_locked(args)
@@ -2829,6 +2849,14 @@ def _cmd_native_action_locked(args: argparse.Namespace) -> int:
 
 
 def cmd_record_native_result(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_record_native_result_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_record_native_result_locked(args)
+
+
+def _cmd_record_native_result_locked(args: argparse.Namespace) -> int:
     try:
         _, state_root, _, state_path, state, native = _native_command_context(args)
         result = task_family_rollover.record_native_result(
@@ -2857,6 +2885,14 @@ def cmd_record_native_result(args: argparse.Namespace) -> int:
 
 
 def cmd_reconcile_native(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_reconcile_native_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_reconcile_native_locked(args)
+
+
+def _cmd_reconcile_native_locked(args: argparse.Namespace) -> int:
     try:
         _, state_root, _, state_path, state, native = _native_command_context(args)
         db_path = task_family_rollover.resolve_db(args.db)
@@ -2921,7 +2957,7 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
     try:
         state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
         if migrated:
-            write_rollover_state(state_path, state_root, state)
+            write_rollover_state(state_path, state_root, state, already_locked=True)
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": f"task identity migration failed: {exc}"}, indent=2))
         return 2
@@ -2963,7 +2999,7 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
-    write_rollover_state(state_path, state_root, confirmed)
+    write_rollover_state(state_path, state_root, confirmed, already_locked=True)
     print(
         json.dumps(
             {
@@ -3025,7 +3061,7 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
     try:
         state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
         if migrated:
-            write_rollover_state(state_path, state_root, state)
+            write_rollover_state(state_path, state_root, state, already_locked=True)
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": f"task identity migration failed: {exc}"}, indent=2))
         return 2
@@ -3044,7 +3080,7 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
         return 2
-    write_rollover_state(state_path, state_root, resumed)
+    write_rollover_state(state_path, state_root, resumed, already_locked=True)
     replacement = resumed["replacement"]
     print(
         json.dumps(

@@ -22,6 +22,7 @@ curl -s http://localhost:8765/api/state/summary   # tracks overview (published_m
 ```bash
 curl -s http://localhost:8765/api/delegate/active
 curl -s http://localhost:8765/api/runtime/agents
+# Read-only fleet rollover audit: GET /api/rollovers
 ```
 
 **Start server:** `npm run api` (or `npm run api:bg`). Serves http://localhost:8765 + all dashboards.

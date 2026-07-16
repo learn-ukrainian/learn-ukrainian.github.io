@@ -460,12 +460,22 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
         "/api/orient", "exact", "http",
         "One-shot agent and dashboard orientation snapshot.",
-        "Git, GitHub issues, pipeline state, runtime files, delegate state, broker, wiki, governance, health, and session hints.",
+        "Git, GitHub issues, pipeline state, runtime files, delegate state, broker, rollover registry, wiki, governance, health, and session hints.",
         "Per-section TTLs in main.py; ?fresh=true invalidates orient cache entries.",
         ("orient.html", "index.html", "agents"),
         "Aggregates many other API sections.",
         "low/medium when upstream collectors degrade",
         "keep cold-start source of truth",
+    ),
+    RouteContract(
+        "/api/rollovers", "exact", "http",
+        "Read-only fleet rollover audit and exact selector projection.",
+        "Versioned registry records under .agent/thread-rollover-registry/v1/.",
+        "Generated per request; no mutation path is exposed over HTTP.",
+        ("agents", "monitor client", "orchestrators"),
+        "Compact actionable entries are also exposed through /api/orient.",
+        "low — corrupt records are isolated and returned as explicit errors",
+        "keep as the canonical rollover observability surface",
     ),
     RouteContract(
         "/api/knowledge", "prefix", "http",
