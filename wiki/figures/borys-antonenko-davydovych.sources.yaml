@@ -1,0 +1,28 @@
+# Source registry for wiki/figures/borys-antonenko-davydovych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-42948
+    type: external
+    title: "Антоненко-Давидович Борис Дмитрович — Енциклопедія Сучасної України"
+    url: https://esu.com.ua/article-42948
+  - id: S2
+    file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davydovych_B
+    type: external
+    title: "Антоненко-Давидович Борис Дмитрович — Енциклопедія історії України"
+    url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davydovych_B
+  - id: S3
+    file: https://resource.history.org.ua/item/11213
+    type: external
+    title: "З порога смерті: Письменники України — жертви сталінських репресій"
+    url: https://resource.history.org.ua/item/11213
+  - id: S4
+    file: https://irbis-nbuv.gov.ua/cgi-bin/irbis64r_81/cgiirbis_64.exe?C21COM=S&I21DBN=VFEIR&P21DBN=VFEIR&S21ALL=%28%3C.%3EK%3D%D0%A2%D0%A0%D0%90%D0%94%D0%98%D0%A6%D0%86%D0%87%24%3C.%3E%2B%3C.%3EK%3D%D0%97%D0%92%D0%98%D0%A7%D0%90%D0%99%24%3C.%3E%29&S21CNR=20&S21FMT=fullw&S21REF=10&S21SRD=&S21SRW=AVHEAD&S21STN=1&Z21ID=
+    type: external
+    title: "Як ми говоримо — каталог Національної бібліотеки України імені В. І. Вернадського"
+    url: https://irbis-nbuv.gov.ua/cgi-bin/irbis64r_81/cgiirbis_64.exe?C21COM=S&I21DBN=VFEIR&P21DBN=VFEIR&S21ALL=%28%3C.%3EK%3D%D0%A2%D0%A0%D0%90%D0%94%D0%98%D0%A6%D0%86%D0%87%24%3C.%3E%2B%3C.%3EK%3D%D0%97%D0%92%D0%98%D0%A7%D0%90%D0%99%24%3C.%3E%29&S21CNR=20&S21FMT=fullw&S21REF=10&S21SRD=&S21SRW=AVHEAD&S21STN=1&Z21ID=
+  - id: S5
+    file: https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/
+    type: external
+    title: "Смерть — Борис Антоненко-Давидович"
+    url: https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/

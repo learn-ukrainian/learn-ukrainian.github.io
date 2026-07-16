@@ -1,0 +1,21 @@
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-25281
+    type: external
+    title: Голобородько Василь Іванович
+    url: https://esu.com.ua/article-25281
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-25281
+      license: Авторське право ЕСУ; використання лише як зовнішнього посилання
+      attribution: Енциклопедія Сучасної України
+  - id: S2
+    file: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+    type: external
+    title: 'Василь Голобородько: «Мене підстрелили на злеті»'
+    url: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+    rights:
+      basis: external-link
+      evidence_url: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+      license: Авторське право Української літературної газети; використання лише як зовнішнього посилання
+      attribution: Українська літературна газета

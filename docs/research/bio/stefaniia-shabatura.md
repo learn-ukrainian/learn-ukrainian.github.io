@@ -1,76 +1,164 @@
-# Стефанія Шабатура — Research Dossier
+# Стефанія Шабатура — дослідницьке досьє
 
-Canonical slug: `stefaniia-shabatura`
+**Slug:** `stefaniia-shabatura`
+**Блок:** мистецтво, шістдесятництво і громадянський опір
+**Рівень джерел:** 2
+**Дослідник:** Codex, evidence-gathering
+**Оновлено:** 2026-07-17
 
-## 1. Identity and research scope
+## 1. Перевірені факти
 
-Стефанія Михайлівна Шабатура (5 November 1938, Ivane-Zolote, Ternopil oblast — 17 December 2014, Lviv) was a Ukrainian decorative-applied artist, tapestry artist, dissident, political prisoner, and member of the Ukrainian Helsinki Group. KHPG's biographical entry identifies her as an artist and UHG member, while the KHPG interview with Vasyl Ovsienko supplies her own autobiographical testimony [S1, S2]. Ukrainian Wikipedia/MCP extract corroborates her arrest, sentence, camp, exile, and later civic work [S3].
+Стефанія Михайлівна Шабатура народилася 5 листопада 1938 року в селі
+Іване-Золоте на Тернопільщині й померла 17 грудня 2014 року у Львові [S1].
+Віртуальний музей дисидентського руху Харківської правозахисної групи називає
+її художницею декоративно-ужиткового мистецтва, членкинею Української
+Гельсінкської групи та колишньою політв'язенькою [S1]. В інтерв'ю, записаному
+Василем Овсієнком 26 червня 2008 року, Шабатура сама назвала дату й місце
+свого народження та розповіла про селянську родину [S2]. Особисте свідчення
+тут доповнює музейну довідку, але не замінює її як джерело юридичної
+хронології.
 
-## 2. Chronology
+1961 року Шабатура закінчила художнє училище, а 1967 року — Львівський
+інститут прикладного та декоративного мистецтва за фахом художниці-прикладниці
+[S1]. Вона була членкинею Спілки художників України; її гобелени експонувалися
+та були помічені пресою, а творчості присвячено матеріал у шостому томі
+«Історії мистецтва України» [S1]. Ці дані встановлюють її професійний статус,
+однак доступна сторінка не є каталогом творів. Отже, не слід надавати певному
+гобеленові конкретної політичної інтерпретації без каталогу, зображення з
+походженням або авторського коментаря.
 
-KHPG records that Шабатура came from a peasant family; her mother Hanna was a folk artist and craftswoman [S1]. She completed art school in 1961 and the Lviv Institute of Applied and Decorative Art in 1967, specializing as an applied artist [S1]. In the 2008 interview she begins with her own birth date and village memory, saying she was born on 5 November 1938 in years that were "very difficult for Ukraine" [S2].
+## 2. Культурне середовище і публічна дія
 
-Before arrest she worked in textile and tapestry, belonged to the Artists' Union, joined Lviv's Club of Creative Youth `Пролісок`, distributed samvydav, and publicly defended Valentyn Moroz in 1970 [S1]. On 12 January 1972, during the mass arrests of Ukrainian intellectuals, she was arrested and accused of anti-Soviet agitation and propaganda, including alleged distribution of Vasyl Stus's `Веселий цвинтар`, Mykola Kholodnyi's `Крик з могили`, and Valentyn Moroz's `Серед снігів` [S1].
+Шабатура працювала в львівському Клубі творчої молоді «Пролісок»,
+поширювала самвидав і 1970 року разом із групою письменників та художників
+виступила на захист Валентина Мороза, домагаючись дозволу бути присутніми на
+його суді [S1]. Для біографії це важливо як окрема громадянська дія, а не як
+доказ того, що всі її мистецькі твори були політичними деклараціями. Самвидав
+був практикою передавання заборонених текстів поза державною цензурою; участь
+у ньому поєднувала ризик для читача, автора й посередника.
 
-On 12-13 July 1972 she was sentenced under Article 62 part 1 of the Criminal Code of the Ukrainian SSR to five years in strict-regime camps and three years of exile [S1]. KHPG states that she served in the women's camp ZhKh-385/3-4 in Barashevo, Mordovia, took part in protests and hunger strikes, demanded political-prisoner status, and was punished with 115 days in punishment cells and one and a half years in PKT [S1]. She returned to Ukraine after exile in 1979; later sources record her work in Memorial, Rukh, the revival of the UGCC, and the Lviv city council [S3].
+У спогаді Шабатури є родинні оповіді й міркування про прізвище. Їх потрібно
+подавати як її власну пам'ять, а не як встановлену генеалогію [S2]. Таке
+розрізнення особливо суттєве в біографії людини, про яку часто пишуть у
+меморіальному регістрі. Достовірна історія не потребує прикрашання: фахова
+мистецька освіта, робота в «Проліску» й публічна солідарність уже показують
+самостійну культурну й громадянську позицію.
 
-## 3. Significance for the bio track
+## 3. Арешт, вирок і табір
 
-Шабатура gives the bio track a necessary woman artist-political-prisoner dossier. Her case connects textile art, Lviv dissident networks, samvydav circulation, women's camp protest, and post-Soviet memory politics. The educational value is not only that she was imprisoned, but that the state treated drawings, textiles, and networks of solidarity as political danger [S1, S2].
+12 січня 1972 року Шабатуру заарештували під час хвилі арештів української
+інтелігенції. Серед інкримінованих їй матеріалів музейна сторінка називає
+машинописні збірки Василя Стуса «Веселий цвинтар», Миколи Холодного «Крик з
+могили» та статтю Валентина Мороза «Серед снігів» [S1]. 12–13 липня 1972 року
+її засудили за частиною першою статті 62 Кримінального кодексу УРСР до п'яти
+років таборів суворого режиму та трьох років заслання [S1]. Доступна музейна
+довідка не публікує номера архівної справи, тому такого номера тут не
+вигадано.
 
-The dossier also helps correct a common imbalance in шістдесятники coverage. Literary male figures often dominate the classroom narrative, while women appear as helpers or relatives. Шабатура should be taught as an artist and organizer in her own right: she had formal art training, exhibited tapestries, worked in `Пролісок`, defended Moroz, endured camp punishments, and later returned to public civic life in Lviv [S1, S3]. Her interview adds a personal account of family, village, and name that can humanize the legal chronology without replacing it [S2].
+Вона перебувала в жіночому таборі ЖХ-385/3-4 у Барашевому, Мордовія. Джерело
+фіксує участь у протестах, вимогу визнати статус політичних в'язнів, 115 діб
+карцеру та півтора року в ПКТ [S1]. Ці подробиці показують конкретний механізм
+радянського контролю: не тільки вирок, а й дисциплінарну ізоляцію, покарання
+за протест, обмеження спілкування та спробу підкорити повсякденне життя.
 
-## 4. Persecution and pressure mechanisms
+## 4. Право малювати і знищення робіт
 
-The repression mechanism was a standard Article 62 charge after the 1972 wave, but the evidence named in KHPG is culturally specific: typed poetry, samvydav essays, and solidarity around Moroz [S1]. KHPG also records that she was forbidden to draw in camp and that other women political prisoners declared hunger strikes in protest; only in 1974 did a Lviv KGB representative bring an easel, paints, pencils, brushes, and paper [S1]. The Ukrainian Wikipedia/MCP extract adds that the KGB destroyed dozens of ex libris and more than a hundred drawings; exact inventory source not found beyond the retrieved secondary article [S3].
+Мистецька праця в таборі стала окремим предметом контролю. За музейною
+біографією, лише 1974 року представник львівського КДБ привіз Шабатурі
+етюдник, фарби, олівці, пензлі й папір [S1]. Це не свідчення вільної творчості:
+сама необхідність такого дозволу показує залежність від адміністрації. 1975
+року, після поїздки до Львова на так зване «перевиховання», їй оголосили акт
+про спалення 150 вилучених малюнків, названих «абстрактними» та такими, що
+зображують табір [S1].
 
-Primary-source quote from the interview: she explained the family name as `козацька торба`, a small but useful way to introduce her rooted historical imagination without turning etymology into a proven genealogy [S2]. Exact archival case number: source not found.
+У відповідь Шабатура відмовилася від роботи; її помістили до карцеру, а потім
+до ПКТ. Вона оголосила голодування, яке тривало дванадцять діб [S1]. Відомі
+число 150, акт і послідовність протесту, але не повний каталог спалених
+малюнків. Тому коректно говорити про знищення зафіксованого джерелом корпусу
+робіт, але некоректно реконструювати назви, сюжети чи техніки без окремого
+документального підтвердження.
 
-The camp-art detail is especially important. KHPG says she was forbidden to draw and that women political prisoners used hunger strikes to challenge that ban [S1]. This shows art not as decorative background but as a contested right. A class can ask why a pencil, sketchbook, or textile design was threatening in a political camp. The answer should be source-based: the retrieved material proves the ban and protests, but a complete administrative order banning her drawing was not retrieved; source not found.
+Цей епізод не повинен перетворювати репресію на доказ будь-якого художнього
+тлумачення. Він доводить інше: радянська адміністрація контролювала доступ
+мисткині до матеріалів і знищила її роботи, а сама Шабатура відповідала на це
+ненасильницьким протестом. Саме така межа між документованим фактом та
+припущенням дозволяє говорити про мистецтво й політичний тиск без міфологізації.
 
-## 5. Works and public actions
+## 5. Повернення, правозахист і пам'ять
 
-Her pre-arrest and post-release work belongs to Ukrainian textile and decorative art; KHPG notes that her tapestries were exhibited and praised, and that her work was treated in the sixth volume of `Історія мистецтва України` [S1]. In camp and exile the act of making or being denied art became a rights issue. After return, her civic activity in Lviv helps connect dissident biography to institutions of memory and local government [S3].
+Після заслання Шабатура повернулася в Україну 1979 року. Музейна довідка
+пов'язує її пізнішу діяльність із «Меморіалом», Народним рухом України,
+відродженням Української греко-католицької церкви та Львівською міською радою
+[S1]. Вона була членкинею Української Гельсінкської групи [S1]. Водночас
+членство не означає авторства кожного документа чи дії інших учасників: у
+кожному конкретному випадку потрібне окреме джерело.
 
-For Phase 2 curriculum writing, choose one object-centered prompt and one rights-centered prompt. Object-centered: "What can a tapestry or ex libris communicate that a speech cannot?" Rights-centered: "Why did political prisoners demand the right to draw?" Both prompts are supported by KHPG's art and camp details [S1], while any interpretation of individual artworks must wait for a rights-checked image source.
+Для BIO важливо не зводити Шабатуру до «жертви режиму». До арешту вона була
+професійною художницею; у таборі відстоювала право на творчу працю; після
+повернення діяла в культурному та громадському просторі. Так само неправильно
+було б зводити її мистецтво до нібито прозорого політичного коду. Джерела
+дозволяють упевнено говорити про освіту, виставкову роботу, самвидав, вирок,
+табірні протести й пізню громадянську участь. Вони не дозволяють без каталогу
+переказувати зміст кожного знищеного малюнка.
 
-## 6. Source pack
+## 6. Назва, зображення і відкриті питання
 
-- [S1] `ШАБАТУРА СТЕФАНІЯ МИХАЙЛІВНА`, KHPG Virtual Museum, https://museum.khpg.org/1114001603.
-- [S2] `Шабатура Стефанія Михайлівна`, interview by Vasyl Ovsienko, KHPG, https://museum.khpg.org/1314388686.
-- [S3] `Шабатура Стефанія Михайлівна`, Ukrainian Wikipedia / MCP `query_wikipedia`, https://uk.wikipedia.org/wiki/Шабатура_Стефанія_Михайлівна.
-- [S4] `Українська Гельсінська група`, MCP `search_sources` / Ukrainian Wikipedia corpus for UHG member context, https://uk.wikipedia.org/wiki/Українська_Гельсінська_група.
+Канонічна форма — Стефанія Михайлівна Шабатура; латинкою — Stefaniia
+Shabatura. У плані потрібен текстовий портретний замінник: сторінки KHPG
+містять зображення, але не дають окремої сторінки файла з автором, походженням
+і ліцензією [S1; S2]. Картинку не можна вважати вільною лише тому, що вона
+відкрита в інтернеті. Відкритими залишаються повний каталог табірних робіт,
+архівний номер кримінальної справи та індивідуально ліцензований портрет.
 
-## 7. Cross-track links
+## 7. Джерельне читання і педагогічні межі
 
-- **Existing ISTORIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml` — Lviv and Kyiv movement context.
-  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml` — using court/camp/dissident sources.
-  - `curriculum/l2-uk-en/plans/istorio/memorandum-uhh.yaml` — UHG context after camp networks.
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/vasyl-stus.yaml` — alleged circulation of Stus texts and shared repression wave.
-  - `curriculum/l2-uk-en/plans/bio/alla-horska.yaml` — women artists and шістдесятники comparison.
-- **Candidate Phase 2+ links:**
-  - A women political-prisoners cluster with Iryna Kalynets, Iryna Senyk, Dariia Husiak, Nina Strokata, and Nadiia Svitlychna.
+Музейна біографія [S1] і інтерв'ю [S2] відповідають на різні питання. Перша
+встановлює дату, строк, табірний маршрут і зафіксовані покарання. Друге
+зберігає спосіб, у який Шабатура сама розповідала про родину, середовище та
+пережитий контроль. Інтерв'ю не є стенограмою всієї справи, а коротка довідка
+не відтворює повноти особистого досвіду. Їх не потрібно зводити до одного
+жанру: зіставлення допомагає відрізняти встановлену хронологію від пам'яті
+учасниці подій.
 
-## 8. Pedagogical notes
+Відсутність локатора не є запрошенням вставити ефектну цитату. У цьому пакеті
+немає неперевірених реплік суду, табірних листів або відновленого змісту
+знищених малюнків. Така обережність не дозволяє перетворити Шабатуру на фон
+для чужих, нею не сказаних тез. Так само перелік інкримінованих текстів не дає
+права приписувати їй авторство творів Стуса, Холодного чи Мороза [S1].
 
-Use a source-comparison task: KHPG biography for legal chronology, interview for voice and memory, and Wikipedia/MCP for later public recognition. Ask learners what counts as "evidence" in a Soviet political case and why typed poems or drawings could be treated as hostile.
+Для джерельного семінару корисно простежити, як контроль над матеріалами
+творчості ставав контролем над людиною. Довідка повідомляє про дозвіл на
+етюдник і фарби, акт про 150 малюнків та відповідь у вигляді протесту [S1].
+Вона не містить каталогу цих робіт. Отже, можна досліджувати механізм тиску,
+але не можна вигадувати сюжети кожного аркуша. Це розмежування робить пам'ять
+про репресію перевірюваною, а мистецьку працю — не зведеною до символу.
 
-A second task can compare Шабатура and Строката in the same women's camp. Both dossiers include Barashevo/Mordovia and hunger-strike/protest contexts, but their professional identities differ: artist and microbiologist. This helps students understand the camp as a forced convergence of different Ukrainian intellectual worlds rather than a single social type.
+Додаткові каталоги мають перевіряти форму, матеріал і виставкову історію
+кожного твору окремо: сам факт репресії не замінює мистецтвознавчого опису.
+Потрібні також надійні відомості про збережені й утрачені роботи.
+Це лишається окремим завданням архіву.
 
-Keep the final student claim narrow: "Шабатура was punished for samvydav circulation and civic solidarity, and she resisted in camp through protest and art." Each part has a retrieved source [S1, S2].
+## 8. Джерела
 
-## 9. Media and image candidates
+Збереження цієї межі має практичний наслідок для подальшої роботи. Якщо буде
+знайдено музейний каталог або архівний опис, його слід звірити з уже
+встановленими датами, а не додавати до біографії лише через емоційну
+виразність. Зокрема, новий документ мусить мати походження, дату, автора або
+фондоутворювача та можливість перевірки. Тоді він може уточнити долю конкретної
+роботи, але не скасує потреби розрізняти адміністративний акт, спогад художниці
+й пізнішу інтерпретацію. Така послідовність робить дослідження придатним для
+відкритого виправлення без повторення радянських спрощень чи нових легенд.
 
-KHPG has an image placeholder/portrait lead [S1, S2]. Albums and exhibitions such as `Стефанія Шабатура: нескорений дух творчості` are promising, but rights-cleared classroom images must be verified: source not found.
+- [S1] Віртуальний музей дисидентського руху Харківської правозахисної групи.
+  «ШАБАТУРА СТЕФАНІЯ МИХАЙЛІВНА». https://museum.khpg.org/1114001603.
+  Українська мова, відкрито 2026-07-17.
+- [S2] Василь Овсієнко. «Шабатура Стефанія Михайлівна. Інтерв'ю 26 червня
+  2008 року». Віртуальний музей дисидентського руху Харківської
+  правозахисної групи. https://museum.khpg.org/1314388686. Українська мова,
+  відкрито 2026-07-17.
 
-## 10. Open questions
+## Деколонізаційна перевірка
 
-- Exact KGB destruction inventory for drawings/ex libris: source not found beyond secondary article.
-- Full catalogue of camp works: source not found.
-- Rights-cleared image for curriculum use: source not found.
-
-## Decolonization self-check
-
-The dossier does not isolate Шабатура as a victim only. It centers her art, agency, camp protest, and later civic work, while naming Soviet legal vocabulary as the language of repression rather than neutral description.
+- [x] Радянську державу названо суб'єктом арешту, вироку й табірного контролю.
+- [x] Репресію не використано як автоматичне доведення мистецької інтерпретації.
+- [x] Неперевірені номери справ, каталоги та ліцензії не вигадано.

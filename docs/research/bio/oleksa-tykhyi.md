@@ -1,120 +1,162 @@
-# Олекса Іванович Тихий — Research Dossier
+# Олекса Тихий — дослідницьке досьє
 
 **Slug:** `oleksa-tykhyi`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** дисидентський і правозахисний рух
+**Рівень джерел:** 1–2
+**Дослідник:** Codex, evidence-gathering
+**Оновлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Особа, ім'я і донбаський контекст
 
-- **Full name (UA, canonical):** Олекса Іванович Тихий; Ukrainian Wikipedia gives Олексій Іванович Тихий as the expanded civil form. KHPG uses both Олекса and Олексій in the heading. [S1] [S2] [S3]
-- **Pseudonyms / aliases:** Олекса Тихий; Олексій Тихий; Oleksa Tykhy; Oleksiy Ivanovych Tykhy. Forbidden Russian-imperial form for body prose: `Алексей Иванович Тихий`. [S1] [S2]
-- **Born:** 27 January 1927, хутір Їжівка / Yizhivka, Kostiantynivka district, Donetsk region, Ukrainian SSR. KHPG and Ukrainian Wikipedia agree. [S1] [S2] [S3]
-- **Died:** 6 May 1984, prison hospital of the Perm political labour camps / Perm prison hospital, RSFSR. KHPG and Ukrainian Wikipedia agree. [S1] [S2] [S3]
-- **Family / education key facts:** KHPG says he was born into a peasant family, studied at Zaporizhzhia Agricultural Institute, Dnipropetrovsk Institute for Transport Engineers, and graduated from the philosophy department of Moscow State University. He worked as a teacher of physics, mathematics, and Ukrainian language, and later as a laborer when barred from teaching. [S1] [S2]
+Олекса Тихий, або Олексій Іванович Тихий, народився 27 січня 1927 року на
+хуторі Їжівка Костянтинівського району Донеччини та помер 6 травня 1984 року в
+тюремній лікарні Пермі. 19 листопада 1989 року його перепоховали в Києві [S1].
+ЕСУ використовує коротку форму «Олекса», водночас подаючи цивільне ім'я
+«Олексій Іванович»; музей KHPG також виносить обидві форми в заголовок [S1;
+S2]. Для плану канонічною є форма «Олекса Тихий», а «Олексій Іванович Тихий»
+зберігається як джерельний варіант. Російську форму імені не слід переносити в
+українську біографічну прозу.
 
-Тихий is a Donbas-centered Ukrainian language-rights figure: a teacher, author and distributor of samvydav, co-founder of the Ukrainian Helsinki Group, and political prisoner who died in Soviet custody. [S1] [S2] [S3]
+Тихий навчався у Запорізькому сільськогосподарському інституті та
+Дніпропетровському інституті інженерів залізничного транспорту, а згодом
+закінчив філософський факультет Московського університету [S1; S2]. Він
+учителював у Запорізькій і Сталінській, нині Донецькій, областях. KHPG називає
+його вчителем фізики, математики й української мови; після політичних
+переслідувань він не міг продовжувати цю працю та виконував фізичну роботу
+[S2]. Ця професійна лінія є ключовою: мовні права й освіта були для нього
+практикою повсякденного громадянства, а не зовнішньою темою, нібито принесеною
+на Донеччину з іншого регіону.
 
-## 2. Oppression mechanism
+## 2. Перші переслідування
 
-- **What happened:** repeated political prosecution, imprisonment, camp punishment, and death in custody.
-- **When:** first arrest in 1948 for criticizing the single official candidate; major arrest on 15 February 1957 over a letter protesting the Warsaw Pact invasion of Hungary and criticism of Soviet schools; sentenced on 18 May 1958 to seven years in harsh-regime camp and five years deprivation of civil rights; co-founded the Ukrainian Helsinki Group in 1976; arrested again on 5 February 1977; sentenced on 21 July 1977 to ten years special-regime camp plus five years exile; died 6 May 1984. [S1] [S2] [S3]
-- **By whom:** Soviet KGB/security apparatus and Ukrainian SSR courts; KHPG identifies the 1958 Stalino Regional Court sentence under Article 54-10 of the Criminal Code of the Ukrainian SSR. [S1]
-- **Document references:** Article 54-10 for the 1958 sentence; Article 62 part 2 and a planted-rifle accusation are reported by Ukrainian Wikipedia for the 1977 case. Exact archival file number: source not found in retrieved sources. [S1] [S3]
-- **Mechanism specifics:** KHPG reports service in Mordovian political labour camps, Vladimir Prison, and later Perm special-regime camp VS-389/36-1 in Kuchino. The 1977 Rudenko-Tykhy trial in Druzhkivka followed the formation of the Ukrainian Helsinki Group and targeted rights monitoring as anti-Soviet activity. [S1] [S2] [S3]
-- **What survived / what was destroyed:** KHPG says the typescript *The Language of a People. The People* was confiscated during a 15 June 1976 search. Ukrainian Wikipedia lists works such as *Мова-народ* and *Думки про рідний донецький край*. [S2] [S3] [S5]
+1948 року Тихого ненадовго заарештували за критику єдиного кандидата в
+депутати; після «профілактичної роботи» його відпустили [S1]. Цей епізод не
+можна назвати повноцінним судовим процесом, якщо доступне джерело не наводить
+вироку. Він показує ранній конфлікт із радянською моделлю виборів, де формальна
+процедура не забезпечувала можливості критики.
 
-The oppression mechanism was not incidental to his life; it was the Soviet state's answer to a teacher from Donetsk region insisting that Ukrainian speakers there had ordinary civic and linguistic rights. [S1] [S5]
+15 січня 1957 року його заарештували за лист до Центрального комітету КПРС,
+у якому він протестував проти окупації Угорщини військами країн Варшавського
+договору. 18 травня 1958 року Сталінський обласний суд засудив Тихого за
+«антирадянську агітацію» та «наклеп» на КПРС і радянську дійсність до семи
+років таборів суворого режиму [S1]. У музейній довідці цей вирок пов'язано зі
+статтею 54-10 КК УРСР [S2]. Назви обвинувачень подано як мову радянської
+каральної системи, а не як нейтральну характеристику його діяльності.
 
-## 3. Major works
+## 3. Вчитель, автор і учасник УГГ
 
-- `1972` — *Думки про рідний донецький край*, essay on Donetsk-region language and cultural rights. [S5]
-- `1976` — *Мова-народ* / *The Language of a People. The People*, typescript confiscated during a search according to KHPG. [S2]
-- `1976` — signatures on the Declaration and Memorandum No. 1 of the Ukrainian Helsinki Group, as reported in Ukrainian Wikipedia. [S3]
-- `1977` — court statements and defense texts from the Rudenko-Tykhy trial; exact archival text source not found in retrieved sources. [S3]
-- `posthumous` — selections and commemorative editions of his writings; exact edition data source not found in retrieved sources.
+Після звільнення Тихий повернувся до Донеччини. Він писав про русифікацію,
+шкільну освіту, історичну пам'ять і становище української мови в регіоні [S1;
+S2]. Серед відомих праць називають «Думки про рідний донецький край» (1972) та
+«Мова-народ» (1976). Доступні джерела підтверджують назви й загальний напрям,
+але для дослівної цитати з цих текстів потрібні точне видання, сторінка або
+інший стабільний локатор. У досьє тому немає цитат, узятих із пам'яті або зі
+вторинного переказу.
 
-## 4. Primary-source quotes (≥2 required)
+1976 року Тихий став одним із засновників Української Громадської Групи
+сприяння виконанню Гельсінкських угод, звичніше — Української Гельсінкської
+групи [S1; S2]. Її робота полягала у правозахисному моніторингу після
+Гельсінських угод, а не в абстрактному «націоналізмі», яким радянська влада
+позначала інакодумство. Водночас кожну конкретну заяву чи меморандум слід
+приписувати Тихому лише тоді, коли в джерелі названо його підпис або авторство.
+Таке правило не применшує його ролі співзасновника, а відокремлює встановлене
+від припущеного.
 
-- "Історія — найдійовіший... засіб формування національної самосвідомості." — from *Думки про рідний донецький край*, 1972, via Wikiquote citing *Історична правда*. This quote is a direct bridge between history learning and identity formation. [S5]
-- "Донеччина — це 1/6 всього населення Української РСР." — from the same 1972 text. It matters because Tykhy framed Donbas not as an exception outside Ukraine but as a decisive Ukrainian region. [S5]
+## 4. Арешт 1977 року, суд і табори
 
-Both retrieved primary excerpts come from the same text. A second independent primary text with page image was not retrieved; do not invent one.
+5 лютого 1977 року Тихого знову заарештували. ЕСУ зазначає, що 21 липня 1977
+року Донецький обласний суд засудив його до десяти років таборів особливого
+режиму та п'яти років заслання [S1]. KHPG пов'язує переслідування зі статтею
+62 частиною другою КК УРСР та описує процес як один із ударів по засновниках
+УГГ [S2]. Раніше поширюване твердження про «підкинуту рушницю» тут не
+використано: у двох безпосередньо відкритих джерелах, що становлять цей пакет,
+немає достатнього документального локатора для такого точного опису.
 
-## 5. Language register
+Після вироку Тихий утримувався у мордовських політичних таборах, у
+Владимирській в'язниці, а згодом у таборі особливого режиму ВС-389/36-1 у
+Кучино, Пермська область [S2]. Від доступних джерел не можна вимагати більше,
+ніж вони доводять: вони встановлюють маршрут репресії, але не дають повного
+щоденника табірного життя. Тому не варто приписувати йому вислови, голодування
+чи взаємини з іншими в'язнями без конкретного документа.
 
-- **Register:** civic essay, rights petition, teacherly explanatory prose.
-- **CEFR readiness for full reading:** B2/C1 for selected excerpts; full texts need C1 support because of Soviet institutional vocabulary and regional demographic argument.
-- **Lexicon notes:** `русифікація`, `національна самосвідомість`, `українізація`, `Донеччина`, and Soviet legal terms.
-- **Stylistic features:** enumerated proposals, moral urgency, and a teacher's tendency to define civic problems through education, history, and language. [S1] [S5]
+Тихий помер 6 травня 1984 року в тюремній лікарні Пермі [S1; S2]. У цій
+формулі важливий суб'єкт відповідальності: смерть сталася в системі радянського
+ув'язнення після повторного політичного вироку. Водночас причина смерті та
+медичні деталі мають бути названі лише за медичним або архівним джерелом;
+доступні тут сторінки такого документа не подають. 1989 року перепоховання в
+Києві стало частиною повернення пам'яті про дисидента до публічного простору
+України [S1].
 
-For pedagogy, Tykhy is especially useful in dismantling the false claim that Ukrainian language activism in Donbas is an external import. His own biography and text locate it inside the region. [S1] [S5]
+## 5. Історична рамка і межі висновків
 
-## 6. Contested points
+Біографія Тихого пов'язує Донеччину з українським правозахисним рухом без
+екзотизації регіону. Вчителювання, тексти про мову й участь в УГГ показують
+місцеве коріння його громадянської позиції. Це не означає, що одна людина може
+представляти весь регіон або що кожен мешканець Донеччини поділяв його погляди.
+Коректніше говорити про задокументований приклад учителя з Донеччини, який
+публічно обстоював українську мову, історичну пам'ять і права людини.
 
-- **What's debated in modern UA scholarship:** retrieved sources do not present a scholarly controversy about his biography, but they do show a need to reconcile civil-name variants Олекса/Олексій. [S1] [S3]
-- **What gets simplified in popular memory:** his death in custody can eclipse his teacherly and linguistic work; the dossier should keep the Donbas language-rights argument central. [S1] [S5]
-- **Russian disinformation attack surface:** Russian/Soviet narratives often frame Ukrainian language rights in Donbas as artificial; Tykhy's texts directly contradict that frame. [S5]
-- **Other-perspective considerations:** source not found for a specific Polish, Jewish, or minority-perspective issue in the retrieved materials.
+Слід уникати двох спрощень. Перше — називати Тихого лише «жертвою таборів»:
+так зникають його освіта, учителювання, авторська праця та правозахисна
+організація. Друге — перетворювати всі його тексти на пряме джерело сучасних
+оцінок Донбасу. Їх треба читати у конкретному радянському часі, зіставляючи
+авторський аргумент, енциклопедичну хронологію та музейну документацію.
 
-## 7. Cross-track links
+## 6. Зображення, читання і джерела
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Donbas language-rights micro-unit using *Думки про рідний донецький край*.
-  - UHG founder group comparison with Mykola Rudenko, Levko Lukianenko, Oksana Meshko, and Nina Strokata.
-- **Potential LIT additions surfaced by this research:**
-  - Excerpted reading from *Думки про рідний донецький край*, after retrieving a stable text edition.
+Для плану обрано текстовий портретний замінник. ЕСУ та KHPG показують
+фотографії, але жодна відкрита сторінка не встановлює окремо автора, походження
+файла та вільну ліцензію [S1; S2]. Наявність зображення в енциклопедії або
+музеї не є дозволом на його копіювання. Потрібна окрема сторінка файла або
+архівне повідомлення з ліцензією.
 
-## 8. Naming-canonical
+## 7. Джерельне читання і HIST-узгодження
 
-- **Slug:** `oleksa-tykhyi`
-- **EN canonical (BGN/PCGN 2010):** Oleksa Ivanovych Tykhyi
-- **UA canonical (with patronymic if attested):** Олекса Іванович Тихий
-- **Aliases (track these for `aliases:` YAML field):** Олексій Іванович Тихий; Oleksa Tykhy; Oleksiy Tykhy
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Aleksey Ivanovich Tikhy; Алексей Иванович Тихий
+ЕСУ [S1] дає інституційно відредагований життєпис: ім'я, дати, освіту, арешти,
+вироки, смерть і перепоховання. KHPG [S2] розгортає правозахисний та табірний
+контекст. Їхня відповідність у базовій хронології дозволяє обережно називати
+ці події встановленими. Проте обидві сторінки мають межі: вони не замінюють
+повний текст судового вироку, медичну документацію чи видання творів Тихого.
+Тому досьє не повторює цитати без сторінки, не приписує йому неперевірених
+заяв і не використовує невстановлені подробиці процесу.
 
-## 9. Image candidates
+Біографічна рамка узгоджується з історією дисидентського руху: Тихий був
+учителем з Донеччини, автором про мовні права та співзасновником УГГ, а
+радянська влада неодноразово переслідувала його через незалежну громадянську
+позицію [S1; S2]. Це не дає підстав змішувати його справу зі справами інших
+дисидентів. Порівняння можливе лише тоді, коли окреме джерело підтверджує
+спільний документ, місце чи подію. Такий підхід не ізолює Тихого від руху, а
+захищає його індивідуальну відповідальність і голос.
 
-- **Best PD/CC portrait:** source not found in retrieved sources; KHPG and Ukrainian Wikipedia include images, license not retrieved.
-- **Backup candidates:** Wikimedia Commons from Ukrainian Wikipedia, if license allows; KHPG portrait as identification lead only.
-- **If no PD/CC portrait exists:** use a rights-cleared memorial or document-context image from a museum/rights archive.
-- **Era-appropriate context image:** UHG-related archival document or Perm-36/Kuchino context image after rights verification.
+Для роботи з текстами «Думки про рідний донецький край» і «Мова-народ» слід
+спершу знайти відкрите видання з точною ідентичністю документа. Поки цього
+немає, вони можуть бути предметом бібліографічного й тематичного опису, але
+не підставою для дослівного аналізу. Відкрита вебсторінка про автора не
+дорівнює дозволу на передрук його тексту або на вільне цитування без локатора.
 
-## 10. Sources used
+**Джерела:**
 
-**Tier 1 (authoritative):**
-- [S6] Internet Encyclopedia of Ukraine, "Tykhy, Oleksa." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CY%5CTykhyOleksa.htm | accessed 2026-05-30.
+Донбаський вимір вимагає також точності назв. Історичні документи можуть
+вживати радянську назву Сталіно, тоді як сучасний опис регіону називає Донецьк
+і Донеччину. Зміна назви не повинна приховувати часу події: вона допомагає
+бачити, у якому адміністративному й політичному контексті працював Тихий.
+Так само слово «окупація» щодо Угорщини передає оцінку, яку наводить ЕСУ у
+зв'язку з його листом [S1], а не є довільною вставкою. Відповідальна біографія
+пояснює походження таких формул, не використовуючи їх як заміну аналізу.
 
-**Tier 2 (institutional):**
-- [S1] "TYKHY Oleksa (Oleskiy Ivanovych)," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/en/1142694578 | accessed 2026-05-30.
-- [S2] "ТИХИЙ ОЛЕКСІЙ ІВАНОВИЧ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1114001053 | accessed 2026-05-30.
-- [S7] "Oleksa Tykhy: Citizen of Ukraine," KHPG archive. https://archive.khpg.org/en/1169504757 | accessed 2026-05-30.
+Пізніше вивчення має шукати опубліковані тексти Тихого, матеріали судів і
+документи УГГ у фондах з чітким описом. До їхнього відкриття найнадійніший
+результат цього пакета — перевірена хронологія, а не ілюзія повноти.
 
-**Tier 3 (encyclopedic):**
-- [S3] "Тихий Олексій Іванович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Тихий_Олексій_Іванович | accessed 2026-05-30.
+- [S1] Енциклопедія Сучасної України, Інститут енциклопедичних досліджень НАН
+  України. «Тихий Олекса». https://esu.com.ua/article-887522. Українська мова,
+  відкрито 2026-07-17.
+- [S2] Віртуальний музей дисидентського руху Харківської правозахисної групи.
+  «ТИХИЙ ОЛЕКСІЙ ІВАНОВИЧ». https://museum.khpg.org/1114001053. Українська
+  мова, відкрито 2026-07-17.
 
-**Tier 4 (modern scholarly post-1991):**
-- `mcp__sources.search_sources`, chunks on Dziuba and Donbas historiography that situate Tykhy's language-rights work with anti-russification thought.
+## Деколонізаційна перевірка
 
-**Tier 5 (general web):**
-- [S5] "Тихий Олексій Іванович," Wikiquote, citing *Олекса Тихий. Думки про рідний донецький край. Текст 1972 року* at *Історична правда*. https://uk.wikiquote.org/wiki/Тихий_Олексій_Іванович | accessed 2026-05-30.
-
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Article references retrieved; exact archival file/case number: source not found in retrieved sources.
-
-## Decolonization self-check
-
-- [x] Donbas is framed as part of Ukrainian civic history, not as a Russocentric exception
-- [x] Soviet charges are labeled as repression mechanisms
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] No invented court-file identifiers
-- [x] Source gaps are explicit
+- [x] Донеччину подано як частину української історії, без імперського ярлика.
+- [x] Радянські обвинувачення подано як інструмент переслідування.
+- [x] Точні цитати, медичні подробиці й кримінальні епізоди без локатора вилучено.

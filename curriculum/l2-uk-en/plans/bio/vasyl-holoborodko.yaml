@@ -106,27 +106,34 @@ persona:
   voice: Literary Historian
 phase: BIO
 readings:
-- language: uk
-  hosting: reading-needed
-  notes: Енциклопедична стаття про поета Київської школи.
-  role: reading-needed
-  source: 'reading-needed: vasyl-holoborodko-esu-profile'
-  source_name: Енциклопедія сучасної України (ЕСУ)
-  title: Голобородько Василь Іванович
-- language: uk
-  hosting: reading-needed
-  notes: Перша збірка (1970). Потребує надійного онлайн-джерела для читання (лише посилання на фрагменти, уникати порушення авторських прав).
-  role: reading-needed
-  source: 'reading-needed: letiuchie-vikontse-primary'
-  source_name: Видавництво "Смолоскип"
-  title: Летюче віконце
-- language: uk
-  hosting: reading-needed
-  notes: Інтерв'ю про публікаційну траєкторію та цензуру (2015).
-  role: reading-needed
-  source: 'reading-needed: mene-pidstrelyly-na-zleti-interview'
-  source_name: Українська літературна газета
-  title: «Мене підстрелили на злеті»
+  - title: Голобородько Василь Іванович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-25281
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-25281
+      note: Відкрита україномовна енциклопедична сторінка; повний текст і зображення не відтворюються.
+    learner_task: Відокремити перевірену хронологію навчання, заборони друку й видань від інтерпретації його поетики.
+  - title: 'Василь Голобородько: «Мене підстрелили на злеті»'
+    source_name: Українська літературна газета
+    source_url: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+      note: Публічне україномовне інтерв’ю доступне лише за зовнішнім посиланням; жоден уривок не відтворюється.
+    learner_task: Порівняти авторську розповідь про перервану траєкторію з енциклопедичною хронологією, не узагальнюючи її до непідтвердженої табірної історії.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Для живого автора не підтверджено окремого файла з індивідуальною вільною ліцензією; зображення на біографічній сторінці не дає права повторного використання.
+  candidate_url: https://esu.com.ua/article-25281
+  evidence_url: https://esu.com.ua/article-25281
+  disposition: no-portrait-until-rights-verified
+readings_contract_version: 2
 references:
 - note: Енциклопедична стаття про життя та поетику.
   title: Голобородько Василь Іванович (ЕСУ)

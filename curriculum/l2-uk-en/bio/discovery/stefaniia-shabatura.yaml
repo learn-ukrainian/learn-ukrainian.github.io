@@ -1,0 +1,12 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Стефанія Шабатура
+  - Стефанія Шабатура КХПГ біографія
+  - Стефанія Шабатура інтерв'ю Василь Овсієнко
+direct_sources:
+  - https://museum.khpg.org/1114001603
+  - https://museum.khpg.org/1314388686
+rag_chunks: []
+rag_literary: []
+warning: Direct-source packet; both URLs are the strict-v2 link-only reading records.

@@ -92,20 +92,34 @@ slug: mykola-vinhranovskyi
 subtitle: Poet, Filmmaker, and the Spectrum of Soviet Cultural Pressure
 title: 'Микола Вінграновський: свобода у формі'
 readings:
-- title: "Вінграновський Микола Степанович"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/pdf/file/34622.pdf"
-  language: "uk"
-  role: "reference"
-  hosting: "link-only"
-  rights_note: "Open-access reference entry in Ukrainian from ESU."
-- title: "Поетика й публічні виступи Вінграновського"
-  source_name: "reading-needed"
-  source_url: "reading-needed"
-  language: "uk"
-  role: "reading-needed"
-  hosting: "reading-needed"
-  rights_note: "reading-needed: verify rights-safe Ukrainian source for verified primary excerpts."
+- title: Вінграновський Микола Степанович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-34622
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-34622
+    note: Відкрита україномовна енциклопедична сторінка; повний текст і зображення не відтворюються.
+  learner_task: Простежити окремі траєкторії поета, кіноактора й режисера та зіставити їх за датами й назвами творів.
+- title: Вінграновський Микола Степанович (електронна версія статті)
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/pdf/file/34622.pdf
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/pdf/file/34622.pdf
+    note: Публічна україномовна електронна версія ЕСУ використовується лише за посиланням; курс не відтворює статтю.
+  learner_task: Перевірити бібліографічні назви поетичних книжок і фільмів за статтею та не переносити оцінку одного виду мистецтва на інший.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Окрему сторінку файла з індивідуально підтвердженою вільною ліцензією не встановлено; зображення в ЕСУ не є доказом повторного використання.
+  candidate_url: https://esu.com.ua/article-34622
+  evidence_url: https://esu.com.ua/article-34622
+  disposition: no-portrait-until-rights-verified
+readings_contract_version: 2
 version: '1.1'
 vocabulary_hints:
 - word: шістдесятник

@@ -1,126 +1,182 @@
-# Борис Дмитрович Антоненко-Давидович — Research Dossier
+# Борис Дмитрович Антоненко-Давидович — дослідницьке досьє
 
 **Slug:** `borys-antonenko-davydovych`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Літературний і громадянський опір
+**Рівень джерел:** 1–2
+**Дослідник:** Codex, evidence-gathering
+**Оновлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Борис Дмитрович Антоненко-Давидович. ЕСУ lists the pseudonyms Богдан Вірний, Антоненко Б., and Петро Котик; Ukrainian Wikipedia also notes the birth surname Давидов/Давидів. [S1] [S3]
-- **Pseudonyms / aliases:** Богдан Вірний; Антоненко Б.; Петро Котик; Борис Давидов. Forbidden Russian-imperial form for body prose: `Борис Дмитриевич Антоненко-Давидович`. [S1] [S3]
-- **Born:** 23 July OS / 5 August NS 1899 by ЕСУ, Засулля near Romny, Poltava Governorate, Russian Empire. Ukrainian Wikipedia gives 23 July / 4 August 1899; this one-day NS discrepancy is flagged <!-- VERIFY -->, and the dossier follows the Tier 1 ЕСУ date. [S1] [S3]
-- **Died:** 9 May 1984, Kyiv, Ukrainian SSR. ЕСУ, NBU, and Ukrainian Wikipedia agree on the date and place. [S1] [S2] [S3]
-- **Family / education key facts:** He studied at Kharkiv University, Kyiv University, and Kyiv Institute of People's Education but did not complete a diploma; his later professional record included teaching, journalism, editing, literary work, translation, and language-culture writing. [S1] [S3]
+Борис Дмитрович Антоненко-Давидович (справжнє прізвище — Давидов)
+народився 23 липня (5 серпня за новим стилем) 1899 року в Засуллі, яке
+нині входить до Ромен на Сумщині, а помер 9 травня 1984 року в Києві.
+ЕСУ називає його прозаїком, поетом, публіцистом, літературознавцем,
+мовознавцем, перекладачем і громадським діячем; ЕІУ також фіксує правничу
+форму імені та літературні ролі. [T1: ЕСУ — «Антоненко-Давидович Борис
+Дмитрович»] [T1: ЕІУ — «Антоненко-Давидович Борис Дмитрович»]
 
-Антоненко-Давидович belongs in Block E because his twentieth-century biography links the executed and imprisoned generation of the 1920s-1930s to the later Ukrainian dissident milieu. He was not a military figure. His core relevance for learners is the connection between prose, language culture, and repeated Soviet repression. [S1] [S2] [S5]
+Псевдоніми Богдан Вірний, Антоненко Б. і Петро Котик належать до його
+авторської біографії, але не замінюють канонічного імені. Освіту він здобував
+в Охтирській гімназії, Харківському та Київському університетах і Київському
+інституті народної освіти; перелік не дає підстав перетворювати незавершене
+навчання на вигаданий диплом. Перші українськомовні публіцистичні виступи
+датуються 1921 роком, а оповідання «Останні два» з’явилося 1923 року. Його
+участь у «Асписі», «Ланці» та МАРСі показує зв’язок із літературним полем
+1920-х, а не належність до абстрактної «радянської школи». [T1: ЕСУ —
+«Антоненко-Давидович Борис Дмитрович»]
 
-## 2. Oppression mechanism
+## 2. Механізми радянського переслідування
 
-- **What happened:** Arrest, fabricated political prosecution, Gulag imprisonment, later exile, rehabilitation, and renewed censorship/blacklisting.
-- **When:** arrested 2 January 1935 by ЕСУ, 5 January 1935 by Ukrainian Wikipedia; sentenced after the first case to death commuted to ten years; re-arrested after release and sent to lifelong exile on 6 July 1951 by ЕСУ; rehabilitated in 1956 and returned to Kyiv in 1957; blacklisted again from 1970. [S1] [S3]
-- **By whom:** Soviet state security and judicial organs; ЕСУ names the later exile as imposed without court by a "трійка" decision and under state-security supervision. [S1]
-- **Document references:** exact archival file ID or case number: source not found in retrieved sources. Retrieved sources give charges and mechanisms but not a stable archival citation. [S1] [S3]
-- **Mechanism specifics:** ЕСУ says public attacks before the arrest focused on *Смерть* and *Землею українською*, with accusations of "зоологічний націоналізм"; this phrase is used here only as a Soviet accusation, not as an analytical label. Ukrainian Wikipedia reports that the first fabricated case ended in a death sentence commuted to ten years in camps, followed by later re-arrest and exile. [S1] [S3]
-- **What survived / what was destroyed:** His prose and language works survived through later publications and diaspora editions, while some manuscripts and publication opportunities were blocked. Ukrainian Wikipedia reports searches, confiscation, and renewed print bans after he refused to testify against Vasyl Moroz. [S3]
+Перша хвиля була не метафорою «утисків», а ланцюгом конкретних дій радянських
+силових і судових органів. 2 січня 1935 року Антоненка-Давидовича заарештували
+в Алма-Аті та під конвоєм доставили до Києва. Перед арештом пресова кампанія
+атакувала повість *Смерть* і збірку репортажів *Землею українською*; формулу
+«зоологічний націоналізм» тут можна вживати тільки як назву радянського
+обвинувачення, а не як опис його позиції. ЕСУ називає сфабрикованим звинувачення
+у приналежності до УВО та «контрреволюційній діяльності» і фіксує вирок — десять
+років позбавлення волі в таборах ГУЛАГу. [T1: ЕСУ — «Антоненко-Давидович Борис
+Дмитрович»]
 
-The oppression mechanism is a pattern rather than a single event: Soviet institutions first criminalized his 1920s Ukrainian literary position, then used exile and surveillance to remove him from public life, and finally tried to silence the rehabilitated writer when he became a moral reference point for the 1960s-1970s dissident generation. [S1] [S2] [S3]
+20 травня 1937 року спеціальна колегія Далекосхідного крайового суду при
+БАМЛАГу НКВС, за даними ЕСУ, повторно звинуватила письменника у
+«контрреволюційній агітації», додавши ще десять років неволі та п’ять років
+обмеження прав. Для цього досьє важливо не підміняти документальний факт
+узагальненням про «сталінські часи»: названо орган, дату, повторне обвинувачення
+та табірний простір. Звільнення 1947 року не означало відновлення прав. Після
+повернення в Україну 1948-го він працював фельдшером у Білому Рукаві на
+Вінниччині, а 6 липня 1951 року його без суду за рішенням «трійки» як
+«повторника» вивезли на довічне заслання до Красноярського краю під наглядом
+органів держбезпеки. [T1: ЕСУ — «Антоненко-Давидович Борис Дмитрович»]
 
-## 3. Major works
+Реабілітація постановою Верховної Ради СРСР 1956 року та повернення до Києва
+1957-го відкрили можливість друку, але не скасували наступного замовчування:
+від 1970 року його не друкували й майже не згадували в пресі. Отже, біографія
+має дві різні репресивні фази: кримінально-табірну та пізнішу цензурно-
+ізоляційну. Інститут історії України у виданні *З порога смерті* окремо вміщує
+нарис про Антоненка-Давидовича серед письменників — жертв сталінських репресій,
+наголошуючи на роботі з матеріалами судово-слідчих справ. Це корисний
+контекстуальний, а не замінний архівний доказ. [T2: ІІУ НАН України — *З порога
+смерті*, с. 44]
 
-- `1926` — *Тук-тук*, prose collection, Kyiv. Early prose from the 1920s literary milieu. [S1]
-- `1928` — *Смерть*, novella, Kharkiv. ЕСУ describes it as a work about the impossibility of combining honesty before one's people with obedient party service. [S1]
-- `1930` — *Землею українською*, literary reportage, Kyiv. Later used against him in Soviet accusations. [S1]
-- `1934` — *Лицарі "Абсурду"*, prose. Listed by ЕСУ among major works. [S1]
-- `1959` — *Збруч*, prose collection, Kyiv. Post-rehabilitation return to print. [S1]
-- `1960` — *Слово матері*, short prose, *Дніпро*. [S1]
-- `1962` — *Про що і як*, language and style essays, Kyiv. [S1]
-- `1963` — *За ширмою*, novel, Kyiv. ЕСУ reads the mother image as expanding toward a symbol of Ukraine. [S1]
-- `1964` — *В літературі й коло літератури*, literary essays, Kyiv. [S1]
-- `1970` — *Як ми говоримо*, language-culture essays. The textbook corpus treats this work as an authoritative source for Ukrainian stylistic choice. [S5]
-- `1989` — *Сибірські новели*, posthumous cycle on camp experience. [S1] [S2]
+## 3. Основні твори й видання
 
-## 4. Primary-source quotes (≥2 required)
+- `1926` — *Тук-тук*, рання проза; початок самостійної книжкової траєкторії.
+- `1928` — *Смерть*, повість про моральний конфлікт українського інтелігента в
+  більшовицькій системі; ЕСУ пов’язує її з кампанією перед арештом.
+- `1930` — *Землею українською*, репортажі, використані владою в обвинуваченні.
+- `1934` — *Лицарі «Абсурду»*, проза 1930-х років.
+- `1959` — *Збруч*, книжка повернення до легального друку.
+- `1962` — *Про що і як*, есеї про працю з мовою та стилем.
+- `1963` — *За ширмою*, роман, у якому ЕСУ відзначає образ матері як ширший
+  символ України.
+- `1964` — *В літературі й коло літератури*, літературно-критичні тексти.
+- `1970` — *Як ми говоримо*, праця з культури української мови.
+- `1989` — *Сибірські новели*, посмертне повернення табірного досвіду в прозі.
 
-- "Боротьба за чистоту й високу мовну культуру..." — from *Як ми говоримо*, excerpted in a Grade 10 Ukrainian-language textbook. The quote matters because it frames language culture as a civic practice, not a purist hobby. [S5]
-- "Двері відчиняються водієм" — an example he criticizes in *Як ми говоримо*, retrieved from the Osvita.ua online text. This is useful for teaching instrumental-case overuse and bureaucratic calque. [S6]
+Дати та бібліографічні контури цього списку перевірені за ЕСУ. Повість *Смерть*
+має окрему українськомовну картку з ідентифікованим автором і назвою в Чтиві;
+це дає можливість послатися на зовнішній текст, але не дає курсу права
+відтворювати його. [T1: ЕСУ — «Антоненко-Давидович Борис Дмитрович»] [T5:
+Чтиво — *Смерть*]
 
-Both retrieved primary excerpts come from *Як ми говоримо*. Page-numbered print edition references should still be retrieved before Phase 2 learner-facing publication.
+## 4. Первинні тексти та межі цитування
 
-## 5. Language register
+Для каталогу обрано link-only reading — *Смерть*. Його документальна ідентичність
+та українськомовна сторінка перевірені, проте у цьому досьє немає дослівних
+цитат: переглянута вебкартка не надає стабільної пагінації або розділового
+локатора, який дозволив би відповідально цитувати фразу. Так само *Як ми
+говоримо* засвідчена в електронному каталозі НБУВ як видання 1970 року на 182
+сторінки й як перевидання 1994 року на 252 сторінки, але доступний опис не є
+повним текстом. Тому формули з популярних переказів не переносяться сюди як
+авторські вислови. [T2: НБУВ — каталог *Як ми говоримо*]
 
-- **Register:** literary prose plus normative essayistic language guidance.
-- **CEFR readiness for full reading:** B2 for selected language notes; C1 for *Смерть* and camp prose because of political context, interwar style, and historical vocabulary.
-- **Lexicon notes:** learners need support for Soviet legal vocabulary, interwar literary terms, and style-pair judgments in *Як ми говоримо*.
-- **Stylistic features:** psychological prose, compressed ethical conflict, and precise language-culture contrasts. [S1] [S5]
+## 5. Мовний і стильовий регістр
 
-Pedagogically, he is useful for showing that de-Russification can be taught through sentence-level style work without reducing the figure to a grammar mascot. His biography makes the stakes of lexical and syntactic choice visible. [S1] [S5]
+Проза Антоненка-Давидовича поєднує психологічний конфлікт, міжвоєнний
+літературний контекст і політичну лексику, тому цілісне читання *Смерті* доречне
+для C1. Натомість окремі завдання з *Як ми говоримо* мають показувати не
+«вічні заборони», а історично сформовану традицію мовної культури, зіставлену
+із сучасними словниками й граматиками. Нормативна порада автора не повинна
+видаватися за незмінний закон морфології. Для студентів корисними будуть
+розрізнення між калькою, стилістичним вибором, слововживанням і кодифікованою
+нормою.
 
-## 6. Contested points
+Таке розмежування має і джерельну ціну. Повість, спогад, публіцистика,
+бібліографічний запис та енциклопедична стаття відповідають на різні питання.
+Повість дозволяє аналізувати побудову конфлікту й лексику персонажів; вона не
+замінює вирок або архівний опис. Каталог НБУВ підтверджує видання, але не дає
+права реконструювати зміст за назвою. ЕСУ фіксує послідовність репресивних
+подій, однак для мікроісторії слідчої справи потрібний окремий архівний
+документ. Саме тому запропонований набір читання не змішує літературний аналіз
+із доказуванням біографічного факту.
 
-- **What's debated in modern UA scholarship:** the relative weight of his 1920s prose, later language-culture essays, and dissident-era moral authority; retrieved sources emphasize all three but not a single hierarchy. [S1] [S2]
-- **What gets simplified in popular memory:** he is often remembered only as the author of *Як ми говоримо*, while ЕСУ foregrounds his prose, repression, and influence on dissident circles. [S1] [S5]
-- **Russian disinformation attack surface:** Soviet accusations labelled his work "nationalist"; the dossier treats those labels as evidence of repression, not as valid categories. [S1]
-- **Other-perspective considerations:** source not found for a specific Polish, Jewish, or minority-perspective controversy tied to this dossier.
+## 6. Контексти, що потребують обережності
 
-## 7. Cross-track links
+Популярна пам’ять часто зводить його або до автора *Як ми говоримо*, або до
+табірного мученика. Обидва скорочення гублять його ранню прозу, журналістику,
+переклад і літературну критику. Водночас спротив русифікації не є підставою
+приписувати йому всі пізніші позиції мовного руху. Радянські ярлики мають
+залишатися в лапках і в поясненому джерельному контексті. Документований
+злочинний характер репресивної практики не звільняє біографа від перевірки
+кожного приписуваного тексту, судження чи особистої розмови.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/antonenko-davydovych-prose.yaml`
-  - `curriculum/l2-uk-en/plans/lit/antonenko-davydovych-smert.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - none verified for this dossier.
-- **Existing core language modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/c2/lexical-stylistics.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio module on the line from Ланка-МАРС repression to later dissident language work.
-  - C1/C2 reading task pairing *Як ми говоримо* with contemporary decolonizing style choices.
-- **Potential LIT additions surfaced by this research:**
-  - A short-source unit on *Сибірські новели* as camp prose, only after primary text and rights checks.
+## 7. Перевірені міжтрекові зв’язки
 
-## 8. Naming-canonical
+**Наявні файли, перевірені локально:**
 
-- **Slug:** `borys-antonenko-davydovych`
-- **EN canonical (BGN/PCGN 2010):** Borys Dmytrovych Antonenko-Davydovych
-- **UA canonical (with patronymic if attested):** Борис Дмитрович Антоненко-Давидович
-- **Aliases (track these for `aliases:` YAML field):** Борис Давидов; Богдан Вірний; Антоненко Б.; Петро Котик; Borys Antonenko-Davydovych
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Boris Dmitrievich Antonenko-Davidovich; Борис Дмитриевич Антоненко-Давидович
+- `curriculum/l2-uk-en/plans/lit/antonenko-davydovych-prose.yaml`
+- `curriculum/l2-uk-en/plans/lit/antonenko-davydovych-smert.yaml`
+- `curriculum/l2-uk-en/plans/c2/lexical-stylistics.yaml`
 
-## 9. Image candidates
+**Кандидатні зв’язки:** читання *Смерті* поряд із темами МАРСу й репресій
+1930-х; окремий мовний семінар про історичну норму та сучасну кодифікацію;
+контекст табірної прози без ототожнення художнього оповідача з автором.
 
-- **Best PD/CC portrait:** source not found in retrieved sources. Ukrainian Wikipedia and ЕСУ display portraits, but license status was not retrieved.
-- **Backup candidates:** ЕСУ article image for identification only until license is verified; Wikimedia Commons linked from Ukrainian Wikipedia, license to verify.
-- **If no PD/CC portrait exists:** use a rights-cleared image of a first edition or a neutral manuscript/book context rather than an unlicensed portrait.
-- **Era-appropriate context image:** cover/title page of *Як ми говоримо* or a rights-cleared image of a Soviet-era publication ban context; source not found for a ready rights-cleared candidate.
+## 8. Канонічне іменування
 
-## 10. Sources used
+- **Slug:** `borys-antonenko-davydovych`.
+- **Українська форма:** Борис Дмитрович Антоненко-Давидович.
+- **Англійська транслітерація:** Borys Antonenko-Davydovych.
+- **Псевдоніми:** Богдан Вірний, Антоненко Б., Петро Котик.
+- **Форми, не придатні для нейтрального українського тексту:** Boris Dmitrievich
+  Antonenko-Davidovich; Борис Дмитриевич Антоненко-Давидович.
 
-**Tier 1 (authoritative):**
-- [S1] "Антоненко-Давидович Борис Дмитрович," Енциклопедія Сучасної України. https://esu.com.ua/article-42948 | accessed 2026-05-30.
-- [S2] "Антоненко-Давидович Борис Дмитрович," Енциклопедія історії України / NBU Ukrainika access copy. https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davydovych_B | accessed 2026-05-30.
+## 9. Зображення і права
 
-**Tier 2 (institutional):**
-- [S5] `mcp__sources.search_sources`, textbook chunk `10-klas-ukrmova-karaman-2018`, §22, pages 65-67, excerpting *Як ми говоримо*.
+Окремо ліцензований портрет не підтверджено. План фіксує `portrait_fallback`
+типу `text-only`, а не припускає ліцензію зображень на ЕСУ, у книжкових
+каталогах або на вікісайтах. Якщо пізніше з’явиться портрет, потрібні точна
+сторінка файла, ліцензія, автор/атрибуція та дата перевірки.
 
-**Tier 3 (encyclopedic):**
-- [S3] "Антоненко-Давидович Борис Дмитрович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Антоненко-Давидович_Борис_Дмитрович | accessed 2026-05-30.
+## 10. Використані джерела
 
-**Tier 4 (modern scholarly post-1991):**
-- [S4] "Борис Антоненко-Давидович як борець за культуру української мови," *Філологічні студії*, Kryvyi Rih State Pedagogical University. https://journal.kdpu.edu.ua/filstd/article/view/694 | accessed 2026-05-30.
+### Tier 1
 
-**Tier 5 (general web):**
-- NBU commemorative page "Народився Борис Антоненко-Давидович..." https://www.nbuv.gov.ua/node/4853 | accessed 2026-05-30.
-- [S6] "«Як ми говоримо» Борис Антоненко-Давидович, читати онлайн текст твору повністю," Osvita.ua. https://osvita.ua/school/literature/a/79209/list-4.html | accessed 2026-05-30.
+- Енциклопедія Сучасної України. «Антоненко-Давидович Борис Дмитрович».
+  https://esu.com.ua/article-42948. Доступ 2026-07-17.
+- Енциклопедія історії України, Інститут історії України НАН України. «Антоненко-
+  Давидович Борис Дмитрович». https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davydovych_B. Доступ 2026-07-17.
 
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Specific archival case number: source not found in retrieved sources.
+### Tier 2
 
-## Decolonization self-check
+- Інститут історії України НАН України. *З порога смерті: Письменники України —
+  жертви сталінських репресій*. https://resource.history.org.ua/item/11213.
+  Доступ 2026-07-17.
+- Національна бібліотека України імені В. І. Вернадського. Каталог: Антоненко-
+  Давидович Б. Д. *Як ми говоримо*. https://irbis-nbuv.gov.ua/cgi-bin/irbis64r_81/cgiirbis_64.exe?C21COM=S&I21DBN=VFEIR&P21DBN=VFEIR&S21ALL=%28%3C.%3EK%3D%D0%A2%D0%A0%D0%90%D0%94%D0%98%D0%A6%D0%86%D0%87%24%3C.%3E%2B%3C.%3EK%3D%D0%97%D0%92%D0%98%D0%A7%D0%90%D0%99%24%3C.%3E%29&S21CNR=20&S21FMT=fullw&S21REF=10&S21SRD=&S21SRW=AVHEAD&S21STN=1&Z21ID=. Доступ 2026-07-17.
 
-- [x] No Russocentric framing
-- [x] Russian-imperial transliterations appear only in the forbidden-forms field
-- [x] Soviet accusation terms are labeled as Soviet accusations
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] Source gaps are declared rather than filled by inference
+### Tier 5, первинний текст для link-only читання
+
+- Антоненко-Давидович, Борис. *Смерть*. Чтиво.
+  https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/. Доступ 2026-07-17.
+
+## Деколонізаційна самоперевірка
+
+- [x] Радянські обвинувачення марковані як мова переслідувачів.
+- [x] Російські транслітерації не використані як нейтральні імена.
+- [x] Арешт, суди, табори, заслання й цензура названі конкретно.
+- [x] Відсутні неперевірені цитати та приписані «правила мови».
+- [x] Наявні міжтрекові шляхи перевірені перед зазначенням.
+
+Перевірка не скасовує потреби майбутнього звернення до повної архівної справи.

@@ -1,0 +1,12 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Олекса Тихий
+  - Олекса Тихий ЕСУ
+  - Олекса Тихий КХПГ біографія
+direct_sources:
+  - https://esu.com.ua/article-887522
+  - https://museum.khpg.org/1114001053
+rag_chunks: []
+rag_literary: []
+warning: Direct-source packet; both URLs are the strict-v2 link-only reading records.

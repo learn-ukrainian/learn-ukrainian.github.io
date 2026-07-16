@@ -1,0 +1,21 @@
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-34622
+    type: external
+    title: Вінграновський Микола Степанович
+    url: https://esu.com.ua/article-34622
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-34622
+      license: Авторське право ЕСУ; використання лише як зовнішнього посилання
+      attribution: Енциклопедія Сучасної України
+  - id: S2
+    file: https://esu.com.ua/pdf/file/34622.pdf
+    type: external
+    title: Вінграновський Микола Степанович (PDF-версія)
+    url: https://esu.com.ua/pdf/file/34622.pdf
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/pdf/file/34622.pdf
+      license: Авторське право ЕСУ; використання лише як зовнішнього посилання
+      attribution: Енциклопедія Сучасної України

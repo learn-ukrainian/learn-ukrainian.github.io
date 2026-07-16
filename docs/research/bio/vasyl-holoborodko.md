@@ -1,120 +1,168 @@
-# Василь Іванович Голобородько — Research Dossier
+# Василь Голобородько — дослідницьке досьє
 
 **Slug:** `vasyl-holoborodko`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Статус:** підготовка каталогу джерел, без модульного тексту
+**Дата перевірки:** 2026-07-17
 
-## 1. Verified facts
+## 1. Ідентичність і джерельна межа
 
-- **Full name (UA, canonical):** Василь Іванович Голобородько. [S1] [S2]
-- **Pseudonyms / aliases:** Vasyl Holoborodko; Василь Голобородько. Forbidden Russian-imperial form for body prose: `Василий Иванович Голобородько`. [S1] [S2]
-- **Born:** 7 April 1945, с. Адріанопіль, Perevalsk district, Voroshylovhrad oblast, Ukrainian SSR. ЕСУ and Ukrainian Wikipedia agree. [S1] [S2]
-- **Died:** not applicable; retrieved sources identify him as living, with no death date. [S1] [S2]
-- **Family / education key facts:** Ukrainian Wikipedia reports Kyiv University entry in 1964, transfer to Donetsk Pedagogical Institute in 1965, expulsion in early 1967, attempted admission to the Moscow Literary Institute in 1967, and service in military construction units in the Far East from 1968 to 1970. [S2]
+Василь Іванович Голобородько народився 7 квітня 1945 року в селі Андріанопіль,
+нині Пере­вальського району Луганської області. ЕСУ подає його як поета, члена
+НСПУ з 1988 року, лауреата Шевченківської премії 1994 року та премії імені
+Василя Симоненка 1988 року [T1: ЕСУ — «Голобородько Василь Іванович»]. У
+поточному джерельному пакеті дата смерті відсутня, отже автор подається як
+живий; робота має триматися завершених книжок і встановленої хронології, а не
+прогнозів щодо його майбутньої ролі чи символічного статусу.
 
-Holoborodko is a poet of the Kyiv School of Poetry generation whose Soviet-era suppression operated mainly through educational expulsion, publication blockage, and exclusion from the official Ukrainian print sphere from 1969 to 1986. He is non-military and less politically charged than Block G figures, but his biography is still inseparable from Soviet cultural coercion. [S1] [S2]
+ЕСУ фіксує навчання в Київському університеті у 1964–1965 роках і Донецькому
+педагогічному інституті у 1966–1967 роках [T1]. Ці два місця не означають
+переходу українського поета до якоїсь позанаціональної «радянської» культури:
+йдеться про його освіту в тодішніх інституціях Української РСР. Біографія
+Голобородька також дає змогу назвати Луганщину українським культурним
+регіоном без заперечення її складної мовної й колоніальної історії.
 
-## 2. Oppression mechanism
+## 2. Виключення і заборона друку
 
-- **What happened:** expulsion from higher education, blocked publication, forced literary invisibility in Soviet Ukraine, and later displacement after Russian aggression in eastern Ukraine.
-- **When:** 1967 expulsion from Donetsk Pedagogical Institute; 1967 non-admission to Moscow Literary Institute exams despite passing the creative competition; 1969-1986 not printed in Ukraine; 1970 first collection *Летюче віконце* published by Smoloskyp in Baltimore; 2014 displacement due to Russian aggression/war in the East as reported by Ukrainian Wikipedia. [S2]
-- **By whom:** Soviet educational and cultural gatekeeping institutions; exact KGB or institutional order name: source not found in retrieved sources. [S2]
-- **Document references:** exact expulsion order, censorship file, or KGB document: source not found in retrieved sources.
-- **Mechanism specifics:** Ukrainian Wikipedia states he was expelled for "actions incompatible..." and identifies those actions as circulating Ivan Dziuba's *Інтернаціоналізм чи русифікація?*. The mechanism therefore linked literary community, samvydav circulation, and institutional punishment. [S2]
-- **What survived / what was destroyed:** *Летюче віконце* survived through publication abroad in 1970. ЕСУ emphasizes that his early poetry preserved a mythopoetic, folkloric world rather than merely echoing literary reminiscence. [S1] [S2]
+1965 року Голобородько подав до видавництва «Молодь» збірку «Летюче віконце».
+За ЕСУ, вона виявилася неприйнятною для радянської цензури, як і твори інших
+учасників київської школи. 1967 року поета виключили з Донецького
+педагогічного інституту за читання «самвидавівської» літератури; ЕСУ називає
+інформацію секретаря Донецького обкому КПУ до ЦК КПУ від 30 січня 1967 року
+[T1]. Це достатньо конкретний механізм: інституційна санкція за зв’язок із
+незалежним обігом текстів. Досьє не додає номеру наказу, кримінальної справи
+або прізвищ виконавців, бо ці реквізити в перевіреній сторінці не наведені.
 
-Unlike imprisoned UHG members, Holoborodko's repression was primarily cultural and professional. The dossier should not overstate a prison narrative, but it should name the practical effect: a poet from Luhansk region was made nearly unpublishable in Ukraine for many years. [S1] [S2]
+Збірка «Летюче віконце» вийшла 1970 року у балтиморському видавництві
+«Смолоскип». ЕСУ вказує, що це дало привід до дальшої політичної
+дискримінації, а шлях до друку для поета був майже на двадцять років закритий
+[T1]. Увесь цей час він жив у рідному селі й не припиняв писати. Формула
+«майже на двадцять років» не означає табірного ув’язнення: це опис
+професійного й видавничого усунення. У цьому пакеті не знайдено відкритого
+судового вироку, табірного маршруту чи документів КДБ; тому такі твердження
+виключено.
 
-## 3. Major works
+## 3. Книги і поетична мова
 
-- `1970` — *Летюче віконце*, poetry collection, Smoloskyp, Baltimore; first book published outside Soviet Ukraine. [S2]
-- `1988` — *Зелен день*, poetry collection; return to Ukrainian publication. [S2]
-- `1990` — *Ікар на метеликових крилах*, poetry collection. [S2]
-- `1992` — *Калина об Різдві*, poetry collection. [S2]
-- `1994` — Shevchenko Prize awarded for *Ікар на метеликових крилах* and *Калина об Різдві*. [S2]
-- `2002` — *Міфопоетична трансформація українського обряду сватання в українських народних казках*, folklore/literary study listed in Wikipedia-derived bibliographic searches; exact page source not found in retrieved sources.
-- `2010` — *Віршів повна рукавичка*, poetry for children listed in retrieved general search snippets; verify before curriculum use.
+Після відновлення можливості друку вийшли «Зелен день» (1988) і «Ікар на
+метеликових крилах» (1990). Шевченківську премію 1994 року Голобородько
+одержав за «Ікар на метеликових крилах» і «Калину об Різдві» [T1]. Бібліографія
+не мусить служити схемою «мовчання — повернення — тріумф»: вона показує
+реальні перерви в публічному доступі до письма, але не вичерпує творчого
+процесу, який тривав поза друком.
 
-## 4. Primary-source quotes (≥2 required)
+ЕСУ пояснює ранню поезію через світ прадавніх анімістичних уявлень, українську
+народну демонологію, казку, загадку й колядку, але застерігає від простого
+розуміння цього як літературної ремінісценції [T1]. Для Голобородька це не
+декорація «фольклорного стилю»: речі, звуки, кольори й звичайні дії дістають
+власну активність у сучасному переживанні світу. Тому поезію слід читати як
+міфопоетичну й асоціативну, а не розкладати на етнографічні прикраси.
 
-- "Мене підстрелили на злеті..." — from the 2015 Litgazeta interview. It matters because Holoborodko names the broken publication trajectory without turning it into a prison biography. [S5]
-- "тут Україна, і ви українці" — quoted in a university-library profile from a Holoborodko statement. It is useful for a lesson on regional Ukrainian identity and language. [S6]
+Повного вірша у цьому досьє немає. Окремий вірш є авторським твором, а
+публічність вебсторінки не дорівнює дозволу на передрук. Для цитування потрібні
+назва, видання, сторінка або розділ і окрема правова підстава. У зовнішньому
+інтерв’ю «Української літературної газети» 2015 року автор сам розповідає про
+перервану траєкторію; воно придатне як посилання на прямий голос, але не
+ліцензує відтворення його тексту в курсі [T2: «Василь Голобородько: “Мене
+підстрелили на злеті”»].
 
-The retrieved quotes are stronger than a bare encyclopedia excerpt, but Phase 2 should still retrieve the original collection/interview context before learner-facing publication.
+## 4. Київська школа і регіональний контекст
 
-## 5. Language register
+Зв’язок із київською школою має пояснювати літературну близькість і поколінне
+середовище, а не утворювати жорстку організаційну схему. ЕСУ називає
+«Летюче віконце» неприйнятним для цензури разом із творами учасників цієї
+школи, але не перетворює її на єдину інституцію [T1]. Вивчення потребує
+порівняння конкретних текстів, а не автоматичного перенесення рис інших поетів
+на Голобородька.
 
-- **Register:** mythopoetic modern lyric, folklore-inflected, high-image density.
-- **CEFR readiness for full reading:** B2 for short selected poems with glosses; C1 for full cycles because semantic connections are associative and image-based.
-- **Lexicon notes:** folk objects, ritual vocabulary, diminutive and archaic resonances, and non-linear image logic.
-- **Stylistic features:** animistic imagery, dreamlike object agency, folkloric rhythm without simple imitation, and quiet civic force. [S1] [S2]
+Його досвід показує, що примус може бути культурним і професійним: виключення,
+обмеження друку, підозра до самвидаву, тривала невидимість у публічному
+просторі. Це не менш реальна історія від цензурного опису, але її не можна
+підсилювати запозиченими з біографій інших дисидентів таборами, судами або
+висланням. Точність тут захищає і людину, і розуміння радянської системи.
 
-Holoborodko is ideal for showing learners that modern Ukrainian poetry can be deeply rooted in folklore without becoming folkloristic decoration. ЕСУ's description of an "early" world of ancient animistic ideas gives a strong interpretive frame for literature modules. [S1]
+## 5. Мова, зв’язки й портрет
 
-## 6. Contested points
+Для читання його поезії потрібен щонайменше рівень B2 для короткого тексту з
+коментарем і C1 для послідовного аналізу циклу. Важливі слова пов’язані з
+обрядом, народною демонологією, предметним світом, зменшувальними формами,
+несподіваним дієслівним керуванням і асоціативним переходом. Не слід
+подавати цю поетику як «просту народність»: її складність полягає саме в
+способі, яким буденне стає носієм пам’яті та уяви.
 
-- **What's debated in modern UA scholarship:** retrieved sources do not expose a single controversy, but they imply a tension between reading him as Kyiv School modernist, folkloric poet, or suppressed regional voice. [S1] [S2]
-- **What gets simplified in popular memory:** his biography can be reduced to "poet expelled for Dziuba"; the poetics themselves need equal weight. [S1] [S2]
-- **Russian disinformation attack surface:** language and identity claims from Luhansk/Donbas are vulnerable to Russocentric erasure; his life and quotations resist that framing. [S2]
-- **Other-perspective considerations:** source not found for a specific Polish, Jewish, or minority-perspective issue in the retrieved source pack.
+Перевірено наявність `curriculum/l2-uk-en/plans/lit/holoborodko-flying-window.yaml`
+і `curriculum/l2-uk-en/plans/lit/kyiv-school-of-poetry.yaml`. Вони є наявними
+планами для майбутнього зіставлення, а не готовими доказами для цієї статті.
+Портрет не додається: ЕСУ містить зображення, проте не надає окремої сторінки
+файла з перевіреною ліцензією. Для живого автора особливо важливо не
+припускати вільне використання фото.
 
-## 7. Cross-track links
+## 6. Як читати цю біографію
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/holoborodko-flying-window.yaml`
-  - `curriculum/l2-uk-en/plans/lit/kyiv-school-of-poetry.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - none verified for this dossier.
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio module on cultural repression through publication bans rather than imprisonment.
-  - Regional Ukrainian identity unit pairing Holoborodko with Oleksa Tykhy.
-- **Potential LIT additions surfaced by this research:**
-  - A rights-checked short poem from *Зелен день* or *Калина об Різдві* for B2/C1 image analysis.
+Біографічна точність не зводить Голобородька до переліку утисків. Його ранні
+журнальні публікації 1963–1965 років уже привернули увагу незвичним баченням
+буденного, про що прямо говорить ЕСУ [T1]. Отже, хронологія має починатися не
+з карального епізоду, а з появи поетичного голосу. Виключення, цензура й
+закриття шляху до друку змінювали умови його присутності, проте не є ключем,
+який автоматично перекладає кожен образ на політичну мову. Таке механічне
+читання відтворювало б саму логіку контролю, для якої мистецтво цінне лише як
+доказ лояльності або нелояльності.
 
-## 8. Naming-canonical
+Водночас поетику не можна відділити від матеріальних умов літературного
+життя. Видавництво, редакція, доступ до друку та самвидав визначали, чи може
+книжка дійти до читача. «Летюче віконце» важливе саме подвійно: як назва
+поетичної книжки і як свідчення того, що український текст знайшов шлях до
+публікації поза радянським видавничим контролем. Балтиморське видання не треба
+називати «еміграцією автора»: у перевіреній статті йдеться про видання книжки,
+а не про зміну ним місця проживання [T1]. Розрізнення автора, рукопису,
+видавця і місця друку запобігає поширеній неточності.
 
-- **Slug:** `vasyl-holoborodko`
-- **EN canonical (BGN/PCGN 2010):** Vasyl Ivanovych Holoborodko
-- **UA canonical (with patronymic if attested):** Василь Іванович Голобородько
-- **Aliases (track these for `aliases:` YAML field):** Vasyl Holoborodko; Василь Голобородько
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Vasiliy Ivanovich Goloborodko; Василий Иванович Голобородько
+Для семінарського читання корисно вести три паралельні колонки. У першій
+фіксують дані ЕСУ: роки навчання, 1967 рік виключення, 1970 рік видання,
+1988 і 1990 роки повернення книжок. У другій записують формулювання джерела,
+зокрема про цензуру та політичну дискримінацію. У третій формулюють власне
+запитання до тексту: як працює образ, який зв’язок між речами й людиною,
+який ритм має вільний вірш. Ця третя колонка не має маскуватися під факт, але
+саме вона дає читачеві простір для аргументу. Така робота підтримує українську
+мову аналізу і не робить поета ілюстрацією до чужої схеми.
 
-## 9. Image candidates
+Сучасна присутність живого автора вимагає ще однієї обережності. Не можна
+приписувати йому поточні погляди, місце проживання, політичні ролі або
+висловлювання, яких не перевірено в датованому джерелі. Цей каталог не
+використовує воєнний досвід регіону як готову метафору для ранньої поезії. Він
+зберігає межу між історією книжок ХХ століття та теперішніми подіями. Саме
+така межа дозволяє говорити про українську Луганщину відповідально: без
+колоніального стирання, але й без перетворення людини на символ, позбавлений
+власного складного письма.
 
-- **Best PD/CC portrait:** source not found in retrieved sources; ЕСУ and Ukrainian Wikipedia include portraits, but license metadata was not retrieved.
-- **Backup candidates:** Wikimedia Commons image linked from Wikipedia, license to verify; Smoloskyp/author-event image only with explicit permission.
-- **If no PD/CC portrait exists:** use a rights-cleared cover image or abstract context image only after policy review.
-- **Era-appropriate context image:** cover of *Летюче віконце* (Smoloskyp, 1970), rights status source not found.
+## 7. Джерела
 
-## 10. Sources used
+Наступне джерельне уточнення має шукати не випадковий передрук, а точне видання
+вірша з бібліографічним локатором і встановленим правовим статусом.
 
-**Tier 1 (authoritative):**
-- [S1] "Голобородько Василь Іванович," Енциклопедія Сучасної України. https://esu.com.ua/article-25281 | accessed 2026-05-30.
+### Tier 1
 
-**Tier 2 (institutional):**
-- [S4] `mcp__sources.search_text`, Grade 11 Ukrainian literature textbook chunk naming V. Holoborodko among contemporary Ukrainian lyric poets.
-- [S6] "Василь Голобородько. Поет українського відродження," university library PDF, Volodymyr Dahl East Ukrainian National University. https://library.snu.edu.ua/z/data/Vasyl_Goloborodko.pdf | accessed 2026-05-30.
+- Енциклопедія Сучасної України. «Голобородько Василь Іванович».
+  https://esu.com.ua/article-25281. Відкрито 2026-07-17.
 
-**Tier 3 (encyclopedic):**
-- [S2] "Голобородько Василь Іванович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Голобородько_Василь_Іванович | accessed 2026-05-30.
+### Tier 5: пряме інтерв’ю
 
-**Tier 4 (modern scholarly post-1991):**
-- Source not found in retrieved sources.
+- Українська літературна газета. «Василь Голобородько: “Мене підстрелили на
+  злеті”». https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/.
+  Відкрито 2026-07-17. Використано як зовнішнє посилання на авторську розмову,
+  не як підставу для неперевірених точних дат.
 
-**Tier 5 (general web):**
-- [S5] "Василь Голобородько: «Мене підстрелили на злеті»," *Українська літературна газета*, 11 October 2015. https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/ | accessed 2026-05-30.
-- Search result for ЕСУ PDF export and general bibliographic snippets were used only as leads; core claims rely on ЕСУ, SNU library profile, Litgazeta interview, and Ukrainian Wikipedia.
+### Первинні документи
 
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Not applicable for a court case in retrieved sources. Exact expulsion/censorship document: source not found.
+- Пряме інтерв’ю відкрито; дослівні цитати не відтворено, бо каталог не має
+  окремого дозволу на републікацію. Наказ про виключення, кримінальна справа й
+  цензурне досьє в цьому проході не відкриті.
 
-## Decolonization self-check
+## Деколонізаційна самоперевірка
 
-- [x] Luhansk/Donbas identity is not Russocentrically framed
-- [x] Oppression is stated as cultural/professional where prison evidence was not retrieved
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] Quote-source weakness is declared
-- [x] No fabricated KGB/censorship document identifiers
+- Луганщина названа українським культурним регіоном без російськоцентричного
+  стирання.
+- Радянська цензура описана через документований інституційний механізм, а не
+  через евфемізм «труднощі з друком».
+- Не приписано ув’язнення, вигадані документи або мотиви.
+- Для живого автора застосовано рамку завершеного, джерельно встановленого
+  доробку; жодного прогнозного твердження немає.

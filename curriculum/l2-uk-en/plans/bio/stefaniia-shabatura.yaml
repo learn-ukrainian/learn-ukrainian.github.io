@@ -57,6 +57,9 @@ content_outline:
   - Повернення 1979 р.; «Меморіал», Рух.
   - '[!decolonization] Митець і організатор, не лише жертва.'
 focus: Стефанія Шабатура — художниця, політв'язень, членкиня УГГ. Справа 1972 р., заборона малювати, голодування.
+aliases:
+- Стефанія Михайлівна Шабатура (канонічна українська форма)
+- Stefaniia Shabatura (канонічна латинка)
 level: BIO
 module: bio-262
 objectives:
@@ -84,20 +87,34 @@ slug: stefaniia-shabatura
 subtitle: The Tapestry Artist, Political Prisoner, and Helsinki Monitor
 title: 'Стефанія Шабатура: гобелен і протест'
 readings:
-- title: "Шабатура Стефанія Михайлівна"
-  source_name: "КХПГ Музей / Музей шістдесятництва"
-  source_url: "https://museum.khpg.org/1314388686"
-  language: "uk"
-  role: "primary"
-  hosting: "link-only"
-  rights_note: "Museum source with documented interview and archival context in Ukrainian."
-- title: "Шабатура Стефанія Михайлівна (документи)"
-  source_name: "reading-needed"
-  source_url: "reading-needed"
-  language: "uk"
-  role: "reading-needed"
-  hosting: "reading-needed"
-  rights_note: "reading-needed: verify open, stable rights-cleared source for workshop-ready primary excerpts."
+- title: ШАБАТУРА СТЕФАНІЯ МИХАЙЛІВНА
+  source_name: Віртуальний музей дисидентського руху Харківської правозахисної групи
+  source_url: https://museum.khpg.org/1114001603
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1114001603
+    note: Відкрита українськомовна музейна біографія; повний текст на сайті курсу не відтворюється.
+  learner_task: Відокремити документовану хронологію мистецької праці, арешту 1972 року, табору й заслання від пізніших інтерпретацій.
+- title: Шабатура Стефанія Михайлівна. Інтерв'ю 26 червня 2008 року
+  source_name: Віртуальний музей дисидентського руху Харківської правозахисної групи
+  source_url: https://museum.khpg.org/1314388686
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1314388686
+    note: Відкрите українськомовне інтерв'ю, записане Василем Овсієнком; повний текст на сайті курсу не відтворюється.
+  learner_task: Порівняти голос учасниці подій з музейною довідкою, не перетворюючи особисту пам'ять на неперевірений факт.
+readings_contract_version: 2
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Індивідуально ліцензований портрет не підтверджено прямою сторінкою файла з автором, походженням і ліцензією.
+  candidate_url: https://museum.khpg.org/1114001603
+  evidence_url: https://museum.khpg.org/1114001603
+  disposition: no-portrait-until-rights-verified
 version: '1.1'
 vocabulary_hints:
 - word: гобелен

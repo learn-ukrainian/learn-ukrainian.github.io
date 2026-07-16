@@ -20,6 +20,12 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+aliases:
+- Борис Дмитрович Антоненко-Давидович
+- Борис Давидов (справжнє прізвище)
+- Богдан Вірний (псевдонім)
+- Borys Antonenko-Davydovych (canonical EN)
+- Boris Dmitrievich Antonenko-Davidovich (FORBIDDEN Russian-imperial form)
 connects_to:
 - lit-antonenko-davydovych-prose
 - lit-antonenko-davydovych-smert
@@ -52,7 +58,7 @@ content_outline:
   points:
   - «Сибірські новели» (1989).
   - '[!decolonization] Мова як громадянська практика.'
-focus: Борис Антоненко-Давидович — прозаїк і мовознавець. Репресії 1930-х, заслання 1950-х, «Як ми говоримо».
+focus: Борис Антоненко-Давидович — прозаїк, публіцист і дослідник культури української мови; фабриковані радянські справи, заслання та пізня мовна праця.
 level: BIO
 module: bio-263
 objectives:
@@ -64,6 +70,9 @@ pedagogy: CBI
 persona:
   role: Модератор семінару про мовну культуру без агіографічного спрощення.
   voice: Intellectual Historian
+portrait_fallback:
+  type: text-only
+  reason: "Окремо ліцензований портрет не підтверджено прямим джерелом 2026-07-17; не робити припущень за зображеннями в енциклопедіях чи вікісайтах."
 phase: BIO
 references:
 - title: Антоненко-Давидович Борис Дмитрович (ЕСУ)
@@ -72,35 +81,28 @@ references:
 - title: Антоненко-Давидович Борис Дмитрович (ЕІУ)
   note: Енциклопедія історії України.
   type: reference
-- author: Борис Дмитрович Антоненко-Давидович
-  title: Як ми говоримо
-  note: 1970; мовна культура.
-  type: primary
-  work: Як ми говоримо
-- author: Борис Дмитрович Антоненко-Давидович
-  title: Смерть
-  note: 1928; об'єкт радянських атак.
-  type: primary
-  work: Смерть
+- title: Борис Антоненко-Давидович
+  path: wiki/figures/borys-antonenko-davydovych.md
+  type: wiki
+readings_contract_version: 2
 sequence: 263
 slug: borys-antonenko-davydovych
 subtitle: The Prose Writer and Language Guardian Across Two Waves of Repression
 title: 'Борис Антоненко-Давидович: мова і табір'
 readings:
-- title: "Антоненко-Давидович Борис Дмитрович"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/article-42948"
-  language: "uk"
-  role: "reference"
-  hosting: "link-only"
-  rights_note: "Open-access reference entry from ESU."
-- title: "Прямі тексти та свідчення з літературного доробку"
-  source_name: "reading-needed"
-  source_url: "reading-needed"
-  language: "uk"
-  role: "reading-needed"
-  hosting: "reading-needed"
-  rights_note: "reading-needed: primary literature text links in Ukrainian with stable learner-safe access."
+- title: "Смерть"
+  source_name: "Чтиво — каталог українських текстів"
+  source_url: "https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/"
+  language: uk
+  type: primary-source
+  role: text-analysis
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/"
+    note: "Зовнішнє посилання на український текст; курс не відтворює твір і не заявляє ліцензії на нього."
+  learner_task: >-
+    Простежити, як повість ставить етичний конфлікт між службою партії та відповідальністю перед українським суспільством, відділяючи художній сюжет від фактів біографії автора.
 version: '1.1'
 vocabulary_hints:
 - word: проза

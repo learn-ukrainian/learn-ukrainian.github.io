@@ -1,0 +1,13 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Василь Голобородько
+  - Василь Голобородько ЕСУ Летюче віконце Київська школа
+  - Василь Голобородько Мене підстрелили на злеті інтерв’ю
+direct_sources:
+  - https://esu.com.ua/article-25281
+  - https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Прямий пакет: назви читань, URL і зовнішні правові підстави збігаються з планом strict-v2.
