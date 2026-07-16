@@ -62,6 +62,20 @@ class ThreadRecord:
     host: str | None
 
 
+@dataclass(frozen=True)
+class CleanupThreadRecord:
+    """Stable read model for deterministic saved-thread cleanup."""
+
+    thread_id: str
+    title: str
+    cwd: str
+    rollout_path: str
+    created_at: int
+    updated_at: int
+    archived: bool
+    archived_at: int | None
+
+
 def _utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -98,6 +112,20 @@ def _coerce_task_id(raw: Any) -> str:
         raise CodexStateContextError(f"task id must be a UUID: {candidate!r}") from exc
 
 
+def _coerce_timestamp(raw: Any, *, field: str, optional: bool = False) -> int | None:
+    if raw is None and optional:
+        return None
+    if isinstance(raw, bool):
+        raise CodexStateContextError(f"{field} must be an integer timestamp")
+    try:
+        value = int(raw)
+    except (TypeError, ValueError) as exc:
+        raise CodexStateContextError(f"{field} must be an integer timestamp: {raw!r}") from exc
+    if value < 0:
+        raise CodexStateContextError(f"{field} must be non-negative: {value}")
+    return value
+
+
 def _row_to_record(row: sqlite3.Row, *, has_host: bool) -> ThreadRecord:
     archived = _coerce_bool(row["archived"])
     archived_at = _to_text(row["archived_at"])
@@ -109,6 +137,19 @@ def _row_to_record(row: sqlite3.Row, *, has_host: bool) -> ThreadRecord:
         archived=archived,
         archived_at=archived_at,
         host=_to_text(host),
+    )
+
+
+def _row_to_cleanup_record(row: sqlite3.Row) -> CleanupThreadRecord:
+    return CleanupThreadRecord(
+        thread_id=_coerce_task_id(row["id"]),
+        title=_to_text(row["title"]) or "",
+        cwd=_to_text(row["cwd"]) or "",
+        rollout_path=_to_text(row["rollout_path"]) or "",
+        created_at=int(_coerce_timestamp(row["created_at"], field="created_at")),
+        updated_at=int(_coerce_timestamp(row["updated_at"], field="updated_at")),
+        archived=_coerce_bool(row["archived"]),
+        archived_at=_coerce_timestamp(row["archived_at"], field="archived_at", optional=True),
     )
 
 
@@ -304,6 +345,123 @@ def read_thread_record(
                 f"thread {task} state raced during bounded read window: {db_path}"
             )
         time.sleep(0.05)
+
+
+_CLEANUP_REQUIRED_COLUMNS = frozenset(
+    {
+        "id",
+        "title",
+        "cwd",
+        "rollout_path",
+        "created_at",
+        "updated_at",
+        "archived",
+        "archived_at",
+    }
+)
+
+
+def _read_cleanup_records_once(
+    db_path: Path,
+    *,
+    thread_id: str | None,
+    archived_only: bool,
+    timeout_seconds: float,
+) -> tuple[CleanupThreadRecord, ...]:
+    with open_state_db(db_path, timeout_seconds=timeout_seconds, mode="ro") as connection:
+        columns = _thread_columns(connection)
+        missing = sorted(_CLEANUP_REQUIRED_COLUMNS - columns)
+        if missing:
+            raise CodexStateSchemaError(f"missing cleanup thread columns: {', '.join(missing)}")
+        predicates: list[str] = []
+        values: list[Any] = []
+        if thread_id is not None:
+            predicates.append("id = ?")
+            values.append(_coerce_task_id(thread_id))
+        if archived_only:
+            predicates.append("archived = 1")
+        where = f" where {' and '.join(predicates)}" if predicates else ""
+        rows = connection.execute(
+            "select id, title, cwd, rollout_path, created_at, updated_at, archived, archived_at "
+            f"from {THREADS_TABLE}{where} order by id",
+            values,
+        ).fetchall()
+    return tuple(_row_to_cleanup_record(row) for row in rows)
+
+
+def _stable_cleanup_records(
+    db_path: Path,
+    *,
+    thread_id: str | None,
+    archived_only: bool,
+    timeout_seconds: float,
+    read_window_seconds: float,
+) -> tuple[CleanupThreadRecord, ...]:
+    deadline = time.monotonic() + max(0.0, read_window_seconds)
+    stable_sample: tuple[CleanupThreadRecord, ...] | None = None
+    stable_count = 0
+    while True:
+        current = _read_cleanup_records_once(
+            db_path,
+            thread_id=thread_id,
+            archived_only=archived_only,
+            timeout_seconds=timeout_seconds,
+        )
+        if current == stable_sample:
+            stable_count += 1
+            if stable_count >= 3:
+                return current
+        else:
+            stable_sample = current
+            stable_count = 1
+        if time.monotonic() >= deadline:
+            target = thread_id or "cleanup inventory"
+            raise CodexStateConflictError(
+                f"{target} state raced during bounded read window: {db_path}"
+            )
+        time.sleep(0.05)
+
+
+def list_archived_cleanup_threads(
+    db_path: Path | str,
+    *,
+    timeout_seconds: float = 5.0,
+    read_window_seconds: float = 0.75,
+) -> tuple[CleanupThreadRecord, ...]:
+    """List archived threads through a bounded, stable, read-only sample."""
+    path = Path(db_path)
+    if not path.exists():
+        raise CodexStateDiscoveryError(f"codex DB not found: {path}")
+    return _stable_cleanup_records(
+        path,
+        thread_id=None,
+        archived_only=True,
+        timeout_seconds=timeout_seconds,
+        read_window_seconds=read_window_seconds,
+    )
+
+
+def read_cleanup_thread_record(
+    db_path: Path | str,
+    *,
+    thread_id: str,
+    timeout_seconds: float = 5.0,
+    read_window_seconds: float = 0.75,
+) -> CleanupThreadRecord:
+    """Read one exact cleanup row through the same stable read-only bridge."""
+    path = Path(db_path)
+    if not path.exists():
+        raise CodexStateMissingTaskError(f"missing task {thread_id} in {path}")
+    records = _stable_cleanup_records(
+        path,
+        thread_id=_coerce_task_id(thread_id),
+        archived_only=False,
+        timeout_seconds=timeout_seconds,
+        read_window_seconds=read_window_seconds,
+    )
+    if not records:
+        raise CodexStateMissingTaskError(f"missing task {thread_id} in {path}")
+    return records[0]
 
 
 def _ensure_archive_shape(record: ThreadRecord, *, archived: bool) -> bool:
