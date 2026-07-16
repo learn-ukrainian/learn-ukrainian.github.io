@@ -288,12 +288,14 @@ its clause claim from the frozen `intended_behavior`:
   --observation '<what happened>' --evidence-ref '<durable evidence reference>'
 ```
 
-Then pass `--behavior-proof-state-file "$STATE_FILE"` to
-`scripts/verify_review.py`. `source_blind` defaults to
-`blind_enforced: false`; its receipt is explicitly
+The recorder emits `behavior_proof.schema_version: behavior-proof.v1`; the
+verifier rejects unversioned proof. Then pass `--behavior-proof-state-file
+"$STATE_FILE"` to `scripts/verify_review.py`. A `source_blind` `pass` records
+an explicit `blind_enforced: false` by default; its receipt is explicitly
 `declared-blind/unenforced` unless a target-bound isolation attestation is
-validated by the isolation interface. Use `--status n/a --reason '<why>'` for
-a non-applicable surface.
+validated by the isolation interface. Any `blind_enforced: true` requires that
+attestation, including `n/a`; ordinary `n/a` has a non-empty reason and omits
+the field.
 
 - **Python CLI** (e.g. this closeout CLI itself): invoke the actual
   entry point from a shell with real arguments —

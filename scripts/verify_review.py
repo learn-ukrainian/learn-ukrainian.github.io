@@ -47,6 +47,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
+    BEHAVIOR_PROOF_SCHEMA_VERSION,
     EXIT_INVALID,
     AgentIdentity,
     ContractError,
@@ -139,7 +140,7 @@ def _load_behavior_proof_state(
     """Load proof and its claim from the canonical frozen closeout state."""
     try:
         state = json.loads(state_file.read_text(encoding="utf-8"))
-    except OSError as exc:
+    except (OSError, UnicodeDecodeError) as exc:
         raise ContractError(
             f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID
         ) from exc
@@ -153,22 +154,28 @@ def _load_behavior_proof_state(
     proof = state.get("behavior_proof")
     if not isinstance(baseline, dict) or not isinstance(proof, dict):
         raise ContractError("behavior_proof_state_incomplete", exit_code=EXIT_INVALID)
+    if proof.get("schema_version") != BEHAVIOR_PROOF_SCHEMA_VERSION:
+        raise ContractError("behavior_proof_state_schema_version_invalid", exit_code=EXIT_INVALID)
     intended_behavior = baseline.get("intended_behavior")
     saved_target = baseline.get("target")
     if not isinstance(intended_behavior, str) or not intended_behavior.strip():
         raise ContractError("behavior_proof_state_intended_behavior_missing", exit_code=EXIT_INVALID)
     if not isinstance(saved_target, dict):
         raise ContractError("behavior_proof_state_target_missing", exit_code=EXIT_INVALID)
-    expected_target = {
+    stable_target_fields = {
         "mode": target.mode,
         "base_sha": target.base_sha,
         "head_sha": target.head_sha,
         "changed_paths": list(target.changed_paths),
         "non_test_loc": target.non_test_loc,
         "clean_tree": target.clean_tree,
-        "description": target.description,
     }
-    if saved_target != expected_target:
+    if any(field not in saved_target for field in stable_target_fields):
+        raise ContractError("behavior_proof_state_target_invalid", exit_code=EXIT_INVALID)
+    if any(
+        saved_target[field] != expected_value
+        for field, expected_value in stable_target_fields.items()
+    ):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
     return proof, intended_behavior
 

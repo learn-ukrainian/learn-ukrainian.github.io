@@ -32,6 +32,7 @@ from scripts.review.target_resolution import ReviewTarget
 
 SCHEMA_VERSION = "code-review-findings.v1"
 RECEIPT_SCHEMA_VERSION = "code-review-receipt.v1"
+BEHAVIOR_PROOF_SCHEMA_VERSION = "behavior-proof.v1"
 SCHEMA_RELATIVE_PATH = "schemas/code-review-findings.v1.schema.json"
 
 # Stable exit classes (documented in docs/review-protocol.md).
@@ -352,6 +353,8 @@ def _behavior_proof_envelope_status(
     failures: list[str] = []
     if not isinstance(behavior_proof, dict):
         return ["behavior_proof_invalid"], failures
+    if behavior_proof.get("schema_version") != BEHAVIOR_PROOF_SCHEMA_VERSION:
+        incomplete.append("behavior_proof_schema_version_invalid")
 
     for key in ("source_aware", "source_blind"):
         proof = behavior_proof.get(key)
@@ -363,6 +366,27 @@ def _behavior_proof_envelope_status(
             incomplete.append(f"behavior_proof.{key}_status_missing")
             continue
         status = status_raw.strip().lower()
+        if key == "source_blind":
+            blind_enforced = proof.get("blind_enforced")
+            if blind_enforced is not None and not isinstance(blind_enforced, bool):
+                incomplete.append("behavior_proof.source_blind_blind_enforced_invalid")
+            if status == "pass" and not isinstance(blind_enforced, bool):
+                incomplete.append("behavior_proof.source_blind_blind_enforced_missing")
+            if blind_enforced is True:
+                attestation = proof.get("isolation_attestation")
+                if not isinstance(attestation, dict) or not attestation:
+                    incomplete.append("behavior_proof.source_blind_enforced_without_attestation")
+                elif attestation.get("target_input_sha256") != target_input_sha256:
+                    incomplete.append("behavior_proof.source_blind_attestation_target_mismatch")
+                elif isolation_attestation_validator is None:
+                    incomplete.append("behavior_proof.source_blind_attestation_unvalidated")
+                else:
+                    try:
+                        valid_attestation = isolation_attestation_validator(attestation, target)
+                    except Exception:
+                        valid_attestation = False
+                    if valid_attestation is not True:
+                        incomplete.append("behavior_proof.source_blind_attestation_invalid")
         if status == "fail":
             failures.append(f"behavior_proof.{key}_failed")
             continue
@@ -421,25 +445,6 @@ def _behavior_proof_envelope_status(
                 ):
                     incomplete.append(f"behavior_proof.{key}_claim_mismatch")
                 continue
-            if key == "source_blind":
-                blind_enforced = proof.get("blind_enforced")
-                if not isinstance(blind_enforced, bool):
-                    incomplete.append("behavior_proof.source_blind_blind_enforced_missing")
-                elif blind_enforced:
-                    attestation = proof.get("isolation_attestation")
-                    if not isinstance(attestation, dict) or not attestation:
-                        incomplete.append("behavior_proof.source_blind_enforced_without_attestation")
-                    elif attestation.get("target_input_sha256") != target_input_sha256:
-                        incomplete.append("behavior_proof.source_blind_attestation_target_mismatch")
-                    elif isolation_attestation_validator is None:
-                        incomplete.append("behavior_proof.source_blind_attestation_unvalidated")
-                    else:
-                        try:
-                            valid_attestation = isolation_attestation_validator(attestation, target)
-                        except Exception:
-                            valid_attestation = False
-                        if valid_attestation is not True:
-                            incomplete.append("behavior_proof.source_blind_attestation_invalid")
             continue
         if status in {"n/a", "na"}:
             reason = proof.get("reason")

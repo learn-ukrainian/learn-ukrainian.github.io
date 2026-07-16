@@ -162,16 +162,21 @@ A valid **clean** or **actionable** receipt requires:
 - `tests` with concrete `commands` and `passed: true`, **or** explicitly
   supported `status: "n/a"` with a non-empty `reason`. `passed: false` /
   `status: "fail"` makes the receipt non-clean / `actionable` (never exit 0);
-- both `source_aware` and `source_blind` in `behavior_proof`. A `pass` needs
+- `behavior_proof.schema_version: "behavior-proof.v1"`, emitted by
+  `closeout_cli behavior-proof record`; unversioned proof is not accepted as
+  legacy green evidence. Both `source_aware` and `source_blind` are required.
+  A `pass` needs
   at least one complete clause: the frozen `intended_behavior` claim, a
   command or manual step (and `cwd` for a command), exit/result, observation,
   evidence reference, and the exact target-input fingerprint. Record it with
   `closeout_cli behavior-proof record`; do not hand-author a competing surface
   claim. `n/a` requires a non-empty `reason`; `fail` is non-clean / actionable;
   missing or incomplete proof is `incomplete`;
-- `source_blind.blind_enforced` is `false` unless a target-bound isolation
-  attestation validates through the isolation interface. A false value is
-  rendered as `declared-blind/unenforced`, never as mechanically enforced;
+- `source_blind` `pass` records an explicit boolean `blind_enforced`. A true
+  value on any status requires a target-bound isolation attestation validated
+  through the isolation interface. Ordinary justified `n/a` does not carry the
+  field. A false value is rendered as `declared-blind/unenforced`, never as
+  mechanically enforced;
 - explicit non-empty `routing_lineage` (supplied by the runner; not invented);
 - for every finding: disposition key present, disposition ∈
   `in_scope_blocker` | `follow_up` | `stop_and_escalate`, non-empty rationale;
@@ -192,8 +197,9 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --mode local --repo-root . | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["input_sha256"])')
 
 # After `target` and `freeze`, record the proof against that frozen state.
-# The command derives `claim` from `--intended-behavior`; it does not accept a
-# separate behavior-surface field.
+# The recorder emits behavior_proof.schema_version = behavior-proof.v1 and
+# derives `claim` from `--intended-behavior`; it does not accept a separate
+# behavior-surface field.
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
   behavior-proof record --surface source_aware --status pass \
   --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \

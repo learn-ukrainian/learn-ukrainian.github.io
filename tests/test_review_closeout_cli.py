@@ -146,6 +146,7 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
     assert blind.returncode == 0, blind.stderr
 
     recorded = json.loads(_run_cli(state_file, "behavior-proof", "emit").stdout)
+    assert recorded["schema_version"] == "behavior-proof.v1"
     assert recorded["source_aware"]["clauses"][0]["claim"] == "add feature"
     assert recorded["source_blind"]["blind_enforced"] is False
 
@@ -208,6 +209,85 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
     receipt = json.loads(verify.stdout)
     assert receipt["behavior_proof"]["source_aware"] == recorded["source_aware"]
     assert receipt["behavior_proof"]["source_blind"]["blind_enforcement"] == "declared-blind/unenforced"
+
+
+def test_behavior_proof_record_rejects_malformed_proof_and_baseline_before_mutation(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
+
+    record_args = (
+        "behavior-proof", "record", "--surface", "source_aware", "--status", "pass",
+        "--step", "open the feature", "--result", "feature opened", "--observation", "visible",
+        "--evidence-ref", "test:manual",
+    )
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    for malformed in (None, [], "not-an-object"):
+        state["behavior_proof"] = malformed
+        state_file.write_text(json.dumps(state), encoding="utf-8")
+        before = state_file.read_bytes()
+        proc = _run_cli(state_file, *record_args)
+        assert proc.returncode != 0
+        assert json.loads(proc.stderr)["error"] == "behavior_proof_must_be_object"
+        assert state_file.read_bytes() == before
+
+    state_file.write_text(json.dumps({"baseline": {"intended_behavior": "partial"}}), encoding="utf-8")
+    proc = _run_cli(state_file, *record_args)
+    assert proc.returncode != 0
+    assert json.loads(proc.stderr)["error"] == "baseline_issue_ref_invalid"
+
+
+def test_behavior_proof_record_rejects_empty_steps_and_emit_before_record(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
+
+    emit = _run_cli(state_file, "behavior-proof", "emit")
+    assert emit.returncode != 0
+    assert json.loads(emit.stderr)["error"] == "no behavior proof recorded yet"
+
+    common = (
+        "behavior-proof", "record", "--surface", "source_aware", "--status", "pass",
+        "--result", "done", "--observation", "visible", "--evidence-ref", "test:manual",
+    )
+    for flag in ("--command", "--step"):
+        proc = _run_cli(state_file, *common, flag, "   ")
+        assert proc.returncode != 0
+        assert json.loads(proc.stderr)["error"] == "passing proof requires --command or --step"
+
+
+def test_behavior_proof_na_is_versioned_and_does_not_add_blind_enforcement(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
+
+    missing_reason = _run_cli(
+        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a"
+    )
+    assert missing_reason.returncode != 0
+    assert json.loads(missing_reason.stderr)["error"] == "n/a proof requires --reason"
+    recorded = _run_cli(
+        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a",
+        "--reason", "no user-visible surface",
+    )
+    assert recorded.returncode == 0, recorded.stderr
+    proof = json.loads(recorded.stdout)
+    assert proof["schema_version"] == "behavior-proof.v1"
+    assert "blind_enforced" not in proof["source_blind"]
+
+
+def test_closeout_cli_invalid_json_state_is_structured(tmp_path):
+    state_file = tmp_path / "state.json"
+    state_file.write_text("{not-json", encoding="utf-8")
+    proc = _run_cli(state_file, "target", "--mode", "local")
+    assert proc.returncode != 0
+    assert "state_invalid_json" in json.loads(proc.stderr)["error"]
 
 
 def test_check_expansion_commit_mode_measures_committed_fixes_not_clean_tree(tmp_path):
