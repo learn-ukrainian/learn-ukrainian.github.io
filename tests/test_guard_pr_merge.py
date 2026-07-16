@@ -21,6 +21,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -792,3 +793,48 @@ def test_unclosed_heredoc_does_not_hide_merge():
 
 def test_backslash_continuation_merge_detected():
     assert _any_merge("gh pr merge 5 \\\n  --auto --squash")
+
+
+# --- colorized gh output (review B1, PR #5324) ------------------------------
+# Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR (beating NO_COLOR), and gh
+# then colorizes piped --json output — raw json.loads fails and every merge
+# fail-closes. The guard must scrub the env AND tolerate residual ANSI.
+
+_COLORIZED_JSON = (
+    '\x1b[1;37m{\x1b[m\n'
+    '  \x1b[1;34m"baseRefName"\x1b[m: \x1b[32m"main"\x1b[m,\n'
+    '  \x1b[1;34m"isDraft"\x1b[m: \x1b[35mfalse\x1b[m,\n'
+    '  \x1b[1;34m"url"\x1b[m: \x1b[32m"https://github.com/owner/repo/pull/5"\x1b[m\n'
+    '\x1b[1;37m}\x1b[m\n'
+)
+
+
+def test_gh_env_scrubs_color_forcers(monkeypatch):
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("NO_COLOR", "1")
+    env = guard._gh_env()
+    assert "CLICOLOR_FORCE" not in env
+    assert "FORCE_COLOR" not in env
+    assert env["NO_COLOR"] == "1"
+    assert env["CLICOLOR"] == "0"
+
+
+def test_decolorize_recovers_parseable_json():
+    cleaned = guard._decolorize(_COLORIZED_JSON)
+    parsed = json.loads(cleaned)
+    assert parsed == {
+        "baseRefName": "main",
+        "isDraft": False,
+        "url": "https://github.com/owner/repo/pull/5",
+    }
+
+
+def test_colorized_check_rows_still_judged(monkeypatch):
+    """End-to-end through _check_states' parser: colorized rows must not read as
+    undeterminable (which would block every green merge)."""
+    rows = '\x1b[1;37m[{"name": "pytest", "bucket": "pass", "state": "SUCCESS"}]\x1b[m'
+    completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=rows, stderr="")
+    monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
+    failing, pending = guard._check_states("5")
+    assert failing == [] and pending == []

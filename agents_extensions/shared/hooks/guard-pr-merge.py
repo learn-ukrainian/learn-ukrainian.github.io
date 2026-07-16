@@ -40,10 +40,28 @@ likewise unread — a deliberate-only shape, documented rather than papered over
 from __future__ import annotations
 
 import json
+import os
 import re
 import shlex
 import subprocess
 import sys
+
+# Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
+# `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> every merge
+# fail-closes (review B1, PR #5324). Every gh subprocess below runs with the force
+# vars REMOVED and NO_COLOR pinned; _decolorize() strips any residual escapes.
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _gh_env() -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if k not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
+    env["NO_COLOR"] = "1"
+    env["CLICOLOR"] = "0"
+    return env
+
+
+def _decolorize(text: str) -> str:
+    return _ANSI_RE.sub("", text)
 
 # A check is treated as merge-blocking unless its name marks it explicitly advisory.
 # Same inversion as guard-admin-merge.py, and it matters more here: an allowlist of
@@ -519,6 +537,7 @@ def _pr_ref(args: list[str], repo: str | None = None) -> str | None:
         out = subprocess.run(
             ["gh", "pr", "view", *_repo_args(repo), "--json", "number", "-q", ".number"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
             timeout=10,
         )
@@ -550,8 +569,9 @@ def _pr_meta(pr: str, repo: str | None = None) -> dict | None:
         out = subprocess.run(
             ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "isDraft,baseRefName,url"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
-            timeout=20,
+            timeout=8,
         )
     except Exception:
         return None
@@ -572,8 +592,9 @@ def _check_states(pr: str, repo: str | None = None) -> tuple[list[str], list[str
         out = subprocess.run(
             ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
-            timeout=20,
+            timeout=8,
         )
     except Exception:
         return None
@@ -584,7 +605,7 @@ def _check_states(pr: str, repo: str | None = None) -> tuple[list[str], list[str
         # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
         return ([], []) if out.returncode == 0 else None
     try:
-        rows = json.loads(text)
+        rows = json.loads(_decolorize(text))
     except json.JSONDecodeError:
         return None
     if not isinstance(rows, list):
@@ -624,8 +645,9 @@ def _base_protected(owner_repo: str, base: str) -> bool | None:
         out = subprocess.run(
             ["gh", "api", f"repos/{owner_repo}/branches/{base}/protection"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
-            timeout=20,
+            timeout=8,
         )
     except Exception:
         return None
