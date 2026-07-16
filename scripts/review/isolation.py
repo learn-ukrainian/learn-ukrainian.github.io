@@ -2107,8 +2107,6 @@ def wrap_argv_with_sandbox(argv: Sequence[str], sandbox: SandboxCapability) -> l
                 write,
                 "--dev",
                 "/dev",
-                "--tmpfs",
-                "/tmp",
             ]
         )
         cmd.extend(inner)

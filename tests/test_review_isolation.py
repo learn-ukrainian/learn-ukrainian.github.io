@@ -405,9 +405,34 @@ def test_linux_wrapper_uses_blank_root_exact_binds_and_pid_isolation(
     argv = wrap_argv_with_sandbox(["/usr/bin/true"], capability)
     assert argv[:2] == ["/usr/bin/bwrap", "--unshare-pid"]
     assert argv[argv.index("--tmpfs") : argv.index("--tmpfs") + 2] == ["--tmpfs", "/"]
+    assert [argv[index + 1] for index, item in enumerate(argv[:-1]) if item == "--tmpfs"] == ["/"]
     assert "--proc" not in argv
     assert "/etc" not in argv
     assert any(argv[index : index + 3] == ["--ro-bind", str(runtime), str(runtime)] for index in range(len(argv) - 2))
+
+
+def test_linux_wrapper_does_not_shadow_tempfile_backed_review_roots() -> None:
+    snap = Path("/tmp/lu-review-view-test")
+    write = Path("/tmp/lu-review-write-test")
+    capability = SandboxCapability(
+        mechanism="linux-bwrap",
+        binary=Path("/usr/bin/bwrap"),
+        profile_path=None,
+        read_roots=(str(snap), str(write), "/usr"),
+        write_root=str(write),
+        verified=True,
+        metadata_roots=("/", "/tmp"),
+    )
+
+    argv = wrap_argv_with_sandbox(["/usr/bin/true"], capability)
+
+    assert ["--ro-bind", str(snap), str(snap)] in [
+        argv[index : index + 3] for index in range(len(argv) - 2)
+    ]
+    assert ["--bind", str(write), str(write)] in [
+        argv[index : index + 3] for index in range(len(argv) - 2)
+    ]
+    assert [argv[index + 1] for index, item in enumerate(argv[:-1]) if item == "--tmpfs"] == ["/"]
 
 
 # ---------------------------------------------------------------------------
