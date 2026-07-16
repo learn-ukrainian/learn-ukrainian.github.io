@@ -1,4 +1,4 @@
-catalog_version: 5.0.0
+catalog_version: 5.0.1
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -245,6 +245,12 @@ regressions:
     version_field: review_protocol_version
     input: Target files change after preparation while finalization hydrates citations from the live checkout instead of the reviewed bytes.
     expected: Hydrate and validate every excerpt from hash-bound packet materials; report live source drift separately and fail closed.
+  - bug_id: provider-schema-admitted-insufficient-evidence-line
+    responsible_layer: schema
+    fixed_in_version: 5.0.1
+    version_field: review_protocol_version
+    input: A schema-bound reviewer cites a blank line, separator, or structural marker shorter than eight non-whitespace characters.
+    expected: Exclude that locator from the packet-bound provider schema and tell the reviewer to cite a substantive line that finalization can hydrate.
   - bug_id: learner-visible-resource-notes-excluded-with-bibliography
     responsible_layer: track_policy
     fixed_in_version: 1.9.0

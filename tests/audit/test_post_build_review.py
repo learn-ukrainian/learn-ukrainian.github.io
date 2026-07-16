@@ -988,7 +988,7 @@ def test_semantic_response_schema_matches_raw_contract() -> None:
     Draft202012Validator(schema).validate(exemplar)
 
 
-def test_packet_bound_semantic_schema_uses_compact_exact_line_locators() -> None:
+def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
     schema = pbr.semantic_response_schema(packet)
@@ -999,9 +999,18 @@ def test_packet_bound_semantic_schema_uses_compact_exact_line_locators() -> None
         if choice["properties"]["location"]["const"] == content_path
     )
 
-    assert content_choice["properties"]["line"]["minimum"] == 1
-    assert content_choice["properties"]["line"]["maximum"] > 100
-    assert len(json.dumps(schema, ensure_ascii=False)) < 25_000
+    allowed_lines = content_choice["properties"]["line"]["enum"]
+    content_material = packet["target_materials"]["content"]
+    expected_lines = [
+        entry["line"]
+        for entry in content_material["lines"]
+        if len(entry["text"].strip()) >= 8
+    ]
+
+    assert allowed_lines == expected_lines
+    assert 85 in allowed_lines
+    assert 86 not in allowed_lines
+    assert len(json.dumps(schema, ensure_ascii=False)) < 35_000
 
 
 def test_semantic_prompt_writer_emits_exact_integrity_checked_bytes(
@@ -1613,6 +1622,7 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "A synonym, reversed phrase, or",
         "must be below `8.0`",
         "return the exact repo-relative",
+        "at least eight non-whitespace",
     ):
         assert required in prompt
     prompt_lower = prompt.lower()
@@ -2179,8 +2189,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.0"
-    assert len(rows) == 44
+    assert catalog["catalog_version"] == "5.0.1"
+    assert len(rows) == 45
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2208,6 +2218,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "4.1.3",
         "4.1.4",
         "5.0.0",
+        "5.0.1",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

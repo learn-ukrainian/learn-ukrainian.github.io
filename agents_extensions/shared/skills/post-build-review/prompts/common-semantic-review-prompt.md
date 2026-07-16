@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.0`
+Semantic prompt version: `5.0.1`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -29,6 +29,10 @@ that code cannot decide.
   `supports` explanation of why that exact line proves the assessment. Do not
   copy or reconstruct an excerpt. The canonical finalizer retrieves that line
   from the immutable packet, preserving exact punctuation and spelling.
+- Every cited evidence line must itself contain at least eight non-whitespace
+  characters. Never cite a blank line, separator, or short structural marker;
+  the packet-bound provider schema excludes those locators and the finalizer
+  rejects them fail-closed.
 - Verify Ukrainian word, stress, morphology, grammar, Russicism, false-friend,
   and calque claims with project source tools. Never infer them from intuition.
 - Verify factual, quotation, and attribution claims with the appropriate

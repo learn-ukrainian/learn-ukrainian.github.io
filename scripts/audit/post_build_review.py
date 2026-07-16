@@ -2569,7 +2569,12 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
     choices: list[dict[str, Any]] = []
     for path, material in _packet_materials_by_path(packet).items():
         lines = material["lines"]
-        if not lines:
+        eligible_lines = [
+            entry["line"]
+            for entry in lines
+            if len(str(entry["text"]).strip()) >= 8
+        ]
+        if not eligible_lines:
             continue
         choices.append(
             {
@@ -2578,7 +2583,7 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
                 "required": ["location", "line"],
                 "properties": {
                     "location": {"const": path},
-                    "line": {"type": "integer", "minimum": 1, "maximum": len(lines)},
+                    "line": {"type": "integer", "enum": eligible_lines},
                 },
             }
         )
