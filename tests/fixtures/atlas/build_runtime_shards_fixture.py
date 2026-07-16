@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""Build the hermetic ``runtime_shards_fixture.db`` used by exporter contract tests.
+"""Build the hermetic ``runtime_shards_fixture.db`` used by exporter + route parity.
 
-Requires the full ``data/atlas.db`` locally. The committed fixture is small and
-CI-safe; regenerate only when the entry-model schema or representative rows change:
+Requires a full ``data/atlas.db`` locally (or ``ATLAS_SRC_DB``). The committed
+fixture is small and CI-safe; regenerate when representative rows change:
 
-  .venv/bin/python tests/fixtures/atlas/build_runtime_shards_fixture.py
+  ATLAS_SRC_DB=/path/to/atlas.db \\
+    .venv/bin/python tests/fixtures/atlas/build_runtime_shards_fixture.py
+
+PR #2 extends the fixture with test-only rows so EVERY ``ATLAS_ENTRY_TYPES``
+value plus ``form_route`` is present (production currently only ships lemma +
+multiword_term).
 """
 
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import tempfile
 from pathlib import Path
@@ -24,15 +30,31 @@ from scripts.atlas.export_runtime_shards import (
     open_readonly_db,
 )
 
-SRC = ROOT / "data" / "atlas.db"
+SRC_CANDIDATES: list[Path] = []
+if os.environ.get("ATLAS_SRC_DB"):
+    SRC_CANDIDATES.append(Path(os.environ["ATLAS_SRC_DB"]))
+for base in [ROOT, *ROOT.parents]:
+    SRC_CANDIDATES.append(base / "data" / "atlas.db")
+SRC = next((path for path in SRC_CANDIDATES if path.is_file()), None)
 DST = Path(__file__).resolve().parent / "runtime_shards_fixture.db"
+
+# Must match site/src/lib/lexicon/atlasDb.ts ATLAS_ENTRY_TYPES plus form_route.
+REQUIRED_TYPE_SET = {
+    "lemma",
+    "expression",
+    "phraseologism",
+    "proverb",
+    "multiword_term",
+    "proper_name",
+    "form_route",
+}
 
 WANTED_ARTICLES = {
     "прапор",  # rich lemma + marked morphology
     "файний",  # heritage warning_severity treasured
     "достовірний",  # russianism heritage classification
     "іван",  # form_of target
-    "ілля",  # proper name / russian_shadow
+    "ілля",  # proper name surface (stored as lemma in prod)
     "ласка",  # component lemma for будь ласка
     "будь-ласка",  # multiword (partial component link)
     "доконаний",  # component lemma
@@ -40,6 +62,43 @@ WANTED_ARTICLES = {
     "доконаний-вид",  # multiword + resolved component links
 }
 WANTED_FORM_ROUTES = {"іване"}  # form_of → іван
+MISSING_SENTINEL = "fixture-missing-sentinel"
+
+# Test-only articles covering entry types absent from current production data.
+SYNTHETIC_ARTICLES: list[dict[str, object]] = [
+    {
+        "slug": "fixture-expression",
+        "entry_type": "expression",
+        "lemma": "на добраніч",
+        "display_head": "на добраніч",
+        "gloss": "good night",
+        "pos": "phrase",
+    },
+    {
+        "slug": "fixture-phraseologism",
+        "entry_type": "phraseologism",
+        "lemma": "бити байдики",
+        "display_head": "бити байдики",
+        "gloss": "to idle",
+        "pos": "phrase",
+    },
+    {
+        "slug": "fixture-proverb",
+        "entry_type": "proverb",
+        "lemma": "без праці нема калача",
+        "display_head": "без праці нема калача",
+        "gloss": "no pain, no gain",
+        "pos": "phrase",
+    },
+    {
+        "slug": "fixture-proper-name",
+        "entry_type": "proper_name",
+        "lemma": "Київ",
+        "display_head": "Київ",
+        "gloss": "Kyiv",
+        "pos": "name",
+    },
+]
 
 
 def _copy_rows(
@@ -79,9 +138,95 @@ def _trim_morph(morph: object) -> tuple[object, bool]:
     return out, changed
 
 
+def _payload_for_synthetic(article: dict[str, object]) -> str:
+    payload = {
+        "lemma": article["lemma"],
+        "url_slug": article["slug"],
+        "gloss": article["gloss"],
+        "pos": article["pos"],
+        "ipa": None,
+        "primary_source": "fixture",
+        "course_usage": [],
+        "enrichment": {
+            "meaning": {
+                "definitions": [f"fixture {article['entry_type']} meaning"],
+                "source": "fixture",
+            },
+            "sources": ["fixture"],
+        },
+        "heritage_status": None,
+        "sections": None,
+    }
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _insert_synthetic(dst: sqlite3.Connection) -> None:
+    max_order = dst.execute("SELECT COALESCE(MAX(route_order), 0) FROM article_payloads").fetchone()[0]
+    now = "2026-07-16T00:00:00+00:00"
+    for index, article in enumerate(SYNTHETIC_ARTICLES, start=1):
+        slug = str(article["slug"])
+        dst.execute(
+            """INSERT OR REPLACE INTO articles (
+                 slug, display_head, lemma, entry_type, pos, gloss,
+                 review_state, visibility, cefr, heritage_classification,
+                 created_at, updated_at
+               ) VALUES (?, ?, ?, ?, ?, ?, 'approved', 'public', NULL, NULL, ?, ?)""",
+            (
+                slug,
+                article["display_head"],
+                article["lemma"],
+                article["entry_type"],
+                article["pos"],
+                article["gloss"],
+                now,
+                now,
+            ),
+        )
+        dst.execute(
+            """INSERT OR REPLACE INTO article_payloads (
+                 slug, route_order, payload_json, is_public_route
+               ) VALUES (?, ?, ?, 1)""",
+            (slug, int(max_order) + index, _payload_for_synthetic(article)),
+        )
+
+
+def _assert_type_coverage(dst: sqlite3.Connection) -> None:
+    present: set[str] = set()
+    for (entry_type,) in dst.execute(
+        "SELECT entry_type FROM articles WHERE review_state='approved' AND visibility='public'"
+    ):
+        present.add(entry_type)
+    for (_slug,) in dst.execute(
+        """SELECT ap.slug FROM article_payloads ap
+           LEFT JOIN articles a ON a.slug = ap.slug
+           WHERE ap.is_public_route = 1 AND a.slug IS NULL"""
+    ):
+        present.add("form_route")
+        break
+    missing = REQUIRED_TYPE_SET - present
+    if missing:
+        raise SystemExit(f"fixture type-set incomplete; missing={sorted(missing)} present={sorted(present)}")
+    extra_required_ok = present >= REQUIRED_TYPE_SET
+    if not extra_required_ok:
+        raise SystemExit(f"fixture type-set coverage failed: {sorted(present)}")
+    print(
+        "fixture type-set coverage:",
+        " ".join(sorted(REQUIRED_TYPE_SET)),
+        f"(present={sorted(present)})",
+    )
+    sentinel = dst.execute(
+        "SELECT 1 FROM article_payloads WHERE slug=?", (MISSING_SENTINEL,)
+    ).fetchone()
+    if sentinel:
+        raise SystemExit(f"missing sentinel {MISSING_SENTINEL!r} must not be a public route")
+    print(f"missing sentinel absent: {MISSING_SENTINEL}")
+
+
 def build() -> Path:
-    if not SRC.is_file():
-        raise SystemExit(f"missing source DB: {SRC}")
+    if SRC is None or not SRC.is_file():
+        raise SystemExit(
+            "missing source DB; set ATLAS_SRC_DB or place data/atlas.db under the repo root"
+        )
 
     if DST.exists():
         DST.unlink()
@@ -146,6 +291,8 @@ def build() -> Path:
                     (json.dumps(morph, ensure_ascii=False), erow[0]),
                 )
 
+    _insert_synthetic(dst)
+
     dst.execute("DELETE FROM articles_fts")
     for row in dst.execute("SELECT slug, display_head, lemma, gloss FROM articles"):
         alias_text = " ".join(
@@ -161,6 +308,7 @@ def build() -> Path:
         )
 
     dst.commit()
+    _assert_type_coverage(dst)
     dst.execute("VACUUM")
     dst.close()
     src.close()

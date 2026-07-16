@@ -108,18 +108,14 @@ describe("AtlasDataSource runtime shards", () => {
 
         const sqliteHtml = await container.renderToString(WordAtlasArticle, {
           props: {
-            entry: left.record.entry,
-            allEntries: cache.entries,
-            componentLinkTargets: cache.componentLinkTargets,
+            record: left.record,
             generatedAt: cache.generatedAt,
             manifestVersion: cache.manifestVersion,
           },
         });
         const httpHtml = await container.renderToString(WordAtlasArticle, {
           props: {
-            entry: right.record.entry,
-            allEntries: cache.entries,
-            componentLinkTargets: cache.componentLinkTargets,
+            record: right.record,
             generatedAt: cache.generatedAt,
             manifestVersion: cache.manifestVersion,
           },

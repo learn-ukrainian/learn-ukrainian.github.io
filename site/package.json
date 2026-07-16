@@ -19,7 +19,8 @@
     "astro": "astro",
     "test": "npm run hydrate && vitest run",
     "test:watch": "npm run hydrate && vitest --watch",
-    "test:coverage": "npm run hydrate && vitest run --coverage"
+    "test:coverage": "npm run hydrate && vitest run --coverage",
+    "test:atlas-route-parity": "node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

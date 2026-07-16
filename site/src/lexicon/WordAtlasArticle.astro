@@ -4,15 +4,14 @@ import {
   resolveHeritageBoxes,
   type WarningSeverity,
 } from "../lib/lexicon/heritage-severity";
-import { getPracticeLemmas } from "../lib/lexicon/atlasDb";
 import {
   dominantMarkerLabel,
   isFullyMarkedLemma,
   morphologyFormCountLabel,
   registerBadgeLabel,
 } from "../lib/lexicon/register-markers";
-import { normalize as normalizeAtlasSearchText } from "../lib/lexicon/search";
 import { pluralizeUk } from "../lib/i18n/plural";
+import type { EntryRecord } from "../lib/lexicon/atlas-data-source";
 
 interface CourseUsage {
   track: string;
@@ -193,20 +192,17 @@ interface LexiconEntry {
 }
 
 interface Props {
-  entry: LexiconEntry;
-  allEntries: LexiconEntry[];
-  componentLinkTargets?: Map<string, string>;
+  record: EntryRecord;
   generatedAt: string;
   manifestVersion: string;
 }
 
 const {
-  entry,
-  allEntries,
-  componentLinkTargets = new Map<string, string>(),
+  record,
   generatedAt,
   manifestVersion,
 } = Astro.props as Props;
+const entry = record.entry as LexiconEntry;
 const enrichment = entry.enrichment ?? null;
 const sections = entry.sections ?? null;
 const synonymSets = sections?.synonyms?.synsets ?? [];
@@ -267,7 +263,7 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
 });
 const textbookItems = enrichment?.textbooks ?? [];
 const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? []);
-const componentLinks = buildComponentLinks(entry, allEntries, componentLinkTargets);
+const componentLinks = record.renderContext.componentLinks;
 const sourceList = buildSourceList();
 const phraseHasGloss = Boolean(entry.gloss && definitionCards.length === 0 && !enrichment?.meaning);
 const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
@@ -275,8 +271,7 @@ const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
 const styleNotes = buildStyleNotes();
 const articleOverview = buildArticleOverview();
 
-const practiceLemmas = getPracticeLemmas();
-const hasPractice = practiceLemmas.has(entry.url_slug) || practiceLemmas.has(entry.lemma);
+const hasPractice = record.renderContext.practiceLevels.length > 0;
 
 const CASE_ROWS = [
   { key: "називний", label: "Називний" },
@@ -563,27 +558,6 @@ function learnerFacingUrls(urls?: string[]) {
   return (urls ?? []).filter((url) => url && !isMirrorUrl(url));
 }
 
-function buildComponentLinks(
-  current: LexiconEntry,
-  entries: LexiconEntry[],
-  componentLinkTargets: Map<string, string>,
-) {
-  if (!MORPHOLOGY_SUPPRESSED_TYPES.has(current.entry_type ?? "")) return [];
-  const entriesBySlug = new Map(entries.map((item) => [item.url_slug, item]));
-  const tokens = current.lemma.match(/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu) ?? [];
-  return tokens.map((text) => {
-    const targetSlug = componentLinkTargets.get(normalizeAtlasSearchText(text));
-    const target = targetSlug ? entriesBySlug.get(targetSlug) : undefined;
-    return {
-      text,
-      target:
-        target && target.entry_type === "lemma" && target.url_slug !== current.url_slug
-          ? target
-          : null,
-    };
-  });
-}
-
 function buildSourceList() {
   const sources = new Set<string>();
   for (const source of enrichment?.sources ?? []) sources.add(source);
@@ -759,8 +733,8 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
             <div class="chip-label">Складники:</div>
             <div class="chip-row">
               {componentLinks.map((component) => (
-                component.target ? (
-                  <a class="chip" href={`/lexicon/${component.target.url_slug}/`}>{component.text}</a>
+                component.targetSlug ? (
+                  <a class="chip" href={`/lexicon/${component.targetSlug}/`}>{component.text}</a>
                 ) : (
                   <span class="chip">{component.text}</span>
                 )
