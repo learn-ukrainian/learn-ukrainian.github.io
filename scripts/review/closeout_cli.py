@@ -29,8 +29,10 @@ from scripts.review.scope_baseline import (
 from scripts.review.target_resolution import (
     ReviewTarget,
     TargetResolutionError,
+    diff_against_base,
     resolve_local_target,
     resolve_review_target,
+    rev_parse,
 )
 
 
@@ -139,13 +141,63 @@ def _baseline_from_state(state: dict) -> ScopeBaseline:
 
 
 def _cmd_check_expansion(args: argparse.Namespace) -> int:
+    """Re-measure the frozen target's mode against its current state.
+
+    ``local`` mode is re-resolved from the working tree, same as before — it
+    has no committed endpoint by definition. Every other mode (commit/branch/
+    pr) is frozen against a committed base/head, so a clean working tree
+    tells us nothing: review-triggered fixes land as *commits*, not
+    uncommitted changes. Re-resolving those modes means re-diffing the
+    frozen ``base_sha`` against an explicit ``--current-head`` (the reviewed
+    head after fixes) — never re-querying ``gh pr view`` or re-deriving the
+    mode from ``git status``, since either could silently drift from the
+    mode the baseline was actually frozen under.
+    """
     state = _load_state(args.state_file)
     if not state.get("baseline"):
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
         return 1
     baseline = _baseline_from_state(state)
-    current = resolve_local_target(Path(args.repo_root).resolve())
-    result = check_expansion_breaker(baseline, frozenset(current.changed_paths), current.non_test_loc)
+    repo_root = Path(args.repo_root).resolve()
+    target_args = state.get("target_args") or {}
+    mode = target_args.get("mode") or baseline.target.mode
+
+    try:
+        if mode == "local":
+            current = resolve_local_target(repo_root)
+            current_files = frozenset(current.changed_paths)
+            current_non_test_loc = current.non_test_loc
+        else:
+            if not args.current_head:
+                print(
+                    json.dumps(
+                        {
+                            "error": (
+                                f"check-expansion for mode={mode!r} requires --current-head "
+                                "(the explicit reviewed head after any committed fixes) — "
+                                "a clean local working tree is not evidence that committed "
+                                "fixes were re-measured against the frozen baseline"
+                            )
+                        }
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            if not baseline.target.base_sha:
+                print(
+                    json.dumps({"error": f"frozen baseline for mode={mode!r} has no base_sha to re-diff against"}),
+                    file=sys.stderr,
+                )
+                return 1
+            current_head_sha = rev_parse(repo_root, args.current_head)
+            changed_paths, non_test_loc = diff_against_base(repo_root, baseline.target.base_sha, current_head_sha)
+            current_files = frozenset(changed_paths)
+            current_non_test_loc = non_test_loc
+    except TargetResolutionError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
+
+    result = check_expansion_breaker(baseline, current_files, current_non_test_loc)
     print(json.dumps({"triggered": result.triggered, "reason": result.reason}, indent=2))
     return 0
 
@@ -175,6 +227,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         data_egress_policy=args.data_egress_policy,
         isolation_required=args.isolation_required,
         routing_snapshot=routing_snapshot,
+        author_family=args.author_family,
     )
     resolution = resolve_reviewer(inputs)
     print(
@@ -184,6 +237,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                 "advisory": [asdict(a) for a in resolution.advisory],
                 "trace": [asdict(t) for t in resolution.trace],
                 "substitution_note": resolution.substitution_note,
+                "fail_closed_reason": resolution.fail_closed_reason,
             },
             indent=2,
         )
@@ -241,6 +295,16 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_expansion = sub.add_parser("check-expansion", help="Check the 2x files/LOC scope-expansion breaker")
     p_expansion.add_argument("--repo-root", default=".")
+    p_expansion.add_argument(
+        "--current-head",
+        default=None,
+        help=(
+            "Required for commit/branch/pr-mode targets: the explicit reviewed head "
+            "(e.g. HEAD, or a specific SHA) to re-diff against the frozen base_sha "
+            "after committed fixes. Ignored for mode=local, which re-resolves from "
+            "the working tree instead."
+        ),
+    )
     p_expansion.set_defaults(func=_cmd_check_expansion)
 
     p_cycle = sub.add_parser("record-cycle", help="Record one review/fix cycle's outstanding-finding count")
@@ -248,7 +312,23 @@ def _build_parser() -> argparse.ArgumentParser:
     p_cycle.set_defaults(func=_cmd_record_cycle)
 
     p_reviewer = sub.add_parser("resolve-reviewer", help="Resolve the cross-family reviewer for this author")
-    p_reviewer.add_argument("--author-model", required=True)
+    p_reviewer.add_argument(
+        "--author-model",
+        required=True,
+        help=(
+            "Concrete seat/model id, or '<ambiguous-harness>:<concrete-model>' "
+            "(e.g. 'cursor:gpt-5.6-sol') to disambiguate a multi-model harness session."
+        ),
+    )
+    p_reviewer.add_argument(
+        "--author-family",
+        default=None,
+        help=(
+            "Explicit, caller-asserted author model family (e.g. from session logs). "
+            "Required to disambiguate a bare ambiguous-harness --author-model; optional "
+            "corroboration otherwise — a mismatch is a fail-closed conflict."
+        ),
+    )
     p_reviewer.add_argument("--review-profile", default="code")
     p_reviewer.add_argument("--risk", default="medium")
     p_reviewer.add_argument("--domain", default="code")

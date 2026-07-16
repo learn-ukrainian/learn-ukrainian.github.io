@@ -53,8 +53,6 @@ _FAMILY_BY_EXACT_SEAT: dict[str, str] = {
     "grok-tools": "xai",
     "deepseek": "deepseek",
     "deepseek-tools": "deepseek",
-    "cursor": "cursor",
-    "cursor-tools": "cursor",
     "pool": "poolside",
     "glm": "zhipu",
     "qwen": "alibaba",
@@ -106,6 +104,83 @@ def resolve_family(seat_or_model: str) -> str:
         if canonical.startswith(prefix):
             return family
     return "unknown"
+
+
+# --- ambiguous-harness / fail-closed author identity --------------------------
+
+# Harnesses that route to more than one underlying model family depending on
+# per-session configuration — the harness name alone is NOT a model family.
+# Cursor is multi-model (a session may run GPT, Claude, or another model
+# underneath); resolving it to a synthetic "cursor" family would let an
+# author dodge the cross-family requirement whenever the real underlying
+# model happens to collide with whatever the ladder picks.
+AMBIGUOUS_HARNESS_SEATS: frozenset[str] = frozenset({"cursor", "cursor-tools"})
+
+# Concrete model-vendor families a caller may assert via an explicit
+# ``author_family`` override. Deliberately excludes harness pseudo-families
+# (nothing routes to "cursor" as if it were a vendor) and the fail-closed
+# sentinels below — an override must name a real family or be rejected.
+_VALID_CONCRETE_FAMILIES: frozenset[str] = frozenset(
+    {"anthropic", "openai", "google", "xai", "deepseek", "poolside", "zhipu", "alibaba"}
+)
+
+# Fail-closed author-identity outcomes: none of these is a real model family,
+# and a caller must never treat one as matching (or not matching) any
+# candidate's family — resolve_reviewer refuses to select a formal reviewer
+# for any of them.
+UNKNOWN_AUTHOR_FAMILY = "unknown"
+AMBIGUOUS_AUTHOR_FAMILY = "ambiguous"
+CONFLICTING_AUTHOR_FAMILY = "conflict"
+UNRESOLVED_AUTHOR_FAMILIES: frozenset[str] = frozenset(
+    {UNKNOWN_AUTHOR_FAMILY, AMBIGUOUS_AUTHOR_FAMILY, CONFLICTING_AUTHOR_FAMILY}
+)
+
+
+def resolve_author_family(author_model: str, author_family: str | None = None) -> str:
+    """Resolve the author's model family, failing closed for ambiguous harnesses.
+
+    ``author_model`` is either a concrete seat/model id (resolved exactly as
+    :func:`resolve_family` always has), or a ``"<harness>:<concrete-model>"``
+    composite for a multi-model harness (e.g. ``"cursor:gpt-5.6-sol"``,
+    ``"cursor:claude-opus-4-8"``) that disambiguates which model that harness
+    session actually ran. ``author_family`` is an optional explicit,
+    caller-asserted family (e.g. from session logs) used to corroborate or,
+    for a bare ambiguous-harness identity with no embedded model, to supply
+    the disambiguation on its own.
+
+    Returns a concrete family string, or one of the fail-closed sentinels:
+
+    - ``"unknown"`` — no usable identity signal at all.
+    - ``"ambiguous"`` — a multi-model harness with no concrete model and no
+      valid override to disambiguate it.
+    - ``"conflict"`` — the embedded/resolved model family and an explicit
+      ``author_family`` override disagree.
+
+    Callers (:func:`resolve_reviewer`) must never select a formal reviewer
+    against a fail-closed sentinel — an unresolved author identity is not
+    evidence that a candidate is (or isn't) the same family.
+    """
+    normalized = (author_model or "").strip().lower()
+    override = (author_family or "").strip().lower() or None
+    if override is not None and override not in _VALID_CONCRETE_FAMILIES:
+        override = None  # an invalid/unrecognized override does not count as validated
+
+    harness_token, sep, embedded = normalized.partition(":")
+    if sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded.strip():
+        resolved = resolve_family(embedded.strip())
+    elif normalized in AMBIGUOUS_HARNESS_SEATS or (normalize_seat(normalized) or "") in AMBIGUOUS_HARNESS_SEATS:
+        resolved = None  # bare ambiguous harness, no embedded concrete model
+    else:
+        resolved = resolve_family(normalized)
+
+    if resolved is None:
+        # Bare ambiguous harness: only a validated override can disambiguate it.
+        return override if override else AMBIGUOUS_AUTHOR_FAMILY
+    if resolved == "unknown":
+        return override if override else UNKNOWN_AUTHOR_FAMILY
+    if override and override != resolved:
+        return CONFLICTING_AUTHOR_FAMILY
+    return resolved
 
 
 # --- candidates ---------------------------------------------------------------
@@ -186,6 +261,9 @@ def _health_rank(status: str | None) -> int:
 
 @dataclass(frozen=True)
 class ResolverInputs:
+    # Concrete seat/model id, OR a "<ambiguous-harness>:<concrete-model>"
+    # composite (e.g. "cursor:gpt-5.6-sol") disambiguating a multi-model
+    # harness session. See resolve_author_family for the exact contract.
     author_model: str
     review_profile: str = "code"
     risk: str = "medium"
@@ -198,6 +276,11 @@ class ResolverInputs:
     # ("healthy" | "degraded" | "near_cap" | "unhealthy"). Optional — omit for a
     # snapshot-blind resolution (ladder order alone decides).
     routing_snapshot: Mapping[str, str] | None = None
+    # Explicit, caller-asserted author model family (e.g. from session logs),
+    # validated against _VALID_CONCRETE_FAMILIES. Required to disambiguate a
+    # bare ambiguous-harness author_model; optional corroboration otherwise —
+    # a mismatch against the resolved family is a fail-closed conflict.
+    author_family: str | None = None
 
 
 @dataclass(frozen=True)
@@ -216,6 +299,12 @@ class ReviewerResolution:
     advisory: tuple[CandidateResult, ...]
     trace: tuple[CandidateResult, ...]
     substitution_note: str | None
+    # Set (non-None) instead of walking the ladder at all when the author's
+    # model family could not be resolved to a concrete family — unknown,
+    # ambiguous-harness, or conflicting-signal identities never get a formal
+    # reviewer selected, since there is nothing reliable to diff a
+    # candidate's family against.
+    fail_closed_reason: str | None = None
 
 
 def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None) -> str | None:
@@ -261,7 +350,11 @@ def evaluate_candidate(
     data-egress fail-closed behavior is testable per-candidate, including for
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
     """
-    family = author_family if author_family is not None else resolve_family(inputs.author_model)
+    family = (
+        author_family
+        if author_family is not None
+        else resolve_author_family(inputs.author_model, inputs.author_family)
+    )
     health = _health_of(candidate, inputs.routing_snapshot)
     same_family = candidate.family == family
 
@@ -298,8 +391,32 @@ def resolve_reviewer(
     """Walk the ladder in order; the first rung with an eligible candidate
     wins (health breaks ties within that rung). Advisory-only candidates
     (e.g. ``openai_frontier`` for an OpenAI-family author) are always
-    surfaced separately, regardless of which rung is selected."""
-    author_family = resolve_family(inputs.author_model)
+    surfaced separately, regardless of which rung is selected.
+
+    Fails closed — no candidate walked, ``selected`` stays ``None`` — when
+    the author's model family cannot be resolved to a concrete family (an
+    unrecognized identity, a bare ambiguous-model harness with no
+    disambiguation, or a conflicting override). See
+    :func:`resolve_author_family`.
+    """
+    author_family = resolve_author_family(inputs.author_model, inputs.author_family)
+    if author_family in UNRESOLVED_AUTHOR_FAMILIES:
+        reason = {
+            UNKNOWN_AUTHOR_FAMILY: (
+                f"author identity unknown — cannot resolve a model family from "
+                f"author_model={inputs.author_model!r}"
+            ),
+            AMBIGUOUS_AUTHOR_FAMILY: (
+                f"author harness is multi-model and ambiguous (author_model={inputs.author_model!r}) — "
+                "supply a concrete author model (e.g. 'cursor:gpt-5.6-sol') or a validated author_family override"
+            ),
+            CONFLICTING_AUTHOR_FAMILY: (
+                f"author identity conflict — the model embedded in author_model={inputs.author_model!r} "
+                f"disagrees with the declared author_family={inputs.author_family!r} override"
+            ),
+        }[author_family]
+        return ReviewerResolution(selected=None, advisory=(), trace=(), substitution_note=None, fail_closed_reason=reason)
+
     trace: list[CandidateResult] = []
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None

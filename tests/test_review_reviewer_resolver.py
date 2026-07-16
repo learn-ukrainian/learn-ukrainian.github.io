@@ -8,13 +8,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.review.reviewer_resolver import (
+    AMBIGUOUS_AUTHOR_FAMILY,
+    CONFLICTING_AUTHOR_FAMILY,
     DEEPSEEK_V4_FLASH,
     GLM,
     GROK_4_5,
     POOL,
     QWEN,
+    UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
+    resolve_author_family,
     resolve_family,
     resolve_reviewer,
 )
@@ -48,8 +52,6 @@ def test_family_resolution_across_model_and_harness_aliases():
         "deepseek-tools": "deepseek",
         "deepseek-v4-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
-        "cursor": "cursor",
-        "cursor-tools": "cursor",
         "pool": "poolside",
         "glm": "zhipu",
         "glm-5.2": "zhipu",
@@ -63,6 +65,108 @@ def test_family_resolution_across_model_and_harness_aliases():
 def test_family_resolution_unknown_and_empty():
     assert resolve_family("") == "unknown"
     assert resolve_family("some-made-up-seat-xyz") == "unknown"
+
+
+def test_family_resolution_bare_cursor_is_not_a_synthetic_family():
+    """Cursor is a multi-model harness, not a model family on its own — the
+    bare harness name must resolve as unrecognized via resolve_family, same
+    as any other unmapped string. Disambiguating it is resolve_author_family's
+    job (see the Cursor+GPT / Cursor+Claude / ambiguous / conflict fixtures
+    below), not a synthetic "cursor" family entry."""
+    assert resolve_family("cursor") == "unknown"
+    assert resolve_family("cursor-tools") == "unknown"
+
+
+# --- author identity resolution: ambiguous multi-model harnesses --------------
+
+def test_resolve_author_family_cursor_plus_gpt_resolves_openai():
+    assert resolve_author_family("cursor:gpt-5.6-sol") == "openai"
+
+
+def test_resolve_author_family_cursor_plus_claude_resolves_anthropic():
+    assert resolve_author_family("cursor:claude-opus-4-8") == "anthropic"
+
+
+def test_resolve_author_family_bare_cursor_with_no_override_is_ambiguous():
+    assert resolve_author_family("cursor") == AMBIGUOUS_AUTHOR_FAMILY
+    assert resolve_author_family("cursor-tools") == AMBIGUOUS_AUTHOR_FAMILY
+
+
+def test_resolve_author_family_bare_cursor_with_validated_override_resolves():
+    """A bare ambiguous-harness identity can be disambiguated by an explicit,
+    validated author_family override (e.g. from inspecting session logs)."""
+    assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
+
+
+def test_resolve_author_family_bare_cursor_with_invalid_override_stays_ambiguous():
+    """An override that isn't a recognized concrete family does not count as
+    "validated" — it must not silently rescue the ambiguous state."""
+    assert resolve_author_family("cursor", author_family="not-a-real-family") == AMBIGUOUS_AUTHOR_FAMILY
+
+
+def test_resolve_author_family_unknown_identity():
+    assert resolve_author_family("") == UNKNOWN_AUTHOR_FAMILY
+    assert resolve_author_family("some-made-up-seat-xyz") == UNKNOWN_AUTHOR_FAMILY
+
+
+def test_resolve_author_family_conflicting_signals():
+    """The model embedded in a Cursor composite and an explicit author_family
+    override disagreeing is a conflict, not a silent pick of either side."""
+    assert resolve_author_family("cursor:gpt-5.6-sol", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
+
+
+def test_resolve_author_family_fixed_family_alias_unaffected():
+    """Ordinary, non-ambiguous seats keep resolving exactly as before —
+    the ambiguous-harness handling doesn't touch fixed-family aliases."""
+    assert resolve_author_family("claude") == "anthropic"
+    assert resolve_author_family("deepseek-v4-pro") == "deepseek"
+    assert resolve_author_family("grok-build") == "xai"
+
+
+# --- resolve_reviewer fail-closed on unresolved author identity ---------------
+
+def test_resolve_reviewer_fails_closed_for_bare_ambiguous_cursor_author():
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor"))
+    assert resolution.selected is None
+    assert resolution.trace == ()
+    assert resolution.advisory == ()
+    assert resolution.fail_closed_reason is not None
+    assert "ambiguous" in resolution.fail_closed_reason.lower()
+
+
+def test_resolve_reviewer_fails_closed_for_unknown_author():
+    resolution = resolve_reviewer(ResolverInputs(author_model="totally-unrecognized-seat"))
+    assert resolution.selected is None
+    assert resolution.fail_closed_reason is not None
+    assert "unknown" in resolution.fail_closed_reason.lower()
+
+
+def test_resolve_reviewer_fails_closed_for_conflicting_author_identity():
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="cursor:gpt-5.6-sol", author_family="anthropic")
+    )
+    assert resolution.selected is None
+    assert resolution.fail_closed_reason is not None
+    assert "conflict" in resolution.fail_closed_reason.lower()
+
+
+def test_resolve_reviewer_cursor_plus_gpt_picks_deepseek_same_as_codex_author():
+    """A disambiguated Cursor+GPT author must be treated exactly like a
+    native codex author for cross-family purposes: deepseek-v4-flash formally
+    selected, openai_frontier advisory-only (same family as the real model)."""
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:gpt-5.6-sol"))
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.name == "deepseek-v4-flash"
+    assert len(resolution.advisory) == 1
+    assert resolution.advisory[0].name == "openai_frontier"
+
+
+def test_resolve_reviewer_cursor_plus_claude_picks_deepseek():
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:claude-opus-4-8"))
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.name == "deepseek-v4-flash"
 
 
 # --- default code ladder: cross-family selection ------------------------------

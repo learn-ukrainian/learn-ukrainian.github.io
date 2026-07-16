@@ -31,7 +31,8 @@ Every subcommand is `.venv/bin/python -m scripts.review.closeout_cli --state-fil
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
   target --mode branch --branch <branch> --base <base-ref> --repo-root .
 
-# pr: actual PR base (never an assumed default branch)
+# pr: actual PR base (never an assumed default branch), merge-base semantics —
+# diffs against the fork point, not the base branch's possibly-since-moved tip
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
   target --mode pr --pr <number> --repo-root .
 ```
@@ -115,6 +116,27 @@ order alone decides) but **fail-closed on domain/data-egress**: leaving
 specific egress policy (e.g. a China-hosted lane), it does not admit them
 by default.
 
+**Multi-model harnesses (e.g. Cursor) are fail-closed, not a synthetic
+family.** A harness that can run more than one underlying model (Cursor)
+is never itself a model family — `--author-model cursor` alone resolves
+to nothing selectable. Disambiguate it one of two ways:
+
+```bash
+# Composite form: "<harness>:<concrete-model>"
+--author-model "cursor:gpt-5.6-sol"
+--author-model "cursor:claude-opus-4-8"
+
+# Or an explicit, validated author-family override (e.g. from session logs)
+--author-model "cursor" --author-family "anthropic"
+```
+
+An unrecognized `--author-model`, a bare ambiguous harness with no
+disambiguation, or an `--author-family` that disagrees with the model
+embedded in `--author-model` all resolve to `selected: null` with a
+non-null `fail_closed_reason` — **do not treat a null `selected` as "no
+reviewer needed"**; it means the author's identity could not be resolved
+and you must supply better input before proceeding.
+
 Read the `selected` field for the formal, blocking reviewer. Read `advisory`
 for consult-only candidates — most notably `openai_frontier`: it always
 resolves to a concrete model (currently `gpt-5.6-sol`), and it is
@@ -185,10 +207,26 @@ implementation action — the ledger only records that it happened.
 ## Step 6: Re-check scope after any fix
 
 After applying findings, re-check the breakers before calling the review
-done:
+done. For `mode=local` the working tree alone is the signal:
 
 ```bash
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" check-expansion --repo-root .
+```
+
+For `mode=commit`/`branch`/`pr`, fixes land as **commits**, not working-tree
+changes — a clean tree after committing a fix proves nothing. Pass the
+reviewed head explicitly (typically `HEAD` right after committing the fix)
+so the breaker re-diffs the frozen `base_sha` against the real post-fix
+state instead of silently seeing "nothing changed":
+
+```bash
+.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+  check-expansion --repo-root . --current-head HEAD
+```
+
+Then record the cycle:
+
+```bash
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" record-cycle --outstanding-count <N>
 ```
 
@@ -219,13 +257,35 @@ Distinguish three layers explicitly in your report:
    would, with no reference to the diff.
 
 **CLI/API/UI/generated-artifact changes cannot be declared done from code
-review alone.** If the frozen target touches any user-visible surface
-(a CLI flag, an HTTP endpoint, UI, or a generated artifact like deployed
-skill mirrors or built docs), run the project's `verify` skill (or drive it
-manually) and record what you actually observed — not what the diff implies
-should happen. If nothing in the frozen target has a runtime surface (pure
-test/doc-only changes), say so explicitly instead of running a proof that
-has nothing to exercise.
+review alone.** If the frozen target touches any user-visible surface (a CLI
+flag, an HTTP endpoint, UI, or a generated artifact like deployed skill
+mirrors or built docs), drive it exactly as a source-blind user would and
+record what you actually observed — not what the diff implies should
+happen. There is no repo-wide "verify" skill or tool that does this for
+you generically; do not invoke or reference one that doesn't exist. Use
+whatever real, product-specific surface applies:
+
+- **Python CLI** (e.g. this closeout CLI itself): invoke the actual
+  entry point from a shell with real arguments —
+  `.venv/bin/python -m <module> <args>` — and read its stdout/stderr/exit
+  code, not the source.
+- **HTTP endpoint / Monitor API**: `curl` the real route and inspect the
+  response body/status code.
+- **Browser-facing UI**: drive it with `mcp__claude-in-chrome__*` (or the
+  `/run` skill, which launches this project's app) and observe the
+  rendered page, not the component source.
+- **Generated artifact** (deployed skill mirrors, built docs, MDX output):
+  run the actual generator/deploy script (e.g. `scripts/deploy_prompts.sh`,
+  `scripts/lint/lint_agent_skills.py`, the relevant build script) and read
+  its output/exit code.
+- **No dedicated tooling exists for this specific surface**: say so
+  explicitly, then describe the exact manual steps you took (commands run,
+  inputs given, outputs observed) so the proof is reproducible from the
+  report alone.
+
+If nothing in the frozen target has a runtime surface (pure test/doc-only
+changes), say so explicitly instead of running a proof that has nothing to
+exercise.
 
 ---
 

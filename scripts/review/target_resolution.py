@@ -95,6 +95,11 @@ def _rev_parse(repo_root: Path, ref: str) -> str:
     return proc.stdout.strip()
 
 
+def rev_parse(repo_root: Path, ref: str) -> str:
+    """Public wrapper: resolve ``ref`` to a full SHA. Read-only."""
+    return _rev_parse(repo_root, ref)
+
+
 def _numstat_loc(repo_root: Path, diff_range: list[str]) -> tuple[tuple[str, ...], int]:
     """Return (changed_paths, non_test_loc) for a ``git diff --numstat`` range."""
     proc = _run_git(["diff", "--numstat", *diff_range], repo_root)
@@ -118,6 +123,15 @@ def _numstat_loc(repo_root: Path, diff_range: list[str]) -> tuple[tuple[str, ...
         removed = int(removed_raw) if removed_raw.isdigit() else 0
         loc += added + removed
     return tuple(changed), loc
+
+
+def diff_against_base(repo_root: Path, base_sha: str, head_sha: str) -> tuple[tuple[str, ...], int]:
+    """Public wrapper: (changed_paths, non_test_loc) for an explicit
+    ``base_sha..head_sha`` range. Read-only — used to re-measure a frozen
+    commit/branch/PR target's full diff after committed fixes land, without
+    re-resolving the target from scratch (e.g. re-querying ``gh pr view``,
+    whose live base/head could have moved since the target was frozen)."""
+    return _numstat_loc(repo_root, [base_sha, head_sha])
 
 
 def _untracked_paths(repo_root: Path) -> tuple[str, ...]:
@@ -233,7 +247,17 @@ def _ensure_commit_available(repo_root: Path, sha: str) -> None:
 
 
 def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
-    """A PR's diff using its actual base (not an assumed default branch)."""
+    """A PR's diff using the merge-base with its actual base branch (not an
+    assumed default branch, and not the base branch's possibly-moved tip).
+
+    ``baseRefOid`` is the base branch's *current tip* at query time, not
+    necessarily the commit the PR actually forked from — the base branch can
+    advance after the feature diverged. Diffing straight against that tip
+    would pull in every commit the base gained since divergence as if the PR
+    introduced them. The merge-base is the fork point and is what a diff
+    must be computed against; the base tip is retained only in
+    ``description`` for provenance.
+    """
     proc = _run_gh(
         [
             "pr",
@@ -251,24 +275,34 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
     except json.JSONDecodeError as exc:
         raise TargetResolutionError(f"invalid JSON from gh pr view #{pr_number}") from exc
 
-    base_sha = str(payload.get("baseRefOid") or "").strip()
+    base_tip_sha = str(payload.get("baseRefOid") or "").strip()
     head_sha = str(payload.get("headRefOid") or "").strip()
     base_ref_name = str(payload.get("baseRefName") or "").strip()
     head_ref_name = str(payload.get("headRefName") or "").strip()
-    if not base_sha or not head_sha:
+    if not base_tip_sha or not head_sha:
         raise TargetResolutionError(f"PR #{pr_number} payload missing base/head SHA")
 
-    _ensure_commit_available(repo_root, base_sha)
+    _ensure_commit_available(repo_root, base_tip_sha)
     _ensure_commit_available(repo_root, head_sha)
-    changed_paths, non_test_loc = _numstat_loc(repo_root, [base_sha, head_sha])
+    merge_base_proc = _run_git(["merge-base", base_tip_sha, head_sha], repo_root)
+    if merge_base_proc.returncode != 0:
+        raise TargetResolutionError(
+            f"no merge-base between PR #{pr_number} base {base_tip_sha!r} and head {head_sha!r}: "
+            f"{merge_base_proc.stderr.strip()}"
+        )
+    merge_base_sha = merge_base_proc.stdout.strip()
+    changed_paths, non_test_loc = _numstat_loc(repo_root, [merge_base_sha, head_sha])
     return ReviewTarget(
         mode="pr",
-        base_sha=base_sha,
+        base_sha=merge_base_sha,
         head_sha=head_sha,
         changed_paths=changed_paths,
         non_test_loc=non_test_loc,
         clean_tree=False,
-        description=f"PR #{pr_number}: {head_ref_name}@{head_sha[:12]} vs actual base {base_ref_name}@{base_sha[:12]}",
+        description=(
+            f"PR #{pr_number}: {head_ref_name}@{head_sha[:12]} vs merge-base {merge_base_sha[:12]} "
+            f"(base tip {base_ref_name}@{base_tip_sha[:12]})"
+        ),
     )
 
 

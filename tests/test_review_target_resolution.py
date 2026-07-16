@@ -211,6 +211,63 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     assert target.changed_paths == ("pr_change.py",)
 
 
+def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeypatch):
+    """The base branch can advance after the PR branch diverged from it.
+
+    ``baseRefOid`` from ``gh pr view`` is the base branch's *current* tip,
+    not the commit the PR actually forked from. Diffing straight against
+    that tip would pull in the base's own post-divergence commits as if the
+    PR introduced them. The target must diff against the merge-base (the
+    fork point) instead, and store the merge-base — not the moved tip — as
+    ``base_sha``.
+    """
+    repo = _init_repo(tmp_path)
+    merge_base_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+    _git(repo, "checkout", "-q", "-b", "feature")
+    (repo / "pr_change.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "pr_change.py")
+    _git(repo, "commit", "-q", "-m", "pr change")
+    head_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+    _git(repo, "checkout", "-q", "trunk")
+    # Base branch advances AFTER the feature branch forked off it.
+    (repo / "unrelated.py").write_text("x = 1\n", encoding="utf-8")
+    _git(repo, "add", "unrelated.py")
+    _git(repo, "commit", "-q", "-m", "base moves on after divergence")
+    base_tip_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert base_tip_sha != merge_base_sha
+
+    import scripts.review.target_resolution as tr
+
+    payload = {
+        "number": 9001,
+        "baseRefName": "trunk",
+        "baseRefOid": base_tip_sha,
+        "headRefName": "feature",
+        "headRefOid": head_sha,
+    }
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        assert "view" in args
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
+
+    target = resolve_pr_target(repo, 9001)
+    assert target.mode == "pr"
+    # base_sha is the merge-base (fork point), NOT the base's moved-on tip.
+    assert target.base_sha == merge_base_sha
+    assert target.base_sha != base_tip_sha
+    assert target.head_sha == head_sha
+    # Diff must cover only the PR's own change — not the base's post-fork commit.
+    assert target.changed_paths == ("pr_change.py",)
+    assert "unrelated.py" not in target.changed_paths
+    # Base tip is retained for provenance in the description.
+    assert base_tip_sha[:12] in target.description
+    assert merge_base_sha[:12] in target.description
+
+
 def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path)
     import scripts.review.target_resolution as tr

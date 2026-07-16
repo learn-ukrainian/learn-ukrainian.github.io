@@ -119,6 +119,86 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert len(state["findings"]) == 3  # raised, adjudicated, applied
 
 
+def test_check_expansion_commit_mode_measures_committed_fixes_not_clean_tree(tmp_path):
+    """A commit/branch/pr-mode baseline must be re-measured against the
+    committed post-fix head, not the (always-clean) local working tree.
+
+    Before the fix, check-expansion always called resolve_local_target,
+    which reads clean_tree=True/no changed_paths for *any* committed fix —
+    silently hiding real scope creep that landed as a commit rather than an
+    uncommitted change.
+    """
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature commit")
+    state_file = tmp_path / "state.json"
+
+    target_proc = _run_cli(state_file, "target", "--mode", "commit", "--commit", "HEAD", "--repo-root", str(repo))
+    assert target_proc.returncode == 0, target_proc.stderr
+    assert json.loads(target_proc.stdout)["changed_paths"] == ["feature.py"]
+
+    freeze_proc = _run_cli(
+        state_file,
+        "freeze",
+        "--issue",
+        "#5286",
+        "--intended-behavior",
+        "add feature",
+        "--non-goals",
+        "no refactors",
+        "--owner-boundary",
+        "repo root",
+    )
+    assert freeze_proc.returncode == 0, freeze_proc.stderr
+
+    # Positive: no further commits yet — re-diffing frozen base vs current
+    # HEAD (still the same commit) must not trigger.
+    expansion_clean = _run_cli(state_file, "check-expansion", "--repo-root", str(repo), "--current-head", "HEAD")
+    assert expansion_clean.returncode == 0, expansion_clean.stderr
+    assert json.loads(expansion_clean.stdout)["triggered"] is False
+
+    # Negative (the bug this guards): commit review-triggered scope creep,
+    # leaving the working tree clean again. A resolve_local_target-based
+    # check would see clean_tree=True and silently miss this.
+    for i in range(5):
+        (repo / f"extra{i}.py").write_text("x = 1\n" * 20, encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "review-triggered fix that overshot scope")
+    assert _git(repo, "status", "--porcelain").stdout.strip() == ""  # tree is clean
+
+    expansion_after_commit = _run_cli(state_file, "check-expansion", "--repo-root", str(repo), "--current-head", "HEAD")
+    assert expansion_after_commit.returncode == 0, expansion_after_commit.stderr
+    result = json.loads(expansion_after_commit.stdout)
+    assert result["triggered"] is True
+
+
+def test_check_expansion_non_local_mode_requires_current_head(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    _git(repo, "add", "feature.py")
+    _git(repo, "commit", "-q", "-m", "feature commit")
+    state_file = tmp_path / "state.json"
+
+    _run_cli(state_file, "target", "--mode", "commit", "--commit", "HEAD", "--repo-root", str(repo))
+    _run_cli(
+        state_file,
+        "freeze",
+        "--issue",
+        "#5286",
+        "--intended-behavior",
+        "add feature",
+        "--non-goals",
+        "no refactors",
+        "--owner-boundary",
+        "repo root",
+    )
+
+    proc = _run_cli(state_file, "check-expansion", "--repo-root", str(repo))
+    assert proc.returncode != 0
+    assert "--current-head" in proc.stderr
+
+
 def test_check_expansion_before_freeze_errors(tmp_path):
     repo = _init_repo(tmp_path)
     state_file = tmp_path / "state.json"
