@@ -7,6 +7,7 @@
 import reactRenderer from '@astrojs/react/server.js';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, test, beforeAll } from 'vitest';
+import { articleProps } from '../helpers/word-atlas-record';
 
 type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
 interface AstroComponentModule {
@@ -118,12 +119,7 @@ describe('marked-forms subsection (#4891)', () => {
 
   function render(withMarked: boolean): Promise<string> {
     return container.renderToString(WordAtlasArticle, {
-      props: {
-        entry: makeEntry(withMarked),
-        allEntries: [],
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+      props: articleProps(makeEntry(withMarked)),
     });
   }
 
@@ -184,34 +180,19 @@ describe('fully-marked lemma register treatment (#4900)', () => {
     container = await AstroContainer.create();
     container.addServerRenderer({ renderer: reactRenderer });
     unmarkedBaseline = await container.renderToString(WordAtlasArticle, {
-      props: {
-        entry: makeEntry(false),
-        allEntries: [],
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+      props: articleProps(makeEntry(false)),
     });
   });
 
   function renderFullyMarked(kind: 'short' | 'archaic' = 'short'): Promise<string> {
     return container.renderToString(WordAtlasArticle, {
-      props: {
-        entry: makeFullyMarkedEntry(kind),
-        allEntries: [],
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+      props: articleProps(makeFullyMarkedEntry(kind)),
     });
   }
 
   test('unmarked lemma rendering is unchanged', async () => {
     const html = await container.renderToString(WordAtlasArticle, {
-      props: {
-        entry: makeEntry(false),
-        allEntries: [],
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+      props: articleProps(makeEntry(false)),
     });
     expect(html).toBe(unmarkedBaseline);
     expect(html).not.toContain('status-badge register');
@@ -251,12 +232,7 @@ describe('fully-marked lemma register treatment (#4900)', () => {
 
   test('partial-marked lemma keeps collapsed details behavior', async () => {
     const html = await container.renderToString(WordAtlasArticle, {
-      props: {
-        entry: makeEntry(true),
-        allEntries: [],
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+      props: articleProps(makeEntry(true)),
     });
     expect(html).toContain('class="marked-forms"');
     expect(html).not.toContain('marked-forms-primary');

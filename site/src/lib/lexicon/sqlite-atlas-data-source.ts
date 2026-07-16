@@ -4,6 +4,11 @@
  * Reads the same ``article_payloads.payload_json`` + ``articles.entry_type``
  * projection the live renderer uses today, then attaches aliases, relations,
  * provenance, and renderContext to match the versioned EntryRecord contract.
+ *
+ * Practice-index reconciliation (PR #2): match legacy ``getPracticeLemmas`` —
+ * prefer ``public/api/lexicon/`` over ``public/lexicon/``, and index only
+ * ``lemmaId`` (lookup still falls back to ``entry.lemma``, mirroring
+ * ``has(url_slug) || has(lemma)``).
  */
 
 import Database from "better-sqlite3";
@@ -43,6 +48,14 @@ const MORPHOLOGY_SUPPRESSED = new Set([
 
 type BetterSqliteDatabase = InstanceType<typeof Database>;
 
+/** SSG-only catalog snapshot — not part of the general AtlasDataSource contract. */
+export interface AtlasStaticCatalog {
+  sourceVersion: string;
+  generatedAt: string;
+  manifestVersion: string;
+  routeSlugs: readonly string[];
+}
+
 function atlasDbPath(): string {
   return process.env.ATLAS_DB_PATH || resolve(process.cwd(), "../data/atlas.db");
 }
@@ -59,9 +72,10 @@ function loadPracticeLevelsBySlug(): Map<string, PracticeLevel[]> {
   const levelsBySlug = new Map<string, Set<PracticeLevel>>();
   const dbDir = dirname(atlasDbPath());
   for (const level of PRACTICE_LEVELS) {
+    // Legacy getPracticeLemmas checks api/lexicon before lexicon/. Keep that order.
     const candidates = [
-      resolve(dbDir, `../site/public/lexicon/practice-index.${level}.json`),
       resolve(dbDir, `../site/public/api/lexicon/practice-index.${level}.json`),
+      resolve(dbDir, `../site/public/lexicon/practice-index.${level}.json`),
     ];
     for (const path of candidates) {
       if (!existsSync(path)) continue;
@@ -70,12 +84,12 @@ function loadPracticeLevelsBySlug(): Map<string, PracticeLevel[]> {
           items?: Array<{ lemmaId?: string; lemma?: string }>;
         };
         for (const item of payload.items ?? []) {
-          for (const key of [item.lemmaId, item.lemma]) {
-            if (!key) continue;
-            const set = levelsBySlug.get(key) ?? new Set<PracticeLevel>();
-            set.add(level);
-            levelsBySlug.set(key, set);
-          }
+          // Legacy indexes only lemmaId; hasPractice then checks url_slug OR lemma
+          // against that set. Indexing lemma here would widen visibility.
+          if (!item.lemmaId) continue;
+          const set = levelsBySlug.get(item.lemmaId) ?? new Set<PracticeLevel>();
+          set.add(level);
+          levelsBySlug.set(item.lemmaId, set);
         }
         break;
       } catch {
@@ -121,6 +135,9 @@ function assertCefrConsistent(slug: string, articleCefr: string | null, entry: L
 
 export class SqliteAtlasDataSource implements AtlasDataSource {
   private readonly version: string;
+  private readonly generatedAt: string;
+  private readonly manifestVersion: string;
+  private readonly routeSlugs: readonly string[];
   private readonly recordsBySlug: Map<string, EntryRecord>;
   private readonly articleRows: SearchRow[];
   private readonly aliasRows: SearchAlias[];
@@ -129,6 +146,9 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
   constructor(options?: { version?: string; deckDir?: string }) {
     const cache = getAtlasPayloadCache();
     this.version = options?.version ?? `sqlite-${cache.manifestVersion}`;
+    this.generatedAt = cache.generatedAt;
+    this.manifestVersion = cache.manifestVersion;
+    this.routeSlugs = cache.entries.map((entry) => entry.url_slug);
     this.deckDir =
       options?.deckDir ??
       resolve(dirname(atlasDbPath()), "../site/public/lexicon");
@@ -304,6 +324,16 @@ export class SqliteAtlasDataSource implements AtlasDataSource {
     } finally {
       db.close();
     }
+  }
+
+  /** SSG route enumeration + footer metadata. Not on AtlasDataSource. */
+  getStaticCatalog(): AtlasStaticCatalog {
+    return {
+      sourceVersion: this.version,
+      generatedAt: this.generatedAt,
+      manifestVersion: this.manifestVersion,
+      routeSlugs: this.routeSlugs,
+    };
   }
 
   async getEntry(slug: string, options?: { expectedVersion?: string }): Promise<EntryResult> {

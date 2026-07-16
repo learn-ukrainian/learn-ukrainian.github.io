@@ -13,6 +13,7 @@ import {
   getPracticeLemmas,
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
+import { articleProps } from '../helpers/word-atlas-record';
 
 let mockExistsSync = (p: string): boolean => true;
 let mockReadFileSync = (p: string, encoding: any): string => '';
@@ -147,20 +148,18 @@ describe('Atlas DB SSG read parity', () => {
       expect(dbEntry).toEqual(alignedManifestEntry);
 
       const manifestHtml = await container.renderToString(WordAtlasArticle, {
-        props: {
-          entry: alignedManifestEntry,
-          allEntries: manifestEntries,
+        props: articleProps(alignedManifestEntry, {
+          lemmaEntries: manifestEntries,
           generatedAt: data.generated_at,
           manifestVersion: data.version,
-        },
+        }),
       });
       const dbHtml = await container.renderToString(WordAtlasArticle, {
-        props: {
-          entry: dbEntry,
-          allEntries: cache.entries,
+        props: articleProps(dbEntry!, {
+          lemmaEntries: cache.entries,
           generatedAt: cache.generatedAt,
           manifestVersion: cache.manifestVersion,
-        },
+        }),
       });
 
       if (manifestHtml !== dbHtml) {

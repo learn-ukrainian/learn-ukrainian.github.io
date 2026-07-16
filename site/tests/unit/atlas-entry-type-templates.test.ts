@@ -13,6 +13,11 @@ import {
   type AtlasPayloadCache,
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
+import { articleProps } from '../helpers/word-atlas-record';
+import {
+  resetSqliteAtlasDataSourceCachesForTests,
+  SqliteAtlasDataSource,
+} from '@site/src/lib/lexicon/sqlite-atlas-data-source';
 
 type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
 interface AstroComponentModule {
@@ -154,10 +159,14 @@ describe('entry_type-branched article rendering (#4385)', () => {
 
   async function render(entry: LexiconEntry | undefined, slug: string): Promise<string> {
     expect(entry, `fixture missing: ${slug}`).toBeDefined();
+    resetSqliteAtlasDataSourceCachesForTests();
+    const source = new SqliteAtlasDataSource();
+    const result = await source.getEntry(slug);
+    expect(result.kind).toBe('entry');
+    if (result.kind !== 'entry') throw new Error('expected entry');
     return container.renderToString(WordAtlasArticle, {
       props: {
-        entry,
-        allEntries: cache.entries,
+        record: result.record,
         generatedAt: 'test',
         manifestVersion: 'test',
       },
@@ -169,13 +178,10 @@ describe('entry_type-branched article rendering (#4385)', () => {
     componentLinkTargets = COMPONENT_LINK_TARGETS,
   ): Promise<string> {
     return container.renderToString(WordAtlasArticle, {
-      props: {
-        entry,
-        allEntries: COMPONENT_LEMMAS,
+      props: articleProps(entry, {
         componentLinkTargets,
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+        lemmaEntries: COMPONENT_LEMMAS,
+      }),
     });
   }
 

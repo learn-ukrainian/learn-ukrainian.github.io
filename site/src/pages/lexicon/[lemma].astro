@@ -7,25 +7,59 @@
  * (e.g. `брати-взяти`, `іі-відміна`) resolve exactly like single-lemma slugs.
  * The Astro filename stays `[lemma].astro` (a later PR handles the rename); the
  * `entry_type` carried on each entry drives per-type rendering in the article
- * component. The DB-enforced entry-model gates run when `getAtlasPayloadCache()`
- * loads, failing the build loudly on violations.
+ * component.
+ *
+ * PR #2: SSG reads a pinned SqliteAtlasDataSource catalog snapshot and renders
+ * from EntryRecord only (source-swappable; byte-identical to the legacy path).
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
-import WordAtlasArticle from "../../lexicon/WordAtlasArticle.astro";
-import { getAtlasPayloadCache, type LexiconEntry } from "../../lib/lexicon/atlasDb";
-
-const atlasPayloads = getAtlasPayloadCache();
-const lexemeEntries = atlasPayloads.entries;
+import WordAtlasPageShell from "../../lexicon/WordAtlasPageShell.astro";
+import { SqliteAtlasDataSource } from "../../lib/lexicon/sqlite-atlas-data-source";
+import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
+import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
 export async function getStaticPaths() {
-  return getAtlasPayloadCache().entries
-    .map((entry) => ({
-      params: { lemma: entry.url_slug },
-      props: { entry },
-    }));
+  const source = new SqliteAtlasDataSource();
+  const catalog = source.getStaticCatalog();
+  const paths: Array<{
+    params: { lemma: string };
+    props: { record: EntryRecord; generatedAt: string; manifestVersion: string };
+  }> = [];
+
+  for (const slug of catalog.routeSlugs) {
+    const result = await source.getEntry(slug, {
+      expectedVersion: catalog.sourceVersion,
+    });
+    if (result.kind === "missing") {
+      throw new Error(
+        `Atlas static catalog slug missing under pinned version ${catalog.sourceVersion}: ${JSON.stringify(slug)}`,
+      );
+    }
+    paths.push({
+      params: { lemma: slug },
+      props: {
+        record: result.record,
+        generatedAt: catalog.generatedAt,
+        manifestVersion: catalog.manifestVersion,
+      },
+    });
+  }
+
+  return paths;
 }
 
-const { entry } = Astro.props as { entry: LexiconEntry };
+const { record, generatedAt, manifestVersion } = Astro.props as {
+  record: EntryRecord;
+  generatedAt: string;
+  manifestVersion: string;
+};
+const entry = record.entry;
+const readyState = {
+  status: "ready",
+  record,
+  generatedAt,
+  manifestVersion,
+} satisfies WordAtlasPageState;
 const frontmatter = {
   title: entry.lemma,
   description: entry.form_of
@@ -42,11 +76,5 @@ const frontmatter = {
   wide
   showHero={false}
 >
-  <WordAtlasArticle
-    entry={entry}
-    allEntries={lexemeEntries}
-    componentLinkTargets={atlasPayloads.componentLinkTargets}
-    generatedAt={atlasPayloads.generatedAt}
-    manifestVersion={atlasPayloads.manifestVersion}
-  />
+  <WordAtlasPageShell state={readyState} />
 </CourseLayout>

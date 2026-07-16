@@ -1,0 +1,56 @@
+---
+/**
+ * Word Atlas page-state shell.
+ *
+ * `ready` delegates to WordAtlasArticle with zero extra DOM. Other states are
+ * dormant (no scoped CSS / no global imports) so a later client reader can
+ * reuse this shell without changing ready-page HTML assets.
+ */
+import WordAtlasArticle from "./WordAtlasArticle.astro";
+import type { WordAtlasPageState } from "../lib/lexicon/word-atlas-page-state";
+
+interface Props {
+  state: WordAtlasPageState;
+}
+
+const { state } = Astro.props as Props;
+---
+
+{state.status === "ready" ? (
+  <WordAtlasArticle
+    record={state.record}
+    generatedAt={state.generatedAt}
+    manifestVersion={state.manifestVersion}
+  />
+) : state.status === "loading" ? (
+  <div role="status" aria-busy="true" data-word-atlas-state="loading">
+    <p>Завантаження статті Атласу…</p>
+  </div>
+) : state.status === "missing" ? (
+  <div role="alert" data-word-atlas-state="missing" data-http-status="404">
+    <h1>Статтю не знайдено</h1>
+    <p>Немає публічної статті для «{state.slug}».</p>
+    <p>
+      <a href="/lexicon/">До Атласу</a>
+      {" · "}
+      <a href="/lexicon/#lexicon-landing-search">Пошук</a>
+    </p>
+  </div>
+) : state.status === "offline" ? (
+  <div role="alert" data-word-atlas-state="offline" data-http-status="503">
+    <h1>Атлас тимчасово недоступний</h1>
+    <p>{state.message}</p>
+    {state.retryable ? (
+      <p><button type="button" data-word-atlas-retry>Спробувати знову</button></p>
+    ) : null}
+  </div>
+) : (
+  <div role="alert" data-word-atlas-state="version-mismatch" data-http-status="409">
+    <h1>Версія даних змінилася</h1>
+    <p>
+      Очікувалась {state.expectedVersion}
+      {state.actualVersion ? `, зараз ${state.actualVersion}` : ""}.
+    </p>
+    <p><button type="button" data-word-atlas-retry>Оновити</button></p>
+  </div>
+)}
