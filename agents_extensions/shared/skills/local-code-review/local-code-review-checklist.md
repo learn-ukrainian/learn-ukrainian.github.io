@@ -271,9 +271,11 @@ whatever real, product-specific surface applies:
   code, not the source.
 - **HTTP endpoint / Monitor API**: `curl` the real route and inspect the
   response body/status code.
-- **Browser-facing UI**: drive it with `mcp__claude-in-chrome__*` (or the
-  `/run` skill, which launches this project's app) and observe the
-  rendered page, not the component source.
+- **Browser-facing UI**: use a browser-control capability that is actually
+  available in the current harness, or the repository's existing UI/E2E
+  command for that surface, and observe the rendered page. If neither is
+  available, document reproducible manual steps instead of naming a tool or
+  skill that the current environment does not provide.
 - **Generated artifact** (deployed skill mirrors, built docs, MDX output):
   run the actual generator/deploy script (e.g. `scripts/deploy_prompts.sh`,
   `scripts/lint/lint_agent_skills.py`, the relevant build script) and read
