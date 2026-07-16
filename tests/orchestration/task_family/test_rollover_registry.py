@@ -505,6 +505,51 @@ def test_incident_shape_allows_exact_aef219_and_leaves_unrelated_packets_untouch
         assert current["state"] == registry.RolloverState.AWAITING_NATIVE_CREATE.value
 
 
+def _retire_native_plan(lease: dict) -> dict:
+    """Model a lease whose unsatisfiable legacy native plan was retired at migration."""
+    retired = lease["replacement"].pop("native_lifecycle")
+    lease["replacement"]["native_lifecycle_retired"] = {
+        **retired,
+        "status": "retired_non_native_harness",
+        "retired_at": "2026-07-16T12:00:00Z",
+        "reason": "legacy native plan is unsatisfiable on a harness without a native adapter",
+    }
+    return lease
+
+
+def test_retired_non_native_lease_projects_prepared_not_awaiting_native_create(tmp_path: Path) -> None:
+    lease = _retire_native_plan(
+        _lease(
+            agent="claude-infra",
+            lineage="lineage-retired-unbound",
+            rollover_id="rollover-retired-unbound",
+            source="source-retired-unbound",
+        )
+    )
+
+    record = _sync(tmp_path, lease)
+
+    assert lease["replacement"]["title_transition"]["native_title_supported"] is False
+    assert record["state"] == registry.RolloverState.PREPARED.value
+
+
+def test_retired_non_native_lease_with_bound_fallback_projects_replacement_created(tmp_path: Path) -> None:
+    lease = _retire_native_plan(
+        _lease(
+            agent="claude-infra",
+            lineage="lineage-retired-bound",
+            rollover_id="rollover-retired-bound",
+            source="source-retired-bound",
+            replacement="replacement-fallback-bound",
+        )
+    )
+
+    record = _sync(tmp_path, lease)
+
+    assert lease["replacement"]["title_transition"]["state"] == "fallback_recorded"
+    assert record["state"] == registry.RolloverState.REPLACEMENT_CREATED.value
+
+
 def test_stale_age_is_read_only_and_never_deletes_packet(tmp_path: Path) -> None:
     record = _sync(
         tmp_path,

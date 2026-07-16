@@ -900,6 +900,39 @@ def test_touched_legacy_native_plan_is_never_retired():
     assert "native_lifecycle_retired" not in normalized["replacement"]
 
 
+def test_repair_refuses_retired_native_plan_with_clear_error_and_persists_retirement(
+    tmp_path: Path, capsys
+) -> None:
+    state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
+    lineage_id = state["lineage_id"]
+    rollover_id = state["replacement"]["rollover_id"]
+    state_path = th.default_state_path("claude-infra", lineage_id)
+    th.write_json_atomic(tmp_path / state_path, state)
+
+    command = [
+        "--repo-root",
+        str(tmp_path),
+        "repair-native-intent",
+        "--agent",
+        "claude-infra",
+        "--lineage-id",
+        lineage_id,
+        "--rollover-id",
+        rollover_id,
+        "--evidence",
+        "Legacy non-native packet; probing the repair path.",
+    ]
+    assert th.main(command) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert "retired as unsatisfiable" in payload["error"]
+
+    persisted = json.loads((tmp_path / state_path).read_text(encoding="utf-8"))
+    assert "native_lifecycle" not in persisted["replacement"]
+    assert persisted["replacement"]["native_lifecycle_retired"]["status"] == "retired_non_native_harness"
+    identity_receipt = tmp_path / persisted["replacement"]["identity_receipt_path"]
+    assert identity_receipt.exists()
+
+
 def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: Path, capsys, monkeypatch):
     dirty_snapshot = sample_snapshot(tmp_path)
     dirty_snapshot["git"]["modified_files"] = [{"status": "??", "path": "untracked.txt"}]

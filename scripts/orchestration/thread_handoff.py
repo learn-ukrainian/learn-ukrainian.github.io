@@ -2471,7 +2471,9 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         state_error = state_error_payload(state, state_path, state_root)
         if state_error:
             raise ValueError(state_error["error"])
-        state, _ = normalize_identity_state(state, agent=agent, now=utc_now())
+        state, changed = normalize_identity_state(state, agent=agent, now=utc_now())
+        if changed:
+            write_rollover_state(state_path, state_root, state, already_locked=True)
         replacement = dict(state.get("replacement") or {})
         if replacement.get("rollover_id") != args.rollover_id:
             raise ValueError("--rollover-id does not match the isolated rollover")
@@ -2483,6 +2485,11 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         source_thread_id = active.get("thread_id")
         display = replacement.get("display")
         native = replacement.get("native_lifecycle")
+        if not isinstance(native, dict) and isinstance(replacement.get("native_lifecycle_retired"), dict):
+            raise ValueError(
+                "native plan was retired as unsatisfiable for a non-native harness; "
+                "no native-intent repair applies — bind the replacement and resume instead"
+            )
         if (
             not isinstance(lineage_id, str)
             or not isinstance(generation, int)
