@@ -58,13 +58,13 @@ def _run(
     """
     payload = json.dumps({"tool_input": {"command": command}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: pr)
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: pr)
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None: ({"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta),
+        lambda p, repo=None, cwd=None: ({"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta),
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: checks)
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: checks)
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: owner_repo)
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: protected)
     return guard.main()
@@ -168,10 +168,10 @@ def test_unknown_pr_fails_closed(monkeypatch):
 
 def test_undeterminable_pr_meta_fails_closed(monkeypatch):
     # _pr_meta returning None (gh error/timeout) → block, never "assume not a draft".
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: None)
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: None)
     payload = json.dumps({"tool_input": {"command": "gh pr merge 5 --squash"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
     assert guard.main() == 2
 
 
@@ -280,9 +280,9 @@ def test_auto_on_base_with_empty_required_checks_is_blocked(monkeypatch):
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: False)
     payload = json.dumps({"tool_input": {"command": "gh pr merge 5 --auto --squash"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: "owner/repo")
     assert guard.main() == 2
 
@@ -473,13 +473,13 @@ def test_owner_repo_from_url(url, expected):
 def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
     # The PR url decides which repo's protection is read, not the cwd.
     seen = {}
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "https://github.com/other/repo/pull/9")
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "https://github.com/other/repo/pull/9")
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": "https://github.com/other/repo/pull/9"},
+        lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": "https://github.com/other/repo/pull/9"},
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: seen.setdefault("repo", o) and True)
     payload = json.dumps({"tool_input": {"command": "gh pr merge https://github.com/other/repo/pull/9 --auto"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
@@ -538,9 +538,9 @@ def test_recursion_cap_fails_closed(monkeypatch):
     # through. Regression for an inert sentinel: the marker segment carries no PR
     # selector, and _pr_ref falls back to the CURRENT BRANCH's PR — so without an
     # explicit marker check, a green current branch would approve an unread payload.
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))  # all green
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))  # all green
     assert guard._judge([guard._UNREADABLE_MARKER]) is not None
 
 
@@ -886,3 +886,60 @@ def test_colorized_empty_required_checks_still_unprotected(monkeypatch):
     completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized, stderr="")
     monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
     assert guard._base_protected("owner/repo", "main") is False
+
+
+# --- cd-target resolution: judge the PR in the repo the merge RUNS in ---------
+
+
+def test_cd_target_literal_and_home():
+    import os
+    assert guard._cd_target(["cd", "/tmp"]) == "/tmp"
+    assert guard._cd_target(["cd", "~/x"]) == os.path.expanduser("~/x")
+    assert guard._cd_target(["cd"]) == os.path.expanduser("~")
+    assert guard._cd_target(["ls", "-la"]) is None
+
+
+def test_cd_target_unreadable_forms():
+    assert guard._cd_target(["cd", "-"]) is guard._CD_UNREADABLE
+    assert guard._cd_target(["cd", "$DIR"]) is guard._CD_UNREADABLE
+
+
+def test_cd_then_merge_threads_cwd(monkeypatch):
+    """`cd <repo> && gh pr merge N` must judge N in <repo> — captured via the cwd
+    handed to _judge. Wrong-repo judgment is dangerous BOTH ways (false block, or a
+    false ALLOW off a same-numbered green PR elsewhere)."""
+    seen = {}
+
+    def fake_judge(args, cwd=None):
+        seen["cwd"] = cwd
+        return None
+
+    payload = json.dumps(
+        {"tool_input": {"command": "cd /tmp && gh pr merge 7 --squash"}}
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    monkeypatch.setattr(guard, "_judge", fake_judge)
+    assert guard.main() == 0
+    assert seen["cwd"] == "/tmp"
+
+
+def test_unreadable_cd_before_merge_blocks(monkeypatch):
+    payload = json.dumps(
+        {"tool_input": {"command": 'cd "$WORKDIR" && gh pr merge 7 --squash'}}
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+def test_plain_merge_has_no_cwd(monkeypatch):
+    seen = {}
+
+    def fake_judge(args, cwd=None):
+        seen["cwd"] = cwd
+        return None
+
+    payload = json.dumps({"tool_input": {"command": "gh pr merge 7 --squash"}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    monkeypatch.setattr(guard, "_judge", fake_judge)
+    assert guard.main() == 0
+    assert seen["cwd"] is None

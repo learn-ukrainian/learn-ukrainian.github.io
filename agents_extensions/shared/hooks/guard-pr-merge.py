@@ -349,6 +349,30 @@ _MAX_SHELL_DEPTH = 8
 _UNREADABLE_MARKER = "--__guard_unreadable__"
 _UNPARSED = ["gh", "pr", "merge", _UNREADABLE_MARKER]
 
+# Sentinel: a `cd` whose target the guard cannot statically read (`cd -`, `cd "$DIR"`,
+# `cd $(...)`). Distinct from None ("this segment is not a cd").
+_CD_UNREADABLE = object()
+
+
+def _cd_target(seg: list[str]):
+    """The literal directory a `cd` segment changes into, expanded.
+
+    Returns None when the segment is not a cd; _CD_UNREADABLE when it is a cd the
+    guard cannot statically resolve (variable/substitution/`cd -`/flags-only). A
+    bare `cd` goes to $HOME, as the shell does. Relative paths resolve against the
+    hook process's cwd — the same base the real command's cd uses.
+    """
+    i = _skip_command_prefix(seg, 0)
+    if i >= len(seg) or seg[i] != "cd":
+        return None
+    rest = [a for a in seg[i + 1 :] if a not in {"-P", "-L", "-e", "-@"}]
+    if not rest:
+        return os.path.expanduser("~")
+    target = rest[0]
+    if target == "-" or "$" in target or "`" in target:
+        return _CD_UNREADABLE
+    return os.path.abspath(os.path.expanduser(target))
+
 
 def _judged_segments(command: str, depth: int = 0) -> list[list[str]]:
     """Every segment worth judging, including those nested in `bash -c` payloads."""
@@ -528,7 +552,7 @@ def _pr_selector(args: list[str]) -> str | None:
     return positionals[0] if positionals else None
 
 
-def _pr_ref(args: list[str], repo: str | None = None) -> str | None:
+def _pr_ref(args: list[str], repo: str | None = None, cwd: str | None = None) -> str | None:
     """The PR to judge: the explicit selector, else the current branch's PR number."""
     selector = _pr_selector(args)
     if selector:
@@ -538,6 +562,7 @@ def _pr_ref(args: list[str], repo: str | None = None) -> str | None:
             ["gh", "pr", "view", *_repo_args(repo), "--json", "number", "-q", ".number"],
             capture_output=True,
             env=_gh_env(),
+            cwd=cwd,
             text=True,
             timeout=10,
         )
@@ -559,7 +584,7 @@ def _owner_repo_from_url(url: str) -> str | None:
     return f"{m.group(1)}/{m.group(2)}" if m else None
 
 
-def _pr_meta(pr: str, repo: str | None = None) -> dict | None:
+def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict | None:
     """`{isDraft, baseRefName, url}` for the PR, or None if undeterminable (→ fail-closed).
 
     A payload without a boolean `isDraft` is undeterminable, not "not a draft" — `{}` or
@@ -570,6 +595,7 @@ def _pr_meta(pr: str, repo: str | None = None) -> dict | None:
             ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "isDraft,baseRefName,url"],
             capture_output=True,
             env=_gh_env(),
+            cwd=cwd,
             text=True,
             timeout=8,
         )
@@ -586,13 +612,14 @@ def _pr_meta(pr: str, repo: str | None = None) -> dict | None:
     return data
 
 
-def _check_states(pr: str, repo: str | None = None) -> tuple[list[str], list[str]] | None:
+def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
     """(failing, pending) non-advisory check names, or None if undeterminable."""
     try:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
             capture_output=True,
             env=_gh_env(),
+            cwd=cwd,
             text=True,
             timeout=8,
         )
@@ -683,7 +710,7 @@ def _block_msg(reason: str, guidance: str) -> str:
     return f"BLOCKED by guard-pr-merge: {reason}.\n\n{guidance}\n\n{_FOOTER}"
 
 
-def _judge(args: list[str]) -> str | None:
+def _judge(args: list[str], cwd: str | None = None) -> str | None:
     """Block message for this `gh pr merge`, or None to allow."""
     if _UNREADABLE_MARKER in args:
         return _block_msg(
@@ -694,13 +721,13 @@ def _judge(args: list[str]) -> str | None:
             "named explicitly (`gh pr merge <number> ...`).",
         )
     repo = _repo_option(args)
-    pr = _pr_ref(args, repo)
+    pr = _pr_ref(args, repo, cwd=cwd)
     if not pr:
         return _block_msg(
             "could not determine which PR this merges",
             "Name the PR explicitly (`gh pr merge <number> ...`) so the merge can be verified.",
         )
-    meta = _pr_meta(pr, repo)
+    meta = _pr_meta(pr, repo, cwd=cwd)
     if meta is None:
         return _block_msg(
             f"could not verify PR {pr}'s draft status (gh error, timeout, or unexpected schema)",
@@ -714,7 +741,7 @@ def _judge(args: list[str]) -> str | None:
             "(the #189 incident: a draft was squash-merged before anyone reviewed it). Mark it\n"
             "ready (`gh pr ready`) and get the review gate first.",
         )
-    states = _check_states(pr, repo)
+    states = _check_states(pr, repo, cwd=cwd)
     if states is None:
         return _block_msg(
             f"could not verify PR {pr} check states (gh error, timeout, or an unrecognized check state)",
@@ -783,11 +810,34 @@ def main() -> int:
     probe = command.replace("\\", "").replace("'", "").replace('"', "")
     if "gh" not in probe or "pr" not in probe or "merge" not in probe:
         return 0
+    cwd: str | None = None
+    cwd_unreadable = False
     for seg in _judged_segments(command):
+        # Track `cd <target>` so PR numbers are judged in the repo the MERGE runs in,
+        # not the session's repo. `cd private-repo && gh pr merge 203` judged from the
+        # public repo resolves a DIFFERENT PR #203 — wrong verdict in BOTH directions
+        # (false block, or worse: false allow off a same-numbered green PR).
+        target = _cd_target(seg)
+        if target is _CD_UNREADABLE:
+            cwd_unreadable = True
+        elif target is not None:
+            cwd = target
+            cwd_unreadable = False
         args = _merge_args(seg)
         if args is None:
             continue
-        blocked = _judge(args)
+        if cwd_unreadable:
+            sys.stderr.write(
+                _block_msg(
+                    "this merge runs after a `cd` whose target cannot be read "
+                    "(variable, substitution, or `cd -`)",
+                    "The guard must judge the PR in the repo the merge actually runs in.\n"
+                    "Use a literal `cd /path && gh pr merge ...`, or name the repo with\n"
+                    "`-R owner/repo`.",
+                )
+            )
+            return 2
+        blocked = _judge(args, cwd=cwd)
         if blocked:
             sys.stderr.write(blocked)
             return 2
