@@ -8,6 +8,7 @@ import subprocess
 import sys
 from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -244,14 +245,135 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     # single JSON data line; it cannot terminate the evidence boundary.
     assert prompt_evidence.count("\nEND AUTHORITATIVE SEALED REVIEW EVIDENCE\n") == 1
 
-    claude_line = next(line for line in checkout.review_prompt_evidence("claude").splitlines() if line.startswith("{"))
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="split_required:long_line"):
+        checkout.review_prompt_evidence("claude")
+
+    small_checkout = _prompt_evidence_checkout(tmp_path / "snapshot-small")
+    claude_line = next(
+        line
+        for line in small_checkout.review_prompt_evidence("claude").splitlines()
+        if line.startswith("{")
+    )
     claude_dossier = json.loads(claude_line)
     assert claude_dossier["changed_file_content_mode"] == ("complete_via_sealed_snapshot_read_tools")
     assert "content" not in claude_dossier["files"][0]
-    grok_line = next(line for line in checkout.review_prompt_evidence("grok").splitlines() if line.startswith("{"))
+    grok_line = next(
+        line
+        for line in small_checkout.review_prompt_evidence("grok").splitlines()
+        if line.startswith("{")
+    )
     grok_dossier = json.loads(grok_line)
     assert "content" not in grok_dossier["files"][0]
-    assert grok_dossier["sealed_snapshot_root"] == str(checkout.path)
+    assert grok_dossier["sealed_snapshot_root"] == str(small_checkout.path)
+
+
+def _codex_read_calls(
+    checkout: review_worktree.ProvisionedReviewWorktree,
+) -> list[dict[str, object]]:
+    calls: list[dict[str, object]] = []
+    required = review_worktree._required_review_read_paths(
+        checkout.path,
+        checkout.changed_paths,
+    )
+    for rel_path in required:
+        data = (checkout.path / rel_path).read_bytes()
+        offsets = range(0, max(1, len(data)), 64 * 1024)
+        for offset in offsets:
+            chunk = data[offset : offset + 64 * 1024]
+            next_offset = offset + len(chunk)
+            payload = {
+                "path": rel_path,
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "offset": offset,
+                "chunk_bytes": len(chunk),
+                "chunk_sha256": hashlib.sha256(chunk).hexdigest(),
+                "next_offset": next_offset,
+                "total_bytes": len(data),
+                "eof": next_offset == len(data),
+                "content": chunk.decode("utf-8"),
+            }
+            calls.append(
+                {
+                    "name": "mcp__sealed_review__read_file",
+                    "arguments": {"path": rel_path, "offset": offset, "max_bytes": 64 * 1024},
+                    "result": {
+                        "content": [{"type": "text", "text": json.dumps(payload)}],
+                        "isError": False,
+                    },
+                }
+            )
+    return calls
+
+
+def test_clean_review_requires_complete_hash_bound_tool_reads(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "read-proof")
+    calls = _codex_read_calls(checkout)
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["mode"] == "hash_bound_byte_chunks"
+    assert proof["covered_path_count"] == 3
+    incomplete = [
+        call
+        for call in calls
+        if call["arguments"]["path"] != ".review-bundle/patch.diff"  # type: ignore[index]
+    ]
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=incomplete),
+            engine="codex",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
+
+
+def test_clean_review_requires_complete_builtin_line_reads(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "builtin-read-proof")
+    required = review_worktree._required_review_read_paths(checkout.path, checkout.changed_paths)
+    calls = [
+        {
+            "name": "Read",
+            "arguments": {"file_path": str(checkout.path / rel_path)},
+            "result": "complete",
+        }
+        for rel_path in required
+    ]
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="claude",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["mode"] == "sandboxed_line_chunks"
+    assert proof["covered_path_count"] == 3
+
+
+def test_bind_clean_review_rejects_schema_valid_no_read_response(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "no-read-clean")
+    clean = json.dumps(
+        {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "correct",
+                "explanation": "No defects found.",
+                "confidence": 0.95,
+            },
+            "findings": [],
+        }
+    )
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        checkout.bind_review_result(
+            SimpleNamespace(ok=True, response=clean, tool_calls=[]),
+            engine="claude",
+        )
 
 
 def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(

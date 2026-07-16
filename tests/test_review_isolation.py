@@ -21,6 +21,8 @@ from scripts.review.isolation import (
     SandboxCapability,
     _canonical_sandbox_read_roots,
     _inject_codex_sealed_read_mcp,
+    _probe_sealed_read_mcp,
+    _sealed_reader_python_runtime,
     _stage_sealed_read_mcp,
     apply_review_isolation_to_invocation,
     build_claude_review_argv,
@@ -30,6 +32,7 @@ from scripts.review.isolation import (
     detect_engine_capabilities,
     is_sensitive_path,
     preflight_review_inputs,
+    prepare_host_sandbox,
     prepare_isolated_review_launch,
     require_engine_isolation,
     require_supported_engine_version,
@@ -50,6 +53,7 @@ from scripts.review.snapshot import (
     DIAG_TRAVERSAL,
     ImmutableFileRecord,
     ReviewSnapshotError,
+    _immutable_local_patch,
     _read_regular_file_stable,
     capture_local_review_state,
     capture_untracked_records,
@@ -617,6 +621,7 @@ def test_missing_engine_capability_refused_never_downgraded(tmp_path: Path) -> N
     require_engine_isolation(good)
     argv = build_claude_review_argv(fake, prompt="review", json_schema={"type": "object"}, capabilities=good)
     assert "--bare" in argv
+    assert "--safe-mode" in argv
     assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob"
     assert json.loads(argv[argv.index("--json-schema") + 1]) == {"type": "object"}
     assert str(fake.resolve()) == argv[0] or argv[0].endswith("claude")
@@ -639,6 +644,25 @@ def test_codex_review_argv_includes_isolation_flags(tmp_path: Path) -> None:
     assert "--ignore-user-config" in argv
     assert "--ignore-rules" in argv
     assert "read-only" in argv
+
+
+def test_claude_bare_alone_does_not_attest_skill_suppression(tmp_path: Path) -> None:
+    fake = tmp_path / "claude"
+    fake.write_text("#!/bin/sh\n", encoding="utf-8")
+    fake.chmod(fake.stat().st_mode | stat.S_IXUSR)
+
+    caps = detect_engine_capabilities(
+        "claude",
+        fake,
+        help_text=(
+            "--bare --setting-sources --strict-mcp-config "
+            "--disallowedTools --tools --json-schema"
+        ),
+    )
+
+    assert "disable_project_instructions" in caps.capabilities
+    assert "disable_hooks_skills_plugins" not in caps.capabilities
+    assert not caps.ok
 
 
 def test_codex_capabilities_do_not_treat_unrelated_s_substrings_as_sandbox_proof(tmp_path: Path) -> None:
@@ -726,6 +750,95 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
     content = json.loads(responses[2]["result"]["content"][0]["text"])
     assert content["content"] == "VALUE = 1\n"
     assert responses[3]["error"]["message"].startswith("ValueError:invalid_path")
+
+
+def test_codex_sealed_reader_returns_bounded_hash_bound_chunks(tmp_path: Path) -> None:
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    data = ("абвгд" * 20_000 + "\n").encode("utf-8")
+    (snapshot / "large.txt").write_bytes(data)
+    execution = tmp_path / "exec"
+    execution.mkdir(mode=0o700)
+    helper = _stage_sealed_read_mcp(execution)
+    requests = "\n".join(
+        json.dumps(
+            {
+                "jsonrpc": "2.0",
+                "id": index + 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "read_file",
+                    "arguments": {
+                        "path": "large.txt",
+                        "offset": offset,
+                        "max_bytes": 64 * 1024,
+                    },
+                },
+            }
+        )
+        for index, offset in enumerate((0, 65_536, 131_072, 196_608))
+    )
+
+    completed = subprocess.run(
+        ["/usr/bin/python3", "-I", "-S", str(helper), str(snapshot)],
+        input=requests + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    payloads = [
+        json.loads(json.loads(line)["result"]["content"][0]["text"])
+        for line in completed.stdout.splitlines()
+    ]
+
+    assert all(payload["chunk_bytes"] <= 64 * 1024 for payload in payloads)
+    assert all(payload["sha256"] == hashlib.sha256(data).hexdigest() for payload in payloads)
+    assert payloads[0]["next_offset"] == 65_536
+    assert payloads[-1]["eof"] is True
+    rebuilt = "".join(payload["content"] for payload in payloads).encode("utf-8")
+    assert rebuilt == data
+
+
+def test_macos_clt_python_runs_sealed_reader_inside_sandbox(tmp_path: Path) -> None:
+    if os.uname().sysname != "Darwin":
+        pytest.skip("macOS Command Line Tools runtime required")
+    requested_python = Path("/usr/bin/python3").resolve(strict=True)
+    snapshot = tmp_path / "snapshot"
+    bundle = snapshot / ".review-bundle"
+    bundle.mkdir(parents=True)
+    (bundle / "manifest.json").write_text('{"schema_version":"fixture"}\n', encoding="utf-8")
+    reject = tmp_path / "reject"
+    reject.mkdir()
+    write, execution = _private_review_roots(tmp_path, "clt-python")
+    helper = _stage_sealed_read_mcp(execution)
+    python_bin, python_runtime = _sealed_reader_python_runtime(
+        requested_python,
+        reject_roots=(reject,),
+    )
+    runtime_reads = [
+        str(execution),
+        *python_runtime,
+    ]
+    sandbox = prepare_host_sandbox(
+        engine="codex",
+        snapshot_root=snapshot,
+        write_root=write,
+        reject_root=reject,
+        profile_dir=write,
+        runtime_reads=runtime_reads,
+        executable=python_bin,
+        network_allowed=False,
+    )
+
+    _probe_sealed_read_mcp(
+        python_bin=python_bin,
+        helper=helper,
+        snapshot_root=snapshot,
+        sandbox=sandbox,
+    )
+
+    assert sandbox.verified is True
+    assert any("CommandLineTools" in root for root in sandbox.read_roots)
 
 
 def test_agy_isolated_review_is_explicitly_unsupported() -> None:
@@ -832,6 +945,7 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
         effort="max",
     )
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob"
+    assert "--safe-mode" in plan.cmd
     assert "Bash" not in plan.cmd
     assert "review" not in plan.cmd
     assert plan.stdin_payload == "review"
@@ -2963,11 +3077,8 @@ def test_local_patch_preserves_captured_crlf_bytes(tmp_path: Path) -> None:
 
 
 def test_local_patch_is_bound_to_immutable_records_during_source_race(
-    monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    from scripts.review import snapshot as snapshot_module
-
     repo = tmp_path / "repo"
     repo.mkdir()
     _init_repo(repo)
@@ -2984,22 +3095,21 @@ def test_local_patch_is_bound_to_immutable_records_during_source_race(
         "-m",
         "race base",
     )
-    target.write_text("two\n", encoding="utf-8")
-    real_patch = snapshot_module._immutable_local_patch
+    record = ImmutableFileRecord.from_bytes("race.txt", b"two\n", mode=0o644)
+    target.write_text("three\n", encoding="utf-8")
+    git_bin = resolve_external_executable("git", reject_root=repo)
 
-    def racing_patch(*args, **kwargs):
-        target.write_text("three\n", encoding="utf-8")
-        try:
-            return real_patch(*args, **kwargs)
-        finally:
-            target.write_text("two\n", encoding="utf-8")
+    patch = _immutable_local_patch(
+        repo,
+        git_bin=git_bin,
+        head_sha=_head_sha(repo),
+        records=(record,),
+        deleted_paths=(),
+        rename_pairs=(),
+    )
 
-    monkeypatch.setattr(snapshot_module, "_immutable_local_patch", racing_patch)
-
-    capture = capture_local_review_state(repo)
-
-    assert b"+two\n" in capture.patch_bytes
-    assert b"+three\n" not in capture.patch_bytes
+    assert b"+two\n" in patch
+    assert b"+three\n" not in patch
 
 
 def test_local_capture_supports_split_index(tmp_path: Path) -> None:

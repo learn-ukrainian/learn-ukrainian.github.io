@@ -676,6 +676,9 @@ def _freeze_exec_root(exec_root: Path, *, staged_binary: Path) -> None:
     exec_root.chmod(0o500)
 
 
+SEALED_READ_CHUNK_BYTES = 64 * 1024
+
+
 _SEALED_READ_MCP_SOURCE = r'''#!/usr/bin/python3
 import hashlib
 import json
@@ -685,6 +688,9 @@ import sys
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(sys.argv[1]).resolve(strict=True)
+MAX_CHUNK_BYTES = 64 * 1024
+MAX_SEARCH_FILE_BYTES = 8 * 1024 * 1024
+MAX_LISTED_FILES = 10000
 
 def safe_path(raw):
     if not isinstance(raw, str) or not raw or "\\" in raw:
@@ -696,26 +702,83 @@ def safe_path(raw):
     path.relative_to(ROOT)
     return path
 
-def read_text(raw):
+def stable_stat(fd):
+    value = os.fstat(fd)
+    if not stat.S_ISREG(value.st_mode):
+        raise ValueError("not_regular")
+    return value
+
+def same_file(before, after):
+    return (
+        before.st_dev, before.st_ino, before.st_size,
+        before.st_mtime_ns, before.st_ctime_ns,
+    ) == (
+        after.st_dev, after.st_ino, after.st_size,
+        after.st_mtime_ns, after.st_ctime_ns,
+    )
+
+def file_sha256(fd):
+    digest = hashlib.sha256()
+    os.lseek(fd, 0, os.SEEK_SET)
+    while True:
+        block = os.read(fd, 1024 * 1024)
+        if not block:
+            break
+        digest.update(block)
+    return digest.hexdigest()
+
+def read_chunk(raw, offset=0, max_bytes=MAX_CHUNK_BYTES):
+    if not isinstance(offset, int) or isinstance(offset, bool) or offset < 0:
+        raise ValueError("invalid_offset")
+    if (
+        not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or max_bytes < 1
+        or max_bytes > MAX_CHUNK_BYTES
+    ):
+        raise ValueError("invalid_max_bytes")
     path = safe_path(raw)
     fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
     try:
-        before = os.fstat(fd)
-        if not stat.S_ISREG(before.st_mode):
-            raise ValueError("not_regular")
-        chunks = []
-        while True:
-            chunk = os.read(fd, 1024 * 1024)
-            if not chunk:
+        before = stable_stat(fd)
+        if offset > before.st_size:
+            raise ValueError("offset_past_end")
+        digest = file_sha256(fd)
+        os.lseek(fd, offset, os.SEEK_SET)
+        remaining = min(max_bytes, before.st_size - offset)
+        parts = []
+        while remaining:
+            part = os.read(fd, remaining)
+            if not part:
+                raise ValueError("short_read")
+            parts.append(part)
+            remaining -= len(part)
+        data = b"".join(parts)
+        while data:
+            try:
+                text = data.decode("utf-8", errors="strict")
                 break
-            chunks.append(chunk)
-        after = os.fstat(fd)
-        if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (
-            after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns
-        ):
+            except UnicodeDecodeError as exc:
+                if exc.reason != "unexpected end of data" or len(data) <= 1:
+                    raise ValueError("not_utf8") from exc
+                data = data[:-1]
+        else:
+            text = ""
+        after = stable_stat(fd)
+        if not same_file(before, after):
             raise ValueError("file_changed")
-        data = b"".join(chunks)
-        return data.decode("utf-8", errors="strict"), hashlib.sha256(data).hexdigest()
+        next_offset = offset + len(data)
+        return {
+            "path": raw,
+            "sha256": digest,
+            "offset": offset,
+            "chunk_bytes": len(data),
+            "chunk_sha256": hashlib.sha256(data).hexdigest(),
+            "next_offset": next_offset,
+            "total_bytes": before.st_size,
+            "eof": next_offset == before.st_size,
+            "content": text,
+        }
     finally:
         os.close(fd)
 
@@ -735,11 +798,32 @@ def files(prefix=""):
             if path.is_symlink() or not path.is_file():
                 raise ValueError("non_regular_entry")
             result.append(path.relative_to(ROOT).as_posix())
+            if len(result) > MAX_LISTED_FILES:
+                raise ValueError("file_list_split_required")
     return result
+
+def search_file(raw, query):
+    path = safe_path(raw)
+    fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    try:
+        before = stable_stat(fd)
+        if before.st_size > MAX_SEARCH_FILE_BYTES:
+            raise ValueError("search_split_required")
+        with os.fdopen(os.dup(fd), "r", encoding="utf-8", errors="strict") as handle:
+            for number, line in enumerate(handle, 1):
+                if len(line.encode("utf-8")) > MAX_CHUNK_BYTES:
+                    raise ValueError("search_line_split_required")
+                if query in line:
+                    yield number, line.rstrip("\r\n")
+        after = stable_stat(fd)
+        if not same_file(before, after):
+            raise ValueError("file_changed")
+    finally:
+        os.close(fd)
 
 TOOLS = [
     {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
-    {"name":"read_file","description":"Read one complete file from the sealed review snapshot without truncation.","inputSchema":{"type":"object","properties":{"path":{"type":"string"}},"required":["path"],"additionalProperties":False}},
+    {"name":"read_file","description":"Read one hash-bound UTF-8 byte chunk. Start at offset 0 and repeat from next_offset until eof=true.","inputSchema":{"type":"object","properties":{"path":{"type":"string"},"offset":{"type":"integer","minimum":0},"max_bytes":{"type":"integer","minimum":1,"maximum":65536}},"required":["path"],"additionalProperties":False}},
     {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
 ]
 
@@ -749,8 +833,11 @@ def call_tool(name, args):
     if name == "list_files":
         payload = {"files": files(args.get("prefix", ""))}
     elif name == "read_file":
-        text, digest = read_text(args.get("path"))
-        payload = {"path": args["path"], "sha256": digest, "content": text}
+        payload = read_chunk(
+            args.get("path"),
+            args.get("offset", 0),
+            args.get("max_bytes", MAX_CHUNK_BYTES),
+        )
     elif name == "search_text":
         query = args.get("query")
         if not isinstance(query, str) or not query:
@@ -758,13 +845,11 @@ def call_tool(name, args):
         matches = []
         truncated = False
         for rel in files(args.get("prefix", "")):
-            text, _digest = read_text(rel)
-            for number, line in enumerate(text.splitlines(), 1):
-                if query in line:
-                    if len(matches) == 200:
-                        truncated = True
-                        break
-                    matches.append({"path": rel, "line": number, "text": line})
+            for number, line in search_file(rel, query):
+                if len(matches) == 200:
+                    truncated = True
+                    break
+                matches.append({"path": rel, "line": number, "text": line})
             if truncated:
                 break
         payload = {"matches": matches, "truncated": truncated}
@@ -827,7 +912,7 @@ def _inject_codex_sealed_read_mcp(
     """Inject only the parent-owned sealed reader into an empty Codex config."""
     command = f"mcp_servers.sealed_review.command={json.dumps(str(python_bin))}"
     args = "mcp_servers.sealed_review.args=" + json.dumps(
-        [str(helper), str(snapshot_root)],
+        ["-I", "-S", str(helper), str(snapshot_root)],
         separators=(",", ":"),
     )
     injected = list(argv)
@@ -841,6 +926,164 @@ def _inject_codex_sealed_read_mcp(
         "mcp_servers.sealed_review.enabled=true",
     ]
     return injected
+
+
+def _sealed_reader_python_runtime(
+    python_bin: Path,
+    *,
+    reject_roots: Iterable[Path | str],
+) -> tuple[Path, list[str]]:
+    """Resolve the isolated stdlib/runtime needed by the sealed MCP helper.
+
+    macOS ``/usr/bin/python3`` is commonly a shim into the Command Line Tools
+    framework.  Its real interpreter and stdlib live outside ``/usr`` and must
+    be granted explicitly.  The fixed interpreter is probed with ``-I -S`` so
+    user site packages and environment configuration cannot affect discovery.
+    """
+    probe_source = (
+        "import json,sys,sysconfig;"
+        "print(json.dumps({'prefix':sys.prefix,'base_prefix':sys.base_prefix,"
+        "'stdlib':sysconfig.get_path('stdlib'),"
+        "'platstdlib':sysconfig.get_path('platstdlib'),"
+        "'bindir':sysconfig.get_config_var('BINDIR'),"
+        "'version':sysconfig.get_config_var('VERSION')},sort_keys=True))"
+    )
+    probe_env = {
+        "HOME": "/var/empty",
+        "LANG": "C",
+        "LC_ALL": "C",
+        "PATH": "/usr/bin:/bin",
+    }
+    try:
+        completed = subprocess.run(
+            [str(python_bin), "-I", "-S", "-c", probe_source],
+            capture_output=True,
+            text=True,
+            timeout=8,
+            check=False,
+            env=probe_env,
+            cwd=tempfile.gettempdir(),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ReviewIsolationError("sealed_reader_python_runtime_probe_failed") from exc
+    if completed.returncode != 0:
+        raise ReviewIsolationError(
+            "sealed_reader_python_runtime_probe_failed:"
+            f"rc={completed.returncode}:{(completed.stderr or '')[:160]}"
+        )
+    try:
+        payload = json.loads(completed.stdout)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise ReviewIsolationError("sealed_reader_python_runtime_probe_malformed") from exc
+    if not isinstance(payload, dict):
+        raise ReviewIsolationError("sealed_reader_python_runtime_probe_malformed")
+
+    rejects = tuple(Path(root).resolve() for root in reject_roots)
+    bindir = payload.get("bindir")
+    prefix = payload.get("prefix")
+    version = payload.get("version")
+    resolved_python = python_bin.resolve(strict=True)
+    candidates: list[Path] = []
+    if isinstance(version, str) and version:
+        if isinstance(prefix, str) and prefix:
+            candidates.append(Path(prefix) / "bin" / f"python{version}")
+        if isinstance(bindir, str) and bindir:
+            candidates.append(Path(bindir) / f"python{version}")
+    for candidate in candidates:
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            resolved_python = candidate.resolve(strict=True)
+            break
+    if _inside_any(resolved_python, rejects):
+        raise ReviewIsolationError("sealed_reader_python_runtime_binary_rejected")
+
+    broad_roots = {Path("/"), Path("/usr"), Path("/usr/local"), Path("/opt/homebrew")}
+    discovered = resolve_runtime_closure(resolved_python, reject_roots=rejects)
+    for key in ("prefix", "base_prefix", "stdlib", "platstdlib"):
+        raw = payload.get(key)
+        if not isinstance(raw, str) or not raw or not Path(raw).is_absolute():
+            raise ReviewIsolationError(f"sealed_reader_python_runtime_{key}_invalid")
+        try:
+            resolved = Path(raw).resolve(strict=True)
+        except OSError as exc:
+            raise ReviewIsolationError(f"sealed_reader_python_runtime_{key}_missing") from exc
+        if _inside_any(resolved, rejects):
+            raise ReviewIsolationError(f"sealed_reader_python_runtime_{key}_rejected")
+        if resolved in broad_roots:
+            # System Python on Linux may report /usr; the fixed system read
+            # roots already grant its narrow bin/lib/share paths.
+            continue
+        value = str(resolved)
+        if value not in discovered:
+            discovered.append(value)
+    return resolved_python, discovered
+
+
+def _probe_sealed_read_mcp(
+    *,
+    python_bin: Path,
+    helper: Path,
+    snapshot_root: Path,
+    sandbox: SandboxCapability,
+) -> None:
+    """Execute the exact staged MCP helper inside the verified sandbox."""
+    manifest = snapshot_root / ".review-bundle" / "manifest.json"
+    if not manifest.is_file() or manifest.is_symlink():
+        raise ReviewIsolationError("sealed_reader_probe_manifest_missing")
+    requests = (
+        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+        {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "read_file",
+                "arguments": {
+                    "path": ".review-bundle/manifest.json",
+                    "offset": 0,
+                    "max_bytes": 1024,
+                },
+            },
+        },
+    )
+    command = wrap_argv_with_sandbox(
+        [str(python_bin), "-I", "-S", str(helper), str(snapshot_root)],
+        sandbox,
+    )
+    try:
+        completed = subprocess.run(
+            command,
+            input="\n".join(json.dumps(item, separators=(",", ":")) for item in requests) + "\n",
+            capture_output=True,
+            text=True,
+            timeout=8,
+            check=False,
+            env={"HOME": sandbox.write_root, "PATH": "/usr/bin:/bin", "LANG": "C"},
+            cwd=str(snapshot_root),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ReviewIsolationError("sealed_reader_probe_failed") from exc
+    if completed.returncode != 0:
+        raise ReviewIsolationError(
+            f"sealed_reader_probe_failed:rc={completed.returncode}:{(completed.stderr or '')[:160]}"
+        )
+    try:
+        responses = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+        listed = {tool["name"] for tool in responses[1]["result"]["tools"]}
+        payload = json.loads(responses[2]["result"]["content"][0]["text"])
+    except (IndexError, KeyError, TypeError, json.JSONDecodeError) as exc:
+        raise ReviewIsolationError("sealed_reader_probe_malformed") from exc
+    if {"list_files", "read_file", "search_text"} - listed:
+        raise ReviewIsolationError("sealed_reader_probe_tools_missing")
+    expected_digest = _file_sha256(manifest)
+    if (
+        payload.get("path") != ".review-bundle/manifest.json"
+        or payload.get("offset") != 0
+        or payload.get("sha256") != expected_digest
+        or not isinstance(payload.get("chunk_bytes"), int)
+        or payload.get("chunk_bytes", 0) > 1024
+    ):
+        raise ReviewIsolationError("sealed_reader_probe_read_mismatch")
 
 
 def _file_sha256(path: Path) -> str:
@@ -1290,8 +1533,12 @@ def detect_engine_capabilities(
     enforced = {key: bool(value) for key, value in dict(policy_enforced or {}).items() if value}
 
     if engine_key == "claude":
-        if "--safe-mode" in text or "--bare" in text:
+        if "--safe-mode" in text or "--bare" in text or "--setting-sources" in text:
             found.add("disable_project_instructions")
+        # ``--bare`` still permits slash-invoked skills.  Only safe mode is a
+        # current native proof that skills, plugins, hooks, custom agents, and
+        # commands are all disabled on the real review path.
+        if "--safe-mode" in text:
             found.add("disable_hooks_skills_plugins")
         if "--setting-sources" in text:
             found.add("disable_project_instructions")
@@ -1438,6 +1685,7 @@ def build_claude_review_argv(
         cmd.extend(
             [
                 "--bare",
+                "--safe-mode",
                 "--setting-sources",
                 "",
                 "--tools",
@@ -2766,16 +3014,23 @@ def prepare_isolated_review_launch(
             raise ReviewIsolationError(f"reviewer_binary_mismatch:expected={expected}:actual={binary}")
     binary = _stage_pinned_reviewer_runtime(binary, exec_root=execution_root)
     abs_argv[0] = str(binary)
+    sealed_reader_helper: Path | None = None
+    sealed_reader_python: Path | None = None
+    sealed_reader_runtime: list[str] = []
     if engine_key == "codex":
-        helper = _stage_sealed_read_mcp(execution_root)
-        python_bin = _resolve_fixed_system_executable(
+        sealed_reader_helper = _stage_sealed_read_mcp(execution_root)
+        requested_python = _resolve_fixed_system_executable(
             "python3",
+            reject_roots=all_rejects,
+        )
+        sealed_reader_python, sealed_reader_runtime = _sealed_reader_python_runtime(
+            requested_python,
             reject_roots=all_rejects,
         )
         abs_argv = _inject_codex_sealed_read_mcp(
             abs_argv,
-            python_bin=python_bin,
-            helper=helper,
+            python_bin=sealed_reader_python,
+            helper=sealed_reader_helper,
             snapshot_root=snap,
         )
     if not prompt_payload:
@@ -2815,6 +3070,16 @@ def prepare_isolated_review_launch(
         prompt_path.unlink()
     _freeze_exec_root(execution_root, staged_binary=binary)
     runtime_reads = resolve_runtime_closure(binary, reject_roots=all_rejects)
+    # The entire exec root is parent-created, private, and frozen above.  It
+    # contains the staged reviewer, prompt, and sealed MCP helper, all of which
+    # must remain readable after the live checkout and host temp roots are
+    # denied by the OS sandbox.
+    execution_value = str(execution_root)
+    if execution_value not in runtime_reads:
+        runtime_reads.append(execution_value)
+    for runtime_path in sealed_reader_runtime:
+        if runtime_path not in runtime_reads:
+            runtime_reads.append(runtime_path)
 
     write_home = write / "home"
     write_tmp = write / "tmp"
@@ -2834,6 +3099,13 @@ def prepare_isolated_review_launch(
         executable=binary,
         network_allowed=False,
     )
+    if sealed_reader_python is not None and sealed_reader_helper is not None:
+        _probe_sealed_read_mcp(
+            python_bin=sealed_reader_python,
+            helper=sealed_reader_helper,
+            snapshot_root=snap,
+            sandbox=probe_sandbox,
+        )
     probe_env = build_reviewer_env(
         engine=engine_key,
         reject_root=reject,

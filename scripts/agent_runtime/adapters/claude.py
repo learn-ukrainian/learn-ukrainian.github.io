@@ -288,6 +288,7 @@ class ClaudeAdapter:
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
+            cmd.append("--safe-mode")
             if "setting_sources" in tc:
                 cmd.extend(["--setting-sources", str(tc.get("setting_sources") or "")])
             cmd.extend(["--tools", str(tc.get("allowed_tools") or "")])

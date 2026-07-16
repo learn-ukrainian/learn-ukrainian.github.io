@@ -42,6 +42,7 @@ from scripts.review.evidence import (
 )
 from scripts.review.isolation import (
     ISOLATION_POLICY_VERSION,
+    SEALED_READ_CHUNK_BYTES,
     ReviewIsolationError,
     build_reviewer_env,
     canonical_isolated_review_schema,
@@ -64,10 +65,288 @@ from scripts.review.snapshot import (
 from scripts.review.target_resolution import ReviewTarget as CanonicalReviewTarget
 
 MAX_REVIEW_PROMPT_EVIDENCE_BYTES = 512 * 1024
+MAX_BUILTIN_READ_LINES = 2000
+MAX_BUILTIN_READ_LINE_BYTES = 2000
+MAX_SEALED_REVIEW_FILE_BYTES = 16 * 1024 * 1024
+MAX_SEALED_REVIEW_TOTAL_BYTES = 64 * 1024 * 1024
 
 
 class ReviewWorktreeError(RuntimeError):
     """A branch-pinned review checkout could not be safely prepared."""
+
+
+def _required_review_read_paths(
+    evidence_root: Path,
+    changed_paths: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Return every sealed artifact a clean review must actually consume."""
+    root = evidence_root.resolve()
+    required = [".review-bundle/manifest.json", ".review-bundle/patch.diff"]
+    for rel_path in changed_paths:
+        candidate = root / rel_path
+        try:
+            resolved = candidate.resolve(strict=False)
+            resolved.relative_to(root)
+        except (OSError, ValueError) as exc:
+            raise ReviewWorktreeError(f"review_read_evidence_unsafe_path:{rel_path!r}") from exc
+        if candidate.is_file() and not candidate.is_symlink():
+            required.append(rel_path)
+    return tuple(dict.fromkeys(required))
+
+
+def _validate_review_read_sizes(
+    evidence_root: Path,
+    required_paths: tuple[str, ...],
+) -> None:
+    total = 0
+    for rel_path in required_paths:
+        size = (evidence_root / rel_path).stat().st_size
+        if size > MAX_SEALED_REVIEW_FILE_BYTES:
+            raise ReviewWorktreeError(
+                f"review_evidence_split_required:file_bytes:{rel_path}:{size}"
+            )
+        total += size
+    if total > MAX_SEALED_REVIEW_TOTAL_BYTES:
+        raise ReviewWorktreeError(f"review_evidence_split_required:total_bytes:{total}")
+
+
+def _normalized_read_path(raw: Any, *, evidence_root: Path) -> str | None:
+    if not isinstance(raw, str) or not raw or "\\" in raw:
+        return None
+    root = evidence_root.resolve()
+    candidate = Path(raw)
+    candidate = candidate if candidate.is_absolute() else root / candidate
+    try:
+        resolved = candidate.resolve(strict=True)
+        return resolved.relative_to(root).as_posix()
+    except (OSError, ValueError):
+        return None
+
+
+def _tool_result_succeeded(call: dict[str, Any]) -> bool:
+    result = call.get("result")
+    if result is None:
+        return False
+    if isinstance(result, dict):
+        if result.get("isError") is True or result.get("is_error") is True:
+            return False
+        if "error" in result and result.get("error") not in {None, ""}:
+            return False
+    return not (
+        isinstance(result, str)
+        and result.lstrip().lower().startswith(("error", "failed"))
+    )
+
+
+def _mcp_chunk_payload(result: Any) -> dict[str, Any] | None:
+    """Extract the hash-bound JSON payload from a sealed-reader tool result."""
+    candidate = result
+    if isinstance(candidate, dict) and isinstance(candidate.get("content"), list):
+        content = candidate["content"]
+        if content and isinstance(content[0], dict):
+            candidate = content[0].get("text")
+    if isinstance(candidate, str):
+        try:
+            candidate = json.loads(candidate)
+        except json.JSONDecodeError:
+            return None
+    return candidate if isinstance(candidate, dict) else None
+
+
+def _intervals_cover(intervals: list[tuple[int, int]], *, size: int) -> bool:
+    if size == 0:
+        return bool(intervals)
+    cursor = 0
+    for start, end in sorted(intervals):
+        if start > cursor:
+            return False
+        cursor = max(cursor, end)
+        if cursor >= size:
+            return True
+    return False
+
+
+def _verify_codex_review_reads(
+    tool_calls: list[dict[str, Any]],
+    *,
+    evidence_root: Path,
+    required_paths: tuple[str, ...],
+) -> dict[str, Any]:
+    _validate_review_read_sizes(evidence_root, required_paths)
+    file_bytes = {path: (evidence_root / path).read_bytes() for path in required_paths}
+    coverage: dict[str, list[tuple[int, int]]] = {path: [] for path in required_paths}
+    empty_reads: set[str] = set()
+    for call in tool_calls:
+        name = str(call.get("name") or "").lower()
+        if not (
+            name == "read_file"
+            or name.endswith("sealed_review__read_file")
+            or name.endswith("sealed_review.read_file")
+        ):
+            continue
+        if not _tool_result_succeeded(call):
+            continue
+        arguments = call.get("arguments")
+        if not isinstance(arguments, dict):
+            continue
+        rel_path = _normalized_read_path(arguments.get("path"), evidence_root=evidence_root)
+        if rel_path not in coverage:
+            continue
+        payload = _mcp_chunk_payload(call.get("result"))
+        if payload is None or payload.get("path") != rel_path:
+            continue
+        data = file_bytes[rel_path]
+        offset = payload.get("offset")
+        chunk_bytes = payload.get("chunk_bytes")
+        next_offset = payload.get("next_offset")
+        total_bytes = payload.get("total_bytes")
+        content = payload.get("content")
+        if (
+            not isinstance(offset, int)
+            or isinstance(offset, bool)
+            or not isinstance(chunk_bytes, int)
+            or isinstance(chunk_bytes, bool)
+            or not isinstance(next_offset, int)
+            or isinstance(next_offset, bool)
+            or not isinstance(total_bytes, int)
+            or isinstance(total_bytes, bool)
+            or not isinstance(content, str)
+            or offset < 0
+            or chunk_bytes < 0
+            or next_offset != offset + chunk_bytes
+            or total_bytes != len(data)
+            or next_offset > total_bytes
+        ):
+            continue
+        encoded = content.encode("utf-8")
+        if (
+            len(encoded) != chunk_bytes
+            or data[offset:next_offset] != encoded
+            or payload.get("sha256") != hashlib.sha256(data).hexdigest()
+            or payload.get("chunk_sha256") != hashlib.sha256(encoded).hexdigest()
+            or payload.get("eof") is not (next_offset == total_bytes)
+        ):
+            continue
+        if total_bytes == 0:
+            empty_reads.add(rel_path)
+            coverage[rel_path].append((0, 0))
+        elif chunk_bytes:
+            coverage[rel_path].append((offset, next_offset))
+
+    missing = [
+        path
+        for path, intervals in coverage.items()
+        if not (_intervals_cover(intervals, size=(evidence_root / path).stat().st_size) or path in empty_reads)
+    ]
+    if missing:
+        raise ReviewWorktreeError("review_evidence_reads_incomplete:" + ",".join(missing))
+    return {
+        "mode": "hash_bound_byte_chunks",
+        "covered_paths": list(required_paths),
+        "covered_path_count": len(required_paths),
+    }
+
+
+def _verify_builtin_review_reads(
+    tool_calls: list[dict[str, Any]],
+    *,
+    evidence_root: Path,
+    required_paths: tuple[str, ...],
+) -> dict[str, Any]:
+    _validate_review_read_sizes(evidence_root, required_paths)
+    line_totals: dict[str, int] = {}
+    coverage: dict[str, list[tuple[int, int]]] = {}
+    empty_reads: set[str] = set()
+    for rel_path in required_paths:
+        data = (evidence_root / rel_path).read_bytes()
+        try:
+            text = data.decode("utf-8", errors="strict")
+        except UnicodeDecodeError as exc:
+            raise ReviewWorktreeError(f"review_evidence_not_utf8:{rel_path}") from exc
+        lines = text.splitlines(keepends=True)
+        if any(len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES for line in lines):
+            raise ReviewWorktreeError(f"review_evidence_split_required:long_line:{rel_path}")
+        line_totals[rel_path] = len(lines)
+        coverage[rel_path] = []
+
+    for call in tool_calls:
+        name = str(call.get("name") or "").lower()
+        if name not in {"read", "read_file"} and not name.endswith("__read"):
+            continue
+        if not _tool_result_succeeded(call):
+            continue
+        arguments = call.get("arguments")
+        if not isinstance(arguments, dict):
+            continue
+        raw_path = arguments.get("file_path") or arguments.get("path")
+        rel_path = _normalized_read_path(raw_path, evidence_root=evidence_root)
+        if rel_path not in coverage:
+            continue
+        offset = arguments.get("offset", 1)
+        limit = arguments.get("limit", MAX_BUILTIN_READ_LINES)
+        if (
+            not isinstance(offset, int)
+            or isinstance(offset, bool)
+            or not isinstance(limit, int)
+            or isinstance(limit, bool)
+            or offset < 0
+            or limit < 1
+            or limit > MAX_BUILTIN_READ_LINES
+        ):
+            continue
+        start = max(1, offset)
+        total = line_totals[rel_path]
+        if total == 0:
+            empty_reads.add(rel_path)
+            coverage[rel_path].append((0, 0))
+            continue
+        if start > total:
+            continue
+        coverage[rel_path].append((start - 1, min(total, start - 1 + limit)))
+
+    missing = [
+        path
+        for path, intervals in coverage.items()
+        if not (_intervals_cover(intervals, size=line_totals[path]) or path in empty_reads)
+    ]
+    if missing:
+        raise ReviewWorktreeError("review_evidence_reads_incomplete:" + ",".join(missing))
+    return {
+        "mode": "sandboxed_line_chunks",
+        "covered_paths": list(required_paths),
+        "covered_path_count": len(required_paths),
+    }
+
+
+def verify_clean_review_evidence_reads(
+    result: Any,
+    *,
+    engine: str,
+    evidence_root: Path,
+    changed_paths: tuple[str, ...],
+) -> dict[str, Any]:
+    """Require tool-backed complete evidence consumption before clean PASS."""
+    raw_calls = getattr(result, "tool_calls", None)
+    if not isinstance(raw_calls, list) or not all(isinstance(call, dict) for call in raw_calls):
+        raise ReviewWorktreeError("review_evidence_tool_trace_missing")
+    required_paths = _required_review_read_paths(evidence_root, changed_paths)
+    engine_key = engine.strip().lower().replace("-build", "")
+    if engine_key == "codex":
+        proof = _verify_codex_review_reads(
+            raw_calls,
+            evidence_root=evidence_root,
+            required_paths=required_paths,
+        )
+    else:
+        proof = _verify_builtin_review_reads(
+            raw_calls,
+            evidence_root=evidence_root,
+            required_paths=required_paths,
+        )
+    proof["trace_sha256"] = hashlib.sha256(
+        json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return proof
 
 
 @dataclass(frozen=True)
@@ -196,9 +475,11 @@ class ProvisionedReviewWorktree:
         """Bind independent runner facts and strictly validate successful JSON."""
         ok = bool(getattr(result, "ok", False))
         response_digest: str | None = None
+        read_proof: dict[str, Any] | None = None
         if ok:
+            response = str(getattr(result, "response", ""))
             response_digest = validate_code_review_response(
-                str(getattr(result, "response", "")),
+                response,
                 base_sha=self.base_sha,
                 head_sha=self.sha,
                 patch_sha256=self.patch_digest,
@@ -206,6 +487,14 @@ class ProvisionedReviewWorktree:
                 evidence_root=self.path,
                 changed_lines=self.changed_line_numbers,
             )
+            payload = _strict_json_object(response)
+            if self.changed_paths and payload.get("findings") == []:
+                read_proof = verify_clean_review_evidence_reads(
+                    result,
+                    engine=engine,
+                    evidence_root=self.path,
+                    changed_paths=self.changed_paths,
+                )
         self.bind_isolation_evidence(
             getattr(result, "isolation_evidence", None),
             engine=engine,
@@ -223,6 +512,7 @@ class ProvisionedReviewWorktree:
                 "prompt_sha256": getattr(result, "isolation_prompt_digest", None),
                 "prompt_transport": getattr(result, "isolation_prompt_transport", None),
                 "response_sha256": response_digest,
+                "evidence_reads": read_proof,
                 "target_identity": {
                     "base_sha": self.base_sha,
                     "head_sha": self.sha,
@@ -400,6 +690,42 @@ class ProvisionedReviewWorktree:
             }
             files.append(entry)
 
+        required_read_paths = _required_review_read_paths(self.path, self.changed_paths)
+        _validate_review_read_sizes(self.path, required_read_paths)
+        if engine_key == "codex":
+            read_protocol = {
+                "tool": "mcp__sealed_review__read_file",
+                "unit": "utf8_bytes",
+                "start_offset": 0,
+                "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
+                "continue_field": "next_offset",
+                "complete_field": "eof",
+                "required_paths": list(required_read_paths),
+            }
+        else:
+            for rel_path in required_read_paths:
+                try:
+                    text = (self.path / rel_path).read_text(encoding="utf-8", errors="strict")
+                except (OSError, UnicodeDecodeError) as exc:
+                    raise ReviewWorktreeError(
+                        f"review_evidence_split_required:unreadable:{rel_path}"
+                    ) from exc
+                if any(
+                    len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES
+                    for line in text.splitlines(keepends=True)
+                ):
+                    raise ReviewWorktreeError(
+                        f"review_evidence_split_required:long_line:{rel_path}"
+                    )
+            read_protocol = {
+                "tool": "Read",
+                "unit": "lines",
+                "start_offset": 1,
+                "max_chunk_lines": MAX_BUILTIN_READ_LINES,
+                "continue_field": "offset",
+                "required_paths": list(required_read_paths),
+            }
+
         dossier = {
             "schema_version": "review-prompt-evidence.v1",
             "engine": engine_key,
@@ -429,6 +755,8 @@ class ProvisionedReviewWorktree:
             "patch_path": ".review-bundle/patch.diff",
             "patch_bytes": patch_stat.st_size,
             "files": files,
+            "read_protocol": read_protocol,
+            "clean_verdict_gate": "complete_tool_trace_coverage_required",
         }
         serialized = json.dumps(
             dossier,
@@ -453,7 +781,11 @@ class ProvisionedReviewWorktree:
             "This exact-target boundary supersedes any earlier generic instruction to "
             "use a detached worktree, git, gh, or other shell command. "
             "Use the sealed read-only file tools to read the dossier's manifest_path, "
-            "patch_path, and changed files. The dossier authenticates those complete "
+            "patch_path, and every present changed file. Follow read_protocol exactly: "
+            "read bounded chunks from its start_offset and continue until the complete "
+            "condition is reached for every required_path. A clean verdict is rejected "
+            "unless the trusted tool trace proves complete coverage. The dossier "
+            "authenticates those complete "
             "artifacts, and safe exact unchanged tracked text is available at its "
             "sealed_snapshot_root for proof-of-absence checks. "
             "Sensitive, secret-like, binary, and inert-link unchanged paths are omitted. "
