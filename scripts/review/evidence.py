@@ -39,7 +39,7 @@ EVIDENCE_OUTCOMES = frozenset(
 _DRIVE_PATH_RE = re.compile(r"^[A-Za-z]:")
 _HUNK_RE = re.compile(r"^@@\s+-\d+(?:,\d+)?\s+\+(\d+)(?:,(\d+))?\s+@@")
 
-TARGET_INPUT_FINGERPRINT_VERSION = "target-input-v1"
+TARGET_INPUT_FINGERPRINT_VERSION = "target-input-v2"
 
 # Stable git-diff flags for target-input fingerprint surfaces. Avoid default
 # abbreviated index lines, external diff drivers, textconv filters, and rename
@@ -303,6 +303,10 @@ def compute_target_input_fingerprint(repo_root: Path, target: ReviewTarget) -> s
         if head_proc.returncode == 0:
             working_tree_head = (head_proc.stdout or "").strip()
 
+    # ``description`` is display-only and may contain the caller's ref spelling
+    # (for example ``HEAD`` versus a branch name).  Binding it would give the
+    # same immutable target different fingerprints depending on how it was
+    # addressed, so only stable target identity belongs in the hash.
     meta = {
         "fingerprint_version": TARGET_INPUT_FINGERPRINT_VERSION,
         "mode": target.mode,
@@ -312,7 +316,6 @@ def compute_target_input_fingerprint(repo_root: Path, target: ReviewTarget) -> s
         "changed_paths": list(target.changed_paths),
         "non_test_loc": target.non_test_loc,
         "clean_tree": target.clean_tree,
-        "description": target.description,
     }
     hasher = hashlib.sha256()
     hasher.update(TARGET_INPUT_FINGERPRINT_VERSION.encode("utf-8"))

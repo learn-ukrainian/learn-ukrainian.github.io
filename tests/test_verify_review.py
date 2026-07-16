@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -794,6 +794,19 @@ def test_target_fingerprint_changes_after_local_mutation(tmp_path):
     fp2 = compute_target_input_fingerprint(repo, target2)
     assert fp1 != fp2
     assert len(fp1) == 64
+
+
+def test_target_fingerprint_ignores_equivalent_ref_description(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "feature")
+    target = resolve_commit_target(repo, "HEAD")
+    equivalent_ref = replace(target, description="same commit via branch name")
+
+    assert compute_target_input_fingerprint(
+        repo, target
+    ) == compute_target_input_fingerprint(repo, equivalent_ref)
 
 
 def test_missing_expected_fingerprint_cannot_exit_clean(tmp_path):

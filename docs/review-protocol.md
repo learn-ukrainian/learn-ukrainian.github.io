@@ -105,7 +105,8 @@ Bind verification to one explicit mode from `scripts.review.target_resolution`
 deterministic SHA-256 over target metadata plus the exact patch bytes (and
 untracked file bytes in local mode) needed to reconstruct the reviewed
 surface. It **must** change when a local source, the changed-path set,
-base/head, or committed content changes.
+base/head, or committed content changes. Display-only target descriptions and
+equivalent ref spellings do not affect the fingerprint.
 
 Reviewer JSON is hashed separately as `reviewer_output_sha256`.
 
