@@ -1,0 +1,145 @@
+"""Tests for scripts/review/closeout_cli.py — the state-file-backed CLI that
+wires target resolution, scope baseline, findings, and reviewer resolution
+together for the local-code-review skill."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from scripts.common.git_context import sanitized_git_env
+
+
+def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    # sanitized_git_env() strips GIT_DIR/GIT_WORK_TREE/etc — without it, running
+    # this suite from inside a `git commit` pre-commit hook leaks the OUTER
+    # repo's git env into these calls and silently operates on the wrong repo.
+    return subprocess.run(
+        ["git", *args], cwd=str(repo), check=True, capture_output=True, text=True, env=sanitized_git_env()
+    )
+
+
+def _init_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "trunk")
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "Test")
+    (repo / "app.py").write_text("print('v1')\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "init")
+    return repo
+
+
+def _run_cli(state_file: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    project_root = Path(__file__).resolve().parent.parent
+    return subprocess.run(
+        [".venv/bin/python", "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+
+    target_proc = _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo))
+    assert target_proc.returncode == 0, target_proc.stderr
+    target_payload = json.loads(target_proc.stdout)
+    assert target_payload["changed_paths"] == ["feature.py"]
+
+    freeze_proc = _run_cli(
+        state_file,
+        "freeze",
+        "--issue",
+        "#5283",
+        "--intended-behavior",
+        "add feature",
+        "--non-goals",
+        "no refactors",
+        "--owner-boundary",
+        "repo root",
+        "--review-profile",
+        "infra",
+        "--risk",
+        "low",
+    )
+    assert freeze_proc.returncode == 0, freeze_proc.stderr
+    assert "#5283" in freeze_proc.stdout
+
+    # No further local changes yet — expansion breaker must not trigger.
+    expansion_proc = _run_cli(state_file, "check-expansion", "--repo-root", str(repo))
+    assert json.loads(expansion_proc.stdout)["triggered"] is False
+
+    # Simulate review-triggered scope creep: many more files than 2x baseline.
+    for i in range(5):
+        (repo / f"extra{i}.py").write_text("x = 1\n" * 20, encoding="utf-8")
+    expansion_proc2 = _run_cli(state_file, "check-expansion", "--repo-root", str(repo))
+    result2 = json.loads(expansion_proc2.stdout)
+    assert result2["triggered"] is True
+
+    cycle_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "5")
+    assert json.loads(cycle_proc.stdout)["triggered"] is False
+    cycle_proc2 = _run_cli(state_file, "record-cycle", "--outstanding-count", "5")
+    cycle_proc3 = _run_cli(state_file, "record-cycle", "--outstanding-count", "5")
+    assert json.loads(cycle_proc3.stdout)["triggered"] is True
+
+    reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
+    assert reviewer_proc.returncode == 0, reviewer_proc.stderr
+    resolution = json.loads(reviewer_proc.stdout)
+    assert resolution["selected"]["name"] == "deepseek-v4-flash"
+
+    raise_proc = _run_cli(state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "reviewer:grok")
+    assert raise_proc.returncode == 0, raise_proc.stderr
+    apply_before_adjudicate = _run_cli(state_file, "finding", "apply", "--id", "F1")
+    assert apply_before_adjudicate.returncode != 0
+
+    adjudicate_proc = _run_cli(
+        state_file, "finding", "adjudicate", "--id", "F1", "--disposition", "in_scope_blocker", "--rationale", "real bug"
+    )
+    assert adjudicate_proc.returncode == 0, adjudicate_proc.stderr
+    apply_proc = _run_cli(state_file, "finding", "apply", "--id", "F1")
+    assert apply_proc.returncode == 0, apply_proc.stderr
+
+    report_proc = _run_cli(state_file, "finding", "report")
+    assert "F1" in report_proc.stdout
+    assert "applied" in report_proc.stdout
+
+    # State persisted across every invocation via one JSON file.
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state["baseline"]["issue_ref"] == "#5283"
+    assert state["cycle_outstanding_counts"] == [5, 5, 5]
+    assert len(state["findings"]) == 3  # raised, adjudicated, applied
+
+
+def test_check_expansion_before_freeze_errors(tmp_path):
+    repo = _init_repo(tmp_path)
+    state_file = tmp_path / "state.json"
+    proc = _run_cli(state_file, "check-expansion", "--repo-root", str(repo))
+    assert proc.returncode != 0
+    assert "freeze" in proc.stderr
+
+
+def test_freeze_before_target_errors(tmp_path):
+    state_file = tmp_path / "state.json"
+    proc = _run_cli(
+        state_file,
+        "freeze",
+        "--issue",
+        "#1",
+        "--intended-behavior",
+        "x",
+        "--non-goals",
+        "y",
+        "--owner-boundary",
+        "z",
+    )
+    assert proc.returncode != 0
+    assert "target" in proc.stderr
