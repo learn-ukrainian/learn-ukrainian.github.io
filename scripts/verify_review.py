@@ -5,12 +5,26 @@ Canonical reviewer output is versioned JSON (``code-review-findings.v1``).
 Legacy ``FINDING:`` text is rejected. Verification binds to an exact
 local/commit/branch/PR target from ``scripts.review.target_resolution``.
 
+Two-stage usage (target freshness):
+
+  1. Capture target manifest / fingerprint *before* the reviewer runs
+     (source-blind; no review JSON required)::
+
+         .venv/bin/python scripts/verify_review.py --emit-target-manifest \\
+           --mode local --repo-root .
+
+  2. After the reviewer returns JSON, verify with the same mode/target and
+     pass ``--expected-input-sha256`` (target-input fingerprint from step 1)
+     plus identity/scope/tests/behavior-proof/lineage envelope fields.
+     ``input_sha256`` on the receipt is the recomputed target fingerprint;
+     ``reviewer_output_sha256`` records the reviewer JSON separately.
+
 Exit codes (stable):
   0 clean valid review
   1 valid review with actionable findings / incorrect overall
   2 invalid (schema, non-JSON, legacy text, malformed)
   3 incomplete
-  4 stale (head / input hash)
+  4 stale (head / target-input hash)
   5 unverifiable (quote/line/scope evidence failure)
 
 GitHub posting is opt-in (``--post-comment``). Receipts go to stdout and/or
@@ -31,10 +45,12 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     EXIT_INVALID,
     AgentIdentity,
     VerifyContext,
+    compute_target_input_fingerprint,
     sha256_text,
     verify_review,
 )
@@ -110,6 +126,7 @@ def _post_summary(issue: int, receipt: dict) -> None:
         f"- disposition: {receipt.get('final_disposition')}",
         f"- exit_code: {receipt.get('exit_code')}",
         f"- input_sha256: {(receipt.get('target') or {}).get('input_sha256')}",
+        f"- reviewer_output_sha256: {receipt.get('reviewer_output_sha256')}",
     ]
     for name in (
         "verified",
@@ -124,7 +141,10 @@ def _post_summary(issue: int, receipt: dict) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Verify structured code-review JSON against an exact target."
+        description=(
+            "Verify structured code-review JSON against an exact target, "
+            "or emit a source-blind target manifest/fingerprint."
+        )
     )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--issue", type=int, help="Read latest issue comment as review JSON")
@@ -133,6 +153,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-file",
         type=Path,
         help="Read review JSON from a local file",
+    )
+    source.add_argument(
+        "--emit-target-manifest",
+        action="store_true",
+        help=(
+            "Source-blind: resolve the target and print head + target-input "
+            "fingerprint JSON (no reviewer input). Capture before review."
+        ),
     )
 
     parser.add_argument(
@@ -153,29 +181,37 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--expected-input-sha256",
-        help="Fail EXIT_STALE if review input SHA-256 differs",
+        help=(
+            "Expected target-input fingerprint (from --emit-target-manifest). "
+            "Required for clean/actionable; mismatch → EXIT_STALE."
+        ),
     )
 
-    parser.add_argument("--issue-ref", default="", help="Originating issue/request id for receipt")
+    # No placeholder defaults — empty means missing; closeout fails closed.
+    parser.add_argument(
+        "--issue-ref",
+        default="",
+        help="Originating issue/request id for receipt (required for clean/actionable)",
+    )
     parser.add_argument(
         "--scope-json",
         default="",
-        help="Frozen scope JSON object or path (runner-supplied)",
+        help="Frozen scope JSON object or path (required for clean/actionable)",
     )
 
-    parser.add_argument("--author-model", default="unknown")
-    parser.add_argument("--author-family", default="unknown")
-    parser.add_argument("--author-harness", default="unknown")
-    parser.add_argument("--author-selection-reason", default="not_provided")
-    parser.add_argument("--reviewer-model", default="unknown")
-    parser.add_argument("--reviewer-family", default="unknown")
-    parser.add_argument("--reviewer-harness", default="unknown")
-    parser.add_argument("--reviewer-selection-reason", default="not_provided")
+    parser.add_argument("--author-model", default="")
+    parser.add_argument("--author-family", default="")
+    parser.add_argument("--author-harness", default="")
+    parser.add_argument("--author-selection-reason", default="")
+    parser.add_argument("--reviewer-model", default="")
+    parser.add_argument("--reviewer-family", default="")
+    parser.add_argument("--reviewer-harness", default="")
+    parser.add_argument("--reviewer-selection-reason", default="")
 
     parser.add_argument(
         "--tests-json",
         default="",
-        help="JSON object describing tests run (runner-supplied)",
+        help="JSON object describing tests run (required for clean/actionable)",
     )
     parser.add_argument(
         "--behavior-proof-json",
@@ -185,12 +221,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--dispositions-json",
         default="",
-        help='JSON object mapping finding id → {"disposition","rationale"}',
+        help=(
+            'JSON object mapping finding id → {"disposition","rationale"}; '
+            "dispositions: in_scope_blocker|follow_up|stop_and_escalate"
+        ),
     )
     parser.add_argument(
         "--routing-lineage-json",
         default="",
-        help="JSON object recording implementation/routing provenance",
+        help="JSON object recording implementation/routing provenance (required; never fabricated)",
     )
 
     parser.add_argument(
@@ -211,13 +250,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-
-    if args.post_comment and args.issue is None:
-        parser.error("--post-comment requires --issue")
-
+def _resolve_target(args: argparse.Namespace):
     repo_root = Path(args.repo_root).resolve()
     try:
         target = resolve_review_target(
@@ -231,7 +264,33 @@ def main(argv: list[str] | None = None) -> int:
     except TargetResolutionError as exc:
         err = {"error": str(exc), "final_disposition": "invalid", "exit_code": EXIT_INVALID}
         print(json.dumps(err, ensure_ascii=False), file=sys.stderr)
-        return EXIT_INVALID
+        raise SystemExit(EXIT_INVALID) from exc
+    return repo_root, target
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+
+    if args.post_comment and args.issue is None:
+        parser.error("--post-comment requires --issue")
+
+    repo_root, target = _resolve_target(args)
+
+    if args.emit_target_manifest:
+        try:
+            manifest = build_target_manifest(repo_root, target)
+        except Exception as exc:
+            print(
+                json.dumps(
+                    {"error": f"target_manifest_failed:{exc}", "exit_code": EXIT_INVALID},
+                    ensure_ascii=False,
+                ),
+                file=sys.stderr,
+            )
+            return EXIT_INVALID
+        print(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
 
     try:
         raw = _read_review(args.issue, args.from_stdin, args.review_file)
@@ -239,7 +298,15 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"error": f"read_review_failed:{exc}"}, ensure_ascii=False), file=sys.stderr)
         return EXIT_INVALID
 
-    issue_ref = args.issue_ref or (f"#{args.issue}" if args.issue else "unspecified")
+    # Prefer explicit --issue-ref; otherwise derive only a concrete #N from --issue.
+    # Never invent "unspecified".
+    if args.issue_ref:
+        issue_ref = args.issue_ref
+    elif args.issue is not None:
+        issue_ref = f"#{args.issue}"
+    else:
+        issue_ref = ""
+
     scope = _load_json_arg(args.scope_json or None, label="--scope-json")
     tests = _load_json_arg(args.tests_json or None, label="--tests-json")
     behavior_proof = _load_json_arg(
@@ -251,6 +318,18 @@ def main(argv: list[str] | None = None) -> int:
     routing_lineage = _load_json_arg(
         args.routing_lineage_json or None, label="--routing-lineage-json"
     )
+
+    try:
+        target_fp = compute_target_input_fingerprint(repo_root, target)
+    except Exception as exc:
+        print(
+            json.dumps(
+                {"error": f"target_fingerprint_failed:{exc}", "exit_code": EXIT_INVALID},
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_INVALID
 
     ctx = VerifyContext(
         issue_ref=issue_ref,
@@ -269,9 +348,10 @@ def main(argv: list[str] | None = None) -> int:
         ),
         target=target,
         repo_root=repo_root,
-        input_sha256=sha256_text(raw),
+        input_sha256=target_fp,
+        reviewer_output_sha256=sha256_text(raw),
         expected_head=args.expected_head,
-        expected_input_sha256=args.expected_input_sha256,
+        expected_input_sha256=args.expected_input_sha256 or None,
         tests=tests,
         behavior_proof=behavior_proof,
         dispositions={

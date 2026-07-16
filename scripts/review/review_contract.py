@@ -19,9 +19,10 @@ from scripts.review.evidence import (
     OUTCOME_MALFORMED,
     OUTCOME_OUT_OF_SCOPE,
     OUTCOME_QUOTE_MISSING,
-    OUTCOME_VERIFIED,
     EvidenceCheckResult,
+    EvidenceError,
     changed_lines_map,
+    compute_target_input_fingerprint,
     normalize_line_endings,
     verify_finding_evidence,
 )
@@ -47,6 +48,23 @@ EXIT_NAMES = {
     EXIT_STALE: "stale",
     EXIT_UNVERIFIABLE: "unverifiable",
 }
+
+ALLOWED_DISPOSITIONS = frozenset(
+    {
+        "in_scope_blocker",
+        "follow_up",
+        "stop_and_escalate",
+    }
+)
+
+# Explicitly rejected identity / envelope placeholders (fail closed).
+PLACEHOLDER_VALUES = frozenset(
+    {
+        "unknown",
+        "unspecified",
+        "not_provided",
+    }
+)
 
 _LEGACY_FINDING_RE = re.compile(r"(?m)^FINDING:\s*$")
 
@@ -83,6 +101,13 @@ def sha256_text(text: str) -> str:
 
 def _looks_like_legacy_text(raw: str) -> bool:
     return bool(_LEGACY_FINDING_RE.search(raw))
+
+
+def _is_placeholder(value: str) -> bool:
+    stripped = value.strip()
+    if not stripped:
+        return True
+    return stripped.lower() in PLACEHOLDER_VALUES
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
@@ -205,8 +230,12 @@ class VerifyContext:
     reviewer: AgentIdentity
     target: ReviewTarget
     repo_root: Path
+    # Target-input fingerprint (validated review surface), not reviewer JSON.
     input_sha256: str
+    # SHA-256 of the reviewer JSON bytes (recorded separately on the receipt).
+    reviewer_output_sha256: str = ""
     expected_head: str | None = None
+    # Required for clean/actionable: expected target-input fingerprint.
     expected_input_sha256: str | None = None
     tests: dict[str, Any] = field(default_factory=dict)
     behavior_proof: dict[str, Any] = field(default_factory=dict)
@@ -222,6 +251,128 @@ class VerifyResult:
     validations: list[FindingValidation]
     receipt: dict[str, Any]
     error: str | None = None
+
+
+def _identity_errors(label: str, identity: AgentIdentity) -> list[str]:
+    errors: list[str] = []
+    for field_name in ("model", "family", "harness", "selection_reason"):
+        value = getattr(identity, field_name)
+        if not isinstance(value, str) or _is_placeholder(value):
+            errors.append(f"{label}.{field_name}_missing_or_placeholder")
+    return errors
+
+
+def validate_closeout_envelope(
+    ctx: VerifyContext,
+    *,
+    finding_ids: list[str],
+) -> tuple[int, str] | None:
+    """Return (exit_code, error) when envelope cannot support clean/actionable.
+
+    Never fabricates lineage. Placeholder values fail closed.
+    """
+    errors: list[str] = []
+
+    if not isinstance(ctx.issue_ref, str) or _is_placeholder(ctx.issue_ref):
+        errors.append("issue_ref_missing_or_placeholder")
+
+    if not isinstance(ctx.scope, dict) or not ctx.scope:
+        errors.append("scope_empty")
+    else:
+        # Require at least one concrete non-empty value.
+        concrete = False
+        for value in ctx.scope.values():
+            if value is None:
+                continue
+            if isinstance(value, str) and _is_placeholder(value):
+                continue
+            if isinstance(value, (list, dict)) and not value:
+                continue
+            concrete = True
+            break
+        if not concrete:
+            errors.append("scope_lacks_concrete_values")
+
+    errors.extend(_identity_errors("author", ctx.author))
+    errors.extend(_identity_errors("reviewer", ctx.reviewer))
+
+    if not isinstance(ctx.tests, dict) or not ctx.tests:
+        errors.append("tests_empty")
+
+    if not isinstance(ctx.behavior_proof, dict):
+        errors.append("behavior_proof_invalid")
+    else:
+        for key in ("source_aware", "source_blind"):
+            proof = ctx.behavior_proof.get(key)
+            if not isinstance(proof, dict) or not proof:
+                errors.append(f"behavior_proof.{key}_missing")
+
+    if not isinstance(ctx.routing_lineage, dict) or not ctx.routing_lineage:
+        errors.append("routing_lineage_empty")
+    else:
+        for key, value in ctx.routing_lineage.items():
+            if not isinstance(key, str) or not key.strip():
+                errors.append("routing_lineage_invalid_key")
+                break
+            if not isinstance(value, str) or _is_placeholder(value):
+                errors.append(f"routing_lineage.{key}_missing_or_placeholder")
+
+    if not ctx.expected_input_sha256 or _is_placeholder(str(ctx.expected_input_sha256)):
+        errors.append("expected_input_sha256_required")
+
+    finding_id_set = set(finding_ids)
+    disposition_keys = set(ctx.dispositions.keys())
+    unknown = sorted(disposition_keys - finding_id_set)
+    missing = sorted(finding_id_set - disposition_keys)
+    if unknown:
+        errors.append(f"disposition_unknown_ids:{','.join(unknown)}")
+    if missing:
+        errors.append(f"disposition_missing_ids:{','.join(missing)}")
+    for fid in finding_ids:
+        entry = ctx.dispositions.get(fid)
+        if not isinstance(entry, dict):
+            continue
+        disp = entry.get("disposition")
+        rationale = entry.get("rationale")
+        if not isinstance(disp, str) or disp not in ALLOWED_DISPOSITIONS:
+            errors.append(f"disposition_invalid:{fid}")
+        if not isinstance(rationale, str) or not rationale.strip():
+            errors.append(f"disposition_rationale_empty:{fid}")
+
+    if not errors:
+        return None
+
+    # Structural/placeholder failures are incomplete (not invalid schema of
+    # reviewer JSON). Unknown disposition enums / unknown IDs are invalid
+    # envelope data → EXIT_INVALID when only those fire; mix defaults to
+    # incomplete so absence of required runner fields stays EXIT_INCOMPLETE.
+    hard = any(
+        e.startswith(
+            (
+                "disposition_unknown_ids:",
+                "disposition_invalid:",
+            )
+        )
+        for e in errors
+    )
+    code = EXIT_INVALID if hard and all(
+        e.startswith(("disposition_unknown_ids:", "disposition_invalid:", "disposition_rationale_empty:", "disposition_missing_ids:"))
+        for e in errors
+    ) else EXIT_INCOMPLETE
+    # Prefer incomplete when any required runner field is absent.
+    if any(
+        not e.startswith(
+            (
+                "disposition_unknown_ids:",
+                "disposition_invalid:",
+                "disposition_rationale_empty:",
+                "disposition_missing_ids:",
+            )
+        )
+        for e in errors
+    ):
+        code = EXIT_INCOMPLETE
+    return code, "envelope_incomplete:" + ";".join(errors)
 
 
 def _check_stale(ctx: VerifyContext) -> str | None:
@@ -280,6 +431,7 @@ def build_receipt(
     final_disposition: str,
     error: str | None = None,
 ) -> dict[str, Any]:
+    """Build a runner receipt. Never fabricates routing lineage or identities."""
     target = ctx.target
     receipt: dict[str, Any] = {
         "schema_version": RECEIPT_SCHEMA_VERSION,
@@ -295,25 +447,18 @@ def build_receipt(
             "non_test_loc": target.non_test_loc,
             "clean_tree": target.clean_tree,
             "description": target.description,
+            # Target-input fingerprint of the validated review surface.
             "input_sha256": ctx.input_sha256,
         },
+        "reviewer_output_sha256": ctx.reviewer_output_sha256,
         "findings": [v.to_dict() for v in validations],
         "tests": ctx.tests,
         "behavior_proof": ctx.behavior_proof,
         "final_disposition": final_disposition,
         "exit_code": exit_code,
         "error": error,
-        "routing_lineage": ctx.routing_lineage
-        or {
-            "implementation_agent": "grok/5284-strict-review-receipts",
-            "accountable_advisor": "GPT-5.6 Sol",
-            "selection_note": (
-                "Grok 4.5 high substituted for the issue's provisional Claude "
-                "developer due to live routing-budget recommendation; "
-                "GPT-5.6 Sol remains accountable advisor/integrator and "
-                "cross-family reviewer."
-            ),
-        },
+        # Explicit runner-supplied lineage only — empty when not provided.
+        "routing_lineage": dict(ctx.routing_lineage),
     }
     if payload is not None:
         receipt["reviewer_payload"] = {
@@ -330,14 +475,33 @@ def verify_review(
     *,
     schema: dict[str, Any] | None = None,
 ) -> VerifyResult:
-    """Full pipeline: parse → schema → stale checks → evidence → receipt."""
-    input_hash = sha256_text(raw_input)
-    # Prefer the hash the runner computed when building ctx, but keep consistency.
-    if ctx.input_sha256 and ctx.input_sha256 != input_hash:
-        # Runner may have hashed a different byte string; trust recomputed hash
-        # for the receipt and treat expected hash checks against ctx fields.
-        pass
-    ctx.input_sha256 = input_hash
+    """Full pipeline: target fingerprint → parse → schema → evidence → receipt."""
+    reviewer_output_sha = sha256_text(raw_input)
+    ctx.reviewer_output_sha256 = reviewer_output_sha
+
+    try:
+        target_fp = compute_target_input_fingerprint(ctx.repo_root, ctx.target)
+    except EvidenceError as exc:
+        err = f"target_fingerprint_unavailable:{exc}"
+        ctx.input_sha256 = ""
+        receipt = build_receipt(
+            ctx,
+            payload=None,
+            validations=[],
+            exit_code=EXIT_UNVERIFIABLE,
+            final_disposition=EXIT_NAMES[EXIT_UNVERIFIABLE],
+            error=err,
+        )
+        return VerifyResult(
+            exit_code=EXIT_UNVERIFIABLE,
+            final_disposition=EXIT_NAMES[EXIT_UNVERIFIABLE],
+            payload=None,
+            validations=[],
+            receipt=receipt,
+            error=err,
+        )
+
+    ctx.input_sha256 = target_fp
 
     stale = _check_stale(ctx)
     if stale:
@@ -419,19 +583,31 @@ def verify_review(
                 matched_line=check.matched_line,
                 matched_text=check.matched_text,
                 detail=check.detail,
-                disposition=disp.get("disposition"),
-                disposition_rationale=disp.get("rationale"),
+                disposition=disp.get("disposition") if isinstance(disp, dict) else None,
+                disposition_rationale=disp.get("rationale") if isinstance(disp, dict) else None,
             )
         )
 
     exit_code, final_disposition = _classify_exit(payload, validations)
+    error: str | None = None
+
+    # Clean/actionable require complete provenance + expected target fingerprint.
+    if exit_code in (EXIT_CLEAN, EXIT_ACTIONABLE):
+        envelope = validate_closeout_envelope(
+            ctx,
+            finding_ids=[f["id"] for f in findings],
+        )
+        if envelope is not None:
+            exit_code, error = envelope
+            final_disposition = EXIT_NAMES[exit_code]
+
     receipt = build_receipt(
         ctx,
         payload=payload,
         validations=validations,
         exit_code=exit_code,
         final_disposition=final_disposition,
-        error=None,
+        error=error,
     )
     return VerifyResult(
         exit_code=exit_code,
@@ -439,7 +615,7 @@ def verify_review(
         payload=payload,
         validations=validations,
         receipt=receipt,
-        error=None,
+        error=error,
     )
 
 

@@ -19,8 +19,11 @@ from scripts.review.evidence import (
     OUTCOME_QUOTE_MISSING,
     OUTCOME_VERIFIED,
     EvidenceError,
+    build_target_manifest,
+    compute_target_input_fingerprint,
     find_verbatim_match,
     is_safe_repo_relative_path,
+    match_at_line,
     normalize_line_endings,
     resolve_safe_path,
     split_lines_preserve_content,
@@ -127,47 +130,110 @@ def _finding(
     }
 
 
+def _full_envelope_kwargs(repo: Path, target, **overrides):
+    """Runner envelope sufficient for clean/actionable closeout."""
+    fp = compute_target_input_fingerprint(repo, target)
+    base = {
+        "issue_ref": "#5284",
+        "scope": {"owner_boundary": "scripts/verify_review.py"},
+        "author": _identity(model="author-model", family="author-family"),
+        "reviewer": _identity(
+            model="reviewer-model",
+            family="reviewer-family",
+            harness="reviewer-harness",
+            selection_reason="cross-family-gate",
+        ),
+        "tests": {"commands": ["pytest"], "passed": True},
+        "behavior_proof": {
+            "source_aware": {"status": "pass"},
+            "source_blind": {"status": "pass", "note": "cli-proof"},
+        },
+        "routing_lineage": {
+            "implementation_agent": "test-impl",
+            "accountable_advisor": "test-advisor",
+        },
+        "expected_input_sha256": fp,
+        "dispositions": {},
+    }
+    base.update(overrides)
+    return base
+
+
 def _ctx(
     repo: Path,
     target,
     raw: str,
     **kwargs,
 ) -> VerifyContext:
+    env = _full_envelope_kwargs(repo, target, **kwargs)
     return VerifyContext(
-        issue_ref=kwargs.get("issue_ref", "#5284"),
-        scope=kwargs.get("scope", {"owner_boundary": "scripts/verify_review.py"}),
-        author=kwargs.get("author", _identity(model="gpt-5.6-sol", family="openai")),
-        reviewer=kwargs.get(
-            "reviewer",
-            _identity(
-                model="grok-4.5",
-                family="xai",
-                harness="grok-build",
-                selection_reason="routing-substitution-cross-family",
-            ),
-        ),
+        issue_ref=env["issue_ref"],
+        scope=env["scope"],
+        author=env["author"],
+        reviewer=env["reviewer"],
         target=target,
         repo_root=repo,
-        input_sha256=sha256_text(raw),
-        expected_head=kwargs.get("expected_head"),
-        expected_input_sha256=kwargs.get("expected_input_sha256"),
-        tests=kwargs.get("tests", {"commands": ["pytest"], "passed": True}),
-        behavior_proof=kwargs.get(
-            "behavior_proof",
+        input_sha256=env.get("input_sha256", env["expected_input_sha256"] or ""),
+        reviewer_output_sha256=sha256_text(raw),
+        expected_head=env.get("expected_head"),
+        expected_input_sha256=env.get("expected_input_sha256"),
+        tests=env["tests"],
+        behavior_proof=env["behavior_proof"],
+        dispositions=env["dispositions"],
+        routing_lineage=env["routing_lineage"],
+    )
+
+
+def _cli_envelope_args(repo: Path, *, dispositions: dict | None = None) -> list[str]:
+    target = resolve_local_target(repo)
+    fp = compute_target_input_fingerprint(repo, target)
+    args = [
+        "--mode",
+        "local",
+        "--repo-root",
+        str(repo),
+        "--expected-input-sha256",
+        fp,
+        "--issue-ref",
+        "#5284",
+        "--scope-json",
+        json.dumps({"owner_boundary": "app.py"}),
+        "--author-model",
+        "author-model",
+        "--author-family",
+        "author-family",
+        "--author-harness",
+        "author-harness",
+        "--author-selection-reason",
+        "fixture",
+        "--reviewer-model",
+        "reviewer-model",
+        "--reviewer-family",
+        "reviewer-family",
+        "--reviewer-harness",
+        "reviewer-harness",
+        "--reviewer-selection-reason",
+        "cross-family-gate",
+        "--tests-json",
+        json.dumps({"commands": ["pytest"], "passed": True}),
+        "--behavior-proof-json",
+        json.dumps(
             {
                 "source_aware": {"status": "pass"},
-                "source_blind": {"status": "n/a", "reason": "no user-visible surface"},
-            },
+                "source_blind": {"status": "pass"},
+            }
         ),
-        dispositions=kwargs.get("dispositions", {}),
-        routing_lineage=kwargs.get(
-            "routing_lineage",
+        "--routing-lineage-json",
+        json.dumps(
             {
-                "implementation_agent": "grok/5284-strict-review-receipts",
-                "accountable_advisor": "GPT-5.6 Sol",
-            },
+                "implementation_agent": "test-impl",
+                "accountable_advisor": "test-advisor",
+            }
         ),
-    )
+    ]
+    if dispositions is not None:
+        args.extend(["--dispositions-json", json.dumps(dispositions)])
+    return args
 
 
 # --- normalization / path safety ---------------------------------------------
@@ -278,14 +344,31 @@ def test_local_target_verified_and_clean(tmp_path):
         "findings": [_finding(start=2, verbatim="value = 2")],
     }
     raw = json.dumps(payload)
-    result = verify_review(raw, _ctx(repo, target, raw))
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {
+                    "disposition": "in_scope_blocker",
+                    "rationale": "bad constant",
+                }
+            },
+        ),
+    )
     assert result.exit_code == EXIT_ACTIONABLE
     assert result.validations[0].outcome == OUTCOME_VERIFIED
     assert result.validations[0].matched_line == 2
     assert result.receipt["target"]["mode"] == "local"
-    assert result.receipt["target"]["input_sha256"] == sha256_text(raw)
-    assert result.receipt["author"]["family"] == "openai"
-    assert result.receipt["reviewer"]["model"] == "grok-4.5"
+    # input_sha256 is target fingerprint, not reviewer JSON hash
+    assert result.receipt["target"]["input_sha256"] == compute_target_input_fingerprint(
+        repo, target
+    )
+    assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
+    assert result.receipt["author"]["family"] == "author-family"
+    assert result.receipt["reviewer"]["model"] == "reviewer-model"
 
 
 def test_local_clean_review_exit_zero(tmp_path):
@@ -315,7 +398,17 @@ def test_commit_target_quote_and_line_checks(tmp_path):
         "findings": [_finding(start=2, verbatim="value = 2")],
     }
     raw = json.dumps(payload)
-    ok = verify_review(raw, _ctx(repo, target, raw))
+    ok = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": "in_scope_blocker", "rationale": "x"},
+            },
+        ),
+    )
     assert ok.validations[0].outcome == OUTCOME_VERIFIED
 
     # line_mismatch: quote exists at 2 but claimed 1
@@ -351,7 +444,17 @@ def test_branch_target(tmp_path):
         "findings": [_finding(start=2, verbatim="value = 3")],
     }
     raw = json.dumps(payload)
-    result = verify_review(raw, _ctx(repo, target, raw))
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": "follow_up", "rationale": "scope note"},
+            },
+        ),
+    )
     assert result.validations[0].outcome == OUTCOME_VERIFIED
     assert result.receipt["target"]["mode"] == "branch"
     assert result.receipt["target"]["base_sha"]
@@ -400,7 +503,17 @@ def test_pr_target(tmp_path, monkeypatch):
         "findings": [_finding(start=2, verbatim="value = 4")],
     }
     raw = json.dumps(payload)
-    result = verify_review(raw, _ctx(repo, target, raw))
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": "in_scope_blocker", "rationale": "pr"},
+            },
+        ),
+    )
     assert result.validations[0].outcome == OUTCOME_VERIFIED
     assert result.receipt["target"]["mode"] == "pr"
     # unused var guard
@@ -474,7 +587,17 @@ def test_missing_claim_allows_contextual_evidence_without_changed_line(tmp_path)
         ],
     }
     raw = json.dumps(payload)
-    result = verify_review(raw, _ctx(repo, target, raw))
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": "follow_up", "rationale": "context ok"},
+            },
+        ),
+    )
     assert result.validations[0].outcome == OUTCOME_VERIFIED
 
 
@@ -538,7 +661,18 @@ def test_multi_finding_all_preserved_and_ordered(tmp_path):
         ],
     }
     raw = json.dumps(payload)
-    result = verify_review(raw, _ctx(repo, target, raw))
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F1": {"disposition": "in_scope_blocker", "rationale": "a"},
+                "F2": {"disposition": "follow_up", "rationale": "b"},
+            },
+        ),
+    )
     assert [v.id for v in result.validations] == ["F1", "F2"]
     assert all(v.outcome == OUTCOME_VERIFIED for v in result.validations)
     assert result.exit_code == EXIT_ACTIONABLE
@@ -584,12 +718,238 @@ def test_receipt_includes_required_envelope_fields(tmp_path):
     assert r["author"]["model"]
     assert r["reviewer"]["selection_reason"]
     assert r["target"]["changed_paths"]
-    assert r["target"]["input_sha256"]
+    assert r["target"]["input_sha256"] == compute_target_input_fingerprint(repo, target)
+    assert r["reviewer_output_sha256"] == sha256_text(raw)
     assert r["tests"]["passed"] is True
     assert "source_aware" in r["behavior_proof"]
     assert "source_blind" in r["behavior_proof"]
-    assert r["routing_lineage"]["accountable_advisor"] == "GPT-5.6 Sol"
+    assert r["routing_lineage"]["accountable_advisor"] == "test-advisor"
     assert r["final_disposition"] == "clean"
+
+
+# --- fingerprint / location / envelope (review cycle 1) ----------------------
+
+
+def test_target_fingerprint_changes_after_local_mutation(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    target1 = resolve_local_target(repo)
+    fp1 = compute_target_input_fingerprint(repo, target1)
+    (repo / "app.py").write_text("print('v1')\nvalue = 3\n", encoding="utf-8")
+    target2 = resolve_local_target(repo)
+    fp2 = compute_target_input_fingerprint(repo, target2)
+    assert fp1 != fp2
+    assert len(fp1) == 64
+
+
+def test_missing_expected_fingerprint_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(repo, target, raw, expected_input_sha256=None),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "expected_input_sha256" in (result.error or "")
+
+
+def test_missing_lineage_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(repo, target, raw, routing_lineage={}),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "routing_lineage" in (result.error or "")
+    assert result.receipt["routing_lineage"] == {}
+
+
+def test_placeholder_identity_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            author=_identity(model="unknown", family="unspecified"),
+            reviewer=_identity(selection_reason="not_provided"),
+        ),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "placeholder" in (result.error or "")
+
+
+def test_receipt_does_not_fabricate_lineage(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(repo, target, raw, routing_lineage={}),
+    )
+    lineage = result.receipt["routing_lineage"]
+    assert "grok/5284" not in json.dumps(lineage)
+    assert "GPT-5.6" not in json.dumps(lineage)
+    assert lineage == {}
+
+
+def test_duplicate_quote_later_occurrence_verifies(tmp_path):
+    repo = _init_repo(tmp_path)
+    # Same line text appears twice; claim the later occurrence.
+    (repo / "app.py").write_text(
+        "flag = True\nshared = 1\nmiddle = 0\nshared = 1\n",
+        encoding="utf-8",
+    )
+    target = resolve_local_target(repo)
+    assert match_at_line(
+        (repo / "app.py").read_text(encoding="utf-8"), "shared = 1", 4
+    )[0]
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "later dup",
+            "confidence": 0.8,
+        },
+        "findings": [_finding(start=4, end=4, verbatim="shared = 1")],
+    }
+    raw = json.dumps(payload)
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": "in_scope_blocker", "rationale": "dup"},
+            },
+        ),
+    )
+    assert result.validations[0].outcome == OUTCOME_VERIFIED
+    assert result.validations[0].matched_line == 4
+    assert result.exit_code == EXIT_ACTIONABLE
+
+
+def test_inflated_range_fails_line_mismatch(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\nextra = 9\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    # One-line quote claiming a multi-line inflated range.
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "inflated",
+            "confidence": 0.8,
+        },
+        "findings": [_finding(start=2, end=3, verbatim="value = 2")],
+    }
+    raw = json.dumps(payload)
+    result = verify_review(raw, _ctx(repo, target, raw))
+    assert result.validations[0].outcome == OUTCOME_LINE_MISMATCH
+    assert "range_span_mismatch" in result.validations[0].detail
+    assert result.exit_code == EXIT_UNVERIFIABLE
+
+
+def test_short_range_fails_line_mismatch(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("a = 1\nb = 2\nc = 3\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "short range",
+            "confidence": 0.8,
+        },
+        "findings": [
+            _finding(start=1, end=1, verbatim="a = 1\nb = 2"),
+        ],
+    }
+    raw = json.dumps(payload)
+    result = verify_review(raw, _ctx(repo, target, raw))
+    assert result.validations[0].outcome == OUTCOME_LINE_MISMATCH
+    assert "range_span_mismatch" in result.validations[0].detail
+
+
+def test_decode_failure_is_fail_closed_evidence(tmp_path, monkeypatch):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+
+    def boom(*_a, **_k):
+        raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "bad")
+
+    monkeypatch.setattr("scripts.review.evidence.load_file_text", boom)
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "x",
+            "confidence": 0.5,
+        },
+        "findings": [_finding(start=2, verbatim="value = 2")],
+    }
+    raw = json.dumps(payload)
+    result = verify_review(raw, _ctx(repo, target, raw))
+    assert result.validations[0].outcome == OUTCOME_QUOTE_MISSING
+    assert "decode" in result.validations[0].detail or "read_or_decode" in result.validations[
+        0
+    ].detail
+    assert result.exit_code == EXIT_UNVERIFIABLE
+
+
+def test_disposition_unknown_id_and_missing_rationale(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "x",
+            "confidence": 0.9,
+        },
+        "findings": [_finding(start=2, verbatim="value = 2")],
+    }
+    raw = json.dumps(payload)
+    # Unknown disposition key
+    r1 = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "OTHER": {"disposition": "in_scope_blocker", "rationale": "x"},
+            },
+        ),
+    )
+    assert r1.exit_code not in (EXIT_CLEAN, EXIT_ACTIONABLE)
+    assert "disposition" in (r1.error or "")
+
+    # Missing rationale
+    r2 = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={"F001": {"disposition": "in_scope_blocker", "rationale": ""}},
+        ),
+    )
+    assert r2.exit_code == EXIT_INCOMPLETE
+    assert "rationale" in (r2.error or "")
 
 
 # --- CLI ---------------------------------------------------------------------
@@ -606,30 +966,24 @@ def test_cli_receipt_path_and_forbidden_paths(tmp_path, monkeypatch):
         [
             "--review-file",
             str(review),
-            "--mode",
-            "local",
-            "--repo-root",
-            str(repo),
+            * _cli_envelope_args(repo),
             "--receipt-path",
             str(receipt),
-            "--issue-ref",
-            "#5284",
         ]
     )
     assert code == EXIT_CLEAN
     assert receipt.is_file()
     data = json.loads(receipt.read_text(encoding="utf-8"))
     assert data["final_disposition"] == "clean"
+    assert data["reviewer_output_sha256"]
+    assert data["target"]["input_sha256"] != data["reviewer_output_sha256"]
 
     forbidden = tmp_path / "data" / "telemetry" / "receipt.json"
     code2 = verify_review_cli.main(
         [
             "--review-file",
             str(review),
-            "--mode",
-            "local",
-            "--repo-root",
-            str(repo),
+            * _cli_envelope_args(repo),
             "--receipt-path",
             str(forbidden),
         ]
@@ -664,10 +1018,15 @@ def test_cli_issue_mode_posts_opt_in_comment(tmp_path, monkeypatch, capsys):
         [
             "--issue",
             "5284",
-            "--mode",
-            "local",
-            "--repo-root",
-            str(repo),
+            * _cli_envelope_args(
+                repo,
+                dispositions={
+                    "F001": {
+                        "disposition": "in_scope_blocker",
+                        "rationale": "introduced here",
+                    }
+                },
+            ),
             "--post-comment",
             "--print-findings",
         ]
@@ -686,6 +1045,141 @@ def test_cli_stdin_legacy_text_exit_invalid(tmp_path, monkeypatch, capsys):
         ["--from-stdin", "--mode", "local", "--repo-root", str(repo)]
     )
     assert code == EXIT_INVALID
+
+
+def test_cli_emit_target_manifest_source_blind(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    code = verify_review_cli.main(
+        ["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)]
+    )
+    assert code == 0
+    out = capsys.readouterr().out
+    data = json.loads(out)
+    assert data["schema_version"] == "code-review-target-manifest.v1"
+    assert data["mode"] == "local"
+    assert "app.py" in data["changed_paths"]
+    assert len(data["input_sha256"]) == 64
+    # Mutate and re-emit — fingerprint must change.
+    (repo / "app.py").write_text("print('v1')\nvalue = 9\n", encoding="utf-8")
+    code2 = verify_review_cli.main(
+        ["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)]
+    )
+    assert code2 == 0
+    data2 = json.loads(capsys.readouterr().out)
+    assert data2["input_sha256"] != data["input_sha256"]
+
+
+def test_cli_missing_lineage_cannot_exit_clean(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    review = tmp_path / "review.json"
+    review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
+    target = resolve_local_target(repo)
+    fp = compute_target_input_fingerprint(repo, target)
+    code = verify_review_cli.main(
+        [
+            "--review-file",
+            str(review),
+            "--mode",
+            "local",
+            "--repo-root",
+            str(repo),
+            "--expected-input-sha256",
+            fp,
+            "--issue-ref",
+            "#5284",
+            "--scope-json",
+            json.dumps({"owner": "app.py"}),
+            "--author-model",
+            "a",
+            "--author-family",
+            "b",
+            "--author-harness",
+            "c",
+            "--author-selection-reason",
+            "d",
+            "--reviewer-model",
+            "e",
+            "--reviewer-family",
+            "f",
+            "--reviewer-harness",
+            "g",
+            "--reviewer-selection-reason",
+            "h",
+            "--tests-json",
+            json.dumps({"passed": True}),
+            "--behavior-proof-json",
+            json.dumps(
+                {
+                    "source_aware": {"status": "pass"},
+                    "source_blind": {"status": "pass"},
+                }
+            ),
+            # deliberately omit --routing-lineage-json
+        ]
+    )
+    assert code == EXIT_INCOMPLETE
+    data = json.loads(capsys.readouterr().out)
+    assert data["exit_code"] == EXIT_INCOMPLETE
+    assert data["final_disposition"] != "clean"
+
+
+def test_cli_duplicate_later_and_inflated_range(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text(
+        "shared = 1\nx = 0\nshared = 1\n",
+        encoding="utf-8",
+    )
+    # Later duplicate verifies via CLI
+    payload_ok = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "later",
+            "confidence": 0.8,
+        },
+        "findings": [_finding(start=3, end=3, verbatim="shared = 1")],
+    }
+    review = tmp_path / "ok.json"
+    review.write_text(json.dumps(payload_ok), encoding="utf-8")
+    code = verify_review_cli.main(
+        [
+            "--review-file",
+            str(review),
+            * _cli_envelope_args(
+                repo,
+                dispositions={
+                    "F001": {"disposition": "in_scope_blocker", "rationale": "later"},
+                },
+            ),
+        ]
+    )
+    assert code == EXIT_ACTIONABLE
+    capsys.readouterr()
+
+    # Inflated range fails
+    payload_bad = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "inflated",
+            "confidence": 0.8,
+        },
+        "findings": [_finding(start=3, end=10, verbatim="shared = 1")],
+    }
+    review2 = tmp_path / "bad.json"
+    review2.write_text(json.dumps(payload_bad), encoding="utf-8")
+    code2 = verify_review_cli.main(
+        [
+            "--review-file",
+            str(review2),
+            * _cli_envelope_args(repo),
+        ]
+    )
+    assert code2 == EXIT_UNVERIFIABLE
+    data = json.loads(capsys.readouterr().out)
+    assert data["findings"][0]["outcome"] == OUTCOME_LINE_MISMATCH
 
 
 def test_dispositions_attached_on_receipt(tmp_path):
@@ -718,3 +1212,12 @@ def test_dispositions_attached_on_receipt(tmp_path):
     )
     assert result.validations[0].disposition == "in_scope_blocker"
     assert "Introduced" in (result.validations[0].disposition_rationale or "")
+    assert result.exit_code == EXIT_ACTIONABLE
+
+
+def test_build_target_manifest_matches_fingerprint_helper(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    manifest = build_target_manifest(repo, target)
+    assert manifest["input_sha256"] == compute_target_input_fingerprint(repo, target)
