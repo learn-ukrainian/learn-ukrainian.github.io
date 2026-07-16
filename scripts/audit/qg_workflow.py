@@ -6,7 +6,8 @@ one canonical ``qg_schema`` evidence record per module. Live reviewer dispatch
 is intentionally absent until #4370 calibrates the prompt and canary runbook;
 callers must inject a reviewer response or reuse a composite cache hit. The
 live Tier-2 retry composition is capped at three reviewer calls per module:
-initial response, at most one theatre retry, and at most one deep-read retry.
+one initial response plus at most two one-time retries selected from theatre,
+deep-read, and a missing seminar factual sweep.
 """
 
 from __future__ import annotations
