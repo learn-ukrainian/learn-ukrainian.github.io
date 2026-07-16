@@ -118,7 +118,7 @@ def _title_reconciled(tmp_path: Path, data: dict[str, object]) -> None:
     assert result["ok"] is True
 
 
-def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> None:
+def test_rollover_titles_are_meaningful_bounded_and_hide_runtime_identifiers() -> None:
     title, source, metadata = rollover.rollover_title(
         agent="codex",
         lineage_id="lineage-1234567890abcdef12345678",
@@ -139,10 +139,11 @@ def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> No
         goal=None,
         phase=None,
     )
-    assert "lineage-1234567890abcdef12345678" in fallback
-    assert "g0017" in fallback
+    assert fallback == "thread-rollover — Recover predecessor task context"
+    assert "lineage-1234567890abcdef12345678" not in fallback
+    assert "g0017" not in fallback
     assert len(fallback) <= 60
-    assert fallback_source == "lineage_generation_fallback"
+    assert fallback_source == "deterministic_legacy_fallback"
     assert "resume codex rollover" not in fallback.casefold()
     orchestrator_fallback, _, _ = rollover.rollover_title(
         agent="orchestrator",
@@ -152,8 +153,9 @@ def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> No
         goal=None,
         phase=None,
     )
-    assert "lineage-fedcba0987654321fedcba09" in orchestrator_fallback
-    assert "g9999" in orchestrator_fallback
+    assert orchestrator_fallback == "thread-rollover — Recover predecessor task context"
+    assert "lineage-fedcba0987654321fedcba09" not in orchestrator_fallback
+    assert "g9999" not in orchestrator_fallback
     assert len(orchestrator_fallback) <= 60
     with pytest.raises(ValueError, match="supplied together"):
         rollover.rollover_title(

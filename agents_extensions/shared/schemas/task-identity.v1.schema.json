@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-identity.v1",
+  "title": "Fleet task identity envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository",
+    "stream_epic",
+    "stream_epic_url",
+    "github_issue_number",
+    "github_issue_url",
+    "semantic_title",
+    "visible_title",
+    "task_family",
+    "role",
+    "predecessor_task_id",
+    "replacement_task_id",
+    "lineage_id",
+    "generation",
+    "terminal_goal",
+    "lifecycle_state",
+    "carriers",
+    "migration"
+  ],
+  "properties": {
+    "schema_version": {"const": "task-identity.v1"},
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/\\s]+/[^/\\s]+$",
+      "maxLength": 200
+    },
+    "stream_epic": {"type": ["integer", "null"], "minimum": 1},
+    "stream_epic_url": {"type": ["string", "null"], "format": "uri", "maxLength": 500},
+    "github_issue_number": {"type": ["integer", "null"], "minimum": 1},
+    "github_issue_url": {"type": ["string", "null"], "format": "uri", "maxLength": 500},
+    "semantic_title": {"type": "string", "minLength": 1, "maxLength": 240},
+    "visible_title": {"type": "string", "minLength": 1, "maxLength": 60},
+    "task_family": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+    "role": {"type": "string", "minLength": 1, "maxLength": 100},
+    "predecessor_task_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "replacement_task_id": {"type": ["string", "null"], "minLength": 1, "maxLength": 256},
+    "lineage_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+    "generation": {"type": "integer", "minimum": 1},
+    "terminal_goal": {"enum": ["merge", "deploy", "certify", "unknown"]},
+    "lifecycle_state": {
+      "enum": ["prepared", "replacement_bound", "title_ready", "title_failed", "resumed", "confirmed"]
+    },
+    "carriers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dispatch_record", "brief", "ledger", "inbox", "monitor_api", "final_receipt"],
+      "properties": {
+        "dispatch_record": {"type": "string", "minLength": 1, "maxLength": 60},
+        "brief": {"type": "string", "minLength": 1, "maxLength": 60},
+        "ledger": {"type": "string", "minLength": 1, "maxLength": 60},
+        "inbox": {"type": "string", "minLength": 1, "maxLength": 60},
+        "monitor_api": {"type": "string", "minLength": 1, "maxLength": 60},
+        "final_receipt": {"type": "string", "minLength": 1, "maxLength": 60}
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "legacy_fallback"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1, "maxLength": 100},
+        "legacy_fallback": {"type": "boolean"}
+      }
+    }
+  }
+}

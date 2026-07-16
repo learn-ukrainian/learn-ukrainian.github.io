@@ -12,6 +12,7 @@ import pytest
 
 from scripts.lib import session_record
 from scripts.orchestration import claudex_supervisor as cs
+from scripts.orchestration import task_identity
 from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
 from scripts.orchestration.task_family import rollover
@@ -130,6 +131,7 @@ def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> d
         active_automation_id="old-auto",
         context_percent=86.0,
         force_new_replacement=False,
+        harness="codex-app",
     )
     state["replacement"]["source_checkout"] = {
         "full_head": sample_snapshot(Path("."))["git"]["full_head"],
@@ -138,9 +140,69 @@ def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> d
     return state
 
 
+def test_rollover_state_commits_identity_receipt_before_lease(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    state = prepared()
+    state_path = tmp_path / ".agent/thread-rollovers/orchestrator/lease.json"
+    writes: list[tuple[Path, dict]] = []
+    monkeypatch.setattr(th, "write_json_atomic", lambda path, payload: writes.append((path, payload)))
+
+    th.write_rollover_state(state_path, tmp_path, state)
+
+    assert writes[0][0] == tmp_path / state["replacement"]["identity_receipt_path"]
+    assert writes[0][1]["schema_version"] == "rollover-identity-receipt.v1"
+    assert writes[1] == (state_path, state)
+
+
+def test_rollover_state_missing_receipt_path_writes_nothing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    state = prepared()
+    state["replacement"].pop("identity_receipt_path")
+    writes: list[tuple[Path, dict]] = []
+    monkeypatch.setattr(th, "write_json_atomic", lambda path, payload: writes.append((path, payload)))
+
+    with pytest.raises(ValueError, match="receipt path is missing"):
+        th.write_rollover_state(tmp_path / "lease.json", tmp_path, state)
+
+    assert writes == []
+
+
 def bind_native_replacement(state: dict, thread_id: str) -> None:
-    state["replacement"]["native_lifecycle"]["replacement_thread_id"] = thread_id
-    state["replacement"]["native_lifecycle"]["status"] = "replacement_created_bound"
+    replacement = state["replacement"]
+    replacement["native_lifecycle"]["replacement_thread_id"] = thread_id
+    replacement["native_lifecycle"]["status"] = "title_reconciled"
+    identity, transition = task_identity.bind_replacement(
+        replacement["identity"],
+        replacement["title_transition"],
+        replacement_task_id=thread_id,
+        evidence="test exact binding",
+        now="2026-05-30T08:00:30Z",
+    )
+    identity, transition = task_identity.record_title_acknowledgement(
+        identity,
+        transition,
+        replacement_task_id=thread_id,
+        succeeded=True,
+        evidence="test native title acknowledgement",
+        error="",
+        now="2026-05-30T08:00:40Z",
+    )
+    identity, transition = task_identity.record_title_readback(
+        identity,
+        transition,
+        replacement_task_id=thread_id,
+        observed_title=identity["visible_title"],
+        succeeded=True,
+        evidence="test exact title readback",
+        error="",
+        now="2026-05-30T08:00:50Z",
+    )
+    replacement["identity"] = identity
+    replacement["title_transition"] = transition
 
 
 def bind_native_lease(state_path: Path, thread_id: str) -> None:
@@ -252,6 +314,7 @@ def test_direct_script_help_from_repository_root():
         "prepare",
         "repair-native-intent",
         "register-created",
+        "bind-replacement",
         "native-action",
         "record-native-result",
         "reconcile-native",
@@ -279,8 +342,9 @@ def test_prepare_state_records_meaningful_title_and_native_identity():
     )
 
     replacement = state["replacement"]
-    assert replacement["display"]["title"] == "Curriculum lifecycle — P5 CI unblock → P6"
-    assert replacement["display"]["title_source"] == "durable_metadata"
+    assert replacement["display"]["title"] == "thread-rollover — CI unblock"
+    assert replacement["display"]["title_source"] == "legacy-prepare-goal"
+    assert replacement["identity"]["semantic_title"] == "CI unblock"
     assert replacement["native_lifecycle"] == {
         "family_id": replacement["native_lifecycle"]["family_id"],
         "operation_id": replacement["native_lifecycle"]["operation_id"],
@@ -291,12 +355,13 @@ def test_prepare_state_records_meaningful_title_and_native_identity():
     assert "Resume codex rollover" not in replacement["display"]["title"]
 
 
-def test_prepare_state_uses_unique_non_generic_fallback():
+def test_prepare_state_uses_deterministic_non_generic_fallback():
     state = prepared(agent="codex", thread_id="source-thread")
 
     title = state["replacement"]["display"]["title"]
-    assert state["lineage_id"] in title
-    assert "g0001" in title
+    assert title == "thread-rollover — Recover predecessor task context"
+    assert state["lineage_id"] not in title
+    assert "generation" not in title.casefold()
     assert title.casefold() != "resume codex rollover"
 
 
@@ -435,7 +500,8 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "If either fact is absent, use `unknown`" in prompt
     assert "Only an actionable response authorizes `set_thread_archived`" in prompt
-    assert "must register and title this exact native replacement before resume" in prompt
+    assert "must create and register this exact replacement" in prompt
+    assert "exact readback before resume" in prompt
     assert (
         "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)."
         in prompt
@@ -653,6 +719,9 @@ def test_live_lease_keeps_legacy_v2_pending_packet_compatible():
     state = prepared(agent="codex")
     state["replacement"].pop("display")
     state["replacement"].pop("native_lifecycle")
+    state["replacement"].pop("identity")
+    state["replacement"].pop("title_transition")
+    state["replacement"].pop("identity_receipt_path")
     state_path = th.default_state_path("codex", state["lineage_id"])
 
     replacement, error = th.validate_live_lease(state, agent="codex", state_path=state_path)
@@ -660,13 +729,8 @@ def test_live_lease_keeps_legacy_v2_pending_packet_compatible():
     assert error is None
     assert replacement is not None
     assert replacement["status"] == "pending_start"
-    resumed = th.resume_state(
-        state,
-        rollover_id=replacement["rollover_id"],
-        replacement_thread_id="legacy-replacement",
-        now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
-    )
-    assert resumed["replacement"]["resumed_thread_id"] == "legacy-replacement"
+    assert replacement["identity"]["migration"]["legacy_fallback"] is True
+    assert replacement["identity"]["visible_title"] == "thread-rollover — Recover predecessor task context"
 
 
 def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: Path, capsys, monkeypatch):
@@ -756,7 +820,7 @@ def test_supervised_claudex_request_failure_preserves_prepared_lease(
     assert not cs._request_path(tmp_path, supervisor.run_id).exists()
 
 
-def test_prepare_without_claudex_supervisor_keeps_native_lifecycle(
+def test_prepare_without_native_adapter_records_carrier_binding_action(
     tmp_path: Path,
     capsys,
     monkeypatch,
@@ -780,8 +844,84 @@ def test_prepare_without_claudex_supervisor_keeps_native_lifecycle(
     payload = json.loads(capsys.readouterr().out)
 
     assert "claudex_rollover_request" not in payload
-    assert payload["next_native_action"]["tool"] == "create_thread"
+    assert payload["next_native_action"]["tool"] == "bind-replacement"
+    assert payload["title_transition"]["native_title_supported"] is False
     assert not (tmp_path / ".agent/claudex-supervisors").exists()
+
+
+def test_unsupported_native_title_adapter_binds_exact_task_without_claiming_rename(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude",
+                "--active-thread-id",
+                "claude-old",
+                "--issue-number",
+                "5295",
+                "--stream-epic",
+                "4707",
+                "--semantic-title",
+                "Repair fleet rollover task identity",
+                "--terminal-goal",
+                "merge",
+            ]
+        )
+        == 0
+    )
+    prepared_payload = json.loads(capsys.readouterr().out)
+    bind_command = [
+        "--repo-root",
+        str(tmp_path),
+        "bind-replacement",
+        "--agent",
+        "claude",
+        "--lineage-id",
+        prepared_payload["lineage_id"],
+        "--rollover-id",
+        prepared_payload["rollover_id"],
+        "--replacement-task-id",
+        "claude-new",
+        "--evidence",
+        "dispatch runtime exact task receipt",
+    ]
+    assert th.main(bind_command) == 0
+    bound = json.loads(capsys.readouterr().out)
+
+    assert bound["native_title_mutation_supported"] is False
+    assert bound["fallback_receipt"]["attempted"] is False
+    assert bound["visible_title"] == "#5295 — Repair fleet rollover task identity"
+    assert th.main(bind_command) == 0
+    capsys.readouterr()
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "resume",
+                "--agent",
+                "claude",
+                "--lineage-id",
+                prepared_payload["lineage_id"],
+                "--rollover-id",
+                prepared_payload["rollover_id"],
+                "--replacement-thread-id",
+                "claude-new",
+            ]
+        )
+        == 0
+    )
+    resumed = json.loads(capsys.readouterr().out)
+    assert resumed["identity"]["lifecycle_state"] == "resumed"
+    assert resumed["title_transition"]["fallback_receipt"]["attempted"] is False
 
 
 def test_prepare_dry_run_never_prints_canary_bearing_prompt(
@@ -984,6 +1124,11 @@ def test_legacy_receipt_collision_repairs_current_packet_and_never_creates_from_
     assert repaired_native["operation_id"] == expected_operation
     assert repaired_native["status"] == "awaiting_native_create"
     assert repaired_state["replacement"]["bootstrap_prompt_path"] == current_bootstrap
+    identity_receipt = tmp_path / repaired_state["replacement"]["identity_receipt_path"]
+    assert identity_receipt.exists()
+    assert json.loads(identity_receipt.read_text(encoding="utf-8"))["identity"] == (
+        repaired_state["replacement"]["identity"]
+    )
     assert legacy_storage.load_state()["details"]["status"] == "superseded_before_native_create"
     current_storage = TaskFamilyStorage(tmp_path, expected_family, expected_operation)
     assert current_storage.read_json(current_storage.rollover_plan_path)["rollover_id"] == current_rollover_id
@@ -1062,11 +1207,49 @@ def test_prepare_repair_and_create_authorization_share_one_lineage_lock(tmp_path
             "create",
         ]
     )
+    resume_args = parser.parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "resume",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            lineage_id,
+            "--rollover-id",
+            "rollover-current",
+            "--replacement-thread-id",
+            "replacement-thread",
+        ]
+    )
+    confirm_args = parser.parse_args(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "confirm-started",
+            "--agent",
+            "codex",
+            "--lineage-id",
+            lineage_id,
+            "--rollover-id",
+            "rollover-current",
+            "--new-thread-id",
+            "replacement-thread",
+            "--canary-proof",
+            "canary.json",
+            "--strict-probe",
+            "probe.json",
+            "--strict-verdict",
+            "verdict.json",
+        ]
+    )
 
     expected = tmp_path / th.default_state_path("codex", lineage_id).parent / ".native-intent.lock"
     assert th._rollover_mutation_lock_path(prepare_args) == expected
     assert th._rollover_mutation_lock_path(repair_args) == expected
     assert th._rollover_mutation_lock_path(create_args) == expected
+    assert th._rollover_mutation_lock_path(resume_args) == expected
+    assert th._rollover_mutation_lock_path(confirm_args) == expected
 
 
 def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: Path, capsys, monkeypatch):
@@ -1862,6 +2045,8 @@ def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_
     detected = json.loads(capsys.readouterr().out)
     assert detected["lineage_id"] == prepared_payload["lineage_id"]
     assert detected["rollover_id"] == prepared_payload["rollover_id"]
+    assert detected["identity"] == prepared_payload["identity"]
+    assert detected["title_transition"] == prepared_payload["title_transition"]
     for key in (
         "state_file",
         "runtime_path",
@@ -1876,6 +2061,11 @@ def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_
         "strict_verdict_path",
     ):
         assert detected[key]
+
+    snapshot = th.rollover_identity_snapshot(tmp_path, agent="codex")
+    assert snapshot["candidate_count"] == 1
+    assert snapshot["candidates"][0]["visible_title"] == prepared_payload["identity"]["visible_title"]
+    assert snapshot["candidates"][0]["safe_recommended_resolution"]
 
     state_path = tmp_path / detected["state_file"]
     state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -1935,6 +2125,27 @@ def test_detect_rejects_bad_or_ambiguous_engine_leases(tmp_path: Path, capsys, m
             state["replacement"]["rollover_id"] = "rollover-!!!"
         th.write_json_atomic(state_path, state)
     assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    if mutation == "ambiguous":
+        assert payload["error_code"] == "MULTIPLE_LIVE_PENDING_ROLLOVERS"
+        assert payload["candidate_count"] == 2
+        assert "filesystem order" in payload["resolution_policy"]
+        for candidate in payload["candidates"]:
+            assert set(candidate) >= {
+                "semantic_title",
+                "visible_title",
+                "issue",
+                "lineage_id",
+                "generation",
+                "rollover_id",
+                "predecessor_task_id",
+                "replacement_task_id",
+                "created_at",
+                "updated_at",
+                "confirmation_state",
+                "title_confirmation_state",
+                "safe_recommended_resolution",
+            }
 
 
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
@@ -2008,9 +2219,29 @@ def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_pat
 def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, capsys, monkeypatch):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
     assert (
-        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]) == 0
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--active-thread-id",
+                "old-thread",
+                "--stream-epic",
+                "4707",
+                "--issue-number",
+                "5295",
+                "--semantic-title",
+                "Repair fleet rollover task identity",
+                "--terminal-goal",
+                "merge",
+            ]
+        )
+        == 0
     )
     packet = json.loads(capsys.readouterr().out)
+    assert packet["identity"]["visible_title"] == "#5295 — Repair fleet rollover task identity"
     bind_native_lease(tmp_path / packet["state_file"], "new-thread")
     assert (
         th.main(
@@ -2030,26 +2261,27 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
     )
     startup = capsys.readouterr().out
     assert "PENDING THREAD ROLLOVER DETECTED" in startup and "context_canary.py questions" in startup
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "resume",
-                "--agent",
-                "codex",
-                "--lineage-id",
-                packet["lineage_id"],
-                "--rollover-id",
-                packet["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
+    resume_command = [
+        "--repo-root",
+        str(tmp_path),
+        "resume",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+    ]
+    assert th.main(resume_command) == 0
+    resumed_payload = json.loads(capsys.readouterr().out)
+    assert resumed_payload["identity"]["visible_title"] == packet["identity"]["visible_title"]
     state_path = tmp_path / packet["state_file"]
+    resumed_bytes = state_path.read_bytes()
+    assert th.main(resume_command) == 0
+    capsys.readouterr()
+    assert state_path.read_bytes() == resumed_bytes
     resumed = json.loads(state_path.read_text(encoding="utf-8"))
     strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
     questions = tmp_path / resumed["replacement"]["strict_questions_path"]
@@ -2072,31 +2304,33 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
         == 0
     )
     capsys.readouterr()
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "confirm-started",
-                "--agent",
-                "codex",
-                "--lineage-id",
-                packet["lineage_id"],
-                "--rollover-id",
-                packet["rollover_id"],
-                "--new-thread-id",
-                "new-thread",
-                "--canary-proof",
-                str(proof),
-                "--strict-probe",
-                str(strict_probe),
-                "--strict-verdict",
-                str(strict_verdict),
-            ]
-        )
-        == 0
-    )
-    assert json.loads(capsys.readouterr().out)["old_automation_ready_to_delete"] is True
+    confirm_command = [
+        "--repo-root",
+        str(tmp_path),
+        "confirm-started",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--new-thread-id",
+        "new-thread",
+        "--canary-proof",
+        str(proof),
+        "--strict-probe",
+        str(strict_probe),
+        "--strict-verdict",
+        str(strict_verdict),
+    ]
+    assert th.main(confirm_command) == 0
+    confirmed_payload = json.loads(capsys.readouterr().out)
+    assert confirmed_payload["old_automation_ready_to_delete"] is True
+    assert confirmed_payload["identity"]["lifecycle_state"] == "confirmed"
+    confirmed_bytes = state_path.read_bytes()
+    assert th.main(confirm_command) == 0
+    capsys.readouterr()
+    assert state_path.read_bytes() == confirmed_bytes
 
 
 def test_confirmation_rejects_nine_of_ten_and_wrong_reserved_paths(tmp_path: Path, capsys, monkeypatch):

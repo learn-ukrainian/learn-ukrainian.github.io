@@ -30,7 +30,7 @@ from typing import Any
 
 try:
     from scripts import context_canary
-    from scripts.orchestration import thread_handoff_canary
+    from scripts.orchestration import task_identity, thread_handoff_canary
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
     from scripts.orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
@@ -39,6 +39,7 @@ except ModuleNotFoundError as exc:
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import context_canary
+    import task_identity
     import thread_handoff_canary
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
@@ -177,6 +178,7 @@ def replacement_packet_paths(agent: str, lineage_id: str, generation: int, rollo
         "strict_answers_path": (packet_dir / "strict-answers.json").as_posix(),
         "strict_verdict_path": (packet_dir / "strict-verdict.json").as_posix(),
         "canary_proof_path": (packet_dir / "canary-pass.json").as_posix(),
+        "identity_receipt_path": (packet_dir / "identity-receipt.json").as_posix(),
     }
 
 
@@ -616,6 +618,44 @@ def write_text_atomic(path: Path, text: str) -> None:
     os.replace(tmp, path)
 
 
+def normalize_identity_state(
+    state: dict[str, Any], *, agent: str, now: datetime
+) -> tuple[dict[str, Any], bool]:
+    """Return a validated identity-aware lease, deterministically backfilling legacy v2 packets."""
+    normalized, migrated = task_identity.backfill_legacy_identity(
+        state,
+        agent=agent,
+        repository=task_identity.DEFAULT_REPOSITORY,
+        now=isoformat_z(now),
+    )
+    if migrated:
+        replacement = dict(normalized.get("replacement") or {})
+        try:
+            paths = replacement_packet_paths(
+                agent,
+                str(replacement["lineage_id"]),
+                int(replacement["generation"]),
+                str(replacement["rollover_id"]),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"legacy rollover cannot reserve its identity receipt: {exc}") from exc
+        replacement.setdefault("identity_receipt_path", paths["identity_receipt_path"])
+        normalized["replacement"] = replacement
+    return normalized, migrated
+
+
+def write_rollover_state(state_path: Path, state_root: Path, state: dict[str, Any]) -> None:
+    """Persist the receipt first and the lease last as the transaction commit marker."""
+    replacement = state.get("replacement") or {}
+    receipt_value = replacement.get("identity_receipt_path")
+    if not isinstance(receipt_value, str) or not receipt_value:
+        raise ValueError("rollover identity receipt path is missing")
+    receipt_path = repo_local_path(state_root, Path(receipt_value))
+    receipt = task_identity.receipt_payload(state)
+    write_json_atomic(receipt_path, receipt)
+    write_json_atomic(state_path, state)
+
+
 def active_thread_id_from_env() -> str | None:
     return (
         os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
@@ -764,6 +804,16 @@ def prepare_state(
     goal: str | None = None,
     phase: str | None = None,
     next_phase: str | None = None,
+    repository: str = task_identity.DEFAULT_REPOSITORY,
+    stream_epic: int | None = None,
+    stream_epic_url: str | None = None,
+    github_issue_number: int | None = None,
+    github_issue_url: str | None = None,
+    semantic_title: str | None = None,
+    task_family: str = "thread-rollover",
+    role: str | None = None,
+    terminal_goal: str | None = None,
+    harness: str | None = None,
 ) -> dict[str, Any]:
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("schema v2 state is required; migrate v1 explicitly before preparing")
@@ -820,20 +870,63 @@ def prepare_state(
     generation = int((prepared["active"] or {}).get("generation", 0)) + 1
     rollover_id = new_rollover_id()
     packet_paths = replacement_packet_paths(agent, lineage_id, generation, rollover_id)
-    intended_title, title_source, display_metadata = task_family_rollover.rollover_title(
-        agent=agent,
+    if (epic_title is None) != (phase is None) or (next_phase is not None and (epic_title is None or phase is None)):
+        raise ValueError("legacy epic-title, phase, and optional next-phase metadata must be supplied together")
+    if semantic_title is not None:
+        semantic = semantic_title
+        identity_source = "explicit"
+        legacy_fallback = False
+    elif goal:
+        semantic = goal
+        identity_source = "legacy-prepare-goal"
+        legacy_fallback = True
+    elif epic_title and phase:
+        semantic = f"{phase} {epic_title}"
+        identity_source = "legacy-prepare-metadata"
+        legacy_fallback = True
+    else:
+        semantic = "Recover predecessor task context"
+        identity_source = "legacy-prepare-deterministic-fallback"
+        legacy_fallback = True
+    resolved_harness = harness or task_identity.default_harness(agent)
+    identity = task_identity.build_identity(
+        repository=repository,
+        stream_epic=stream_epic,
+        stream_epic_url=stream_epic_url,
+        github_issue_number=github_issue_number,
+        github_issue_url=github_issue_url,
+        semantic_title=semantic,
+        task_family=task_family,
+        role=role or agent,
+        predecessor_task_id=requested_thread_id,
+        replacement_task_id=None,
         lineage_id=lineage_id,
         generation=generation,
-        epic_title=epic_title,
-        goal=goal,
-        phase=phase,
-        next_phase=next_phase,
+        terminal_goal=terminal_goal or task_identity.LEGACY_TERMINAL_GOAL,
+        migration_source=identity_source,
+        legacy_fallback=legacy_fallback,
     )
-    family_id, operation_id = task_family_rollover.transition_identity(
-        lineage_id=lineage_id,
-        generation=generation,
-        rollover_id=rollover_id,
+    intended_title = identity["visible_title"]
+    title_source = identity["migration"]["source"]
+    title_transition = task_identity.new_title_transition(
+        harness=resolved_harness,
+        visible_title_value=intended_title,
+        prepared_at=isoformat_z(now),
     )
+    native_lifecycle: dict[str, Any] | None = None
+    if title_transition["native_title_supported"]:
+        family_id, operation_id = task_family_rollover.transition_identity(
+            lineage_id=lineage_id,
+            generation=generation,
+            rollover_id=rollover_id,
+        )
+        native_lifecycle = {
+            "family_id": family_id,
+            "operation_id": operation_id,
+            "source_thread_id": requested_thread_id,
+            "replacement_thread_id": None,
+            "status": "awaiting_native_create",
+        }
     replacement = {
         "rollover_id": rollover_id,
         "lineage_id": lineage_id,
@@ -843,19 +936,19 @@ def prepare_state(
         "thread_id": None,
         "canary_challenge": new_canary_challenge(),
         "display": {
-            **display_metadata,
+            "epic_title": epic_title,
+            "goal": goal,
+            "phase": phase,
+            "next_phase": next_phase,
             "title": intended_title,
             "title_source": title_source,
         },
-        "native_lifecycle": {
-            "family_id": family_id,
-            "operation_id": operation_id,
-            "source_thread_id": requested_thread_id,
-            "replacement_thread_id": None,
-            "status": "awaiting_native_create",
-        },
+        "identity": identity,
+        "title_transition": title_transition,
         **packet_paths,
     }
+    if native_lifecycle is not None:
+        replacement["native_lifecycle"] = native_lifecycle
     prepared["replacement"] = replacement
     prepared["rollover_id"] = rollover_id
 
@@ -898,7 +991,11 @@ def validate_live_lease(
         or not active["thread_id"].strip()
     ):
         return None, "lease active identity is malformed or mismatched"
-    replacement = state.get("replacement")
+    try:
+        normalized_state, _ = normalize_identity_state(state, agent=agent, now=utc_now())
+    except ValueError as exc:
+        return None, f"task identity migration failed: {exc}"
+    replacement = normalized_state.get("replacement")
     if not isinstance(replacement, dict):
         return None, "lease replacement is missing or malformed"
     if replacement.get("lineage_id") != lineage_id:
@@ -925,22 +1022,30 @@ def validate_live_lease(
         binding_error = source_checkout_binding_error(replacement)
         if binding_error:
             return None, binding_error
-        if "display" in replacement or "native_lifecycle" in replacement:
-            display = replacement.get("display")
-            if (
-                not isinstance(display, dict)
-                or not isinstance(display.get("title"), str)
-                or not display["title"].strip()
-                or len(display["title"]) > 60
-                or display["title"].casefold() in {"resume codex rollover", "rollover"}
-            ):
-                return None, "replacement display metadata is missing, generic, or malformed"
+        try:
+            identity = task_identity.validate_identity(replacement.get("identity") or {})
+            title_transition = task_identity.validate_title_transition(
+                replacement.get("title_transition") or {}, identity
+            )
+        except ValueError as exc:
+            return None, f"replacement task identity is malformed: {exc}"
+        display = replacement.get("display")
+        if (
+            not isinstance(display, dict)
+            or display.get("title") != identity["visible_title"]
+            or display.get("title_source") != identity["migration"]["source"]
+            or identity["predecessor_task_id"] != active["thread_id"]
+            or identity["lineage_id"] != lineage_id
+            or identity["generation"] != generation
+        ):
+            return None, "replacement display or task identity does not match the exact lease"
+        native = replacement.get("native_lifecycle")
+        if title_transition["native_title_supported"]:
             expected_family_id, expected_operation_id = task_family_rollover.transition_identity(
                 lineage_id=lineage_id,
                 generation=generation,
                 rollover_id=rollover_id,
             )
-            native = replacement.get("native_lifecycle")
             if (
                 not isinstance(native, dict)
                 or native.get("family_id") != expected_family_id
@@ -1052,13 +1157,40 @@ def confirm_started(
     active = confirmed.get("active")
     if not isinstance(active, dict) or not isinstance(active.get("thread_id"), str) or not active["thread_id"].strip():
         raise ValueError("confirmed rollover has no exact predecessor thread identity")
-    if replacement.get("status") != "resumed":
+    status = replacement.get("status")
+    if status not in {"resumed", "started"}:
         raise ValueError("replacement must be resumed through the rollover packet before confirmation")
-    if replacement.get("resumed_thread_id") != new_thread_id.strip():
-        raise ValueError("--new-thread-id does not match the thread that resumed this rollover")
+    if status == "started":
+        if replacement.get("thread_id") != new_thread_id.strip():
+            raise ValueError("--new-thread-id does not match the already confirmed replacement")
+    else:
+        if replacement.get("resumed_thread_id") != new_thread_id.strip():
+            raise ValueError("--new-thread-id does not match the thread that resumed this rollover")
+        native = replacement.get("native_lifecycle")
+        if isinstance(native, dict) and native.get("replacement_thread_id") != new_thread_id.strip():
+            raise ValueError("--new-thread-id does not match the exact native-created replacement")
+    identity = task_identity.validate_identity(replacement.get("identity") or {})
+    transition = task_identity.validate_title_transition(
+        replacement.get("title_transition") or {}, identity
+    )
+    task_identity.assert_title_ready(
+        identity,
+        transition,
+        replacement_task_id=new_thread_id.strip(),
+    )
+    if status == "started":
+        proof = replacement.get("canary_proof") or {}
+        verdict = replacement.get("strict_verdict") or {}
+        cleanup = confirmed.get("cleanup") or {}
+        if (
+            identity["lifecycle_state"] != "confirmed"
+            or proof.get("status") != "PASS"
+            or verdict.get("verdict") != "PASS"
+            or cleanup.get("old_automation_ready_to_delete") is not True
+        ):
+            raise ValueError("existing confirmation is incomplete or inconsistent")
+        return state
     native = replacement.get("native_lifecycle")
-    if isinstance(native, dict) and native.get("replacement_thread_id") != new_thread_id.strip():
-        raise ValueError("--new-thread-id does not match the exact native-created replacement")
     proof, proof_error = thread_handoff_canary.load_and_validate_pass_proof(
         canary_proof,
         rollover_id=str(replacement.get("rollover_id") or ""),
@@ -1080,6 +1212,11 @@ def confirm_started(
         replacement["automation_id"] = new_automation_id
     replacement["canary_proof"] = proof
     replacement["strict_verdict"] = strict_evidence
+    replacement["identity"] = task_identity.mark_confirmed(
+        identity,
+        transition,
+        replacement_task_id=new_thread_id.strip(),
+    )
     if isinstance(native, dict):
         native = dict(native)
         native["status"] = "confirmed_started"
@@ -1118,14 +1255,24 @@ def resume_state(
             raise ValueError("native-created replacement must be registered before resume")
         if bound_thread_id != thread_id:
             raise ValueError("--replacement-thread-id does not match the exact native-created replacement")
+    identity = task_identity.validate_identity(replacement.get("identity") or {})
+    transition = task_identity.validate_title_transition(
+        replacement.get("title_transition") or {}, identity
+    )
+    task_identity.assert_title_ready(identity, transition, replacement_task_id=thread_id)
     existing = replacement.get("resumed_thread_id")
     if existing and existing != thread_id:
         raise ValueError("pending rollover is already bound to a different replacement thread")
-    if existing == thread_id:
+    if existing == thread_id and identity["lifecycle_state"] == "resumed":
         return state
     replacement["status"] = "resumed"
     replacement["resumed_thread_id"] = thread_id
     replacement.setdefault("resumed_at", isoformat_z(now))
+    replacement["identity"] = task_identity.mark_resumed(
+        identity,
+        transition,
+        replacement_task_id=thread_id,
+    )
     if isinstance(native, dict):
         native = dict(native)
         native["status"] = "resumed"
@@ -1339,6 +1486,8 @@ def render_bootstrap_prompt(
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
     display = replacement.get("display") or {}
+    identity = replacement.get("identity") or {}
+    title_transition = replacement.get("title_transition") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or "unknown"
     handoff_path = handoff_path or Path(replacement.get("handoff_path") or "unknown")
     role_handoff_path = role_handoff_path or default_handoff_path(agent)
@@ -1363,6 +1512,23 @@ def render_bootstrap_prompt(
         strict_verdict_path = repo_local_path(state_root, strict_verdict_path)
     context_percent = (state.get("last_handoff") or {}).get("context_percent")
     agent_label = "Codex orchestrator" if agent == "orchestrator" else agent
+    if title_transition.get("native_title_supported"):
+        title_rules = [
+            "- The predecessor app task must create and register this exact replacement, mutate its exact native title, record the acknowledgement, and reconcile an exact readback before resume.",
+            "- A successful title acknowledgement without exact readback is not reconciled and must fail closed.",
+        ]
+    else:
+        title_rules = [
+            "- This harness has no native title mutation adapter. Bind the exact replacement with `bind-replacement` before resume.",
+            "- Preserve the visible title in the dispatch record, brief, ledger, inbox, monitor API, and final receipt; never claim a native rename.",
+        ]
+    binding_command_lines = (
+        []
+        if title_transition.get("native_title_supported")
+        else [
+            f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --replacement-task-id <replacement-thread-id> --evidence <exact-harness-binding-evidence>"
+        ]
+    )
 
     return (
         "\n".join(
@@ -1370,7 +1536,12 @@ def render_bootstrap_prompt(
                 f"Work locally in {git.get('repo_root')}.",
                 "",
                 f"You are the replacement {agent_label} thread.",
-                f"Task title: {display.get('title', 'unknown')}",
+                f"Task title: {identity.get('visible_title', display.get('title', 'unknown'))}",
+                f"Repository: {identity.get('repository', 'unknown')}",
+                f"Stream epic: {identity.get('stream_epic_url') or identity.get('stream_epic') or 'not-recorded'}",
+                f"GitHub issue: {identity.get('github_issue_url') or identity.get('github_issue_number') or 'not-applicable'}",
+                f"Task family / role: {identity.get('task_family', 'unknown')} / {identity.get('role', 'unknown')}",
+                f"Terminal goal: {identity.get('terminal_goal', 'unknown')}",
                 f"Replacement generation: {replacement_generation}",
                 f"Rollover id: {rollover_id}",
                 f"Previous active generation: {active_generation}",
@@ -1393,7 +1564,7 @@ def render_bootstrap_prompt(
                 "- Do not write docs/session-state/current.md for thread rollover.",
                 "- Do not delete or migrate the old heartbeat automation until the confirm-started command below has succeeded.",
                 "- Do not archive the predecessor unless the exact post-confirmation native action is authorized with idle and unpinned app evidence.",
-                "- The predecessor app task must register and title this exact native replacement before resume. If registration is not yet visible, preserve this task and retry the same packet; never create or select another task.",
+                *title_rules,
                 "",
                 *first_turn_checklist_lines(
                     repo_root=str(git.get("repo_root")),
@@ -1410,6 +1581,7 @@ def render_bootstrap_prompt(
                 "",
                 "Bind this new thread and complete the strict semantic recall before proof and confirmation:",
                 "```bash",
+                *binding_command_lines,
                 f".venv/bin/python scripts/orchestration/thread_handoff.py resume --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --replacement-thread-id <replacement-thread-id>",
                 f".venv/bin/python scripts/context_canary.py mint --snapshot {semantic_snapshot_path.as_posix()} --out {strict_probe_path.as_posix()}",
                 f".venv/bin/python scripts/context_canary.py questions --probe {strict_probe_path.as_posix()} --out {strict_questions_path.as_posix()}",
@@ -1449,6 +1621,8 @@ def render_current_markdown(
     github = snapshot["github"]
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
+    identity = replacement.get("identity") or {}
+    title_transition = replacement.get("title_transition") or {}
     cleanup = state.get("cleanup") or {}
     handoff = state.get("last_handoff") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or "unknown"
@@ -1468,6 +1642,13 @@ def render_current_markdown(
         semantic_snapshot_path = repo_local_path(state_root, semantic_snapshot_path)
     role_handoff = (role_handoff_path or default_handoff_path(agent)).as_posix()
     title_agent = "Orchestrator" if agent == "orchestrator" else agent.title()
+    binding_command_lines = (
+        []
+        if title_transition.get("native_title_supported")
+        else [
+            f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement --agent {agent} --lineage-id {replacement.get('lineage_id', '<lineage-id>')} --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --replacement-task-id <replacement-thread-id> --evidence <exact-harness-binding-evidence>"
+        ]
+    )
 
     lines = [
         f"# Current - {title_agent} thread handoff ({snapshot['generated_at']})",
@@ -1491,6 +1672,20 @@ def render_current_markdown(
         f"- Old automation ready to delete: `{cleanup.get('old_automation_ready_to_delete', False)}`",
         f"- Bootstrap prompt: `{prompt_path}`",
         f"- Durable role handoff: `{role_handoff}`",
+        "",
+        "## Task Identity",
+        "",
+        f"- Visible title: `{identity.get('visible_title', 'unknown')}`",
+        f"- Semantic title: `{identity.get('semantic_title', 'unknown')}`",
+        f"- Repository: `{identity.get('repository', 'unknown')}`",
+        f"- Stream epic: `{identity.get('stream_epic_url') or identity.get('stream_epic') or 'not-recorded'}`",
+        f"- GitHub issue: `{identity.get('github_issue_url') or identity.get('github_issue_number') or 'not-applicable'}`",
+        f"- Task family / role: `{identity.get('task_family', 'unknown')}` / `{identity.get('role', 'unknown')}`",
+        f"- Predecessor / replacement: `{identity.get('predecessor_task_id', 'unknown')}` / `{identity.get('replacement_task_id') or 'not-bound'}`",
+        f"- Terminal goal: `{identity.get('terminal_goal', 'unknown')}`",
+        f"- Identity lifecycle: `{identity.get('lifecycle_state', 'unknown')}`",
+        f"- Title adapter: `{title_transition.get('harness', 'unknown')}` (`{title_transition.get('state', 'unknown')}`)",
+        f"- Native title mutation supported: `{title_transition.get('native_title_supported', False)}`",
         "",
         "## Context Budget",
         "",
@@ -1562,6 +1757,7 @@ def render_current_markdown(
         "After the new thread is actually running, bind and prove this exact rollover:",
         "",
         "```bash",
+        *binding_command_lines,
         f".venv/bin/python scripts/orchestration/thread_handoff.py resume --agent {agent} --lineage-id {replacement.get('lineage_id', '<lineage-id>')} --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --replacement-thread-id <replacement-thread-id>",
         f".venv/bin/python scripts/context_canary.py mint --snapshot {semantic_snapshot_path.as_posix()} --out {strict_probe_path.as_posix()}",
         f".venv/bin/python scripts/context_canary.py questions --probe {strict_probe_path.as_posix()} --out {strict_questions_path.as_posix()}",
@@ -1667,6 +1863,12 @@ def check_state(
     facts.append(f"lineage_id={state.get('lineage_id', 'unknown')}")
     facts.append(f"rollover_id={replacement.get('rollover_id', 'none')}")
     facts.append(f"replacement_status={replacement.get('status', 'none')}")
+    identity = replacement.get("identity") or {}
+    title_transition = replacement.get("title_transition") or {}
+    facts.append(f"visible_title={identity.get('visible_title', 'legacy-unmigrated')}")
+    facts.append(f"github_issue_number={identity.get('github_issue_number', 'none')}")
+    facts.append(f"identity_lifecycle={identity.get('lifecycle_state', 'legacy-unmigrated')}")
+    facts.append(f"title_confirmation_state={title_transition.get('state', 'legacy-unmigrated')}")
     facts.append(f"old_automation_ready_to_delete={cleanup.get('old_automation_ready_to_delete', False)}")
 
     active_seen = parse_iso_datetime(active.get("last_seen_at") or active.get("started_at"))
@@ -1826,6 +2028,16 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             goal=args.goal,
             phase=args.phase,
             next_phase=args.next_phase,
+            repository=args.repository,
+            stream_epic=args.stream_epic,
+            stream_epic_url=args.stream_epic_url,
+            github_issue_number=args.issue_number,
+            github_issue_url=args.issue_url,
+            semantic_title=args.semantic_title,
+            task_family=args.task_family,
+            role=args.role,
+            terminal_goal=args.terminal_goal,
+            harness=args.harness or ("codex-app" if os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID") else None),
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
@@ -1899,21 +2111,25 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             "canary_proof_file": replacement["canary_proof_path"],
             "intended_title": replacement["display"]["title"],
             "title_source": replacement["display"]["title_source"],
-            "native_lifecycle": replacement["native_lifecycle"],
+            "identity": replacement["identity"],
+            "title_transition": replacement["title_transition"],
+            "identity_receipt_file": replacement["identity_receipt_path"],
+            "native_lifecycle": replacement.get("native_lifecycle"),
             "bootstrap_prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
             "bootstrap_prompt_bytes": len(prompt_bytes),
         }
         print(json.dumps(output, indent=2))
         return 0
 
+    native_plan = replacement.get("native_lifecycle")
     supersedes: dict[str, str] | None = None
     if args.force_new_replacement and previous_replacement.get("status") in {"pending_start", "resumed"}:
         previous_native = previous_replacement.get("native_lifecycle")
-        if not isinstance(previous_native, dict):
+        if isinstance(previous_native, dict) != isinstance(native_plan, dict):
             print(
                 json.dumps(
                     {
-                        "error": "existing rollover has no exact native lifecycle receipt to supersede",
+                        "error": "force-new-replacement cannot change native title-adapter capability",
                         "state_file": rel(state_path, state_root),
                         "old_automation_ready_to_delete": False,
                     },
@@ -1921,52 +2137,61 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
                 )
             )
             return 2
-        supersedes = {
-            "family_id": str(previous_native.get("family_id") or ""),
-            "operation_id": str(previous_native.get("operation_id") or ""),
-            "rollover_id": str(previous_replacement.get("rollover_id") or ""),
-        }
-        try:
-            task_family_rollover.assert_transition_supersedable(
-                repo_root=state_root,
-                family_id=supersedes["family_id"],
-                operation_id=supersedes["operation_id"],
-                lineage_id=lineage_id,
-                generation=int(previous_replacement["generation"]),
-                source_thread_id=prepared_state["active"]["thread_id"],
-                successor_rollover_id=replacement["rollover_id"],
-                successor_operation_id=replacement["native_lifecycle"]["operation_id"],
-                expected_rollover_id=supersedes["rollover_id"],
-            )
-        except (KeyError, OSError, TypeError, ValueError) as exc:
-            print(
-                json.dumps(
-                    {
-                        "error": f"existing native rollover intent cannot be safely superseded: {exc}",
-                        "recovery": "If the immutable plan belongs to an older packet, run repair-native-intent for the current exact lease.",
-                        "state_file": rel(state_path, state_root),
-                        "old_automation_ready_to_delete": False,
-                    },
-                    indent=2,
+        if isinstance(previous_native, dict) and isinstance(native_plan, dict):
+            supersedes = {
+                "family_id": str(previous_native.get("family_id") or ""),
+                "operation_id": str(previous_native.get("operation_id") or ""),
+                "rollover_id": str(previous_replacement.get("rollover_id") or ""),
+            }
+            try:
+                task_family_rollover.assert_transition_supersedable(
+                    repo_root=state_root,
+                    family_id=supersedes["family_id"],
+                    operation_id=supersedes["operation_id"],
+                    lineage_id=lineage_id,
+                    generation=int(previous_replacement["generation"]),
+                    source_thread_id=prepared_state["active"]["thread_id"],
+                    successor_rollover_id=replacement["rollover_id"],
+                    successor_operation_id=native_plan["operation_id"],
+                    expected_rollover_id=supersedes["rollover_id"],
                 )
-            )
-            return 2
+            except (KeyError, OSError, TypeError, ValueError) as exc:
+                print(
+                    json.dumps(
+                        {
+                            "error": f"existing native rollover intent cannot be safely superseded: {exc}",
+                            "recovery": "If the immutable plan belongs to an older packet, run repair-native-intent for the current exact lease.",
+                            "state_file": rel(state_path, state_root),
+                            "old_automation_ready_to_delete": False,
+                        },
+                        indent=2,
+                    )
+                )
+                return 2
+        else:
+            replacement["supersedes"] = {
+                "rollover_id": previous_replacement.get("rollover_id"),
+                "resolution": "explicit force-new-replacement on a non-native title adapter",
+            }
 
     write_text_atomic(bootstrap_path, prompt)
     write_text_atomic(handoff_path, handoff_md)
     try:
-        native_transition = task_family_rollover.prepare_transition(
-            repo_root=state_root,
-            agent=agent,
-            lineage_id=lineage_id,
-            rollover_id=replacement["rollover_id"],
-            generation=replacement["generation"],
-            source_thread_id=prepared_state["active"]["thread_id"],
-            intended_title=replacement["display"]["title"],
-            title_source=replacement["display"]["title_source"],
-            bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
-            supersedes=supersedes,
-        )
+        native_transition = None
+        if isinstance(native_plan, dict):
+            native_transition = task_family_rollover.prepare_transition(
+                repo_root=state_root,
+                agent=agent,
+                lineage_id=lineage_id,
+                rollover_id=replacement["rollover_id"],
+                generation=replacement["generation"],
+                source_thread_id=prepared_state["active"]["thread_id"],
+                intended_title=replacement["display"]["title"],
+                title_source=replacement["display"]["title_source"],
+                bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
+                supersedes=supersedes,
+                task_identity_envelope=replacement["identity"],
+            )
         if supersedes is not None:
             pending_state = dict(prepared_state)
             pending_replacement = dict(replacement)
@@ -1975,7 +2200,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             pending_native["supersedes"] = dict(supersedes)
             pending_replacement["native_lifecycle"] = pending_native
             pending_state["replacement"] = pending_replacement
-            write_json_atomic(state_path, pending_state)
+            write_rollover_state(state_path, state_root, pending_state)
             task_family_rollover.supersede_unexecuted_transition(
                 repo_root=state_root,
                 family_id=supersedes["family_id"],
@@ -1993,10 +2218,10 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
                 family_id=replacement["native_lifecycle"]["family_id"],
                 operation_id=replacement["native_lifecycle"]["operation_id"],
             )
-            replacement["native_lifecycle"]["supersedes"] = dict(supersedes)
+            native_plan["supersedes"] = dict(supersedes)
             native_transition["status"] = "awaiting_native_create"
             native_transition["superseded"] = dict(supersedes)
-        write_json_atomic(state_path, prepared_state)
+        write_rollover_state(state_path, state_root, prepared_state)
     except (OSError, ValueError) as exc:
         print(
             json.dumps(
@@ -2059,12 +2284,24 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         "canary_proof_file": replacement["canary_proof_path"],
         "intended_title": replacement["display"]["title"],
         "title_source": replacement["display"]["title_source"],
+        "identity": replacement["identity"],
+        "title_transition": replacement["title_transition"],
+        "identity_receipt_file": replacement["identity_receipt_path"],
         "native_lifecycle": native_transition,
-        "next_native_action": {
-            "tool": "create_thread",
-            "title_after_create": replacement["display"]["title"],
-            "source_thread_id": prepared_state["active"]["thread_id"],
-        },
+        "next_native_action": (
+            {
+                "tool": "create_thread",
+                "title_after_create": replacement["display"]["title"],
+                "source_thread_id": prepared_state["active"]["thread_id"],
+                "native_title_confirmation_required": True,
+            }
+            if isinstance(native_plan, dict)
+            else {
+                "tool": "bind-replacement",
+                "native_title_mutation_supported": False,
+                "visible_title_carriers": list(task_identity.FALLBACK_CARRIERS),
+            }
+        ),
     }
     if claudex_request is not None:
         output["claudex_rollover_request"] = claudex_request
@@ -2089,6 +2326,9 @@ def _native_command_context(
     state_error = state_error_payload(state, state_path, state_root)
     if state_error:
         raise ValueError(state_error["error"])
+    state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
+    if migrated:
+        write_rollover_state(state_path, state_root, state)
     replacement = state.get("replacement") or {}
     if replacement.get("rollover_id") != args.rollover_id:
         raise ValueError("--rollover-id does not match the isolated rollover")
@@ -2126,6 +2366,32 @@ def _native_command_context(
     return repo_root, state_root, agent, state_path, state, native
 
 
+def _identity_command_context(
+    args: argparse.Namespace,
+) -> tuple[Path, Path, str, Path, dict[str, Any], dict[str, Any]]:
+    repo_root, state_root = resolve_roots(args.repo_root)
+    agent = normalize_agent_name(args.agent)
+    if not args.lineage_id and not args.state_file:
+        raise ValueError("--lineage-id or --state-file is required to locate an isolated rollover")
+    state_path = resolve_state_path(
+        repo_root=repo_root,
+        state_root=state_root,
+        supplied_state_file=args.state_file,
+        default_path=default_state_path(agent, args.lineage_id) if args.lineage_id else None,
+    )
+    state = load_state(state_path)
+    state_error = state_error_payload(state, state_path, state_root)
+    if state_error:
+        raise ValueError(state_error["error"])
+    state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
+    replacement = state.get("replacement") or {}
+    if replacement.get("rollover_id") != args.rollover_id:
+        raise ValueError("--rollover-id does not match the isolated rollover")
+    if migrated:
+        write_rollover_state(state_path, state_root, state)
+    return repo_root, state_root, agent, state_path, state, replacement
+
+
 def cmd_repair_native_intent(args: argparse.Namespace) -> int:
     lock_path = _rollover_mutation_lock_path(args)
     if lock_path is None:
@@ -2151,6 +2417,7 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         state_error = state_error_payload(state, state_path, state_root)
         if state_error:
             raise ValueError(state_error["error"])
+        state, _ = normalize_identity_state(state, agent=agent, now=utc_now())
         replacement = dict(state.get("replacement") or {})
         if replacement.get("rollover_id") != args.rollover_id:
             raise ValueError("--rollover-id does not match the isolated rollover")
@@ -2241,8 +2508,9 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
             title_source=display["title_source"],
             bootstrap_prompt_path=replacement["bootstrap_prompt_path"],
             supersedes=supersedes,
+            task_identity_envelope=replacement["identity"],
         )
-        write_json_atomic(state_path, candidate_state)
+        write_rollover_state(state_path, state_root, candidate_state)
         superseded = task_family_rollover.supersede_unexecuted_transition(
             repo_root=state_root,
             family_id=supersedes["family_id"],
@@ -2264,7 +2532,7 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         candidate_replacement["native_lifecycle"] = candidate_native
         candidate_state["replacement"] = candidate_replacement
         candidate_state["updated_at"] = isoformat_z(utc_now())
-        write_json_atomic(state_path, candidate_state)
+        write_rollover_state(state_path, state_root, candidate_state)
         _, final_error = validate_live_lease(candidate_state, agent=agent, state_path=state_path)
         if final_error:
             raise ValueError(f"persisted repaired lease failed validation: {final_error}")
@@ -2303,6 +2571,7 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
 
 def _write_native_status(
     state_path: Path,
+    state_root: Path,
     state: dict[str, Any],
     *,
     status: str,
@@ -2316,7 +2585,98 @@ def _write_native_status(
     replacement["native_lifecycle"] = native
     state["replacement"] = replacement
     state["updated_at"] = isoformat_z(utc_now())
-    write_json_atomic(state_path, state)
+    write_rollover_state(state_path, state_root, state)
+
+
+def _record_identity_title_ack(
+    state: dict[str, Any], *, replacement_task_id: str, succeeded: bool, evidence: str, error: str
+) -> None:
+    replacement = dict(state["replacement"])
+    identity, transition = task_identity.record_title_acknowledgement(
+        replacement["identity"],
+        replacement["title_transition"],
+        replacement_task_id=replacement_task_id,
+        succeeded=succeeded,
+        evidence=evidence,
+        error=error or "Native title adapter reported failure.",
+        now=isoformat_z(utc_now()),
+    )
+    replacement["identity"] = identity
+    replacement["title_transition"] = transition
+    state["replacement"] = replacement
+
+
+def _record_identity_title_readback(
+    state: dict[str, Any], *, succeeded: bool, evidence: str, error: str
+) -> None:
+    replacement = dict(state["replacement"])
+    identity = task_identity.validate_identity(replacement["identity"])
+    replacement_task_id = identity.get("replacement_task_id")
+    if not isinstance(replacement_task_id, str):
+        raise ValueError("native title readback has no exact replacement binding")
+    identity, transition = task_identity.record_title_readback(
+        identity,
+        replacement["title_transition"],
+        replacement_task_id=replacement_task_id,
+        observed_title=identity["visible_title"] if succeeded else None,
+        succeeded=succeeded,
+        evidence=evidence,
+        error=error or "Native title readback did not confirm the exact visible title.",
+        now=isoformat_z(utc_now()),
+    )
+    replacement["identity"] = identity
+    replacement["title_transition"] = transition
+    state["replacement"] = replacement
+
+
+def cmd_bind_replacement(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_bind_replacement_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_bind_replacement_locked(args)
+
+
+def _cmd_bind_replacement_locked(args: argparse.Namespace) -> int:
+    """Bind an exact replacement and persist an honest non-native title fallback."""
+    try:
+        _, state_root, _, state_path, state, replacement = _identity_command_context(args)
+        identity = task_identity.validate_identity(replacement.get("identity") or {})
+        transition = task_identity.validate_title_transition(
+            replacement.get("title_transition") or {}, identity
+        )
+        if transition["native_title_supported"]:
+            raise ValueError("native title adapter requires register-created and exact title readback")
+        bound_identity, bound_transition = task_identity.bind_replacement(
+            identity,
+            transition,
+            replacement_task_id=args.replacement_task_id,
+            evidence=args.evidence,
+            now=isoformat_z(utc_now()),
+        )
+        updated_replacement = dict(replacement)
+        updated_replacement["identity"] = bound_identity
+        updated_replacement["title_transition"] = bound_transition
+        state["replacement"] = updated_replacement
+        state["updated_at"] = isoformat_z(utc_now())
+        write_rollover_state(state_path, state_root, state)
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": str(exc), "action": "bind-replacement"}, indent=2))
+        return 2
+    print(
+        json.dumps(
+            {
+                "status": "fallback_recorded",
+                "replacement_task_id": bound_identity["replacement_task_id"],
+                "visible_title": bound_identity["visible_title"],
+                "native_title_mutation_supported": False,
+                "fallback_receipt": bound_transition["fallback_receipt"],
+                "identity_receipt_file": updated_replacement["identity_receipt_path"],
+            },
+            indent=2,
+        )
+    )
+    return 0
 
 
 def cmd_register_created(args: argparse.Namespace) -> int:
@@ -2338,8 +2698,22 @@ def cmd_register_created(args: argparse.Namespace) -> int:
             db_path=db_path,
             evidence=args.evidence,
         )
+        lease_replacement = dict(state["replacement"])
+        bound_identity, bound_transition = task_identity.bind_replacement(
+            lease_replacement["identity"],
+            lease_replacement["title_transition"],
+            replacement_task_id=replacement_id,
+            evidence=args.evidence,
+            now=isoformat_z(utc_now()),
+        )
+        if binding["intended_title"] != bound_identity["visible_title"]:
+            raise ValueError("native rollover plan title does not match the canonical task identity")
+        lease_replacement["identity"] = bound_identity
+        lease_replacement["title_transition"] = bound_transition
+        state["replacement"] = lease_replacement
         _write_native_status(
             state_path,
+            state_root,
             state,
             status="replacement_created_bound",
             replacement_thread_id=replacement_id,
@@ -2370,6 +2744,8 @@ def cmd_register_created(args: argparse.Namespace) -> int:
                 "source_thread_id": binding["source_thread_id"],
                 "replacement_thread_id": binding["replacement_thread_id"],
                 "intended_title": binding["intended_title"],
+                "identity": bound_identity,
+                "title_transition": bound_transition,
                 "relations": binding["relations"],
             },
             indent=2,
@@ -2421,7 +2797,30 @@ def _cmd_native_action_locked(args: argparse.Namespace) -> int:
                     pin_state=args.pin_state,
                     evidence=args.evidence,
                 )
-        _write_native_status(state_path, state, status=str(result["status"]))
+        if args.action == "title":
+            identity = task_identity.validate_identity(state["replacement"]["identity"])
+            if result.get("needs_native_action"):
+                expected_arguments = {
+                    "threadId": identity["replacement_task_id"],
+                    "title": identity["visible_title"],
+                }
+                if result.get("tool") != "set_thread_title" or result.get("arguments") != expected_arguments:
+                    raise ValueError("native title action does not target the exact task identity envelope")
+            elif result.get("ok"):
+                _record_identity_title_readback(
+                    state,
+                    succeeded=True,
+                    evidence="Native title preflight/readback reconciled the exact replacement.",
+                    error="",
+                )
+            else:
+                _record_identity_title_readback(
+                    state,
+                    succeeded=False,
+                    evidence="Native title preflight/readback failed for the exact replacement.",
+                    error=str(result.get("error") or "Native title reconciliation failed."),
+                )
+        _write_native_status(state_path, state_root, state, status=str(result["status"]))
     except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
         print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
         return 2
@@ -2441,7 +2840,15 @@ def cmd_record_native_result(args: argparse.Namespace) -> int:
             evidence=args.evidence,
             error=args.error,
         )
-        _write_native_status(state_path, state, status=str(result["status"]))
+        if args.action == "title":
+            _record_identity_title_ack(
+                state,
+                replacement_task_id=str(result["resource_id"]),
+                succeeded=args.succeeded,
+                evidence=args.evidence,
+                error=args.error,
+            )
+        _write_native_status(state_path, state_root, state, status=str(result["status"]))
     except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
         print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
         return 2
@@ -2460,7 +2867,14 @@ def cmd_reconcile_native(args: argparse.Namespace) -> int:
             action=args.action,
             db_path=db_path,
         )
-        _write_native_status(state_path, state, status=str(result["status"]))
+        if args.action == "title":
+            _record_identity_title_readback(
+                state,
+                succeeded=bool(result.get("ok")),
+                evidence="Native DB readback for the exact replacement title.",
+                error=str(result.get("error") or ""),
+            )
+        _write_native_status(state_path, state_root, state, status=str(result["status"]))
     except (OSError, ValueError, task_family_codex_state.CodexStateError) as exc:
         print(json.dumps({"error": str(exc), "action": args.action}, indent=2))
         return 2
@@ -2469,6 +2883,14 @@ def cmd_reconcile_native(args: argparse.Namespace) -> int:
 
 
 def cmd_confirm_started(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_confirm_started_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_confirm_started_locked(args)
+
+
+def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
     try:
         repo_root, state_root = resolve_roots(args.repo_root)
     except ValueError as exc:
@@ -2495,6 +2917,13 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
     state_error = state_error_payload(state, state_path, state_root)
     if state_error:
         print(json.dumps(state_error, indent=2))
+        return 2
+    try:
+        state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
+        if migrated:
+            write_rollover_state(state_path, state_root, state)
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": f"task identity migration failed: {exc}"}, indent=2))
         return 2
     replacement = state.get("replacement") or {}
     if not replacement:
@@ -2534,7 +2963,7 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
-    write_json_atomic(state_path, confirmed)
+    write_rollover_state(state_path, state_root, confirmed)
     print(
         json.dumps(
             {
@@ -2546,6 +2975,9 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
                 "replacement_thread_id": confirmed["replacement"]["thread_id"],
                 "predecessor_thread_id": confirmed["active"]["thread_id"],
                 "native_lifecycle": confirmed["replacement"].get("native_lifecycle"),
+                "identity": confirmed["replacement"]["identity"],
+                "title_transition": confirmed["replacement"]["title_transition"],
+                "identity_receipt_file": confirmed["replacement"]["identity_receipt_path"],
                 "old_automation_ready_to_delete": confirmed["cleanup"]["old_automation_ready_to_delete"],
                 "next_native_action": "Run native-action --action archive with authoritative idle and unpinned app evidence; unknown state preserves the predecessor.",
             },
@@ -2556,6 +2988,14 @@ def cmd_confirm_started(args: argparse.Namespace) -> int:
 
 
 def cmd_resume(args: argparse.Namespace) -> int:
+    lock_path = _rollover_mutation_lock_path(args)
+    if lock_path is None:
+        return _cmd_resume_locked(args)
+    with task_family_advisory_lock(lock_path):
+        return _cmd_resume_locked(args)
+
+
+def _cmd_resume_locked(args: argparse.Namespace) -> int:
     try:
         repo_root, state_root = resolve_roots(args.repo_root)
     except ValueError as exc:
@@ -2583,6 +3023,13 @@ def cmd_resume(args: argparse.Namespace) -> int:
         print(json.dumps(state_error, indent=2))
         return 2
     try:
+        state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
+        if migrated:
+            write_rollover_state(state_path, state_root, state)
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": f"task identity migration failed: {exc}"}, indent=2))
+        return 2
+    try:
         require_checkout_continuity(state.get("replacement") or {}, repo_root)
     except ValueError as exc:
         print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
@@ -2597,7 +3044,7 @@ def cmd_resume(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
         return 2
-    write_json_atomic(state_path, resumed)
+    write_rollover_state(state_path, state_root, resumed)
     replacement = resumed["replacement"]
     print(
         json.dumps(
@@ -2613,6 +3060,9 @@ def cmd_resume(args: argparse.Namespace) -> int:
                 "strict_answers_file": replacement["strict_answers_path"],
                 "strict_verdict_file": replacement["strict_verdict_path"],
                 "status": replacement["status"],
+                "identity": replacement["identity"],
+                "title_transition": replacement["title_transition"],
+                "identity_receipt_file": replacement["identity_receipt_path"],
             },
             indent=2,
         )
@@ -2659,8 +3109,43 @@ def cmd_audit(args: argparse.Namespace) -> int:
     codex_home = Path(args.codex_home).expanduser().resolve()
     audit = inspect_codex_home(codex_home)
     audit["monitor"] = gather_monitor_state(args.monitor_base_url) if args.include_monitor else "skipped"
+    try:
+        _, state_root = resolve_roots(args.repo_root)
+        audit["task_identity"] = rollover_identity_snapshot(state_root)
+    except ValueError as exc:
+        audit["task_identity"] = {"error": str(exc)}
     print(json.dumps(audit, indent=2))
     return 0
+
+
+def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> dict[str, Any]:
+    """Project identity from live leases without selecting, mutating, or maintaining a registry."""
+    root = state_root / ".agent" / "thread-rollovers"
+    candidates: list[dict[str, Any]] = []
+    errors: list[dict[str, str]] = []
+    paths = root.glob(f"{agent}/*/lease.json") if agent else root.glob("*/*/lease.json")
+    for path in sorted(paths):
+        lease_agent = path.parent.parent.name
+        state = load_state(path)
+        replacement, error = validate_live_lease(state, agent=lease_agent, state_path=path)
+        if error:
+            errors.append({"state_file": rel(path, state_root), "error": error})
+            continue
+        if replacement is not None and replacement.get("status") in {"pending_start", "resumed"}:
+            diagnostic = task_identity.candidate_diagnostic(
+                state,
+                replacement,
+                state_file=rel(path, state_root),
+            )
+            diagnostic["agent"] = lease_agent
+            candidates.append(diagnostic)
+    return {
+        "schema_version": "rollover-identity-snapshot.v1",
+        "generated_at": isoformat_z(utc_now()),
+        "candidate_count": len(candidates),
+        "candidates": candidates,
+        "errors": errors,
+    }
 
 
 def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str, current_thread_id: str) -> str:
@@ -2692,6 +3177,8 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
     questions = candidate["strict_questions_path"]
     answers = candidate["strict_answers_path"]
     verdict = candidate["strict_verdict_path"]
+    identity = candidate["identity"]
+    title_transition = candidate["title_transition"]
     common = " ".join(base)
     if candidate["status"] == "resumed":
         title = "RESUMED THREAD ROLLOVER DETECTED"
@@ -2699,11 +3186,29 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
     else:
         title = "PENDING THREAD ROLLOVER DETECTED"
         first = "Claim this packet before ordinary work:"
-    lines = [title, first]
+    lines = [
+        title,
+        first,
+        f"Visible task title: {identity['visible_title']}",
+        f"Issue: {identity['github_issue_url'] or 'not applicable'}",
+        f"Task identity lifecycle: {identity['lifecycle_state']}",
+        f"Title confirmation state: {title_transition['state']}",
+    ]
     if candidate["status"] == "pending_start":
-        lines.append(
-            f".venv/bin/python scripts/orchestration/thread_handoff.py resume {common} --replacement-thread-id {thread_id}"
-        )
+        if not title_transition["native_title_supported"] and title_transition["state"] == "awaiting_replacement_binding":
+            lines.append(
+                f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement {common} --replacement-task-id {thread_id} --evidence <exact-harness-binding-evidence>"
+            )
+        if title_transition["state"] in {"title_reconciled", "fallback_recorded"} or not title_transition[
+            "native_title_supported"
+        ]:
+            lines.append(
+                f".venv/bin/python scripts/orchestration/thread_handoff.py resume {common} --replacement-thread-id {thread_id}"
+            )
+        else:
+            lines.append(
+                f"Do not resume yet. {task_identity.safe_recommended_resolution(title_transition, rollover_id=rollover_id)}"
+            )
     lines.extend(
         [
             f"Read the packet: {candidate['handoff_path']}",
@@ -2759,8 +3264,26 @@ def cmd_detect(args: argparse.Namespace) -> int:
         return 0
 
     if len(live_leases) > 1:
+        candidates = [
+            task_identity.candidate_diagnostic(
+                state,
+                replacement,
+                state_file=rel(path, state_root),
+            )
+            for path, state, replacement in live_leases
+        ]
         print(
-            json.dumps({"error": f"Multiple live pending rollovers found for agent {agent} in {agent_dir}"}, indent=2)
+            json.dumps(
+                {
+                    "error_code": "MULTIPLE_LIVE_PENDING_ROLLOVERS",
+                    "error": f"Multiple live pending rollovers found for agent {agent}.",
+                    "agent": agent,
+                    "candidate_count": len(candidates),
+                    "candidates": candidates,
+                    "resolution_policy": "Use exact candidate identifiers and receipts; never select by filesystem order, visible title, or automatic supersession.",
+                },
+                indent=2,
+            )
         )
         return 2
 
@@ -2799,6 +3322,9 @@ def cmd_detect(args: argparse.Namespace) -> int:
         "strict_questions_path": replacement.get("strict_questions_path"),
         "strict_answers_path": replacement.get("strict_answers_path"),
         "strict_verdict_path": replacement.get("strict_verdict_path"),
+        "identity_receipt_path": replacement.get("identity_receipt_path"),
+        "identity": replacement.get("identity"),
+        "title_transition": replacement.get("title_transition"),
     }
     print(
         render_session_start_context(output, agent=agent, current_thread_id=args.current_thread_id)
@@ -2825,6 +3351,30 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("--current-file", type=Path, help="Override the shared docs/session-state/current.md router.")
     prepare.add_argument("--active-thread-id")
     prepare.add_argument("--active-automation-id")
+    prepare.add_argument(
+        "--repository",
+        default=task_identity.DEFAULT_REPOSITORY,
+        help="Canonical GitHub owner/repository recorded in task-identity.v1.",
+    )
+    prepare.add_argument("--stream-epic", type=int, help="The task's one stream epic issue number.")
+    prepare.add_argument("--stream-epic-url", help="Optional exact URL; derived when omitted.")
+    prepare.add_argument("--issue-number", type=int, help="Scoped GitHub issue number when applicable.")
+    prepare.add_argument("--issue-url", help="Optional exact URL; derived when omitted.")
+    prepare.add_argument(
+        "--semantic-title",
+        help="Required semantic identity for new callers; legacy callers receive a deterministic fallback.",
+    )
+    prepare.add_argument("--task-family", default="thread-rollover", help="Lowercase task-family slug.")
+    prepare.add_argument("--role", help="Human/agent role carried across the rollover.")
+    prepare.add_argument(
+        "--terminal-goal",
+        choices=sorted(task_identity.TERMINAL_GOALS),
+        help="Terminal outcome preserved across replacement generations (merge, deploy, or certify).",
+    )
+    prepare.add_argument(
+        "--harness",
+        help="Native harness adapter name. Only declared adapters may claim title mutation/readback support.",
+    )
     prepare.add_argument("--epic-title", help="Durable human epic label for the replacement title.")
     prepare.add_argument("--goal", help="Durable current goal for the replacement title.")
     prepare.add_argument("--phase", help="Durable current phase for the replacement title.")
@@ -2880,6 +3430,18 @@ def build_parser() -> argparse.ArgumentParser:
     register.add_argument("--db", default="auto")
     register.add_argument("--evidence", required=True)
     register.set_defaults(func=cmd_register_created)
+
+    bind_replacement = subparsers.add_parser(
+        "bind-replacement",
+        help="Bind the exact replacement for a harness without native title mutation and record the honest carrier fallback.",
+    )
+    bind_replacement.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    bind_replacement.add_argument("--lineage-id", type=argparse_lineage_id)
+    bind_replacement.add_argument("--state-file", type=Path)
+    bind_replacement.add_argument("--rollover-id", required=True)
+    bind_replacement.add_argument("--replacement-task-id", required=True)
+    bind_replacement.add_argument("--evidence", required=True)
+    bind_replacement.set_defaults(func=cmd_bind_replacement)
 
     native_action = subparsers.add_parser(
         "native-action",
@@ -2957,12 +3519,16 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--context-threshold", type=float, default=DEFAULT_CONTEXT_THRESHOLD)
     check.set_defaults(func=cmd_check)
 
-    audit = subparsers.add_parser("audit", help="Inspect local Codex thread/automation metadata.")
+    audit = subparsers.add_parser(
+        "audit", help="Inspect local task identity plus Codex thread/automation metadata."
+    )
     audit.add_argument("--codex-home", default=os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
     audit.add_argument("--include-monitor", action="store_true")
     audit.set_defaults(func=cmd_audit)
 
-    detect = subparsers.add_parser("detect", help="Detect a single pending/resumed thread rollover.")
+    detect = subparsers.add_parser(
+        "detect", help="Detect task-identity-aware pending/resumed rollovers with structured conflict diagnostics."
+    )
     detect.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     detect.add_argument("--current-thread-id", default="")
     detect.add_argument("--format", choices=("json", "session-start"), default="json")

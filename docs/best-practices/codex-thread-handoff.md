@@ -1,4 +1,4 @@
-# Codex Thread Handoff Runbook
+# Fleet Task Rollover and Codex Handoff Runbook
 
 This runbook covers replacement-thread rollover when a Codex, Claude, Gemini,
 or orchestrator heartbeat thread approaches the auto-compaction zone.
@@ -26,13 +26,15 @@ Verified locally through 2026-07-15:
 - `scripts/ai_agent_bridge/_ui_codex.py` already supports sending messages
   to an existing Codex UI thread with `codex exec resume`; it does not create
   a new app thread.
-- Monitor state for orchestration is available through `/api/orient`,
+- Monitor state for orchestration is available through `/api/orient` (including
+  its read-only `rollovers` identity-candidate projection),
   `/api/delegate/active`, `/api/delegate/tasks`, and `/api/worktrees`.
 
 ## Architecture
 
-The handoff system has three separate layers:
+The handoff system has four separate layers:
 
+- Canonical task identity: the shared `task-identity.v1` envelope and visible-title policy.
 - Durable role handoff: repo-tracked state for the role an agent is playing.
 - Thread rollover packet: local state for replacing one saturated thread with
   a fresh thread.
@@ -58,6 +60,8 @@ prompt, and a Task Family Manager transition operation:
 - Compatibility router: `docs/session-state/current.md` (git-tracked; not used
   for normal thread rollover)
 - Script: `scripts/orchestration/thread_handoff.py`
+- Canonical schema: `agents_extensions/shared/schemas/task-identity.v1.schema.json`
+- Canonical contract: `agents_extensions/shared/contracts/task-identity.md`
 
 Agent names are lower-case slugs matching `[a-z][a-z0-9-]*`. The standard
 agents are `orchestrator`, `codex`, `claude`, and `gemini`; additional agents
@@ -77,7 +81,12 @@ The lease records:
 - active heartbeat automation id, when known
 - replacement generation
 - replacement status: `pending_start`, `resumed`, or `started`
-- deterministic intended title and its durable source metadata
+- repository, one stream epic, scoped issue and URL when applicable
+- immutable semantic title plus readable bounded visible title
+- task family, role, predecessor/replacement IDs, lineage/generation, and typed
+  terminal goal (`merge`, `deploy`, or `certify`), lifecycle state,
+  carrier titles, and migration provenance
+- durable title-transition binding, mutation, readback, or honest fallback receipts
 - exact source/replacement native IDs and typed `replacement_of` plus
   `rollover_generation_of` relations after native creation
 - bootstrap prompt path
@@ -94,12 +103,14 @@ zone:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
-  --agent orchestrator \
+  --agent orchestrator --harness codex-app \
   --active-thread-id <current-thread-id> \
-  --epic-title "<durable epic label>" \
-  --goal "<current goal>" \
-  --phase "<current phase>" \
-  --next-phase "<next phase>" \
+  --stream-epic <one-stream-epic-number> \
+  --issue-number <scoped-issue-number> \
+  --semantic-title "<specific semantic task title>" \
+  --task-family <task-family> \
+  --role "<role>" \
+  --terminal-goal <merge|deploy|certify> \
   --context-percent 86
 ```
 
@@ -110,13 +121,22 @@ If the active thread id or automation id is known, include them:
   --agent orchestrator \
   --active-thread-id <current-thread-id> \
   --active-automation-id <old-heartbeat-automation-id> \
+  --stream-epic <one-stream-epic-number> \
+  --semantic-title "<specific semantic task title>" \
+  --task-family <task-family> \
+  --terminal-goal <merge|deploy|certify> \
   --context-percent 86
 ```
 
 This writes the lineage-scoped lease and packet plus an immutable Task Family
-Manager transition plan and receipt. `intended_title` is human-readable when
-the durable metadata is supplied. Without all three required fields, the safe
-fallback includes lineage and generation. `Resume codex rollover` is forbidden.
+Manager transition plan and receipt. Issue-backed visible titles are
+`#<issue> — <semantic title>`; otherwise they are
+`<task family> — <semantic title>`. Blank and generic labels, UUID-only titles,
+and lineage/rollover/generation-only titles are rejected. Legacy identity-less
+packets receive a deterministic semantic fallback with migration provenance;
+its `terminal_goal: unknown` is reserved for migration and explicit callers
+must choose `merge`, `deploy`, or `certify`. Raw runtime identifiers never
+become the primary visible title.
 The Task Family Manager family remains stable for one lineage generation, while
 the operation ID is deterministic for the exact rollover packet. A forced
 same-generation packet therefore cannot collide with or rewrite an older
@@ -159,7 +179,31 @@ Use the returned exact `arguments` with native `set_thread_title`, then run
 `record-native-result --action title --succeeded --evidence "..."` and
 `reconcile-native --action title`. For a failed native call, use `--failed
 --error "..."`. Always retry through `native-action`; its receipt and read-back
-logic prevent duplicate successful mutations.
+logic prevent duplicate successful mutations. A title acknowledgement without
+exact readback does not count as reconciled and cannot unlock resume.
+Readback uses raw exact string equality; whitespace is not normalized. A later
+failed retry cannot overwrite an already durable acknowledgement or exact
+readback receipt.
+
+### Harnesses without native title mutation
+
+When `prepare` reports `native_title_supported: false`, create or bind the
+exact replacement through that harness, then persist the carrier fallback:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement \
+  --agent <agent> --lineage-id <lineage-id> \
+  --rollover-id <rollover-id> \
+  --replacement-task-id <exact-replacement-task-id> \
+  --evidence "<exact dispatch/harness binding receipt>"
+```
+
+The receipt records that native mutation/readback are unsupported and that no
+rename was attempted. The same visible title remains in the dispatch record,
+brief, lease ledger, inbox/bootstrap, monitor projection, and final receipt.
+Do not fabricate `set_thread_title` success. Conversely, if an adapter declares
+native support but acknowledgement or exact readback fails, fail closed rather
+than silently downgrading to this fallback.
 
 The bootstrap starts with a checklist that is deliberately hard to skip:
 
@@ -222,7 +266,12 @@ Agents other than the orchestrator write only their own handoff by default:
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
-  --agent codex \
+  --agent <agent> --harness <harness> \
+  --active-thread-id <exact-active-task-id> \
+  --stream-epic <one-stream-epic-number> \
+  --semantic-title "<specific semantic task title>" \
+  --task-family <task-family> \
+  --terminal-goal <merge|deploy|certify> \
   --context-percent 86
 ```
 
@@ -253,7 +302,8 @@ Confirm the replacement with the same agent name:
 Check the lease at any time:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py check --agent orchestrator
+.venv/bin/python scripts/orchestration/thread_handoff.py check \
+  --agent <agent> --lineage-id <lineage-id>
 ```
 
 Warnings mean the old heartbeat automation should stay active. Common
@@ -265,6 +315,18 @@ warnings:
 - context estimate is at or above the threshold
 - cleanup says ready but no replacement thread id is recorded
 - lease state file is unreadable or corrupt
+
+`detect` never collapses multiple live packets into a generic error. Its
+`MULTIPLE_LIVE_PENDING_ROLLOVERS` diagnostic lists each candidate's semantic
+title, issue, lineage/generation, rollover and predecessor/replacement IDs,
+creation/update times, confirmation states, and safe exact-ID resolution. Do
+not resolve candidates by directory order, age, title similarity, or automatic
+supersession.
+
+`audit` includes the same read-only `task_identity` snapshot. Monitor and
+orientation integrations consume
+`scripts.orchestration.thread_handoff.rollover_identity_snapshot(...)` so the
+API view uses this envelope instead of reconstructing titles from lineage IDs.
 
 `prepare` and `confirm-started` refuse to overwrite an unreadable lease file.
 Inspect or restore the file first. If the operator intentionally wants to
@@ -339,13 +401,15 @@ npm run agents:deploy | tee "$evidence/canonical-deploy.txt"
 test -z "$(git status --porcelain)"
 source_head=$(git rev-parse HEAD)
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
-  --agent codex \
+  --agent codex --harness codex-app \
   --active-thread-id <predecessor-task-id> \
   --active-automation-id <predecessor-automation-id> \
-  --epic-title "Rollover smoke" \
-  --goal "restart verification" \
-  --phase "claim" \
-  --next-phase "confirm" \
+  --stream-epic <one-stream-epic-number> \
+  --issue-number <scoped-issue-number> \
+  --semantic-title "Verify fleet task rollover continuity" \
+  --task-family infra-harness \
+  --role smoke-verifier \
+  --terminal-goal certify \
   | tee "$evidence/prepare.json"
 lineage_id=$(jq -r .lineage_id "$evidence/prepare.json")
 rollover_id=$(jq -r .rollover_id "$evidence/prepare.json")
