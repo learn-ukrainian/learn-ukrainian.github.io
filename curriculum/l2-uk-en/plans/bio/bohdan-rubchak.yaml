@@ -114,6 +114,7 @@ references:
   title: Rubchak, Bohdan (IEU)
   type: reference
 - note: Стаття про Нью-Йоркську групу та антологію «Координати».
+  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CE%5CNewYorkGroup.htm
   title: New York Group (IEU)
   type: reference
 - note: Лекційний цикл із критичним апаратом про його поетику й науку.
@@ -138,7 +139,7 @@ sequence: 241
 slug: bohdan-rubchak
 subtitle: The Poet-Scholar Who Theorised Ukrainian Modernism in Exile
 title: 'Богдан Рубчак: Поет і вчений Нью-Йоркської групи'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: сукупність мистецьких напрямів XX століття, що поривали з традиційними формами на
     користь експерименту

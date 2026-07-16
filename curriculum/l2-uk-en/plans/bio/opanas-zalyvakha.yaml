@@ -19,6 +19,10 @@ activity_hints:
 - focus: Есе
   placement: workbook
   type: essay-response
+aliases:
+- Опанас Іванович Заливаха (canonical UA)
+- Opanas Zalyvakha (canonical EN)
+- Афанасий Заливаха (Russified; FORBIDDEN in body text)
 cefr_min: C1
 connects_to:
 - bio-alla-horska
@@ -41,7 +45,7 @@ content_outline:
   words: 1200
   points:
   - Виставку 1962 р. закрито (КХПГ).
-  - Вітраж 1964 р. знищено (підручник).
+  - Вітраж 1964 р. знищено (УІНП).
   - '[!epistemic-humility] Джерело підтверджує знищення, не реконструкцію.'
 - section: 'Тінь: Арешт 1965 року'
   words: 1600
@@ -70,12 +74,15 @@ phase: BIO
 references:
 - title: Заливаха Опанас Іванович (ЕСУ)
   note: Вирок 1965 р., табір, графіка.
+  path: https://esu.com.ua/article-14749
   type: reference
 - title: Заливаха Опанас Іванович (КХПГ)
   note: Косів, закрита виставка 1962 р.
+  path: https://museum.khpg.org/1113910802
   type: reference
-- title: Вітраж «Шевченко. Мати» (підручник, 11 клас)
+- title: 1925 — народився Опанас Заливаха, художник (УІНП)
   note: Знищення вітража 1964 р.
+  path: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/26/1905-narodyvsya-nil-hasevych-hudozhnyk
   type: reference
 sequence: 261
 slug: opanas-zalyvakha
@@ -111,7 +118,7 @@ portrait_fallback:
   type: text-only
   reason: Індивідуально ліцензованого портретного файла не підтверджено; музейна чи пошукова картинка не встановлює прав.
   verified_on: '2026-07-15'
-version: '1.1'
+version: '1.2'
 vocabulary_hints:
 - word: вітраж
   pos: ч.
