@@ -11,10 +11,14 @@
   role: scholarly
   url: https://doi.org/10.31110/consensus/2026-01/075-090
   notes: Депутатська хронологія, звернення громадян і повсякденна представницька робота.
-- title: Андрій Самійлович Малишко (1912–1970) — ЦДАМЛМ України
-  role: archive
-  url: https://csamm.archives.gov.ua/2022/11/15/andrii-samiilovych-malyshko-1912-1970/
-  notes: Огляд рукописів, листування, творчого доробку та пісенно-фільмового контексту.
+- title: Літа молодії — каталог Держкіно
+  role: reference
+  url: https://usfa.gov.ua/movie-catalog/lita-molodii-i10747
+  notes: Рік виробництва стрічки та дата прем'єри в Україні.
+- title: Статут Агентства преси «Новини» 1961 року — бібліотечний запис
+  role: reference
+  url: https://search.rsl.ru/ru/record/01006425211
+  notes: Бібліографічне свідчення про статут радянського агентства 1961 року.
 - title: «Пісня про рушник» — Андрій Малишко
   role: primary-text
   url: https://www.ukrlib.com.ua/books/printit.php?tid=961
