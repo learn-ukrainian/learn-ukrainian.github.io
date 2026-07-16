@@ -633,6 +633,61 @@ def test_preparation_rebuild_routing_rejects_incomplete_inputs_and_learner_drift
         )
 
 
+def test_preparation_rebuild_from_awaiting_production_qg_arming_clears_stale_fields(
+    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    path, core_ledger = _start(fake_repo, "a1/core-built")
+    run_id = core_ledger["run"]["run_id"]
+    assert core_ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    snapshot = tc.resolve_target("a1/core-built", repo_root=repo, config=tc.load_config(config_path))
+    post_build = _result(snapshot, repo, status="PASS")
+    post_build_path = _result_file(tmp_path, "post-build-pass.json")
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: post_build)
+    _, core_ledger = tc.record_review(
+        "a1/core-built",
+        run_id=run_id,
+        result_path=post_build_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert core_ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+
+    core_ledger["routing"] = {"owners": ["built_artifact"], "findings": []}
+    core_ledger["publication"] = {
+        "pr": 5255,
+        "merge_sha": "a" * 40,
+        "recorded_at": "2026-07-15T00:00:00Z",
+    }
+    core_ledger["production_qg_authorization"] = {
+        "qualification_path": "qualification.json",
+        "qualification_sha256": "b" * 64,
+        "human_arming_path": "human-arming.json",
+        "human_arming_sha256": "c" * 64,
+        "approval_id": "deploy-approval-5255",
+        "route": {"family": "gemini", "model": "fixture", "effort": "high"},
+    }
+    tc._atomic_write_json(path, core_ledger)
+
+    profiles = repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
+    profiles.write_text(profiles.read_text(encoding="utf-8") + "# preparation drift\n", encoding="utf-8")
+
+    _, rebuilt = tc.request_preparation_rebuild(
+        "a1/core-built",
+        run_id=run_id,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert rebuilt["state"] == "BUILD_REQUIRED"
+    rebuild_event = rebuilt["history"][-1]
+    assert rebuild_event["event"] == "PREPARATION_REBUILD_REQUIRED"
+    assert rebuilt["routing"] is None
+    assert rebuilt["publication"] is None
+    assert rebuilt["production_qg_authorization"] is None
+
+
 def test_review_rejects_unrecorded_drift_and_routes_plan_findings(
     fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

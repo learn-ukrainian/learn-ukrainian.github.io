@@ -995,6 +995,7 @@ def request_preparation_rebuild(
                 "INTEGRATION_REQUIRED",
                 "PBR_PASS_QG_PENDING",
                 "PRODUCTION_QG_REQUIRED",
+                "AWAITING_PRODUCTION_QG_ARMING",
             }
             if ledger["state"] not in allowed_states:
                 raise CompletionError(
@@ -1030,6 +1031,8 @@ def request_preparation_rebuild(
                 },
             )
             ledger["routing"] = None
+            ledger["publication"] = None
+            ledger["production_qg_authorization"] = None
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)
             return path, ledger
