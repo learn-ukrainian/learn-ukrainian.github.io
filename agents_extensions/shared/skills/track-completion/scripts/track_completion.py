@@ -748,6 +748,7 @@ def resume_run(
     if prior is not None and prior.get("terminal_goal") is None:
         raise CompletionError("Existing ledger has no terminal goal; run migrate-terminal-goal")
     reopening_state: str | None = None
+    active_qg_rearming = False
     matching_prior = prior is not None and prior.get("run", {}).get("run_id") == run_id
     if matching_prior and prior["run"].get("status") == "completed":
         projection = certification_projection(
@@ -776,25 +777,32 @@ def resume_run(
         )
         if projection["state"] == "AWAITING_PRODUCTION_QG_ARMING":
             reopening_state = "AWAITING_PRODUCTION_QG_ARMING"
+            active_qg_rearming = True
     try:
         with _with_lock(path):
             ledger = _read_ledger(path)
             if ledger is None or ledger["run"]["run_id"] != run_id:
                 raise CompletionError("No matching completion run to resume")
             resumed_state = ledger["state"]
+            reconcile_qg_rearming = bool(
+                active_qg_rearming
+                and ledger["run"]["status"] == "active"
+                and ledger["state"] == "PRODUCTION_QG_REQUIRED"
+            )
             if ledger["run"]["status"] != "active":
                 if reopening_state is None:
                     raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
                 ledger["run"]["status"] = "active"
                 resumed_state = reopening_state
-            elif (
-                reopening_state == "AWAITING_PRODUCTION_QG_ARMING"
-                and ledger["state"] == "PRODUCTION_QG_REQUIRED"
-            ):
+            elif reconcile_qg_rearming:
                 resumed_state = reopening_state
                 ledger["production_qg_authorization"] = None
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
-            if drifted and ledger["state"] not in MUTATING_STATES:
+            if (
+                drifted
+                and ledger["state"] not in MUTATING_STATES
+                and not reconcile_qg_rearming
+            ):
                 raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
             _renew_lease(ledger, config)
             eid = _event_id(
@@ -807,8 +815,16 @@ def resume_run(
                     event_id=eid,
                     event="CERTIFICATION_RESUMED" if reopening_state else "RESUMED",
                     to_state=resumed_state,
-                    identity=ledger["current_identity"] if drifted else identity,
-                    details={"pending_identity_drift": drifted, "reopened_for_certification": reopening_state is not None},
+                    identity=(
+                        identity
+                        if reconcile_qg_rearming or not drifted
+                        else ledger["current_identity"]
+                    ),
+                    details={
+                        "pending_identity_drift": drifted and not reconcile_qg_rearming,
+                        "reconciled_qg_rearming": reconcile_qg_rearming,
+                        "reopened_for_certification": reopening_state is not None,
+                    },
                 )
             _validate(ledger, LEDGER_SCHEMA_PATH, "track-completion ledger")
             _atomic_write_json(path, ledger)

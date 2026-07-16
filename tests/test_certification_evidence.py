@@ -933,11 +933,26 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
     prompt_dependency = repo / "scripts/audit/prompts/reviewer_prompt.md"
     prompt_dependency.write_text(prompt_dependency.read_text(encoding="utf-8") + "\n<!-- qg-only drift -->\n", encoding="utf-8")
+    lifecycle_dependency = (
+        repo
+        / "agents_extensions/shared/skills/track-completion/scripts/track_completion.py"
+    )
+    lifecycle_dependency.write_text(
+        lifecycle_dependency.read_text(encoding="utf-8")
+        + "\n# lifecycle workflow identity drift\n",
+        encoding="utf-8",
+    )
     after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
+    current_identity = tc.build_identity(
+        tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)),
+        repo_root=repo,
+        config=tc.load_config(config_path),
+    )
 
     assert after["preparation_identity"] == before["preparation_identity"]
     assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
     assert after["qg_identity"] != before["qg_identity"]
+    assert current_identity["sha256"] != ledger["current_identity"]["sha256"]
     projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
@@ -955,6 +970,9 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     )
     assert resumed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert resumed["production_qg_authorization"] is None
+    assert resumed["current_identity"]["sha256"] == current_identity["sha256"]
+    assert resumed["history"][-1]["details"]["pending_identity_drift"] is False
+    assert resumed["history"][-1]["details"]["reconciled_qg_rearming"] is True
 
 
 def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) -> None:
