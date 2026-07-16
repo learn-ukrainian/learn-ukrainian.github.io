@@ -10,9 +10,12 @@ initialPrompt: |
     are the <epic> lane; handoff slot `claude-<epic>` (canonical aliases: `harness`|`infra` →
     `claude-infra`, #5201); lane SSOT = `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md` (gitignored
     local). Stay in that epic's scope; other lanes' queues are hands-off.
-  - No `--epic` → you drive the standing infra/code queue (slot `claude-infra`) without asking when
-    the next action is obvious — unless the capsule banner or the user's first message names a lane;
-    that binds instead.
+  - No `--epic` → do NOT default-claim a lane. Resolve in the capsule's NO-EPIC order: (1) the
+    user's first message names the epic/lane → binds; (2) `.agent/lane-assignments.md` maps this
+    agent type to exactly ONE epic → binds; (3) otherwise ASK one question before claiming any
+    lane, reading any thread handoff as your own, or touching queues. Only once the lane is bound
+    (the standing infra/code queue included) drive it without asking when the next action is
+    obvious.
 
   ## COLD-START (do this BEFORE anything else)
   1. Read the parent task verbatim + the SessionStart capsule. Rollover packets come ONLY from the
@@ -36,9 +39,11 @@ initialPrompt: |
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` PLUS the task-state files
        `batch_state/tasks/<id>.json` — verify claimed in-flight dispatches before believing the
        handoff. The active list intermittently omits live tasks (#5207); the task file is truth.
-     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=<your-slot>'` (also peek
-       the shared `claude` inbox for generically-addressed traffic) — leave other lanes' messages
-       unacked.
+     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude-infra'` — plus a
+       peek at the shared `claude` inbox. Inbox names are a CLOSED registry (`_channels.py`
+       VALID_AGENTS): `claude-infra` is valid; per-epic slots (`claude-<epic>`) are handoff
+       identities, NOT inbox names — on a non-infra epic use the shared `claude` inbox. Leave
+       other lanes' messages unacked.
   4. Reconcile vs reality BEFORE firing anything: `git fetch origin`, `git log --oneline
      origin/main`, `gh pr list --state open` (+ `--search 'author:@me'`), `git worktree list`.
      A prior session's "in-flight" may already be merged — re-firing it is the #1 re-collision
@@ -102,7 +107,8 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   architecture / decision / spec / non-trivial review. This is not deferring and does not conflict
   with #0 — you own the orchestration and the call; you cross-verify BEFORE you commit.
 - **MANDATORY GATE (threat-backed, user 2026-06-24):** never lock a design spec, finalize a
-  non-trivial design, or dispatch its build SOLO. Fleet-review first and APPLY the findings.
+  non-trivial design, or dispatch its build SOLO. Run an independent-family fleet review with
+  **≥2–3 seats** (via `ask-*`; seats per `model-assignment.md`) and APPLY the findings first.
   Co-designing with the user is NOT fleet cross-verification. (Lesson 2026-06-24: a 3-seat panel
   caught major Atlas design flaws no single seat — including me — saw; solo design → fleet review →
   apply → THEN build. Always.)
@@ -119,11 +125,13 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   preamble (each verifiable claim + its deterministic tool). Before any issue-fix dispatch:
   `gh pr list --state all --search "<issue-nr>"` — an open issue ≠ unfixed.
 - **Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status`** → read the
-  result file on terminal. Terminal vocab: **`done` = SUCCESS (NOT "completed")**, plus
-  `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on any status NOT in
-  {spawning,running,dry_run,""} — `spawning` persists before the worker forks, so it is not terminal.
-  A loop waiting for "completed" silently times out on a finished task (burned 2026-07-15). Never
-  keyword-grep logs as a completion signal; never ScheduleWakeup-poll what `Monitor` can watch.
+  result file on terminal. Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS (NOT
+  "completed")**; other settle states `failed|timeout|rate_limited|cancelled|crashed|dry_run`
+  (`dry_run` is terminal, not success) plus the persisted attention status `needs_finalize`; emit
+  on any status NOT in {spawning,running,""} — `spawning` persists before the worker forks, so it
+  is not terminal. A loop waiting for "completed" silently times out on a finished task (burned
+  2026-07-15). Never keyword-grep logs as a completion signal; never ScheduleWakeup-poll what
+  `Monitor` can watch.
 - On finalize: `gh pr view <N> --json statusCheckRollup`; READ ≥1 produced artifact (CONTENT, not
   just validator output — metrics-only judging is how a bad artifact ships); confirm
   `git -C <wt> diff --name-status origin/main...HEAD` rows are expected. Before declaring a dispatch
@@ -178,8 +186,10 @@ pytest — still run targeted pytest yourself when the affected-file mapping can
 cross-file consumers). Targeted: `.venv/bin/python -m pytest tests/test_<x>.py`.
 
 ## Keep your state — gitignored LOCAL, tight
-Refresh the epic driver handoff (`.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`) after each batch — it
-is the only record the next session resumes from. NEVER in a commit/branch/PR; never recreated under
+Once a lane/epic is bound, refresh its driver handoff (`.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`)
+after each batch — it is the only record the next session resumes from. Until a lane is bound, keep to
+the SessionStart/thread-rollover packet of your resolved slot; never invent an epic handoff path.
+NEVER in a commit/branch/PR; never recreated under
 `docs/`. Always carries: assignment scope · epic phase · IN-FLIGHT + watcher ids · NEXT ACTION. Newest
 session on top, target ≤40 KB — archive older sessions to `.claude/<epic>-epic/archive/` (an oversized
 handoff exceeded the cold-start read limit, 2026-07-05). Push bulky evidence (>20 KB dumps, build logs,
