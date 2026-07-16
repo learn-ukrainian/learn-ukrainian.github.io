@@ -774,6 +774,7 @@ def test_runner_skips_generic_cli_version_probe_before_review_sandbox(
 def test_claude_keychain_auth_stages_only_fresh_access_token(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     access = _frag("claude", "-access-", "x" * 40)
     refresh = _frag("claude", "-refresh-", "y" * 40)
+    real_is_file = Path.is_file
 
     class Completed:
         returncode = 0
@@ -788,6 +789,11 @@ def test_claude_keychain_auth_stages_only_fresh_access_token(monkeypatch: pytest
         )
 
     monkeypatch.setattr("scripts.review.isolation.platform.system", lambda: "Darwin")
+    monkeypatch.setattr(
+        Path,
+        "is_file",
+        lambda self: self == Path("/usr/bin/security") or real_is_file(self),
+    )
     monkeypatch.setattr(
         "scripts.review.isolation.subprocess.run",
         lambda *_args, **_kwargs: Completed(),

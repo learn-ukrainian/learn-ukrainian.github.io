@@ -154,6 +154,16 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
         "review_prompt_evidence",
         lambda self, engine: "\nSEALED_DOSSIER",
     )
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "isolation_tool_config",
+        lambda self, engine: {"review_isolation": True},
+    )
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "bind_review_result",
+        lambda self, result, engine: None,
+    )
     monkeypatch.setattr(_grok_build, "send_message", lambda **_kwargs: 10)
     monkeypatch.setattr(_grok_build, "acknowledge", lambda *_args: None)
     monkeypatch.setattr(_grok_build, "record_ask_reply", lambda *_args: None)
