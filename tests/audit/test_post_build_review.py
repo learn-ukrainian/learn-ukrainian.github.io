@@ -21,6 +21,7 @@ BILASH_V1_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v1.json"
 BILASH_V2_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v2.json"
 REGRESSIONS = FIXTURES / "regressions.v1.yaml"
 CORE_EXEMPLAR = FIXTURES / "core-semantic-exemplar.v1.json"
+SCORE_CALIBRATION = FIXTURES / "score-calibration.v1.yaml"
 
 
 def _reviewer() -> dict[str, object]:
@@ -49,6 +50,8 @@ def _quality_dimensions(packet: dict | None = None) -> dict[str, dict[str, objec
     return {
         dimension: {
             "status": "PASS",
+            "score": 10.0,
+            "score_rationale": "No evidence-backed finding identifies a gap to 10.0.",
             "evidence": [{"location": location, "excerpt": excerpt}],
             "finding_ids": [],
         }
@@ -95,6 +98,30 @@ def _passing_semantic(packet: dict) -> dict:
         ],
         "findings": [],
     }
+
+
+def _claim_owned_finding_semantic(packet: dict) -> dict:
+    semantic = _passing_semantic(packet)
+    semantic["verdict"] = "REVISE"
+    semantic["findings"] = [
+        {
+            "id": "claim-only-language-finding",
+            "issue_id": "CLAIM_ONLY_LANGUAGE_FINDING",
+            "category": "language",
+            "severity": "high",
+            "message": "A claim-specific language defect requires revision.",
+            "evidence": "Synthetic claim-level evidence.",
+            "location": "tests/fixtures/post_build_review:1",
+        }
+    ]
+    semantic["claim_ledger"][0].update(
+        {
+            "status": "contradicted",
+            "finding_id": "claim-only-language-finding",
+        }
+    )
+    semantic["claim_coverage"]["claims_supported"] = 0
+    return semantic
 
 
 def _mechanical_high_deterministic() -> dict:
@@ -274,6 +301,8 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
     semantic["quality_dimensions"]["naturalness"] = {
         **semantic["quality_dimensions"]["naturalness"],
         "status": "REVISE",
+        "score": 7.0,
+        "score_rationale": "The cited passive construction needs revision before it can reach 10.0.",
         "finding_ids": ["awkward-passive"],
     }
 
@@ -281,6 +310,333 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
 
     assert normalized["quality_dimensions"]["naturalness"]["status"] == "REVISE"
     assert normalized["findings"][0]["issue_id"] == "AWKWARD_PASSIVE_RESULT_STATE"
+
+
+def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
+    bilash_packet: dict,
+) -> None:
+    calibration = yaml.safe_load(SCORE_CALIBRATION.read_text(encoding="utf-8"))
+
+    assert calibration["fixture_version"] == "score-calibration.v1"
+    assert calibration["score_bands"] == {
+        **{
+            status: f"[{lower:.1f}, {upper:.1f}{']' if includes_upper else ')'}"
+            for status, (lower, upper, includes_upper) in pbr.QUALITY_DIMENSION_SCORE_BANDS.items()
+        },
+        "INCOMPLETE": None,
+    }
+    assert calibration["score_anchors"] == {
+        "10.0": "no dimension findings",
+        "[9.0, 10.0)": "quality target with bounded low-severity headroom",
+        "[8.0, 9.0)": "release-safe with a concrete low-severity improvement",
+        "[7.0, 8.0)": "focused material revision while most of the dimension remains strong",
+        "[6.0, 7.0)": "substantial material defect requiring broader revision",
+        "[4.0, 6.0)": "blocking defect with some usable evidence",
+        "[0.0, 4.0)": "fundamentally unusable, unsafe, or unsupported",
+    }
+    for case in calibration["cases"]:
+        semantic = _passing_semantic({"deterministic": {"evidence_requirements": []}})
+        dimension = case["dimension"]
+        semantic["verdict"] = case["verdict"]
+        semantic["quality_dimensions"][dimension].update(case["assessment"])
+        finding = case["finding"]
+        if finding is not None:
+            semantic["findings"] = [finding]
+            semantic["quality_dimensions"][dimension]["finding_ids"] = [finding["id"]]
+        normalized = pbr.normalize_semantic_result(semantic, "seminar", _reviewer())
+
+        assert case["expected"]["valid"] is True
+        if "minimum_dimension_score" in case["expected"]:
+            assert pbr.minimum_dimension_score(normalized["quality_dimensions"]) == case[
+                "expected"
+            ]["minimum_dimension_score"]
+        if "documented_semantic_cap" in case["expected"]:
+            assert normalized["quality_dimensions"][dimension]["score"] == case["expected"][
+                "documented_semantic_cap"
+            ]
+
+    current_result = pbr.finalize_review(
+        bilash_packet, _raw(_passing_semantic(bilash_packet))
+    )
+    current_identity = [
+        current_result["semantic_prompt_version"],
+        *(
+            current_result["reviewer"][key]
+            for key in ("family", "model", "effort")
+        ),
+    ]
+    assert calibration["comparability"][0]["left"] == current_identity
+    for comparison in calibration["comparability"]:
+        assert (comparison["left"] == comparison["right"]) is comparison["expected"]
+
+
+@pytest.mark.parametrize("invalid_bound", ["8.0", True, float("nan"), float("inf")])
+def test_score_calibration_policy_rejects_non_numeric_or_non_finite_bounds(
+    invalid_bound: object,
+) -> None:
+    policy = pbr.load_track_policy()
+    policy["score_calibration"]["bands"]["PASS"]["minimum"] = invalid_bound
+
+    with pytest.raises(pbr.ReviewProtocolError, match="bounds must be"):
+        pbr.quality_dimension_score_bands(policy)
+
+
+def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
+    bilash_packet: dict,
+) -> None:
+    prompt = bilash_packet["semantic_prompt"]
+
+    assert "`PASS` `[8.0, 10.0]`" in prompt
+    assert "`REVISE` `[6.0, 8.0)`" in prompt
+    assert "`BLOCK` `[0.0, 6.0)`" in prompt
+    assert "half-open bands" not in prompt
+
+
+@pytest.mark.parametrize(
+    ("label", "mutate", "error_fragment"),
+    [
+        (
+            "status-score mismatch",
+            lambda semantic: (
+                semantic.update(
+                    {
+                        "findings": [
+                            {
+                                "id": "band-mismatch",
+                                "issue_id": "SCORE_BAND_MISMATCH",
+                                "category": "pedagogy",
+                                "severity": "medium",
+                                "message": "Synthetic band mismatch.",
+                                "evidence": "Synthetic evidence-backed finding.",
+                                "location": "tests/fixtures/post_build_review:1",
+                            }
+                        ]
+                    }
+                ),
+                semantic["quality_dimensions"]["pedagogical"].update(
+                    {"status": "REVISE", "score": 8.0, "finding_ids": ["band-mismatch"]}
+                ),
+            ),
+            "inconsistent with REVISE",
+        ),
+        (
+            "missing rationale",
+            lambda semantic: semantic["quality_dimensions"]["pedagogical"].pop("score_rationale"),
+            "fields are invalid",
+        ),
+        (
+            "out-of-range score",
+            lambda semantic: semantic["quality_dimensions"]["pedagogical"].update({"score": 10.1}),
+            "inclusive range",
+        ),
+        (
+            "excess precision",
+            lambda semantic: semantic["quality_dimensions"]["pedagogical"].update({"score": 8.01}),
+            "at most one decimal",
+        ),
+        (
+            "boolean score",
+            lambda semantic: semantic["quality_dimensions"]["pedagogical"].update({"score": True}),
+            "not a boolean or string",
+        ),
+        (
+            "perfect score with backlog",
+            lambda semantic: (
+                semantic.update(
+                    {
+                        "findings": [
+                            {
+                                "id": "perfect-score-backlog",
+                                "issue_id": "PERFECT_SCORE_BACKLOG",
+                                "category": "pedagogy",
+                                "severity": "low",
+                                "message": "A low-severity gap remains.",
+                                "evidence": "Synthetic evidence for the gap.",
+                                "location": "tests/fixtures/post_build_review:1",
+                            }
+                        ]
+                    }
+                ),
+                semantic["quality_dimensions"]["pedagogical"].update(
+                    {"finding_ids": ["perfect-score-backlog"]}
+                ),
+            ),
+            "score 10.0 requires no dimension findings",
+        ),
+        (
+            "orphan material finding",
+            lambda semantic: semantic.update(
+                {
+                    "findings": [
+                        {
+                            "id": "unowned-language-finding",
+                            "issue_id": "UNOWNED_LANGUAGE_FINDING",
+                            "category": "language",
+                            "severity": "high",
+                            "message": "A Russianism-class defect is present.",
+                            "evidence": "Synthetic evidence-backed language finding.",
+                            "location": "tests/fixtures/post_build_review:1",
+                        }
+                    ]
+                }
+            ),
+            "must be referenced by a quality dimension, claim, or learner-evidence entry",
+        ),
+    ],
+)
+def test_invalid_dimension_scores_fail_closed_without_repair(
+    bilash_packet: dict,
+    label: str,
+    mutate: object,
+    error_fragment: str,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    mutate(semantic)
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert label
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert error_fragment in result["semantic_response"]["error"]
+    assert result["semantic"]["verdict"] == "INCOMPLETE"
+    assert result["minimum_dimension_score"] is None
+    assert all(
+        dimension["score"] is None and dimension["score_rationale"] is None
+        for dimension in result["semantic"]["quality_dimensions"].values()
+    )
+
+
+def test_minimum_dimension_score_is_reporting_only_not_a_disposition_input(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    semantic["findings"] = [
+        {
+            "id": "reporting-only-low-gap",
+            "issue_id": "REPORTING_ONLY_LOW_GAP",
+            "category": "pedagogy",
+            "severity": "low",
+            "message": "A low-severity gap remains.",
+            "evidence": "Synthetic evidence-backed low gap.",
+            "location": "tests/fixtures/post_build_review:1",
+        }
+    ]
+    semantic["quality_dimensions"]["pedagogical"].update(
+        {
+            "score": 8.0,
+            "score_rationale": "The low-severity gap prevents a 10.0 pedagogical score.",
+            "finding_ids": ["reporting-only-low-gap"],
+        }
+    )
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["minimum_dimension_score"] == 8.0
+    assert result["combined_disposition"]["status"] == "PASS"
+
+
+def test_minimum_dimension_score_mismatch_fails_even_with_recomputed_key(
+    bilash_packet: dict,
+) -> None:
+    result = pbr.finalize_review(
+        bilash_packet, _raw(_passing_semantic(bilash_packet))
+    )
+    result["minimum_dimension_score"] = 9.9
+    reproducible = {
+        key: copy.deepcopy(result[key]) for key in pbr.REPRODUCIBILITY_FIELDS
+    }
+    result["reproducibility_key"] = pbr.sha256_text(
+        pbr._stable_json(reproducible)
+    )
+
+    with pytest.raises(pbr.ReviewProtocolError, match="minimum_dimension_score"):
+        pbr.validate_result(result)
+
+
+def test_claim_only_owned_finding_preserves_perfect_dimension_vector(
+    bilash_packet: dict,
+) -> None:
+    result = pbr.finalize_review(
+        bilash_packet, _raw(_claim_owned_finding_semantic(bilash_packet))
+    )
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["minimum_dimension_score"] == 10.0
+    assert result["combined_disposition"]["status"] == "REVISE"
+
+
+def test_learner_evidence_only_owned_finding_is_not_orphaned(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    semantic["verdict"] = "INCOMPLETE"
+    semantic["findings"] = [
+        {
+            "id": "learner-evidence-only-finding",
+            "issue_id": "LEARNER_EVIDENCE_ONLY_FINDING",
+            "category": "media",
+            "severity": "high",
+            "message": "Required learner evidence could not be verified.",
+            "evidence": "Synthetic inaccessible learner evidence.",
+            "location": "tests/fixtures/post_build_review:1",
+        }
+    ]
+    semantic["learner_evidence_ledger"].append(
+        {
+            "id": "fixture-unverified-audio",
+            "location": "tests/fixtures/post_build_review:1",
+            "task": "Inspect the required audio evidence.",
+            "modality": "audio",
+            "source": "fixture://unverified-audio",
+            "access_status": "reviewer_unverified",
+            "verification_method": "The route could not inspect the audio bytes.",
+            "finding_id": "learner-evidence-only-finding",
+        }
+    )
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["minimum_dimension_score"] == 10.0
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
+def test_stored_v4_result_rejects_orphan_finding_with_recomputed_key(
+    bilash_packet: dict,
+) -> None:
+    result = pbr.finalize_review(
+        bilash_packet, _raw(_claim_owned_finding_semantic(bilash_packet))
+    )
+    result["semantic"]["claim_ledger"][0].update(
+        {"status": "supported", "finding_id": None}
+    )
+    result["semantic"]["claim_coverage"]["claims_supported"] = 1
+    reproducible = {
+        key: copy.deepcopy(result[key]) for key in pbr.REPRODUCIBILITY_FIELDS
+    }
+    result["reproducibility_key"] = pbr.sha256_text(
+        pbr._stable_json(reproducible)
+    )
+
+    with pytest.raises(pbr.ReviewProtocolError, match="must be referenced"):
+        pbr.validate_result(result)
+
+
+@pytest.mark.parametrize("field", ["dimension", "minimum"])
+def test_v4_schema_bounds_dimension_and_minimum_scores(
+    bilash_packet: dict,
+    field: str,
+) -> None:
+    result = pbr.finalize_review(
+        bilash_packet, _raw(_passing_semantic(bilash_packet))
+    )
+    if field == "dimension":
+        result["semantic"]["quality_dimensions"]["tone"]["score"] = 10.1
+    else:
+        result["minimum_dimension_score"] = 10.1
+
+    with pytest.raises(ValidationError):
+        pbr.validate_result(result)
 
 
 def test_quality_dimension_evidence_must_quote_the_resolved_target() -> None:
@@ -421,7 +777,7 @@ def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) ->
     assert deterministic["track_audit"]["provenance"]["config_version"] == "1"
     skips = {item["category"]: item["disposition"] for item in deterministic["skip_assessments"]}
     assert skips == {
-        "llm_qg": "capabilities_absorbed_by_semantic_v3",
+        "llm_qg": "capabilities_absorbed_by_semantic_v4",
         "mdx_generation_validate": "accepted_read_only_omission",
         "external_resource_liveness": "advisory_external",
     }
@@ -940,11 +1296,28 @@ def test_metadata_only_perceptual_evidence_cannot_be_downgraded_to_info() -> Non
         pbr.normalize_semantic_result(semantic, "seminar", {"capabilities": ["text"]})
 
 
-def test_schema_validates_golden_and_rejects_missing_versions() -> None:
+def test_schema_validates_historical_v1_v2_v3_and_rejects_missing_versions(
+    bilash_packet: dict,
+) -> None:
     historical = json.loads(BILASH_V1_GOLDEN.read_text(encoding="utf-8"))
     pbr.validate_result(historical)
     golden = json.loads(BILASH_V2_GOLDEN.read_text(encoding="utf-8"))
     pbr.validate_result(golden)
+    historical_v3 = pbr.finalize_review(bilash_packet, _raw(_passing_semantic(bilash_packet)))
+    historical_v3["schema_version"] = "post-build-review.result.v3"
+    historical_v3.pop("minimum_dimension_score")
+    for assessment in historical_v3["semantic"]["quality_dimensions"].values():
+        assessment.pop("score")
+        assessment.pop("score_rationale")
+    historical_reproducible = {
+        key: copy.deepcopy(historical_v3[key])
+        for key in pbr.V3_REPRODUCIBILITY_FIELDS
+    }
+    historical_v3["reproducibility_key"] = pbr.sha256_text(pbr._stable_json(historical_reproducible))
+    pbr.validate_result(historical_v3)
+    historical_v3["semantic"]["summary"] = "Tampered historical v3 result."
+    with pytest.raises(pbr.ReviewProtocolError, match="reproducibility key"):
+        pbr.validate_result(historical_v3)
     for field in (
         "review_protocol_version",
         "deterministic_contract_version",
@@ -966,13 +1339,14 @@ def test_current_bilash_result_is_reproducible(bilash_packet: dict) -> None:
     first = pbr.finalize_review(bilash_packet, response)
     second = pbr.finalize_review(bilash_packet, response)
 
-    assert first["schema_version"] == "post-build-review.result.v3"
+    assert first["schema_version"] == "post-build-review.result.v4"
     assert first["reproducibility_key"] == second["reproducibility_key"]
     assert first["combined_disposition"] == second["combined_disposition"]
     assert set(first["semantic"]["quality_dimensions"]) == set(pbr.QUALITY_DIMENSIONS)
+    assert first["minimum_dimension_score"] == 10.0
 
 
-def test_v3_result_rejects_reproducibility_key_tampering(bilash_packet: dict) -> None:
+def test_v4_result_rejects_reproducibility_key_tampering(bilash_packet: dict) -> None:
     result = pbr.finalize_review(bilash_packet, _raw(_passing_semantic(bilash_packet)))
     result["semantic"]["summary"] = "Tampered after canonical finalization."
 
@@ -980,7 +1354,7 @@ def test_v3_result_rejects_reproducibility_key_tampering(bilash_packet: dict) ->
         pbr.validate_result(result)
 
 
-def test_v3_result_revalidates_quality_dimension_consistency(bilash_packet: dict) -> None:
+def test_v4_result_revalidates_quality_dimension_consistency(bilash_packet: dict) -> None:
     result = pbr.finalize_review(bilash_packet, _raw(_passing_semantic(bilash_packet)))
     result["semantic"]["quality_dimensions"]["tone"]["evidence"] = []
     reproducible = {key: copy.deepcopy(result[key]) for key in pbr.REPRODUCIBILITY_FIELDS}
@@ -1067,8 +1441,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "3.0.0"
-    assert len(rows) == 31
+    assert catalog["catalog_version"] == "4.0.0"
+    assert len(rows) == 35
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -1089,6 +1463,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "2.0.0",
         "2.0.1",
         "3.0.0",
+        "4.0.0",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

@@ -26,7 +26,7 @@ and combines both layers inside an invocation-unique directory allocated under
 | Mechanically verifiable track rules | `post-build-review/config/track-policy.v1.yaml` |
 | Semantic judgment | `post-build-review/prompts/*.md` |
 | Orchestration order and run isolation | `post-build-review/SKILL.md` plus `post_build_review.py allocate` |
-| Output shape | `post-build-review/schema/review-result.v3.schema.json` |
+| Output shape | `post-build-review/schema/review-result.v4.schema.json` |
 | Operator maintenance | This runbook |
 
 The evidence-derived size contract consumes the existing size-policy audit. It
@@ -47,6 +47,8 @@ Every result records:
 - exact raw semantic-response SHA-256, byte count, parser status, and contract status
 - atomic claim ledger with count-consistency enforcement
 - explicit pedagogical, naturalness, decolonization, engagement, and tone coverage
+- calibrated per-dimension diagnostic scores with score rationales and a
+  reporting-only `minimum_dimension_score` (never an average or release gate)
 - deterministic argv/cwd/exit/output hashes/config provenance
 - source-file hashes and a normalized reproducibility key
 
@@ -60,9 +62,17 @@ Bump the version responsible for a behavior change:
 | Track mapping, mechanical rule, skip classification | `track_policy_version` |
 
 Use semantic versioning. A breaking schema change requires a new schema id/file
-and review protocol major version. Schema v1 remains available for historical
-validation; schema v2 also remains historical and new reviews emit v3. Prompt hashes change automatically from the
+and review protocol major version. Schemas v1-v3 remain available for historical
+validation; new reviews emit v4. Prompt hashes change automatically from the
 exact assembled common + family + resolved context.
+
+Dimension scores preserve the accepted raw reviewer response after strict
+Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
+`BLOCK` is `[0.0, 6.0)`, and `INCOMPLETE` has a null score/rationale. The
+normalizer never repairs, rounds, clamps, downgrades, or reconciles a score.
+`combine_disposition` consumes categorical semantic/deterministic evidence
+only. A score can be compared only for identical semantic prompt, reviewer
+family, reviewer model, and reviewer effort identities.
 
 ## Bug-fix workflow
 

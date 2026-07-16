@@ -1,4 +1,4 @@
-catalog_version: 3.0.0
+catalog_version: 4.0.0
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -179,3 +179,27 @@ regressions:
     version_field: review_protocol_version
     input: A schema-valid result is edited after finalization without updating its reproducibility evidence.
     expected: Canonical validation rejects the result before track completion can record it.
+  - bug_id: dimension-score-was-repaired-or-misaligned
+    responsible_layer: schema
+    fixed_in_version: 4.0.0
+    version_field: review_protocol_version
+    input: A score is boolean, missing its rationale, outside 0.0..10.0, has excess precision, or conflicts with its categorical band.
+    expected: Preserve the raw response, reject it without repair, and emit the structured INCOMPLETE semantic outcome.
+  - bug_id: diagnostic-score-affected-disposition
+    responsible_layer: disposition
+    fixed_in_version: 4.0.0
+    version_field: review_protocol_version
+    input: A valid low within-band score accompanies otherwise categorical semantic and deterministic evidence.
+    expected: The result exposes only minimum_dimension_score for reporting; combine_disposition remains categorical and deterministic.
+  - bug_id: hard-language-or-fabrication-score-cap-was-evaded
+    responsible_layer: semantic_prompt
+    fixed_in_version: 4.0.0
+    version_field: semantic_prompt_version
+    input: A Russianism, calque, or fabrication-class finding is linked to a quality dimension.
+    expected: The anchored reviewer contract caps that dimension at 6.0; calibration fixtures retain this semantic rule until a stable hard-class field exists.
+  - bug_id: perfect-score-vector-concealed-an-orphan-finding
+    responsible_layer: orchestration
+    fixed_in_version: 4.0.0
+    version_field: review_protocol_version
+    input: A semantic finding is emitted without a quality-dimension, claim-ledger, or learner-evidence-ledger reference while every dimension claims 10.0.
+    expected: Reject the orphan finding and emit structured INCOMPLETE; a finding must have one explicit dimension or ledger owner.

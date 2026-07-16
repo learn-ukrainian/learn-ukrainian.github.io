@@ -18,7 +18,7 @@ review as an operator completion gate.
 
 ## Start or resume
 
-1. Preserve the legacy parity boundary documented below. Post-build review v3
+1. Preserve the legacy parity boundary documented below. Post-build review v4
    owns semantic readiness; the outer skill owns lifecycle and persistence.
 2. Satisfy repository issue, stream, worktree, research-classification, and
    pending-decision preflight before mutation. Work in the existing scoped
@@ -211,10 +211,11 @@ The repository-backed feature audit has these binding dispositions:
 
 | Capability | Completion disposition |
 | --- | --- |
-| Pedagogical, naturalness, decolonization, engagement, tone; scaffolding/leakage canaries; Ukrainian/factual/decolonization/media evidence | ABSORB into post-build prompt v3, schema, strict normalizer, and regression tests |
+| Pedagogical, naturalness, decolonization, engagement, tone; scaffolding/leakage canaries; Ukrainian/factual/decolonization/media evidence | ABSORB into post-build prompt v4, schema, strict normalizer, and regression tests |
 | Deterministic surface/activity/vocabulary/resource/route/size checks | ABSORB through post-build preparation; never invoke separately |
 | Author lineage, repairability, freshness, bounded correction, and stability | REPLACE with ledger identities, deterministic owners, fresh review, and `REVIEWER_INSTABILITY` |
-| Numeric scores, warning demotion, parser salvage, merged retries, score sidecars, DB/mtime readiness, same-route median independence | REJECT |
+| Schema-bound, evidence-backed in-result diagnostic dimension scores and a reporting-only minimum | ACCEPT; categorical semantic and deterministic gates remain authoritative |
+| Numeric score authority, numeric readiness thresholds, score sidecars, score-based disposition, warning demotion, parser salvage, merged retries, DB/mtime readiness, same-route median independence | REJECT |
 | Canary calibration, cost/circuit experiments, deep-read evaluation, and V7's internal LLM-QG while it remains | RETAIN-EVAL only; none can complete the outer state machine |
 
 Before deprecating separate operator invocation, tests must prove current and

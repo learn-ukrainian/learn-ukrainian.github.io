@@ -69,8 +69,8 @@ artifacts. Report findings; do not fix the module during this invocation.
 - Disposition policy: [contracts/combined-disposition-policy.md](contracts/combined-disposition-policy.md)
 - Size policy: [contracts/evidence-derived-size-policy-contract.md](contracts/evidence-derived-size-policy-contract.md)
 - Track configuration: [config/track-policy.v1.yaml](config/track-policy.v1.yaml)
-- Current output schema: [schema/review-result.v3.schema.json](schema/review-result.v3.schema.json)
-- Historical schemas: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json), [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json)
+- Current output schema: [schema/review-result.v4.schema.json](schema/review-result.v4.schema.json)
+- Historical schemas: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json), [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json), [schema/review-result.v3.schema.json](schema/review-result.v3.schema.json)
 
 The runner assembles the common prompt plus exactly one family prompt. Do not
 manually concatenate or substitute other review prompts.
@@ -81,6 +81,12 @@ manually concatenate or substitute other review prompts.
   the track audit, or `--run-mdx-generation-validate`; those paths may write to
   the repository.
 - Never let semantic `PASS` override a deterministic blocker/high finding.
+- Treat v4 dimension scores and `minimum_dimension_score` as diagnostic,
+  evidence-backed reporting only. Never use them as readiness thresholds,
+  disposition inputs, score sidecars, or retry-selection criteria.
+- Treat `10.0` as an attestation about findings linked to that dimension, not
+  as evidence that the whole result has no claim or learner-evidence findings.
+  The strict normalizer rejects any finding that has no dimension/ledger owner.
 - Never infer audio, video, image, text, or interactive content from metadata.
   If the reviewer cannot inspect evidence required by a learner task, record it
   as `reviewer_unverified` and return `INCOMPLETE`.

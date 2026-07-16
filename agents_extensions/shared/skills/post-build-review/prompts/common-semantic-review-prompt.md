@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `3.0.0`
+Semantic prompt version: `4.0.0`
 
 Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
@@ -55,6 +55,45 @@ location. Do not reuse a generic compliment as evidence across dimensions.
 `INCOMPLETE` may omit excerpts only when its finding explains why the evidence
 could not be inspected.
 
+## Diagnostic score calibration
+
+For every quality dimension, return the exact raw keys `status`, `score`,
+`score_rationale`, `evidence`, and `finding_ids`. Scores are diagnostic evidence
+inside this result only: they never set readiness, demote a warning, change the
+categorical verdict, or authorize a release. `BLOCK` is this contract's name
+for the legacy standing-rule `REJECT`; the quality target remains 9+.
+
+Use these bands exactly: `PASS` `[8.0, 10.0]`, `REVISE` `[6.0, 8.0)`,
+`BLOCK` `[0.0, 6.0)`, and `INCOMPLETE` `null`. Use at most one decimal place.
+Apply the following anchored rubric within the bands:
+
+- Return `10.0` if and only if that dimension has no findings.
+- `9.0`–`9.9` meets the quality target with only bounded, low-severity
+  headroom; `8.0`–`8.9` is release-safe but has a more consequential,
+  concrete low-severity improvement.
+- `7.0`–`7.9` needs one focused material revision while most of the dimension
+  remains strong; `6.0`–`6.9` has a substantial material defect that requires
+  broader revision.
+- `4.0`–`5.9` has a blocking defect despite some usable evidence; `0.0`–`3.9`
+  is fundamentally unusable, unsafe, or unsupported for that dimension.
+- Every score below `10.0` must link to at least one evidence-backed finding in
+  that dimension and its rationale must name the concrete gap to `10.0`.
+- Every semantic finding must be referenced by at least one quality dimension,
+  contradicted/imprecise/unattested claim, or non-verified learner-evidence
+  entry. A `10.0` attests that the dimension has no linked finding; it never
+  erases a separately owned claim or learner-evidence finding from the result.
+- A Russianism, calque, or fabrication-class finding for a dimension caps that
+  dimension at `6.0`. The current finding structure has no stable hard-class
+  field, so this cap is a reviewer contract exercised by calibration fixtures;
+  never evade it by reclassifying or omitting the finding.
+- Scores are comparable only when `(semantic_prompt_version, reviewer.family,
+  reviewer.model, reviewer.effort)` is identical. Never compare, average, rank,
+  or aggregate scores across a different tuple.
+
+`score` is a JSON number for `PASS`, `REVISE`, or `BLOCK`, and `null` if and
+only if the status is `INCOMPLETE`. `score_rationale` is a non-empty string for
+numeric scores and `null` if and only if the status is `INCOMPLETE`.
+
 Before returning, mechanically search every quality-dimension `excerpt` in its
 referenced target file. Each excerpt must be one contiguous, byte-for-byte
 substring; never splice fragments, normalize punctuation, or add an ellipsis.
@@ -99,6 +138,8 @@ equal the statuses actually present in that array.
   "quality_dimensions": {
     "pedagogical": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "score": 10.0,
+      "score_rationale": "No pedagogical finding identifies a gap to 10.0.",
       "evidence": [
         {
           "location": "repo-relative target file and locator",
@@ -109,21 +150,29 @@ equal the statuses actually present in that array.
     },
     "naturalness": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "score": 10.0,
+      "score_rationale": "No naturalness finding identifies a gap to 10.0.",
       "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
       "finding_ids": []
     },
     "decolonization": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "score": 10.0,
+      "score_rationale": "No decolonization finding identifies a gap to 10.0.",
       "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
       "finding_ids": []
     },
     "engagement": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "score": 10.0,
+      "score_rationale": "No engagement finding identifies a gap to 10.0.",
       "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
       "finding_ids": []
     },
     "tone": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
+      "score": 10.0,
+      "score_rationale": "No tone finding identifies a gap to 10.0.",
       "evidence": [{"location": "path:locator", "excerpt": "exact excerpt"}],
       "finding_ids": []
     }
@@ -179,4 +228,7 @@ only supported claims.
 Every quality-dimension `finding_id` must reference a semantic finding. A
 dimension marked `REVISE` requires a medium/high finding, `BLOCK` requires a
 blocker, and `PASS` cannot reference a material finding. The overall verdict
-must fail closed when any dimension is not `PASS`.
+must fail closed when any dimension is not `PASS`. Do not repair, clamp,
+downgrade, round, reconcile, or otherwise change a score to fit a band.
+Do not emit an orphan semantic finding: every finding must be owned by a
+dimension, claim-ledger entry, or learner-evidence-ledger entry.

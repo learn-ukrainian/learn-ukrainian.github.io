@@ -47,7 +47,8 @@ The repeated mechanics are assigned once:
 | Durable report paths and remediation batches | Runtime ledger/status `CODE`; compact `REFERENCE` output |
 | Model/helper routing, ownership, and output budgets | Fleet `CONFIG` and coordinator `CODE` |
 | Telemetry and final response | Integration/telemetry adapter `CODE` and schema `CONFIG` |
-| Numeric quality scores used as readiness | Semantic criteria absorbed into explicit findings; legacy authority `DEPRECATE` |
+| Schema-bound, evidence-backed in-result diagnostic scores and reporting-only minimum | `ACCEPT`: v4 evidence fields; categorical semantic and deterministic gates remain authoritative |
+| Numeric score authority, numeric readiness thresholds, score sidecars, score-based disposition, warning demotion, parser salvage, merged retries, DB/mtime readiness, same-route median independence | `REJECT`: no lifecycle authority or retry-selection role |
 
 ## File-by-file parity
 

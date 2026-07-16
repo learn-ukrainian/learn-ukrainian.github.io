@@ -53,7 +53,10 @@ The existing `$track-completion` implementation remains the module engine. It is
 extended behind compatible schemas rather than replaced. Existing BIO readiness
 gates supply the first PREPARE adapter pattern; V7 remains the BUILD adapter;
 `$post-build-review` remains the first CERTIFY adapter. No adapter's internal
-cache, score, sidecar, or generated report may become lifecycle authority.
+cache, score, sidecar, or generated report may become lifecycle authority. Its
+v4 result may retain schema-bound, evidence-backed per-dimension diagnostic
+scores and a reporting-only minimum, while categorical semantic and
+deterministic gates remain the only release authority.
 
 ### Derived lifecycle
 
@@ -154,8 +157,14 @@ Production LLM-QG is an optional adapter and remains disarmed. Enabling it requi
 a repository-backed qualification artifact, complete dry-run, route/model/prompt/
 gate canary, budget rails, circuit breaker, resumable evidence, and explicit human
 arming. Its useful cache, lineage, grounding, canary, and cost controls may be
-reused. Legacy `llm_qg.json`, numeric score thresholds, file mtimes, SQLite rows,
-parser salvage, median sampling, and in-gate mutation remain non-authoritative.
+reused. The lifecycle explicitly rejects numeric score authority, numeric
+readiness thresholds, score sidecars, score-based disposition, warning
+demotion, parser salvage, merged retries, DB/mtime readiness, and same-route
+median independence. Legacy `llm_qg.json`, file mtimes, SQLite rows, median
+sampling, and in-gate mutation remain non-authoritative. In contrast, the v4
+post-build result accepts only schema-bound, evidence-backed in-result
+diagnostic dimension scores and a reporting-only minimum; those values do not
+alter the categorical gates.
 
 Final certification is a derived state: all gates required by the current track
 profile are current and passing, and all material independent-review findings are

@@ -19,7 +19,7 @@ profiles:
     family: core
     readiness_profile: core
     pbr:
-      adapter: post-build-review.v3
+      adapter: post-build-review.v4
       required: true
     independent_review:
       required_for_mutation: true
@@ -33,7 +33,7 @@ profiles:
     family: core
     readiness_profile: core
     pbr:
-      adapter: post-build-review.v3
+      adapter: post-build-review.v4
       required: true
     independent_review:
       required_for_mutation: true
@@ -47,7 +47,7 @@ profiles:
     family: seminar
     readiness_profile: seminar
     pbr:
-      adapter: post-build-review.v3
+      adapter: post-build-review.v4
       required: true
     independent_review:
       required_for_mutation: true
@@ -61,7 +61,7 @@ profiles:
     family: seminar
     readiness_profile: bio
     pbr:
-      adapter: post-build-review.v3
+      adapter: post-build-review.v4
       required: true
     independent_review:
       required_for_mutation: true
