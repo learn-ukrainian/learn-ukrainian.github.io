@@ -187,6 +187,22 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
+    "kimi": {
+        # Managed native kimi-code CLI seat; no proxy-provider route.
+        "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
+        "default_model": "k2.7-coding",
+        "cost_tier": "medium",
+        # Content capabilities remain gated on the dedicated UA probe (#5326).
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "adversarial_review",
+            }
+        ),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
     "deepseek": {
         "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
         "default_model": "deepseek-v4-pro",

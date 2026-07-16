@@ -135,6 +135,7 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
+    "kimi",  # managed native kimi-code CLI seat; no automatic fallback chain
     "deepseek",
     "agy",
     "cursor",
@@ -3297,7 +3298,7 @@ def build_parser() -> argparse.ArgumentParser:
         # while the routing guard rejects it at dispatch is a UX trap. The
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
-        "grok (native CLI; grok-build=alias), grok-hermes, deepseek, agy, or cursor.",
+        "grok (native CLI; grok-build=alias), grok-hermes, kimi, deepseek, agy, or cursor.",
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")

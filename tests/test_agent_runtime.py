@@ -106,6 +106,7 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
+from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
@@ -184,6 +185,7 @@ def test_registry_has_known_agents():
         "grok",
         "grok-build",
         "grok-hermes",
+        "kimi",
         "deepseek",
         "qwen",
         "agy",
@@ -220,6 +222,20 @@ def test_grok_build_entry_is_well_formed():
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "never"
     assert {"code_writing", "code_review", "debugging"} <= entry["capabilities"]
+
+
+def test_kimi_entry_is_well_formed():
+    entry = get_agent_entry("kimi")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.kimi:KimiAdapter"
+    assert entry["default_model"] == "k2.7-coding"
+    assert entry["cost_tier"] == "medium"
+    assert entry["cli_available"] is True
+    assert entry["resume_policy"] == "never"
+    assert entry["capabilities"] == {"code_writing", "code_review", "adversarial_review"}
+
+
+def test_load_adapter_kimi():
+    assert _load_adapter("kimi").name == KimiAdapter.name
 
 
 def test_codex_entry_has_bridge_only_resume_policy():
