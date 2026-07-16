@@ -202,6 +202,11 @@ def _is_tool_use_payload(payload: Mapping[str, Any]) -> bool:
         or "functionCall" in payload
         or "toolCall" in payload
         or (
+            payload_type == "function"
+            and isinstance(payload.get("function"), Mapping)
+            and bool(_tool_name(payload))
+        )
+        or (
             bool(_tool_name(payload))
             and any(key in payload for key in ("arguments", "args", "input", "parameters"))
             and "result" not in payload_type

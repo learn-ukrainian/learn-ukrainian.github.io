@@ -115,7 +115,7 @@ router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
 TASKS_DIR = Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
-SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor")
+SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
 API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
 STATE_SUMMARY_TTL_S = 60.0
@@ -690,7 +690,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
         "remaining_pct": (100.0 - claude_burn) if claude_burn is not None else None,
     }
 
-    for agent in ("codex", "gemini", "grok", "cursor"):
+    for agent in (lane for lane in SUBSCRIPTION_LANES if lane != "claude"):
         agent_config = budgets.get(agent) if isinstance(budgets.get(agent), dict) else {}
         cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
         has_cap = cap > 0

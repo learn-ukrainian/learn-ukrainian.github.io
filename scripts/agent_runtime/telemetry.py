@@ -231,6 +231,10 @@ def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None)
         return _NOT_EXPOSED
     if agent_name in {"deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
+    if agent_name == "kimi":
+        # K3 exposes max effort only and the native CLI has no per-call effort
+        # flag. Never mislabel an ignored lower caller request as effective.
+        return _default_effort_for(agent_name) or "max"
     if requested_effort:
         return requested_effort
     if agent_name == "codex":
@@ -336,6 +340,11 @@ def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",)) -> str | Non
     return _probe_version(prefix)
 
 
+@lru_cache(maxsize=1)
+def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",)) -> str | None:
+    return _probe_version(prefix)
+
+
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
     if agent_name == "codex":
         prefix = _codex_version_prefix(plan.cmd) if plan is not None else ("codex",)
@@ -352,6 +361,9 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "cursor":
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
         return cursor_cli_version(prefix)
+    if agent_name == "kimi":
+        prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("kimi",)
+        return kimi_cli_version(prefix)
     from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
@@ -428,3 +440,4 @@ def _reset_version_cache_for_tests() -> None:
     claude_cli_version.cache_clear()
     agy_cli_version.cache_clear()
     cursor_cli_version.cache_clear()
+    kimi_cli_version.cache_clear()

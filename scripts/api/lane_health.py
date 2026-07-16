@@ -63,7 +63,7 @@ def normalize_agent_name(raw_agent: str | None) -> str | None:
     if agent in {"grok", "grok-build"} or agent.startswith("grok ") or agent.startswith("grok("):
         return "grok"
     canonical = normalize_seat(agent)
-    for name in ("claude", "codex", "gemini", "grok", "cursor", "deepseek"):
+    for name in ("claude", "codex", "gemini", "grok", "cursor", "kimi", "deepseek"):
         if canonical == name or agent in seat_read_aliases(name):
             return name
         if agent == name or agent.startswith(f"{name} ") or agent.startswith(f"{name}("):

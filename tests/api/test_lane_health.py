@@ -19,6 +19,7 @@ def test_normalize_agent_name():
     assert normalize_agent_name("Claude (Interactive)") == "claude"
     assert normalize_agent_name("codex ") == "codex"
     assert normalize_agent_name("deepseek") == "deepseek"
+    assert normalize_agent_name("Kimi") == "kimi"
     assert normalize_agent_name("Unknown-Agent") == "unknown-agent"
 
 
@@ -292,8 +293,8 @@ def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
     ]
     _configure_test_budgets(monkeypatch, tmp_path, records)
 
-    # Claude, Codex, Gemini, Grok, Cursor all unhealthy (2 failures each)
-    for agent in ("claude", "codex", "gemini", "grok", "cursor"):
+    # Every subscription lane is unhealthy (2 failures each).
+    for agent in ("claude", "codex", "gemini", "grok", "cursor", "kimi"):
         _write_task(tmp_path, f"task-{agent}-1", agent, "failed", 1, 10.0, now - timedelta(minutes=45))
         _write_task(tmp_path, f"task-{agent}-2", agent, "failed", 1, 10.0, now - timedelta(minutes=15))
 

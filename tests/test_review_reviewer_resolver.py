@@ -57,6 +57,8 @@ def test_family_resolution_across_model_and_harness_aliases():
         "glm-5.2": "zhipu",
         "qwen": "alibaba",
         "qwen-tools": "alibaba",
+        "kimi": "moonshot",
+        "kimi-code/k3": "moonshot",
     }
     for seat, expected_family in cases.items():
         assert resolve_family(seat) == expected_family, f"{seat} -> expected {expected_family}"
@@ -121,6 +123,14 @@ def test_resolve_author_family_fixed_family_alias_unaffected():
     assert resolve_author_family("claude") == "anthropic"
     assert resolve_author_family("deepseek-v4-pro") == "deepseek"
     assert resolve_author_family("grok-build") == "xai"
+    assert resolve_author_family("kimi-code/k3") == "moonshot"
+
+
+def test_default_ladder_kimi_author_gets_deepseek():
+    resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3"))
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.name == "deepseek-v4-flash"
 
 
 # --- resolve_reviewer fail-closed on unresolved author identity ---------------

@@ -231,6 +231,25 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
+    "kimi": {
+        # Native Kimi Code OAuth subscription lane. K3 currently exposes a
+        # 262K context window and max effort only. Keep capabilities narrow
+        # until the repository's role-specific bakeoffs establish quality.
+        "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
+        "default_model": "kimi-code/k3",
+        "default_effort": "max",
+        "cost_tier": "low",
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "debugging",
+                "multimodal",
+            }
+        ),
+        "cli_available": True,
+        "resume_policy": "bridge_only",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.5 on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff
