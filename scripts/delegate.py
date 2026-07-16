@@ -102,6 +102,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -1363,6 +1364,199 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         target.symlink_to(resolved_source)
 
 
+# Default cone sparse-checkout exclusions for dispatch worktrees.
+# curriculum/ + wiki/ are ~300MB of the ~550MB full tree; most infra/code
+# dispatches never edit them. Content work opts back in with
+# --sparse-include curriculum (and/or wiki) or --full-checkout.
+_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "wiki"})
+
+
+def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
+    """Normalize --sparse-include values to unique top-level directory names.
+
+    Fail closed: explicit values must be bare top-level names in the default
+    exclusion set (``curriculum``, ``wiki``). Nested paths and unknown names
+    raise :class:`ValueError` so content dispatches cannot silently miss trees.
+    """
+    if not raw:
+        return ()
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for item in raw:
+        name = str(item).strip().strip("/")
+        if not name or name in {".", ".."}:
+            raise ValueError(
+                f"--sparse-include {item!r} is empty or invalid; "
+                f"pass a top-level name such as 'curriculum' or 'wiki'"
+            )
+        if "/" in name:
+            top = name.split("/", 1)[0]
+            raise ValueError(
+                f"--sparse-include {item!r} must be a top-level directory name "
+                f"(use {top!r}, not a nested path)"
+            )
+        if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
+            allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
+            raise ValueError(
+                f"--sparse-include {name!r} is not a default-excluded tree; "
+                f"allowed: {allowed}"
+            )
+        if name in seen:
+            continue
+        seen.add(name)
+        ordered.append(name)
+    return tuple(ordered)
+
+
+def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
+    """Detect default-excluded top-level path prefixes referenced in a prompt."""
+    if not text:
+        return ()
+    found: list[str] = []
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT):
+        # Path-like reference: curriculum/… or `wiki/` — not bare English words.
+        if re.search(rf"(?<![\w.-]){re.escape(name)}/", text):
+            found.append(name)
+    return tuple(found)
+
+
+def _infer_sparse_include(
+    explicit: Sequence[str] | None,
+    *,
+    owned_paths: Sequence[str] | None = None,
+    prompt_text: str | None = None,
+) -> tuple[str, ...]:
+    """Merge explicit includes with owned-path tops and prompt path references.
+
+    A dispatch that already declares ``--research-owned-path curriculum/...``
+    or whose brief references ``curriculum/`` / ``wiki/`` materializes those
+    trees without a second flag.
+    """
+    merged: list[str] = list(_normalize_sparse_include(explicit))
+    seen = set(merged)
+    for raw in owned_paths or ():
+        top = str(raw).strip().strip("/").split("/", 1)[0]
+        if top in _DISPATCH_SPARSE_EXCLUDE_DEFAULT and top not in seen:
+            seen.add(top)
+            merged.append(top)
+    for name in _infer_sparse_include_from_text(prompt_text):
+        if name not in seen:
+            seen.add(name)
+            merged.append(name)
+    return tuple(merged)
+
+
+def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
+    """Return top-level directory names at ``at_ref`` inside a worktree."""
+    proc = subprocess.run(
+        ["git", "ls-tree", "-d", "--name-only", at_ref],
+        cwd=worktree_path,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
+        raise RuntimeError(
+            f"could not list top-level dirs in {worktree_path}: {detail}"
+        )
+    return [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+
+
+def _apply_dispatch_sparse_checkout(
+    worktree_path: Path,
+    *,
+    full_checkout: bool = False,
+    sparse_include: Sequence[str] = (),
+) -> dict[str, Any]:
+    """Apply (or disable) cone sparse-checkout on a dispatch worktree.
+
+    Default profile excludes ``curriculum/`` and ``wiki/`` so each dispatch
+    stays ~200MB instead of ~550MB. ``--full-checkout`` disables sparse mode.
+    ``--sparse-include DIR`` keeps named top-level dirs that would otherwise
+    be excluded (e.g. ``curriculum`` for module content work).
+    """
+    includes = _normalize_sparse_include(sparse_include)
+    telemetry: dict[str, Any] = {
+        "full_checkout": bool(full_checkout),
+        "sparse_include": list(includes),
+        "excluded": [],
+        "included_dirs": [],
+        "applied": False,
+        "error": None,
+    }
+
+    def _run_git(args: list[str]) -> subprocess.CompletedProcess[str]:
+        # Must sanitize GIT_* so sparse-checkout applies to *this* worktree
+        # when a parent harness injects GIT_DIR/GIT_WORK_TREE (pre-commit, etc.).
+        return subprocess.run(
+            args,
+            cwd=worktree_path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+
+    if full_checkout:
+        proc = _run_git(["git", "sparse-checkout", "disable"])
+        if proc.returncode != 0:
+            detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
+            telemetry["error"] = detail
+            raise RuntimeError(
+                f"failed to disable sparse-checkout in {worktree_path}: {detail}"
+            )
+        telemetry["applied"] = True
+        return telemetry
+
+    exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
+    all_dirs = _list_worktree_top_dirs(worktree_path)
+    included = [name for name in all_dirs if name not in exclude]
+    excluded = sorted(name for name in all_dirs if name in exclude)
+    telemetry["excluded"] = excluded
+    telemetry["included_dirs"] = included
+
+    if not excluded:
+        # Nothing to drop at this ref (or everything was re-included). Prefer a
+        # full tree rather than an empty cone set.
+        proc = _run_git(["git", "sparse-checkout", "disable"])
+        if proc.returncode != 0:
+            detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
+            telemetry["error"] = detail
+            raise RuntimeError(
+                f"failed to disable sparse-checkout in {worktree_path}: {detail}"
+            )
+        telemetry["applied"] = True
+        return telemetry
+
+    proc = _run_git(["git", "sparse-checkout", "init", "--cone"])
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "sparse-checkout init failed").strip()
+        telemetry["error"] = detail
+        raise RuntimeError(
+            f"failed to init sparse-checkout in {worktree_path}: {detail}"
+        )
+
+    proc = _run_git(["git", "sparse-checkout", "set", "--", *included])
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "sparse-checkout set failed").strip()
+        telemetry["error"] = detail
+        raise RuntimeError(
+            f"failed to set sparse-checkout in {worktree_path}: {detail}. "
+            "Commit/stash local changes under excluded paths, or pass "
+            "--full-checkout / --sparse-include."
+        )
+
+    telemetry["applied"] = True
+    print(
+        f"🌲 dispatch sparse-checkout: excluded {', '.join(excluded)} "
+        f"in {worktree_path} (use --sparse-include / --full-checkout to keep them)",
+        file=sys.stderr,
+    )
+    return telemetry
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -1371,6 +1565,8 @@ def _ensure_worktree(
     base: str = "main",
     branch: str | None = None,
     dry_run: bool = False,
+    full_checkout: bool = False,
+    sparse_include: Sequence[str] = (),
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -1382,6 +1578,7 @@ def _ensure_worktree(
     - ``layout``: ``"dispatch"`` or ``"flat"``.
     - ``reused``: whether the path already existed and was validated rather
       than created.
+    - ``sparse``: sparse-checkout profile telemetry (when applied).
     """
     worktree_path = _normalize_worktree_path(raw_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -1392,6 +1589,7 @@ def _ensure_worktree(
         "rebased": False,
         "layout": layout,
         "reused": False,
+        "sparse": None,
     }
 
     if requested_branch:
@@ -1427,6 +1625,12 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _REPO_ROOT)
+        # Re-apply sparse profile so pre-existing full trees shrink on reuse.
+        telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+            worktree_path,
+            full_checkout=full_checkout,
+            sparse_include=sparse_include,
+        )
         return worktree_path, worktree_branch, telemetry
 
     if dry_run:
@@ -1482,18 +1686,39 @@ def _ensure_worktree(
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
     _provision_data_symlinks(worktree_path, _REPO_ROOT)
+    telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+        worktree_path,
+        full_checkout=full_checkout,
+        sparse_include=sparse_include,
+    )
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, worktree_branch, telemetry
 
 
-def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> str:
+def _augment_prompt_with_worktree(
+    prompt: str,
+    worktree_path: Path | None,
+    *,
+    sparse_telemetry: dict[str, Any] | None = None,
+) -> str:
     """Inject worktree context into the delegated prompt when relevant."""
     if worktree_path is None:
         return prompt
+    sparse_note = ""
+    if sparse_telemetry and not sparse_telemetry.get("full_checkout"):
+        excluded = sparse_telemetry.get("excluded") or []
+        if excluded:
+            sparse_note = (
+                "Sparse-checkout is active: these top-level trees are NOT present: "
+                + ", ".join(str(p) for p in excluded)
+                + ". If you need them, re-dispatch with --sparse-include <dir> "
+                "or --full-checkout (do not invent content for missing paths).\n"
+            )
     return (
         "[delegate worktree]\n"
         f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
-        "Do not switch branches in the main checkout.\n\n"
+        "Do not switch branches in the main checkout.\n"
+        f"{sparse_note}\n"
         f"{prompt}"
     )
 
@@ -2064,6 +2289,26 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
+    full_checkout = bool(getattr(args, "full_checkout", False))
+    # Prompt is resolved later for the worker; for sparse inference we only
+    # need the raw text when available so content briefs auto-include trees.
+    early_prompt: str | None = None
+    if getattr(args, "prompt", None):
+        early_prompt = str(args.prompt)
+    elif getattr(args, "prompt_file", None):
+        try:
+            early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+        except OSError:
+            early_prompt = None
+    try:
+        sparse_include = _infer_sparse_include(
+            getattr(args, "sparse_include", None),
+            owned_paths=getattr(args, "research_owned_path", None),
+            prompt_text=early_prompt,
+        )
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,
@@ -2195,6 +2440,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     dry_run=True,
+                    full_checkout=full_checkout,
+                    sparse_include=sparse_include,
                 )
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
@@ -2297,6 +2544,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
                 branch=requested_branch,
+                full_checkout=full_checkout,
+                sparse_include=sparse_include,
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -2311,7 +2560,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         return 1
 
     cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
-    prompt = _augment_prompt_with_worktree(prompt, worktree_path)
+    prompt = _augment_prompt_with_worktree(
+        prompt,
+        worktree_path,
+        sparse_telemetry=worktree_telemetry.get("sparse")
+        if isinstance(worktree_telemetry.get("sparse"), dict)
+        else None,
+    )
 
     # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
     # instruction (never digest bodies) when an explicit context was supplied and
@@ -2348,6 +2603,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_rebased": bool(worktree_telemetry.get("rebased")),
         "worktree_reused": bool(worktree_telemetry.get("reused")),
         "worktree_layout": worktree_layout,
+        "worktree_sparse": worktree_telemetry.get("sparse"),
         "runtime_tmp_root": str(runtime_tmp_root),
         "tmp_bytes_freed": None,
         "tmp_reap_error": None,
@@ -2376,12 +2632,19 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
     if worktree_path:
+        sparse_meta = worktree_telemetry.get("sparse") or {}
+        sparse_tag = ""
+        if sparse_meta.get("full_checkout"):
+            sparse_tag = " [full-checkout]"
+        elif sparse_meta.get("excluded"):
+            sparse_tag = f" [sparse-exclude={','.join(sparse_meta['excluded'])}]"
         print(
             f"🌲 dispatch {task_id}: branch={worktree_branch} "
             f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
             f"path={worktree_path} layout={worktree_layout}"
             + (" [rebased]" if worktree_telemetry.get("rebased") else "")
-            + (" [reused]" if worktree_telemetry.get("reused") else ""),
+            + (" [reused]" if worktree_telemetry.get("reused") else "")
+            + sparse_tag,
             file=sys.stderr,
         )
         if worktree_layout == "flat":
@@ -3117,6 +3380,27 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Keep a successful clean dispatch worktree instead of reaping it "
             "after the branch is recoverable from origin or PR state."
+        ),
+    )
+    d.add_argument(
+        "--full-checkout",
+        action="store_true",
+        help=(
+            "Materialize the full git working tree in the dispatch worktree. "
+            "Default is cone sparse-checkout excluding curriculum/ and wiki/ "
+            "(~300MB saved per worktree). Use this for tasks that need the "
+            "entire tree without listing includes."
+        ),
+    )
+    d.add_argument(
+        "--sparse-include",
+        action="append",
+        default=None,
+        metavar="DIR",
+        help=(
+            "Keep a top-level directory that default sparse-checkout would "
+            "exclude (curriculum, wiki). Repeatable. Example: "
+            "--sparse-include curriculum for module content work."
         ),
     )
     d.add_argument(

@@ -1751,6 +1751,16 @@ def _make_run_stub(
         if cmd[:2] == ["git", "rebase"]:
             rc = 0 if rebase_ok else 1
             return subprocess.CompletedProcess(cmd, rc, "", "")
+        if cmd[:2] == ["git", "ls-tree"]:
+            # Default top-level dirs for sparse-checkout tests / ensure_worktree.
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                "curriculum\ndocs\nscripts\nsite\ntests\nwiki\n",
+                "",
+            )
+        if cmd[:2] == ["git", "sparse-checkout"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     return calls, fake_run
@@ -2451,6 +2461,118 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     )
     assert telemetry["base_sha"] == "sha-from-origin"
     assert telemetry["reused"] is False
+    sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
+    assert any(c[:3] == ["git", "sparse-checkout", "init"] for c in sparse_calls)
+    set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
+    assert set_calls, "default dispatch worktree must apply sparse-checkout set"
+    assert "curriculum" not in set_calls[0]
+    assert "wiki" not in set_calls[0]
+    assert "scripts" in set_calls[0]
+    assert telemetry["sparse"] is not None
+    assert telemetry["sparse"]["excluded"] == ["curriculum", "wiki"]
+
+
+def test_normalize_sparse_include_dedupes_and_strips():
+    assert delegate._normalize_sparse_include(None) == ()
+    assert delegate._normalize_sparse_include(["curriculum/", " wiki ", "curriculum"]) == (
+        "curriculum",
+        "wiki",
+    )
+
+
+def test_normalize_sparse_include_rejects_nested_and_unknown():
+    import pytest
+
+    with pytest.raises(ValueError, match="top-level"):
+        delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
+    with pytest.raises(ValueError, match="not a default-excluded"):
+        delegate._normalize_sparse_include(["scripts"])
+    with pytest.raises(ValueError, match="empty or invalid"):
+        delegate._normalize_sparse_include([""])
+
+
+def test_infer_sparse_include_from_owned_paths_and_prompt():
+    assert delegate._infer_sparse_include(None) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["curriculum/l2-uk-en/bio/foo", "scripts/x.py"],
+    ) == ("curriculum",)
+    assert delegate._infer_sparse_include(
+        ["wiki"],
+        owned_paths=["curriculum/a", "wiki/b"],
+    ) == ("wiki", "curriculum")
+    assert delegate._infer_sparse_include(
+        None,
+        prompt_text="Edit curriculum/l2-uk-en/a1/foo.md and leave scripts alone.",
+    ) == ("curriculum",)
+    assert "wiki" not in delegate._infer_sparse_include(
+        None,
+        prompt_text="Discuss Wikipedia articles without path refs.",
+    )
+
+
+def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    meta = delegate._apply_dispatch_sparse_checkout(tmp_path, full_checkout=True)
+    assert meta["full_checkout"] is True
+    assert meta["applied"] is True
+    assert calls == [["git", "sparse-checkout", "disable"]]
+
+
+def test_apply_dispatch_sparse_checkout_include_curriculum(tmp_path, monkeypatch):
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:2] == ["git", "ls-tree"]:
+            return subprocess.CompletedProcess(
+                cmd, 0, "curriculum\ndocs\nscripts\nwiki\n", ""
+            )
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    meta = delegate._apply_dispatch_sparse_checkout(
+        tmp_path, sparse_include=("curriculum",)
+    )
+    assert meta["excluded"] == ["wiki"]
+    assert "curriculum" in meta["included_dirs"]
+    set_cmd = next(c for c in calls if c[:3] == ["git", "sparse-checkout", "set"])
+    assert "curriculum" in set_cmd
+    assert "wiki" not in set_cmd
+
+
+def test_ensure_worktree_full_checkout_disables_sparse(tmp_tasks_dir, tmp_path, monkeypatch):
+    target = tmp_path / "full-worktree"
+    calls, fake_run = _make_run_stub(rev_parse_head_sha="sha-full")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    _, _, telemetry = delegate._ensure_worktree(
+        agent="codex",
+        task_id="full-checkout-task",
+        raw_path=str(target),
+        base="main",
+        full_checkout=True,
+    )
+    sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
+    assert sparse_calls == [["git", "sparse-checkout", "disable"]]
+    assert telemetry["sparse"]["full_checkout"] is True
+
+
+def test_augment_prompt_mentions_sparse_exclusions():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        sparse_telemetry={"full_checkout": False, "excluded": ["curriculum", "wiki"]},
+    )
+    assert "curriculum" in text
+    assert "wiki" in text
+    assert "sparse" in text.lower() or "Sparse" in text
 
 
 def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -3249,3 +3371,76 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
     assert not any(c[:2] == ["git", "rebase"] for c in calls), (
         "branch-reuse dry-run must never rebase"
     )
+
+
+def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
+    """Integration: cone sparse excludes curriculum/wiki without touching primary."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    # Drop parent-repo redirect env that pre-commit / agent harness may inject.
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    for name in ("curriculum", "wiki", "scripts", "docs"):
+        d = primary / name
+        d.mkdir()
+        (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    (primary / "README.md").write_text("root\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+    assert (worktree / "curriculum" / "f.txt").is_file()
+
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+    assert meta["applied"] is True
+    assert meta["excluded"] == ["curriculum", "wiki"]
+    assert not (worktree / "curriculum").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+    assert (worktree / "README.md").is_file()
+    # Primary must remain full.
+    assert (primary / "curriculum" / "f.txt").is_file()
+    assert (primary / "wiki" / "f.txt").is_file()
+
+    meta2 = delegate._apply_dispatch_sparse_checkout(
+        worktree, sparse_include=("curriculum",)
+    )
+    assert meta2["excluded"] == ["wiki"]
+    assert (worktree / "curriculum" / "f.txt").is_file()
+    assert not (worktree / "wiki").exists()
+
+    meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
+    assert meta3["full_checkout"] is True
+    assert (worktree / "curriculum" / "f.txt").is_file()
+    assert (worktree / "wiki" / "f.txt").is_file()
+
