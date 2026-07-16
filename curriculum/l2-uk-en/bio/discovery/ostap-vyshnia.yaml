@@ -1,0 +1,35 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Остап Вишня
+- Остап Вишня Енциклопедія Сучасної України
+- Остап Вишня кримінальна справа 44228 архів
+- Остап Вишня Літературні усмішки 1924 Україніка НБУВ
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-34331
+- https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+warning: >-
+  Первинне видання подано як посилання на бібліотечний запис; цитати без
+  сторінкового локатора не використовуються.
+sources:
+- id: S1
+  file: https://esu.com.ua/article-34331
+  type: external
+  title: Вишня Остап
+  url: https://esu.com.ua/article-34331
+  metadata: {publisher: Енциклопедія Сучасної України, language: uk, verified_on: '2026-07-16'}
+- id: S2
+  file: https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+  type: external
+  title: «Кому веселе, а кому сумне»
+  url: https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+  metadata: {publisher: Урядовий кур'єр, language: uk, verified_on: '2026-07-16'}
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+  type: external
+  title: Літературні усмішки (1924)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}

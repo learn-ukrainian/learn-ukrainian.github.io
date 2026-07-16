@@ -1,0 +1,13 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-38801
+  title: Бажан Микола Платонович
+  url: https://esu.com.ua/article-38801
+  type: external
+  metadata: {publisher: Енциклопедія Сучасної України, language: uk, verified_on: '2026-07-16'}
+- id: S2
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+  title: Вибрані поезії (1940)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+  type: external
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}

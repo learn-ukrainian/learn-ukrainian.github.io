@@ -1,0 +1,19 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-34331
+  title: Вишня Остап
+  url: https://esu.com.ua/article-34331
+  type: external
+  metadata: {publisher: Енциклопедія Сучасної України, language: uk, verified_on: '2026-07-16'}
+- id: S2
+  file: https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+  title: «Кому веселе, а кому сумне»
+  url: https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+  type: external
+  metadata: {publisher: Урядовий кур'єр, language: uk, verified_on: '2026-07-16'}
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+  title: Літературні усмішки (1924)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+  type: external
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}

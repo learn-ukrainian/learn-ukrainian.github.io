@@ -148,16 +148,39 @@ persona:
     прозі та насильницьке редагування літературної пам'яті.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- language: uk
-  note: Енциклопедія історії України; біографічна стаття. Джерело стабільне.
-  role: context
-  source: 'http://www.history.org.ua/?termin=Yanovsky_Yu_I'
-- hosting: reading-needed
+- title: Яновський Юрій Іванович
+  source_name: Енциклопедія історії України
+  source_url: https://www.history.org.ua/?termin=Yanovskyj_Y
   language: uk
-  note: Первинний текст (напр., уривки з "Вершників" або "Майстра корабля") потребує перевірки на вільні ліцензії.
-  role: reading-needed
-  source: 'reading-needed: первинний текст'
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: Відокремити підтверджену хронологію життя від пізніших літературних інтерпретацій.
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Yanovskyj_Y
+    note: Відкрита україномовна сторінка ЕІУ; текст не копіюється.
+- title: 'Твори. Т. 2: «Майстер корабля», «Чотири шаблі», «Вершники» (1983)'
+  source_name: Електронна бібліотека «Україніка», НБУВ
+  source_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030602
+  language: uk
+  genre: зібрання романів
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: Перевірити склад тому й зіставити три назви без копіювання художнього тексту.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030602
+    note: Публічна бібліотечна сторінка ідентифікує видання; повний текст не переноситься.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Перевірений набір не встановлює для окремого портретного файла автора, походження і придатну ліцензію.
+  verified_on: '2026-07-16'
 references:
 - note: Енциклопедія історії України; основна стаття з біографічними фактами й уточненням місця народження.
   path: http://www.history.org.ua/?termin=Yanovsky_Yu_I

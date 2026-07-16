@@ -1,0 +1,22 @@
+sources:
+- id: S1
+  file: https://www.nbuv.gov.ua/node/4468
+  title: Народилася Зінаїда Тулуб
+  url: https://www.nbuv.gov.ua/node/4468
+  type: external
+  metadata:
+    publisher: Національна бібліотека України імені В. І. Вернадського
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0010531
+  title: 'Твори. Т. 1: «Людолови», книга 1 (1991)'
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0010531
+  type: external
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}
+- id: S3
+  file: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/28/1890-narodylasya-zinayida-tulub-pysmennycya
+  title: 1890 – народилася Зінаїда Тулуб, письменниця
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/28/1890-narodylasya-zinayida-tulub-pysmennycya
+  type: external
+  metadata: {publisher: Український інститут національної пам'яті, language: uk, verified_on: '2026-07-16'}

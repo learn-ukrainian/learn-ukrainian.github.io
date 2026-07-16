@@ -1,0 +1,38 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Олександр Ковінька
+- Олександр Ковінька Енциклопедія Сучасної України
+- Олександр Ковінька ЦДАМЛМ
+- Олександр Ковінька Як мене купали й сповивали
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-7316
+- https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
+- https://irbis-nbuv.gov.ua/ulib/item/UKR0002865
+warning: >-
+  Назву автобіографічного твору підтверджено архівним переліком; цитати без
+  видання і сторінки не використовуються.
+sources:
+- id: S1
+  file: https://esu.com.ua/article-7316
+  type: external
+  title: Ковінька Олександр Іванович
+  url: https://esu.com.ua/article-7316
+  metadata: {publisher: Енциклопедія Сучасної України, language: uk, verified_on: '2026-07-16'}
+- id: S2
+  file: https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
+  type: external
+  title: Олександр Іванович Ковінька (1900–1985)
+  url: https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
+  metadata:
+    publisher: Центральний державний архів-музей літератури і мистецтва України
+    language: uk
+    verified_on: '2026-07-16'
+- id: S3
+  file: https://irbis-nbuv.gov.ua/ulib/item/UKR0002865
+  type: external
+  title: '...З порога смерті... Вип. 1 (1991)'
+  url: https://irbis-nbuv.gov.ua/ulib/item/UKR0002865
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}

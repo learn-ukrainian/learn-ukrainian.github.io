@@ -1,7 +1,9 @@
 ---
 activity_hints:
 - after_section: 'Тінь: Покара славою (1935–1939)'
-  focus: Перевірка розуміння механізму «покари славою» — справа № 1377, вербування інформатором та орден Леніна як зняття загрози знищення
+  focus: >-
+    Перевірка розуміння механізму «покари славою» — справа № 1377, вербування
+    інформатором та орден Леніна як зняття загрози знищення
   items: 5
   placement: inline
   type: quiz
@@ -130,16 +132,43 @@ persona:
     спрощеного засудження.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- language: uk
-  note: Енциклопедія Сучасної України; стаття про життя, творчість та архівні матеріали. Джерело стабільне.
-  role: context
-  source: 'https://esu.com.ua/article-38786'
-- hosting: reading-needed
+- title: Бажан Микола Платонович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-38801
   language: uk
-  note: Первинний текст (напр., поезія з ранніх збірок) потребує перевірки на вільні ліцензії.
-  role: reading-needed
-  source: 'reading-needed: первинний текст'
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Простежити, які факти про авангард, переклад і публічні посади джерело
+    підтверджує без морального спрощення.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-38801
+    note: Відкрита україномовна стаття; текст не копіюється.
+- title: Вибрані поезії (1940)
+  source_name: Електронна бібліотека «Україніка», НБУВ
+  source_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+  language: uk
+  genre: поетична збірка
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: >-
+    Зіставити бібліографічні дані видання з переліком циклів і поем, не
+    переносячи рядки без точного локатора.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+    note: Бібліотечна сторінка дає ідентичність видання; повний текст не копіюється.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Перевірений набір не підтверджує файл-специфічну вільну ліцензію портрета.
+  verified_on: '2026-07-16'
 references:
 - note: Основна стаття про життя, творчість та архівні матеріали про справу НКВС.
   path: https://esu.com.ua/article-38786
@@ -172,10 +201,14 @@ vocabulary_hints:
 - definition: митець, що творить поезію
   pos: ч.
   word: поет
-- definition: загальна назва мистецьких напрямів кінця XIX — початку XX ст., що шукали нових форм на противагу класичним зразкам
+- definition: >-
+    загальна назва мистецьких напрямів кінця XIX — початку XX ст., що шукали
+    нових форм на противагу класичним зразкам
   pos: ч.
   word: модернізм
-- definition: авангардний напрям 1920-х, що цінував «сконструйованість», функційність і чітку, мовби архітектурну, побудову твору
+- definition: >-
+    авангардний напрям 1920-х, що цінував «сконструйованість», функційність і
+    чітку, мовби архітектурну, побудову твору
   pos: ч.
   word: конструктивізм
 - definition: визнання поразки й припинення опору; тут — вимушена ідеологічна здача митця під загрозою знищення

@@ -1,0 +1,27 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Микола Бажан
+- Микола Бажан Енциклопедія Сучасної України
+- Микола Бажан Вибрані поезії 1940 Україніка НБУВ
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-38801
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+warning: >-
+  Видання 1940 року використано лише як точно ідентифікований зовнішній текст;
+  жодних рядків без локатора не відтворено.
+sources:
+- id: S1
+  file: https://esu.com.ua/article-38801
+  type: external
+  title: Бажан Микола Платонович
+  url: https://esu.com.ua/article-38801
+  metadata: {publisher: Енциклопедія Сучасної України, language: uk, verified_on: '2026-07-16'}
+- id: S2
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+  type: external
+  title: Вибрані поезії (1940)
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+  metadata: {publisher: Електронна бібліотека «Україніка», НБУВ, language: uk, verified_on: '2026-07-16'}

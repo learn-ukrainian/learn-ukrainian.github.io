@@ -1,7 +1,9 @@
 ---
 activity_hints:
 - after_section: 'Тінь: 19 років ГУЛАГу й заслання (1937–1956)'
-  focus: Перевірка розуміння двох хвиль репресій (арешт 1937 р. та «повторні репресії» 1950 р.), їхніх дат і каральних органів
+  focus: >-
+    Перевірка розуміння двох хвиль репресій (арешт 1937 р. та «повторні
+    репресії» 1950 р.), їхніх дат і каральних органів
   items: 5
   placement: inline
   type: quiz
@@ -19,7 +21,9 @@ activity_hints:
     пророцтво долі авторки
   placement: workbook
   type: critical-analysis
-- focus: Есе-рефлексія — як режим карав за українську ідентичність через звинувачення жінки-романістки в «буржуазному націоналізмі»
+- focus: >-
+    Есе-рефлексія — як режим карав за українську ідентичність через
+    звинувачення жінки-романістки в «буржуазному націоналізмі»
   placement: workbook
   type: essay-response
 cefr_min: C1
@@ -130,17 +134,41 @@ persona:
     російському привласненню.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: resource.history.org.ua
+- title: Народилася Зінаїда Тулуб, українська письменниця, літературознавиця, перекладачка, педагогиня
+  source_name: Національна бібліотека України імені В. І. Вернадського
+  source_url: https://www.nbuv.gov.ua/node/4468
   language: uk
-  note: Енциклопедична стаття про життя та репресії письменниці.
-  role: context
-  source: https://history.org.ua/?termin=Tulub_Z
-- hosting: reading-needed
+  genre: інституційна біографічна довідка
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: Побудувати хронологію арешту, ув'язнення, заслання, скасування вироку та повернення до Києва.
+  rights:
+    basis: external-link
+    evidence_url: https://www.nbuv.gov.ua/node/4468
+    note: Відкрита україномовна сторінка НБУВ; текст не копіюється.
+- title: 'Твори. Т. 1: «Людолови», книга 1 (1991)'
+  source_name: Електронна бібліотека «Україніка», НБУВ
+  source_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0010531
   language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for primary text "Людолови" (або "В степу безкраїм за Уралом").'
-  role: reading-needed
-  source: 'reading-needed: zinaida-tulub-primary'
+  genre: історичний роман
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: >-
+    Перевірити авторку, назву, том, книгу, підготовку тексту й обсяг видання,
+    не підміняючи біографію сюжетом роману.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/ulib/item/ukr0010531
+    note: Бібліотечний запис є зовнішнім посиланням; повний текст не переноситься.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Для окремого портрета не доведено автора, походження і придатну ліцензію.
+  verified_on: '2026-07-16'
 references:
 - author: Г. Герасимова
   note: Енциклопедична стаття про життя та репресії письменниці.
@@ -175,7 +203,9 @@ vocabulary_hints:
 - definition: письменниця, що пише романи
   pos: ж.
   word: романістка
-- definition: той, хто захоплює людей у неволю, работорговець; у назві роману Тулуб — і кримські работорговці XVII ст., і метафора репресивної машини
+- definition: >-
+    той, хто захоплює людей у неволю, работорговець; у назві роману Тулуб — і
+    кримські работорговці XVII ст., і метафора репресивної машини
   pos: ч.
   word: людолов
 - definition: примусове виселення засудженого в віддалену місцевість під нагляд як вид покарання

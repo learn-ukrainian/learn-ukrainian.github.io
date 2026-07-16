@@ -1,7 +1,9 @@
 ---
 activity_hints:
 - after_section: 'Тінь: 21 рік ГУЛАГу (1934–1956)'
-  focus: Перевірка розуміння двох хвиль репресій (1934 і 1950), справи боротьбистів, системи Дальбуду та реабілітації 1956 р.
+  focus: >-
+    Перевірка розуміння двох хвиль репресій (1934 і 1950), справи боротьбистів,
+    системи Дальбуду та реабілітації 1956 р.
   items: 5
   placement: inline
   type: quiz
@@ -10,7 +12,9 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: Дебати — чи зламав ГУЛАГ його політичну сміливість, чи «безпечний» побутовий гумор був гідною формою внутрішньої еміграції?
+- focus: >-
+    Дебати — чи зламав ГУЛАГ його політичну сміливість, чи «безпечний» побутовий
+    гумор був гідною формою внутрішньої еміграції?
   placement: workbook
   type: debate
 - focus: >-
@@ -18,7 +22,9 @@ activity_hints:
     (гумор як психологічний щит проти тоталітарного знищення)
   placement: workbook
   type: critical-analysis
-- focus: Есе-рефлексія — радянська санітизація образу «веселого дідуся з Полтави» і як деколонізаційна педагогіка її розбирає
+- focus: >-
+    Есе-рефлексія — радянська санітизація образу «веселого дідуся з Полтави» і
+    як деколонізаційна педагогіка її розбирає
   placement: workbook
   type: essay-response
 cefr_min: C1
@@ -118,7 +124,9 @@ objectives:
 - >-
   Аналізувати внесок Олександра Ковіньки в українську гумористику та його
   «некваплива оповідь»-стиль у традиції Остапа Вишні.
-- Пояснювати механізм репресій на прикладі справи боротьбистів, двох арештів (1934 і 1950) та системи Дальбуду на Колимі.
+- >-
+  Пояснювати механізм репресій на прикладі справи боротьбистів, двох арештів
+  (1934 і 1950) та системи Дальбуду на Колимі.
 - Критично оцінювати радянську санітизацію його образу як «веселого дідуся» і евфемізм «перерва у творчості».
 - Розуміти гумор як гідну стратегію психологічного виживання та форму внутрішньої еміграції.
 pedagogy: CBI
@@ -129,17 +137,39 @@ persona:
     митця.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: reading-needed
+- title: Ковінька Олександр Іванович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-7316
   language: uk
-  note: 'reading-needed: verify ESU URL for Kovinka or another stable bio source.'
-  role: reading-needed
-  source: 'reading-needed: oleksandr-kovinka-context'
-- hosting: reading-needed
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: Відрізнити правове ім'я, літературне ім'я, документовану репресію та пізню літературну працю.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-7316
+    note: Відкрита україномовна стаття; текст не копіюється.
+- title: Як мене купали й сповивали (1957)
+  source_name: Центральний державний архів-музей літератури і мистецтва України
+  source_url: https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
   language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for primary text "Як мене купали й сповивали".'
-  role: reading-needed
-  source: 'reading-needed: oleksandr-kovinka-primary'
+  genre: автобіографічний твір
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: Перевірити назву та рік у архівному переліку творів, не цитуючи текст без видання і сторінки.
+  rights:
+    basis: external-link
+    evidence_url: https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
+    note: Архівна сторінка ідентифікує твір; повний текст не переноситься.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Перевірений набір не встановлює придатної файл-специфічної ліцензії портрета.
+  verified_on: '2026-07-16'
 references:
 - note: Основна стаття про життя, репресії та творчість письменника.
   title: Ковінька Олександр Іванович (Енциклопедія Сучасної України)
@@ -182,7 +212,9 @@ vocabulary_hints:
 - definition: гірниче підприємство для видобутку корисних копалин; тут — золоті копальні Магадану
   pos: ж.
   word: копальня
-- definition: каральний захід державного примусу проти політичних чи ідеологічних опонентів; часто вживається у множині (репресії)
+- definition: >-
+    каральний захід державного примусу проти політичних чи ідеологічних
+    опонентів; часто вживається у множині (репресії)
   pos: ж.
   word: репресія
 - definition: офіційне відновлення доброго імені та прав безпідставно засудженої людини
