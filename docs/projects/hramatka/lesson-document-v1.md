@@ -26,7 +26,7 @@ the async bake API (build step 5) and the editor/player frontend (step 6).
                                         // they never reject the teacher's text for difficulty
   "method": "ttt",                      // v1: Тест→Навчання→Тест; phase set {1,2,3}
   "focus": "string|null",               // grammar focus, free text v1
-  "focus_status": "object|null",        // Outcome of the teacher's requested focus, optional
+  "focus_status": "object",             // optional (absent when no focus requested); never an explicit null
   "anchor": { "text": "string", "source": "teacher-paste|teacher-url", "chars": 1456 },
   "duration": 45 | 60 | 90,             // minutes; the ONLY sizing input a teacher gives
   "version": 1,                          // integer, for data migration (schema string is not parsed)
