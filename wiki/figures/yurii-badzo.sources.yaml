@@ -1,0 +1,17 @@
+# Source registry for wiki/figures/yurii-badzo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://esu.com.ua/article-38777
+  type: external
+  title: Бадзьо Юрій Васильович
+  url: https://esu.com.ua/article-38777
+  author: В. С. Лісовий
+  notes: Україномовна енциклопедична стаття; використано як зовнішнє посилання, без передруку тексту чи зображення.
+- id: S2
+  file: https://museum.khpg.org/1113843475
+  type: external
+  title: БАДЗЬО ЮРІЙ ВАСИЛЬОВИЧ
+  url: https://museum.khpg.org/1113843475
+  notes: Україномовна музейна біографічна сторінка; використано як зовнішнє посилання, без передруку тексту чи зображення.
+

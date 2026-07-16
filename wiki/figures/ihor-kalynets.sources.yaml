@@ -1,0 +1,22 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-10472
+  type: external
+  title: Калинець Ігор Миронович
+  url: https://esu.com.ua/article-10472
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-10472
+    license: Авторське право ЕСУ; використання як зовнішнього посилання
+    attribution: Енциклопедія Сучасної України
+- id: S2
+  file: https://museum.khpg.org/1113911396
+  type: external
+  title: КАЛИНЕЦЬ ІГОР МИРОНОВИЧ
+  url: https://museum.khpg.org/1113911396
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113911396
+    license: Зовнішнє посилання; КХПГ вимагає посилання при передруку
+    attribution: Володимир Каплун / Віртуальний музей «Дисидентський рух в Україні»
+

@@ -1,124 +1,206 @@
-# Плющ Леонід Іванович — Research Dossier
+# Леонід Іванович Плющ — дослідницьке досьє
 
 **Slug:** `leonid-pliushch`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Соціальний опір
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-16
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Плющ Леонід Іванович.
-- **Pseudonyms / aliases:** Leonid Pliushch, Leonid Plyushch, Leonid Pliouchtch.
-- **Born:** 1939-04-26 | Naryn, Kyrgyz SSR, USSR. ESU and KHPG agree; Ukrainian Wikipedia summary retrieved via `mcp__sources.query_wikipedia` also gives Naryn. [S1] [S2] [S5]
-- **Died:** 2015-06-04 | Besseges, France. ESU and KHPG agree on date and France. [S1] [S2]
-- **Family / education key facts:** Childhood illness led the family to Odesa; studied mathematics in Odesa and Kyiv; graduated from Kyiv University's mechanics-mathematics faculty in 1962; worked at the Institute of Cybernetics of the Academy of Sciences of the Ukrainian SSR until dismissal in 1968. [S1] [S2]
+- **Канонічне ім'я:** Плющ Леонід Іванович.
+- **Народився:** 26 квітня 1939 року в Нарині, Киргизстан.
+- **Помер:** 4 червня 2015 року в Бессежі, Франція.
+- **Фах і ролі:** математик і кібернетик за освітою та ранньою працею; згодом
+  публіцист, літературознавець і учасник правозахисного руху.
 
-## 2. Oppression mechanism
+ЕСУ подає Плюща як публіциста, літературознавця та учасника правозахисного
+руху; КХПГ також фіксує його математичний фах і роботу в кібернетиці [S1,
+S2]. Дитяча хвороба стала причиною переїзду сім'ї до Одеси. У 1956 році він
+почав навчання на фізико-математичному факультеті Одеського університету, а
+1962 року закінчив механіко-математичний факультет Київського університету
+[S1, S2]. До 1968 року працював в Інституті кібернетики АН УРСР у Києві [S1,
+S2]. Цей маршрут важливий не як вступ до готової легенди про «дисидента», а як
+пояснення інтелектуального середовища, з якого виросла його публічна дія.
 
-- **What happened:** Dismissal, searches, arrest, criminal accusation under anti-Soviet agitation/propaganda, closed psychiatric ruling, punitive psychiatric confinement, forced exile/emigration.
-- **When:** Fired July 1968; joined Initiative Group in May 1969; arrested 1972-01-15; Kyiv regional court ruled him "insane" in 1973; sent to Dnipropetrovsk Special Psychiatric Hospital on 1973-07-05; expelled from the USSR in January 1976. [S1] [S2]
-- **By whom:** KGB/Soviet investigative apparatus, Kyiv regional court, Soviet punitive psychiatric system.
-- **Document references:** KHPG gives Criminal Code article `ч. I ст. 62 КК УРСР`; ESU gives the same broad accusation and court/psychiatric-hospital sequence. A full case file number was not retrieved. [S1] [S2]
-- **Mechanism specifics:** Pliushch moved from mathematical work into samvydav and rights documentation. KHPG records that he gathered information about human-rights violations in Ukraine and passed it to *Хроника текущих событий* and *Український вісник*. He signed Initiative Group letters including a 1971 appeal to the International Congress of Psychiatrists against punitive psychiatry, then became himself one of the most visible victims of that system. [S2]
+Обидва джерела вказують, що 1964 року Плющ написав до ЦК КПРС лист про
+демократизацію, а від 1966 року готував самвидавні статті про радянську
+державу, ідеологію й національні проблеми [S1, S2]. ЕСУ застерігає від
+ретроспективного спрощення: на початку він поділяв марксистські та
+соціалістично-демократичні надії, а пізніше став переконаним антикомуністом
+[S1]. Отже, його політичну траєкторію не слід описувати як незмінну від
+юності; джерела дозволяють говорити про зміну позиції, а не про наперед задану
+ідентичність.
 
-The psychiatric diagnosis "млявотічна шизофренія" appears in KHPG as the official diagnosis. This dossier quotes it only as a Soviet forensic-political label, not as a medical fact. The international campaign around Pliushch helped expose Soviet psychiatric abuse. [S2]
+## 2. Механізм переслідування
 
-- **What survived / what was destroyed:** His scientific career was broken; his memoir and later cultural criticism survived in diaspora and Ukrainian editions. Western psychiatrists found him healthy after expulsion, according to KHPG. [S2]
+Переслідування Плюща було послідовністю професійного тиску, кримінального
+звинувачення, судового рішення без його участі та примусового утримання в
+спеціальній психіатричній лікарні. У липні 1968 року його звільнили з
+Інституту кібернетики через протести проти порушень прав людини [S1, S2].
+Після цього він збирав відомості про порушення прав людини в Україні й
+передавав їх до самвидавних видань; ЕСУ та КХПГ називають «Хронику текущих
+событий» і «Український вісник» [S1, S2]. Це не побічна подробиця: його
+робота полягала в перетворенні відомостей про репресії на доступне для інших
+свідчення.
 
-## 3. Major works
+У травні 1969 року Плющ увійшов до Ініціативної групи захисту прав людини в
+СРСР. КХПГ наводить дати підписаних ним звернень: 20 травня 1969 року — листа
+про створення групи, 26 листопада — повідомлення про репресії проти її членів,
+а 26 листопада 1971 року — звернення до П'ятого міжнародного конгресу
+психіатрів проти карального використання психіатрії [S2]. ЕСУ підтверджує
+участь у групі та звернення 1971 року [S1]. Через це подальше застосування
+психіатричної інституції до самого Плюща має документований політичний
+контекст, а не виглядає ізольованою медичною історією.
 
-- `1966-1971` — samvydav articles on Soviet ideology, national questions, and rights violations. [S2]
-- `1971` — appeal to the 5th International Congress of Psychiatrists against punitive psychiatry. [S2]
-- `1976/1978/2002` — *На карнавалі історії* / *У карнавалі історії: Свідчення*, memoir; ESU records editions and translations. [S1]
-- `1977` — foreign representative role for the Ukrainian Helsinki Group. [S1] [S2]
-- `1986/2001` — *Екзод Тараса Шевченка. Навколо "Москалевої криниці"*, literary-critical monograph. [S2]
-- `1991` — documentary/video work *З Малоросії в Україну*, per KHPG. [S2]
-- `1993` — French book *Ukraine: A nous l'Europe!* listed by KHPG. [S2]
-- `2006` — *Його таємниця, або "Прекрасна ложа" Хвильового*, cultural/literary study listed by KHPG. [S2]
+Після кількох обшуків його заарештували 15 січня 1972 року. Звинувачення
+КХПГ визначає як частину першу статті 62 КК УРСР — «антирадянська агітація і
+пропаганда» [S2]. 29 січня 1973 року Київський обласний суд, засідання якого
+відбулося без участі Плюща, визнав його неосудним; 5 липня суд направив його
+на примусове лікування до Дніпропетровської спеціальної психіатричної лікарні
+[S2]. ЕСУ підтверджує 1973 рік, рішення Київського обласного суду без участі
+Плюща та направлення до цієї установи [S1].
 
-## 4. Primary-source quotes
+КХПГ відтворює назву радянського діагнозу. У цьому досьє її не повторено як
+нейтральне медичне визначення: це формула, яку джерело пов'язує з рішенням
+суду та примусовим лікуванням [S2]. Не знайдено оприлюдненого номера справи,
+повного тексту постанови чи медичного висновку. Тому не можна вигадувати
+архівні реквізити, точні медикаментозні процедури або мотиви окремих лікарів.
+Достатньо підтверджено інше: радянські органи використали судово-психіатричне
+рішення для позбавлення правозахисника свободи.
 
-> "Мушу все це запам'ятати, щоб свідчити."
+3 червня 1974 року медична комісія продовжила строк лікування [S2]. Водночас
+розгорнулася міжнародна кампанія: влітку 1974 року Міжнародний конгрес
+математиків у Ванкувері вимагав негайного звільнення, а 23 жовтня 1975 року в
+Парижі відбувся мітинг математиків, фізиків і психіатрів за підтримки
+Міжнародної амністії та профспілок [S2]. ЕСУ пов'язує цю кампанію з ширшим
+міжнародним усвідомленням каральної психіатрії в СРСР [S1]. У січні 1976 року
+Плюща видворили з СРСР; західні психіатри визнали його здоровим [S1, S2].
 
-Source: *У карнавалі історії* passage surfaced in web retrieval. It is short enough for classroom use and captures the memoir's witness function; verify against the 2002 Fact edition before quoting in learner materials. [S4]
+## 3. Праці й публічна діяльність
 
-> "свідок і учасник цього трагіфарсу"
+Ранній корпус Плюща складається насамперед із самвидавних статей 1966–1971
+років. Їхні теми — природа радянської держави, ідеологія, національні питання
+та права людини [S1, S2]. Його діяльність не зводилася до однієї української
+мережі: ЕСУ називає його зв'язковим між українським, московським,
+кримськотатарським та єврейським правозахисними рухами [S1]. Водночас
+український самвидав і документування порушень в Україні були його власним
+практичним внеском, а не периферією чужого центру.
 
-Source: Pliushch's explanation of the memoir title in retrieved online text. Use as a primary-voice lead, with edition check required in Phase 2. [S4]
+У Франції Плющ написав автобіографічну книжку «На карнавалі історії». ЕСУ
+фіксує українські видання в Мюнхені 1978 року та Києві 2002 року [S1], а КХПГ
+подає бібліографічний запис київського видання «У карнавалі історії:
+Свідчення» видавництва «Факт» [S2]. Ця бібліографія встановлює існування та
+назви видань, але наявний пакет не містить прямого первинного локатора до
+перевіреного уривка. Тому текст не використовує жодної цитати з мемуарів.
 
-## 5. Language register
+У січні 1977 року, на прохання Миколи Руденка, Плющ став закордонним
+представником Української Гельсінської групи, а пізніше входив до її
+Закордонного представництва; від 1988 року був в Українській Гельсінській
+спілці [S1, S2]. Ця роль показує тяглість його роботи після видворення:
+еміграція не завершила участі в українському правозахисному русі, а змінила
+умови комунікації та представництва.
 
-- **Register:** Memoir, rights documentation, mathematical/intellectual prose, literary criticism.
-- **CEFR readiness for full reading:** C1 for memoir chapters; C2 for *Екзод Тараса Шевченка*.
-- **Lexicon notes:** `самвидав`, `каральна психіатрія`, `Ініціативна група`, `млявотічна шизофренія`, `закордонне представництво`, `семіотика`.
-- **Stylistic features:** Analytic self-observation, irony, political diagnosis, and literary-critical abstraction.
+Пізніший доробок змістився до культурології й літературознавства. ЕСУ називає
+цикл передач «На межі культури» в українській редакції радіо «Свобода», працю
+в об'єднанні письменників «Слово» та в редакції «Сучасності» [S1]. Обидва
+джерела фіксують монографію «Екзод Тараса Шевченка. Навколо “Москалевої
+криниці”» (Едмонтон, 1986; Київ, 2001) і дослідження творчості Шевченка,
+Хвильового, Барки, Антонича, Тичини, Стуса, Руденка, Довженка та Галича [S1,
+S2]. ЕСУ також подає «Його таємниця, або “Прекрасна ложа” Хвильового» (2006)
+та «Людоненависництво» (2007) [S1]. Отже, літературознавчий період має бути
+окремим розділом біографії, а не післямовою до ув'язнення.
 
-## 6. Contested points
+## 4. Прямі висловлювання
 
-- **What's debated in modern UA scholarship:** Pliushch began with socialist-democratic hopes and moved toward anti-communism; sources should preserve that ideological movement rather than retroactively simplifying it.
-- **What gets simplified in popular memory:** He is often remembered only as a psychiatric-abuse victim. KHPG and ESU also show a cultural mediator between Ukrainian, Moscow, Crimean Tatar, and Jewish rights networks.
-- **Where modern Russian disinformation attacks them:** Soviet psychiatric labels are the attack mechanism. Curriculum must not repeat the diagnosis as medical truth.
-- **Polish / Jewish / other-perspective considerations:** KHPG says he was a bridge to Jewish and Crimean Tatar rights movements and later worked in Ukrainian-Jewish anti-defamation contexts. [S2]
-- **Pedagogical caution:** Explain why "dissident" is useful shorthand but does not capture the full rights-network role.
-- **Source-balance note:** ESU and KHPG are mutually reinforcing for the arrest, court, psychiatric hospital, and emigration chronology. The memoir quotations are weaker because the online access copy is not a critical edition; they are included as primary-voice leads, with an explicit instruction to check the 2002 Fact edition before curriculum publication.
-- **Risk note:** The phrase "punitive psychiatry" should be anchored in the court/hospital timeline, not used as a vague metaphor. For Pliushch it means a named special psychiatric hospital, a named Soviet diagnosis, and a documented international defense campaign.
+У цьому пакеті немає відтворених цитат Плюща. Доступні сторінки ЕСУ і КХПГ
+надійно ідентифікують його книжки, статті та правозахисні дії, але не дають
+прямого локатора до конкретного україномовного фрагмента мемуарів чи
+літературознавчої праці. Раніше внесені цитати, що походили з неперевірених
+онлайн-передруків, вилучено. Для майбутнього цитування потрібне видання або
+цифрова копія з назвою, сторінкою чи розділом і зрозумілою правовою підставою.
 
-## 7. Cross-track links
+## 5. Мовний регістр і доступність
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - source not found
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - source not found
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio links to Ukrainian Helsinki Group, punitive psychiatry, Crimean Tatar rights contacts, Mykola Rudenko, Nadiia Svitlychna, Petro Hryhorenko, and Shevchenko studies.
-- **Potential LIT additions surfaced by this research:**
-  - C1/C2 excerpt from *У карнавалі історії* on witness and memory; C2 excerpt from *Екзод Тараса Шевченка*.
-  - A cross-track human-rights activity can ask learners to map how information moved between Kyiv, Moscow, Crimean Tatar, Jewish, and Western networks without treating Moscow contacts as the center of the story.
+Плющ працював у кількох регістрах: аналітичній публіцистиці, правозахисному
+документуванні, мемуарі та літературознавчому есеї. Для читача української як
+другої мови це переважно рівень C1: у текстах важливі абстрактні іменники,
+суспільно-політична лексика та обережне розрізнення факту, судового формулювання
+і авторської оцінки. Ключові слова: *самвидав*, *інакодумство*, *примусове
+лікування*, *видворення*, *правозахисний рух*, *закордонне представництво*.
+Поряд із цим потрібна лексична дисципліна: репресивний діагноз слід подавати
+лише як атрибутовану радянську формулу, а не як характеристику людини.
 
-## 8. Naming-canonical
+## 6. Складні місця й рамка інтерпретації
 
-- **Slug:** `leonid-pliushch`
-- **EN canonical (BGN/PCGN 2010):** Leonid Pliushch
-- **UA canonical (with patronymic):** Плющ Леонід Іванович
-- **Aliases (track these for `aliases:` YAML field):** Leonid Plyushch, Leonid Pliouchtch.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Leonid Plyusch, Leonid Pliushch through Russian source-only form (FORBIDDEN except bibliography).
+Поширена редукція перетворює Плюща лише на жертву каральної психіатрії. Вона
+стирає його математичну освіту, самвидавну працю, організаційні контакти та
+літературознавчий доробок. Протилежна помилка — зробити з нього безпомилковий
+символ — також не випливає з джерел. ЕСУ прямо фіксує еволюцію від віри в
+«соціалізм з людським обличчям» до антикомунізму [S1]. Це дає підставу говорити
+про зміни поглядів, не вигадуючи особистих психологічних причин.
 
-## 9. Image candidates
+Зв'язки з московськими, кримськотатарськими та єврейськими правозахисниками
+не повинні перетворювати український рух на допоміжний сюжет. ЕСУ описує
+посередницьку роботу Плюща між кількома рухами, а КХПГ конкретизує його
+поширення українського самвидаву й збирання інформації про порушення в Україні
+[S1, S2]. Коректна деколонізаційна рамка називає радянські інституції, що
+контролювали працю, кримінальне переслідування і психіатричне ув'язнення, але
+не віддає їм право визначати українську культурну та правозахисну суб'єктність.
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait candidate; verify specific license.
-- **Backup candidates:** KHPG page image; rights not established.
-- **If no PD/CC portrait exists:** Use rights-cleared cover of *У карнавалі історії* or a human-rights museum context image.
-- **Era-appropriate context image:** Dnipropetrovsk special psychiatric hospital context or samvydav image, only with explicit license.
+Для HIST-перспективи біографія пов'язана з Українською Гельсінською групою,
+самвидавом і радянськими репресіями 1960–1970-х років. На рівні цього пакета
+можна встановити хронологію та інституції; ширші порівняння з іншими справами
+потребують окремих джерел. Не варто приписувати Плющу керівну роль у всіх
+мережах або називати міжнародну кампанію єдиною причиною видворення, бо S1 і
+S2 цього причинного зв'язку не доводять.
 
-## 10. Sources used
+## 7. Міжтрекові зв'язки
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Плющ Леонід Іванович" | https://esu.com.ua/article-879739 | accessed 2026-05-30
+- **Наявні матеріали:** перевірених локальних матеріалів про Плюща, які можна
+  назвати тут як готові міжтрекові сторінки, не використано.
+- **Кандидати для наступного етапу:** історія Української Гельсінської групи;
+  самвидав як канал документування; радянське зловживання психіатрією; студії
+  Шевченка й Хвильового у пізній праці Плюща.
+- **Перевірка рамки:** потенційний HIST-матеріал має зіставляти українську
+  правозахисну діяльність із конкретними радянськими інституціями, не
+  розчиняючи її в загальному «всесоюзному дисидентстві».
 
-**Tier 2 (institutional):**
-- Харківська правозахисна група, "ПЛЮЩ ЛЕОНІД ІВАНОВИЧ" | https://museum.khpg.org/1113936077 | accessed 2026-05-30
+## 8. Канонічне іменування
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Плющ Леонід Іванович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+- **Slug:** `leonid-pliushch`.
+- **Українська форма:** Леонід Іванович Плющ.
+- **Латинська канонічна форма:** Leonid Pliushch.
+- **Варіанти для пошуку:** Leonid Plyushch; Leonid Pliouchtch.
+- **Застереження:** російськомовні форми імені можуть допомагати пошуку старих
+  бібліографій, але не є формою українського основного тексту.
 
-**Tier 4 (modern scholarly post-1991):**
-- `mcp__sources.search_sources`, Realna Istoriia / punitive psychiatry retrieval for Pliushch searches and samvydav accusation context | accessed 2026-05-30
+## 9. Зображення
 
-**Tier 5 (general web):**
-- Diasporiana, "У карнавалі історії: Свідчення" | https://diasporiana.org.ua/memuari/5057-plyushh-l-u-karnavali-istoriyi/ | accessed 2026-05-30
-- Coollib online text, "У карнавалі історії. Свідчення" | https://coollib.net/b/697342/read | accessed 2026-05-30
+Індивідуально ліцензований портрет не підтверджено. Сторінки ЕСУ та КХПГ
+містять біографічний матеріал, але не дають окремої ліцензії на файл
+зображення [S1, S2]. План тому фіксує `portrait_fallback` типу `text-only`.
+Це не твердження про відсутність усіх можливих портретів у мережі; це вузьке
+правове рішення: без прямої сторінки конкретного файла і перевірної ліцензії
+PD або CC не слід повторно використовувати портрет.
 
-**Primary-source documents accessed:**
-- Memoir excerpts via online text; full court/medical case file: source not found.
+## 10. Використані джерела
 
----
+**S1 — Tier 1, авторитетне:** В. В. Овсієнко, «Плющ Леонід Іванович»,
+*Енциклопедія Сучасної України*, 2023, DOI 10.5281/zenodo.19758716.
+https://esu.com.ua/article-879739 (перевірено 2026-07-16). Сторінка українською;
+ЕСУ вказує авторське право на текст.
 
-## Decolonization self-check
+**S2 — Tier 2, інституційне:** Євген Захаров, «ПЛЮЩ ЛЕОНІД ІВАНОВИЧ»,
+Віртуальний музей «Дисидентський рух в Україні», Харківська правозахисна група.
+https://museum.khpg.org/1113936077 (перевірено 2026-07-16). Сторінка українською;
+при передруку КХПГ вимагає посилання на джерело.
 
-- [x] Punitive psychiatric label marked as Soviet label
-- [x] Article 62 cited from KHPG/ESU
-- [x] No fabricated case-file number
-- [x] Existing path gap declared
-- [x] Russian-imperial forms confined to naming metadata
+## Деколонізаційна самоперевірка
+
+- [x] Радянські інституції названо як суб'єкти переслідування, а не як нейтральне тло.
+- [x] Українська правозахисна й культурна дія Плюща не зведена до московської мережі.
+- [x] Радянський психіатричний ярлик атрибутовано, але не відтворено як медичний факт.
+- [x] Немає неперевірених цитат, номера справи або вигаданих архівних деталей.
+- [x] Відомості про портрет обмежено прямим доказом ліцензії, якого пакет не має.
+

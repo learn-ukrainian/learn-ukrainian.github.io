@@ -139,12 +139,27 @@ persona:
   voice: Literary-Historical Analyst
 phase: BIO
 readings:
-- hosting: link-only
-  language: uk
-  notes: Енциклопедична стаття про біографію, твори, репресії і пізню освітню працю.
-  role: primary
-  source: Енциклопедія Сучасної України (ЕСУ)
-  url: https://esu.com.ua/article-10473
+  - title: Калинець Ірина Онуфріївна
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-10473
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-10473
+      note: Відкрита українськомовна енциклопедична сторінка; повний текст не відтворюється.
+    learner_task: Відокремити авторську, педагогічну, табірну та післятабірну частини її біографії.
+  - title: Калинець-Стасів Ірина. Інтерв'ю
+    source_name: Віртуальний музей дисидентського руху КХПГ
+    source_url: https://museum.khpg.org/1383774632
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://museum.khpg.org/1383774632
+      note: Відкрите інтерв’ю українською; повний текст не відтворюється.
+    learner_task: Прочитати один фрагмент інтерв’ю як свідчення й відділити авторську пам’ять від довідкової хронології.
+readings_contract_version: 2
 references:
 - note: Енциклопедична стаття про біографію, твори, репресії і пізню освітню працю.
   path: https://esu.com.ua/article-10473
@@ -168,6 +183,13 @@ references:
   title: Шлюб із полином
   type: primary
   work: Шлюб із полином
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Індивідуально ліцензований портрет не підтверджено прямою сторінкою файла; зображення ЕСУ не дає окремої ліцензії.
+  candidate_url: https://esu.com.ua/article-10473
+  evidence_url: https://esu.com.ua/article-10473
+  disposition: no-portrait-until-rights-verified
 sequence: 273
 slug: iryna-kalynets
 subtitle: Poet, Teacher, Political Prisoner, and Keeper of Cultural Memory
@@ -196,3 +218,4 @@ vocabulary_hints:
   pos: ж.
   word: розлука
 word_target: 5200
+

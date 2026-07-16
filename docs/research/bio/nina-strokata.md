@@ -1,80 +1,168 @@
-# Ніна Строката — Research Dossier
+# Ніна Строката — дослідницьке досьє
 
 Canonical slug: `nina-strokata`
 
-## 1. Identity and research scope
+## Ідентичність і межі перевірки
 
-Ніна Антонівна Строката-Караванська (31 January 1926, Odesa — 2 August 1998, Denton, Texas) was a microbiologist, immunologist, Ukrainian human-rights defender, political prisoner, founding member of the Ukrainian Helsinki Group, and member of its foreign representation. ESU records her professional work in microbiology and epidemiology and her later books on the persecution of Ukrainian women in the USSR [S1]. KHPG identifies her as a microbiologist, prominent rights defender, and UHG member [S2].
+Ніна Антонівна Строката-Караванська (31 січня 1926, Одеса — 2 серпня 1998,
+Дентон, штат Техас) — лікарка-мікробіологиня, імунологиня й учасниця
+українського правозахисного руху. Її поховано в Бавнд-Бруку, штат Нью-Джерсі.
+Ці дати, фах і місця подає стаття Енциклопедії Сучасної України (ЕСУ), написана
+В. В. Овсієнком; музейна довідка Харківської правозахисної групи (ХПГ) так само
+називає її мікробіологинею, правозахисницею і членкинею Української Гельсінської
+групи (УГГ) [S1, S2].
 
-## 2. Chronology
+Пакет спирається на дві відкриті україномовні сторінки з прямими URL. ЕСУ є
+основою для дат, місць, вироку, строку та подальшої діяльності. Сторінка музею
+ХПГ слугує незалежною біографічною опорою для ідентифікації постаті. Матеріал
+не відтворює жодної судової цитати: у цьому проході не підтверджено прямий
+первинний текст промови з точним локатором. Так само не подається номер
+кримінальної справи, якого два перевірені джерела не називають.
 
-Строката graduated from the Odesa Medical Institute in 1947 and worked as a doctor and microbiology teacher, later at Odesa institutes of advanced medical training and medicine; ESU notes that she prepared a candidate dissertation [S1]. She married Sviatoslav Karavanskyi, a former political prisoner, and after his renewed imprisonment in 1965 she defended him publicly despite institutional pressure to renounce him [S2].
+## Наукове формування в Одесі
 
-In May 1971 she was dismissed because of her active protest against her husband's arrest and sentence; ESU states that she later taught microbiology in Nalchik [S1]. She was arrested on 6 December 1971 in a case involving Oleksii Prytyka, Oleksa Riznykiv, and herself, and was accused of anti-Soviet agitation and propaganda [S1]. On 19 May 1972 she was sentenced to four years in strict-regime camps [S1]. She served in Barashevo, Mordovia, participated in hunger strikes with other women political prisoners, and spent the final eight months of the term in a prison hospital because of cancer [S1].
+У 1947 році Строката-Караванська закінчила Одеський медичний інститут. Після
+цього працювала лікаркою та викладала мікробіологію в Одеському
+мікробіологічному інституті. У 1950–1971 роках її робота була пов'язана з
+кафедрами мікробіології й епідеміології Одеського інституту удосконалення
+лікарів та медичного інституту. Від 1963 року вона одночасно була молодшою
+науковою співробітницею Центральної науково-дослідної лабораторії й підготувала
+до захисту кандидатську дисертацію [S1].
 
-The Public Committee for the Defense of Nina Strokata was created in Lviv on 21 December 1971 under Vasyl Stus; ESU and the KHPG essay both treat it as an important solidarity action [S1, S3]. After release in late 1975 she was barred from returning to Ukraine, lived under administrative supervision in Tarusa, refused Soviet citizenship, and on 9 November 1976 signed the Declaration and Memorandum No. 1 of the Ukrainian Helsinki Group [S1]. She emigrated to the United States in 1979 and worked in the foreign representation of the UHG [S1, S4].
+Ця послідовність важлива для навчального портрета. Строката не стала відомою
+лише через родинний зв'язок або через переслідування: до них вона мала фахову
+освіту, лікарську практику, викладацьку роботу й дослідницький план. Тому
+репресія стосується не абстрактної «інакодумки», а конкретної кар'єри в
+українському місті. Одеса тут не периферійне тло. Це місце медичної освіти,
+лабораторної праці, професійного кола й майбутнього конфлікту з радянською
+владою [S1].
 
-## 3. Significance for the bio track
+ЕСУ називає її дружиною Святослава Караванського і прямо пов'язує травневе
+звільнення 1971 року з активним протестом проти його незаконного арешту та
+засудження. Після звільнення вона викладала мікробіологію в школі медичної
+технології в Нальчику [S1]. Не варто подавати цю зміну місця праці як
+добровільну «кар'єрну мобільність»: послідовність у джерелі показує, що їй
+передував тиск через публічну позицію.
 
-Строката expands the bio track beyond the Kyiv-Lviv axis. Her Odesa scientific career, defense of Karavanskyi, and founding role in UHG show that the rights movement included professionals, women, and southern Ukraine. Her courtroom language lets students connect constitutional rhetoric to Soviet criminal law: the state claimed formal rights while criminalizing their exercise [S3].
+## Арешт, вирок і табір
 
-This dossier should keep her scientific identity visible throughout. ESU records her work as a doctor, microbiology teacher, research laboratory worker, and prospective dissertation author before the state interrupted that career [S1]. The repression was therefore also an attack on professional continuity: dismissal in 1971, arrest later that year, camp illness, and forced residence outside Ukraine broke a scientific path as well as a civic one. That point matters for learners because it broadens "dissident" beyond writers and public speakers.
+6 грудня 1971 року Строкату-Караванську заарештували у сфабрикованій справі
+трьох «націоналістів»: Олекси Притики, Олекси Різниченка та її самої. Формула
+обвинувачення, наведена ЕСУ, — «антирадянська агітація та пропаганда» [S1].
+Вона характеризує мову кримінального переслідування, але сама по собі не
+доводить конкретного складу доказів; тому досьє не додає неперевірених переліків
+листів, самвидаву чи текстів.
 
-## 4. Persecution and pressure mechanisms
+19 травня 1972 року її засудили до чотирьох років ув'язнення в таборах суворого
+режиму. Покарання вона відбувала в селі Барашево Теньгушевського району Мордовії
+на території тодішньої РСФРР. ЕСУ фіксує участь Строкатої в голодних страйках
+жінок-політв'язнів разом із Дарією Гусяк, Надією Світличною, Іриною Сеник,
+Іриною Калинець і Стефанією Шабатурою. Останні вісім місяців строку через
+онкологічне захворювання вона перебувала у в'язничній лікарні [S1].
 
-The mechanisms were professional dismissal, criminal prosecution, camp imprisonment, denial of return to Ukraine, and administrative supervision [S1, S2]. The KHPG court-speech essay records that investigators used possession and distribution of samvydav, letters, and texts by Valentyn Moroz, `Український вісник`, and poems by Mykola Kholodnyi as evidence [S3]. It also records her court argument that Article 62 contradicted formal civil rights; she called the article unconstitutional because it cancelled formal rights [S3].
+Тут потрібна точність у словах. Досьє може назвати табір, строк, діагностовану
+в джерелі причину перебування в лікарні та солідарні дії ув'язнених. Воно не
+повинно перетворювати голодування на романтичний жест чи припускати його точні
+дати й вимоги без окремого документа. Важливим є вже встановлений факт: люди
+різних професій і поколінь опинилися в одному просторі примусового ув'язнення
+та колективного протесту [S1].
 
-A short primary-source quote suitable for class: "свобода цензури... пересилює свободу слова" [S3]. Exact KGB archival file number: source not found.
+21 грудня 1971 року у Львові створили Комітет на захист Строкатої-Караванської
+на чолі з Василем Стусом [S1]. Урок може працювати з цим як з прикладом публічної
+солідарності, але не має називати комітет офіційно зареєстрованою організацією
+або приписувати йому програму, якої наведені джерела не подають. Сам факт
+створення комітету пов'язує одеську справу з ширшими українськими мережами
+захисту прав.
 
-The defense committee is another key mechanism. ESU states that the Public Committee for the Defense of Strokata was created in Lviv on 21 December 1971 under Vasyl Stus [S1]. The committee can be taught as an early open human-rights action: it named a prisoner, challenged the legitimacy of prosecution, and connected Odesa, Lviv, and Kyiv networks. Avoid overstating it as a fully legalized NGO; the retrieved sources support "public committee" and "defense action," not a stable registered institution.
+## Після звільнення і УГГ
 
-## 5. Works and public actions
+Наприкінці 1975 року Строкату-Караванську звільнили із забороною повертатися в
+Україну. У відповідь вона відмовилася від радянського громадянства. Вона жила і
+працювала лікаркою в Тарусі Калузької області та перебувала під адміністративним
+наглядом [S1]. Заборона повернення, нагляд і вимушене життя поза Україною є
+окремими механізмами тиску після табірного строку; їх не треба зливати в одну
+подію «звільнення».
 
-Her scientific work included microbiology, epidemiology, and immunology; ESU notes approximately the professional trajectory but does not list every paper in the retrieved excerpt [S1]. Her rights publications include `Ukrainian Women in Soviet Union: Documental Persecution` (Baltimore, 1980) and `A Family Torn Apart` (Toronto, 1981), plus pamphlets on politically persecuted Ukrainian women [S1]. In the UHG, she signed founding documents under her own name and address, a useful detail for teaching the group's legalist and open method [S4].
+Строката-Караванська стала членкинею-засновницею УГГ 1976 року. 9 листопада
+1976 року вона підписала Декларацію Гельсінської групи сприяння виконанню
+гельсінських угод і її Меморандум № 1 [S1]. Цей підпис показує її власну
+політичну суб'єктність: після звільнення вона не зникає з історії як об'єкт
+репресії, а входить до відкритої правозахисної ініціативи. Водночас коректно
+описувати її саме як членкиню-засновницю, не приписуючи їй одноосібного
+керівництва всією групою.
 
-The courtroom material is unusually teachable because it connects form and content. Students can identify the prosecution's objects, such as letters, poems, `Український вісник`, and texts by Valentyn Moroz, then compare them with Строката's argument about constitutional freedoms [S3]. The activity should end by naming the verdict and sentence from ESU rather than leaving the case as abstract debate [S1].
+Від 1979 року вона жила в еміграції у США, в Дентоні, і була членкинею
+закордонного представництва УГГ, беручи участь у виданні його матеріалів. ЕСУ
+також згадує її належність до Американського товариства мікробіологів з 1974
+року та Українського лікарського товариства Північної Америки з 1980 року [S1].
+Ці факти показують, що наукова і правозахисна ідентичності не є двома
+несумісними частинами біографії: еміграційна праця поєднувала професійні та
+громадські зв'язки.
 
-## 6. Source pack
+## Письмо, допомога і межі джерел
 
-- [S1] `Строката-Караванська Ніна Антонівна`, Енциклопедія сучасної України, https://esu.com.ua/article-886523.
-- [S2] `СТРОКАТА (СТРОКАТОВА)-КАРАВАНСЬКА НІНА АНТОНІВНА`, KHPG Virtual Museum, https://museum.khpg.org/index.php?id=1113999650.
-- [S3] `Строката-Караванська Ніна Антонівна`, KHPG essay/court-speech source, https://museum.khpg.org/1314643030.
-- [S4] `§14. Дисидентський рух`, 11th-grade history textbook chunk retrieved via `mcp__sources.search_sources`, source file `11-klas-istoriya-ukr-galimov-2024`.
+ЕСУ перелічує дві книжки Строкатої-Караванської про політичні репресії в
+Україні: *Ukrainian Women in Soviet Union: Dokumental Persecution* (Балтімор,
+1980) та *A Family Torn Apart* (Торонто, 1981). Вона також була авторкою
+памфлетів про політично переслідуваних українських жінок, виданих 1985 року
+[S1]. Назви і вихідні дані тут подано як бібліографічні факти ЕСУ, а не як
+першоджерела для читання: у цьому пакеті не встановлено прямого відкритого
+URL, мову повного тексту та правовий статус кожного видання.
 
-## 7. Cross-track links
+Від початку 1990-х років вона досліджувала процеси й явища в СРСР та Україні,
+зокрема події перебудови, стан православної церкви, долю вчителів і кримських
+татар. ЕСУ також повідомляє, що вона надавала захист і допомогу переслідуваним
+в Україні та співпрацювала з громадськими організаціями українців у США [S1].
+Це розширює образ постаті за межі одного судового процесу: її діяльність
+продовжувалася після табору та еміграції.
 
-- **Existing ISTORIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/memorandum-uhh.yaml` — founding UHG documents.
-  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml` — courtroom and samvydav evidence.
-  - `curriculum/l2-uk-en/plans/istorio/ukrayinskyi-visnyk.yaml` — samvydav used in accusations.
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/vasyl-stus.yaml` — committee for her defense and women's camp network.
-  - `curriculum/l2-uk-en/plans/bio/levko-lukyanenko.yaml` — UHG legalist context.
-  - `curriculum/l2-uk-en/plans/bio/myroslav-marynovych.yaml` — UHG repression comparison.
-- **Candidate Phase 2+ links:**
-  - Odesa/southern Ukraine dissident cluster with Oleksa Riznykiv and Sviatoslav Karavanskyi.
+На її честь 2023 року в Києві перейменували провулок Суворова, а 2024 року в
+Одесі — вулицю Буніна [S1]. Ці перейменування можна розглядати як сучасну
+публічну пам'ять, але не як заміну біографічному аналізу. Вони не скасовують
+необхідності називати конкретні інституції тиску: звільнення з роботи, арешт,
+судове покарання, табір, заборону повернення та адміністративний нагляд.
 
-## 8. Pedagogical notes
+## Педагогічне застосування і деколонізаційна оптика
 
-Use a "law versus rights" activity: students compare the formal promise of freedom of speech with Article 62 practice. This makes Строката's scientific and legal voice visible without reducing her to "wife of Karavanskyi."
+Для семінару доречна хронологічна вправа: учні розташовують медичну освіту,
+працю в Одесі, звільнення 1971 року, арешт 6 грудня 1971 року, вирок 19 травня
+1972 року, звільнення наприкінці 1975 року, підписання документів УГГ 9
+листопада 1976 року та еміграцію 1979 року. Після цього варто попросити їх
+відрізнити дані джерела від висновку: наприклад, факт звільнення через протест
+є засвідченим, а пояснення його наслідків для фахової траєкторії має бути
+позначене як інтерпретація [S1].
 
-Pair her with Nadiia Svitlychna for an "information pipeline" lesson. Строката's case shows founding UHG documents and foreign representation [S1]; Svitlychna's case shows bulletins and broadcasting. Together they make clear that the rights movement depended on people who gathered facts, preserved names, wrote appeals, and transmitted evidence.
+Деколонізаційна перспектива не зводиться до заміни одного героїчного штампа
+іншим. Вона повертає в поле зору українську жінку-науковицю з Одеси, називає
+радянську репресивну процедуру її власними датами й місцями та не применшує
+її до формули «дружина Караванського». Водночас вона не дозволяє домислювати
+архівний номер, невідомий текст промови або ліцензію на портрет. Доказова
+пам'ять тут сильніша за ефектну, але неперевірену цитату.
 
-A compact writing task can ask students to explain why a microbiologist appears in a political-prisoner unit. A strong answer should name her scientific career, defense of Karavanskyi, Odesa trial, camp sentence, UHG founding signature, and later publications on persecuted Ukrainian women [S1, S2, S3]. This guards against reducing her to one family relationship or one courtroom quotation.
+Корисний спосіб перевірити учнівську відповідь — попросити її автора позначити
+кожне речення як факт, прямо названий у джерелі, або як обережний висновок із
+кількох фактів. До першої групи належать дати освіти, арешту, вироку, звільнення
+й підписання документів УГГ, а також назви установ і місць. До другої —
+твердження, що послідовність звільнення, табору й нагляду зруйнувала професійну
+тяглість. Такий висновок обґрунтований, проте його не слід видавати за дослівну
+формулу ЕСУ. Вправа вчить працювати з історичним джерелом без підміни його
+емоційною реконструкцією.
 
-The teacher should require one southern-Ukraine detail in that answer: Odesa medical training, Odesa trial, or post-release exclusion from Ukraine.
-For assessment, require students to cite the arrest date, sentence date, and camp geography from ESU [S1].
+## Джерела
 
-## 9. Media and image candidates
+- [S1] В. В. Овсієнко, «Строката-Караванська Ніна Антонівна», *Енциклопедія
+  Сучасної України*: https://esu.com.ua/article-886523. Перевірено 2026-07-16:
+  україномовна сторінка, публічний URL, автор, дата публікації та бібліографія
+  в метаданих сторінки.
+- [S2] «СТРОКАТА (СТРОКАТОВА)-КАРАВАНСЬКА НІНА АНТОНІВНА», Віртуальний музей
+  Харківської правозахисної групи: https://museum.khpg.org/index.php?id=1113999650.
+  Перевірено 2026-07-16: відкритий україномовний біографічний запис.
 
-KHPG and ESU provide portrait/image leads [S1, S2]. A cover image for `A Family Torn Apart` would be useful if rights can be verified: source not found.
+## Невирішені питання
 
-## 10. Open questions
+- Повного переліку її наукових праць два використані джерела не подають.
+- Точний номер кримінальної справи та первинний повний текст судової промови не
+  встановлено; тому їх не слід вигадувати або цитувати.
+- Окремого портретного файла з перевіреними автором, походженням і ліцензією не
+  виявлено; застосовано текстовий `portrait_fallback`.
 
-- Complete bibliography of her scientific papers: source not found.
-- Exact archival case number for the Odesa trial: source not found.
-- Rights-cleared image for curriculum use: source not found.
-
-## Decolonization self-check
-
-The dossier foregrounds Odesa and a Ukrainian woman scientist as a rights actor. It avoids treating the dissident movement as only western Ukrainian or only literary.

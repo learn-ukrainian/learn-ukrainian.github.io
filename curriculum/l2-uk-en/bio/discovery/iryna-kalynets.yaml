@@ -1,0 +1,15 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+  - 'Ірина Калинець: поетка, педагогиня і політв’язенька'
+  - Дорога вигнання
+  - Оранта
+  - жіночий табір Барашево
+  - Євшан-зілля
+direct_sources:
+  - https://esu.com.ua/article-10473
+  - https://museum.khpg.org/1383774632
+rag_chunks: []
+rag_literary: []
+warning: Direct-source packet; the interview is used as a link-only primary-voice reading.
+

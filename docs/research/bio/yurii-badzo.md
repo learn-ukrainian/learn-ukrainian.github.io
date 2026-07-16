@@ -1,122 +1,207 @@
-# Юрій Васильович Бадзьо — Research Dossier
+# Юрій Васильович Бадзьо — дослідницьке досьє
 
 **Slug:** `yurii-badzo`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Стан перевірки:** завершено 2026-07-16
+**Джерельне ядро:** ЕСУ та Віртуальний музей Харківської правозахисної групи.
+**Правило цитування:** дослівних висловів Бадзьо в цьому досьє немає: для них не
+перевірено прямого первинного локатора.
 
-## 1. Verified facts
+## Ідентичність і межі джерел
 
-- **Full name (UA, canonical):** Юрій Васильович Бадзьо. [S1] [S3]
-- **Pseudonyms / aliases:** Yurii Badzio; Yuriy Badzo; Юрій Бадзьо. Forbidden Russian-imperial form for body prose: `Юрий Васильевич Бадзё` / `Yurii Badzo` when used as Russian transliteration rather than English cataloging. [S1] [S3]
-- **Born:** 25 April 1936, с. Копинівці, now Mukachevo district, Zakarpattia oblast; then Czechoslovak-controlled Subcarpathian Rus' context is not stated in the retrieved biographical entries, so the then-political entity is source not found. [S1] [S3]
-- **Died:** 1 September 2018, Kyiv, Ukraine. [S1] [S3]
-- **Family / education key facts:** Graduate of Uzhhorod University, philology faculty, 1958; teacher and school director in Zakarpattia; later junior researcher at the Institute of Literature of the Academy of Sciences of the Ukrainian SSR; husband of Svitlana Kyrychenko. [S1] [S3] [S4]
+Юрій Васильович Бадзьо народився 25 квітня 1936 року в селі Копинівці, що
+нині належить до Мукачівського району Закарпатської області, а помер 1 вересня
+2018 року в Києві [S1]. Обидві базові сторінки називають його
+літературознавцем, публіцистом і громадсько-політичним діячем; музей також
+характеризує його як політичного мислителя та дисидента-політв'язня [S2]. Для
+курсу важливо не стискати цю біографію до однієї ролі. Бадзьо був не лише
+людиною, яку ув'язнили, і не лише автором великої праці: його інтелектуальна
+робота, коло громадської участі, праця поза фахом після звільнення і пізніша
+публічна діяльність утворюють один пов'язаний сюжет.
 
-Бадзьо's relevance is intellectual rather than military: he turned the language-rights and national-rights questions of the 1960s into a long political argument about the right of Ukraine to exist as a historical subject. ЕСУ and KHPG both identify him as a literary scholar, publicist, civic-political figure, and participant in the opposition movement in Soviet Ukraine. [S1] [S4]
+Написання імені в пакеті усталене: **Юрій Васильович Бадзьо**. У довідкових
+англомовних каталогах можливі варіанти *Yurii Badzo* та *Yuriy Badzo*, проте
+це не привід переводити український виклад на чужу транслітерацію. Радянські
+кримінально-правові формули тут подаються як мова переслідувачів або назви
+норм, а не як нейтральний опис його діяльності.
 
-## 2. Oppression mechanism
+Джерельний пакет має чіткі межі. ЕСУ дає стислу авторитетну біографічну
+хронологію та бібліографію основних праць [S1]. Віртуальний музей ХПГ дає
+розгорнутіші відомості про протест 1965 року, обшук, суд, табір, заслання і
+тиск на сім'ю [S2]. Це публічні україномовні сторінки з усталеними URL, але
+їхній текст захищений правом; тому курс посилається на них, а не відтворює їх
+цілком. Повний текст праці *Право жити* не був перевірений як доступне
+ліцензійно придатне читання. Не слід вигадувати сторінки, номер архівної справи
+або дослівні формули з рукопису.
 
-- **What happened:** dismissal, party expulsion, surveillance, manuscript confiscation, political imprisonment, and exile.
-- **When:** 1965 public protest at the Kyiv premiere of Sergei Parajanov's *Shadows of Forgotten Ancestors* led to expulsion from the Communist Party and dismissal from the Institute of Literature; 1972-1979 he secretly worked on *Право жити*; 23 April 1979 arrest by KHPG, 12 December 1979 sentencing by Ukrainian Wikipedia; released 9 December 1988. [S1] [S3] [S4]
-- **By whom:** Soviet KGB and courts of the Ukrainian SSR. [S3] [S4]
-- **Document references:** exact KGB case file number: source not found in retrieved sources. Retrieved sources identify the work *Право жити*, Article 62-type anti-Soviet accusation context, and sentence length, but not a stable archival file citation. [S3] [S4]
-- **Mechanism specifics:** KHPG states that the core case followed his secret work on *Право жити*, a political-philosophical manuscript about the totalitarian foundations of "real socialism" and the national-political condition of Ukrainians in the USSR. Ukrainian Wikipedia gives the sentence as seven years' imprisonment plus five years' exile and identifies Dubravlag ZhKh-385/3-5 in Barashevo and exile in Khandyga. [S3] [S4]
-- **What survived / what was destroyed:** Ukrainian Wikipedia says a 1400-page manuscript of *Право жити* was stolen from his apartment before later publication. KHPG documents broader family pressure, including repeated dismissals of Svitlana Kyrychenko and pressure on their son. [S3] [S4]
+## Освіта, фах і громадське середовище
 
-The oppression mechanism was aimed at both text and household. Soviet authorities targeted the manuscript, the author, and the family network that made samvydav survival possible. [S3] [S4]
+Бадзьо закінчив українське відділення філологічного факультету Ужгородського
+університету 1958 року [S1; S2]. Після університету вчителював на Закарпатті,
+був директором восьмирічної школи на Мукачівщині, а згодом навчався в
+аспірантурі Інституту літератури АН УРСР [S1; S2]. ЕСУ фіксує його роботу
+молодшим науковим співробітником відділу теорії літератури Інституту
+літератури у 1964–1965 роках, літературознавчі й критичні публікації та
+переклади з німецької [S1]. Він підготував кандидатську дисертацію про
+критерій правди в оцінюванні літературно-художнього твору, однак не захистив її
+через політичне переслідування [S1]. Це конкретний приклад того, як державний
+тиск руйнував не абстрактну кар'єру, а можливість нормально завершити фахову
+працю.
 
-## 3. Major works
+У 1961–1964 роках Бадзьо був членом Ради київського Клубу творчої молоді
+[S1; S2]. Сам факт участі в клубі не робить усіх його учасників однодумцями,
+але допомагає побачити середовище, де літературна, культурна й громадянська
+активність перетиналися. Музейне джерело згадує його шлюб зі Світланою
+Кириченко 1964 року [S2]. У подальшій історії це не біографічна деталь для
+прикрашання: переслідування поширилося і на неї, тому сімейний вимір є частиною
+аналізу механізму репресії.
 
-- `1960s` — literary-critical and translation articles, including work from German; exact title list source not found in retrieved sources. [S1]
-- `1971` — open letter to the sixth congress of the Writers' Union of Ukraine criticizing national-cultural policy. [S1]
-- `1972-1979` — *Право жити*, political-philosophical manuscript; published in independent Ukraine in 1996. [S1] [S3] [S4]
-- `1996` — *Право жити*, book publication, Kyiv. [S1]
-- `2000` — "Воля жити — у свідомості права, перед лицем загроз і викликів часу," Antonovych Foundation lecture. [S5]
-- `2000` — *Національна ідея і національне питання*, publicistic work. [S3]
-- `2003` — publicistic and political essays listed in Ukrainian Wikipedia bibliography; exact verified titles beyond retrieved list source not found. [S3]
+## 1965 рік: публічний протест і професійне витіснення
 
-## 4. Primary-source quotes (≥2 required)
+4 вересня 1965 року під час перегляду *Тіней забутих предків* у київському
+кінотеатрі Україна Бадзьо взяв участь у публічному протесті проти арештів
+української інтелігенції [S2]. ЕСУ також пов'язує його участь у протесті 1965
+року з виключенням із КПРС і звільненням з Інституту літератури [S1]. Саме
+така послідовність потрібна учневі: публічна дія, політична кара, втрата
+фахової посади. Її не можна замінити романтизованою оповіддю про один сміливий
+вечір.
 
-- "Так народилася формула — ПРАВО ЖИТИ." — from the 26 May 2000 Antonovych Foundation lecture, quoted on Wikiquote from the *Ї* magazine page. It is a compact formulation of his intellectual project. [S5]
-- "Мовна русифікація не слабне..." — from the same lecture. For pedagogy, this can introduce late-post-Soviet continuity between Soviet language policy and post-1991 cultural pressure. [S5]
+Після 1965 року безробіття в його житті чергувалося з викладацькою,
+коректорською й редакторською роботою; ЕСУ називає журнал для сліпих,
+видавництво Молодь, Укрторгрекламу та науково-дослідний інститут гігієни
+[S1]. У 1974–1979 роках він працював вантажником хліба в системі
+Київхлібторгу [S1]. Музей описує це як поступове позбавлення можливості
+працювати не тільки за фахом, а й загалом в інтелектуальній сфері [S2]. Для
+антиагіографічного читання тут варто тримати дві правди разом: Бадзьо не
+перестав мислити і писати, але саме це не скасовує матеріальних наслідків
+витіснення з професії.
 
-The direct quotes retrieved are from a recorded/public lecture after imprisonment, not from the confiscated 1970s manuscript itself. Primary excerpts from the original 1400-page manuscript with page numbers: source not found in retrieved sources.
+1971 року він звернувся відкритим листом до VI з'їзду Спілки письменників
+України, критикуючи національно-культурну політику влади [S1]. Музей уточнює,
+що в листі він порушував питання нерівноправного становища української культури
+за національно-політичної несвободи [S2]. Це не дозволяє приписувати листові
+точніші тези, яких у наявній перевірці немає; проте достатньо, щоб зрозуміти
+зв'язок між культурним питанням і політичними умовами, у яких воно постало.
 
-## 5. Language register
+## Праця *Право жити* і вразливість рукопису
 
-- **Register:** high publicistic, philosophical, political-analytic.
-- **CEFR readiness for full reading:** C1/C2; excerpts can be scaffolded at B2 if terms such as `національна ідея`, `асиміляція`, and `історичний процес` are pre-taught.
-- **Lexicon notes:** abstract nouns, Soviet political vocabulary used critically, and post-Soviet civic terminology.
-- **Stylistic features:** thesis-driven argument, repeated conceptual pairing of right/life/nation, and critique of imperial conceptual frames. [S2] [S5]
+У 1972–1979 роках Бадзьо таємно працював над монографією *Право жити* [S1].
+ЕСУ характеризує її як критику радянської політичної системи й національної
+політики комуністичної партії з соціал-демократичних позицій [S1]. Віртуальний
+музей подає працю як дослідження тоталітарних засад реального соціалізму та
+національно-політичного становища українського народу в СРСР [S2]. Різні
+формулювання доповнюють одне одного, але не дають підстав називати текст
+готовою програмою будь-якої сучасної партії.
 
-His texts are better for advanced learners than for early biography reading. A lower-level module should introduce his life story first, then use one short quote about `право жити` as the language anchor. [S5]
+Музейне джерело повідомляє, що перший варіант становив 1400 сторінок рукопису,
+був викрадений 1977 року з квартири приятеля, після чого Бадзьо почав роботу
+наново [S2]. У лютому 1979 року під час обшуку вилучили 450 сторінок другого,
+незавершеного варіанта [S2]. ЕСУ стисло підтверджує конфіскацію твору КДБ [S1].
+Найобережніший висновок такий: держава завдала удару не лише авторові, а й
+матеріальному носієві його думки. Твердження про відповідальність конкретної
+інституції за викрадення першої версії музей подає як переконання Бадзьо, тому
+його не можна перетворювати на доведений архівний факт без окремого документа.
 
-## 6. Contested points
+Назва *Право жити* в курсі є предметом аналізу, а не приводом виготовити
+ефектну цитату. Учень може досліджувати, як поєднуються право, існування,
+національна суб'єктність і критика тоталітарної системи, спираючись на
+перекази перевірених джерел. Він не має приписувати авторові фрази з
+цитатників, де немає першодруку й сторінки.
 
-- **What's debated in modern UA scholarship:** how to classify *Право жити* ideologically. Retrieved Ukrainian-wiki corpus sources describe it as coming from democratic-socialist positions while also moving beyond Dziuba's Marxist revision frame. [S2]
-- **What gets simplified in popular memory:** the 1965 cinema-premiere protest is often used as shorthand for the whole biography; the longer manuscript labor from 1972 to 1979 is the deeper intellectual event. [S1] [S3] [S4]
-- **Russian disinformation attack surface:** Soviet framing treated his critique of assimilation as anti-Soviet agitation. Use that framing only as evidence of repression. [S4]
-- **Other-perspective considerations:** source not found for a specific Polish, Jewish, or minority-perspective controversy in the retrieved source pack.
+## Арешт, вирок, табір і заслання
 
-## 7. Cross-track links
+23 квітня 1979 року Бадзьо заарештували [S2]. Перед тим, після обшуку, він
+написав відкриті листи до Президії Верховної Ради СРСР і ЦК КПРС та до
+українських і російських істориків; музей зазначає, що в них стисло викладено
+основні ідеї *Права жити* [S2]. Самі ці документи в пакеті не прочитані за
+первинним локатором, тому вони не стають підставою для дослівних завдань.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Pair Badzio with Ivan Dziuba as a progression from "Internationalism or Russification?" to a broader political theory of Ukraine's right to exist.
-  - Advanced reading on the ethics of samvydav manuscript preservation after confiscation.
-- **Potential LIT additions surfaced by this research:**
-  - An advanced publicistic excerpt from the Antonovych lecture after rights review.
+Суд відбувався 19–21 грудня 1979 року. За даними музею, Київський міський суд
+засудив Бадзьо за частиною першою статті 62 КК УРСР до семи років таборів
+суворого режиму і п'яти років заслання; Верховний суд УРСР залишив вирок у
+силі [S2]. ЕСУ незалежно підтверджує дату засудження 21 грудня, тривалість
+покарання, Мордовію як місце таборів і Якутію як місце заслання [S1]. Ці
+відомості дозволяють говорити про механізм переслідування з достатньою
+точністю, не вигадуючи номеру кримінальної справи або повного тексту вироку.
 
-## 8. Naming-canonical
+Музей фіксує прибуття 21 березня 1980 року до табору ЖХ-385/3-5 у Барашеві,
+участь Бадзьо в політичному страйку під час Московської олімпіади, голодуваннях
+і заявах до державних інстанцій [S2]. Такі дані описують продовження опору в
+неволі, але не роблять із людини безтілесний символ. Ув'язнення мало
+повсякденні форми покарання: позбавлення побачень, карцер, віддалення від
+родини [S2]. З 1986 року він перебував на засланні в селищі Хандига в Якутії;
+музей зазначає, що поруч була Світлана Кириченко, а звільнення відбулося з
+ініціативи влади в грудні 1988 року після його відмови писати прохання про
+звільнення [S2]. ЕСУ пов'язує звільнення з тиском міжнародної громадськості
+[S1]. Розбіжності тут немає: одна сторінка описує безпосередню форму рішення,
+інша — ширший контекст тиску.
 
-- **Slug:** `yurii-badzo`
-- **EN canonical (BGN/PCGN 2010):** Yurii Vasylovych Badzo
-- **UA canonical (with patronymic if attested):** Юрій Васильович Бадзьо
-- **Aliases (track these for `aliases:` YAML field):** Yurii Badzio; Yuriy Badzo; Юрій Бадзьо
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Yurii Badzjo; Юрий Бадзё
+## Родина як ціль репресії
 
-## 9. Image candidates
+Кириченко зазнала переслідувань за листи на захист чоловіка, що прямо зазначає
+ЕСУ [S1]. Віртуальний музей деталізує: у час його неволі її одинадцять разів
+звільняли з роботи, зокрема з посад поштарки та прибиральниці; 1983 року сина
+Сергія виключили з комсомолу [S2]. Ці факти не треба використовувати для
+емоційного тиску на читача. Вони пояснюють, що репресивна система діяла через
+родинну економіку, працевлаштування та соціальні інституції, а не тільки через
+судовий вирок одній людині.
 
-- **Best PD/CC portrait:** source not found in retrieved sources; ЕСУ displays a portrait but the retrieved metadata does not establish license.
-- **Backup candidates:** KHPG biographical page image, license to verify; Wikimedia Commons if linked from Ukrainian Wikipedia, license to verify.
-- **If no PD/CC portrait exists:** use a rights-cleared scan of a book cover or a neutral samvydav-context image.
-- **Era-appropriate context image:** title-page/cover of *Право жити* after rights check; no rights-cleared candidate retrieved.
+У педагогічній розмові корисно розрізняти документований факт і моральну
+оцінку. Документований факт: членів сім'ї карали адміністративно й соціально
+[S1; S2]. Оцінка: це демонструє колективне покарання. Такий висновок має бути
+аргументований конкретною послідовністю дій, а не просто величною характеристикою
+епохи.
 
-## 10. Sources used
+## Повернення, видання і пізня діяльність
 
-**Tier 1 (authoritative):**
-- [S1] "Бадзьо Юрій Васильович," Енциклопедія Сучасної України. https://esu.com.ua/article-38777 | accessed 2026-05-30.
+3 січня 1989 року Бадзьо з дружиною повернувся до Києва [S2]. У 1989–1991
+роках він очолював інформаційно-видавничий відділ Товариства української мови
+імені Тараса Шевченка [S1]. Він був одним із творців Демократичної партії
+України, написав її маніфест і очолював партію у 1990–1992 роках [S1]. Музей
+також зазначає його участь у ініціативній групі створення опозиційної КПУ
+партії та обрання головою ДемПУ на установчому з'їзді [S2]. Тут доречно не
+змішувати партійну біографію з дослідницькою працею: це споріднені, але різні
+сфери діяльності.
 
-**Tier 2 (institutional):**
-- [S4] "БАДЗЬО ЮРІЙ ВАСИЛЬОВИЧ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1113843475 | accessed 2026-05-30.
-- [S6] "Бадзьо Юрій. Право Жити," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1455464516 | accessed 2026-05-30.
-- [S7] "ПРАВОЗАХИСНИЙ РУХ В УКРАЇНІ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1204026181 | accessed 2026-05-30.
+Від 1993 року Бадзьо працював в Інституті філософії НАН України; ЕСУ називає
+його редактором сектора пам'яток української і світової філософської класики,
+а музей — співробітником інституту [S1; S2]. У 1996 році він став членом
+Національної спілки письменників України [S1]. Після проголошення незалежності
+влада повернула вилучений рукопис *Права жити*, а 1996 року праця вийшла
+окремою монографією [S2]. ЕСУ подає повну бібліографічну назву видання:
+*Право жити. Україна в складі СРСР, людина в системі тоталітарного
+соціалізму* [S1]. Дата видання й повернення рукопису важливі, бо показують
+різницю між часом написання, конфіскацією і пізнішою доступністю книги.
 
-**Tier 3 (encyclopedic):**
-- [S3] "Бадзьо Юрій Васильович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Бадзьо_Юрій_Васильович | accessed 2026-05-30.
+## Педагогічні висновки і візуальна етика
 
-**Tier 4 (modern scholarly post-1991):**
-- [S2] `mcp__sources.search_sources`, Ukrainian-wiki corpus chunks on Dziuba and Donbas historiography discussing Badzio's *Право жити* and the critique of assimilation.
+Для C1-модуля Бадзьо дає можливість навчити читати хронологічно складний
+біографічний матеріал. Учні можуть побудувати схему освіта — культурне
+середовище — протест — професійне витіснення — рукопис — обшук — суд — табір
+— заслання — повернення. Далі вони мають назвати, яке джерело підтверджує
+кожну ланку. Така вправа не перетворює біографію на легенду і водночас не
+розчиняє політичне насильство в безособовій історії.
 
-**Tier 5 (general web):**
-- [S5] "Бадзьо Юрій Васильович," Wikiquote, citing *Ї* magazine Antonovych Foundation lecture. https://uk.wikiquote.org/wiki/Бадзьо_Юрій_Васильович | accessed 2026-05-30.
+Досьє не використовує портрет із ЕСУ або Віртуального музею. Обидві сторінки
+показують зображення Бадзьо, але в перевіреному HTML немає індивідуальної
+відкритої ліцензії, дозволу на повторне використання або атрибуції, достатньої
+для курсового розміщення. Застосовано `portrait_fallback` типу `text-only`.
+Це не прогалина, яку треба заповнити випадковою фотографією: текстова
+біографія є чеснішою за візуальний матеріал з невідомими правами.
 
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Specific KGB/court file number: source not found in retrieved sources.
+## Джерела
 
-## Decolonization self-check
+- **[S1]** В. С. Лісовий. Бадзьо Юрій Васильович. Енциклопедія Сучасної
+  України. https://esu.com.ua/article-38777. Перевірено 2026-07-16.
+- **[S2]** БАДЗЬО ЮРІЙ ВАСИЛЬОВИЧ. Віртуальний музей Харківської
+  правозахисної групи. https://museum.khpg.org/1113843475. Перевірено
+  2026-07-16.
 
-- [x] No Russocentric framing
-- [x] Soviet legal labels are presented as repression language
-- [x] No unsupported archival IDs
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] Source gaps are declared rather than invented
+## Деколонізаційна та доказова перевірка
+
+- У викладі не використано Вікіпедію, MCP-витяги чи цитатники як джерела фактів.
+- Жодної особистої цитати не подано без перевіреного первинного локатора.
+- Радянські юридичні формули марковано як інструмент переслідування.
+- Не вигадано номеру справи, архівного шифру, сторінок рукопису чи ліцензії зображення.
+- Для читань використано лише україномовні публічні URL з правовою моделлю зовнішнього посилання.
+

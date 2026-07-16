@@ -41,7 +41,7 @@ content_outline:
   points:
   - 1965 — протест на прем'єрі «Тіні забутих предків».
   - 1972–1979 — манускрипт «Право жити».
-  - '[!epistemic-humility] Повний текст манускрипту в досьє не знайдено.'
+  - '[!epistemic-humility] Для читання використовуйте перевірені зовнішні біографічні сторінки; повний текст праці не хостується в курсі.'
 - section: 'Тінь: Арешт і вигнання'
   words: 1600
   points:
@@ -52,7 +52,6 @@ content_outline:
   words: 1000
   points:
   - Звільнення 1988 р.; видання 1996 р.
-  - «Мовна русифікація не слабне...» (2000).
   - '[!decolonization] Міст від Дзюби до ширшої теорії права жити.'
 focus: Юрій Бадзьо — літературознавець, автор «Право жити», політв'язень 1979 р.
 level: BIO
@@ -60,7 +59,7 @@ module: bio-264
 objectives:
 - Відокремити протест 1965 р. від манускрипту «Право жити».
 - Пояснити конфіскацію манускрипту.
-- Аналізувати цитату «Так народилася формула — ПРАВО ЖИТИ».
+- Аналізувати назву праці як політичне поняття, не підміняючи її неперевіреною цитатою.
 - Порівняти тиск на родину.
 pedagogy: CBI
 persona:
@@ -81,23 +80,38 @@ references:
   work: Право жити
 sequence: 264
 slug: yurii-badzo
-subtitle: The Literary Scholar and the Manuscript the State Feared
+subtitle: Літературознавець і рукопис, який став предметом переслідування
 title: 'Юрій Бадзьо: право жити'
+readings_contract_version: 2
 readings:
-- title: "Бадзьо Юрій Васильович"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/article-38777"
-  language: "uk"
-  role: "reference"
-  hosting: "link-only"
-  rights_note: "Open-access encyclopedic biography entry."
-- title: "Бадзьо Юрій Васильович"
-  source_name: "КХПГ Музей"
-  source_url: "https://museum.khpg.org/1113843475"
-  language: "uk"
-  role: "historical-archive"
-  hosting: "link-only"
-  rights_note: "Museum-hosted biographical and historical archive page."
+- title: Бадзьо Юрій Васильович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-38777
+  language: uk
+  source_type: biography
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-38777
+    note: Стаття доступна за зовнішнім посиланням; її текст не відтворюється в курсі.
+  learner_task: Скласти хронологію освіти, праці, ув'язнення та повернення до Києва, відокремивши факти від власних висновків.
+- title: БАДЗЬО ЮРІЙ ВАСИЛЬОВИЧ
+  source_name: Віртуальний музей Харківської правозахисної групи
+  source_url: https://museum.khpg.org/1113843475
+  language: uk
+  source_type: historical-archive
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113843475
+    note: Музейна біографічна сторінка доступна за зовнішнім посиланням; курс не хостує її текст або зображення.
+  learner_task: Визначити послідовність обшук, арешт, суд, табір і заслання та пояснити, чому це є системою переслідування.
+portrait_fallback:
+  type: text-only
+  reason: На сторінках ЕСУ та Віртуального музею є зображення, але в перевіреному матеріалі немає індивідуально встановленої відкритої ліцензії чи дозволу на повторне використання портрета.
+  verified_on: '2026-07-16'
 version: '1.1'
 vocabulary_hints:
 - word: манускрипт
@@ -122,3 +136,4 @@ vocabulary_hints:
   pos: с.
   definition: формула «право жити»
 word_target: 5200
+

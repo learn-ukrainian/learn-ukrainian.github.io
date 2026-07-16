@@ -14,8 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — "Мушу все це запам'ятати, щоб свідчити" як формула мемуарного
-    свідчення і документування репресій
+    Аналіз мемуарного свідчення — як Плющ документує досвід репресії, не зводячи
+    його до медичного ярлика
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — чому радянська держава перетворювала медичний ярлик на політичну зброю?
@@ -139,28 +139,53 @@ persona:
     як інструментом політичного примусу.
   voice: Human Rights Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- language: uk
-  hosting: link-only
-  notes: Енциклопедична стаття з хронологією життя та репресій.
-  rights_note: Link-only classroom source; do not host the full article in this repository.
-  source_name: Енциклопедія сучасної України (ЕСУ)
+- title: Плющ Леонід Іванович
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-879739
-  title: Плющ Леонід Іванович
-- language: uk
+  language: uk
+  type: encyclopedia
+  source_type: reference
+  role: biographical-framework
   hosting: link-only
-  notes: Профіль із деталями статті 62 та каральної психіатрії.
-  rights_note: Link-only classroom source; cite and summarize rather than republishing the full page.
-  source_name: Віртуальний музей дисидентського руху (ХПГ)
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-879739
+    note: Авторське право ЕСУ зазначено на сторінці; повний текст не відтворюється.
+  learner_task: >-
+    Укласти хронологію від математичної освіти Плюща до закордонної правозахисної
+    праці, відділяючи документовані дати від подальших інтерпретацій.
+  caveats: >-
+    Енциклопедична стаття встановлює біографічний каркас і не є виданням мемуарів
+    або матеріалів судової справи.
+- title: ПЛЮЩ ЛЕОНІД ІВАНОВИЧ
+  source_name: Віртуальний музей «Дисидентський рух в Україні» Харківської правозахисної групи
   source_url: https://museum.khpg.org/1113936077
-  title: Плющ Леонід Іванович
-- language: uk
+  language: uk
+  type: institutional-biography
+  source_type: reference
+  role: repression-and-network-context
   hosting: link-only
-  notes: Електронна сторінка мемуарів.
-  rights_note: Copyrighted memoir page; use as link-only reading and do not host full text in this repository.
-  source_name: Diasporiana
-  source_url: https://diasporiana.org.ua/memuari/5057-plyushh-l-u-karnavali-istoriyi/
-  title: У карнавалі історії (Свідчення)
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113936077
+    note: Сторінка вимагає посилання при передруку; повний текст не відтворюється.
+  learner_task: >-
+    Простежити послідовність обшуків, арешту, судового рішення і примусового
+    лікування та пояснити, чому радянський діагноз не можна подавати як медичний факт.
+  caveats: >-
+    Це музейна біографія, а не повна публікація матеріалів справи; номер справи й
+    первинні судові документи вона не наводить.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Після прямої перевірки сторінок ЕСУ і КХПГ не встановлено окремого файлу
+    індивідуального портрета з підтвердженою ліцензією PD або CC; зображення на
+    біографічній сторінці не є доказом права повторного використання.
+  candidate_url: https://esu.com.ua/article-879739
+  evidence_url: https://esu.com.ua/article-879739
 references:
 - note: Енциклопедична стаття з хронологією життя, наукової праці, репресій і видань.
   path: https://esu.com.ua/article-879739
@@ -170,19 +195,6 @@ references:
   path: https://museum.khpg.org/1113936077
   title: ПЛЮЩ ЛЕОНІД ІВАНОВИЧ (KHPG)
   type: reference
-- note: Електронна сторінка видання мемуару для перевірки первинного голосу.
-  path: https://diasporiana.org.ua/memuari/5057-plyushh-l-u-karnavali-istoriyi/
-  title: 'У карнавалі історії: Свідчення'
-  type: primary
-- note: Онлайн-текст мемуару; використовувати лише після звірки з виданням 2002 року.
-  path: https://coollib.net/b/697342/read
-  title: У карнавалі історії. Свідчення
-  type: primary
-- author: Леонід Плющ
-  note: Літературно-критична праця, згадана в досьє як частина післятабірної культурної роботи.
-  title: Екзод Тараса Шевченка. Навколо "Москалевої криниці"
-  type: primary
-  work: Екзод Тараса Шевченка
 sequence: 270
 slug: leonid-pliushch
 subtitle: Mathematician, Witness, and Victim of Punitive Psychiatry
@@ -211,3 +223,4 @@ vocabulary_hints:
   pos: ч.
   word: свідок
 word_target: 5200
+
