@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/code-review-findings.v1.schema.json",
+  "title": "Code review findings v1",
+  "description": "Strict reviewer output for scripts/verify_review.py (issue #5284). Fail-closed: additionalProperties false throughout.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "overall", "findings"],
+  "properties": {
+    "schema_version": {
+      "const": "code-review-findings.v1"
+    },
+    "overall": {
+      "$ref": "#/$defs/overall"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "$defs": {
+    "nonempty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "P3"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "security",
+        "correctness",
+        "regression",
+        "api",
+        "tests",
+        "docs",
+        "performance",
+        "style",
+        "other"
+      ]
+    },
+    "claim_type": {
+      "type": "string",
+      "enum": ["present", "missing"],
+      "description": "present: defect at a changed line. missing: evidence-backed absence claim; location is contextual evidence, not a pretend diff line for the missing code."
+    },
+    "repo_relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._@+-]+(?:/[A-Za-z0-9._@+-]+)*$"
+    },
+    "line_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correctness", "explanation", "confidence"],
+      "properties": {
+        "correctness": {
+          "type": "string",
+          "enum": ["correct", "incorrect", "uncertain"]
+        },
+        "explanation": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "start_line", "end_line", "claim_type"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/repo_relative_path"
+        },
+        "start_line": {
+          "$ref": "#/$defs/line_number"
+        },
+        "end_line": {
+          "$ref": "#/$defs/line_number"
+        },
+        "claim_type": {
+          "$ref": "#/$defs/claim_type"
+        }
+      }
+    },
+    "sources": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "const": "none"
+          },
+          "maxItems": 1
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "not": {
+              "const": "none"
+            }
+          }
+        }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "body",
+        "priority",
+        "confidence",
+        "category",
+        "location",
+        "verbatim",
+        "why_wrong",
+        "smallest_fix",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+        },
+        "title": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "body": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "priority": {
+          "$ref": "#/$defs/priority"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "location": {
+          "$ref": "#/$defs/location"
+        },
+        "verbatim": {
+          "$ref": "#/$defs/nonempty",
+          "description": "Verbatim current code/evidence from the exact review target. Only line-ending normalization is applied during verification."
+        },
+        "why_wrong": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "smallest_fix": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "sources": {
+          "$ref": "#/$defs/sources"
+        }
+      }
+    }
+  }
+}
