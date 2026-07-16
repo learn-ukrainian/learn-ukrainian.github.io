@@ -107,6 +107,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 - Центральний державний архів-музей літератури і мистецтва України. "Андрій Самійлович Малишко (1912-1970)." https://csamm.archives.gov.ua/2022/11/15/andrii-samiilovych-malyshko-1912-1970/. Accessed 2026-06-30.
 - Український інститут національної пам'яті. "1912 - народився Андрій Малишко, поет." https://uinp.gov.ua/istorychnyy-kalendar/lystopad/14/1912-narodyvsya-andriy-malyshko-poet. Accessed 2026-06-30.
 - Державне агентство України з питань кіно. "Літа молодії." https://usfa.gov.ua/movie-catalog/lita-molodii-i10747. Accessed 2026-07-16.
+- Національна бібліотека України імені В. І. Вернадського. Каталог нотних видань: "Рідна мати моя" з кінофільму "Літа молодії" (видання 1959 і 1960 років). https://irbis-nbuv.gov.ua/cgi-bin/irbis_vfmf/cgiirbis_64.exe?C21COM=S&I21DBN=VFMF&P21DBN=VFMF&S21ALL=%28%3C.%3ET%3D%D0%A0%D0%86%D0%94%D0%9D%D0%90+%D0%9C%D0%90%D0%A2%D0%98+%D0%9C%D0%9E%D0%AF%3C.%3E%29&S21CNR=20&S21FMT=fullwebr&S21REF=10&S21SRD=&S21SRW=dz&S21STN=1&Z21ID=. Accessed 2026-07-16.
 - Росархів. "Агентство печати «Новости». 1961-1990." https://guides.rusarchives.ru/funds/6/agentstvo-pechati-novosti-1961-1990. Accessed 2026-07-16. Used only for the named Soviet agency's institutional chronology.
 - Російська державна бібліотека. "Устав Агентства печати «Новости»." Москва, 1961. https://search.rsl.ru/ru/record/01006425211. Accessed 2026-07-16. Used only to corroborate the agency's 1961 charter record.
 
