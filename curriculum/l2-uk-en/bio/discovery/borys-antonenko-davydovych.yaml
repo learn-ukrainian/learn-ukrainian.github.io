@@ -8,9 +8,13 @@ query_keywords:
   - 'З порога смерті: Антоненко-Давидович Борис'
 direct_sources:
   - https://esu.com.ua/article-42948
-  - https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davydovych_B
+  - "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21\
+    COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davy\
+    dovych_B"
   - https://resource.history.org.ua/item/11213
   - https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/
 rag_chunks: []
 rag_literary: []
-warning: 'Direct-source packet; the first query is the bare subject and the source URLs match the adopted reading and evidence set.'
+warning: >-
+  Direct-source packet; the first query is the bare subject and the source URLs match the adopted
+  reading and evidence set.
