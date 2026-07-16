@@ -4,13 +4,14 @@ Semantic prompt version: `5.0.2`
 
 ## Machine-response contract — read before any source or tool call
 
-Your final response is ingested as raw JSON bytes. Its first byte must be `{`
-and its last byte must be `}`. Emit no progress narration, source-check notes,
-preface, Markdown fence, or trailing text in that final response. Tool calls may
-precede it in the provider transcript, but the returned response body must be
-the single JSON object defined below. Any wrapper text invalidates the entire
-review and produces `INCOMPLETE`; the orchestrator will not extract or repair
-an embedded object.
+Your final response is ingested as raw JSON bytes. After optional surrounding
+JSON whitespace, its first non-whitespace byte must be `{` and its last
+non-whitespace byte must be `}`. Emit no progress narration, source-check notes,
+preface, Markdown fence, or trailing non-whitespace text in that final response.
+Tool calls may precede it in the provider transcript, but the returned response
+body must be the single JSON object defined below. Any wrapper text invalidates
+the entire review and produces `INCOMPLETE`; the orchestrator will not extract
+or repair an embedded object.
 
 Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
@@ -37,9 +38,10 @@ IDs across both deterministic and semantic findings.
   copy or reconstruct an excerpt. The canonical finalizer retrieves that line
   from the immutable packet, preserving exact punctuation and spelling.
 - Every cited evidence line must itself contain at least eight non-whitespace
-  characters. Never cite a blank line, separator, or short structural marker;
-  the packet-bound provider schema excludes those locators and the finalizer
-  rejects them fail-closed.
+  characters unless its exact locator belongs to a supplied deterministic
+  finding that the audit must report. Never cite any other blank line,
+  separator, or short structural marker; the packet-bound provider schema
+  excludes those unrelated locators and the finalizer rejects them fail-closed.
 - Verify Ukrainian word, stress, morphology, grammar, Russicism, false-friend,
   and calque claims with project source tools. Never infer them from intuition.
 - Verify factual, quotation, and attribution claims with the appropriate

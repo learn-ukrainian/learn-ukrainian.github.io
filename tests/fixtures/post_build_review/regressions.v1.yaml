@@ -262,7 +262,7 @@ regressions:
     fixed_in_version: 5.0.2
     version_field: review_protocol_version
     input: A deterministic learner-surface finding has an exact immutable line shorter than the generic eight-character evidence threshold.
-    expected: Admit that exact supplied-finding locator through the provider schema, hydration, result schema, and finalizer while continuing to exclude unrelated short structural lines.
+    expected: Tell the reviewer about the exception, admit that exact supplied-finding locator through the provider schema, hydration, result schema, and finalizer, and continue to exclude unrelated short structural lines.
   - bug_id: dimension-rejects-supplied-finding-identity
     responsible_layer: orchestration
     fixed_in_version: 5.0.2

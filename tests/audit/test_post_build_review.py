@@ -966,10 +966,12 @@ def test_common_prompt_leads_with_machine_response_contract() -> None:
 
     contract_index = prompt.index("## Machine-response contract")
     review_index = prompt.index("Review the resolved built module")
+    prompt_flat = " ".join(prompt.split())
 
     assert contract_index < review_index
-    assert "Its first byte must be `{`" in prompt
-    assert "the orchestrator will not extract or repair" in prompt
+    assert "first non-whitespace byte must be `{`" in prompt_flat
+    assert "last non-whitespace byte must be `}`" in prompt_flat
+    assert "the orchestrator will not extract or repair" in prompt_flat
 
 
 def test_semantic_response_schema_matches_raw_contract() -> None:
@@ -1713,6 +1715,7 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "must be below `8.0`",
         "return the exact repo-relative",
         "at least eight non-whitespace",
+        "exact locator belongs to a supplied deterministic",
     ):
         assert required in prompt
     prompt_lower = prompt.lower()
