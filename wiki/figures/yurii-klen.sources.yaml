@@ -12,7 +12,7 @@ sources:
 - id: S3
   file: https://elibrary.kubg.edu.ua/id/eprint/16798/
   type: external
-  title: Архівно підкріплене дослідження біографії Юрія Клена
+  title: До питання про місце народження Юрія Клена (Освальда Бурґгардта)
   url: https://elibrary.kubg.edu.ua/id/eprint/16798/
 - id: S4
   file: https://elib.nlu.org.ua/object.html?id=12214
