@@ -13,6 +13,7 @@ import {
   createNodeHttpAtlasDataSource,
 } from "@site/src/lib/lexicon/http-atlas-node";
 import {
+  COMPONENT_TOKEN_RE,
   resetSqliteAtlasDataSourceCachesForTests,
   SqliteAtlasDataSource,
 } from "@site/src/lib/lexicon/sqlite-atlas-data-source";
@@ -56,6 +57,11 @@ const FIXTURE_SLUGS = [
   "іване", // form_of
 ];
 
+const componentTokenVectorsPath = resolve(
+  process.cwd(),
+  "../scripts/atlas/component_tokenization_vectors.json",
+);
+
 describe("atlas normalization vectors", () => {
   test("TypeScript normalizeAtlasText matches shared vectors", () => {
     const payload = JSON.parse(readFileSync(vectorsPath, "utf-8")) as {
@@ -63,6 +69,19 @@ describe("atlas normalization vectors", () => {
     };
     for (const testCase of payload.cases) {
       expect(normalizeAtlasText(testCase.input), testCase.input).toBe(testCase.expected);
+    }
+  });
+});
+
+describe("atlas component tokenization vectors", () => {
+  test("TypeScript COMPONENT_TOKEN_RE matches shared vectors", () => {
+    const payload = JSON.parse(readFileSync(componentTokenVectorsPath, "utf-8")) as {
+      cases: Array<{ id: string; input: string; expected: string[] }>;
+    };
+    for (const testCase of payload.cases) {
+      expect(testCase.input.match(COMPONENT_TOKEN_RE) ?? [], testCase.id).toEqual(
+        testCase.expected,
+      );
     }
   });
 });

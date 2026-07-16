@@ -1,0 +1,38 @@
+{
+  "schema": "atlas-component-tokenization-vectors",
+  "schemaVersion": 1,
+  "pattern": "/[\\p{L}\\p{M}]+(?:['’][\\p{L}\\p{M}]+)*/gu",
+  "notes": "Shared cross-language vectors for component-link tokenization. Must match site/src/lib/lexicon/sqlite-atlas-data-source.ts COMPONENT_TOKEN_RE and scripts/atlas/export_runtime_shards.py find_component_tokens.",
+  "cases": [
+    {
+      "id": "numeric-multiword",
+      "input": "мені-20-років",
+      "expected": ["мені", "років"]
+    },
+    {
+      "id": "stress-combining-acute",
+      "input": "Малоро́сія",
+      "expected": ["Малоро́сія"]
+    },
+    {
+      "id": "apostrophe-ascii",
+      "input": "з'їзд",
+      "expected": ["з'їзд"]
+    },
+    {
+      "id": "apostrophe-right-single",
+      "input": "з’їзд",
+      "expected": ["з’їзд"]
+    },
+    {
+      "id": "underscore-latin-mixed",
+      "input": "foo_bar baz",
+      "expected": ["foo", "bar", "baz"]
+    },
+    {
+      "id": "plain-multiword",
+      "input": "будь-ласка",
+      "expected": ["будь", "ласка"]
+    }
+  ]
+}

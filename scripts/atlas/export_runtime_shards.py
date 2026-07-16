@@ -14,10 +14,17 @@ import math
 import re
 import sqlite3
 import sys
+import unicodedata
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+# Allow ``python scripts/atlas/export_runtime_shards.py`` (not only ``-m``).
+if __package__ is None or __package__ == "":
+    _REPO_ROOT = Path(__file__).resolve().parents[2]
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
 
 from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for_hash
 from scripts.etymology.transliterate import transliterate
@@ -36,6 +43,7 @@ DEFAULT_COMPRESSION = 9
 
 PRACTICE_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 DECK_PARTS = ("index", "lexemes", "cloze")
+# Search gloss tokens — twin of site/src/lib/lexicon/search.ts TOKEN_RE (/[\p{L}\p{N}_]+/gu).
 TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+", re.UNICODE)
 
 ARTICLE_ENTRY_TYPES = {
@@ -52,11 +60,54 @@ MORPHOLOGY_SUPPRESSED_TYPES = {
     "phraseologism",
     "proverb",
 }
-COMPONENT_TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+(?:['’][\w\u0400-\u04ff]+)*", re.UNICODE)
+# Component chips — Letter/Mark only (+ apostrophe joins). Twin of
+# sqlite-atlas-data-source.ts COMPONENT_TOKEN_RE: /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu
+# (std ``re`` has no \p{}; vectors in component_tokenization_vectors.json).
+_COMPONENT_APOSTROPHES = frozenset("'’")
+COMPONENT_TOKENIZATION_VECTORS_PATH = Path(__file__).with_name("component_tokenization_vectors.json")
 
 
 class ExportError(RuntimeError):
     """Hard export failure (oversized record, CEFR conflict, integrity)."""
+
+
+def _is_unicode_letter_or_mark(char: str) -> bool:
+    """True for Unicode Letter (L*) or Mark (M*) — mirrors ``\\p{L}\\p{M}``."""
+    return unicodedata.category(char)[0] in ("L", "M")
+
+
+def find_component_tokens(text: str) -> list[str]:
+    r"""Tokenize like TS ``/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu`` (no digit/underscore)."""
+    tokens: list[str] = []
+    index = 0
+    length = len(text)
+    while index < length:
+        if not _is_unicode_letter_or_mark(text[index]):
+            index += 1
+            continue
+        start = index
+        index += 1
+        while index < length and _is_unicode_letter_or_mark(text[index]):
+            index += 1
+        while index < length and text[index] in _COMPONENT_APOSTROPHES:
+            after = index + 1
+            if after >= length or not _is_unicode_letter_or_mark(text[after]):
+                break
+            index = after + 1
+            while index < length and _is_unicode_letter_or_mark(text[index]):
+                index += 1
+        tokens.append(text[start:index])
+    return tokens
+
+
+def load_component_tokenization_vectors() -> list[dict[str, object]]:
+    payload = json.loads(COMPONENT_TOKENIZATION_VECTORS_PATH.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema") != "atlas-component-tokenization-vectors":
+        raise ValueError(f"invalid component tokenization vectors at {COMPONENT_TOKENIZATION_VECTORS_PATH}")
+    cases = payload.get("cases")
+    if not isinstance(cases, list) or not cases:
+        raise ValueError(f"component tokenization vectors missing cases: {COMPONENT_TOKENIZATION_VECTORS_PATH}")
+    return cases
 
 
 def canonical_json_bytes(payload: Any) -> bytes:
@@ -236,7 +287,7 @@ def component_links_for_entry(
         return []
     current_slug = str(entry.get("url_slug") or "")
     links: list[dict[str, str | None]] = []
-    for text in COMPONENT_TOKEN_RE.findall(lemma):
+    for text in find_component_tokens(lemma):
         target_slug = component_targets.get(normalize_atlas_text(text))
         if (
             target_slug
@@ -249,25 +300,47 @@ def component_links_for_entry(
     return links
 
 
+def practice_index_dir_candidates(deck_dir: Path) -> list[Path]:
+    """Prefer ``public/api/lexicon`` before ``public/lexicon`` (SqliteAtlasDataSource)."""
+    resolved = deck_dir.resolve()
+    public_root: Path | None = None
+    if resolved.name == "lexicon" and resolved.parent.name == "api":
+        public_root = resolved.parent.parent
+    elif resolved.name == "lexicon":
+        public_root = resolved.parent
+    if public_root is not None:
+        return [public_root / "api" / "lexicon", public_root / "lexicon"]
+    return [resolved]
+
+
 def load_practice_levels_by_slug(deck_dir: Path | None) -> dict[str, list[str]]:
+    """Index practice levels by ``lemmaId`` only; prefer api/lexicon over lexicon/.
+
+    Mirrors ``SqliteAtlasDataSource.loadPracticeLevelsBySlug`` / legacy
+    ``getPracticeLemmas``: first existing practice-index per level wins, and
+    only ``lemmaId`` is indexed (lookup still falls back to ``entry.lemma``).
+    """
     levels_by_slug: dict[str, set[str]] = defaultdict(set)
     if deck_dir is None:
         return {}
+    candidates = practice_index_dir_candidates(deck_dir)
     for level in PRACTICE_LEVELS:
-        path = deck_dir / f"practice-index.{level}.json"
-        if not path.is_file():
-            continue
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        items = payload.get("items") if isinstance(payload, dict) else None
-        if not isinstance(items, list):
-            continue
-        for item in items:
-            if not isinstance(item, dict):
+        for candidate_dir in candidates:
+            path = candidate_dir / f"practice-index.{level}.json"
+            if not path.is_file():
                 continue
-            for key in ("lemmaId", "lemma"):
-                value = item.get(key)
-                if isinstance(value, str) and value:
-                    levels_by_slug[value].add(level)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            items = payload.get("items") if isinstance(payload, dict) else None
+            if not isinstance(items, list):
+                break
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                # Legacy indexes only lemmaId; indexing lemma would widen visibility.
+                lemma_id = item.get("lemmaId")
+                if isinstance(lemma_id, str) and lemma_id:
+                    levels_by_slug[lemma_id].add(level)
+            break
     return {slug: sorted(levels) for slug, levels in levels_by_slug.items()}
 
 
