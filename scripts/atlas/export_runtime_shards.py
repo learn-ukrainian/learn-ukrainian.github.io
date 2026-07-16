@@ -1228,13 +1228,71 @@ def export_runtime_shards(
         conn.close()
 
 
+# Transport-only fields that legitimately differ across zlib builds (compressed
+# size + compressed-body digest). Logical identity ignores these; jsonSha256 /
+# uncompressedBytes remain and still catch payload drift.
+_TRANSPORT_FINGERPRINT_KEYS = frozenset({"sha256", "bytes"})
+
+
+def _strip_transport_fields(value: Any) -> Any:
+    """Drop per-object zlib transport fields from manifest/current JSON."""
+    if isinstance(value, Mapping):
+        return {
+            key: _strip_transport_fields(item)
+            for key, item in value.items()
+            if key not in _TRANSPORT_FINGERPRINT_KEYS
+        }
+    if isinstance(value, list):
+        return [_strip_transport_fields(item) for item in value]
+    return value
+
+
+def _logical_file_payload(path: Path) -> bytes:
+    """Bytes hashed for cross-platform content identity of one tree file."""
+    if path.name.endswith(".json.gz"):
+        try:
+            return gzip.decompress(path.read_bytes())
+        except (OSError, EOFError, gzip.BadGzipFile) as exc:
+            raise ExportError(
+                f"undecompressable runtime object (logical fingerprint): {path}"
+            ) from exc
+    if path.suffix == ".json" or path.name in {"current.json", "manifest.json"}:
+        payload = json.loads(path.read_bytes().decode("utf-8"))
+        return canonical_json_bytes(_strip_transport_fields(payload))
+    return path.read_bytes()
+
+
 def tree_fingerprint(root: Path) -> str:
+    """Raw FILE-BYTE tree fingerprint — same-build determinism only.
+
+    Not a cross-platform contract: zlib builds can emit different gzip bytes for
+    identical logical content (burn: PR #5323 CI red, macOS-committed tree vs
+    Linux CI). Use ``logical_tree_fingerprint`` for freshness / content identity.
+    """
     digest = hashlib.sha256()
     for path in sorted(p for p in root.rglob("*") if p.is_file()):
         rel = path.relative_to(root).as_posix()
         digest.update(rel.encode("utf-8"))
         digest.update(b"\0")
         digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def logical_tree_fingerprint(root: Path) -> str:
+    """Logical CONTENT tree fingerprint — cross-platform identity.
+
+    ``*.json.gz``: hash gunzipped payload. Plain JSON (``current.json``,
+    ``manifest.json``): hash after stripping transport fields ``sha256``/``bytes``
+    that track zlib output. Same-build raw identity remains ``tree_fingerprint``.
+    Burn: PR #5323 CI red, macOS-committed tree vs Linux CI.
+    """
+    digest = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+        rel = path.relative_to(root).as_posix()
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(_logical_file_payload(path))
         digest.update(b"\0")
     return digest.hexdigest()
 

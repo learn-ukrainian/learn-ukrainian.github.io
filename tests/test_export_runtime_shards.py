@@ -10,6 +10,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -24,6 +25,7 @@ from scripts.atlas.export_runtime_shards import (
     load_component_tokenization_vectors,
     load_entry_records,
     load_practice_levels_by_slug,
+    logical_tree_fingerprint,
     open_readonly_db,
     tree_fingerprint,
     verify_tree,
@@ -33,6 +35,7 @@ from scripts.atlas.normalization import load_normalization_vectors, normalize_at
 ROOT = Path(__file__).resolve().parents[1]
 REAL_DB_PATH = ROOT / "data" / "atlas.db"
 FIXTURE_DB_PATH = ROOT / "tests" / "fixtures" / "atlas" / "runtime_shards_fixture.db"
+COMMITTED_RUNTIME_TREE = ROOT / "tests" / "fixtures" / "atlas" / "runtime-tree"
 PRACTICE_DECKS_ROOT = ROOT / "tests" / "fixtures" / "atlas" / "practice_decks"
 EXPORTER_SCRIPT = ROOT / "scripts" / "atlas" / "export_runtime_shards.py"
 
@@ -44,7 +47,13 @@ def fixture_db() -> Path:
 
 
 def _fp(root: Path) -> str:
+    """Same-build raw fingerprint (determinism only — not cross-platform)."""
     return tree_fingerprint(root)
+
+
+def _logical_fp(root: Path) -> str:
+    """Cross-platform logical content fingerprint (freshness guard)."""
+    return logical_tree_fingerprint(root)
 
 
 def test_normalization_vectors_match_python_rules() -> None:
@@ -122,6 +131,101 @@ def test_export_twice_is_byte_identical(fixture_db: Path, tmp_path: Path) -> Non
     assert report_a["dataVersion"] == report_b["dataVersion"]
     assert report_a["dataVersion"].startswith("atlas-v1-")
     assert _fp(out_a / "atlas") == _fp(out_b / "atlas")
+
+
+def test_committed_runtime_tree_matches_fresh_fixture_export(
+    fixture_db: Path, tmp_path: Path
+) -> None:
+    """Sol F006 freshness guard: committed runtime-tree must match a live export.
+
+    Compares *logical* content (gunzipped payloads + transport-stripped JSON),
+    not raw gzip bytes — zlib builds differ across platforms (PR #5323).
+
+    If the exporter or ``runtime_shards_fixture.db`` changes without regenerating
+    the tree, this fails loudly in Python CI. Regen::
+
+        PYTHONPATH=. .venv/bin/python \\
+          tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree
+    """
+    current = COMMITTED_RUNTIME_TREE / "atlas" / "current.json"
+    assert current.is_file(), (
+        f"missing committed runtime-tree at {COMMITTED_RUNTIME_TREE}; "
+        "run build_runtime_shards_fixture.py --emit-tree"
+    )
+    fresh = tmp_path / "fresh-export"
+    export_runtime_shards(
+        db_path=fixture_db,
+        out_dir=fresh,
+        deck_dir=None,
+        include_decks=False,
+        verify=True,
+    )
+    committed_root = COMMITTED_RUNTIME_TREE / "atlas"
+    fresh_root = fresh / "atlas"
+    committed_fp = _logical_fp(committed_root)
+    fresh_fp = _logical_fp(fresh_root)
+    assert committed_fp == fresh_fp, (
+        "committed tests/fixtures/atlas/runtime-tree is stale relative to a "
+        "fresh export of runtime_shards_fixture.db; regenerate with "
+        "`PYTHONPATH=. .venv/bin/python "
+        "tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree`"
+    )
+
+    # Path-set equality catches empty-dir / missing-leaf surprises without
+    # requiring zlib-byte identity of committed vs freshly compressed objects.
+    def _paths(root: Path) -> set[str]:
+        return {
+            path.relative_to(root).as_posix()
+            for path in root.rglob("*")
+            if path.is_file()
+        }
+
+    assert _paths(committed_root) == _paths(fresh_root)
+
+
+def test_logical_freshness_guard_fails_on_corrupt_committed_gz(
+    fixture_db: Path, tmp_path: Path
+) -> None:
+    """Corrupt-byte property: gz payload change / undecompressable → guard fails.
+
+    Extends the fail-closed checksum surface (see ``test_trie_split_and_checksum_fail_closed``)
+    to the logical freshness comparison used cross-platform.
+    """
+    fresh = tmp_path / "fresh-export"
+    export_runtime_shards(
+        db_path=fixture_db,
+        out_dir=fresh,
+        deck_dir=None,
+        include_decks=False,
+        verify=True,
+    )
+    fresh_fp = _logical_fp(fresh / "atlas")
+
+    corrupt_root = tmp_path / "corrupt-committed"
+    shutil.copytree(COMMITTED_RUNTIME_TREE / "atlas", corrupt_root)
+    gz_path = next(corrupt_root.rglob("*.json.gz"))
+    blob = bytearray(gz_path.read_bytes())
+    mid = max(10, len(blob) // 2)
+    blob[mid] = (blob[mid] + 1) % 256
+    gz_path.write_bytes(bytes(blob))
+
+    stale_msg = (
+        "committed tests/fixtures/atlas/runtime-tree is stale relative to a "
+        "fresh export of runtime_shards_fixture.db; regenerate with "
+        "`PYTHONPATH=. .venv/bin/python "
+        "tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree`"
+    )
+    with pytest.raises((AssertionError, ExportError)) as exc_info:
+        corrupt_fp = _logical_fp(corrupt_root)
+        assert corrupt_fp == fresh_fp, stale_msg
+
+    # Must be the guard assertion or a clear ExportError — not an unrelated crash.
+    if isinstance(exc_info.value, AssertionError):
+        assert "stale relative" in str(exc_info.value)
+    else:
+        assert "undecompressable" in str(exc_info.value).lower() or "logical" in str(
+            exc_info.value
+        ).lower()
 
 
 def test_fixture_covers_representative_entry_shapes(fixture_db: Path) -> None:
@@ -292,6 +396,17 @@ def test_gzip_mtime_zero_and_newline_termination(fixture_db: Path, tmp_path: Pat
         assert hashlib.sha256(raw).hexdigest() == descriptor["jsonSha256"]
 
 
+def _require_real_atlas_db() -> Path:
+    """Fail closed for release-gate runs; ordinary CI still skipif-guarded below."""
+    if not REAL_DB_PATH.is_file():
+        raise AssertionError(
+            "atlas_release gate requires hydrated data/atlas.db "
+            f"(expected at {REAL_DB_PATH}); symlink from primary checkout or "
+            "run site hydrate before publish"
+        )
+    return REAL_DB_PATH
+
+
 @pytest.mark.skipif(not REAL_DB_PATH.is_file(), reason="data/atlas.db not available")
 def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
     out = tmp_path / "out"
@@ -342,3 +457,42 @@ def test_real_db_entry_shard_size_band(tmp_path: Path) -> None:
     assert sizes, "expected entry shards"
     assert min(sizes) >= 524_288, sizes
     assert max(sizes) <= 1_048_576, sizes
+
+
+@pytest.mark.atlas_release
+def test_atlas_release_gate_real_db_counts_and_export(tmp_path: Path) -> None:
+    """Publish-time release gate (``pytest -m atlas_release``).
+
+    Requires hydrated ``data/atlas.db``. Fails closed when missing — never skip.
+    Companion TS full-record parity: ``npm run test:atlas-release-gate`` (site/).
+    """
+    db_path = _require_real_atlas_db()
+    out = tmp_path / "release-export"
+    report = export_runtime_shards(
+        db_path=db_path,
+        out_dir=out,
+        include_decks=False,
+        deck_dir=None,
+        verify=True,
+    )
+    assert report["counts"]["articles"] == 8206, report["counts"]
+    assert report["counts"]["formRoutes"] == 336, report["counts"]
+    assert report["counts"]["publicRoutes"] == 8542, report["counts"]
+    assert report["counts"]["aliases"] == 9969, report["counts"]
+    assert (
+        report["counts"]["articles"] + report["counts"]["formRoutes"]
+        == report["counts"]["publicRoutes"]
+    )
+    sizes = report["entryShardBytes"]
+    assert sizes, "expected entry shards"
+    assert min(sizes) >= 524_288, sizes
+    assert max(sizes) <= 1_048_576, sizes
+    assert (out / "atlas" / "current.json").is_file()
+    print(
+        "atlas_release gate ok:",
+        report["dataVersion"],
+        "publicRoutes=",
+        report["counts"]["publicRoutes"],
+        "entryShards=",
+        report["counts"]["entryShards"],
+    )

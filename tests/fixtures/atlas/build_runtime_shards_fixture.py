@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""Build the hermetic ``runtime_shards_fixture.db`` used by exporter + route parity.
+"""Build the hermetic ``runtime_shards_fixture.db`` + committed runtime-tree.
 
-Requires a full ``data/atlas.db`` locally (or ``ATLAS_SRC_DB``). The committed
-fixture is small and CI-safe; regenerate when representative rows change:
+Requires a full ``data/atlas.db`` locally (or ``ATLAS_SRC_DB``) only when
+rebuilding the SQLite fixture. The committed fixture + runtime tree are small
+and CI-safe.
+
+Rebuild the SQLite fixture when representative rows change:
 
   ATLAS_SRC_DB=/path/to/atlas.db \\
-    .venv/bin/python tests/fixtures/atlas/build_runtime_shards_fixture.py
+    .venv/bin/python tests/fixtures/atlas/build_runtime_shards_fixture.py --rebuild-db
+
+Regenerate the committed runtime shard tree after exporter or fixture-DB changes
+(Sol F006 freshness contract — no Python dependency in the frontend CI leg):
+
+  .venv/bin/python tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree
 
 PR #2 extends the fixture with test-only rows so EVERY ``ATLAS_ENTRY_TYPES``
 value plus ``form_route`` is present (production currently only ships lemma +
@@ -18,8 +26,10 @@ lemma≠lemmaId) live beside this DB under ``practice_decks/`` — see
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import shutil
 import sqlite3
 import tempfile
 from pathlib import Path
@@ -41,6 +51,7 @@ for base in [ROOT, *ROOT.parents]:
     SRC_CANDIDATES.append(base / "data" / "atlas.db")
 SRC = next((path for path in SRC_CANDIDATES if path.is_file()), None)
 DST = Path(__file__).resolve().parent / "runtime_shards_fixture.db"
+RUNTIME_TREE = Path(__file__).resolve().parent / "runtime-tree"
 
 # Must match site/src/lib/lexicon/atlasDb.ts ATLAS_ENTRY_TYPES plus form_route.
 REQUIRED_TYPE_SET = {
@@ -353,5 +364,59 @@ def build() -> Path:
     return DST
 
 
+def emit_tree(*, db_path: Path | None = None, dest: Path | None = None) -> Path:
+    """Export the hermetic fixture DB into the committed ``runtime-tree/``.
+
+    Tree is deterministic (exporter contract). Vitest consumes this tree
+    unconditionally — no ``data/atlas.db`` and no Python in the frontend CI leg.
+    """
+    source = db_path or DST
+    if not source.is_file():
+        raise SystemExit(f"missing fixture DB for --emit-tree: {source}")
+    out = dest or RUNTIME_TREE
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
+    # No decks: fixture practice indexes cover practiceLevels resolver tests in
+    # pytest; the committed tree is entry + search only (still small).
+    report = export_runtime_shards(
+        db_path=source,
+        out_dir=out,
+        include_decks=False,
+        deck_dir=None,
+        verify=True,
+    )
+    current = out / "atlas" / "current.json"
+    if not current.is_file():
+        raise SystemExit(f"emit-tree failed: missing {current}")
+    print("wrote runtime-tree", out, "dataVersion", report["dataVersion"], "counts", report["counts"])
+    return out
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--rebuild-db",
+        action="store_true",
+        help="Rebuild runtime_shards_fixture.db from ATLAS_SRC_DB / data/atlas.db",
+    )
+    parser.add_argument(
+        "--emit-tree",
+        action="store_true",
+        help="Export fixture DB into tests/fixtures/atlas/runtime-tree/ (commit the result)",
+    )
+    args = parser.parse_args(argv)
+    # Default (no flags): rebuild DB then emit tree — keeps one-command regen working.
+    if not args.rebuild_db and not args.emit_tree:
+        build()
+        emit_tree()
+        return 0
+    if args.rebuild_db:
+        build()
+    if args.emit_tree:
+        emit_tree()
+    return 0
+
+
 if __name__ == "__main__":
-    build()
+    raise SystemExit(main())
