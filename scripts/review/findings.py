@@ -141,6 +141,6 @@ class FindingsLedger:
                     lines.append("  - applied")
                 elif event.event == "skipped":
                     lines.append(f"  - skipped: {event.rationale}")
-            if len(history) == 1:
+            if self.latest_disposition(finding_id) is None:
                 lines.append("  - UNADJUDICATED (no reviewer/challenger verdict recorded)")
         return "\n".join(lines) if lines else "(no findings raised)"

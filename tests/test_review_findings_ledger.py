@@ -127,3 +127,20 @@ def test_render_report_includes_every_finding_and_full_history():
 def test_render_report_empty_ledger():
     ledger = FindingsLedger()
     assert ledger.render_report() == "(no findings raised)"
+
+
+def test_render_report_raised_then_skipped_still_shows_unadjudicated():
+    """A skip is not an adjudication — latest_disposition stays None, so the
+    report must still flag the finding as UNADJUDICATED even though it also
+    carries a skip rationale. Before the fix, render_report only checked
+    ``len(history) == 1``, so a raised-then-skipped finding (history length 2)
+    silently lost its UNADJUDICATED marker."""
+    ledger = FindingsLedger()
+    ledger.raise_finding("F1", summary="raised then skipped, never adjudicated", source="self-review")
+    ledger.skip("F1", rationale="deferred without a reviewer verdict")
+
+    assert ledger.latest_disposition("F1") is None
+    report = ledger.render_report()
+    assert "F1" in report
+    assert "skipped: deferred without a reviewer verdict" in report
+    assert "UNADJUDICATED" in report

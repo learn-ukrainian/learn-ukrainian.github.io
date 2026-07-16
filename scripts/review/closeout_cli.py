@@ -65,6 +65,19 @@ def _ledger_from_state(state: dict) -> FindingsLedger:
 
 def _cmd_target(args: argparse.Namespace) -> int:
     state = _load_state(args.state_file)
+    if state.get("baseline"):
+        print(
+            json.dumps(
+                {
+                    "error": (
+                        "baseline already frozen for this state file — the target is immutable "
+                        "once frozen; start a new review with a new --state-file"
+                    )
+                }
+            ),
+            file=sys.stderr,
+        )
+        return 1
     try:
         target = resolve_review_target(
             args.mode,
@@ -94,6 +107,19 @@ def _cmd_target(args: argparse.Namespace) -> int:
 
 def _cmd_freeze(args: argparse.Namespace) -> int:
     state = _load_state(args.state_file)
+    if state.get("baseline"):
+        print(
+            json.dumps(
+                {
+                    "error": (
+                        "baseline already frozen for this state file — freeze may only be called "
+                        "once; start a new review with a new --state-file"
+                    )
+                }
+            ),
+            file=sys.stderr,
+        )
+        return 1
     if not state.get("target"):
         print(json.dumps({"error": "no target resolved yet — run the `target` subcommand first"}), file=sys.stderr)
         return 1
@@ -206,6 +232,12 @@ def _cmd_record_cycle(args: argparse.Namespace) -> int:
     state = _load_state(args.state_file)
     if not state.get("baseline"):
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
+        return 1
+    if args.outstanding_count < 0:
+        print(
+            json.dumps({"error": f"--outstanding-count must be >= 0, got {args.outstanding_count}"}),
+            file=sys.stderr,
+        )
         return 1
     state.setdefault("cycle_outstanding_counts", []).append(args.outstanding_count)
     result = check_cycle_convergence_breaker(state["cycle_outstanding_counts"])

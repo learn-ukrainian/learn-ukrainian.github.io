@@ -71,6 +71,14 @@ workflow YAML, config, schemas, and documentation are changed paths just
 as much as `.py`/`.ts` files, and none of them are silently excluded from
 scope or from review in the steps below.
 
+**Both `target` and `freeze` are one-shot per state file.** Once a baseline
+is frozen, `target` refuses to re-resolve (it would silently swap out what
+the frozen baseline claims to describe) and `freeze` refuses a second call
+(it would silently reset the cycle history). Both fail closed with a
+non-zero exit and leave the state file untouched. Starting a genuinely new
+review — a different target, a redone freeze — means picking a new
+`$STATE_FILE`, not reusing one whose baseline is already frozen.
+
 ---
 
 ## Step 3: Deterministic / static checks (non-mutating)

@@ -223,3 +223,79 @@ def test_freeze_before_target_errors(tmp_path):
     )
     assert proc.returncode != 0
     assert "target" in proc.stderr
+
+
+def _freeze_kwargs(issue: str = "#5283") -> tuple[str, ...]:
+    return (
+        "freeze",
+        "--issue",
+        issue,
+        "--intended-behavior",
+        "add feature",
+        "--non-goals",
+        "no refactors",
+        "--owner-boundary",
+        "repo root",
+    )
+
+
+def test_target_and_freeze_are_immutable_once_baseline_frozen(tmp_path):
+    """Once a baseline is frozen, `target` must reject replacing the target
+    and `freeze` must reject a second call — both must fail without mutating
+    the original target, baseline, cycle history, or findings. A new review
+    must use a new state file instead."""
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+
+    target_proc = _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo))
+    assert target_proc.returncode == 0, target_proc.stderr
+
+    freeze_proc = _run_cli(state_file, *_freeze_kwargs())
+    assert freeze_proc.returncode == 0, freeze_proc.stderr
+
+    cycle_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "3")
+    assert cycle_proc.returncode == 0, cycle_proc.stderr
+    raise_proc = _run_cli(state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "self-review")
+    assert raise_proc.returncode == 0, raise_proc.stderr
+
+    state_before = json.loads(state_file.read_text(encoding="utf-8"))
+
+    # Adding more files after freeze, then trying to re-target, must be rejected.
+    (repo / "extra.py").write_text("x = 1\n", encoding="utf-8")
+    retarget_proc = _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo))
+    assert retarget_proc.returncode != 0
+    assert "immutable" in retarget_proc.stderr or "already frozen" in retarget_proc.stderr
+
+    refreeze_proc = _run_cli(state_file, *_freeze_kwargs(issue="#9999"))
+    assert refreeze_proc.returncode != 0
+    assert "already frozen" in refreeze_proc.stderr
+
+    state_after = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state_after == state_before
+    assert state_after["target"]["changed_paths"] == ["feature.py"]
+    assert state_after["baseline"]["issue_ref"] == "#5283"
+    assert state_after["cycle_outstanding_counts"] == [3]
+    assert len(state_after["findings"]) == 1
+
+
+def test_record_cycle_rejects_negative_outstanding_count(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+
+    _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo))
+    _run_cli(state_file, *_freeze_kwargs())
+    ok_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "2")
+    assert ok_proc.returncode == 0, ok_proc.stderr
+
+    state_before = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state_before["cycle_outstanding_counts"] == [2]
+
+    bad_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "-1")
+    assert bad_proc.returncode != 0
+    assert "outstanding-count" in bad_proc.stderr
+
+    state_after = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state_after == state_before
+    assert state_after["cycle_outstanding_counts"] == [2]
