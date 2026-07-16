@@ -47,8 +47,9 @@ review as an operator completion gate.
    never mint a replacement run merely to bypass a lease or stale evidence.
    If a versioned review-tooling change lands while the exact run is already in
    `POST_BUILD_REVIEW_REQUIRED`, record it with `record-change --owner-kind
-   audit_tooling`; that transition is accepted only when every target hash is
-   unchanged and the workflow identity actually changed.
+   audit_tooling`; that transition is accepted only when the module state,
+   layout, and every target hash are unchanged and the workflow identity
+   actually changed.
    A legacy ledger without a goal is non-authoritative. Use
    `migrate-terminal-goal` with the exact old run id and explicit intent; a
    `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character

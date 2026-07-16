@@ -928,6 +928,13 @@ def record_change(
             if identity["sha256"] == ledger["current_identity"]["sha256"]:
                 raise CompletionError("No target or workflow identity changed; refusing a no-op repair")
             if pending_review_workflow_refresh:
+                if (
+                    identity["layout"] != ledger["current_identity"]["layout"]
+                    or identity["module_state"] != ledger["current_identity"]["module_state"]
+                ):
+                    raise CompletionError(
+                        "A pending post-build review accepts audit_tooling refresh only when module layout and state are unchanged"
+                    )
                 if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
                     raise CompletionError(
                         "A pending post-build review accepts audit_tooling refresh only when target hashes are unchanged"

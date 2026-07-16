@@ -1042,7 +1042,7 @@ def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path
 
 
 def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
-    fake_repo: tuple[Path, Path, Path],
+    fake_repo: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo, config_path, ledger_root = fake_repo
     _, ledger = _start(fake_repo, "bio/seminar-built")
@@ -1080,6 +1080,28 @@ def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
             owner_kind="audit_tooling",
             author_family="codex",
             summary="Must not disguise learner-surface drift as review tooling.",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+    real_build_identity = tc.build_identity
+
+    def relocated_identity(*args: object, **kwargs: object) -> dict[str, Any]:
+        identity = real_build_identity(*args, **kwargs)
+        identity["layout"] = "flat"
+        payload = {key: identity[key] for key in ("module_state", "layout", "target_hashes", "workflow_hashes")}
+        identity["sha256"] = tc.sha256_bytes(tc.stable_json(payload).encode("utf-8"))
+        return identity
+
+    monkeypatch.setattr(tc, "build_identity", relocated_identity)
+    with pytest.raises(tc.CompletionError, match="module layout and state are unchanged"):
+        tc.record_change(
+            "bio/seminar-built",
+            run_id=run_id,
+            owner_kind="audit_tooling",
+            author_family="codex",
+            summary="Must not disguise a layout migration as review tooling.",
             repo_root=repo,
             config_path=config_path,
             ledger_root=ledger_root,
