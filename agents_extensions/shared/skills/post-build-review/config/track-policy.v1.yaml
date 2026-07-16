@@ -3,6 +3,21 @@ deterministic_contract_version: 1.2.1
 semantic_prompt_version: 4.0.0
 track_policy_version: 1.6.0
 
+score_calibration:
+  bands:
+    PASS:
+      minimum: 8.0
+      maximum: 10.0
+      includes_maximum: true
+    REVISE:
+      minimum: 6.0
+      maximum: 8.0
+      includes_maximum: false
+    BLOCK:
+      minimum: 0.0
+      maximum: 6.0
+      includes_maximum: false
+
 defaults:
   semantic_requirements:
     learner_evidence_ledger: required_when_applicable

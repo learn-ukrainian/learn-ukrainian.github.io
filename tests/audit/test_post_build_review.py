@@ -320,7 +320,7 @@ def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
     assert calibration["fixture_version"] == "score-calibration.v1"
     assert calibration["score_bands"] == {
         **{
-            status: f"[{lower}, {upper}{']' if includes_upper else ')'}"
+            status: f"[{lower:.1f}, {upper:.1f}{']' if includes_upper else ')'}"
             for status, (lower, upper, includes_upper) in pbr.QUALITY_DIMENSION_SCORE_BANDS.items()
         },
         "INCOMPLETE": None,

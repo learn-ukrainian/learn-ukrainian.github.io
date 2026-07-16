@@ -51,11 +51,6 @@ TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_a
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
 QUALITY_DIMENSIONS = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
-QUALITY_DIMENSION_SCORE_BANDS = {
-    "PASS": (Decimal("8.0"), Decimal("10.0"), True),
-    "REVISE": (Decimal("6.0"), Decimal("8.0"), False),
-    "BLOCK": (Decimal("0.0"), Decimal("6.0"), False),
-}
 REPRODUCIBILITY_FIELDS = (
     "schema_version",
     "review_protocol_version",
@@ -134,6 +129,63 @@ def read_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
+def quality_dimension_score_bands(
+    policy: Mapping[str, Any],
+) -> dict[str, tuple[Decimal, Decimal, bool]]:
+    """Resolve the executable score bands from the versioned review policy."""
+    calibration = policy.get("score_calibration")
+    bands = calibration.get("bands") if isinstance(calibration, Mapping) else None
+    expected_statuses = {"PASS", "REVISE", "BLOCK"}
+    if not isinstance(bands, Mapping) or set(bands) != expected_statuses:
+        raise ReviewProtocolError(
+            "Track policy score_calibration.bands must define exactly PASS, REVISE, and BLOCK"
+        )
+
+    resolved: dict[str, tuple[Decimal, Decimal, bool]] = {}
+    for status in ("PASS", "REVISE", "BLOCK"):
+        band = bands[status]
+        if not isinstance(band, Mapping) or set(band) != {
+            "minimum",
+            "maximum",
+            "includes_maximum",
+        }:
+            raise ReviewProtocolError(
+                f"Track policy score band {status} must define minimum, maximum, and includes_maximum"
+            )
+        try:
+            minimum = Decimal(str(band["minimum"]))
+            maximum = Decimal(str(band["maximum"]))
+        except (InvalidOperation, ValueError) as exc:
+            raise ReviewProtocolError(f"Track policy score band {status} bounds must be numeric") from exc
+        includes_maximum = band["includes_maximum"]
+        if type(includes_maximum) is not bool:
+            raise ReviewProtocolError(
+                f"Track policy score band {status} includes_maximum must be boolean"
+            )
+        if minimum < Decimal(0) or maximum > Decimal(10) or minimum >= maximum:
+            raise ReviewProtocolError(
+                f"Track policy score band {status} must be an increasing subset of 0.0..10.0"
+            )
+        resolved[status] = (minimum, maximum, includes_maximum)
+
+    if (
+        resolved["BLOCK"][0] != Decimal(0)
+        or resolved["BLOCK"][1] != resolved["REVISE"][0]
+        or resolved["REVISE"][1] != resolved["PASS"][0]
+        or resolved["PASS"][1] != Decimal(10)
+        or resolved["BLOCK"][2]
+        or resolved["REVISE"][2]
+        or not resolved["PASS"][2]
+    ):
+        raise ReviewProtocolError(
+            "Track policy score bands must be contiguous half-open intervals with an inclusive PASS ceiling"
+        )
+    return resolved
+
+
+QUALITY_DIMENSION_SCORE_BANDS = quality_dimension_score_bands(read_yaml(POLICY_PATH))
+
+
 def load_track_policy(
     path: Path = POLICY_PATH,
     *,
@@ -145,6 +197,7 @@ def load_track_policy(
         "deterministic_contract_version",
         "semantic_prompt_version",
         "track_policy_version",
+        "score_calibration",
         "families",
         "selectors",
         "track_overrides",
@@ -152,6 +205,7 @@ def load_track_policy(
     missing = sorted(required - set(policy))
     if missing:
         raise ReviewProtocolError(f"Track policy missing: {', '.join(missing)}")
+    quality_dimension_score_bands(policy)
     if "tracks" in policy:
         raise ReviewProtocolError("Track policy must derive active tracks from curriculum.yaml")
     families = policy.get("families")
