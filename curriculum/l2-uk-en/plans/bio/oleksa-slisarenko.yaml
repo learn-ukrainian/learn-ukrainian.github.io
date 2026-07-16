@@ -154,19 +154,6 @@ readings:
     evidence_url: "https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/"
     note: "Архівна сторінка використовується тільки як зовнішнє посилання; текст не відтворюється."
   learner_task: "Скласти хронологію: літературні групи, арешт, вирок, Соловки, розстріл — не називаючи радянське обвинувачення фактом."
-- title: "Вибрані твори (вид. 2011)"
-  source_name: "Чтиво"
-  source_url: "https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/"
-  language: uk
-  genre: вибрані твори
-  source_type: primary
-  role: primary-voice-catalog
-  hosting: link-only
-  rights:
-    basis: external-link
-    evidence_url: "https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/"
-    note: "Скан видання доступний лише за зовнішнім посиланням; цитати потребують точного номера сторінки."
-  learner_task: "За змістом видання обрати один твір для подальшого читання; не переносити його текст до курсу."
 references:
 - note: Англомовна енциклопедична стаття про життя й доробок (справжнє прізвище, групи, твори, репресії).
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CL%5CSlisarenkoOleksa.htm

@@ -3,14 +3,14 @@ error: null
 query_keywords:
   - 'Микола Зеров: Лідер неокласиків і дорога до Сандармоху'
   - 'Зеров Микола Костянтинович ЕСУ'
-  - 'Микола Зеров Сонети і елегії Чтиво'
+  - 'Zerov Mykola Internet Encyclopedia of Ukraine'
 source_pairs:
   - title: 'Зеров Микола Костянтинович'
     url: 'https://esu.com.ua/article-16057'
     role: 'інституційна біографічна довідка'
-  - title: 'Сонети і елегії'
-    url: 'https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/'
-    role: 'первинний поетичний текст; цитати лише за точним виданням'
+  - title: 'Zerov, Mykola'
+    url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CE%5CZerovMykola.htm'
+    role: 'англомовна інституційна енциклопедична довідка'
 rag_chunks: []
 rag_literary: []
 warning: 'Дати репресій перевіряти за ЕСУ або архівним виданням; не переносити старі непідтверджені локатори.'

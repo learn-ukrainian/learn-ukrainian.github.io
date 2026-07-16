@@ -24,7 +24,7 @@
 - **Full name (UA, canonical):** Теодосій Степанович Осьмачка, known as **Тодось Осьмачка**. [T1: ЕІУ — Осьмачка Феодосій Степанович; T3: Вікіпедія]
 - **Pseudonyms / aliases:** Тодось Осьмачка; Феодосій / Теодосій Степанович Осьмачка (encyclopedic headword variants). Forbidden in body text except in the naming section: "Feodosii Osmachka," "Феодосий Степанович Осьмачка," "Osmachka, Theodosius."
 - **Born:** 3 (15) **травня 1895** | село Куцівка, Черкаський повіт, Київська губернія, Russian Empire (now Смілянський район, Черкаська область, Україна). [T3: Вікіпедія; T1: ЕІУ]
-- **Died:** **7 вересня 1962** | New York City, USA, at the Pilgrim State psychiatric hospital | death after a nervous paralysis (стрoke), broken by decades of persecution. Buried at the Орфоdox cemetery of St. Andrew, South Bound Brook, New Jersey. [T3: Вікіпедія]
+- **Died:** **7 вересня 1962** | New York City, USA, at the Pilgrim State psychiatric hospital | death after a nervous paralysis (stroke), broken by decades of persecution. Buried at the Orthodox cemetery of St. Andrew, South Bound Brook, New Jersey. [T3: Вікіпедія]
 - **Family / education key facts:** Son of a self-taught village veterinarian, Степан Осьмачка. Self-financed his higher education; graduated from the **Київський інститут народної освіти (КІНО)** in 1925 (the then-name of Kyiv University). Member of **АСПИС** (the association led by Микола Зеров) and then of **Ланка / МАРС**, alongside his closest friend Григорій Косинка, plus Підмогильний, Плужник, and Антоненко-Давидович. Translator of Shakespeare (*Макбет*, 1930) and Wilde. [T3: Вікіпедія; T1: ЕІУ]
 
 ## 2. Oppression mechanism — arrest, threatened execution, and punitive psychiatry; then forced emigration
@@ -95,7 +95,7 @@
   - `curriculum/l2-uk-en/plans/hist/rozstriliane-vidrodzennia.yaml` — his МАРС friends (Косинка, Підмогильний, Плужник) were executed in it
 - **Candidate cross-track connections (Phase 2+ — NOT existing files):**
   - Bio-to-bio: `todos-osmachka` ↔ `ivan-bahrianyi` (both МАРС; Багряний was the last friend to see Осьмачка alive and wrote the moving "Данте" letter about him); ↔ МАРС/Ланка peers Косинка / Підмогильний / Плужник (Block A); ↔ `mykola-zerov` (АСПИС); ↔ `yevhen-malaniuk` (who coined the "син села" phrase).
-  - A `plans/bio/todos-osmachka.yaml` does **not** yet exist — to be created in Phase 2.
+  - `curriculum/l2-uk-en/plans/bio/todos-osmachka.yaml` now exists; keep future reading additions tied to live records with exact rights evidence.
 
 ## 8. Naming-canonical
 
@@ -136,8 +136,8 @@
 ## Catalog-source disposition
 
 - **Institutional record:** ЕСУ, «Осьмачка Тодось» — https://esu.com.ua/article-77208.
-- **Primary-material catalog:** «Тодось Осьмачка — авторська тека» — https://chtyvo.org.ua/authors/Osmachka_Todos/.
-- **Reading and rights disposition:** матеріали лишаються зовнішніми українськомовними посиланнями; не відтворювати поезію або прозу без точного видання та локатора.
+- **Contextual record:** IEU, «Osmachka, Teodosii» — https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CS%5COsmachkaTeodosii.htm.
+- **Reading and rights disposition:** learner-facing reading лишається зовнішнім українськомовним посиланням ЕСУ; IEU є англомовною контекстуальною опорою, а поезію або прозу не відтворювати без точного видання та локатора.
 - **Image disposition:** текстовий варіант, оскільки індивідуальну ліцензію портрета не встановлено.
 
 ## Decolonization self-check (run before submitting)

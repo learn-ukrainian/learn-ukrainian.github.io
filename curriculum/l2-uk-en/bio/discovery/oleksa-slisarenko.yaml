@@ -3,14 +3,14 @@ error: null
 query_keywords:
   - 'Олекса Слісаренко: Чорний ангел і Сандармох'
   - 'Олекса Андрійович Слісаренко ЦДАМЛМ'
-  - 'Олекса Слісаренко Вибрані твори Чтиво'
+  - 'Slisarenko Oleksa Internet Encyclopedia of Ukraine'
 source_pairs:
   - title: 'Олекса Андрійович Слісаренко (1891–1937)'
     url: 'https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/'
     role: 'архівна біографічна довідка'
-  - title: 'Вибрані твори (вид. 2011)'
-    url: 'https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/'
-    role: 'каталог видання первинних текстів; без передруку'
+  - title: 'Slisarenko, Oleksa'
+    url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CL%5CSlisarenkoOleksa.htm'
+    role: 'англомовна інституційна енциклопедична довідка'
 rag_chunks: []
 rag_literary: []
 warning: 'Радянські формули обвинувачення подавати тільки як формули органів ГПУ/НКВС, а не як опис автора.'

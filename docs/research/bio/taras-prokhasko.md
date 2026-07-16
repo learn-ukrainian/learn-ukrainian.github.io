@@ -52,11 +52,11 @@
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — «Neprosti» opening essay (verify_quote matched 1.0):**
+**Quote 1 — Dovhan preface to «Neprosti» (verify_quote matched 1.0; not Prokhasko's authored voice):**
 
 > «А хто не прочитає сей есей, тому чи тій буде непросто у житті, оскільки їх Непрості оминуть своїми явними сюжетами, ба навіть вимкнуть звук і світло.»
 
-[Primary: ukrlib-prokhasko; `verify_quote(author="Прохасько", text="А хто не прочитає сей есей…")` → **matched:true, confidence 1.0**, chunk `48b3dc4e_c0000`]
+[Container: ukrlib-prokhasko; `verify_quote(author="Прохасько", text="А хто не прочитає сей есей…")` → **matched:true, confidence 1.0**, chunk `48b3dc4e_c0000`. Attribution is to the Dovhan preface, so this line must not be presented as a quotation from Prokhasko.]
 
 **Quote 2 — «Filosofiia» aphorism from *Chetver* (verify_quote matched 0.9535):**
 

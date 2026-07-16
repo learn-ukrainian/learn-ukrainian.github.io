@@ -3,14 +3,14 @@ error: null
 query_keywords:
   - 'Тодось Осьмачка: поет, прозаїк і емігрант'
   - 'Осьмачка Тодось ЕСУ'
-  - 'Тодось Осьмачка авторська тека Чтиво'
+  - 'Osmachka Teodosii Internet Encyclopedia of Ukraine'
 source_pairs:
   - title: 'Осьмачка Тодось'
     url: 'https://esu.com.ua/article-77208'
     role: 'інституційна біографічна довідка'
-  - title: 'Тодось Осьмачка — авторська тека'
-    url: 'https://chtyvo.org.ua/authors/Osmachka_Todos/'
-    role: 'каталог первинних матеріалів; без передруку'
+  - title: 'Osmachka, Teodosii'
+    url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CS%5COsmachkaTeodosii.htm'
+    role: 'англомовна інституційна енциклопедична довідка'
 rag_chunks: []
 rag_literary: []
 warning: 'Не перетворювати історичні психіатричні ярлики на діагноз; розрізняти переслідування, симуляцію, травму й еміграцію.'

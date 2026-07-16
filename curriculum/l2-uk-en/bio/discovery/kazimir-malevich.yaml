@@ -3,14 +3,14 @@ error: null
 query_keywords:
   - 'Казимир Малевич: Революція в мистецтві'
   - 'Малевич Казимир Северинович ЕСУ'
-  - 'Казимир Малевич авторська тека Чтиво'
+  - 'Malevich Kazimir Internet Encyclopedia of Ukraine'
 source_pairs:
   - title: 'Малевич Казимир Северинович'
     url: 'https://esu.com.ua/article-61120'
     role: 'інституційна біографічна довідка'
-  - title: 'Казимир Малевич — авторська тека'
-    url: 'https://chtyvo.org.ua/authors/Malevych_Kazymyr/'
-    role: 'каталог первинних матеріалів; цитати лише після точного локатора'
+  - title: 'Malevich, Kazimir'
+    url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMalevichKazimir.htm'
+    role: 'англомовна інституційна енциклопедична довідка'
 rag_chunks: []
 rag_literary: []
-warning: 'Прямі джерела перевірено; Вікіпедія та згенеровані wiki-сторінки не є доказом.'
+warning: 'Обидві енциклопедичні сторінки перевірено; національні атрибуції не спрощувати до одного імперського ярлика.'

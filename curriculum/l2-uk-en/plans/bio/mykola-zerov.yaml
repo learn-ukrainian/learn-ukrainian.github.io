@@ -143,19 +143,6 @@ readings:
     evidence_url: "https://esu.com.ua/article-16057"
     note: "ЕСУ доступна як зовнішня сторінка; текст не копіюється до навчального матеріалу."
   learner_task: "Виписати три ролі Зерова — поета, історика літератури й перекладача — та перевірити їх за статтею."
-- title: "Сонети і елегії"
-  source_name: "Чтиво"
-  source_url: "https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/"
-  language: uk
-  genre: поетична збірка
-  source_type: primary
-  role: close-reading-catalog
-  hosting: link-only
-  rights:
-    basis: external-link
-    evidence_url: "https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/"
-    note: "Посилання веде до бібліографічного запису й файлу; у курсі не відтворюється повний текст."
-  learner_task: "Обрати один сонет за точним заголовком і описати форму без цитування рядків без сторінкового локатора."
 references:
 - note: Академічна стаття про життя і творчість поета.
   path: https://esu.com.ua/article-16057
