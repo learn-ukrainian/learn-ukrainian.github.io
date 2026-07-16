@@ -1,0 +1,21 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-5995
+  type: external
+  title: Королів-Старий Василь
+  url: https://esu.com.ua/article-5995
+- id: S2
+  file: https://irbis-nbuv.gov.ua/ulib/item/ref0000012917
+  type: external
+  title: Королів Василь Костянтинович
+  url: https://irbis-nbuv.gov.ua/ulib/item/ref0000012917
+- id: S3
+  file: https://commons.wikimedia.org/wiki/File%3A%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%96%D0%B2-%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D0%B9_%D0%92._%D0%97%D0%B3%D0%B0%D0%B4%D0%BA%D0%B8_%D0%BF%D1%80%D0%BE_%D0%BC%D0%BE%D1%8E_%D1%81%D0%BC%D0%B5%D1%80%D1%82%D1%8C_%281942%29.pdf
+  type: external
+  title: Згадки про мою смерть, Прага, 1942
+  url: https://commons.wikimedia.org/wiki/File%3A%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%96%D0%B2-%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D0%B9_%D0%92._%D0%97%D0%B3%D0%B0%D0%B4%D0%BA%D0%B8_%D0%BF%D1%80%D0%BE_%D0%BC%D0%BE%D1%8E_%D1%81%D0%BC%D0%B5%D1%80%D1%82%D1%8C_%281942%29.pdf
+- id: S4
+  file: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024631
+  type: external
+  title: Збірник памяти Симона Петлюри, Прага, 1930
+  url: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024631

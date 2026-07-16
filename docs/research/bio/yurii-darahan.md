@@ -1,142 +1,86 @@
-# Юрій Дараган — Research Dossier
+# Юрій Дараган — дослідницьке досьє
 
-**Slug:** `yurii-darahan`
-**Block:** C.2 (émigré tradition — Празька школа; its founding poet)
-**Tier:** 1b
-**Issue:** #2318 (R1b — Tier 1b research, Block C émigré)
-**Researcher:** Claude (claude-opus-4-8)
-**Completed:** 2026-05-29
+**Ідентифікатор:** `yurii-darahan`
+**Стан перевірки:** завершено 16 липня 2026 року
+**Рішення щодо зображення:** текстовий виклад без портрета
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (UNR defeat → Polish internment → fatal camp-contracted TB → death in exile at 32)
-- [x] ≥2 primary-source quotes (corpus does not index him — cited verbatim to *Сагайдак*, 1925, + documented letter)
-- [x] Cross-track links VERIFIED with `test -e`
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Ім’я та основні дати
 
----
+Канонічне українське ім’я — **Юрій Юрійович Дараган**. Псевдоніма в прийнятих джерелах не встановлено. ЕСУ використовує написання прізвища «Дараґан» із літерою ґ, тоді як назви бібліотечних записів і сучасний план використовують «Дараган». У бібліографічній назві зберігається форма конкретного запису; в основному тексті — канонічна проєктна форма.
 
-## 1. Verified facts
+Народився 16 березня 1894 року в Єлисаветграді, нині Кропивницький. Помер 17 березня 1926 року від туберкульозу в Новій Весі під Плеші поблизу Праги. Похований у Празі. Попередню форму «Плешов» вилучено як неточну. У досьє немає псевдоточної історії про безпосередній причинний зв’язок таборових умов і захворювання, бо прийняті джерела такого медичного висновку не доводять.
 
-- **Full name (UA, canonical):** Юрій Юрійович Дараган — "**the first poet in whom the complex of ideas and feelings characteristic of the 'пражани' was clearly delineated.**" [T1: ЕУ Сарсель — Дараган Юрій; T3: Вікіпедія]
-- **Pseudonyms / aliases:** Дараган Юрій Юрійович. Forbidden in body text except in the naming section: "Yuri Daragan," "Юрий Дараган."
-- **Born:** **16 березня 1894** | Єлисаветград, Херсонська губернія, Russian Empire (now Кропивницький, Кіровоградська область, Україна). His mother was Georgian; his father, a Ukrainian engineer, died three months before his birth, and the orphaned family moved to Tbilisi, where the boy was baptised. [T3: Вікіпедія]
-- **Died:** **17 березня 1926** | м. Плешов (Pleš/Plešov), near Prague, Czechoslovakia | tuberculosis of the lungs and throat, at the "На Плеше" TB sanatorium. Buried at the Olšany cemetery, Prague — aged 32. [T3: Вікіпедія]
-- **Family / education key facts:** Studied at the Tiraspol real school (unfinished — taken into the First World War). In Prague (from 1923) he entered the **Ukrainian Higher Pedagogical Institute named after M. Drahomanov** but did not live to finish it. [T3: Вікіпедія]
+## 2. Військова хронологія
 
-## 2. Oppression mechanism — UNR defeat → internment → death by camp-contracted disease
+Під час Першої світової війни Дараган служив у російській армії. Від кінця 1917 року був військовиком Армії Української Народної Республіки. ЕСУ подає звання сотника, командування кулеметною сотнею в Житомирській юнацькій школі та службу в Кам’янецькій юнацькій школі. УІНП викладає подібну шкільну й кулеметну лінію.
 
-Дараган is the **founding poet of the Празька школа who paid for the lost war with his life**: a UNR officer interned in Polish camps where the cold and hunger gave him the tuberculosis that killed him at 32 — then erased inside Soviet Ukraine for sixty years.
+Інший державний ресурс про місце поховання містить кавалерійську деталізацію, яка не узгоджується з цією версією. Пакет не зшиває дві лінії в нібито повніший маршрут. Для каталогу достатньо підтверджених рамок: Перша світова війна, українська військова діяльність від 1917 року, старшинська служба та подальше інтернування. Назви конкретних частин, щодо яких джерела розходяться, вилучено.
 
-- **What happened:** UNR military service; defeat; internment in Polish camps; fatal tuberculosis contracted in the camps; early death in émigré Prague; Soviet erasure. [T3: Вікіпедія]
-- **When:** First World War service as a junior officer (поручник/підпоручник) of the Russian army, wounded; after the February 1917 revolution **joined the forces of the UNR** (machine-gun company commander at the Zhytomyr military school, then officer of the Kamianets school); **in 1920, after the defeat of the liberation struggle, interned in the Polish camps Łańcut, Wadowice, Kalisz, and Szczypiorno**; in Prague from 1923; dead in March 1926. [T3: Вікіпедія]
-- **By whom:** the Bolshevik conquest of the UNR is the proximate cause of the internment and exile; the Polish internment regime is where the "hungry and cold camp life caused his grave illness." [T3: Вікіпедія]
-- **Mechanism specifics:** in the Kalisz camp the creative drive seized him; with Євген Маланюк (his fellow Yelysavethrad native) he produced the hectographed journal *Веселка* (1922–23), the seedbed of the Prague School. The same camps that incubated the new poetry incubated the disease that killed him. His single book, *Сагайдак* (1925), appeared a year before his death and became "the harbinger of the artistic platform of the future Prague school." [T3: Вікіпедія]
+## 3. Інтернування і таборова преса
 
-**What survived / what was destroyed:** *Сагайдак* survived and was reissued in 1965 and (as *Срібні сурми*) in 2003; the founding role it played was carried forward by Маланюк, Лятуринська, and the others. Inside the USSR Дараган was unprintable until the late-Soviet recovery of the diaspora.
+Після поразки Армії УНР Дараган перебував у таборах інтернованих у Ланцуті, Вадовицях і Каліші. Щипйорно не входить до прямо підтвердженого предметного набору для Дарагана, хоча пов’язане з ширшою історією інтернованих і біографіями інших військових. Тому його не додаємо за аналогією.
 
-## 3. Major works
+У Каліші Дараган разом із Євгеном Маланюком працював над журналом і літературним товариством «Веселка». Інституційне дослідження таборової преси з архівними посиланнями допомагає відокремити редакційну роботу від пізнішої легенди про однорідну «Празьку школу». «Веселка» виникла в конкретних умовах інтернування й була формою української культурної самоорганізації.
 
-- **1908** — first (Russian-language) poem, in the journal *Закавказье*, at 14 — before he turned decisively to Ukrainian. [T3: Вікіпедія]
-- **1922–1923** — poems in *Веселка* (Kalisz), co-edited with Маланюк: "Похід," "Київ," "Свати," and others, opening the old-Kyivan-Rus theme for the Prague School. [T3: Вікіпедія]
-- **1924** — *Мазепа*, поема — on the era of the 1709 battle of Poltava. [T3: Вікіпедія]
-- **1925** — *Сагайдак*, поезії (Прага: Український громадський видавничий фонд) — his **only lifetime book** and the founding book of the Prague School. [T1: ЕУ Сарсель; T3: Вікіпедія]
-- **1926** — "Прозорість," a deathbed poem. [T3: Вікіпедія]
-- **2003 (posthumous)** — *Срібні сурми*, поезії (Кіровоград: Спадщина). [T3: Вікіпедія]
+## 4. Чехословаччина та освіта
 
-## 4. Primary-source quotes (≥2 required)
+ЕСУ датує еміграцію до Чехословаччини 1922 роком, тоді як календарна стаття УІНП розповідає про переїзд до Праги 1923 року. Ці дати можуть стосуватися різних етапів переміщення, але без додаткового документа пакет не будує між ними власної схеми. Формула «на початку 1920-х переїхав до Чехословаччини; ЕСУ називає 1922 рік, УІНП описує празький етап від 1923-го» є точнішою за мовчазний вибір.
 
-> **Honesty note (#M-4):** `verify_quote` returns no corpus entry for Дараган. The verse quotes are cited verbatim to *Сагайдак* (1925) as reproduced on Ukrainian literary archives (virchi.narod.ru / ukrlib); the prose quote is the documented letter to Микита Шаповал.
+Дараган навчався в Українському вищому педагогічному інституті в Празі, але не завершив навчання через хворобу. Належав до товариства українських письменників «Культ», друкувався в українській періодиці. Літературне середовище Чехословаччини стало продовженням, але не копією каліської редакційної роботи.
 
-### Quote 1 — the quiver in the wild field (the title image)
+## 5. «Сагайдак» як точний документ
 
-> **«То я та вітер в дикім полі, / Отруйні стріли, сагайдак,— / Таким міцним солодким болем / Наповнить їх смертельний знак!..»**
+«Сагайдак: вірші. Книга 1: 1922–1924» вийшов у Празі 1925 року коштом Українського громадського видавничого фонду. Це єдина прижиттєва збірка Дарагана. Національна бібліотека України надає точний запис і цифровий перегляд. Тому один документ є достатнім первинним читанням: каталог не наповнюється повторними сканами того самого твору або пізнішими перевиданнями, замаскованими під різні читання.
 
-*Source:* *Сагайдак* (1925).
-*Pedagogical note:* the *сагайдак* (Cossack quiver) and the "wild field" set the warrior-pagan key of the whole Prague School — the lyric "I" fused with wind, arrows, and the steppe. C1; pairs with Маланюк's «стилет чи стилос».
+Збірка поєднує історичні, фольклорні, пейзажні й особисті мотиви; ЕСУ описує її як міст між українським символізмом і празьким поетичним середовищем. Цю оцінку слід подавати як рецепцію, а не як формальне проголошення Дарагана «засновником» усіх подальших течій. Для аналізу потрібно назвати конкретний вірш і сторінку.
 
-### Quote 2 — Dazhboh and the pagan dawn (*Дажбог*)
+Два поетичні уривки зі старого досьє були звірені зі сканом, але новий пакет не відтворює їх, бо каталог не потребує цитат для готовності. Лист до Микити Шаповала вилучено: публічного точного скану, сторінки або архівного локатора не встановлено. Посилання на переказ листа не відповідає вимозі первинного локатора.
 
-> **«Дажбог лякає білі коні, / Бучний табун зими, / З його рожевої долоні / Вогонь проміння барвно гонить / На вогке тло землі…»**
+## 6. Розмежування з Маланюком
 
-*Source:* поезія «Дажбог», *Сагайдак* (1925).
-*Pedagogical note:* the pre-Christian sun-god Дажбог driving out winter is the mythic-historiosophical turn the "пражани" made toward princely-Rus identity; teachable at C1 alongside the cultural-memory theme.
+Маланюк і Дараган справді співпрацювали в Каліші, але їхні військові служби, таборові маршрути, освіта, еміграція та видання не тотожні. Маланюк продовжив довге життя у Польщі, повоєнній Німеччині та США; Дараган помер 1926 року. Поняття «празьке середовище» не дає права переносити на Дарагана членство Маланюка у варшавському «Танку» або його пізні діаспорні ролі.
 
-*(Cf. his letter to Микита Шаповал, c. 1925: he explains why "the son of a Georgian woman" chose Ukrainian — "**Я завжди зостанусь… українцем**." [T4: «Жива вода», 1996])*
+Так само «Сагайдак» не слід тлумачити через готові формули Маланюка про державність. Військова поезія, історична образність і пам’ять про УНР мають аналізуватися в тексті самого Дарагана. Біографічний зв’язок створює тему порівняння, а не дозвіл замінити одного автора іншим.
 
-## 5. Language register
+## 7. Деколонізаційна перспектива
 
-- **Register:** neoromantic-symbolist with strong folk-дума and pagan-mythic colouring; influenced by Олесь and Чупринка.
-- **CEFR readiness for full reading:** **B2–C1** — the verse is musical and relatively concrete; the mythic-historical vocabulary (Дажбог, сагайдак, дружина) needs glossing.
-- **Lexicon notes:** princely-Rus and pagan lexicon; Caucasus imagery; folk-дума cadence.
-- **Stylistic features:** martial-pagan imagery, the "thin whistle of the flying arrow," historical reverie, the steppe.
+Дараган народився в імперському прикордонному просторі, жив у різних мовних і культурних середовищах, служив у війську УНР і творив українською. Не можна примусово звести цю траєкторію до одного походження або національного ярлика. Українська агентність виявляється в службі, таборовій самоорганізації, виборі мови та книжці.
 
-## 6. Contested points
+Водночас грузинський родинний і кавказький контекст, який описує УІНП, не треба використовувати для екзотизації. Він пояснює багатошаровість життєпису, але не стирає української самоідентифікації. Деколонізація тут протистоїть і російсько-імперському привласненню, і спрощеній одновимірній героїзації.
 
-- **Debated in modern UA scholarship:** whether *Сагайдак* should be read as the true *founding* of the Prague School or as its precursor; the role of his Georgian-Ukrainian dual heritage.
-- **Simplified in popular memory:** he is barely remembered at all — a one-book poet dead at 32 — which understates his foundational influence on Маланюк, Лятуринська, and the school.
-- **Russian/Soviet framing:** sixty years of erasure of an entire émigré school; restoring Дараган means restoring the *origin* of that school, not just one poet.
-- **Other-perspective considerations:** the son of a Georgian mother who consciously chose Ukrainian — a Caucasus-Ukraine cultural bridge and a refutation of blood-based definitions of nationality. He also translated the Czech romantic Karel Hynek Mácha (a fellow poet of exile).
+## 8. Мовний і педагогічний профіль
 
-## 7. Cross-track links
+Ключові поняття: сотник, інтернування, таборова преса, прижиттєве видання, збірка, празьке середовище, рецепція. Для рівня C1 корисні формули розбіжності: «ЕСУ подає», «УІНП описує», «джерела не дають підстав об’єднати». Сумнівні наголоси й форми в майбутньому модулі перевірятимуться за ВЕСУМ або атрибутованими джерелами проєкту.
 
-> Paths under "Existing" were each confirmed with `test -e` on 2026-05-29.
+## 9. Права на зображення
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - *(none yet specific to Дараган — a `darahan-poetry` module is a strong B2–C1 candidate; see below)*
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/symon-petliura-revolution.yaml` — the UNR struggle he fought in
-  - `curriculum/l2-uk-en/plans/hist/syntez-revoliutsiia.yaml`
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR context
-- **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yurii-darahan` ↔ `yevhen-malaniuk` (co-founded *Веселка*; Yelysavethrad townsmen); ↔ `oksana-liaturynska` (her *Княжа емаль* (1941) is **dedicated to Дараган's memory**); ↔ `natalia-livytska-kholodna`, `leonid-mosendz` (the Prague circle).
-  - Potential LIT addition: a `plans/lit/darahan-poetry.yaml` (file as `bio-expansion-followup`).
-  - A `plans/bio/yurii-darahan.yaml` does **not** yet exist — to be created in Phase 2.
+Файл «Daragan.jpg» зі сховища Вікімедіа має невідомого автора, дату «до 1926 року» й зовнішнє джерело без доведеної первісної публікації. Сторінка прямо застерігає про відсутність потрібного підтвердження статусу у США. Тому використовується текстовий `portrait_fallback`.
 
-## 8. Naming-canonical
+## 10. Прийняті джерела
 
-- **Slug:** `yurii-darahan`
-- **EN canonical (BGN/PCGN 2010):** Yurii Darahan
-- **UA canonical (with patronymic):** Юрій Юрійович Дараган
-- **Aliases (for `aliases:` field):** Дараган Юрій Юрійович; Yurii Darahan (IEU)
-- **Forbidden forms (flag in body text):** "Yuri Daragan"; "Юрий Дараган" (Russified)
+1. ЕСУ, «Дараґан Юрій»: https://esu.com.ua/article-23637
+2. УІНП, календарна біографія: https://uinp.gov.ua/istorychnyy-kalendar/berezen/16/1894-narodyvsya-yuriy-daragan-poet-predstavnyk-prazkoyi-shkoly
+3. КУБГ, дослідження таборового журналу «Веселка»: https://elibrary.kubg.edu.ua/id/eprint/52676/1/Yu_Holubnycha-Shlenchak_N_Sydorenko_I_Sribnyak_UIP_1%2815%29_2025_FSHN.pdf
+4. НЛУ, «Сагайдак»: https://elib.nlu.org.ua/object.html?id=13531
 
-## 9. Image candidates
+Усі адреси синхронізовано в пакеті. «Сагайдак» лишається зовнішнім читанням. Утримання немає: одна відмінна прижиттєва збірка є достатнім точним первинним документом. Дослідницького покажчика від диспетчера не надходило.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **Yurii Darahan** — a 1920s photograph (he died in 1926, so portraits are PD-old); verify the tag on the individual file page.
-- **Backup candidates:** cover of *Сагайдак* (1925); a Kalisz internment-camp / *Веселка* journal image.
-- **Era-appropriate context image:** the Olšany cemetery (Prague) Ukrainian section, where he and Олександр Олесь are buried.
+## 11. Матриця доказів
 
-## 10. Sources used
+ЕСУ є головною опорою для дат, звання, шкільної військової служби, таборів, еміграції, освіти, періодики, товариства «Культ», хвороби й основної оцінки «Сагайдака». Календарна стаття УІНП незалежно підтверджує предмет, розширює життєву розповідь і називає точне місце смерті, але її докладні родинні епізоди не автоматично стають рівноцінними архівному запису. Університетське дослідження потрібне для історії «Веселки» як інституції, а НЛУ — для точної ідентичності збірки.
 
-**Tier 1 (authoritative):**
-- "Дараган Юрій." *Енциклопедія українознавства: Словникова частина* (гол. ред. В. Кубійович), т. 2, с. 489 (репринт, Львів, 1993).
+Такий розподіл не дозволяє одним джерелом доводити все. Енциклопедія може підтвердити, що книжка існує, але бібліотечний запис точніше встановлює видання. Календарний нарис може переказати лист, але без публічного локатора цей переказ не відповідає вимозі до цитати. Наукова стаття про таборову пресу пояснює редакційний контекст, але не розв’язує суперечку про військові частини.
 
-**Tier 4 (modern scholarly post-1991):**
-- Клочек Г. "Тонкий свист летючої стріли (Юрій Дараган і його поетична збірка 'Сагайдак')." *Вежа*, 1996, № 3, с. 43–58.
-- Слабошпицький М. "'…Дай мені стати великим поетом'. Юрій Дараган," in *25 поетів української діаспори* (Київ: Ярославів Вал, 2006), с. 49–71.
-- *Празька літературна школа: Ліричні та епічні твори* / упоряд. В. А. Просалова (Донецьк, 2008).
+## 12. Дослідницькі межі й майбутня робота
 
-**Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Дараган Юрій Юрійович." https://uk.wikipedia.org/wiki/Дараган_Юрій_Юрійович. Accessed 2026-05-29.
+Найважливіша невирішена тема — точна військова хронологія. Дві державні сторінки дають різні схеми: шкільно-кулеметну та кавалерійську. Майбутня перевірка повинна звернутися до згаданих друкованих праць або архівних послужних документів. До цього часу безпечно говорити про старшинську службу в Армії УНР, не називаючи несумісних номерів частин.
 
-**Primary-source documents accessed (printed/online text):**
-- *Сагайдак* (Прага, 1925) — Quotes 1 and 2, sourced from virchi.narod.ru / ukrlib full-text.
-- Лист до Микити Шаповала (c. 1925), publ. «Жива вода», 1996, № 4 — the "я завжди зостанусь українцем" statement.
+Друга тема — переміщення 1922–1923 років. Можливо, одна дата стосується виїзду до Чехословаччини, а інша — фактичного оселення в Празі, але це пояснення поки є лише гіпотезою. Лист, студентська справа або реєстраційний документ могли б розділити етапи. У навчальному тексті гіпотеза не маскується як місток між двома джерелами.
 
----
+Третя тема — хвороба. Поширена причинна формула про туберкульоз, нібито набутий саме в таборах, вимагає медичного свідчення або авторського листа. Відомі умови інтернування самі по собі не доводять індивідуальної етіології. Достатньо підтвердженого факту смерті від туберкульозу в санаторії.
 
-## Decolonization self-check (run before submitting)
+Для майбутньої вправи «Сагайдак» можна дослідити через карту мотивів: історичний час, фольклорне джерело, пейзаж, лірична особа, воєнна лексика. Кожний висновок має отримати сторінку. Окрема вправа може зіставити бібліографічну назву «Книга 1» з відсутністю наступної прижиттєвої книги: назва відбиває авторський або видавничий задум, але не доводить готового другого тому.
 
-- [x] No Russocentric framing (UNR service named; emigration forced by Bolshevik conquest)
-- [x] No Russian-imperial transliterations in body text (only in §8 alias warnings)
-- [x] No Russocentric periodization (визвольні змагання; Українська революція)
-- [x] No uncritical Soviet propaganda terms
-- [x] No "lost his life" euphemism (death by camp-contracted TB named precisely)
-- [x] All place names modern UA canonical (Київ, Кропивницький; Kalisz/Prague/Tbilisi kept in their languages)
-- [x] Georgian-Ukrainian heritage handled as a bridge, not as a doubt about his Ukrainian identity
-- [x] Modern UA framing applied throughout
+Використання одного первинного читання не є утриманням. Воно відображає реальну структуру доробку: одна відмінна прижиттєва збірка. Дублювати її пізнім перевиданням означало б створити кількість без нової документної цінності.
+
+Готовність пакета тримається не на кількості книжок, а на цілісності доказу. Біографічні джерела встановлюють особу й хронологію, дослідження пояснює таборову інституцію, а бібліотека надає точний первинний текст. Разом вони дозволяють будувати семінар без Вікіпедії, без повторного скану й без неперевіреної цитати. Поглиблення військової суперечки може відбутися пізніше, не блокуючи обережний виклад уже доведеного.

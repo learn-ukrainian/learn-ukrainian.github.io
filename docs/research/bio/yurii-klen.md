@@ -1,141 +1,85 @@
-# Юрій Клен (Освальд Бургардт) — Research Dossier
+# Юрій Клен — дослідницьке досьє
 
-**Slug:** `yurii-klen`
-**Block:** C.2 (émigré tradition — Празька школа; the neoclassicist who escaped the Terror)
-**Tier:** 1b
-**Issue:** #2318 (R1b — Tier 1b research, Block C émigré)
-**Researcher:** Claude (claude-opus-4-8)
-**Completed:** 2026-05-29
+**Ідентифікатор:** `yurii-klen`
+**Стан перевірки:** завершено 16 липня 2026 року
+**Рішення щодо зображення:** текстовий виклад без портрета
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (escape-emigration 1931; annihilation of his neoclassicist cohort; named victims)
-- [x] ≥2 primary-source quotes (corpus does not index him — both cited verbatim to *Прокляті роки*, 1937)
-- [x] Cross-track links VERIFIED with `test -e`
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Літературне та юридичне ім’я
 
----
+**Юрій Клен** — літературний псевдонім. ЕСУ подає юридичне ім’я як **Освальд Федорович Бурґгардт** і називає також інші авторські підписи. Архівно підкріплене дослідження Київського столичного університету імені Бориса Грінченка відтворює запис про народження з формою **Освальд Екгард Бурґгардт**. Тому пакет не оголошує псевдонім справжнім цивільним ім’ям і не стирає документовану форму імені по батькові або другого імені.
 
-## 1. Verified facts
+Написання «Екгард» прийнято за відтвореним документом; варіанти в довідковій літературі позначаються як варіанти, а не виправляються без пояснення. Український правопис прізвища в ЕСУ має літеру ґ. У бібліографічних назвах зберігаємо написання конкретного видання, зокрема «неоклясиків» у назві мемуарної книжки.
 
-- **Full name (UA, canonical):** Освальд-Еккард Бургардт (Oswald-Eckard Burghardt), who wrote in Ukrainian as **Юрій Клен**. The ЕІУ headword uses the Russified-patronymic form "Бургардт Освальд Федорович." [T1: ЕІУ — Клен Юрій; T3: Вікіпедія]
-- **Pseudonyms / aliases:** Юрій Клен; Освальд Бургардт; with Леонід Мосендз he co-wrote as **Порфирій Горотак**. Forbidden in body text except in the naming section: "Осва́льд Фёдорович Бургардт" (Russified), "Yuri Klen" (Russian-via-English).
-- **Born:** **4 жовтня 1891** | село Сербинівці, Подільська губернія, Russian Empire (now Хмельницька область, Україна). The exact birthplace is debated in modern scholarship (Руснак, 2016). [T3: Вікіпедія; T1: ЕІУ]
-- **Died:** **30 жовтня 1947** | Авґсбург (Augsburg), Germany | illness in the DP-era. [T3: Вікіпедія]
-- **Family / education key facts:** Born to a German colonist merchant family (father Фрідріх Бургардт; mother Сідонія Тіль). Graduated from the First Kyiv Gymnasium with a gold medal; from 1911 studied Romance-Germanic philology at Kyiv University. **A member of the "грона п'ятірне" of neoclassicists** — with Микола Зеров, Михайло Драй-Хмара, Павло Филипович, and Максим Рильський — and a co-teacher with Зеров at the Baryshivka technical school. Son: Вольфрам Бургардт, who (with Євген Маланюк) later edited Klen's collected works. [T3: Вікіпедія; T1: ЕІУ]
+## 2. Дата народження й архівний пріоритет
 
-## 2. Oppression mechanism — escape-emigration from a generation marked for death
+Дослідження, що наводить архівний локатор, відтворює дату 22 вересня 1891 року за старим стилем, тобто 4 жовтня за новим. ЕСУ також подає 4 жовтня. Енциклопедія історії України натомість називає 6 жовтня. У пакеті основною вважається дата 4 жовтня, бо її підтримують архівно підкріплена публікація та ЕСУ, але розбіжність з ЕІУ залишається видимою. Це не голосування між сайтами, а оцінка близькості до первинного запису.
 
-Клен is the **neoclassicist who got out**: as an ethnic German he was able to emigrate from the USSR in 1931, just as the Stalinist terror prepared to annihilate the rest of his "грона п'ятірне." His major poems are the witness-testimony of a survivor against the destruction of his entire literary cohort — and his own erasure inside Ukraine.
+Місце народження — Сербинівка на Вінниччині. Смерть 30 жовтня 1947 року в Авґсбурзі підтверджують ЕСУ та ЕІУ. У майбутньому навчальному тексті не потрібно додавати точні обставини смерті, якщо вони не входять до прийнятого прямого доказу.
 
-- **First Soviet repression (WWI legacy):** during the First World War the imperial authorities **deported Бургардт as a German to Arkhangelsk gubernia** (с. Мар'їна гора); he returned to Kyiv only in 1918. [T3: Вікіпедія]
-- **What happened:** in **1931** he left Soviet Ukraine for Germany, using his German origin — a route closed to his Ukrainian-born friends. There he became a university lecturer (Münster, 1934), defended a German doctorate on Leonid Andreyev (1936), and rebuilt a literary life in the diaspora. [T3: Вікіпедія; T1: ЕІУ]
-- **The annihilation he escaped — and indicted:** the cohort he left behind was destroyed by the NKVD: **Микола Зеров** shot at Sandarmokh on 3 November 1937; **Павло Филипович** shot in 1937; **Михайло Драй-Хмара** dead in the Kolyma camps in 1939. Клен's poem *Прокляті роки* (1937) and the epic *Попіл імперій* (1943–47) are his explicit witness to "the tragic destruction of Ukrainian culture in the Stalinist era." [T1: ЕІУ; T3: Вікіпедія; cf. `mykola-zerov`, `mykhailo-drai-khmara`]
-- **By whom:** the imperial authorities (WWI deportation) and then the Soviet party-state, whose terror killed his peers and whose censorship erased him — his translation of *Hamlet* was published in 1930s Soviet Ukraine "**без імені перекладача**" (without the translator's name). [T3: Вікіпедія]
+## 3. Київський етап
 
-**What survived / what was destroyed:** his archive was saved by his wife Зінаїда, carried to Canada, and published there; the collected *Твори* (NTSh, New York; Toronto Foundation) appeared in the diaspora. Inside the USSR he was unprintable until 1990 (*Прокляті роки* appeared in *Вітчизна*, 1990). [T3: Вікіпедія]
+Бурґгардт здобував філологічну освіту в Києві, вивчав романську, германську й слов’янську філології, викладав і займався перекладом. Він увійшов до кола українських неокласиків поряд з Миколою Зеровим, Максимом Рильським, Павлом Филиповичем і Михайлом Драй-Хмарою. Назва «неокласики» описує літературні контакти та естетичні спорідненості; її не слід подавати як формальну партію з одним статутом.
 
-## 3. Major works
+1921 року Бурґгардта ув’язнила радянська надзвичайна комісія; його звільнили після клопотання Володимира Короленка. У цьому пакеті факт арешту не розгортається в драматичну сцену без документа. Далі він працював у навчальних закладах Києва, редагував і перекладав. Перекладацька праця є самостійним напрямом, а не другорядним додатком до поезії.
 
-- **1937** — *Прокляті роки*, поема (Львів; repr. Краків 1943) — the indictment of the Stalinist destruction of Ukrainian culture. [T3: Вікіпедія]
-- **1943** — *Каравели*, збірка (Прага) — synthesis of Kyivan neoclassicism with the Prague School's "поезія чину." [T3: Вікіпедія]
-- **1943–1947** — *Попіл імперій*, епопея — his unfinished magnum opus on the Stalinist terror and the inhumanity of the Second World War. [T3: Вікіпедія]
-- **1946** — *Спогади про неоклясиків*, мемуари (publ. Мюнхен 1947) — a primary source on Зеров's circle. [T3: Вікіпедія]
-- **1947** — *Дияволічні параболи* (with Мосендз, as Порфирій Горотак), Зальцбург — parodic verse. [T3: Вікіпедія]
-- **Translations:** Shakespeare (*Hamlet*, *The Tempest*), Rilke, George, Byron, Shelley, Rimbaud/Verlaine (in the censored 1930 neoclassicists' anthology of French poetry), plus editorial supervision of 26-volume Jack London and 8-volume Shaw editions; translated Зеров's sonnets into German. [T3: Вікіпедія]
+## 4. Еміграція та праця за межами України
 
-## 4. Primary-source quotes (≥2 required)
+1931 року Бурґгардт виїхав до Німеччини й залишився там. ЕСУ пов’язує рішення з арештами неокласиків, але пакет не додає невідомих внутрішніх мотивів. У Німеччині він викладав; працював також у Празі та Українському вільному університеті. Під псевдонімом Юрій Клен активно друкував українські поетичні й мемуарні тексти.
 
-> **Honesty note (#M-4):** `verify_quote` returns no corpus entry for Юрій Клен. Both quotes are cited verbatim to the text of *Прокляті роки* as reproduced on Ukrainian literary archives (osvita.ua / ukrlib / myslenedrevo).
+Попередня редакція містила точну військову посаду перекладача й подробиці маршрутів, які не були однаково підтверджені прийнятим набором. Їх вилучено. Наявність життя в Німеччині під час нацистського режиму потребує серйозного історичного контексту, але не дозволяє автоматично приписувати службу, посаду чи політичну позицію.
 
-### Quote 1 — naming the murdered (the load-bearing quote)
+## 5. Твори й читання
 
-> **«Вогнем я в серці випік люті вчинки: / з убивців водою цілого ставка / не змити кров невинного Косинки, / не воскресити мертвого Влизька.»**
+ЕСУ називає поему «Прокляті роки», збірку «Каравели», епопею «Попіл імперій», прозу, переклади й «Спогади про неокласиків». До строгого читання прийнято точні бібліотечні записи Національної бібліотеки України: львівське видання «Проклятих років» 1937 року й мюнхенське видання «Спогадів про неоклясиків» 1947 року. Перший документ є поетичним осмисленням голоду та репресій, другий — мемуарним поглядом учасника на літературне коло.
 
-*Source:* *Прокляті роки* (1937).
-*Pedagogical note:* Клен names the executed writers **Григорій Косинка** (shot 1934) and **Олекса Влизько** (shot 1934) — turning the poem into documentary witness. The most teachable single passage for connecting the émigré tradition (Block C) to the executed Розстріляне Відродження (Block A). C1.
+Обидва тексти українськомовні й мають точні публічні сторінки. Вони залишаються зовнішніми посиланнями, бо бібліотечна доступність не є дозволом курсові копіювати повний текст. Поетичні цитати з попередньої версії вилучено: без сторінки в прийнятому скані навіть упізнаваний рядок не відповідає вимозі точного локатора.
 
-### Quote 2 — autumn over a doomed Kyiv
+## 6. Багатомовність і українська агентність
 
-> **«Якась смутна і невесела осінь / зійшла, мов помаранча золота, / над Києвом, і олив'яні оси / дзижчали і співали з-за моста… / (О спогади терпкі і непотрібні / про ті роки жорстокі і безхлібні!)»**
+Освальд Бурґгардт зростав у багатомовному середовищі й працював із кількома літературами. ЕІУ прямо говорить про писання російською, українською та німецькою. Така біографія не вкладається в одну примусову національну етикетку. Водночас псевдонім, участь у неокласичному колі, українські книжки й переклади показують його власну тривалу працю в українській культурі.
 
-*Source:* *Прокляті роки* (1937).
-*Pedagogical note:* the "leaden wasps" over Kyiv and the "hungry, bread-less years" fuse the terror and the Holodomor into one autumnal image — high neoclassical craft put to the service of memory (C1).
+Деколонізаційна рамка не має ні германізувати, ні русифікувати постать через походження або ранню мову. Вона описує зміну практик і авторський вибір. Українська агентність не потребує вигадки про «чисте» походження; навпаки, вона стає видимою саме тоді, коли документовану складність не приховують.
 
-## 5. Language register
+## 7. Мемуари та межі свідчення
 
-- **Register:** neoclassical — formal mastery, classical and medieval allusion, "панестетизм," fused in emigration with the Prague School's civic-heroic mode.
-- **CEFR readiness for full reading:** **C1–C2** (allusive density; *Попіл імперій* is long and learned). Selected *Прокляті роки* passages teachable at C1 with framing.
-- **Lexicon notes:** classical/historical lexicon, European-literary allusion (Antony and Cleopatra, Jeanne d'Arc, the Vikings, Volodymyr); precise, "cool" diction.
-- **Stylistic features:** sonnet and epic forms, ottava rima, historiosophical sweep, the bridge between Київські неокласики and «пражани».
+«Спогади про неоклясиків» є джерелом учасника. Автор пам’ятає людей, зустрічі та атмосферу, але пише після руйнування київського кола й за межами України. Час написання формує відбір подій та інтонацію. Мемуари слід зіставляти з біографіями інших неокласиків, документами репресивних установ і бібліографією, а не використовувати як остаточний суд.
 
-## 6. Contested points
+«Прокляті роки» належать до поезії, тому їхня історична важливість не перетворює образ на статистичний документ. Навчальне завдання має аналізувати композицію, голос, метафору й часову організацію. Біографічна довідка пояснює контекст, але не замінює текстового доказу.
 
-- **Debated in modern UA scholarship:** how to classify a bilingual German-Ukrainian who chose Ukrainian; the relation of *Попіл імперій* to his WWII service as a Wehrmacht-army translator (1941–43) — a biographical complication that must be presented honestly, not hidden, and not used to impugn his anti-Stalinist witness.
-- **Simplified in popular memory:** he is reduced to "the fifth neoclassicist" or "the translator," dropping the survivor-witness who wrote the terror's elegy.
-- **Russian/Soviet framing:** his erasure (the nameless *Hamlet*) and the silence around the murdered Зеров/Филипович/Драй-Хмара are the Soviet method itself; the decolonized frame restores both the translator's name and the victims' names.
-- **Other-perspective considerations:** as an ethnic German who became a Ukrainian poet and a European-scale translator, Клен is a model of voluntary national belonging — useful against essentialist definitions of nationality.
+## 8. Мовний профіль
 
-## 7. Cross-track links
+Ключові поняття: псевдонім, юридичне ім’я, неокласики, багатомовність, переклад, архівний локатор, мемуари. Для C1 важливо практикувати формули атрибуції: «ЕСУ подає», «архівно підкріплене дослідження відтворює», «ЕІУ називає іншу дату». Такі дієслова відокремлюють знання редактора від твердження джерела.
 
-> Paths under "Existing" were each confirmed with `test -e` on 2026-05-29.
+Сумнівні українські форми, наголоси й відмінювання під час майбутньої розробки перевірятимуться за ВЕСУМ або атрибутованими джерелами проєкту. У корпус не вводяться неперевірені цитати. Історичні правописні форми з назв видань не оголошуються сучасною нормою.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/klen-poetry.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/rozstriliane-vidrodzennia.yaml` — the cohort his poems mourn
-  - `curriculum/l2-uk-en/plans/hist/mekhanizm-teroru.yaml`
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/mykola-zerov.yaml` — fellow neoclassicist, executed 1937
-  - `curriculum/l2-uk-en/plans/bio/pavlo-fylypovych.yaml` — fellow neoclassicist, executed 1937
-- **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yurii-klen` ↔ `mykhailo-drai-khmara` (research dossier exists at `docs/research/bio/mykhailo-drai-khmara.md`; neoclassicist "грона п'ятірне"); ↔ Максим Рильський (the fifth survivor-by-capitulation); ↔ `leonid-mosendz` (the Горотак collaboration); ↔ `yevhen-malaniuk` (Каравели = neoclassicism + Prague School).
-  - A `plans/bio/yurii-klen.yaml` does **not** yet exist — to be created in Phase 2.
+## 9. Права на зображення
 
-## 8. Naming-canonical
+Файл «Yuriy Klen.jpg» зі сховища Вікімедіа має невідомого автора й дату лише «до 1947 року». Сторінка пояснює український статус, але залишає умовним статус у США залежно від дати публікації та реєстрації. Ці умови не доведено. Тому пакет використовує `portrait_fallback` і не заявляє індивідуальної ліцензії.
 
-- **Slug:** `yurii-klen`
-- **EN canonical (BGN/PCGN 2010):** Yurii Klen (Oswald Burghardt)
-- **UA canonical:** Юрій Клен (Освальд Бургардт)
-- **Aliases (for `aliases:` field):** Юрій Клен; Освальд Бургардт; Бургардт Освальд Федорович (ЕІУ); Порфирій Горотак (joint pseud. with Мосендз); Oswald Burghardt
-- **Forbidden forms (flag in body text):** "Осва́льд Фёдорович Бургардт" (Russified); "Yuri Klen" (Russian-via-English)
+## 10. Прийняті джерела
 
-## 9. Image candidates
+1. ЕСУ, «Бурґгардт Освальд Федорович»: https://esu.com.ua/article-38025
+2. ЕІУ, «Клен Юрій»: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Klen_Yu&Z21ID=
+3. КУБГ, архівно підкріплене дослідження: https://elibrary.kubg.edu.ua/id/eprint/16798/
+4. НЛУ, «Прокляті роки»: https://elib.nlu.org.ua/object.html?id=12214
+5. НЛУ, «Спогади про неоклясиків»: https://elib.nlu.org.ua/object.html?id=7595
 
-- **Best PD/CC portrait:** Wikimedia Commons category **Yurii Klen / Oswald Burghardt** — inter-war photograph; verify license on the individual file page.
-- **Backup candidates:** cover of *Каравели* (1943) or *Прокляті роки*; a Kyiv-neoclassicists group photo (with Зеров).
-- **Era-appropriate context image:** a Sandarmokh memorial image (his cohort's killing ground) as a HIST cross-tie — license accordingly.
+Усі адреси синхронізовано в пакеті. Читання — лише зовнішні посилання. Утримання немає. Дослідницького покажчика від диспетчера не надходило.
 
-## 10. Sources used
+## 11. Матриця доказів
 
-**Tier 1 (authoritative):**
-- Білокінь С. І. "Клен Юрій (Бургардт Освальд Федорович)." *Енциклопедія історії України*, т. 4 (Київ: Наукова думка, 2007), с. 346.
-- Internet Encyclopedia of Ukraine (CIUS). "Klen, Yurii." encyclopediaofukraine.com.
+П’ять прийнятих адрес утворюють послідовний, а не дубльований набір. ЕСУ дає повну енциклопедичну рамку та українську форму імені. ЕІУ додає окрему біографічну реконструкцію й фіксує дату, що розходиться з іншими джерелами. Університетська публікація з архівним локатором потрібна для юридичного імені та календарної дати. Два записи Національної бібліотеки України ідентифікують конкретні первинні книжки різних жанрів.
 
-**Tier 4 (modern scholarly post-1991):**
-- Качуровський І. "Життя і творчість Юрія Клена," in *Променисті сильвети* (Київ: Києво-Могилянська академія, 2008), с. 249–284.
-- Руснак І. "До питання про місце народження Юрія Клена (Освальда Бурґгардта)." *Філологічний дискурс*, вип. 3 (Хмельницький, 2016), с. 138–146.
-- *Празька літературна школа: Ліричні та епічні твори* / упоряд. В. А. Просалова (Донецьк, 2008).
+Пріоритет архівного доказу не означає, що енциклопедію оголошено ненадійною загалом. Розбіжність оцінюється на рівні окремого поля. ЕІУ може бути сильним джерелом для освітньої та літературної хронології й водночас мати іншу дату народження. Такий польовий підхід кращий за ярлик «добре» або «погане» джерело: кожне твердження має власний ланцюг походження.
 
-**Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Юрій Клен." https://uk.wikipedia.org/wiki/Юрій_Клен. Accessed 2026-05-29. Cross-checked against ЕІУ.
+Правова матриця також розділена. Авторсько-правова стаття ЕСУ читається зовні. Університетський запис підтверджує дослідження, але не дає права переносити весь текст. Бібліотечні переглядачі забезпечують публічний доступ до книжки, однак курс не хостить скани. Для портрета бракує встановленого автора й безумовного статусу у США; український статус сам собою не покриває всі юрисдикції використання.
 
-**Primary-source documents accessed (printed/online text):**
-- *Прокляті роки* (1937) — Quotes 1 and 2, sourced from osvita.ua / ukrlib / myslenedrevo full-text archives.
-- *Спогади про неоклясиків* (1947) — memoir source on the cohort.
+## 12. Питання для подальшого дослідження
 
----
+Окремого прямого дослідження потребує воєнна праця Клена. Популярні біографії часто подають точну роль при німецькому війську, проте пакет не має узгодженого предметного доказу, достатнього для навчального твердження. Майбутній дослідник має шукати службовий документ, листування або академічну публікацію з архівним посиланням, а не повторювати один і той самий переказ.
 
-## Decolonization self-check (run before submitting)
+Так само перспективним є точне зіставлення перекладів. ЕСУ підтверджує широкий перекладацький корпус, але аналіз конкретного «Гамлета», Рільке чи французької поезії потребує сторінки видання та оригіналу. Без цієї пари перелік авторів залишається біографічним фактом, а не готовою вправою з перекладознавства.
 
-- [x] No Russocentric framing (NKVD murders of the cohort named with dates)
-- [x] No Russian-imperial transliterations in body text (only in §8 alias warnings)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms
-- [x] No "lost his life" euphemism (Зеров/Филипович/Влизько/Косинка executions named)
-- [x] All place names modern UA canonical (Київ; Augsburg/Münster kept as German)
-- [x] Holodomor referenced (the "hungry, bread-less years" of the quote)
-- [x] WWII-translator complication presented honestly, not hidden
+Для «Спогадів про неоклясиків» майбутній модуль може створити карту пам’яті: особа, згадана подія, дата написання спогаду, незалежне підтвердження. Така карта покаже, як післявоєнна перспектива структурує київське минуле. Для «Проклятих років» доречна інша схема: поетична сцена, історичний контекст, текстовий доказ, межа висновку. Обидва завдання зберігають різницю між мемуарами, поезією та архівом.
+
+Пакет не має утримання: документна ідентичність, українська мова й зовнішній правовий режим читань установлені. Потрібні подальші дослідження стосуються поглиблення окремих тем, а не базової придатності джерел. Саме тому вони зафіксовані як майбутні питання, а не як причина блокувати всю постать.

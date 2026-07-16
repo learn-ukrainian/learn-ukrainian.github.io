@@ -1,145 +1,68 @@
-# Василь Королів-Старий — Research Dossier
+# Василь Королів-Старий — дослідницьке досьє
 
-**Slug:** `vasyl-koroliv-staryi`
-**Block:** C.1 (émigré tradition — first wave; Central Rada founder, UNR émigré)
-**Tier:** 1b
-**Issue:** #2318 (R1b — Tier 1b research, Block C émigré)
-**Researcher:** Claude (claude-opus-4-8)
-**Completed:** 2026-05-29
+**Ідентифікатор:** `vasyl-koroliv-staryi`
+**Стан перевірки:** завершено 16 липня 2026 року
+**Рішення щодо зображення:** текстовий виклад без портрета
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (forced emigration, 1906 imperial arrest, Soviet erasure)
-- [x] ≥2 primary-source quotes (corpus does not index him — both cited to printed/online primary texts, one verbatim-confirmed against the ukrlib full text)
-- [x] Cross-track links VERIFIED with `test -e`
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Ім’я та ідентичність
 
----
+Канонічне літературне ім’я постаті — **Василь Королів-Старий**. Юридичне ім’я — **Василь Костянтинович Королів**. Дефісована форма з компонентом «Старий» належить до літературного імені й не повинна механічно переноситися до запису цивільного імені. Енциклопедія Сучасної України окремо називає справжнє ім’я та подає низку інших псевдонімів і криптонімів. Авторитетний запис Національної бібліотеки України імені В. І. Вернадського також ідентифікує письменника за юридичним іменем та пов’язує його з літературними варіантами. Ці два рівні іменування треба зберігати в усіх навчальних поверхнях.
 
-## 1. Verified facts
+Дата народження в ЕСУ подана як 4 лютого за старим стилем і 16 лютого 1879 року за новим. Місце народження не вважаємо остаточно встановленим: ЕСУ називає Диканьку, але в тому самому записі фіксує іншу версію — Ладан. Тому досьє не обирає одну місцевість на підставі кількості повторень у популярних матеріалах. Смерть 11 грудня 1941 року в Мельнику підтверджуємо за ЕСУ; пізнішу помилкову дату з окремого оглядового матеріалу не переносимо.
 
-- **Full name (UA, canonical):** Василь Костьович Королів, who wrote as **Василь Королів-Старий** ("Старий" being his standing pen-name). [T3: Вікіпедія; T1: IEU — Koroliv-Stary, Vasyl]
-- **Pseudonyms / aliases:** Василь Старий; В. Диканський; Старий Василь; Подорожний; П. Щур; Хуторянин Старий; В. Дикий; Amator; M. Petryshyn (IEU). Forbidden in body text except in the naming section: "Vasily Korolev," "Василий Королёв."
-- **Born:** 4 (16) **лютого 1879** | село Ладан (Ладин), Прилуцький повіт, Полтавська губернія, Russian Empire (now Чернігівська область, Україна). **Source disagreement:** IEU gives "17 February 1879 in Dykanka" — Dykanka was his father's *later* parish (1891–95, 1902–12), not the birthplace; the day (16 vs 17) also differs. Prefer the Ладан birthplace per uk.wiki/modern sources; flag, do not silently resolve. [T3: Вікіпедія; T1: IEU]
-- **Died:** **11 грудня 1941** | Мельник (Mělník), near Prague, Protectorate of Bohemia and Moravia | heart attack — he returned from Prague (where he had delivered his last manuscript to the publisher), entered his house, crossed himself, and collapsed into his wife's arms. Buried with his wife at the St. Wenceslas municipal cemetery, Mělník. [T3: Вікіпедія]
-- **Family / education key facts:** Son of a priest. Finished the **Полтавська духовна семінарія**, then obtained an imperial permit to study at a secular institution and graduated from the **Харківський ветеринарний інститут** (1902); worked as a veterinarian and in 1911 opened Ukraine's first goat farm («Зааненталь») in Kyiv. Married the Ukrainian writer **Наталена Королева** in Prague; settled in Mělník in 1927. [T3: Вікіпедія; T1: IEU]
+## 2. Перевірена біографічна основа
 
-## 2. Oppression mechanism — imperial arrest, then forced emigration + Soviet erasure of a Central Rada founder
+Королів навчався в Полтавській духовній семінарії, а згодом закінчив Харківський ветеринарний інститут 1904 року. Саме 1904 рік приймаємо замість ранішого числа, що траплялося у старій редакції плану. У Києві він працював у журналістиці й українському книговиданні, співпрацював із газетами, був співзасновником і директором видавництва «Час». У 1917–1919 роках редагував «Книгарь». Таке поєднання фахової освіти, публіцистики й видавничої організації показує його не лише як автора окремих казок, а як учасника розбудови української інфраструктури друку.
 
-Королів-Старий suffered **both** Russian imperial repression and, decisively, the Soviet erasure that followed the destruction of the UNR: as **a founder of the Українська Центральна Рада and Symon Petliura's lifelong friend and first biographer**, he was among the figures Soviet Ukraine could never name.
+1917 року Короліва обрали членом Української Центральної Ради. 1919 року він виїхав до Праги у складі дипломатичної місії Української Народної Республіки й залишився за межами України. В еміграції викладав в Українській господарській академії в Подєбрадах, продовжував письменницьку, перекладацьку й мистецьку працю. Біографічний виклад не називає його еміграцію добровільною побутовою мандрівкою: виїзд відбувався в державній місії на тлі поразки української республіки, а подальша праця була пов’язана з українськими еміграційними інституціями.
 
-- **Imperial repression (1906):** arrested and imprisoned for organising a peasants' union; after release he remained **under police surveillance**. [T3: Вікіпедія]
-- **Statehood and forced emigration:** member of the **Товариство українських поступовців (ТУП)**; on **7 March 1917** elected to the Українська Центральна Рада from ТУП — i.e. one of the founders of the revolutionary Ukrainian parliament. In **1919** he was sent on a **diplomatic mission of the UNR to Prague and remained there as an émigré** when the republic fell. [T3: Вікіпедія; T1: IEU]
-- **By whom:** the Russian imperial police (1906) and then the Soviet party-state, whose erasure machine made a Central Rada founder and Petliura biographer unmentionable inside Soviet Ukraine.
-- **Mechanism specifics:** in emigration he lectured at the **Українська господарська академія в Подєбрадах**, ran what remained of his Kyiv publishing enterprise, and lived in real poverty — painting icons and church murals in Transcarpathia (the Basilian monastery church at Імстичево) to repay the Prague printing debts of the «Час» society "so as not to shame the Ukrainian name before the Czechs" (see Quote 1). His 1930 memoir of Petliura and his 1919 brochure *Український народний герой Симон Петлюра* guaranteed his name's deletion from Soviet literary history. [T3: Вікіпедія]
+## 3. Твори та точні документи читання
 
-**What survived / what was destroyed:** his children's books (*Чмелик*, *Нечиста сила*) survived through diaspora and post-1991 Ukrainian reprints; his memoir *Згадки про мою смерть* was published in Prague in 1942, months after his death. Inside the USSR his entire œuvre and his political biography were suppressed; a three-volume *Твори* appeared in Kyiv only in 2012.
+ЕСУ фіксує широкий доробок Короліва-Старого: дитячу прозу, оповідання, казки, переклади, матеріали про Симона Петлюру й мемуари. Для каталогу прийнято не будь-який переказ творів, а два документи з точною ідентичністю. Перший — празьке видання «Згадки про мою смерть» 1942 року зі вступним словом Степана Росохи, видане «Пробоєм». Сторінка файла містить скан конкретної книжки, тож дозволяє встановити автора, назву, місце, рік і обсяг. Другий — текст «З моїх споминів про С. Петлюру» у празькому «Збірнику памяти Симона Петлюри» 1930 року, що зберігається в цифровій колекції НБУВ.
 
-## 3. Major works
+Обидва документи мають статус зовнішнього читання. Курс не копіює скани й не проголошує бібліотечний доступ дозволом на нове відтворення. Для мемуарів про власне життя завдання полягає в розрізненні опису події та пізнішої авторської оцінки. Для спогадів про Петлюру — у порівнянні особистого свідчення з енциклопедичною хронологією. Жодної цитати до пакета не внесено: попередні цитати не мали достатнього точного локатора у прийнятому виданні.
 
-- **1919** — *Український народний герой Симон Петлюра: спроба характеристики*, брошура (Київ; Прага: «Час»). [T3: Вікіпедія]
-- **1920** — *Чмелик*, роман для юнацтва (Прага) — subtitled *Навколо світу*; a Poltava youth forced to wander the world, homesick, who finally returns to Ukraine — a transparent émigré allegory. [T3: Вікіпедія]
-- **1923** — *Нечиста сила*, збірка казок (Київ — Каліш) — folk demonology retold so the "unclean" creatures clear their own names; his most beloved book. [T3: Вікіпедія]
-- **1923** — *Русалка-жаба*, п'єса-казка (Львів); *Провідник для українців у Чехословаччині* (Прага) — a practical guide widely read among émigrés. [T3: Вікіпедія; T5: corroborated]
-- **1930** — «З моїх споминів про Петлюру», in *Збірник пам'яти С. Петлюри (1879–1926)* (Прага), с. 177–189. [T3: Вікіпедія]
-- **1936–1938** — children's tales and retellings (*Зух-Клаповух та Роман Лопух*; *Чарівне намисто*; *Милосердний Самарянин*), Lviv. [T3: Вікіпедія]
-- **1942 (posthumous)** — *Згадки про мою смерть*, спомини (Прага: Пробоєм) — completed 9 November 1941; near-death episodes interwoven with reflection on **why the 1917–1921 liberation struggle was lost**. [T3: Вікіпедія]
+## 4. Джерельні розбіжності й вилучені твердження
 
-## 4. Primary-source quotes (≥2 required)
+Найважливіша відкрита розбіжність стосується місця народження. Формула досьє має бути стабільною: «ЕСУ подає Диканьку й окремо зазначає версію про Ладан». Така конструкція не применшує жодну місцеву традицію пам’яті й не створює хибної певності. Якщо надалі буде знайдено актовий запис із перевіреним архівним локатором, рішення можна переглянути. До того часу обидва варіанти мають різний статус від версії, доведеної первинним документом.
 
-> **Honesty note (#M-4):** `verify_quote` returns no corpus entry for Королів-Старий (his prose is not indexed in the project's literary corpus). Quote 1 is cited to his memoir as preserved in scholarship; Quote 2 was confirmed **verbatim against the ukrlib full text** of the tale.
+Вилучено непідкріплені подробиці про арешт 1906 року, точну сцену смерті, окремі побутові епізоди, нібито першу ферму певного типу та завершення мемуарів у конкретний день. Частина таких тверджень може виявитися правдивою, однак у межах цього пакета вони не мають прямої доказової опори. Так само не відтворюємо емоційні вислови про бідність, якщо немає сторінки прийнятого первинного джерела. Вилучення не є запереченням події; це дисципліна каталогу.
 
-### Quote 1 — émigré poverty and national dignity
+## 5. Деколонізаційна перспектива
 
-> **«В тій добі все, що могли ми заробити, ми виплачували за зроблені в Чехах видання товариства „Час“ та інші, щоб не осоромити перед чехами українського імені. Злидні тисли нас так, що треба було кидатись на заробіток кожної корони.»**
+Радянська модель пам’яті могла відділяти дитячу прозу від державницької та видавничої біографії автора. Джерельно відповідальний виклад повертає зв’язок між українською книжкою, Центральною Радою, дипломатією УНР і роботою еміграційних установ. Водночас деколонізація не означає створення безпомилкового героя. Вона вимагає називати українські інституції власними іменами, показувати агентність діяча й так само чесно позначати межі знання.
 
-*Source:* Королів-Старий's reminiscences (the milieu of *Згадки про мою смерть*, 1942), as preserved in modern biographical scholarship. [T3: Вікіпедія; printed: *Згадки про мою смерть*, Прага: Пробоєм, 1942]
-*Pedagogical note:* the émigré ethic in one sentence — destitution borne to protect "the Ukrainian name." A B2-readable primary text on the dignity of the first-wave emigration.
+Королів-Старий працював у середовищах Російської імперії, революційної України та Чехословаччини. Ці політичні рамки не треба зводити до одного ярлика громадянства, бо такий ярлик може приховати зміну інституцій і власний вибір української культурної праці. Літературне ім’я також слід читати як авторську форму присутності в українській літературі, а не як привід відмовитися від юридичного імені в архівному пошуку.
 
-### Quote 2 — *Хуха-Моховинка* (зб. *Нечиста сила*, 1923)
+## 6. Мовний і педагогічний профіль
 
-> **«Була вона добра, лагідна, плоха, звичайненька, слухняна, роботяща.»**
+Мемуарний текст потребує уваги до часової перспективи, першої особи, оцінної лексики й назв історичних установ. На рівні C1 доречно зіставляти дієслова спостереження, пам’яті та оцінювання; відрізняти фактографічне речення від ретроспективного судження. Імена та назви не модернізуємо без потреби. У назві збірника зберігаємо історичний правопис «памяти» як частину бібліографічної ідентичності, але в сучасному поясненні використовуємо нормативну форму «пам’яті».
 
-*Source:* казка «Хуха-Моховинка» (збірка *Нечиста сила*, 1923); line confirmed verbatim against the ukrlib full text (ukrlib.com.ua, tid=2488). [T5: УкрЛіб — full text; printed: *Нечиста сила*, 1923]
-*Pedagogical note:* an ideal **A2–B1 reading text** — short folk-tale sentences, a string of teachable adjectives, and a gentle re-humanising of Ukrainian folk spirits. The collection is a natural early-CEFR entry point into the émigré canon.
+Основні поняття: псевдонім, юридичне ім’я, видавництво, мемуари, дипломатична місія, еміграція, джерельна розбіжність. Наголос і морфологічні форми, що викликатимуть сумнів під час майбутньої побудови модуля, мають перевірятися окремо за ВЕСУМ або атрибутованими джерелами проєкту. У цьому пакеті нових неперевірених наголосів не заявлено.
 
-## 5. Language register
+## 7. Зв’язки й межі пакета
 
-- **Register:** accessible literary Ukrainian; warm, folkloric, didactic children's prose; clear memoir style.
-- **CEFR readiness for full reading:** the fairy tales at **A2–B1** (among the most learner-friendly texts in the whole Block-C set); *Чмелик* at **B1–B2**; the memoirs and the Petliura essay at **B2**.
-- **Lexicon notes:** folk-demonology vocabulary (хуха, потерчата, мавки) is culturally rich but needs glossing; otherwise everyday diction.
-- **Stylistic features:** folk-tale framing devices, gentle humour, moral clarity, ethnographic detail; he was also a painter, and his prose is visual.
+Постаті Симона Петлюри й Володимира Винниченка є змістовими зв’язками через Центральну Раду, УНР і мемуарне письмо. Зв’язок не означає, що спогади Короліва автоматично підтверджують усі факти біографії Петлюри. Кожна постать потребує власного джерельного пакета. Цей етап не створює модуль, вправи, словник чи медіаресурс; він лише готує каталог джерел.
 
-## 6. Contested points
+## 8. Права на зображення
 
-- **Debated in modern UA scholarship:** his standing — long pigeonholed as a "children's writer," he is being re-read as a serious memoirist and a documentary witness of the emigration (the 2012 academic *Твори*).
-- **Simplified in popular memory:** remembered, if at all, only as the author of *Хуха-Моховинка*, severing the beloved tales from the Central Rada founder and Petliura biographer behind them.
-- **Russian/Soviet framing:** his total Soviet erasure is itself the datum — a founder of Ukraine's revolutionary parliament written out of his nation's memory for seven decades.
-- **Other-perspective considerations:** his Transcarpathian icon-painting and his Czech-language translations make him a Ukrainian–Czech cultural bridge of the inter-war emigration, not a closed figure.
+Єдина знайдена сторінка портрета на Wikimedia Commons називає невідомого автора, не встановлює надійної дати первісної публікації й містить недостатню для цього проєкту аргументацію щодо статусу у США. Тому прийнято `portrait_fallback`: текстовий виклад без портрета до появи точного файла з автором, стандартною ліцензією, придатною атрибуцією та доказовою сторінкою.
 
-## 7. Cross-track links
+## 9. Прийняті джерела
 
-> Paths under "Existing" were each confirmed with `test -e` on 2026-05-29.
+1. Енциклопедія Сучасної України, «Королів-Старий Василь»: https://esu.com.ua/article-5995
+2. НБУВ, авторитетний запис «Королів Василь Костянтинович»: https://irbis-nbuv.gov.ua/ulib/item/ref0000012917
+3. «Згадки про мою смерть», Прага, 1942, точна сторінка файла: https://commons.wikimedia.org/wiki/File%3A%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%96%D0%B2-%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D0%B9_%D0%92._%D0%97%D0%B3%D0%B0%D0%B4%D0%BA%D0%B8_%D0%BF%D1%80%D0%BE_%D0%BC%D0%BE%D1%8E_%D1%81%D0%BC%D0%B5%D1%80%D1%82%D1%8C_%281942%29.pdf
+4. НБУВ, «Збірник памяти Симона Петлюри», Прага, 1930: https://irbis-nbuv.gov.ua/ulib/item/ukr0000024631
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - *(none yet specific to Королів-Старий — his fairy tales are a strong A2–B1 candidate; see below)*
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/symon-petliura-revolution.yaml` — he was Petliura's friend, co-worker, and first biographer
-  - `curriculum/l2-uk-en/plans/hist/syntez-revoliutsiia.yaml` — Central Rada founding context
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — direct biographical link (Poltava bursa friendship onward)
-- **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `vasyl-koroliv-staryi` ↔ Наталена Королева (his wife, a Block-C émigré writer; dossier not yet created); ↔ `oleksandr-oles`, `volodymyr-vynnychenko` (Prague/Vienna first-wave cohort); ↔ Празька школа figures who shared the Prague émigré milieu.
-  - Potential LIT addition: a `plans/lit/koroliv-staryi-fairy-tales.yaml` at A2–B1 (file as `bio-expansion-followup`, do not add unilaterally).
-  - A `plans/bio/vasyl-koroliv-staryi.yaml` does **not** yet exist — to be created in Phase 2.
+Усі чотири адреси синхронізовано з планом, відкриттям і реєстром вікіджерел. Читання залишаються зовнішніми посиланнями. Дослідницького покажчика від диспетчера не надходило.
 
-## 8. Naming-canonical
+## 10. Матриця доказів і майбутні перевірки
 
-- **Slug:** `vasyl-koroliv-staryi`
-- **EN canonical (BGN/PCGN 2010):** Vasyl Koroliv-Staryi
-- **UA canonical (with patronymic):** Василь Костьович Королів (псевдонім Василь Королів-Старий)
-- **Aliases (for `aliases:` field):** Василь Королів-Старий; Королів Василь Костянтинович; Василь Старий; В. Диканський; M. Petryshyn (IEU)
-- **Forbidden forms (flag in body text):** "Vasily Korolev"; "Василий Королёв"; "Korolev" (Russified, collides with the rocket engineer — never use)
+ЕСУ є головним джерелом для повного імені, псевдонімів, дат, освіти, видавничих посад, членства в Центральній Раді, дипломатичного виїзду й переліку творів. Авторитетний запис НБУВ виконує іншу функцію: стабілізує предметну ідентичність і пошукові форми імені, але не підмінює розгорнуту біографію. Скан «Згадок» доводить існування точного празького видання й відкриває первинний текст, а запис збірника про Петлюру встановлює том, у якому міститься інший мемуарний твір. Різні джерела відповідають на різні запитання; їх не треба рахувати як однакові «голоси».
 
-## 9. Image candidates
+Для кожного майбутнього твердження редактор має спершу визначити його тип. Дата освіти перевіряється біографічним або архівним записом. Авторське ставлення — сторінкою мемуарів. Назва й рік книжки — бібліографічним записом конкретного видання. Право відтворення — окремою ліцензією або умовами правовласника, а не самою наявністю файла. Така матриця запобігає типовій помилці, коли один мемуарний абзац використовують одночасно як доказ дати, мотиву, оцінки й прав.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **Vasyl Koroliv-Stary** — inter-war photograph; verify license on the individual file page (Czechoslovak/Ukrainian work, likely PD-old).
-- **Backup candidates:** cover of *Нечиста сила* (1923) or *Чмелик* (1920); one of his own illustrations to the fairy tales (he drew them himself).
-- **Era-appropriate context image:** his Transcarpathian church murals (Імстичево Basilian church) — note these are artworks requiring rights review.
+Подальшої прямої перевірки потребували б актовий запис про народження, якщо він стане публічним, і документи про раннє переслідування, яке згадували популярні біографії. До їх появи місце народження лишається розбіжністю, а сюжет про арешт не входить до готового матеріалу. Окремо можна дослідити точні видавничі ролі в «Часі» та «Книгарі», але лише з архівом або бібліографією установи. Наявний пакет уже достатній для передбудівельної готовності: він має надійну особову ідентичність, кілька інституційно підтверджених біографічних вузлів і два точні українські первинні документи.
 
-## 10. Sources used
-
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine (CIUS). "Koroliv-Stary, Vasyl." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoroliv6StaryVasyl.htm. Accessed 2026-05-29. (Note the Dykanka vs. Ладан birthplace error.)
-- Погребенник Ф. П. "Королів-Старий Василь Костянтинович." *Українська літературна енциклопедія*, т. 3 (Київ, 1995), с. 5.
-
-**Tier 4 (modern scholarly post-1991):**
-- *Празька літературна школа: Ліричні та епічні твори* / упоряд. В. А. Просалова (Донецьк: Східний видавничий дім, 2008).
-- *Твори: у 3 т.* / Василь Королів-Старий (Київ: Київ. ун-т, 2012) — first scholarly collected edition.
-
-**Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Королів Василь Костянтинович." https://uk.wikipedia.org/wiki/Королів_Василь_Костянтинович. Accessed 2026-05-29. Dates/places cross-checked against IEU.
-
-**Tier 5 (general web — corroboration / primary text):**
-- УкрЛіб. "Хуха-Моховинка" (повний текст), tid=2488 — Quote 2 confirmed verbatim.
-- Український інститут національної пам'яті, profile note ("1879 — народився … член Центральної Ради Василь Королів-Старий").
-
-**Primary-source documents accessed (printed):**
-- *Згадки про мою смерть* (Прага: Пробоєм, 1942) — Quote 1.
-- *Нечиста сила* (Київ — Каліш, 1923) — Quote 2.
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing (imperial + Soviet repression both named)
-- [x] No Russian-imperial transliterations in body text (only in §8 alias warnings)
-- [x] No Russocentric periodization (Українська революція; визвольні змагання 1917–1921)
-- [x] No uncritical Soviet propaganda terms
-- [x] No "lost his life" euphemism (death described precisely)
-- [x] All place names modern UA canonical (Київ, Полтава; Mělník/Прага kept as Czech)
-- [x] Soviet erasure of a Central Rada founder named as repression
-- [x] Modern UA framing applied throughout
+Відсутність портрета не є прогалиною, яку треба заповнювати будь-якою світлиною. У текстовому режимі можна подати часову лінію, карту інституцій і обкладинки як предмети окремого майбутнього правового дослідження. Ця обережність особливо важлива для історичного фото з невідомим фотографом: вік зображеної особи або дата смерті не визначають автоматично строк охорони фотографії.

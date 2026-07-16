@@ -1,148 +1,72 @@
-# Євген Маланюк — Research Dossier
+# Євген Маланюк — дослідницьке досьє
 
-**Slug:** `yevhen-malaniuk`
-**Block:** C.2 (émigré tradition — Празька школа / Prague School; UNR Army officer)
-**Tier:** 1b
-**Issue:** #2318 (R1b — Tier 1b research, Block C émigré)
-**Researcher:** Claude (claude-opus-4-8)
-**Completed:** 2026-05-29
+**Ідентифікатор:** `yevhen-malaniuk`
+**Стан перевірки:** завершено 16 липня 2026 року
+**Рішення щодо зображення:** текстовий виклад без портрета
 
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (two forced emigrations, internment camps, the "Ukrainian fascist" smear, NKVD murder of his closest friend)
-- [x] ≥2 primary-source quotes corpus-verified (`verify_quote`, confidence 1.0 / 0.95)
-- [x] Cross-track links VERIFIED with `test -e`
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
+## 1. Ім’я та календарна розбіжність
 
----
+Канонічне українське ім’я — **Євген Филимонович Маланюк**. Літературного псевдоніма в прийнятих джерелах не встановлено. Відоме означення про «залізні строфи» є критичним епітетом, а не альтернативним ім’ям і не повинно входити до переліку псевдонімів. Варіанти латинкою в еміграційних каталогах корисні для пошуку, але в українському тексті не замінюють канонічну форму.
 
-## 1. Verified facts
+Дата народження має розбіжність у переведенні старого й нового стилів. ЕСУ подає 20 січня за старим стилем і 2 лютого 1897 року за новим. Запис Інституту історії України подає 1 лютого разом зі старостильною датою 20 січня. Досьє не вдає, ніби різниці немає: основна дата в плані не перетворюється на непомітно виправлений день. Місце народження — Архангород, нині Новоархангельськ. Смерть 16 лютого 1968 року в Нью-Йорку підтверджують обидва енциклопедичні джерела.
 
-- **Full name (UA, canonical):** Євген Филимонович Маланюк, called **«Імператор залізних строф»** ("Emperor of iron strophes"). [T1: ЕІУ — Маланюк Євген Филимонович; T3: Вікіпедія]
-- **Pseudonyms / aliases:** Маланюк Євген Филимонович; the older-spelling form "Евген Маланюк" appears in diaspora editions. Forbidden in body text except in the naming section: "Yevgeny Malanyuk," "Евгений Филимонович Маланюк."
-- **Born:** 20 січня / **1 лютого 1897** | посад Новоархангельськ (on the Синюха river), Єлисаветградський повіт, Херсонська губернія, Russian Empire (now Новоархангельськ, Кіровоградська область, Україна). [T1: ЕІУ; T3: Вікіпедія]
-- **Died:** **16 лютого 1968** | New York City, USA | natural causes. Buried at the St. Andrew Orthodox cemetery, South Bound Brook, New Jersey — his grave faces that of Oksana Лятуринська. [T3: Вікіпедія]
-- **Family / education key facts:** Father Филимон (teacher, theatre director, enlightener); mother Гликерія, of a Montenegrin military-settler family of Nova Serbia. Studied at the **Єлисаветградське земське реальне училище** (1906–1914), then the **First Kyiv Military School** (1915–16). Trained later as a **hydrotechnical engineer** at the Ukrainian Husbandry Academy, Poděbrady. [T3: Вікіпедія]
+## 2. Військова хронологія
 
-## 2. Oppression mechanism — UNR officer → internment → two forced emigrations → Soviet smear and the murder of his friends
+Маланюк навчався в Єлисаветградському земському реальному училищі, а потім у Київській військовій школі. Під час Першої світової війни служив у російській армії. У добу визвольних змагань був старшиною Армії Української Народної Республіки; ЕСУ окремо називає службу ад’ютантом Василя Тютюнника 1919 року. Військовий досвід у досьє відокремлено від наступної літературної діяльності: поетичний образ не використовується як доказ посади, а посада — як готове тлумачення кожного вірша.
 
-Маланюк is the **central poet of the Празька школа** and the conscience of the political emigration: a UNR staff officer driven abroad by the Bolshevik conquest, interned in Polish camps, branded a "Ukrainian fascist" by Soviet propaganda, forced into a *second* emigration in 1944 to escape the NKVD, and erased inside Ukraine for the rest of his life.
+Після поразки війська УНР Маланюк перебував у таборах інтернованих у Польщі. Прийняті джерела називають Стшалково, Щипйорно й Каліш. Це інтернування, а не довільно названий «полон» із вигаданою точною датою захоплення. У Каліші він разом із Юрієм Дараганом, Максимом Гривою та Миколою Чирським заснував журнал «Веселка» й однойменне товариство. Спільна таборова робота не робить військові біографії цих людей взаємозамінними.
 
-- **What happened:** combat and staff service in the Army of the UNR; defeat; Polish internment; émigré life in Czechoslovakia and Poland; a second flight (1944) to Germany ahead of the advancing NKVD; final emigration to the USA. [T3: Вікіпедія; T1: ЕІУ]
-- **When:** joined the UNR struggle in **1917**; **adjutant to General Василь Тютюнник**, commander of the Naddniprianska Army, who died of typhus in Маланюк's own arms; in **December 1919** taken into Polish captivity (Rivne, the Łańcut camp); interned 1920 at **Strzałków, Szczypiorno, and Kalisz**; emigrated to Czechoslovakia in autumn **1923**; in Poland from **1929**; second emigration to Germany from **1944**; to the USA in **June 1949**. [T3: Вікіпедія]
-- **By whom:** the Bolshevik / Soviet party-state and its security organs. After his 1926 «Посланіє» (echoing Хвильовий's "Геть від Москви!"), the USRR political apparatus erupted, accusing Маланюк of **"Ukrainian fascism"** and ordering a rebuke — Володимир Сосюра was made to write the answering verse (which he later regretted). In 1944 Маланюк fled west specifically to escape the НКВС, "which by then had already murdered his closest friend Юрій Липа." [T3: Вікіпедія]
-- **Mechanism specifics:** in the Kalisz camp Маланюк, with Юрій Дараган, Микола Чирський, and Максим Грива, produced the hectographed journal *Веселка* (1922–23) — the seedbed of the Prague School. His entire œuvre was unpublishable in Soviet Ukraine; an essay like *Малоросійство* (1959) diagnosed precisely the colonial mentality the regime cultivated. [T3: Вікіпедія]
+## 3. Чехословаччина, Польща та повоєнна еміграція
 
-**What survived / what was destroyed:** everything he wrote survived in the diaspora (Poděbrady, Hamburg, Paris, Lviv, Philadelphia, New York, Munich); the *Книга спостережень* essays and the *Нотатники* are major primary sources. What the USSR destroyed was his readership at home — restored only after 1991.
+1922 року Маланюк виїхав до Чехословаччини. В Українській господарській академії в Подєбрадах він навчався на гідротехнічному відділі. Саме в цьому середовищі вийшли ранні збірки «Стилет і стилос» 1925 року та «Гербарій» 1926 року. Подєбрадський етап поєднує професійну освіту й літературну працю, але не зводиться до абстрактної «Празької школи».
 
-## 3. Major works
+1929 року Маланюк оселився в Польщі й разом із Юрієм Липою заснував варшавську групу «Танк». Публікувався у «Вістнику» та інших часописах. Цей етап треба відрізняти від каліського журналу «Веселка»: інші міста, час, організаційні партнери й програмні обставини. Під час Другої світової війни поет знову переміщувався через Моравію, Прагу та Реґенсбурґ; у Німеччині долучився до Мистецького українського руху. До США прибув 1948 року, а не в червні 1949-го, як стверджувала попередня редакція без достатньої опори.
 
-- **1925** — *Стилет і стилос*, поезії (Подєбради) — debut; the program of the poet-nation-builder. [T1: ЕІУ; T3: Вікіпедія]
-- **1926** — *Гербарій* (Гамбург); the polemical *Посланіє*. [T3: Вікіпедія]
-- **1930** — *Земля й залізо* (Париж). [T3: Вікіпедія]
-- **1934** — *Земна мадонна* (Львів). [T3: Вікіпедія]
-- **1939** — *Перстень Полікрата* (Львів). [T3: Вікіпедія]
-- **1951** — *Влада* (Філадельфія). [T3: Вікіпедія]
-- **1953–54** — *П'ята симфонія* (поема, glorifying Тютюнник and the UNR fighters); *Поезії в одному томі* (Нью-Йорк). [T3: Вікіпедія]
-- **1954** — *Нариси з історії нашої культури*. [T3: Вікіпедія]
-- **1959** — *Малоросійство* — his landmark essay on the colonial "Little-Russian" mentality. [T3: Вікіпедія]
-- **1962, 1966** — *Книга спостережень*, 2 vols (Торонто) — collected historiosophical essays. [T3: Вікіпедія]
-- **1972 (posthumous)** — *Перстень і посох* (Мюнхен) — his "swan song," assembled by himself. [T3: Вікіпедія]
+## 4. Твори та документні читання
 
-## 4. Primary-source quotes (≥2 required)
+ЕСУ називає поетичні збірки «Стилет і стилос», «Гербарій», «Земля й залізо», «Земна мадонна», «Перстень Полікрата», «Влада», «Проща», «Остання весна», «Серпень», а також есеїстику й двотомну «Книгу спостережень». У каталог прийнято дві ранні книжки за точними записами НБУВ. «Стилет і стилос: вірші 1923–1924» видано в Подєбрадах 1925 року видавництвом «Київ». «Гербарій: книга віршів, 1920–1924» вийшов у Гамбурзі 1926 року.
 
-### Quote 1 — the poet as leader of a leaderless nation
+Обидва видання мають українську мову й публічні бібліотечні сторінки. Вони залишаються зовнішніми посиланнями. Курс не хостить повний текст, а бібліотечний перегляд не тлумачиться як необмежена ліцензія на перевидання. Завдання до першої книжки спрямоване на композицію й образну систему одного вірша; до другої — на порівняння ранніх збірок. Попередні афористичні цитати вилучено, бо пакет не мав точного локатора в прийнятому первинному виданні.
 
-> **«Як в нації вождів нема, / Тоді вожді її — поети.»**
+## 5. Жанри й політичні поняття
 
-*Source:* Маланюк's poetry. Verified with `verify_quote` against the Ukrainian literary corpus (`ukrlib-malaniuk`, confidence 1.0).
-*Pedagogical note:* the single most quoted line of the Prague School and the credo of its "поезія чину" (poetry of action); a C1 gateway to the whole émigré idea that culture substitutes for a lost state.
+Маланюк працював як поет, критик, есеїст, культуролог і літературознавець. В одному викладі легко змішати ліричного мовця з автором есею або пізню оцінку з раннім віршем. Досьє вимагає щоразу називати жанр, книжку та рік. Поняття державності, культурної відповідальності й колоніальної свідомості можна аналізувати в його творчості, проте їх не слід подавати як безчасові формули, відірвані від конкретного тексту.
 
-### Quote 2 — stylet or stylus (the program poem)
+Окремої обережності потребує варшавське інтелектуальне середовище та зв’язок із Дмитром Донцовим. Факт публікації або організаційного контакту не доводить повної тотожності поглядів. Так само назва «Празька школа» є пізнішим способом опису мережі еміграційних авторів, а не документом про єдине членство всіх поетів. У навчальному матеріалі ці назви слугують контекстом, а не скороченням замість біографії.
 
-> **«Стилет чи стилос? — не збагнув. Двояко / Вагаються трагічні терези…»**
+## 6. Деколонізаційна перспектива
 
-*Source:* *Стилет і стилос* (1925). Verified with `verify_quote` against `ukrlib-malaniuk` (confidence 0.95).
-*Pedagogical note:* the dagger (стилет) versus the pen (стилос) — art as weapon versus art as beauty — is the founding dilemma of the Prague School; teachable at C1 as a self-defining metaphor.
+Військову службу Маланюка слід називати службою в Армії УНР, а табори — місцями інтернування українських військових. Така мова повертає українські державні інституції в центр оповіді. Поет не був просто «російським офіцером, що став емігрантом»: рання служба в імперській армії змінилася участю в українських визвольних змаганнях і тривалою працею в українських еміграційних середовищах.
 
-*(Cf. his 1924 diagnosis of Павло Тичина — "від кларнета твого — пофарбована дудка зосталась" — quoted in the `pavlo-tychyna` dossier; Маланюк is the émigré conscience who named Тичина's capitulation.)*
+Деколонізація не виправдовує агіографії. Вона не перетворює автора на безпомилкового речника нації й не дозволяє повторювати гострі вислови без документа. Критичне читання має питати, хто говорить, у якому жанрі, коли написано текст і як історична поразка впливає на його риторику. Воно також визнає, що пізня американська лірика могла відрізнятися від ранньої громадянської поезії.
 
-## 5. Language register
+## 7. Мова та майбутня педагогіка
 
-- **Register:** high historiosophical and "iron" civic verse; symbolist, neo-baroque, classically allusive; lyric love poetry of great refinement underneath the martial surface.
-- **CEFR readiness for full reading:** **C1–C2** (mythic-historical density, classical allusion — Степова Еллада, варяги, Рим; the «мазепинство» concept). Selected short lyrics at B2.
-- **Lexicon notes:** classical and historical lexicon, coinages, archaisms; the dualistic Україна as «Степова Еллада» / «Чорна Еллада».
-- **Stylistic features:** lapidary symbolism, historiosophical argument, martial imagery, the address to the nation; "симфонізм" he shared with Тичина.
+Для рівня C1 корисно працювати з термінами старшина, інтернування, есеїстика, літературне угруповання, хронологія, збірка, державність. Військові назви не можна довільно осучаснювати або перекладати через російську термінологію. Сумнівні форми, наголоси й відмінювання під час майбутнього написання модуля перевірятимуться за ВЕСУМ чи атрибутованими джерелами проєкту.
 
-## 6. Contested points
+Навчальна послідовність має чотири лінії: військова служба; інтернування й таборова преса; освіта та літературні середовища; твори. Після окремого опрацювання лінії можна зіставити. Такий порядок заважає пояснювати кожний вірш військовою посадою або вважати будь-якого учасника празького середовища членом усіх тих самих організацій.
 
-- **Debated in modern UA scholarship:** his "стихійний традиціоналізм" and conservative historiosophy; the relation of his poetics to Донцов's «вісниківство»; the harshness of his self-criticism of "малороси."
-- **Simplified in popular memory:** flattened to "the poet of iron strophes," dropping the refined lyricist and the cultural historian (*Книга спостережень*, *Малоросійство*).
-- **Russian/Soviet disinformation:** the Soviet "Ukrainian fascist" smear of 1926 is still recycled by Russocentric framing; it was a propaganda label aimed at an émigré officer-poet, not a description. Cite it only as evidence of Soviet framing.
-- **Polish-Ukrainian considerations:** in Warsaw Маланюк built bridges to the Skamander poets (Tuwim, Iwaszkiewicz, Lechoń) and to Józef Łobodowski — a model of Polish-Ukrainian literary dialogue under hostile political conditions, worth teaching as such.
+## 8. Права на зображення
 
-## 7. Cross-track links
+Доступні файли зі сховища Вікімедіа мають непевне авторство та ланцюг первісної публікації; сторінки також не дають достатнього безумовного доказу статусу у США. Тому прийнято текстовий `portrait_fallback`. Зображення не буде використане, доки не з’являться точний автор, дата, стандартна ліцензія або надійний статус суспільного надбання й придатна атрибуція.
 
-> Paths under "Existing" were each confirmed with `test -e` on 2026-05-29.
+## 9. Прийняті джерела
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/malaniuk-poetry.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/symon-petliura-revolution.yaml` — the UNR struggle he served in
-  - `curriculum/l2-uk-en/plans/hist/syntez-revoliutsiia.yaml`
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml` — UNR context
-  - `curriculum/l2-uk-en/plans/bio/oleh-olzhych.yaml` — befriended in Poděbrady; Prague School / OUN milieu
-- **Candidate cross-track connections (Phase 2+ — NOT existing files):**
-  - Bio-to-bio: `yevhen-malaniuk` ↔ `yurii-darahan` (co-founded *Веселка*; Prague School origin); ↔ `oksana-liaturynska` (graves face each other; close friends); ↔ `natalia-livytska-kholodna` (his great unhappy love); ↔ `leonid-mosendz` (Poděbrady circle); ↔ `pavlo-tychyna` (the 1924 diagnosis); ↔ `yurii-klen` (whose son co-edited Klen's works with Маланюк); ↔ Олена Теліга, Юрій Липа.
-  - A `plans/bio/yevhen-malaniuk.yaml` does **not** yet exist — to be created in Phase 2.
+1. ЕСУ, «Маланюк Євген Филимонович»: https://esu.com.ua/article-61072
+2. Інститут історії України, «Маланюк Євген Филимонович»: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Malanyuk_E_F&Z21ID=
+3. НБУВ, «Стилет і стилос»: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030757
+4. НБУВ, «Гербарій»: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030725
 
-## 8. Naming-canonical
+Джерела синхронізовано в усіх п’яти поверхнях пакета. Дослідницького покажчика від диспетчера не надходило. Читання мають статус зовнішніх посилань; утримання немає.
 
-- **Slug:** `yevhen-malaniuk`
-- **EN canonical (BGN/PCGN 2010):** Yevhen Malaniuk
-- **UA canonical (with patronymic):** Євген Филимонович Маланюк
-- **Aliases (for `aliases:` field):** Маланюк Євген Филимонович; Евген Маланюк (diaspora spelling); Yevhen Malaniuk (IEU)
-- **Forbidden forms (flag in body text):** "Yevgeny Malanyuk"; "Евгений Филимонович Маланюк"; "Malanyuk" (Russian-via-English transliteration)
+## 10. Матриця доказів і застережень
 
-## 9. Image candidates
+ЕСУ забезпечує найширшу предметну основу: ідентичність, календарну форму дати, освіту, військову службу, табори, «Веселку», Подєбради, Варшаву, повоєнну Німеччину, переїзд до США й бібліографію. Стаття Інституту історії України потрібна для незалежного зіставлення військової та еміграційної хронологій. Їхня розбіжність щодо новостильної дати народження не впливає на предметну ідентичність, але показує, чому календарне перетворення слід називати явно.
 
-- **Best PD/CC portrait:** Wikimedia Commons category **Yevhen Malaniuk** — UNR-officer or émigré-period photograph; verify license on the individual file page.
-- **Backup candidates:** the bust in Новоархангельськ; cover of *Стилет і стилос* (1925) or *Книга спостережень*.
-- **Era-appropriate context image:** a photograph of the Kalisz internment camp or the *Веселка* journal masthead (Prague School origin).
+Два записи НБУВ відповідають на документні питання, яких не розв’язує загальний перелік творів. Вони встановлюють точні назви, хронологічні підзаголовки, міста, видавців, роки й обсяг ранніх збірок. Ці дані дають змогу будувати завдання про редакційну композицію та повторне включення текстів. Водночас сам запис не доводить інтерпретації образу й не дозволяє цитувати рядок без відкриття відповідної сторінки.
 
-## 10. Sources used
+Не прийнято причинні твердження про конкретну втечу від радянських органів, точну дату прибуття в Америку, обставини смерті або приватну сцену з Василем Тютюнником. Щоб повернути будь-яке з них, потрібен прямий документ, мемуар із точним локатором або предметне академічне дослідження, яке показує джерело. Подібним чином різкий політичний вислів автора має подаватися лише з назвою есею, виданням, роком і сторінкою.
 
-**Tier 1 (authoritative):**
-- Герасимова Г. П. "Маланюк Євген Филимонович." *Енциклопедія історії України*, т. 6 (Київ: Наукова думка, 2009), с. 467.
-- "Маланюк Євген." *Енциклопедія українознавства: Словникова частина* (гол. ред. В. Кубійович), т. 4, с. 1445–1446.
+Для майбутньої педагогіки корисна таблиця з чотирма колонками: подія, дата, місце, тип джерела. Учні зможуть побачити, що каліська редакторська робота не є військовою посадою, а варшавська група не є продовженням академії в Подєбрадах. Інша таблиця може зіставити бібліографічну рамку «Стилета і стилоса» та «Гербарію» без відтворення поетичних текстів. Такі завдання розвивають джерельне мислення й не залежать від непідтверджених цитат.
 
-**Tier 2 (institutional):**
-- *Маланюк Євген Филимонович.* Шевченківська енциклопедія, т. 4 (Київ: Ін-т літератури ім. Т. Г. Шевченка, 2013), с. 38–44.
-
-**Tier 4 (modern scholarly post-1991):**
-- Куценко Л. *Dominus Малаniuk: тло і постать* (and related monographs) — leading modern biographer.
-- *Празька літературна школа: Ліричні та епічні твори* / упоряд. В. А. Просалова (Донецьк, 2008).
-
-**Tier 3 (encyclopedic — starting point only):**
-- Українська Вікіпедія. "Маланюк Євген Филимонович." https://uk.wikipedia.org/wiki/Маланюк_Євген_Филимонович. Accessed 2026-05-29. Cross-checked against ЕІУ and `verify_quote`.
-
-**Primary-source documents accessed:**
-- `verify_quote` corpus matches (`ukrlib-malaniuk`) for "Як в нації вождів нема…" (1.0) and "Стилет чи стилос?…" (0.95).
-- *Книга спостережень* (2 vols, 1962/1966) and *Малоросійство* (1959) — essayistic primary sources.
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing (UNR service named; two emigrations forced by Bolshevik/NKVD pressure)
-- [x] No Russian-imperial transliterations in body text (only in §8 alias warnings)
-- [x] No Russocentric periodization (визвольні змагання; Українська революція)
-- [x] "Український фашизм" appears only as the named Soviet smear, not endorsed
-- [x] No "lost his life" euphemism (Тютюнник's death, Липа's NKVD murder named)
-- [x] All place names modern UA canonical (Київ, Новоархангельськ; Kalisz/Warsaw kept as Polish)
-- [x] NKVD murder of Юрій Липа named as the cause of his second emigration
-- [x] Modern UA framing applied throughout
+Текстовий портрет є навмисним правовим рішенням. Невідомий фотограф і неповний ланцюг публікації не дають надійної атрибуції. Якщо з’явиться архівний портрет із встановленим автором, датою, умовами використання та доказовою сторінкою, його можна оцінити окремо; загальна категорія Commons або копія у Вікіпедії не достатня.

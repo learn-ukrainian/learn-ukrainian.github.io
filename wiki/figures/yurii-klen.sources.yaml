@@ -1,0 +1,26 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-38025
+  type: external
+  title: Бурґгардт Освальд Федорович
+  url: https://esu.com.ua/article-38025
+- id: S2
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Klen_Yu&Z21ID=
+  type: external
+  title: Клен Юрій
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Klen_Yu&Z21ID=
+- id: S3
+  file: https://elibrary.kubg.edu.ua/id/eprint/16798/
+  type: external
+  title: Архівно підкріплене дослідження біографії Юрія Клена
+  url: https://elibrary.kubg.edu.ua/id/eprint/16798/
+- id: S4
+  file: https://elib.nlu.org.ua/object.html?id=12214
+  type: external
+  title: Прокляті роки
+  url: https://elib.nlu.org.ua/object.html?id=12214
+- id: S5
+  file: https://elib.nlu.org.ua/object.html?id=7595
+  type: external
+  title: Спогади про неоклясиків
+  url: https://elib.nlu.org.ua/object.html?id=7595

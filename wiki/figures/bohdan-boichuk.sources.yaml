@@ -1,0 +1,26 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-36186
+  type: external
+  title: Бойчук Богдан Миколайович
+  url: https://esu.com.ua/article-36186
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CO%5CBoychukBohdan.htm
+  type: external
+  title: Boychuk, Bohdan
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CO%5CBoychukBohdan.htm
+- id: S3
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CE%5CNewYorkGroup.htm
+  type: external
+  title: New York Group
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CE%5CNewYorkGroup.htm
+- id: S4
+  file: https://bookforum.ua/en/p/literaturni-migratsiyi-istoriya-bogdana-bojchuka
+  type: external
+  title: Літературні міграції. Історія Богдана Бойчука
+  url: https://bookforum.ua/en/p/literaturni-migratsiyi-istoriya-bogdana-bojchuka
+- id: S5
+  file: https://diasporiana.org.ua/poeziya/bojchuk-b-chas-bolyu/
+  type: external
+  title: Час болю
+  url: https://diasporiana.org.ua/poeziya/bojchuk-b-chas-bolyu/
