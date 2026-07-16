@@ -28,6 +28,7 @@ codex:
   weekly_cap_usd: 1000
 gemini:
   weekly_cap_usd: 500
+kimi:
 """.lstrip(),
         encoding="utf-8",
     )
@@ -93,6 +94,35 @@ def test_status_cool_when_burn_under_50(monkeypatch, tmp_path):
     assert data["agents"]["claude"]["burn_pct_7d"] == data["agents"]["claude"]["interactive"]["burn_pct_7d"]
     assert data["agents"]["codex"]["burn_pct_7d"] == 10.0
     assert data["agents"]["codex"]["status"] == "cool"
+
+
+def test_kimi_is_a_subscription_lane_and_accepts_codexbar_overlay(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 16, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+
+    def _kimi_codexbar(provider: str) -> dict:
+        return {
+            "lane": provider,
+            "primary_used_pct": 0.0 if provider == "kimi" else None,
+            "weekly_used_pct": 0.0 if provider == "kimi" else None,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": "2026-07-23T20:17:58Z" if provider == "kimi" else None,
+            "weekly_pace_delta_pct": None,
+            "will_last_to_reset": True if provider == "kimi" else None,
+            "pace_summary": "0% used" if provider == "kimi" else None,
+            "source": "codexbar",
+            "fetched_at": "2026-07-16T20:30:56Z",
+            "stale": False,
+            "age_s": 0.0,
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _kimi_codexbar)
+    data = state_router.compute_routing_budget(now)
+
+    assert data["agents"]["kimi"]["status"] == "cool"
+    assert data["agents"]["kimi"]["codexbar"]["weekly_used_pct"] == 0.0
+    assert any(row["lane"] == "kimi" and row["type"] == "subscription" for row in data["ranked_by_headroom"])
 
 
 def test_status_hot_when_burn_75_90(monkeypatch, tmp_path):

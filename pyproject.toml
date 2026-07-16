@@ -9,13 +9,15 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short"
+# atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
+addopts = "-v --tb=short -m 'not atlas_release'"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
 markers = [
     "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
     "slow: tests that load ML models or require long execution time",
+    "atlas_release: real-DB Atlas runtime-shard release gate (requires data/atlas.db; fails closed)",
 ]
 
 [tool.ruff]

@@ -187,22 +187,6 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "never",
     },
-    "kimi": {
-        # Managed native kimi-code CLI seat; no proxy-provider route.
-        "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
-        "default_model": "k2.7-coding",
-        "cost_tier": "medium",
-        # Content capabilities remain gated on the dedicated UA probe (#5326).
-        "capabilities": frozenset(
-            {
-                "code_writing",
-                "code_review",
-                "adversarial_review",
-            }
-        ),
-        "cli_available": True,
-        "resume_policy": "never",
-    },
     "deepseek": {
         "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
         "default_model": "deepseek-v4-pro",
@@ -242,6 +226,30 @@ AGENTS: dict[str, AgentEntry] = {
                 "content_writing",
                 "content_review",
                 "adversarial_review",
+            }
+        ),
+        "cli_available": True,
+        "resume_policy": "bridge_only",
+    },
+    "kimi": {
+        # Native Kimi Code OAuth subscription lane (no proxy-provider route).
+        # K3 exposes a 262K context window and max effort only; the managed
+        # seat's usage window depletes FAST (operator, 2026-07-16), so
+        # dispatch defaults to the window-frugal coding model and K3 stays
+        # the deep-ask model (bridge default). Content capabilities remain
+        # gated on the dedicated UA probe; keep routing narrow until the
+        # #5326 probe battery establishes quality.
+        "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
+        "default_model": "k2.7-coding",
+        "default_effort": "max",
+        "cost_tier": "medium",
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "adversarial_review",
+                "debugging",
+                "multimodal",
             }
         ),
         "cli_available": True,

@@ -106,7 +106,6 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
-from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
@@ -214,6 +213,24 @@ def test_agy_entry_is_well_formed():
     assert {"content_writing", "content_review"} <= entry["capabilities"]
 
 
+def test_kimi_entry_is_well_formed():
+    entry = get_agent_entry("kimi")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.kimi:KimiAdapter"
+    assert entry["default_model"] == "k2.7-coding"
+    assert entry["default_effort"] == "max"
+    assert entry["cli_available"] is True
+    assert entry["resume_policy"] == "bridge_only"
+    assert entry["cost_tier"] == "medium"
+    assert {
+        "code_writing",
+        "code_review",
+        "adversarial_review",
+        "debugging",
+        "multimodal",
+    } <= entry["capabilities"]
+    assert not ({"content_writing", "content_review"} & entry["capabilities"])
+
+
 def test_grok_build_entry_is_well_formed():
     entry = get_agent_entry("grok-build")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
@@ -222,20 +239,6 @@ def test_grok_build_entry_is_well_formed():
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "never"
     assert {"code_writing", "code_review", "debugging"} <= entry["capabilities"]
-
-
-def test_kimi_entry_is_well_formed():
-    entry = get_agent_entry("kimi")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.kimi:KimiAdapter"
-    assert entry["default_model"] == "k2.7-coding"
-    assert entry["cost_tier"] == "medium"
-    assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "never"
-    assert entry["capabilities"] == {"code_writing", "code_review", "adversarial_review"}
-
-
-def test_load_adapter_kimi():
-    assert _load_adapter("kimi").name == KimiAdapter.name
 
 
 def test_codex_entry_has_bridge_only_resume_policy():
@@ -274,6 +277,13 @@ def test_load_adapter_cursor():
     adapter = _load_adapter("cursor")
     assert adapter.name == "cursor"
     assert adapter.default_model == "auto"
+    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
+
+
+def test_load_adapter_kimi():
+    adapter = _load_adapter("kimi")
+    assert adapter.name == "kimi"
+    assert adapter.default_model == "k2.7-coding"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 

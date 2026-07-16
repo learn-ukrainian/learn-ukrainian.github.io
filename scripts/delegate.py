@@ -3297,8 +3297,8 @@ def build_parser() -> argparse.ArgumentParser:
         # "qwen" removed from choices (banned agent): advertising it in --help
         # while the routing guard rejects it at dispatch is a UX trap. The
         # guard still catches programmatic Namespace bypass.
-        help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
-        "grok (native CLI; grok-build=alias), grok-hermes, kimi, deepseek, agy, or cursor.",
+        help="Agent to run for the task: codex, gemini, claude, grok "
+        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi.",
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")

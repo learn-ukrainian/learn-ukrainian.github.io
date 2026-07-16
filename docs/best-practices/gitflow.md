@@ -220,6 +220,44 @@ it accordingly.
 - Worktree branches that never land on `main` get cleaned by
   `scripts/wt.sh clean {issue}`.
 
+### Merge guards (the hook layer, where GitHub can't enforce)
+
+Branch protection is a paid feature for **private** repos: on a free-plan private
+repo the protection API answers 403, so **no check is ever "required"** there.
+That gap is not theoretical — it cost us a draft PR squash-merged before review,
+plus two merges that landed with the test job red, because `--auto` only ever
+waits for *required* checks and there were none. (This public repo is the lucky
+case: `main` is protected, with `CI Gate` required. The fleet works across both,
+so the guards decide per-repo rather than assuming either.) Two PreToolUse hooks
+close the gap:
+
+| Hook | Owns | Blocks |
+| --- | --- | --- |
+| `guard-admin-merge.py` | `gh pr merge --admin` | a blocking check is red (#M-0.5) |
+| `guard-pr-merge.py` | every other `gh pr merge` | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
+
+The two never judge the same command — `guard-pr-merge.py` skips `--admin`
+segments. Both fail **closed**: if the PR, its checks, or the base branch's
+protection can't be read (gh error/timeout), the merge is refused rather than
+assumed safe.
+
+A red check blocks whether or not GitHub calls it required: "required" is a
+config accident (absent entirely on the private repo), while red is red. So every
+check counts unless its name says `advisory` — which is why the two advisory
+jobs, `pip-audit (advisory)` and `npm-audit (advisory)`, carry that word.
+
+`--auto` is the one verdict that does consult protection, because it is the one
+thing protection actually changes: auto-merge waits for *required* checks, so
+with none configured it merges the moment the PR is mergeable, red or not. The
+guard reads `repos/{owner}/{repo}/branches/{base}/protection` per merge — allowed
+against a base with required checks (this repo's `main`), refused where the API
+403s or lists none (the private repo). There, read the checks green yourself and
+merge manually. `gh pr merge --disable-auto` is never blocked; disarming
+auto-merge is the remedy, not the offence.
+
+**Escape hatch:** a human runs the merge outside the agent harness. The hooks
+gate the agent fleet, not the maintainer — but see the override log below.
+
 ### When a hook or check blocks you
 
 Fix the underlying issue — never bypass with `--no-verify`,

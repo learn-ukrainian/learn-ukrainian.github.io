@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
@@ -17,18 +17,18 @@ import {
   resetSqliteAtlasDataSourceCachesForTests,
   SqliteAtlasDataSource,
 } from "@site/src/lib/lexicon/sqlite-atlas-data-source";
-import { AtlasDataSourceError } from "@site/src/lib/lexicon/atlas-data-source";
+import {
+  AtlasDataSourceError,
+  type EntryRecord,
+} from "@site/src/lib/lexicon/atlas-data-source";
 import { rankSearchResults, type SearchRow } from "@site/src/lib/lexicon/search";
-import reactRenderer from "@astrojs/react/server.js";
-import { experimental_AstroContainer as AstroContainer } from "astro/container";
+import { PRACTICE_LEVELS, type PracticeLevel } from "@site/src/lib/lexicon/runtime-contract";
+import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
 } from "@site/src/lib/lexicon/atlasDb";
-import { gzipSync } from "node:zlib";
-import { mkdtempSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
+import { gzipSync, gunzipSync } from "node:zlib";
 
 const vectorsPath = resolve(
   process.cwd(),
@@ -40,27 +40,126 @@ const fixtureDbPath = resolve(
   process.cwd(),
   "../tests/fixtures/atlas/runtime_shards_fixture.db",
 );
+/** Committed hermetic runtime tree (Sol F006) — always present in CI. */
+const fixtureRuntimeTree = resolve(
+  process.cwd(),
+  "../tests/fixtures/atlas/runtime-tree",
+);
 const hasAtlasDb = existsSync(atlasDbPath);
 const hasExportRoot = existsSync(resolve(exportRoot, "atlas/current.json"));
 const hasFixtureDb = existsSync(fixtureDbPath);
+const hasFixtureRuntimeTree = existsSync(
+  resolve(fixtureRuntimeTree, "atlas/current.json"),
+);
+/** Publish-time full-corpus gate — never skip; fails closed if prereqs missing. */
+const isAtlasReleaseGate = process.env.ATLAS_RELEASE_GATE === "1";
 
 function nodeHttp(fetchBytes: AtlasFetch, options?: { pointerTtlMs?: number; now?: () => number }) {
   return createNodeHttpAtlasDataSource(fetchBytes, options);
 }
 
-const FIXTURE_SLUGS = [
-  "прапор", // rich lemma
-  "файний", // heritage warning
-  "будь-ласка", // multiword / component links
-  "доконаний-вид", // marked morphology / multiword
-  "ілля", // proper name / entry type
-  "іване", // form_of
-];
-
 const componentTokenVectorsPath = resolve(
   process.cwd(),
   "../scripts/atlas/component_tokenization_vectors.json",
 );
+
+// ---------------------------------------------------------------------------
+// Helpers — fixture isolation + tree enumeration
+// ---------------------------------------------------------------------------
+
+type RuntimeManifest = {
+  dataVersion: string;
+  entries: {
+    shards: Record<string, { id: string; url: string; sha256: string }>;
+  };
+  decks: {
+    levels: Record<
+      string,
+      {
+        deckVersion: string;
+        parts: Record<string, { id: string; url: string }>;
+      }
+    >;
+  };
+};
+
+function readFixtureManifest(): {
+  exportRoot: string;
+  current: { dataVersion: string; manifestUrl: string };
+  versionDir: string;
+  manifest: RuntimeManifest;
+} {
+  expect(hasFixtureRuntimeTree, "committed runtime-tree missing; run build_runtime_shards_fixture.py --emit-tree").toBe(
+    true,
+  );
+  const current = JSON.parse(
+    readFileSync(resolve(fixtureRuntimeTree, "atlas/current.json"), "utf-8"),
+  ) as { dataVersion: string; manifestUrl: string };
+  const versionDir = resolve(
+    fixtureRuntimeTree,
+    "atlas",
+    current.manifestUrl.replace(/manifest\.json$/, ""),
+  );
+  const manifest = JSON.parse(
+    readFileSync(resolve(fixtureRuntimeTree, "atlas", current.manifestUrl), "utf-8"),
+  ) as RuntimeManifest;
+  return { exportRoot: fixtureRuntimeTree, current, versionDir, manifest };
+}
+
+/** Enumerate every article / form_of (form_route) / alias-target route slug from the tree. */
+function enumerateEntryRecordsFromTree(
+  versionDir: string,
+  manifest: RuntimeManifest,
+): EntryRecord[] {
+  const records: EntryRecord[] = [];
+  for (const descriptor of Object.values(manifest.entries.shards)) {
+    const compressed = readFileSync(resolve(versionDir, descriptor.url));
+    const raw = gunzipSync(compressed);
+    const payload = JSON.parse(raw.toString("utf-8")) as { records: EntryRecord[] };
+    for (const record of payload.records) {
+      records.push(record);
+    }
+  }
+  records.sort((a, b) => a.slug.localeCompare(b.slug, "uk"));
+  return records;
+}
+
+/**
+ * Point SqliteAtlasDataSource at the fixture DB and hide dual-publication
+ * search artifacts so it projects search rows from the same DB the export used.
+ */
+function withFixtureSqlite<T>(fn: (sqlite: SqliteAtlasDataSource) => Promise<T>): Promise<T> {
+  expect(hasFixtureDb).toBe(true);
+  const searchIndex = resolve(process.cwd(), "src/data/lexicon-search-index.json");
+  const searchAliases = resolve(process.cwd(), "src/data/lexicon-search-aliases.json");
+  const bakIndex = `${searchIndex}.f006-bak`;
+  const bakAliases = `${searchAliases}.f006-bak`;
+  const prevAtlasDb = process.env.ATLAS_DB_PATH;
+  let movedIndex = false;
+  let movedAliases = false;
+  try {
+    if (existsSync(searchIndex)) {
+      renameSync(searchIndex, bakIndex);
+      movedIndex = true;
+    }
+    if (existsSync(searchAliases)) {
+      renameSync(searchAliases, bakAliases);
+      movedAliases = true;
+    }
+    process.env.ATLAS_DB_PATH = fixtureDbPath;
+    resetSqliteAtlasDataSourceCachesForTests();
+    resetAtlasPayloadCacheForTests();
+    const sqlite = new SqliteAtlasDataSource();
+    return fn(sqlite);
+  } finally {
+    if (movedIndex && existsSync(bakIndex)) renameSync(bakIndex, searchIndex);
+    if (movedAliases && existsSync(bakAliases)) renameSync(bakAliases, searchAliases);
+    if (prevAtlasDb === undefined) delete process.env.ATLAS_DB_PATH;
+    else process.env.ATLAS_DB_PATH = prevAtlasDb;
+    resetSqliteAtlasDataSourceCachesForTests();
+    resetAtlasPayloadCacheForTests();
+  }
+}
 
 describe("atlas normalization vectors", () => {
   test("TypeScript normalizeAtlasText matches shared vectors", () => {
@@ -86,44 +185,222 @@ describe("atlas component tokenization vectors", () => {
   });
 });
 
-describe("AtlasDataSource runtime shards", () => {
-  test.skipIf(!hasAtlasDb || !hasExportRoot)(
-    "Sqlite and Http entry records match for parity fixtures",
-    async () => {
-      resetAtlasPayloadCacheForTests();
-      resetSqliteAtlasDataSourceCachesForTests();
-      const sqlite = new SqliteAtlasDataSource();
-      const http = nodeHttp(createFileAtlasFetch(exportRoot));
+// ---------------------------------------------------------------------------
+// Sol F006 — unconditional fixture Sqlite↔Http parity (always on in CI)
+// ---------------------------------------------------------------------------
 
-      for (const slug of FIXTURE_SLUGS) {
+describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () => {
+  test("committed runtime-tree is present (no skipIf)", () => {
+    expect(hasFixtureRuntimeTree).toBe(true);
+    expect(hasFixtureDb).toBe(true);
+    const { current, manifest } = readFixtureManifest();
+    expect(current.dataVersion).toMatch(/^atlas-v1-/);
+    expect(Object.keys(manifest.entries.shards).length).toBeGreaterThan(0);
+  });
+
+  test("Sqlite and Http EntryRecords deep-equal for every tree route", async () => {
+    const { exportRoot: treeRoot, versionDir, manifest } = readFixtureManifest();
+    const treeRecords = enumerateEntryRecordsFromTree(versionDir, manifest);
+    expect(treeRecords.length).toBeGreaterThan(0);
+
+    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
+
+    await withFixtureSqlite(async (sqlite) => {
+      // Enumerate from the tree — do not hand-list slugs.
+      for (const expected of treeRecords) {
+        const slug = expected.slug;
         const left = await sqlite.getEntry(slug);
         const right = await http.getEntry(slug);
         expect(left.kind, slug).toBe("entry");
         expect(right.kind, slug).toBe("entry");
         if (left.kind !== "entry" || right.kind !== "entry") continue;
-        expect(right.record.entry).toEqual(left.record.entry);
-        expect(right.record.kind).toBe(left.record.kind);
-        expect(right.record.renderContext.componentLinks).toEqual(
-          left.record.renderContext.componentLinks,
+        // Full EntryRecord deep equality (kind article | form_route, entry, aliases, …).
+        expect(right.record, slug).toEqual(left.record);
+        expect(right.record, slug).toEqual(expected);
+      }
+    });
+  });
+
+  test("search parity for token-initial queries (incl. gloss-only + prefix)", async () => {
+    const { exportRoot: treeRoot } = readFixtureManifest();
+    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
+
+    // TOKEN-INITIAL queries only. Mid-word substring hits that land in shards the
+    // query prefix does not select are structurally unreachable for the HTTP
+    // source (prefix-trie selection vs Sqlite full scan) — accepted design
+    // boundary, recorded on PR #5319. Do not add mid-token substring queries here.
+    const queries = [
+      "прапор", // exact lemma
+      "фай", // prefix (файний)
+      "іван", // exact / family prefix
+      "trustworthy", // gloss-only (достовірний gloss; not lemma/roman)
+    ];
+
+    await withFixtureSqlite(async (sqlite) => {
+      for (const query of queries) {
+        const left = await sqlite.search(query, { limit: 12 });
+        const right = await http.search(query, { limit: 12 });
+        expect(right.results.map((item) => item.article.s), query).toEqual(
+          left.results.map((item) => item.article.s),
         );
+        expect(right.results.map((item) => item.article.l), query).toEqual(
+          left.results.map((item) => item.article.l),
+        );
+        expect(right.results.length, query).toBeGreaterThan(0);
+        if (query === "trustworthy") {
+          for (const item of right.results) {
+            const lemma = normalizeAtlasText(item.article.l);
+            const roman = item.article.r ? normalizeAtlasText(item.article.r) : "";
+            const nq = normalizeAtlasText(query);
+            expect(lemma === nq || lemma.startsWith(nq) || roman.startsWith(nq)).toBe(false);
+            expect(normalizeAtlasText(item.article.g ?? "").includes(nq)).toBe(true);
+          }
+        }
+      }
+    });
+  });
+
+  test("deck parity for every level+part present in the fixture tree", async () => {
+    const { exportRoot: treeRoot, manifest } = readFixtureManifest();
+    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
+    const levels = Object.keys(manifest.decks.levels) as PracticeLevel[];
+
+    // Fixture export is entry+search only (include_decks=False). When levels are
+    // empty the loop is a no-op; release gate covers real decks. When a future
+    // regen includes decks, this asserts Sqlite↔Http deckVersion + part data.
+    await withFixtureSqlite(async (sqlite) => {
+      for (const level of levels) {
+        const info = manifest.decks.levels[level]!;
+        const partNames = Object.keys(info.parts);
+        expect(partNames.length).toBeGreaterThan(0);
+
+        const left = await sqlite.getDeck(level);
+        const right = await http.getDeck(level);
+        // Without fixture practice-{part}.{level}.json next to the fixture DB,
+        // Sqlite reports missing; if decks are in the tree HTTP has them.
+        // Parity requires deckDir to match — when both present, deep-compare.
+        if (left.kind === "deck" && right.kind === "deck") {
+          expect(right.deckVersion, level).toBe(left.deckVersion);
+          expect(right.data, level).toEqual(left.data);
+          expect(right.deckVersion, level).toBe(info.deckVersion);
+        } else if (right.kind === "deck") {
+          // Tree has deck; Sqlite missing is a fixture packaging bug if we ship decks.
+          expect(left.kind, `${level}: sqlite should load deck when tree has it`).toBe("deck");
+        }
+      }
+    });
+  });
+
+  test("version mismatch never combines two manifests (fixture tree)", async () => {
+    const { exportRoot: treeRoot } = readFixtureManifest();
+    const http = nodeHttp(createFileAtlasFetch(treeRoot));
+    const probeSlug = enumerateEntryRecordsFromTree(
+      resolve(
+        treeRoot,
+        "atlas",
+        JSON.parse(readFileSync(resolve(treeRoot, "atlas/current.json"), "utf-8")).manifestUrl.replace(
+          /manifest\.json$/,
+          "",
+        ),
+      ),
+      JSON.parse(
+        readFileSync(
+          resolve(
+            treeRoot,
+            "atlas",
+            JSON.parse(readFileSync(resolve(treeRoot, "atlas/current.json"), "utf-8")).manifestUrl,
+          ),
+          "utf-8",
+        ),
+      ),
+    )[0]!.slug;
+
+    await expect(
+      http.getEntry(probeSlug, { expectedVersion: "atlas-v1-deadbeefdeadbeef" }),
+    ).rejects.toBeInstanceOf(AtlasDataSourceError);
+    try {
+      await http.getEntry(probeSlug, { expectedVersion: "atlas-v1-deadbeefdeadbeef" });
+    } catch (error) {
+      expect(error).toBeInstanceOf(AtlasDataSourceError);
+      expect((error as AtlasDataSourceError).code).toBe("version_mismatch");
+    }
+  });
+
+  test("one-byte corruption fails closed (fixture tree)", async () => {
+    const { exportRoot: treeRoot, current, versionDir, manifest } = readFixtureManifest();
+    const probeSlug = enumerateEntryRecordsFromTree(versionDir, manifest)[0]!.slug;
+
+    const httpProbe = nodeHttp(createFileAtlasFetch(treeRoot));
+    const before = await httpProbe.getEntry(probeSlug);
+    expect(before.kind).toBe("entry");
+
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(probeSlug.normalize("NFC")),
+    );
+    const bits = [...new Uint8Array(digest)].map((b) => b.toString(2).padStart(8, "0")).join("");
+    let node: {
+      shardId?: string;
+      children?: Record<string, { shardId?: string; children?: Record<string, unknown> }>;
+    } = (
+      JSON.parse(readFileSync(resolve(treeRoot, "atlas", current.manifestUrl), "utf-8")) as {
+        entries: { tree: { shardId?: string; children?: Record<string, unknown> } };
+      }
+    ).entries.tree;
+    let depth = 0;
+    while (!node.shardId) {
+      const bit = bits[depth]!;
+      node = node.children![bit]! as typeof node;
+      depth += 1;
+    }
+    const descriptor = manifest.entries.shards[node.shardId!]!;
+    const shardPath = resolve(versionDir, descriptor.url);
+    const original = readFileSync(shardPath);
+    const corrupted = Buffer.from(original);
+    corrupted[0] = (corrupted[0] + 1) % 256;
+    writeFileSync(shardPath, corrupted);
+    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
+    try {
+      await expect(http.getEntry(probeSlug)).rejects.toBeInstanceOf(AtlasDataSourceError);
+    } finally {
+      writeFileSync(shardPath, original);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Real-DB optional suite (ordinary CI may skip) + release gate (fails closed)
+// ---------------------------------------------------------------------------
+
+describe("AtlasDataSource runtime shards (real DB, optional)", () => {
+  test.skipIf(!hasAtlasDb || !hasExportRoot)(
+    "Sqlite and Http entry records match for a sample of real routes",
+    async () => {
+      resetAtlasPayloadCacheForTests();
+      resetSqliteAtlasDataSourceCachesForTests();
+      const sqlite = new SqliteAtlasDataSource();
+      const http = nodeHttp(createFileAtlasFetch(exportRoot));
+      const sample = ["прапор", "файний", "будь-ласка", "доконаний-вид", "ілля", "іване"];
+
+      for (const slug of sample) {
+        const left = await sqlite.getEntry(slug);
+        const right = await http.getEntry(slug);
+        expect(left.kind, slug).toBe("entry");
+        expect(right.kind, slug).toBe("entry");
+        if (left.kind !== "entry" || right.kind !== "entry") continue;
+        expect(right.record, slug).toEqual(left.record);
       }
     },
   );
 
   test.skipIf(!hasAtlasDb || !hasExportRoot)(
-    "WordAtlasArticle HTML is byte-identical across Sqlite vs Http entries",
+    "WordAtlasArticle HTML is byte-identical across Sqlite vs Http sample entries",
     async () => {
       resetAtlasPayloadCacheForTests();
       resetSqliteAtlasDataSourceCachesForTests();
       const cache = getAtlasPayloadCache();
       const sqlite = new SqliteAtlasDataSource();
       const http = nodeHttp(createFileAtlasFetch(exportRoot));
-      const { default: WordAtlasArticle } = await import(
-        "@site/src/lexicon/WordAtlasArticle.astro"
-      );
-      const container = await AstroContainer.create();
-      container.addServerRenderer({ renderer: reactRenderer });
-
       const entryTypes = new Set<string>();
       for (const entry of cache.entries) {
         if (entry.entry_type) entryTypes.add(entry.entry_type);
@@ -132,7 +409,7 @@ describe("AtlasDataSource runtime shards", () => {
         const hit = cache.entries.find((entry) => entry.entry_type === entryType);
         return hit!.url_slug;
       });
-      const slugs = [...new Set([...FIXTURE_SLUGS, ...byType])];
+      const slugs = [...new Set(["прапор", "файний", "будь-ласка", "доконаний-вид", "ілля", "іване", ...byType])];
 
       let differing = 0;
       for (const slug of slugs) {
@@ -142,19 +419,15 @@ describe("AtlasDataSource runtime shards", () => {
         expect(right.kind).toBe("entry");
         if (left.kind !== "entry" || right.kind !== "entry") continue;
 
-        const sqliteHtml = await container.renderToString(WordAtlasArticle, {
-          props: {
-            record: left.record,
-            generatedAt: cache.generatedAt,
-            manifestVersion: cache.manifestVersion,
-          },
+        const sqliteHtml = renderWordAtlasArticle({
+          record: left.record,
+          generatedAt: cache.generatedAt,
+          manifestVersion: cache.manifestVersion,
         });
-        const httpHtml = await container.renderToString(WordAtlasArticle, {
-          props: {
-            record: right.record,
-            generatedAt: cache.generatedAt,
-            manifestVersion: cache.manifestVersion,
-          },
+        const httpHtml = renderWordAtlasArticle({
+          record: right.record,
+          generatedAt: cache.generatedAt,
+          manifestVersion: cache.manifestVersion,
         });
         if (sqliteHtml !== httpHtml) {
           differing += 1;
@@ -203,27 +476,16 @@ describe("AtlasDataSource runtime shards", () => {
           legacy.map((item) => item.article.s),
         );
         expect(response.fetchedShardIds.some((id) => id.startsWith("articles:"))).toBe(true);
-        expect(response.fetchedShardIds.every((id) => id.startsWith("articles:") || id.startsWith("aliases:"))).toBe(
-          true,
-        );
+        expect(
+          response.fetchedShardIds.every(
+            (id) => id.startsWith("articles:") || id.startsWith("aliases:"),
+          ),
+        ).toBe(true);
       }
     },
   );
 
-  test.skipIf(!hasExportRoot)("version mismatch never combines two manifests", async () => {
-    const http = nodeHttp(createFileAtlasFetch(exportRoot));
-    await expect(http.getEntry("прапор", { expectedVersion: "atlas-v1-deadbeefdeadbeef" })).rejects.toBeInstanceOf(
-      AtlasDataSourceError,
-    );
-    try {
-      await http.getEntry("прапор", { expectedVersion: "atlas-v1-deadbeefdeadbeef" });
-    } catch (error) {
-      expect(error).toBeInstanceOf(AtlasDataSourceError);
-      expect((error as AtlasDataSourceError).code).toBe("version_mismatch");
-    }
-  });
-
-  test.skipIf(!hasExportRoot)("deck parts share one deckVersion", async () => {
+  test.skipIf(!hasExportRoot)("deck parts share one deckVersion (real export)", async () => {
     const http = nodeHttp(createFileAtlasFetch(exportRoot));
     const deck = await http.getDeck("A1");
     expect(deck.kind).toBe("deck");
@@ -231,58 +493,72 @@ describe("AtlasDataSource runtime shards", () => {
     expect(deck.deckVersion.length).toBeGreaterThan(0);
     expect(deck.data.deckVersion).toBe(deck.deckVersion);
   });
+});
 
-  test.skipIf(!hasExportRoot)("one-byte corruption fails closed", async () => {
-    const current = JSON.parse(
-      readFileSync(resolve(exportRoot, "atlas/current.json"), "utf-8"),
-    ) as { dataVersion: string; manifestUrl: string };
-    const versionDir = resolve(exportRoot, "atlas", current.manifestUrl.replace(/manifest\.json$/, ""));
-    const manifest = JSON.parse(
-      readFileSync(resolve(exportRoot, "atlas", current.manifestUrl), "utf-8"),
-    ) as {
-      entries: { shards: Record<string, { id: string; url: string; sha256: string }> };
-    };
+describe("Atlas runtime release gate (ATLAS_RELEASE_GATE=1)", () => {
+  test("full-catalog Sqlite↔Http EntryRecord parity over every public route", async () => {
+    if (!isAtlasReleaseGate) {
+      // Not a skipIf: this test documents the gate and no-ops outside it so
+      // ordinary `vitest run` stays green without hydrated atlas.db.
+      expect(isAtlasReleaseGate).toBe(false);
+      return;
+    }
 
-    // Locate the leaf that actually holds прапор, then corrupt that object.
-    const httpProbe = nodeHttp(createFileAtlasFetch(exportRoot));
-    const before = await httpProbe.getEntry("прапор");
-    expect(before.kind).toBe("entry");
+    if (!hasAtlasDb) {
+      throw new Error(
+        "atlas release gate requires data/atlas.db (hydrated). " +
+          "Symlink from primary checkout or run npm run hydrate before publish.",
+      );
+    }
+    if (!hasExportRoot) {
+      throw new Error(
+        "atlas release gate requires build/atlas-runtime (fresh export). " +
+          "Run: .venv/bin/python -m scripts.atlas.export_runtime_shards --verify",
+      );
+    }
 
-    // Hash walk to the shard id using the same algorithm as the reader.
-    const slug = "прапор";
-    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(slug.normalize("NFC")));
-    const bits = [...new Uint8Array(digest)].map((b) => b.toString(2).padStart(8, "0")).join("");
-    let node: {
-      shardId?: string;
-      children?: Record<string, { shardId?: string; children?: Record<string, unknown> }>;
-    } = (
-      JSON.parse(readFileSync(resolve(exportRoot, "atlas", current.manifestUrl), "utf-8")) as {
-        entries: { tree: { shardId?: string; children?: Record<string, unknown> } };
+    resetAtlasPayloadCacheForTests();
+    resetSqliteAtlasDataSourceCachesForTests();
+    const sqlite = new SqliteAtlasDataSource();
+    const http = nodeHttp(createFileAtlasFetch(exportRoot), { pointerTtlMs: 0 });
+    const catalog = sqlite.getStaticCatalog();
+    const slugs = [...catalog.routeSlugs].sort((a, b) => a.localeCompare(b, "uk"));
+    expect(slugs.length).toBeGreaterThan(8000);
+
+    let checked = 0;
+    for (const slug of slugs) {
+      const left = await sqlite.getEntry(slug);
+      const right = await http.getEntry(slug);
+      expect(left.kind, slug).toBe("entry");
+      expect(right.kind, slug).toBe("entry");
+      if (left.kind !== "entry" || right.kind !== "entry") {
+        throw new Error(`release gate: missing entry for ${slug}`);
       }
-    ).entries.tree;
-    let depth = 0;
-    while (!node.shardId) {
-      const bit = bits[depth]!;
-      node = node.children![bit]! as typeof node;
-      depth += 1;
+      expect(right.record, slug).toEqual(left.record);
+      checked += 1;
     }
-    const descriptor = manifest.entries.shards[node.shardId!]!;
-    const shardPath = resolve(versionDir, descriptor.url);
-    const original = readFileSync(shardPath);
-    const corrupted = Buffer.from(original);
-    corrupted[0] = (corrupted[0] + 1) % 256;
-    writeFileSync(shardPath, corrupted);
-    const http = nodeHttp(createFileAtlasFetch(exportRoot));
-    try {
-      await expect(http.getEntry("прапор")).rejects.toBeInstanceOf(AtlasDataSourceError);
-    } finally {
-      writeFileSync(shardPath, original);
+    process.stdout.write(
+      `atlas release gate: checked=${checked} publicRoutes catalog=${slugs.length}\n`,
+    );
+    expect(checked).toBe(slugs.length);
+
+    // Deck parity for every practice level present on disk / in export.
+    for (const level of PRACTICE_LEVELS) {
+      const left = await sqlite.getDeck(level);
+      const right = await http.getDeck(level);
+      if (left.kind === "missing" && right.kind === "missing") continue;
+      expect(left.kind, level).toBe("deck");
+      expect(right.kind, level).toBe("deck");
+      if (left.kind === "deck" && right.kind === "deck") {
+        expect(right.deckVersion, level).toBe(left.deckVersion);
+        expect(right.data, level).toEqual(left.data);
+      }
     }
-  });
+  }, 600_000);
 });
 
 // ---------------------------------------------------------------------------
-// Hermetic Sol F003 / F004 / F005 coverage (committed fixture export — always on)
+// Hermetic Sol F003 / F004 / F005 coverage
 // ---------------------------------------------------------------------------
 
 async function sha256HexBuf(data: Uint8Array): Promise<string> {
@@ -514,86 +790,31 @@ describe("HttpAtlasDataSource Sol F003/F004/F005 (hermetic)", () => {
     expect(fetchedDuringPin.some((u) => u.includes(v2))).toBe(true);
   });
 
-  test("gloss-only query matches SqliteAtlasDataSource over fixture export (F005)", async () => {
-    expect(hasFixtureDb).toBe(true);
+  test("gloss-only query matches Sqlite over committed fixture tree (F005+F006)", async () => {
+    // Uses committed runtime-tree — no on-the-fly Python export in the frontend CI leg.
+    const { exportRoot: treeRoot } = readFixtureManifest();
+    const glossQuery = "trustworthy";
+    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
 
-    const outDir = mkdtempSync(resolve(tmpdir(), "atlas-fixture-export-"));
-    try {
-      const pySnippet = [
-        "from pathlib import Path",
-        "from scripts.atlas.export_runtime_shards import export_runtime_shards",
-        `export_runtime_shards(db_path=Path(${JSON.stringify(fixtureDbPath)}), out_dir=Path(${JSON.stringify(outDir)}), include_decks=False, deck_dir=None, verify=True)`,
-      ].join("; ");
-      const exportResult = spawnSync(
-        resolve(process.cwd(), "../.venv/bin/python"),
-        ["-c", pySnippet],
-        {
-          cwd: resolve(process.cwd(), ".."),
-          encoding: "utf-8",
-          maxBuffer: 20 * 1024 * 1024,
-        },
+    await withFixtureSqlite(async (sqlite) => {
+      const left = await sqlite.search(glossQuery, { limit: 12 });
+      const right = await http.search(glossQuery, { limit: 12 });
+
+      expect(left.results.length).toBeGreaterThan(0);
+      expect(right.results.map((item) => item.article.s)).toEqual(
+        left.results.map((item) => item.article.s),
       );
-      if (exportResult.status !== 0) {
-        throw new Error(
-          `fixture export failed: ${exportResult.stderr || exportResult.stdout || exportResult.status}`,
-        );
+      expect(right.results.map((item) => item.article.l)).toEqual(
+        left.results.map((item) => item.article.l),
+      );
+      for (const item of right.results) {
+        const lemma = normalizeAtlasText(item.article.l);
+        const roman = item.article.r ? normalizeAtlasText(item.article.r) : "";
+        const nq = normalizeAtlasText(glossQuery);
+        expect(lemma === nq || lemma.startsWith(nq) || roman.startsWith(nq)).toBe(false);
+        expect(normalizeAtlasText(item.article.g ?? "").includes(nq)).toBe(true);
       }
-
-      const glossQuery = "trustworthy"; // distinctive: only in достовірний gloss, not lemma/roman
-      const http = nodeHttp(createFileAtlasFetch(outDir), { pointerTtlMs: 0 });
-
-      // Isolate Sqlite to fixture DB by temporarily hiding dual-publication search artifacts
-      // so it projects search rows from the same fixture DB the export used.
-      const searchIndex = resolve(process.cwd(), "src/data/lexicon-search-index.json");
-      const searchAliases = resolve(process.cwd(), "src/data/lexicon-search-aliases.json");
-      const bakIndex = `${searchIndex}.f005-bak`;
-      const bakAliases = `${searchAliases}.f005-bak`;
-      const prevAtlasDb = process.env.ATLAS_DB_PATH;
-      let movedIndex = false;
-      let movedAliases = false;
-      try {
-        if (existsSync(searchIndex)) {
-          renameSync(searchIndex, bakIndex);
-          movedIndex = true;
-        }
-        if (existsSync(searchAliases)) {
-          renameSync(searchAliases, bakAliases);
-          movedAliases = true;
-        }
-        process.env.ATLAS_DB_PATH = fixtureDbPath;
-        resetSqliteAtlasDataSourceCachesForTests();
-        resetAtlasPayloadCacheForTests();
-        const sqlite = new SqliteAtlasDataSource();
-
-        const left = await sqlite.search(glossQuery, { limit: 12 });
-        const right = await http.search(glossQuery, { limit: 12 });
-
-        expect(left.results.length).toBeGreaterThan(0);
-        expect(right.results.map((item) => item.article.s)).toEqual(
-          left.results.map((item) => item.article.s),
-        );
-        expect(right.results.map((item) => item.article.l)).toEqual(
-          left.results.map((item) => item.article.l),
-        );
-        // Gloss-only: lemma/roman must not be the admission path for the hit.
-        for (const item of right.results) {
-          const lemma = normalizeAtlasText(item.article.l);
-          const roman = item.article.r ? normalizeAtlasText(item.article.r) : "";
-          const nq = normalizeAtlasText(glossQuery);
-          expect(lemma === nq || lemma.startsWith(nq) || roman.startsWith(nq)).toBe(false);
-          expect(normalizeAtlasText(item.article.g ?? "").includes(nq)).toBe(true);
-        }
-      } finally {
-        if (movedIndex && existsSync(bakIndex)) renameSync(bakIndex, searchIndex);
-        if (movedAliases && existsSync(bakAliases)) renameSync(bakAliases, searchAliases);
-        if (prevAtlasDb === undefined) delete process.env.ATLAS_DB_PATH;
-        else process.env.ATLAS_DB_PATH = prevAtlasDb;
-        resetSqliteAtlasDataSourceCachesForTests();
-        resetAtlasPayloadCacheForTests();
-      }
-    } finally {
-      rmSync(outDir, { recursive: true, force: true });
-    }
+    });
   });
 
   test("core module has no static node: imports (F004 source guard)", () => {

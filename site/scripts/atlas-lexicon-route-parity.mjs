@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /**
- * Build-both-and-diff gate for Atlas scale-out PR #2.
+ * Build-both-and-diff gate for Atlas lexicon routes (PR2 → PR3 adapted).
  *
  * Builds merge-base/main and PR-head lexicon article routes against the SAME
- * absolute fixture DB, then byte-compares every selected dist HTML page.
+ * absolute fixture DB, then:
+ *   - NORMALIZED-DOM compares the `[data-word-atlas]` article region
+ *     (Astro→React port cannot stay byte-identical — CSS-module hashes,
+ *     attribute order, whitespace)
+ *   - BYTE-compares everything OUTSIDE the article region (scripts stripped)
  *
  * Usage (from repo root):
  *   node --experimental-strip-types site/scripts/atlas-lexicon-route-parity.mjs
@@ -23,14 +27,16 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
+import { Window } from "happy-dom";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "../..");
 const FIXTURE_DB = resolve(REPO_ROOT, "tests/fixtures/atlas/runtime_shards_fixture.db");
 const MISSING_SENTINEL = "fixture-missing-sentinel";
+const SITE = resolve(REPO_ROOT, "site");
 
 /** Named parity scenarios + every ATLAS_ENTRY_TYPES synthetic + form_route. */
 const FIXTURE_SLUGS = [
@@ -134,7 +140,6 @@ function prepareSiteCopy({ label, sourceSite, lemmaFilesFrom, outDir, nodeModule
   rmSync(siteDir, { recursive: true, force: true });
   mkdirSync(siteDir, { recursive: true });
 
-  // Copy the site tree but skip heavy/generated dirs; node_modules is symlinked.
   run("rsync", [
     "-a",
     "--delete",
@@ -156,33 +161,49 @@ function prepareSiteCopy({ label, sourceSite, lemmaFilesFrom, outDir, nodeModule
   mkdirSync(join(siteDir, "src/content/readings/empty"), { recursive: true });
   writeFileSync(join(siteDir, "src/content.config.ts"), emptyContentConfig());
 
-  // Keep only the lexicon article route.
   rmSync(join(siteDir, "src/pages"), { recursive: true, force: true });
   mkdirSync(join(siteDir, "src/pages/lexicon"), { recursive: true });
   cpSync(
     join(lemmaFilesFrom, "src/pages/lexicon/[lemma].astro"),
     join(siteDir, "src/pages/lexicon/[lemma].astro"),
   );
-  // Head/main article + shell must come from the same tree as the route.
+
+  // Article + shell + React port deps must come from the same tree as the route.
   for (const rel of [
     "src/lexicon/WordAtlasArticle.astro",
+    "src/lexicon/WordAtlasArticle.tsx",
+    "src/lexicon/WordAtlasArticle.module.css",
     "src/lexicon/WordAtlasPageShell.astro",
+    "src/lexicon/AtlasTypeahead.astro",
     "src/lib/lexicon/sqlite-atlas-data-source.ts",
     "src/lib/lexicon/atlas-data-source.ts",
     "src/lib/lexicon/word-atlas-page-state.ts",
     "src/lib/lexicon/atlasDb.ts",
+    "src/lib/lexicon/word-atlas-article-model.ts",
+    "src/lib/lexicon/safe-url.ts",
+    "src/lib/lexicon/heritage-severity.ts",
+    "src/lib/lexicon/register-markers.ts",
+    "src/lib/i18n/plural.ts",
+    "src/styles/word-atlas.css",
   ]) {
     const from = join(lemmaFilesFrom, rel);
     const to = join(siteDir, rel);
     if (existsSync(from)) {
       mkdirSync(dirname(to), { recursive: true });
       cpSync(from, to);
-    } else if (existsSync(to) && rel.includes("WordAtlasPageShell")) {
-      rmSync(to, { force: true });
+    } else if (existsSync(to) && (rel.includes("WordAtlasPageShell") || rel.endsWith(".astro"))) {
+      // Head may have deleted the Astro article; remove stale copies from rsync base.
+      if (rel.includes("WordAtlasArticle.astro")) rmSync(to, { force: true });
     }
   }
 
-  // Ensure hydrated JSON stubs exist for any leftover imports under lib.
+  // If head no longer ships the Astro article, ensure the rsynced copy is gone.
+  const headAstro = join(lemmaFilesFrom, "src/lexicon/WordAtlasArticle.astro");
+  const copyAstro = join(siteDir, "src/lexicon/WordAtlasArticle.astro");
+  if (!existsSync(headAstro) && existsSync(copyAstro) && label === "head") {
+    rmSync(copyAstro, { force: true });
+  }
+
   const dataDir = join(siteDir, "src/data");
   mkdirSync(dataDir, { recursive: true });
   for (const name of [
@@ -245,6 +266,22 @@ function collectLexiconHtml(distDir) {
   return out;
 }
 
+async function loadNormalizeHelpers() {
+  const mod = await import(
+    pathToFileURL(join(SITE, "tests/helpers/normalize-article-dom.ts")).href
+  );
+  return mod;
+}
+
+function installDomGlobals() {
+  const window = new Window({ url: "https://example.test/" });
+  globalThis.window = window;
+  globalThis.document = window.document;
+  globalThis.DOMParser = window.DOMParser;
+  globalThis.Node = window.Node;
+  return window;
+}
+
 function unifiedDiff(left, right, label) {
   const leftLines = left.split("\n");
   const rightLines = right.split("\n");
@@ -264,11 +301,14 @@ function unifiedDiff(left, right, label) {
   return lines.join("\n");
 }
 
-function main() {
+async function main() {
   if (!existsSync(FIXTURE_DB)) {
     throw new Error(`missing fixture DB: ${FIXTURE_DB}`);
   }
   assertFixtureTypeCoverage();
+  installDomGlobals();
+  const { normalizeArticleDom, extractArticleRegion, stripArticleRegion } =
+    await loadNormalizeHelpers();
 
   const headSite = resolve(REPO_ROOT, "site");
   const mainWorktree = join(tmpdir(), "atlas-pr2-parity-main");
@@ -301,7 +341,6 @@ function main() {
       nodeModulesFrom: join(headSite, "node_modules"),
     });
 
-    // Share identical practice indexes (empty) so practice visibility matches.
     for (const siteCopy of [mainSiteCopy, headSiteCopy]) {
       for (const rel of ["public/lexicon", "public/api/lexicon"]) {
         const dir = join(siteCopy, rel);
@@ -337,33 +376,52 @@ function main() {
       }
     }
 
-    let differing = 0;
+    let articleDiffering = 0;
+    let shellDiffering = 0;
     for (const slug of FIXTURE_SLUGS) {
       if (!mainPages.has(slug) || !headPages.has(slug)) {
         throw new Error(`fixture slug missing from build output: ${slug}`);
       }
-      const mainBuf = readFileSync(mainPages.get(slug));
-      const headBuf = readFileSync(headPages.get(slug));
-      const mainHash = sha256(mainBuf);
-      const headHash = sha256(headBuf);
-      if (mainHash !== headHash) {
-        differing += 1;
-        console.error(unifiedDiff(mainBuf.toString("utf-8"), headBuf.toString("utf-8"), slug));
-        console.error(`PARITY FAIL ${slug} main=${mainHash} head=${headHash}`);
+      const mainHtml = readFileSync(mainPages.get(slug), "utf8");
+      const headHtml = readFileSync(headPages.get(slug), "utf8");
+
+      const mainArticle = normalizeArticleDom(extractArticleRegion(mainHtml));
+      const headArticle = normalizeArticleDom(extractArticleRegion(headHtml));
+      if (mainArticle !== headArticle) {
+        articleDiffering += 1;
+        console.error(unifiedDiff(mainArticle, headArticle, `${slug}[article-dom]`));
+        console.error(`ARTICLE DOM PARITY FAIL ${slug}`);
       } else {
-        console.log(`PARITY OK ${slug} sha256=${mainHash}`);
+        console.log(`ARTICLE DOM PARITY OK ${slug}`);
+      }
+
+      const mainShell = stripArticleRegion(mainHtml);
+      const headShell = stripArticleRegion(headHtml);
+      const mainHash = sha256(mainShell);
+      const headHash = sha256(headShell);
+      if (mainHash !== headHash) {
+        shellDiffering += 1;
+        console.error(unifiedDiff(mainShell, headShell, `${slug}[outside-article]`));
+        console.error(`SHELL BYTE PARITY FAIL ${slug} main=${mainHash} head=${headHash}`);
+      } else {
+        console.log(`SHELL BYTE PARITY OK ${slug} sha256=${mainHash}`);
       }
     }
 
-    if (differing !== 0) {
-      throw new Error(`byte parity failed: differing=${differing}`);
+    if (articleDiffering !== 0 || shellDiffering !== 0) {
+      throw new Error(
+        `parity failed: articleDomDiffering=${articleDiffering} shellByteDiffering=${shellDiffering}`,
+      );
     }
     console.log(
-      `atlas lexicon route parity: fixtures=${FIXTURE_SLUGS.length} differing=0 (zero differing files)`,
+      `atlas lexicon route parity: fixtures=${FIXTURE_SLUGS.length} articleDomDiffering=0 shellByteDiffering=0`,
     );
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

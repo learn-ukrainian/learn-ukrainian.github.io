@@ -24,7 +24,7 @@ codex:
 gemini:
   weekly_cap_usd: 500
 
-# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok only.
+# Subscription lanes (per CodexBar design constraint): claude/codex/gemini/cursor/grok/kimi only.
 # API-billed (deepseek etc.) absent from this snapshot BY DESIGN — absence ≠ unavailable.
 # For lanes without numeric cap here, status="unknown" (data lives in user's external CodexBar snapshot).
 grok:
@@ -36,3 +36,6 @@ grok:
 cursor:
   # cursor composer subscription lane
   # cap value not duplicated here to avoid drift with user's live tracking.
+kimi:
+  # Native Kimi Code OAuth subscription lane (K3). CodexBar exposes request
+  # windows directly; do not duplicate a synthetic dollar cap here.

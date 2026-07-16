@@ -1,8 +1,6 @@
 // @vitest-environment node
 
 import Database from 'better-sqlite3';
-import reactRenderer from '@astrojs/react/server.js';
-import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
 import { resolve } from 'node:path';
 import * as fs from 'node:fs';
@@ -14,6 +12,7 @@ import {
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
 import { articleProps } from '../helpers/word-atlas-record';
+import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
 
 let mockExistsSync = (p: string): boolean => true;
 let mockReadFileSync = (p: string, encoding: any): string => '';
@@ -46,12 +45,6 @@ interface LexiconManifest {
 interface EntryTypeRow {
   entry_type: string;
   slug: string;
-}
-
-type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
-
-interface AstroComponentModule {
-  default: AstroComponent;
 }
 
 const data = manifest as LexiconManifest;
@@ -128,11 +121,6 @@ describe('Atlas DB SSG read parity', () => {
     const fixtureSlugs = Array.from(
       new Set([...requiredFixtureSlugs, ...readEntryTypeFixtures().map((row) => row.slug)]),
     );
-    const { default: WordAtlasArticle } = (await import(
-      '@site/src/lexicon/WordAtlasArticle.astro'
-    )) as AstroComponentModule;
-    const container = await AstroContainer.create();
-    container.addServerRenderer({ renderer: reactRenderer });
     let differing = 0;
 
     for (const slug of fixtureSlugs) {
@@ -147,20 +135,16 @@ describe('Atlas DB SSG read parity', () => {
       const alignedManifestEntry = { ...manifestEntry!, entry_type: dbEntry!.entry_type };
       expect(dbEntry).toEqual(alignedManifestEntry);
 
-      const manifestHtml = await container.renderToString(WordAtlasArticle, {
-        props: articleProps(alignedManifestEntry, {
-          lemmaEntries: manifestEntries,
-          generatedAt: data.generated_at,
-          manifestVersion: data.version,
-        }),
-      });
-      const dbHtml = await container.renderToString(WordAtlasArticle, {
-        props: articleProps(dbEntry!, {
-          lemmaEntries: cache.entries,
-          generatedAt: cache.generatedAt,
-          manifestVersion: cache.manifestVersion,
-        }),
-      });
+      const manifestHtml = renderWordAtlasArticle(articleProps(alignedManifestEntry, {
+        lemmaEntries: manifestEntries,
+        generatedAt: data.generated_at,
+        manifestVersion: data.version,
+      }));
+      const dbHtml = renderWordAtlasArticle(articleProps(dbEntry!, {
+        lemmaEntries: cache.entries,
+        generatedAt: cache.generatedAt,
+        manifestVersion: cache.manifestVersion,
+      }));
 
       if (manifestHtml !== dbHtml) {
         differing += 1;

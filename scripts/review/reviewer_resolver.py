@@ -57,6 +57,7 @@ _FAMILY_BY_EXACT_SEAT: dict[str, str] = {
     "glm": "zhipu",
     "qwen": "alibaba",
     "qwen-tools": "alibaba",
+    "kimi": "moonshot",
 }
 
 # Model-id prefixes, for concrete model strings not covered by the seat table
@@ -76,6 +77,8 @@ _FAMILY_BY_MODEL_PREFIX: tuple[tuple[str, str], ...] = (
     ("deepseek-", "deepseek"),
     ("qwen", "alibaba"),
     ("glm-", "zhipu"),
+    ("kimi-code/", "moonshot"),
+    ("kimi-", "moonshot"),
 )
 
 
@@ -121,7 +124,17 @@ AMBIGUOUS_HARNESS_SEATS: frozenset[str] = frozenset({"cursor", "cursor-tools"})
 # (nothing routes to "cursor" as if it were a vendor) and the fail-closed
 # sentinels below — an override must name a real family or be rejected.
 _VALID_CONCRETE_FAMILIES: frozenset[str] = frozenset(
-    {"anthropic", "openai", "google", "xai", "deepseek", "poolside", "zhipu", "alibaba"}
+    {
+        "anthropic",
+        "openai",
+        "google",
+        "xai",
+        "deepseek",
+        "poolside",
+        "zhipu",
+        "alibaba",
+        "moonshot",
+    }
 )
 
 # Fail-closed author-identity outcomes: none of these is a real model family,

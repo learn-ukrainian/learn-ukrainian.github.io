@@ -1,0 +1,14 @@
+/**
+ * CSS-modules entry for the WordAtlasArticle React port (PR3 R3).
+ *
+ * The former Astro template had no `<style>` block — visual rules live in the
+ * shared global stylesheet `src/styles/word-atlas.css` (also used by DailyWords
+ * / practice; pulled in via course.css on lexicon pages). This module provides a
+ * hashed root class so the React component participates in CSS-modules scoping;
+ * the twin global `.word-atlas` class on the same element keeps visuals equivalent.
+ */
+
+.root {
+  /* CSS-module scope marker — visuals via global .word-atlas twin class */
+  --word-atlas-react: 1;
+}

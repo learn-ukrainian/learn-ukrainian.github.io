@@ -136,8 +136,8 @@ def _in_main_worktree(project_root: Path) -> bool:
 # --- Command segmentation hardened against glued shell operators (#4876). ---
 # Pattern lifted from guard-secret-print.py (the reference parser among the
 # Bash guards). Hooks are standalone by design, so the helpers are copied,
-# not imported. Keep the three copies in guard-branch-switch-in-main.py,
-# guard-admin-merge.py, and guard-push-pytest.py in sync.
+# not imported. Keep the four copies in guard-branch-switch-in-main.py,
+# guard-admin-merge.py, guard-push-pytest.py, and guard-pr-merge.py in sync.
 
 
 def _strip_quotes(token: str) -> str:
