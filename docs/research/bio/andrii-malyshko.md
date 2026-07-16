@@ -31,10 +31,10 @@ Core identity for BIO: Ukrainian poet whose public career moved through Soviet i
 ## 3. Major works / contributions
 
 - **Early and wartime poetry:** First publications appeared in 1930. Early books include "Батьківщина" (1936), "Лірика" (1938), "З книги життя" (1938), "Народження синів" (1939), and 1940 collections. Wartime books include "Понад пожари" (1942), "Слово о полку" (1943), and "Битва" (1943); ЦДАМЛМ highlights the 1941 cycle "Україно моя!" as a major Ukrainian literary event of the war years.
-- **Song canon:** ЕСУ says roughly 100 lyric poems were set to music and emphasizes the collaboration with Platon Maiboroda: more than 30 songs, including "Київський вальс", "Пісня про рушник", "Вчителько моя", "Стежина", "Ми підем, де трави похилі", "Білі каштани", "Пролягла доріженька", and "Цвітуть осінні тихі небеса". ЦДАМЛМ records that "Пісня про рушник" first sounded widely through the film "Літа молодії" in 1959.
+- **Song canon:** ЕСУ says roughly 100 lyric poems were set to music and emphasizes the collaboration with Platon Maiboroda: more than 30 songs, including "Київський вальс", "Пісня про рушник", "Вчителько моя", "Стежина", "Ми підем, де трави похилі", "Білі каштани", "Пролягла доріженька", and "Цвітуть осінні тихі небеса". ЦДАМЛМ records that "Пісня про рушник" first sounded widely through the film "Літа молодії" in 1959; the Ukrainian State Film Agency catalog distinguishes the 1958 production year from the Ukrainian premiere on 9 March 1959.
 - **Public reception and commemoration:** National-library and state-memory sources continue to frame him through "Україно моя!", "Пісня про рушник", the Maiboroda collaboration, and Ukrainian song culture. A BIO module can use this reception evidence as modern Ukrainian memory, not as a substitute for literary judgment.
 - **Literary criticism and large forms:** He wrote literary-critical books including "Думки про поезію" (1959) and "Слово про поета. М. Т. Рильський та його творчість" (1960), wrote libretti for "Молода гвардія" and "Арсенал" (with Oleksandr Levada), and supplied poetic bases for Ukrainian musical works.
-- **Institutional/public role:** Responsible editor of "Дніпро" in 1944-1947; chairman of the Ukrainian public branch of APN from 1960; deputy of the Supreme Soviet of the Ukrainian SSR across the 1950s-1960s according to ЕІУ and recent scholarship on deputy activity.
+- **Institutional/public role:** Responsible editor of "Дніпро" in 1944-1947; ЕСУ and ЦДАМЛМ date his chairmanship of the Ukrainian public branch of APN from 1960, while APN's archival guide and 1961 charter record show that the agency itself was established in 1961; deputy of the Supreme Soviet of the Ukrainian SSR across the 1950s-1960s according to ЕІУ and recent scholarship on deputy activity. Learner-facing synthesis should preserve the attribution and name this as a source-date conflict rather than silently choosing one date.
 
 ## 4. Primary-source quotes
 
@@ -106,6 +106,10 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 
 - Центральний державний архів-музей літератури і мистецтва України. "Андрій Самійлович Малишко (1912-1970)." https://csamm.archives.gov.ua/2022/11/15/andrii-samiilovych-malyshko-1912-1970/. Accessed 2026-06-30.
 - Український інститут національної пам'яті. "1912 - народився Андрій Малишко, поет." https://uinp.gov.ua/istorychnyy-kalendar/lystopad/14/1912-narodyvsya-andriy-malyshko-poet. Accessed 2026-06-30.
+- Державне агентство України з питань кіно. "Літа молодії." https://usfa.gov.ua/movie-catalog/lita-molodii-i10747. Accessed 2026-07-16.
+- Національна бібліотека України імені В. І. Вернадського. Каталог нотних видань: "Рідна мати моя" з кінофільму "Літа молодії" (видання 1959 і 1960 років). https://irbis-nbuv.gov.ua/cgi-bin/irbis_vfmf/cgiirbis_64.exe?C21COM=S&I21DBN=VFMF&P21DBN=VFMF&S21ALL=%28%3C.%3ET%3D%D0%A0%D0%86%D0%94%D0%9D%D0%90+%D0%9C%D0%90%D0%A2%D0%98+%D0%9C%D0%9E%D0%AF%3C.%3E%29&S21CNR=20&S21FMT=fullwebr&S21REF=10&S21SRD=&S21SRW=dz&S21STN=1&Z21ID=. Accessed 2026-07-16.
+- Росархів. "Агентство печати «Новости». 1961-1990." https://guides.rusarchives.ru/funds/6/agentstvo-pechati-novosti-1961-1990. Accessed 2026-07-16. Used only for the named Soviet agency's institutional chronology.
+- Російська державна бібліотека. "Устав Агентства печати «Новости»." Москва, 1961. https://search.rsl.ru/ru/record/01006425211. Accessed 2026-07-16. Used only to corroborate the agency's 1961 charter record.
 
 **Tier 3 (encyclopedic):**
 
