@@ -65,28 +65,43 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
    `scripts/wiki/sources.py::build_literary_row`, then `literary_fts('rebuild')`, commit.
 4. Verify via the MCP: `mcp__sources__search_literary` / `verify_quote`.
 
-### Reclaiming local disk — symlink a Drive-duplicated file (no data loss)
-Much of `data/` is **already copied to the Drive mount but never deleted locally**, so the local
-copy is pure duplication (~2.4 GB as of 2026-07-16: `ubertext-freq` 1.2 GB, `embeddings` 597 MB,
-`raw` 305 MB, `native-reviewer-lessons` 254 MB, `literary_texts` 36 MB — all confirmed present on
-`GDRIVE_DATA`). To reclaim the space without breaking builds that read the **local** path (the
-dir-mismatch gotcha above), replace the local file with a **symlink to the streamed Drive copy** —
-it takes 0 local bytes when idle and materializes on demand. Recipe (used 2026-07-16 for
-`ubertext-freq/frequency.db`, 1.2 GB):
-1. **Confirm identical:** `ls -la` byte-size of `data/<x>` == `GDRIVE_DATA/<x>` (same size + mtime).
+### Reclaiming local disk — symlink a Drive-duplicated FILE (verify identity per file)
+Some files in `data/` are byte-identical copies of what already sits on the Drive mount but were
+never deleted locally. For a file **proven identical** to its Drive copy, replace the local file
+with a **symlink to the streamed Drive copy** — it takes 0 local bytes when idle and materializes
+on demand, so builds that read the **local** path (the dir-mismatch gotcha above) still work. This
+is **per-file**, not per-directory: prove identity for each file; do NOT blanket-symlink a directory
+(most `data/` subdirs are NOT pure duplicates — see caveat b).
+
+Resolve the mount path the way the runbooks do — the env override is **`LU_GDRIVE_DATA`** (see
+`scripts/wiki/config.py`), NOT `GDRIVE_DATA`:
+```bash
+GDRIVE="${LU_GDRIVE_DATA:-$(ls -d "$HOME/Library/CloudStorage/"GoogleDrive-*/"My Drive/Projects/learn-ukrainian-data" 2>/dev/null | head -1)}"
+```
+Recipe (used 2026-07-16 for `ubertext-freq/frequency.db`, 1.2 GB reclaimed):
+1. **Prove byte-identical** (not just "exists on Drive"): `cmp -s data/<x> "$GDRIVE/<x>"` — or, for a
+   very large file you trust, matching size **and** mtime via `ls -la`.
 2. **Confirm valid + mount healthy:** e.g. `head -c 16` of a SQLite file reads `SQLite format 3`.
 3. **Confirm nothing has it open:** `lsof data/<x>` is empty.
-4. `rm data/<x>` then `ln -s "$GDRIVE_DATA/<x>" data/<x>`.
-5. **Functional test (mandatory):** actually open/read it through the symlink (e.g.
-   `sqlite3` a `SELECT`), proving the reader still works before declaring done.
+4. **Swap, keeping the local copy until verified:**
+   ```bash
+   mv "data/<x>" "data/<x>.localbak"
+   ln -s "$GDRIVE/<x>" "data/<x>"
+   ```
+5. **Functional test (mandatory):** actually open/read it through the symlink (e.g. a `sqlite3
+   SELECT`) — the reader must work. THEN `rm -rf "data/<x>.localbak"`. If it fails, `mv` the bak back.
 
-**Caveats:** (a) do NOT symlink files a **runtime server** reads hot — `embeddings/` may back the
-MCP dense reranker; confirm it is not runtime-critical first. (b) A regenerating writer (e.g.
-`convert_phase2.py` rebuilds `frequency.db` from `ubertext_freq.csv.xz`) will write **through** the
-symlink to Drive; delete the symlink first if you want a fresh local rebuild.
+**Caveats:** (a) A regenerating writer (e.g. `convert_phase2.py` DROP/CREATE/INSERTs `frequency.db`
+from `ubertext_freq.csv.xz`) writes **through** the symlink to Drive; unlink first for a fresh local
+rebuild. (b) **Directories are usually NOT pure duplicates.** As of 2026-07-16 only
+`ubertext-freq/frequency.db` was proven identical; `literary_texts/` local (~27 files) is a partial
+subset of Drive's source-of-truth (~232), and `native-reviewer-lessons/` + `raw/` diverge
+(different tree/mtime). Verify each file — never trust the directory.
 
-**Never symlink these — runtime-essential, must stay local:** `sources.db` (MCP `sources` server),
-`vesum.db`, `mphdict/`, `lexicon/`.
+**Never symlink these — runtime-hot / build-essential, keep local:** `sources.db` (MCP `sources`
+server), `vesum.db` (VESUM `verify_*`), **`embeddings/`** (dense reranker — `search_sources` defaults
+to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + shards), `mphdict/`,
+`lexicon/` (offline Atlas/enrich/build deps).
 
 ---
 
