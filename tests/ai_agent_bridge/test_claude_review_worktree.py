@@ -40,13 +40,28 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
     monkeypatch.setattr(_claude.atexit, "register", lambda *_args: None)
     monkeypatch.setattr(_claude, "set_session", lambda *_args: None)
     monkeypatch.setattr(_claude, "provision_review_worktree", fake_checkout)
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "review_prompt_evidence",
+        lambda self, engine: "\nSEALED_DOSSIER",
+    )
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "isolation_tool_config",
+        lambda self, engine: {"review_isolation": True},
+    )
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "bind_review_result",
+        lambda self, result, engine: None,
+    )
     monkeypatch.setattr(_claude, "send_message", lambda **_kwargs: 10)
     monkeypatch.setattr(_claude, "acknowledge", lambda *_args: None)
     monkeypatch.setattr(_claude, "record_ask_reply", lambda *_args: None)
     monkeypatch.setattr(
         _claude,
         "runtime_invoke",
-        lambda *_args, **kwargs: captured.update(kwargs)
+        lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
         or Result(
             ok=True,
             agent="claude",
@@ -66,3 +81,4 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
     _claude._run_claude_sync_via_runtime(msg, 9, None, no_timeout=False, review=True)
 
     assert captured["cwd"] == checkout.path
+    assert str(captured["prompt"]).endswith("SEALED_DOSSIER")

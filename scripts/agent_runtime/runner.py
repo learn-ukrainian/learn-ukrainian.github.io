@@ -24,6 +24,7 @@ Flow (see docs/design/agent-runtime.md § 4.2 for the full spec):
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -110,6 +111,35 @@ _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 
 
+def _resolve_plan_telemetry(
+    *,
+    agent_name: str,
+    plan: Any,
+    requested_model: str,
+    requested_effort: str | None,
+    tool_config: Mapping[str, Any] | None,
+) -> InvocationTelemetry:
+    """Resolve telemetry without pre-sandbox reviewer execution.
+
+    Generic telemetry probes ``argv[0] --version``. For isolated review that
+    would execute the reviewer before the runner installs the OS sandbox, so
+    version remains explicitly unknown; the exact binary is instead hashed and
+    help/version-probed inside the verified sandbox by the isolation layer.
+    """
+    if tool_config and tool_config.get("review_isolation"):
+        return InvocationTelemetry(
+            model=requested_model,
+            effort=requested_effort or "unknown",
+            cli_version="unknown",
+        )
+    return resolve_invocation_telemetry(
+        agent_name=agent_name,
+        plan=plan,
+        requested_model=requested_model,
+        requested_effort=requested_effort,
+    )
+
+
 class _PTYUnavailableError(RuntimeError):
     """Raised when PTY setup itself fails on this host.
 
@@ -147,6 +177,9 @@ def _stdin_uses_text_mode(stdin: Any) -> bool:
 
 def _prepare_stdin_handle(
     stdin_payload: str,
+    *,
+    directory: Path | None = None,
+    unlink_after_open: bool = False,
 ) -> tuple[Any, Path | None]:
     """Return ``(stdin_for_Popen, temp_path)`` for a prompt payload.
 
@@ -158,7 +191,11 @@ def _prepare_stdin_handle(
     if not stdin_payload:
         return subprocess.DEVNULL, None
 
-    fd, path_str = tempfile.mkstemp(prefix=_STDIN_TEMP_PREFIX, suffix=".txt")
+    fd, path_str = tempfile.mkstemp(
+        prefix=_STDIN_TEMP_PREFIX,
+        suffix=".txt",
+        dir=str(directory) if directory is not None else None,
+    )
     path = Path(path_str)
     try:
         with os.fdopen(fd, "wb") as handle:
@@ -168,7 +205,13 @@ def _prepare_stdin_handle(
             path.unlink()
         raise
 
-    return open(path, encoding="utf-8"), path
+    # Ownership transfers to the subprocess lifecycle; _cleanup_stdin_temp
+    # closes it in the runner finally block.
+    handle = open(path, encoding="utf-8")  # noqa: SIM115
+    if unlink_after_open:
+        path.unlink()
+        return handle, None
+    return handle, path
 
 
 def _cleanup_stdin_temp(path: Path | None, handle: Any) -> None:
@@ -252,9 +295,7 @@ def _spawn_pty_subprocess(
             with contextlib.suppress(OSError):
                 fcntl.ioctl(slave_fd, termios.TIOCSWINSZ, winsize)
     except (OSError, AttributeError) as exc:
-        raise _PTYUnavailableError(
-            f"PTY setup failed ({type(exc).__name__}: {exc})"
-        ) from exc
+        raise _PTYUnavailableError(f"PTY setup failed ({type(exc).__name__}: {exc})") from exc
 
     # --- Phase 2: spawn the child against the PTY slaves. ---
     # Any failure here (FileNotFoundError, PermissionError, generic
@@ -347,8 +388,7 @@ def _spawn_subprocess(
         import warnings
 
         warnings.warn(
-            f"{exc}; falling back to pipe-based spawn. Set "
-            f"DELEGATE_DISABLE_PTY=1 to silence this warning.",
+            f"{exc}; falling back to pipe-based spawn. Set DELEGATE_DISABLE_PTY=1 to silence this warning.",
             RuntimeWarning,
             stacklevel=2,
         )
@@ -376,10 +416,7 @@ def _is_agent_runtime_shim(path: str | None) -> bool:
     if not path:
         return False
     candidate = Path(path)
-    return (
-        len(candidate.parts) >= 3
-        and candidate.parts[-3:] == ("agent_runtime", "shims", candidate.name)
-    )
+    return len(candidate.parts) >= 3 and candidate.parts[-3:] == ("agent_runtime", "shims", candidate.name)
 
 
 def _resolve_real_binary(binary: str, *, original_path: str) -> str | None:
@@ -428,9 +465,7 @@ def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
         guarded_env.pop("AGENT_REAL_GIT", None)
 
     shim_path = str(_SHIMS_DIR)
-    guarded_env["PATH"] = (
-        f"{shim_path}{os.pathsep}{original_path}" if original_path else shim_path
-    )
+    guarded_env["PATH"] = f"{shim_path}{os.pathsep}{original_path}" if original_path else shim_path
     return guarded_env
 
 
@@ -511,8 +546,7 @@ def _load_adapter(name: str) -> AgentAdapter:
         entry = get_agent_entry(name)
     except KeyError:
         raise AgentUnavailableError(
-            f"Agent {name!r} is not in the registry. "
-            f"Available: {sorted(AGENTS.keys())}"
+            f"Agent {name!r} is not in the registry. Available: {sorted(AGENTS.keys())}"
         ) from None
 
     if not entry["cli_available"]:
@@ -526,8 +560,7 @@ def _load_adapter(name: str) -> AgentAdapter:
     dotted_path = entry["adapter"]
     if ":" not in dotted_path:
         raise AgentUnavailableError(
-            f"Malformed adapter path in registry: {dotted_path!r}. "
-            f"Expected 'module.path:ClassName'."
+            f"Malformed adapter path in registry: {dotted_path!r}. Expected 'module.path:ClassName'."
         )
     module_path, class_name = dotted_path.split(":", 1)
 
@@ -559,8 +592,7 @@ def _load_adapter(name: str) -> AgentAdapter:
         adapter_cls = getattr(module, class_name)
     except AttributeError as exc:
         raise AgentUnavailableError(
-            f"Adapter class {class_name!r} not found in module "
-            f"{module_path!r} for agent {name!r}."
+            f"Adapter class {class_name!r} not found in module {module_path!r} for agent {name!r}."
         ) from exc
 
     adapter: AgentAdapter = adapter_cls()
@@ -734,6 +766,10 @@ class _ExecutionOutcome:
     stdout_text: str
     stderr_text: str
     liveness_paths: tuple[Path, ...]
+    isolation_evidence: dict | None = None
+    isolation_capability_digest: str | None = None
+    isolation_prompt_digest: str | None = None
+    isolation_prompt_transport: str | None = None
 
 
 @dataclass
@@ -809,9 +845,7 @@ class _McpRuntimeObserver:
         if not failure_match:
             return
         url_match = _MCP_FAILURE_URL_RE.search(line)
-        servers = self._servers_for_failed_line(
-            url_match.group("url") if url_match else None
-        )
+        servers = self._servers_for_failed_line(url_match.group("url") if url_match else None)
         if not servers:
             self._emit_unattributed_failure(stream=stream, line=line)
             return
@@ -821,22 +855,14 @@ class _McpRuntimeObserver:
     def maybe_emit_timeout(self, now: float) -> None:
         if now - self.start_time < self.timeout_s:
             return
-        unresolved = (
-            self.configured_servers
-            - self.ready_servers
-            - self.failed_servers
-            - self.timed_out_servers
-        )
+        unresolved = self.configured_servers - self.ready_servers - self.failed_servers - self.timed_out_servers
         for server in sorted(unresolved):
             self.timed_out_servers.add(server)
             self._emit(
                 server=server,
                 status="timeout",
                 stream=None,
-                line=(
-                    f"no mcp runtime init line observed within "
-                    f"{self.timeout_s:.0f}s"
-                ),
+                line=(f"no mcp runtime init line observed within {self.timeout_s:.0f}s"),
             )
 
     def _servers_for_failed_line(self, url: str | None) -> list[str]:
@@ -954,9 +980,7 @@ def _resolve_gemini_ladder_auth_modes(tool_config: dict | None) -> tuple[str, ..
     """Resolve which Gemini auth rungs are allowed for this runtime call."""
     env = dict(os.environ)
     if tool_config and "auth_mode" in tool_config:
-        env["GEMINI_AUTH_MODE"] = _normalize_gemini_tool_auth_mode(
-            tool_config.get("auth_mode")
-        )
+        env["GEMINI_AUTH_MODE"] = _normalize_gemini_tool_auth_mode(tool_config.get("auth_mode"))
     return resolve_allowed_auth_modes(env)
 
 
@@ -998,9 +1022,7 @@ def _build_gemini_attempt_tool_config(
     if rung.auth_mode is None:
         return dict(tool_config or {})
     attempt_tool_config = dict(tool_config or {})
-    attempt_tool_config["auth_mode"] = (
-        "subscription" if rung.auth_mode == "oauth" else "api"
-    )
+    attempt_tool_config["auth_mode"] = "subscription" if rung.auth_mode == "oauth" else "api"
     return attempt_tool_config
 
 
@@ -1024,11 +1046,58 @@ def _execute_invocation_plan(
     initial_response_timeout: int | None = None,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
-    env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
-    for key in plan.env_unsets:
-        env.pop(key, None)
-    env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
-    env = _apply_merge_guard(mode=mode, env=env)
+    # Exact-target review isolation (#5285): when tool_config requests
+    # review_isolation, replace ambient agent env + wrap argv with the
+    # fail-closed OS sandbox policy. Never silently weaken.
+    review_cmd = list(plan.cmd)
+    review_cwd = cwd
+    isolation_evidence: dict | None = None
+    isolation_capability_digest: str | None = None
+    isolation_prompt_digest: str | None = None
+    isolation_prompt_transport: str | None = None
+    if tool_config and tool_config.get("review_isolation"):
+        try:
+            from scripts.review.isolation import (
+                ReviewIsolationError,
+                apply_review_isolation_to_invocation,
+            )
+        except ImportError:  # pragma: no cover - package path
+            from review.isolation import (  # type: ignore
+                ReviewIsolationError,
+                apply_review_isolation_to_invocation,
+            )
+        try:
+            prompt_transport = "stdin" if plan.stdin_payload else "prompt-file"
+            (
+                review_cmd,
+                env,
+                review_cwd,
+                isolation_evidence,
+                isolation_capability_digest,
+                isolation_prompt_digest,
+                isolation_prompt_transport,
+            ) = apply_review_isolation_to_invocation(
+                engine=agent_name,
+                cmd=plan.cmd,
+                cwd=plan.cwd if getattr(plan, "cwd", None) else cwd,
+                tool_config=tool_config,
+                env_overrides=plan.env_overrides,
+                prompt_payload=plan.stdin_payload or prompt,
+                prompt_transport=prompt_transport,
+            )
+        except ReviewIsolationError as exc:
+            raise AgentUnavailableError(f"review isolation refused for {agent_name!r}: {exc}") from exc
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+        # Merge guard shims are host paths outside the sandbox allowlist and
+        # are not needed for evidence-only review (no gh merge). Skip them.
+    else:
+        env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+        env = _apply_merge_guard(mode=mode, env=env)
 
     start_time = time.monotonic()
     proc: subprocess.Popen | None = None
@@ -1043,10 +1112,18 @@ def _execute_invocation_plan(
     try:
         try:
             if plan.stdin_payload:
-                stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
+                if tool_config and tool_config.get("review_isolation"):
+                    write_root = Path(str(tool_config["review_write_root"]))
+                    stdin_handle, stdin_temp_path = _prepare_stdin_handle(
+                        plan.stdin_payload,
+                        directory=write_root / "tmp",
+                        unlink_after_open=True,
+                    )
+                else:
+                    stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
             proc, stdout_master_fd, stderr_master_fd = _spawn_subprocess(
-                plan.cmd,
-                cwd=cwd,
+                review_cmd,
+                cwd=review_cwd,
                 env=env,
                 stdin=stdin_handle,
             )
@@ -1066,15 +1143,11 @@ def _execute_invocation_plan(
                 outcome="error",
                 rate_limited=False,
                 stalled=False,
-                stderr_excerpt=(
-                    f"Popen failed: {type(exc).__name__}: {exc}"
-                )[:500],
+                stderr_excerpt=(f"Popen failed: {type(exc).__name__}: {exc}")[:500],
                 tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             )
             write_record(record)
-            raise AgentUnavailableError(
-                f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}"
-            ) from exc
+            raise AgentUnavailableError(f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}") from exc
 
         liveness_paths = tuple(adapter.liveness_signal_paths(plan))
         if plan.output_file is not None and plan.output_file not in liveness_paths:
@@ -1084,9 +1157,7 @@ def _execute_invocation_plan(
             list(liveness_paths),
             stdout_master_fd=stdout_master_fd,
             stderr_master_fd=stderr_master_fd,
-            track_process_activity=bool(
-                stdout_silence_timeout is not None and stdout_silence_timeout > 0
-            ),
+            track_process_activity=bool(stdout_silence_timeout is not None and stdout_silence_timeout > 0),
         )
         mcp_observer = _McpRuntimeObserver.from_tool_config(
             agent_name=agent_name,
@@ -1233,6 +1304,10 @@ def _execute_invocation_plan(
             stdout_text=stdout_text,
             stderr_text=stderr_text,
             liveness_paths=liveness_paths,
+            isolation_evidence=isolation_evidence,
+            isolation_capability_digest=isolation_capability_digest,
+            isolation_prompt_digest=isolation_prompt_digest,
+            isolation_prompt_transport=isolation_prompt_transport,
         )
     finally:
         if proc is not None and proc.poll() is None:
@@ -1248,11 +1323,7 @@ def _execute_invocation_plan(
                 stderr_master_fd=stderr_master_fd,
             )
 
-        if (
-            plan.output_file is not None
-            and plan.output_file.exists()
-            and _is_temp_file(plan.output_file)
-        ):
+        if plan.output_file is not None and plan.output_file.exists() and _is_temp_file(plan.output_file):
             should_delete = False
             try:
                 file_size = plan.output_file.stat().st_size
@@ -1262,11 +1333,7 @@ def _execute_invocation_plan(
             if (
                 file_size == 0
                 or (proc is not None and proc.returncode == 0)
-                or (
-                    proc is not None
-                    and proc.returncode is not None
-                    and proc.returncode < 0
-                )
+                or (proc is not None and proc.returncode is not None and proc.returncode < 0)
             ):
                 should_delete = True
 
@@ -1305,9 +1372,7 @@ def _raise_for_kill_reason(
     if not kill_reason:
         return
     parse = execution.parse
-    record_substitution = (
-        substitution if substitution is not None else parse.substitution
-    )
+    record_substitution = substitution if substitution is not None else parse.substitution
     if kill_reason == "hard_timeout" and parse.ok:
         return
     if kill_reason == "stdout_silence_timeout":
@@ -1493,11 +1558,12 @@ def _invoke_gemini_with_fallback(
                 tool_config=attempt_tool_config,
                 effort=effort,
             )
-            last_telemetry = resolve_invocation_telemetry(
+            last_telemetry = _resolve_plan_telemetry(
                 agent_name=attempt_agent_name,
                 plan=plan,
                 requested_model=rung.model,
                 requested_effort=effort,
+                tool_config=attempt_tool_config,
             )
             execution = _execute_invocation_plan(
                 agent_name=attempt_agent_name,
@@ -1598,16 +1664,10 @@ def _invoke_gemini_with_fallback(
     record_model = (
         (last_telemetry.model if last_telemetry is not None else None)
         or call_result.model_used
-        or (
-            last_attempt_record.model
-            if last_attempt_record and last_attempt_record.model
-            else model
-        )
+        or (last_attempt_record.model if last_attempt_record and last_attempt_record.model else model)
     )
     record_effort = last_telemetry.effort if last_telemetry is not None else "unknown"
-    record_cli_version = (
-        last_telemetry.cli_version if last_telemetry is not None else "unknown"
-    )
+    record_cli_version = last_telemetry.cli_version if last_telemetry is not None else "unknown"
     stderr_excerpt = (
         (last_attempt_record.note if last_attempt_record and last_attempt_record.note else None)
         or (last_attempt_record.stderr_excerpt if last_attempt_record else None)
@@ -1653,11 +1713,10 @@ def _invoke_gemini_with_fallback(
             usage_record=record,
             tool_calls=last_tool_calls,
             tool_calls_total=len(last_tool_calls),
+            isolation_evidence=None,
         )
 
-    if call_result.attempts and all(
-        attempt.status == "rate_limited" for attempt in call_result.attempts
-    ):
+    if call_result.attempts and all(attempt.status == "rate_limited" for attempt in call_result.attempts):
         record = _build_usage_record(
             agent=agent_name,
             entrypoint=entrypoint,
@@ -1679,10 +1738,9 @@ def _invoke_gemini_with_fallback(
         write_record(record)
         raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
 
-    if (
-        (last_attempt_record is not None and last_attempt_record.status == "timeout")
-        or "no budget left" in (call_result.error_message or "").lower()
-    ):
+    if (last_attempt_record is not None and last_attempt_record.status == "timeout") or "no budget left" in (
+        call_result.error_message or ""
+    ).lower():
         record = _build_usage_record(
             agent=agent_name,
             entrypoint=entrypoint,
@@ -1740,6 +1798,7 @@ def _invoke_gemini_with_fallback(
         usage_record=record,
         tool_calls=last_tool_calls,
         tool_calls_total=len(last_tool_calls),
+        isolation_evidence=None,
     )
 
 
@@ -1955,11 +2014,12 @@ def _invoke_with_runner_failover(
             effort=effort,
         )
 
-        telemetry = resolve_invocation_telemetry(
+        telemetry = _resolve_plan_telemetry(
             agent_name=agent_name,
             plan=plan,
             requested_model=route.model,
             requested_effort=effort,
+            tool_config=attempt_tool_config,
         )
 
         execution = _execute_invocation_plan(
@@ -2056,11 +2116,7 @@ def _invoke_with_runner_failover(
         emit_runner_substitution_marker(substitution, logger=_logger)
 
         record_model = telemetry.model
-        if (
-            isinstance(substitution, dict)
-            and substitution.get("substituted")
-            and substitution.get("actual_model")
-        ):
+        if isinstance(substitution, dict) and substitution.get("substituted") and substitution.get("actual_model"):
             record_model = str(substitution["actual_model"])[:200]
 
         _emit_substitution_event(
@@ -2120,6 +2176,10 @@ def _invoke_with_runner_failover(
             tool_calls=list(parse.tool_calls),
             tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
             substitution=substitution,
+            isolation_evidence=execution.isolation_evidence,
+            isolation_capability_digest=execution.isolation_capability_digest,
+            isolation_prompt_digest=execution.isolation_prompt_digest,
+            isolation_prompt_transport=execution.isolation_prompt_transport,
         )
 
     if last_headroom_failure is not None:
@@ -2137,9 +2197,7 @@ def _invoke_with_runner_failover(
         )
         raise RateLimitedError(agent_name, route.model, reason)
 
-    raise AgentUnavailableError(
-        f"Agent {agent_name!r} has an empty runner failover route set"
-    )
+    raise AgentUnavailableError(f"Agent {agent_name!r} has an empty runner failover route set")
 
 
 def invoke(
@@ -2154,10 +2212,10 @@ def invoke(
     tool_config: dict | None = None,
     entrypoint: str = "runtime",
     hard_timeout: int = 86400,  # 24h — last-resort leak guard, NOT a
-                                 # tuning knob for expected runtime. See
-                                 # the header comment in
-                                 # scripts/batch/batch_gemini_config.py
-                                 # for the full design rationale.
+    # tuning knob for expected runtime. See
+    # the header comment in
+    # scripts/batch/batch_gemini_config.py
+    # for the full design rationale.
     stall_timeout: int = 180,  # accepted but ignored; see docstring
     stdout_silence_timeout: int | None = None,
     initial_response_timeout: int | None = None,
@@ -2231,8 +2289,7 @@ def invoke(
     # ---------- 2. Validate mode ----------
     if mode not in adapter.supported_modes:
         raise ValueError(
-            f"Agent {agent_name!r} does not support mode {mode!r}. "
-            f"Supported modes: {sorted(adapter.supported_modes)}"
+            f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
     # ---------- 3. Validate cwd for write modes ----------
@@ -2328,11 +2385,12 @@ def invoke(
         effort=effort,
     )
 
-    telemetry = resolve_invocation_telemetry(
+    telemetry = _resolve_plan_telemetry(
         agent_name=agent_name,
         plan=plan,
         requested_model=effective_model,
         requested_effort=effort,
+        tool_config=tool_config,
     )
 
     execution = _execute_invocation_plan(
@@ -2386,11 +2444,7 @@ def invoke(
     # isinstance guard mirrors _safe_substitution_record: adapters (and test
     # mocks) may hand back arbitrary objects; only a real dict payload may
     # override resolved telemetry.
-    if (
-        isinstance(substitution, dict)
-        and substitution.get("substituted")
-        and substitution.get("actual_model")
-    ):
+    if isinstance(substitution, dict) and substitution.get("substituted") and substitution.get("actual_model"):
         record_model = str(substitution["actual_model"])[:200]
 
     _emit_substitution_event(
@@ -2449,4 +2503,8 @@ def invoke(
         tool_calls=list(parse.tool_calls),
         tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
         substitution=substitution,
+        isolation_evidence=execution.isolation_evidence,
+        isolation_capability_digest=execution.isolation_capability_digest,
+        isolation_prompt_digest=execution.isolation_prompt_digest,
+        isolation_prompt_transport=execution.isolation_prompt_transport,
     )

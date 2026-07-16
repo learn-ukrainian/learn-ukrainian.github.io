@@ -22,6 +22,7 @@ Mode → ``--permission-mode``:
 cross-session memory risk worktree contamination — the same footgun as Codex.
 The grok CLI is Claude-Code-shaped, so this mirrors ``claude.py`` closely.
 """
+
 from __future__ import annotations
 
 import json
@@ -94,11 +95,20 @@ class GrokBuildAdapter:
         effort: str | None = None,
     ) -> InvocationPlan:
         if mode not in self.supported_modes:
-            raise ValueError(
-                f"GrokBuildAdapter: unsupported mode {mode!r} "
-                f"(supported: {sorted(self.supported_modes)})"
-            )
-        grok_bin = shutil.which("grok")
+            raise ValueError(f"GrokBuildAdapter: unsupported mode {mode!r} (supported: {sorted(self.supported_modes)})")
+        tc = tool_config or {}
+        review_isolation = bool(tc.get("review_isolation"))
+        review_write_root: Path | None = None
+        if review_isolation:
+            from scripts.review.isolation import validated_review_write_root
+
+            review_write_root = validated_review_write_root(tc)
+            trusted = tc.get("review_engine_binary")
+            if not isinstance(trusted, str) or not Path(trusted).is_absolute():
+                raise ValueError("GrokBuildAdapter: trusted review_engine_binary required")
+            grok_bin = trusted
+        else:
+            grok_bin = shutil.which("grok")
         if not grok_bin:
             raise RuntimeError(
                 "grok CLI not found on PATH. Install the xAI grok CLI "
@@ -108,23 +118,39 @@ class GrokBuildAdapter:
         requested_model = model or self.default_model
         if requested_model not in GROK_ALLOWED_MODELS:
             raise ValueError(
-                f"GrokBuildAdapter: unsupported Grok model {requested_model!r}; "
-                f"allowed: {sorted(GROK_ALLOWED_MODELS)}"
+                f"GrokBuildAdapter: unsupported Grok model {requested_model!r}; allowed: {sorted(GROK_ALLOWED_MODELS)}"
             )
-        tc = tool_config or {}
         if "sources" in (tc.get("mcp_server_names") or []):
             prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
+        execution_cwd = cwd
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
         # would be misparsed by clap as a flag, so route those through a temp
         # --prompt-file instead (robust for any content).
-        if prompt.startswith("-"):
-            with tempfile.NamedTemporaryFile(
-                "w", suffix=".grok-prompt.txt", delete=False, encoding="utf-8"
-            ) as handle:
-                handle.write(prompt)
-                prompt_path = handle.name
+        if review_isolation and review_write_root is not None:
+            write_root = review_write_root
+            out_dir = write_root / "tmp"
+            execution_cwd = write_root / "exec"
+            prompt_file = out_dir / "grok-prompt.txt"
+            fd = os.open(
+                prompt_file,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                0o600,
+            )
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(prompt.encode("utf-8"))
+            prompt_path = str(prompt_file)
+            cmd.extend(["--prompt-file", prompt_path])
+        elif prompt.startswith("-"):
+            if review_isolation:
+                raise ValueError("GrokBuildAdapter: isolated review prompt file requires review_write_root")
+            else:
+                with tempfile.NamedTemporaryFile(
+                    "w", suffix=".grok-prompt.txt", delete=False, encoding="utf-8"
+                ) as handle:
+                    handle.write(prompt)
+                    prompt_path = handle.name
             cmd.extend(["--prompt-file", prompt_path])
         else:
             cmd.extend(["-p", prompt])
@@ -140,15 +166,27 @@ class GrokBuildAdapter:
         # or non-MCP call keeps its normal (safer) mode mapping.
         mcp_servers_requested = set(tc.get("mcp_server_names") or [])
         mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
-        permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
+        # Review isolation (#5285): force plan/read-only and explicit deny rules.
+        # Keys match review_isolation_tool_config: disallowed_tools, review_deny_tools.
+        if review_isolation:
+            permission_mode = str(tc.get("permission_mode") or "plan")
+        else:
+            permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
-        cmd.extend(["--cwd", str(cwd)])
-        if mcp_read_only:
+        cmd.extend(["--cwd", str(execution_cwd)])
+        if mcp_read_only and not review_isolation:
             cmd.append("--always-approve")
             cmd.append("--no-plan")
             cmd.append("--disable-web-search")
             for rule in _MCP_REVIEW_DENY_RULES:
                 cmd.extend(["--deny", rule])
+        if review_isolation:
+            cmd.extend(["--no-memory", "--no-subagents", "--disable-web-search", "--verbatim"])
+            deny_rules = tc.get("review_deny_tools") or list(_MCP_REVIEW_DENY_RULES)
+            if isinstance(deny_rules, (list, tuple)):
+                for rule in deny_rules:
+                    if rule:
+                        cmd.extend(["--deny", str(rule)])
 
         effective_effort = effort or self.default_effort
         cmd.extend(["-m", requested_model])
@@ -160,7 +198,7 @@ class GrokBuildAdapter:
         if disallowed:
             cmd.extend(["--disallowed-tools", str(disallowed)])
         allowed = tc.get("allowed_tools")
-        if allowed:
+        if allowed and not review_isolation:
             cmd.extend(["--tools", str(allowed)])
 
         # Resume only if the caller explicitly opts in (delegate dispatch never
@@ -179,7 +217,7 @@ class GrokBuildAdapter:
 
         return InvocationPlan(
             cmd=cmd,
-            cwd=cwd,
+            cwd=execution_cwd,
             stdin_payload="",
             output_file=None,
             env_overrides={},
@@ -210,9 +248,7 @@ class GrokBuildAdapter:
 
         usable = bool(text)
         failed = returncode != 0 or not usable
-        rate_limited = failed and bool(
-            _RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}")
-        )
+        rate_limited = failed and bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
         ok = returncode == 0 and usable and not rate_limited
 
         stderr_excerpt: str | None = None
@@ -250,8 +286,7 @@ def _adapt_prompt_for_grok_build_mcp(prompt: str) -> str:
     """Adapt canonical MCP review prompts for native grok-build headless."""
     translated = _translate_mcp_prefix_for_grok_build(prompt)
     return (
-        translated
-        + "\n\n## Native grok-build headless compatibility\n\n"
+        translated + "\n\n## Native grok-build headless compatibility\n\n"
         "You are running in native grok-build single-turn headless mode. "
         "Do not call abstract `search_tool` or `use_tool` protocols, do not "
         "call `read_file`, and do not describe a plan. The article text and "

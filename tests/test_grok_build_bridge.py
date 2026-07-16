@@ -149,6 +149,11 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
         },
     )
     monkeypatch.setattr(_grok_build, "provision_review_worktree", fake_checkout)
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "review_prompt_evidence",
+        lambda self, engine: "\nSEALED_DOSSIER",
+    )
     monkeypatch.setattr(_grok_build, "send_message", lambda **_kwargs: 10)
     monkeypatch.setattr(_grok_build, "acknowledge", lambda *_args: None)
     monkeypatch.setattr(_grok_build, "record_ask_reply", lambda *_args: None)
@@ -156,13 +161,14 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
     monkeypatch.setattr(
         _grok_build.agent_runner,
         "invoke",
-        lambda *_args, **kwargs: captured.update(kwargs)
+        lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
         or SimpleNamespace(ok=True, response="reply", session_id=None, model="grok-4.5"),
     )
 
     _grok_build.process_for_grok_build(9, review=True)
 
     assert captured["cwd"] == checkout.path
+    assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
 
 
 def test_grok_build_registry_key_resolves_native_adapter():

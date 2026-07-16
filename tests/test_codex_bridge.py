@@ -412,13 +412,18 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
     )
     monkeypatch.setattr("ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
     monkeypatch.setattr("ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr(
+        ProvisionedReviewWorktree,
+        "review_prompt_evidence",
+        lambda self, engine: "\nSEALED_DOSSIER",
+    )
     monkeypatch.setattr("ai_agent_bridge._codex.acknowledge", lambda *_args: None)
     monkeypatch.setattr("ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
     monkeypatch.setattr("ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
     monkeypatch.setattr("ai_agent_bridge._codex.set_session", lambda *_args: None)
     monkeypatch.setattr(
         "ai_agent_bridge._codex.agent_runner.invoke",
-        lambda *_args, **kwargs: captured.update(kwargs)
+        lambda *args, **kwargs: captured.update({"prompt": args[1], **kwargs})
         or Result(
             ok=True,
             agent="codex",
@@ -438,6 +443,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
     process_for_codex(9, review=True)
 
     assert captured["cwd"] == checkout.path
+    assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
 
 
 def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):

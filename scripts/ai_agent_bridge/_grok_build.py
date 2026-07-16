@@ -31,6 +31,7 @@ from ._messaging import acknowledge, send_message
 from ._prompts import _prepend_review_protocol
 from ._review_worktree import (
     ReviewWorktreeError,
+    append_review_prompt_evidence,
     provision_review_worktree,
     review_target_from_message,
     review_target_payload,
@@ -147,9 +148,21 @@ def process_for_grok_build(
 
     try:
         review_target = review_target_from_message(msg) if review else None
-        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
-            result = agent_runner.invoke(
-                "grok",
+        with provision_review_worktree(
+            review_target,
+            repo_root=REPO_ROOT,
+            allow_local_fallback=bool(review),
+        ) as checkout:
+            if review:
+                if checkout is None:
+                    raise ReviewWorktreeError(
+                        "exact-target-required: review requires a sealed neutral "
+                        "snapshot; refusing primary checkout fallback"
+                    )
+                review_tool_config = checkout.isolation_tool_config("grok")
+            else:
+                review_tool_config = None
+            prompt = append_review_prompt_evidence(
                 _build_grok_build_prompt(
                     msg,
                     review,
@@ -157,17 +170,26 @@ def process_for_grok_build(
                     review_pr_number=checkout.pr_number if checkout else None,
                     review_worktree_provisioned=checkout is not None,
                 ),
+                review=review,
+                checkout=checkout,
+                engine="grok",
+            )
+            result = agent_runner.invoke(
+                "grok",
+                prompt,
                 mode="read-only",
-                cwd=checkout.path if checkout else REPO_ROOT,
+                cwd=checkout.path if checkout is not None else REPO_ROOT,
                 model=model,
                 task_id=msg["task_id"],
                 session_id=None,
-                tool_config=None,
+                tool_config=review_tool_config,
                 entrypoint="bridge",
                 hard_timeout=timeout_val,
                 stall_timeout=min(600, timeout_val),
                 effort=GROK_BUILD_DEFAULT_EFFORT,
             )
+            if review and checkout is not None:
+                checkout.bind_review_result(result, engine="grok")
     except RateLimitedError as exc:
         _handle_grok_build_error(msg, message_id, f"Grok Build rate limited: {exc}")
         return

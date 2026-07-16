@@ -122,3 +122,7 @@ class Result:
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
     tool_calls_total: int | None = 0
     substitution: dict[str, Any] | None = None
+    isolation_evidence: dict[str, Any] | None = None
+    isolation_capability_digest: str | None = None
+    isolation_prompt_digest: str | None = None
+    isolation_prompt_transport: str | None = None

@@ -42,6 +42,7 @@ Liveness paths:
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 import json
@@ -86,11 +87,90 @@ _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
 
 
+def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
+    """Return a target-bound Claude structured-output schema for reviews."""
+    base_sha = tool_config.get("review_base_sha")
+    head_sha = tool_config.get("review_head_sha")
+    patch_sha256 = tool_config.get("review_patch_digest")
+    changed_paths = tool_config.get("review_changed_paths")
+    if base_sha is not None and not isinstance(base_sha, str):
+        raise ValueError("ClaudeAdapter: invalid isolated review base SHA")
+    if not isinstance(head_sha, str) or not isinstance(patch_sha256, str):
+        raise ValueError("ClaudeAdapter: isolated review target identity required")
+    if not isinstance(changed_paths, list) or not all(
+        isinstance(path, str) and path for path in changed_paths
+    ):
+        raise ValueError("ClaudeAdapter: isolated review changed paths required")
+    evidence_path_schema = {
+        "type": "string",
+        "enum": changed_paths or ["__no_changed_paths__"],
+    }
+    text_field = {"type": "string", "minLength": 1}
+    schema = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["schema_version", "target_identity", "production_safe", "findings"],
+        "properties": {
+            "schema_version": {"const": "code-review-findings.v1"},
+            "target_identity": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["base_sha", "head_sha", "patch_sha256"],
+                "properties": {
+                    "base_sha": {"const": base_sha},
+                    "head_sha": {"const": head_sha},
+                    "patch_sha256": {"const": patch_sha256},
+                },
+            },
+            "production_safe": {"type": "boolean"},
+            "findings": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": [
+                        "id",
+                        "severity",
+                        "category",
+                        "title",
+                        "description",
+                        "evidence",
+                        "remediation",
+                    ],
+                    "properties": {
+                        "id": {"type": "string", "pattern": "^F[0-9]{3,6}$"},
+                        "severity": {"enum": ["BLOCKER", "MAJOR", "MINOR", "NIT"]},
+                        "category": text_field,
+                        "title": text_field,
+                        "description": text_field,
+                        "remediation": text_field,
+                        "evidence": {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": False,
+                                "required": ["path", "line_start", "line_end", "text"],
+                                "properties": {
+                                    "path": evidence_path_schema,
+                                    "line_start": {"type": "integer", "minimum": 1},
+                                    "line_end": {"type": "integer", "minimum": 1},
+                                    "text": text_field,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    return json.dumps(schema, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
+
+
 def _discussion_readonly_requested(tool_config: dict | None) -> bool:
     """Return True when the caller is an ab discuss read-only invocation."""
     return bool(
-        os.environ.get("AB_DISCUSS_READONLY") == "1"
-        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+        os.environ.get("AB_DISCUSS_READONLY") == "1" or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
     )
 
 
@@ -187,6 +267,12 @@ class ClaudeAdapter:
         """
         tc: dict[str, Any] = tool_config or {}
         discussion_readonly = _discussion_readonly_requested(tool_config)
+        review_isolation = bool(tc.get("review_isolation"))
+        review_write_root: Path | None = None
+        if review_isolation:
+            from scripts.review.isolation import validated_review_write_root
+
+            review_write_root = validated_review_write_root(tc)
         if discussion_readonly and mode != "read-only":
             raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
 
@@ -211,7 +297,12 @@ class ClaudeAdapter:
         # Callers can still override by passing
         # ``tool_config={"cmd_prefix": [...]}`` (preserved unchanged).
         cmd_prefix = tc.get("cmd_prefix")
-        if cmd_prefix:
+        if review_isolation:
+            trusted = tc.get("review_engine_binary")
+            if not isinstance(trusted, str) or not Path(trusted).is_absolute():
+                raise ValueError("ClaudeAdapter: trusted review_engine_binary required")
+            cmd = [trusted]
+        elif cmd_prefix:
             cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
         else:
             claude_bin = _default_claude_bin()
@@ -228,7 +319,8 @@ class ClaudeAdapter:
                 )
 
         probe_prefix = tuple(cmd)
-        cli_version = _ensure_supported_claude_cli_version(probe_prefix)
+        # Review binaries are probed later, inside the verified OS sandbox.
+        cli_version = None if review_isolation else _ensure_supported_claude_cli_version(probe_prefix)
 
         cmd.append("-p")
         # NB: the actual prompt positional is appended at the END below, after a
@@ -248,8 +340,37 @@ class ClaudeAdapter:
         if use_bare is None:
             # Auto-decide: enable if no session and API key is set
             use_bare = not has_session and bool(os.environ.get("ANTHROPIC_API_KEY"))
+        # Review isolation (#5285): force bare/no-project load when requested.
+        if review_isolation or tc.get("use_bare"):
+            use_bare = True
         if use_bare and not has_session:
             cmd.append("--bare")
+        if review_isolation:
+            # Exact read/search tools + empty setting sources: no write/shell
+            # tools and no project CLAUDE.md/hooks/skills when flags are honored.
+            if "setting_sources" in tc:
+                cmd.extend(["--setting-sources", str(tc.get("setting_sources") or "")])
+            cmd.extend(["--tools", str(tc.get("allowed_tools") or "")])
+            mcp_config_path = tc.get("mcp_config_path")
+            if not tc.get("strict_mcp_config") or not isinstance(mcp_config_path, str):
+                raise ValueError("ClaudeAdapter: isolated review requires strict empty MCP config")
+            mcp_path = Path(mcp_config_path)
+            try:
+                mcp_resolved = mcp_path.resolve(strict=True)
+            except OSError as exc:
+                raise ValueError("ClaudeAdapter: invalid isolated review MCP config path") from exc
+            if (
+                review_write_root is None
+                or not mcp_path.is_absolute()
+                or not mcp_resolved.is_relative_to(review_write_root)
+                or not mcp_path.is_file()
+                or mcp_path.is_symlink()
+            ):
+                raise ValueError("ClaudeAdapter: invalid isolated review MCP config path")
+            if mcp_resolved.read_bytes() != b'{"mcpServers":{}}\n':
+                raise ValueError("ClaudeAdapter: isolated review MCP config is not empty")
+            cmd.extend(["--strict-mcp-config", "--mcp-config", str(mcp_resolved)])
+            cmd.extend(["--json-schema", _isolated_review_response_schema(tc)])
 
         # Session handling — --session-id (new) vs --resume (existing)
         if has_session:
@@ -270,7 +391,7 @@ class ClaudeAdapter:
             cmd.extend(["--max-budget-usd", f"{float(max_budget_usd):.2f}"])
 
         # Effort (reasoning level) — version-gated. See #1396.
-        if effort is not None:
+        if effort is not None and not review_isolation:
             # Use the `utils.claude_version.supports_effort` helper so tests
             # can patch the decision at a single point. Inline version
             # comparison bypassed the helper and left CI runs (no Claude CLI
@@ -279,13 +400,13 @@ class ClaudeAdapter:
             # test_claude_adapter_emits_effort_when_supported CI failure on
             # PR #1474.
             from utils.claude_version import supports_effort
+
             effort_supported = supports_effort(probe_prefix)
             if effort_supported:
                 cmd.extend(["--effort", effort])
             else:
                 _logger.warning(
-                    "Claude CLI at %s does not support --effort; "
-                    "ignoring effort=%r and using CLI default (#1396)",
+                    "Claude CLI at %s does not support --effort; ignoring effort=%r and using CLI default (#1396)",
                     probe_prefix,
                     effort,
                 )
@@ -308,8 +429,7 @@ class ClaudeAdapter:
         if requested_agent:
             if cli_version and cli_version < _AGENT_FLAG_MIN_VERSION:
                 raise RuntimeError(
-                    "Claude CLI < 2.1.119 does not support --agent for "
-                    f"print-mode subprocesses; got {cli_version!r}."
+                    f"Claude CLI < 2.1.119 does not support --agent for print-mode subprocesses; got {cli_version!r}."
                 )
             cmd.extend(["--agent", str(requested_agent)])
 
@@ -323,21 +443,25 @@ class ClaudeAdapter:
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
         allowed_tools = tc.get("allowed_tools")
-        if mcp_config_path and allowed_tools:
+        if mcp_config_path and allowed_tools and not review_isolation:
             cmd.extend(["--mcp-config", str(mcp_config_path), "--allowedTools", allowed_tools])
 
         # Cache-warmth optimization (CC 2.1.98+)
         if cli_version and cli_version >= _EFFORT_MIN_VERSION:
             cmd.append("--exclude-dynamic-system-prompt-sections")
 
-        # Prompt positional MUST be last, preceded by `--` end-of-options marker.
-        # See comment near `cmd.append("-p")` above for the Commander.js rationale.
-        cmd.extend(["--", prompt])
+        # Large sealed review dossiers can exceed execve ARG_MAX. Claude print
+        # mode accepts text on stdin, so the isolation path never places review
+        # evidence in argv. Ordinary calls retain the positional behavior.
+        if not review_isolation:
+            # Prompt positional MUST be last, preceded by `--` end-of-options marker.
+            # See comment near `cmd.append("-p")` above for the Commander.js rationale.
+            cmd.extend(["--", prompt])
 
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload="",  # Claude -p takes prompt as positional arg, not stdin
+            stdin_payload=prompt if review_isolation else "",
             output_file=None,
             env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=self._resolve_liveness_paths(cwd),
@@ -460,9 +584,7 @@ def _claude_project_slug(cwd: Path) -> str:
 
 
 def _claude_session_jsonl_path(cwd: Path, session_id: str) -> Path | None:
-    candidate = (
-        Path.home() / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
-    )
+    candidate = Path.home() / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
     return candidate if candidate.is_file() else None
 
 
@@ -484,8 +606,12 @@ def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
 def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
     """Extract assistant text from Claude ``--output-format stream-json`` events."""
     result_text = ""
+    structured_output: dict[str, Any] | None = None
     text_parts: list[str] = []
     for event in events:
+        structured = event.get("structured_output")
+        if isinstance(structured, dict):
+            structured_output = structured
         result = event.get("result")
         if isinstance(result, str) and result.strip():
             result_text = result.strip()
@@ -501,14 +627,12 @@ def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:
         content = event.get("content")
         if isinstance(content, list):
             for item in content:
-                if (
-                    isinstance(item, dict)
-                    and item.get("type") == "text"
-                    and isinstance(item.get("text"), str)
-                ):
+                if isinstance(item, dict) and item.get("type") == "text" and isinstance(item.get("text"), str):
                     text_parts.append(item["text"])
         elif isinstance(content, str) and event.get("type") in {"text", "assistant"}:
             text_parts.append(content)
+    if structured_output is not None:
+        return json.dumps(structured_output, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
     if result_text:
         return result_text
     return "\n".join(part.strip() for part in text_parts if part.strip()).strip()

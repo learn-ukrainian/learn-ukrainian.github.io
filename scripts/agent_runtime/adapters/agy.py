@@ -177,34 +177,61 @@ class AgyAdapter:
                 effort,
             )
 
+        tc = tool_config or {}
+        review_isolation = bool(tc.get("review_isolation"))
+        if review_isolation:
+            raise ValueError(
+                "agy_isolated_review_unsupported: AGY cannot yet prove native "
+                "project-instruction, MCP, hook, and nested-reviewer suppression"
+            )
+
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
-        log_path = _build_log_path(task_id)
-        # `--dangerously-skip-permissions` is unconditional: any tool-using
-        # prompt (file read, shell call) triggers an interactive permission
-        # prompt that would hang a headless dispatch waiting for human input.
-        # AGY exposes only an opt-in ``--sandbox`` flag (no ``--no-sandbox``
-        # counterpart), so callers that need repository reads intentionally
-        # omit it. The `mode` field is retained for runtime accounting +
-        # adapter-API parity; bridge calls use ``danger`` to report that
-        # unsandboxed state honestly. Callers (delegate.py/dispatch_smart.py)
-        # should force mode=danger for --agent agy to avoid accidental routes
-        # around this.
+        # Prefer absolute binary for isolation policy / sandbox argv0 rules.
+        with contextlib.suppress(OSError):
+            agy_bin = str(Path(agy_bin).resolve())
+        if review_isolation and tc.get("review_write_root"):
+            log_dir = Path(str(tc["review_write_root"])) / "tmp"
+            log_dir.mkdir(parents=True, exist_ok=True)
+            safe_task = "".join(c if c.isalnum() or c in "-_." else "_" for c in (task_id or "review"))[:48]
+            log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}.log"
+        else:
+            log_path = _build_log_path(task_id)
+
+        # Non-review: `--dangerously-skip-permissions` is unconditional so
+        # headless tool use does not hang on interactive prompts.
+        # Review (#5285): never skip permissions; require OS sandbox (runner)
+        # plus AGY `--sandbox` when available. Fail closed if review asks for
+        # skip-permissions explicitly.
+        if review_isolation and tc.get("agy_skip_permissions"):
+            raise ValueError(
+                "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
+            )
+
         cmd: list[str] = [
             agy_bin,
             "-p",
             prompt,
-            "--dangerously-skip-permissions",
-            "--print-timeout",
-            _AGY_PRINT_TIMEOUT,
-            "--log-file",
-            str(log_path),
         ]
+        if review_isolation:
+            # Isolation path: no --dangerously-skip-permissions.
+            if tc.get("agy_review_sandbox", True):
+                cmd.append("--sandbox")
+        else:
+            cmd.append("--dangerously-skip-permissions")
+        cmd.extend(
+            [
+                "--print-timeout",
+                _AGY_PRINT_TIMEOUT,
+                "--log-file",
+                str(log_path),
+            ]
+        )
 
         resolved_model = self._resolve_model_flag(model)
         if resolved_model:
             cmd += ["--model", resolved_model]
 
-        if session_id:
+        if session_id and not review_isolation:
             cmd.append(f"--conversation={session_id}")
 
         # ``--add-dir`` is AGY's documented way to include a directory in its
@@ -217,14 +244,9 @@ class AgyAdapter:
         # the protected primary checkout.  Permission scope remains AGY's
         # full-trust headless mode, therefore the bridge prompt supplies the
         # no-write guard.
-        if (tool_config or {}).get("bridge_repo_read"):
-            add_dir = (tool_config or {}).get("repo_read_root") or str(cwd)
+        if tc.get("bridge_repo_read") or review_isolation:
+            add_dir = tc.get("repo_read_root") or tc.get("review_snapshot_root") or str(cwd)
             cmd += ["--add-dir", str(add_dir)]
-
-        # agy reads MCP servers from its global Antigravity config. There is
-        # no per-invocation MCP CLI flag to pass here; tool_config is retained
-        # for adapter API parity and resolver diagnostics.
-        _ = tool_config
 
         return InvocationPlan(
             cmd=cmd,
