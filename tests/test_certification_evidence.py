@@ -908,7 +908,9 @@ def test_current_unresolved_independent_material_finding_blocks_a_pass(tmp_path:
     assert projection["independent_review"] == "unresolved"
 
 
-def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(tmp_path: Path) -> None:
+def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
+    qg_capture: dict[str, Any], tmp_path: Path
+) -> None:
     repo, config_path, ledger_root, ledger, inputs = _completion_case(tmp_path)
     current = _independent_value(inputs)
     current_sha = _sha("current-independent")
@@ -917,6 +919,15 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(tmp_pa
         {"path": "/outside/current.json", "sha256": current_sha, "value": current},
         {"path": "/outside/integration.json", "sha256": _sha("integration"), "value": integration},
     ]
+    ledger["state"] = "PRODUCTION_QG_REQUIRED"
+    ledger["production_qg_authorization"] = {
+        "approval_id": "qg-arm-stale-after-contract-drift",
+        "qualification_path": "/outside/qualification.json",
+        "qualification_sha256": _sha("qualification"),
+        "human_arming_path": "/outside/arming.json",
+        "human_arming_sha256": _sha("arming"),
+        "route": _route(inputs["qg_identity"], qg_capture["tier2"]),
+    }
     path = tc.ledger_path_for(tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)), repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
     tc._atomic_write_json(path, ledger)
     before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
@@ -930,7 +941,20 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(tmp_pa
     projection = tc.certification_projection(inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root)
     assert projection["post_build"] == "current"
     assert projection["integration"] == "current"
+    assert projection["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert projection["production_qg"] == "awaiting-human-arming"
+    assert projection["reason"] == (
+        "recorded production-QG authorization does not bind the current QG contract"
+    )
+    _, resumed = tc.resume_run(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert resumed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    assert resumed["production_qg_authorization"] is None
 
 
 def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) -> None:

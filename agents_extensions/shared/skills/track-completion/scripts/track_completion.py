@@ -748,7 +748,8 @@ def resume_run(
     if prior is not None and prior.get("terminal_goal") is None:
         raise CompletionError("Existing ledger has no terminal goal; run migrate-terminal-goal")
     reopening_state: str | None = None
-    if prior is not None and prior.get("run", {}).get("run_id") == run_id and prior["run"].get("status") == "completed":
+    matching_prior = prior is not None and prior.get("run", {}).get("run_id") == run_id
+    if matching_prior and prior["run"].get("status") == "completed":
         projection = certification_projection(
             selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
         )
@@ -765,6 +766,16 @@ def resume_run(
             "AUDIT_TOOLING_REQUIRED",
         }:
             reopening_state = candidate
+    elif (
+        matching_prior
+        and prior["run"].get("status") == "active"
+        and prior["state"] == "PRODUCTION_QG_REQUIRED"
+    ):
+        projection = certification_projection(
+            selector, repo_root=repo_root, config_path=config_path, ledger_root=ledger_root
+        )
+        if projection["state"] == "AWAITING_PRODUCTION_QG_ARMING":
+            reopening_state = "AWAITING_PRODUCTION_QG_ARMING"
     try:
         with _with_lock(path):
             ledger = _read_ledger(path)
@@ -776,6 +787,12 @@ def resume_run(
                     raise CompletionError("Completed runs are non-authoritative; start a new run or resume after fresh certification evidence")
                 ledger["run"]["status"] = "active"
                 resumed_state = reopening_state
+            elif (
+                reopening_state == "AWAITING_PRODUCTION_QG_ARMING"
+                and ledger["state"] == "PRODUCTION_QG_REQUIRED"
+            ):
+                resumed_state = reopening_state
+                ledger["production_qg_authorization"] = None
             drifted = ledger["current_identity"]["sha256"] != identity["sha256"]
             if drifted and ledger["state"] not in MUTATING_STATES:
                 raise CompletionError("Unrecorded identity drift outside a mutation state; adjudicate stale evidence")
@@ -2441,9 +2458,17 @@ def certification_projection(
     try:
         if runtime_authorization is not None:
             # The runtime artifacts were schema-, identity-, and hash-validated before
-            # this immutable authorization was committed to the validated ledger.
-            # Projection must remain resumable after ephemeral evidence is cleaned up.
-            authorization = runtime_authorization
+            # this immutable authorization was committed to the validated ledger. Keep
+            # it resumable after ephemeral evidence is cleaned up, but never carry it
+            # across a changed prompt/gate/budget/circuit/resume contract.
+            if certification.runtime_authorization_is_current(
+                runtime_authorization, inputs["qg_identity"]
+            ):
+                authorization = runtime_authorization
+            else:
+                authorization_reason = (
+                    "recorded production-QG authorization does not bind the current QG contract"
+                )
         elif qg["mode"] == "armed-canary":
             authorization = certification.load_authorization(
                 qg,
