@@ -838,3 +838,51 @@ def test_colorized_check_rows_still_judged(monkeypatch):
     monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
     failing, pending = guard._check_states("5")
     assert failing == [] and pending == []
+
+
+def test_colorized_pr_meta_still_parses(monkeypatch):
+    """_check_states was decolorized but _pr_meta was not (review B1 follow-up). Raw
+    parsing here raises JSONDecodeError -> None -> undeterminable -> every merge blocked,
+    draft or not. The payload must survive ANSI and keep isDraft a real boolean."""
+    completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=_COLORIZED_JSON, stderr="")
+    monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
+    assert guard._pr_meta("5") == {
+        "baseRefName": "main",
+        "isDraft": False,
+        "url": "https://github.com/owner/repo/pull/5",
+    }
+
+
+def test_colorized_pr_meta_honors_draft(monkeypatch):
+    """The draft bit must be read THROUGH the colorization, not lost to it: a colorized
+    draft payload has to still block."""
+    colorized_draft = '\x1b[1;37m{\x1b[m\x1b[1;34m"isDraft"\x1b[m: \x1b[35mtrue\x1b[m, \x1b[1;34m"baseRefName"\x1b[m: \x1b[32m"main"\x1b[m\x1b[1;37m}\x1b[m'
+    completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized_draft, stderr="")
+    monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
+    meta = guard._pr_meta("5")
+    assert meta is not None and meta["isDraft"] is True
+
+
+def test_colorized_base_protection_still_classified(monkeypatch):
+    """_base_protected's parse was raw too. Colorized protection JSON must classify as
+    protected — reading it as undeterminable blocks legitimate --auto on a guarded base."""
+    colorized = (
+        '\x1b[1;37m{\x1b[m\n'
+        '  \x1b[1;34m"required_status_checks"\x1b[m: \x1b[1;37m{\x1b[m\n'
+        '    \x1b[1;34m"contexts"\x1b[m: [\x1b[32m"Test (pytest)"\x1b[m],\n'
+        '    \x1b[1;34m"strict"\x1b[m: \x1b[35mtrue\x1b[m\n'
+        '  \x1b[1;37m}\x1b[m\n'
+        '\x1b[1;37m}\x1b[m\n'
+    )
+    completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized, stderr="")
+    monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
+    assert guard._base_protected("owner/repo", "main") is True
+
+
+def test_colorized_empty_required_checks_still_unprotected(monkeypatch):
+    """Decolorizing must not flip the empty-required-checks verdict: protection that
+    requires NOTHING is still False (auto-merge would wait for nothing and merge red)."""
+    colorized = '\x1b[1;37m{\x1b[m\x1b[1;34m"required_status_checks"\x1b[m: \x1b[1;37m{\x1b[m\x1b[1;34m"contexts"\x1b[m: [], \x1b[1;34m"checks"\x1b[m: []\x1b[1;37m}\x1b[m\x1b[1;37m}\x1b[m'
+    completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized, stderr="")
+    monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
+    assert guard._base_protected("owner/repo", "main") is False

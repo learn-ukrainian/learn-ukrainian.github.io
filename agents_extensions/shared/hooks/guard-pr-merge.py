@@ -578,7 +578,7 @@ def _pr_meta(pr: str, repo: str | None = None) -> dict | None:
     if out.returncode != 0:
         return None
     try:
-        data = json.loads((out.stdout or "").strip() or "{}")
+        data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
     if not isinstance(data, dict) or not isinstance(data.get("isDraft"), bool):
@@ -657,7 +657,7 @@ def _base_protected(owner_repo: str, base: str) -> bool | None:
             return False
         return None
     try:
-        data = json.loads((out.stdout or "").strip() or "{}")
+        data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
     if not isinstance(data, dict):
