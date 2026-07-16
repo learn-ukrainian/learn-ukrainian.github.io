@@ -439,6 +439,19 @@ def _effective_state_from_lease(state_root: Path, lease: Mapping[str, Any]) -> t
         return RolloverState.RESUMED, None
     if isinstance(native.get("replacement_thread_id"), str) and native["replacement_thread_id"].strip():
         return RolloverState.REPLACEMENT_CREATED, None
+    if not native:
+        # Non-native lease: either prepared without a native plan (current
+        # prepare for a harness with no native adapter) or its unsatisfiable
+        # legacy plan was retired at identity migration and preserved under
+        # ``native_lifecycle_retired``. The replacement binds through the
+        # recorded fallback, never a native create — projecting
+        # AWAITING_NATIVE_CREATE here would tell operators and automation to
+        # attempt a native create that can never be authorized.
+        identity = replacement.get("identity")
+        bound_id = identity.get("replacement_task_id") if isinstance(identity, Mapping) else None
+        if isinstance(bound_id, str) and bound_id.strip():
+            return RolloverState.REPLACEMENT_CREATED, None
+        return RolloverState.PREPARED, None
     return RolloverState.AWAITING_NATIVE_CREATE, None
 
 

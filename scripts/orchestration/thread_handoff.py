@@ -620,6 +620,45 @@ def write_text_atomic(path: Path, text: str) -> None:
     os.replace(tmp, path)
 
 
+def _retire_unsatisfiable_native_plan(state: dict[str, Any], *, now: datetime) -> bool:
+    """Retire a pristine legacy native plan that a non-native harness can never execute.
+
+    Leases prepared before the identity envelope carried an unconditional
+    ``native_lifecycle`` block. Deterministic legacy migration assigns the
+    ``<harness>-legacy`` slug, which is never native-capable, so a pristine
+    ``awaiting_native_create`` block is unsatisfiable: only ``register-created``
+    can bind it, and that path requires a native adapter the transition denies.
+    Converge the lease to the honest non-native fallback shape (what current
+    ``prepare`` emits for such a harness) and keep the retired block as durable
+    evidence. Touched plans (bound, failed, or supersession-pending) and
+    native-capable transitions are never retired here.
+    """
+    replacement = state.get("replacement")
+    if not isinstance(replacement, dict):
+        return False
+    native = replacement.get("native_lifecycle")
+    if not isinstance(native, dict):
+        return False
+    transition = replacement.get("title_transition")
+    if not isinstance(transition, dict) or transition.get("native_title_supported") is not False:
+        return False
+    if native.get("status") != "awaiting_native_create" or native.get("replacement_thread_id") is not None:
+        return False
+    updated_replacement = dict(replacement)
+    updated_replacement.pop("native_lifecycle")
+    updated_replacement["native_lifecycle_retired"] = {
+        **native,
+        "status": "retired_non_native_harness",
+        "retired_at": isoformat_z(now),
+        "reason": (
+            "legacy native plan is unsatisfiable on a harness without a native adapter; "
+            "converged to the recorded non-native fallback path"
+        ),
+    }
+    state["replacement"] = updated_replacement
+    return True
+
+
 def normalize_identity_state(
     state: dict[str, Any], *, agent: str, now: datetime
 ) -> tuple[dict[str, Any], bool]:
@@ -643,7 +682,8 @@ def normalize_identity_state(
             raise ValueError(f"legacy rollover cannot reserve its identity receipt: {exc}") from exc
         replacement.setdefault("identity_receipt_path", paths["identity_receipt_path"])
         normalized["replacement"] = replacement
-    return normalized, migrated
+    retired = _retire_unsatisfiable_native_plan(normalized, now=now)
+    return normalized, migrated or retired
 
 
 def write_rollover_state(
@@ -2431,7 +2471,9 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         state_error = state_error_payload(state, state_path, state_root)
         if state_error:
             raise ValueError(state_error["error"])
-        state, _ = normalize_identity_state(state, agent=agent, now=utc_now())
+        state, changed = normalize_identity_state(state, agent=agent, now=utc_now())
+        if changed:
+            write_rollover_state(state_path, state_root, state, already_locked=True)
         replacement = dict(state.get("replacement") or {})
         if replacement.get("rollover_id") != args.rollover_id:
             raise ValueError("--rollover-id does not match the isolated rollover")
@@ -2443,6 +2485,11 @@ def _cmd_repair_native_intent_locked(args: argparse.Namespace) -> int:
         source_thread_id = active.get("thread_id")
         display = replacement.get("display")
         native = replacement.get("native_lifecycle")
+        if not isinstance(native, dict) and isinstance(replacement.get("native_lifecycle_retired"), dict):
+            raise ValueError(
+                "native plan was retired as unsatisfiable for a non-native harness; "
+                "no native-intent repair applies — bind the replacement and resume instead"
+            )
         if (
             not isinstance(lineage_id, str)
             or not isinstance(generation, int)

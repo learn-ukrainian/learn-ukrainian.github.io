@@ -786,6 +786,153 @@ def test_live_lease_keeps_legacy_v2_pending_packet_compatible():
     assert replacement["identity"]["visible_title"] == "thread-rollover — Recover predecessor task context"
 
 
+def _legacy_lease_with_unconditional_native_plan(*, agent: str) -> dict:
+    """Model a pre-identity-envelope lease: no identity, native_lifecycle always present."""
+    state = prepared(agent=agent)
+    state["replacement"].pop("display")
+    state["replacement"].pop("identity")
+    state["replacement"].pop("title_transition")
+    state["replacement"].pop("identity_receipt_path")
+    assert state["replacement"]["native_lifecycle"]["status"] == "awaiting_native_create"
+    return state
+
+
+@pytest.mark.parametrize("agent", ["claude-infra", "codex"])
+def test_legacy_migration_retires_unsatisfiable_native_plan_and_unbricks_resume(agent: str):
+    state = _legacy_lease_with_unconditional_native_plan(agent=agent)
+    original_native = dict(state["replacement"]["native_lifecycle"])
+
+    normalized, changed = th.normalize_identity_state(state, agent=agent, now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+
+    assert changed is True
+    replacement = normalized["replacement"]
+    assert replacement["title_transition"]["native_title_supported"] is False
+    assert "native_lifecycle" not in replacement
+    retired = replacement["native_lifecycle_retired"]
+    assert retired["status"] == "retired_non_native_harness"
+    assert retired["family_id"] == original_native["family_id"]
+    assert retired["operation_id"] == original_native["operation_id"]
+    assert retired["replacement_thread_id"] is None
+    assert retired["retired_at"] == "2026-07-16T12:00:00Z"
+    assert "unsatisfiable" in retired["reason"]
+
+    identity, transition = task_identity.bind_replacement(
+        replacement["identity"],
+        replacement["title_transition"],
+        replacement_task_id="new-thread-1",
+        evidence="harness binding receipt for regression test",
+        now="2026-07-16T12:00:01Z",
+    )
+    replacement["identity"] = identity
+    replacement["title_transition"] = transition
+
+    resumed = th.resume_state(
+        normalized,
+        rollover_id=replacement["rollover_id"],
+        replacement_thread_id="new-thread-1",
+        now=datetime(2026, 7, 16, 12, 0, 2, tzinfo=UTC),
+    )
+    assert resumed["replacement"]["status"] == "resumed"
+    assert resumed["replacement"]["resumed_thread_id"] == "new-thread-1"
+
+
+def test_already_migrated_fallback_lease_still_retires_orphan_native_plan():
+    """A lease migrated+bound by pre-fix code keeps its orphan block; normalize must retire it."""
+    state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
+    first, _ = th.normalize_identity_state(state, agent="claude-infra", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+    replacement = first["replacement"]
+    # Simulate the pre-fix migration outcome: identity bound via fallback, orphan block intact.
+    identity, transition = task_identity.bind_replacement(
+        replacement["identity"],
+        replacement["title_transition"],
+        replacement_task_id="new-thread-2",
+        evidence="harness binding receipt recorded before the fix",
+        now="2026-07-16T12:00:01Z",
+    )
+    replacement["identity"] = identity
+    replacement["title_transition"] = transition
+    replacement["native_lifecycle"] = dict(replacement["native_lifecycle_retired"])
+    replacement["native_lifecycle"]["status"] = "awaiting_native_create"
+    del replacement["native_lifecycle_retired"]
+
+    normalized, changed = th.normalize_identity_state(
+        first, agent="claude-infra", now=datetime(2026, 7, 16, 12, 0, 3, tzinfo=UTC)
+    )
+
+    assert changed is True
+    assert "native_lifecycle" not in normalized["replacement"]
+    assert normalized["replacement"]["native_lifecycle_retired"]["status"] == "retired_non_native_harness"
+    resumed = th.resume_state(
+        normalized,
+        rollover_id=normalized["replacement"]["rollover_id"],
+        replacement_thread_id="new-thread-2",
+        now=datetime(2026, 7, 16, 12, 0, 4, tzinfo=UTC),
+    )
+    assert resumed["replacement"]["status"] == "resumed"
+
+
+def test_native_capable_packet_is_never_retired_and_resume_stays_gated():
+    state = prepared(agent="codex")  # current prepare: codex-app harness, native-capable
+
+    normalized, changed = th.normalize_identity_state(state, agent="codex", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+
+    assert changed is False
+    replacement = normalized["replacement"]
+    assert replacement["title_transition"]["native_title_supported"] is True
+    assert replacement["native_lifecycle"]["status"] == "awaiting_native_create"
+    assert "native_lifecycle_retired" not in replacement
+    with pytest.raises(ValueError, match="must be registered before resume"):
+        th.resume_state(
+            normalized,
+            rollover_id=replacement["rollover_id"],
+            replacement_thread_id="new-thread-3",
+            now=datetime(2026, 7, 16, 12, 0, 1, tzinfo=UTC),
+        )
+
+
+def test_touched_legacy_native_plan_is_never_retired():
+    state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
+    state["replacement"]["native_lifecycle"]["status"] = "supersession_pending"
+
+    normalized, _ = th.normalize_identity_state(state, agent="claude-infra", now=datetime(2026, 7, 16, 12, 0, tzinfo=UTC))
+
+    assert normalized["replacement"]["native_lifecycle"]["status"] == "supersession_pending"
+    assert "native_lifecycle_retired" not in normalized["replacement"]
+
+
+def test_repair_refuses_retired_native_plan_with_clear_error_and_persists_retirement(
+    tmp_path: Path, capsys
+) -> None:
+    state = _legacy_lease_with_unconditional_native_plan(agent="claude-infra")
+    lineage_id = state["lineage_id"]
+    rollover_id = state["replacement"]["rollover_id"]
+    state_path = th.default_state_path("claude-infra", lineage_id)
+    th.write_json_atomic(tmp_path / state_path, state)
+
+    command = [
+        "--repo-root",
+        str(tmp_path),
+        "repair-native-intent",
+        "--agent",
+        "claude-infra",
+        "--lineage-id",
+        lineage_id,
+        "--rollover-id",
+        rollover_id,
+        "--evidence",
+        "Legacy non-native packet; probing the repair path.",
+    ]
+    assert th.main(command) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert "retired as unsatisfiable" in payload["error"]
+
+    persisted = json.loads((tmp_path / state_path).read_text(encoding="utf-8"))
+    assert "native_lifecycle" not in persisted["replacement"]
+    assert persisted["replacement"]["native_lifecycle_retired"]["status"] == "retired_non_native_harness"
+    identity_receipt = tmp_path / persisted["replacement"]["identity_receipt_path"]
+    assert identity_receipt.exists()
+
+
 def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: Path, capsys, monkeypatch):
     dirty_snapshot = sample_snapshot(tmp_path)
     dirty_snapshot["git"]["modified_files"] = [{"status": "??", "path": "untracked.txt"}]
