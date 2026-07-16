@@ -92,5 +92,61 @@ def test_unknown_mode_is_rejected(tmp_path):
         _plan(tmp_path, mode="invalid")
 
 
+def test_empty_stdout_with_rc_zero_fails():
+    result = KimiAdapter().parse_response(stdout="", stderr="", returncode=0, output_file=None)
+
+    assert result.ok is False
+    assert result.response == ""
+
+
+def test_nonzero_returncode_fails_even_with_text():
+    result = KimiAdapter().parse_response(
+        stdout=json.dumps({"type": "result", "result": "looks fine"}),
+        stderr="boom",
+        returncode=1,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert "boom" in (result.stderr_excerpt or "")
+
+
+def test_rate_limit_signature_sets_rate_limited():
+    result = KimiAdapter().parse_response(
+        stdout="",
+        stderr="HTTP 429: rate limit exceeded for managed seat",
+        returncode=1,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.rate_limited is True
+
+
+def test_events_without_text_never_promote_raw_jsonl_to_success():
+    """Silent-error-as-content guard: tool/status-only streams must fail."""
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "tool_call", "name": "Read", "arguments": {"path": "x"}}),
+            json.dumps({"type": "status", "state": "working"}),
+        ]
+    )
+
+    result = KimiAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+
+    assert result.ok is False
+    assert result.response == ""
+
+
+def test_plain_text_stdout_without_jsonl_still_succeeds():
+    result = KimiAdapter().parse_response(
+        stdout="plain text answer", stderr="", returncode=0, output_file=None
+    )
+
+    assert result.ok is True
+    assert result.response == "plain text answer"
+
+
 def test_conforms_to_adapter_protocol():
     assert isinstance(KimiAdapter(), AgentAdapter)

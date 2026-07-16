@@ -27,6 +27,16 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **CodexBar / routing-budget (live 2026-07-07):** `/api/state/routing-budget` + `delegate --check-budget` = the never-trip window check for SUBSCRIPTION lanes (claude/codex/gemini/cursor/**grok**) — consult before big fanouts. **grok is a SUBSCRIPTION lane (xAI sub, user-corrected 2026-07-07), NOT API-billed** — it appears in the CodexBar snapshot (5h window) and `grok` (native CLI seat; historical alias `grok-build`) is the seat to use for coding + adversarial review; grok-4.5 is the only live Grok model. (xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197) API-billed lanes (deepseek/openrouter) are absent from CodexBar BY DESIGN (the user tracks dollar spend himself): **absence from the snapshot ≠ unavailable** — route them freely by quality fit. Any ranked-headroom view must treat absent lanes as unmetered (constraint pinned on #4640). **Deficit routing (pace > 1× of the weekly window): shed work from the over-pace lanes to the FULL relief roster — agy / grok / cursor (coding dispatches) · deepseek (dirt-cheap API: execution via hermes + the default review seat) · glm (idle Zhipu sub — standing slice of off-seat deep/security review, LOCAL-ONLY guard unchanged) · gemma (cheap surface review). Don't forget the cheap lanes exist (user reminder 2026-07-07).**
 
+**kimi — CANDIDATE lane (UNTESTED, zero automatic weight; onboarded 2026-07-16, #5326):** native
+kimi-code CLI seat (managed subscription via device-code OAuth, `~/.kimi-code/bin/kimi`; models `k3`
+(deep/ask default, 256K ctx, effort max-only) · `k2.7-coding` (dispatch default) ·
+`k2.7-coding-highspeed`). Operator-declared niche: **webdev/frontend first-pick candidate** —
+believed frontier-tier ("Fable/Sol level"), UNVERIFIED until the #5326 probe battery (frontend coding
+probe · code-review head-to-head · deterministic UA probe) posts a scorecard. Until then: EXPLICIT
+dispatch only (`delegate.py dispatch --agent kimi` / `ab ask-kimi`), member of NO automatic
+failover chain or substitution map (absence-pin), NOT a UA-content/folk seat, and NOT a QG judge
+(judge pairing is gemini↔gpt only, user order 2026-07-16).
+
 ## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11)
 
 Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label):
@@ -80,7 +90,7 @@ several models are reachable through more than one. Know both axes before routin
 |---|---|---|---|
 | **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
-| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently) | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` |
+| **native CLIs** (codex, cursor, agy, grok, claude, kimi — CANDIDATE, untested) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently) | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —

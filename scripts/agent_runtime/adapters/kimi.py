@@ -106,7 +106,18 @@ class KimiAdapter:
         """Extract terminal text from stream JSON, retaining generic fallbacks."""
         _ = (output_file, plan, call_start_time)
         events = parse_json_events(stdout, source="kimi", logger=_logger)
-        text = _stream_text(events) or (stdout or "").strip()
+        extracted = _stream_text(events)
+        if extracted:
+            text = extracted
+        elif events:
+            # Stream parsed but carried no text-bearing events (tool/status
+            # only). Raw JSONL must never be promoted to a successful
+            # response (silent-error-as-content class — see
+            # docs/bug-autopsies/hermes-inband-errors.md).
+            text = ""
+        else:
+            # No JSONL at all: plain-text output mode falls back verbatim.
+            text = (stdout or "").strip()
         failed = returncode != 0 or not text
         rate_limited = failed and bool(_RATE_LIMIT_RE.search(f"{stdout}\n{stderr}"))
         ok = returncode == 0 and bool(text) and not rate_limited
