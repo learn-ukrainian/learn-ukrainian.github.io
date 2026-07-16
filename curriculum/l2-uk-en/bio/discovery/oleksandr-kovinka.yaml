@@ -1,3 +1,4 @@
+---
 discovered_at: '2026-07-16T00:00:00+00:00'
 error: null
 query_keywords:
@@ -12,8 +13,8 @@ source_urls:
 - https://csamm.archives.gov.ua/2020/01/13/oleksandr-ivanovych-kovinka-1900-1985/
 - https://irbis-nbuv.gov.ua/ulib/item/UKR0002865
 warning: >-
-  Назву автобіографічного твору підтверджено архівним переліком; цитати без
-  видання і сторінки не використовуються.
+  Сторінка ЦДАМЛМ є архівною біографічною довідкою з переліком творів і
+  описом фонду; вона не доставляє повного тексту книжки 1957 року.
 sources:
 - id: S1
   file: https://esu.com.ua/article-7316

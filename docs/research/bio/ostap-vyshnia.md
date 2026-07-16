@@ -1,146 +1,222 @@
-# Остап Вишня (Павло Михайлович Губенко) — Research Dossier
+# Остап Вишня (Павло Михайлович Губенко) — дослідницьке досьє
 
 **Slug:** `ostap-vyshnia`
-**Block:** D (survived-but-censored / coerced / camp-returnees)
-**Tier:** 1a
-**Issue:** #2317
-**Researcher:** gemini 3.1-pro
-**Completed:** 2026-05-28
+**Статус:** джерельно обмежене дослідницьке досьє
+**Джерельний принцип:** лише ЕСУ, архівна публікація «Урядового кур'єра» та каталог НБУВ
 
----
+## 1. Джерела і розподіл їхніх ролей
 
-## 1. Verified facts
+Пакет має три джерела різних жанрів. Енциклопедія Сучасної України подає
+синтетичну біографію, літературну працю, видавничу статистику, переслідування
+та характеристику післявоєнних текстів [S1]. «Урядовий кур'єр» публікує
+відомості й витяги з архівної кримінальної справи 44228, тому є основою для
+правової хронології, формул слідства, вироків і припинення справи [S2]. НБУВ
+ідентифікує конкретну книжку «Літературні усмішки» 1924 року [S3].
 
-- **Full name (UA, canonical):** Павло Михайлович Губенко
-- **Pseudonyms / aliases:** Остап Вишня, П. Грунський. Russian-imperial transliteration "Павел Губенко" or "Остап Вишня" (with "и" transliterated as "i" via Russian phonetics like "Vishnya") are forbidden in body text.
-- **Born:** 13 November 1889 (1 November O.S.) | хутір Чечва, біля містечка Грунь, Зіньківський повіт, Полтавська губернія, Російська імперія (now Сумська область, Україна)
-- **Died:** 28 September 1956 | Київ, Українська РСР | серцевий напад
-- **Family / education key facts:** Born into a large peasant family of 17 children. Graduated from the Kyiv Military Feldsher School (1907) and worked as a medical assistant in the Russian army and railways. Entered Kyiv University in 1917 but abandoned studies for journalism. Served as an officer (Head of the Medical-Sanitary Directorate of the Ministry of Railways) in the Army of the Ukrainian National Republic (УНР) in 1918–1919.
+Ці ролі не слід змішувати. Каталог не підтверджує службу або арешт.
+Енциклопедична стаття не замінює архівної справи. Формула радянського
+слідства не стає правдою лише тому, що її збережено в документі. Досьє подає
+таку лексику як доказ механізму репресії, а не як доказ вини Павла Губенка.
+Художніх і щоденникових цитат без сторінкового локатора тут немає.
 
-**Sources:** Birth, death, and UNR service confirmed by Енциклопедія історії України (ЕІУ) and Енциклопедія Сучасної України (ЕСУ). The UNR service is a critical biographic fact that later served as the regime's underlying justification for his repression.
+## 2. Правове й літературне ім'я
 
-## 2. Oppression mechanism
+Остап Вишня — літературне ім'я Павла Михайловича Губенка. ЕСУ також фіксує
+ранній псевдонім П. Грунський [S1]. Правове ім'я потрібне для роботи з
+ордером, обвинувальним висновком, вироком і заявою про перегляд справи.
+Літературне ім'я потрібне для бібліографії, періодики й історії жанру. Їхнє
+розрізнення не розділяє людину на дві постаті, а допомагає правильно читати
+документи різного типу.
 
-Ostap Vyshnia represents a unique archetype in the Block D (survived-but-broken) cohort: the "camp-returnee." Unlike Tychyna or Rylsky who were broken by the *threat* of the Gulag, Vyshnia actually served 10 years in the camps and was then pulled back into the Soviet literary machine to serve as a weaponized propaganda asset.
+Письменник народився 13 листопада 1889 року на хуторі Чечва, пов'язаному з
+нинішнім селом Грунь Сумської області, і помер 28 вересня 1956 року в Києві
+[S1]. ЕСУ визначає його як письменника-сатирика й гумориста. Біографія не має
+зводитися ані до веселого псевдоніма, ані до табірної справи: обидві частини
+потрібні для точного розуміння його публічної долі.
 
-**Specific pressure points (documented chronology):**
+## 3. Медична освіта і перші публікації
 
-- **1919–1921:** Captured by the Bolsheviks as a high-ranking "Petliurite" officer of the UNR. Imprisoned in Kharkiv by the Cheka until the "end of the Civil War." Allegedly saved by Mykola Skrypnyk, who enjoyed his humorous sketches.
-- **1930:** The ideological preparation for his arrest began with brutal attacks in the Soviet press. Oleksii Poltoratsky published the article «Що таке Остап Вишня» in *Nova Generatsiia*, labeling Vyshnia a "fascist" and "counter-revolutionary" who smuggled "nationalist kulak ideas" into print.
-- **26 December 1933:** Arrested by the NKVD in Kharkiv during the post-Holodomor purge of the Ukrainian intelligentsia.
-- **Charges:** Accused of "counter-revolutionary terrorist activity." Specifically, the NKVD fabricated a charge that Vyshnia plotted to assassinate Pavel Postyshev (the orchestrator of the Holodomor and purges in Ukraine) during the October Revolution anniversary demonstration. Vyshnia mocked the absurdity of the charge during interrogations, famously responding: "Why don't you accuse me of raping Clara Zetkin too?"
-- **Sentence and Gulag:** Initially sentenced to execution by shooting (розстріл) on 23 February 1934 by the judicial troika of the OGPU. On 3 March 1934, the sentence was commuted to 10 years in corrective labor camps. He served this sentence in the Ukhtpechlag (Ухтпечлаг) in the Komi ASSR, working partly as a camp medic and journalist for the camp newspaper.
-- **1943 (The Coerced Return):** Suddenly released in 1943. He was not released out of clemency, but because Stalin's regime required his specific, highly popular voice. The UPA (Ukrainian Insurgent Army) was gaining ground, and Soviet propaganda needed to counter the narrative that the beloved "Ostap Vyshnia" had been murdered by Moscow. Vyshnia was relocated straight from the Pechora barracks to a writer's desk in newly de-occupied Kyiv to write anti-nationalist propaganda.
-- **The Toll:** His brother, Vasyl Chechviansky (also a humorist), was arrested and executed by the NKVD in 1937. His first wife, Olena Smyrnova, died of typhus in Kharkiv in 1933 shortly before his arrest.
+1907 року Губенко закінчив Київську військово-фельдшерську школу, після чого
+працював фельдшером у лікарні Південно-Західної залізниці в Києві [S1]. Це
+перевірена професійна основа ранньої біографії. Вона не підтверджує
+високої адміністративної посади в уряді УНР. Архівна публікація повідомляє
+лише, що слідчі пізніше ставили йому за провину працю в Міністерстві шляхів при
+уряді Гетьмана та УНР [S2]. Саме так, із вказівкою на авторство слідчої
+формули, цей факт і має подаватися.
 
-## 3. Major works
+Під псевдонімом П. Грунський Губенко почав друкуватися 1919 року в українській
+пресі Кам'янця-Подільського. Від 1921 року під іменем Остап Вишня працював у
+харківській періодиці, зокрема в газетах і журналах, які перелічує ЕСУ [S1].
+Перехід між підписами є бібліографічним фактом, а не доказом таємного
+політичного задуму.
 
-- **1919** — *Демократичні реформи Денікіна* (фейлетон). Debut publication under the pseudonym П. Грунський.
-- **1925** — *Вишневі усмішки кримські* (збірка). Established him as the "king of print runs."
-- **1927** — *Моя автобіографія* (усмішка). The programmatic work of Ukrainian literary humor.
-- **1930** — *Як із Харкова зробити Берлін* (збірка).
-- **1934–1935** — *Чиб'ю* (табірний щоденник). Camp diary from Ukhtpechlag, published posthumously in 1989.
-- **1944** — *Зенітка* (усмішка). The first work published after his return from the Gulag, signaling his "rehabilitation" to the Soviet public.
-- **1945–1946** — *Самостійна дірка* (памфлет). The coerced anti-UPA pamphlet written to fulfill the regime's terms for his release. A voice from the grave mobilized against his own people.
-- **1948–1956** — *Думи мої, думи мої...* (повоєнний щоденник). Deeply reflective, censoring his own trauma while insisting on his love for the Ukrainian people.
-- **1956** — *Мисливські усмішки* (збірка). The late-period masterpiece where he retreated into apolitical nature writing to survive the post-war ideological climate.
+## 4. Арешт 1921 року й роль Блакитного
 
-## 4. Primary-source quotes (≥2 required)
+«Урядовий кур'єр» повідомляє, що Павла Губенка вперше заарештували 1921 року у
+справі центрального комітету Української партії соціалістів-революціонерів.
+Його засудили до трьох років концтабору, але звільнили за клопотанням
+письменника й громадсько-політичного діяча Василя Еллана-Блакитного [S2]. ЕСУ
+також пов'язує початок співпраці у «Вістях ВУЦВК» із редактором Василем
+Блакитним і прямо говорить про його авторитет у звільненні Губенка з підвалів
+ВУЧК [S1].
 
-### Quote 1 — The Usmishka Genre and Self-Deprecation
-From *Моя автобіографія* (1927):
+Отже, прийнятий пакет однозначно називає Блакитного. Приписувати цю роль
+іншій особі немає підстав. Так само не слід домислювати точну ранню посаду
+Губенка, рік такої посади або керівний статус. Джерельно чесна хронологія вже
+достатньо виразна: арешт, вирок, клопотання конкретної людини й звільнення.
 
-> **"У мене нема жодного сумніву в тому, що я народився, хоч і під час мого появлення на світ божий... мати казала, що мене витягли з колодязя, коли напували корову Оришку."**
+## 5. Популярність і тематичне поле 1920-х
 
-*Pedagogical note:* This quote perfectly encapsulates the *усмішка* (usmishka) genre he invented. By employing absurd hyperbole and folksy colloquialisms, Vyshnia mocks the rigid, bureaucratic structure of the standard Soviet autobiography. It is highly useful for B1/B2 learners studying irony and narrative voice.
+ЕСУ описує надзвичайну популярність Вишні: двадцять три його книжки мали
+сорок два видання, а загальний наклад у 1920-х роках поступався лише накладові
+творів Тараса Шевченка [S1]. Це показник широкої української читацької
+публічності, а не автоматична оцінка кожного тексту. Він також пояснює, чому
+письменник був помітною фігурою для державного контролю.
 
-### Quote 2 — The Tragedy of the Humorist
-From the post-war diary *Думи мої, думи мої...* (1948–1956):
+Збірки фейлетонів і гуморесок стосувалися сільського господарювання, побуту,
+культури й освіти. ЕСУ наголошує, що Вишня виступав за гідне місце української
+мови й культури в суспільній і державній практиці, критикував російський
+великодержавний шовінізм, висвітлював успіхи й прорахунки українізації [S1].
+Ці факти повертають український мовний центр його сатирі, але не дозволяють
+назвати кожний фейлетон політичним спротивом.
 
-> **"Треба було сміятися, бо інакше я б плакав."**
+## 6. «Усмішка» і конкретне видання
 
-*Pedagogical note:* This is the central pedagogical key to understanding Vyshnia in the Block D context. It breaks the facade of the cheerful "people's humorist" and reveals the psychological mechanism of survival. This quote should anchor any C1/C2 discussion on the toll of totalitarianism on the artist's psyche.
+Інституційні джерела пов'язують Остапа Вишню з особливим жанром «усмішки».
+Для навчання важливо не перетворювати жанрову назву на абстрактний синонім
+будь-якого жарту. Усмішка працює з адресатом, розмовною інтонацією,
+спостереженням, шаржем і сатиричним загостренням. Конкретний текст може бути
+доброзичливим, в'їдливим або політично замовним; це визначається читанням
+самого видання.
 
-### Quote 3 — Identity and Language
-From the post-war diary *Думи мої, думи мої...*:
+НБУВ описує «Літературні усмішки / Остап Вишня»: Харків, Державне
+видавництво України, 1924 рік, 25 сторінок [S3]. Каталог подає книжку як
+збірку шаржів на українських митців. Цих даних достатньо для перевірки автора,
+назви, видавця, року, обсягу й загального жанрового означення. Їх недостатньо
+для відтворення окремої фрази без сторінки. Тому бібліотечний ресурс у плані є
+зовнішнім читанням, а не сховищем цитат для вільного копіювання.
 
-> **"Мову свою я взяв з маминої циці. Це — невичерпне джерело мовне. Зверніть увагу на це, матері, і ваших діточок ніколи не доведеться українізувати."**
+## 7. Офіційне цькування
 
-*Pedagogical note:* A powerful statement on organic language acquisition vs. state-sponsored "Ukrainization" campaigns. Excellent for L2 learners discussing language transmission, identity, and the generational chain of the Ukrainian language.
+Від кінця 1920-х і на початку 1930-х років офіційна критика розгорнула проти
+Вишні кампанію цькування. ЕСУ повідомляє, що його називали
+контрреволюціонером і фашистом [S1]. Такі слова слід залишати в ролі ярликів
+офіціозу. Вони свідчать про виробництво образу ворога, а не встановлюють
+політичну або кримінальну характеристику людини.
 
-## 5. Language register
+Для семінару важливо пов'язати цю мову з подальшою кримінальною конструкцією,
+але не оголошувати газетну атаку прямою юридичною причиною арешту без
+документа. Джерела дають послідовність публічного цькування та арешту, а
+висновок про кожен канал ухвалення рішення потребував би окремих матеріалів.
 
-- **Register:** Predominantly folk-colloquial and conversational, deliberately fused with bureaucratic and pseudo-academic registers for satirical contrast.
-- **CEFR readiness for full reading:**
-  - *Мисливські усмішки* — B1/B2 (accessible, nature-focused, rich in accessible vocabulary).
-  - *Моя автобіографія* — B2 (requires some understanding of the tropes being parodied).
-  - Diaries — B2/C1.
-  - Satires and pamphlets — C1 (requires heavy contextual knowledge of the 1920s Soviet reality).
-- **Lexicon notes:** Vyshnia is the master of the Ukrainian conversational idiom. He uses dialectisms, rich synonymic rows, and neologisms (he coined the term *усмішка* to replace the foreign *фейлетон*). He frequently employs Russianisms and Soviet bureaucratic jargon ("канцелярит") strictly as objects of mockery.
-- **Stylistic features:** Hyperbole, litotes, self-deprecation, and the "skaz" narrative technique (a first-person narrator with a highly specific, often uneducated, colloquial voice).
+## 8. Арешт 1933 року і справа 44228
 
-## 6. Contested points
+26 грудня 1933 року до квартири Вишні в харківському будинку «Слово» прийшли
+співробітники ДПУ УСРР, провели трус і заарештували Павла Губенка [S2]. У
+постанові про запобіжний захід було зазначено, що арешт відбувався за особистим
+розпорядженням голови ДПУ УСРР Всеволода Балицького. Разом із ним у справі
+проходили інші українські громадські, наукові й літературні діячі [S2].
 
-1. **The Coerced Pamphlets:** The publication of *Самостійна дірка* (1945–46) against the UPA is the most contested point of his biography. Soviet historiography framed this as his "ideological maturation" and realization of the "truth." Modern Ukrainian scholarship frames it as coercion—the explicit price he paid to Stalin for his life and the safety of his remaining family. The fact that the UPA underground reportedly welcomed his release (knowing he was coerced, but glad he survived) complicates the narrative of pure betrayal.
-2. **The King of Print Runs vs. The Victim:** In popular memory, Vyshnia is often simplified into a cheerful, grandfatherly figure (associated with *Мисливські усмішки*). This hagiography erases the trauma of his 10 years in the Ukhtpechlag and the destruction of his psychological health. He was a broken man who hid his trauma behind hunting stories because it was the only politically safe genre left to him.
-3. **Russian Disinformation:** Russian narratives occasionally attempt to claim him as a "Soviet satirist," entirely erasing his UNR officer past, his Cheka imprisonment in 1919, and the 10 years the Soviet regime stole from him in the Gulag.
+Слідство використало конструкцію про українську контрреволюційну організацію,
+яка нібито мала повалити радянську владу збройним шляхом. Павлові Губенку
+пригадали працю в Міністерстві шляхів при уряді Гетьмана та УНР, співпрацю з
+друкованими органами, а головним пунктом зробили належність до вигаданої
+Української військової організації й план убивства Павла Постишева [S2]. Усі
+ці формули описують фабрикацію обвинувачення, а не підтверджену діяльність.
 
-## 7. Cross-track links
+## 9. Вирок, заміна покарання і звільнення
 
-- **Existing LIT modules (planned, discovery state):**
-  - Potential (Phase 2+) candidate: a module defining the *усмішка* genre (not yet planned).
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/rozstriliane-vidrodzennia.yaml` — Vyshnia must be explicitly contrasted with those who were shot; his survival illustrates the regime's pragmatic use of terror.
-  - `plans/hist/upa.yaml` — Context for why the regime needed Vyshnia to write *Самостійна дірка*.
-- **Connected bios already in place:**
-  - `mykola-khvylovyi.yaml` — Close friend and VAPLITE contemporary.
-  - `maksym-rylskyi.yaml` — Vyshnia rushed to Kyiv to financially and morally support Rylsky's family when Rylsky was arrested in 1931. Both share the Block D "survived-but-coerced" trajectory.
-  - `mykola-kulish.yaml` — Close friend; Vyshnia often hunted with him. Kulish was shot in Sandarmokh; Vyshnia survived Pechora.
-  - `oleksandr-dovzhenko.yaml` — Dovzhenko leveraged his wartime capital with Stalin to petition for Vyshnia's release in 1943.
+23 лютого 1934 року колегія ОДПУ засудила Остапа Вишню до розстрілу. 3 березня
+1934 року цей вирок замінили десятьма роками виправно-трудового табору [S2].
+ЕСУ повідомляє про вислання до сталінських таборів на Півночі, у Комі АРСР
+[S1]. Прийнятий пакет не потребує додаткової назви конкретної табірної
+установи, побутової легенди або ефектної відповіді слідчому.
 
-## 8. Naming-canonical
+25 вересня 1943 року особлива нарада при народному комісарі внутрішніх справ
+СРСР постановила знизити строк до фактично відбутого й звільнити Павла
+Губенка. 8 жовтня, після майже десяти років ув'язнення, він вийшов на волю
+[S2]. Джерела не встановлюють, що конкретний пізніший памфлет був умовою
+цього рішення. Тому досьє не перетворює часову послідовність на доказ угоди,
+якої прийняті матеріали не називають.
 
-- **Slug:** `ostap-vyshnia`
-- **EN canonical (BGN/PCGN 2010):** Ostap Vyshnia
-- **UA canonical (with patronymic):** Остап Вишня (Павло Михайлович Губенко)
-- **Aliases for `aliases:` field:**
-  - Губенко Павло Михайлович
-  - П. Грунський
-- **Forbidden forms (flag in body text):**
-  - "Ostap Vishnya" (Russian-imperial transliteration)
-  - "Pavel Gubenko" (Russian-imperial transliteration)
+## 10. Повоєнне письмо без виправдання й демонізації
 
-## 9. Image candidates
+Від 1944 року Вишня мешкав у Києві й повернувся до сатирико-гумористичної
+праці [S1]. ЕСУ окремо характеризує «Мисливські усмішки» як твори про
+багатство й красу українських лісів, річок і озер та про людське спілкування
+з природою. Цей цикл має власний тематичний зміст; називати природу лише
+втечею від політики без доказу було б редукцією.
 
-- **Best PD/CC portrait:** [File:Ostap Vyshnya.jpg on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ostap_Vyshnya.jpg) — A standard 1920s portrait before his arrest. License is PD-Ukraine.
-- **Backup candidate:** Any PD photo of Vyshnia in his later years (post-1943), showing the visible toll of the camps, to contrast with the cheerful 1920s photos.
-- **Era-appropriate context image:** The cover of *Моя автобіографія* or the arrest warrant / NKVD mugshot if available via archives (ГДА СБУ), serving as stark documentary proof of his repression.
+Водночас ЕСУ прямо зазначає, що низка повоєнних текстів була витримана в дусі
+офіційних партійно-державних настанов, а памфлети проти українських
+«буржуазних націоналістів» мали замовний характер [S1]. Цей факт не слід
+замовчувати через табірний досвід автора. Але й замовний памфлет не може бути
+ретроспективним виправданням сфабрикованої справи. Відповідальний аналіз
+тримає разом примусове минуле, конкретний текст і його суспільний наслідок.
 
-## 10. Sources used
+## 11. Вилучення книжок і тривалість правового тавра
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Вишня Остап." https://esu.com.ua/article-34351. Accessed 2026-05-28.
-- Енциклопедія історії України. "Вишня Остап." Т. 1. Київ: Наукова думка, 2003. С. 521-522.
+Архівна публікація містить повідомлення Головліту, що 1938 року Павло Губенко
+та інші українські письменники були внесені до наказу про вилучення всіх
+їхніх творів із книготорговельної мережі й бібліотек громадського
+користування [S2]. У документах не збереглися сліди причини цього вилучення.
+Це важлива межа: факт вилучення встановлено, але мотив не треба вигадувати.
 
-**Tier 2 (institutional):**
-- Лавріненко Юрій. *Розстріляне відродження: Антологія 1917–1933*. Париж: Інститут літературний, 1959. (Profiles Vyshnia as a central figure of the 1920s renaissance before his camp sentence).
-- Sectoral State Archive of the Security Service of Ukraine (ГДА СБУ). Case file references regarding his 1933 arrest and the fabricated Postyshev assassination plot (cited via modern scholarship).
+Звільнення 1943 року не припинило автоматично кримінальної справи. 9 червня
+1955 року Вишня звернувся до військового прокурора Київського військового
+округу з проханням переглянути справу й реабілітувати його. 25 жовтня
+військовий трибунал припинив справу, а 28 жовтня цей висновок оголосили
+письменникові [S2]. Часовий розрив між виходом на волю і правовим рішенням
+показує тривалість наслідків репресії.
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Остап Вишня." Accessed 2026-05-28. (Used for bibliographic timelines and cross-checking dates against Tier 1).
+## 12. Праця з мовою, жанрами й перекладом
 
-**Tier 4 (modern scholarly post-1991):**
-- Цалик С. М., Селігей П. О. *Таємниці письменницьких шухляд: Детективна історія української літератури*. Київ: Наш час, 2010. С. 224-279. (Detailed analysis of his arrest, the Postyshev plot fabrication, and his release).
+Вишня працював не лише з усмішкою. ЕСУ називає оповідання, тексти для дітей,
+гумористичні нариси й художні переклади [S1]. Перелік перекладених авторів
+показує жанрову широту, але не дозволяє оцінити конкретний переклад без
+оригіналу та українського тексту. Так само багатство розмовної інтонації не
+слід описувати неперевіреними щоденниковими афоризмами.
 
----
+Мовний вимір має деколонізаційне значення саме там, де його підтверджує ЕСУ:
+захист місця української мови, критика російського великодержавного шовінізму,
+увага до українізації та сучасної української публіки [S1]. Це конкретніша й
+надійніша основа, ніж декоративне твердження про «природний національний
+характер» гумору.
 
-## Decolonization self-check (run before submitting)
+## 13. Епістемічні застереження
 
-- [x] No Russocentric framing (His forced anti-UPA writings are explicitly framed as coercion, not ideological enlightenment).
-- [x] No Russian-imperial transliterations in body text.
-- [x] No Russocentric periodization (The 1918-1919 period is framed around the UNR, not the "Civil War").
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms (His survival and the execution of his peers/brother are stated plainly).
-- [x] All place names use modern UA canonical form (Київ, Харків).
-- [x] Holodomor referenced directly as the context for the 1933 purges.
-- [x] Modern UA framing applied throughout.
+Прийняті джерела дають підставу назвати лише працю в Міністерстві шляхів при
+уряді Гетьмана та УНР як формулу слідства [S2]. Обидва прямі джерела називають
+Василя Еллана-Блакитного в історії звільнення 1921 року [S1, S2]. Художні й
+щоденникові репліки без локатора не використовуються. Джерела також не
+дозволяють пояснювати звільнення 1943 року конкретним завданням, якщо документ
+такого зв'язку не встановлює.
+
+Джерельна скромність не означає применшення терору. Справа 44228, трус,
+арешт, сфабрикована УВО, смертний вирок, десять років табору, вилучення книжок
+і відкладене припинення справи утворюють перевірену картину державного
+переслідування [S2]. Саме точність робить цю картину стійкою до пропаганди.
+
+## 14. Питання для семінару
+
+1. Чому літературне й правове ім'я потрібні для різних типів документів?
+2. Як слід цитувати формулу слідства, щоб не перетворити її на біографічну
+   правду?
+3. Що саме підтверджує бібліотечний запис «Літературних усмішок»?
+4. Чим звільнення 1943 року відрізняється від припинення справи 1955 року?
+5. Як аналізувати замовні післявоєнні памфлети, не виправдовуючи їх і не
+   виправдовуючи ними попередню репресію?
+
+## 15. Прийняті джерела
+
+- **[S1]** Зуб І. В. «Вишня Остап». Енциклопедія Сучасної України. URL:
+  https://esu.com.ua/article-34331
+- **[S2]** Кирпич Л. «Кому веселе, а кому сумне». «Урядовий кур'єр»,
+  публікація матеріалів справи 44228. URL:
+  https://ukurier.gov.ua/uk/articles/komu-vesele-komu-sumne/
+- **[S3]** «Літературні усмішки» (1924). Електронна бібліотека «Україніка»,
+  НБУВ. URL: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030769
+
+Усі три ресурси лишаються зовнішніми посиланнями. Повний текст не переноситься
+до курсу. Портрет не використовується, бо прийнятий набір не доводить
+походження й придатну файл-специфічну ліцензію конкретного зображення.

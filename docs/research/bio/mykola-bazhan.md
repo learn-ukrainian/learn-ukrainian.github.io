@@ -1,146 +1,251 @@
-# Микола Платонович Бажан — Research Dossier
+# Микола Платонович Бажан — дослідницьке досьє
 
 **Slug:** `mykola-bazhan`
-**Block:** D (survived-but-censored / coerced / camp-returnees)
-**Tier:** 1a
-**Issue:** #2317
-**Researcher:** gemini 3.1-pro
-**Completed:** 2026-05-26
+**Статус:** джерельно обмежене дослідницьке досьє
+**Джерельний принцип:** лише прийняті ЕСУ та НБУВ; тяжкі звинувачення потребують окремого прямого джерела
 
-## 1. Verified facts
+## 1. Структура доказової бази
 
-- **Full name (UA, canonical):** Микола Платонович Бажан
-- **Pseudonyms / aliases:** Бажан Микола Платонович (academic-citation order), Нік Бажан, Панфутурист, Н. Б., Петро Уманський (NKVD operative pseudonym).
-- **Born:** 26 вересня (9 жовтня) 1904 [Julian / Gregorian] | Кам'янець-Подільський, Подільська губернія, Russian Empire (now Хмельницька область, Україна)
-- **Died:** 23 листопада 1983 | Київ, Ukrainian SSR | natural causes
-- **Family / education key facts:** Father Платон Бажан was a military topographer (Tsarist lieutenant colonel, later UNR army officer). Mykola spent his youth in Uman, studied at the Uman Cooperative Technical School (graduated 1921), and later at the Kyiv Cooperative Institute and Institute of External Relations. [T1: ЕСУ — Бажан Микола Платонович]
+Пакет спирається на два прямі українські інституційні джерела. Стаття
+Енциклопедії Сучасної України подає життєві дати, освіту, ранню стильову
+траєкторію, заборону дальшого друку «Сліпців», перехід до офіційної поетики,
+державні й редакторські посади, пізні твори, переклади та роботу в Українській
+радянській енциклопедії [S1]. Каталог НБУВ установлює бібліографічну
+ідентичність «Вибраних поезій» 1940 року та перелічує цикли й поеми у виданні
+[S2].
 
-## 2. Oppression mechanism
+Оскільки прийнятий набір не містить окремої архівної справи, це досьє не
+додає до енциклопедичної статті тяжких біографічних звинувачень з інших
+матеріалів. Воно не замінює відсутній архів і не виводить приватних мотивів
+із посади чи нагороди.
 
-Mykola Bazhan's oppression is a classic example of "**покара славою**" (punishment by glory), identical in structure to Pavlo Tychyna's trajectory, though achieved through intense direct NKVD intimidation. He was broken via the threat of physical destruction and forced into both literary and operational capitulation.
+## 2. Канонічне ім'я, дати й фахи
 
-**Specific pressure points (documented chronology):**
-- **1935:** The OGPU/NKVD opened "criminal case № 1377" against Bazhan, accusing him of belonging to a "clandestine Ukrainian Military Organization" (which also implicated Yuriy Yanovsky and Maksym Rylsky). By August 1935, a note was added to the file stating his "membership in a terrorist organization is established" — a formal ground for immediate execution. [T1: ЕСУ — Бажан Микола Платонович]
-- **March 1936:** Under the weight of Case-formular № 2055 (opened in 1929, declassified only in 2010), the NKVD successfully recruited Bazhan as an informant under the pseudonym "Петро Уманський" (Petro Umansky). Researchers from the Center for Research on the Liberation Movement (ЦДВР) note that Bazhan collaborated reluctantly, often sabotaged scheduled meetings, and actively tried to protect figures he was assigned to report on, such as Oleksandr Dovzhenko and Ahatanhel Krymsky. [T2: ЦДВР / Укрінформ — Архіви КҐБ]
-- **1938:** The peak of the Great Terror. Bazhan expected to be arrested every night and frequently slept away from home to avoid the "black raven" (NKVD arrest vans).
-- **31 January 1939:** A sudden, shocking reversal. By decree of the Presidium of the Supreme Soviet, Bazhan was awarded the Order of Lenin. This "pardon" officially ended the threat of his physical destruction, transitioning him fully into the Soviet establishment. [T3: uk.wikipedia]
+Канонічне ім'я — Микола Платонович Бажан. ЕСУ датує його життя 26 вересня
+(9 жовтня) 1904 року — 23 листопада 1983 року. Він народився в
+Кам'янці-Подільському й помер у Києві [S1]. Джерело визначає Бажана як поета,
+перекладача, літературознавця, громадського й державного діяча. Такий перелік
+важливий, бо його біографія належить одночасно історії поезії, перекладу,
+редакторської роботи та радянських інституцій.
 
-**Subsequent absorption into the regime:**
-Like Tychyna, Bazhan was forced to use his massive intellectual talent for the regime. He became a high-ranking official: Deputy Chairman of the Council of Ministers of the Ukrainian SSR (1943–1949), deputy of the Supreme Soviet, and member of the Central Committee of the CPU. However, Bazhan also used his resulting immunity to preserve Ukrainian culture: he directed the 17-volume *Ukrainian Soviet Encyclopedia* and, importantly, initiated the rehabilitation of repressed writers (Bobynsky, Kulish, Antonenko-Davydovych, etc.) during the 1956 Khrushchev Thaw.
+Академічні звання, державні премії та відзнаки, які перелічує ЕСУ, є фактами
+офіційного статусу [S1]. Вони не утворюють автоматичної моральної оцінки.
+Нагорода може показувати включення до державного культурного поля, але не
+доводить змісту приватного рішення й не скасовує заборон на друк. Тому досьє
+розглядає відзнаки поряд із цензурними межами, а не замість них.
 
-## 3. Major works
+## 3. Освіта, кіно й редакторська праця
 
-Bazhan's bibliography splits cleanly into high modernist brilliance, forced Stalinist panegyrics, and a late-life return to philosophical depth (often masked as translation or historical poetry).
+У 1923–1925 роках Бажан навчався в Київському інституті зовнішніх відносин
+[S1]. ЕСУ не подає в цій статті розгорнутої уманської освітньої передісторії,
+тому вона не використовується як точна основа плану. Після навчання Бажан
+працював редактором і кіносценаристом на Одеській кіностудії, а в 1926–1930
+роках редагував журнал «Кіно» [S1].
 
-- **1926** — *Сімнадцятий патруль*, poetry collection, debut book.
-- **1928** — *Гетто в Умані*, poem. A complex expressionist exploration of history and suffering.
-- **1929** — *Будівлі*, poetry cycle/collection. Considered the peak of Ukrainian constructivism and expressionism.
-- **1929** — *Гофманова ніч*, poem.
-- **1931** — *Сліпці*, historical poem. Widely considered his creative zenith.
-- **1932** — *Товариш стоїть в зореноснім Кремлі*, verse. The explicit marker of his ideological capitulation to Stalinism.
-- **1935–1937** — *Безсмертя*, poem-trilogy about Kirov. Soviet laureate output.
-- **1939** — *Клич вождя*, poem.
-- **1941** — *Клятва*, wartime verse. Extremely popular mobilizing piece during WWII.
-- **1942** — *Данило Галицький*, poem. A return to Ukrainian historical themes, permitted under wartime patriotic mobilization.
-- **1948** — *Англійські враження*, poetry cycle (Stalin Prize, 1949).
-- **1964** — *Політ крізь бурю*, poem.
-- **1976** — *Нічні роздуми старого майстра*, poem. A late-period masterpiece reflecting his profound encyclopedic and philosophical depth.
+Кінематографічна праця є документованою професійною обставиною, але не
+дозволяє називати будь-яку поему сценарною або виводити образ із конкретного
+виробничого епізоду. Так само редакторська посада не відкриває приватної
+психології. Для навчального читання корисніше зіставити роки праці й
+публікацій, а потім аналізувати композицію конкретного тексту за самим
+виданням.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Від футуризму до інтенсивно-пластичного стилю
 
-### Quote 1 — Pre-capitulation, expressionist constructivism
+ЕСУ повідомляє, що у 1920-х роках Бажан починав як футурист, далі працював як
+експресіоніст і неоромантик. Серед ранніх книжок названо «17-ий патруль» 1926
+року та «Різьблену тінь» 1927 року [S1]. Ці стильові означення описують
+траєкторію пошуку, а не незмінну сутність автора. Вони допомагають побачити
+перехід між мистецькими програмами, але не замінюють аналізу окремого твору.
 
-From the cycle *Будівлі* (1929), section «Собор»:
+На межі 1920-х і 1930-х років, за ЕСУ, сформувався інтенсивно-пластичний,
+насичений, бриластий стиль з ознаками необароко та прагненням до синтезу
+мистецтв. Цю фазу репрезентують «Будівлі» 1929 року [S1]. Джерело наголошує
+на пристрасній патетиці, багатстві словника й прагненні осмислити минуле
+України у світовому контексті. Саме ці перевірені характеристики слід
+використовувати замість неатестованих поетичних рядків.
 
-> **Звучить колона, як гобоя звук,**
-> **Звучить собор камінним Dies irae,**
-> **Мов ораторія голодних тіл і рук.**
+## 5. «Гофманова ніч» і мова офіційної критики
 
-*Pedagogical note:* This represents Bazhan at the height of his avant-garde, constructivist power. The heavy architectural terminology ("колона", "собор"), musical synesthesia ("гобоя звук", "ораторія"), and intense, almost terrifying historical weight ("камінним Dies irae") define his 1920s style. This requires C1-level vocabulary but provides a masterclass in Ukrainian expressionism.
+Поема «Гофманова ніч» 1929 року в ЕСУ поставлена поруч із гострою критикою за
+нібито відхід від революційної тематики, втрату сучасності та перехід до
+ліричної суб'єктивної теми [S1]. Формули критики слід подавати як мову
+партійного нормативного поля. Вони показують, чого офіціоз вимагав від
+літератури, але не є нейтральним описом художньої якості.
 
-### Quote 2 — Post-capitulation, the "survival ticket"
+Стаття характеризує «Гофманову ніч» як твір про трагедію безсилля митця у
+ворожому оточенні [S1]. Це інтерпретація прийнятого енциклопедичного джерела,
+а не пряме авторське самосвідчення. Семінар має навчити відрізняти
+енциклопедичну характеристику, критичний ярлик доби та голос конкретного
+поетичного тексту.
 
-From the ode *Товариш стоїть в зореноснім Кремлі* (1932):
+## 6. Правильна дата «Сліпців»
 
-> **Товариш стоїть в зореноснім Кремлі,**
-> **Він бачить всі думи, всі справи землі...**
+ЕСУ фіксує публікацію першої частини поеми «Сліпці» 1933 року [S1]. Дальше
+друкування було заборонено, а автора комуністична критика затаврувала як
+націоналіста. Рік 1933 є джерельно підтвердженим і має стояти в плані та
+досьє.
 
-*Pedagogical note:* This quote acts as the exact structural equivalent to Tychyna's «Партія веде». The complex, multi-layered philosophical poetry is flattened into a primitive, quasi-religious panegyric to Stalin. Pedagogically, reading this alongside *Будівлі* demonstrates exactly what totalitarianism demands of literature: the erasure of ambiguity and the enforcement of absolute subjection.
+Стаття пов'язує зміст першої частини з передбаченням майбутнього відродження
+України [S1]. Це дає деколонізаційний орієнтир, але не дозволяє відтворювати
+поему без локатора або приписувати цензорам додатковий мотив поза текстом
+джерела. Факт заборони достатньо сильний сам по собі: він показує межу
+допустимого українського історичного уявлення в офіційному полі.
 
-## 5. Language register
+## 7. Перехід до офіційної поетики
 
-- **Register:** Extremely varied based on the era. The 1920s and late 1970s work is high modernist, philosophical, and expressionist, characterized by dense, heavy phrasing ("барокова пишність"). The 1930s-1940s work is bureaucratic, party-line Soviet verse.
-- **CEFR readiness for full reading:**
-  - *Будівлі*, *Сліпці*, *Гофманова ніч* — C1/C2. Requires deep cultural, historical, and architectural vocabulary.
-  - *Товариш стоїть в зореноснім Кремлі* and official Soviet odes — B1. (Syntactically simple, though the pedagogical analysis of *why* it is simple is C1).
-  - Philosophical translations (e.g., Rustaveli, Rilke) — C1+.
-- **Lexicon notes:** Bazhan is a master of the "heavy," sculpted Ukrainian word. Look for architectural terms, neologisms, and dense consonant clusters (alliteration).
-- **Stylistic features:** Constructivism, expressionism, "sculptural" and "architectural" poetic forms, philosophical depth, and extreme lexical richness.
+Після заборони дальшого друку «Сліпців» ЕСУ говорить про злам у творчості
+Бажана й перехід до офіційного стилю соціалістичного реалізму [S1]. Стаття
+називає поеми, що сакралізували комуністичних лідерів і радянську дійсність,
+а також твори з офіційною критикою Заходу. Цю частину доробку не слід
+приховувати за образом раннього авангардиста.
 
-## 6. Contested points
+Водночас саме слово «злам» у джерелі не є дозволом вигадувати точну сцену
+психологічної капітуляції. Для таких тверджень потрібні окремі документи,
+яких у прийнятому пакеті немає. Епістемічно відповідальна розповідь називає
+послідовність публікації, заборони й стильової зміни, не перетворюючи її на
+неперевірену приватну біографію.
 
-1. **The nature of his survival:** Like Tychyna and Rylsky, Bazhan's capitulation is heavily debated. Did he trade his poetic soul for his life and privileges, or did he make a necessary, horrific compromise that allowed him to protect Ukrainian culture (through translations and the *Ukrainian Soviet Encyclopedia*)?
-2. **The NKVD Informant file:** The 2010 declassification of his informant file (Agent "Petro Umansky") added a grim layer to his biography. Modern UA scholarship emphasizes that he was coerced under threat of death and used his position to write evasive reports that protected his colleagues (like Dovzhenko), rather than acting as a willing executioner.
-3. **Soviet Hagiography:** For decades, Bazhan was presented purely as a monumental, loyal Soviet academician and "Hero of Socialist Labor." Stripping away this monumentality to reveal the terrified, broken avant-garde poet of the 1930s is the primary goal of modern decolonized study.
-4. **Russian Disinformation:** Russian narratives attempt to claim Bazhan as a "Soviet" poet, entirely ignoring the expressionist, profoundly Ukrainian national roots of his early masterpieces like *Сліпці* and *Гетто в Умані*.
+## 8. Воєнні твори й офіційні посади
 
-## 7. Cross-track links
+ЕСУ відзначає, що навіть у межах офіційної поетики з'являлися твори, які не
+вкладалися в просту схему соціалістичного реалізму, зокрема «Труна Тимура»,
+історична драма-фреска «Данило Галицький» 1942 року й «Сталінградський зошит»
+[S1]. Ці назви показують різнорідність доробку, але оцінка кожного твору
+потребує тексту й видання.
 
-- **Existing LIT modules (planned, discovery state):**
-  - `plans/lit/bazhan-idols.yaml` — focused on *Будівлі* and *Гофманова ніч*.
-  - `plans/lit/bazhan-quiet-step.yaml` — focused on *Будівлі* and *Гофманова ніч*.
-  - `plans/lit/tychyna-soviet-period.yaml` — comparing his 1932 turn with Tychyna's 1933 turn.
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/mekhanizm-teroru.yaml`
-- **Connected bios already in place/proposed:**
-  - `pavlo-tychyna` (Tier 1a) — the exact same trajectory of "покара славою" and co-option into high government roles.
-  - `maksym-rylskyi` (Tier 1a) — arrested in the same 1935 manufactured "Ukrainian Military Organization" case.
-  - `oleksandr-dovzhenko` (Tier 1a) — the colleague Bazhan tried to protect from the NKVD.
-  - `yuriy-yanovskyi` (Tier 2) — his close friend and neighbor in the "Rolit" house, also implicated in the 1935 NKVD case.
+Посадова хронологія має бути подана точно. У 1943–1948 роках Бажан був
+заступником Голови Ради Міністрів УРСР, у 1953–1959 роках — головою Спілки
+письменників України, а в 1958–1983 роках — головним редактором Української
+радянської енциклопедії [S1]. Кінцевий рік першої посади — 1948.
 
-## 8. Naming-canonical
+## 9. Посада як факт, а не психологічний вирок
 
-- **Slug:** `mykola-bazhan`
-- **EN canonical (BGN/PCGN 2010):** Mykola Bazhan
-- **UA canonical (with patronymic):** Микола Платонович Бажан
-- **Aliases for `aliases:` field:**
-  - Бажан Микола Платонович
-  - Нік Бажан
-  - Петро Уманський (NKVD pseudonym - flag context)
-- **Forbidden forms (flag in body text):**
-  - Nikolai Bazhan (Russian-imperial translation)
+Висока посада означає участь у радянській державній та культурній системі.
+Вона дає підставу досліджувати конкретні рішення, редакторську політику й
+суспільні наслідки. Вона не доводить автоматично ані повної внутрішньої
+лояльності, ані таємного спротиву. Таке саме правило стосується премій,
+депутатства й академічного статусу.
 
-## 9. Image candidates
+Для критичного семінару корисно поставити два запитання. Що джерело прямо
+говорить про інституційну дію Бажана? Які оцінки потребують листа, протоколу,
+архівної справи або тексту? Ця процедура захищає від радянської
+монументалізації й від дзеркальної легенди, у якій кожен офіційний крок нібито
+має приховане героїчне пояснення.
 
-- **Best PD/CC portrait:** Young Mykola Bazhan in the 1920s (pre-capitulation). Many PD-Ukraine images exist from his VAPLITE and futurist periods.
-- **Backup candidates:** Official Soviet laureate portraits (useful pedagogically to show the physical transformation into an apparatchik).
-- **Era-appropriate context image:** The cover of *Будівлі* (1929) or his apartment building "Rolit" in Kyiv.
+## 10. Українська радянська енциклопедія
 
-## 10. Sources used
+ЕСУ подає складну, але конкретну оцінку редакторської роботи. Як головний
+редактор УРЕ Бажан дотримувався засад офіційної ідеології. Водночас він
+домагався від партійного керівництва дозволу на статті про проскрибованих
+українських діячів культури, серед яких названо Олександра Архипенка, Івана
+Падалку та братів Михайла і Тимофія Бойчуків [S1]. Він також забезпечував
+високий професійний рівень видання.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Бажан Микола Платонович." https://esu.com.ua/article-38786. Accessed 2026-05-26.
+Ця дія не робить УРЕ неідеологічною й не виправдовує всього радянського
+енциклопедичного проєкту. Але її не можна відкинути лише через офіційну
+посаду. Вона показує обмежений і документований простір культурної праці
+всередині контрольованої інституції. Деколонізаційний аналіз має називати і
+структурні межі, і конкретне повернення українських імен до довідкового поля.
 
-**Tier 2 (institutional):**
-- Світлана Шевцова. "Архіви КҐБ: академік Бажан очима донощиків." Укрінформ / Галузевий державний архів СБУ (ГДА СБУ), 2018. (Detailed analysis of his NKVD file and coerced recruitment).
+## 11. Пізня українська тематика
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Бажан Микола Платонович." https://uk.wikipedia.org/wiki/Бажан_Микола_Платонович. Accessed 2026-05-26. Used for general timeline and bibliography.
+В останній період життя Бажан повертався до української тематики. ЕСУ називає
+«Чотири оповідання про надію», «Кларнет Тичини», «Міцкевич в Одесі. Рік
+1825», «Політ крізь бурю», «Уманські спогади» й «Нічні роздуми старого
+майстра» [S1]. Джерело водночас застерігає, що таке повернення давалося
+нелегко. Це не історія одномоментного «очищення», а довга й неоднорідна
+траєкторія письма.
 
-**Tier 4 (modern scholarly post-1991):**
-- Віра Агеєва. *Візерунок на камені. Микола Бажан: життєпис (не)радянського поета.* Львів: Видавництво Старого Лева, 2018.
+Остання збірка «Карби» 1978 року містила щирі ліричні мініатюри й цикл про
+музику; ЕСУ відзначає зміну стилю від монументальної важкості до прозорості й
+лагіднішої інтонації [S1]. Таку стильову характеристику можна використати як
+маршрут читання, але не як медичний або психологічний діагноз.
 
-**Primary-source documents accessed (or cited in modern scholarship):**
-- NKVD Case-formular № 2055 (declassified 2010), cited via Tier 2 (Укрінформ/ЦДВР).
+## 12. «Дебора» і тривалість цензурних меж
 
----
+Поему «Дебора» 1968 року після публікації в журналі «Вітчизна» заборонили
+передруковувати [S1]. Цей факт важливий, бо показує: високий офіційний статус
+Бажана не усував державного контролю над друком. Джерело не дає підстави
+зводити заборону до одного домисленого мотиву; досить назвати твір, рік,
+журнал і наслідок.
 
-## Decolonization self-check (run before submitting)
+У поєднанні із забороною «Сліпців» ця пізня заборона руйнує просту
+періодизацію, за якою після здобуття посад автор нібито дістав необмежену
+свободу. Водночас різні епізоди не треба ототожнювати: кожен має власний
+текст, рік і інституційний контекст.
 
-- [x] No Russocentric framing (his survival is accurately framed as coercion/capitulation, not loyalist epiphany).
-- [x] No Russian-imperial transliterations in body text.
-- [x] No Russocentric periodization.
-- [x] No uncritical Soviet propaganda terms (Order of Lenin and Hero of Socialist Labor noted strictly as regime absorption mechanisms).
-- [x] No "lost his life" euphemisms (he survived physically, but his literary independence was executed).
-- [x] All place names use modern UA canonical form (Київ, Кам'янець-Подільський).
-- [x] Modern UA framing applied throughout.
+## 13. Переклад як українська мовна праця
+
+ЕСУ наголошує на перекладах складних і маловідомих в Україні поетів
+вісімнадцятого — двадцятого століть: Фрідріха Гельдерліна, Ципріана Норвіда,
+Райнера Марії Рільке та інших [S1]. Особливе місце посідає переклад поеми
+Шота Руставелі «Витязь у тигровій шкурі». Джерело високо оцінює розуміння
+поетики оригіналу й винахідливість українського відтворення.
+
+Переклад у цій біографії — не додаток до «власної» поезії й не доказ
+культурної залежності. Це робота з можливостями української мови в
+багатомовному полі. Оцінювати конкретний переклад слід зіставленням текстів,
+але сам факт систематичної перекладацької праці підтверджує багатогранність
+культурної ролі Бажана.
+
+## 14. Самокорекція пам'яті
+
+У 1976–1983 роках Бажан публікував у «Вітчизні» «Сторінки спогадів». ЕСУ
+повідомляє, що в них він висловив жаль через несправедливу критику Юрія
+Яновського за роман «Жива вода» [S1]. Це конкретний задокументований жест
+самокорекції. Він не є індульгенцією за всі офіційні ролі й не дозволяє
+вигадувати зміст приватних розмов.
+
+Такий епізод корисний для антигагіографічного читання. Людина в інституції
+може мати суперечливу траєкторію, а пізній публічний перегляд власної оцінки є
+окремою дією. Аналіз має назвати саме її, не перетворюючи на загальну легенду
+про остаточне спокутування.
+
+## 15. «Вибрані поезії» 1940 року
+
+НБУВ каталогізує «Вибрані поезії» Миколи Бажана: Київ, Державне літературне
+видавництво, 1940 рік, 194 сторінки [S2]. Запис перелічує цикли й поеми,
+зокрема «Сімнадцятий патруль», «Будівлі», «Смерть Гамлета», «Безсмертя» та
+«Ямби». Такі дані дають можливість скласти бібліографічне завдання й
+перевірити склад конкретного видання.
+
+Каталог не дозволяє перетворювати поетичний рядок на біографічний доказ.
+Навіть доступний цифровий примірник не скасовує потреби в сторінковому
+локаторі, редакції та правовій підставі для відтворення. У плані ресурс
+залишається link-only, а поетичні цитати без локатора не відтворюються.
+
+## 16. Деколонізаційні й епістемічні орієнтири
+
+Українська рамка повертає Бажана з абстрактного «радянського» пантеону до
+конкретного українського авангарду, української поезії, перекладу й роботи з
+пам'яттю про проскрибованих митців [S1]. Вона не приховує соціалістичний
+реалізм, високі посади або офіційну ідеологію УРЕ. Вона також не потребує
+непідтверджених тяжких звинувачень, щоб показати складність цієї біографії.
+
+Епістемічна дисципліна вимагає розділяти встановлене й відсутнє. Дати
+«Сліпців», посади, заборона «Дебори», робота щодо статей про Архипенка,
+Падалку й Бойчуків та бібліографія 1940 року підтверджені. Тяжкі біографічні
+звинувачення й приватні мотиви не підтверджені прийнятим набором і тому не
+входять до пакета.
+
+## 17. Питання для семінару
+
+1. Як змінюються стильові означення Бажана від футуризму до необарокової
+   пластичності «Будівель»?
+2. Чому 1933 рік є принциповим для точної хронології «Сліпців»?
+3. Що посада доводить про інституційну участь, а чого не доводить про мотив?
+4. Як оцінити працю щодо статей про проскрибованих митців, не виправдовуючи
+   офіційну ідеологію УРЕ?
+5. Чому каталог видання є надійним для складу книжки, але не для біографічної
+   інтерпретації поетичного образу?
+
+## 18. Прийняті джерела
+
+- **[S1]** Ковалів Ю. І. «Бажан Микола Платонович». Енциклопедія Сучасної
+  України. URL: https://esu.com.ua/article-38801
+- **[S2]** «Вибрані поезії» (1940). Електронна бібліотека «Україніка», НБУВ.
+  URL: https://irbis-nbuv.gov.ua/ulib/item/ukr0000030535
+
+Обидва джерела використовуються як зовнішні посилання. Текст статті й поезій
+не копіюється. Портрет залишається текстовою відмовою, оскільки пакет не
+доводить файл-специфічну вільну ліцензію та походження конкретного зображення.

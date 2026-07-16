@@ -1,132 +1,225 @@
-# Юрій Іванович Яновський — Research Dossier
+# Юрій Іванович Яновський — дослідницьке досьє
 
 **Slug:** `yurii-yanovskyi`
-**Block:** D (survived-but-broken / camp-returnees)
-**Tier:** 1a
-**Issue:** #2317
-**Researcher:** gemini 3.1-pro
-**Completed:** 2026-05-28
+**Статус:** джерельно обмежене дослідницьке досьє
+**Джерельний принцип:** лише прийняті ЕІУ та НБУВ; кожна точність обмежена прямим свідченням
 
----
+## 1. Межі доказової бази
 
-## 1. Verified facts
+Це досьє спирається на два взаємодоповнювальні джерела. Стаття Енциклопедії
+історії України встановлює життєву, професійну, видавничу й цензурну
+хронологію Юрія Яновського [S1]. Бібліотечний запис НБУВ установлює
+ідентичність другого тому п'ятитомного видання 1983 року та називає три романи,
+які до нього ввійшли [S2]. Енциклопедична стаття є синтетичною біографічною
+довідкою, а каталог — описом конкретного видання. Їх не можна міняти ролями:
+каталог не доводить біографічних мотивів, а довідка не замінює текстологічного
+порівняння редакцій.
 
-- **Full name (UA, canonical):** Юрій Іванович Яновський
-- **Pseudonyms / aliases:** Георгій Ней (early film pseudonym); Яновський Юрій Іванович. Russian-imperial forms to avoid: Юрий Иванович Яновский.
-- **Born:** 14 (27) серпня 1902 | хутір Маєрове (нині с. Нечаївка), Компаніївська волость, Єлисаветградський повіт, Херсонська губернія, Russian Empire
-- **Died:** 25 лютого 1954 | Київ, Ukrainian SSR | natural causes (heart failure after years of severe stress, poverty, and state persecution)
-- **Family / education key facts:** Born to a wealthy landowning family, a fact he later had to obscure in Soviet questionnaires, claiming he was from an "employee's family". Educated at the Yelysavetgrad real school, then studied at the Kyiv Polytechnic Institute (1922–1923). Worked at the Odessa Film Studio alongside Oleksandr Dovzhenko.
+ЕІУ подає достатньо конкретну послідовність державного контролю над
+літературою: московський видавничий фільтр, постанову, звільнення, пленумний
+осуд, редакційні зміни й посмертну публікацію [S1]. Ці встановлені події є
+основою аналізу; приватний стан автора або зміст окремої редакторської правки
+потребували б іншого, прямо локованого джерела.
 
-**Disagreement flag:** Early biographical notes often listed his birthplace as Yelysavetgrad due to his own attempts to hide his "kulak" (wealthy landowner) background. Modern UA scholarship confirms the birthplace as the Maierove khutir [T1: ЕІУ — Яновський Юрій Іванович].
+## 2. Ім'я, дати й місце народження
 
-## 2. Oppression mechanism
+Канонічне ім'я — Юрій Іванович Яновський. ЕІУ фіксує псевдоніми Григорій Ней
+і Юрій Юрченко та застерігає самим фактом їхнього переліку від змішування
+авторського підпису з юридичним ім'ям [S1]. Правильна форма першого псевдоніма
+— саме Григорій Ней. Джерело датує народження 27 (14) серпня 1902 року й
+смерть 25 лютого 1954 року. Місцем народження названо хутір Маєрове, нині
+село Нечаївка на Кіровоградщині; помер письменник у Києві й похований на
+Байковому цвинтарі [S1].
 
-This figure's oppression is a textbook example of the Soviet "whip and gingerbread" (батіг і пряник) strategy: coerced co-option and severe ideological censorship that broke the author physically and artistically. Like Tychyna, Yanovskyi was subjected to "punishment by glory," but with a uniquely brutal postwar addendum.
+Від 1917 року родина мешкала в Єлисаветграді, де працював батько Яновського.
+Цей факт не змінює місця народження. Для навчального викладу важливо тримати
+окремо хутір Маєрове, місто подальшого навчання і пізніші місця праці. Така
+географічна точність протидіє звичці підміняти сільське походження зручною
+міською легендою або переносити сучасні адміністративні назви в документи
+початку двадцятого століття без пояснення.
 
-**Specific pressure points (documented chronology):**
+## 3. Освіта і перші роки праці
 
-- **1930 (First Break):** His novel *Чотири шаблі* was harshly condemned by official critics for "nationalist romanticism" and "otamanshchyna," and subsequently banned. Facing the imminent threat of arrest during the intensifying repressions of the early 1930s (when his peers in VAPLITE were being executed or imprisoned), Yanovskyi capitulated by writing *Вершники* (1935). While *Вершники* retained his masterful neoromantic style, it formally adhered to Socialist Realism by asserting the inevitability of the Bolshevik victory. This ideological concession saved his life.
-- **August 1947 (Second Break):** Following WWII, Yanovskyi published the novel *Жива вода* in the journal *Дніпро*. The work depicted the post-WWII rebirth of the Ukrainian nation, emphasizing the biological and spiritual resilience of the people. During the 1947 "Kaganovych-shchyna" (the brutal Ukrainian ideological purge mirroring Zhdanovshchyna), Lazar Kaganovich personally attacked Yanovskyi at a Writers' Union plenum. He accused Yanovskyi of "bourgeois nationalism," "apolitism," and a "biological approach," declaring that the author had "buried 'Жива вода' ten meters underground."
-- **Mechanism specifics:** The Central Committee of the KP(b)U issued a devastating decree against him. The entire printed run of *Жива вода* as a separate book (approximately 20,000 copies) was destroyed. Yanovskyi was fired as chief editor of the journal *Вітчизна* (formerly *Українська література*). He was forced into isolation and abject poverty, having to sell his personal library and belongings to survive.
-- **What survived / what was destroyed:** Under immense pressure, he was compelled to publish a humiliating public letter of repentance in *Літературна газета*. To return to literature, Yanovskyi spent his final, sick years mutilating *Жива вода*. He made over 200 ideological concessions, stripping the novel of its national vitality, removing "harmful details," and injecting forced Party rhetoric to produce the sterile, regime-approved *Мир*, published posthumously in 1956. Paradoxically, the regime rewarded his capitulation with a Stalin Prize in 1949 for the politically safe and artistically anemic *Київські оповідання*, finalizing his breaking.
+Яновський навчався в Єлисаветградському реальному училищі. У 1919–1921 роках
+працював у різних установах, а в 1922–1924 роках навчався на
+електромеханічному факультеті Київського політехнічного інституту [S1]. Саме
+цей проміжок є прийнятою датою. 1922 року він надрукував перший вірш «Море», а 1924 року
+став позаштатним кореспондентом газети «Більшовик» [S1].
 
-## 3. Major works
+У 1925–1928 роках Яновський був членом Вільної академії пролетарської
+літератури, а після її ліквідації — «Пролетарського літературного фронту».
+У 1926–1927 роках працював художнім редактором Одеської кінофабрики й тісно
+співпрацював з Олександром Довженком [S1]. Ця хронологія дає підставу говорити
+про реальний зв'язок із кіновиробництвом. Проте вона не дозволяє оголосити
+кожний прозовий прийом наслідком кіно або виводити приватний задум роману з
+посади редактора.
 
-- `1925` — *Мамутові бивні*, збірка оповідань. Early romantic novellas.
-- `1927` — *Кров землі*, збірка оповідань.
-- `1928` — *Майстер корабля*, роман. The pinnacle of his 1920s high-modernist maritime romanticism.
-- `1930` — *Чотири шаблі*, роман. Condemned and banned for "nationalist romanticism".
-- `1935` — *Вершники*, роман у новелах. His capitulation masterpiece; formal socialist realism masking a neoromantic tragedy.
-- `1940` — *Короткі історії*, збірка оповідань.
-- `1944` — *Земля батьків*, збірка оповідань.
-- `1947` — *Жива вода*, роман, журнал «Дніпро». Suppressed, print run destroyed for "nationalism".
-- `1948` — *Київські оповідання*. Stalin Prize winner (1949); marks his total ideological surrender.
-- `1956` — *Мир*, роман (posthumous). The heavily censored, mutilated rewrite of *Жива вода*.
+## 4. Літературне середовище й відповідальна інтерпретація
 
-## 4. Primary-source quotes (≥2 required)
+Належність до ВАПЛІТЕ розміщує Яновського в українському літературному
+середовищі 1920-х років, однак сама назва організації не пояснює кожного
+твору. Для аналізу композиції, образів або стилю потрібен конкретний текст.
+Досьє тому відділяє перевірені біографічні обставини від літературної
+інтерпретації. Можна досліджувати монтажність чи неоромантичну образність, але
+не можна подавати таку інтерпретацію як факт, нібито засвідчений короткою
+енциклопедичною довідкою.
 
-### Quote 1 — The Neoromantic Ideal
-From *Майстер корабля* (1928):
-> **«І як було всім зрозуміти, що в мене одна наречена... Для неї я був сміливий і впертий, заради неї я хотів бути в першій лаві бійців — бійців за її розквітання. Для неї я полюбив море, поставив на гербі якір, залізний важкий якір, що його приймають усі моря світу, і колишеться над ним могутній корабель. Культура нації — звуть її.»**
+ЕІУ називає Яновського одним із найяскравіших представників неоромантичної
+течії в українській літературі двадцятого століття, сміливим новатором змісту
+і форми [S1]. Це оцінка профільного інституційного джерела. Вона дає рамку для
+читання, але не потребує прикрашання неперевіреними афоризмами. Навчальне
+завдання має спрямовувати студента від такої загальної характеристики до
+конкретного видання, а не пропонувати готовий психологічний портрет.
 
-*Pedagogical note:* This quote demonstrates Yanovskyi's early, uncompromised artistic vision. The allegorical "bride" being national culture is a powerful example of 1920s high-modernist aesthetics, written before the regime forced him to replace "culture of the nation" with "class struggle." It is excellent for teaching C1-level extended metaphors and elevated vocabulary.
+## 5. «Чотири шаблі» та історичне тло
 
-### Quote 2 — The Tragedy of Fratricide
-From *Вершники* (новела «Подвійне коло», 1935):
-> **«Тому роду не буде переводу, в котрому браття милують згоду.»**
+1930 року Яновський видав роман «Чотири шаблі». ЕІУ пов'язує його з подіями в
+Україні 1917–1921 років і зі спогадами Юрія Тютюнника про похід отамана
+Никифора Григор'єва [S1]. Роман зазнав різкої критики як твір
+націоналістичного романтизму. Саме так слід формулювати перевірений факт:
+джерело фіксує критичний ярлик та його інституційний вплив, але не дає в цьому
+місці повного протоколу заборони, списку вилучень або авторської реакції.
 
-*Pedagogical note:* This recurring father's proverb frames the tragedy of the Ukrainian revolution. It serves as a brilliant example of Yanovskyi's "Aesopian language": while the novel formally glorifies the Bolshevik victory, the rhythmic repetition of this folk wisdom mourns the destruction of the Ukrainian family ("рід") by foreign ideologies.
+Історичний контекст у семінарі варто називати Українською революцією
+1917–1921 років, не зводячи його до радянської формули «громадянської війни».
+Водночас роман не є підручниковою картою всіх армій і політичних проєктів.
+Деколонізаційна робота тут означає повернути українську суб'єктність
+історичному тлу, але не перетворити художню прозу на документальну стенограму.
 
-### Quote 3 — The Ideological Surrender
-From *Вершники* (новела «Подвійне коло», 1935):
-> **«Рід розпадається, а клас стоїть, і весь світ за нас, і Карл Маркс.»**
+## 6. Московський фільтр для «Вершників»
 
-*Pedagogical note:* Spoken by the victorious Bolshevik brother, Ivan Polovets, after executing his brothers. Essential for teaching the L2 reader how Soviet ideology demanded that "клас" (class) violently supersede "рід" (kinship/nation). It perfectly encapsulates Yanovskyi's ideological concession—giving the censors the Marxist victory line they demanded, while leaving the reader horrified by the fratricide.
+ЕІУ повідомляє, що «Вершники» були написані в 1930–1933 роках. Критика
+«Чотирьох шабель» вплинула й на оцінку нового роману. Видати «Вершників» в
+УСРР 1935 року вдалося лише після публікації уривків, перекладених російською
+мовою, та організації спеціальних обговорень у Москві [S1]. Ця послідовність
+є важливим джерельно підтвердженим прикладом нерівного культурного руху:
+український твір проходив через російськомовне представлення й союзний центр
+перед українським виданням.
 
-## 5. Language register
+Цей факт не потребує приписування Москві або авторові мотивів, яких стаття не
+називає. Він уже показує інституційну структуру доступу до друку. Саме тому
+його не можна пропускати під приводом загальної джерельної обережності.
+Замовчування перевіреного фільтра було б такою самою помилкою, як додавання
+вигаданої сцени переговорів. У навчальному модулі слід запропонувати
+студентові відрізнити зафіксовану процедуру від висновку про прихований опір
+чи повну капітуляцію.
 
-- **Register:** High modernist neoromanticism, lyrical prose, and cinematic montage. Heavily stylized, moving from folklore-inflected steppe epics to cosmopolitan maritime narratives.
-- **CEFR readiness for full reading:** B2 for selected shorter novellas (e.g., «Шаланда в морі»); C1/C2 for *Майстер корабля* and the complete *Вершники*.
-- **Lexicon notes:** Rich in maritime terminology (in early works) and vivid, archaic steppe dialectisms. His prose is intensely poetic, requiring readers to navigate complex metaphors, heavy alliteration, and elevated rhetorical phrasing. The stark contrast between the rich, vital vocabulary of his 1920s work and the sterile, bureaucratic Soviet calques found in *Мир* provides a profound pedagogical lesson in totalitarian censorship.
-- **Stylistic features:** Cinematic montage (flashbacks, disrupted chronological sequence, heavily influenced by his work with Dovzhenko on the Odessa Film Studio), rhythmic prose (often bordering on blank verse), and deep mythopoetic symbolism (the sea, the steppe, the iron anchor).
+## 7. Редакторська праця та воєнний період
 
-## 6. Contested points
+1939 року Яновський став головним редактором журналу «Українська література»,
+який від 1946 року мав назву «Вітчизна» [S1]. ЕІУ також називає письменників,
+чиїм публікаціям і творчому зростанню він сприяв. Під час німецько-радянської
+війни журнал тимчасово виходив в Уфі; Яновський продовжував редакторську
+роботу, був військовим кореспондентом, а згодом від газети «Правда України»
+був присутній на Нюрнберзькому процесі й видав «Листи з Нюрнберга» [S1].
 
-- **Resistance vs. Surrender:** Modern UA scholarship fiercely debates whether *Вершники* is a masterpiece of hidden resistance (using "Aesopian language" to mourn the destruction of the nation) or a definitive surrender to Socialist Realism. Literary critic Володимир Панченко famously termed the novel a "brilliant defeat" («блискуча поразка»). While the regime got its Bolshevik victory, Yanovskyi smuggled in the tragedy of the Ukrainian steppe.
-- **The destruction of *Жива вода*:** The transformation of *Жива вода* into *Мир* is often simplified in older texts as "authorial revision." Decolonized scholarship insists it was a violent mutilation. He didn't just revise it; he was forced to spend his final sick years dissecting his own testament to Ukrainian resilience in order to survive physically and financially.
-- **Soviet canonization:** In popular memory, because *Вершники* was a staple of the Soviet school curriculum for decades, Yanovskyi is sometimes reductively remembered as a loyal Soviet classic. This erases the trauma of the 1930 banning of *Чотири шаблі* and the 1947 public destruction of *Жива вода*.
-- **Russian Disinformation:** Modern Russian narratives often attempt to claim the 1920s Odessa Film Studio era as a "multinational Soviet" achievement, erasing the distinctly Ukrainian national-cultural project ("Культура нації") that Yanovskyi and Dovzhenko were building, and ignoring the fact that Moscow systematically dismantled it.
+Цей етап показує, що біографія не складається лише з романів. Редакторська
+позиція означала роботу в інституції, де рішення про друк мали культурні
+наслідки. Водночас посада не є доказом внутрішньої згоди з усіма державними
+політиками. Відповідальний виклад називає дію й установу, не перетворюючи
+формальний статус на психологічний діагноз.
 
-## 7. Cross-track links
+## 8. «Жива вода» і постанова 1947 року
 
-- **Existing LIT modules referencing this figure:**
-  - `plans/lit/vaplite-literary-avant-garde.yaml` — fits perfectly alongside Khvylovyi's romanticism.
-  - `plans/lit/yanovsky-master-of-the-ship.yaml` — standalone module on his cinematic maritime prose.
-  - `plans/lit/yanovsky-four-sabres.yaml` — connects *Вершники* and *Чотири шаблі*.
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/syntez-revoliutsiia.yaml` — the Polovets brothers in *Вершники* directly map to the Denikin, Petliura, Makhno, and Bolshevik factions of the 1918-1921 Ukrainian Revolution.
-- **Existing bios that connect to this figure:**
-  - `plans/bio/oleksandr-dovzhenko.yaml` — close collaborators at the Odessa Film Studio; Dovzhenko is a prototype (the character "To-Ma-Ki") in *Майстер корабля*.
-  - `plans/bio/mykola-khvylovyi.yaml` — peers in VAPLITE and leaders of the Ukrainian neoromantic movement.
+1947 року журнал «Дніпро» надрукував роман «Жива вода». ЕІУ пов'язує критику
+твору партійними рецензентами із зображенням правдивих картин важкої
+повоєнної дійсності [S1]. Того самого року ЦК КП(б)У ухвалив постанову «Про
+журнал «Вітчизна»». Яновського звільнили з посади головного редактора в
+контексті офіційних звинувачень у націоналізмі, міщансько-обивательських
+поглядах, аполітичності та друці помилкових і порочних творів [S1]. Ці слова
+слід подавати як лексику владного осуду, а не як нейтральну характеристику
+автора.
 
-## 8. Naming-canonical
+Пленум Спілки письменників України за участю першого секретаря ЦК КП(б)У
+Лазаря Кагановича засудив «Живу воду» як ідейно хибний, націоналістичний і
+наклепницький роман [S1]. Джерело фіксує інституцію, учасника і зміст
+пленумного вироку. Воно не потребує додаткової ефектної репліки. Тому досьє не
+відтворює фразу, для якої немає локатора, і не додає приблизного числа
+знищених примірників. Документованих фактів достатньо, щоб показати масштаб
+політичного втручання.
 
-- **Slug:** `yurii-yanovskyi`
-- **EN canonical (BGN/PCGN 2010):** Yurii Yanovskyi
-- **UA canonical (with patronymic if attested):** Юрій Іванович Яновський
-- **Aliases (track these for `aliases:` YAML field):** Яновський Юрій Іванович, Георгій Ней
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Yuri Yanovsky, Юрий Яновский
+## 9. Виправлення й посмертний «Мир»
 
-## 9. Image candidates
+За порадами колег Яновський зробив до 200 виправлень у творі. Після смерті
+автора його надрукували під назвою «Мир» [S1]. Важливо зберегти межу
+формулювання: до 200 — не більше наперед визначеного числа, а зміст усіх
+виправлень коротка стаття не перелічує. Щоб установити, що саме було вилучено,
+додано або переставлено, потрібне окреме текстологічне порівняння редакцій.
 
-- **Best PD/CC portrait:** [File:Yanovs'kyy.jpg on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Yanovs%27kyy.jpg) | PD-Ukraine | Standard 1920s portrait.
-- **Backup candidates:** Archival photos from the Odessa Film Studio era showing him with Dovzhenko.
-- **Era-appropriate context image:** The original 1928 cover of *Майстер корабля* (constructivist design, PD), or a scan of the 1947 *Літературна газета* showing his forced public apology.
+ЕІУ розміщує ці зміни після постанови, звільнення й пленумного осуду, а також
+говорить про моральний і матеріальний тиск на Яновського [S1]. Тому
+посмертний «Мир» не можна подавати як редакційний факт поза політичним
+контекстом. Водночас не слід вигадувати перелік авторських «поступок» або
+стверджувати точний приватний намір кожної зміни. Джерельно чесна мова тримає
+разом контекст примусу й межу відомого.
 
-## 10. Sources used
+## 10. Пізня праця та офіційне визнання
 
-**Tier 1 (authoritative):**
-- Янковська О. В. "ЯНОВСЬКИЙ Юрій Іванович." Енциклопедія історії України. Т. 10. Київ: Наукова думка, 2013. С. 748. URL: http://www.history.org.ua/?termin=Yanovsky_Yu_I. Accessed 2026-05-28.
-- Гальченко С. А. "Яновський Юрій Іванович." Шевченківська енциклопедія. Т. 6. Київ: Ін-т літератури ім. Т. Г. Шевченка, 2015. С. 1100.
+ЕІУ повідомляє про критику інших творів Яновського, зокрема «Дочки прокурора»,
+і повторне згадування «Чотирьох шабель». Письменник звернувся до інших тем.
+За цикл «Київські оповідання», у якому було відтворено офіційну радянську
+воєнну риторику, він отримав Сталінську премію 1949 року [S1]. Відзнака є
+фактом інституційного визнання, але не доводить приватного примирення з
+режимом і не скасовує попередньої цензурної хронології.
 
-**Tier 2 (institutional):**
-- Лавріненко Ю. *Розстріляне відродження: Антологія 1917–1933*. Париж: Інститут літературний, 1959. (Provides critical context on his place within the coerced generation and the concept of "punishment by glory").
+Стаття характеризує тривале переслідування й послідовне витіснення живого
+мистецького духу як процес, унаслідок якого автор став заручником системи й
+речником правлячої ідеології [S1]. Це сильна оцінка самого прийнятого
+джерела. Її треба читати разом із названими діями інституцій, а не розширювати
+до неперевірених сцен побутової нужди, листів каяття або точних обставин
+смерті.
 
-**Tier 4 (modern scholarly post-1991):**
-- Панченко, Володимир. *Диптих про втрачену свободу* (Essays analyzing the compromises of Yanovskyi and Bazhan, detailing the "brilliant defeat" of *Вершники*).
-- Цалик С. М., Селігей П. О. "Юрій Яновський: биття й буття на літературному вулкані." *Таємниці письменницьких шухляд*. Київ: Наш час, 2010. С. 206–223. (Details the 1947 Kaganovich attack and the destruction of *Жива вода*).
+## 11. Бібліотечний том і межа цитування
 
-**Tier 3 (encyclopedic):**
-- Українська Вікіпедія. "Яновський Юрій Іванович." Accessed 2026-05-28. Used as a starting point; critical oppression dates and publishing histories cross-checked against Tier 1 and Tier 4 sources.
+НБУВ ідентифікує «Твори. Т. 2» Юрія Яновського, видані 1983 року, і перелічує
+«Майстер корабля», «Чотири шаблі» та «Вершники» [S2]. Запис установлює автора,
+назву, номер тому, рік і склад. Він не перетворює видання 1983 року на
+першодрук кожного роману й не дає права переносити до навчального плану
+рядки без сторінкового або розділового локатора.
 
----
+Для семінару цей том є зовнішнім читанням. Учень може перевірити назви та
+структуру видання, але курс не відтворює художній текст. Посилання
+залишається link-only: доступ до бібліотечної сторінки не тотожний ліцензії на
+передрук. Портрет також не використовується, бо прийнятий набір не встановлює
+автора, походження і придатну файл-специфічну ліцензію для конкретного
+зображення.
 
-## Decolonization self-check (run before submitting)
+## 12. Деколонізаційні й епістемічні орієнтири
 
-- [x] No Russocentric framing (Yanovskyi's coercion is explicitly documented, not euphemized as a "creative evolution" or "maturation").
-- [x] No Russian-imperial transliterations in body text.
-- [x] No Russocentric periodization (the 1918-1921 events are correctly framed as the Ukrainian Revolution and fratricidal war, not merely the "Russian Civil War").
-- [x] No uncritical Soviet propaganda terms (terms like "bourgeois nationalism" are strictly in quotes describing Soviet attacks).
-- [x] No "lost his life" euphemisms (his death is directly tied to the physical toll of state-sponsored ideological destruction).
-- [x] All place names use modern UA canonical form (Kyiv, Odessa Film Studio in context).
-- [x] The transition from *Жива вода* to *Мир* is framed as censorship and mutilation, not an organic authorial revision.
+Деколонізаційний центр цього пакета — не декоративна теза про «зламаного
+генія», а перевірений маршрут українського твору через російський переклад і
+московське обговорення перед виданням в УСРР [S1]. До нього додається
+українська інституційна хронологія 1947 року: постанова ЦК КП(б)У проти
+«Вітчизни», звільнення українського редактора, пленумний осуд роману й
+посмертна редакційна історія. Ці факти показують, як центр контролював
+можливість українського друку, не вимагаючи припущень про таємний намір.
+
+Епістемічна скромність означає не мовчати, а точно розподіляти ступені
+певності. Псевдонім, період навчання, посади, назви постанови й романів,
+московський фільтр, до 200 виправлень та назва «Мир» є підтвердженими. Зміст
+кожної правки, точний наклад, приватні розмови й психологічні мотиви не
+встановлені цим набором. Художній образ може бути предметом інтерпретації,
+але не доказом біографічної події.
+
+## 13. Питання для семінару
+
+1. Які факти про Яновського встановлює ЕІУ, а які — бібліотечний запис НБУВ?
+2. Чому російський переклад уривків і московське обговорення перед виданням
+   «Вершників» є інституційним фактом, а не просто деталлю рецепції?
+3. Як відрізнити офіційний ярлик у постанові або пленумному вироку від
+   нейтрального опису письменника?
+4. Що дозволяє сказати формула «до 200 виправлень», а що потребує окремого
+   порівняння редакцій?
+5. Чому пізніша державна премія не скасовує й не пояснює автоматично
+   попереднього переслідування?
+
+## 14. Прийняті джерела
+
+- **[S1]** Янковська О. В. «Яновський Юрій Іванович». Енциклопедія історії
+  України. URL: https://www.history.org.ua/?termin=Yanovskyj_Y
+- **[S2]** «Твори. Т. 2: “Майстер корабля”, “Чотири шаблі”, “Вершники”
+  (1983)». Електронна бібліотека «Україніка», НБУВ. URL:
+  https://irbis-nbuv.gov.ua/ulib/item/ukr0000030602
+
+Обидва ресурси використовуються як прямі зовнішні посилання. Текст статті й
+художні твори в досьє не відтворюються; цитат без точного локатора немає.
