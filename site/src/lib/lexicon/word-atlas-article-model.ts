@@ -228,6 +228,7 @@ export const PERSON_ROWS = [
   { key: "3", label: "3 особа" },
 ] as const;
 
+/** Ukrainian track labels for «У курсі» (CEFR codes stay Latin; seminar tracks are localized). */
 export const TRACK_LABELS_UK: Record<string, string> = {
   a1: "A1",
   a2: "A2",
@@ -235,12 +236,13 @@ export const TRACK_LABELS_UK: Record<string, string> = {
   b2: "B2",
   c1: "C1",
   c2: "C2",
-  hist: "HIST",
-  istorio: "ISTORIO",
-  bio: "BIO",
-  lit: "LIT",
-  oes: "OES",
-  ruth: "RUTH",
+  folk: "Фольклор",
+  hist: "Історія",
+  istorio: "Історіографія",
+  bio: "Біографії",
+  lit: "Література",
+  oes: "Давня східнослов'янська",
+  ruth: "Руська",
 };
 
 export const CONTEXT_LABELS_UK: Record<string, string> = {

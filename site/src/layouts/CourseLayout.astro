@@ -88,6 +88,7 @@ const isActive = (href: string) => {
     <title>{title} · Learn Ukrainian</title>
     {description && <meta name="description" content={description} />}
     <link rel="icon" href="/favicon.svg" />
+    <slot name="head" />
     <script is:inline>
       (() => {
         const query = window.matchMedia('(prefers-color-scheme: dark)');
