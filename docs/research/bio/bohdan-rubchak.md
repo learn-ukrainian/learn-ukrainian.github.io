@@ -55,22 +55,22 @@ For Рубчак the mechanism is **forced displacement from the Soviet (re-)occ
 
 ## 4. Primary-source quotes (≥2 required)
 
-**Quote 1 — from "Камінь" (*Особиста Кліо*):**
+**Quote 1 — from "Камінь" (*Особиста Кліо*, p. 10; Diasporiana PDF p. 11):**
 
 > **Камінь не має вікон, / він не має очей. / Нашим безкровним віком / тиша його тече.**
 
-The stone with neither windows nor eyes, through which "our bloodless age" flows as silence — Рубчак's controlled, image-driven modernism and his historically-aware melancholy (note the collection title, *Особиста Кліо* — "Personal Clio," the muse of history). `verify_quote` returned no corpus match (diaspora poets unindexed); cited from Ukrainian Wikiquote, attributed to "Камінь" in *Особиста Кліо*.
+The stone with neither windows nor eyes, through which "our bloodless age" flows as silence — Рубчак's controlled, image-driven modernism and his historically-aware melancholy (note the collection title, *Особиста Кліо* — "Personal Clio," the muse of history). `verify_quote` returned no corpus match because diaspora poets are unindexed; the text was checked directly against the adopted Diasporiana scan.
 
-**Quote 2 — from "Поетові" (*Камінний сад*):**
+**Quote 2 — from "Пісня для Мар'яни" (*Особиста Кліо*, p. 27; Diasporiana PDF p. 28):**
 
 > **Заблукався в коханім обличчі, як в дивнім краю: / в краєвиді його таємничім себе шукаю.**
 
-"Lost in the beloved's face as in a strange land… in its mysterious landscape I seek myself" — a B2/C1-accessible lyric showing his "more traditional" (vs. Tarnavsky/Andiievska) but richly metaphorical line, and the exile's recurring motif of the lost homeland mapped onto the beloved. Cited from Wikiquote, attributed to "Поетові," *Камінний сад*.
+"Lost in the beloved's face as in a strange land… in its mysterious landscape I seek myself" — a B2/C1-accessible lyric showing his "more traditional" (vs. Tarnavsky/Andiievska) but richly metaphorical line, and the exile's recurring motif of the lost homeland mapped onto the beloved. The title, collection, wording, and page were checked directly against the adopted Diasporiana scan.
 
 ## 5. Language register
 
 - **Register:** high modernist lyric, more formally traditional than Tarnavsky/Andiievska; intellectually dense, history-aware.
-- **CEFR readiness for full reading:** C1; selected lyrics ("Поетові," "Камінь") teachable at B2 with scaffolding.
+- **CEFR readiness for full reading:** C1; selected lyrics ("Пісня для Мар'яни," "Камінь") teachable at B2 with scaffolding.
 - **Lexicon notes:** literary, not archaic; abstractions and mythic/historical allusion (Clio, Icarus, Marena) need glossing. Diaspora-careful Ukrainian, free of Russianisms.
 - **Stylistic features:** controlled metaphor, mythic and historical framing, the exile's doubled landscape, and an intellectual self-consciousness that connects to his scholarship. [T1: IEU — New York Group]
 
@@ -88,10 +88,8 @@ The stone with neither windows nor eyes, through which "our bloodless age" flows
 - **LIT (existing):** `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` — names Рубчак among the anthology authors ("Тексти Бойчука, Рубчака, Тарнавського, Андієвської"); group analysis.
 - **LIT (existing):** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — diaspora modernism overview.
 - **LIT (potential):** his criticism on the неокласики connects to `curriculum/l2-uk-en/plans/lit/rylsky-neoclassicism.yaml` and `dray-khmara-poetry.yaml` — Рубчак is a citable scholarly source for those modules (file as `bio-expansion-followup`, do not modify YAML).
-- **HIST (existing):** `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml` — the executed Renaissance whose scholarship the diaspora preserved.
+- **ISTORIO (existing):** `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml` — the executed Renaissance whose scholarship the diaspora preserved.
 - **Cohort cross-refs (real connections):** co-editor of *Координати* (1969) with Богдан Бойчук; founding-circle member of the New York Group with Тарнавський; co-members Андієвська (1957) and Вовк (1959). Bio cross-ref: his criticism on Драй-Хмара / Рильський links to `bio/mykhailo-drai-khmara.md`.
-
-No plan YAML was modified.
 
 ## 8. Naming-canonical
 
@@ -120,13 +118,13 @@ No plan YAML was modified.
 **Tier 5 (general web, corroborated):**
 - Історична правда. "In memoriam. Помер видатний поет української еміграції Богдан Рубчак." 2018-09-24. https://www.istpravda.com.ua/short/2018/09/24/152978/ — death date, biographical corroboration.
 - bukvoid.com.ua / nashformat.ua — confirm his 100+ essays and the volume *Міти метаморфоз*. Accessed 2026-05-28.
-- Ukrainian Wikiquote, "Рубчак Богдан" — primary-quote attribution (poems "Камінь," "Поетові"). Flagged for exact-wording single-sourcing.
+- Ukrainian Wikiquote, "Рубчак Богдан" — used only as an initial finding aid; the final §4 wording and attribution were checked against the Diasporiana scan.
 - onlyart.org.ua / diasporiana.org.ua author pages — bibliography corroboration.
 
 **Tier 3 (navigation only):**
 - Ukrainian Wikipedia, "Богдан Рубчак" — starting point; birthplace (Калуш), dates, UIC affiliation cross-checked against IEU.
 
-**Primary-source documents accessed:** none (oppression mechanism is displacement + literary/scholarly impossibility, not arrest).
+**Primary-source documents accessed:** Богдан Рубчак, *Особиста Кліо* (New York: New York Group, 1967), Diasporiana scan; §4 checked at print pages 10 and 27 (PDF pages 11 and 28). The oppression mechanism is displacement and literary/scholarly impossibility, not arrest.
 
 ---
 
