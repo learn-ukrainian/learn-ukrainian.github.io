@@ -1,6 +1,23 @@
 ---
+/**
+ * Site 404 + Atlas client word-page shell (PR3 D2).
+ *
+ * GitHub Pages serves this document with HTTP 404 for unknown paths. When the
+ * path is `/lexicon/<slug>/`, the client shell boots, fetches the entry from
+ * same-origin `/atlas` shards, and mounts WordAtlasArticle. Other 404s keep
+ * the generic learner recovery UI.
+ */
 import CourseLayout from '../layouts/CourseLayout.astro';
 import ChromeText from '../components/chrome/ChromeText.astro';
+import WordAtlasClientShell from '../lexicon/WordAtlasClientShell';
+
+const siteUrl = Astro.site ? new URL(Astro.site).origin : 'https://learn-ukrainian.github.io';
+const ogTitle = 'Learn Ukrainian';
+const ogDescription =
+  'Free open-source Ukrainian curriculum — lessons, readings, and the Word Atlas.';
+const ogImage = `${siteUrl}/favicon.svg`;
+const baseUrl = import.meta.env.BASE_URL || '/';
+const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atlas`;
 ---
 
 <CourseLayout
@@ -12,7 +29,59 @@ import ChromeText from '../components/chrome/ChromeText.astro';
   heroVariant="unavailable"
   wide
 >
-  <section class="route-state-card big">
+  {/* Generic site-wide OpenGraph on 404 (spec R2 — tail lemmas share these tags). */}
+  <meta slot="head" property="og:type" content="website" />
+  <meta slot="head" property="og:site_name" content="Learn Ukrainian" />
+  <meta slot="head" property="og:title" content={ogTitle} />
+  <meta slot="head" property="og:description" content={ogDescription} />
+  <meta slot="head" property="og:url" content={siteUrl} />
+  <meta slot="head" property="og:image" content={ogImage} />
+  <meta slot="head" name="twitter:card" content="summary" />
+  <meta slot="head" name="twitter:title" content={ogTitle} />
+  <meta slot="head" name="twitter:description" content={ogDescription} />
+
+  <script is:inline define:vars={{ baseUrl }}>
+    (() => {
+      const base = baseUrl === '/' ? '' : String(baseUrl).replace(/\/$/, '');
+      const path = location.pathname;
+      const stripped = base && path.startsWith(base) ? path.slice(base.length) || '/' : path;
+      const isLexiconArticle = /^\/lexicon\/[^/]+\/?$/.test(stripped);
+      if (!isLexiconArticle) return;
+      window.goatcounter = Object.assign(window.goatcounter || {}, { no_onload: true });
+      document.documentElement.dataset.atlasShell = 'pending';
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-generic-404]').forEach((el) => {
+          el.setAttribute('hidden', '');
+        });
+        document.querySelectorAll('[data-atlas-shell-boot]').forEach((el) => {
+          el.removeAttribute('hidden');
+        });
+      });
+    })();
+  </script>
+
+  <div data-atlas-shell-boot hidden>
+    <div
+      role="status"
+      aria-busy="true"
+      data-word-atlas-state="loading"
+      class="atlas-client-shell-state atlas-client-shell-loading"
+    >
+      <div class="atlas-client-shell-skeleton" aria-hidden="true">
+        <div class="atlas-client-shell-skel-line wide"></div>
+        <div class="atlas-client-shell-skel-line"></div>
+        <div class="atlas-client-shell-skel-line mid"></div>
+        <div class="atlas-client-shell-skel-block"></div>
+      </div>
+      <p>Завантаження статті Атласу…</p>
+    </div>
+  </div>
+
+  <div data-atlas-client-shell>
+    <WordAtlasClientShell client:only="react" baseUrl={baseUrl} assetBaseUrl={atlasAssetBase} />
+  </div>
+
+  <section class="route-state-card big" data-generic-404>
     <p class="state-code">404</p>
     <h2><ChromeText k="state.notFoundTitle" /></h2>
     <p><ChromeText k="state.notFoundBody" /></p>
@@ -24,3 +93,81 @@ import ChromeText from '../components/chrome/ChromeText.astro';
     </div>
   </section>
 </CourseLayout>
+
+<style is:global>
+  .atlas-client-shell-state {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem 0 2rem;
+    max-width: 42rem;
+  }
+  .atlas-client-shell-state h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+  .atlas-client-shell-state p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  .atlas-client-shell-detail {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    word-break: break-word;
+  }
+  .atlas-client-shell-state a {
+    font-weight: 700;
+  }
+  .atlas-client-shell-state button[data-word-atlas-retry] {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--lu-border, #ccc);
+    border-radius: 6px;
+    background: var(--lu-surface, #fff);
+    color: var(--lu-text, inherit);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .atlas-client-shell-skeleton {
+    display: grid;
+    gap: 0.65rem;
+    margin-bottom: 0.5rem;
+  }
+  .atlas-client-shell-skel-line,
+  .atlas-client-shell-skel-block {
+    border-radius: 6px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--lu-border, #ddd) 65%, transparent),
+      color-mix(in srgb, var(--lu-border, #ddd) 35%, transparent),
+      color-mix(in srgb, var(--lu-border, #ddd) 65%, transparent)
+    );
+    background-size: 200% 100%;
+    animation: atlas-shell-shimmer 1.2s ease-in-out infinite;
+  }
+  .atlas-client-shell-skel-line {
+    height: 0.9rem;
+    width: 70%;
+  }
+  .atlas-client-shell-skel-line.wide {
+    width: 92%;
+    height: 1.4rem;
+  }
+  .atlas-client-shell-skel-line.mid {
+    width: 55%;
+  }
+  .atlas-client-shell-skel-block {
+    height: 6rem;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  @keyframes atlas-shell-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+</style>
