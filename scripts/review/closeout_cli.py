@@ -460,7 +460,7 @@ def _cmd_behavior_proof(args: argparse.Namespace) -> int:
         surface = {"status": args.status, "reason": args.reason}
 
     proof["schema_version"] = BEHAVIOR_PROOF_SCHEMA_VERSION
-    if args.surface == "source_blind" and args.status == "pass":
+    if args.surface == "source_blind" and (args.status == "pass" or args.blind_enforced):
         surface["blind_enforced"] = args.blind_enforced
     proof[args.surface] = surface
     state["behavior_proof"] = proof

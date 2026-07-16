@@ -279,7 +279,7 @@ def test_behavior_proof_record_rejects_empty_steps_and_emit_before_record(tmp_pa
         assert json.loads(proc.stderr)["error"] == "passing proof requires --command or --step"
 
 
-def test_behavior_proof_na_is_versioned_and_does_not_add_blind_enforcement(tmp_path):
+def test_behavior_proof_na_is_versioned_and_preserves_explicit_blind_enforcement(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
     state_file = tmp_path / "state.json"
@@ -299,6 +299,13 @@ def test_behavior_proof_na_is_versioned_and_does_not_add_blind_enforcement(tmp_p
     proof = json.loads(recorded.stdout)
     assert proof["schema_version"] == "behavior-proof.v1"
     assert "blind_enforced" not in proof["source_blind"]
+
+    explicit = _run_cli(
+        state_file, "behavior-proof", "record", "--surface", "source_blind", "--status", "n/a",
+        "--reason", "isolation unavailable", "--blind-enforced",
+    )
+    assert explicit.returncode == 0, explicit.stderr
+    assert json.loads(explicit.stdout)["source_blind"]["blind_enforced"] is True
 
 
 def test_closeout_cli_invalid_json_state_is_structured(tmp_path):
