@@ -101,6 +101,7 @@ def _prepare_lease(state_root: Path, *, session_id: str = _SESSION_ID) -> tuple[
         goal="exact route continuity",
         phase="prepare",
         next_phase="restart",
+        harness="codex-app",
     )
     state["replacement"]["source_checkout"] = {
         "full_head": "abc123def0456789",

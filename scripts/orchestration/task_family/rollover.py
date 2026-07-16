@@ -13,6 +13,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Literal
 
+from .. import task_identity
 from . import codex_state
 from .graph import bounded_title, discover_task_family
 from .model import (
@@ -55,7 +56,7 @@ def rollover_title(
     phase: str | None,
     next_phase: str | None = None,
 ) -> tuple[str, str, dict[str, str | None]]:
-    """Return a bounded human title or a unique lineage/generation fallback."""
+    """Return bounded semantic display text without exposing runtime IDs."""
     fields = {
         "epic_title": _clean_display(epic_title, "epic title"),
         "goal": _clean_display(goal, "goal"),
@@ -73,13 +74,12 @@ def rollover_title(
     else:
         if generation < 1:
             raise ValueError("rollover generation must be positive")
-        agent_label = _clean_display(agent, "agent")
-        assert agent_label is not None
-        base = f"{agent_label[:6].title()} continuity — {lineage_id} · g{generation:04d}"
-        source = "lineage_generation_fallback"
+        _clean_display(agent, "agent")
+        _clean_display(lineage_id, "lineage id")
+        base = "thread-rollover — Recover predecessor task context"
+        source = "deterministic_legacy_fallback"
     title = bounded_title(base)
-    if title.casefold() in {"resume codex rollover", "rollover"}:
-        raise ValueError("generic rollover titles are forbidden")
+    task_identity.validate_semantic_title(title.split(" — ", 1)[-1])
     return title, source, fields
 
 
@@ -222,6 +222,7 @@ def prepare_transition(
     intended_title: str,
     title_source: str,
     bootstrap_prompt_path: str,
+    task_identity_envelope: dict[str, Any] | None = None,
     supersedes: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     family_id, operation_id = transition_identity(
@@ -252,6 +253,15 @@ def prepare_transition(
         "bootstrap_prompt_path": bootstrap_prompt_path,
         "relation_types": [RelationType.REPLACEMENT_OF.value, RelationType.ROLLOVER_GENERATION_OF.value],
     }
+    if task_identity_envelope is not None:
+        identity = task_identity.validate_identity(task_identity_envelope)
+        if identity["lineage_id"] != lineage_id or identity["generation"] != generation:
+            raise ValueError("task identity lineage/generation does not match the native transition")
+        if identity["predecessor_task_id"] != source_thread_id:
+            raise ValueError("task identity predecessor does not match the native transition")
+        if identity["visible_title"] != intended_title:
+            raise ValueError("task identity visible title does not match the native transition")
+        payload["task_identity"] = identity
     if supersedes is not None:
         payload["supersedes"] = dict(supersedes)
     payload["digest"] = _plan_digest(payload)

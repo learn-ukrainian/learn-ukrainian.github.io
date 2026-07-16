@@ -1,20 +1,24 @@
 ---
 name: thread-rollover
-description: Prepare, resume, validate, and confirm a durable Codex thread rollover with the repository's strict continuity packet. Use when a Codex task approaches context exhaustion, SessionStart reports a pending or resumed rollover, or a replacement task must prove continuity before predecessor cleanup.
+description: Prepare, name, resume, validate, and confirm a durable fleet-wide task rollover with the shared task-identity envelope and strict continuity packet. Use when any supported agent or harness approaches context exhaustion, reports pending or resumed rollover state, must reconcile a replacement title, or must prove continuity before predecessor cleanup.
 ---
 
 # Thread Rollover
 
-Use `--agent codex` for every Codex command. Never fork, continue, copy provider
-history, or select a task by title. The repository owns the durable transition
-plan and receipts; the app-capable agent owns the native create/title/archive
-calls. Repo-local Python never writes Codex state directly.
+Use the exact deployed `--agent` and `--harness` for the active runtime. Never
+fork, continue, copy provider history, or select a task by title. The repository
+owns the fleet-wide `task-identity.v1` envelope, transition plan, and receipts.
+An app-capable adapter owns native create/title/archive calls; an unsupported
+adapter records the shared carrier fallback and never claims a native rename.
+Repo-local Python never writes provider state directly.
 
 ## Health
 
 Run this read-only command at a session boundary. It returns `status: none`, one
 validated `pending_start`/`resumed` packet, or exit 2 with explicit corruption,
-identity, path, or ambiguity evidence.
+identity, path, or structured ambiguity evidence. Multiple candidates include
+semantic title, issue, lineage/generation, rollover and task IDs, timestamps,
+confirmation states, and a safe exact-ID resolution; never choose one by order.
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py detect --agent codex
@@ -28,25 +32,31 @@ For a known packet, inspect health without changing it.
 
 ## Rollover
 
-Prepare only from the active Codex thread; this reserves every packet path and
-keeps cleanup false. Supply durable epic, goal, and phase metadata together when
-known; `--next-phase` is optional.
+Prepare only from the active task; this reserves every packet path and keeps
+cleanup false. New callers supply the one stream epic, scoped issue when
+applicable, semantic title, family, role, terminal goal, and actual harness.
+Legacy epic/goal/phase flags remain migration inputs, not the canonical title.
 
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
-  --agent codex \
-  --active-thread-id "$CODEX_THREAD_ID" \
-  --epic-title "<durable epic label>" \
-  --goal "<current goal>" \
-  --phase "<current phase>" \
-  --next-phase "<next phase>"
+  --agent <agent> --harness <harness> \
+  --active-thread-id "<exact-active-task-id>" \
+  --stream-epic <epic-number> \
+  --issue-number <issue-number> \
+  --semantic-title "<specific semantic task title>" \
+  --task-family <task-family> \
+  --role "<role>" \
+  --terminal-goal <merge|deploy|certify>
 ```
 
-`prepare` returns `intended_title`, exact native lifecycle IDs, and a
-`create_thread` action. The title is derived from the supplied metadata, for
-example `Curriculum lifecycle — P5 CI unblock → P6`. If those fields are not
-available, the fallback includes the durable lineage and generation. Never use
-`Resume codex rollover` or another generic title.
+`prepare` returns the complete identity envelope, title transition, identity
+receipt path, and the next exact adapter action. Issue-backed visible titles are
+`#<issue> — <semantic title>`; otherwise they are
+`<task family> — <semantic title>`. UUIDs, lineage, rollover, and generation
+remain metadata. Blank, generic, or identifier-only titles fail before prepare.
+Legacy packets without identity receive a deterministic semantic fallback with
+migration provenance and `terminal_goal: unknown`; explicit callers cannot use
+that legacy-only value. The visible title never exposes raw runtime IDs.
 
 In an app-capable task:
 
@@ -102,10 +112,31 @@ In an app-capable task:
      --action title
    ```
 
-If a native tool is absent or fails, use `record-native-result --failed
---error "..."` for the attempted action and stop. On retry, run
+If a supported native adapter is absent or fails, use
+`record-native-result --failed --error "..."` for the attempted action and
+stop. On retry, run
 `native-action` first. It reconciles exact native state before authorizing a
 mutation and will not repeat an acknowledged action while read-back is pending.
+Readback compares raw strings without whitespace normalization. An
+acknowledgement without exact task-ID and title readback never unlocks resume or
+confirmation, and a late failed retry cannot regress a durable success.
+
+For a harness that declares no native title mutation/readback support, create
+or bind its exact replacement through that harness, then record the honest
+fallback before resume:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement \
+  --agent <agent> --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --replacement-task-id <exact-task-id> \
+  --evidence "<exact dispatch/harness binding receipt>"
+```
+
+The receipt must say mutation support is false and `attempted: false`. Carry
+the exact visible title in the dispatch record, brief, ledger, inbox, monitor
+API, and final receipt. Do not call `register-created`, `native-action --action
+title`, or `reconcile-native`, and do not fabricate success for a missing
+adapter.
 
 Each prepared packet has its own deterministic native operation ID, even when
 an explicit `prepare --force-new-replacement` stays in the same generation.
@@ -135,24 +166,27 @@ already-authorized native state. After success, begin again at `native-action
 ## Resume and confirm
 
 In the fresh task, use the exact paths returned by `detect` or `resume`. First
-bind the replacement thread, then read the handoff and write a truthful durable
+finish exact native title reconciliation or the honest unsupported-adapter
+fallback, then bind the replacement task, read the handoff, and write a truthful durable
 semantic snapshot at the reserved `semantic_snapshot_path`. Its records must be
 exactly 3 goals, 3 decisions/rationales, 2 negative constraints/prohibitions, and
 2 next actions with real allowed `source_ref` values; never use Git, GitHub, or
 Monitor facts and never pad anchors.
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py resume --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> --replacement-thread-id "$CODEX_THREAD_ID"
+.venv/bin/python scripts/orchestration/thread_handoff.py resume --agent <agent> --lineage-id <lineage-id> --rollover-id <rollover-id> --replacement-thread-id <exact-replacement-task-id>
 .venv/bin/python scripts/context_canary.py mint --snapshot <semantic_snapshot_path> --out <strict_probe_path>
 .venv/bin/python scripts/context_canary.py questions --probe <strict_probe_path> --out <strict_questions_path>
 .venv/bin/python scripts/context_canary.py score --probe <strict_probe_path> --answers <strict_answers_path> --expected-lineage-id <lineage-id> --expected-rollover-id <rollover-id> --verdict <strict_verdict_path>
-.venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id <rollover-id> --replacement-thread-id "$CODEX_THREAD_ID" --challenge <canary_challenge> --proof-file <canary_proof_path>
-.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> --new-thread-id "$CODEX_THREAD_ID" --canary-proof <canary_proof_path> --strict-probe <strict_probe_path> --strict-verdict <strict_verdict_path>
+.venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id <rollover-id> --replacement-thread-id <exact-replacement-task-id> --challenge <canary_challenge> --proof-file <canary_proof_path>
+.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent <agent> --lineage-id <lineage-id> --rollover-id <rollover-id> --new-thread-id <exact-replacement-task-id> --canary-proof <canary_proof_path> --strict-probe <strict_probe_path> --strict-verdict <strict_verdict_path>
 ```
 
 Create `strict_answers_path` only from the questions-only view after restoring
 context. `confirm-started` unlocks cleanup only when the separate challenge proof
 and strict verdict both bind to the exact reserved packet paths and pass 10/10.
+Repeated exact resume and confirmation are idempotent; a different replacement
+ID fails closed.
 
 ## Archive the confirmed predecessor
 

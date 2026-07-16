@@ -11,6 +11,7 @@ from uuid import uuid4
 
 import pytest
 
+from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import codex_state, rollover
 from scripts.orchestration.task_family.model import RelationType
 from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
@@ -118,7 +119,7 @@ def _title_reconciled(tmp_path: Path, data: dict[str, object]) -> None:
     assert result["ok"] is True
 
 
-def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> None:
+def test_rollover_titles_are_meaningful_bounded_and_hide_runtime_identifiers() -> None:
     title, source, metadata = rollover.rollover_title(
         agent="codex",
         lineage_id="lineage-1234567890abcdef12345678",
@@ -139,10 +140,11 @@ def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> No
         goal=None,
         phase=None,
     )
-    assert "lineage-1234567890abcdef12345678" in fallback
-    assert "g0017" in fallback
+    assert fallback == "thread-rollover — Recover predecessor task context"
+    assert "lineage-1234567890abcdef12345678" not in fallback
+    assert "g0017" not in fallback
     assert len(fallback) <= 60
-    assert fallback_source == "lineage_generation_fallback"
+    assert fallback_source == "deterministic_legacy_fallback"
     assert "resume codex rollover" not in fallback.casefold()
     orchestrator_fallback, _, _ = rollover.rollover_title(
         agent="orchestrator",
@@ -152,8 +154,9 @@ def test_rollover_titles_are_meaningful_bounded_and_have_unique_fallback() -> No
         goal=None,
         phase=None,
     )
-    assert "lineage-fedcba0987654321fedcba09" in orchestrator_fallback
-    assert "g9999" in orchestrator_fallback
+    assert orchestrator_fallback == "thread-rollover — Recover predecessor task context"
+    assert "lineage-fedcba0987654321fedcba09" not in orchestrator_fallback
+    assert "g9999" not in orchestrator_fallback
     assert len(orchestrator_fallback) <= 60
     with pytest.raises(ValueError, match="supplied together"):
         rollover.rollover_title(
@@ -186,6 +189,38 @@ def test_transition_identity_is_stable_per_packet_without_splitting_the_family()
     assert first_family == retry_family == second_family
     assert first_operation == retry_operation
     assert first_operation != second_operation
+
+
+def test_transition_rejects_task_identity_title_mismatch(tmp_path: Path) -> None:
+    identity = task_identity.build_identity(
+        repository=task_identity.DEFAULT_REPOSITORY,
+        stream_epic=4707,
+        stream_epic_url=None,
+        github_issue_number=5295,
+        github_issue_url=None,
+        semantic_title="Repair fleet rollover task identity",
+        task_family="infra-harness",
+        role="orchestrator",
+        predecessor_task_id="source-thread",
+        replacement_task_id=None,
+        lineage_id="lineage-task-identity",
+        generation=1,
+        terminal_goal="merge",
+    )
+
+    with pytest.raises(ValueError, match="visible title does not match the native transition"):
+        rollover.prepare_transition(
+            repo_root=tmp_path,
+            agent="codex",
+            lineage_id="lineage-task-identity",
+            rollover_id="rollover-task-identity",
+            generation=1,
+            source_thread_id="source-thread",
+            intended_title="A different native transition title",
+            title_source="explicit",
+            bootstrap_prompt_path=".agent/thread-rollovers/bootstrap.md",
+            task_identity_envelope=identity,
+        )
 
 
 def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> None:

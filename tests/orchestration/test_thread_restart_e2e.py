@@ -79,11 +79,13 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
     sources = [
         "scripts/__init__.py",
         "scripts/context_canary.py",
+        "scripts/orchestration/task_identity.py",
         "scripts/orchestration/thread_handoff.py",
         "scripts/orchestration/thread_handoff_canary.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
         "scripts/config/context_profiles.yaml",
+        "agents_extensions/shared/schemas/task-identity.v1.schema.json",
     ]
     sources.extend(
         str(path.relative_to(REPO_ROOT))
