@@ -65,6 +65,29 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
    `scripts/wiki/sources.py::build_literary_row`, then `literary_fts('rebuild')`, commit.
 4. Verify via the MCP: `mcp__sources__search_literary` / `verify_quote`.
 
+### Reclaiming local disk — symlink a Drive-duplicated file (no data loss)
+Much of `data/` is **already copied to the Drive mount but never deleted locally**, so the local
+copy is pure duplication (~2.4 GB as of 2026-07-16: `ubertext-freq` 1.2 GB, `embeddings` 597 MB,
+`raw` 305 MB, `native-reviewer-lessons` 254 MB, `literary_texts` 36 MB — all confirmed present on
+`GDRIVE_DATA`). To reclaim the space without breaking builds that read the **local** path (the
+dir-mismatch gotcha above), replace the local file with a **symlink to the streamed Drive copy** —
+it takes 0 local bytes when idle and materializes on demand. Recipe (used 2026-07-16 for
+`ubertext-freq/frequency.db`, 1.2 GB):
+1. **Confirm identical:** `ls -la` byte-size of `data/<x>` == `GDRIVE_DATA/<x>` (same size + mtime).
+2. **Confirm valid + mount healthy:** e.g. `head -c 16` of a SQLite file reads `SQLite format 3`.
+3. **Confirm nothing has it open:** `lsof data/<x>` is empty.
+4. `rm data/<x>` then `ln -s "$GDRIVE_DATA/<x>" data/<x>`.
+5. **Functional test (mandatory):** actually open/read it through the symlink (e.g.
+   `sqlite3` a `SELECT`), proving the reader still works before declaring done.
+
+**Caveats:** (a) do NOT symlink files a **runtime server** reads hot — `embeddings/` may back the
+MCP dense reranker; confirm it is not runtime-critical first. (b) A regenerating writer (e.g.
+`convert_phase2.py` rebuilds `frequency.db` from `ubertext_freq.csv.xz`) will write **through** the
+symlink to Drive; delete the symlink first if you want a fresh local rebuild.
+
+**Never symlink these — runtime-essential, must stay local:** `sources.db` (MCP `sources` server),
+`vesum.db`, `mphdict/`, `lexicon/`.
+
 ---
 
 ## Table inventory (`data/sources.db`, 2026-07-10)
