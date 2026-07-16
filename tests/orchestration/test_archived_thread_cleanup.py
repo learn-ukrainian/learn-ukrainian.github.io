@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import archived_thread_cleanup as cleanup
+from scripts.orchestration import task_identity
 
 NOW = datetime(2026, 7, 16, 18, 0, tzinfo=UTC)
 THREAD_A = "00000000-0000-4000-8000-000000000001"
@@ -82,6 +83,57 @@ def _codex_home(path: Path, *, pinned: list[str] | None = None) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _write_live_rollover_lease(root: Path, *, source_thread_id: str) -> None:
+    prepared_at = "2026-07-16T09:00:00Z"
+    lineage_id = "cleanup-protection"
+    rollover_id = "rollover-cleanup-protection"
+    identity = task_identity.build_identity(
+        repository=task_identity.DEFAULT_REPOSITORY,
+        stream_epic=None,
+        stream_epic_url=None,
+        github_issue_number=None,
+        github_issue_url=None,
+        semantic_title="Cleanup protection fixture",
+        task_family="thread-rollover",
+        role="codex",
+        predecessor_task_id=source_thread_id,
+        replacement_task_id=None,
+        lineage_id=lineage_id,
+        generation=1,
+        terminal_goal="merge",
+    )
+    lease = {
+        "schema_version": 2,
+        "agent": "codex",
+        "lineage_id": lineage_id,
+        "rollover_id": rollover_id,
+        "active": {
+            "thread_id": source_thread_id,
+            "generation": 0,
+            "lineage_id": lineage_id,
+            "started_at": prepared_at,
+            "last_seen_at": prepared_at,
+        },
+        "replacement": {
+            "rollover_id": rollover_id,
+            "lineage_id": lineage_id,
+            "generation": 1,
+            "status": "pending_start",
+            "prepared_at": prepared_at,
+            "identity": identity,
+            "title_transition": task_identity.new_title_transition(
+                harness="codex-app",
+                visible_title_value=identity["visible_title"],
+                prepared_at=prepared_at,
+            ),
+        },
+        "updated_at": prepared_at,
+    }
+    path = root / ".agent" / "thread-rollovers" / "codex" / lineage_id / "lease.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(lease), encoding="utf-8")
 
 
 def _runner(db: Path, transcript_by_id: dict[str, Path], *, fail: set[str] | None = None):
@@ -243,7 +295,7 @@ def test_malformed_pin_registry_blocks_apply_and_clears_observations(tmp_path: P
 
 
 def test_automation_and_rollover_references_are_protected(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
 ) -> None:
     home = _codex_home(tmp_path / "codex")
     automation_dir = home / "automations" / "weekly"
@@ -263,11 +315,7 @@ def test_automation_and_rollover_references_are_protected(
             _row(THREAD_B, second, archived_at=NOW - timedelta(days=100)),
         ],
     )
-    monkeypatch.setattr(
-        cleanup,
-        "_load_live_rollover_references",
-        lambda roots: ({THREAD_B}, []),
-    )
+    _write_live_rollover_lease(tmp_path, source_thread_id=THREAD_B)
 
     receipt = cleanup.run_cleanup(
         codex_home=home,

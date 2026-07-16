@@ -52,7 +52,7 @@ the first observation can delete an unchanged candidate. The command remains non
 
 Runtime state is stored at `~/.codex/thread-cleanup/state-v1.json`; versioned receipts are written under
 `~/.codex/thread-cleanup/receipts/v1/`. Standard output and standard error from scheduled runs are
-appended to:
+written to:
 
 ```text
 ~/.codex/thread-cleanup/logs/stdout.log
