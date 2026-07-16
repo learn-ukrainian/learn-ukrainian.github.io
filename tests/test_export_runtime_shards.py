@@ -11,6 +11,7 @@ import gzip
 import hashlib
 import json
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -18,7 +19,10 @@ import pytest
 from scripts.atlas.export_runtime_shards import (
     ExportError,
     export_runtime_shards,
+    find_component_tokens,
+    load_component_tokenization_vectors,
     load_entry_records,
+    load_practice_levels_by_slug,
     open_readonly_db,
     tree_fingerprint,
     verify_tree,
@@ -28,6 +32,8 @@ from scripts.atlas.normalization import load_normalization_vectors, normalize_at
 ROOT = Path(__file__).resolve().parents[1]
 REAL_DB_PATH = ROOT / "data" / "atlas.db"
 FIXTURE_DB_PATH = ROOT / "tests" / "fixtures" / "atlas" / "runtime_shards_fixture.db"
+PRACTICE_DECKS_ROOT = ROOT / "tests" / "fixtures" / "atlas" / "practice_decks"
+EXPORTER_SCRIPT = ROOT / "scripts" / "atlas" / "export_runtime_shards.py"
 
 
 @pytest.fixture(scope="module")
@@ -43,6 +49,55 @@ def _fp(root: Path) -> str:
 def test_normalization_vectors_match_python_rules() -> None:
     for case in load_normalization_vectors():
         assert normalize_atlas_text(case["input"]) == case["expected"], case
+
+
+def test_component_tokenization_vectors_match_python_rules() -> None:
+    for case in load_component_tokenization_vectors():
+        assert find_component_tokens(str(case["input"])) == case["expected"], case
+
+
+def test_script_path_invocation_exits_zero() -> None:
+    """F007: ``python scripts/atlas/export_runtime_shards.py`` must not ModuleNotFoundError."""
+    result = subprocess.run(
+        [str(ROOT / ".venv" / "bin" / "python"), str(EXPORTER_SCRIPT), "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "usage:" in result.stdout.lower()
+
+
+def test_practice_levels_prefer_api_lexicon_and_lemma_id_only(fixture_db: Path) -> None:
+    """F002: mirror SqliteAtlasDataSource — api/lexicon first, index lemmaId only."""
+    deck_dir = PRACTICE_DECKS_ROOT / "lexicon"
+    levels = load_practice_levels_by_slug(deck_dir)
+    # api/lexicon A1 wins over lexicon/ A1 (which only lists файний).
+    assert levels["прапор"] == ["A1"]
+    assert levels["доконаний-вид"] == ["A1"]
+    assert "файний" not in levels
+    # lexicon-only A2 still applies when api has no A2 index.
+    assert levels["іван"] == ["A2"]
+    # lemma text must not become an index key (would poison ласка / вид).
+    assert "ласка" not in levels
+    assert "вид" not in levels
+
+    conn = open_readonly_db(fixture_db)
+    try:
+        records = {
+            record["slug"]: record
+            for record in load_entry_records(conn, practice_levels_by_slug=levels)
+        }
+    finally:
+        conn.close()
+
+    assert records["прапор"]["renderContext"]["practiceLevels"] == ["A1"]
+    assert records["доконаний-вид"]["renderContext"]["practiceLevels"] == ["A1"]
+    assert records["іван"]["renderContext"]["practiceLevels"] == ["A2"]
+    assert records["ласка"]["renderContext"]["practiceLevels"] == []
+    assert records["вид"]["renderContext"]["practiceLevels"] == []
+    assert records["файний"]["renderContext"]["practiceLevels"] == []
 
 
 def test_export_twice_is_byte_identical(fixture_db: Path, tmp_path: Path) -> None:

@@ -1,0 +1,14 @@
+{
+  "deckVersion": "fixture-api-a1",
+  "level": "A1",
+  "items": [
+    {
+      "lemmaId": "прапор",
+      "lemma": "ласка"
+    },
+    {
+      "lemmaId": "доконаний-вид",
+      "lemma": "вид"
+    }
+  ]
+}

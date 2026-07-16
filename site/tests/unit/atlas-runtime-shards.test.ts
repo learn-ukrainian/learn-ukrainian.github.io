@@ -39,6 +39,13 @@ const FIXTURE_SLUGS = [
   "іване", // form_of
 ];
 
+const componentTokenVectorsPath = resolve(
+  process.cwd(),
+  "../scripts/atlas/component_tokenization_vectors.json",
+);
+/** Twin of scripts/atlas/export_runtime_shards.py find_component_tokens / Sqlite COMPONENT_TOKEN_RE. */
+const COMPONENT_TOKEN_RE = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
+
 describe("atlas normalization vectors", () => {
   test("TypeScript normalizeAtlasText matches shared vectors", () => {
     const payload = JSON.parse(readFileSync(vectorsPath, "utf-8")) as {
@@ -46,6 +53,19 @@ describe("atlas normalization vectors", () => {
     };
     for (const testCase of payload.cases) {
       expect(normalizeAtlasText(testCase.input), testCase.input).toBe(testCase.expected);
+    }
+  });
+});
+
+describe("atlas component tokenization vectors", () => {
+  test("TypeScript COMPONENT_TOKEN_RE matches shared vectors", () => {
+    const payload = JSON.parse(readFileSync(componentTokenVectorsPath, "utf-8")) as {
+      cases: Array<{ id: string; input: string; expected: string[] }>;
+    };
+    for (const testCase of payload.cases) {
+      expect(testCase.input.match(COMPONENT_TOKEN_RE) ?? [], testCase.id).toEqual(
+        testCase.expected,
+      );
     }
   });
 });

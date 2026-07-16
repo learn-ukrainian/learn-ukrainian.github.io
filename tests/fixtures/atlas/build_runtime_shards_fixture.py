@@ -10,6 +10,10 @@ fixture is small and CI-safe; regenerate when representative rows change:
 PR #2 extends the fixture with test-only rows so EVERY ``ATLAS_ENTRY_TYPES``
 value plus ``form_route`` is present (production currently only ships lemma +
 multiword_term).
+
+Practice-index resolver fixtures (api/lexicon vs lexicon/ disagreement +
+lemma≠lemmaId) live beside this DB under ``practice_decks/`` — see
+``tests/test_export_runtime_shards.py::test_practice_levels_prefer_api_lexicon_and_lemma_id_only``.
 """
 
 from __future__ import annotations
