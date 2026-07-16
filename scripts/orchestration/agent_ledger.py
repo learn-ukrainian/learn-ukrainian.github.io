@@ -212,6 +212,18 @@ def task_event(
     }
 
 
+def lifecycle_carrier(path: str | Path) -> dict[str, Any]:
+    """Load the shared closeout projection exposed by coordination endpoints."""
+    from scripts.orchestration import task_lifecycle
+
+    resolved = Path(path).expanduser().resolve()
+    try:
+        ledger = task_lifecycle.load_lifecycle(resolved)
+    except task_lifecycle.LifecycleError as exc:
+        raise LedgerError(f"invalid task lifecycle ledger: {exc}") from exc
+    return task_lifecycle.carrier_projection(ledger, state_file=str(resolved))
+
+
 def upsert_task(
     repo_root: Path,
     *,
@@ -229,6 +241,7 @@ def upsert_task(
     owned_paths: list[str] | None = None,
     allow_conflicts: bool = False,
     metadata: dict[str, Any] | None = None,
+    lifecycle_file: str | Path | None = None,
 ) -> dict[str, Any]:
     with ledger_mutation_lock(repo_root):
         task_id = safe_id(task_id)
@@ -257,6 +270,11 @@ def upsert_task(
                 raise OwnershipConflictError(task_id, conflicts)
 
         now = isoformat_z(utc_now())
+        lifecycle = (
+            lifecycle_carrier(lifecycle_file)
+            if lifecycle_file is not None
+            else existing.get("task_lifecycle")
+        )
         events = list(existing.get("events") or [])
         if not existing:
             events.append(task_event(event_type="created", actor=effective_agent, message="task registered"))
@@ -289,6 +307,7 @@ def upsert_task(
             "ci": existing.get("ci") or {},
             "pr_url": existing.get("pr_url"),
             "metadata": {**(existing.get("metadata") or {}), **(metadata or {})},
+            "task_lifecycle": lifecycle,
             "events": events,
             "created_at": existing.get("created_at") or now,
             "updated_at": now,
@@ -383,6 +402,10 @@ def build_parser() -> argparse.ArgumentParser:
     upsert.add_argument("--owned-path", action="append")
     upsert.add_argument("--allow-conflicts", action="store_true")
     upsert.add_argument("--metadata")
+    upsert.add_argument(
+        "--lifecycle-file",
+        help="Validated task-lifecycle.v1 ledger carried into monitor-visible agent state.",
+    )
 
     event = sub.add_parser("event")
     event.add_argument("--task-id", required=True)
@@ -421,6 +444,7 @@ def main(argv: list[str] | None = None) -> int:
                 owned_paths=args.owned_path,
                 allow_conflicts=args.allow_conflicts,
                 metadata=_json_arg(args.metadata),
+                lifecycle_file=args.lifecycle_file,
             )
         elif args.command == "event":
             payload = append_event(

@@ -314,13 +314,35 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — describe the problem, draft a plan, **link it to its stream epic** (see Work intake above)
-2. **Adversarial review of plan** — send to Gemini, incorporate feedback
-3. **Finalize ACs** — update issue with concrete acceptance criteria
-4. **Implement** — work through ACs one by one
-5. **Verify all ACs** — every AC checked and documented on the issue
-6. **Adversarial review of implementation** — send code to Gemini, fix findings
-7. **Close** — only when all ACs pass and review is clean
+1. **Create GH issue** — describe the problem and link it to exactly one stream epic.
+2. **Review the plan** — obtain outside input and incorporate the disposition.
+3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
+   applicability, due state, evidence types, and content hash in
+   `task-lifecycle.v1`.
+4. **Implement in the dispatch worktree** — carry the lifecycle ledger with
+   `--lifecycle-file` through delegation, the agent ledger, and coordinator state.
+5. **Record typed AC evidence** — checkboxes are a display projection, never proof.
+   User-visible ACs require typed `behavior_proof` evidence referencing the
+   canonical #5302 receipt path/digest, target-input fingerprint, and exact
+   reviewed SHA; never copy a `behavior_proof_status` string.
+6. **Pass the independent review and CI gates** — review evidence must be from
+   outside the author model family and bound to the current PR head.
+7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
+   distinct and cannot substitute for one another.
+8. **Reconcile and close** — read actual GitHub state, transfer any remaining
+   scope first, close the issue explicitly, then remove the exact branch/worktree.
+
+The machine gate is:
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_closeout --help
+```
+
+Read-only `reconcile` appends an idempotent observation receipt. Remote changes
+require `mutate`, an exact action, `--authorize`, and an actor. `Fixes #N`, a
+completed worker, or a merged PR never proves issue closeout by itself. The
+canonical contract is
+`agents_extensions/shared/contracts/task-lifecycle-closeout.md`.
 
 **Goal-Driven Execution (step 4)**: Transform imperative tasks into verifiable goals. For multi-step work, state a plan with explicit verification at each step:
 ```
@@ -332,11 +354,12 @@ Strong success criteria enable independent looping. Weak criteria ("make it work
 
 **Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
 
-**Adversarial review command** (steps 2 & 6). Always use `--model gemini-3.1-pro-preview`. Document findings on the GH issue.
+**Adversarial review command** (steps 2 & 6). Use a current cross-family
+review lane and document findings on the GH issue.
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
-  "Adversarial review for #NNN. Read {path}." \
-  --task-id issue-NNN --model gemini-3.1-pro-preview
+printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+    --task-id review-NNN --to-model gemini-3.1-pro-high --review
 ```
 
 ## Channel bridge (#1190, shipped 2026-04-12)
@@ -357,23 +380,27 @@ cross-agent discussions, anything that needs pinned context.
 **Not preferred for:** one-off drive-by questions — use `ask-*` for
 those.
 
-**Quick reference**:
+**Quick reference** (through the explicit project bridge; never run bare
+`ab`, which resolves to ApacheBench on the operator machine):
 ```bash
   # List / inspect
-ab channel list
-ab channel info pipeline
-ab channel tail reviews -n 20
-ab channel tail reviews --thread THREAD_ID
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel info pipeline
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail reviews -n 20
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail reviews --thread THREAD_ID
 
   # Post (short form — single recipient)
-ab p reviews gemini "quick question about module X"
+.venv/bin/python scripts/ai_agent_bridge/__main__.py p reviews gemini \
+  "quick question about module X"
 
   # Post (long form — multi-recipient, threading, parent/corr ids)
-ab post reviews "Review of #NNN" --to gemini,codex --parent MSG_ID
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews \
+  "Review of #NNN" --to gemini,codex --parent MSG_ID
 
   # Multi-agent bounded discussion
-ab discuss architecture "Should we extract the V6 god object?" \
-    --with claude,gemini,codex --max-rounds 2
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture \
+  "Should we extract the V6 god object?" \
+  --with claude,gemini,codex --max-rounds 2
 ```
 
 `ab discuss` runs rounds in parallel via ThreadPoolExecutor,

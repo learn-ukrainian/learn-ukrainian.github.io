@@ -1498,6 +1498,20 @@ def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> st
     )
 
 
+def _load_task_lifecycle_carrier(raw_path: str | None) -> tuple[dict[str, Any] | None, str]:
+    """Validate one canonical lifecycle ledger before dispatch side effects."""
+    if not raw_path:
+        return None, ""
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.orchestration import task_lifecycle
+
+    path = Path(raw_path).expanduser().resolve()
+    ledger = task_lifecycle.load_lifecycle(path)
+    carrier = task_lifecycle.carrier_projection(ledger, state_file=str(path))
+    return carrier, task_lifecycle.render_carrier_prompt(carrier)
+
+
 class ResearchContextError(ValueError):
     """A --research-* flag violated a request-side bound (mirrors the API 422s)."""
 
@@ -2120,6 +2134,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
+    try:
+        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(
+            getattr(args, "lifecycle_file", None)
+        )
+    except (OSError, ValueError) as exc:
+        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+        return 2
+    prompt += lifecycle_prompt
+
     # ADR-011 P3 research context — explicit --research-* flags only. Validate the
     # request-side caps up front (fail fast, before any worktree side effect) so a
     # direct CLI caller is bounded exactly like the API query layer.
@@ -2215,6 +2238,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "returncode_reason": None,
             "substitution": None,
         }
+        if lifecycle_carrier is not None:
+            dry_run_state["task_lifecycle"] = lifecycle_carrier
         dry_run_reap = _reap_runtime_tmp_lease(
             runtime_tmp_root,
             runtime_tmp_namespace_root,
@@ -2344,6 +2369,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "returncode_reason": None,
         "substitution": None,
     }
+    if lifecycle_carrier is not None:
+        initial_state["task_lifecycle"] = lifecycle_carrier
     initial_state = _with_optional_research_state(initial_state, research_state)
     _write_state_atomic(state_path, initial_state)
 
@@ -3012,6 +3039,13 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
+    d.add_argument(
+        "--lifecycle-file",
+        help=(
+            "Canonical task-lifecycle.v1 ledger to validate and carry in the worker prompt/state. "
+            "Invalid ledgers fail before worktree or worker side effects."
+        ),
+    )
     d.add_argument(
         "--mode",
         default="read-only",
