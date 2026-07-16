@@ -1041,6 +1041,51 @@ def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path
     assert "llm_qg" not in snapshot.observed_files
 
 
+def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    original_target_hashes = ledger["current_identity"]["target_hashes"]
+
+    workflow = repo / "workflow.txt"
+    workflow.write_text("workflow-v2\n", encoding="utf-8")
+    _, refreshed = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Integrated a new post-build review protocol before its pending review.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert refreshed["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert refreshed["current_identity"]["target_hashes"] == original_target_hashes
+    assert refreshed["current_identity"]["workflow_hashes"] != ledger["current_identity"][
+        "workflow_hashes"
+    ]
+    assert refreshed["history"][-1]["details"]["owner_kind"] == "audit_tooling"
+
+    content = repo / "curriculum/l2-uk-en/bio/seminar-built/module.md"
+    content.write_text(content.read_text(encoding="utf-8") + "Незаписана зміна.\n", encoding="utf-8")
+    workflow.write_text("workflow-v3\n", encoding="utf-8")
+
+    with pytest.raises(tc.CompletionError, match="target hashes are unchanged"):
+        tc.record_change(
+            "bio/seminar-built",
+            run_id=run_id,
+            owner_kind="audit_tooling",
+            author_family="codex",
+            summary="Must not disguise learner-surface drift as review tooling.",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+
+
 def test_historical_post_build_result_cannot_advance_current_ledger() -> None:
     historical = ROOT / "tests" / "fixtures" / "post_build_review" / "bio-oleksandr-bilash.result.v2.json"
 

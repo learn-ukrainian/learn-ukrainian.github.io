@@ -919,10 +919,23 @@ def record_change(
                 "PUBLISH_REQUIRED",
                 "INTEGRATION_REQUIRED",
             }
-            if ledger["state"] not in allowed_states:
+            pending_review_workflow_refresh = (
+                ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
+                and owner_kind == "audit_tooling"
+            )
+            if ledger["state"] not in allowed_states and not pending_review_workflow_refresh:
                 raise CompletionError(f"A repair change is not allowed from {ledger['state']}")
             if identity["sha256"] == ledger["current_identity"]["sha256"]:
                 raise CompletionError("No target or workflow identity changed; refusing a no-op repair")
+            if pending_review_workflow_refresh:
+                if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
+                    raise CompletionError(
+                        "A pending post-build review accepts audit_tooling refresh only when target hashes are unchanged"
+                    )
+                if identity["workflow_hashes"] == ledger["current_identity"]["workflow_hashes"]:
+                    raise CompletionError(
+                        "A pending post-build review audit_tooling refresh requires workflow identity drift"
+                    )
             if ledger["state"] == "PLAN_REPAIR_REQUIRED" and owner_kind != "plan_workflow":
                 raise CompletionError("Plan-repair state only accepts plan_workflow changes")
             if ledger["state"] == "REVIEWER_INSTABILITY" and owner_kind != "audit_tooling":
