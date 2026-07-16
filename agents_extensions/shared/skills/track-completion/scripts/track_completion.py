@@ -951,30 +951,39 @@ def record_change(
                 "REVIEWER_INSTABILITY",
                 "PUBLISH_REQUIRED",
                 "INTEGRATION_REQUIRED",
+                "AWAITING_PRODUCTION_QG_ARMING",
             }
-            pending_review_workflow_refresh = (
-                ledger["state"] == "POST_BUILD_REVIEW_REQUIRED"
+            workflow_only_audit_refresh = (
+                ledger["state"]
+                in {"POST_BUILD_REVIEW_REQUIRED", "AWAITING_PRODUCTION_QG_ARMING"}
                 and owner_kind == "audit_tooling"
             )
-            if ledger["state"] not in allowed_states and not pending_review_workflow_refresh:
+            if ledger["state"] not in allowed_states and not workflow_only_audit_refresh:
                 raise CompletionError(f"A repair change is not allowed from {ledger['state']}")
+            if (
+                ledger["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+                and not workflow_only_audit_refresh
+            ):
+                raise CompletionError(
+                    "Production-QG arming boundary accepts only an audit_tooling workflow refresh"
+                )
             if identity["sha256"] == ledger["current_identity"]["sha256"]:
                 raise CompletionError("No target or workflow identity changed; refusing a no-op repair")
-            if pending_review_workflow_refresh:
+            if workflow_only_audit_refresh:
                 if (
                     identity["layout"] != ledger["current_identity"]["layout"]
                     or identity["module_state"] != ledger["current_identity"]["module_state"]
                 ):
                     raise CompletionError(
-                        "A pending post-build review accepts audit_tooling refresh only when module layout and state are unchanged"
+                        "An audit_tooling refresh accepts only unchanged module layout and state"
                     )
                 if identity["target_hashes"] != ledger["current_identity"]["target_hashes"]:
                     raise CompletionError(
-                        "A pending post-build review accepts audit_tooling refresh only when target hashes are unchanged"
+                        "An audit_tooling refresh accepts only unchanged target hashes"
                     )
                 if identity["workflow_hashes"] == ledger["current_identity"]["workflow_hashes"]:
                     raise CompletionError(
-                        "A pending post-build review audit_tooling refresh requires workflow identity drift"
+                        "An audit_tooling refresh requires workflow identity drift"
                     )
             if ledger["state"] == "PLAN_REPAIR_REQUIRED" and owner_kind != "plan_workflow":
                 raise CompletionError("Plan-repair state only accepts plan_workflow changes")

@@ -15,11 +15,11 @@ selectors:
     seminar: seminar-pending
 profiles:
   core-disabled:
-    version: 1.0.0
+    version: 2.0.0
     family: core
     readiness_profile: core
     pbr:
-      adapter: post-build-review.v4
+      adapter: post-build-review.v5
       required: true
     independent_review:
       required_for_mutation: true
@@ -29,11 +29,11 @@ profiles:
       adapter: production-qg.v1
       mode: disabled
   core-pending:
-    version: 1.0.0
+    version: 2.0.0
     family: core
     readiness_profile: core
     pbr:
-      adapter: post-build-review.v4
+      adapter: post-build-review.v5
       required: true
     independent_review:
       required_for_mutation: true
@@ -43,11 +43,11 @@ profiles:
       adapter: production-qg.v1
       mode: pending
   seminar-pending:
-    version: 1.0.0
+    version: 2.0.0
     family: seminar
     readiness_profile: seminar
     pbr:
-      adapter: post-build-review.v4
+      adapter: post-build-review.v5
       required: true
     independent_review:
       required_for_mutation: true
@@ -57,11 +57,11 @@ profiles:
       adapter: production-qg.v1
       mode: pending
   bio-pending:
-    version: 1.0.0
+    version: 2.0.0
     family: seminar
     readiness_profile: bio
     pbr:
-      adapter: post-build-review.v4
+      adapter: post-build-review.v5
       required: true
     independent_review:
       required_for_mutation: true

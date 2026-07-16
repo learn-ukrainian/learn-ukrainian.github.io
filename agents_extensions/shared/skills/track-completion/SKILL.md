@@ -18,7 +18,7 @@ review as an operator completion gate.
 
 ## Start or resume
 
-1. Preserve the legacy parity boundary documented below. Post-build review v4
+1. Preserve the legacy parity boundary documented below. Post-build review v5
    owns semantic readiness; the outer skill owns lifecycle and persistence.
 2. Satisfy repository issue, stream, worktree, research-classification, and
    pending-decision preflight before mutation. Work in the existing scoped
@@ -50,6 +50,10 @@ review as an operator completion gate.
    audit_tooling`; that transition is accepted only when the module state,
    layout, and every target hash are unchanged and the workflow identity
    actually changed.
+   The same explicit audit-tooling refresh may reopen an exact run from
+   `AWAITING_PRODUCTION_QG_ARMING`; it invalidates the prior publication/QG
+   chain and returns to a fresh post-build review. This is the development
+   route for a stronger gate and does not arm production QG or mint a new run.
    A legacy ledger without a goal is non-authoritative. Use
    `migrate-terminal-goal` with the exact old run id and explicit intent; a
    `PBR_PASS_QG_PENDING` migration must also name its exact PR and 40-character
@@ -87,7 +91,9 @@ freshness. Record the actual writer/repair author family with `record-build`.
 
 Read and follow `$post-build-review` completely for the same target. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
-that invocation. Record its exact result:
+that invocation. Use its emitted semantic schema when the provider supports
+structured output; prompt-only JSON compliance is not a reliable automation
+boundary. Record its exact result:
 
 ```bash
 .venv/bin/python \

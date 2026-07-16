@@ -47,7 +47,7 @@
           "type": "object",
           "additionalProperties": false,
           "required": ["adapter", "required"],
-          "properties": {"adapter": {"const": "post-build-review.v4"}, "required": {"const": true}}
+          "properties": {"adapter": {"const": "post-build-review.v5"}, "required": {"const": true}}
         },
         "independent_review": {"$ref": "#/$defs/mutationGate"},
         "integration": {"$ref": "#/$defs/mutationGate"},

@@ -1,4 +1,4 @@
-catalog_version: 4.0.0
+catalog_version: 5.0.0
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -203,3 +203,57 @@ regressions:
     version_field: review_protocol_version
     input: A semantic finding is emitted without a quality-dimension, claim-ledger, or learner-evidence-ledger reference while every dimension claims 10.0.
     expected: Reject the orphan finding and emit structured INCOMPLETE; a finding must have one explicit dimension or ledger owner.
+  - bug_id: seminar-cefr-planning-meta-passed-review
+    responsible_layer: track_policy
+    fixed_in_version: 1.8.0
+    version_field: track_policy_version
+    input: Learner-facing seminar prose says На рівні C1 or labels a C1 learner, answer, vocabulary, or seminar.
+    expected: One medium LEARNER_LEVEL_META_LEAKAGE finding per location and combined REVISE even when semantic review says PASS.
+  - bug_id: semantic-review-praised-planning-meta-and-missed-alignment
+    responsible_layer: semantic_prompt
+    fixed_in_version: 4.1.2
+    version_field: semantic_prompt_version
+    input: A reviewer praises declared C1 appropriateness while plan instructions leak, source mappings disappear, tasks repeat answers, objectives are keyword-matched, and vocabulary remains unused.
+    expected: Exhaustive evidence-backed findings use LEARNER_LEVEL_META_LEAKAGE, PLAN_INSTRUCTION_LEAKAGE, SOURCE_TRACEABILITY, SEMANTIC_REDUNDANCY, OBJECTIVE_ASSESSMENT_GAP, TASK_VALIDITY, and VOCABULARY_INTEGRATION as applicable.
+  - bug_id: exact-excerpt-enumeration-exceeded-provider-prompt-limit
+    responsible_layer: semantic_prompt
+    fixed_in_version: 4.1.3
+    version_field: semantic_prompt_version
+    input: A packet-bound provider schema enumerates every learner-surface sentence to force byte-exact Ukrainian evidence excerpts.
+    expected: Constrain evidence to a target-file path and valid one-based line, then hydrate the exact Unicode line from the immutable packet without model-side normalization or an oversized schema.
+  - bug_id: isolated-reviewer-received-paths-without-target-materials
+    responsible_layer: semantic_prompt
+    fixed_in_version: 4.1.4
+    version_field: semantic_prompt_version
+    input: A read-only isolated provider receives target paths and hashes but has no ambient repository file access, so it cannot perform the semantic review.
+    expected: Embed complete hash-bound target files as quoted curriculum data in the canonical semantic prompt; never grant shell or write access and never treat target text as instructions.
+  - bug_id: prompt-only-alignment-classes-could-be-omitted
+    responsible_layer: schema
+    fixed_in_version: 5.0.0
+    version_field: review_protocol_version
+    input: A reviewer returns five dimension scores but silently omits one or more required alignment comparisons or vocabulary lemmas.
+    expected: The exact seven-class alignment audit and source-order vocabulary coverage ledger are schema-required; omission is contract-invalid and becomes INCOMPLETE.
+  - bug_id: vocabulary-stem-guessing-accepted-unrelated-words
+    responsible_layer: track_policy
+    fixed_in_version: 1.9.0
+    version_field: track_policy_version
+    input: A target lemma appears only in its vocabulary definition, an HTML/YAML comment, an unrelated shared stem, or a reversed multiword phrase.
+    expected: No deterministic stem guessing or self-match; integration requires exact visible learner-surface use or explicit source-order VESUM mappings in semantic coverage.
+  - bug_id: semantic-evidence-hydrated-from-live-checkout
+    responsible_layer: orchestration
+    fixed_in_version: 5.0.0
+    version_field: review_protocol_version
+    input: Target files change after preparation while finalization hydrates citations from the live checkout instead of the reviewed bytes.
+    expected: Hydrate and validate every excerpt from hash-bound packet materials; report live source drift separately and fail closed.
+  - bug_id: learner-visible-resource-notes-excluded-with-bibliography
+    responsible_layer: track_policy
+    fixed_in_version: 1.9.0
+    version_field: track_policy_version
+    input: A resources file has a bibliographic title or URL plus learner-visible notes that narrate C1 calibration.
+    expected: Exempt title and URL fields but scan selected learner-visible note, description, instruction, and caption values with preserved line numbers.
+  - bug_id: raw-semantic-response-bypassed-provider-schema
+    responsible_layer: schema
+    fixed_in_version: 5.0.0
+    version_field: review_protocol_version
+    input: A raw response uses legacy string locators or omits supports while a provider schema exists only as an optional transport hint.
+    expected: Finalization revalidates the exact raw JSON against the packet-bound provider schema before hydration; mismatches become structured INCOMPLETE.

@@ -1,7 +1,7 @@
-review_protocol_version: 4.0.0
+review_protocol_version: 5.0.0
 deterministic_contract_version: 1.2.1
-semantic_prompt_version: 4.0.0
-track_policy_version: 1.6.0
+semantic_prompt_version: 5.0.0
+track_policy_version: 1.9.0
 
 score_calibration:
   bands:
@@ -45,6 +45,18 @@ defaults:
           regex: 'зміст\w*\s+непрочитан\w*\s+(?:справ|документ)\w*'
         - id: title-body-reconciliation
           regex: '(?:заголовок\w*[^.\n]{0,80}основн\w*\s+текст\w*|основн\w*\s+текст\w*[^.\n]{0,80}заголовок\w*)'
+        - id: learner-level-meta
+          families: [seminar]
+          category: learner_level_meta_leakage
+          severity: medium
+          issue_id: LEARNER_LEVEL_META_LEAKAGE
+          message: >-
+            Internal target-level metadata leaked into seminar learner prose;
+            preserve the substantive instruction without narrating its CEFR calibration.
+          include_yaml_keys: [note, notes, description, instruction, instructions, caption]
+          yaml_key_filter_path_regex: '(?:^|/)resources\.ya?ml$'
+          regex: >-
+            (?:(?:на\s+рівні|для\s+рівня)\s+(?:A1|A2|B1|B2|C1|C2)\+?\b|для\s+(?:(?:учн|читач|дослідник)\w*\s+)?(?:A1|A2|B1|B2|C1|C2)\+?(?:-рівн\w*)?\b|(?:A1|A2|B1|B2|C1|C2)\+?-(?:читач|учн|дослідник|відповід|лексик|семінар)\w*\b|мовн\w*\s+(?:якість\s+)?(?:A1|A2|B1|B2|C1|C2)\+?\b|мов\w*\s+рівня\s+(?:A1|A2|B1|B2|C1|C2)\+?\b|(?:A1|A2|B1|B2|C1|C2)\+?\s+(?:лексик|учн|читач|дослідник)\w*\b)
     evidence_requirements:
       - id: audio-dependent-task
         modality: audio
@@ -84,7 +96,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v4
+      llm_qg: capabilities_absorbed_by_semantic_v5
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
   seminar:
@@ -113,7 +125,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved; use text-only until cleared.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v4
+      llm_qg: capabilities_absorbed_by_semantic_v5
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
 

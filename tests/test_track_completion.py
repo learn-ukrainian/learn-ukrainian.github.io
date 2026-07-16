@@ -268,6 +268,20 @@ def _result_file(tmp_path: Path, name: str) -> Path:
     return path
 
 
+def test_current_certification_profiles_require_post_build_review_v5() -> None:
+    path = (
+        ROOT
+        / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
+    )
+    config = yaml.safe_load(path.read_text(encoding="utf-8"))
+
+    assert config["profiles"]
+    assert {
+        (profile["version"], profile["pbr"]["adapter"])
+        for profile in config["profiles"].values()
+    } == {("2.0.0", "post-build-review.v5")}
+
+
 def _certification_artifact(
     tmp_path: Path,
     name: str,
@@ -285,7 +299,7 @@ def _certification_artifact(
     }
     if kind == "post-build":
         value["pbr"] = {
-            "adapter": "post-build-review.v4",
+            "adapter": "post-build-review.v5",
             "verdict": "PASS",
             "raw_response_sha256": "a" * 64,
             "workflow_hashes": inputs["workflow_hashes"],
@@ -740,6 +754,36 @@ def test_review_rejects_unrecorded_drift_and_routes_plan_findings(
     assert ledger["routing"]["owners"] == ["plan_workflow"]
 
 
+def test_learner_level_meta_policy_finding_routes_to_built_artifact() -> None:
+    result = {
+        "combined_disposition": {"status": "REVISE"},
+        "findings": [
+            {
+                "id": "learner-workflow-leakage-learner-level-meta-1",
+                "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
+                "source": "track_policy",
+                "category": "learner_level_meta_leakage",
+                "severity": "medium",
+                "location": "curriculum/l2-uk-en/bio/example/module.md:31",
+            }
+        ],
+    }
+
+    routing = tc.route_findings(result, config=_config())
+
+    assert routing == {
+        "owners": ["built_artifact"],
+        "findings": [
+            {
+                "finding_id": "learner-workflow-leakage-learner-level-meta-1",
+                "category": "learner_level_meta_leakage",
+                "location": "curriculum/l2-uk-en/bio/example/module.md:31",
+                "owner": "built_artifact",
+            }
+        ],
+    }
+
+
 def _fresh_fixture_from(tmp_path: Path) -> tuple[Path, Path, Path]:
     """Create the same fixture without depending on pytest fixture internals."""
     repo = tmp_path / "repo"
@@ -1073,7 +1117,7 @@ def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
     content.write_text(content.read_text(encoding="utf-8") + "Незаписана зміна.\n", encoding="utf-8")
     workflow.write_text("workflow-v3\n", encoding="utf-8")
 
-    with pytest.raises(tc.CompletionError, match="target hashes are unchanged"):
+    with pytest.raises(tc.CompletionError, match="unchanged target hashes"):
         tc.record_change(
             "bio/seminar-built",
             run_id=run_id,
@@ -1095,7 +1139,7 @@ def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
         return identity
 
     monkeypatch.setattr(tc, "build_identity", relocated_identity)
-    with pytest.raises(tc.CompletionError, match="module layout and state are unchanged"):
+    with pytest.raises(tc.CompletionError, match="unchanged module layout and state"):
         tc.record_change(
             "bio/seminar-built",
             run_id=run_id,
@@ -1106,6 +1150,49 @@ def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
             config_path=config_path,
             ledger_root=ledger_root,
         )
+
+
+def test_qg_arming_boundary_accepts_review_tooling_refresh(
+    fake_repo: tuple[Path, Path, Path],
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, ledger = _start(fake_repo, "bio/seminar-built")
+    run_id = ledger["run"]["run_id"]
+    snapshot = tc.resolve_target(
+        "bio/seminar-built", repo_root=repo, config=tc.load_config(config_path)
+    )
+    path = tc.ledger_path_for(
+        snapshot,
+        repo_root=repo,
+        config=tc.load_config(config_path),
+        ledger_root=ledger_root,
+    )
+    ledger["state"] = "AWAITING_PRODUCTION_QG_ARMING"
+    ledger["publication"] = {
+        "pr": 123,
+        "merge_sha": "a" * 40,
+        "recorded_at": "2026-01-01T00:00:00+00:00",
+    }
+    tc._atomic_write_json(path, ledger)
+    original_target_hashes = ledger["current_identity"]["target_hashes"]
+
+    (repo / "workflow.txt").write_text("workflow-v2\n", encoding="utf-8")
+    _, refreshed = tc.record_change(
+        "bio/seminar-built",
+        run_id=run_id,
+        owner_kind="audit_tooling",
+        author_family="codex",
+        summary="Upgraded the versioned post-build review before production QG arming.",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert refreshed["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert refreshed["current_identity"]["target_hashes"] == original_target_hashes
+    assert refreshed["publication"] is None
+    assert refreshed["production_qg_authorization"] is None
+    assert refreshed["history"][-1]["details"]["owner_kind"] == "audit_tooling"
 
 
 def test_historical_post_build_result_cannot_advance_current_ledger() -> None:
