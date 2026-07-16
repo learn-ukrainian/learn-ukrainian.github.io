@@ -673,6 +673,173 @@ def _freeze_exec_root(exec_root: Path, *, staged_binary: Path) -> None:
     exec_root.chmod(0o500)
 
 
+_SEALED_READ_MCP_SOURCE = r'''#!/usr/bin/python3
+import hashlib
+import json
+import os
+import stat
+import sys
+from pathlib import Path, PurePosixPath
+
+ROOT = Path(sys.argv[1]).resolve(strict=True)
+
+def safe_path(raw):
+    if not isinstance(raw, str) or not raw or "\\" in raw:
+        raise ValueError("invalid_path")
+    parsed = PurePosixPath(raw)
+    if parsed.is_absolute() or any(part in {"", ".", ".."} for part in parsed.parts):
+        raise ValueError("invalid_path")
+    path = (ROOT / Path(*parsed.parts)).resolve(strict=True)
+    path.relative_to(ROOT)
+    return path
+
+def read_text(raw):
+    path = safe_path(raw)
+    fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    try:
+        before = os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError("not_regular")
+        chunks = []
+        while True:
+            chunk = os.read(fd, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        after = os.fstat(fd)
+        if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (
+            after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns
+        ):
+            raise ValueError("file_changed")
+        data = b"".join(chunks)
+        return data.decode("utf-8", errors="strict"), hashlib.sha256(data).hexdigest()
+    finally:
+        os.close(fd)
+
+def files(prefix=""):
+    if prefix:
+        base = safe_path(prefix)
+        if base.is_file():
+            return [prefix]
+    else:
+        base = ROOT
+    result = []
+    for directory, dirnames, filenames in os.walk(base, followlinks=False):
+        dirnames.sort()
+        filenames.sort()
+        for name in filenames:
+            path = Path(directory) / name
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("non_regular_entry")
+            result.append(path.relative_to(ROOT).as_posix())
+    return result
+
+TOOLS = [
+    {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
+    {"name":"read_file","description":"Read one complete file from the sealed review snapshot without truncation.","inputSchema":{"type":"object","properties":{"path":{"type":"string"}},"required":["path"],"additionalProperties":False}},
+    {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
+]
+
+def call_tool(name, args):
+    if not isinstance(args, dict):
+        raise ValueError("arguments_must_be_object")
+    if name == "list_files":
+        payload = {"files": files(args.get("prefix", ""))}
+    elif name == "read_file":
+        text, digest = read_text(args.get("path"))
+        payload = {"path": args["path"], "sha256": digest, "content": text}
+    elif name == "search_text":
+        query = args.get("query")
+        if not isinstance(query, str) or not query:
+            raise ValueError("invalid_query")
+        matches = []
+        truncated = False
+        for rel in files(args.get("prefix", "")):
+            text, _digest = read_text(rel)
+            for number, line in enumerate(text.splitlines(), 1):
+                if query in line:
+                    if len(matches) == 200:
+                        truncated = True
+                        break
+                    matches.append({"path": rel, "line": number, "text": line})
+            if truncated:
+                break
+        payload = {"matches": matches, "truncated": truncated}
+    else:
+        raise ValueError("unknown_tool")
+    return {"content":[{"type":"text","text":json.dumps(payload, ensure_ascii=False, separators=(",", ":"))}],"isError":False}
+
+for raw in sys.stdin:
+    request = None
+    request_id = None
+    try:
+        request = json.loads(raw)
+        method = request.get("method")
+        request_id = request.get("id")
+        if method == "initialize":
+            result = {"protocolVersion":"2025-03-26","capabilities":{"tools":{"listChanged":False}},"serverInfo":{"name":"sealed-review-reader","version":"1"}}
+        elif method == "tools/list":
+            result = {"tools": TOOLS}
+        elif method == "tools/call":
+            params = request.get("params") or {}
+            result = call_tool(params.get("name"), params.get("arguments") or {})
+        elif method == "ping":
+            result = {}
+        elif request_id is None:
+            continue
+        else:
+            raise ValueError("unsupported_method")
+        response = {"jsonrpc":"2.0","id":request_id,"result":result}
+    except Exception as exc:
+        if isinstance(locals().get("request"), dict) and request.get("id") is None:
+            continue
+        response = {"jsonrpc":"2.0","id":locals().get("request_id"),"error":{"code":-32602,"message":type(exc).__name__ + ":" + str(exc)}}
+    sys.stdout.write(json.dumps(response, ensure_ascii=False, separators=(",", ":")) + "\n")
+    sys.stdout.flush()
+'''
+
+
+def _stage_sealed_read_mcp(exec_root: Path) -> Path:
+    """Stage the parent-owned read-only MCP helper beside the pinned reviewer."""
+    helper = exec_root / "sealed-read-mcp.py"
+    fd = os.open(
+        helper,
+        os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+        0o400,
+    )
+    try:
+        _write_fd_all(fd, _SEALED_READ_MCP_SOURCE.encode("utf-8"))
+    finally:
+        os.close(fd)
+    return helper
+
+
+def _inject_codex_sealed_read_mcp(
+    argv: Sequence[str],
+    *,
+    python_bin: Path,
+    helper: Path,
+    snapshot_root: Path,
+) -> list[str]:
+    """Inject only the parent-owned sealed reader into an empty Codex config."""
+    command = f"mcp_servers.sealed_review.command={json.dumps(str(python_bin))}"
+    args = "mcp_servers.sealed_review.args=" + json.dumps(
+        [str(helper), str(snapshot_root)],
+        separators=(",", ":"),
+    )
+    injected = list(argv)
+    index = len(injected) - 1 if injected and injected[-1] == "-" else len(injected)
+    injected[index:index] = [
+        "-c",
+        command,
+        "-c",
+        args,
+        "-c",
+        "mcp_servers.sealed_review.enabled=true",
+    ]
+    return injected
+
+
 def _file_sha256(path: Path) -> str:
     """Hash one trusted executable without executing it."""
     try:
@@ -1356,10 +1523,19 @@ def review_isolation_tool_config(engine: str) -> dict[str, object]:
                     "shell_tool",
                     "goals",
                     "browser_use",
+                    "browser_use_external",
                     "in_app_browser",
+                    "computer_use",
                     "image_generation",
                     "apps",
+                    "enable_mcp_apps",
                     "plugins",
+                    "plugin_sharing",
+                    "skill_mcp_dependency_install",
+                    "tool_suggest",
+                    "auth_elicitation",
+                    "tool_call_mcp_elicitation",
+                    "hooks",
                     "multi_agent",
                 ],
                 "ignore_user_config": True,
@@ -1372,7 +1548,8 @@ def review_isolation_tool_config(engine: str) -> dict[str, object]:
         base.update(
             {
                 "disallowed_tools": "Shell,Write,Edit,Bash,MultiEdit,NotebookEdit,search_replace",
-                "permission_mode": "plan",
+                "allowed_tools": "Read,Grep,Glob",
+                "permission_mode": "bypassPermissions",
                 "review_deny_tools": [
                     "Write",
                     "Edit",
@@ -2570,6 +2747,18 @@ def prepare_isolated_review_launch(
             raise ReviewIsolationError(f"reviewer_binary_mismatch:expected={expected}:actual={binary}")
     binary = _stage_pinned_reviewer_runtime(binary, exec_root=execution_root)
     abs_argv[0] = str(binary)
+    if engine_key == "codex":
+        helper = _stage_sealed_read_mcp(execution_root)
+        python_bin = _resolve_fixed_system_executable(
+            "python3",
+            reject_roots=all_rejects,
+        )
+        abs_argv = _inject_codex_sealed_read_mcp(
+            abs_argv,
+            python_bin=python_bin,
+            helper=helper,
+            snapshot_root=snap,
+        )
     if not prompt_payload:
         raise ReviewIsolationError("review_prompt_missing")
     if prompt_transport not in {"stdin", "prompt-file"}:

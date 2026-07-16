@@ -160,6 +160,17 @@ def _prompt_evidence_checkout(
         "patch_digest": patch_digest,
         "patch_bytes": len(patch),
         "inert_links": [],
+        "deleted_files": [
+            {
+                "path": "src/deleted.py",
+                "mode": 0o644,
+                "sha256": hashlib.sha256(b"old = True\n").hexdigest(),
+                "bytes": len(b"old = True\n"),
+                "content": "old = True\n",
+            }
+        ]
+        if "src/deleted.py" in changed_paths
+        else [],
         "source_state": None,
         "identity": identity,
     }
@@ -211,7 +222,13 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
             "bytes": len(content.encode()),
             "content": content,
         },
-        {"path": "src/deleted.py", "status": "deleted"},
+        {
+            "path": "src/deleted.py",
+            "status": "deleted",
+            "old_sha256": hashlib.sha256(b"old = True\n").hexdigest(),
+            "old_bytes": len(b"old = True\n"),
+            "old_content": "old = True\n",
+        },
     ]
     # A source-controlled delimiter-looking line remains escaped inside the
     # single JSON data line; it cannot terminate the evidence boundary.
@@ -236,6 +253,47 @@ def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
     traversal = _prompt_evidence_checkout(tmp_path / "traversal", changed_paths=("../host-secret",))
     with pytest.raises(review_worktree.ReviewWorktreeError, match="unsafe_path"):
         traversal.review_prompt_evidence("codex")
+
+
+def test_old_side_evidence_does_not_hide_same_path_replacement(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(
+        tmp_path / "replacement",
+        changed_paths=("src/app.py",),
+        present_content="new_value = True\n",
+    )
+    manifest_path = checkout.path / ".review-bundle" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    old = b"old_value = True\n"
+    manifest["name_status"] = [
+        {"status": "D ", "path": "src/app.py", "kind": "delete"},
+        {"status": "A", "path": "src/app.py", "kind": "untracked"},
+    ]
+    manifest["deleted_files"] = [
+        {
+            "path": "src/app.py",
+            "mode": 0o644,
+            "sha256": hashlib.sha256(old).hexdigest(),
+            "bytes": len(old),
+            "content": old.decode(),
+        }
+    ]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    json_line = next(
+        line
+        for line in checkout.review_prompt_evidence("codex").splitlines()
+        if line.startswith("{")
+    )
+    dossier = json.loads(json_line)
+    assert dossier["files"] == [
+        {
+            "path": "src/app.py",
+            "status": "present",
+            "sha256": hashlib.sha256(b"new_value = True\n").hexdigest(),
+            "bytes": len(b"new_value = True\n"),
+            "content": "new_value = True\n",
+        }
+    ]
 
 
 def test_codex_dossier_keeps_hostile_agents_as_inert_complete_evidence(
@@ -519,6 +577,22 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
             evidence_root=evidence_root,
             changed_lines={"src/app.py": frozenset({1})},
         )
+    for nonfinite in ("NaN", "Infinity", "-Infinity"):
+        invalid_number = response.replace(
+            '"confidence": 0.95',
+            f'"confidence": {nonfinite}',
+            1,
+        )
+        with pytest.raises(review_worktree.ReviewWorktreeError, match="nonfinite_number"):
+            review_worktree.validate_code_review_response(
+                invalid_number,
+                base_sha=base,
+                head_sha=head,
+                patch_sha256=patch,
+                changed_paths=("src/app.py",),
+                evidence_root=evidence_root,
+                changed_lines={"src/app.py": frozenset({1})},
+            )
     payload["findings"][0]["location"]["path"] = "src/outside.py"
     with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_schema"):
         review_worktree.validate_code_review_response(
@@ -558,6 +632,82 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
             head_sha=head,
             patch_sha256=patch,
             changed_paths=("src/app.py",),
+        )
+
+
+def test_deleted_file_finding_uses_hash_bound_old_side_evidence(tmp_path: Path) -> None:
+    old_content = "required_registration()\n"
+    encoded = old_content.encode()
+    evidence_root = tmp_path / "evidence"
+    bundle = evidence_root / ".review-bundle"
+    bundle.mkdir(parents=True)
+    (bundle / "manifest.json").write_text(
+        json.dumps(
+            {
+                "deleted_files": [
+                    {
+                        "path": "src/registry.py",
+                        "mode": 0o644,
+                        "sha256": hashlib.sha256(encoded).hexdigest(),
+                        "bytes": len(encoded),
+                        "content": old_content,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    payload = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "A required registration was deleted.",
+            "confidence": 0.95,
+        },
+        "findings": [
+            {
+                "id": "F001",
+                "title": "Restore the required registration",
+                "body": "Deleting the registration breaks startup.",
+                "priority": "P1",
+                "confidence": 0.95,
+                "category": "regression",
+                "location": {
+                    "path": "src/registry.py",
+                    "start_line": 1,
+                    "end_line": 1,
+                    "claim_type": "present",
+                },
+                "verbatim": "required_registration()",
+                "why_wrong": "The startup path still requires this registration.",
+                "smallest_fix": "Restore the deleted registration.",
+                "sources": ["none"],
+            }
+        ],
+    }
+    digest = review_worktree.validate_code_review_response(
+        json.dumps(payload),
+        base_sha="b" * 40,
+        head_sha="a" * 40,
+        patch_sha256="c" * 64,
+        changed_paths=("src/registry.py",),
+        evidence_root=evidence_root,
+        changed_lines={"src/registry.py": frozenset()},
+    )
+    assert len(digest) == 64
+
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    manifest["deleted_files"][0]["content"] = "tampered\n"
+    (bundle / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="deleted_evidence_digest"):
+        review_worktree.validate_code_review_response(
+            json.dumps(payload),
+            base_sha="b" * 40,
+            head_sha="a" * 40,
+            patch_sha256="c" * 64,
+            changed_paths=("src/registry.py",),
+            evidence_root=evidence_root,
+            changed_lines={"src/registry.py": frozenset()},
         )
 
 

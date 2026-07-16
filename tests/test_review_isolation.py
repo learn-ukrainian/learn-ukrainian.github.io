@@ -20,6 +20,8 @@ from scripts.review.isolation import (
     ReviewIsolationError,
     SandboxCapability,
     _canonical_sandbox_read_roots,
+    _inject_codex_sealed_read_mcp,
+    _stage_sealed_read_mcp,
     apply_review_isolation_to_invocation,
     build_claude_review_argv,
     build_codex_review_argv,
@@ -607,7 +609,65 @@ def test_tool_config_denies_nested_reviewers_and_writes() -> None:
     grok = review_isolation_tool_config("grok")
     assert "disallowed_tools" in grok
     assert "review_deny_tools" in grok
+    assert grok["allowed_tools"] == "Read,Grep,Glob"
+    assert grok["permission_mode"] == "bypassPermissions"
     assert grok.get("deny_tools") is None  # old wrong key removed
+
+
+def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
+    tmp_path: Path,
+) -> None:
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    (snapshot / "safe.py").write_text("VALUE = 1\n", encoding="utf-8")
+    execution = tmp_path / "exec"
+    execution.mkdir(mode=0o700)
+    helper = _stage_sealed_read_mcp(execution)
+    argv = _inject_codex_sealed_read_mcp(
+        ["/trusted/codex", "exec", "-"],
+        python_bin=Path("/usr/bin/python3"),
+        helper=helper,
+        snapshot_root=snapshot,
+    )
+    assert argv[-1] == "-"
+    assert any("mcp_servers.sealed_review.command" in item for item in argv)
+    assert any(str(snapshot) in item and str(helper) in item for item in argv)
+
+    requests = "\n".join(
+        json.dumps(item)
+        for item in (
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+            {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {"name": "read_file", "arguments": {"path": "safe.py"}},
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 4,
+                "method": "tools/call",
+                "params": {"name": "read_file", "arguments": {"path": "../outside"}},
+            },
+        )
+    )
+    completed = subprocess.run(
+        ["/usr/bin/python3", str(helper), str(snapshot)],
+        input=requests + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    responses = [json.loads(line) for line in completed.stdout.splitlines()]
+    assert {tool["name"] for tool in responses[1]["result"]["tools"]} == {
+        "list_files",
+        "read_file",
+        "search_text",
+    }
+    content = json.loads(responses[2]["result"]["content"][0]["text"])
+    assert content["content"] == "VALUE = 1\n"
+    assert responses[3]["error"]["message"].startswith("ValueError:invalid_path")
 
 
 def test_agy_isolated_review_is_explicitly_unsupported() -> None:
@@ -1037,6 +1097,10 @@ def test_grok_adapter_uses_sealed_prompt_file_for_large_review_evidence(
     assert plan.cwd == write_root / "exec"
     assert plan.cmd[plan.cmd.index("--cwd") + 1] == str(write_root / "exec")
     assert "--no-subagents" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "bypassPermissions"
+    assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob"
+    assert "--always-approve" in plan.cmd
+    assert "--no-plan" in plan.cmd
 
 
 def test_untracked_immutable_capture_survives_source_swap(tmp_path: Path) -> None:
@@ -2354,6 +2418,9 @@ def test_f15_local_patch_and_delete_rename_fidelity(tmp_path: Path) -> None:
     (repo / "b.txt").unlink()
     _git(repo, "mv", "c.txt", "d.txt")
     (repo / "new.txt").write_text("untracked\n", encoding="utf-8")
+    executable = repo / "run.sh"
+    executable.write_text("#!/bin/sh\necho safe\n", encoding="utf-8")
+    executable.chmod(0o755)
     # Staged + unstaged mixed edit on README.
     (repo / "README.md").write_text("staged\n", encoding="utf-8")
     _git(repo, "add", "README.md")
@@ -2377,9 +2444,19 @@ def test_f15_local_patch_and_delete_rename_fidelity(tmp_path: Path) -> None:
         assert not (snap.path / "c.txt").exists()
         assert (snap.path / "d.txt").read_text(encoding="utf-8") == "rename-me\n"
         assert (snap.path / "new.txt").read_text(encoding="utf-8") == "untracked\n"
+        assert (snap.path / "run.sh").read_text(encoding="utf-8") == "#!/bin/sh\necho safe\n"
         assert (snap.path / "README.md").read_text(encoding="utf-8") == ("staged-and-unstaged\n")
         patch = (snap.path / ".review-bundle" / "patch.diff").read_bytes()
         assert patch.strip()
+        assert b"diff --git a/run.sh b/run.sh\nnew file mode 100755\n" in patch
+        manifest = json.loads(
+            (snap.path / ".review-bundle" / "manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        deleted = {entry["path"]: entry for entry in manifest["deleted_files"]}
+        assert deleted["b.txt"]["content"] == "delete-me\n"
+        assert deleted["c.txt"]["content"] == "rename-me\n"
         assert snap.patch_digest
         assert "a.txt" in snap.changed_paths
     finally:
@@ -2421,6 +2498,49 @@ def test_local_file_to_directory_replacement_is_captured_and_verified(tmp_path: 
     try:
         assert (snap.path / "node").is_dir()
         assert (snap.path / "node" / "child.py").read_text(encoding="utf-8") == "VALUE = 1\n"
+        verify_review_acceptance(snap)
+    finally:
+        cleanup_snapshot_state(state)
+
+
+def test_local_directory_to_file_replacement_is_captured_and_verified(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    tracked = repo / "node" / "child.py"
+    tracked.parent.mkdir()
+    tracked.write_text("OLD = True\n", encoding="utf-8")
+    _git(repo, "add", "node/child.py")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "tracked directory",
+    )
+    head = _head_sha(repo)
+    tracked.unlink()
+    tracked.parent.rmdir()
+    (repo / "node").write_text("replacement\n", encoding="utf-8")
+
+    capture = capture_local_review_state(repo)
+    assert "node/child.py" in capture.deleted_paths
+    assert {record.rel_path for record in capture.untracked} == {"node"}
+    snap, state = materialize_review_snapshot(
+        repo,
+        mode="local",
+        head_sha=head,
+        local_capture=capture,
+        temp_parent=tmp_path / "tmp",
+    )
+    try:
+        assert (snap.path / "node").is_file()
+        assert (snap.path / "node").read_text(encoding="utf-8") == "replacement\n"
         verify_review_acceptance(snap)
     finally:
         cleanup_snapshot_state(state)

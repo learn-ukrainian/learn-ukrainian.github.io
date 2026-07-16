@@ -166,10 +166,12 @@ class GrokBuildAdapter:
         # or non-MCP call keeps its normal (safer) mode mapping.
         mcp_servers_requested = set(tc.get("mcp_server_names") or [])
         mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
-        # Review isolation (#5285): force plan/read-only and explicit deny rules.
-        # Keys match review_isolation_tool_config: disallowed_tools, review_deny_tools.
+        # Review isolation (#5285): expose only built-in read tools. The
+        # parent-owned OS sandbox limits them to the sealed view; explicit deny
+        # rules remove shell/write/nested execution even though headless tool
+        # calls require an execution-capable permission mode.
         if review_isolation:
-            permission_mode = str(tc.get("permission_mode") or "plan")
+            permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
         else:
             permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
@@ -181,7 +183,16 @@ class GrokBuildAdapter:
             for rule in _MCP_REVIEW_DENY_RULES:
                 cmd.extend(["--deny", rule])
         if review_isolation:
-            cmd.extend(["--no-memory", "--no-subagents", "--disable-web-search", "--verbatim"])
+            cmd.extend(
+                [
+                    "--always-approve",
+                    "--no-plan",
+                    "--no-memory",
+                    "--no-subagents",
+                    "--disable-web-search",
+                    "--verbatim",
+                ]
+            )
             deny_rules = tc.get("review_deny_tools") or list(_MCP_REVIEW_DENY_RULES)
             if isinstance(deny_rules, (list, tuple)):
                 for rule in deny_rules:
@@ -198,7 +209,7 @@ class GrokBuildAdapter:
         if disallowed:
             cmd.extend(["--disallowed-tools", str(disallowed)])
         allowed = tc.get("allowed_tools")
-        if allowed and not review_isolation:
+        if allowed:
             cmd.extend(["--tools", str(allowed)])
 
         # Resume only if the caller explicitly opts in (delegate dispatch never

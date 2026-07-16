@@ -723,10 +723,18 @@ def _write_records(dest: Path, records: Iterable[ImmutableFileRecord]) -> dict[s
     written: dict[str, bytes] = {}
     for rec in records:
         target = _safe_child(dest, rec.rel_path)
-        target.parent.mkdir(parents=True, exist_ok=True)
         # Overlays may replace already-extracted read-only archive members.
         if target.exists():
-            target.chmod(0o644)
+            if target.is_dir() and not target.is_symlink():
+                try:
+                    target.rmdir()
+                except OSError as exc:
+                    raise ReviewSnapshotError(
+                        f"overlay_directory_not_empty:{rec.rel_path}"
+                    ) from exc
+            else:
+                target.chmod(0o644)
+        target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(rec.content)
         target.chmod(0o444)
         on_disk = target.read_bytes()
@@ -734,6 +742,73 @@ def _write_records(dest: Path, records: Iterable[ImmutableFileRecord]) -> dict[s
             raise ReviewSnapshotError(f"record_integrity_failed:{rec.rel_path}")
         written[rec.rel_path] = rec.content
     return written
+
+
+def _capture_deleted_records(
+    git_bin: Path,
+    repo_root: Path,
+    *,
+    revision: str,
+    paths: Iterable[str],
+) -> tuple[ImmutableFileRecord, ...]:
+    """Capture old-side regular-file bytes for deletion evidence."""
+    records: list[ImmutableFileRecord] = []
+    for rel_path in sorted(set(paths)):
+        path = _validate_rel_path(rel_path)
+        tree = _run_git(
+            git_bin,
+            ["ls-tree", "-z", revision, "--", path],
+            cwd=repo_root,
+            text=False,
+            check=False,
+        )
+        if tree.returncode != 0 or not tree.stdout:
+            raise ReviewSnapshotError(f"deleted_evidence_missing:{path}")
+        assert isinstance(tree.stdout, (bytes, bytearray))
+        header, separator, listed_path = bytes(tree.stdout).rstrip(b"\0").partition(b"\t")
+        fields = header.split()
+        if not separator or len(fields) != 3 or listed_path.decode("utf-8", errors="strict") != path:
+            raise ReviewSnapshotError(f"deleted_evidence_malformed:{path}")
+        mode_raw, object_type, _oid = fields
+        if mode_raw == b"120000":
+            raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{path}")
+        if mode_raw == b"160000":
+            raise ReviewSnapshotError(f"{DIAG_GITLINK}:{path}")
+        if object_type != b"blob" or mode_raw not in {b"100644", b"100755"}:
+            raise ReviewSnapshotError(
+                f"deleted_evidence_unsupported:{path}:mode={mode_raw.decode(errors='replace')}"
+            )
+        blob = _run_git(
+            git_bin,
+            ["cat-file", "-p", f"{revision}:{path}"],
+            cwd=repo_root,
+            text=False,
+            check=False,
+        )
+        if blob.returncode != 0 or not isinstance(blob.stdout, (bytes, bytearray)):
+            raise ReviewSnapshotError(f"deleted_evidence_missing:{path}")
+        content = bytes(blob.stdout)
+        if b"\0" in content:
+            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
+        try:
+            text = content.decode("utf-8", errors="strict")
+        except UnicodeDecodeError as exc:
+            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
+        if is_sensitive_path(path):
+            raise ReviewSnapshotError(f"sensitive_path:{path}")
+        hits = secret_like_findings(text)
+        if hits:
+            raise ReviewSnapshotError(
+                f"{DIAG_CHANGED_SECRET}:{path}:{','.join(hits)}"
+            )
+        records.append(
+            ImmutableFileRecord.from_bytes(
+                path,
+                content,
+                mode=0o755 if mode_raw == b"100755" else 0o644,
+            )
+        )
+    return tuple(records)
 
 
 def _set_tree_read_only(root: Path) -> None:
@@ -1185,6 +1260,7 @@ def _write_review_bundle(
     patch_bytes: bytes,
     name_status: list[dict[str, str]],
     inert_links: tuple[InertLinkRecord, ...],
+    deleted_records: tuple[ImmutableFileRecord, ...],
     source_state: SourceStateIdentity | None,
 ) -> ReviewBundle:
     bundle_dir = dest / ".review-bundle"
@@ -1212,6 +1288,16 @@ def _write_review_bundle(
                 "target_or_oid": link.target_or_oid,
             }
             for link in inert_links
+        ],
+        "deleted_files": [
+            {
+                "path": record.rel_path,
+                "mode": record.mode,
+                "sha256": record.sha256,
+                "bytes": len(record.content),
+                "content": record.content.decode("utf-8", errors="strict"),
+            }
+            for record in deleted_records
         ],
         "source_state": source_state.public_dict() if source_state else None,
     }
@@ -1258,6 +1344,21 @@ def verify_review_bundle(snapshot: ReviewSnapshot) -> str:
     if not manifest_path.is_file() or not patch_path.is_file():
         raise ReviewSnapshotError(f"{DIAG_BUNDLE}:missing")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    deleted_files = manifest.get("deleted_files", [])
+    if not isinstance(deleted_files, list):
+        raise ReviewSnapshotError(f"{DIAG_BUNDLE}:deleted_files")
+    for entry in deleted_files:
+        if not isinstance(entry, dict):
+            raise ReviewSnapshotError(f"{DIAG_BUNDLE}:deleted_file_entry")
+        path = entry.get("path")
+        content = entry.get("content")
+        digest = entry.get("sha256")
+        byte_count = entry.get("bytes")
+        if not isinstance(path, str) or not isinstance(content, str):
+            raise ReviewSnapshotError(f"{DIAG_BUNDLE}:deleted_file_shape")
+        encoded = content.encode("utf-8")
+        if byte_count != len(encoded) or digest != hashlib.sha256(encoded).hexdigest():
+            raise ReviewSnapshotError(f"{DIAG_BUNDLE}:deleted_file_digest:{path}")
     patch_bytes = patch_path.read_bytes()
     patch_digest = hashlib.sha256(patch_bytes).hexdigest()
     if patch_digest != manifest.get("patch_digest"):
@@ -1376,7 +1477,11 @@ def materialize_review_snapshot(
         if mode == "local" and derived_paths and not (derived_patch or b"").strip():
             synthesized = b""
             for rec in (*dirty_tracked_records, *untracked_records):
-                synthesized += _synthetic_untracked_diff(rec.rel_path, rec.content)
+                synthesized += _synthetic_untracked_diff(
+                    rec.rel_path,
+                    rec.content,
+                    mode=rec.mode,
+                )
             for rel in deleted_paths:
                 synthesized += (
                     f"diff --git a/{rel} b/{rel}\ndeleted file mode 100644\n--- a/{rel}\n+++ /dev/null\n"
@@ -1419,6 +1524,20 @@ def materialize_review_snapshot(
 
     dest = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=str(parent)))
     try:
+        remove_paths = set(deleted_paths)
+        remove_paths.update(old for old, _new in rename_pairs)
+        for entry in resolved_name_status:
+            status = str(entry.get("status") or "")
+            if status.startswith("D") and entry.get("path"):
+                remove_paths.add(str(entry["path"]))
+            if entry.get("old_path"):
+                remove_paths.add(str(entry["old_path"]))
+        deleted_records = _capture_deleted_records(
+            git,
+            root,
+            revision=resolved_base or head_sha,
+            paths=remove_paths,
+        )
         file_map, inert_links = _materialize_tree_from_blobs(
             git,
             root,
@@ -1427,8 +1546,6 @@ def materialize_review_snapshot(
             changed_paths=set(derived_paths),
         )
         # Apply deletion/rename-old semantics so snapshot paths match the target.
-        remove_paths = set(deleted_paths)
-        remove_paths.update(old for old, _new in rename_pairs)
         for rel in sorted(remove_paths):
             target = _safe_child(dest, rel)
             if target.exists() or target.is_symlink():
@@ -1464,6 +1581,7 @@ def materialize_review_snapshot(
             patch_bytes=derived_patch or b"",
             name_status=resolved_name_status,
             inert_links=changed_inert_links,
+            deleted_records=deleted_records,
             source_state=source_state,
         )
         # Include bundle files in fingerprint map.
@@ -1706,8 +1824,9 @@ def provision_review_snapshot(
         cleanup_snapshot_state(state)
 
 
-def _synthetic_untracked_diff(rel_path: str, content: bytes) -> bytes:
+def _synthetic_untracked_diff(rel_path: str, content: bytes, *, mode: int = 0o644) -> bytes:
     """Build a unified diff for an untracked file from immutable captured bytes."""
+    git_mode = "100755" if mode & 0o111 else "100644"
     text = content.decode("utf-8")
     lines = text.splitlines()
     body = "\n".join(f"+{line}" for line in lines)
@@ -1717,14 +1836,14 @@ def _synthetic_untracked_diff(rel_path: str, content: bytes) -> bytes:
         pass
     header = (
         f"diff --git a/{rel_path} b/{rel_path}\n"
-        f"new file mode 100644\n"
+        f"new file mode {git_mode}\n"
         f"--- /dev/null\n"
         f"+++ b/{rel_path}\n"
         f"@@ -0,0 +1,{max(len(lines), 1) if text else 0} @@\n"
     )
     if not text:
         return (
-            f"diff --git a/{rel_path} b/{rel_path}\nnew file mode 100644\n--- /dev/null\n+++ b/{rel_path}\n"
+            f"diff --git a/{rel_path} b/{rel_path}\nnew file mode {git_mode}\n--- /dev/null\n+++ b/{rel_path}\n"
         ).encode()
     return (header + body + ("\n" if not body.endswith("\n") else "")).encode()
 
@@ -1924,7 +2043,11 @@ def capture_local_review_state(
         raise ReviewSnapshotError(f"{DIAG_BINARY_PATCH}:local_non_utf8_patch") from exc
 
     for rec in untracked:
-        patch_bytes += _synthetic_untracked_diff(rec.rel_path, rec.content)
+        patch_bytes += _synthetic_untracked_diff(
+            rec.rel_path,
+            rec.content,
+            mode=rec.mode,
+        )
 
     # Secret-scan patch sections and overlay texts (no path exemptions).
     if patch_bytes.strip():
