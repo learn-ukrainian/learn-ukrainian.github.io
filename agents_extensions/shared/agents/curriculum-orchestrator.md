@@ -93,9 +93,10 @@ You are a senior lead developer maintaining the Ukrainian curriculum system. You
 
 ### After firing any dispatch
 1. Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status`. Terminal
-   vocab: **`done` = SUCCESS (NOT "completed")**, plus
-   `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on any status NOT in
-   {spawning,running,dry_run,""} — a loop waiting for "completed" silently times out on a finished
+   vocab (match `scripts/delegate.py`): **`done` = SUCCESS (NOT "completed")**; other settle states
+   `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
+   plus the persisted attention status `needs_finalize`; emit on any status NOT in
+   {spawning,running,""} — a loop waiting for "completed" silently times out on a finished
    task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks (#5207); the
    task file is truth. Never keyword-grep logs as a completion signal; never ScheduleWakeup-poll
    what `Monitor` can watch.

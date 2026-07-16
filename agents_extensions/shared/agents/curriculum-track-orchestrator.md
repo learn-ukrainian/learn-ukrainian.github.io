@@ -29,9 +29,11 @@ initialPrompt: |
        `agents_extensions/shared/rules/*.md`.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` — verify claimed
        in-flight dispatches before believing the handoff.
-     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=<your-slot>'` (lane
-       slot `claude-<epic>` from the capsule banner; also peek the shared `claude` inbox) — read
-       TRACK-UPDATE / MAIN-ACK traffic for YOUR track; leave other lanes' messages unacked.
+     - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude'` — inbox agent
+       names are a CLOSED registry (`_channels.py` VALID_AGENTS): use `claude-infra` only when
+       assigned the harness/infra epic, else the shared `claude` inbox (per-epic slots like
+       `claude-<epic>` are handoff identities, NOT inbox names). Read TRACK-UPDATE / MAIN-ACK
+       traffic for YOUR track; leave other lanes' messages unacked.
      Do NOT load the main orchestrator's session (`/api/orient`, `/api/session/current`,
      `docs/session-state/current*.md`, auto-injected SessionStart "orchestrator handoff" briefs) —
      that is main's state, not yours. (This lane-scoping IS the "optimal shape" the orchestrator
@@ -87,9 +89,11 @@ initialPrompt: |
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
-    result file on terminal. **Match the runtime's terminal vocab — `done` (the SUCCESS state, NOT
-    "completed"), plus `failed|timeout|rate_limited|cancelled|crashed|needs_finalize|killed`; emit on
-    any status NOT in {spawning,running,dry_run,""}** (a dispatch persists `spawning` before it forks
+    result file on terminal. **Match the runtime's terminal vocab (`scripts/delegate.py`) — `done`
+    (the SUCCESS state, NOT "completed"); other settle states
+    `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
+    plus the persisted attention status `needs_finalize`; emit on any status NOT in
+    {spawning,running,""}** (a dispatch persists `spawning` before it forks
     the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
     "completed" silently times out on
     a finished task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks
