@@ -820,20 +820,24 @@ def _run_tier2(
     if cached is not None:
         cached_payload = dict(cached.payload)
         cached_meta = dict(cached.dispatch_metadata or {})
+        cached_gate_outcomes = dict(cached.gate_outcomes or {})
         cached_meta.setdefault("tool_call_count", cached.tool_call_count)
         cached_meta.setdefault("tools_used", list(cached.tools_used))
         cached_meta.setdefault("route_name", cached.route_name)
         if cached.tool_events is not None:
             cached_meta.setdefault("tool_events", [dict(event) for event in cached.tool_events])
             try:
-                llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
+                cached_gate_payload = _cached_reviewer_payload_for_regate(cached, texts=texts)
+                llm_reviewer.validate_reviewer_payload(cached_gate_payload, policy_family)
                 cache_gate = _run_reviewer_gate_sequence(
-                    cached_payload,
+                    cached_gate_payload,
                     cached_meta,
                     policy_family=policy_family,
                     theatre_retry_available=True,
                     deep_read_retry_available=True,
-                    factual_sweep_retry_available=True,
+                    factual_sweep_retry_available=not bool(
+                        cached_gate_outcomes.get("factual_sweep_retried")
+                    ),
                     retry_unavailable_fails=True,
                 )
             except ValueError:
@@ -1549,6 +1553,34 @@ def _complete_cached_capture(
     }
 
 
+def _cached_reviewer_payload_for_regate(
+    cached: llm_qg_store.StoredQG,
+    *,
+    texts: Mapping[str, str],
+) -> dict[str, Any]:
+    """Recover the original reviewer payload before replaying deterministic gates."""
+    raw_response = cached.raw_response
+    raw_sha256 = cached.raw_response_sha256
+    if (
+        not isinstance(raw_response, str)
+        or not raw_response
+        or not isinstance(raw_sha256, str)
+        or raw_sha256 != llm_qg_store._sha256_bytes(raw_response.encode("utf-8"))
+    ):
+        return dict(cached.payload)
+    parsed_payload = llm_reviewer.parse_and_evaluate_llm_response(
+        raw_response,
+        module_md=texts.get("module.md", ""),
+        activities_yaml=texts.get("activities.yaml", ""),
+        vocabulary_yaml=texts.get("vocabulary.yaml", ""),
+        resources_yaml=texts.get("resources.yaml", ""),
+        return_payload=True,
+    )
+    if not isinstance(parsed_payload, Mapping):
+        raise ValueError("cached reviewer payload must be a mapping")
+    return _payload_from_reviewer_payload(parsed_payload)
+
+
 def _observed_cost(dispatch_meta: Mapping[str, Any]) -> float | None:
     value = dispatch_meta.get("observed_cost_usd")
     if value is None:
@@ -1680,7 +1712,7 @@ def _run_reviewer_gate_sequence(
     sweep_missing = policy_family.strip().lower() == "seminar" and (
         not isinstance(fact_checks, list) or not fact_checks
     )
-    if sweep_missing and (factual_sweep_retry_available or retry_unavailable_fails):
+    if sweep_missing and factual_sweep_retry_available:
         return _ReviewerGateOutcome(
             payload=working_payload,
             findings=[],

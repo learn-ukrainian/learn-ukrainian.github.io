@@ -770,6 +770,56 @@ def test_missing_fact_sweep_retry_exhausts_fail_closed(tmp_path: Path) -> None:
     assert "Factual Sweep Required" in calls[1]
 
 
+def test_exhausted_fact_sweep_replays_fail_closed_from_cache(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="fact-sweep-cache-exhausted",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        return _seminar_dispatch(
+            response_text=json.dumps({"findings": []}),
+            events=(_wiki_event(mode="section"),),
+        )
+
+    options = qg_workflow.WorkflowOptions(
+        enable_llm=True,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+    )
+    target = _target(seminar_dir, level="folk", slug="fact-sweep-cache-exhausted")
+    first = qg_workflow.review_module(
+        target,
+        options=options,
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+    stored = llm_qg_store.latest_llm_qg(
+        "folk", "fact-sweep-cache-exhausted", path=db_path
+    )
+    assert stored is not None
+    assert stored.gate_outcomes is not None
+    assert stored.gate_outcomes["factual_sweep_retried"] is True
+    second = qg_workflow.review_module(
+        target,
+        options=options,
+        reviewer=None,
+        store_path=db_path,
+    )
+
+    assert _tier(first, 2)["status"] == "factual_sweep_incomplete"
+    assert first["terminal_verdict"] == "FAIL"
+    assert _tier(second, 2)["status"] == "factual_sweep_incomplete"
+    assert _tier(second, 2)["cache_regate"] == "replayed"
+    assert second["terminal_verdict"] == "FAIL"
+    assert len(calls) == 2
+
+
 def test_missing_fact_sweep_retry_honors_lower_call_limit(tmp_path: Path) -> None:
     seminar_dir = _write_module(
         tmp_path,
