@@ -21,6 +21,7 @@
     "test:watch": "npm run hydrate && vitest --watch",
     "test:coverage": "npm run hydrate && vitest run --coverage",
     "test:atlas-route-parity": "node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs",
+    "test:atlas-release-gate": "ATLAS_RELEASE_GATE=1 vitest run tests/unit/atlas-runtime-shards.test.ts -t \"full-catalog Sqlite\"",
     "check:atlas-browser-bundle": "esbuild src/lib/lexicon/http-atlas-data-source.ts --bundle --platform=browser --external:astro* --outfile=/dev/null"
   },
   "dependencies": {

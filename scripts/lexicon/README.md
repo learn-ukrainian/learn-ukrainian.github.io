@@ -50,12 +50,41 @@ The last command publishes a Release asset and must run only when publishing is
 authorized. See `docs/bug-autopsies/atlas-manifest-source-split.md` for the
 2026-07-13 evidence behind this split.
 
+### Runtime shard Sqlite↔Http release gate (Sol F006, pre-publish)
+
+Before publishing a **runtime shard** release (`build/atlas-runtime` from
+`scripts.atlas.export_runtime_shards`), run the real-DB release gate. It fails
+closed when `data/atlas.db` or a fresh export is missing — do not treat a skip
+as a pass (that is how prior contract divergences merged unseen).
+
+```bash
+# 1) Ensure hydrated DB + fresh export
+test -f data/atlas.db
+.venv/bin/python -m scripts.atlas.export_runtime_shards --out-dir build/atlas-runtime --verify
+
+# 2) Python count / size band gate (8206 articles, shard size band, …)
+.venv/bin/python -m pytest tests/test_export_runtime_shards.py -m atlas_release -q
+
+# 3) Full-catalog EntryRecord deep parity Sqlite↔Http (every public route)
+(cd site && npm run test:atlas-release-gate)
+```
+
+Ordinary CI keeps the hermetic fixture suite unconditional (committed
+`tests/fixtures/atlas/runtime-tree/`) and still `skipif`s the real-DB
+assertions when `data/atlas.db` is absent. The commands above are the
+publish-time path. Fixture-tree regen after exporter/fixture-DB changes:
+
+```bash
+PYTHONPATH=. .venv/bin/python \
+  tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree
+```
+
 Before packaging or uploading, `publish_manifest` downloads the canonical live
 Release asset and compares the three Atlas POC richness counts against the
 candidate: `poc_thin_pages`, `search_no_visible_gloss`, and
-`old_gate_no_english_anchor`. A count may remain above the advisory CI limit if
-it improves (for example, gloss-less search rows `158→120`); a regression
-blocks publish.
+`old_gate_no_english_anchor` (#5138 publish gate). A count may remain above the
+advisory CI limit if it improves (for example, gloss-less search rows
+`158→120`); a regression blocks publish.
 An operator may publish an approved exception only with a non-empty recorded
 reason:
 
