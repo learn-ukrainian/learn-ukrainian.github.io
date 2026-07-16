@@ -29,8 +29,24 @@ export interface AtlasFetch {
 /** Pluggable gzip decode — browsers use DecompressionStream; Node injects gunzipSync. */
 export type AtlasDecompress = (compressed: Uint8Array) => Promise<Uint8Array> | Uint8Array;
 
+export interface AtlasAssetBaseEnv {
+  /** Vite public env: immutable raw.githubusercontent.com/.../<sha>/… overflow base (R7). */
+  PUBLIC_ATLAS_ASSET_BASE_URL?: string;
+}
+
 export interface HttpAtlasDataSourceOptions {
+  /**
+   * Atlas asset root. Production default is same-origin `/atlas` (PR3 D1).
+   * Overflow escape (R7, design-in): set `PUBLIC_ATLAS_ASSET_BASE_URL` at build
+   * time to an immutable commit-SHA `raw.githubusercontent.com` URL — never a
+   * branch name. Explicit option wins over env.
+   */
   assetBaseUrl?: string;
+  /**
+   * Inject build-time env for tests / Node. Defaults to `import.meta.env` when
+   * available. Only `PUBLIC_ATLAS_ASSET_BASE_URL` is read.
+   */
+  env?: AtlasAssetBaseEnv;
   /**
    * Max age for cached `current.json` / manifest pointer resolution.
    * Default 60s. Set to 0 to re-resolve on every logical request (tests).
@@ -44,6 +60,62 @@ export interface HttpAtlasDataSourceOptions {
 
 /** Default pointer TTL — short enough to observe release rollovers, long enough to amortize fetches. */
 export const DEFAULT_POINTER_TTL_MS = 60_000;
+
+/** Same-origin Pages-vendored tree root (PR3 D1). */
+export const DEFAULT_ATLAS_ASSET_BASE_URL = "/atlas";
+
+/**
+ * Resolve the Atlas asset base URL (R7 overflow hook).
+ *
+ * Precedence: explicit `assetBaseUrl` → `PUBLIC_ATLAS_ASSET_BASE_URL` →
+ * `DEFAULT_ATLAS_ASSET_BASE_URL` (`/atlas`).
+ *
+ * For on-disk fixture fetchers that root at the `atlas/` directory, pass
+ * `assetBaseUrl: ""` so relative paths stay unprefixed.
+ */
+export function resolveAtlasAssetBaseUrl(options?: {
+  assetBaseUrl?: string;
+  env?: AtlasAssetBaseEnv;
+}): string {
+  if (options && Object.prototype.hasOwnProperty.call(options, "assetBaseUrl")) {
+    const explicit = options.assetBaseUrl ?? "";
+    return explicit.replace(/\/$/, "");
+  }
+  const env = options?.env ?? readImportMetaEnv();
+  const fromEnv = env?.PUBLIC_ATLAS_ASSET_BASE_URL?.trim();
+  if (fromEnv) {
+    return fromEnv.replace(/\/$/, "");
+  }
+  return DEFAULT_ATLAS_ASSET_BASE_URL;
+}
+
+/**
+ * Constructor-time base resolution: env override when set, else explicit option,
+ * else empty string (backward-compatible for Node fixture fetchers).
+ * Product same-origin default `/atlas` is applied by the app shell / 404 page
+ * (or by calling {@link resolveAtlasAssetBaseUrl} without an explicit base).
+ */
+function resolveConstructorAssetBaseUrl(options?: HttpAtlasDataSourceOptions): string {
+  if (options && Object.prototype.hasOwnProperty.call(options, "assetBaseUrl")) {
+    return (options.assetBaseUrl ?? "").replace(/\/$/, "");
+  }
+  const env = options?.env ?? readImportMetaEnv();
+  const fromEnv = env?.PUBLIC_ATLAS_ASSET_BASE_URL?.trim();
+  if (fromEnv) {
+    return fromEnv.replace(/\/$/, "");
+  }
+  return "";
+}
+
+function readImportMetaEnv(): AtlasAssetBaseEnv | undefined {
+  try {
+    // Vite injects import.meta.env; guard for non-Vite Node unit contexts.
+    const meta = import.meta as ImportMeta & { env?: AtlasAssetBaseEnv };
+    return meta.env;
+  } catch {
+    return undefined;
+  }
+}
 
 interface CurrentPointer {
   schema: string;
@@ -172,6 +244,7 @@ export class HttpAtlasDataSource implements AtlasDataSource {
   private manifest: RuntimeManifest | null = null;
   private versionDir = "";
   private readonly assetCache = new Map<string, Uint8Array>();
+  private readonly assetBaseUrl: string;
   private readonly pointerTtlMs: number;
   private readonly decompress: AtlasDecompress;
   private readonly now: () => number;
@@ -180,13 +253,15 @@ export class HttpAtlasDataSource implements AtlasDataSource {
     private readonly fetchBytes: AtlasFetch,
     private readonly options?: HttpAtlasDataSourceOptions,
   ) {
+    // Env overflow hook (R7) when assetBaseUrl is omitted; explicit option wins.
+    this.assetBaseUrl = resolveConstructorAssetBaseUrl(options);
     this.pointerTtlMs = options?.pointerTtlMs ?? DEFAULT_POINTER_TTL_MS;
     this.decompress = options?.decompress ?? gunzipWithDecompressionStream;
     this.now = options?.now ?? (() => Date.now());
   }
 
   private assetUrl(relative: string): string {
-    const base = this.options?.assetBaseUrl ?? "";
+    const base = this.assetBaseUrl;
     if (!base) return relative;
     return `${base.replace(/\/$/, "")}/${relative.replace(/^\//, "")}`;
   }

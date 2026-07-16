@@ -93,8 +93,23 @@ jobs:
           mkdir -p dist/.well-known
           printf '%s\n' "$GITHUB_SHA" > "dist/.well-known/learn-ukrainian-deployment-${GITHUB_SHA}.txt"
 
+      # PR3 D1/R1/R7: vendor pinned atlas runtime tree into dist/atlas/ (same-origin).
+      # Feature-flagged: unset ATLAS_TREE_ASSET_ID + ATLAS_TREE_SHA256 → skip (deploy
+      # stays green until the 20k publish arc supplies the first immutable pin).
+      # Pin is asset id + sha256 digest — never a mutable release tag name.
+      # Runs AFTER build, BEFORE the size gate so the vendored tree counts.
+      - name: Vendor Atlas runtime tree
+        working-directory: .
+        env:
+          ATLAS_TREE_ASSET_ID: ${{ vars.ATLAS_TREE_ASSET_ID }}
+          ATLAS_TREE_SHA256: ${{ vars.ATLAS_TREE_SHA256 }}
+          ATLAS_TREE_METRICS_PATH: ${{ runner.temp }}/atlas-vendor-metrics.json
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .venv/bin/python scripts/deploy/vendor_atlas_tree.py site/dist
+
       # #5274: fail-closed size gate (replaces advisory 70% warn-only). Runs after
-      # build, before upload-pages-artifact — unknown profile or ≥80% of 1 GiB fails.
+      # build (+ optional atlas vendoring), before upload-pages-artifact — unknown
+      # profile or ≥80% of 1 GiB fails.
       - name: Check published-site size (fail-closed)
         working-directory: .
         env:
