@@ -1,7 +1,7 @@
-review_protocol_version: 3.0.0
+review_protocol_version: 4.0.0
 deterministic_contract_version: 1.2.1
-semantic_prompt_version: 3.0.0
-track_policy_version: 1.5.0
+semantic_prompt_version: 4.0.0
+track_policy_version: 1.6.0
 
 defaults:
   semantic_requirements:
@@ -69,7 +69,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v3
+      llm_qg: capabilities_absorbed_by_semantic_v4
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
   seminar:
@@ -98,7 +98,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved; use text-only until cleared.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v3
+      llm_qg: capabilities_absorbed_by_semantic_v4
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
 

@@ -130,7 +130,7 @@ identity_paths:
   - agents_extensions/shared/skills/post-build-review/prompts/common-semantic-review-prompt.md
   - agents_extensions/shared/skills/post-build-review/prompts/core-semantic-review-prompt.md
   - agents_extensions/shared/skills/post-build-review/prompts/seminar-semantic-review-prompt.md
-  - agents_extensions/shared/skills/post-build-review/schema/review-result.v3.schema.json
+  - agents_extensions/shared/skills/post-build-review/schema/review-result.v4.schema.json
   - agents_extensions/shared/skills/post-build-review/SKILL.md
   - agents_extensions/shared/skills/apply-plan-fixes/SKILL.md
   - agents_extensions/shared/skills/apply-plan-fixes/apply-plan-fixes-prompt.md
@@ -161,7 +161,7 @@ certification_identity_paths:
     - agents_extensions/shared/skills/post-build-review/prompts/common-semantic-review-prompt.md
     - agents_extensions/shared/skills/post-build-review/prompts/core-semantic-review-prompt.md
     - agents_extensions/shared/skills/post-build-review/prompts/seminar-semantic-review-prompt.md
-    - agents_extensions/shared/skills/post-build-review/schema/review-result.v3.schema.json
+    - agents_extensions/shared/skills/post-build-review/schema/review-result.v4.schema.json
     - scripts/audit/post_build_review.py
     - scripts/audit/track_deterministic_audit.py
     - scripts/audit/module_size_policy_audit.py

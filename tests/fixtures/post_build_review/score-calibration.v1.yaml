@@ -1,0 +1,233 @@
+fixture_version: score-calibration.v1
+score_bands:
+  PASS: "[8.0, 10.0]"
+  REVISE: "[6.0, 8.0)"
+  BLOCK: "[0.0, 6.0)"
+  INCOMPLETE: null
+score_anchors:
+  "10.0": no dimension findings
+  "[9.0, 10.0)": quality target with bounded low-severity headroom
+  "[8.0, 9.0)": release-safe with a concrete low-severity improvement
+  "[7.0, 8.0)": focused material revision while most of the dimension remains strong
+  "[6.0, 7.0)": substantial material defect requiring broader revision
+  "[4.0, 6.0)": blocking defect with some usable evidence
+  "[0.0, 4.0)": fundamentally unusable, unsafe, or unsupported
+cases:
+  - id: pass-lower-bound-backed-backlog
+    dimension: pedagogical
+    verdict: PASS
+    assessment:
+      status: PASS
+      score: 8.0
+      score_rationale: A low-severity pedagogical finding leaves a concrete gap to 10.0.
+    finding:
+      id: low-pedagogy-gap
+      issue_id: PEDAGOGICAL_CLARITY_GAP
+      category: pedagogy
+      severity: low
+      message: One instruction could clarify its next learner action.
+      evidence: The task omits an explicit next action.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 8.0
+  - id: pass-quality-target-boundary
+    dimension: engagement
+    verdict: PASS
+    assessment:
+      status: PASS
+      score: 9.0
+      score_rationale: A bounded low-severity progression gap prevents a 10.0 engagement score.
+    finding:
+      id: low-progression-gap
+      issue_id: ENGAGEMENT_PROGRESSION_HEADROOM
+      category: engagement
+      severity: low
+      message: One optional extension could add a further progression step.
+      evidence: The activity is complete but offers no optional transfer step.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 9.0
+  - id: pass-upper-bound-perfect-no-findings
+    dimension: naturalness
+    verdict: PASS
+    assessment:
+      status: PASS
+      score: 10.0
+      score_rationale: No naturalness finding identifies a gap to 10.0.
+    finding: null
+    expected:
+      valid: true
+      minimum_dimension_score: 10.0
+  - id: revise-lower-bound
+    dimension: engagement
+    verdict: REVISE
+    assessment:
+      status: REVISE
+      score: 6.0
+      score_rationale: The cited activity defect leaves substantial engagement work before 10.0.
+    finding:
+      id: engagement-revision
+      issue_id: ENGAGEMENT_ACTIVITY_GAP
+      category: engagement
+      severity: medium
+      message: The activity does not give the learner a meaningful choice.
+      evidence: The task repeats the same response format without progression.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 6.0
+  - id: revise-upper-bound
+    dimension: tone
+    verdict: REVISE
+    assessment:
+      status: REVISE
+      score: 7.9
+      score_rationale: A medium tone finding leaves a narrow but concrete gap to 10.0.
+    finding:
+      id: tone-revision
+      issue_id: TONE_REGISTER_GAP
+      category: tone
+      severity: medium
+      message: One directive is unnecessarily abrupt.
+      evidence: The imperative lacks the surrounding supportive context.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 7.9
+  - id: revise-focused-anchor
+    dimension: naturalness
+    verdict: REVISE
+    assessment:
+      status: REVISE
+      score: 7.0
+      score_rationale: One focused medium-severity phrasing defect prevents a 10.0 naturalness score.
+    finding:
+      id: focused-naturalness-revision
+      issue_id: NATURALNESS_FOCUSED_REVISION
+      category: naturalness
+      severity: medium
+      message: One repeated construction is unnatural but locally repairable.
+      evidence: The same marked construction recurs in one bounded passage.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 7.0
+  - id: block-upper-bound
+    dimension: decolonization
+    verdict: BLOCK
+    assessment:
+      status: BLOCK
+      score: 5.9
+      score_rationale: The blocker leaves a material decolonization gap to 10.0.
+    finding:
+      id: decolonization-block
+      issue_id: IMPERIAL_FRAMING
+      category: decolonization
+      severity: blocker
+      message: The module repeats an imperial framing.
+      evidence: The cited sentence denies Ukrainian agency.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 5.9
+  - id: block-partially-usable-anchor
+    dimension: decolonization
+    verdict: BLOCK
+    assessment:
+      status: BLOCK
+      score: 4.0
+      score_rationale: A blocker prevents release, although other evidence preserves partial value above 0.0.
+    finding:
+      id: blocking-agency-erasure
+      issue_id: DECOLONIZATION_AGENCY_ERASURE
+      category: decolonization
+      severity: blocker
+      message: A central passage erases Ukrainian agency.
+      evidence: The cited framing assigns all historical agency to the imperial center.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 4.0
+  - id: block-lower-bound
+    dimension: tone
+    verdict: BLOCK
+    assessment:
+      status: BLOCK
+      score: 0.0
+      score_rationale: The blocker leaves no demonstrated tone quality to credit above the floor.
+    finding:
+      id: tone-floor-block
+      issue_id: TONE_SAFETY_BLOCKER
+      category: tone
+      severity: blocker
+      message: The learner-facing tone is unsafe.
+      evidence: The cited wording is hostile to the learner.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: 0.0
+  - id: incomplete-null
+    dimension: pedagogical
+    verdict: INCOMPLETE
+    assessment:
+      status: INCOMPLETE
+      score: null
+      score_rationale: null
+    finding:
+      id: pedagogy-unverified
+      issue_id: PEDAGOGY_EVIDENCE_UNAVAILABLE
+      category: pedagogy
+      severity: high
+      message: Required learner evidence could not be inspected.
+      evidence: The required interactive object was unavailable to the reviewer.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      minimum_dimension_score: null
+  - id: hard-language-cap
+    dimension: naturalness
+    verdict: REVISE
+    assessment:
+      status: REVISE
+      score: 6.0
+      score_rationale: The Russianism-class finding caps this dimension at 6.0.
+    finding:
+      id: russianism-calque
+      issue_id: UKRAINIAN_GRAMMAR_CALQUE
+      category: language
+      severity: high
+      message: The phrase is a documented Russian calque.
+      evidence: Project Ukrainian source verification identifies the calque.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      documented_semantic_cap: 6.0
+  - id: hard-fabrication-cap
+    dimension: pedagogical
+    verdict: REVISE
+    assessment:
+      status: REVISE
+      score: 6.0
+      score_rationale: The fabrication-class finding caps this dimension at 6.0.
+    finding:
+      id: fabricated-teaching-fact
+      issue_id: FABRICATED_TEACHING_FACT
+      category: factuality
+      severity: high
+      message: The module teaches a fabricated factual claim.
+      evidence: The cited authoritative source contradicts the claim.
+      location: tests/fixtures/post_build_review:1
+    expected:
+      valid: true
+      documented_semantic_cap: 6.0
+comparability:
+  - id: identical-review-identity-is-comparable
+    left: [4.0.0, fixture, fixture-model, high]
+    right: [4.0.0, fixture, fixture-model, high]
+    expected: true
+  - id: prompt-or-reviewer-identity-drift-is-not-comparable
+    left: [4.0.0, fixture, fixture-model, high]
+    right: [4.0.0, google, gemini-3.1-pro, high]
+    expected: false

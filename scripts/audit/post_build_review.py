@@ -18,6 +18,7 @@ import sys
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -42,13 +43,19 @@ SCHEMA_PATHS = {
     "post-build-review.result.v1": SKILL_ROOT / "schema" / "review-result.v1.schema.json",
     "post-build-review.result.v2": SKILL_ROOT / "schema" / "review-result.v2.schema.json",
     "post-build-review.result.v3": SKILL_ROOT / "schema" / "review-result.v3.schema.json",
+    "post-build-review.result.v4": SKILL_ROOT / "schema" / "review-result.v4.schema.json",
 }
-CURRENT_PACKET_VERSION = "post-build-review.packet.v3"
-CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v3"
+CURRENT_PACKET_VERSION = "post-build-review.packet.v4"
+CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v4"
 TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
 QUALITY_DIMENSIONS = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
+QUALITY_DIMENSION_SCORE_BANDS = {
+    "PASS": (Decimal("8.0"), Decimal("10.0"), True),
+    "REVISE": (Decimal("6.0"), Decimal("8.0"), False),
+    "BLOCK": (Decimal("0.0"), Decimal("6.0"), False),
+}
 REPRODUCIBILITY_FIELDS = (
     "schema_version",
     "review_protocol_version",
@@ -62,8 +69,12 @@ REPRODUCIBILITY_FIELDS = (
     "semantic_response",
     "deterministic",
     "semantic",
+    "minimum_dimension_score",
     "findings",
     "combined_disposition",
+)
+V3_REPRODUCIBILITY_FIELDS = tuple(
+    field for field in REPRODUCIBILITY_FIELDS if field != "minimum_dimension_score"
 )
 SEVERITY_ALIASES = {
     "critical": "blocker",
@@ -968,6 +979,105 @@ def _nonnegative_int(value: object, label: str) -> int:
     return value
 
 
+def _decimal_score(value: object, label: str) -> Decimal:
+    """Validate a JSON numeric score without normalizing reviewer output."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ReviewProtocolError(f"{label} must be a JSON number, not a boolean or string")
+    try:
+        score = Decimal(str(value))
+    except (InvalidOperation, ValueError) as exc:
+        raise ReviewProtocolError(f"{label} must be a finite decimal number") from exc
+    if not score.is_finite():
+        raise ReviewProtocolError(f"{label} must be a finite decimal number")
+    if score.as_tuple().exponent < -1:
+        raise ReviewProtocolError(f"{label} must use at most one decimal place")
+    if score < Decimal("0.0") or score > Decimal("10.0"):
+        raise ReviewProtocolError(f"{label} must be in the inclusive range 0.0..10.0")
+    return score
+
+
+def _validate_quality_dimension_score(
+    *,
+    dimension: str,
+    status: str,
+    score: object,
+    score_rationale: object,
+    referenced_findings: Sequence[Mapping[str, Any]],
+) -> None:
+    """Enforce score/status calibration from structure, never by repairing text."""
+    label = f"Quality dimension {dimension} score"
+    if status == "INCOMPLETE":
+        if score is not None or score_rationale is not None:
+            raise ReviewProtocolError(
+                f"{label} and score_rationale must be null when the status is INCOMPLETE"
+            )
+        return
+    if score is None or score_rationale is None:
+        raise ReviewProtocolError(
+            f"{label} and score_rationale are required when the status is {status}"
+        )
+    decimal_score = _decimal_score(score, label)
+    _nonempty_string(score_rationale, f"Quality dimension {dimension} score_rationale")
+    lower, upper, includes_upper = QUALITY_DIMENSION_SCORE_BANDS[status]
+    if decimal_score < lower or decimal_score > upper or (
+        decimal_score == upper and not includes_upper
+    ):
+        upper_marker = "]" if includes_upper else ")"
+        raise ReviewProtocolError(
+            f"{label} {decimal_score} is inconsistent with {status}; expected [{lower}, {upper}{upper_marker}"
+        )
+    if decimal_score == Decimal("10.0") and referenced_findings:
+        raise ReviewProtocolError(
+            f"Quality dimension {dimension} score 10.0 requires no dimension findings"
+        )
+    if decimal_score < Decimal("10.0"):
+        if not referenced_findings:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} score below 10.0 requires a dimension finding"
+            )
+        if any(not str(finding.get("evidence") or "").strip() for finding in referenced_findings):
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} score below 10.0 requires evidence-backed findings"
+            )
+
+
+def minimum_dimension_score(dimensions: Mapping[str, Mapping[str, Any]]) -> int | float | None:
+    """Return the reporting-only minimum without averaging or changing raw scores."""
+    numeric_scores: list[tuple[Decimal, int | float]] = []
+    for dimension in QUALITY_DIMENSIONS:
+        score = dimensions[dimension]["score"]
+        if score is None:
+            return None
+        numeric_scores.append((_decimal_score(score, f"Quality dimension {dimension} score"), score))
+    return min(numeric_scores, key=lambda pair: pair[0])[1]
+
+
+def _validate_semantic_finding_ownership(semantic: Mapping[str, Any]) -> None:
+    """Require every semantic finding to have a dimension or ledger owner."""
+    finding_ids = {str(finding["id"]) for finding in semantic["findings"]}
+    owned_finding_ids = {
+        str(finding_id)
+        for assessment in semantic["quality_dimensions"].values()
+        for finding_id in assessment["finding_ids"]
+    }
+    owned_finding_ids.update(
+        str(claim["finding_id"])
+        for claim in semantic["claim_ledger"]
+        if claim["finding_id"] is not None
+    )
+    owned_finding_ids.update(
+        str(item["finding_id"])
+        for item in semantic["learner_evidence_ledger"]
+        if item["finding_id"] is not None
+    )
+    orphan_finding_ids = sorted(finding_ids - owned_finding_ids)
+    if orphan_finding_ids:
+        raise ReviewProtocolError(
+            "Every semantic finding must be referenced by a quality dimension, "
+            "claim, or learner-evidence entry: " + ", ".join(orphan_finding_ids)
+        )
+
+
 def normalize_semantic_result(
     value: Mapping[str, Any],
     family: str,
@@ -1047,7 +1157,7 @@ def normalize_semantic_result(
     _require_exact_keys(raw_dimensions, set(QUALITY_DIMENSIONS), "quality dimensions")
     dimensions: dict[str, dict[str, Any]] = {}
     dimension_statuses = {"PASS", "REVISE", "BLOCK", "INCOMPLETE"}
-    expected_dimension_keys = {"status", "evidence", "finding_ids"}
+    expected_dimension_keys = {"status", "score", "score_rationale", "evidence", "finding_ids"}
     source_lookup = dict(source_texts or {})
     for dimension in QUALITY_DIMENSIONS:
         raw = raw_dimensions[dimension]
@@ -1134,8 +1244,20 @@ def normalize_semantic_result(
             raise ReviewProtocolError(
                 f"Quality dimension {dimension} INCOMPLETE requires a finding"
             )
+        referenced_findings = [
+            finding for finding in findings if finding["id"] in dimension_finding_ids
+        ]
+        _validate_quality_dimension_score(
+            dimension=dimension,
+            status=dimension_status,
+            score=raw["score"],
+            score_rationale=raw["score_rationale"],
+            referenced_findings=referenced_findings,
+        )
         dimensions[dimension] = {
             "status": dimension_status,
+            "score": raw["score"],
+            "score_rationale": raw["score_rationale"],
             "evidence": dimension_evidence,
             "finding_ids": dimension_finding_ids,
         }
@@ -1305,7 +1427,7 @@ def normalize_semantic_result(
     if verdict == "PASS" and any(claim["status"] != "supported" for claim in claims):
         raise ReviewProtocolError("Semantic PASS is inconsistent with a non-supported claim ledger entry")
 
-    return {
+    normalized = {
         "family": family,
         "verdict": verdict,
         "summary": summary,
@@ -1320,6 +1442,8 @@ def normalize_semantic_result(
         "learner_evidence_ledger": evidence_ledger,
         "findings": findings,
     }
+    _validate_semantic_finding_ownership(normalized)
+    return normalized
 
 
 def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
@@ -1340,6 +1464,8 @@ def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
         "quality_dimensions": {
             dimension: {
                 "status": "INCOMPLETE",
+                "score": None,
+                "score_rationale": None,
                 "evidence": [],
                 "finding_ids": ["semantic-response-integrity"],
             }
@@ -1423,10 +1549,16 @@ def combine_disposition(
     return {"status": "PASS", "reasons": ["deterministic and semantic review passed"]}
 
 
-def _validate_normalized_quality_dimensions(semantic: Mapping[str, Any]) -> None:
+def _validate_normalized_quality_dimensions(
+    semantic: Mapping[str, Any], *, scores_required: bool = True, ownership_required: bool = True
+) -> None:
     dimensions = semantic["quality_dimensions"]
     finding_severities = {
         str(finding["id"]): str(finding["severity"])
+        for finding in semantic["findings"]
+    }
+    findings_by_id = {
+        str(finding["id"]): finding
         for finding in semantic["findings"]
     }
     nonpassing: dict[str, str] = {}
@@ -1462,8 +1594,19 @@ def _validate_normalized_quality_dimensions(semantic: Mapping[str, Any]) -> None
             raise ReviewProtocolError(
                 f"Quality dimension {dimension} INCOMPLETE requires a finding"
             )
+        if scores_required:
+            _validate_quality_dimension_score(
+                dimension=dimension,
+                status=status,
+                score=assessment["score"],
+                score_rationale=assessment["score_rationale"],
+                referenced_findings=[findings_by_id[finding_id] for finding_id in finding_ids],
+            )
         if status != "PASS":
             nonpassing[dimension] = status
+
+    if ownership_required:
+        _validate_semantic_finding_ownership(semantic)
 
     verdict = str(semantic["verdict"])
     if verdict == "PASS" and nonpassing:
@@ -1488,9 +1631,18 @@ def validate_result(
         schema_path = repo_root / relative.relative_to(PROJECT_ROOT)
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(result)
-    if result.get("schema_version") != CURRENT_RESULT_SCHEMA_VERSION:
+    schema_version = str(result.get("schema_version") or "")
+    if schema_version not in {CURRENT_RESULT_SCHEMA_VERSION, "post-build-review.result.v3"}:
         return
-    _validate_normalized_quality_dimensions(result["semantic"])
+    _validate_normalized_quality_dimensions(
+        result["semantic"],
+        scores_required=schema_version == CURRENT_RESULT_SCHEMA_VERSION,
+        ownership_required=schema_version == CURRENT_RESULT_SCHEMA_VERSION,
+    )
+    if schema_version == CURRENT_RESULT_SCHEMA_VERSION:
+        expected_minimum_score = minimum_dimension_score(result["semantic"]["quality_dimensions"])
+        if result["minimum_dimension_score"] != expected_minimum_score:
+            raise ReviewProtocolError("minimum_dimension_score does not match the dimension scores")
     expected_findings = [
         *_deterministic_findings(result),
         *deepcopy(result["semantic"]["findings"]),
@@ -1502,7 +1654,12 @@ def validate_result(
     )
     if result["combined_disposition"] != expected_disposition:
         raise ReviewProtocolError("Combined disposition does not match canonical precedence")
-    reproducible = {key: deepcopy(result[key]) for key in REPRODUCIBILITY_FIELDS}
+    reproducibility_fields = (
+        REPRODUCIBILITY_FIELDS
+        if schema_version == CURRENT_RESULT_SCHEMA_VERSION
+        else V3_REPRODUCIBILITY_FIELDS
+    )
+    reproducible = {key: deepcopy(result[key]) for key in reproducibility_fields}
     expected_key = sha256_text(_stable_json(reproducible))
     if result["reproducibility_key"] != expected_key:
         raise ReviewProtocolError("Result reproducibility key does not match canonical evidence")
@@ -1566,6 +1723,7 @@ def finalize_review(
         "semantic_response": response_provenance,
         "deterministic": deterministic,
         "semantic": semantic,
+        "minimum_dimension_score": minimum_dimension_score(semantic["quality_dimensions"]),
         "findings": findings,
         "combined_disposition": disposition,
     }

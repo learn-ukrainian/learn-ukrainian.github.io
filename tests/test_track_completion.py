@@ -238,10 +238,10 @@ def _result(
             }
         )
     return {
-        "review_protocol_version": "3.0.0",
+        "review_protocol_version": "4.0.0",
         "deterministic_contract_version": "1.2.1",
-        "semantic_prompt_version": "3.0.0",
-        "track_policy_version": "1.5.0",
+        "semantic_prompt_version": "4.0.0",
+        "track_policy_version": "1.6.0",
         "prompt_sha256": "1" * 64,
         "reproducibility_key": "2" * 64,
         "target": {
@@ -285,7 +285,7 @@ def _certification_artifact(
     }
     if kind == "post-build":
         value["pbr"] = {
-            "adapter": "post-build-review.v3",
+            "adapter": "post-build-review.v4",
             "verdict": "PASS",
             "raw_response_sha256": "a" * 64,
             "workflow_hashes": inputs["workflow_hashes"],
