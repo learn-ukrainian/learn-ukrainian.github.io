@@ -916,6 +916,7 @@ def record_change(
                 "REPAIR_REQUIRED",
                 "AUDIT_TOOLING_REQUIRED",
                 "REVIEWER_INSTABILITY",
+                "PUBLISH_REQUIRED",
                 "INTEGRATION_REQUIRED",
             }
             if ledger["state"] not in allowed_states:
