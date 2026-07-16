@@ -1,6 +1,6 @@
 # Seminar semantic post-build review prompt
 
-Semantic prompt version: `5.0.1`
+Semantic prompt version: `5.0.2`
 
 Apply this only to FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, or RUTH,
 after the common prompt.

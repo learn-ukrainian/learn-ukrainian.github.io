@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.1`
+Semantic prompt version: `5.0.2`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -16,6 +16,13 @@ Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
 do not re-score them or negotiate them down. Investigate the residual judgments
 that code cannot decide.
+
+The resolved context may already contain deterministic or track-policy
+findings. Reuse each supplied finding's exact `id` when a quality dimension or
+alignment class owns it. Do not create a semantic duplicate for the same class
+and location. Create a new semantic finding only for a defect not already
+represented by a supplied finding; the finalizer compares exhaustive alignment
+IDs across both deterministic and semantic findings.
 
 ## Evidence rules
 
@@ -132,11 +139,13 @@ resolved bundle:
 
 Return the machine-bound `alignment_audit` record for all seven classes. Mark a
 class `CLEAR` only with exact cited evidence for the comparison, `FOUND` with
-every corresponding finding ID, or `INCOMPLETE` with an integrity finding. The
-review summary must name every material class found. A high-quality paragraph
-or activity never cancels a defect elsewhere. If any class was not actually
-compared, return `INCOMPLETE`. If a semantic dimension is `REVISE`, its score
-must be below `8.0`; `8.0` and above are valid only with `PASS`.
+every corresponding deterministic and semantic finding ID, or `INCOMPLETE`
+with an integrity finding. For mechanically supplied findings, reuse the exact
+IDs from the resolved context instead of emitting duplicate semantic findings.
+The review summary must name every material class found. A high-quality
+paragraph or activity never cancels a defect elsewhere. If any class was not
+actually compared, return `INCOMPLETE`. If a semantic dimension is `REVISE`,
+its score must be below `8.0`; `8.0` and above are valid only with `PASS`.
 
 ## Required quality-dimension coverage
 

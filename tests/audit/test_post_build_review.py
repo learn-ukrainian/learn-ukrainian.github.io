@@ -1631,6 +1631,8 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "never praise",
         "exhaustive learner-register pass",
         "explicit subject is cefr",
+        "reuse each supplied finding's exact",
+        "do not create a semantic duplicate",
     ):
         assert required in prompt_lower
 
@@ -2189,8 +2191,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.1"
-    assert len(rows) == 45
+    assert catalog["catalog_version"] == "5.0.2"
+    assert len(rows) == 46
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2219,6 +2221,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "4.1.4",
         "5.0.0",
         "5.0.1",
+        "5.0.2",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
