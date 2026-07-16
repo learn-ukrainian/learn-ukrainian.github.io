@@ -1,0 +1,64 @@
+{
+  "slugs": [
+    {
+      "slug": "прапор",
+      "file": "прапор.html",
+      "entry_type": "lemma",
+      "kind": "article"
+    },
+    {
+      "slug": "файний",
+      "file": "файний.html",
+      "entry_type": "lemma",
+      "kind": "article"
+    },
+    {
+      "slug": "будь-ласка",
+      "file": "будь-ласка.html",
+      "entry_type": "multiword_term",
+      "kind": "article"
+    },
+    {
+      "slug": "доконаний-вид",
+      "file": "доконаний-вид.html",
+      "entry_type": "multiword_term",
+      "kind": "article"
+    },
+    {
+      "slug": "іване",
+      "file": "іване.html",
+      "entry_type": "form_route",
+      "kind": "form_route"
+    },
+    {
+      "slug": "fixture-expression",
+      "file": "fixture-expression.html",
+      "entry_type": "expression",
+      "kind": "article"
+    },
+    {
+      "slug": "fixture-phraseologism",
+      "file": "fixture-phraseologism.html",
+      "entry_type": "phraseologism",
+      "kind": "article"
+    },
+    {
+      "slug": "fixture-proverb",
+      "file": "fixture-proverb.html",
+      "entry_type": "proverb",
+      "kind": "article"
+    },
+    {
+      "slug": "fixture-proper-name",
+      "file": "fixture-proper-name.html",
+      "entry_type": "proper_name",
+      "kind": "article"
+    },
+    {
+      "slug": "ілля",
+      "file": "ілля.html",
+      "entry_type": "lemma",
+      "kind": "article"
+    }
+  ]
+}

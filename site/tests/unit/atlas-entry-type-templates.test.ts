@@ -1,8 +1,6 @@
 // @vitest-environment node
 
 import Database from 'better-sqlite3';
-import reactRenderer from '@astrojs/react/server.js';
-import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, test, beforeAll, vi } from 'vitest';
 import { resolve } from 'node:path';
 import {
@@ -14,15 +12,11 @@ import {
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
 import { articleProps } from '../helpers/word-atlas-record';
+import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
 import {
   resetSqliteAtlasDataSourceCachesForTests,
   SqliteAtlasDataSource,
 } from '@site/src/lib/lexicon/sqlite-atlas-data-source';
-
-type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
-interface AstroComponentModule {
-  default: AstroComponent;
-}
 
 const atlasDbPath = resolve(
   process.env.ATLAS_DB_PATH ?? resolve(process.cwd(), '../data/atlas.db'),
@@ -143,18 +137,11 @@ function makeFixtureDb(): InstanceType<typeof Database> {
 }
 
 describe('entry_type-branched article rendering (#4385)', () => {
-  let container: AstroContainer;
-  let WordAtlasArticle: AstroComponent;
   let cache: AtlasPayloadCache;
 
-  beforeAll(async () => {
+  beforeAll(() => {
     resetAtlasPayloadCacheForTests();
     cache = getAtlasPayloadCache();
-    ({ default: WordAtlasArticle } = (await import(
-      '@site/src/lexicon/WordAtlasArticle.astro'
-    )) as AstroComponentModule);
-    container = await AstroContainer.create();
-    container.addServerRenderer({ renderer: reactRenderer });
   });
 
   async function render(entry: LexiconEntry | undefined, slug: string): Promise<string> {
@@ -164,25 +151,21 @@ describe('entry_type-branched article rendering (#4385)', () => {
     const result = await source.getEntry(slug);
     expect(result.kind).toBe('entry');
     if (result.kind !== 'entry') throw new Error('expected entry');
-    return container.renderToString(WordAtlasArticle, {
-      props: {
-        record: result.record,
-        generatedAt: 'test',
-        manifestVersion: 'test',
-      },
+    return renderWordAtlasArticle({
+      record: result.record,
+      generatedAt: 'test',
+      manifestVersion: 'test',
     });
   }
 
   function renderFixture(
     entry: LexiconEntry,
     componentLinkTargets = COMPONENT_LINK_TARGETS,
-  ): Promise<string> {
-    return container.renderToString(WordAtlasArticle, {
-      props: articleProps(entry, {
-        componentLinkTargets,
-        lemmaEntries: COMPONENT_LEMMAS,
-      }),
-    });
+  ): string {
+    return renderWordAtlasArticle(articleProps(entry, {
+      componentLinkTargets,
+      lemmaEntries: COMPONENT_LEMMAS,
+    }));
   }
 
   test('entry_type is joined onto payloads from the articles table', () => {
@@ -228,7 +211,7 @@ describe('entry_type-branched article rendering (#4385)', () => {
     async (entryType, lemma, entryTypeLabel, linkedComponent, linkedSlug, unresolvedComponent) => {
       const html = await renderFixture(makeExpressionLikeFixture(entryType, lemma));
 
-      expect(html.replace(/&#39;/g, "'")).toContain(`Лексикон · ${entryTypeLabel}`);
+      expect(html.replace(/&#39;/g, "'").replace(/&#x27;/gi, "'")).toContain(`Лексикон · ${entryTypeLabel}`);
       expect(html).toContain(`data-expression-detail="${entryType}"`);
       expect(html).toContain('Складники:');
       expect(html).toContain('fixture meaning');
