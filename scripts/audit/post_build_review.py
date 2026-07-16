@@ -1373,6 +1373,7 @@ def _normalize_cited_evidence(
     label: str,
     source_lookup: Mapping[str, str],
     required: bool,
+    allowed_short_locations: frozenset[str] = frozenset(),
 ) -> list[dict[str, str]]:
     if not isinstance(raw_evidence, list):
         raise ReviewProtocolError(f"{label} evidence must be a list")
@@ -1386,9 +1387,9 @@ def _normalize_cited_evidence(
         location = _nonempty_string(item["location"], f"{label} location")
         excerpt = _nonempty_string(item["excerpt"], f"{label} excerpt")
         supports = _nonempty_string(item["supports"], f"{label} supports")
-        if len(excerpt.strip()) < 8 or len(supports.strip()) < 8:
+        if len(supports.strip()) < 8:
             raise ReviewProtocolError(
-                f"{label} excerpt and supports must each contain at least 8 characters"
+                f"{label} supports must contain at least 8 characters"
             )
         try:
             path, raw_line = location.rsplit(":", 1)
@@ -1402,6 +1403,11 @@ def _normalize_cited_evidence(
         if line < 1 or line > len(lines) or excerpt != lines[line - 1]:
             raise ReviewProtocolError(
                 f"{label} excerpt does not equal the immutable packet line at {location}"
+            )
+        if len(excerpt.strip()) < 8 and location not in allowed_short_locations:
+            raise ReviewProtocolError(
+                f"{label} excerpt must contain at least 8 characters unless its exact "
+                "locator belongs to a supplied deterministic finding"
             )
         normalized.append(
             {"location": location, "excerpt": excerpt, "supports": supports}
@@ -1501,6 +1507,11 @@ def _normalize_alignment_audit(
         str(finding["id"]): finding
         for finding in [*external_findings, *semantic_findings]
     }
+    allowed_short_locations = frozenset(
+        str(finding["location"])
+        for finding in external_findings
+        if finding.get("location") is not None
+    )
     normalized: dict[str, dict[str, Any]] = {}
     for audit_class in ALIGNMENT_AUDIT_CLASSES:
         raw = raw_audit[audit_class]
@@ -1535,6 +1546,7 @@ def _normalize_alignment_audit(
             label=f"alignment audit {audit_class}",
             source_lookup=source_lookup,
             required=status != "INCOMPLETE",
+            allowed_short_locations=allowed_short_locations,
         )
         if status == "CLEAR" and (finding_ids or class_ids):
             raise ReviewProtocolError(
@@ -1702,6 +1714,9 @@ def normalize_semantic_result(
         raise ReviewProtocolError("Semantic findings must be a list")
     findings: list[dict[str, Any]] = []
     finding_ids: set[str] = set()
+    external_findings_by_id = {
+        str(finding["id"]): finding for finding in alignment_findings
+    }
     expected_finding_keys = {
         "id",
         "issue_id",
@@ -1718,6 +1733,10 @@ def normalize_semantic_result(
         finding_id = _nonempty_string(raw["id"], "semantic finding id")
         if finding_id in finding_ids:
             raise ReviewProtocolError(f"Duplicate semantic finding id: {finding_id}")
+        if finding_id in external_findings_by_id:
+            raise ReviewProtocolError(
+                f"Semantic finding must reference, not recreate, supplied finding {finding_id}"
+            )
         finding_ids.add(finding_id)
         issue_id = _nonempty_string(raw["issue_id"], "semantic finding issue_id")
         if re.fullmatch(r"[A-Z][A-Z0-9_]*", issue_id) is None:
@@ -1751,6 +1770,15 @@ def normalize_semantic_result(
     dimension_statuses = {"PASS", "REVISE", "BLOCK", "INCOMPLETE"}
     expected_dimension_keys = {"status", "score", "score_rationale", "evidence", "finding_ids"}
     source_lookup = dict(source_texts or {})
+    all_findings_by_id = {
+        **external_findings_by_id,
+        **{str(finding["id"]): finding for finding in findings},
+    }
+    allowed_short_locations = frozenset(
+        str(finding["location"])
+        for finding in alignment_findings
+        if finding.get("location") is not None
+    )
     for dimension in QUALITY_DIMENSIONS:
         raw = raw_dimensions[dimension]
         if not isinstance(raw, Mapping):
@@ -1766,6 +1794,7 @@ def normalize_semantic_result(
             label=f"quality dimension {dimension}",
             source_lookup=source_lookup,
             required=dimension_status != "INCOMPLETE",
+            allowed_short_locations=allowed_short_locations,
         )
         raw_dimension_finding_ids = raw["finding_ids"]
         if not isinstance(raw_dimension_finding_ids, list):
@@ -1781,13 +1810,14 @@ def normalize_semantic_result(
                 raise ReviewProtocolError(
                     f"Quality dimension {dimension} repeats finding {referenced}"
                 )
-            if referenced not in finding_ids:
+            if referenced not in all_findings_by_id:
                 raise ReviewProtocolError(
                     f"Quality dimension {dimension} references unknown finding {referenced}"
                 )
             dimension_finding_ids.append(referenced)
         referenced_severities = {
-            finding["severity"] for finding in findings if finding["id"] in dimension_finding_ids
+            str(all_findings_by_id[finding_id]["severity"])
+            for finding_id in dimension_finding_ids
         }
         if dimension_status == "PASS" and referenced_severities.intersection(
             {"blocker", "high", "medium"}
@@ -1810,7 +1840,7 @@ def normalize_semantic_result(
                 f"Quality dimension {dimension} INCOMPLETE requires a finding"
             )
         referenced_findings = [
-            finding for finding in findings if finding["id"] in dimension_finding_ids
+            all_findings_by_id[finding_id] for finding_id in dimension_finding_ids
         ]
         _validate_quality_dimension_score(
             dimension=dimension,
@@ -2170,16 +2200,20 @@ def combine_disposition(
 
 
 def _validate_normalized_quality_dimensions(
-    semantic: Mapping[str, Any], *, scores_required: bool = True, ownership_required: bool = True
+    semantic: Mapping[str, Any],
+    *,
+    scores_required: bool = True,
+    ownership_required: bool = True,
+    external_findings: Sequence[Mapping[str, Any]] = (),
 ) -> None:
     dimensions = semantic["quality_dimensions"]
     finding_severities = {
         str(finding["id"]): str(finding["severity"])
-        for finding in semantic["findings"]
+        for finding in [*external_findings, *semantic["findings"]]
     }
     findings_by_id = {
         str(finding["id"]): finding
-        for finding in semantic["findings"]
+        for finding in [*external_findings, *semantic["findings"]]
     }
     nonpassing: dict[str, str] = {}
     for dimension in QUALITY_DIMENSIONS:
@@ -2370,21 +2404,27 @@ def validate_result(
     validated_versions = {"post-build-review.result.v3", *scored_versions}
     if schema_version not in validated_versions:
         return
+    deterministic_findings = _deterministic_findings(result)
     _validate_normalized_quality_dimensions(
         result["semantic"],
         scores_required=schema_version in scored_versions,
         ownership_required=schema_version in scored_versions,
+        external_findings=(
+            deterministic_findings
+            if schema_version == CURRENT_RESULT_SCHEMA_VERSION
+            else ()
+        ),
     )
     if schema_version == CURRENT_RESULT_SCHEMA_VERSION:
         _validate_normalized_alignment_vocabulary(
-            result["semantic"], _deterministic_findings(result)
+            result["semantic"], deterministic_findings
         )
     if schema_version in scored_versions:
         expected_minimum_score = minimum_dimension_score(result["semantic"]["quality_dimensions"])
         if result["minimum_dimension_score"] != expected_minimum_score:
             raise ReviewProtocolError("minimum_dimension_score does not match the dimension scores")
     expected_findings = [
-        *_deterministic_findings(result),
+        *deterministic_findings,
         *deepcopy(result["semantic"]["findings"]),
     ]
     if result["findings"] != expected_findings:
@@ -2566,6 +2606,11 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
                 "line": {"type": "integer", "minimum": 1},
             },
         }
+    supplied_finding_locations = {
+        str(finding["location"])
+        for finding in _deterministic_findings(packet)
+        if finding.get("location") is not None
+    }
     choices: list[dict[str, Any]] = []
     for path, material in _packet_materials_by_path(packet).items():
         lines = material["lines"]
@@ -2573,6 +2618,7 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
             entry["line"]
             for entry in lines
             if len(str(entry["text"]).strip()) >= 8
+            or f"{path}:{entry['line']}" in supplied_finding_locations
         ]
         if not eligible_lines:
             continue
@@ -2620,6 +2666,11 @@ def hydrate_provider_dimension_evidence(
     del repo_root
     hydrated = deepcopy(semantic)
     materials = _packet_materials_by_path(packet)
+    supplied_finding_locations = {
+        str(finding["location"])
+        for finding in _deterministic_findings(packet)
+        if finding.get("location") is not None
+    }
 
     def hydrate_evidence(evidence: object, label: str) -> None:
         if not isinstance(evidence, list):
@@ -2645,12 +2696,16 @@ def hydrate_provider_dimension_evidence(
                     f"Provider evidence line is outside {path}: {line}"
                 )
             excerpt = lines[line - 1]["text"]
-            if len(excerpt.strip()) < 8:
+            exact_location = f"{path}:{line}"
+            if (
+                len(excerpt.strip()) < 8
+                and exact_location not in supplied_finding_locations
+            ):
                 raise ReviewProtocolError(
                     f"Provider evidence line is not a sufficient excerpt: {path}:{line}"
                 )
             evidence[index] = {
-                "location": f"{path}:{line}",
+                "location": exact_location,
                 "excerpt": excerpt,
                 "supports": _nonempty_string(raw_item["supports"], f"{label} supports"),
             }

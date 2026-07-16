@@ -128,7 +128,7 @@ def _finding_evidence(packet: dict, findings: list[dict]) -> list[dict[str, obje
             continue
         line = int(raw_line)
         lines = source_texts[path].splitlines()
-        if line < 1 or line > len(lines) or len(lines[line - 1].strip()) < 8:
+        if line < 1 or line > len(lines):
             continue
         evidence.append({
             "location": path,
@@ -503,6 +503,38 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
 
     assert normalized["quality_dimensions"]["naturalness"]["status"] == "REVISE"
     assert normalized["findings"][0]["issue_id"] == "AWKWARD_PASSIVE_RESULT_STATE"
+
+
+def test_quality_dimension_reuses_supplied_deterministic_finding_id() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    external = next(
+        finding
+        for finding in pbr._deterministic_findings(packet)
+        if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"
+    )
+    semantic = _passing_semantic(packet)
+    semantic["verdict"] = "REVISE"
+    semantic["quality_dimensions"]["pedagogical"].update(
+        {
+            "status": "REVISE",
+            "score": 7.0,
+            "score_rationale": "The learner-facing level label requires a focused revision.",
+            "evidence": _finding_evidence(packet, [external]),
+            "finding_ids": [external["id"]],
+        }
+    )
+
+    result = pbr.finalize_review(packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["semantic"]["quality_dimensions"]["pedagogical"]["finding_ids"] == [
+        external["id"]
+    ]
+    assert external["id"] not in {
+        finding["id"] for finding in result["semantic"]["findings"]
+    }
+    assert result["combined_disposition"]["status"] == "REVISE"
+    pbr.validate_result(result)
 
 
 def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
@@ -1011,6 +1043,49 @@ def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> 
     assert 85 in allowed_lines
     assert 86 not in allowed_lines
     assert len(json.dumps(schema, ensure_ascii=False)) < 35_000
+
+
+def test_packet_bound_contract_allows_short_line_only_for_supplied_finding() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    content_path = packet["target"]["files"]["content"]
+    content_material = packet["target_materials"]["content"]
+    content_material["lines"][0]["text"] = "Мова C1"
+    content = "\n".join(entry["text"] for entry in content_material["lines"])
+    if content_material["trailing_newline"]:
+        content += "\n"
+    content_material["sha256"] = pbr.sha256_text(content)
+    supplied_finding = {
+        "id": "short-learner-level-meta",
+        "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
+        "source": "track_policy",
+        "category": "learner_level_meta_leakage",
+        "severity": "medium",
+        "message": "Synthetic short learner-level metadata leakage.",
+        "evidence": "Мова C1",
+        "location": f"{content_path}:1",
+    }
+    packet["deterministic"]["policy_findings"].append(supplied_finding)
+    packet["deterministic"]["aggregate"] = pbr.aggregate_deterministic(
+        packet["deterministic"]
+    )
+
+    schema = pbr.semantic_response_schema(packet)
+    content_choice = next(
+        choice
+        for choice in schema["$defs"]["dimensionEvidence"]["oneOf"]
+        if choice["properties"]["location"]["const"] == content_path
+    )
+    assert 1 in content_choice["properties"]["line"]["enum"]
+    assert 2 not in content_choice["properties"]["line"]["enum"]
+
+    semantic = _passing_semantic(packet)
+    hydrated = pbr.hydrate_provider_dimension_evidence(semantic, packet)
+    normalized = _normalize_fixture(hydrated, packet=packet)
+    audit = normalized["alignment_audit"]["LEARNER_LEVEL_META_LEAKAGE"]
+
+    assert audit["status"] == "FOUND"
+    assert supplied_finding["id"] in audit["finding_ids"]
+    assert any(item["excerpt"] == "Мова C1" for item in audit["evidence"])
 
 
 def test_semantic_prompt_writer_emits_exact_integrity_checked_bytes(
@@ -2192,7 +2267,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "5.0.2"
-    assert len(rows) == 46
+    assert len(rows) == 48
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

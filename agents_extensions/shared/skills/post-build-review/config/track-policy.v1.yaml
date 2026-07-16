@@ -1,4 +1,4 @@
-review_protocol_version: 5.0.1
+review_protocol_version: 5.0.2
 deterministic_contract_version: 1.2.1
 semantic_prompt_version: 5.0.2
 track_policy_version: 1.9.0
