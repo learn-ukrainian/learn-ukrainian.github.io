@@ -76,11 +76,11 @@ Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to
 A fleet member = MODEL × HARNESS. The same model behaves differently in different harnesses, and
 several models are reachable through more than one. Know both axes before routing:
 
-| Harness | What it adds to ANY model it hosts | Models reachable through it | Entry points¹ |
+| Harness | What it adds to ANY model it hosts | Models routed through it | Entry points¹ |
 |---|---|---|---|
-| **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · gpt-5.5 (codex OAuth) · grok-hermes (xai OAuth) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|grok-hermes\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer grok-tools\|deepseek-tools\|qwen-tools` (grok-tools→`grok-hermes`; all hermes-backed) |
+| **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
-| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. `grok` = the NATIVE grok CLI seat (alias `grok-build` kept permanently); demoted Hermes path is `--agent grok-hermes` | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` |
+| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently) | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -97,11 +97,14 @@ Consequences:
 - **A model "lacking" a capability may just be in the wrong harness** — deepseek can't browse
   natively but browses via opencode; any hermes-hosted model gets VESUM/`sources` tools for free.
 - **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
-  often reachable through another harness (e.g. gpt-5.5 native codex CLI ↔ hermes codex-OAuth;
-  deepseek via delegate-hermes ↔ opencode). Check `hermes auth list` + `/api/orient` headroom.
+  often reachable through another harness (e.g. deepseek via delegate-hermes ↔ opencode), but
+  **Grok and GPT/Codex are hard exceptions**: keep both on their native CLIs and never substitute
+  `grok-hermes`, `grok-tools`, or a Codex OAuth-backed Hermes model. Check `hermes auth list` +
+  `/api/orient` headroom.
   For Claude/Codex budget buckets at `near_cap`, substitute per
   `scripts/config/agent_fallback_substitutions.yaml` (that file is the budget-bucket map, not a
-  general outage map). ALWAYS note a substitution in the artifact — silent rerouting hides
+  general outage map); Codex substitutions must never use Hermes. ALWAYS note a substitution
+  in the artifact — silent rerouting hides
   review-independence, cost, and egress changes.
 - **Hermes is also an automation platform** (cron, kanban, insights, session FTS, gateway,
   openai-compat proxy) — study + adoption plan: `docs/references/private/hermes-usage.md`
