@@ -91,3 +91,30 @@ describe("WordAtlasArticle normalized DOM parity (PR3)", () => {
     });
   }
 });
+
+describe("normalizeArticleDom entity handling (CodeQL js/double-escaping regression)", () => {
+  test("literal '&lt;' text is NOT equated with a real '<' character", () => {
+    // Source `&amp;lt;` parses to the literal characters `&lt;`; source `&lt;`
+    // parses to `<`. These are genuinely different renders and the parity
+    // gate must keep them distinct (no second decode pass after DOMParser).
+    const literalAmp = normalizeArticleDom(
+      '<div data-word-atlas><p>&amp;lt;слово&amp;gt;</p></div>',
+    );
+    const realAngle = normalizeArticleDom(
+      "<div data-word-atlas><p>&lt;слово&gt;</p></div>",
+    );
+    expect(literalAmp).not.toBe(realAngle);
+    expect(literalAmp).toContain("&lt;слово&gt;");
+    expect(realAngle).toContain("<слово>");
+  });
+
+  test("parser-decoded quote entities still normalize identically", () => {
+    // `&#x27;` and a raw apostrophe are identical AFTER the single DOMParser
+    // decode — removing the second decode pass must not break this.
+    const encoded = normalizeArticleDom(
+      "<div data-word-atlas><p>п&#x27;ять</p></div>",
+    );
+    const raw = normalizeArticleDom("<div data-word-atlas><p>п'ять</p></div>");
+    expect(encoded).toBe(raw);
+  });
+});

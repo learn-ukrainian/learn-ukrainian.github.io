@@ -47,16 +47,13 @@ const PRESENCE_DATA_ATTRS = new Set([
   "data-atlas-typeahead-list",
 ]);
 
-function decodeEntities(text: string): string {
-  return text
-    .replace(/&#x27;/gi, "'")
-    .replace(/&#39;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&nbsp;/g, " ");
-}
+// NOTE: no entity decoding happens here on purpose. This helper only ever sees
+// DOMParser output, where text nodes and attribute values are ALREADY
+// entity-decoded exactly once (`&amp;#x27;` vs `'` etc. are identical
+// post-parse, and `&nbsp;` becomes U+00A0 which JS `\s` — used by the
+// whitespace collapse — already matches). A second decode pass is at best a
+// no-op and at worst double-unescapes literal text (CodeQL js/double-escaping),
+// folding genuinely different renders like `&lt;` vs `<` into false equality.
 
 function normalizeClassList(value: string | null): string | null {
   if (value == null) return null;
@@ -88,7 +85,7 @@ function serializeNode(node: Node, parts: string[]): void {
     const raw = node.textContent ?? "";
     // Keep whitespace so adjacent text nodes can be merged by the parent.
     if (!raw) return;
-    parts.push(`#text:${decodeEntities(raw)}`);
+    parts.push(`#text:${raw}`);
     return;
   }
   if (node.nodeType !== Node.ELEMENT_NODE) return;
@@ -123,7 +120,7 @@ function serializeNode(node: Node, parts: string[]): void {
     } else if (name.startsWith("data-") && (value === "true" || value === "")) {
       value = "";
     } else {
-      value = decodeEntities(value).trim();
+      value = value.trim();
     }
     attrs.push([name, value]);
   }
