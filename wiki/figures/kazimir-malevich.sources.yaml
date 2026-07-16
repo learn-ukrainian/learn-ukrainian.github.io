@@ -1,43 +1,13 @@
 # Source registry for wiki/figures/kazimir-malevich.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: ukrainian_wiki/kazimir-malevich_Біографія-Казимир-Малевич-Революція-в-мистецтві-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Казимир Малевич: Революція в мистецтві'
-  section_path: 'Біографія: Казимир Малевич: Революція в мистецтві > Деколонізаційна
-    перспектива'
-- id: S2
-  file: ukrainian_wiki/kazimir-malevich_Біографія-Казимир-Малевич-Революція-в-мистецтві-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Казимир Малевич: Революція в мистецтві'
-  section_path: 'Біографія: Казимир Малевич: Революція в мистецтві > Короткий зміст'
-- id: S3
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1299
-  type: textbook
-  title: Літературний і мистецький авангард  13
-  page: 13
-  grade: 11
-- id: S4
-  file: ukrainian_wiki/kazimir-malevich_Біографія-Казимир-Малевич-Революція-в-мистецтві-Основний-зміст-Народження-супрематизму-від-фігуративності-до-чистої-абстракції
-  type: ukrainian_wiki
-  title: 'Біографія: Казимир Малевич: Революція в мистецтві'
-  section_path: 'Біографія: Казимир Малевич: Революція в мистецтві > Основний зміст
-    > Народження супрематизму: від фігуративності до чистої абстракції'
-- id: S5
-  file: ukrainian_wiki/kazimir-malevich_Біографія-Казимир-Малевич-Революція-в-мистецтві-Основний-зміст-Історіографія-та-проблеми-рецепції-авангардного-мистецтва
-  type: ukrainian_wiki
-  title: 'Біографія: Казимир Малевич: Революція в мистецтві'
-  section_path: 'Біографія: Казимир Малевич: Революція в мистецтві > Основний зміст
-    > Історіографія та проблеми рецепції авангардного мистецтва'
-- id: S6
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4920
-  type: textbook
-  title: Шевченка для музею в Чернігові. Українські митці випробували свої
-  page: 271
-  grade: 9
-- id: S7
-  file: ukrainian_wiki/ukrainian-avant-garde_Академічна-C1-Український-авангард-Деколонізаційні-застереження
-  type: ukrainian_wiki
-  title: 'Академічна C1: Український авангард'
-  section_path: 'Академічна C1: Український авангард > Деколонізаційні застереження'
+  - id: S1
+    file: esu-malevych-kazymyr
+    type: external
+    title: Малевич Казимир Северинович
+    url: https://esu.com.ua/article-61120
+  - id: S2
+    file: chtyvo-malevych-kazymyr
+    type: external
+    title: Казимир Малевич — авторська тека
+    url: https://chtyvo.org.ua/authors/Malevych_Kazymyr/

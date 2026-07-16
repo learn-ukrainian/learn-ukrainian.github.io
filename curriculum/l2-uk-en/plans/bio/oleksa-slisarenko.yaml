@@ -139,23 +139,34 @@ persona:
     поряд, відділяючи задокументований факт від легенди.
   voice: Literary Forensic Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Публіцистичний лонгрід про долю репресованих.
-  hosting: external
+- title: "Олекса Андрійович Слісаренко (1891–1937)"
+  source_name: "Центральний державний архів-музей літератури і мистецтва України"
+  source_url: "https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/"
   language: uk
-  role: Контекст
-  source_name: Локальна історія
-  source_type: Стаття
-  task: Прочитати статтю про життя та трагічну загибель Олекси Слісаренка в Сандармосі.
-  title: 'Олекса Слісаренко. Опонент великодержавного шовінізму'
-  url: https://sandarmoh.localhistory.org.ua/slisarenko
-- hosting: reading-needed
+  genre: архівна біографічна довідка
+  source_type: institutional
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/"
+    note: "Архівна сторінка використовується тільки як зовнішнє посилання; текст не відтворюється."
+  learner_task: "Скласти хронологію: літературні групи, арешт, вирок, Соловки, розстріл — не називаючи радянське обвинувачення фактом."
+- title: "Вибрані твори (вид. 2011)"
+  source_name: "Чтиво"
+  source_url: "https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/"
   language: uk
-  role: Першоджерело
-  source_type: Поезія / Проза
-  task: Знайти фрагмент ранньої лірики чи пригодницької прози Слісаренка.
-  title: Уривок із творів Олекси Слісаренка
-  url: null
+  genre: вибрані твори
+  source_type: primary
+  role: primary-voice-catalog
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/"
+    note: "Скан видання доступний лише за зовнішнім посиланням; цитати потребують точного номера сторінки."
+  learner_task: "За змістом видання обрати один твір для подальшого читання; не переносити його текст до курсу."
 references:
 - note: Англомовна енциклопедична стаття про життя й доробок (справжнє прізвище, групи, твори, репресії).
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CL%5CSlisarenkoOleksa.htm
@@ -183,6 +194,12 @@ references:
   title: На березі Кастальському
   type: primary
   work: На березі Кастальському
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: 'Архівна біографічна сторінка не встановлює ліцензії окремого зображення; портрет не використовується.'
+  evidence_url: 'https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/'
+  disposition: no-portrait-until-rights-verified
 sequence: 115
 slug: oleksa-slisarenko
 subtitle: The Avant-Garde Poet and Adventure-Novelist Executed at Sandarmokh

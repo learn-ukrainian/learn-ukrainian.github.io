@@ -138,6 +138,13 @@
 
 ---
 
+## Catalog-source disposition
+
+- **Institutional record:** ЦДАМЛМ, «Олекса Андрійович Слісаренко (1891–1937)» — https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/.
+- **Primary-material catalog:** «Вибрані твори (вид. 2011)» — https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/.
+- **Reading and rights disposition:** два українськомовні зовнішні посилання; не переносити скан або цитату без видання, сторінки й правової перевірки.
+- **Image disposition:** текстовий варіант; архівна сторінка не встановлює ліцензію окремого зображення.
+
 ## Decolonization self-check (run before submitting)
 
 - [x] No Russocentric framing — українська культура подана на власних засадах.

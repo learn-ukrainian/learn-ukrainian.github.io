@@ -80,22 +80,34 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені наративи, вимагає доказів та вчить бачити за іконами авангарду складних людей у складному історичному контексті.
   voice: Art-Historian-Skeptic
 phase: BIO.4
+readings_contract_version: 2
 readings:
 - title: "Малевич Казимир Северинович"
-  source: "Енциклопедія Сучасної України (ЕСУ)"
-  url: "https://esu.com.ua/article-61120"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-61120"
   language: uk
-  type: article
-  role: "Загальна біографічна довідка з акцентом на його українське походження та супрематизм."
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
   hosting: link-only
-  task: "Ознайомитися з основними віхами творчості та дискусіями навколо його національної ідентичності."
-- title: "Від кубізму і футуризму до супрематизму. Новий живописний реалізм"
-  source: "Казимир Малевич (первинне джерело)"
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-61120"
+    note: "Сторінка читається лише за зовнішнім посиланням; текст у курсі не відтворюється."
+  learner_task: "Зіставити київське навчання Малевича з його пізнішим супрематичним проєктом і назвати межі, які джерело не дає підстав стирати."
+- title: "Казимир Малевич — авторська тека"
+  source_name: "Чтиво"
+  source_url: "https://chtyvo.org.ua/authors/Malevych_Kazymyr/"
   language: uk
-  type: manifest
-  role: "Ключовий маніфест Малевича, де він викладає теорію супрематизму."
-  hosting: reading-needed
-  task: "Законспектувати основні ідеї 'звільнення' живопису від предметності."
+  genre: авторська тека
+  source_type: primary
+  role: primary-voice-catalog
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://chtyvo.org.ua/authors/Malevych_Kazymyr/"
+    note: "Каталог подає доступ до матеріалів автора; жоден текст або уривок не відтворюється у курсі."
+  learner_task: "Відкрити лише назву й бібліографічний запис обраного матеріалу; не цитувати без точного видання та сторінки."
 references:
 - title: Kazimir Malevich
   note: Compiled research on Malevich's Ukrainian period, Suprematism, and the decolonization debate.
@@ -115,6 +127,12 @@ references:
   note: Malevich's profile at MoMA for international context.
   type: reference
   url: https://www.moma.org/artists/3710
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: 'У межах цього ремонту не перевірено індивідуальну ліцензію конкретного портрета; текстовий варіант безпечніший за припущення.'
+  evidence_url: 'https://esu.com.ua/article-61120'
+  disposition: no-portrait-until-rights-verified
 sequence: 101
 slug: kazimir-malevich
 subtitle: 'Kazimir Malevich: A Revolution in Art'

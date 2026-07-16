@@ -155,6 +155,13 @@
 
 ---
 
+## Catalog-source disposition
+
+- **Institutional record:** ЕСУ, «Зеров Микола Костянтинович» — https://esu.com.ua/article-16057.
+- **Primary-material catalog:** «Сонети і елегії» — https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/.
+- **Reading and rights disposition:** лише зовнішні українськомовні посилання; не відтворювати поезію без точного видання й сторінки.
+- **Image disposition:** текстовий варіант, бо права конкретного портрета не перевірено.
+
 ## Decolonization self-check (run before submitting)
 
 - [x] No Russocentric framing — радянські репресії названо прямо як механізм імперського терору.

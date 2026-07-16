@@ -1,14 +1,32 @@
 ---
+readings_contract_version: 2
 readings:
-- source_name: "Тодось Осьмачка (Вікіпедія)"
-  source_url: "https://uk.wikipedia.org/wiki/Тодось_Осьмачка"
-  language: "uk"
-  hosting: "link-only"
-  rights_note: "CC BY-SA 4.0"
-- source_name: "Осьмачка Тодось: Життя і творчість"
-  language: "uk"
-  hosting: "reading-needed"
-  rights_note: "Need rights-clear primary text or scholarly article"
+- title: "Осьмачка Тодось"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-77208"
+  language: uk
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-77208"
+    note: "ЕСУ використовується лише через зовнішнє посилання; текст не передруковується."
+  learner_task: "Зіставити ранню поезію, київські літературні кола та еміграційні твори за датами, які подає ЕСУ."
+- title: "Тодось Осьмачка — авторська тека"
+  source_name: "Чтиво"
+  source_url: "https://chtyvo.org.ua/authors/Osmachka_Todos/"
+  language: uk
+  genre: авторська тека
+  source_type: primary
+  role: primary-voice-catalog
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://chtyvo.org.ua/authors/Osmachka_Todos/"
+    note: "Каталог і матеріали доступні тільки на зовнішньому сайті; жодного повного тексту курс не хостить."
+  learner_task: "Обрати точну назву твору для майбутнього читання та не цитувати її без перевіреного видання й локатора."
 activity_hints:
 - after_section: 'Розминка'
   focus: Перевірка фактів про ім'я Теодосій Осьмачка, село Куцівка, КІНО та МАРС
@@ -195,6 +213,12 @@ references:
   title: Клекіт
   type: primary
   work: Клекіт
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: 'Не встановлено ліцензію конкретного портрета; каталог готовності не повинен припускати її.'
+  evidence_url: 'https://esu.com.ua/article-77208'
+  disposition: no-portrait-until-rights-verified
 sequence: 224
 slug: todos-osmachka
 subtitle: The Poet Who Survived Punitive Psychiatry

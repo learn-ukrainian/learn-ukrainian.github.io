@@ -154,6 +154,13 @@ His own account of the spark, set in the Ukrainian provinces — useful for grou
 
 ---
 
+## Catalog-source disposition
+
+- **Institutional record:** ЕСУ, «Малевич Казимир Северинович» — https://esu.com.ua/article-61120.
+- **Primary-material catalog:** «Казимир Малевич — авторська тека» — https://chtyvo.org.ua/authors/Malevych_Kazymyr/.
+- **Reading and rights disposition:** обидва записи використовуються тільки як зовнішні українськомовні посилання. Жодного тексту не відтворювати без точного видання, локатора й окремої правової підстави.
+- **Image disposition:** текстовий варіант; ліцензію конкретного портрета не встановлено індивідуально.
+
 ## Decolonization self-check (run before submitting)
 
 - [x] No Russocentric framing — the "Russian avant-garde" label is *named as appropriation* and contested with sourced Kyiv/Ukrainian facts, **without** inflating him into a "Ukrainian-language national artist."

@@ -128,6 +128,13 @@
 
 ---
 
+## Catalog-source disposition
+
+- **Publisher record:** «Тарас Прохасько» — https://starylev.com.ua/old-lion/author/taras-proxasko.
+- **Primary-voice record:** «Прості істини: Тарас Прохасько» — https://starylev.com.ua/news/prosti-istyny-taras-prohasko.
+- **Reading and rights disposition:** обидва захищені авторським правом матеріали лишаються зовнішніми українськомовними посиланнями; без передруку й без припущень про теперішній статус автора.
+- **Image disposition:** текстовий варіант; індивідуальну ліцензію портрета не встановлено.
+
 ## Decolonization self-check
 
 - [x] Stanislav/Ivano-Frankivsk naming — historical **Stanislaviv** glossed, modern **Ivano-Frankivsk** canonical

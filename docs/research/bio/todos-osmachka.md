@@ -133,6 +133,13 @@
 
 ---
 
+## Catalog-source disposition
+
+- **Institutional record:** ЕСУ, «Осьмачка Тодось» — https://esu.com.ua/article-77208.
+- **Primary-material catalog:** «Тодось Осьмачка — авторська тека» — https://chtyvo.org.ua/authors/Osmachka_Todos/.
+- **Reading and rights disposition:** матеріали лишаються зовнішніми українськомовними посиланнями; не відтворювати поезію або прозу без точного видання та локатора.
+- **Image disposition:** текстовий варіант, оскільки індивідуальну ліцензію портрета не встановлено.
+
 ## Decolonization self-check (run before submitting)
 
 - [x] No Russocentric framing (ДПУ/НКВС named; punitive psychiatry named as Soviet/Russian system)

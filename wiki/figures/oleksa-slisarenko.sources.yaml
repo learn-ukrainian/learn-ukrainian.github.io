@@ -1,24 +1,13 @@
 # Source registry for wiki/figures/oleksa-slisarenko.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: wave7-entsyklopediia-ukrainoznavstva_c2018
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S2
-  file: eiu-slisarenko-biohrafiia
-  type: unknown
-  title: eiu-slisarenko-biohrafiia
-- id: S3
-  file: uk-wikipedia-slisarenko-zhyttia
-  type: wikipedia
-  title: uk-wikipedia-slisarenko-zhyttia
-- id: S4
-  file: uk-wikipedia-slisarenko-aresht-zahybel
-  type: wikipedia
-  title: uk-wikipedia-slisarenko-aresht-zahybel
-- id: S5
-  file: uk-wikipedia-slisarenko-tvorchist
-  type: wikipedia
-  title: uk-wikipedia-slisarenko-tvorchist
+  - id: S1
+    file: csammlm-slisarenko-oleksa
+    type: external
+    title: Олекса Андрійович Слісаренко (1891–1937)
+    url: https://csamm.archives.gov.ua/2021/01/10/oleksa-andriiovych-slisarenko-1891-1937/
+  - id: S2
+    file: chtyvo-slisarenko-vybrani-tvory
+    type: external
+    title: Вибрані твори (вид. 2011)
+    url: https://chtyvo.org.ua/authors/Slisarenko_Oleksa/Vybrani_tvory_vyd_2011/

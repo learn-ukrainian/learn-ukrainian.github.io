@@ -77,16 +77,34 @@ persona:
   role: Модератор семінару, що проводить студента від споглядання природи до глибин філософії та літератури, ставлячи точні, неспішні питання
   voice: Meditative-Analyst
 phase: BIO.16
+readings_contract_version: 2
 readings:
-- hosting: reading-needed
+- title: "Тарас Прохасько"
+  source_name: "Видавництво Старого Лева"
+  source_url: "https://starylev.com.ua/old-lion/author/taras-proxasko"
   language: uk
-  learner_task: "Читати про формування 'станіславівського феномену' та біографію автора"
-  license: unknown
-  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
-  role: primary
-  source_name: "Біографія Тараса Прохаська"
-  source_type: article
-  source_url: ""
+  genre: авторська сторінка
+  source_type: publisher
+  role: contextual-reading
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://starylev.com.ua/old-lion/author/taras-proxasko"
+    note: "Видавнича авторська сторінка читається за зовнішнім посиланням; біографічний текст не передруковується."
+  learner_task: "Звірити лише за сторінкою видавця дату народження, фахову освіту та зв’язок зі станіславівським феноменом."
+- title: "Прості істини: Тарас Прохасько"
+  source_name: "Видавництво Старого Лева"
+  source_url: "https://starylev.com.ua/news/prosti-istyny-taras-prohasko"
+  language: uk
+  genre: авторське інтерв’ю
+  source_type: primary
+  role: primary-voice
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://starylev.com.ua/news/prosti-istyny-taras-prohasko"
+    note: "Інтерв’ю є захищеним авторським матеріалом і використовується тільки через посилання."
+  learner_task: "Прочитати один фрагмент про місто або письмо й переказати його власними словами без цитування."
 references:
 - title: Taras Prokhasko
   note: Основна біографічна інформація, хронологія творчості, список нагород
@@ -103,6 +121,12 @@ references:
   type: primary
   url: https://litakcent.com/
   work: Інтерв'ю та критичні статті про Тараса Прохаська
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: 'Для живого автора жоден портрет не визнано індивідуально ліцензованим у межах цього завдання.'
+  evidence_url: 'https://starylev.com.ua/old-lion/author/taras-proxasko'
+  disposition: no-portrait-until-rights-verified
 sequence: 183
 slug: taras-prokhasko
 subtitle: 'Taras Prokhasko: The Stanislaviv Phenomenon'

@@ -2,12 +2,12 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave8-ukr-lit-entsyklopediia_c5517
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: esu-zerov-mykola
+  type: external
+  title: Зеров Микола Костянтинович
+  url: https://esu.com.ua/article-16057
 - id: S2
-  file: wikipedia/Неокласики
-  type: wikipedia
-  title: Неокласики
-  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D0%BE%D0%BA%D0%BB%D0%B0%D1%81%D0%B8%D0%BA%D0%B8
+  file: chtyvo-zerov-sonety-i-elegii
+  type: external
+  title: Сонети і елегії
+  url: https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/

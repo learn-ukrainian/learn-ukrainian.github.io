@@ -1,0 +1,15 @@
+# Source registry for wiki/figures/todos-osmachka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: esu-osmachka-todos
+    type: external
+    title: Осьмачка Тодось
+    url: https://esu.com.ua/article-77208
+    notes: Інституційна українськомовна біографічна стаття.
+  - id: S2
+    file: chtyvo-osmachka-todos
+    type: external
+    title: Тодось Осьмачка — авторська тека
+    url: https://chtyvo.org.ua/authors/Osmachka_Todos/
+    notes: Каталог видань і текстів; цитування можливе лише за точним виданням.
