@@ -156,15 +156,25 @@ A valid **clean** or **actionable** receipt requires:
 - non-empty frozen `scope` with at least one concrete value;
 - complete author and reviewer `model` / `family` / `harness` /
   `selection_reason` (no placeholders);
-- non-empty `tests`;
-- both `source_aware` and `source_blind` keys in `behavior_proof`;
+- **cross-family gate**: `author.family` and `reviewer.family` must be
+  concrete and different (case-insensitive). Same-family lineage cannot
+  exit `clean` (final disposition is non-clean / `actionable`);
+- `tests` with concrete `commands` and `passed: true`, **or** explicitly
+  supported `status: "n/a"` with a non-empty `reason`. `passed: false` /
+  `status: "fail"` makes the receipt non-clean / `actionable` (never exit 0);
+- both `source_aware` and `source_blind` in `behavior_proof`, each with
+  `status: "pass"` or `status: "n/a"` + non-empty `reason`. `status: "fail"`
+  is non-clean / `actionable`; missing/invalid status is `incomplete`;
 - explicit non-empty `routing_lineage` (supplied by the runner; not invented);
 - for every finding: disposition key present, disposition ∈
   `in_scope_blocker` | `follow_up` | `stop_and_escalate`, non-empty rationale;
   unknown or missing finding IDs rejected.
 
-Malformed or incomplete envelope data may still emit a receipt, but exits
-`incomplete` or `invalid` — **never** `0`/`1`.
+Malformed runner envelope JSON (`--scope-json`, `--tests-json`,
+`--behavior-proof-json`, `--dispositions-json`, `--routing-lineage-json`)
+exits `invalid` (2) with structured error output. Incomplete envelope data
+exits `incomplete` (3). Explicit failed proof / same-family exits
+`actionable` (1) — **never** `0` when the formal closeout gate fails.
 
 ## Runner command
 

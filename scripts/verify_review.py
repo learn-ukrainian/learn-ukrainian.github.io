@@ -49,6 +49,7 @@ from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     EXIT_INVALID,
     AgentIdentity,
+    ContractError,
     VerifyContext,
     compute_target_input_fingerprint,
     sha256_text,
@@ -87,16 +88,30 @@ def _read_review(issue: int | None, from_stdin: bool, review_file: Path | None) 
 
 
 def _load_json_arg(raw: str | None, *, label: str) -> dict:
+    """Parse a JSON object from a CLI string or file path.
+
+    Malformed / unreadable inputs raise :class:`ContractError` with
+    ``EXIT_INVALID`` so the runner exits 2 (never a string ``SystemExit`` → 1).
+    """
     if not raw:
         return {}
     path = Path(raw)
-    text = path.read_text(encoding="utf-8") if path.is_file() else raw
+    try:
+        text = path.read_text(encoding="utf-8") if path.is_file() else raw
+    except OSError as exc:
+        raise ContractError(
+            f"{label}_unreadable:{exc}",
+            exit_code=EXIT_INVALID,
+        ) from exc
     try:
         value = json.loads(text)
     except json.JSONDecodeError as exc:
-        raise SystemExit(f"invalid JSON for {label}: {exc}") from exc
+        raise ContractError(
+            f"{label}_invalid_json:{exc.msg}",
+            exit_code=EXIT_INVALID,
+        ) from exc
     if not isinstance(value, dict):
-        raise SystemExit(f"{label} must be a JSON object")
+        raise ContractError(f"{label}_must_be_object", exit_code=EXIT_INVALID)
     return value
 
 
@@ -307,17 +322,31 @@ def main(argv: list[str] | None = None) -> int:
     else:
         issue_ref = ""
 
-    scope = _load_json_arg(args.scope_json or None, label="--scope-json")
-    tests = _load_json_arg(args.tests_json or None, label="--tests-json")
-    behavior_proof = _load_json_arg(
-        args.behavior_proof_json or None, label="--behavior-proof-json"
-    )
-    dispositions = _load_json_arg(
-        args.dispositions_json or None, label="--dispositions-json"
-    )
-    routing_lineage = _load_json_arg(
-        args.routing_lineage_json or None, label="--routing-lineage-json"
-    )
+    try:
+        scope = _load_json_arg(args.scope_json or None, label="--scope-json")
+        tests = _load_json_arg(args.tests_json or None, label="--tests-json")
+        behavior_proof = _load_json_arg(
+            args.behavior_proof_json or None, label="--behavior-proof-json"
+        )
+        dispositions = _load_json_arg(
+            args.dispositions_json or None, label="--dispositions-json"
+        )
+        routing_lineage = _load_json_arg(
+            args.routing_lineage_json or None, label="--routing-lineage-json"
+        )
+    except ContractError as exc:
+        print(
+            json.dumps(
+                {
+                    "error": str(exc),
+                    "final_disposition": "invalid",
+                    "exit_code": EXIT_INVALID,
+                },
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_INVALID
 
     try:
         target_fp = compute_target_input_fingerprint(repo_root, target)

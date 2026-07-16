@@ -90,9 +90,16 @@ def schema_path(tooling_root: Path | None = None) -> Path:
 def load_schema(tooling_root: Path | None = None) -> dict[str, Any]:
     path = schema_path(tooling_root)
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
     except OSError as exc:
         raise ContractError(f"schema_unavailable:{path}:{exc}", exit_code=EXIT_INVALID) from exc
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ContractError(
+            f"schema_invalid_json:{path}:{exc.msg}",
+            exit_code=EXIT_INVALID,
+        ) from exc
 
 
 def sha256_text(text: str) -> str:
@@ -108,6 +115,10 @@ def _is_placeholder(value: str) -> bool:
     if not stripped:
         return True
     return stripped.lower() in PLACEHOLDER_VALUES
+
+
+def _canonical_family(value: str) -> str:
+    return value.strip().lower()
 
 
 def parse_reviewer_json(raw: str) -> dict[str, Any]:
@@ -145,10 +156,18 @@ def validate_reviewer_payload(
     """Strict JSON Schema validation (Draft 2020-12). Unknown fields fail."""
     try:
         from jsonschema import Draft202012Validator
+        from jsonschema.exceptions import SchemaError
     except ImportError as exc:  # pragma: no cover - venv always has jsonschema
         raise ContractError("jsonschema_unavailable", exit_code=EXIT_INVALID) from exc
 
     sch = schema if schema is not None else load_schema(tooling_root)
+    try:
+        Draft202012Validator.check_schema(sch)
+    except SchemaError as exc:
+        raise ContractError(
+            f"schema_meta_invalid:{exc.message}",
+            exit_code=EXIT_INVALID,
+        ) from exc
     validator = Draft202012Validator(sch)
     errors = sorted(validator.iter_errors(payload), key=lambda e: list(e.absolute_path))
     if errors:
@@ -262,22 +281,113 @@ def _identity_errors(label: str, identity: AgentIdentity) -> list[str]:
     return errors
 
 
+def _tests_envelope_status(tests: dict[str, Any]) -> tuple[list[str], list[str]]:
+    """Validate tests closeout semantics.
+
+    Returns (incomplete_errors, proof_failures).
+    Successful closeout needs concrete commands + ``passed: true``, or explicit
+    supported ``status: n/a`` with a non-empty reason. Explicit failure
+    (``passed: false`` / ``status: fail``) is a proof failure, not incomplete.
+    """
+    incomplete: list[str] = []
+    failures: list[str] = []
+    if not isinstance(tests, dict) or not tests:
+        return ["tests_empty"], failures
+
+    status_raw = tests.get("status")
+    status = status_raw.strip().lower() if isinstance(status_raw, str) else None
+    passed = tests.get("passed")
+    commands = tests.get("commands")
+    reason = tests.get("reason")
+    if not isinstance(reason, str) or not reason.strip():
+        rationale = tests.get("rationale")
+        reason = rationale if isinstance(rationale, str) else reason
+
+    if status in {"fail", "failed"}:
+        failures.append("tests_failed")
+        return incomplete, failures
+    if passed is False:
+        failures.append("tests_failed")
+        return incomplete, failures
+    if status in {"n/a", "na"}:
+        if not isinstance(reason, str) or not reason.strip():
+            incomplete.append("tests_na_reason_empty")
+        return incomplete, failures
+    if passed is True:
+        if not isinstance(commands, list) or not commands:
+            incomplete.append("tests_commands_missing")
+        elif not all(isinstance(c, str) and c.strip() for c in commands):
+            incomplete.append("tests_commands_invalid")
+        return incomplete, failures
+
+    incomplete.append("tests_result_missing_or_invalid")
+    return incomplete, failures
+
+
+def _behavior_proof_envelope_status(
+    behavior_proof: Any,
+) -> tuple[list[str], list[str]]:
+    """Validate source-aware / source-blind proof semantics.
+
+    Each side must be ``status: pass`` or ``status: n/a`` with a non-empty
+    reason. Explicit ``fail`` is a proof failure (non-clean/actionable).
+    Missing or invalid status remains incomplete.
+    """
+    incomplete: list[str] = []
+    failures: list[str] = []
+    if not isinstance(behavior_proof, dict):
+        return ["behavior_proof_invalid"], failures
+
+    for key in ("source_aware", "source_blind"):
+        proof = behavior_proof.get(key)
+        if not isinstance(proof, dict) or not proof:
+            incomplete.append(f"behavior_proof.{key}_missing")
+            continue
+        status_raw = proof.get("status")
+        if not isinstance(status_raw, str) or not status_raw.strip():
+            incomplete.append(f"behavior_proof.{key}_status_missing")
+            continue
+        status = status_raw.strip().lower()
+        if status == "fail":
+            failures.append(f"behavior_proof.{key}_failed")
+            continue
+        if status == "pass":
+            continue
+        if status in {"n/a", "na"}:
+            reason = proof.get("reason")
+            if not isinstance(reason, str) or not reason.strip():
+                rationale = proof.get("rationale")
+                reason = rationale if isinstance(rationale, str) else reason
+            if not isinstance(reason, str) or not reason.strip():
+                incomplete.append(f"behavior_proof.{key}_na_reason_empty")
+            continue
+        incomplete.append(f"behavior_proof.{key}_status_invalid")
+    return incomplete, failures
+
+
 def validate_closeout_envelope(
     ctx: VerifyContext,
     *,
     finding_ids: list[str],
 ) -> tuple[int, str] | None:
-    """Return (exit_code, error) when envelope cannot support clean/actionable.
+    """Return (exit_code, error) when envelope cannot support clean closeout.
 
     Never fabricates lineage. Placeholder values fail closed.
+
+    Structural / missing / invalid envelope fields → ``EXIT_INCOMPLETE`` (or
+    ``EXIT_INVALID`` for hard disposition errors alone). Explicit proof
+    failures (failed tests, failed behavior proof, same-family author/reviewer)
+    → ``EXIT_ACTIONABLE`` so the receipt is non-clean and never exits 0.
     """
-    errors: list[str] = []
+    incomplete: list[str] = []
+    proof_failures: list[str] = []
+    hard_errors: list[str] = []
 
     if not isinstance(ctx.issue_ref, str) or _is_placeholder(ctx.issue_ref):
-        errors.append("issue_ref_missing_or_placeholder")
+        incomplete.append("issue_ref_missing_or_placeholder")
 
     if not isinstance(ctx.scope, dict) or not ctx.scope:
-        errors.append("scope_empty")
+        incomplete.append("scope_empty")
     else:
         # Require at least one concrete non-empty value.
         concrete = False
@@ -291,43 +401,55 @@ def validate_closeout_envelope(
             concrete = True
             break
         if not concrete:
-            errors.append("scope_lacks_concrete_values")
+            incomplete.append("scope_lacks_concrete_values")
 
-    errors.extend(_identity_errors("author", ctx.author))
-    errors.extend(_identity_errors("reviewer", ctx.reviewer))
+    incomplete.extend(_identity_errors("author", ctx.author))
+    incomplete.extend(_identity_errors("reviewer", ctx.reviewer))
 
-    if not isinstance(ctx.tests, dict) or not ctx.tests:
-        errors.append("tests_empty")
+    # Formal closeout requires concrete, distinct families (case-insensitive).
+    author_family_ok = not any(
+        e.startswith("author.family_") for e in incomplete
+    )
+    reviewer_family_ok = not any(
+        e.startswith("reviewer.family_") for e in incomplete
+    )
+    if (
+        author_family_ok
+        and reviewer_family_ok
+        and _canonical_family(ctx.author.family)
+        == _canonical_family(ctx.reviewer.family)
+    ):
+        proof_failures.append("same_family_review")
 
-    if not isinstance(ctx.behavior_proof, dict):
-        errors.append("behavior_proof_invalid")
-    else:
-        for key in ("source_aware", "source_blind"):
-            proof = ctx.behavior_proof.get(key)
-            if not isinstance(proof, dict) or not proof:
-                errors.append(f"behavior_proof.{key}_missing")
+    t_incomplete, t_failures = _tests_envelope_status(ctx.tests)
+    incomplete.extend(t_incomplete)
+    proof_failures.extend(t_failures)
+
+    b_incomplete, b_failures = _behavior_proof_envelope_status(ctx.behavior_proof)
+    incomplete.extend(b_incomplete)
+    proof_failures.extend(b_failures)
 
     if not isinstance(ctx.routing_lineage, dict) or not ctx.routing_lineage:
-        errors.append("routing_lineage_empty")
+        incomplete.append("routing_lineage_empty")
     else:
         for key, value in ctx.routing_lineage.items():
             if not isinstance(key, str) or not key.strip():
-                errors.append("routing_lineage_invalid_key")
+                incomplete.append("routing_lineage_invalid_key")
                 break
             if not isinstance(value, str) or _is_placeholder(value):
-                errors.append(f"routing_lineage.{key}_missing_or_placeholder")
+                incomplete.append(f"routing_lineage.{key}_missing_or_placeholder")
 
     if not ctx.expected_input_sha256 or _is_placeholder(str(ctx.expected_input_sha256)):
-        errors.append("expected_input_sha256_required")
+        incomplete.append("expected_input_sha256_required")
 
     finding_id_set = set(finding_ids)
     disposition_keys = set(ctx.dispositions.keys())
     unknown = sorted(disposition_keys - finding_id_set)
     missing = sorted(finding_id_set - disposition_keys)
     if unknown:
-        errors.append(f"disposition_unknown_ids:{','.join(unknown)}")
+        hard_errors.append(f"disposition_unknown_ids:{','.join(unknown)}")
     if missing:
-        errors.append(f"disposition_missing_ids:{','.join(missing)}")
+        incomplete.append(f"disposition_missing_ids:{','.join(missing)}")
     for fid in finding_ids:
         entry = ctx.dispositions.get(fid)
         if not isinstance(entry, dict):
@@ -335,44 +457,27 @@ def validate_closeout_envelope(
         disp = entry.get("disposition")
         rationale = entry.get("rationale")
         if not isinstance(disp, str) or disp not in ALLOWED_DISPOSITIONS:
-            errors.append(f"disposition_invalid:{fid}")
+            hard_errors.append(f"disposition_invalid:{fid}")
         if not isinstance(rationale, str) or not rationale.strip():
-            errors.append(f"disposition_rationale_empty:{fid}")
+            incomplete.append(f"disposition_rationale_empty:{fid}")
 
-    if not errors:
+    if not incomplete and not proof_failures and not hard_errors:
         return None
 
-    # Structural/placeholder failures are incomplete (not invalid schema of
-    # reviewer JSON). Unknown disposition enums / unknown IDs are invalid
-    # envelope data → EXIT_INVALID when only those fire; mix defaults to
-    # incomplete so absence of required runner fields stays EXIT_INCOMPLETE.
-    hard = any(
-        e.startswith(
-            (
-                "disposition_unknown_ids:",
-                "disposition_invalid:",
-            )
+    # Prefer incomplete when required runner fields are absent/invalid.
+    if incomplete:
+        return (
+            EXIT_INCOMPLETE,
+            "envelope_incomplete:" + ";".join(incomplete + hard_errors + proof_failures),
         )
-        for e in errors
-    )
-    code = EXIT_INVALID if hard and all(
-        e.startswith(("disposition_unknown_ids:", "disposition_invalid:", "disposition_rationale_empty:", "disposition_missing_ids:"))
-        for e in errors
-    ) else EXIT_INCOMPLETE
-    # Prefer incomplete when any required runner field is absent.
-    if any(
-        not e.startswith(
-            (
-                "disposition_unknown_ids:",
-                "disposition_invalid:",
-                "disposition_rationale_empty:",
-                "disposition_missing_ids:",
-            )
+    # Explicit failed proof / same-family → non-clean actionable (never exit 0).
+    if proof_failures:
+        return (
+            EXIT_ACTIONABLE,
+            "envelope_proof_failed:" + ";".join(proof_failures + hard_errors),
         )
-        for e in errors
-    ):
-        code = EXIT_INCOMPLETE
-    return code, "envelope_incomplete:" + ";".join(errors)
+    # Unknown disposition ids / invalid enums alone → invalid envelope.
+    return EXIT_INVALID, "envelope_invalid:" + ";".join(hard_errors)
 
 
 def _check_stale(ctx: VerifyContext) -> str | None:

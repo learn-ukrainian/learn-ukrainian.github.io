@@ -41,6 +41,17 @@ _HUNK_RE = re.compile(r"^@@\s+-\d+(?:,\d+)?\s+\+(\d+)(?:,(\d+))?\s+@@")
 
 TARGET_INPUT_FINGERPRINT_VERSION = "target-input-v1"
 
+# Stable git-diff flags for target-input fingerprint surfaces. Avoid default
+# abbreviated index lines, external diff drivers, textconv filters, and rename
+# detection so fingerprint bytes are exact and config-stable.
+CANONICAL_DIFF_ARGS = (
+    "--binary",
+    "--full-index",
+    "--no-ext-diff",
+    "--no-textconv",
+    "--no-renames",
+)
+
 
 class EvidenceError(RuntimeError):
     """Evidence loading or path resolution failed closed."""
@@ -232,7 +243,11 @@ def changed_lines_map(repo_root: Path, target: ReviewTarget) -> dict[str, set[in
 
 
 def path_surface_bytes(repo_root: Path, target: ReviewTarget, rel_path: str) -> bytes:
-    """Exact patch or untracked file bytes for one path on the reviewed surface."""
+    """Exact patch or untracked file bytes for one path on the reviewed surface.
+
+    Tracked paths use canonical git-diff arguments (binary + full-index, no
+    ext-diff/textconv/renames). Untracked local paths hash raw file bytes.
+    """
     if not is_safe_repo_relative_path(rel_path):
         raise EvidenceError(f"unsafe_path:{rel_path!r}")
     if target.mode == "local":
@@ -246,8 +261,11 @@ def path_surface_bytes(repo_root: Path, target: ReviewTarget, rel_path: str) -> 
                 return safe.read_bytes()
             except OSError as exc:
                 raise EvidenceError(f"read_failed:{rel_path}:{exc}") from exc
-        # Working tree vs HEAD (staged + unstaged combined).
-        proc = _run_git_bytes(["diff", "HEAD", "--", rel_path], repo_root)
+        # Working tree vs HEAD (staged + unstaged combined), canonical form.
+        proc = _run_git_bytes(
+            ["diff", *CANONICAL_DIFF_ARGS, "HEAD", "--", rel_path],
+            repo_root,
+        )
         if proc.returncode not in (0, 1):
             err = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
             raise EvidenceError(f"diff_failed:{rel_path}:{err}")
@@ -256,7 +274,14 @@ def path_surface_bytes(repo_root: Path, target: ReviewTarget, rel_path: str) -> 
     if not target.base_sha or not target.head_sha:
         raise EvidenceError("target_missing_base_or_head_for_fingerprint")
     proc = _run_git_bytes(
-        ["diff", target.base_sha, target.head_sha, "--", rel_path],
+        [
+            "diff",
+            *CANONICAL_DIFF_ARGS,
+            target.base_sha,
+            target.head_sha,
+            "--",
+            rel_path,
+        ],
         repo_root,
     )
     if proc.returncode not in (0, 1):

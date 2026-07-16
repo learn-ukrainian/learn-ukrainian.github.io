@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import scripts.verify_review as verify_review_cli
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.evidence import (
+    CANONICAL_DIFF_ARGS,
     OUTCOME_LINE_MISMATCH,
     OUTCOME_OUT_OF_SCOPE,
     OUTCOME_QUOTE_MISSING,
@@ -25,6 +26,7 @@ from scripts.review.evidence import (
     is_safe_repo_relative_path,
     match_at_line,
     normalize_line_endings,
+    path_surface_bytes,
     resolve_safe_path,
     split_lines_preserve_content,
 )
@@ -39,6 +41,7 @@ from scripts.review.review_contract import (
     AgentIdentity,
     ContractError,
     VerifyContext,
+    load_schema,
     parse_reviewer_json,
     sha256_text,
     sort_findings_deterministically,
@@ -1221,3 +1224,382 @@ def test_build_target_manifest_matches_fingerprint_helper(tmp_path):
     target = resolve_local_target(repo)
     manifest = build_target_manifest(repo, target)
     assert manifest["input_sha256"] == compute_target_input_fingerprint(repo, target)
+
+
+# --- closeout gate / fingerprint / invalid CLI (review cycle 2) --------------
+
+
+def test_failed_tests_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            tests={"commands": ["pytest"], "passed": False},
+        ),
+    )
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert result.final_disposition == "actionable"
+    assert "tests_failed" in (result.error or "")
+    assert result.exit_code != EXIT_CLEAN
+
+
+def test_failed_behavior_proof_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            behavior_proof={
+                "source_aware": {"status": "fail"},
+                "source_blind": {"status": "fail"},
+            },
+        ),
+    )
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert "behavior_proof.source_aware_failed" in (result.error or "")
+    assert "behavior_proof.source_blind_failed" in (result.error or "")
+
+
+def test_same_family_lineage_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            author=_identity(model="author-model", family="OpenAI"),
+            reviewer=_identity(
+                model="reviewer-model",
+                family="openai",
+                selection_reason="same-family-advisory",
+            ),
+        ),
+    )
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert "same_family_review" in (result.error or "")
+    assert result.final_disposition != "clean"
+
+
+def test_justified_na_tests_and_behavior_proof_can_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            tests={
+                "status": "n/a",
+                "reason": "no automated suite for docs-only surface",
+            },
+            behavior_proof={
+                "source_aware": {"status": "pass"},
+                "source_blind": {
+                    "status": "n/a",
+                    "reason": "no user-visible surface",
+                },
+            },
+        ),
+    )
+    assert result.exit_code == EXIT_CLEAN
+    assert result.error is None
+
+
+def test_missing_behavior_status_is_incomplete(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            behavior_proof={
+                "source_aware": {"note": "present without status"},
+                "source_blind": {"status": "pass"},
+            },
+        ),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_aware_status_missing" in (result.error or "")
+
+
+def test_tests_passed_without_commands_is_incomplete(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(repo, target, raw, tests={"passed": True}),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "tests_commands_missing" in (result.error or "")
+
+
+def test_tracked_binary_same_length_mutation_changes_fingerprint(tmp_path):
+    repo = _init_repo(tmp_path)
+    blob_a = b"\x00\x01\x02\x03AAAA"
+    blob_b = b"\x00\x01\x02\x03BBBB"
+    assert len(blob_a) == len(blob_b)
+    (repo / "asset.bin").write_bytes(blob_a)
+    _git(repo, "add", "asset.bin")
+    _git(repo, "commit", "-q", "-m", "add binary")
+    (repo / "asset.bin").write_bytes(blob_b)
+    target = resolve_local_target(repo)
+    assert "asset.bin" in target.changed_paths
+    surface = path_surface_bytes(repo, target, "asset.bin")
+    # Full-index + binary surface carries content identity, not only abbrev.
+    assert b"index " in surface
+    index_line = next(
+        line for line in surface.splitlines() if line.startswith(b"index ")
+    )
+    # full-index: two 40-char hex object ids separated by ".."
+    assert b".." in index_line
+    left, right = index_line.split(b" ", 1)[1].split(b" ")[0].split(b"..")
+    assert len(left) == 40 and len(right) == 40
+    assert all(c in b"0123456789abcdef" for c in left + right)
+    fp1 = compute_target_input_fingerprint(repo, target)
+    (repo / "asset.bin").write_bytes(blob_a)  # mutate back to committed
+    # Same content as HEAD → no change surface for this path; force second
+    # same-length mutation different from both prior blobs? Use third blob.
+    blob_c = b"\x00\x01\x02\x03CCCC"
+    (repo / "asset.bin").write_bytes(blob_c)
+    target2 = resolve_local_target(repo)
+    fp2 = compute_target_input_fingerprint(repo, target2)
+    assert fp1 != fp2
+    # Untracked path still hashes raw bytes.
+    (repo / "new.bin").write_bytes(blob_a)
+    target3 = resolve_local_target(repo)
+    assert "new.bin" in target3.changed_paths
+    untracked = path_surface_bytes(repo, target3, "new.bin")
+    assert untracked == blob_a
+
+
+def test_fingerprint_not_controlled_by_abbrev_formatting(tmp_path, monkeypatch):
+    repo = _init_repo(tmp_path)
+    (repo / "asset.bin").write_bytes(b"\xff\xfeBINARY-DATA-01")
+    _git(repo, "add", "asset.bin")
+    _git(repo, "commit", "-q", "-m", "bin")
+    (repo / "asset.bin").write_bytes(b"\xff\xfeBINARY-DATA-02")
+    target = resolve_local_target(repo)
+    fp_default = compute_target_input_fingerprint(repo, target)
+
+    # Even if process env requests ultra-short abbrev, canonical flags win.
+    calls: list[list[str]] = []
+    real_run = subprocess.run
+
+    def tracking_run(cmd, **kwargs):
+        if isinstance(cmd, (list, tuple)) and cmd and cmd[0] == "git":
+            calls.append(list(cmd))
+        return real_run(cmd, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", tracking_run)
+    # Local git config that would otherwise shrink index lines.
+    _git(repo, "config", "core.abbrev", "4")
+    fp_short = compute_target_input_fingerprint(repo, target)
+    assert fp_short == fp_default
+    # Fingerprint path uses the stable flag set.
+    diff_calls = [c for c in calls if "diff" in c]
+    assert any(all(flag in c for flag in CANONICAL_DIFF_ARGS) for c in diff_calls)
+    surface = path_surface_bytes(repo, target, "asset.bin")
+    index_line = next(line for line in surface.splitlines() if line.startswith(b"index "))
+    ids = index_line.split(b" ", 1)[1].split(b" ")[0].split(b"..")
+    assert all(len(part) == 40 for part in ids)
+
+
+def test_load_schema_invalid_json_is_contract_error(tmp_path, monkeypatch):
+    bad = tmp_path / "schemas"
+    bad.mkdir()
+    schema_file = bad / "code-review-findings.v1.schema.json"
+    schema_file.write_text("{not-json", encoding="utf-8")
+    monkeypatch.setattr(
+        "scripts.review.review_contract.package_repo_root",
+        lambda: tmp_path,
+    )
+    with pytest.raises(ContractError, match="schema_invalid_json") as exc:
+        load_schema()
+    assert exc.value.exit_code == EXIT_INVALID
+
+
+def test_load_schema_unreadable_is_contract_error(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "scripts.review.review_contract.package_repo_root",
+        lambda: tmp_path / "missing-root",
+    )
+    with pytest.raises(ContractError, match="schema_unavailable") as exc:
+        load_schema()
+    assert exc.value.exit_code == EXIT_INVALID
+
+
+def test_invalid_meta_schema_is_contract_error():
+    with pytest.raises(ContractError, match="schema_meta_invalid") as exc:
+        validate_reviewer_payload(_clean_payload(), schema={"type": "not-a-type"})
+    assert exc.value.exit_code == EXIT_INVALID
+
+
+def test_cli_malformed_envelope_json_exits_invalid(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    review = tmp_path / "review.json"
+    review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
+    labels = (
+        "--scope-json",
+        "--tests-json",
+        "--behavior-proof-json",
+        "--dispositions-json",
+        "--routing-lineage-json",
+    )
+    for label in labels:
+        args = [
+            "--review-file",
+            str(review),
+            "--mode",
+            "local",
+            "--repo-root",
+            str(repo),
+            label,
+            "{not-json",
+        ]
+        code = verify_review_cli.main(args)
+        assert code == EXIT_INVALID, label
+        err = capsys.readouterr().err
+        data = json.loads(err)
+        assert data["exit_code"] == EXIT_INVALID
+        assert data["final_disposition"] == "invalid"
+        assert "invalid_json" in data["error"]
+
+
+def test_cli_failed_proof_and_same_family_non_clean(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    review = tmp_path / "review.json"
+    review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
+    target = resolve_local_target(repo)
+    fp = compute_target_input_fingerprint(repo, target)
+    base = [
+        "--review-file",
+        str(review),
+        "--mode",
+        "local",
+        "--repo-root",
+        str(repo),
+        "--expected-input-sha256",
+        fp,
+        "--issue-ref",
+        "#5284",
+        "--scope-json",
+        json.dumps({"owner": "app.py"}),
+        "--author-model",
+        "a",
+        "--author-family",
+        "openai",
+        "--author-harness",
+        "h",
+        "--author-selection-reason",
+        "author",
+        "--reviewer-model",
+        "b",
+        "--reviewer-harness",
+        "h",
+        "--reviewer-selection-reason",
+        "review",
+        "--routing-lineage-json",
+        json.dumps({"implementation_agent": "impl"}),
+    ]
+
+    # Failed tests + failed behavior proof
+    code = verify_review_cli.main(
+        [
+            *base,
+            "--reviewer-family",
+            "xai",
+            "--tests-json",
+            json.dumps({"commands": ["pytest"], "passed": False}),
+            "--behavior-proof-json",
+            json.dumps(
+                {
+                    "source_aware": {"status": "fail"},
+                    "source_blind": {"status": "fail"},
+                }
+            ),
+        ]
+    )
+    assert code == EXIT_ACTIONABLE
+    data = json.loads(capsys.readouterr().out)
+    assert data["final_disposition"] == "actionable"
+    assert data["exit_code"] == EXIT_ACTIONABLE
+    assert "tests_failed" in (data.get("error") or "")
+
+    # Same-family with otherwise green proof
+    code2 = verify_review_cli.main(
+        [
+            *base,
+            "--reviewer-family",
+            "OpenAI",
+            "--tests-json",
+            json.dumps({"commands": ["pytest"], "passed": True}),
+            "--behavior-proof-json",
+            json.dumps(
+                {
+                    "source_aware": {"status": "pass"},
+                    "source_blind": {"status": "pass"},
+                }
+            ),
+        ]
+    )
+    assert code2 == EXIT_ACTIONABLE
+    data2 = json.loads(capsys.readouterr().out)
+    assert data2["final_disposition"] == "actionable"
+    assert "same_family_review" in (data2.get("error") or "")
+
+
+def test_cli_subprocess_malformed_scope_exits_2(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    review = tmp_path / "review.json"
+    review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [
+            str(root / ".venv" / "bin" / "python"),
+            str(root / "scripts" / "verify_review.py"),
+            "--review-file",
+            str(review),
+            "--mode",
+            "local",
+            "--repo-root",
+            str(repo),
+            "--scope-json",
+            "{not-json",
+        ],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+        env=sanitized_git_env(),
+    )
+    assert proc.returncode == EXIT_INVALID
+    err = json.loads(proc.stderr)
+    assert err["exit_code"] == EXIT_INVALID
+    assert "invalid_json" in err["error"]
