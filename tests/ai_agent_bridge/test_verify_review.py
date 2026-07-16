@@ -1,119 +1,18 @@
+"""Bridge-facing tests: review protocol prompt loading (not FINDING text).
+
+Structured verifier behavior lives in ``tests/test_verify_review.py`` (issue #5284).
+Legacy ``FINDING:`` text is no longer accepted by ``scripts/verify_review.py``.
+"""
+
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-import verify_review
 from ai_agent_bridge import _channels, _inbox, _prompts
 from ai_agent_bridge._inbox import _ClaimedDelivery, _ClaimedThread
-
-
-def _finding(path: str, line: int, quote: str, *, include_fix: bool = True) -> str:
-    parts = [
-        "FINDING:",
-        f"FILE:LINE: {path}:{line}",
-        "CURRENT CODE (verbatim from branch):",
-        "```",
-        quote,
-        "```",
-        "WHY WRONG:",
-        "This is wrong.",
-    ]
-    if include_fix:
-        parts.extend(["FIX:", "Replace it."])
-    parts.extend(["SEVERITY: major", "SOURCE: none"])
-    return "\n".join(parts)
-
-
-def test_verify_review_outcomes(monkeypatch):
-    files = {
-        "origin/main:ok.py": "a = 1\nb = 2\n",
-        "origin/main:mismatch.py": "x = 0\nvalue = 2\n",
-        "origin/main:missing.py": "z = 9\n",
-    }
-    monkeypatch.setattr(verify_review, "_run", lambda cmd, input_text=None: files[cmd[-1]])
-    review = "\n\n".join(
-        [
-            _finding("ok.py", 2, "b = 2"),
-            _finding("mismatch.py", 1, "value = 2"),
-            _finding("missing.py", 1, "value = 2"),
-        ]
-    )
-
-    results = [
-        verify_review._verify_finding(
-            verify_review._parse_finding(match.group("body"), idx),
-            "main",
-        )
-        for idx, match in enumerate(
-            verify_review.FINDING_RE.finditer(review), start=1
-        )
-    ]
-
-    assert [result["outcome"] for result in results] == [
-        "verified",
-        "line_mismatch",
-        "quote_missing",
-    ]
-
-
-def test_malformed_finding_is_discarded_with_reason():
-    result = verify_review._parse_finding(
-        _finding("bad.py", 1, "value = 2", include_fix=False),
-        7,
-    )
-    assert result["outcome"] == "discarded"
-    assert result["reason"] == "missing_fields:fix"
-
-
-def test_issue_mode_reads_latest_comment_and_posts_summary(
-    monkeypatch, capsys
-):
-    review = _finding("ok.py", 2, "b = 2")
-    calls: list[list[str]] = []
-
-    def _fake_run(cmd, input_text=None):
-        calls.append(cmd)
-        if cmd[:3] == ["gh", "issue", "view"]:
-            return json.dumps({"comments": [{"body": "old"}, {"body": review}]})
-        if cmd[:2] == ["git", "show"]:
-            return "a = 1\nb = 2\n"
-        if cmd[:3] == ["gh", "issue", "comment"]:
-            return ""
-        raise AssertionError(cmd)
-
-    monkeypatch.setattr(verify_review, "_run", _fake_run)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["verify_review.py", "--issue", "1331", "--branch", "main", "--post-comment"],
-    )
-
-    assert verify_review.main() == 0
-    out = capsys.readouterr().out.strip().splitlines()
-    assert json.loads(out[0])["outcome"] == "verified"
-    assert calls[-1][:3] == ["gh", "issue", "comment"]
-
-
-def test_verify_review_branch_mode_never_uses_a_local_branch_or_worktree(monkeypatch):
-    commands: list[list[str]] = []
-
-    def fake_run(command, input_text=None):
-        commands.append(command)
-        assert input_text is None
-        return "value = 1\n"
-
-    monkeypatch.setattr(verify_review, "_run", fake_run)
-
-    assert verify_review._load_file("path/to/file.py", "feature/review") == "value = 1\n"
-    assert commands == [["git", "show", "origin/feature/review:path/to/file.py"]]
-    with pytest.raises(ValueError, match="without origin"):
-        verify_review._load_file("path/to/file.py", "origin/feature/review")
 
 
 def test_review_protocol_is_loaded_at_call_time(tmp_path, monkeypatch):
@@ -165,7 +64,14 @@ def test_build_agent_prompt_review_prefix_precedes_channel_context(monkeypatch):
     monkeypatch.setattr(
         _channels,
         "read",
-        lambda channel, tail=10: [{"created_at": "2026-04-19T12:00:00", "from_agent": "user", "round_index": 0, "body": "older"}],
+        lambda channel, tail=10: [
+            {
+                "created_at": "2026-04-19T12:00:00",
+                "from_agent": "user",
+                "round_index": 0,
+                "body": "older",
+            }
+        ],
     )
 
     prompt = _channels.build_agent_prompt("pipeline", "new", review=True)["prompt"]
@@ -215,3 +121,13 @@ def test_inbox_thread_prompt_includes_review_prefix_before_context(monkeypatch):
 
     prompt = _inbox._build_thread_prompt("codex", claimed, has_session=False)
     assert prompt.index("PROTO") < prompt.index("CTX") < prompt.index("root body")
+
+
+def test_review_protocol_doc_declares_json_contract_and_legacy_removal():
+    """docs/review-protocol.md must document the #5284 JSON contract."""
+    root = Path(__file__).resolve().parents[2]
+    text = (root / "docs" / "review-protocol.md").read_text(encoding="utf-8")
+    assert "code-review-findings.v1" in text
+    assert "Legacy" in text or "legacy" in text
+    assert "EXIT" in text or "exit" in text
+    assert "receipt" in text.lower()
