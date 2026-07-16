@@ -60,6 +60,7 @@ INVALID_TOOL_THEATRE = "INVALID_TOOL_THEATRE"
 RETRY_EXHAUSTED = "RETRY_EXHAUSTED"
 UNGROUNDED_FINDINGS = "ungrounded_findings"
 DEEP_READ_REQUIRED = "deep_read_required"
+FACTUAL_SWEEP_REQUIRED = "factual_sweep_required"
 
 _TOKEN_DIVISOR = 3.5
 _TOKEN_RE = re.compile(r"[\w’'-]+", re.UNICODE)
@@ -106,6 +107,21 @@ _DEEP_READ_RETRY_REMINDER = """
 ## Reviewer Retry: Deep Read Required
 
 The prior response used wiki summary-mode evidence where summary-only evidence is inadmissible for any verdict. Re-run the relevant wiki query in section/extract mode before deciding the verdict, then return only the required JSON object.
+"""
+
+_FACTUAL_SWEEP_RETRY_REMINDER = """
+
+---
+
+## Reviewer Retry: Factual Sweep Required
+
+The prior seminar response omitted the mandatory top-level `fact_checks` sweep
+or returned it empty. Re-read the target module, call the sources MCP tools for
+the factual claims, and return one JSON object containing all three top-level
+arrays: `findings`, `fact_checks`, and `evidence_gaps`. Enumerate every factual
+claim. When the source protocol or tool budget cannot verify a claim, preserve
+it as `UNVERIFIED_INSUFFICIENT_SEARCH` with `budget_exhausted: true`; never
+silently omit it.
 """
 
 
@@ -1289,6 +1305,8 @@ def reviewer_retry_prompt(prompt: str, reason: str) -> str:
     """Append a deterministic retry reminder to the reviewer prompt."""
     if reason == DEEP_READ_REQUIRED:
         return f"{prompt}{_DEEP_READ_RETRY_REMINDER}"
+    if reason == FACTUAL_SWEEP_REQUIRED:
+        return f"{prompt}{_FACTUAL_SWEEP_RETRY_REMINDER}"
     return f"{prompt}{_THEATRE_RETRY_REMINDER}"
 
 
