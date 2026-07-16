@@ -1,0 +1,20 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-886523
+  type: external
+  title: Строката-Караванська Ніна Антонівна
+  url: https://esu.com.ua/article-886523
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    author: В. В. Овсієнко
+    language: uk
+    verified_on: '2026-07-16'
+- id: S2
+  file: https://museum.khpg.org/index.php?id=1113999650
+  type: external
+  title: СТРОКАТА (СТРОКАТОВА)-КАРАВАНСЬКА НІНА АНТОНІВНА
+  url: https://museum.khpg.org/index.php?id=1113999650
+  metadata:
+    publisher: Віртуальний музей Харківської правозахисної групи
+    language: uk
+    verified_on: '2026-07-16'

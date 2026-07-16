@@ -1,0 +1,21 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-879739
+  type: external
+  title: Плющ Леонід Іванович
+  url: https://esu.com.ua/article-879739
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-879739
+    license: Авторське право ЕСУ; використання як зовнішнього посилання
+    attribution: В. В. Овсієнко / Енциклопедія Сучасної України
+- id: S2
+  file: https://museum.khpg.org/1113936077
+  type: external
+  title: ПЛЮЩ ЛЕОНІД ІВАНОВИЧ
+  url: https://museum.khpg.org/1113936077
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113936077
+    license: Зовнішнє посилання; КХПГ вимагає посилання при передруку
+    attribution: Євген Захаров / Віртуальний музей «Дисидентський рух в Україні»

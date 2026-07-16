@@ -1,128 +1,164 @@
-# Калинець Ірина Онуфріївна (Стасів-Калинець) — Research Dossier
+# Ірина Калинець — дослідницьке досьє
 
-**Slug:** `iryna-kalynets`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+Canonical slug: `iryna-kalynets`
 
-## 1. Verified facts
+## Джерельна рамка
 
-- **Full name (UA, canonical):** Калинець Ірина Онуфріївна; birth surname and dissident-archive form: Стасів-Калинець Ірина Онуфріївна.
-- **Pseudonyms / aliases:** Iryna Kalynets; Iryna Stasiv-Kalynets; Ірина Стасів-Калинець.
-- **Born:** 1940-12-06 | Lviv | Ukrainian SSR under Soviet occupation after the 1939 annexation. Sources: ESU "Калинець Ірина Онуфріївна"; KHPG "Стасів-Калинець Ірина Онуфріївна"; Ukrainian Wikipedia summary via MCP.
-- **Died:** 2012-07-31 | Lviv | Ukraine. Sources: ESU; KHPG; Ukrainian Wikipedia summary via MCP.
-- **Family / education key facts:** Wife of Ihor Kalynets; mother of Zvenyslava Kalynets; graduated from Lviv University in 1964; worked as teacher, methodologist, librarian, and later professor at Lviv University. ESU gives the post-1991 education roles; KHPG gives the dissident-era work path and family separation caused by imprisonment.
+Ірина Онуфріївна Калинець (6 грудня 1940, Львів — 31 липня 2012, Львів) —
+письменниця, публіцистка, культурологиня, літературознавиця та громадська діячка.
+Так її фахову і громадську ідентичність визначає стаття Енциклопедії Сучасної
+України (ЕСУ), написана Т. Ю. Салигою [S1]. Другим джерелом є записане Василем
+Овсієнком 26 червня 2008 року в домі Ірини та Ігоря Калинців інтерв'ю. Це
+первинне усне свідчення, а не нейтральний довідник: воно важливе для досвіду
+дитинства, львівського середовища, арешту, табору й повернення, але його оцінки
+потрібно відокремлювати від хронології ЕСУ [S2].
 
-## 2. Oppression mechanism
+Пакет не використовує Вікіпедію, вторинні перекази чи невстановлені цитати. Він
+також не подає повний перелік матеріалів слідства, номер архівної справи або
+ліцензію на портрет, оскільки ці відомості не підтверджені двома обраними
+джерелами. Замість портрета передбачено текстовий `portrait_fallback`.
 
-- **What happened:** Dismissal, KGB surveillance, arrest, interrogations involving pupils, conviction under Article 62, strict-regime camp, exile, family separation.
-- **When:** Dismissed in 1970; signed protests in 1970 and December 1971; arrested in Lviv on 1972-01-12; tried in July 1972; sentence was 6 years strict-regime camps plus 3 years exile. ESU and KHPG corroborate the sentence; KHPG provides the arrest and trial context.
-- **By whom:** KGB / КДБ of the Ukrainian SSR; Soviet court applying Article 62 part 1 of the Criminal Code of the UkrSSR.
-- **Document references:** KHPG states that she and Stefania Shabatura were tried under Article 62 part 1, "anti-Soviet agitation and propaganda." KHPG also records that the investigation called her pupils as witnesses.
-- **Mechanism specifics:** KHPG states that only two or three of roughly one hundred pupils gave testimony against her, alleging that she read poems dedicated to Viacheslav Chornovil, gave students Valentyn Moroz works, and spoke about an independent Ukraine. The investigators failed to prove participation in the Chornovil group or in the uncensored *Український вісник*, but the court convicted her anyway. She served in the women's Mordovian political zone ЖХ-385/3-4 at Barashevo, with Stefania Shabatura, Nadiia Svitlychna, and others, and took part in collective letters, hunger strikes, Easter-observance protests, and appeals to the UN and human-rights bodies. Exile was in Chita oblast.
-- **What survived / what was destroyed:** Her manuscripts survived across prison and exile in partial/post-Soviet publication. ESU lists manuscript collections *Лісовий Никифор*, *Дорога вигнання*, *Оранта*, *Крізь камінь*, *Тирсою в полі*, and *Остання з плакальниць*, with later inclusion in *Поезії* (New York, 1991) and *Шлюб із полином* (Lviv, 1995). The family was forced into nine years of separation from daughter Zvenyslava.
+## Львів, освіта і рання авторська праця
 
-## 3. Major works
+Калинець народилася і померла у Львові. Вона закінчила Львівський університет
+1964 року та вчителювала [S1]. У розмові з Овсієнком вона згадує повоєнне
+дитинство у львівській жіночій школі, де частину учениць вивезли, а рідкісні
+листи про це потрапляли до рук дітей [S2]. Цей епізод не потрібно перетворювати
+на універсальну характеристику всіх львівських шкіл; це особисте свідчення, яке
+пояснює, чому досвід насильного переміщення і мовчання про нього міг стати
+частиною її пам'яті.
 
-- `1959` — "Дика троянда," debut poem in *Жовтень*, per ESU.
-- `1965` — *Лісовий Никифор*, manuscript poetry collection, per ESU.
-- `1968-1971` — *Дорога вигнання*, manuscript cycle, per ESU.
-- `1969-1970` — *Оранта*, manuscript poetry collection, per ESU.
-- `1972-1979` — *Крізь камінь*, prison/exile-period poetry, per ESU.
-- `1973-1979` — *Тирсою в полі*, prison/exile-period poetry, per ESU.
-- `1974-1979` — *Остання з плакальниць*, prison/exile-period poetry, per ESU.
-- `1991` — *Поезії*, New York collection, per ESU.
-- `1995` — *Шлюб із полином*, Lviv collection, per ESU.
-- `1993-2002` — children's prose and cultural studies including *Лелека і Чорна Хмара*, *Пімбо-Бімбо*, and studies of Kyivan Rus' Christian culture, per ESU and UkrLib biography.
-- `1987-1989` — co-founder/editor of *Євшан-зілля* with Ihor Kalynets, per ESU.
+Її літературний дебют — вірш «Дика троянда», надрукований 1959 року в журналі
+«Жовтень». ЕСУ називає рукописні поетичні збірки «Лісовий Никифор» (1965),
+«Дорога вигнання» (1968–1971), «Оранта» (1969–1970), «Крізь камінь» (1972–1979),
+«Тирсою в полі» (1973–1979) та «Остання з плакальниць» (1974–1979). Основні
+твори з цього корпусу ввійшли до книжок «Поезії» (Нью-Йорк, 1991) і «Шлюб із
+полином» (Львів, 1995) [S1]. Рукописний статус ранніх і табірних циклів має
+значення: він не дозволяє видавати їх за вільно доступні й цензурно нейтральні
+видання свого часу.
 
-## 4. Primary-source quotes
+ЕСУ характеризує її поетичний світ як такий, де помітні філософський і
+християнський виміри, а релігійні мотиви посідають важливе місце. Для навчання
+це привід говорити про образи, жанрові форми й історичну пам'ять, але не
+привласнювати її тексти без перевіреного видання. Семінар може назвати збірки,
+дати й теми, а пряме цитування залишити до моменту, коли буде встановлено
+конкретний первинний текст, його сторінку і правовий статус [S1].
 
-> "У школі обпльовувалося найсвятіше..."
+## Арешт, табір і заслання
 
-Source: Iryna Stasiv-Kalynets recollection quoted in KHPG biography and expanded in the 2008 KHPG interview recorded by Vasyl Ovsiienko. It is a precise learner-facing statement about double consciousness under Soviet schooling.
+12 січня 1972 року Ірину Калинець заарештували одночасно з В'ячеславом
+Чорноволом, Стефанією Шабатурою та Василем Стусом. За обвинуваченням у
+антирадянській агітації та пропаганді її засудили до шести років таборів суворого
+режиму в Мордовії та трьох років заслання в Читинській області; обидва місця на
+той час були на території РСФРР. Звільнили її 1981 року [S1]. Її власна оповідь
+підтверджує день арешту: дорогою до камери вона побачила речі інших заарештованих
+і зрозуміла, що затриманих було кілька [S2].
 
-> "Так, я ходила."
+Важливо назвати механізм репресії точно. Радянська держава застосувала кримінальне
+обвинувачення, табірний режим і заслання проти вчительки й авторки. Проте з двох
+використаних джерел не можна реконструювати всю справу по пунктах. Не слід
+повторювати неперевірені переліки учнівських показань, предметів обшуку чи
+матеріалів, нібито використаних судом. Така дисципліна не применшує насильства,
+а захищає біографію від сенсаційних деталей, які не мають надійного локатора.
 
-Source: KHPG interview, where she recalls answering a teacher who demanded to know whether pupils had gone to church. The line matters because it compresses religious, family, and national dissent into an ordinary school moment.
+Табір і заслання не були паузою між двома «справжніми» періодами творчості. Дати
+рукописних циклів «Крізь камінь», «Тирсою в полі» й «Остання з плакальниць»
+перетинаються з роками ув'язнення й заслання [S1]. З цього випливає обережний
+висновок: письмо лишалося способом роботи з досвідом, навіть коли можливість
+вільно друкувати й повертатися додому була обмежена. Це висновок із хронології,
+а не твердження про кожен окремий рукопис.
 
-## 5. Language register
+## Повернення, видавнича та освітня робота
 
-- **Register:** Lyric-sacral, historical-cultural essay, pedagogical public speech.
-- **CEFR readiness for full reading:** C1 for poetry and cultural studies; B2 for selected autobiographical interview excerpts.
-- **Lexicon notes:** Learners need `політв'язень`, `заслання`, `самвидав`, `Українська греко-католицька церква`, `Оранта`, `вигнання`, `правозахисний`.
-- **Stylistic features:** Religious imagery, lament/trenos forms, historical layering from Kyivan Rus' to dissident modernity, and direct testimony in interviews.
+Після звільнення Калинець продовжила публічну й культурну працю. Разом з Ігорем
+Калинцем вона заснувала та редагувала альманах «Євшан-зілля» у 1987–1989 роках
+[S1]. Спільне видання не стирає її індивідуального авторства: ЕСУ окремо називає
+її поетичні, дитячі, науково-популярні, літературознавчі та публіцистичні праці.
+Її не можна описувати лише через шлюб або через табірний досвід.
 
-## 6. Contested points
+У 1990–1994 роках Калинець була народною депутаткою Верховної Ради України та
+очолювала підкомісію з питань освіти. Очолюючи Львівське обласне управління
+освіти у 1990–1992 роках, вона ініціювала перебудову навчального процесу,
+зміну програм і організацію гімназій, ліцеїв, коледжів, авторських і приватних
+шкіл. Від 2002 року працювала у Львівському університеті, а від 2003 року була
+професоркою кафедри української літератури [S1].
 
-- **What's debated in modern UA scholarship:** The balance between her literary work, children's writing, scholarship, and political/education reform roles after 1990. ESU's entry shows that the post-release life is not an appendix but a second major phase.
-- **What gets simplified in popular memory:** "Wife of Ihor Kalynets" is a misleading shortcut. ESU and KHPG document an independent writer, organizer, political prisoner, MP, educational reformer, and professor.
-- **Where modern Russian disinformation attacks them:** Soviet accusations treated classroom Ukrainian history, independent Ukraine, and religious observance as criminal. The dossier quotes those accusations only as evidence of repression.
-- **Other-perspective considerations:** Her family memory includes UGCC persecution and relatives linked to OUN. This dossier avoids turning that background into a Block G military narrative; the subject here is her documented cultural and human-rights resistance.
+Цей етап не слід називати просто винагородою за попередні страждання. Він має
+власний зміст: роботу з інституціями освіти, програмами, школами та університетом.
+Перехід від учителювання до освітньої політики також показує, що боротьба за
+український культурний простір була не тільки приватним переживанням і не лише
+справою літературних гуртків. Вона вимагала публічного управління, суперечок про
+програми й створення нових освітніх можливостей [S1].
 
-## 7. Cross-track links
+## Пізні книги і межі оцінки
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/kalynets-dissident-poetry.yaml`
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`
-  - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-  - `curriculum/l2-uk-en/plans/hist/movna-polityka.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/kulturna-rezystentsiia.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Ihor Kalynets, Stefania Shabatura, Nadiia Svitlychna, Viacheslav Chornovil, Valentyn Moroz, and Nina Strokata.
-- **Potential LIT additions surfaced by this research:**
-  - A women political-prisoners unit pairing Kalynets, Shabatura, Svitlychna, and Strokata through verified KHPG testimony.
+ЕСУ називає дитячі книжки «Лелека і Чорна Хмара» (1993), «Пімбо-Бімбо» (2000) і
+«Казки іграшкового телефону» (2001). Разом із Ігорем Калинцем вона видала збірку
+духовної лірики «Се ми, Господи» (1993) та книжку прози «Молімось зорям дальнім»
+(1997), куди ввійшов її детективний роман «Вбивство тисячолітньої давності»;
+окреме видання роману з'явилося 2002 року. До науково-популярних та
+культурологічних праць належать «Гуни — нащадки Ізраїля» (1997), «Студії над
+“Словом о полку Ігоревім”» (1999) і «Загадки хрещення України-Руси» (2000) [S1].
 
-## 8. Naming-canonical
+Цей широкий список не доводить, що всі її історичні інтерпретації є консенсусом
+сучасної науки. ЕСУ описує авторські підходи й теми, але для оцінки окремих
+гіпотез потрібне спеціальне історіографічне читання, якого цей пакет не виконує.
+Таке розрізнення дозволяє одночасно визнавати масштаб праці й не перетворювати
+енциклопедичну довідку на автоматичне схвалення кожної дослідницької тези.
 
-- **Slug:** `iryna-kalynets`
-- **EN canonical (BGN/PCGN 2010):** Iryna Kalynets
-- **UA canonical (with patronymic):** Калинець Ірина Онуфріївна
-- **Aliases (track these for `aliases:` YAML field):** Ірина Стасів-Калинець, Iryna Stasiv-Kalynets, Iryna Stasiv
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Irina Kalinets, Irina Stasiv-Kalinets (FORBIDDEN except as archival metadata)
+Особливу увагу в семінарі варто приділити переходам між жанрами. Дитяча книжка,
+лірична збірка, публіцистична стаття, культурологічне дослідження і освітня
+політика не мають однакової аудиторії, доказової сили чи мети. Учні можуть
+зіставити дату, назву та тип праці, не удаючи, що прочитали весь текст. Така
+вправа робить видимою широту її діяльності й водночас зберігає чесну межу між
+бібліографічною інформацією ЕСУ та самостійним аналізом першоджерела [S1].
 
-## 9. Image candidates
+Інтерв'ю корисно читати інакше. Воно не є переліком дат, а розмовою, у якій
+спогад формується через запитання Овсієнка, паузи й вибір тем. Отже, воно може
+пояснити, як людина осмислювала пережите 2008 року, але не повинно автоматично
+витісняти документальну хронологію. Поєднання ЕСУ та інтерв'ю дає змогу навчити
+різниці між довідковим фактом, особистим свідченням і пізнішою інтерпретацією
+[S1, S2].
 
-- **Best PD/CC portrait:** ESU entry image for "Калинець Ірина Онуфріївна"; rights must be checked before reuse.
-- **Backup candidates:** KHPG Virtual Museum portrait; IEU image of Ihor and Iryna Kalynets; verify license.
-- **If no PD/CC portrait exists:** Use no portrait in Phase 2 and request rights from a museum/archive.
-- **Era-appropriate context image:** Rights-cleared image of Mordovian women's political-camp memorial context or *Євшан-зілля* cover.
+## Навчальна та деколонізаційна оптика
 
-## 10. Sources used
+Калинець варто вивчати в кількох площинах: львівська освіта, поезія, радянське
+кримінальне переслідування, табір і заслання, видавнича робота напередодні
+незалежності, освітня реформа та університетська праця. Така структура запобігає
+двом спрощенням. Перше — звести її до дружини Ігоря Калинця. Друге — зупинити
+біографію на вироку 1972 року, ніби дев'ять років покарання вичерпали всю її
+діяльність.
 
-**Tier 1 (authoritative):**
-- *Енциклопедія Сучасної України*, "Калинець Ірина Онуфріївна" | https://esu.com.ua/article-10473 | accessed 2026-05-30
+Деколонізаційна перспектива називає радянську владу суб'єктом арешту, табірного
+покарання та заслання, а Львів — не екзотичною периферією, а місцем освіти,
+письма й культурної дії. Вона не вимагає безпомилкового образу героїні: чесне
+читання має вказати, де джерела знають дату або назву, а де вони не дають
+підстави для ефектної сцени, прямої цитати чи архівного реквізиту. Саме так
+пам'ять про людину не стає новою формою міфологізації.
 
-**Tier 2 (institutional):**
-- KHPG Virtual Museum, "Стасів-Калинець Ірина Онуфріївна" | https://museum.khpg.org/1113999256 | accessed 2026-05-30
-- Vasyl Ovsiienko, "Калинець-Стасів Ірина. Інтерв'ю" | https://museum.khpg.org/1383774632 | accessed 2026-05-30
+Для підсумкової роботи доречне питання: як пов'язані право на освіту, право на
+культурне письмо й право повернутися додому? Відповідь має спиратися щонайменше
+на чотири перевірені опори: львівський університет і учителювання, вирок 1972
+року, заслання, а також післярадянську роботу в управлінні освіти чи університеті.
+Такий формат не вимагає від учня відтворювати чуже травматичне свідчення; він
+вимагає побачити зв'язок між інституціями, досвідом людини та історичною мовою
+джерел [S1, S2].
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia "Ірина Калинець" via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## Джерела
 
-**Tier 4 (modern scholarly post-1991):**
-- ESU bibliography for her literary and cultural studies; direct scholarly monographs not accessed.
+- [S1] Т. Ю. Салига, «Калинець Ірина Онуфріївна», *Енциклопедія Сучасної
+  України*: https://esu.com.ua/article-10473. Перевірено 2026-07-16: відкритий
+  україномовний URL, автор, видавець і бібліографічні метадані сторінки.
+- [S2] Василь Овсієнко, «Калинець-Стасів Ірина. Інтерв'ю», Віртуальний музей
+  Харківської правозахисної групи: https://museum.khpg.org/1383774632.
+  Запис 26 червня 2008 року; відкритий україномовний первинний запис, перевірено
+  2026-07-16.
 
-**Primary-source documents accessed:**
-- KHPG interview recorded 2008-06-26 by Vasyl Ovsiienko.
-- KHPG biography reproducing Article 62 case details and camp actions.
+## Відкриті межі
 
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text
-- [x] No conflation of family OUN background with this non-Block-G dossier
-- [x] Soviet legal accusations quoted only as repression evidence
-- [x] Existing paths verified
-- [x] Place names use Ukrainian canonical forms
-- [x] Holodomor not central here
-- [x] Crimea/2014/2022 not applicable
+- Повний архівний номер справи, первинний текст вироку та вичерпний перелік
+  доказів обвинувачення в цьому пакеті не встановлено.
+- Цитати з поезії та з інтерв'ю не відтворено: без окремого завдання на аналіз
+  першоджерела курс не потребує вирваної з контексту репліки.
+- Окремого портретного файла з доведеними автором, походженням і ліцензією не
+  виявлено; матеріал використовує текстовий `portrait_fallback`.

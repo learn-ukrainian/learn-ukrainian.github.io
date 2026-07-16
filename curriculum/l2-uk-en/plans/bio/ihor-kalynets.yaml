@@ -13,9 +13,7 @@ activity_hints:
 - focus: Дебати — необарокова поезія як естетика, правозахисний жест чи обидва виміри одночасно?
   placement: workbook
   type: debate
-- focus: >-
-    Аналіз первинної формули — "Моя поезія до арешту - це суцільна присвята..."
-    як ключ до національної адресованості його лірики
+- focus: Аналіз необарокової образності як ключа до національної адресованості його лірики
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — як табірний досвід змінив, але не вичерпав поетичну біографію Калинця
@@ -139,12 +137,27 @@ persona:
   voice: Literary-Historical Analyst
 phase: BIO
 readings:
-- hosting: link-only
-  language: uk
-  notes: Оновлена енциклопедична стаття з датою смерті, біографією, творами і премією.
-  role: primary
-  source: Енциклопедія Сучасної України (ЕСУ)
-  url: https://esu.com.ua/article-10472
+  - title: Калинець Ігор Миронович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-10472
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-10472
+      note: Відкрита українськомовна енциклопедична сторінка; повний текст не відтворюється.
+    learner_task: Простежити хронологію поетичних книжок, арешту 1972 року і повернення до культурної праці.
+  - title: Калинець Ігор Миронович
+    source_name: Віртуальний музей дисидентського руху КХПГ
+    source_url: https://museum.khpg.org/1113911396
+    language: uk
+    hosting: link-only
+    rights:
+      basis: external-link
+      evidence_url: https://museum.khpg.org/1113911396
+      note: Відкрита музейна біографія українською; повний текст не відтворюється.
+    learner_task: Порівняти літературну працю Калинця з документованими механізмами переслідування.
+readings_contract_version: 2
 references:
 - note: Оновлена енциклопедична стаття з датою смерті, біографією, творами і премією.
   path: https://esu.com.ua/article-10472
@@ -167,6 +180,13 @@ references:
   title: Підсумовуючи мовчання
   type: primary
   work: Підсумовуючи мовчання
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Індивідуально ліцензований портрет не підтверджено прямою сторінкою файла; зображення ЕСУ не дає окремої ліцензії.
+  candidate_url: https://esu.com.ua/article-10472
+  evidence_url: https://esu.com.ua/article-10472
+  disposition: no-portrait-until-rights-verified
 sequence: 272
 slug: ihor-kalynets
 subtitle: Neo-Baroque Poet, Political Prisoner, and Witness of Cultural Resistance

@@ -1,0 +1,14 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+  - 'Ігор Калинець: поет, самвидав і політв’язень'
+  - Вогонь Купала
+  - Підсумовуючи мовчання
+  - табори і заслання
+  - необароко
+direct_sources:
+  - https://esu.com.ua/article-10472
+  - https://museum.khpg.org/1113911396
+rag_chunks: []
+rag_literary: []
+warning: Direct-source packet; discovery terms align with the strict-v2 reading records.

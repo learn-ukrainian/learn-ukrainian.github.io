@@ -1,0 +1,25 @@
+# Source registry for wiki/figures/iryna-kalynets.md
+sources:
+- id: S1
+  file: https://esu.com.ua/article-10473
+  type: external
+  title: Калинець Ірина Онуфріївна
+  url: https://esu.com.ua/article-10473
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    author: Т. Ю. Салига
+    language: uk
+    verified_on: '2026-07-16'
+    portrait_fallback: >-
+      text-only: сторінка містить зображення, але не доводить окрему ліцензію,
+      автора та походження файла; портрет не використовується.
+- id: S2
+  file: https://museum.khpg.org/1383774632
+  type: external
+  title: Калинець-Стасів Ірина. Інтерв'ю
+  url: https://museum.khpg.org/1383774632
+  metadata:
+    publisher: Віртуальний музей Харківської правозахисної групи
+    recorder: Василь Овсієнко
+    language: uk
+    verified_on: '2026-07-16'

@@ -1,127 +1,197 @@
-# Калинець Ігор Миронович — Research Dossier
+# Ігор Миронович Калинець — дослідницьке досьє
 
 **Slug:** `ihor-kalynets`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Соціальний опір і літературна культура
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-16
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Калинець Ігор Миронович.
-- **Pseudonyms / aliases:** Ihor Kalynets; Ihor Kalynec; Ігор Калинець.
-- **Born:** 1939-07-09 | Khodoriv, now Stryi raion, Lviv oblast | then Polish-ruled western Ukraine. Sources: ESU "Калинець Ігор Миронович"; IEU "Kalynets, Ihor"; KHPG biography.
-- **Died:** 2025-06-28 | Lviv | Ukraine. Sources: ESU updated article; KHPG memorial article "In Memory of Ihor Kalynets"; `mcp__sources.search_sources` Ukrainian-wiki corpus result "Ігор Калинець: Поезія як вчинок".
-- **Family / education key facts:** Husband of Iryna Kalynets; graduated from Lviv University; worked in the Lviv Oblast Archive until his 1972 arrest. ESU and KHPG corroborate education and employment; IEU gives the English-language scholarly baseline.
+- **Канонічне ім'я:** Калинець Ігор Миронович.
+- **Народився:** 9 липня 1939 року в Ходорові, нині Стрийського району Львівської області.
+- **Помер:** 28 червня 2025 року у Львові.
+- **Ролі:** письменник, перекладач і громадський діяч; чоловік Ірини Калинець.
 
-Because Kalynets died after many older reference works were written, date-sensitive claims here use ESU and the KHPG 2025 memorial rather than older IEU text alone.
+ЕСУ встановлює основний біографічний каркас: дати життя, походження, працю,
+літературний доробок, ув'язнення та пізні професійні ролі [S1]. КХПГ доповнює
+його деталями про архівну роботу, цензурні втручання, арешт і табірний період
+[S2]. Калинець закінчив Львівський університет 1962 року й відтоді працював у
+Львівському обласному архіві [S1, S2]. Не слід переносити на нього біографічні
+деталі дружини: спільна громадська активність і подружній зв'язок не скасовують
+окремих професійних та авторських траєкторій.
 
-## 2. Oppression mechanism
+Поетична творчість Калинця постала у львівському культурному середовищі
+шістдесятників. КХПГ згадує знайомство й спілкування з Іваном Світличним,
+Аллою Горською та іншими діячами [S2]. Водночас джерела не дозволяють
+перетворювати мережу знайомств на однорідну групу з однаковими поглядами.
+Значення Калинця визначають його власні тексти, упорядкування поетичних циклів,
+документована громадська діяльність і пережитий репресивний механізм.
 
-- **What happened:** Publication suppression, KGB surveillance, arrest, sentence to camps and exile, blacklisting.
-- **When:** KHPG states that the type for his first planned collection *Екскурсії* was broken up for "ideological reasons" in 1963. From 1965, Ihor and Iryna were under KGB surveillance. Iryna was arrested in January 1972; Ihor was arrested 1972-08-11. ESU and KHPG both give the sentence: 6 years in strict-regime camps and 3 years of exile.
-- **By whom:** KGB / КДБ; Soviet court under Article 62 part 1 of the Criminal Code of the UkrSSR.
-- **Document references:** KHPG names Article 62 part 1, "anti-Soviet agitation and propaganda"; ESU gives the same accusation. KHPG records that the court used a KGB-ordered literary expert analysis of five Kalynets collections.
-- **Mechanism specifics:** The state treated poetic publication abroad as criminal evidence. IEU states that he was imprisoned because his poetry had appeared in the West; KHPG specifies that prosecutors cited foreign publication, dedication to Valentyn Moroz, contacts with "unreliable" people and foreigners, and literary expert reports commissioned by the KGB. He served first in Perm camp No. 35 near Vsekhsvyatska, then in camp No. 36 at Kuchino, took part in camp-resistance statements, letters, hunger strikes, and camp chronicles. Exile was in Chita oblast, where KHPG says he and Iryna worked in collective-farm conditions.
-- **What survived / what was destroyed:** The poems survived through samvydav and western editions: *Поезії з України* (Brussels, 1970), *Підсумовуючи мовчання* (Munich, 1971), and *Коронування опудала* (New York, 1972). ESU and IEU state that his collected poetic corpus was later divided into *Пробуджена муза* and *Невольнича муза*. His "muse" was largely silenced after release, but he became an editor of *Євшан-зілля* and later wrote for children.
+## 2. Механізм переслідування
 
-## 3. Major works
+Перший документований удар по публікації стався 1963 року: з ідеологічних
+причин було розсипано набір збірки «Екскурсії», підготовленої до друку у
+видавництві «Молодь» [S2]. 1966 року в Києві вийшла «Вогонь Купала», але ЕСУ
+повідомляє, що книжку невдовзі вилучили з продажу через несумісність із
+партійними ідеологічними догмами [S1]. КХПГ уточнює, що продаж заборонили в
+Західній Україні, а автора викликали до обкому КПУ [S2]. Це рання форма
+цензурного тиску, а не доказ повної заборони на будь-яку присутність поета.
 
-- `1963` — *Екскурсії*, planned first collection; KHPG says the typeset was broken up for ideological reasons.
-- `1966` — *Вогонь Купала*, poetry collection, Kyiv; ESU and IEU state that it was withdrawn/confiscated after publication.
-- `1970` — *Поезії з України*, Brussels; western edition, later reissued as *Відчинення вертепу*.
-- `1971` — *Підсумовуючи мовчання*, Munich; dedicated to Valentyn Moroz according to KHPG.
-- `1972` — *Коронування опудала*, New York; western publication cited by ESU and IEU.
-- `1972` — *Молімось зорям дальнім*, prose written during imprisonment in Lviv jail; IEU states it appeared in *Suchasnist* in 1994.
-- `1991` — *Пробуджена муза* and *Невольнича муза*, collected poetry volumes; IEU and the MCP Ukrainian-wiki corpus identify the division.
-- `1992` — *Тринадцять аналогій*, Shevchenko Prize recognition per ESU.
-- `1998` — *Дурні казки*, children's book, noted by IEU.
+Від 1965 року Ігор та Ірина Калинці перебували під наглядом КДБ [S2]. Після
+того як офіційне друкування стало недоступним, твори поширювалися в самвидаві,
+а окремі збірки виходили за кордоном [S1, S2]. КХПГ описує приватні читання й
+саморобні книжечки; ЕСУ подає видання «Поезії з України» (Брюссель, 1970),
+«Підсумовуючи мовчання» (Мюнхен, 1971) та «Коронування опудала» (Нью-Йорк,
+1972) [S1, S2]. Закордонний друк був каналом виживання тексту, але саме його
+радянські органи надалі використали в обвинуваченні.
 
-## 4. Primary-source quotes
+У січні 1972 року заарештували Ірину Калинець; 11 серпня 1972 року заарештували
+Ігоря Калинця [S1, S2]. Обвинувачення висунули за частиною першою статті 62
+КК УРСР, радянською формулою «антирадянська агітація і пропаганда» [S1, S2].
+КХПГ вказує, що в суді йому інкримінували видання книжок за кордоном,
+присвяту збірки Валентинові Морозу, контакти з людьми, яких радянська влада
+вважала неблагонадійними, та з іноземцями; також використали
+літературознавчу експертизу п'яти збірок, замовлену КДБ [S2]. Ці формулювання
+потрібно подавати як зміст обвинувачення, не як незалежний опис вини поета.
 
-> "Моя поезія до арешту - це суцільна присвята..."
+Вирок — шість років ув'язнення в таборах суворого режиму і три роки заслання
+[S1, S2]. ЕСУ стисло називає Північний Урал і Забайкалля місцями відбування,
+а КХПГ конкретизує: спочатку табір № 35 біля станції Всехсвятська Пермської
+області, потім табір № 36 у Кучині [S1, S2]. КХПГ зазначає участь Калинця в
+табірному русі опору — заявах, листах, голодуваннях і хроніках таборів [S2].
+Ці дії не слід романтизувати: вони відбувалися за умов ув'язнення, праці та
+обмеженого зв'язку із зовнішнім світом.
 
-Source: Ihor Kalynets interview excerpt retrieved via `mcp__sources.search_sources`, linked to *Дивослово* / later interview material in the Ukrainian-wiki corpus "Ігор Калинець: Поезія як вчинок." This is a compact self-definition of the pre-arrest poems as national dedication rather than private ornament.
+Заслання він відбував разом із дружиною в Читинській області, працюючи в
+колгоспі [S2]. 1981 року повернувся до Львова; ЕСУ повідомляє, що після
+звільнення працював у Львівській науковій бібліотеці [S1]. Джерела не дають
+номера кримінальної справи чи повного тексту вироку. Відтак пакет не вигадує
+архівний шифр, не приписує точних медичних наслідків і не реконструює
+особисті розмови зі слідчими.
 
-> "Січень 22, День Злуки і Свободи України."
+## 3. Праці, переклади і культурна робота
 
-Source: Volodymyr Marmus recollection in KHPG "In Memory of Ihor Kalynets," recounting Kalynets's camp gathering on 22 January. It matters pedagogically because it turns a calendar date into a covert prison ritual.
+Поетичний корпус Калинця складається із сімнадцяти збірок, згрупованих у
+«Пробудженій Музі» (1962–1972) та «Невольничій Музі» (1973–1981), обидві
+видані 1991 року [S1]. Такий поділ пов'язує літературну форму з історичним
+часом, але не зводить усю поезію до політичного документа. ЕСУ характеризує
+його творчість через інтелектуальне й культурне переживання; у центрі постає
+загроза втрати національної духовності та культури [S1].
 
-## 5. Language register
+«Вогонь Купала» (Київ, 1966) — перша і єдина збірка, що вийшла в СРСР до
+арешту; її вилучення стало видимим знаком конфлікту з цензурою [S1, S2].
+«Поезії з України» вийшли у Брюсселі 1970 року й пізніше перевидавалися під
+назвою «Відчинення вертепу» [S1]. «Підсумовуючи мовчання» вийшла в Мюнхені
+1971 року, «Коронування опудала» — в Нью-Йорку 1972 року [S1]. Назви й дати
+підтверджені безпосередньо двома джерелами; не варто додавати до них змістові
+тези, яких ці сторінки не встановлюють.
 
-- **Register:** Neo-baroque, imagistic, culturally allusive lyric; later children's prose and civic speech.
-- **CEFR readiness for full reading:** C1 for lyric cycles; B1-B2 for selected children's texts.
-- **Lexicon notes:** High density of ritual, Christian, baroque, folklore, and Antonych-derived imagery; teach `самвидав`, `заслання`, `табір`, `невольнича`, `вертеп`, `алюзія`.
-- **Stylistic features:** Cyclical architecture, mythic time, calendrical motifs, dense metaphor, and indirect political coding.
+Найбільший вплив на поетику Калинця мала творчість Богдана-Ігоря Антонича
+[S1]. ЕСУ описує його інтерес до цілісності збірки, системи образності,
+інтонації та ритмомелодики, а також праці, спрямовані на повернення імені
+Антонича в літературу [S1]. Він разом із дружиною відшукав будинок, квартиру й
+могилу Антонича, згодом написав розвідку «Знане і незнане про Антонича»
+(Львів, 2011) [S1]. Це власна дослідницька праця Калинця; її не слід
+змішувати з літературним доробком Ірини Калинець.
 
-## 6. Contested points
+Після звільнення його діяльність змінилася, але не зникла. Від 1992 року він
+працював у Міжнародному інституті освіти, науки й культури Національного
+університету «Львівська політехніка» [S1]. КХПГ вказує на його участь у
+неофіційному культурологічному журналі «Євшан-зілля», Товаристві української
+мови імені Тараса Шевченка, меморіальних акціях у Львові та Львівській
+обласній раді [S2]. Він також писав дитячі книжки [S2]. Поет, дослідник
+Антонича, культурний організатор і автор для дітей — це різні сторони однієї
+біографії, не привід називати будь-яку з них лише «пізнім відлунням» таборів.
 
-- **What's debated in modern UA scholarship:** How to stage Kalynets for learners: as a dissident first, as a difficult neo-baroque poet first, or as the rare figure in whom the two cannot be separated.
-- **What gets simplified in popular memory:** "Poet-political prisoner" is true but too thin. ESU and IEU show a long formal evolution: archive worker, samvydav poet, camp resister, editor of uncensored *Євшан-зілля*, children's writer, and civic moral authority.
-- **Where modern Russian disinformation attacks them:** Soviet-style framing criminalized western publication and Ukrainian cultural memory as "anti-Soviet activity." Dossier language treats that as prosecution terminology, not fact.
-- **Other-perspective considerations:** His work is rooted in western Ukrainian memory but became a national and diaspora text through Brussels, Munich, New York, Warsaw, Baltimore, Toronto, and Lviv publication channels.
+## 4. Прямі висловлювання
 
-## 7. Cross-track links
+У цьому пакеті немає відтворених цитат Ігоря Калинця. ЕСУ містить короткі
+літературні фрагменти, а КХПГ — спогадові та біографічні матеріали, проте для
+навчального передруку потрібен точний первинний локатор: видання, сторінка чи
+стабільний розділ і виразна правова підстава. Раніше внесені цитати, взяті з
+непрямих пошукових результатів або спогаду іншої людини, вилучено. Відсутність
+цитати не виправляють переказом її з пам'яті.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/kalynets-dissident-poetry.yaml`
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`
-  - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Iryna Kalynets, Ivan Svitlychnyi, Vasyl Stus, Valentyn Moroz, and the Chortkiv flag-raising group.
-- **Potential LIT additions surfaced by this research:**
-  - A scaffolded close-reading of *Відчинення вертепу* with copyright-safe short excerpts.
+## 5. Мовний регістр і доступність
 
-## 8. Naming-canonical
+Поезія Калинця має щільну культурну образність, пов'язану з обрядовістю,
+християнськими й язичницькими уявленнями, історичною пам'яттю та міфологією
+[S1]. Для повного читання це переважно рівень C1. Корисні поняття: *цикл*,
+*образність*, *самвидав*, *цензура*, *заслання*, *табір*, *алюзія*,
+*ритмомелодика*. Дитячі твори можуть бути доступнішими, але це не означає, що
+вся його творчість належить до одного рівня складності. У біографічній мові
+важливо відрізняти судове звинувачення від авторського тексту і від
+енциклопедичного факту.
 
-- **Slug:** `ihor-kalynets`
-- **EN canonical (BGN/PCGN 2010):** Ihor Kalynets
-- **UA canonical (with patronymic):** Калинець Ігор Миронович
-- **Aliases (track these for `aliases:` YAML field):** Ihor Kalynec, Igor Kalynets, Ігор Калинець
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Igor Kalinets, Igor Kalinec (FORBIDDEN except as archival metadata)
+## 6. Складні місця й рамка інтерпретації
 
-## 9. Image candidates
+Звична формула «поет-політв'язень» правдива, але недостатня. Вона приховує
+роботу архівіста, продуману будову поетичних книжок, інтерес до Антонича,
+перекладацьку й культурно-організаційну діяльність [S1, S2]. Проте протилежне
+спрощення — читати репресії як зовнішню випадковість, не пов'язану з поезією,
+— теж хибне. КХПГ документує, що тексти та способи їх поширення були частиною
+судового обвинувачення [S2].
 
-- **Best PD/CC portrait:** IEU images "Ihor Kalynets" and "Ihor and Iryna Kalynets"; verify license before reuse.
-- **Backup candidates:** KHPG memorial portrait; Lviv funeral photos are recent and require rights clearance.
-- **If no PD/CC portrait exists:** Use a rights-cleared cover image from a post-1991 edition only after permission.
-- **Era-appropriate context image:** A rights-cleared photo of Perm-36/Kuchino memorial context or a *Євшан-зілля* cover.
+Культурні контакти Калинця з українською діаспорою, пражськими перекладами й
+закордонними виданнями не роблять його «закордонним» поетом. ЕСУ й КХПГ
+показують, що твори виходили поза СРСР через цензурні обмеження, тоді як
+поетична мова, львівське середовище та культурні теми залишалися українськими
+[S1, S2]. Деколонізований підхід називає радянську цензуру, КДБ і статтю 62,
+але не приймає їхню кримінальну лексику як визначення творчості.
 
-## 10. Sources used
+Для історичного напряму Калинець пов'язаний зі шістдесятниками, масовими арештами
+1972 року, табірним опором і культурним відродженням наприкінці 1980-х. Для
+літературного напряму важливі його цикли, Антоничева традиція, самвидав і діаспорні
+видання. Ці зв'язки не означають, що кожен розділ має тлумачити інший трек;
+вони позначають теми для окремої перевіреної роботи.
 
-**Tier 1 (authoritative):**
-- *Енциклопедія Сучасної України*, "Калинець Ігор Миронович" | https://esu.com.ua/article-10472 | accessed 2026-05-30
-- Internet Encyclopedia of Ukraine, "Kalynets, Ihor" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKalynetsIhor.htm | accessed 2026-05-30
+## 7. Міжтрекові зв'язки
 
-**Tier 2 (institutional):**
-- KHPG Virtual Museum, "Калинець Ігор Миронович" | https://museum.khpg.org/1113911396 | accessed 2026-05-30
-- KHPG, "In Memory of Ihor Kalynets" | https://museum.khpg.org/en/1628665441 | accessed 2026-05-30
+- **Наявні літературні плани:** `curriculum/l2-uk-en/plans/lit/kalynets-dissident-poetry.yaml`;
+  `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`.
+- **Наявні історичні плани:** `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`;
+  `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`.
+- **Наявні пояснювальні історичні плани:** `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`;
+  `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`.
+- **Кандидати:** поетичні цикли Калинця, табірні листи лише за наявності
+  перевіреного видання, історія культурних акцій пам'яті у Львові.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia "Ігор Калинець" via `mcp__sources.query_wikipedia` and `mcp__sources.search_sources` | accessed 2026-05-30
+Усі наведені наявні шляхи перевірені в робочому дереві; кандидатні теми не
+позначають готових матеріалів.
 
-**Tier 4 (modern scholarly post-1991):**
-- Petro Shkrabiuk, *Попід золоті ворота*; Mykola Ilnytskyi, *Ключем метафори відімкнені вуста* (bibliographic references from IEU; not directly accessed).
+## 8. Канонічне іменування
 
-**Primary-source documents accessed:**
-- KHPG biography reproducing charges under Article 62 and camp details.
-- KHPG memorial recollection by Volodymyr Marmus.
+- **Slug:** `ihor-kalynets`.
+- **Українська форма:** Ігор Миронович Калинець.
+- **Латинська канонічна форма:** Ihor Kalynets.
+- **Варіанти для пошуку:** Ihor Kalynec; Igor Kalynets.
+- **Застереження:** форма *Igor Kalinets* трапляється в іншомовних каталогах,
+  але не є основною українською транслітерацією.
 
----
+## 9. Зображення
 
-## Decolonization self-check (run before submitting)
+Пряма перевірка ЕСУ та КХПГ не встановлює окремого індивідуального портрета з
+ліцензією PD або CC [S1, S2]. План уже фіксує `portrait_fallback` типу
+`text-only`. Наявність зображення на біографічній сторінці не доводить права
+повторного використання. Це обмежене правове рішення, а не твердження, що
+портретів Калинця не існує.
 
-- [x] No Russocentric framing
-- [x] Russian/Soviet accusation labels treated as prosecution language
-- [x] No Russian-imperial transliterations in body text
-- [x] Existing paths verified
-- [x] No unsupported claim about 2025 death without current sources
-- [x] Place names use Ukrainian canonical forms
-- [x] Holodomor not central here
-- [x] Crimea/2014/2022 not applicable
+## 10. Використані джерела
+
+**S1 — Tier 1, авторитетне:** «Калинець Ігор Миронович», *Енциклопедія
+Сучасної України*. https://esu.com.ua/article-10472 (перевірено 2026-07-16).
+Україномовна енциклопедична стаття; ЕСУ вказує авторське право на сторінці.
+
+**S2 — Tier 2, інституційне:** «КАЛИНЕЦЬ ІГОР МИРОНОВИЧ», Віртуальний музей
+«Дисидентський рух в Україні», Харківська правозахисна група.
+https://museum.khpg.org/1113911396 (перевірено 2026-07-16). Сторінка
+українською; КХПГ вимагає посилання на джерело при передруку.
+
+## Деколонізаційна самоперевірка
+
+- [x] Радянські звинувачення названо формулою обвинувачення, не оцінкою творчості.
+- [x] Українська поезія й культурна дія не зведені до репресивної справи.
+- [x] Не перенесено факти, авторство чи цитати від Ірини Калинець.
+- [x] Вилучено неперевірені цитати й непрямі джерела.
+- [x] Портрет не використано без окремого ліцензійного доказу.
