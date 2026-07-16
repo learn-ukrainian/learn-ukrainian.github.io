@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.2`
+Semantic prompt version: `5.0.3`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -19,11 +19,14 @@ do not re-score them or negotiate them down. Investigate the residual judgments
 that code cannot decide.
 
 The resolved context may already contain deterministic or track-policy
-findings. Reuse each supplied finding's exact `id` when a quality dimension or
-alignment class owns it. Do not create a semantic duplicate for the same class
-and location. Create a new semantic finding only for a defect not already
-represented by a supplied finding; the finalizer compares exhaustive alignment
-IDs across both deterministic and semantic findings.
+findings. Those supplied finding objects already exist outside your semantic
+`findings` array. Reuse each supplied finding's exact `id` only by referencing
+it from the owning quality dimension's `finding_ids` and/or alignment class's
+`finding_ids`. Never emit a supplied finding object in the semantic `findings`
+array, even with the same ID, message, class, or location. That array contains
+only genuinely new semantic defects not represented by supplied findings. The
+finalizer compares exhaustive alignment IDs across both deterministic and new
+semantic findings.
 
 ## Evidence rules
 
