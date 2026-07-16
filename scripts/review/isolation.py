@@ -350,7 +350,15 @@ _ENGINE_REQUIRED_CAPABILITIES: dict[str, frozenset[str]] = {
 }
 
 _SYSTEM_READ_SUBPATHS = (
-    "/usr",
+    # Never grant all of /usr: /usr/local can contain user-managed config and
+    # credentials. Runtime closure adds any exact third-party installation
+    # paths separately.
+    "/usr/bin",
+    "/usr/sbin",
+    "/usr/lib",
+    "/usr/lib64",
+    "/usr/libexec",
+    "/usr/share",
     "/bin",
     "/sbin",
     "/System",
@@ -382,16 +390,11 @@ _ENGINE_AUTH_STAGE_FILES: dict[str, tuple[str, ...]] = {
         ".agy/credentials.json",
         ".config/agy/credentials.json",
     ),
-    "grok": (
-        ".grok/auth.json",
-        ".grok/credentials.json",
-        ".config/grok/credentials.json",
-    ),
-    "grok-build": (
-        ".grok/auth.json",
-        ".grok/credentials.json",
-        ".config/grok/credentials.json",
-    ),
+    # Native Grok needs a file-backed OAuth store while also exposing general
+    # Read/Grep/Glob tools. The CLI provides no channel that keeps that store
+    # outside model-tool scope, so isolated Grok reviews are refused below.
+    "grok": (),
+    "grok-build": (),
     "gemini": (
         ".gemini/oauth_creds.json",
         ".gemini/google_accounts.json",
@@ -2715,6 +2718,11 @@ def prepare_isolated_review_launch(
         raise ReviewIsolationError(
             "agy_isolated_review_unsupported: native project-instruction, MCP, "
             "hook, and nested-reviewer suppression is not proven"
+        )
+    if engine_key == "grok":
+        raise ReviewIsolationError(
+            "grok_isolated_review_unsupported: native OAuth credentials cannot "
+            "be hidden from the required Read/Grep/Glob tools"
         )
     snap = snapshot_root.resolve()
     reject = reject_root.resolve()

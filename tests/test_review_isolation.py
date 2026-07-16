@@ -234,6 +234,53 @@ def test_exact_tree_materialization_preserves_dot_paths_and_ignores_export_attrs
         cleanup_snapshot_state(state)
 
 
+def test_unchanged_tree_blobs_and_fingerprint_are_streamed_from_disk(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    large = repo / "assets" / "large.bin"
+    large.parent.mkdir(exist_ok=True)
+    large.write_bytes(b"x" * (2 * 1024 * 1024))
+    _git(repo, "add", "assets/large.bin")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "large unchanged fixture",
+    )
+    base = _head_sha(repo)
+    head = _commit_change(repo, "src/app.py", "VALUE = 9\n", "small change")
+    real_read_bytes = Path.read_bytes
+
+    def _guarded_read_bytes(path: Path) -> bytes:
+        if path.name == "large.bin" and "lu-review-snap-" in str(path):
+            raise AssertionError("unchanged snapshot blob was buffered")
+        return real_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", _guarded_read_bytes)
+    snap, state = materialize_review_snapshot(
+        repo,
+        mode="branch",
+        base_sha=base,
+        head_sha=head,
+        temp_parent=tmp_path / "tmp",
+    )
+    try:
+        assert (snap.path / "assets" / "large.bin").stat().st_size == (
+            2 * 1024 * 1024
+        )
+        verify_snapshot_fingerprint(snap)
+    finally:
+        cleanup_snapshot_state(state)
+
+
 # ---------------------------------------------------------------------------
 # Sensitive path / secret preflight
 # ---------------------------------------------------------------------------
@@ -529,6 +576,16 @@ def test_linux_roots_preserve_trusted_merged_usr_and_network_aliases(
         "/fixture/etc/resolv.conf",
         "/fixture/etc/resolv.conf",
     ] in triplets
+
+
+def test_system_read_roots_never_grant_all_usr_or_usr_local() -> None:
+    from scripts.review import isolation as isolation_module
+
+    assert "/usr" not in isolation_module._SYSTEM_READ_SUBPATHS
+    assert not any(
+        root == "/usr/local" or root.startswith("/usr/local/")
+        for root in isolation_module._SYSTEM_READ_SUBPATHS
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -944,7 +1001,9 @@ def test_auth_stage_rejects_symlink_and_permissive_source(tmp_path: Path) -> Non
         stage_engine_auth("codex", write_home=write_home, source_home=source_home)
 
 
-def test_grok_oauth_stages_only_owner_private_auth_json(tmp_path: Path) -> None:
+def test_grok_oauth_store_is_never_staged_into_model_read_scope(
+    tmp_path: Path,
+) -> None:
     source_home = tmp_path / "source"
     write_home = tmp_path / "write"
     grok_home = source_home / ".grok"
@@ -959,13 +1018,14 @@ def test_grok_oauth_stages_only_owner_private_auth_json(tmp_path: Path) -> None:
     env = stage_engine_auth("grok", write_home=write_home, source_home=source_home)
 
     staged = write_home / ".grok" / "auth.json"
-    assert staged.read_bytes() == auth.read_bytes()
-    assert stat.S_IMODE(staged.stat().st_mode) == 0o400
+    assert not staged.exists()
     assert not (write_home / ".grok" / "history.json").exists()
     assert env == {}
 
 
-def test_grok_oauth_auth_json_keeps_generic_symlink_and_mode_gates(tmp_path: Path) -> None:
+def test_grok_oauth_store_is_ignored_even_when_host_path_is_unsafe(
+    tmp_path: Path,
+) -> None:
     source_home = tmp_path / "source"
     grok_home = source_home / ".grok"
     grok_home.mkdir(parents=True)
@@ -973,14 +1033,41 @@ def test_grok_oauth_auth_json_keeps_generic_symlink_and_mode_gates(tmp_path: Pat
     target.write_text("{}\n", encoding="utf-8")
     auth = grok_home / "auth.json"
     auth.symlink_to(target)
-    with pytest.raises(ReviewIsolationError, match="not_regular"):
-        stage_engine_auth("grok", write_home=tmp_path / "write-symlink", source_home=source_home)
+    assert stage_engine_auth(
+        "grok",
+        write_home=tmp_path / "write-symlink",
+        source_home=source_home,
+    ) == {}
+    assert not (tmp_path / "write-symlink" / ".grok").exists()
 
     auth.unlink()
     auth.write_text("{}\n", encoding="utf-8")
     auth.chmod(0o644)
-    with pytest.raises(ReviewIsolationError, match="permissions"):
-        stage_engine_auth("grok", write_home=tmp_path / "write-mode", source_home=source_home)
+    assert stage_engine_auth(
+        "grok",
+        write_home=tmp_path / "write-mode",
+        source_home=source_home,
+    ) == {}
+    assert not (tmp_path / "write-mode" / ".grok").exists()
+
+
+def test_isolated_grok_review_refuses_unseparable_model_tool_credentials(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(
+        ReviewIsolationError,
+        match="grok_isolated_review_unsupported",
+    ):
+        prepare_isolated_review_launch(
+            engine="grok",
+            argv=["/usr/bin/true"],
+            snapshot_root=tmp_path / "snapshot",
+            reject_root=tmp_path / "reject",
+            write_root=tmp_path / "write",
+            exec_root=tmp_path / "exec",
+            prompt_payload="review",
+            prompt_transport="stdin",
+        )
 
 
 def test_seatbelt_profile_escapes_path_literals(tmp_path: Path) -> None:
@@ -1645,18 +1732,21 @@ def test_prompt_file_is_pinned_into_read_only_exec_root(
     reject.mkdir()
     (snapshot / "evidence.txt").write_text("evidence\n", encoding="utf-8")
     write, execution = _private_review_roots(tmp_path, "prompt-pin")
-    fake = tmp_path / "grok"
+    fake = tmp_path / "claude"
     fake.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     fake.chmod(0o755)
-    original_prompt = write / "tmp" / "grok-prompt.txt"
+    original_prompt = write / "tmp" / "claude-prompt.txt"
     original_prompt.write_text("sealed dossier", encoding="utf-8")
     monkeypatch.setattr(
         "scripts.review.isolation.probe_engine_help",
-        lambda *_args, **_kwargs: "plan --deny --disallowed-tools",
+        lambda *_args, **_kwargs: (
+            "2.1.116 --bare --safe-mode --setting-sources --strict-mcp-config "
+            "--disallowedTools --tools --json-schema"
+        ),
     )
     launch = prepare_isolated_review_launch(
-        engine="grok",
-        argv=[str(fake), "--prompt-file", str(original_prompt), "--deny", "Shell"],
+        engine="claude",
+        argv=[str(fake), "--prompt-file", str(original_prompt)],
         snapshot_root=snapshot,
         reject_root=reject,
         write_root=write,
@@ -1668,7 +1758,10 @@ def test_prompt_file_is_pinned_into_read_only_exec_root(
         head_sha="e" * 40,
         prompt_payload="sealed dossier",
         prompt_transport="prompt-file",
-        source_env={"PATH": "/usr/bin:/bin"},
+        source_env={
+            "PATH": "/usr/bin:/bin",
+            "ANTHROPIC_API_KEY": "fixture-key",
+        },
     )
     pinned = Path(launch.argv[launch.argv.index("--prompt-file") + 1])
     assert pinned.is_relative_to(execution)
@@ -2498,6 +2591,60 @@ def test_local_file_to_directory_replacement_is_captured_and_verified(tmp_path: 
     try:
         assert (snap.path / "node").is_dir()
         assert (snap.path / "node" / "child.py").read_text(encoding="utf-8") == "VALUE = 1\n"
+        verify_review_acceptance(snap)
+    finally:
+        cleanup_snapshot_state(state)
+
+
+def test_branch_file_to_directory_replacement_preserves_head_descendants(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    tracked = repo / "node"
+    tracked.write_text("old file\n", encoding="utf-8")
+    _git(repo, "add", "node")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "tracked node file",
+    )
+    base = _head_sha(repo)
+    tracked.unlink()
+    tracked.mkdir()
+    (tracked / "child.py").write_text("VALUE = 2\n", encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "replace file with directory",
+    )
+    head = _head_sha(repo)
+
+    snap, state = materialize_review_snapshot(
+        repo,
+        mode="branch",
+        base_sha=base,
+        head_sha=head,
+        temp_parent=tmp_path / "tmp",
+    )
+    try:
+        assert "node" in snap.changed_paths
+        assert "node/child.py" in snap.changed_paths
+        assert (snap.path / "node" / "child.py").read_text(encoding="utf-8") == (
+            "VALUE = 2\n"
+        )
         verify_review_acceptance(snap)
     finally:
         cleanup_snapshot_state(state)

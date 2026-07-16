@@ -204,7 +204,13 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     dossier = json.loads(json_line)
 
     assert dossier["schema_version"] == "review-prompt-evidence.v1"
-    assert dossier["changed_file_content_mode"] == "inline_complete"
+    assert dossier["changed_file_content_mode"] == (
+        "complete_via_sealed_snapshot_read_tools"
+    )
+    assert dossier["sealed_snapshot_root"] == str(checkout.path)
+    assert dossier["prompt_evidence_limit_bytes"] == (
+        review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES
+    )
     assert dossier["target_identity"] == {
         "mode": "branch",
         "base_sha": checkout.base_sha,
@@ -220,14 +226,12 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
             "status": "present",
             "sha256": hashlib.sha256(content.encode()).hexdigest(),
             "bytes": len(content.encode()),
-            "content": content,
         },
         {
             "path": "src/deleted.py",
             "status": "deleted",
             "old_sha256": hashlib.sha256(b"old = True\n").hexdigest(),
             "old_bytes": len(b"old = True\n"),
-            "old_content": "old = True\n",
         },
     ]
     # A source-controlled delimiter-looking line remains escaped inside the
@@ -239,7 +243,9 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     assert claude_dossier["changed_file_content_mode"] == ("complete_via_sealed_snapshot_read_tools")
     assert "content" not in claude_dossier["files"][0]
     grok_line = next(line for line in checkout.review_prompt_evidence("grok").splitlines() if line.startswith("{"))
-    assert json.loads(grok_line)["files"][0]["content"] == content
+    grok_dossier = json.loads(grok_line)
+    assert "content" not in grok_dossier["files"][0]
+    assert grok_dossier["sealed_snapshot_root"] == str(checkout.path)
 
 
 def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
@@ -253,6 +259,51 @@ def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
     traversal = _prompt_evidence_checkout(tmp_path / "traversal", changed_paths=("../host-secret",))
     with pytest.raises(review_worktree.ReviewWorktreeError, match="unsafe_path"):
         traversal.review_prompt_evidence("codex")
+
+
+def test_review_prompt_evidence_requires_split_before_large_bundle_read(
+    tmp_path: Path,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "oversized")
+    patch = checkout.path / ".review-bundle" / "patch.diff"
+    patch.write_bytes(b"+" * (review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES + 1))
+
+    with pytest.raises(
+        review_worktree.ReviewWorktreeError,
+        match="review_prompt_evidence_split_required",
+    ):
+        checkout.review_prompt_evidence("codex")
+
+
+def test_new_side_lines_counts_source_text_that_begins_with_double_plus() -> None:
+    diff = "@@ -0,0 +1,2 @@\n+++counter;\n+normal\n"
+
+    assert review_worktree._new_side_lines(diff) == frozenset({1, 2})
+
+
+def test_remove_review_root_unlinks_reviewer_symlinks_without_following(
+    tmp_path: Path,
+) -> None:
+    outside_file = tmp_path / "outside.txt"
+    outside_file.write_text("preserve\n", encoding="utf-8")
+    outside_dir = tmp_path / "outside-dir"
+    outside_dir.mkdir()
+    (outside_dir / "preserve.txt").write_text("preserve\n", encoding="utf-8")
+    root = tmp_path / "private-root"
+    nested = root / "home" / ".codex" / "tmp" / "arg0"
+    nested.mkdir(parents=True)
+    (nested / "applypatch").symlink_to(outside_file)
+    (root / "linked-dir").symlink_to(outside_dir, target_is_directory=True)
+    (root / "readonly.txt").write_text("done\n", encoding="utf-8")
+    (root / "readonly.txt").chmod(0o400)
+
+    review_worktree._remove_review_root(root)
+
+    assert not root.exists()
+    assert outside_file.read_text(encoding="utf-8") == "preserve\n"
+    assert (outside_dir / "preserve.txt").read_text(encoding="utf-8") == (
+        "preserve\n"
+    )
 
 
 def test_old_side_evidence_does_not_hide_same_path_replacement(tmp_path: Path) -> None:
@@ -291,7 +342,6 @@ def test_old_side_evidence_does_not_hide_same_path_replacement(tmp_path: Path) -
             "status": "present",
             "sha256": hashlib.sha256(b"new_value = True\n").hexdigest(),
             "bytes": len(b"new_value = True\n"),
-            "content": "new_value = True\n",
         }
     ]
 
@@ -316,7 +366,6 @@ def test_codex_dossier_keeps_hostile_agents_as_inert_complete_evidence(
         "status": "present",
         "sha256": hashlib.sha256(hostile.encode()).hexdigest(),
         "bytes": len(hostile.encode()),
-        "content": hostile,
     }
 
 

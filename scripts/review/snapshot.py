@@ -404,6 +404,30 @@ def compute_source_fingerprint(
     source_state_id: str = "",
 ) -> str:
     """Deterministic fingerprint over identity + exact captured file bytes."""
+    hasher = _source_fingerprint_hasher(
+        mode=mode,
+        base_sha=base_sha,
+        head_sha=head_sha,
+        changed_paths=changed_paths,
+        patch_digest=patch_digest,
+        source_state_id=source_state_id,
+    )
+    for path in sorted(file_records):
+        blob = file_records[path]
+        _update_fingerprint_record(hasher, path=path, size=len(blob), chunks=(blob,))
+    return hasher.hexdigest()
+
+
+def _source_fingerprint_hasher(
+    *,
+    mode: str,
+    base_sha: str | None,
+    head_sha: str,
+    changed_paths: tuple[str, ...],
+    patch_digest: str,
+    source_state_id: str,
+) -> Any:
+    """Initialize the stable fingerprint prefix shared by memory/disk callers."""
     hasher = hashlib.sha256()
     hasher.update(SNAPSHOT_FINGERPRINT_VERSION.encode("utf-8"))
     hasher.update(b"\0")
@@ -416,14 +440,99 @@ def compute_source_fingerprint(
         "source_state_id": source_state_id,
     }
     hasher.update(json.dumps(meta, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
-    for path in sorted(file_records):
-        blob = file_records[path]
-        hasher.update(b"\0path:")
-        hasher.update(path.encode("utf-8"))
-        hasher.update(b"\0len:")
-        hasher.update(f"{len(blob)}".encode("ascii"))
-        hasher.update(b"\0")
-        hasher.update(blob)
+    return hasher
+
+
+def _update_fingerprint_record(
+    hasher: Any,
+    *,
+    path: str,
+    size: int,
+    chunks: Iterable[bytes],
+) -> None:
+    hasher.update(b"\0path:")
+    hasher.update(path.encode("utf-8"))
+    hasher.update(b"\0len:")
+    hasher.update(f"{size}".encode("ascii"))
+    hasher.update(b"\0")
+    observed = 0
+    for chunk in chunks:
+        observed += len(chunk)
+        hasher.update(chunk)
+    if observed != size:
+        raise ReviewSnapshotError(
+            f"fingerprint_size_mismatch:{path}:expected={size}:actual={observed}"
+        )
+
+
+def _fingerprint_snapshot_tree(
+    root: Path,
+    *,
+    mode: str,
+    base_sha: str | None,
+    head_sha: str,
+    changed_paths: tuple[str, ...],
+    patch_digest: str,
+    source_state_id: str,
+) -> str:
+    """Stream a private snapshot into the fingerprint without buffering blobs."""
+    paths: list[str] = []
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        base = Path(dirpath)
+        if base.is_symlink():
+            raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{base}")
+        for name in dirnames:
+            child = base / name
+            if child.is_symlink():
+                raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{child}")
+        for name in filenames:
+            full = base / name
+            if full.is_symlink():
+                raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{full}")
+            rel = full.relative_to(root).as_posix()
+            if rel != ".review-snapshot-metadata.json":
+                paths.append(rel)
+
+    hasher = _source_fingerprint_hasher(
+        mode=mode,
+        base_sha=base_sha,
+        head_sha=head_sha,
+        changed_paths=changed_paths,
+        patch_digest=patch_digest,
+        source_state_id=source_state_id,
+    )
+    for rel in sorted(paths):
+        full = root / rel
+        before = full.stat()
+        if not stat.S_ISREG(before.st_mode):
+            raise ReviewSnapshotError(f"fingerprint_non_regular:{rel}")
+
+        def _chunks(path: Path = full) -> Iterator[bytes]:
+            with path.open("rb") as handle:
+                while chunk := handle.read(1024 * 1024):
+                    yield chunk
+
+        _update_fingerprint_record(
+            hasher,
+            path=rel,
+            size=before.st_size,
+            chunks=_chunks(),
+        )
+        after = full.stat()
+        if (
+            before.st_dev,
+            before.st_ino,
+            before.st_size,
+            before.st_mtime_ns,
+            before.st_ctime_ns,
+        ) != (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+        ):
+            raise ReviewSnapshotError(f"{DIAG_DRIFT}:fingerprint_read_race:{rel}")
     return hasher.hexdigest()
 
 
@@ -591,59 +700,55 @@ def _inert_link_bytes(kind: str, target_or_oid: str, mode: str) -> bytes:
     return payload.encode("utf-8")
 
 
-def _read_blob_batch(
-    git_bin: Path,
-    repo_root: Path,
-    entries: Sequence[tuple[str, str, str, str]],
-) -> dict[str, bytes]:
-    """Read each unique blob OID through one exact ``cat-file --batch`` call."""
-    oids = tuple(dict.fromkeys(oid for _mode, obj_type, oid, _path in entries if obj_type == "blob"))
-    if not oids:
-        return {}
-    command = [
-        str(git_bin),
-        "--no-optional-locks",
-        "-c",
-        "core.fsmonitor=false",
-        "cat-file",
-        "--batch",
-    ]
-    proc = subprocess.run(
-        command,
-        cwd=str(repo_root),
-        input=("\n".join(oids) + "\n").encode("ascii"),
-        capture_output=True,
-        check=False,
-        env=_git_env(repo_root),
-    )
-    if proc.returncode != 0:
-        detail = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
-        raise ReviewSnapshotError(f"git_cat_file_batch_failed:{detail or proc.returncode}")
-    output = bytes(proc.stdout)
-    offset = 0
-    blobs: dict[str, bytes] = {}
-    for expected_oid in oids:
-        header_end = output.find(b"\n", offset)
-        if header_end < 0:
-            raise ReviewSnapshotError(f"cat_file_batch_header_missing:{expected_oid}")
-        try:
-            oid_raw, obj_type_raw, size_raw = output[offset:header_end].split(b" ", 2)
-            actual_oid = oid_raw.decode("ascii")
-            obj_type = obj_type_raw.decode("ascii")
-            size = int(size_raw)
-        except (ValueError, UnicodeDecodeError) as exc:
-            raise ReviewSnapshotError(f"cat_file_batch_header_malformed:{expected_oid}") from exc
-        if actual_oid != expected_oid or obj_type != "blob" or size < 0:
-            raise ReviewSnapshotError(f"cat_file_batch_identity:{expected_oid}:{actual_oid}:{obj_type}:{size}")
-        start = header_end + 1
-        end = start + size
-        if end >= len(output) or output[end : end + 1] != b"\n":
-            raise ReviewSnapshotError(f"cat_file_batch_body_malformed:{expected_oid}")
-        blobs[expected_oid] = output[start:end]
-        offset = end + 1
-    if offset != len(output):
-        raise ReviewSnapshotError("cat_file_batch_trailing_bytes")
-    return blobs
+def _read_batch_header(stream: Any, *, expected_oid: str) -> int:
+    """Parse one interactive ``git cat-file --batch`` header."""
+    raw = stream.readline()
+    if not raw:
+        raise ReviewSnapshotError(f"cat_file_batch_header_missing:{expected_oid}")
+    try:
+        oid_raw, obj_type_raw, size_raw = raw.rstrip(b"\n").split(b" ", 2)
+        actual_oid = oid_raw.decode("ascii")
+        obj_type = obj_type_raw.decode("ascii")
+        size = int(size_raw)
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise ReviewSnapshotError(f"cat_file_batch_header_malformed:{expected_oid}") from exc
+    if actual_oid != expected_oid or obj_type != "blob" or size < 0:
+        raise ReviewSnapshotError(
+            f"cat_file_batch_identity:{expected_oid}:{actual_oid}:{obj_type}:{size}"
+        )
+    return size
+
+
+def _write_all(fd: int, data: bytes) -> None:
+    view = memoryview(data)
+    while view:
+        written = os.write(fd, view)
+        if written <= 0:
+            raise ReviewSnapshotError("cat_file_batch_disk_write_failed")
+        view = view[written:]
+
+
+def _stream_batch_body(stream: Any, *, size: int, destination_fd: int) -> None:
+    """Copy one exact batch body to disk with bounded memory."""
+    remaining = size
+    while remaining:
+        chunk = stream.read(min(1024 * 1024, remaining))
+        if not chunk:
+            raise ReviewSnapshotError("cat_file_batch_body_truncated")
+        _write_all(destination_fd, chunk)
+        remaining -= len(chunk)
+    if stream.read(1) != b"\n":
+        raise ReviewSnapshotError("cat_file_batch_body_malformed")
+
+
+def _read_small_batch_body(stream: Any, *, size: int, path: str) -> bytes:
+    """Read bounded symlink metadata from a batch stream."""
+    if size > 1024 * 1024:
+        raise ReviewSnapshotError(f"{DIAG_UNSAFE_PATH}:{path}:link_target_too_large")
+    data = stream.read(size)
+    if len(data) != size or stream.read(1) != b"\n":
+        raise ReviewSnapshotError(f"cat_file_batch_body_malformed:{path}")
+    return data
 
 
 def _materialize_tree_from_blobs(
@@ -653,7 +758,7 @@ def _materialize_tree_from_blobs(
     dest: Path,
     *,
     changed_paths: set[str],
-) -> tuple[dict[str, bytes], tuple[InertLinkRecord, ...]]:
+) -> tuple[InertLinkRecord, ...]:
     """Materialize exact ``ls-tree`` blob OIDs without archive attributes.
 
     Unchanged symlinks/gitlinks become inert regular-file metadata.
@@ -662,61 +767,124 @@ def _materialize_tree_from_blobs(
     ``export-subst`` transformations and preserves leading-dot paths exactly.
     """
     entries = _list_tree_entries(git_bin, repo_root, treeish)
-    blobs = _read_blob_batch(git_bin, repo_root, entries)
-    file_map: dict[str, bytes] = {}
     inert: list[InertLinkRecord] = []
-
-    for mode, obj_type, oid, path in entries:
+    for mode, obj_type, _oid, path in entries:
         is_changed = path in changed_paths
         if is_changed and (obj_type == "commit" or mode == "160000"):
             raise ReviewSnapshotError(f"{DIAG_GITLINK}:{path}")
         if is_changed and (obj_type == "symlink" or mode == "120000"):
             raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{path}")
-        if obj_type == "commit" or mode == "160000":
-            data = _inert_link_bytes("gitlink", oid, "160000")
-            inert.append(InertLinkRecord(rel_path=path, kind="gitlink", target_or_oid=oid, mode="160000"))
-        elif obj_type == "symlink" or mode == "120000":
-            try:
-                link_target = blobs[oid].decode("utf-8", errors="strict")
-            except UnicodeDecodeError as exc:
-                raise ReviewSnapshotError(f"{DIAG_UNSAFE_PATH}:{path}") from exc
-            if "\0" in link_target or "\n" in link_target:
-                raise ReviewSnapshotError(f"{DIAG_UNSAFE_PATH}:{path}")
-            data = _inert_link_bytes("symlink", link_target, "120000")
-            inert.append(
-                InertLinkRecord(
-                    rel_path=path,
-                    kind="symlink",
-                    target_or_oid=link_target,
-                    mode="120000",
-                )
-            )
-        elif obj_type == "blob" and mode in {"100644", "100755"}:
-            data = blobs[oid]
-            if is_changed:
-                if is_sensitive_path(path):
-                    raise ReviewSnapshotError(f"sensitive_path:{path}")
-                if b"\x00" in data:
-                    raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
-                try:
-                    text = data.decode("utf-8", errors="strict")
-                except UnicodeDecodeError as exc:
-                    raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
-                hits = secret_like_findings(text)
-                if hits:
-                    raise ReviewSnapshotError(f"{DIAG_CHANGED_SECRET}:{path}:{','.join(hits)}")
-        else:
+        if not (
+            obj_type == "commit"
+            or mode == "160000"
+            or (obj_type == "blob" and mode in {"100644", "100755", "120000"})
+        ):
             raise ReviewSnapshotError(f"unsupported_tree_entry:{path}:mode={mode}:type={obj_type}")
 
-        target = _safe_child(dest, path)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data)
-        target.chmod(0o444)
-        if target.read_bytes() != data:
-            raise ReviewSnapshotError(f"tree_blob_integrity_failed:{path}:{oid}")
-        file_map[path] = data
+    command = [
+        str(git_bin),
+        "--no-optional-locks",
+        "-c",
+        "core.fsmonitor=false",
+        "cat-file",
+        "--batch",
+    ]
+    proc = subprocess.Popen(
+        command,
+        cwd=str(repo_root),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=_git_env(repo_root),
+    )
+    assert proc.stdin is not None
+    assert proc.stdout is not None
+    assert proc.stderr is not None
+    try:
+        for mode, obj_type, oid, path in entries:
+            target = _safe_child(dest, path)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if obj_type == "commit" or mode == "160000":
+                data = _inert_link_bytes("gitlink", oid, "160000")
+                target.write_bytes(data)
+                inert.append(
+                    InertLinkRecord(
+                        rel_path=path,
+                        kind="gitlink",
+                        target_or_oid=oid,
+                        mode="160000",
+                    )
+                )
+            else:
+                proc.stdin.write(oid.encode("ascii") + b"\n")
+                proc.stdin.flush()
+                size = _read_batch_header(proc.stdout, expected_oid=oid)
+                if mode == "120000":
+                    raw_target = _read_small_batch_body(proc.stdout, size=size, path=path)
+                    try:
+                        link_target = raw_target.decode("utf-8", errors="strict")
+                    except UnicodeDecodeError as exc:
+                        raise ReviewSnapshotError(f"{DIAG_UNSAFE_PATH}:{path}") from exc
+                    if "\0" in link_target or "\n" in link_target:
+                        raise ReviewSnapshotError(f"{DIAG_UNSAFE_PATH}:{path}")
+                    data = _inert_link_bytes("symlink", link_target, "120000")
+                    target.write_bytes(data)
+                    inert.append(
+                        InertLinkRecord(
+                            rel_path=path,
+                            kind="symlink",
+                            target_or_oid=link_target,
+                            mode="120000",
+                        )
+                    )
+                else:
+                    fd = os.open(
+                        target,
+                        os.O_WRONLY
+                        | os.O_CREAT
+                        | os.O_EXCL
+                        | getattr(os, "O_NOFOLLOW", 0),
+                        0o400,
+                    )
+                    try:
+                        _stream_batch_body(proc.stdout, size=size, destination_fd=fd)
+                    finally:
+                        os.close(fd)
+                    if target.stat().st_size != size:
+                        raise ReviewSnapshotError(f"tree_blob_integrity_failed:{path}:{oid}")
+                    if path in changed_paths:
+                        data = target.read_bytes()
+                        if is_sensitive_path(path):
+                            raise ReviewSnapshotError(f"sensitive_path:{path}")
+                        if b"\x00" in data:
+                            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
+                        try:
+                            text = data.decode("utf-8", errors="strict")
+                        except UnicodeDecodeError as exc:
+                            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
+                        hits = secret_like_findings(text)
+                        if hits:
+                            raise ReviewSnapshotError(
+                                f"{DIAG_CHANGED_SECRET}:{path}:{','.join(hits)}"
+                            )
+            target.chmod(0o444)
+        proc.stdin.close()
+        returncode = proc.wait()
+        detail = proc.stderr.read().decode("utf-8", errors="replace").strip()
+        if returncode != 0:
+            raise ReviewSnapshotError(
+                f"git_cat_file_batch_failed:{detail or returncode}"
+            )
+        if proc.stdout.read(1):
+            raise ReviewSnapshotError("cat_file_batch_trailing_bytes")
+    except BaseException:
+        with contextlib.suppress(OSError, ProcessLookupError):
+            proc.kill()
+        with contextlib.suppress(OSError):
+            proc.wait(timeout=5)
+        raise
 
-    return file_map, tuple(inert)
+    return tuple(inert)
 
 
 def _write_records(dest: Path, records: Iterable[ImmutableFileRecord]) -> dict[str, bytes]:
@@ -1538,7 +1706,7 @@ def materialize_review_snapshot(
             revision=resolved_base or head_sha,
             paths=remove_paths,
         )
-        file_map, inert_links = _materialize_tree_from_blobs(
+        inert_links = _materialize_tree_from_blobs(
             git,
             root,
             head_sha,
@@ -1550,12 +1718,14 @@ def materialize_review_snapshot(
             target = _safe_child(dest, rel)
             if target.exists() or target.is_symlink():
                 if target.is_dir() and not target.is_symlink():
-                    shutil.rmtree(target)
+                    # Git trees never contain directory entries. A directory at
+                    # an old file path therefore consists only of descendants
+                    # present in the exact head (file -> directory replacement)
+                    # and must survive old-side evidence removal.
+                    continue
                 else:
                     target.unlink()
-                file_map.pop(rel, None)
-        overlays_written = _write_records(dest, overlays)
-        file_map.update(overlays_written)
+        _write_records(dest, overlays)
 
         if (dest / ".git").exists():
             raise ReviewSnapshotError("snapshot_contains_git_metadata")
@@ -1584,22 +1754,12 @@ def materialize_review_snapshot(
             deleted_records=deleted_records,
             source_state=source_state,
         )
-        # Include bundle files in fingerprint map.
-        for rel in (
-            ".review-bundle/manifest.json",
-            ".review-bundle/patch.diff",
-            ".review-bundle/changed-paths.json",
-        ):
-            p = dest / rel
-            if p.is_file():
-                file_map[rel] = p.read_bytes()
-
-        fingerprint = compute_source_fingerprint(
+        fingerprint = _fingerprint_snapshot_tree(
+            dest,
             mode=mode,
             base_sha=resolved_base,
             head_sha=head_sha,
             changed_paths=derived_paths,
-            file_records=file_map,
             patch_digest=bundle.patch_digest,
             source_state_id=source_state.identity,
         )
@@ -1669,25 +1829,12 @@ def materialize_review_snapshot(
 
 def verify_snapshot_fingerprint(snapshot: ReviewSnapshot) -> str:
     """Re-hash snapshot on-disk contents; raise on drift vs recorded fingerprint."""
-    file_map: dict[str, bytes] = {}
-    for dirpath, _dirnames, filenames in os.walk(snapshot.path, followlinks=False):
-        base = Path(dirpath)
-        if base.is_symlink():
-            raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{base}")
-        for name in filenames:
-            full = base / name
-            if full.is_symlink():
-                raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{full}")
-            rel = full.relative_to(snapshot.path).as_posix()
-            if rel == ".review-snapshot-metadata.json":
-                continue
-            file_map[rel] = full.read_bytes()
-    current = compute_source_fingerprint(
+    current = _fingerprint_snapshot_tree(
+        snapshot.path,
         mode=snapshot.mode,
         base_sha=snapshot.base_sha,
         head_sha=snapshot.head_sha,
         changed_paths=snapshot.changed_paths,
-        file_records=file_map,
         patch_digest=snapshot.patch_digest,
         source_state_id=snapshot.source_state_id,
     )

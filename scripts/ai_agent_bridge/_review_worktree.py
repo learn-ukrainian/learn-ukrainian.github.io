@@ -64,6 +64,8 @@ from scripts.review.snapshot import (
 )
 from scripts.review.target_resolution import ReviewTarget as CanonicalReviewTarget
 
+MAX_REVIEW_PROMPT_EVIDENCE_BYTES = 512 * 1024
+
 
 class ReviewWorktreeError(RuntimeError):
     """A branch-pinned review checkout could not be safely prepared."""
@@ -282,11 +284,29 @@ class ProvisionedReviewWorktree:
         engine_key = engine.strip().lower()
         if engine_key not in {"codex", "claude", "agy", "grok", "grok-build"}:
             raise ReviewWorktreeError(f"review_prompt_evidence_invalid:unsupported_engine:{engine!r}")
-        inline_complete_content = engine_key in {"codex", "grok", "grok-build"}
+        # Every supported review engine has a sealed read path. Changed-source
+        # bytes therefore stay on disk instead of being duplicated into one
+        # potentially unbounded model prompt.
+        inline_complete_content = False
         bundle_dir = self.path / ".review-bundle"
         manifest_path = bundle_dir / "manifest.json"
         patch_path = bundle_dir / "patch.diff"
         try:
+            manifest_stat = manifest_path.lstat()
+            patch_stat = patch_path.lstat()
+            if not stat.S_ISREG(manifest_stat.st_mode) or not stat.S_ISREG(
+                patch_stat.st_mode
+            ):
+                raise ReviewWorktreeError(
+                    "review_prompt_evidence_invalid:bundle_not_regular"
+                )
+            bundle_bytes = manifest_stat.st_size + patch_stat.st_size
+            if bundle_bytes > MAX_REVIEW_PROMPT_EVIDENCE_BYTES:
+                raise ReviewWorktreeError(
+                    "review_prompt_evidence_split_required:"
+                    f"bundle_bytes={bundle_bytes}:"
+                    f"limit={MAX_REVIEW_PROMPT_EVIDENCE_BYTES}"
+                )
             manifest_bytes = manifest_path.read_bytes()
             patch_bytes = patch_path.read_bytes()
             manifest_text = manifest_bytes.decode("utf-8", errors="strict")
@@ -362,18 +382,21 @@ class ProvisionedReviewWorktree:
             if not stat.S_ISREG(metadata.st_mode):
                 raise ReviewWorktreeError(f"review_prompt_evidence_invalid:non_regular:{rel_path}")
             try:
-                content_bytes = target.read_bytes()
-                content = content_bytes.decode("utf-8", errors="strict")
-            except (OSError, UnicodeDecodeError) as exc:
+                with target.open("rb") as handle:
+                    digest = hashlib.file_digest(handle, "sha256").hexdigest()
+                byte_count = metadata.st_size
+            except OSError as exc:
                 raise ReviewWorktreeError(f"review_prompt_evidence_invalid:content:{rel_path}:{exc}") from exc
             entry = {
                 "path": rel_path,
                 "status": "present",
-                "sha256": hashlib.sha256(content_bytes).hexdigest(),
-                "bytes": len(content_bytes),
+                "sha256": digest,
+                "bytes": byte_count,
             }
             if inline_complete_content:
-                entry["content"] = content
+                raise ReviewWorktreeError(
+                    "review_prompt_evidence_invalid:inline_content_forbidden"
+                )
             files.append(entry)
 
         dossier = {
@@ -389,6 +412,8 @@ class ProvisionedReviewWorktree:
             "changed_file_content_mode": (
                 "inline_complete" if inline_complete_content else "complete_via_sealed_snapshot_read_tools"
             ),
+            "sealed_snapshot_root": str(self.path),
+            "prompt_evidence_limit_bytes": MAX_REVIEW_PROMPT_EVIDENCE_BYTES,
             "unchanged_context_mode": {
                 "codex": "safe_exact_text_via_parent_owned_sealed_read_mcp",
                 "grok": "safe_exact_text_via_sandboxed_builtin_read_tools",
@@ -410,6 +435,13 @@ class ProvisionedReviewWorktree:
             separators=(",", ":"),
             sort_keys=True,
         )
+        serialized_bytes = len(serialized.encode("utf-8"))
+        if serialized_bytes > MAX_REVIEW_PROMPT_EVIDENCE_BYTES:
+            raise ReviewWorktreeError(
+                "review_prompt_evidence_split_required:"
+                f"serialized_bytes={serialized_bytes}:"
+                f"limit={MAX_REVIEW_PROMPT_EVIDENCE_BYTES}"
+            )
         return (
             "\n\nREVIEWER ISOLATION BOUNDARY (fail closed — issue #5285)\n"
             "You are running against a neutral evidence-only snapshot of the exact "
@@ -421,7 +453,8 @@ class ProvisionedReviewWorktree:
             "use a detached worktree, git, gh, or other shell command. "
             "Use read-only file tools only when the engine exposes them; the dossier "
             "below is authoritative for every change, and safe exact unchanged tracked "
-            "text is available inside the sealed snapshot for proof-of-absence checks. "
+            "text is available at the dossier's sealed_snapshot_root for "
+            "proof-of-absence checks. "
             "Sensitive, secret-like, binary, and inert-link unchanged paths are omitted. "
             "Emit exactly one canonical "
             "code-review-findings.v1 JSON object with schema_version, overall "
@@ -1226,13 +1259,16 @@ def _new_side_lines(diff_text: str) -> frozenset[int]:
             continue
         if current is None:
             continue
-        if raw.startswith("+") and not raw.startswith("+++"):
+        # File headers occur before a hunk. Once ``current`` is set, every
+        # leading ``+`` is source content, including a valid line whose text
+        # itself begins with ``++`` (rendered as ``+++...`` in the diff).
+        if raw.startswith("+"):
             lines.add(current)
             current += 1
             remaining -= 1
             if remaining <= 0:
                 current = None
-        elif (raw.startswith("-") and not raw.startswith("---")) or raw.startswith("\\"):
+        elif raw.startswith("-") or raw.startswith("\\"):
             continue
         elif remaining > 0 and not raw.startswith(("+", "-", "@")):
             current += 1
@@ -1364,18 +1400,24 @@ def _create_reviewer_view(
 
 
 def _remove_review_root(root: Path) -> None:
-    """Remove one read-only temporary root and verify deletion."""
-    if not root.exists():
+    """Remove a private root without following reviewer-created symlinks."""
+    try:
+        root_stat = root.lstat()
+    except FileNotFoundError:
         return
+    if stat.S_ISLNK(root_stat.st_mode) or not stat.S_ISDIR(root_stat.st_mode):
+        raise OSError(f"temporary root is not a private directory: {root}")
     for dirpath, dirnames, filenames in os.walk(root, topdown=False, followlinks=False):
         base = Path(dirpath)
         for name in filenames:
             path = base / name
             if path.is_symlink():
-                raise OSError(f"temporary root contains symlink: {path}")
+                path.unlink()
         for name in dirnames:
             path = base / name
-            if not path.is_symlink():
+            if path.is_symlink():
+                path.unlink()
+            else:
                 path.chmod(0o700)
     root.chmod(0o700)
     shutil.rmtree(root, ignore_errors=False)
