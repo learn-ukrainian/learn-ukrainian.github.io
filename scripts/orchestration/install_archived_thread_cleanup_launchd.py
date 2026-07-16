@@ -139,7 +139,7 @@ def _fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
-def atomic_write(path: Path, content: bytes, *, mode: int = 0o644) -> bool:
+def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
     """Atomically replace path and report whether its contents changed."""
     if path.is_file() and path.read_bytes() == content:
         return False

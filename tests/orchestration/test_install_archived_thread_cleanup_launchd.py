@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import plistlib
+import stat
 from pathlib import Path
 
 from scripts.orchestration import install_archived_thread_cleanup_launchd as launchd
@@ -49,6 +50,7 @@ def test_atomic_write_is_idempotent(tmp_path: Path) -> None:
     assert launchd.atomic_write(destination, b"first") is False
     assert launchd.atomic_write(destination, b"second") is True
     assert destination.read_bytes() == b"second"
+    assert stat.S_IMODE(destination.stat().st_mode) == 0o600
 
 
 def test_uninstall_preserves_cleanup_receipts(
