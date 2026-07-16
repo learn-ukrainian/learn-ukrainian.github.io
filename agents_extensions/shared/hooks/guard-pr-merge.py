@@ -127,10 +127,17 @@ def _command(payload: dict) -> str:
 #
 # This copy alone splits the tokenizer into _scope_events() with _segments() derived from
 # it: only this hook cares WHERE a subshell begins and ends, because only this hook tracks
-# `cd` (#5333). _segments() still returns exactly what the siblings' version does — the
-# sync target is tokenizing semantics, not line count (guard-branch-switch-in-main.py likewise
-# grew _segments_with_following_operator for what it needed). Do NOT collapse the events
-# back into a flat list to "re-sync": that flattening WAS the bug.
+# `cd` (#5333). The sync target is tokenizing semantics, not line count
+# (guard-branch-switch-in-main.py likewise grew _segments_with_following_operator for what it
+# needed). Do NOT collapse the events back into a flat list to "re-sync": that flattening
+# WAS the bug.
+#
+# One deliberate semantic divergence (#5333 r2): the siblings read a QUOTED lone paren
+# (`echo ')'`) as an operator, because shlex strips the quotes before they see it. Here that
+# splits a subshell scope and judges a merge in the wrong repo, so this copy scans the raw
+# line for its parens (_split_scopes) and keeps quoted ones as argv. In the siblings the same
+# quirk only ever splits a segment that neither `git checkout` nor `gh pr merge` matches, so
+# it is harmless there and they are left alone rather than churned.
 
 
 def _strip_quotes(token: str) -> str:
@@ -218,10 +225,14 @@ def _join_line_continuations(text: str) -> str:
 
 
 _PUNCTUATION = ";|&()<>"
+# The parens are split out of the raw line by _split_scopes BEFORE a chunk is tokenized,
+# so any paren still inside a chunk is quoted or escaped text, never an operator (#5333 r2).
+_ARGV_PUNCTUATION = ";|&<>"
 
 
-def _is_operator(tok: str) -> bool:
-    return bool(tok) and all(c in _PUNCTUATION for c in tok)
+def _is_operator(tok: str, punctuation: str = _PUNCTUATION) -> bool:
+    """A token that is nothing but shell punctuation — a separator, not argv."""
+    return bool(tok) and all(c in punctuation for c in tok)
 
 
 def _tokenize(line: str) -> list[str] | None:
@@ -232,6 +243,53 @@ def _tokenize(line: str) -> list[str] | None:
         return list(lexer)
     except ValueError:
         return None
+
+
+def _split_scopes(line: str) -> list[tuple[str, str]]:
+    """One raw line as ("text"|"open"|"close", raw) pieces, split at its REAL parens.
+
+    A real paren is one the shell would act on: unquoted and unescaped. This scan runs on
+    the RAW line because that is the only place quote context still exists — shlex strips
+    quotes, so `echo ')'` and a bare `)` reach the token stream as the identical token `)`,
+    and the scope scanner read the quoted one as a real subshell close (#5333 r2). That was
+    not merely an over-block: in `(cd /a && echo ')' && gh pr merge 9)` the fake close
+    popped the REAL subshell and judged PR 9 in the session's repo instead of /a — a
+    wrong-repo judgment, the same false-ALLOW class the scope fix set out to close.
+
+    Pairing shlex's posix and non-posix token streams would be the obvious alternative, and
+    it is wrong: they diverge on backslashes (`cd /a\\ b` -> 2 posix tokens, 3 raw ones), so
+    the two streams cannot be zipped, and a misalignment silently mis-classifies a REAL
+    paren — reopening the leak. Splitting the raw text first needs no alignment at all.
+
+    Quote/escape state tracks posix shlex's own rules, so the pieces re-lex as shlex reads
+    them: `\\` escapes outside quotes and inside `"..."`, but is literal inside `'...'`.
+    """
+    pieces: list[tuple[str, str]] = []
+    buf: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for ch in line:
+        if escaped:
+            buf.append(ch)
+            escaped = False
+        elif ch == "\\" and quote != "'":
+            buf.append(ch)
+            escaped = True
+        elif quote:
+            buf.append(ch)
+            if ch == quote:
+                quote = None
+        elif ch in "'\"":
+            buf.append(ch)
+            quote = ch
+        elif ch in "()":
+            pieces.append(("text", "".join(buf)))
+            pieces.append(("open" if ch == "(" else "close", ch))
+            buf = []
+        else:
+            buf.append(ch)
+    pieces.append(("text", "".join(buf)))
+    return pieces
 
 
 def _scope_events(command: str) -> list[tuple[str, list[str]]]:
@@ -246,9 +304,14 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     Events, rather than a flat segment list, because `(` and `)` are the only record of a
     SUBSHELL — and a subshell's `cd` dies at its `)` (#5333). Flattening them away made
     `(cd /inner && true) && gh pr merge 5` read as if the merge ran in /inner: a
-    false-ALLOW off whatever PR #5 is there. Parens arrive as their own tokens, but glue
-    (`&&(`, `)&&`) packs them WITH neighbouring operators, so each operator token is
-    scanned char by char, in order, to keep boundaries in sequence with the segments.
+    false-ALLOW off whatever PR #5 is there.
+
+    Boundaries come from _split_scopes' scan of the RAW line, which is the only reader that
+    still has quote context; the pieces between them are then tokenized. Glue (`&&(`, `)&&`)
+    needs no special handling — the raw split cuts at the paren, leaving `&&` in the
+    neighbouring chunk, so boundaries stay in sequence with the segments. A paren surviving
+    INSIDE a chunk is quoted or escaped text, so `_ARGV_PUNCTUATION` (parens excluded) is
+    what separates segments there: `echo ')'` keeps its `)` as the argument it is (#5333 r2).
 
     `(` also opens a command substitution (`cd $(cat f)`), which reads here as a subshell
     scope. That is not a coincidence to paper over: `$(...)` really does run in a
@@ -256,29 +319,34 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
 
     An `("unreadable", [])` event marks a line that does not lex (unbalanced quote —
     which the real shell rejects too). It cannot be scanned for `cd`, so it must not be
-    passed off as scope-neutral. Only a `segment` event carries argv; the rest carry [].
+    passed off as scope-neutral. It replaces the whole line's events rather than just the
+    offending chunk's: a half-scanned line could otherwise leave an `open` whose later
+    `close` RESTORES a readable cwd, laundering an unreadable line into a clean one.
+    Only a `segment` event carries argv; the rest carry [].
     """
     events: list[tuple[str, list[str]]] = []
     for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
-        tokens = _tokenize(line)
-        if tokens is None:
-            events.append(("unreadable", []))
-            continue
-        cur: list[str] = []
-        for tok in tokens:
-            if not _is_operator(tok):
-                cur.append(tok)
+        line_events: list[tuple[str, list[str]]] = []
+        readable = True
+        for kind, raw in _split_scopes(line):
+            if kind != "text":
+                line_events.append((kind, []))
                 continue
+            tokens = _tokenize(raw)
+            if tokens is None:
+                readable = False
+                break
+            cur: list[str] = []
+            for tok in tokens:
+                if not _is_operator(tok, _ARGV_PUNCTUATION):
+                    cur.append(tok)
+                    continue
+                if cur:
+                    line_events.append(("segment", cur))
+                    cur = []
             if cur:
-                events.append(("segment", cur))
-                cur = []
-            for char in tok:
-                if char == "(":
-                    events.append(("open", []))
-                elif char == ")":
-                    events.append(("close", []))
-        if cur:
-            events.append(("segment", cur))
+                line_events.append(("segment", cur))
+        events.extend(line_events if readable else [("unreadable", [])])
     return events
 
 
@@ -946,18 +1014,27 @@ def main() -> int:
         args = _merge_args(seg.argv)
         if args is None:
             continue
-        if seg.cwd_unreadable:
+        # `-R owner/repo` names the repo outright, so this merge does not depend on the cwd
+        # it runs in — and an unreadable cwd has nothing left to fail closed about. Blocking
+        # anyway made the escape hatch this very message advertises a no-op (#5333 r2).
+        # Verified against real gh from /tmp, which is not a git repo at all:
+        # `gh pr view 9 --repo cli/cli --json number` -> rc=0 `{"number":9}`. Without a
+        # selector gh refuses (`argument required when using the --repo flag` -> rc=1), so
+        # `-R` alone cannot wave a merge through: _pr_ref reads that rc and fails closed.
+        if seg.cwd_unreadable and not _repo_option(args):
             sys.stderr.write(
                 _block_msg(
                     "this merge's working directory cannot be read (a `cd` to a variable, "
                     "a substitution, or `cd -`; or a shell nesting this guard cannot follow)",
                     "The guard must judge the PR in the repo the merge actually runs in.\n"
                     "Use a literal `cd /path && gh pr merge ...`, or name the repo with\n"
-                    "`-R owner/repo`.",
+                    "`-R owner/repo` (with the PR number: `gh pr merge 5 -R owner/repo`).",
                 )
             )
             return 2
-        blocked = _judge(args, cwd=seg.cwd)
+        # An unreadable cwd is a guess, not a location — `-R` got us here, so let gh resolve
+        # from the repo name in this hook's own cwd rather than hand it a stale directory.
+        blocked = _judge(args, cwd=None if seg.cwd_unreadable else seg.cwd)
         if blocked:
             sys.stderr.write(blocked)
             return 2
