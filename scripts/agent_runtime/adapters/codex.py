@@ -242,6 +242,12 @@ class CodexAdapter:
         write_root = review_write_root or (
             Path(str(tc_early["review_write_root"])) if tc_early.get("review_write_root") else None
         )
+        execution_cwd = cwd
+        if tc_early.get("review_isolation") and review_write_root is not None:
+            # Codex discovers AGENTS.md from its working root independently of
+            # --ignore-rules. Run from the parent-created instruction-free
+            # directory; complete changed content remains in the sealed prompt.
+            execution_cwd = review_write_root / "exec"
         if tc_early.get("review_isolation") and write_root is not None:
             out_dir = write_root / "tmp"
             output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
@@ -271,7 +277,7 @@ class CodexAdapter:
             [
                 "--skip-git-repo-check",
                 "-C",
-                str(cwd),
+                str(execution_cwd),
                 "--color",
                 "never",
                 "-o",
@@ -320,7 +326,7 @@ class CodexAdapter:
 
         return InvocationPlan(
             cmd=cmd,
-            cwd=cwd,
+            cwd=execution_cwd,
             stdin_payload=prompt,
             output_file=output_path,
             env_overrides=env_overrides,

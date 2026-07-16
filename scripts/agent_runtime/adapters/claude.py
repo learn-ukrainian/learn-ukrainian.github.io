@@ -88,82 +88,21 @@ _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
 
 
 def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
-    """Return a target-bound Claude structured-output schema for reviews."""
-    base_sha = tool_config.get("review_base_sha")
-    head_sha = tool_config.get("review_head_sha")
-    patch_sha256 = tool_config.get("review_patch_digest")
+    """Return the canonical structured-output schema for isolated reviews."""
+    from scripts.review.isolation import (
+        ReviewIsolationError,
+        canonical_isolated_review_schema,
+    )
+
     changed_paths = tool_config.get("review_changed_paths")
-    if base_sha is not None and not isinstance(base_sha, str):
-        raise ValueError("ClaudeAdapter: invalid isolated review base SHA")
-    if not isinstance(head_sha, str) or not isinstance(patch_sha256, str):
-        raise ValueError("ClaudeAdapter: isolated review target identity required")
     if not isinstance(changed_paths, list) or not all(
         isinstance(path, str) and path for path in changed_paths
     ):
         raise ValueError("ClaudeAdapter: isolated review changed paths required")
-    evidence_path_schema = {
-        "type": "string",
-        "enum": changed_paths or ["__no_changed_paths__"],
-    }
-    text_field = {"type": "string", "minLength": 1}
-    schema = {
-        "type": "object",
-        "additionalProperties": False,
-        "required": ["schema_version", "target_identity", "production_safe", "findings"],
-        "properties": {
-            "schema_version": {"const": "code-review-findings.v1"},
-            "target_identity": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": ["base_sha", "head_sha", "patch_sha256"],
-                "properties": {
-                    "base_sha": {"const": base_sha},
-                    "head_sha": {"const": head_sha},
-                    "patch_sha256": {"const": patch_sha256},
-                },
-            },
-            "production_safe": {"type": "boolean"},
-            "findings": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": [
-                        "id",
-                        "severity",
-                        "category",
-                        "title",
-                        "description",
-                        "evidence",
-                        "remediation",
-                    ],
-                    "properties": {
-                        "id": {"type": "string", "pattern": "^F[0-9]{3,6}$"},
-                        "severity": {"enum": ["BLOCKER", "MAJOR", "MINOR", "NIT"]},
-                        "category": text_field,
-                        "title": text_field,
-                        "description": text_field,
-                        "remediation": text_field,
-                        "evidence": {
-                            "type": "array",
-                            "minItems": 1,
-                            "items": {
-                                "type": "object",
-                                "additionalProperties": False,
-                                "required": ["path", "line_start", "line_end", "text"],
-                                "properties": {
-                                    "path": evidence_path_schema,
-                                    "line_start": {"type": "integer", "minimum": 1},
-                                    "line_end": {"type": "integer", "minimum": 1},
-                                    "text": text_field,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    }
+    try:
+        schema = canonical_isolated_review_schema(changed_paths)
+    except ReviewIsolationError as exc:
+        raise ValueError(f"ClaudeAdapter: {exc}") from exc
     return json.dumps(schema, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
 
 

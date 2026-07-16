@@ -23,6 +23,7 @@ multi-thousand-line external scanner.
 from __future__ import annotations
 
 import contextlib
+import copy
 import hashlib
 import json
 import os
@@ -375,8 +376,16 @@ _ENGINE_AUTH_STAGE_FILES: dict[str, tuple[str, ...]] = {
         ".agy/credentials.json",
         ".config/agy/credentials.json",
     ),
-    "grok": (".grok/credentials.json", ".config/grok/credentials.json"),
-    "grok-build": (".grok/credentials.json", ".config/grok/credentials.json"),
+    "grok": (
+        ".grok/auth.json",
+        ".grok/credentials.json",
+        ".config/grok/credentials.json",
+    ),
+    "grok-build": (
+        ".grok/auth.json",
+        ".grok/credentials.json",
+        ".config/grok/credentials.json",
+    ),
     "gemini": (
         ".gemini/oauth_creds.json",
         ".gemini/google_accounts.json",
@@ -1345,6 +1354,29 @@ def review_isolation_tool_config(engine: str) -> dict[str, object]:
     return base
 
 
+def canonical_isolated_review_schema(changed_paths: Sequence[str]) -> dict[str, Any]:
+    """Return the canonical review schema constrained to the frozen surface.
+
+    Target identity remains parent-owned isolation evidence; reviewer output
+    uses the repository-wide ``code-review-findings.v1`` contract unchanged.
+    """
+    from scripts.review.review_contract import load_schema
+
+    paths = list(dict.fromkeys(changed_paths))
+    if not all(isinstance(path, str) and path for path in paths):
+        raise ReviewIsolationError("review_schema_changed_paths_invalid")
+    schema = copy.deepcopy(load_schema())
+    findings = schema["properties"]["findings"]
+    if paths:
+        schema["$defs"]["location"]["properties"]["path"] = {
+            "type": "string",
+            "enum": paths,
+        }
+    else:
+        findings["maxItems"] = 0
+    return schema
+
+
 def _real(path: Path | str) -> str:
     return os.path.realpath(str(path))
 
@@ -1626,16 +1658,15 @@ def _canonical_sandbox_read_roots(
     write_root: Path,
     runtime_reads: Sequence[Path | str],
 ) -> tuple[str, ...]:
-    """Canonical least-privilege roots shared by probes and real launches."""
-    candidates: list[Path | str] = [
-        *_SYSTEM_READ_SUBPATHS,
-        *_NETWORK_READ_PATHS,
-        snapshot_root,
-        write_root,
-        *runtime_reads,
-    ]
+    """Least-privilege roots shared by probes and real launches.
+
+    Fixed host paths retain both their lexical spelling and canonical target
+    so blank-root bwrap preserves merged-/usr aliases such as ``/bin`` and
+    resolver-file aliases. Caller-controlled roots remain canonical-only.
+    """
     roots: set[str] = set()
     forbidden_exact = {
+        "/",
         "/tmp",
         "/private/tmp",
         "/private/var",
@@ -1646,20 +1677,40 @@ def _canonical_sandbox_read_roots(
     snap = _real(snapshot_root)
     write = _real(write_root)
     runtime_exact = {_real(item) for item in runtime_reads}
-    for candidate in candidates:
-        path = Path(candidate)
-        if not path.exists():
-            continue
-        real = _real(path)
+
+    def _allowed_target(real: str) -> bool:
         if real in forbidden_exact and real not in {snap, write}:
-            continue
-        if (
+            return False
+        return not (
             (real.startswith("/private/var/folders") or real.startswith("/var/folders"))
             and real not in {snap, write}
             and real not in runtime_exact
             and not real.startswith(snap + os.sep)
             and not real.startswith(write + os.sep)
-        ):
+        )
+
+    # These values are module-owned trusted constants. Preserve their literal
+    # absolute paths only after the canonical target passes the broad-root
+    # filters. Never do this for caller-provided runtime aliases.
+    for candidate in (*_SYSTEM_READ_SUBPATHS, *_NETWORK_READ_PATHS):
+        path = Path(candidate)
+        if not path.exists():
+            continue
+        real = _real(path)
+        if not _allowed_target(real):
+            continue
+        literal = os.path.abspath(os.path.normpath(str(path)))
+        if not literal.startswith("/"):
+            raise ReviewIsolationError(f"sandbox_fixed_root_not_absolute:{candidate}")
+        roots.add(literal)
+        roots.add(real)
+
+    for candidate in (snapshot_root, write_root, *runtime_reads):
+        path = Path(candidate)
+        if not path.exists():
+            continue
+        real = _real(path)
+        if not _allowed_target(real):
             continue
         roots.add(real)
     if snap not in roots or write not in roots:
@@ -1668,7 +1719,9 @@ def _canonical_sandbox_read_roots(
     compact: list[str] = []
     for value in ordered:
         path = Path(value)
-        if any(is_within(path, Path(parent)) for parent in compact):
+        # Lexical comparison is intentional: resolving here would collapse
+        # /bin beneath /usr again and remove the alias bwrap must recreate.
+        if any(path == Path(parent) or path.is_relative_to(Path(parent)) for parent in compact):
             continue
         compact.append(value)
     return tuple(sorted(compact))

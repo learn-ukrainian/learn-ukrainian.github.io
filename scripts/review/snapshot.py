@@ -1013,16 +1013,31 @@ def verify_source_state_identity(
         raise ReviewSnapshotError(f"{DIAG_DRIFT}:target_mismatch")
 
     # Re-read live overlay bytes/modes; never trust capture-time digest alone.
+    present_entries = tuple(entry for entry in identity.overlay_entries if entry.state == "present")
+
+    def _captured_replacement(path: Path, rel_path: str) -> bool:
+        """Allow a tracked deletion replaced by captured file/descendant bytes."""
+        if path.is_symlink():
+            return False
+        if path.is_file():
+            return any(entry.path == rel_path for entry in present_entries)
+        if path.is_dir():
+            prefix = rel_path.rstrip("/") + "/"
+            return any(entry.path.startswith(prefix) for entry in present_entries)
+        return False
+
     for entry in identity.overlay_entries:
         full = root / entry.path
         if entry.state == "deleted":
-            if full.exists() or full.is_symlink():
+            if (full.exists() or full.is_symlink()) and not _captured_replacement(full, entry.path):
                 raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_deleted_reappeared:{entry.path}")
             continue
         if entry.state == "renamed_from":
             old = root / (entry.old_path or entry.path)
             if old.exists() or old.is_symlink():
-                raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_rename_old_present:{entry.old_path or entry.path}")
+                old_rel = entry.old_path or entry.path
+                if not _captured_replacement(old, old_rel):
+                    raise ReviewSnapshotError(f"{DIAG_DRIFT}:overlay_rename_old_present:{old_rel}")
             continue
         live_digest, live_mode = _live_path_digest(full)
         if live_digest != entry.sha256:
@@ -1714,7 +1729,7 @@ def capture_local_review_state(
             continue
 
         # Deletion: staged (D ) / unstaged ( D) / both (DD).
-        if "D" in xy and not full.exists():
+        if "D" in xy:
             deleted.append(path)
             changed.append(path)
             name_status.append({"status": "D", "path": path, "kind": "delete"})
