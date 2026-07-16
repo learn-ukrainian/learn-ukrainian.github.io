@@ -1,170 +1,81 @@
-# Дмитро Іванович Чижевський — Research Dossier
+# Дмитро Чижевський — дослідницьке досьє
 
 **Slug:** `dmytro-chyzhevskyi`
-**Block:** C.5 (émigré scholars who built Ukrainian studies in exile)
-**Tier:** 1b
-**Issue:** #2318
-**Researcher:** Claude (claude-opus-4-8) — R1b Block C dispatch
-**Completed:** 2026-05-28
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited (4 distinct: IEU, ЕІУ, HURI-Chair via babel/Portnov, КНУ ім. Шевченка)
-- [x] Oppression mechanism is specific (Aug-1920 Cheka arrest [T1 ЕІУ] + threatened розстріл [T2 КНУ, provisional] + 1921 escape across the Polish–Soviet border)
-- [x] ≥2 primary-source quotes from his own work / recorded speech
-- [x] Cross-track links to LIT/HIST/ISTORIO/LIT-ESSAY tracks checked
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Пакет перевірено:** 2026-07-16
+**Статус читань:** готові, лише зовнішні посилання
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Дмитро Іванович Чижевський. [T1: IEU — Chyzhevsky, Dmytro; T3/T5: uk.wikipedia; T5: library.kr.ua]
-- **Pseudonyms / aliases:** in German-language scholarship he published as **Dmitrij Tschižewskij** (the spelling on most of his German books); also Dmytro Čyževśkyj (scholarly transliteration). Forbidden in body text except this section: Дмитрий Чижевский, Дмитрий Иванович Чижевский (Russified).
-- **Born:** 23 March (4 April) 1894 [Julian / Gregorian] | місто Олександрія, Херсонська губернія (now Кіровоградська область, Україна). [T1: IEU; T1: ЕІУ — Чижевський Дмитро Іванович (Ясь); T5: library.kr.ua; T5: uain.press]
-- **Died:** 18 April 1977 | Heidelberg, West Germany | natural causes. [T1: IEU; T1: ЕІУ — Чижевський Дмитро Іванович; T5: library.kr.ua]
-- **Family / education key facts:** studied physics-mathematics at St Petersburg University (1911–1913), where he "став українцем" (consciously became Ukrainian, switching to Ukrainian in correspondence and speech), then philosophy and Slavic philology at Kyiv University (from 1913, graduating 1919); teachers included Husserl, Heidegger, Jaspers (in Germany in the 1920s) and earlier Lossky/Zenkovsky/Chelpanov in the Empire. He was a member of the RSDLP (Mensheviks) and sat in the Central Rada as a Menshevik representative, voting against the Fourth Universal. [T1: IEU; T1: ЕІУ — Чижевський Дмитро Іванович; T2: КНУ ім. Шевченка — Чижевський Д. І.; T5: uain.press; T5: library.kr.ua]
+Дмитро Іванович Чижевський народився 4 квітня 1894 року, за старим стилем 23 березня, в Олександрії; помер 18 квітня 1977 року в Гайдельберзі [S1]. Він працював на перетині історії філософії, славістики, історії літератури, філології та культурної історії. Українська проблематика не була локальним додатком: праці про Григорія Сковороду, історію філософії в Україні, українське бароко та історію української літератури належать до центральної частини спадщини [S1][S5][S6]. Водночас значну частину текстів він написав німецькою, працював у кількох європейських і американських університетах та розглядав український матеріал у порівняльному контексті [S1][S3][S4].
 
-**Source disagreement note:** sources differ on which gubernia constituency he represented in the Central Rada / Mala Rada. IEU says he represented Poltava gubernia; library.kr.ua frames his Mala Rada role around the Russian (Menshevik) faction and notes he "голосував проти проголошення незалежності УНР" (voted against the proclamation of UNR independence) — a Menshevik-internationalist position, not anti-Ukrainian (he was simultaneously a committed Ukrainian by self-identification). Flag both, prefer the IEU constituency datum, and present the Menshevik vote honestly as part of §6.
+Його політична біографія доби Української революції не вкладається в однозначну схему. Чижевський був представником меншовиків у Центральній і Малій Радах та 22 січня 1918 року голосував проти IV Універсалу [S1]. Цей факт не слід приховувати чи подавати як доказ байдужості до України. Він відбиває тодішню соціал-демократичну й інтернаціоналістичну позицію. Подальша праця в українських освітніх і наукових установах еміграції та великий українознавчий корпус засвідчують тривалу інтелектуальну лінію.
 
-## 2. Oppression mechanism — arrest, threatened execution, escape across the Soviet–Polish border (1921)
+## 2. Oppression mechanism
 
-Chyzhevskyi is a Block C.5 figure whose emigration was a genuine flight from Bolshevik repression, **not** a career move — a point the dispatch brief insists on and the sources confirm.
+У серпні 1920 року Київська ЧК заарештувала Чижевського. Його перевели до харківської в'язниці, де він перебував сім місяців, а згодом звільнили [S1]. КНУ додає, що вчений уникнув розстрілу та 13 травня 1921 року нелегально перетнув польсько-радянський кордон [S2]. Офіційна історія Слов'янського інституту Гайдельберзького університету незалежно підтверджує загальну обставину: навесні 1921 року він ледве уникнув більшовицької страти й утік через польський кордон [S3].
 
-- **What happened:** As a Menshevik and former Ukrainian Central Rada / Mala Rada member, and after appointment as docent at Kyiv University, he was arrested by the Bolshevik authorities and faced execution; he escaped and crossed the Soviet–Polish border illegally to reach Germany. The arrest itself is now corroborated at Tier 1: the ЕІУ entry records that **in August 1920 he was arrested by the Kyiv Cheka and transferred to Kharkiv prison, where he was held for seven months**, and dates his emigration to summer 1921 ("На еміграції — від літа 1921 — спершу в Польщі, згодом — у Німеччині"). [T1: ЕІУ — Чижевський Дмитро Іванович (Ясь)]
-- **When:** the consensus emigration date is summer 1921 [T1: ЕІУ — Чижевський Дмитро Іванович]; the institutional KNU biography and the Kirovohrad library date the illegal border crossing precisely to **13 May 1921**. [T2: КНУ ім. Шевченка — Чижевський Д. І.; T5: library.kr.ua; T5: uain.press]
-- **By whom:** the Bolshevik (Soviet) security/judicial apparatus in Kyiv (the early Cheka/revtribunal machinery of the Ukrainian SSR); the ЕІУ names the **Kyiv Cheka** for the 1920 arrest. [T1: ЕІУ] The threatened-розстріл detail is carried by the institutional KNU bio — "Дивом йому вдалося уникнути розстрілу" (by a miracle he managed to avoid being shot) — and by the Kirovohrad library, which states he "чудом йому вдалося уникнути розстрілу, утекти." The KNU bio in turn cites the Kirovohrad library, so the *execution-threat* detail (as distinct from the now-Tier-1 arrest and emigration) rests on a single institutional-plus-library line and is flagged provisional. [T2: КНУ ім. Шевченка; T5: library.kr.ua]
-- **Mechanism specifics:** Chyzhevskyi belonged to the political class the Bolsheviks were liquidating — Mensheviks, SR-orbit intellectuals, and former Ukrainian-revolution participants. The threat of розстріл (shooting) was concrete, not abstract. He never returned to live in Soviet Ukraine.
-- **What the Soviet regime did to his field and his work:** Chyzhevskyi's entire research programme — Ukrainian baroque as a great European literary epoch, Skovoroda as a major philosopher, a Ukrainian philosophical and literary history distinct from Russia — was anathema to Soviet scholarship, which branded baroque a "reactionary, decadent" style and subordinated all of it to a Russian-centred narrative. His books were **banned in Soviet Ukraine**; his name was effectively erased from the Soviet academy and his works circulated only in the diaspora and samvydav until the late-Soviet/post-1991 rehabilitation, when *Історія української літератури* and *Українське літературне бароко* were republished in Kyiv. The curriculum module `lit-essay/chyzhevsky-baroque-history.yaml` makes this Soviet-vs-Chyzhevskyi battle (`Дебат 2`, `[!decolonization]`) explicit. [T1: IEU; cross-track YAML]
+Рівень точності треба зберігати. Арешт, Київська ЧК, харківська в'язниця й семимісячне ув'язнення підтверджені ЕІУ [S1]. Весняна втеча та загроза страти мають інституційне підтвердження КНУ й Гайдельберга [S2][S3]. Точна дата 13 травня походить зі сторінки КНУ, тому її подають з атрибуцією, а не як деталь із невідомого архівного документа.
 
-## 3. Major works (his scholarship)
+Нацистський режим також обмежував академічні можливості Чижевського. ЕІУ пов'язує перешкоди до габілітації з єврейським походженням дружини й фіксує заборону на поїздки 1939 року [S1]. Після приходу радянського війська 1945 року він залишив Галле й опинився в Марбурзі; Гайдельберзький університет називає цей рух утечею від наступу радянської армії [S3]. Отже, транснаціональна кар'єра не була послідовністю лише вільно обраних посад.
 
-- **1929** — *Філософія на Україні (спроба історіографії)*, Prague — first attempt at a history of Ukrainian philosophy. [T1: IEU]
-- **1931** — *Нариси з історії філософії на Україні*, Prague — the foundational survey of Ukrainian philosophy, including the major Skovoroda essay. [T1: IEU; T5: uk.wikipedia; primary at litopys]
-- **1933** — *Філософія Г. С. Сковороди*, Warsaw — the first full philosophical monograph on Skovoroda; established Skovoroda as founder of the Ukrainian "філософія серця." [T1: IEU; T5: uk.wikipedia]
-- **1934** — *Гегель в Росії* (Hegel in Russia) — study of Hegel's reception among the Slavs; later expanded as *Hegel bei den Slaven*. [T1: IEU; T5: uain.press]
-- **1941–1944** — *Український літературний барок. Нариси* (3 parts), Prague — the work that single-handedly established Ukrainian baroque as a literary-historical category. [T1: IEU; primary at litopys / diasporiana; T5: uk.wikipedia]
-- **1947** — *До проблеми бароко* — programmatic essay on baroque as a pan-European style with a Ukrainian chapter. [T5: uk.wikipedia]
-- **1948 onward** — rediscovery and editing of the lost manuscript of **Jan Amos Comenius** (*De rerum humanarum emendatione consultatio catholica*, the "Pansophia"), which Chyzhevskyi found in the Pietist archives at Halle after it had been lost for ~150 years — a discovery of European significance. [T1: IEU; T5: library.kr.ua]
-- **1952** — *Outline of Comparative Slavic Literatures*, Harvard / American Academy. [T1: IEU]
-- **1956** — *Історія української літератури (від початків до доби реалізму)*, New York (Українська Вільна Академія Наук) — his magnum opus; reads Ukrainian literary history as a **history of styles** (Romanesque, Gothic, Renaissance, Baroque, Classicism, Romanticism, Realism). [T1: IEU; T5: uk.wikipedia]
-- **1968** — *Comparative History of Slavic Literatures* (English edition). [T5: uk.wikipedia]
-- **1971** — *Порівняльна історія слов'янських літератур* (German *Vergleichende Geschichte der slavischen Literaturen*). [T5: uk.wikipedia]
-- **2003 (posthumous, Kyiv)** — *Українське літературне бароко: Вибрані праці з давньої літератури* (Київ: Обереги, 576 с.) — the post-1991 Ukrainian republication. [T1/primary: litopys digitization]
+## 3. Major works
 
-**Institutional positions:** Ukrainian Higher Pedagogical Institute, Prague (from 1924); Ukrainian Free University, Munich/Prague (professor from 1929); University of Halle (1932–1945); Marburg/Jena (1945–1951); **Harvard University** (visiting/professor, 1949/1951–1956); Heidelberg University, chair of Slavic philology (1956–1977). His name was honoured at HURI by the **Dmytro Chyzhevsky Chair of Ukrainian Literature** (endowed 1973). [T1: IEU; T2: babel.ua / Portnov]
+В українських установах Праги Чижевський викладав філософію й розвивав історико-філософські студії [S1]. Університет Галле документує його постійну лекторську роботу у 1932–1945 роках. Він викладав кілька слов'янських мов і літератур та ширші теми інтелектуальної історії [S4]. ЕІУ окремо фіксує роботу в Єні у 1935–1938 роках [S1]. Тому Єну не можна зливати з повоєнним Марбургом.
 
-## 4. Primary-source quotes (≥2 required)
+Пізніше Чижевський працював у Гарварді, а 1956 року повернувся до Гайдельберга, де очолив славістичний осередок і викладав до смерті [S1][S3]. Початок гарвардського етапу іноді датують 1949 або 1951 роком залежно від статусу посади. Якщо кадрова категорія не пояснена, безпечніше говорити про роботу в Гарварді до повернення в Гайдельберг 1956 року.
 
-### Quote 1 — his own scholarly voice on Skovoroda (his major thesis)
+Український корпус включає «Нариси з історії філософії на Україні», студії про Сковороду, праці про українське літературне бароко й синтетичну історію української літератури [S1][S5][S6]. У цих роботах історія культури постає як зміна стилів і способів мислення. Чижевський зіставляв український матеріал із чеським, польським, німецьким та іншими контекстами. Порівняння не мало доводити вторинність України; воно показувало, як загальноєвропейські форми набували української конфігурації.
 
-From the Skovoroda essay in *Нариси з історії філософії на Україні* (Prague 1931; Kyiv reprint 1992, pp. 43–79):
+Гайдельберзький університет зберігає значну частину матеріальної спадщини: приватну бібліотеку приблизно з дванадцяти тисяч томів, листування та архів [S3]. Інші архівні частини пов'язані з Галле й Гарвардом [S1][S4]. Розпорошеність відповідає географії життя і вимагає працювати з кількома інституційними традиціями.
 
-> **«Життя є філософія і філософія є життя.»**
+## 4. Primary-source reading packet
 
-*Source:* litopys.org.ua digitization of *Нариси з історії філософії на Україні*, Skovoroda chapter. [primary; corroborated T1: IEU as his central Skovoroda thesis] (Note: litopys.org.ua had to be fetched via direct request because its HTTPS certificate name does not validate through the standard fetch path; the text was retrieved and the quote verified verbatim.)
+НБУВ описує перше читання як «Філософські твори» у чотирьох томах, том 1: «Нариси з історії філософії на Україні. Філософія Григорія Сковороди», Київ, видавництво «Смолоскип», 2005 рік, XXXVIII + 400 сторінок [S5]. Бібліотечний запис називає автора, загального редактора, установи-учасниці, українську мову та зміст тому. Учень працює з авторськими аргументами про історію філософії й Сковороду, але курс не переносить повний текст до власного сховища.
 
-*Pedagogical note:* this is the kernel of Chyzhevskyi's reading of Skovoroda — that Skovoroda's greatness lay in *living* his philosophy rather than systematizing it. It is the seed of the whole Ukrainian "філософія серця" (cordocentrism) tradition that the curriculum's Skovoroda modules build on.
+Друге читання має окрему точну ідентичність: «Історія української літератури», книга 2, частини 4 «Ренесанс та реформація» і 5 «Барок», Прага, видавництво Юрія Тищенка, 1942 рік, 134 + 9 сторінок [S6]. НБУВ прямо позначає мову як українську та надає перегляд документа. Це не тотожне лекції в пізнішому збірному виданні, тому стару назву й сторінковий локатор вилучено, а не перенесено між виданнями.
 
-### Quote 2 — his own scholarly voice on Baroque (his defining contribution)
-
-From his lectures/history of Ukrainian literature, baroque chapter:
-
-> **«Замість простоти ренесансу в барокко панує ускладненість, замість поставлення людини в центрі уваги, барокко повертається до „теоцентризму“…»**
-
-*Source:* litopys.org.ua digitization, "Барокко" (Лекції / Історія української літератури). [primary; corroborated T1: IEU] Retrieved by direct request (see TLS note above).
-
-*Pedagogical note:* a model of his "history of styles" method — he defines baroque structurally (complexity vs Renaissance simplicity, theocentrism vs anthropocentrism) and thereby makes Ukrainian baroque legible as part of a pan-European stylistic system, the decolonial move that pulls Ukrainian literature out of the Russian frame.
-
-### Quote 3 — recorded political recollection (documentary, on the 1921 context)
-
-His recollection of confronting the Bolsheviks before his flight:
-
-> **«На моє питання, чи большевицька партія, захопивши владу, скориться перед волею більшости в вільних виборах…»**
-
-*Source:* quoted in uain.press biographical essay (from Chyzhevskyi's own memoir-recollection). [T5; provisional — memoir fragment reproduced in secondary literature] *Pedagogical note:* documents the democratic-Menshevik conviction that put him on the Bolsheviks' liquidation list.
+Жодної прямої цитати в пакеті не залишено. Популярний вислів без первинного документа вилучено раніше, а локатори з дефектних сторінок Ізборника не приписано новим виданням. Обидва тексти доступні лише за зовнішніми посиланнями. НБУВ окремо застерігає від подальшого відтворення повних текстів; диспозиція курсу — link-only.
 
 ## 5. Language register
 
-- **Register:** high academic. His Ukrainian prose is dense scholarly argumentation with precise philosophical and literary-historical terminology; much of his oeuvre is in **German** (as Tschižewskij) and some in English (Harvard period).
-- **CEFR readiness for full reading:** C2 for his scholarly Ukrainian (e.g. *Українське літературне бароко*, the Skovoroda essay). His baroque chapters use older orthography (барокко with double-к, hard-sign-era spellings in pre-war editions) — relevant for advanced learners reading primary editions.
-- **Lexicon notes:** philosophical and literary-historical terminology (теоцентризм, кордоцентризм, стиль доби, ренесанс/бароко/класицизм); German-influenced syntax in translated passages; pre-1933-reform and diaspora orthography in original editions.
-- **Stylistic features:** the "history of styles" architecture; comparative method (constant parallels to German, Italian, Czech literature); the curriculum already treats his prose as a model of **аргументаційна проза** (argumentative prose) in `lit-essay/chyzhevsky-baroque-history.yaml`.
+Українська проза Чижевського має високий академічний регістр. У ній поєднано філософські поняття, історико-літературну періодизацію й порівняльні конструкції. Характерна лексика: теоцентризм, ренесанс, бароко, історія стилів, містика, філософська традиція, слов'янські літератури [S5][S6]. Видання 1942 і 2005 років мають різні редакційні шари, тому історичні форми не можна механічно переносити з одного документа до іншого.
+
+Через термінологічну густоту, довгі синтаксичні періоди й широкий культурний контекст повне читання відповідає C1–C2, а філософський розділ — переважно C2. Багатомовність корпусу має залишатися видимою: Чижевський писав також німецькою й працював у міжнародній славістиці [S1][S3][S4].
 
 ## 6. Contested points
 
-- **The 1918 Menshevik vote against UNR independence:** library.kr.ua records that he voted against the proclamation of UNR independence as a Menshevik internationalist. This is genuinely contested terrain — it must be presented honestly (he was a Ukrainian by conviction but an internationalist-Menshevik by party), not airbrushed and not weaponized. [T5: library.kr.ua]
-- **"Sleepy" vs "lonely" philosopher / his distance from political nationalism:** uain.press frames him as "самотній філософ" (a lonely philosopher) who stood apart from diaspora political camps — debated whether this was principled scholarly detachment or political naivety.
-- **The "national character" critique (Grabowicz):** the curriculum module flags George Grabowicz's critique — is the "national character" Chyzhevskyi seeks in literature a real object or a construction of the historian? A live scholarly debate, not a smear. [cross-track: `lit-essay/chyzhevsky-baroque-history.yaml`]
-- **Blind spots:** his focus on "high"/bookish elite baroque (vs folk/low baroque) and his "history of ideas" method (vs social/economic history) are the standard scholarly criticisms — the module marks these `[!anti-hagiography]`.
-- **Russian disinformation / Soviet erasure angle:** the Soviet academy branded baroque "reactionary/decadent" and erased Chyzhevskyi; his deliberate **ignoring of the Russian literary context for the 17th–18th c.** broke the imperial "спільна колиска / common cradle" concept. Modern Russocentric narratives still resist his claim that Ukrainian baroque is a distinct European phenomenon. [cross-track YAML `[!decolonization]`]
+Політичний вибір 1918 року не можна згладжувати. Чижевський був учасником українського представницького органу, але як меншовик голосував проти IV Універсалу [S1]. Це поєднання української участі та інтернаціоналістичної позиції пояснюють у його історичному часі, не перетворюючи вченого ані на бездоганного державника, ані на зрадника.
+
+Друга неоднозначність — університетські дати. Галле документує 1932–1945 роки [S4]; Єна припадає на 1935–1938 роки [S1]; Марбург — на повоєнний період [S3]; Гайдельберг — від 1956 року [S1][S3]. Третя — оцінка методу. Історія стилів зробила українське бароко видимим у європейському контексті, але не охоплює автоматично всі соціальні чи народнокультурні процеси. Цю межу можна назвати без приписування авторові поглядів, яких немає в текстах. Так само не слід заявляти про повну заборону всіх праць у СРСР без документа про конкретні видання.
 
 ## 7. Cross-track links
 
-`rg` checks across `curriculum/l2-uk-en/plans/{lit,hist,bio,istorio,lit-essay}/` (no YAML modified):
-
-- **LIT-ESSAY:** `plans/lit-essay/chyzhevsky-baroque-history.yaml` — an entire module built on his *Історія української літератури* as argumentative prose, the baroque debates, and the decolonial reading. **Direct, central link.**
-- **LIT:** `plans/lit/skovoroda-baroque-philosophy.yaml`; `plans/lit/baroque-poetry-velychkovsky.yaml`; `plans/lit-drama/skovoroda-dialogues-theatre.yaml` — all in the baroque/Skovoroda domain he founded.
-- **HIST / RUTH (Ruthenian/baroque track):** `plans/hist/hryhorii-skovoroda.yaml`; the whole `plans/ruth/` baroque-poetry cluster (`poeziia-baroko.yaml`, `baroque-poetry.yaml`, etc.) rests on the category he established.
-- **ISTORIO:** `plans/istorio/diaspora-naukovtsi.yaml` and `diaspora-ta-zakhidni-istoriky.yaml` (diaspora scholarship); `plans/istorio/tsykl-kulturnykh-vidrodzhen.yaml`.
-- **Connected bios already in place:** `plans/bio/hryhoriy-skovoroda.yaml` (his life's subject); `plans/bio/george-shevelov.yaml` and the new `omelian-pritsak` (this dispatch) — fellow Harvard/diaspora scholars; the **Chyzhevsky Chair** at HURI links him to Pritsak directly.
-- **Potential additions (do NOT add unilaterally):** a dedicated `dmytro-chyzhevskyi` bio module would anchor the baroque/Skovoroda cluster; file `bio-expansion-followup` if desired.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/hryhoriy-skovoroda.yaml` — предмет філософських студій Чижевського.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/omelian-pritsak.yaml` — інша модель міжнародної української гуманітаристики.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — ширший інституційний контекст еміграції.
 
 ## 8. Naming-canonical
 
-- **Slug:** `dmytro-chyzhevskyi`
-- **EN canonical (BGN/PCGN 2010):** Dmytro Chyzhevskyi.
-- **UA canonical (with patronymic):** Дмитро Іванович Чижевський.
-- **Aliases (for `aliases:` field):**
-  - "Дмитро Чижевський (canonical UA)"
-  - "Dmytro Chyzhevskyi (canonical EN, BGN/PCGN 2010)"
-  - "Dmitrij Tschižewskij (author's German scholarly spelling)"
-  - "Dmytro Čyževśkyj (scholarly transliteration)"
-- **Forbidden forms (flag in body text):** "Дмитрий Чижевский", "Дмитрий Иванович Чижевский" (Russified); "Chizhevsky" (English-via-Russian).
+Українська форма — Дмитро Іванович Чижевський; коротка — Дмитро Чижевський [S1][S2]. Англійська канонічна форма проєкту — Dmytro Chyzhevskyi. У німецьких бібліографічних записах трапляється Dmitrij Tschižewskij; її зберігають, коли відтворюють назву архівного фонду або прижиттєве видання [S3][S4]. Російська форма імені не є нейтральним основним варіантом.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category `Dmytro Chyzhevsky` — verify the file-page license (likely PD-Ukraine or PD-old for pre-war photos). The uk.wikipedia infobox photo is the first candidate (confirm license tag).
-- **Backup candidates:** the Kirovohrad regional library named after him (ОУНБ ім. Д. І. Чижевського, library.kr.ua) holds and publishes photographs; institutional rights query may be needed.
-- **Era-appropriate context image:** title page of *Український літературний барок* (Prague 1941–44) or *Історія української літератури* (New York, UVAN, 1956); or the Halle Pietist archive (Franckesche Stiftungen) where he found the Comenius manuscript.
-- **If no clean PD/CC portrait:** fall back to a book-cover image plus the Halle archive until a licensed portrait is confirmed.
+Пакет має текстовий `portrait_fallback`. Виявлений файл Wikimedia Commons `Чижевский Дмитро.jpg` має невідомих автора й дату, походить із допису Blogspot і містить попередження про неповне підтвердження суспільного надбання у США [S7]. Позначка Commons сама по собі не доводить індивідуальні права. Файл не прийнято як портрет.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine. "Chyzhevsky, Dmytro." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CC%5CH%5CChyzhevskyDmytro.htm. Accessed 2026-05-29. (Birth/death, education under Husserl/Heidegger/Jaspers, Central Rada, 1921 emigration, Prague/Halle/Marburg/Harvard/Heidelberg, Comenius contributions, works.)
-- Ясь О. В. "Чижевський Дмитро Іванович." *Енциклопедія історії України*. http://history.org.ua/?termin=Chyzhevskyj_D. Accessed 2026-05-29. (Birth/death; RSDLP-Menshevik affiliation and Central Rada role; **August 1920 arrest by the Kyiv Cheka and seven months in Kharkiv prison**; emigration from summer 1921, "спершу в Польщі, згодом — у Німеччині"; the ~1000-work scholarly output.)
+- [S1] [ЕІУ, «Чижевський Дмитро Іванович»](https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Chyzhevskyj_D&Z21ID=).
+- [S2] [КНУ, університетська біографія](https://knu.ua/ua/geninf/osobystosti/chizhevskiy/).
+- [S3] [Гайдельберзький університет, історія інституту](https://www.slav.uni-heidelberg.de/geschichte.html).
+- [S4] [Університет Галле, історія славістики](https://www.slavistik.uni-halle.de/neu/2709305_2709310/geschichte/).
+- [S5] [НБУВ, «Філософські твори. Том 1»](https://irbis-nbuv.gov.ua/ulib/item/UKR0004469).
+- [S6] [НБУВ, «Історія української літератури. Книга 2»](https://irbis-nbuv.gov.ua/ulib/item/ukr0000032037).
+- [S7] [Відхилений портретний кандидат](https://commons.wikimedia.org/wiki/File:%D0%A7%D0%B8%D0%B6%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE.jpg).
 
-**Tier 2 (institutional):**
-- babel.ua / Andrii Portnov & Oleksii Yas biography excerpt — establishes the **Dmytro Chyzhevsky Chair of Ukrainian Literature** at HURI (1973). https://babel.ua/texts/124095. Accessed 2026-05-28.
-- Київський національний університет імені Тараса Шевченка. "ЧИЖЕВСЬКИЙ Дмитро Іванович (1894–1977)." https://knu.ua/ua/geninf/osobystosti/chizhevskiy/. Accessed 2026-05-29. (University memorial biography of its former student/docent: the 1921 arrest and internment, the threatened розстріл — "Дивом йому вдалося уникнути розстрілу" — and the illegal crossing of the Polish–Soviet border on 13 May 1921; the page cites the Kirovohrad ОУНБ ім. Д. І. Чижевського as its source, so it corroborates rather than fully independent.)
+## Decolonization self-check
 
-**Tier 3 (encyclopedic — navigation/cross-check):**
-- uk.wikipedia. "Чижевський Дмитро Іванович." Used for the dated works list (Нариси 1931, Філософія Сковороди 1933, Гегель в Росії, Український літературний барок 1941–44, До проблеми бароко 1947, Історія української літератури 1956, Порівняльна історія 1971); cross-checked against IEU and litopys digitizations.
+Чижевського подано українським ученим у транснаціональній славістиці, а не автоматично російським мислителем через імперські кордони чи мови публікацій. Його участь у Центральній Раді й голос проти IV Універсалу названо разом. Більшовицький арешт і втечу описано за інституційними джерелами. Європейський контекст не стирає української агентності праць про Сковороду, бароко й історію літератури. Непідтверджену цитату та абсолют про заборону вилучено.
 
-**Tier 4 (modern scholarly post-1991):**
-- George G. Grabowicz, critique of "national character" in literary historiography (referenced via the curriculum `lit-essay/chyzhevsky-baroque-history.yaml`; primary venues to be confirmed for any direct citation).
-- Post-1991 Kyiv republications (Обереги): *Українське літературне бароко* (2003), *Нариси з історії філософії на Україні* (1992).
+Для навчального аналізу потрібно тримати разом політичну неоднозначність і науковий внесок. Голос проти IV Універсалу не зникає через пізніші праці, а праці не втрачають значення через ранню меншовицьку позицію [S1]. Так само арешт ЧК є документованою репресією, але не дає права вигадувати повну історію цензури кожного видання. Учень має побачити, як різні типи фактів співіснують без виправдання й без анахронічного вироку.
 
-**Tier 5 (general web — corroborated):**
-- library.kr.ua (ОУНБ ім. Д. І. Чижевського) biography. https://library.kr.ua/chizhevsky/lifestory/biograf/. (1921 arrest, threatened розстріл, illegal border crossing 13 May 1921; Comenius discovery at Halle; Mala Rada vote.)
-- uain.press. "Дмитро Чижевський. Самотній філософ." https://uain.press/blogs/...1212065. (Escape context; quote 3.)
-- Radio Svoboda. "Дмитро Чижевський: громадянин УНР, дослідник Сковороди, славіст світового рівня." https://www.radiosvoboda.org/a/...31182570.html. (403 on fetch; cited as a lead only — facts above are carried by IEU + library.kr.ua, not by this page.)
-
-**Primary-source documents accessed:**
-- litopys.org.ua digitizations of Chyzhevskyi's own texts — *Нариси з історії філософії на Україні* (Skovoroda essay) and the "Барокко" chapter — used for Quotes 1 and 2 (fetched via direct request owing to a TLS certificate-name mismatch on the host; quotes verified verbatim against the retrieved text).
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing (his baroque/Skovoroda work presented as the anti-imperial "history of styles"; "common cradle" named as the imperial myth he broke)
-- [x] No Russian-imperial transliterations in body text (Russified forms only in §8 aliases, labeled forbidden)
-- [x] No Russocentric periodization (Українська революція / Central Rada, not "Civil War")
-- [x] No uncritical Soviet propaganda terms ("reactionary/decadent baroque" cited only as the Soviet label)
-- [x] No "lost his life" euphemisms (escape from threatened розстріл named plainly)
-- [x] All place names use modern UA canonical form (Олександрія / Kirovohrad oblast, Kyiv)
-- [x] Holodomor NA to this figure
-- [x] Soviet erasure of his scholarship framed as the colonial mechanism it was
+Два первинні читання дають практичну перевірку методу. Розділ про Сковороду показує історико-філософський аргумент [S5], а книжка про ренесанс, реформацію й бароко — стильове порівняння [S6]. Зіставлення допомагає зрозуміти, що Чижевський не просто додавав Україну до готової європейської схеми, а виробляв спосіб описати її власну конфігурацію в ширшій історії.

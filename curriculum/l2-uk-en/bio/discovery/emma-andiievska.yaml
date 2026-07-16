@@ -1,0 +1,19 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Емма Андієвська
+- Емма Андієвська ЕСУ біографія
+- Емма Андієвська Український вільний університет 95
+- Емма Андієвська Ukraїner інтерв'ю мова
+- Емма Андієвська Шевченківська премія
+- Emma Andijewska Commons audio portrait license
+direct_sources:
+- https://esu.com.ua/article-44101
+- https://ufu-muenchen.de/ya-zhyla-dlya-ukrayiny-vechir-prysvyata-do-95-richchya-emmy-andiyevskoyi/
+- https://www.ukrainer.net/emma-andiievska/
+- https://knpu.gov.ua/winners/andiievska-emma-ivanivna/
+- https://commons.wikimedia.org/wiki/File:Emma_Andijewska,_Dobryi_vechir_samotnoste.ogg
+- https://commons.wikimedia.org/wiki/File:Portrait_of_Emma_Andijewska.JPG
+rag_chunks: []
+rag_literary: []
+warning: Direct subject packet; every URL was fetched for task codex/bio-1981-cohort16 and matches the adopted registry.

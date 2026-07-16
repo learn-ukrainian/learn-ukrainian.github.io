@@ -1,0 +1,22 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Дмитро Чижевський
+- Дмитро Чижевський Енциклопедія історії України
+- Дмитро Чижевський КНУ біографія
+- Дмитро Чижевський Гайдельберг архів
+- Дмитро Чижевський Галле славістика
+- Дмитро Чижевський Філософські твори том 1 НБУВ
+- Дмитро Чижевський Історія української літератури Барок НБУВ
+- Дмитро Чижевський Commons portrait rights
+direct_sources:
+- https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Chyzhevskyj_D&Z21ID=
+- https://knu.ua/ua/geninf/osobystosti/chizhevskiy/
+- https://www.slav.uni-heidelberg.de/geschichte.html
+- https://www.slavistik.uni-halle.de/neu/2709305_2709310/geschichte/
+- https://irbis-nbuv.gov.ua/ulib/item/UKR0004469
+- https://irbis-nbuv.gov.ua/ulib/item/ukr0000032037
+- https://commons.wikimedia.org/wiki/File:%D0%A7%D0%B8%D0%B6%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE.jpg
+rag_chunks: []
+rag_literary: []
+warning: Direct subject packet; every URL was fetched for task codex/bio-1981-cohort16 and matches the adopted registry; the portrait URL documents a rejected candidate.

@@ -1,143 +1,79 @@
-# Емма Іванівна Андієвська — Research Dossier
+# Емма Андієвська — дослідницьке досьє
 
 **Slug:** `emma-andiievska`
-**Block:** C.4 (Нью-Йоркська група — émigré modernist poets)
-**Tier:** 1b
-**Issue:** #2318
-**Researcher:** Claude (claude-opus-4-8) — R1b Block C dispatch
-**Completed:** 2026-05-28
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (father executed by Soviets 1941; family flight; literary ban)
-- [x] ≥2 primary-source quotes from her own work
-- [x] Cross-track links to LIT/HIST tracks checked
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Пакет перевірено:** 2026-07-16
+**Статус читань:** готові, лише зовнішні посилання
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Емма Іванівна Андієвська. [T1: ЕСУ — Андієвська Емма; T1: IEU — Andiievska, Emma]
-- **Pseudonyms / aliases:** Emma Andiievska (BGN/PCGN-2010 project EN); Emma Andijewska (German-diaspora spelling used on her own publications and exhibitions). Forbidden in body text except this section: Андриевская, Emma Andriyevska, any Russified rendering.
-- **Born:** 19 March 1931 | Сталіно (the Soviet-renamed Юзівка), now **Донецьк**, Українська СРР (under Soviet occupation). [T1: ЕСУ; T1: IEU; T5: Ukrainer]
-- **Died:** **NOT DECEASED — living as of this dossier.** She celebrated her **95th birthday on 19 March 2026** (T5: Главком, dated 2026-03-19); ESU and IEU give no death date. [T1: ЕСУ; T1: IEU; T5: Главком 2026]
-- **Family / education key facts:** Father **Іван Андієвський**, a chemist-inventor (six inventions reportedly noted in Encyclopædia Britannica); mother a biology teacher/agronomist. Educated in emigration; completed the Ukrainian Free University (УВУ), Munich, 1957. From 1961 based in Munich; also lived in New York and France. [T1: ЕСУ; T1: IEU; T5: Ukrainer, cxid.media]
+Емма Іванівна Андієвська — українська поетка, прозаїкиня і художниця. Вона народилася 19 березня 1931 року в місті Сталіно, нині Донецьк [S1][S4]. Офіційний профіль Комітету Шевченківської премії підтверджує повну форму імені, дату й місце народження, еміграцію від 1943 року та навчання в Українському вільному університеті [S4]. У березні 2026 року Український вільний університет провів вечір до її 95-річчя і згадав особисту зустріч ректора з мисткинею в Мюнхені 2025 року [S2]. Отже, станом на дату перевірки Андієвська жива; старі енциклопедичні статті без актуального інституційного повідомлення не були б достатніми для такого висновку.
 
-**Source disagreement note (load-bearing — the brief's death claim is wrong):** the dispatch brief stated "d. 2022 Munich (VERIFY)." **This is incorrect.** Multiple sources confirm she was alive after 2022: ESU and IEU carry no death date, and Ukrainian press marked her 95th birthday on 19 March 2026. She is treated here as **living**. A separate minor disagreement exists on whether she "emigrated in 1943" (UA press shorthand) vs. fled to Germany in 1943 and reached Munich in 1949 (Mittenwald DP camp en route) — the latter is the fuller timeline. [T1: ЕСУ; T1: IEU; T5: Главком; T5: Ukrainer]
+Дитинство Андієвської пов'язане з Донеччиною, Вишгородом і Києвом. У прямій розмові вона пояснює, що українську опанувала в україномовному середовищі Вишгорода, попри російськомовність удома й опір матері її мовному вибору [S3]. 1943 року дванадцятирічна Емма разом із матір'ю та молодшим братом залишила Україну. Подальша траєкторія пролягла через Німеччину до Мюнхена [S1][S3][S4]. Кожен проміжний пункт треба підтверджувати окремо, а не складати точний маршрут із фрагментів різних переказів.
+
+1957 року Андієвська закінчила Український вільний університет у Мюнхені за спеціальностями філософія та філологія [S4]. Вона працювала в українському відділі Радіо Свобода як дикторка, сценаристка, режисерка й редакторка [S1][S4]. Ця праця належить до української медійної інфраструктури діаспори, але її не можна використовувати як готове пояснення кожної поетичної форми.
+
+Андієвську часто пов'язують із Нью-Йоркською групою. Пряме інтерв'ю подає поруч дві перспективи: дослідники й учасники середовища включають її до групи, тоді як сама мисткиня заперечує формальну належність [S3]. Отже, формула про точний рік вступу надто категорична. Треба розрізняти участь у спільному середовищі, публікації, спогади інших і самоозначення авторки.
 
 ## 2. Oppression mechanism
 
-Andiievska is the cohort member with the most **direct early-Soviet biography**: the regime did not merely force her family into exile — it **executed her father** and tried to suppress her Ukrainian language from inside her own home.
+Родинна історія містить загибель батька, яку українські джерела пов'язують із радянською владою, та вимушений виїзд родини. Однак доступні джерела не збігаються в деталях. Ukraïner називає радянські спецслужби й 1941 рік [S3], тоді як інші інституційні перекази обирають обережніше формулювання про радянську владу [S4]. У пакеті немає номера архівної справи, акта розстрілу, місця поховання чи документа карального органу.
 
-- **What happened:** Her father, chemist-inventor Іван Андієвський, was **shot by Soviet security in 1941**. The reported motive (one version) was to prevent his inventions and scientific work from falling into German hands as the front approached Stalino. To protect the surviving family, her mother fled with the children. [T5: Ukrainer; T5: cxid.media — both independent]
-- **When (specific dates):** father's execution **1941**; family flight from Soviet Ukraine **1943** (she was twelve, travelling in a German railway car); Mittenwald DP camp 1949; Munich from 1949/1961. [T5: Ukrainer; T1: ЕСУ]
-- **By whom (specific regime):** the **Soviet Union** — the father's killing by Soviet security organs (NKVD), 1941; the broader displacement driven by Soviet occupation/re-occupation dynamics of WWII. [T5: Ukrainer; T5: cxid.media]
-- **Mechanism specifics — linguistic and literary repression.** Two layers. (1) **Russification at home:** Andiievska has recounted that her mother forbade her to speak Ukrainian, treating Russian as the language of higher status — a domestic echo of imperial language hierarchy. The young Emma deliberately *chose* Ukrainian and kept it as her primary creative language her whole life, calling it "мова моєї душі." From Soviet-Russified Donetsk, this was an act of resistance. (2) **The Soviet ban on her poetics:** her surrealist, neologism-dense, Zen-inflected verse was categorically unpublishable under socialist realism; the entire body of work could exist only in the diaspora — the curriculum's own NYG-vs-МУР framing makes this point explicit. [T5: Ukrainer; T1: IEU; T2: LIT plan `new-york-group-poets.yaml`]
-- **What survived / what was destroyed:** her father's life and scientific archive were lost to the regime; what *survived* — because she was beyond Soviet reach — is one of the largest modernist Ukrainian oeuvres of the 20th century (thousands of poems and paintings). After 1991 her work, and the Shevchenko National Prize (2018), returned it to Ukraine. [T1: ЕСУ]
+Коректна формула така: за родинною пам'яттю та українськими інституційними джерелами, батька Андієвської вбила радянська влада або радянські спецслужби; точний рік, орган і мотив потребують архівного підтвердження. Тезу про недопущення передачі винаходів німцям не можна подавати як висновок архівного розслідування. Збереження невизначеності не применшує насильства, а відділяє узгоджене ядро від неперевіреної точності.
+
+Виїзд 1943 року був не звичайною зміною місця проживання, а втечею родини в умовах війни й загрози [S3][S4]. Водночас художній твір про переміщених осіб не є автоматично протоколом власної біографії. Конкретне біографічне тлумачення потребує текстового доказу.
 
 ## 3. Major works
 
-- `1951` — *Поезії*, debut poetry (Neu Ulm). [T1: ЕСУ]
-- `1955` — *Подорож*, prose. [T1: IEU]
-- `1958` — *Народження ідола*, poetry (New York). [T1: ЕСУ]
-- `1961` — *Риба і розмір*, poetry (New York) — famous for the literary mystification of two invented poets (the Greek Арістодімос Ліхнос and African-American Варуба Бдрумбґу). [T1: ЕСУ; T5: UA press]
-- `1962` — *Тигри* / *Кути опостінь*, poetry. [T1: IEU; T1: ЕСУ]
-- `1968` — *Пісні без тексту*, poetry (Munich). [T1: ЕСУ]
-- `1975` — *Наука про землю*, poetry (Munich). [T1: ЕСУ]
-- `1982` — *Роман про людське призначення*, novel. [T1: IEU]
-- `1985` — *Спокуси святого Антонія*, poetry (Munich). [T1: ЕСУ]
-- `1995` — *Знаки. Тарок*, poetry (Kyiv). [T1: ЕСУ]
-- `1998` — *Межиріччя. Сонети*, sonnets (Kyiv). [T1: ЕСУ]
-- Painting — surrealist oils/watercolours/gouache from her 1956 first solo show in Munich onward; an enormous output. [T1: IEU; T5: Ukrainer]
+Поетичний дебют Андієвської — збірка «Поезії» 1951 року. Далі вийшли «Народження ідола», «Риба і розмір», «Кути опостінь», «Первні», «Базар», «Пісні без тексту», «Наука про землю», «Кав'ярня», «Спокуси святого Антонія», «Віґілії», «Архітектурні ансамблі», «Знаки. Тарок», «Атракціони з орбітами й без» та інші книжки [S1][S4]. Перелік і роки треба звіряти за конкретними виданнями, бо довідкові джерела можуть ставити перевидання поруч із першою публікацією.
 
-## 4. Primary-source quotes (≥2 required)
+Коротка проза охоплює «Подорож», «Тигри», «Джалапіту», «Казки» і «Проблему голови». До романів належать «Герострати», «Роман про добру людину» та «Роман про людське призначення» [S1]. Літературу не можна відділяти від малярства, але й не можна називати кожен вірш описом картини. ЕСУ характеризує живопис як символічно-фантастичний, а поезію — як образно несподівану й лексично багату [S1].
 
-**Quote 1 — opening of a meditation on solitude (quoted in the Ukrainer profile):**
+Для первинного слухання перевірено точний аудіофайл, де Андієвська читає український твір «Добрий вечір, самотносте» [S5]. Файлова сторінка містить публічнодоменну декларацію завантажувача щодо запису. Курс може давати зовнішнє посилання на аудіо, але статус запису не доводить окремого дозволу відтворювати або транскрибувати повний літературний текст.
 
-> **Добрий вечір, самотносте! / Ось кухоль, ось кінь мій, ось моє серце.**
+## 4. Primary-source quotations
 
-The personified address to solitude, the abrupt inventory of objects (mug, horse, heart) — this is her surrealist image-logic and her hospitable, almost folkloric tone toward the metaphysical. `verify_quote` returned no corpus match (diaspora poets unindexed); cited from the Ukrainer feature on Andiievska.
-
-**Quote 2 — her credo on the Ukrainian language (recorded statement, quoted in the Ukrainer profile):**
-
-> **[українська —] мова моєї душі.**
-
-Pedagogically vital: a poet born in Russified Soviet Donetsk, whose mother forbade Ukrainian, naming Ukrainian "the language of my soul" and writing in it for ninety years. It is the decolonisation argument in her own voice. Cited from Ukrainer; flagged single-source for exact wording.
+Прямих цитат до досьє не включено. Інтерв'ю Ukraïner дає авторське пояснення мовного вибору та позиції щодо Нью-Йоркської групи [S3], проте ці думки можна точно переказати без копіювання формулювань. Поетичні рядки з профілів вилучено, бо для них не було встановлено книжкового видання й друкованої сторінки. Аудіофайл є точним записом авторського читання, але без окремої перевіреної транскрипції й прав на текст його слід слухати за посиланням, а не передруковувати [S5].
 
 ## 5. Language register
 
-- **Register:** high surrealist modernism; dense neologism; "вірші-сни" (dream-poems); strict sonnet form deployed against surreal content.
-- **CEFR readiness for full reading:** C2 for independent reading; selected sonnets C1 with heavy glossary.
-- **Lexicon notes:** her trademark is **invented compound neologisms** — words that do not exist in VESUM because she coined them. Learners must be told these are deliberate coinages, not errors, and not Russianisms. This makes her unusable for vocabulary drilling but ideal for teaching *word-formation* (composition, derivation) as a creative system.
-- **Stylistic features:** surreal juxtaposition, otherworldly bestiary shared between her painting and poetry, Zen/Far-Eastern philosophical undertones, paradox and negation, and rigorous formal containers (sonnets) for irrational content. [T1: IEU]
+Андієвська працює у високому модерністському й сюрреалістичному регістрі, який поєднує розмовну лексику, наукові терміни, архаїзми, складні синтаксичні конструкції та несподівані образні переходи [S1][S3]. Сонетна форма не означає простого наслідування класичного зразка. Дисонансна рима може спиратися на каркас приголосних за відмінних голосних, тому учень не завжди почує її, якщо очікує тотожних закінчень.
+
+Для повного читання поезії доцільний рівень C1, для романів зі складним реченням і багатошаровою композицією — C1–C2. На B2 можливе точне слухання короткого аудіо з опорою на лексику й ритм без вимоги розшифрувати весь образ [S5]. Незвичне слово не слід автоматично називати авторським неологізмом: спочатку його перевіряють у словниках, корпусах і контексті.
 
 ## 6. Contested points
 
-- **Modern UA scholarly debate:** how to classify her — pure surrealist, metaphysical visionary, or sui generis; and how to read the painting/poetry cross-feed (do the canvases illustrate the poems, or are both outputs of one private cosmology?).
-- **What gets simplified:** popular framing flattens her into "the surrealist of the New York Group," underselling her Donetsk origin and her deliberate, biographical *choice* of Ukrainian over the Russian her mother pushed.
-- **Russian/Soviet disinformation angle:** present-day Russian narratives claim Donetsk/Donbas as "Russian." Andiievska — born in Stalino, father shot by the Soviets, lifelong Ukrainian-language writer — is a direct refutation: she is the Ukrainian poet of Donetsk. Her biography is actively cited in Ukrainian cultural defence of Donbas. [T5: cxid.media]
-- **Other-perspective considerations:** her neologisms raise a real linguistic question (creative coinage vs. codified norm) that must be handled with VESUM literacy, not flagged as "wrong Ukrainian."
+Перший спірний пункт — обставини смерті батька. Радянська відповідальність присутня в джерелах, але рік, точна установа й мотив не мають єдиного документального підтвердження [S3][S4]. Другий — Нью-Йоркська група: інституційні виклади пов'язують Андієвську з раннім колом, тоді як сама вона дистанціюється від формального означення [S3]. Потрібно показати обидва рівні — історію мережі та авторське самоозначення.
+
+Третє спрощення — твердження про абсолютну одномовність. Пряме інтерв'ю доводить свідомий вибір української як головної творчої мови [S3]. Водночас Андієвська знала інші мови й жила в багатомовному середовищі. Найточніше говорити про українську як обрану, послідовну й центральну літературну мову. Четверте спрощення — пояснення всіх творів лише травмою втечі або лише сюрреалізмом. Кожен твір має власну форму й історію.
 
 ## 7. Cross-track links
 
-`rg` over `curriculum/l2-uk-en/plans/{lit,hist,bio}/` found:
-
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/emma-andiyevska-new-york-group.yaml` — dedicated module "Емма Андієвська та Нью-Йоркська група" (surrealism).
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/andijewska-magic-realism.yaml` — magic-realism module on her prose.
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` — analyses "герменевтика поезії Емми Андієвської: сюрреалістичні образи… спроба створити власну реальність через слово"; her texts are mandatory anthology reading.
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — diaspora overview.
-- **HIST (existing):** `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml` — repression context; her father's 1941 Soviet execution belongs with terror-mechanism modules.
-- **Cohort cross-refs (real connections):** joined the New York Group in 1957 alongside Patricia Kylyna; co-members Богдан Бойчук, Юрій Тарнавський, Богдан Рубчак, Віра Вовк (1959).
-
-No plan YAML was modified.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/emma-andiyevska-new-york-group.yaml` — окреме літературне читання.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` — групове середовище та розбіжності самоозначення.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — діаспорний модернізм без одномовного шаблону.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/yurii-tarnavskyi.yaml` і `curriculum/l2-uk-en/plans/bio/bohdan-rubchak.yaml` — порівняння окремих естетик.
 
 ## 8. Naming-canonical
 
-- **Slug:** `emma-andiievska`
-- **EN canonical (BGN/PCGN 2010):** Emma Andiievska.
-- **UA canonical:** Емма Іванівна Андієвська.
-- **Aliases to track:** Emma Andijewska (own German-diaspora spelling); Андієвська Емма Іванівна.
-- **Forbidden Russian-imperial / Russified forms:** Андриевская; Emma Andriyevska/Andrievskaya; "Stalino"/"Yuzovka" used as a *current* place name (historical only, with modern Донецьк given). Use only in alias warnings, never in body text.
+Канонічна українська форма — Емма Андієвська, повна — Емма Іванівна Андієвська [S4]. Англійська проєктна форма — Emma Andiievska. У німецьких і файлових записах трапляється Emma Andijewska [S5][S6]. Ці варіанти потрібні для пошуку й бібліографії. Російську транслітерацію не ставлять основною.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category **`Emma Andijewska`** (exists, with photos and painting reproductions) — verify the individual file's license; she is living, so portraits are under copyright unless explicitly freely licensed.
-- **Backup candidates:** her own site emma-andiyevska.com and the Ukrainian Art Library (uartlib.org) host portraits and paintings (rights to confirm).
-- **Era-appropriate context image:** a reproduction of one of her surrealist canvases (cover-as-artifact / fair dealing), which uniquely illustrates the painting/poetry cross-feed.
+Прийнято точний файл Wikimedia Commons `Portrait of Emma Andijewska.JPG`, створений 12 травня 2009 року користувачем Silin2005. На файловій сторінці автор завантаження присвячує роботу суспільному надбанню [S6]. Запис у плані містить точну назву файла, автора, дату, декларацію прав і доказову адресу. Фото з сучасних медіапрофілів не переносять без окремої ліцензії.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Андієвська Емма." https://esu.com.ua/article-44101 — Accessed 2026-05-28.
-- Internet Encyclopedia of Ukraine. "Andiievska, Emma." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndiievskaEmma.htm — Accessed 2026-05-28.
-- Internet Encyclopedia of Ukraine. "New York Group." (founding/membership) — Accessed 2026-05-28.
+- [S1] [Енциклопедія Сучасної України, «Андієвська Емма»](https://esu.com.ua/article-44101).
+- [S2] [Український вільний університет, вечір до 95-річчя](https://ufu-muenchen.de/ya-zhyla-dlya-ukrayiny-vechir-prysvyata-do-95-richchya-emmy-andiyevskoyi/).
+- [S3] [«Хто така Емма Андієвська?», пряме інтерв'ю](https://www.ukrainer.net/emma-andiievska/).
+- [S4] [Комітет Шевченківської премії, офіційний профіль](https://knpu.gov.ua/winners/andiievska-emma-ivanivna/).
+- [S5] [Авторське читання українського твору](https://commons.wikimedia.org/wiki/File:Emma_Andijewska,_Dobryi_vechir_samotnoste.ogg).
+- [S6] [Точний портрет із декларацією прав](https://commons.wikimedia.org/wiki/File:Portrait_of_Emma_Andijewska.JPG).
 
-**Tier 2 (institutional):**
-- Project LIT plans `emma-andiyevska-new-york-group.yaml`, `andijewska-magic-realism.yaml` (internal cross-track framing only).
+## Decolonization self-check
 
-**Tier 5 (general web, corroborated):**
-- Ukrainer. "Хто така Емма Андієвська?" https://www.ukrainer.net/emma-andiievska/ — father's 1941 Soviet execution, 1943 flight, "мова моєї душі," primary quote. Accessed 2026-05-28.
-- cxid.media. "Емма Андієвська: життя і творчість… з Донецька." — independent corroboration of father's execution and Donetsk-defence framing. Accessed 2026-05-28.
-- Главком. "Еммі Андієвській — 95." 2026-03-19. https://glavcom.ua/country/culture/emmi-andijevskij-95-... — confirms she is living (95th birthday). Accessed 2026-05-28.
+Донецьк не подано як природно російський простір; родинну русифікацію описано як історичний процес, а українську — як свідомо обрану літературну мову. Радянське насильство названо без вигаданої архівної певності. Нью-Йоркська група не поглинає самоозначення мисткині. Права на аудіозапис не перенесено на повний текст твору.
 
-**Tier 3 (navigation only):**
-- Ukrainian Wikipedia, "Емма Андієвська" — starting point only; dates cross-checked against IEU/ESU.
+Джерела мають різні функції. ЕСУ й офіційний профіль встановлюють дати, освіту, працю та бібліографічне ядро [S1][S4]. Університетське повідомлення потрібне саме для актуального життєвого статусу, а не як універсальна біографія [S2]. Інтерв'ю передає авторське розуміння мови й групової належності [S3]. Commons документує окремо аудіозапис і портрет, тому правовий висновок роблять на рівні конкретного файла [S5][S6]. Змішування цих ролей породило б або недоведену точність, або хибну ліцензію.
 
-**Primary-source documents accessed:** none directly; the father's 1941 NKVD execution is reported via modern UA cultural sources (no archival case-file citation located — flagged for future ГДА СБУ lookup).
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing — "the Ukrainian poet of Donetsk" foregrounded against Russian Donbas claims.
-- [x] No Russian-imperial transliterations in body text (Russified forms quarantined in §8).
-- [x] No Russocentric periodization — Soviet execution and occupation named precisely.
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms — father "shot by Soviet security," active voice, perpetrator named.
-- [x] Modern UA place names — Донецьк (with historical "Сталіно/Юзівка" clarified on first use).
-- [x] Holodomor — NA.
-- [x] Crimea/2014/2022 — her Donetsk origin framed against Russian aggression claims on Donbas.
+Для уроку корисно зіставити три види самоозначення: місце народження, обрану мову письма і ставлення до літературної групи. Вони не збігаються автоматично. Народження в Донецьку не визначає російської культурної належності; українська мова не заперечує багатомовного досвіду; участь у нью-йоркському середовищі не скасовує пізнішого заперечення формального членства. Таке зіставлення зберігає агентність Андієвської й не робить біографію гаслом.

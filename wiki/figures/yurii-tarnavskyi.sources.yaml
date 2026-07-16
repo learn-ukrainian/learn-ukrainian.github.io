@@ -1,0 +1,7 @@
+sources:
+- {id: S1, file: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CA%5CTarnawskyYuriy.htm', type: external, title: 'Tarnawsky, Yuriy — Internet Encyclopedia of Ukraine', url: 'https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CA%5CTarnawskyYuriy.htm'}
+- {id: S2, file: 'https://archive.chytomo.com/interview/yurij-tarnavskij-ne-bulo-vpliviv-shistdesyatnikiv-na-nyu-jorksku-grupu', type: external, title: 'Юрій Тарнавський: Не було впливів шістдесятників на Нью-Йоркську групу', url: 'https://archive.chytomo.com/interview/yurij-tarnavskij-ne-bulo-vpliviv-shistdesyatnikiv-na-nyu-jorksku-grupu'}
+- {id: S3, file: 'https://craftmagazine.net/yuriy-tarnawsky/', type: external, title: 'Юрій Тарнавський про письменницьку працю', url: 'https://craftmagazine.net/yuriy-tarnawsky/'}
+- {id: S4, file: 'https://suspilne.media/1141186-pomer-pismennik-urij-tarnavskij/', type: external, title: 'Помер письменник Юрій Тарнавський', url: 'https://suspilne.media/1141186-pomer-pismennik-urij-tarnavskij/'}
+- {id: S5, file: 'https://diasporiana.org.ua/poeziya/15259-tarnavskiy-yu-spomini-poeziyi/', type: external, title: 'Тарнавський Ю. Спомини. Поезії', url: 'https://diasporiana.org.ua/poeziya/15259-tarnavskiy-yu-spomini-poeziyi/'}
+- {id: S6, file: 'https://commons.wikimedia.org/wiki/File:Yuriy_Tarnawsky_in_Kyiv.jpg', type: external, title: 'Yuriy Tarnawsky in Kyiv — CC BY-SA 4.0', url: 'https://commons.wikimedia.org/wiki/File:Yuriy_Tarnawsky_in_Kyiv.jpg'}

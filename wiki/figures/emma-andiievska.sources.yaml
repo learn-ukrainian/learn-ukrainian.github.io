@@ -1,0 +1,7 @@
+sources:
+- {id: S1, file: 'https://esu.com.ua/article-44101', type: external, title: 'Андієвська Емма — ЕСУ', url: 'https://esu.com.ua/article-44101'}
+- {id: S2, file: 'https://ufu-muenchen.de/ya-zhyla-dlya-ukrayiny-vechir-prysvyata-do-95-richchya-emmy-andiyevskoyi/', type: external, title: 'Вечір до 95-річчя Емми Андієвської — УВУ', url: 'https://ufu-muenchen.de/ya-zhyla-dlya-ukrayiny-vechir-prysvyata-do-95-richchya-emmy-andiyevskoyi/'}
+- {id: S3, file: 'https://www.ukrainer.net/emma-andiievska/', type: external, title: 'Хто така Емма Андієвська? — Ukraïner', url: 'https://www.ukrainer.net/emma-andiievska/'}
+- {id: S4, file: 'https://knpu.gov.ua/winners/andiievska-emma-ivanivna/', type: external, title: 'Андієвська Емма Іванівна — Шевченківський комітет', url: 'https://knpu.gov.ua/winners/andiievska-emma-ivanivna/'}
+- {id: S5, file: 'https://commons.wikimedia.org/wiki/File:Emma_Andijewska,_Dobryi_vechir_samotnoste.ogg', type: external, title: 'Добрий вечір, самотносте — авторське читання', url: 'https://commons.wikimedia.org/wiki/File:Emma_Andijewska,_Dobryi_vechir_samotnoste.ogg'}
+- {id: S6, file: 'https://commons.wikimedia.org/wiki/File:Portrait_of_Emma_Andijewska.JPG', type: external, title: 'Portrait of Emma Andijewska — public-domain dedication', url: 'https://commons.wikimedia.org/wiki/File:Portrait_of_Emma_Andijewska.JPG'}

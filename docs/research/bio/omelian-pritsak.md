@@ -1,155 +1,82 @@
-# Омелян Йосипович Пріцак — Research Dossier
+# Омелян Пріцак — дослідницьке досьє
 
 **Slug:** `omelian-pritsak`
-**Block:** C.5 (émigré scholars who built Ukrainian studies in exile)
-**Tier:** 1b
-**Issue:** #2318
-**Researcher:** Claude (claude-opus-4-8) — R1b Block C dispatch
-**Completed:** 2026-05-28
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (exile + Soviet destruction of his field/teacher)
-- [x] ≥2 primary-source quotes from his own work / recorded speech
-- [x] Cross-track links to LIT/HIST/ISTORIO tracks checked
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Пакет перевірено:** 2026-07-16
+**Статус читань:** готові, лише зовнішні посилання
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Омелян Йосипович Пріцак. [T1: ЕСУ — Пріцак Омелян Йосипович; T1: IEU — Pritsak, Omeljan]
-- **Pseudonyms / aliases:** Omeljan Pritsak (his own preferred English-language scholarly spelling, used on every Harvard title page). Forbidden in body text except this section: Емельян Прицак, Емельян Иосифович Прицак (Russified forms), Omelan Prytsak.
-- **Born:** 7 April 1919 | село Лука, Самбірський повіт, Galicia (then under Polish administration / Друга Річ Посполита; now Самбірський район, Львівська область, Україна). IEU notes the village is "now Озерне." [T1: ЕСУ; T1: IEU; T5: NBUV]
-- **Died:** 29 May 2006 | Boston (Brookline), Massachusetts, USA | buried in Kyiv (Байкове кладовище). [T1: ЕСУ; T2: Harvard Gazette obituary 2006]
-- **Family / education key facts:** Polish-administered gymnasium in Ternopil (matriculated 1936); historical/Oriental-languages study at Lviv University (1936–1940), focusing on Arabic, Mongolian, Persian, Turkish; doctoral aspirantura at the Інститут мовознавства АН УРСР in Kyiv (1940–1941) under academician **Ahatanhel Krymsky**; doctorate (Dr. phil.) at Göttingen 1948 with the dissertation *Karachanidische Studien* ("Караханідські студії"). Wife Larysa Hvozdyk-Pritsak; daughter Iryna (Irene). [T1: ЕСУ; T1: IEU; T2: Harvard Gazette 2006; T5: chornomorka.com]
+Омелян Йосипович Пріцак народився 7 квітня 1919 року і помер 29 травня 2006 року. Українські енциклопедичні та інституційні джерела визначають його як історика, філолога й сходознавця, чия праця охоплювала тюркологію, іраністику, історію середньовічної Євразії та історію України [S1][S2][S5]. Така широта не була відступом від української тематики. Вона дала дослідникові інструменти розглядати Україну у зв'язках із тюркськими, іранськими, скандинавськими та іншими культурами, а не як периферію чужої національної історії.
 
-**Source disagreement note:** Sources differ on the WWII path. ЕСУ compresses it to "drafted into the Soviet army; after the Nazi invasion (June 1941) captured but escaped." en.wikipedia states only that he was "taken to the west as an Ostarbeiter." The fuller Ukrainian account (chornomorka.com, drawing on the Portnov/Yas biography material) reconciles these: conscripted into the Red Army in **November 1940**, he "одразу потрапляє в полон" (was immediately taken prisoner) at the front in 1941, then was held as forced labour in Germany and **released through the intervention of Professor Richard Hartmann**, after which he attended seminars at Berlin University from **October 1943**. Use the reconciled version and flag the compression. [T1: ЕСУ; T3: en.wikipedia; T5: chornomorka.com]
+Пріцак навчався у Львові, де студіював історію та східні мови, а в Києві був пов'язаний з академічним середовищем Агатангела Кримського [S1][S2][S5]. Подальша академічна траєкторія пролягла через Німеччину й Сполучені Штати. Він захистив докторську працю з караханідської проблематики, працював у німецьких університетах, а згодом у Гарварді [S1][S2].
 
-**Source disagreement note (HURI directorship end-date):** ЕСУ writes that he taught at Harvard "до 1990"; the Harvard Gazette obituary and IEU give his HURI directorship as **1973–1989** and his retirement as 1989. Both are compatible (institute directorship ended 1989; faculty emeritus status around 1990). Cite 1973–1989 for the directorship.
+У 1970-х роках учений став ключовим організатором сталої університетської інфраструктури українознавства в Гарварді. Йшлося не про один курс, а про поєднання кафедр, дослідницького інституту, бібліотечних ресурсів і наукового видання [S1][S3]. У 1991 році Пріцак став засновником і першим директором відновленого Інституту сходознавства імені А. Ю. Кримського НАН України [S5]. Сильні українські джерела датують директорство 1991–1998 роками, а інституційна сторінка називає його почесним директором від 1999 року [S1][S5]. Тому формулу про директорство до 2001 року вилучено.
 
-## 2. Oppression mechanism — exile + the Soviet destruction of his field and his teacher
+Помер Пріцак у Бостоні. Похований у Києві на Лук'янівському кладовищі, а не на Байковому [S1][S2]. Ця корекція важлива, бо помилкове місце поховання повторювалося в попередньому пакеті як безсумнівна точність.
 
-Pritsak is a Block C.5 figure: he could not do free Ukrainian-and-Oriental scholarship under Soviet rule and so built it in exile, precisely because Soviet power had decapitated the very disciplines he was trained in.
+## 2. Oppression mechanism
 
-- **What happened:** displacement by war (Red Army conscription → German captivity → Ostarbeiter forced labour → DP-era study in Germany), followed by a deliberate refusal to return to the USSR and a career built in the West. His was not a "career move" but a forced rupture: a Galician Ukrainian conscripted by the regime that had occupied western Ukraine in 1939, captured, used as forced labour, and left stateless.
-- **When:** conscription November 1940; captivity 1941; forced labour and then Berlin study 1943–45; Göttingen 1946–48; he never returned to live in the USSR, settling in West Germany, then the United States (1961). [T5: chornomorka.com; T1: IEU]
-- **By whom / what was destroyed:** the load-bearing fact is the fate of his teacher. In 1939, in Soviet-occupied Lviv, the young Pritsak met the "леґендарний академік" **Ahatanhel Krymsky**, the founder of Ukrainian Orientalism. Krymsky was arrested by the NKVD in July 1941 and **died in Soviet captivity (Kustanai prison hospital, Kazakhstan) on 25 January 1942** — "знищений комуністичною системою" (destroyed by the communist system), in the words of the biographical literature. The discipline Pritsak inherited — Ukrainian Oriental studies — had been physically annihilated in the USSR: its founder dead in an NKVD prison, its institutions Russified, its very premise (that Ukraine had its own Orientalist tradition and its own relation to the Turkic-Iranian-Khazar world) treated as bourgeois nationalism. [T1: ЕСУ; T5: chornomorka.com]
-- **Mechanism specifics:** Pritsak's life work — re-founding Ukrainian Oriental and historical studies abroad, then symbolically returning to Ukraine in 1991 to found the **Institute of Oriental Studies named for A. Yu. Krymsky** — is a direct restitution of what the Soviet regime had destroyed. He named the new institute after the murdered teacher. The Harvard Ukrainian Research Institute itself (1973) existed because Ukrainian studies could not be done freely in Soviet Ukraine, where the field was straitjacketed by the imperial "common cradle" (спільна колиска) doctrine that subordinated Kyivan Rus' to a Russian national narrative. [T1: ЕСУ; T1: IEU; T2/T5: babel.ua]
-- **What survived:** his entire archive, library, and art collection survived in the West and were repatriated; since 2007 they form the «Меморіальна бібліотека Омеляна Пріцака» at the National University of Kyiv-Mohyla Academy. [T1: ЕСУ]
+Життєпис Пріцака не варто зводити ні до історії успішної еміграційної кар'єри, ні до готової схеми переслідуваного вченого. Його молодість припала на зміну державних кордонів, радянську анексію західноукраїнських земель і Другу світову війну. Енциклопедичні джерела фіксують мобілізацію до радянського війська, полон і подальше перебування в Німеччині, але не всі етапи воєнного шляху описані однаково докладно [S1][S2]. За відсутності одного первинного документа слід називати спільне ядро: війна перервала львівсько-київський етап навчання, після неї Пріцак продовжив наукову працю в Німеччині, а пізніше — у США.
 
-## 3. Major works (his scholarship and the institutions he founded)
+Важливою лінією спадкоємності був Агатангел Кримський. Пріцак формувався поруч із традицією українського сходознавства, яку уособлював Кримський, а 1991 року очолив інститут, названий на його честь [S1][S5]. Цей зв'язок не дає підстав приписувати учневі кожну тезу вчителя, проте пояснює, чому відновлення установи мало не лише адміністративне значення.
 
-- **1948** — *Karachanidische Studien* ("Караханідські студії"), Göttingen doctoral dissertation; foundational Turkological work on the Qarakhanid dynasty. [T1: ЕСУ; T1: IEU]
-- **1952–** — *Stammesnamen und Titulaturen der altaischen Völker* and a stream of studies in historical-comparative Turkic and Altaic linguistics; he becomes professor at the University of Hamburg (1957–61). [T1: IEU; T2: Harvard Gazette 2006]
-- **1967** — programmatic proposal to Harvard for three endowed chairs of Ukrainian studies (history, literature, philology) — the intellectual blueprint of the "Harvard miracle." [T2: babel.ua excerpt of Portnov/Yas biography; T2: HURI — Portnov, *Omeljan Pritsak and the Intellectual Origins of the Ukrainian "Harvard Miracle"*]
-- **1973** — **founds the Ukrainian Research Institute at Harvard (HURI)** and serves as its first director (1973–1989); the same year sees the Hrushevsky Chair of Ukrainian History, the Potebnia Chair of Ukrainian Philology, and the **Chyzhevsky Chair of Ukrainian Literature** endowed. [T1: IEU; T2: Harvard Gazette 2006; T2: babel.ua]
-- **1977** — founding editor of the journal **Harvard Ukrainian Studies**. [T1: IEU; T2: Harvard Gazette 2006]
-- **1981** — ***The Origin of Rus'***, vol. 1 (Old Scandinavian Sources Other than the Sagas), Harvard University Press — his magnum opus, projected as a multi-volume work; argues against a mono-ethnic origin of the Rus' and reads Kyivan Rus' as a multi-ethnic Eurasian polity drawing on Scandinavian, Iranian, and Khazar sources. [T1: IEU; T1: ЕСУ]
-- **1981** — *Studies in Medieval Eurasian History* (Variorum collected studies). [T3: en.wikipedia, corroborated by T1: IEU]
-- **1982** — *Khazarian Hebrew Documents of the Tenth Century* (with Norman Golb), Cornell UP — edition and study of the Kyivan Letter and Khazar correspondence. [T3: en.wikipedia; T1: IEU]
-- **1990** — elected foreign member of the Academy of Sciences of Ukraine (НАН України). [T1: ЕСУ]
-- **1991–2001** — **founds and directs the Institute of Oriental Studies named for A. Yu. Krymsky, НАН України** (honorary director from 1999). [T1: ЕСУ; T1: IEU]
-- **2003** — *The Origin of Rus'*, vol. 2. [T1: ЕСУ]
-- **2008 (posthumous)** — *Коли і ким було написано «Слово о полку Ігоревім»* (Київ: Обереги) — his late monograph dating and contextualizing the *Slovo*. [T1: ЕСУ; T1: IEU]
+Відповіддю на несталість українських наукових інституцій стало довготривале будівництво інфраструктури. У тексті 1973 року Пріцак обґрунтовував потребу системної присутності українських студій у світовому університеті [S3]. Після відновлення незалежності долучився до української академічної установи [S5]. Діаспорний інститут не замінював Україну, а створював умови для міжнародної видимості української науки.
 
-## 4. Primary-source quotes (≥2 required)
+## 3. Major works
 
-### Quote 1 — programmatic statement of mission
+Рання спеціалізація Пріцака була пов'язана з тюркськими мовами й середньовічними державами Євразії. Його докторська праця стосувалася Караханідів; у подальших дослідженнях він працював із мовними, титулатурними й історичними матеріалами різних культурних зон [S1][S2]. Тому назва «сходознавець» позначає не екзотичне доповнення до біографії, а основу порівняльного методу.
 
-> **«Усе, що я робив, — я робив для України.»**
+Найвідоміший багатотомний задум ученого — дослідження походження Русі. Його підхід залучав скандинавські, тюркські, іранські та хозарські матеріали й заперечував просту одноетнічну модель середньовічної політичної спільноти [S1][S2]. Це не означає, що кожна реконструкція стала науковим консенсусом. Значення праці полягає також у зміні масштабу питання: історія Києва і Русі постала не як передмова до історії однієї пізнішої імперії, а як частина багатомовного середньовічного світу.
 
-*Source:* widely-attributed recorded answer to the question «Нащо вам та україністика? Ви ж визначний тюрколог!» ("Why do you need Ukrainian studies — you're a distinguished Turkologist!"). [T5: uain.press — corroborated as Pritsak's signature self-summary across multiple UA memorial sources] **Provisional flag:** this is an oral/recorded statement reproduced in memorial literature, not a sentence from a printed scholarly work; cite as attributed speech, not as a textual primary source.
+Дві українськомовні праці особливо придатні для курсу. Книжка «Чому катедри українознавства в Гарварді?» об'єднує тексти 1967–1973 років про культурну політику та інституційні потреби українознавства [S3]. Стаття «Що таке історія України?», надрукована 1991 року у «Віснику Міжнародної асоціації україністів», ставить питання про предмет, межі та спосіб писання української історії [S4]. Обидва документи мають точну бібліографічну ідентичність і публічні українські тексти.
 
-*Pedagogical note:* the single most useful sentence for framing the whole C.5 block — it states the decolonial logic explicitly: a world-class Turkologist deliberately put his scholarship at the service of a nation whose own scholarly institutions the Soviet regime had destroyed.
+## 4. Primary-source quotations
 
-### Quote 2 — programmatic scholarly thesis (his own scholarly voice)
+До досьє не включено популярну фразу про те, що все було зроблено для України: у перевіреному наборі немає запису виступу, видання, сторінки чи іншого точного первинного локатора. Її поширеність у меморіальних текстах не перетворює її на перевірену цитату.
 
-From the Origin-of-Rus' research programme, his central, repeatedly-stated methodological claim on the Varangians/Rus':
+Натомість два тексти дають надійний матеріал без вигаданого цитування. У виданні 1973 року можна простежити, як Пріцак пов'язував кафедри, дослідницьку установу й міжнародне академічне визнання [S3]. Стаття 1991 року дозволяє аналізувати вимогу бачити історію України в множинних зв'язках, не розчиняючи українського суб'єкта [S4]. Поки не зафіксовано сторінку конкретного речення, положення оформлюють як переказ із посиланням, а не як пряму мову.
 
-> The Varangians had no single nationality; they were "first and foremost a multi-ethnic, multi-lingual group of professionals" — so it is futile to assign the Rus' one ethnic origin.
-
-*Source:* paraphrased thesis of *The Origin of Rus'* (vol. 1, Harvard UP, 1981), as restated in the scholarly reception literature. [T1: IEU; T4: reception summaries] **Provisional flag:** rendered here in English summary because the original is English-language scholarship; the underlying argument is securely Pritsak's, but treat the wording as paraphrase, not verbatim quotation, until the page is checked against the printed volume.
-
-*Pedagogical note:* this thesis is precisely the decolonial move — it dissolves the imperial Russian "Norman vs anti-Norman / Russian cradle" binary by reframing Rus' as a Eurasian, multi-ethnic federation, denying Moscow any privileged claim to the Kyivan inheritance.
+Обидва тексти доступні за посиланням, але публічний доступ не є дозволом на передрук. Правильна диспозиція — link-only, без розміщення повного тексту або великих уривків [S3][S4].
 
 ## 5. Language register
 
-- **Register:** academic / scholarly. His Ukrainian-language prose (e.g. *Коли і ким було написано «Слово о полку Ігоревім»*, and his programmatic article *Що таке історія України?*) is high academic Ukrainian — precise terminology, long periodic argumentation, dense citation apparatus. Much of his most important work is in **English and German**, not Ukrainian.
-- **CEFR readiness for full reading:** C2 for his Ukrainian scholarly prose (specialist Orientalist/historiographic vocabulary). His *life story*, by contrast, is tellable at B1–B2; his *texts* are C2.
-- **Lexicon notes:** heavy Orientalist and medievalist terminology (каганат, тюркологія, караханіди, варяги, етногенез); Greco-Latin scholarly compounds; loanwords from Arabic/Turkic in transliteration. Not a source of everyday vocabulary.
-- **Stylistic features:** the argumentative-prose model already used in the curriculum (see `istorio/diaspora-naukovtsi.yaml`, which analyses his fundraising/programmatic rhetoric: «інтеграція», «міждисциплінарність», «глобальний контекст», «порівняльні студії»).
+Українська наукова проза Пріцака належить до високого академічного регістру. Вона поєднує історіографічну аргументацію, терміни інституційної політики та спеціальну лексику сходознавства: тюркологія, іраністика, Караханіди, Хозарський каганат, етногенез, джерелознавство [S1][S3][S4]. Синтаксис часто розгорнутий, а аргумент залежить від розрізнення понять і традицій. Повне читання відповідає рівням C1–C2.
+
+Багатомовність ученого потрібно називати прямо. Він публікувався українською, німецькою та англійською і працював із джерелами багатьох мов [S1][S2]. Це не послаблює української ідентичності його інституційного проєкту. Воно показує спосіб, у який українська проблематика входила до міжнародного наукового обігу.
 
 ## 6. Contested points
 
-- **The Origin of Rus' reception:** Pritsak's multi-ethnic, Khazar-and-Scandinavian reading of Rus' origins met skeptical reception from both Russianists and Scandinavianists; some specialists found vol. 1 speculative in its source handling. This is a genuine scholarly debate, not a political smear, and should be presented as such. [T5: chornomorka.com; T4: reception literature]
-- **What gets simplified:** popular memory reduces him to "the man who built Harvard Ukrainian studies"; the Turkological core of his scholarship (Qarakhanids, Khazars, Altaic linguistics) — which is what made the Ukrainian work methodologically possible — gets dropped.
-- **The "Harvard miracle" framing:** Portnov's HURI book stresses that Pritsak's founding articles were also *fundraising documents* aimed at American donors and administrators — so the soaring "integration into world scholarship" rhetoric must be read partly as institutional self-presentation, not pure disinterested vision. The curriculum already flags this (`diaspora-naukovtsi.yaml`, `[!epistemic-humility]`). [T2: HURI — Portnov]
-- **Russian disinformation angle:** Pritsak's central thesis directly threatens the Kremlin "спільна колиска / one people" (триединый народ) myth by denying Moscow a privileged claim to Kyivan Rus'. Modern Russian-state narratives that assert Kyivan Rus' as "ancient Russian" are exactly what his scholarship dismantles.
+Перша неоднозначність — адміністративні дати. Кінець директорства в Гарвардському інституті подають як 1989 або 1990 рік; без потреби в кадровій точності доречно писати, що він очолював інститут у 1970–1980-х роках. Київське директорство підтверджено для 1991–1998 років, а від 1999 року — почесний статус [S1][S5].
+
+Друга неоднозначність — масштаб оцінки досліджень Русі. Їх слід характеризувати як впливову й дискусійну програму, а не остаточне спростування всіх інших концепцій [S1][S2]. Третя стосується співвідношення універсального й національного. Пріцак був фахівцем з історії Євразії та організатором українських студій. Неправильно відтинати одне від іншого: порівняльний досвід дозволяв йому заперечувати провінціалізацію української історії [S1][S4].
 
 ## 7. Cross-track links
 
-`rg` checks across `curriculum/l2-uk-en/plans/{lit,hist,bio,istorio,lit-essay}/` (no YAML modified):
-
-- **HIST:** `plans/hist/khozary-i-sloviany.yaml` — already lists **«Походження Русі», author Пріцак О.** as a text and names Pritsak in `connects_to` (Hrushevsky vs Pritsak vs Plokhii on the Khazar role in Rus' genesis). Direct, strong link.
-- **ISTORIO:** `plans/istorio/diaspora-naukovtsi.yaml` — analyses Pritsak's programmatic HURI articles and his vision vs the UVAN model; lists his article **«Що таке історія України?»**. Also `plans/istorio/diaspora-ta-zakhidni-istoriky.yaml` (diaspora & Western historians).
-- **Connected bios already in place:** `plans/bio/ahatanhel-krymskyi.yaml` (his teacher, murdered by the NKVD); `plans/bio/george-shevelov.yaml` (fellow émigré scholar / Potebnia-Chair-tradition philologist). The **Chyzhevsky Chair** at HURI links directly to `dmytro-chyzhevskyi` (this dispatch).
-- **Potential additions surfaced (do NOT add unilaterally):** a bio module on Pritsak himself would slot naturally beside `diaspora-naukovtsi`; file as `bio-expansion-followup` if desired.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/ahatanhel-krymskyi.yaml` — дисциплінарна спадкоємність українського сходознавства.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/dmytro-chyzhevskyi.yaml` — інша транснаціональна модель української гуманітаристики.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — культурний контекст інституцій поза УРСР, без змішування літератури й науки.
 
 ## 8. Naming-canonical
 
-- **Slug:** `omelian-pritsak`
-- **EN canonical (BGN/PCGN 2010):** Omelian Pritsak. (Note: he himself published as **Omeljan Pritsak**; this scholarly self-spelling is acceptable in academic citation but the project slug/body form is `Omelian Pritsak`.)
-- **UA canonical (with patronymic):** Омелян Йосипович Пріцак.
-- **Aliases (for `aliases:` field):**
-  - "Омелян Пріцак (canonical UA)"
-  - "Omelian Pritsak (canonical EN, BGN/PCGN 2010)"
-  - "Omeljan Pritsak (author's own scholarly spelling)"
-- **Forbidden forms (flag in body text):** "Емельян Прицак", "Емельян Иосифович Прицак" (Russified), "Prytsak", "Pritsak Omelan".
+Українська канонічна форма — Омелян Йосипович Пріцак; коротка — Омелян Пріцак [S1][S2][S5]. Англійська проєктна форма — Omelian Pritsak; у бібліографічних описах зберігають авторське написання Omeljan Pritsak, якщо воно стоїть на виданні. Російські форми імені не використовують як нейтральні основні назви. Різні латинські написання є бібліографічними варіантами, а не різними особами.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons category `Omeljan Pritsak` — check individual file pages for a PD-Ukraine / CC-licensed portrait; the uk.wikipedia infobox photo is the first candidate (verify the file-page license tag, do not assume from the article).
-- **Backup candidates:** the «Меморіальна бібліотека Омеляна Пріцака» (NaUKMA) holds photographs from his archive — institutional contact may be needed for rights; Harvard Gazette obituary (2006) carries a portrait (Harvard copyright — not for reuse without permission).
-- **Era-appropriate context image:** the cover/title page of *The Origin of Rus'* vol. 1 (Harvard UP, 1981), or the HURI building, to anchor the "Harvard miracle" theme.
-- **If no clean PD/CC portrait:** propose a fallback of an institution image (HURI) plus a book-cover image until a licensed portrait is confirmed.
+Прийнято конкретний файл Wikimedia Commons `Омелян Йосипович Пріцак (1919–2006).png`. Сторінка вказує джерело «Український медієвістичний журнал», номер 2 за 2016 рік, і ліцензію CC BY-SA 3.0 [S6]. Атрибуція має назвати журнал, Wikimedia Commons і ліцензію. Фотографії на інституційних сторінках без окремої ліцензії не є дозволом на повторне використання.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Пріцак Омелян Йосипович." https://esu.com.ua/article-885199. Accessed 2026-05-28.
-- Internet Encyclopedia of Ukraine. "Pritsak, Omeljan." https://www.encyclopediaofukraine.com/ (entry PritsakOmeljan). Accessed 2026-05-28.
+- [S1] [ЕСУ, «Пріцак Омелян Йосипович»](https://esu.com.ua/article-885199).
+- [S2] [Інститут історії України, персональна сторінка й бібліографія](https://resource.history.org.ua/person/0000360).
+- [S3] [«Чому катедри українознавства в Гарварді?»](https://resource.history.org.ua/item/0016150).
+- [S4] [«Що таке історія України?»](https://resource.history.org.ua/item/0009898).
+- [S5] [Інститут сходознавства, «Омелян Пріцак»](https://www.oriental-studies.org.ua/uk/%D0%BF%D1%80%D0%BE-%D1%96%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%82/%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%96%D1%97/%D0%BE%D0%BC%D0%B5%D0%BB%D1%8F%D0%BD-%D0%BF%D1%80%D1%96%D1%86%D0%B0%D0%BA/).
+- [S6] [Точний ліцензований портрет](<https://commons.wikimedia.org/wiki/File:%D0%9E%D0%BC%D0%B5%D0%BB%D1%8F%D0%BD_%D0%99%D0%BE%D1%81%D0%B8%D0%BF%D0%BE%D0%B2%D0%B8%D1%87_%D0%9F%D1%80%D1%96%D1%86%D0%B0%D0%BA_(1919%E2%80%932006).png>).
 
-**Tier 2 (institutional):**
-- Harvard Gazette. "Linguistics, history scholar Pritsak, 87." 2006. https://news.harvard.edu/gazette/story/2006/06/linguistics-history-scholar-pritsak-87/. Accessed 2026-05-28. (Obituary: HURI directorship 1973–1989, Hrushevsky Professor 1975, *Harvard Ukrainian Studies* 1977.)
-- Andrii Portnov. *Omeljan Pritsak and the Intellectual Origins of the Ukrainian "Harvard Miracle."* HURI / Harvard University Press. https://books.huri.harvard.edu/books/omeljan-pritsak-ukrainian-harvard-miracle. Accessed 2026-05-28.
-- babel.ua. "«Гарвадське диво»… уривок з його нової біографії" (excerpt of the Portnov/Yas biography). https://babel.ua/texts/124095. Accessed 2026-05-28. (Founding chairs 1973; FKU fundraising figures.)
+## Decolonization self-check
 
-**Tier 3 (encyclopedic — navigation/cross-check only):**
-- en.wikipedia. "Omeljan Pritsak." Used for the Ostarbeiter line and the works list; WWII path cross-checked against ЕСУ + chornomorka.com.
+Пріцака подано українським ученим із транснаціональним і багатомовним полем праці, а не безнаціональним славістом. Русь не привласнено жодною модерною державою, наукову дискусію не замінено гаслом. Українську агентність показано через творення установ і постановку власних історіографічних питань. Неперевірену цитату вилучено, кладовище й директорські дати виправлено, а доступ до текстів не переплутано з ліцензією.
 
-**Tier 4 (modern scholarly post-1991):**
-- Reception literature on *The Origin of Rus'* (Russianist/Scandinavianist debate) — surveyed via the above sources; specific journal reviews to be added when the printed venues are confirmed.
+На занятті варто розділити три масштаби роботи Пріцака. Перший — спеціальне сходознавче дослідження мов, династій і джерел. Другий — історіографічне питання про Україну в багатодержавному минулому [S4]. Третій — інституційна праця, що створює кафедри, видання та дослідницькі осередки [S3][S5]. Лише разом вони пояснюють його траєкторію; жоден масштаб не є декоративним додатком до іншого.
 
-**Tier 5 (general web — corroborated):**
-- chornomorka.com. "Омелян Пріцак — історик модерної України." https://chornomorka.com/archive/22046/a-12381.html. (WWII path: Red Army Nov 1940 → captivity 1941 → forced labour → Hartmann's intervention → Berlin Oct 1943; Krymsky 1939 meeting; *Origin of Rus'* reception.) Corroborated against ЕСУ for the war path.
-- uain.press. "Омелян Пріцак: Усе, що я робив – я робив для України." (Quote 1 attribution.)
-- Національна бібліотека України ім. В. І. Вернадського (NBUV), node/4717 — biographical-data page.
-
-**Primary-source documents accessed:** none directly (no NKVD/KGB file on Pritsak — he was outside Soviet reach); the relevant repression document is the NKVD file on his teacher **Ahatanhel Krymsky** (covered in `bio/ahatanhel-krymskyi`).
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing (Rus' presented per Pritsak's multi-ethnic Eurasian thesis; "common cradle" named as the imperial myth it is)
-- [x] No Russian-imperial transliterations in body text (Russified forms only in §8 aliases, labeled forbidden)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms ("буржуазний націоналізм" referenced only as the Soviet label applied to his field)
-- [x] No "lost his life" euphemisms (Krymsky's death named as NKVD captivity death)
-- [x] All place names use modern UA canonical form (Kyiv, Lviv, Ternopil)
-- [x] Holodomor NA to this figure
-- [x] Russian aggression / "common cradle" myth framed correctly where his scholarship bears on it
+Корисне критичне завдання — попросити учня відрізнити впливову гіпотезу від консенсусу, а створену установу від меморіального міфу. Це дозволяє оцінювати Пріцака без поклоніння авторитету. Наукова програма може бути дискусійною, тоді як факт заснування інституції та бібліографічна ідентичність авторського тексту залишаються перевірними.

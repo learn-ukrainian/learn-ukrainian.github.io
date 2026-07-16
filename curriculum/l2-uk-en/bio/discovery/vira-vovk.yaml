@@ -1,0 +1,22 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Віра Вовк
+- Віра Вовк ЕСУ біографія
+- Віра Вовк Шевченківська премія
+- Віра Вовк НаУКМА фонд 15
+- Віра Вовк ЦДАМЛМ архів
+- Віра Вовк Ріка життя інтерв'ю
+- Віра Вовк Юність Diasporiana
+- Vira Vovk Commons portrait license
+direct_sources:
+- https://esu.com.ua/article-35205
+- https://knpu.gov.ua/winners/vovk-vira-selianska-vira-ostapivna/
+- https://ekmair.ukma.edu.ua/bitstreams/33a6c917-5cb5-4201-96ca-046b3b0a91b0/download
+- https://old.archives.gov.ua/News/CDAMLM_VVV.pdf
+- https://lib.if.ua/exhib/1236010827.html
+- https://diasporiana.org.ua/poeziya/735-vovk-v-yunist/
+- https://commons.wikimedia.org/wiki/File:Vira_Vovk.JPG
+rag_chunks: []
+rag_literary: []
+warning: Direct subject packet; every URL was fetched for task codex/bio-1981-cohort16 and matches the adopted registry.

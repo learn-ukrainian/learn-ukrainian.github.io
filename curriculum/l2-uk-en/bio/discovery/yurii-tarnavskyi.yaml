@@ -1,0 +1,19 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Юрій Тарнавський
+- Юрій Тарнавський Читомо інтерв'ю Нью-Йоркська група
+- Юрій Тарнавський Craft двомовність
+- Юрій Тарнавський Суспільне смерть 2025
+- Юрій Тарнавський Спомини Diasporiana
+- Yuriy Tarnawsky Wikimedia Commons portrait license
+direct_sources:
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CA%5CTarnawskyYuriy.htm
+- https://archive.chytomo.com/interview/yurij-tarnavskij-ne-bulo-vpliviv-shistdesyatnikiv-na-nyu-jorksku-grupu
+- https://craftmagazine.net/yuriy-tarnawsky/
+- https://suspilne.media/1141186-pomer-pismennik-urij-tarnavskij/
+- https://diasporiana.org.ua/poeziya/15259-tarnavskiy-yu-spomini-poeziyi/
+- https://commons.wikimedia.org/wiki/File:Yuriy_Tarnawsky_in_Kyiv.jpg
+rag_chunks: []
+rag_literary: []
+warning: Direct subject packet; every URL was fetched for task codex/bio-1981-cohort16 and matches the adopted registry.

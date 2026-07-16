@@ -1,0 +1,20 @@
+discovered_at: '2026-07-16T00:00:00+00:00'
+error: null
+query_keywords:
+- Омелян Пріцак
+- Омелян Пріцак ЕСУ біографія
+- Омелян Пріцак Інститут історії бібліографія
+- Омелян Пріцак Чому катедри українознавства
+- Омелян Пріцак Що таке історія України
+- Омелян Пріцак Інститут сходознавства
+- Omelian Pritsak Commons portrait license
+direct_sources:
+- https://esu.com.ua/article-885199
+- https://resource.history.org.ua/person/0000360
+- https://resource.history.org.ua/item/0016150
+- https://resource.history.org.ua/item/0009898
+- https://www.oriental-studies.org.ua/uk/%D0%BF%D1%80%D0%BE-%D1%96%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%82/%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%96%D1%97/%D0%BE%D0%BC%D0%B5%D0%BB%D1%8F%D0%BD-%D0%BF%D1%80%D1%96%D1%86%D0%B0%D0%BA/
+- https://commons.wikimedia.org/wiki/File:%D0%9E%D0%BC%D0%B5%D0%BB%D1%8F%D0%BD_%D0%99%D0%BE%D1%81%D0%B8%D0%BF%D0%BE%D0%B2%D0%B8%D1%87_%D0%9F%D1%80%D1%96%D1%86%D0%B0%D0%BA_(1919%E2%80%932006).png
+rag_chunks: []
+rag_literary: []
+warning: Direct subject packet; every URL was fetched for task codex/bio-1981-cohort16 and matches the adopted registry.

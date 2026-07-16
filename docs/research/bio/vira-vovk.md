@@ -1,146 +1,79 @@
-# Віра Вовк (Віра-Лідія-Катерина Остапівна Селянська) — Research Dossier
+# Віра Вовк — дослідницьке досьє
 
 **Slug:** `vira-vovk`
-**Block:** C.4 (Нью-Йоркська група — émigré modernist poets; diaspora-Brazil)
-**Tier:** 1b
-**Issue:** #2318
-**Researcher:** Claude (claude-opus-4-8) — R1b Block C dispatch
-**Completed:** 2026-05-28
-
-**Acceptance self-check:**
-- [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited
-- [x] Oppression mechanism is specific (Soviet warning → flight; father killed in Dresden bombing; literary ban)
-- [x] ≥2 primary-source quotes from her own work
-- [x] Cross-track links to LIT/HIST tracks checked
-- [x] Naming-canonical applied
-- [x] Image candidate(s) identified
-- [x] Decolonization checklist self-applied
-
----
+**Пакет перевірено:** 2026-07-16
+**Статус читань:** готові, лише зовнішні посилання
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Віра-Лідія-Катерина Остапівна Селянська; publishes as **Віра Вовк** (pen name). [T1: ЕСУ — Вовк Віра; T1: IEU — Vovk, Vira; T5: Шевченко Prize committee — Селянська Віра Остапівна]
-- **Pseudonyms / aliases:** Віра Вовк (canonical pen name); **Wira Wowk** (her own German/Portuguese-diaspora spelling); Vira Vovk (BGN/PCGN-2010 project EN); legal surname Селянська (Selianska). Forbidden in body text except this section: Вера Селянская / Vera Selyanskaya or any Russified rendering.
-- **Born:** 2 January 1926 | **Борислав**, Дрогобицький повіт, Galicia (then Poland; Western Ukraine) | now Львівська область, Україна. Childhood partly in the Hutsul town Кути. [T1: ЕСУ; T1: IEU; T5: Збруч obituary]
-- **Died:** 16 July 2022 | **Ріо-де-Жанейро, Brazil** | age 96. [T1: ЕСУ; T1: IEU; T5: Збруч obituary 2022]
-- **Family / education key facts:** Daughter of physician **Dr. Остап Селянський** (hence patronymic Остапівна) and a teacher. Educated in emigration; studied Germanistics, musicology and Slavistics at the University of Tübingen, earning a doctorate. Professor of German literature in Rio de Janeiro, holding chairs at three universities (1967–96); UA short bios variously name Santa Úrsula University and the State University of Rio de Janeiro. Full member of **УВАН** and of the **Наукове товариство ім. Шевченка (НТШ)** in New York; member of НСПУ and the émigré writers' association «Слово». [T1: ЕСУ; T1: IEU; T5: Chytomo]
+Віра Вовк — канонічне літературне ім'я української письменниці, перекладачки й літературознавиці, яку українські інституційні джерела ідентифікують як Селянську Віру Остапівну [S1][S2]. Розширені форми з кількома особовими іменами трапляються в окремих працях, але їх не слід механічно поєднувати з патронімом або оформлювати через дефіси без документа про тотожність. У навчальному тексті достатньо вживати ім'я Віра Вовк, а форму Селянська Віра Остапівна навести один раз як документовану.
 
-**Source disagreement note:** the dispatch brief offered "**Boryslav/Borynia**" for birthplace — verified sources uniformly give **Борислав** (Drohobych county); *Бориня* is not supported and should be dropped. On the **flight year**, UA sources say the family began leaving in **1939** under Soviet occupation, spending the war years in Germany (Dresden), where her father died in the **February 1945** Allied bombing of Dresden; some short bios compress this to "emigrated in the post-war years." On the **Rio university**, IEU/Chytomo emphasise her thirty-year chair; the exact institution is given variously as Santa Úrsula University and the State University of Rio de Janeiro — flagged. Death date 16 July 2022 is stable across T1/T5.
+Письменниця народилася 2 січня 1926 року в Бориславі й померла 16 липня 2022 року в Ріо-де-Жанейро [S1][S2]. Отже, теперішні формулювання про те, що вона й далі живе або працює в Бразилії, застарілі. Нижня частина статті ЕСУ зберігає старіший теперішній час, тому для життєвого статусу треба спиратися на оновлений вступ і підтвердження Комітету [S1][S2].
+
+Архівний опис НаУКМА дає послідовну освітню й міграційну канву: навчання в Кутах у 1935–1938 роках, львівський період 1938–1939 років, перебування в Німеччині, навчання в Тюбінгені у 1945–1949 роках і переїзд до Бразилії 1949 року [S3]. У Ріо-де-Жанейро Віра Вовк продовжила освіту, а 1952 року склала докторський іспит у Папському католицькому університеті. Опис фонду окремо називає Університет Санта-Урсула, осередок у Кабу-Фріу та Федеральний університет Ріо-де-Жанейро [S3]. Ці установи не треба зливати в одну умовну кафедру.
+
+Її діяльність була багатомовною. ЕСУ та Комітет засвідчують письмо й переклад українською, португальською та німецькою мовами [S1][S2]. Українська була не випадковою мовою одного етапу, а центральною мовою художнього письма та засобом тривалого зв'язку з українською культурою. Віра Вовк входила до українських наукових і письменницьких інституцій; джерела також пов'язують її з Нью-Йоркською групою [S1][S2].
 
 ## 2. Oppression mechanism
 
-For Вовк the mechanism is **a direct Soviet threat that drove her family's flight, the wartime death of her father, and the Soviet impossibility of her free Ukrainian literary work** — which she instead built an ocean away, in Brazil.
+Механізм тиску не можна описувати як документоване кримінальне переслідування самої Віри Вовк. Немає виявленої слідчої справи, вироку чи наказу про арешт. В інтерв'ю вона згадувала, що після приходу радянської влади до Західної України її батька попередили про загрозу для родини, після чого сім'я виїхала на захід [S5]. Це первинне автобіографічне свідчення, а не знайдений документ радянського органу. Належне формулювання — вимушений виїзд у контексті радянської окупації та сприйнятої родиною загрози, а не юридично доведена депортація.
 
-- **What happened:** as the Soviet Union occupied Western Ukraine (1939), her father — a physician — received a **warning from a Soviet officer that the family would be executed or deported to Siberia.** They escaped westward on an overcrowded refugee freight train. The family spent the war in Germany (Dresden); her **father, Dr. Остап Селянський, was killed on 13 February 1945 during the bombing of Dresden.** Mother and daughter reached Brazil in late 1949. [T5: Збруч; T5: Chytomo — independent]
-- **When (specific dates):** Soviet warning and flight **1939**; Dresden years 1939–45; father's death **13 February 1945**; emigration to Brazil **late 1949** (arriving at Paranaguá, then Curitiba, then Rio). [T5: Збруч; T5: Chytomo]
-- **By whom (specific regime):** the **Soviet Union** — the 1939 occupation of Western Ukraine under the Molotov–Ribbentrop division, and the explicit Soviet-officer threat of execution/Siberian deportation that forced the flight. (Her father's death was caused by the Allied bombing of Dresden, but the displacement that put the family there was Soviet-driven.) [T5: Збруч]
-- **Mechanism specifics — the literary repression.** Vovk's modernist poetry, drama and her vast translation project (Ukrainian literature into Portuguese and German) could not have existed inside the Ukrainian SSR: free modernist verse was banned, and presenting Ukrainian literature to the world as an *independent* literature — not a Soviet sub-branch — directly contradicted Soviet cultural policy. From Rio she became a one-woman bridge carrying Ukrainian literature into the Lusophone world, precisely the cultural sovereignty the regime denied. [T1: IEU; T1: IEU — New York Group]
-- **What survived / what was destroyed:** her father's life was lost to the displacement; what *survived* — beyond Soviet reach — is roughly ten poetry collections, ten prose works, eleven plays, and **53 books of translation** (14 into Ukrainian, 39 from Ukrainian into Portuguese and other languages). After 1991 this returned to Ukraine; the Shevchenko National Prize (2008) recognised it. [T1: IEU; T5: Шевченко committee]
+Архівний опис підтверджує послідовність переміщення: Львів до 1939 року, далі Німеччина, після війни Тюбінген і 1949 року Бразилія [S3]. Він не підтверджує популярних подробиць про точний маршрут через окремі порти й міста. Такі деталі не включаються без міграційного або особового документа.
+
+Родина опинилася в Дрездені, де 13 лютого 1945 року під час бомбардування загинув батько письменниці, лікар Остап Селянський. ЦДАМЛМ наводить точний архівний локатор свідоцтва про смерть: фонд 1212, опис 1, одиниця зберігання 624; документ видано 28 березня 1945 року [S4]. Цей факт треба відділяти від причин попереднього переміщення. Батько загинув унаслідок союзницького бомбардування, тоді як виїзд родини із Західної України Віра Вовк пов'язувала з радянською загрозою [S4][S5].
 
 ## 3. Major works
 
-- `1955` — *Юність* / *Зоря провідна*, early poetry. [T1: ЕСУ]
-- `1956` — *Елегії*, poetry. [T1: ЕСУ]
-- `1961` — *Чорні акації*, poetry. [T1: ЕСУ]
-- `1979–80` — *Меандри* (1979), *Мандала* (1980), poetry. [T1: ЕСУ]
-- `1993` — *Жіночі маски*, poetry. [T1: ЕСУ]
-- `2005` — *Сьома печать*, poetry — one of the Shevchenko-Prize-cited works. [T1: ЕСУ]
-- across her career — *Ромен-зілля* and ~ten poetry collections in total (Munich, Rio, New York, Kyiv). [T1: IEU; T5: Шевченко committee]
-- Prose — ~ten novels/story collections, drawing on magic realism. [T1: IEU; T5: Тексти.org.ua]
-- Drama — eleven plays. [T1: IEU]
-- **Translations into Portuguese (her signature contribution):** two Portuguese anthologies of Ukrainian literature (1959, 1977) plus many individual classic Ukrainian authors, introducing Ukrainian literature to Brazil and the Lusophone world. [T1: ЕСУ; T1: IEU — Literature in translation]
-- **Translations into Ukrainian:** Western writers (from German, French, Portuguese, Spanish). [T1: IEU]
-- `2008` — awarded the **Shevchenko National Prize** for *Сьома печать*, *Ромен-зілля* and her Portuguese translations of Ukrainian literature; earlier honoured with the I. Franko Prize (Chicago 1957, 1982, 1985, 1989; Kyiv 1990), the НСПУ «Благовіст» Prize (2000), and the Order of Princess Olha, 3rd degree (2004). [T1: ЕСУ; T5: Шевченко committee — Селянська Віра Остапівна]
+Найранішим безпосередньо перевіреним виданням є поетична збірка «Юність». Бібліографічна сторінка й скан фіксують автора як Віру Селянську-Вовк, місце видання Прудентополіс, 1947 рік, видавничу формулу «Накладом о. Володимира Ханейка» та обсяг 54 сторінки [S6]. Для бібліографії слід використовувати дані самого оцифрованого примірника.
 
-**Source disagreement note (works list):** ЕСУ and IEU give partly different collection titles/dates (e.g. ЕСУ dates *Сьома печать* to 2005; some bibliographies list a later or variant edition). The titles above follow ЕСУ where it is explicit; treat exact first-edition years for individual collections as provisional pending a full bibliography.
+ЕСУ називає низку поетичних книжок і жанрово різних творів. Особливо важливо зберегти точну форму назви «Мандаля», а не виправляти її на звичніше слово «мандала» [S1]. Власна назва твору є бібліографічним фактом. Офіційний профіль лауреатки пов'язує Шевченківську премію 2008 року з книжками «Сьома печать», «Ромен-зілля» та перекладами української літератури португальською мовою [S2]. Цей перелік є надійною основою для зрілого періоду, але не доводить популярних сумарних чисел про романи, драми, переклади або томи.
 
-## 4. Primary-source quotes (≥2 required)
+Переклад був не додатком до поезії, а окремою тривалою практикою. Інституційні джерела засвідчують роботу з українською, португальською та німецькою мовами, переклади українських авторів для португаломовного читача та перенесення інших літератур в український контекст [S1][S2]. Це дає підставу говорити про культурне посередництво, але не про односторонній експорт готового канону.
 
-**Quote 1 — lyric of uncertainty (quoted in the IEU-linked profile):**
+## 4. Primary-source quotations
 
-> **Я не знаю, чия рука колише / цю сіть, до спочинку розп'яту.**
-
-"I do not know whose hand rocks / this net, stretched out to rest" — her metaphysical, image-driven lyric, suspended between faith and doubt. `verify_quote` returned no corpus match (diaspora poets unindexed); cited from the biographical profile.
-
-**Quote 2 — from "Єлисавета Тюрінгська" / a hunger-and-bread motif (quoted in Chytomo):**
-
-> **я несу хліб у згортках шат / для голодних**
-
-"I carry bread in the folds of my robes / for the hungry" — the Saint Elizabeth of Thuringia figure (who hid bread for the poor) channels Vovk's ethical, almost hagiographic strand and her formal range. Pedagogically it is a B2/C1-accessible image with a clear ethical charge. Cited from the Chytomo feature; flagged single-source for exact wording.
+До досьє не включено прямих цитат. Раніше використані поетичні рядки не мали точного посилання на назву твору, видання й сторінку. Побудовані на них завдання перероблено. Для подальшої перевірки доступні два первинні документи. Інтерв'ю «Ріка життя Віри Вовк» має точну газетну ідентичність і публічну інституційну сторінку [S5]. Збірка «Юність» має точні вихідні дані та повний скан [S6]. Перед цитуванням інтерв'ю треба встановити окремий абзац, а перед цитуванням поезії — назву вірша й друковану сторінку. Сам факт відкритого доступу не надає права відтворювати значні фрагменти.
 
 ## 5. Language register
 
-- **Register:** modernist lyric with magic-realist and hagiographic/medieval strands; musical (her musicology training shows).
-- **CEFR readiness for full reading:** C1; selected lyrics (the bread image) teachable at B2.
-- **Lexicon notes:** literary, occasionally archaic/liturgical (саути, shat = шат "robes"), Hutsul/regional colour from her Кути childhood; her translations make her diction unusually wide-ranging. Diaspora-careful Ukrainian, free of Russianisms.
-- **Stylistic features:** image-driven metaphysics, religious and medieval iconography, musicality, and the transnational bridge between Ukrainian and Lusophone/Germanic traditions. [T1: IEU]
+Поетичні й есеїстичні тексти Віри Вовк доцільно пропонувати на рівні C1. Її письмо вимагає роботи з образним значенням, культурною алюзією, зміною голосу та поєднанням релігійних, історичних і модерністських мотивів. Рання «Юність» може дати коротші фрагменти для рівня B2, але лише після перевірки конкретного вірша та лексики [S6].
+
+Педагогічна характеристика не повинна зводитися до формули «діаспорна українська». Тривале життя в німецькому й бразильському середовищах, професійна германістика та переклад розширювали мовний репертуар [S1][S2][S3]. Це не робить український текст менш українським і не дає підстав автоматично шукати в ньому помилки. Для незвичного слова окремо встановлюють, чи це нормативна лексема, авторський вибір, історизм, регіональна форма або наслідок перекладацької ситуації.
 
 ## 6. Contested points
 
-- **Modern UA scholarly debate:** her degree of belonging to the New York Group. IEU lists her among the founding-period members (joined 1959), but she herself said her **Latin-American** influences outweighed the North-American ones — making her the cohort's geographic and aesthetic outlier. [T1: IEU — New York Group; T5: Chytomo]
-- **What gets simplified:** popular memory keeps the poet and forgets the **translator** — yet her 39 Ukrainian-into-Portuguese volumes are arguably her largest historical contribution.
-- **Russian/Soviet disinformation angle:** the Soviet frame presented Ukrainian literature abroad as fragmentary émigré noise; Vovk's systematic canon-building in Brazil — presenting Ukrainian literature as a sovereign national literature — refutes it. [T2: LIT plan `new-york-group-poets.yaml`]
-- **Other-perspective considerations:** the Brazilian/Lusophone reception is a genuinely non-Russocentric, Global-South vector for Ukrainian culture — a model for decolonised literary diplomacy.
+Перша зона непевності — форма імені. ЕСУ й офіційний профіль подають Селянську Віру Остапівну [S1][S2]. Розширену форму з іншими іменами не треба заперечувати, але вона потребує документа. Друга зона — університетська кар'єра. Архівний опис розрізняє докторський іспит у Папському католицькому університеті, викладання в Університеті Санта-Урсула, Кабу-Фріу та Федеральному університеті [S3]. Безпечніше подавати послідовність установ, а не одну посаду на весь період.
+
+Третя зона — Нью-Йоркська група. Джерела пов'язують Віру Вовк із цим колом [S1][S2], але назва групи не є готовим описом поетики. Бразилія, португаломовні переклади, германістична освіта й власна видавнича практика відрізняють її від інших учасників. Четверта зона — мова творчості. Багатомовність не стирає української суб'єктності, а український центр письма не дозволяє приховати португальську й німецьку практики.
 
 ## 7. Cross-track links
 
-`rg` over `curriculum/l2-uk-en/plans/{lit,hist,bio}/` found:
+- **Existing:** `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` — контекст мережі та відмінностей поетик.
+- **Existing:** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — ширший простір еміграційного модернізму.
+- **Existing:** `curriculum/l2-uk-en/plans/bio/yurii-tarnavskyi.yaml` і `curriculum/l2-uk-en/plans/bio/bohdan-boichuk.yaml` — порівняння окремих траєкторій без шаблону.
 
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` — group analysis; her texts are within the mandatory anthology.
-- **LIT (existing):** `curriculum/l2-uk-en/plans/lit/diaspora-modern-lit.yaml` — diaspora modernism overview.
-- **LIT (potential):** a translation-studies / magic-realism module on Vovk's Portuguese canon-building (Тексти.org.ua frames her as "магічний реалізм по-українськи") — file as `bio-expansion-followup`, do not modify YAML.
-- **HIST (existing):** `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml` — repression context; the 1939 Soviet occupation and deportation threat belong with terror-mechanism modules.
-- **Cohort cross-refs (real connections):** joined the New York Group in **1959** (the last of the founding-period members); co-members Богдан Бойчук, Юрій Тарнавський, Богдан Рубчак, Емма Андієвська. Contributed to *Сучасність* and *Нові поезії*.
-
-No plan YAML was modified.
+Зв'язок із Розстріляним відродженням не позначено як прямий: Віра Вовк не належала до покоління страчених письменників 1920–1930-х років.
 
 ## 8. Naming-canonical
 
-- **Slug:** `vira-vovk`
-- **EN canonical (BGN/PCGN 2010):** Vira Vovk.
-- **UA canonical:** Віра Вовк (pen name); legal Віра-Лідія-Катерина Остапівна Селянська.
-- **Aliases to track:** Wira Wowk (her own German/Portuguese spelling); Vira Selianska / Селянська Віра Остапівна (legal); Vira Selyansky (variant EN).
-- **Forbidden Russian-imperial / Russified forms:** Вера Селянская; Vera Selyanskaya; any "-skaya" Russified suffix. Use only in alias warnings, never in body text.
+Канонічна українська форма — Віра Вовк. Документована юридична форма — Селянська Віра Остапівна [S1][S2]. Для пошуку придатні Vira Vovk, Wira Wowk і Віра Селянська-Вовк. Різні варіанти повного імені не з'єднують у нову конструкцію. Російсько-імперські транслітерації не використовують в українському корпусі.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons — search **`Vira Vovk`** (Wikidata Q3847343 links image candidates); verify the individual file's license and US status (born 1926, d. 2022 — not automatically PD).
-- **Backup candidates:** obituary portraits on Збруч and the Boryslav міськрада memorial page (outlet/municipal copyright — permission or fair dealing).
-- **If no PD/CC portrait exists:** propose a cover scan of *Сьома печать* / *Ромен-зілля* as cover-as-artifact, or a photo of one of her Portuguese translation anthologies illustrating the Brazil bridge.
+Прийнято точний файл `Vira Vovk.JPG`, датований 18 грудня 2011 року. Сторінка файла вказує автора й джерело `O ACIDI, I.P., Alto Comissariado para a Imigração e Diálogo Intercultural` та ліцензію CC BY-SA 3.0 [S7]. Зображення можна використовувати з повною атрибуцією та дотриманням ліцензійних умов. Газетні фотографії без окремої ліцензії не додаються як альтернативи.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України. "Вовк Віра (Селянська Віра Остапівна)." https://esu.com.ua/article-35205 — life dates, УВАН/НТШ membership, prizes, works, Portuguese anthologies. Accessed 2026-05-28.
-- Internet Encyclopedia of Ukraine. "Vovk, Vira." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVovkVira.htm — Accessed 2026-05-28.
-- Internet Encyclopedia of Ukraine. "New York Group." (membership) — Accessed 2026-05-28.
+- [S1] [Енциклопедія Сучасної України, «Вовк Віра»](https://esu.com.ua/article-35205).
+- [S2] [Комітет Шевченківської премії, офіційний профіль](https://knpu.gov.ua/winners/vovk-vira-selianska-vira-ostapivna/).
+- [S3] [НаУКМА, опис особового фонду № 15](https://ekmair.ukma.edu.ua/bitstreams/33a6c917-5cb5-4201-96ca-046b3b0a91b0/download).
+- [S4] [ЦДАМЛМ, архівна виставка](https://old.archives.gov.ua/News/CDAMLM_VVV.pdf).
+- [S5] [«Ріка життя Віри Вовк», інтерв'ю](https://lib.if.ua/exhib/1236010827.html).
+- [S6] [Віра Селянська-Вовк, «Юність»](https://diasporiana.org.ua/poeziya/735-vovk-v-yunist/).
+- [S7] [Точний ліцензований портрет](https://commons.wikimedia.org/wiki/File:Vira_Vovk.JPG).
 
-**Tier 2 (institutional):**
-- Membership grounding via НТШ (Наукове товариство ім. Шевченка) and УВАН, New York — her full membership in these scholarly societies is attested in the ЕСУ entry above.
-- Project LIT plan `curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml` (internal cross-track framing only).
+## Decolonization self-check
 
-**Tier 5 (general web, corroborated):**
-- Збруч. "Померла Віра Вовк (1926–2022)." https://zbruc.eu/node/112524 — Soviet warning, 1939 flight, father's death in Dresden bombing, death date, primary quote.
-- Chytomo. "Віра Вовк — поетка з княжого роду між Бразилією та Україною." https://chytomo.com/vira-vovk-poetka-z-kniazhoho-rodu-mizh-brazyliieiu-ta-ukrainoiu/ — biography, Rio career, primary quote.
-- Комітет з Національної премії України імені Тараса Шевченка. "Вовк Віра (Селянська Віра Остапівна)." https://knpu.gov.ua/winners/vovk-vira-selianska-vira-ostapivna/ — 2008 Shevchenko Prize, legal name/patronymic.
-- Boryslav міськрада memorial page — birthplace corroboration.
+Українську діяльність Віри Вовк не подано як відгалуження російської літератури. Бразильський і німецький контексти збережено без розчинення української суб'єктності. Радянську загрозу названо за первинним свідченням, але не перетворено на вигадану справу. Союзницьке бомбардування Дрездена не приписано радянському апаратові. Нью-Йоркську групу показано як мережу, а не єдину поетику.
 
-**Tier 3 (navigation only):**
-- Ukrainian Wikipedia, "Віра Вовк" — starting point; dates and birthplace cross-checked against IEU.
-
-**Primary-source documents accessed:** none (oppression mechanism is the Soviet deportation threat + displacement + literary impossibility, reported via modern UA sources; no archival case file located).
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing — Ukrainian poet/translator; Brazilian-diaspora bridge foregrounded.
-- [x] No Russian-imperial transliterations in body text (Russified forms quarantined in §8).
-- [x] No Russocentric periodization — "Soviet occupation of Western Ukraine, 1939" and explicit deportation threat named.
-- [x] No uncritical Soviet propaganda terms.
-- [x] No "lost his life" euphemisms — father "killed during the bombing of Dresden," displacement Soviet-driven, stated factually with perpetrator/cause distinguished.
-- [x] Modern UA place names — Борислав, Львівська область, Кути.
-- [x] Holodomor — NA.
-- [x] Crimea/2014/2022 — NA.
+Педагогічно важливо зіставляти інтерв'ю з архівом: спогад пояснює пережиту загрозу, опис фонду встановлює хронологію, а свідоцтво про смерть документує окрему подію [S3][S4][S5]. Жоден із цих жанрів не замінює інші. Саме так учень бачить не лише біографічний результат, а й спосіб його доказування.

@@ -1,0 +1,8 @@
+sources:
+- {id: S1, file: 'https://esu.com.ua/article-35205', type: external, title: 'Вовк Віра — ЕСУ', url: 'https://esu.com.ua/article-35205'}
+- {id: S2, file: 'https://knpu.gov.ua/winners/vovk-vira-selianska-vira-ostapivna/', type: external, title: 'Вовк Віра — Шевченківський комітет', url: 'https://knpu.gov.ua/winners/vovk-vira-selianska-vira-ostapivna/'}
+- {id: S3, file: 'https://ekmair.ukma.edu.ua/bitstreams/33a6c917-5cb5-4201-96ca-046b3b0a91b0/download', type: external, title: 'Особовий фонд № 15 Віри Вовк — НаУКМА', url: 'https://ekmair.ukma.edu.ua/bitstreams/33a6c917-5cb5-4201-96ca-046b3b0a91b0/download'}
+- {id: S4, file: 'https://old.archives.gov.ua/News/CDAMLM_VVV.pdf', type: external, title: 'Віра Вовк — архівна виставка ЦДАМЛМ', url: 'https://old.archives.gov.ua/News/CDAMLM_VVV.pdf'}
+- {id: S5, file: 'https://lib.if.ua/exhib/1236010827.html', type: external, title: 'Ріка життя Віри Вовк — інтерв’ю', url: 'https://lib.if.ua/exhib/1236010827.html'}
+- {id: S6, file: 'https://diasporiana.org.ua/poeziya/735-vovk-v-yunist/', type: external, title: 'Віра Селянська-Вовк. Юність', url: 'https://diasporiana.org.ua/poeziya/735-vovk-v-yunist/'}
+- {id: S7, file: 'https://commons.wikimedia.org/wiki/File:Vira_Vovk.JPG', type: external, title: 'Vira Vovk.JPG — CC BY-SA 3.0', url: 'https://commons.wikimedia.org/wiki/File:Vira_Vovk.JPG'}
