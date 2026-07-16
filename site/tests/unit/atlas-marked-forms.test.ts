@@ -4,15 +4,9 @@
 // render in a SEPARATE collapsed subsection, never inline with the modern paradigm.
 // Renders WordAtlasArticle directly with hand-crafted enrichment (no atlas.db needed).
 
-import reactRenderer from '@astrojs/react/server.js';
-import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import { describe, expect, test, beforeAll } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { articleProps } from '../helpers/word-atlas-record';
-
-type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
-interface AstroComponentModule {
-  default: AstroComponent;
-}
+import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
 
 const MARKED_SUMMARY = 'Марковані форми (нестягнені, застарілі, розмовні)';
 const MARKED_LABEL = 'нестягнена форма';
@@ -106,21 +100,8 @@ function makeFullyMarkedEntry(kind: 'short' | 'archaic' = 'short') {
 }
 
 describe('marked-forms subsection (#4891)', () => {
-  let container: AstroContainer;
-  let WordAtlasArticle: AstroComponent;
-
-  beforeAll(async () => {
-    ({ default: WordAtlasArticle } = (await import(
-      '@site/src/lexicon/WordAtlasArticle.astro'
-    )) as AstroComponentModule);
-    container = await AstroContainer.create();
-    container.addServerRenderer({ renderer: reactRenderer });
-  });
-
-  function render(withMarked: boolean): Promise<string> {
-    return container.renderToString(WordAtlasArticle, {
-      props: articleProps(makeEntry(withMarked)),
-    });
+  function render(withMarked: boolean): string {
+    return renderWordAtlasArticle(articleProps(makeEntry(withMarked)));
   }
 
   test('marked forms render in a collapsed subsection with a Ukrainian learner note', async () => {
@@ -169,50 +150,33 @@ describe('marked-forms subsection (#4891)', () => {
 });
 
 describe('fully-marked lemma register treatment (#4900)', () => {
-  let container: AstroContainer;
-  let WordAtlasArticle: AstroComponent;
-  let unmarkedBaseline: string;
+  const unmarkedBaseline = renderWordAtlasArticle(articleProps(makeEntry(false)));
 
-  beforeAll(async () => {
-    ({ default: WordAtlasArticle } = (await import(
-      '@site/src/lexicon/WordAtlasArticle.astro'
-    )) as AstroComponentModule);
-    container = await AstroContainer.create();
-    container.addServerRenderer({ renderer: reactRenderer });
-    unmarkedBaseline = await container.renderToString(WordAtlasArticle, {
-      props: articleProps(makeEntry(false)),
-    });
-  });
-
-  function renderFullyMarked(kind: 'short' | 'archaic' = 'short'): Promise<string> {
-    return container.renderToString(WordAtlasArticle, {
-      props: articleProps(makeFullyMarkedEntry(kind)),
-    });
+  function renderFullyMarked(kind: 'short' | 'archaic' = 'short'): string {
+    return renderWordAtlasArticle(articleProps(makeFullyMarkedEntry(kind)));
   }
 
-  test('unmarked lemma rendering is unchanged', async () => {
-    const html = await container.renderToString(WordAtlasArticle, {
-      props: articleProps(makeEntry(false)),
-    });
+  test('unmarked lemma rendering is unchanged', () => {
+    const html = renderWordAtlasArticle(articleProps(makeEntry(false)));
     expect(html).toBe(unmarkedBaseline);
     expect(html).not.toContain('status-badge register');
   });
 
-  test('fully-marked lemma renders a header register badge from the dominant marker', async () => {
-    const html = await renderFullyMarked('short');
+  test('fully-marked lemma renders a header register badge from the dominant marker', () => {
+    const html = renderFullyMarked('short');
     expect(html).toContain(`status-badge register`);
     expect(html).toContain(REGISTER_BADGE_SHORT);
     expect(html).not.toContain(REGISTER_BADGE_ARCHAIC);
   });
 
-  test('archaic fully-marked lemma renders the застаріле register badge', async () => {
-    const html = await renderFullyMarked('archaic');
+  test('archaic fully-marked lemma renders the застаріле register badge', () => {
+    const html = renderFullyMarked('archaic');
     expect(html).toContain(`status-badge register`);
     expect(html).toContain(REGISTER_BADGE_ARCHAIC);
   });
 
-  test('fully-marked lemma suppresses the empty modern paradigm table', async () => {
-    const html = await renderFullyMarked('short');
+  test('fully-marked lemma suppresses the empty modern paradigm table', () => {
+    const html = renderFullyMarked('short');
     expect(html).not.toMatch(/0 форм/);
     expect(html).toContain('2 марковані форми');
     // No orphan «Форма | Позначка» shell before the marked block.
@@ -220,8 +184,8 @@ describe('fully-marked lemma register treatment (#4900)', () => {
     expect(morphology).not.toContain('<table class="paradigm-table">');
   });
 
-  test('fully-marked lemma renders marked forms expanded, not inside collapsed details', async () => {
-    const html = await renderFullyMarked('short');
+  test('fully-marked lemma renders marked forms expanded, not inside collapsed details', () => {
+    const html = renderFullyMarked('short');
     expect(html).toContain('class="marked-forms marked-forms-primary"');
     expect(html).not.toContain(MARKED_SUMMARY);
     expect(html).not.toContain('<details');
@@ -230,10 +194,8 @@ describe('fully-marked lemma register treatment (#4900)', () => {
     expect(html.indexOf(LEARNER_NOTE)).toBeLessThan(html.indexOf(ARCHAIC_FORM));
   });
 
-  test('partial-marked lemma keeps collapsed details behavior', async () => {
-    const html = await container.renderToString(WordAtlasArticle, {
-      props: articleProps(makeEntry(true)),
-    });
+  test('partial-marked lemma keeps collapsed details behavior', () => {
+    const html = renderWordAtlasArticle(articleProps(makeEntry(true)));
     expect(html).toContain('class="marked-forms"');
     expect(html).not.toContain('marked-forms-primary');
     expect(html).toContain('<details');

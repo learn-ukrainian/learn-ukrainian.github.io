@@ -23,8 +23,7 @@ import {
 } from "@site/src/lib/lexicon/atlas-data-source";
 import { rankSearchResults, type SearchRow } from "@site/src/lib/lexicon/search";
 import { PRACTICE_LEVELS, type PracticeLevel } from "@site/src/lib/lexicon/runtime-contract";
-import reactRenderer from "@astrojs/react/server.js";
-import { experimental_AstroContainer as AstroContainer } from "astro/container";
+import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
@@ -402,12 +401,6 @@ describe("AtlasDataSource runtime shards (real DB, optional)", () => {
       const cache = getAtlasPayloadCache();
       const sqlite = new SqliteAtlasDataSource();
       const http = nodeHttp(createFileAtlasFetch(exportRoot));
-      const { default: WordAtlasArticle } = await import(
-        "@site/src/lexicon/WordAtlasArticle.astro"
-      );
-      const container = await AstroContainer.create();
-      container.addServerRenderer({ renderer: reactRenderer });
-
       const entryTypes = new Set<string>();
       for (const entry of cache.entries) {
         if (entry.entry_type) entryTypes.add(entry.entry_type);
@@ -426,19 +419,15 @@ describe("AtlasDataSource runtime shards (real DB, optional)", () => {
         expect(right.kind).toBe("entry");
         if (left.kind !== "entry" || right.kind !== "entry") continue;
 
-        const sqliteHtml = await container.renderToString(WordAtlasArticle, {
-          props: {
-            record: left.record,
-            generatedAt: cache.generatedAt,
-            manifestVersion: cache.manifestVersion,
-          },
+        const sqliteHtml = renderWordAtlasArticle({
+          record: left.record,
+          generatedAt: cache.generatedAt,
+          manifestVersion: cache.manifestVersion,
         });
-        const httpHtml = await container.renderToString(WordAtlasArticle, {
-          props: {
-            record: right.record,
-            generatedAt: cache.generatedAt,
-            manifestVersion: cache.manifestVersion,
-          },
+        const httpHtml = renderWordAtlasArticle({
+          record: right.record,
+          generatedAt: cache.generatedAt,
+          manifestVersion: cache.manifestVersion,
         });
         if (sqliteHtml !== httpHtml) {
           differing += 1;

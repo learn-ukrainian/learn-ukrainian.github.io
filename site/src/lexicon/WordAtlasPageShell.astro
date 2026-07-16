@@ -5,8 +5,13 @@
  * `ready` delegates to WordAtlasArticle with zero extra DOM. Other states are
  * dormant (no scoped CSS / no global imports) so a later client reader can
  * reuse this shell without changing ready-page HTML assets.
+ *
+ * PR3 slice 1: WordAtlasArticle is a pure React component rendered SSR-only
+ * (no client: directive). AtlasTypeahead stays Astro so its search script still
+ * boots on prerendered pages; etymology click handlers remain an is:inline script.
  */
-import WordAtlasArticle from "./WordAtlasArticle.astro";
+import WordAtlasArticle from "./WordAtlasArticle";
+import AtlasTypeahead from "./AtlasTypeahead.astro";
 import type { WordAtlasPageState } from "../lib/lexicon/word-atlas-page-state";
 
 interface Props {
@@ -17,11 +22,32 @@ const { state } = Astro.props as Props;
 ---
 
 {state.status === "ready" ? (
-  <WordAtlasArticle
-    record={state.record}
-    generatedAt={state.generatedAt}
-    manifestVersion={state.manifestVersion}
-  />
+  <>
+    <WordAtlasArticle
+      record={state.record}
+      generatedAt={state.generatedAt}
+      manifestVersion={state.manifestVersion}
+    >
+      <AtlasTypeahead id="atlas-article-search" label="Шукати слово в Лексиконі" />
+    </WordAtlasArticle>
+    <script is:inline>
+      (() => {
+        const root = document.querySelector('[data-word-atlas]');
+
+        root?.querySelectorAll('[data-ety-note]').forEach((stage) => {
+          stage.addEventListener('click', () => {
+            root.querySelectorAll('[data-ety-note]').forEach((item) => item.classList.remove('active'));
+            stage.classList.add('active');
+            const output = stage.closest('.atlas-section')?.querySelector('[data-ety-note-output]');
+            if (output) {
+              output.textContent = stage.dataset.etyNote || output.textContent;
+              output.style.background = 'var(--teal-light)';
+            }
+          });
+        });
+      })();
+    </script>
+  </>
 ) : state.status === "loading" ? (
   <div role="status" aria-busy="true" data-word-atlas-state="loading">
     <p>Завантаження статті Атласу…</p>
