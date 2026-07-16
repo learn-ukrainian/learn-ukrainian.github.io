@@ -152,10 +152,23 @@ def record_task(
     prompt_file: str | None = None,
     command: list[str] | None = None,
     note: str | None = None,
+    lifecycle_file: str | None = None,
 ) -> dict[str, Any]:
     state = ensure_run_state(repo_root, run_id)
     now = isoformat_z(utc_now())
+    previous = next(
+        (item for item in state.get("tasks", []) if item.get("task_id") == task_id),
+        None,
+    )
     tasks = [item for item in state.get("tasks", []) if item.get("task_id") != task_id]
+    lifecycle = (previous or {}).get("task_lifecycle")
+    if lifecycle_file:
+        from scripts.orchestration import task_lifecycle
+
+        lifecycle_path = Path(lifecycle_file).expanduser().resolve()
+        lifecycle = task_lifecycle.carrier_projection(
+            task_lifecycle.load_lifecycle(lifecycle_path), state_file=str(lifecycle_path)
+        )
     tasks.append(
         {
             "task_id": task_id,
@@ -163,6 +176,7 @@ def record_task(
             "prompt_file": prompt_file,
             "command": command,
             "note": note or "",
+            "task_lifecycle": lifecycle,
             "recorded_at": now,
         }
     )
@@ -289,6 +303,7 @@ def summarize_task(
         "stderr_log_excerpt": stderr_excerpt,
         "pr_urls": pr_urls,
         "attention": attention,
+        "task_lifecycle": task.get("task_lifecycle"),
     }
 
 
@@ -322,6 +337,7 @@ def collect_inbox(
                         "task_id": task_id,
                         "agent": record.get("agent"),
                         "status": "missing",
+                        "task_lifecycle": record.get("task_lifecycle"),
                     }
                 task_records.append(task)
     else:
@@ -390,6 +406,7 @@ def render_markdown_inbox(payload: dict[str, Any]) -> str:
                 str(task.get("duration_s") or task.get("age_s") or ""),
                 short_path(task.get("worktree_path"), repo_root),
                 prs,
+                str((task.get("task_lifecycle") or {}).get("current_state") or ""),
                 attention,
             ]
         )
@@ -417,7 +434,10 @@ def render_markdown_inbox(payload: dict[str, Any]) -> str:
         "",
         "## Tasks",
         "",
-        table(rows, ["Task", "Agent", "Status", "Age/Duration", "Worktree", "PR", "Attention"]),
+        table(
+            rows,
+            ["Task", "Agent", "Status", "Age/Duration", "Worktree", "PR", "Lifecycle", "Attention"],
+        ),
         "",
         "## Needs Orchestrator Attention",
         "",
@@ -512,6 +532,8 @@ def build_delegate_command(args: argparse.Namespace, prompt_file: Path) -> list[
         command.extend(["--initial-response-timeout", str(args.initial_response_timeout)])
     if args.max_budget_usd is not None:
         command.extend(["--max-budget-usd", str(args.max_budget_usd)])
+    if args.lifecycle_file:
+        command.extend(["--lifecycle-file", str(Path(args.lifecycle_file).expanduser().resolve())])
     return command
 
 
@@ -534,7 +556,14 @@ def cmd_add_task(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
     task = load_task_state(tasks_dir(repo_root), args.task_id)
     agent = args.agent or (task or {}).get("agent")
-    record_task(repo_root, args.run_id, task_id=args.task_id, agent=agent, note=args.note)
+    record_task(
+        repo_root,
+        args.run_id,
+        task_id=args.task_id,
+        agent=agent,
+        note=args.note,
+        lifecycle_file=args.lifecycle_file,
+    )
     print(json.dumps({"run_id": args.run_id, "task_id": args.task_id, "agent": agent}, indent=2))
     return 0
 
@@ -593,6 +622,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         prompt_file=str(prompt_file),
         command=command,
         note=args.note,
+        lifecycle_file=args.lifecycle_file,
     )
     print(
         json.dumps(
@@ -644,6 +674,7 @@ def build_parser() -> argparse.ArgumentParser:
     add.add_argument("--task-id", required=True)
     add.add_argument("--agent")
     add.add_argument("--note", default="")
+    add.add_argument("--lifecycle-file")
     add.set_defaults(func=cmd_add_task)
 
     dispatch = sub.add_parser("dispatch", help="Dispatch a delegate worker and record it in a run ledger.")
@@ -678,6 +709,10 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--silence-timeout", type=int, default=3600)
     dispatch.add_argument("--initial-response-timeout", type=int, default=180)
     dispatch.add_argument("--max-budget-usd", type=float)
+    dispatch.add_argument(
+        "--lifecycle-file",
+        help="Canonical task-lifecycle.v1 ledger forwarded to delegate state and the run ledger.",
+    )
     dispatch.add_argument("--dry-run", action="store_true")
     dispatch.set_defaults(func=cmd_dispatch)
 

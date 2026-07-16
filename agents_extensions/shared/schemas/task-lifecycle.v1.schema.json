@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-lifecycle.v1",
+  "title": "Fleet task lifecycle and closeout ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "lifecycle_id",
+    "identity",
+    "terminal_goal",
+    "current_state",
+    "author_family",
+    "pr",
+    "ac_snapshot",
+    "evidence",
+    "required_checks",
+    "remaining_scope",
+    "observation_receipts",
+    "mutation_receipts",
+    "created_at",
+    "updated_at",
+    "migration"
+  ],
+  "properties": {
+    "schema_version": {"const": "task-lifecycle.v1"},
+    "lifecycle_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "identity": {"type": "object"},
+    "terminal_goal": {"enum": ["merge", "deploy", "certify"]},
+    "current_state": {
+      "enum": [
+        "ISSUE_LINKED",
+        "ACS_FINALIZED",
+        "IMPLEMENTATION_READY",
+        "PR_OPEN",
+        "REVIEW_REQUESTED",
+        "CHANGES_REQUESTED",
+        "REVIEW_PASSED",
+        "CI_PASSED",
+        "MERGED",
+        "DEPLOYED",
+        "CERTIFIED",
+        "ISSUE_CLOSED",
+        "CLEANED_UP",
+        "BLOCKED_WITH_RECEIPT"
+      ]
+    },
+    "author_family": {"type": "string", "minLength": 1, "maxLength": 100},
+    "pr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "url"],
+      "properties": {
+        "number": {"type": ["integer", "null"], "minimum": 1},
+        "url": {"type": ["string", "null"], "format": "uri", "maxLength": 500}
+      }
+    },
+    "ac_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "content_hash", "finalized_at", "criteria"],
+      "properties": {
+        "schema_version": {"const": "acceptance-criteria.v1"},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "finalized_at": {"type": "string", "format": "date-time"},
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "text",
+              "applicable",
+              "due_state",
+              "required_evidence",
+              "behavior_proof_required"
+            ],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]{1,31}$"},
+              "text": {"type": "string", "minLength": 1, "maxLength": 4000},
+              "applicable": {"type": "boolean"},
+              "due_state": {
+                "enum": [
+                  "IMPLEMENTATION_READY",
+                  "REVIEW_PASSED",
+                  "CI_PASSED",
+                  "MERGED",
+                  "DEPLOYED",
+                  "CERTIFIED",
+                  "ISSUE_CLOSED",
+                  "CLEANED_UP"
+                ]
+              },
+              "required_evidence": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "command",
+                    "test",
+                    "review",
+                    "behavior_proof",
+                    "ci",
+                    "github",
+                    "deployment",
+                    "certification",
+                    "follow_up",
+                    "cleanup",
+                    "document"
+                  ]
+                }
+              },
+              "behavior_proof_required": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "required_checks": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 200}
+    },
+    "remaining_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "summary",
+        "follow_up_issue",
+        "follow_up_stream_epic",
+        "evidence_ids"
+      ],
+      "properties": {
+        "status": {"enum": ["none", "open", "transferred"]},
+        "summary": {"type": "string", "maxLength": 4000},
+        "follow_up_issue": {"type": ["integer", "null"], "minimum": 1},
+        "follow_up_stream_epic": {"type": ["integer", "null"], "minimum": 1},
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "observation_receipts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/observationReceipt"}
+    },
+    "mutation_receipts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/mutationReceipt"}
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "legacy", "migrated_at"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1, "maxLength": 100},
+        "legacy": {"type": "boolean"},
+        "migrated_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    }
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "issue", "pr", "commit"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
+        "issue": {"type": "integer", "minimum": 1},
+        "pr": {"type": ["integer", "null"], "minimum": 1},
+        "commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ac_id",
+        "type",
+        "summary",
+        "url",
+        "subject",
+        "details",
+        "recorded_at"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "ac_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]{1,31}$"},
+        "type": {
+          "enum": [
+            "command",
+            "test",
+            "review",
+            "behavior_proof",
+            "ci",
+            "github",
+            "deployment",
+            "certification",
+            "follow_up",
+            "cleanup",
+            "document"
+          ]
+        },
+        "summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "url": {"type": ["string", "null"], "format": "uri", "maxLength": 1000},
+        "subject": {"$ref": "#/$defs/subject"},
+        "details": {"type": "object"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "observationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "observation_digest",
+        "observed_at",
+        "state",
+        "disposition",
+        "hard_blockers",
+        "waiting",
+        "next_actions",
+        "observation"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "observation_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "owner": {"type": "string", "minLength": 1, "maxLength": 100},
+        "state": {"type": "string"},
+        "disposition": {"enum": ["waiting", "blocked", "ready", "complete"]},
+        "hard_blockers": {"type": "array", "items": {"type": "string"}},
+        "waiting": {"type": "array", "items": {"type": "string"}},
+        "next_actions": {"type": "array", "items": {"type": "string"}},
+        "observation": {"type": "object"}
+      }
+    },
+    "mutationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "operation_id",
+        "action",
+        "status",
+        "authorized_by",
+        "requested_at",
+        "completed_at",
+        "remote_mutation_performed",
+        "detail"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "operation_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "action": {"enum": ["sync-acs", "arm-auto-merge", "close-issue"]},
+        "status": {"enum": ["intent", "complete", "failed"]},
+        "authorized_by": {"type": "string", "minLength": 1, "maxLength": 200},
+        "requested_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": ["string", "null"], "format": "date-time"},
+        "remote_mutation_performed": {"type": "boolean"},
+        "detail": {"type": "string", "maxLength": 4000}
+      }
+    }
+  }
+}

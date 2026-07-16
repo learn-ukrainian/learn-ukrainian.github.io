@@ -117,6 +117,25 @@ Choose the operation explicitly:
 - `preview-archive` is reversible and retains transcripts, worktrees, branches, and runtime resources.
 - `preview-cleanup` archives tasks and may remove only exact, verified, family-owned resources. Purge is not implemented.
 
+When the family belongs to non-trivial GitHub implementation work, task-family
+cleanup is only the final local/native part of the shared closeout contract. Load
+the exact `task-lifecycle.v1` ledger from its `task-identity.v1` repository/issue
+before previewing cleanup:
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_closeout locate \
+  --identity-file /absolute/task-identity.json
+.venv/bin/python -m scripts.orchestration.task_closeout reconcile \
+  --state-file /absolute/.agent/task-lifecycle/.../issue-N.json \
+  --branch codex/N-topic --worktree /absolute/.worktrees/dispatch/codex/N-topic
+```
+
+Do not treat archived tasks, a completed worker, a merged PR, or a `Fixes #N`
+keyword as terminal proof. The lifecycle receipt must verify the explicit
+merge/deploy/certify goal, actual issue closure, and exact branch/worktree
+cleanup. A `BLOCKED_WITH_RECEIPT` disposition stops `preview-cleanup` until its
+owner, reason, evidence, and next action are resolved.
+
 ```bash
 .venv/bin/python -m scripts.orchestration.task_family preview-archive \
   --repo-root /absolute/project \
