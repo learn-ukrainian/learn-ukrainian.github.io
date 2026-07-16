@@ -90,8 +90,9 @@ export function resolveAtlasAssetBaseUrl(options?: {
 }
 
 /**
- * Constructor-time base resolution: env override when set, else explicit option,
- * else empty string (backward-compatible for Node fixture fetchers).
+ * Constructor-time base resolution: explicit option when provided (including empty),
+ * else env override when set, else empty string (backward-compatible for Node
+ * fixture fetchers).
  * Product same-origin default `/atlas` is applied by the app shell / 404 page
  * (or by calling {@link resolveAtlasAssetBaseUrl} without an explicit base).
  */

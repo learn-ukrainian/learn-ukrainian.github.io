@@ -159,7 +159,14 @@ def download_release_asset(
             "Accept: application/octet-stream",
         ]
         try:
-            result = subprocess.run(cmd, check=False, capture_output=True)
+            result = subprocess.run(
+                cmd, check=False, capture_output=True, timeout=300
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise VendorError(
+                f"gh api timed out downloading release asset {asset_id} "
+                f"from {repo}: {exc}"
+            ) from exc
         except OSError as exc:
             raise VendorError(f"failed to invoke gh for asset {asset_id}: {exc}") from exc
         if result.returncode != 0:
@@ -555,9 +562,17 @@ def vendor_atlas_tree(
         extract_root = Path(tmp)
         extract_zip(archive_bytes, extract_root)
         packaging_manifest = load_tree_manifest(extract_root)
-        verify_tree_manifest(extract_root, packaging_manifest)
+        listed_file_count = verify_tree_manifest(extract_root, packaging_manifest)
         data_version, priors = verify_generation_retention(extract_root)
         extracted_bytes, object_count = measure_tree(extract_root)
+        # Fail closed: packaging manifest is the allowlist. Extra archive members
+        # (not listed in atlas/tree-manifest.json) would otherwise install unverified.
+        # The packaging manifest lists itself, so object_count must equal listed count.
+        if object_count != listed_file_count:
+            raise VendorError(
+                f"archive contains files not listed in packaging manifest: "
+                f"object_count={object_count} != listed_file_count={listed_file_count}"
+            )
         warnings = apply_scale_gates(
             archive_bytes=len(archive_bytes),
             extracted_bytes=extracted_bytes,

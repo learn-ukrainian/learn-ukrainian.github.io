@@ -211,6 +211,36 @@ def test_missing_file_in_manifest_fails_closed(tmp_path: Path) -> None:
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=bad)
 
 
+def test_extra_unlisted_file_fails_closed(tmp_path: Path) -> None:
+    """Archive member not in tree-manifest must fail closed (object_count gate)."""
+    tree_root = _build_two_gen_tree(tmp_path)
+    archive, _digest = _archive_for(tree_root, tmp_path)
+    with zipfile.ZipFile(archive, "r") as zf:
+        members = {
+            name: zf.read(name) for name in zf.namelist() if not name.endswith("/")
+        }
+    # Inject a payload under atlas/ that packaging manifest does not list.
+    members["atlas/versions/v-current/sneaky-extra.bin"] = b"unlisted-payload"
+    bad = tmp_path / "extra-unlisted.zip"
+    with zipfile.ZipFile(bad, "w") as zf:
+        for name, data in members.items():
+            zf.writestr(name, data)
+    digest = sha256_hex(bad.read_bytes())
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    sentinel = dist / "keep-me.txt"
+    sentinel.write_text("pre-existing", encoding="utf-8")
+
+    with pytest.raises(
+        VendorError,
+        match=r"files not listed in packaging manifest.*object_count=.*listed_file_count=",
+    ):
+        vendor_atlas_tree(dist, sha256=digest, archive_path=bad)
+
+    assert not (dist / "atlas").exists()
+    assert sentinel.read_text(encoding="utf-8") == "pre-existing"
+
+
 def test_missing_prior_generation_fails(tmp_path: Path) -> None:
     tree_root = tmp_path / "tree"
     _mini_generation(tree_root, "v-only", payload=b"solo")
