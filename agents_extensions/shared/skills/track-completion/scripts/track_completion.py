@@ -2441,9 +2441,17 @@ def certification_projection(
     try:
         if runtime_authorization is not None:
             # The runtime artifacts were schema-, identity-, and hash-validated before
-            # this immutable authorization was committed to the validated ledger.
-            # Projection must remain resumable after ephemeral evidence is cleaned up.
-            authorization = runtime_authorization
+            # this immutable authorization was committed to the validated ledger. Keep
+            # it resumable after ephemeral evidence is cleaned up, but never carry it
+            # across a changed prompt/gate/budget/circuit/resume contract.
+            if certification.runtime_authorization_is_current(
+                runtime_authorization, inputs["qg_identity"]
+            ):
+                authorization = runtime_authorization
+            else:
+                authorization_reason = (
+                    "recorded production-QG authorization does not bind the current QG contract"
+                )
         elif qg["mode"] == "armed-canary":
             authorization = certification.load_authorization(
                 qg,

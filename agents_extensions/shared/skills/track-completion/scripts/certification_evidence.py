@@ -189,6 +189,18 @@ def _qualification_route_is_current(route: Mapping[str, Any], identity: Mapping[
     )
 
 
+def runtime_authorization_is_current(
+    authorization: Mapping[str, Any], expected_identity: Mapping[str, str]
+) -> bool:
+    """Return whether a recorded authorization still binds the live QG contracts."""
+    route = authorization.get("route")
+    return bool(
+        isinstance(route, Mapping)
+        and set(expected_identity) == QG_IDENTITY_KEYS
+        and _qualification_route_is_current(route, expected_identity)
+    )
+
+
 def load_authorization(
     qg_profile: Mapping[str, Any],
     *,
