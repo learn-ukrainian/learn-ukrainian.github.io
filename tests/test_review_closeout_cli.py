@@ -223,8 +223,9 @@ def test_behavior_proof_record_rejects_malformed_proof_and_baseline_before_mutat
         "--step", "open the feature", "--result", "feature opened", "--observation", "visible",
         "--evidence-ref", "test:manual",
     )
-    state = json.loads(state_file.read_text(encoding="utf-8"))
+    valid_state = json.loads(state_file.read_text(encoding="utf-8"))
     for malformed in (None, [], "not-an-object"):
+        state = json.loads(json.dumps(valid_state))
         state["behavior_proof"] = malformed
         state_file.write_text(json.dumps(state), encoding="utf-8")
         before = state_file.read_bytes()
@@ -232,6 +233,24 @@ def test_behavior_proof_record_rejects_malformed_proof_and_baseline_before_mutat
         assert proc.returncode != 0
         assert json.loads(proc.stderr)["error"] == "behavior_proof_must_be_object"
         assert state_file.read_bytes() == before
+
+    state = json.loads(json.dumps(valid_state))
+    state["target_args"] = ["not", "an", "object"]
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    before = state_file.read_bytes()
+    proc = _run_cli(state_file, *record_args)
+    assert proc.returncode != 0
+    assert json.loads(proc.stderr)["error"] == "target_args_must_be_object"
+    assert state_file.read_bytes() == before
+
+    state = json.loads(json.dumps(valid_state))
+    state["baseline"].pop("target")
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    before = state_file.read_bytes()
+    proc = _run_cli(state_file, *record_args)
+    assert proc.returncode != 0
+    assert json.loads(proc.stderr)["error"] == "baseline_target_invalid"
+    assert state_file.read_bytes() == before
 
     state_file.write_text(json.dumps({"baseline": {"intended_behavior": "partial"}}), encoding="utf-8")
     proc = _run_cli(state_file, *record_args)

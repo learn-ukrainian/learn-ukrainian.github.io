@@ -104,6 +104,15 @@ def _target_from_dict(data: object) -> ReviewTarget:
     )
 
 
+def _target_args_from_state(state: dict) -> dict:
+    target_args = state.get("target_args")
+    if target_args is None:
+        return {}
+    if not isinstance(target_args, dict):
+        raise CloseoutStateError("target_args_must_be_object")
+    return target_args
+
+
 def _ledger_from_state(state: dict) -> FindingsLedger:
     return FindingsLedger.from_events(FindingEvent(**raw) for raw in state.get("findings", []))
 
@@ -224,12 +233,15 @@ def _baseline_from_state(state: dict) -> ScopeBaseline:
         or frozen_non_test_loc < 0
     ):
         raise CloseoutStateError("baseline_frozen_non_test_loc_invalid")
+    target = data.get("target")
+    if not isinstance(target, dict):
+        raise CloseoutStateError("baseline_target_invalid")
     return ScopeBaseline(
         issue_ref=data["issue_ref"],
         intended_behavior=data["intended_behavior"],
         non_goals=data["non_goals"],
         owner_boundary=data["owner_boundary"],
-        target=_target_from_dict(data["target"]),
+        target=_target_from_dict(target),
         review_profile=data["review_profile"],
         risk=data["risk"],
         frozen_files=frozenset(frozen_files),
@@ -256,7 +268,7 @@ def _cmd_check_expansion(args: argparse.Namespace) -> int:
         return 1
     baseline = _baseline_from_state(state)
     repo_root = Path(args.repo_root).resolve()
-    target_args = state.get("target_args") or {}
+    target_args = _target_args_from_state(state)
     mode = target_args.get("mode") or baseline.target.mode
 
     try:
@@ -380,7 +392,7 @@ def _cmd_behavior_proof(args: argparse.Namespace) -> int:
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
         return 1
     baseline = _baseline_from_state(state)
-    target_args = state.get("target_args") or {}
+    target_args = _target_args_from_state(state)
     repo_root_raw = target_args.get("repo_root")
     if not isinstance(repo_root_raw, str) or not repo_root_raw:
         print(json.dumps({"error": "frozen target has no repository root"}), file=sys.stderr)
