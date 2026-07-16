@@ -1593,18 +1593,46 @@ Payload allowlist is exactly `{task_id, research_id, surface, status}` on top of
 emitter envelope — never a digest body, title, summary, source URL, prompt, role,
 task family, track, owned paths, or context fingerprint.
 
+## Rollover Registry — `/api/rollovers`
+
+### `GET /api/rollovers`
+
+Read-only fleet audit of versioned rollover records. The response classifies
+valid and corrupt packets, reports live-pending counts, and includes exact IDs,
+human-readable task titles, age, last successful boundary, reconciliation
+state, blocking or terminal reason, and the next safe action. HTTP never
+exposes a mutation path.
+
+Optional query parameters are `agent`, `source_thread_id`,
+`replacement_thread_id`, `lineage_id`, `rollover_id`, and `stale_hours`.
+Supplying any exact selector switches to one-record projection mode. Multiple
+selectors are ANDed; no match returns `404`, and an ambiguous match returns
+`409` with candidates instead of selecting one.
+
+```bash
+curl -s "${MONITOR_API_BASE}/api/rollovers" | jq .
+curl -s "${MONITOR_API_BASE}/api/rollovers?agent=codex&lineage_id=<lineage-id>&rollover_id=<rollover-id>" | jq .
+```
+
+The `rollovers` section in `/api/orient` is the compact cold-start projection:
+counts plus live pending or confirmed-but-incompletely-cleaned entries. Use this
+endpoint for complete evidence and registry validation errors. Use
+`scripts/orchestration/rollover_registry_cli.py` for evidence-gated exact
+reconciliation or maintenance.
+
 ## Orientation — `/api/orient`
 
 ### `GET /api/orient`
 
-One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, health, and session hints.
+One-call agent orientation: git, issues, pipeline, runtime, delegate, rollovers,
+wiki, health, and session hints.
 
 Query params:
 
 - `fresh=true` — invalidate orient-layer caches before gathering (see below).
 - `sections=git,runtime` — comma-separated subset of section keys to
   collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
-  `delegate`, `bridge_pending`, `wiki`, `governance`, `health`,
+  `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`, `health`,
   `session_hints`. Unknown keys return `400`. Omitted = full payload
   (back-compat). Skipped sections are not collected and are omitted
   from both the top-level payload and `meta`.
@@ -1650,6 +1678,7 @@ failure retries on the next call.
 | `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
 | `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
 | `delegate` | 30 | `fs` | active delegate/codex tasks |
+| `rollovers` | 15 | `fs` | compact fleet rollover counts plus actionable pending or incompletely cleaned entries |
 | `wiki` | 120 | `fs` | per-track wiki compilation coverage |
 | `health` | 15 | `probe` | API/DB/MCP port + file readability |
 | `session_hints` | 60 | `fs` | recent `docs/session-state/*.md` entries |

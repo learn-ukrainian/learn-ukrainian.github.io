@@ -86,6 +86,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         "scripts/lib/session_record.py",
         "scripts/config/context_profiles.yaml",
         "agents_extensions/shared/schemas/task-identity.v1.schema.json",
+        "agents_extensions/shared/schemas/rollover-registry.v1.schema.json",
     ]
     sources.extend(
         str(path.relative_to(REPO_ROOT))

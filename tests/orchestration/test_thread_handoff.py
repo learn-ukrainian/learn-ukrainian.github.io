@@ -15,7 +15,7 @@ from scripts.orchestration import claudex_supervisor as cs
 from scripts.orchestration import task_identity
 from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
-from scripts.orchestration.task_family import rollover
+from scripts.orchestration.task_family import rollover, rollover_registry
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -169,6 +169,59 @@ def test_rollover_state_missing_receipt_path_writes_nothing(
         th.write_rollover_state(tmp_path / "lease.json", tmp_path, state)
 
     assert writes == []
+
+
+def test_rollover_state_refreshes_canonical_registry_projection(tmp_path: Path) -> None:
+    state = prepared(agent="codex", thread_id="source-registry-sync")
+    lineage_id = state["lineage_id"]
+    rollover_id = state["replacement"]["rollover_id"]
+    state_path = tmp_path / th.default_state_path("codex", lineage_id)
+
+    th.write_rollover_state(state_path, tmp_path, state)
+
+    record = rollover_registry.load_record(
+        tmp_path,
+        agent="codex",
+        lineage_id=lineage_id,
+        rollover_id=rollover_id,
+    )
+    assert record["task_identity"] == state["replacement"]["identity"]
+    assert record["title_transition"] == state["replacement"]["title_transition"]
+    assert record["lease_path"] == state_path.relative_to(tmp_path).as_posix()
+
+
+@pytest.mark.parametrize(
+    ("command_name", "locked_name"),
+    [
+        ("cmd_register_created", "_cmd_register_created_locked"),
+        ("cmd_native_action", "_cmd_native_action_locked"),
+        ("cmd_record_native_result", "_cmd_record_native_result_locked"),
+        ("cmd_reconcile_native", "_cmd_reconcile_native_locked"),
+    ],
+)
+def test_every_native_mutation_runs_inside_the_lineage_lock(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    command_name: str,
+    locked_name: str,
+) -> None:
+    events: list[str] = []
+
+    class RecordingLock:
+        def __enter__(self) -> None:
+            events.append("lock-entered")
+
+        def __exit__(self, *_args: object) -> None:
+            events.append("lock-exited")
+
+    monkeypatch.setattr(th, "_rollover_mutation_lock_path", lambda _args: tmp_path / "lineage.lock")
+    monkeypatch.setattr(th, "task_family_advisory_lock", lambda _path: RecordingLock())
+    monkeypatch.setattr(th, locked_name, lambda _args: events.append("mutation") or 0)
+
+    returncode = getattr(th, command_name)(SimpleNamespace())
+
+    assert returncode == 0
+    assert events == ["lock-entered", "mutation", "lock-exited"]
 
 
 def bind_native_replacement(state: dict, thread_id: str) -> None:

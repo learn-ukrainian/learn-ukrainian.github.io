@@ -65,6 +65,11 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
     monkeypatch.setattr(
+        api_main,
+        "_collect_rollovers_orient_data",
+        lambda: {"counts": {"total": 0, "live_pending": 0}, "actionable": [], "errors": []},
+    )
+    monkeypatch.setattr(
         api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
     )
     monkeypatch.setattr(
@@ -130,6 +135,7 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
+        "rollovers",
         "wiki",
         "health",
         "session_hints",
@@ -144,7 +150,7 @@ def test_parse_orient_sections_lean_preset_excludes_heavy_sections():
     lean = api_main._parse_orient_sections(None, lean=True)
     assert lean == list(api_main.LEAN_ORIENT_SECTIONS)
     assert not ({"pipeline", "issues", "wiki"} & set(lean))
-    assert {"git", "delegate", "governance", "health", "session_hints"} <= set(lean)
+    assert {"git", "delegate", "rollovers", "governance", "health", "session_hints"} <= set(lean)
 
 
 def test_parse_orient_sections_explicit_list_overrides_lean():
@@ -244,6 +250,22 @@ def test_orient_includes_bridge_pending_field(monkeypatch):
     data = response.json()
     assert data["bridge_pending"] == {"claude": {"count": 1, "oldest_hours": 6.5}}
     assert "bridge_pending" in data["meta"]
+
+
+def test_orient_includes_actionable_rollovers(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+    expected = {
+        "counts": {"total": 4, "live_pending": 3},
+        "actionable": [{"agent": "codex", "rollover_id": "rollover-a"}],
+        "errors": [],
+    }
+    monkeypatch.setattr(api_main, "_collect_rollovers_orient_data", lambda: expected)
+
+    response = client.get("/api/orient")
+
+    assert response.status_code == 200
+    assert response.json()["rollovers"] == expected
+    assert "rollovers" in response.json()["meta"]
 
 
 def test_orient_completes_within_500ms(monkeypatch):
@@ -589,6 +611,7 @@ def test_orient_default_sections_remain_full_payload(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
+        "rollovers",
         "wiki",
         "governance",
         "health",

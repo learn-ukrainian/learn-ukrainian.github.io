@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rollover-registry.v1",
+  "title": "Fleet rollover registry record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "key",
+    "task_identity",
+    "title_transition",
+    "state",
+    "last_successful_boundary",
+    "native_creation",
+    "strict_recall",
+    "canary",
+    "confirmation",
+    "predecessor_archival",
+    "heartbeat",
+    "timestamps",
+    "lease_path",
+    "packet_paths",
+    "receipts",
+    "evidence_paths",
+    "terminal_reason",
+    "blocking_reason",
+    "last_reconciliation",
+    "history"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "lineage_id", "rollover_id"],
+      "properties": {
+        "agent": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "lineage_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "rollover_id": {"type": "string", "pattern": "^rollover-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    },
+    "task_identity": {"$ref": "task-identity.v1"},
+    "title_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "harness",
+        "native_title_supported",
+        "native_readback_supported",
+        "state",
+        "visible_title",
+        "replacement_task_id",
+        "binding_receipt",
+        "mutation_receipt",
+        "readback_receipt",
+        "fallback_receipt",
+        "events"
+      ],
+      "properties": {
+        "schema_version": {"const": "rollover-title-transition.v1"},
+        "harness": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "native_title_supported": {"type": "boolean"},
+        "native_readback_supported": {"type": "boolean"},
+        "state": {
+          "enum": [
+            "awaiting_replacement_binding",
+            "awaiting_native_title",
+            "fallback_recorded",
+            "title_acknowledged",
+            "title_mutation_failed",
+            "title_reconciled",
+            "title_readback_failed"
+          ]
+        },
+        "visible_title": {"type": "string", "minLength": 1, "maxLength": 60},
+        "replacement_task_id": {"type": ["string", "null"]},
+        "binding_receipt": {"type": ["object", "null"]},
+        "mutation_receipt": {"type": ["object", "null"]},
+        "readback_receipt": {"type": ["object", "null"]},
+        "fallback_receipt": {"type": ["object", "null"]},
+        "events": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "state": {"$ref": "#/$defs/state"},
+    "last_successful_boundary": {"$ref": "#/$defs/success_state"},
+    "native_creation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["state", "family_id", "operation_id"],
+      "properties": {
+        "state": {"type": "string", "minLength": 1},
+        "family_id": {"type": ["string", "null"]},
+        "operation_id": {"type": ["string", "null"]}
+      }
+    },
+    "strict_recall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "score", "verdict_path"],
+      "properties": {
+        "state": {"enum": ["pending", "passed", "failed"]},
+        "score": {"type": ["integer", "number", "null"]},
+        "verdict_path": {"type": ["string", "null"]}
+      }
+    },
+    "canary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "proof_path"],
+      "properties": {
+        "state": {"enum": ["pending", "passed", "failed"]},
+        "proof_path": {"type": ["string", "null"]}
+      }
+    },
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "confirmed_at", "confirmed_by"],
+      "properties": {
+        "state": {"enum": ["pending", "confirmed"]},
+        "confirmed_at": {"type": ["string", "null"]},
+        "confirmed_by": {"type": ["string", "null"]}
+      }
+    },
+    "predecessor_archival": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["state"],
+      "properties": {"state": {"enum": ["pending", "authorized", "archived", "blocked"]}}
+    },
+    "heartbeat": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["automation_id", "state", "cleanup_authorized"],
+      "properties": {
+        "automation_id": {"type": ["string", "null"]},
+        "state": {"type": "string", "minLength": 1},
+        "cleanup_authorized": {"type": "boolean"}
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["prepared_at", "updated_at"],
+      "properties": {
+        "prepared_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "lease_path": {"type": ["string", "null"]},
+    "packet_paths": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+    "receipts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "terminal_reason": {"type": ["string", "null"]},
+    "blocking_reason": {"type": ["string", "null"]},
+    "last_reconciliation": {"type": ["object", "null"]},
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["state", "at", "reason", "evidence_paths"],
+        "properties": {
+          "state": {"$ref": "#/$defs/state"},
+          "at": {"type": "string", "format": "date-time"},
+          "reason": {"type": "string", "minLength": 1},
+          "evidence_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "success_state": {
+      "enum": [
+        "PREPARED",
+        "AWAITING_NATIVE_CREATE",
+        "REPLACEMENT_CREATED",
+        "RESUMED",
+        "STRICT_RECALL_PASSED",
+        "CANARY_PASSED",
+        "CONFIRMED",
+        "PREDECESSOR_ARCHIVED",
+        "HEARTBEAT_RETIRED"
+      ]
+    },
+    "state": {
+      "enum": [
+        "PREPARED",
+        "AWAITING_NATIVE_CREATE",
+        "REPLACEMENT_CREATED",
+        "RESUMED",
+        "STRICT_RECALL_PASSED",
+        "CANARY_PASSED",
+        "CONFIRMED",
+        "PREDECESSOR_ARCHIVED",
+        "HEARTBEAT_RETIRED",
+        "SUPERSEDED",
+        "ABANDONED_WITH_PROOF",
+        "BLOCKED"
+      ]
+    }
+  }
+}

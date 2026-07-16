@@ -30,6 +30,29 @@ For a known packet, inspect health without changing it.
 .venv/bin/python scripts/orchestration/thread_handoff.py check --agent codex --lineage-id <lineage-id>
 ```
 
+When more than one unrelated packet is pending, generic detection stays
+read-only and returns actionable candidates. Select the intended packet by
+exact ID; selectors are ANDed and titles never select a packet.
+
+```bash
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id>
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+  --agent codex --source-thread-id <predecessor-task-id>
+```
+
+Audit all agents without mutation:
+
+```bash
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py audit
+```
+
+Use `reconcile-exact --snapshot <authoritative-json>` before acting on an
+unrecorded native successor or confusing cleanup state. Reconciliation requires
+exact native IDs, title/readback receipts, confirmation proof, and automation
+facts; a title or missing local process is never proof of creation or cleanup.
+It is read-only unless `--apply` is explicit.
+
 ## Rollover
 
 Prepare only from the active task; this reserves every packet path and keeps
@@ -213,3 +236,11 @@ archive candidates.
 This archive step does not replace or weaken the existing automation cleanup
 gate. Delete or pause an old heartbeat only after `confirm-started` reports
 `old_automation_ready_to_delete: true`.
+
+For stale or duplicate-looking packets, never delete the lease. Use the exact
+registry maintenance commands. `finish-cleanup-exact`, `supersede-exact`, and
+`abandon-exact` require immutable proof and separate `--plan` then `--apply`
+invocations. Apply validates the selected agent/lineage/rollover, plan digest,
+and action before mutation and writes a durable receipt. Age alone can warn but
+cannot authorize a disposition. The complete proof contract is
+`agents_extensions/shared/contracts/rollover-registry.md`.

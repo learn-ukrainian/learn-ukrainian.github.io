@@ -51,6 +51,9 @@ prompt, and a Task Family Manager transition operation:
   (gitignored)
 - Native transition plan, binding, events, and receipts:
   `.agent/task-families/<family-id>/operations/<operation-id>/` (gitignored)
+- Fleet registry projection:
+  `.agent/thread-rollover-registry/v1/<agent>/<lineage-id>/<rollover-id>/record.json`
+  (gitignored)
 - Durable Codex orchestrator handoff:
   `docs/session-state/codex-orchestrator-handoff.md`
 - Codex role handoff pointer:
@@ -344,6 +347,54 @@ Dry-run without writing files:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
 ```
+
+### Fleet audit, exact selection, and maintenance
+
+Several unrelated agents and lineages may legitimately have pending packets at
+the same time. Generic registry detection is therefore fail-closed for mutation
+and returns structured candidates; any corrupt durable source also keeps
+generic detection non-mutating. It never chooses by title, age, or directory
+order. A unique exact selector can proceed while unrelated packets remain
+untouched:
+
+```bash
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py audit
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+  --agent codex --source-thread-id <predecessor-task-id>
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id>
+```
+
+For an unrecorded native successor or disputed cleanup state, capture an
+authoritative app/automation snapshot and compare it without mutation:
+
+```bash
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py reconcile-exact \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --snapshot <native-snapshot.json>
+```
+
+Only a consistent result may be repeated with `--apply`. The snapshot binds the
+exact predecessor, replacement, title readback or honest unsupported fallback,
+confirmation proof, archive receipt, automation ID, cleanup authorization, and
+retirement receipt. A title, task absence, local process absence, or stale age
+does not prove a native action.
+
+Cleanup, supersession, and abandonment use immutable evidence-gated plans:
+
+```bash
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py supersede-exact \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --plan --proof-file <proof.json>
+.venv/bin/python scripts/orchestration/rollover_registry_cli.py supersede-exact \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --apply --plan-file <plan.json>
+```
+
+`finish-cleanup-exact` and `abandon-exact` follow the same plan/apply shape.
+Never bulk-delete old leases. See
+`agents_extensions/shared/contracts/rollover-registry.md` for required proof
+assertions and lifecycle boundaries.
 
 ### Superseded native-intent recovery
 
