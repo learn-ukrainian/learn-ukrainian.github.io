@@ -10,6 +10,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -24,6 +25,7 @@ from scripts.atlas.export_runtime_shards import (
     load_component_tokenization_vectors,
     load_entry_records,
     load_practice_levels_by_slug,
+    logical_tree_fingerprint,
     open_readonly_db,
     tree_fingerprint,
     verify_tree,
@@ -45,7 +47,13 @@ def fixture_db() -> Path:
 
 
 def _fp(root: Path) -> str:
+    """Same-build raw fingerprint (determinism only — not cross-platform)."""
     return tree_fingerprint(root)
+
+
+def _logical_fp(root: Path) -> str:
+    """Cross-platform logical content fingerprint (freshness guard)."""
+    return logical_tree_fingerprint(root)
 
 
 def test_normalization_vectors_match_python_rules() -> None:
@@ -130,6 +138,9 @@ def test_committed_runtime_tree_matches_fresh_fixture_export(
 ) -> None:
     """Sol F006 freshness guard: committed runtime-tree must match a live export.
 
+    Compares *logical* content (gunzipped payloads + transport-stripped JSON),
+    not raw gzip bytes — zlib builds differ across platforms (PR #5323).
+
     If the exporter or ``runtime_shards_fixture.db`` changes without regenerating
     the tree, this fails loudly in Python CI. Regen::
 
@@ -149,8 +160,10 @@ def test_committed_runtime_tree_matches_fresh_fixture_export(
         include_decks=False,
         verify=True,
     )
-    committed_fp = _fp(COMMITTED_RUNTIME_TREE / "atlas")
-    fresh_fp = _fp(fresh / "atlas")
+    committed_root = COMMITTED_RUNTIME_TREE / "atlas"
+    fresh_root = fresh / "atlas"
+    committed_fp = _logical_fp(committed_root)
+    fresh_fp = _logical_fp(fresh_root)
     assert committed_fp == fresh_fp, (
         "committed tests/fixtures/atlas/runtime-tree is stale relative to a "
         "fresh export of runtime_shards_fixture.db; regenerate with "
@@ -158,16 +171,61 @@ def test_committed_runtime_tree_matches_fresh_fixture_export(
         "tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree`"
     )
 
-    # Explicit path-set equality (catches empty-dir / missing-leaf surprises
-    # even if fingerprint collision were ever possible).
-    def _files(root: Path) -> dict[str, bytes]:
+    # Path-set equality catches empty-dir / missing-leaf surprises without
+    # requiring zlib-byte identity of committed vs freshly compressed objects.
+    def _paths(root: Path) -> set[str]:
         return {
-            path.relative_to(root).as_posix(): path.read_bytes()
-            for path in sorted(root.rglob("*"))
+            path.relative_to(root).as_posix()
+            for path in root.rglob("*")
             if path.is_file()
         }
 
-    assert _files(COMMITTED_RUNTIME_TREE / "atlas") == _files(fresh / "atlas")
+    assert _paths(committed_root) == _paths(fresh_root)
+
+
+def test_logical_freshness_guard_fails_on_corrupt_committed_gz(
+    fixture_db: Path, tmp_path: Path
+) -> None:
+    """Corrupt-byte property: gz payload change / undecompressable → guard fails.
+
+    Extends the fail-closed checksum surface (see ``test_trie_split_and_checksum_fail_closed``)
+    to the logical freshness comparison used cross-platform.
+    """
+    fresh = tmp_path / "fresh-export"
+    export_runtime_shards(
+        db_path=fixture_db,
+        out_dir=fresh,
+        deck_dir=None,
+        include_decks=False,
+        verify=True,
+    )
+    fresh_fp = _logical_fp(fresh / "atlas")
+
+    corrupt_root = tmp_path / "corrupt-committed"
+    shutil.copytree(COMMITTED_RUNTIME_TREE / "atlas", corrupt_root)
+    gz_path = next(corrupt_root.rglob("*.json.gz"))
+    blob = bytearray(gz_path.read_bytes())
+    mid = max(10, len(blob) // 2)
+    blob[mid] = (blob[mid] + 1) % 256
+    gz_path.write_bytes(bytes(blob))
+
+    stale_msg = (
+        "committed tests/fixtures/atlas/runtime-tree is stale relative to a "
+        "fresh export of runtime_shards_fixture.db; regenerate with "
+        "`PYTHONPATH=. .venv/bin/python "
+        "tests/fixtures/atlas/build_runtime_shards_fixture.py --emit-tree`"
+    )
+    with pytest.raises((AssertionError, ExportError)) as exc_info:
+        corrupt_fp = _logical_fp(corrupt_root)
+        assert corrupt_fp == fresh_fp, stale_msg
+
+    # Must be the guard assertion or a clear ExportError — not an unrelated crash.
+    if isinstance(exc_info.value, AssertionError):
+        assert "stale relative" in str(exc_info.value)
+    else:
+        assert "undecompressable" in str(exc_info.value).lower() or "logical" in str(
+            exc_info.value
+        ).lower()
 
 
 def test_fixture_covers_representative_entry_shapes(fixture_db: Path) -> None:
