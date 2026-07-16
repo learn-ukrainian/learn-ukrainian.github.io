@@ -658,6 +658,7 @@ def test_live_and_cache_paths_use_shared_reviewer_gate_helper(tmp_path: Path, mo
         policy_family: str,
         theatre_retry_available: bool,
         deep_read_retry_available: bool,
+        factual_sweep_retry_available: bool,
         retry_unavailable_fails: bool = False,
     ) -> qg_workflow._ReviewerGateOutcome:
         calls.append(retry_unavailable_fails)
@@ -697,6 +698,145 @@ def test_live_and_cache_paths_use_shared_reviewer_gate_helper(tmp_path: Path, mo
     assert _tier(first, 2)["status"] == "ran"
     assert _tier(second, 2)["status"] == "cache_hit"
     assert calls == [False, True]
+
+
+def test_missing_fact_sweep_retries_once_and_recovers(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="fact-sweep-recovery",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    section_event = _wiki_event(mode="section")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        response = json.dumps({"findings": []}) if len(calls) == 1 else _seminar_response()
+        return _seminar_dispatch(response_text=response, events=(section_event,))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="fact-sweep-recovery"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            capture_tier2=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == "ran"
+    assert record["terminal_verdict"] == "PASS"
+    assert len(calls) == 2
+    assert "Factual Sweep Required" in calls[1]
+    assert len(tier["retry_history"]) == 2
+    assert tier["gate_outcomes"]["factual_sweep_retried"] is True
+
+
+def test_missing_fact_sweep_retry_exhausts_fail_closed(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="fact-sweep-exhausted",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    section_event = _wiki_event(mode="section")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        return _seminar_dispatch(
+            response_text=json.dumps({"findings": []}),
+            events=(section_event,),
+        )
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="fact-sweep-exhausted"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "factual_sweep_incomplete"
+    assert record["terminal_verdict"] == "FAIL"
+    assert len(calls) == 2
+    assert "Factual Sweep Required" in calls[1]
+
+
+def test_missing_fact_sweep_retry_honors_lower_call_limit(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="fact-sweep-call-limit",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        return _seminar_dispatch(
+            response_text=json.dumps({"findings": []}),
+            events=(_wiki_event(mode="section"),),
+        )
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="fact-sweep-call-limit"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            max_llm_calls=1,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "factual_sweep_incomplete"
+    assert record["terminal_verdict"] == "FAIL"
+    assert len(calls) == 1
+
+
+def test_theatre_then_missing_fact_sweep_recovers_within_three_calls(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="theatre-fact-sweep",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    section_event = _wiki_event(mode="section")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        if len(calls) == 1:
+            return _seminar_dispatch(response_text=json.dumps({"findings": []}), tool_call_count=0)
+        response = json.dumps({"findings": []}) if len(calls) == 2 else _seminar_response()
+        return _seminar_dispatch(response_text=response, events=(section_event,))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="theatre-fact-sweep"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert record["terminal_verdict"] == "PASS"
+    assert len(calls) == qg_workflow.MAX_TIER2_REVIEWER_CALLS
+    assert "Tools Required" in calls[1]
+    assert "Tools Required" in calls[2]
+    assert "Factual Sweep Required" in calls[2]
 
 
 def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:

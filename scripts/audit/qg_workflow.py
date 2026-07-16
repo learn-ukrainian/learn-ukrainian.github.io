@@ -53,6 +53,7 @@ DEFAULT_REVIEWER_MODEL_ID = "llm-reviewer-disabled-until-4370"
 DEFAULT_REVIEWER_FAMILY = "qg_workflow"
 LLM_POLICY_FAMILIES = frozenset({"b1_plus", "seminar"})
 CONTENT_HASH_BASIS = "llm_qg_store.CONTENT_FILES"
+MAX_TIER2_REVIEWER_CALLS = 3
 
 Reviewer = Callable[["ReviewTarget", str], Any]
 
@@ -831,6 +832,7 @@ def _run_tier2(
                     policy_family=policy_family,
                     theatre_retry_available=True,
                     deep_read_retry_available=True,
+                    factual_sweep_retry_available=True,
                     retry_unavailable_fails=True,
                 )
             except ValueError:
@@ -984,6 +986,7 @@ def _run_tier2(
     attempt_prompt = prompt
     theatre_retried = False
     deep_read_retried = False
+    factual_sweep_retried = False
     payload: dict[str, Any]
     findings: list[dict[str, Any]]
     dispatch_meta: dict[str, Any]
@@ -1200,12 +1203,16 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
 
+        retry_slot_available = len(capture_attempts) < MAX_TIER2_REVIEWER_CALLS and (
+            options.max_llm_calls is None or budget.llm_calls < options.max_llm_calls
+        )
         gate_outcome = _run_reviewer_gate_sequence(
             payload,
             dispatch_meta,
             policy_family=policy_family,
-            theatre_retry_available=not theatre_retried,
-            deep_read_retry_available=not deep_read_retried,
+            theatre_retry_available=not theatre_retried and retry_slot_available,
+            deep_read_retry_available=not deep_read_retried and retry_slot_available,
+            factual_sweep_retry_available=not factual_sweep_retried and retry_slot_available,
         )
         if gate_outcome.retry_reason == llm_reviewer_dispatch.INVALID_TOOL_THEATRE:
             theatre_retried = True
@@ -1219,6 +1226,13 @@ def _run_tier2(
             attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
                 prompt,
                 llm_reviewer_dispatch.DEEP_READ_REQUIRED,
+            )
+            continue
+        if gate_outcome.retry_reason == llm_reviewer_dispatch.FACTUAL_SWEEP_REQUIRED:
+            factual_sweep_retried = True
+            attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
+                attempt_prompt,
+                llm_reviewer_dispatch.FACTUAL_SWEEP_REQUIRED,
             )
             continue
         if gate_outcome.status == llm_reviewer_dispatch.RETRY_EXHAUSTED:
@@ -1272,6 +1286,7 @@ def _run_tier2(
         workflow_override=workflow_override,
         theatre_retried=theatre_retried,
         deep_read_retried=deep_read_retried,
+        factual_sweep_retried=factual_sweep_retried,
         grounding_gate=grounding_gate,
     )
     if options.persist_llm_qg:
@@ -1453,6 +1468,7 @@ def _capture_gate_outcomes(
     workflow_override: str | None,
     theatre_retried: bool,
     deep_read_retried: bool,
+    factual_sweep_retried: bool,
     grounding_gate: llm_reviewer_dispatch.GroundingGateResult,
 ) -> dict[str, Any]:
     """Build the strict replay-grade record of the gates that actually ran."""
@@ -1461,6 +1477,7 @@ def _capture_gate_outcomes(
         "workflow_override": workflow_override,
         "theatre_retried": theatre_retried,
         "deep_read_retried": deep_read_retried,
+        "factual_sweep_retried": factual_sweep_retried,
         "grounding": {
             "ungrounded_findings": grounding_gate.ungrounded_findings,
             "required_ungrounded_findings": grounding_gate.required_ungrounded_findings,
@@ -1525,6 +1542,7 @@ def _complete_cached_capture(
             workflow_override=cache_gate.workflow_override,
             theatre_retried=bool(gate.get("theatre_retried")),
             deep_read_retried=bool(gate.get("deep_read_retried")),
+            factual_sweep_retried=bool(gate.get("factual_sweep_retried")),
             grounding_gate=grounding_gate,
         ),
     }
@@ -1610,6 +1628,7 @@ def _run_reviewer_gate_sequence(
     policy_family: str,
     theatre_retry_available: bool,
     deep_read_retry_available: bool,
+    factual_sweep_retry_available: bool,
     retry_unavailable_fails: bool = False,
 ) -> _ReviewerGateOutcome:
     """Apply the canonical theatre/deep-read/grounding/factual-sweep gates."""
@@ -1656,6 +1675,17 @@ def _run_reviewer_gate_sequence(
         policy_family=policy_family,
         invalid_fact_checks=grounding_gate.invalid_fact_checks,
     )
+    fact_checks = working_payload.get("fact_checks")
+    sweep_missing = policy_family.strip().lower() == "seminar" and (
+        not isinstance(fact_checks, list) or not fact_checks
+    )
+    if sweep_missing and (factual_sweep_retry_available or retry_unavailable_fails):
+        return _ReviewerGateOutcome(
+            payload=working_payload,
+            findings=[],
+            retry_reason=llm_reviewer_dispatch.FACTUAL_SWEEP_REQUIRED,
+            grounding_gate=grounding_gate,
+        )
     if grounding_gate.inadmissible_positive_verdicts:
         working_payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
     if (
