@@ -1,5 +1,7 @@
 ---
 discovered_at: '2026-07-16T00:00:00+00:00'
 query_keywords: [Олександр Білаш ЕСУ, Олександр Білаш ВУЕ, Олександр Білаш Два кольори українська пісня]
-source_urls: [https://esu.com.ua/article-39952, https://vue.gov.ua/Білаш,_Олександр_Іванович]
+source_urls:
+  - https://esu.com.ua/article-39952
+  - "https://vue.gov.ua/Білаш,_Олександр_Іванович"
 warning: Прямі українськомовні інституційні джерела; запис discovery не є самостійним доказом.
