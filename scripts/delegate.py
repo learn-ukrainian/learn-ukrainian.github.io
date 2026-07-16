@@ -1372,31 +1372,65 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "wiki"})
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
-    """Normalize --sparse-include values to unique top-level directory names."""
+    """Normalize --sparse-include values to unique top-level directory names.
+
+    Fail closed: explicit values must be bare top-level names in the default
+    exclusion set (``curriculum``, ``wiki``). Nested paths and unknown names
+    raise :class:`ValueError` so content dispatches cannot silently miss trees.
+    """
     if not raw:
         return ()
     seen: set[str] = set()
     ordered: list[str] = []
     for item in raw:
         name = str(item).strip().strip("/")
-        if not name or "/" in name or name in seen:
-            continue
-        if name in {".", ".."}:
+        if not name or name in {".", ".."}:
+            raise ValueError(
+                f"--sparse-include {item!r} is empty or invalid; "
+                f"pass a top-level name such as 'curriculum' or 'wiki'"
+            )
+        if "/" in name:
+            top = name.split("/", 1)[0]
+            raise ValueError(
+                f"--sparse-include {item!r} must be a top-level directory name "
+                f"(use {top!r}, not a nested path)"
+            )
+        if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
+            allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
+            raise ValueError(
+                f"--sparse-include {name!r} is not a default-excluded tree; "
+                f"allowed: {allowed}"
+            )
+        if name in seen:
             continue
         seen.add(name)
         ordered.append(name)
     return tuple(ordered)
 
 
+def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
+    """Detect default-excluded top-level path prefixes referenced in a prompt."""
+    if not text:
+        return ()
+    found: list[str] = []
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT):
+        # Path-like reference: curriculum/… or `wiki/` — not bare English words.
+        if re.search(rf"(?<![\w.-]){re.escape(name)}/", text):
+            found.append(name)
+    return tuple(found)
+
+
 def _infer_sparse_include(
     explicit: Sequence[str] | None,
     *,
     owned_paths: Sequence[str] | None = None,
+    prompt_text: str | None = None,
 ) -> tuple[str, ...]:
-    """Merge explicit --sparse-include with top-level dirs from owned paths.
+    """Merge explicit includes with owned-path tops and prompt path references.
 
     A dispatch that already declares ``--research-owned-path curriculum/...``
-    should materialize ``curriculum/`` without a second flag. Same for wiki.
+    or whose brief references ``curriculum/`` / ``wiki/`` materializes those
+    trees without a second flag.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
@@ -1405,6 +1439,10 @@ def _infer_sparse_include(
         if top in _DISPATCH_SPARSE_EXCLUDE_DEFAULT and top not in seen:
             seen.add(top)
             merged.append(top)
+    for name in _infer_sparse_include_from_text(prompt_text):
+        if name not in seen:
+            seen.add(name)
+            merged.append(name)
     return tuple(merged)
 
 
@@ -1416,6 +1454,7 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
         capture_output=True,
         text=True,
         check=False,
+        env=_sanitized_git_env(),
     )
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
@@ -1449,12 +1488,15 @@ def _apply_dispatch_sparse_checkout(
     }
 
     def _run_git(args: list[str]) -> subprocess.CompletedProcess[str]:
+        # Must sanitize GIT_* so sparse-checkout applies to *this* worktree
+        # when a parent harness injects GIT_DIR/GIT_WORK_TREE (pre-commit, etc.).
         return subprocess.run(
             args,
             cwd=worktree_path,
             capture_output=True,
             text=True,
             check=False,
+            env=_sanitized_git_env(),
         )
 
     if full_checkout:
@@ -2234,10 +2276,25 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
-    sparse_include = _infer_sparse_include(
-        getattr(args, "sparse_include", None),
-        owned_paths=getattr(args, "research_owned_path", None),
-    )
+    # Prompt is resolved later for the worker; for sparse inference we only
+    # need the raw text when available so content briefs auto-include trees.
+    early_prompt: str | None = None
+    if getattr(args, "prompt", None):
+        early_prompt = str(args.prompt)
+    elif getattr(args, "prompt_file", None):
+        try:
+            early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+        except OSError:
+            early_prompt = None
+    try:
+        sparse_include = _infer_sparse_include(
+            getattr(args, "sparse_include", None),
+            owned_paths=getattr(args, "research_owned_path", None),
+            prompt_text=early_prompt,
+        )
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,

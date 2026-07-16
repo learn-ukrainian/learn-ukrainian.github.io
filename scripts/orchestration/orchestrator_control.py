@@ -502,6 +502,10 @@ def build_delegate_command(args: argparse.Namespace, prompt_file: Path) -> list[
         command.append("--worktree")
         if args.worktree != "auto":
             command.append(args.worktree)
+    if getattr(args, "full_checkout", False):
+        command.append("--full-checkout")
+    for name in getattr(args, "sparse_include", None) or []:
+        command.extend(["--sparse-include", str(name)])
     if args.base:
         command.extend(["--base", args.base])
     if args.hard_timeout is not None:
@@ -673,6 +677,18 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"])
     dispatch.add_argument("--cwd")
     dispatch.add_argument("--worktree", nargs="?", const="auto")
+    dispatch.add_argument(
+        "--full-checkout",
+        action="store_true",
+        help="Pass through to delegate.py: materialize full worktree (no sparse exclusions).",
+    )
+    dispatch.add_argument(
+        "--sparse-include",
+        action="append",
+        default=None,
+        metavar="DIR",
+        help="Pass through to delegate.py: keep a default-excluded top-level dir (curriculum, wiki).",
+    )
     dispatch.add_argument("--base", default="main")
     dispatch.add_argument("--hard-timeout", type=int, default=7200)
     dispatch.add_argument("--silence-timeout", type=int, default=3600)

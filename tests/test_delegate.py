@@ -2478,10 +2478,20 @@ def test_normalize_sparse_include_dedupes_and_strips():
         "curriculum",
         "wiki",
     )
-    assert delegate._normalize_sparse_include(["a/b", ".", "..", ""]) == ()
 
 
-def test_infer_sparse_include_from_owned_paths():
+def test_normalize_sparse_include_rejects_nested_and_unknown():
+    import pytest
+
+    with pytest.raises(ValueError, match="top-level"):
+        delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
+    with pytest.raises(ValueError, match="not a default-excluded"):
+        delegate._normalize_sparse_include(["scripts"])
+    with pytest.raises(ValueError, match="empty or invalid"):
+        delegate._normalize_sparse_include([""])
+
+
+def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(None) == ()
     assert delegate._infer_sparse_include(
         None,
@@ -2491,6 +2501,14 @@ def test_infer_sparse_include_from_owned_paths():
         ["wiki"],
         owned_paths=["curriculum/a", "wiki/b"],
     ) == ("wiki", "curriculum")
+    assert delegate._infer_sparse_include(
+        None,
+        prompt_text="Edit curriculum/l2-uk-en/a1/foo.md and leave scripts alone.",
+    ) == ("curriculum",)
+    assert "wiki" not in delegate._infer_sparse_include(
+        None,
+        prompt_text="Discuss Wikipedia articles without path refs.",
+    )
 
 
 def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
@@ -3353,3 +3371,76 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
     assert not any(c[:2] == ["git", "rebase"] for c in calls), (
         "branch-reuse dry-run must never rebase"
     )
+
+
+def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
+    """Integration: cone sparse excludes curriculum/wiki without touching primary."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    # Drop parent-repo redirect env that pre-commit / agent harness may inject.
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    for name in ("curriculum", "wiki", "scripts", "docs"):
+        d = primary / name
+        d.mkdir()
+        (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    (primary / "README.md").write_text("root\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+    assert (worktree / "curriculum" / "f.txt").is_file()
+
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+    assert meta["applied"] is True
+    assert meta["excluded"] == ["curriculum", "wiki"]
+    assert not (worktree / "curriculum").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+    assert (worktree / "README.md").is_file()
+    # Primary must remain full.
+    assert (primary / "curriculum" / "f.txt").is_file()
+    assert (primary / "wiki" / "f.txt").is_file()
+
+    meta2 = delegate._apply_dispatch_sparse_checkout(
+        worktree, sparse_include=("curriculum",)
+    )
+    assert meta2["excluded"] == ["wiki"]
+    assert (worktree / "curriculum" / "f.txt").is_file()
+    assert not (worktree / "wiki").exists()
+
+    meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
+    assert meta3["full_checkout"] is True
+    assert (worktree / "curriculum" / "f.txt").is_file()
+    assert (worktree / "wiki" / "f.txt").is_file()
+
