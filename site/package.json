@@ -20,7 +20,8 @@
     "test": "npm run hydrate && vitest run",
     "test:watch": "npm run hydrate && vitest --watch",
     "test:coverage": "npm run hydrate && vitest run --coverage",
-    "test:atlas-route-parity": "node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs"
+    "test:atlas-route-parity": "node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs",
+    "check:atlas-browser-bundle": "esbuild src/lib/lexicon/http-atlas-data-source.ts --bundle --platform=browser --external:astro* --outfile=/dev/null"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
