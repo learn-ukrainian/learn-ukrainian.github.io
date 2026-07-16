@@ -24,6 +24,36 @@ export interface WordAtlasArticleProps {
   children?: ReactNode;
 }
 
+/** External link: always new tab, visible ↗, SR-announced «(нова вкладка)» (W3). */
+function ExtLink({
+  href,
+  children,
+  className,
+  label,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  /** Base accessible name; «(нова вкладка)» is appended. */
+  label: string;
+}) {
+  return (
+    <a
+      className={className}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${label} (нова вкладка)`}
+    >
+      {children}
+      <span className="ext-link-indicator" aria-hidden="true">
+        {" "}
+        ↗
+      </span>
+    </a>
+  );
+}
+
 function DefaultAtlasTypeahead() {
   const id = "atlas-article-search";
   const inputId = `${id}-input`;
@@ -227,7 +257,7 @@ export default function WordAtlasArticle({
                 </p>
                 <p className="atlas-muted">
                   Тригер: <code>{heritageBoxes.blue.detail}</code>
-                  {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
+                  {sovietizationKeywords.length > 0 && <> · ключові слова: <code>{sovietizationKeywords.join(", ")}</code></>}
                 </p>
               </div>
             </section>
@@ -238,7 +268,8 @@ export default function WordAtlasArticle({
             <div className="atlas-overview-grid">
               {articleOverview.map((item) => (
                 <div key={item.label} className={`atlas-overview-card ${item.ready ? "ready" : "pending"}`}>
-                  <span className="overview-state" aria-hidden="true">{item.ready ? "✓" : "·"}</span>
+                  <span className="overview-state" aria-hidden="true">{item.ready ? "✓" : "○"}</span>
+                  <span className="sr-only">{item.ready ? "готово" : "очікує"}</span>
                   <span className="overview-label">{item.label}</span>
                   <span className="overview-detail">{item.detail}</span>
                 </div>
@@ -270,9 +301,13 @@ export default function WordAtlasArticle({
                 <div key={card.id} className={`def-card ${sourceClass(card)}`}>
                   <div className="def-source">
                     {card.source_url && !isMirrorUrl(card.source_url) && safeHref(card.source_url) ? (
-                      <a className="src-pill" href={safeHref(card.source_url)!} target="_blank" rel="noopener noreferrer">
+                      <ExtLink
+                        className="src-pill"
+                        href={safeHref(card.source_url)!}
+                        label={card.source_pill ?? card.source}
+                      >
                         {card.source_pill ?? card.source}
-                      </a>
+                      </ExtLink>
                     ) : (
                       <span className="src-pill">{card.source_pill ?? card.source}</span>
                     )}
@@ -316,15 +351,15 @@ export default function WordAtlasArticle({
               <div className="ety-timeline">
                 {etymologyStages.map((stage, index) => (
                   <Fragment key={`${stage.period}-${stage.word}-${index}`}>
-                    {index > 0 && <div className="ety-arrow">→</div>}
-                    <div className="ety-stage" data-ety-note={stage.note}>
-                      <div className="ety-period">{stage.period}</div>
-                      <div className={`ety-word ${stage.className}`}>{stage.word}</div>
-                    </div>
+                    {index > 0 && <div className="ety-arrow" aria-hidden="true">→</div>}
+                    <button type="button" className="ety-stage" data-ety-note={stage.note}>
+                      <span className="ety-period">{stage.period}</span>
+                      <span className={`ety-word ${stage.className}`}>{stage.word}</span>
+                    </button>
                   </Fragment>
                 ))}
               </div>
-              <div className="ety-note" data-ety-note-output>{enrichment.etymology.text}</div>
+              <div className="ety-note" data-ety-note-output aria-live="polite">{enrichment.etymology.text}</div>
               <p className="atlas-muted">Джерело: {enrichment.etymology.source}</p>
             </section>
           )}
@@ -337,14 +372,23 @@ export default function WordAtlasArticle({
               </p>
               {nounParadigm ? (
                 <table className="paradigm-table">
-                  <tr><th className="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
-                  {CASE_ROWS.map((caseRow) => (
-                    <tr key={caseRow.key}>
-                      <td className="case-name">{caseRow.label}</td>
-                      <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
-                      <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
+                  <caption>Відмінювання</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col" className="col-case">Відмінок</th>
+                      <th scope="col">Однина</th>
+                      <th scope="col">Множина</th>
                     </tr>
-                  ))}
+                  </thead>
+                  <tbody>
+                    {CASE_ROWS.map((caseRow) => (
+                      <tr key={caseRow.key}>
+                        <td className="case-name">{caseRow.label}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               ) : verbParadigm ? (
                 <>
@@ -353,27 +397,44 @@ export default function WordAtlasArticle({
                   )}
                   {Object.entries(verbParadigm.tenses ?? {}).map(([tense, numbers]) => (
                     <table key={tense} className="paradigm-table">
-                      <tr><th className="col-case">{tense}</th><th>Однина</th><th>Множина</th></tr>
-                      {PERSON_ROWS.map((person) => (
-                        <tr key={person.key}>
-                          <td className="case-name">{person.label}</td>
-                          <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
-                          <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                      <caption>{tense}</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col" className="col-case">Особа</th>
+                          <th scope="col">Однина</th>
+                          <th scope="col">Множина</th>
                         </tr>
-                      ))}
+                      </thead>
+                      <tbody>
+                        {PERSON_ROWS.map((person) => (
+                          <tr key={person.key}>
+                            <td className="case-name">{person.label}</td>
+                            <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
+                            <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                          </tr>
+                        ))}
+                      </tbody>
                     </table>
                   ))}
                 </>
               ) : (
                 !isFullyMarked && enrichment.morphology.forms.length > 0 && (
                   <table className="paradigm-table">
-                    <tr><th>Форма</th><th>Позначка</th></tr>
-                    {enrichment.morphology.forms.slice(0, 24).map((form) => (
-                      <tr key={`${form.form}-${form.label}`}>
-                        <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
-                        <td className="case-name">{form.label}</td>
+                    <caption>Форми</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Форма</th>
+                        <th scope="col">Позначка</th>
                       </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                      {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                        <tr key={`${form.form}-${form.label}`}>
+                          <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
+                          <td className="case-name">{form.label}</td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 )
               )}
@@ -385,13 +446,21 @@ export default function WordAtlasArticle({
                       <div key={group.marker_label} className="marked-forms-group">
                         <div className="marked-forms-label">{group.marker_label}</div>
                         <table className="paradigm-table">
-                          <tr><th>Форма</th><th>Позначка</th></tr>
-                          {group.forms.map((form) => (
-                            <tr key={`${form.form}-${form.label}`}>
-                              <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
-                              <td className="case-name">{form.label}</td>
+                          <caption>{group.marker_label}</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col">Форма</th>
+                              <th scope="col">Позначка</th>
                             </tr>
-                          ))}
+                          </thead>
+                          <tbody>
+                            {group.forms.map((form) => (
+                              <tr key={`${form.form}-${form.label}`}>
+                                <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
+                                <td className="case-name">{form.label}</td>
+                              </tr>
+                            ))}
+                          </tbody>
                         </table>
                       </div>
                     ))}
@@ -404,13 +473,21 @@ export default function WordAtlasArticle({
                       <div key={group.marker_label} className="marked-forms-group">
                         <div className="marked-forms-label">{group.marker_label}</div>
                         <table className="paradigm-table">
-                          <tr><th>Форма</th><th>Позначка</th></tr>
-                          {group.forms.map((form) => (
-                            <tr key={`${form.form}-${form.label}`}>
-                              <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
-                              <td className="case-name">{form.label}</td>
+                          <caption>{group.marker_label}</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col">Форма</th>
+                              <th scope="col">Позначка</th>
                             </tr>
-                          ))}
+                          </thead>
+                          <tbody>
+                            {group.forms.map((form) => (
+                              <tr key={`${form.form}-${form.label}`}>
+                                <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
+                                <td className="case-name">{form.label}</td>
+                              </tr>
+                            ))}
+                          </tbody>
                         </table>
                       </div>
                     ))}
@@ -452,7 +529,12 @@ export default function WordAtlasArticle({
                             {synset.members
                               .filter((member) => member.lemma !== entry.lemma)
                               .map((member) => (
-                                <span key={member.lemma} className="chip" title={member.gloss?.text}>{member.stressed}</span>
+                                <span key={member.lemma} className="chip">
+                                  {member.stressed}
+                                  {member.gloss?.text ? (
+                                    <span className="chip-gloss">{member.gloss.text}</span>
+                                  ) : null}
+                                </span>
                               ))}
                           </div>
                         </div>
@@ -477,22 +559,32 @@ export default function WordAtlasArticle({
                 Дані синонімів та антонімів показано з джерел маніфесту; звіряйте з контекстом перед уживанням.
                 {learnerFacingUrls(sections?.synonyms?.source_urls).length ? (
                   <>
-                    {" "}Джерела синонімів: {learnerFacingUrls(sections?.synonyms?.source_urls).map((url, index) => (
-                      <Fragment key={url}>
-                        {index > 0 && " · "}
-                        <a href={safeHref(url) ?? undefined} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
-                      </Fragment>
-                    ))}
+                    {" "}Джерела синонімів: {learnerFacingUrls(sections?.synonyms?.source_urls).map((url, index) => {
+                      const href = safeHref(url);
+                      if (!href) return null;
+                      const host = sourceHost(url);
+                      return (
+                        <Fragment key={url}>
+                          {index > 0 && " · "}
+                          <ExtLink href={href} label={host}>{host}</ExtLink>
+                        </Fragment>
+                      );
+                    })}
                   </>
                 ) : null}
                 {learnerFacingUrls(sections?.antonyms?.source_urls).length ? (
                   <>
-                    {" "}Джерела антонімів: {learnerFacingUrls(sections?.antonyms?.source_urls).map((url, index) => (
-                      <Fragment key={url}>
-                        {index > 0 && " · "}
-                        <a href={safeHref(url) ?? undefined} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
-                      </Fragment>
-                    ))}
+                    {" "}Джерела антонімів: {learnerFacingUrls(sections?.antonyms?.source_urls).map((url, index) => {
+                      const href = safeHref(url);
+                      if (!href) return null;
+                      const host = sourceHost(url);
+                      return (
+                        <Fragment key={url}>
+                          {index > 0 && " · "}
+                          <ExtLink href={href} label={host}>{host}</ExtLink>
+                        </Fragment>
+                      );
+                    })}
                   </>
                 ) : null}
               </div>
@@ -514,12 +606,17 @@ export default function WordAtlasArticle({
                 Омоніми показано за нумерованими словниковими заголовками; звіряйте значення з контекстом.
                 {learnerFacingUrls(sections?.homonyms?.source_urls).length ? (
                   <>
-                    {" "}Джерела омонімів: {learnerFacingUrls(sections?.homonyms?.source_urls).map((url, index) => (
-                      <Fragment key={url}>
-                        {index > 0 && " · "}
-                        <a href={safeHref(url) ?? undefined} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
-                      </Fragment>
-                    ))}
+                    {" "}Джерела омонімів: {learnerFacingUrls(sections?.homonyms?.source_urls).map((url, index) => {
+                      const href = safeHref(url);
+                      if (!href) return null;
+                      const host = sourceHost(url);
+                      return (
+                        <Fragment key={url}>
+                          {index > 0 && " · "}
+                          <ExtLink href={href} label={host}>{host}</ExtLink>
+                        </Fragment>
+                      );
+                    })}
                   </>
                 ) : null}
               </div>
@@ -542,12 +639,17 @@ export default function WordAtlasArticle({
                 Пароніми — близькі за формою слова з різними значеннями; розрізняйте їх за контекстом.
                 {learnerFacingUrls(sections?.paronyms?.source_urls).length ? (
                   <>
-                    {" "}Джерела паронімів: {learnerFacingUrls(sections?.paronyms?.source_urls).map((url, index) => (
-                      <Fragment key={url}>
-                        {index > 0 && " · "}
-                        <a href={safeHref(url) ?? undefined} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
-                      </Fragment>
-                    ))}
+                    {" "}Джерела паронімів: {learnerFacingUrls(sections?.paronyms?.source_urls).map((url, index) => {
+                      const href = safeHref(url);
+                      if (!href) return null;
+                      const host = sourceHost(url);
+                      return (
+                        <Fragment key={url}>
+                          {index > 0 && " · "}
+                          <ExtLink href={href} label={host}>{host}</ExtLink>
+                        </Fragment>
+                      );
+                    })}
                   </>
                 ) : null}
               </div>
@@ -559,10 +661,12 @@ export default function WordAtlasArticle({
               <h2>Фразеологізми та сталі вирази</h2>
               {sections!.idioms!.items.map((idiom) => (
                 <div key={idiom.phrase} className="resource-card">
-                  <h4>{idiom.phrase}</h4>
+                  <h3>{idiom.phrase}</h3>
                   <p>{idiom.definition}</p>
                   {idiom.source_url && !isMirrorUrl(idiom.source_url) && safeHref(idiom.source_url) ? (
-                    <a className="tag" href={safeHref(idiom.source_url)!}>{idiom.source}</a>
+                    <ExtLink className="tag" href={safeHref(idiom.source_url)!} label={idiom.source}>
+                      {idiom.source}
+                    </ExtLink>
                   ) : (
                     <span className="tag">{idiom.source}</span>
                   )}
@@ -577,9 +681,12 @@ export default function WordAtlasArticle({
               <div className="source-box">
                 <div className="source-box-header">
                   {enrichment.literary_attestation.source_url && !isMirrorUrl(enrichment.literary_attestation.source_url) && safeHref(enrichment.literary_attestation.source_url) ? (
-                    <a href={safeHref(enrichment.literary_attestation.source_url)!} target="_blank" rel="noopener noreferrer">
+                    <ExtLink
+                      href={safeHref(enrichment.literary_attestation.source_url)!}
+                      label={enrichment.literary_attestation.source_label ?? "Літературний корпус"}
+                    >
                       {enrichment.literary_attestation.source_label ?? "Літературний корпус"}
-                    </a>
+                    </ExtLink>
                   ) : (
                     enrichment.literary_attestation.source_label ?? "Літературний корпус"
                   )}
@@ -599,7 +706,7 @@ export default function WordAtlasArticle({
               <h2>У шкільних підручниках</h2>
               {textbookItems.map((item) => (
                 <div key={item.title} className="resource-card textbook">
-                  <h4>{item.title}</h4>
+                  <h3>{item.title}</h3>
                   {item.text && <p>{item.text}</p>}
                   {item.tag && <span className="tag">{item.tag}</span>}
                 </div>
@@ -613,13 +720,22 @@ export default function WordAtlasArticle({
               {externalGroups.map((group) => (
                 <div key={group.name} className="external-group">
                   <div className="external-group-header">{group.name} <span className="external-group-count">{group.materials.length}</span></div>
-                  {group.materials.map((item) => (
-                    <div key={item.title} className={`resource-card ${item.kind ?? "blog"}`}>
-                      <h4>{item.url && safeHref(item.url) ? <a href={safeHref(item.url)!}>{item.title}</a> : item.title}</h4>
-                      {item.description && <p>{item.description}</p>}
-                      {item.tag && <span className="tag">{item.tag}</span>}
-                    </div>
-                  ))}
+                  {group.materials.map((item) => {
+                    const materialHref = item.url ? safeHref(item.url) : null;
+                    return (
+                      <div key={item.title} className={`resource-card ${item.kind ?? "blog"}`}>
+                        <h3>
+                          {materialHref ? (
+                            <ExtLink href={materialHref} label={item.title}>{item.title}</ExtLink>
+                          ) : (
+                            item.title
+                          )}
+                        </h3>
+                        {item.description && <p>{item.description}</p>}
+                        {item.tag && <span className="tag">{item.tag}</span>}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </section>
@@ -646,7 +762,7 @@ export default function WordAtlasArticle({
               <div className="translation-block">
                 <span className="uk-side">{entry.lemma}</span>
                 <span className="arrow">↔</span>
-                <div className="en-side">
+                <div className="en-side" lang="en">
                   {enrichment.translation.en.map((term) => <span key={term} className="en-term">{term}</span>)}
                 </div>
               </div>
@@ -656,26 +772,40 @@ export default function WordAtlasArticle({
 
           {entry.wiki_reference && (
             <section className="atlas-section">
-              <h2>Wikipedia</h2>
+              <h2>Вікіпедія</h2>
               <div className="wiki-card">
                 {entry.wiki_reference.wikipedia ? (
                   <>
-                    <h4>{entry.wiki_reference.wikipedia.title}</h4>
+                    <h3>{entry.wiki_reference.wikipedia.title}</h3>
                     {entry.wiki_reference.wikipedia.summary && <p>{entry.wiki_reference.wikipedia.summary}</p>}
                     <p className="wiki-source">
                       Джерело: {safeHref(entry.wiki_reference.wikipedia.url) ? (
-                        <a href={safeHref(entry.wiki_reference.wikipedia.url)!} target="_blank" rel="noopener noreferrer">
+                        <ExtLink
+                          href={safeHref(entry.wiki_reference.wikipedia.url)!}
+                          label={entry.wiki_reference.wikipedia.url}
+                        >
                           {entry.wiki_reference.wikipedia.url}
-                        </a>
+                        </ExtLink>
                       ) : null}
                     </p>
                   </>
                 ) : (
-                  <h4>Wikimedia</h4>
+                  <h3>Вікімедіа</h3>
                 )}
                 <p className="wiki-source">
-                  {entry.wiki_reference.wiktionary_url && safeHref(entry.wiki_reference.wiktionary_url) && <a href={safeHref(entry.wiki_reference.wiktionary_url)!} target="_blank" rel="noopener noreferrer">Вікісловник</a>}
-                  {entry.wiki_reference.wikisource_url && safeHref(entry.wiki_reference.wikisource_url) && <> · <a href={safeHref(entry.wiki_reference.wikisource_url)!} target="_blank" rel="noopener noreferrer">Вікіджерела</a></>}
+                  {entry.wiki_reference.wiktionary_url && safeHref(entry.wiki_reference.wiktionary_url) && (
+                    <ExtLink href={safeHref(entry.wiki_reference.wiktionary_url)!} label="Вікісловник">
+                      Вікісловник
+                    </ExtLink>
+                  )}
+                  {entry.wiki_reference.wikisource_url && safeHref(entry.wiki_reference.wikisource_url) && (
+                    <>
+                      {" · "}
+                      <ExtLink href={safeHref(entry.wiki_reference.wikisource_url)!} label="Вікіджерела">
+                        Вікіджерела
+                      </ExtLink>
+                    </>
+                  )}
                 </p>
               </div>
             </section>
@@ -689,7 +819,7 @@ export default function WordAtlasArticle({
               ))}
             </div>
             <div className="meta-line">
-              <span>manifest: {manifestVersion}</span>
+              <span>маніфест: {manifestVersion}</span>
               <span>згенеровано: {generatedAt}</span>
               {maxSovietizationRisk > 0 && <span>СУМ-11 із радянським ризиком приховано з тлумачень</span>}
             </div>
