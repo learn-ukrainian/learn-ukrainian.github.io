@@ -2656,6 +2656,59 @@ def _provider_dimension_evidence_schema(
     return locator
 
 
+def _provider_vocabulary_coverage_item_schema() -> dict[str, Any]:
+    """Constrain status-specific vocabulary evidence before provider output."""
+    required = ["lemma", "status", "surface", "verification", "evidence", "finding_id"]
+    evidence = {
+        "type": "array",
+        "items": {"$ref": "#/$defs/dimensionEvidence"},
+    }
+    shared = {
+        "lemma": {"$ref": "#/$defs/nonempty"},
+        "verification": {"$ref": "#/$defs/nonempty"},
+    }
+    integrated = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": required,
+        "properties": {
+            **shared,
+            "status": {"const": "INTEGRATED"},
+            "surface": {"$ref": "#/$defs/nonempty"},
+            "verification": {
+                "oneOf": [
+                    {"const": "exact lemma surface"},
+                    {
+                        "type": "string",
+                        "pattern": (
+                            r"^VESUM: [^\s=;]+=[^\s=;]+"
+                            r"(?:; [^\s=;]+=[^\s=;]+)*$"
+                        ),
+                    },
+                ]
+            },
+            "evidence": {**evidence, "minItems": 1},
+            "finding_id": {"type": "null"},
+        },
+    }
+
+    def unavailable(status: str) -> dict[str, Any]:
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "required": required,
+            "properties": {
+                **shared,
+                "status": {"const": status},
+                "surface": {"type": "null"},
+                "evidence": {**evidence, "maxItems": 0},
+                "finding_id": {"$ref": "#/$defs/nonempty"},
+            },
+        }
+
+    return {"oneOf": [integrated, unavailable("MISSING"), unavailable("INCOMPLETE")]}
+
+
 def hydrate_provider_dimension_evidence(
     semantic: Mapping[str, Any],
     packet: Mapping[str, Any],
@@ -2765,6 +2818,7 @@ def semantic_response_schema(
     raw_finding["required"] = [key for key in raw_finding["required"] if key != "source"]
     raw_finding["properties"].pop("source")
     definitions["dimensionEvidence"] = _provider_dimension_evidence_schema(packet)
+    definitions["vocabularyCoverageItem"] = _provider_vocabulary_coverage_item_schema()
     raw_finding["properties"]["location"] = {
         "oneOf": [{"type": "null"}, _provider_locator_schema(packet)]
     }

@@ -1,4 +1,4 @@
-catalog_version: 5.0.3
+catalog_version: 5.0.4
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -263,6 +263,18 @@ regressions:
     version_field: semantic_prompt_version
     input: The reviewer reuses a supplied deterministic ID by copying the supplied finding into the semantic findings array, then references that duplicate from the owning dimension and alignment class.
     expected: Reference the supplied ID only from owning finding_ids ledgers, never re-emit the supplied object, and reserve semantic findings for genuinely new defects.
+  - bug_id: provider-allows-invalid-vesum-synonym-commentary
+    responsible_layer: orchestration
+    fixed_in_version: 5.0.3
+    version_field: review_protocol_version
+    input: An INTEGRATED vocabulary item appends a synonym explanation after a VESUM mapping whose mapped tokens do not equal the cited surface.
+    expected: Reject prose-suffixed or structurally invalid VESUM mappings at the provider schema boundary and require MISSING when only a synonym is present.
+  - bug_id: semantic-prompt-allows-prose-after-vesum-mapping
+    responsible_layer: semantic_prompt
+    fixed_in_version: 5.0.4
+    version_field: semantic_prompt_version
+    input: The JSON-shape example describes VESUM verification generically, so the reviewer appends a synonym explanation after the formal token mappings.
+    expected: Show the exact source-order lemma-token=surface-token syntax and explicitly forbid synonym or prose commentary in the verification field.
   - bug_id: short-supplied-finding-evidence-rejected
     responsible_layer: orchestration
     fixed_in_version: 5.0.2

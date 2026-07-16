@@ -1022,6 +1022,23 @@ def test_semantic_response_schema_matches_raw_contract() -> None:
     Draft202012Validator(schema).validate(exemplar)
 
 
+def test_provider_schema_rejects_prose_suffixed_vesum_mapping() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    Draft202012Validator(schema).validate(semantic)
+    integrated = next(
+        item for item in semantic["vocabulary_coverage"] if item["status"] == "INTEGRATED"
+    )
+    integrated["verification"] = (
+        "VESUM: фронтовий=фронтових; кореспондент=кореспондентом "
+        "(synonymous role in context)"
+    )
+
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(semantic)
+
+
 def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
@@ -1716,6 +1733,7 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "return the exact repo-relative",
         "at least eight non-whitespace",
         "exact locator belongs to a supplied deterministic",
+        "never append synonym or prose commentary",
     ):
         assert required in prompt
     prompt_lower = prompt.lower()
@@ -2285,8 +2303,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.3"
-    assert len(rows) == 49
+    assert catalog["catalog_version"] == "5.0.4"
+    assert len(rows) == 51
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2317,6 +2335,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.1",
         "5.0.2",
         "5.0.3",
+        "5.0.4",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

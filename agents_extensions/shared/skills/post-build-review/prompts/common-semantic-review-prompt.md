@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.3`
+Semantic prompt version: `5.0.4`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -297,7 +297,7 @@ equal the statuses actually present in that array.
       "lemma": "exact vocabulary lemma in source order",
       "status": "INTEGRATED|MISSING|INCOMPLETE",
       "surface": "exact visible lesson/activity surface or null",
-      "verification": "exact lemma surface, a source-order VESUM mapping, or why coverage is absent",
+      "verification": "exact lemma surface OR VESUM: lemma-token=surface-token; lemma-token=surface-token; never append synonym or prose commentary",
       "evidence": [{"location": "learner content or activities path", "line": 1, "supports": "how the cited surface integrates this lemma"}],
       "finding_id": null
     }
