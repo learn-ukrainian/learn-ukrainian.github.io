@@ -3,7 +3,7 @@
 **Date:** 2026-07-16 · **Category:** schema-migration / legacy-state-reconciliation
 **Fixed by:** PR #5320 (`1c6bfe26e9`) · **Introduced by the interaction of:** #5233 (old prepare) × #5301/#5307 (identity envelope + registry)
 
-## What broke (symptom)
+## Symptom
 
 Every thread-rollover packet prepared before the task-identity envelope landed was
 un-claimable: the replacement session's `thread_handoff.py resume` failed with
@@ -12,7 +12,7 @@ un-claimable: the replacement session's `thread_handoff.py resume` failed with
 fleet-wide were bricked — `claude-infra`, `claude`, and both `codex` packets. Discovered
 when the claude-infra lane's own cold-start rollover claim hit the wall.
 
-## Why (root cause)
+## Root cause
 
 Three individually-reasonable changes composed into a fail-closed dead end:
 
@@ -48,7 +48,7 @@ the registry projection told operators a retired/non-native lease was
 `PREPARED`/`REPLACEMENT_CREATED`), and `repair-native-intent` dropped the
 migration-changed flag (retirement computed but not persisted, plus a misleading error).
 
-## Prevention (what stops this class)
+## Prevention
 
 - **Migration must converge, not just translate.** When a schema changes the *meaning*
   of existing state (here: presence ⇒ capability), the deterministic migration is the
