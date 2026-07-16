@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { PracticeRating } from '../lib/lexicon/srs';
 
 export interface PracticeFlashcardData {
@@ -27,24 +27,22 @@ export default function PracticeFlashcard({
   showEnglishSubtitles,
 }: PracticeFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
-  const ratingBarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setFlipped(false);
   }, [card.front, card.back]);
 
   useEffect(() => {
-    if (!flipped) return undefined;
-    const timer = window.setTimeout(() => {
-      ratingBarRef.current?.querySelector<HTMLButtonElement>('[data-rate="good"]')?.focus();
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [flipped]);
-
-  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
+      // Never steal keys from text-entry controls (typing 'a' must not rate).
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
       const key = event.key.toLowerCase();
+      // Space/Enter activate whatever control holds focus (button, link, the card
+      // itself) — let that native activation happen instead of double-handling it here.
+      const activatesControl = key === ' ' || key === 'enter';
+      if (activatesControl && target?.closest?.('button, a, [role="button"], [role="link"]')) return;
       if (!flipped && (key === ' ' || key === 'enter')) {
         event.preventDefault();
         setFlipped(true);
@@ -115,7 +113,6 @@ export default function PracticeFlashcard({
       </div>
       <div
         className="lexicon-rating-bar rating-bar"
-        ref={ratingBarRef}
         role="group"
         aria-label={showEnglishSubtitles ? "Оцініть, наскільки легко згадалось / Rate how easy it was to recall" : "Оцініть, наскільки легко згадалось"}
         data-revealed={flipped ? 'true' : 'false'}
