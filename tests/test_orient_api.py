@@ -7,7 +7,6 @@ import contextlib
 import os
 import subprocess
 import time
-from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -15,8 +14,6 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
-from scripts.orchestration import task_identity
-from scripts.orchestration import thread_handoff as th
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -67,16 +64,6 @@ def _patch_orient_sources(monkeypatch) -> None:
     )
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
-    monkeypatch.setattr(
-        api_main,
-        "_collect_rollovers_orient_data",
-        lambda: {
-            "schema_version": "rollover-identity-snapshot.v1",
-            "candidate_count": 0,
-            "candidates": [],
-            "errors": [],
-        },
-    )
     monkeypatch.setattr(
         api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
     )
@@ -143,7 +130,6 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
-        "rollovers",
         "wiki",
         "health",
         "session_hints",
@@ -158,65 +144,7 @@ def test_parse_orient_sections_lean_preset_excludes_heavy_sections():
     lean = api_main._parse_orient_sections(None, lean=True)
     assert lean == list(api_main.LEAN_ORIENT_SECTIONS)
     assert not ({"pipeline", "issues", "wiki"} & set(lean))
-    assert {"git", "delegate", "rollovers", "governance", "health", "session_hints"} <= set(lean)
-
-
-def test_orient_rollovers_projects_live_identity_candidates(monkeypatch):
-    _patch_orient_sources(monkeypatch)
-    candidate = {
-        "visible_title": "#5295 — Repair fleet rollover task identity",
-        "github_issue_number": 5295,
-        "terminal_goal": "merge",
-    }
-    monkeypatch.setattr(
-        api_main,
-        "_collect_rollovers_orient_data",
-        lambda: {
-            "schema_version": "rollover-identity-snapshot.v1",
-            "candidate_count": 1,
-            "candidates": [candidate],
-            "errors": [],
-        },
-    )
-
-    response = client.get("/api/orient?sections=rollovers&fresh=true")
-
-    assert response.status_code == 200
-    assert response.json()["rollovers"]["candidates"] == [candidate]
-    assert response.json()["meta"]["rollovers"]["source"] == "fs"
-
-
-def test_rollover_collector_projects_a_real_live_lease(monkeypatch, tmp_path: Path):
-    state = th.prepare_state(
-        {"schema_version": th.SCHEMA_VERSION},
-        agent="claude",
-        now=datetime(2026, 7, 16, 8, 0, tzinfo=UTC),
-        active_thread_id="predecessor-thread",
-        active_automation_id=None,
-        context_percent=86.0,
-        force_new_replacement=False,
-        repository=task_identity.DEFAULT_REPOSITORY,
-        stream_epic=4707,
-        github_issue_number=5295,
-        semantic_title="Repair fleet rollover task identity",
-        task_family="infra-harness",
-        role="reviewer",
-        terminal_goal="merge",
-        harness="claude",
-    )
-    state["replacement"]["source_checkout"] = {"full_head": "abc123", "clean": True}
-    state_path = tmp_path / th.default_state_path("claude", state["lineage_id"])
-    th.write_rollover_state(state_path, tmp_path, state)
-    monkeypatch.setattr(api_main, "PROJECT_ROOT", tmp_path)
-
-    snapshot = api_main._collect_rollovers_orient_data()
-
-    assert snapshot["candidate_count"] == 1
-    candidate = snapshot["candidates"][0]
-    assert candidate["visible_title"] == "#5295 — Repair fleet rollover task identity"
-    assert candidate["lineage_id"] == state["lineage_id"]
-    assert candidate["terminal_goal"] == "merge"
-    assert candidate["safe_recommended_resolution"].startswith("Bind the exact replacement")
+    assert {"git", "delegate", "governance", "health", "session_hints"} <= set(lean)
 
 
 def test_parse_orient_sections_explicit_list_overrides_lean():
@@ -661,7 +589,6 @@ def test_orient_default_sections_remain_full_payload(monkeypatch):
         "runtime",
         "delegate",
         "bridge_pending",
-        "rollovers",
         "wiki",
         "governance",
         "health",
