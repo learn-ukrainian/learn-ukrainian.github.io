@@ -1751,6 +1751,16 @@ def _make_run_stub(
         if cmd[:2] == ["git", "rebase"]:
             rc = 0 if rebase_ok else 1
             return subprocess.CompletedProcess(cmd, rc, "", "")
+        if cmd[:2] == ["git", "ls-tree"]:
+            # Default top-level dirs for sparse-checkout tests / ensure_worktree.
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                "curriculum\ndocs\nscripts\nsite\ntests\nwiki\n",
+                "",
+            )
+        if cmd[:2] == ["git", "sparse-checkout"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     return calls, fake_run
@@ -2451,6 +2461,100 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     )
     assert telemetry["base_sha"] == "sha-from-origin"
     assert telemetry["reused"] is False
+    sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
+    assert any(c[:3] == ["git", "sparse-checkout", "init"] for c in sparse_calls)
+    set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
+    assert set_calls, "default dispatch worktree must apply sparse-checkout set"
+    assert "curriculum" not in set_calls[0]
+    assert "wiki" not in set_calls[0]
+    assert "scripts" in set_calls[0]
+    assert telemetry["sparse"] is not None
+    assert telemetry["sparse"]["excluded"] == ["curriculum", "wiki"]
+
+
+def test_normalize_sparse_include_dedupes_and_strips():
+    assert delegate._normalize_sparse_include(None) == ()
+    assert delegate._normalize_sparse_include(["curriculum/", " wiki ", "curriculum"]) == (
+        "curriculum",
+        "wiki",
+    )
+    assert delegate._normalize_sparse_include(["a/b", ".", "..", ""]) == ()
+
+
+def test_infer_sparse_include_from_owned_paths():
+    assert delegate._infer_sparse_include(None) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["curriculum/l2-uk-en/bio/foo", "scripts/x.py"],
+    ) == ("curriculum",)
+    assert delegate._infer_sparse_include(
+        ["wiki"],
+        owned_paths=["curriculum/a", "wiki/b"],
+    ) == ("wiki", "curriculum")
+
+
+def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    meta = delegate._apply_dispatch_sparse_checkout(tmp_path, full_checkout=True)
+    assert meta["full_checkout"] is True
+    assert meta["applied"] is True
+    assert calls == [["git", "sparse-checkout", "disable"]]
+
+
+def test_apply_dispatch_sparse_checkout_include_curriculum(tmp_path, monkeypatch):
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:2] == ["git", "ls-tree"]:
+            return subprocess.CompletedProcess(
+                cmd, 0, "curriculum\ndocs\nscripts\nwiki\n", ""
+            )
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    meta = delegate._apply_dispatch_sparse_checkout(
+        tmp_path, sparse_include=("curriculum",)
+    )
+    assert meta["excluded"] == ["wiki"]
+    assert "curriculum" in meta["included_dirs"]
+    set_cmd = next(c for c in calls if c[:3] == ["git", "sparse-checkout", "set"])
+    assert "curriculum" in set_cmd
+    assert "wiki" not in set_cmd
+
+
+def test_ensure_worktree_full_checkout_disables_sparse(tmp_tasks_dir, tmp_path, monkeypatch):
+    target = tmp_path / "full-worktree"
+    calls, fake_run = _make_run_stub(rev_parse_head_sha="sha-full")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    _, _, telemetry = delegate._ensure_worktree(
+        agent="codex",
+        task_id="full-checkout-task",
+        raw_path=str(target),
+        base="main",
+        full_checkout=True,
+    )
+    sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
+    assert sparse_calls == [["git", "sparse-checkout", "disable"]]
+    assert telemetry["sparse"]["full_checkout"] is True
+
+
+def test_augment_prompt_mentions_sparse_exclusions():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        sparse_telemetry={"full_checkout": False, "excluded": ["curriculum", "wiki"]},
+    )
+    assert "curriculum" in text
+    assert "wiki" in text
+    assert "sparse" in text.lower() or "Sparse" in text
 
 
 def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
