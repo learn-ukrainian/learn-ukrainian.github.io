@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg
+  type: external
+  title: 1905 — народилася Оксана Мешко — УІНП
+  url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg
+- id: S2
+  file: https://www.nbuv.gov.ua/node/4596
+  type: external
+  title: Оксана Мешко — Національна бібліотека України імені В. І. Вернадського
+  url: https://www.nbuv.gov.ua/node/4596

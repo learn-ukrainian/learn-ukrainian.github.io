@@ -1,122 +1,176 @@
-# Святослав Йосипович Караванський — Research Dossier
+# Святослав Караванський — дослідницьке досьє
 
-**Slug:** `sviatoslav-karavanskyi`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Канонічний ідентифікатор:** `sviatoslav-karavanskyi`
+**Дослідницька межа:** біографічна довідка для BIO; використано тільки прямі
+джерела зі збереженого реєстру джерел.
+**Правило джерел:** [S1] — український біографічний запис Віртуального музею
+ХПГ; [S2] — стаття *Internet Encyclopedia of Ukraine*. Помилкову енциклопедичну сторінку іншої особи не використано; цей
+реєстр лишає лише два перевірені біографічні джерела про Святослава
+Караванського.
 
-## 1. Verified facts
+## 1. Ідентичність і дослідницька рамка
 
-- **Full name (UA, canonical):** Святослав Йосипович Караванський. [S1] [S2] [S3]
-- **Pseudonyms / aliases:** Sviatoslav Karavanskyi; Sviatoslav Karavansky; Святослав Караванський. Forbidden Russian-imperial form for body prose: `Святослав Иосифович Караванский`. [S1] [S2]
-- **Born:** 24 December 1920, Odesa, Ukrainian SSR / Soviet Ukraine. KHPG and Ukrainian Wikipedia agree. [S1] [S2] [S3]
-- **Died:** 17 December 2016, Baltimore, United States, according to Ukrainian Wikipedia and search-retrieved ESU context; the older KHPG biography predates his death and does not include it. [S3]
-- **Family / education key facts:** KHPG says he was born into an engineer's family, entered Odesa Industrial Institute in 1938 and the external department of the Institute of Foreign Languages in 1939, wrote from school age, and moved toward literature and translation. [S1] [S2]
+Святослав Йосипович Караванський народився 24 грудня 1920 року в Одесі й
+помер 17 грудня 2016 року в Балтиморі. *Internet Encyclopedia of Ukraine*
+називає його мовознавцем, письменником, перекладачем, журналістом і політичним
+дисидентом; ХПГ визначає його як філолога, літератора й постійного автора
+самвидаву [S1, S2]. Обидва джерела описують людину, яка провела в радянських
+таборах і тюрмах 31 рік, але вони водночас дають достатньо матеріалу, щоб не
+звести його історію до самого числа років неволі [S1, S2].
 
-Karavanskyi is a language specialist, translator, samvydav author, lexicographer, and one of the longest-imprisoned Ukrainian political prisoners of the Soviet era. KHPG identifies him as a political prisoner for 31 years. [S1] [S2]
+Караванського доцільно розглядати як діяча, для якого робота з українським
+словом була тривалою практикою: він писав і перекладав ще замолоду, у таборах
+почав укладати словник рим, після звільнення працював із перекладами,
+публіцистикою й самвидавом, а в еміграції опублікував словники та мовознавчі
+праці [S1, S2]. Таке прочитання не зменшує масштабу репресії; воно показує,
+що саме намагалася перервати держава і що залишилося продуктивним попри неї.
 
-## 2. Oppression mechanism
+## 2. Ранні роки, освіта й літературний інтерес
 
-- **What happened:** arrest, military-tribunal sentence, long Gulag imprisonment, renewed arrest by restoring the unserved portion of the old sentence, further prison sentence, and forced emigration.
-- **When:** arrested in July 1944 after illegal return to Odesa; sentenced 7 February 1945 by the military tribunal of the Odesa military district to 25 years; released 19 December 1960 according to Ukrainian Wikipedia; search on 4 September 1965 and arrest 13 November 1965; in 1969 given additional prison/camp punishment; emigrated in 1979. [S1] [S2] [S3]
-- **By whom:** Soviet military tribunal, KGB/security organs, and Soviet penal institutions. [S1] [S2] [S3]
-- **Document references:** Articles 54-1b and 54-11 of the Criminal Code of the Ukrainian SSR for the 1945 sentence are named by KHPG. Exact archival file number: source not found in retrieved sources. [S1]
-- **Mechanism specifics:** KHPG says the 1945 case accused him of treason by military personnel and involvement in a counter-revolutionary organization. Ukrainian Wikipedia reports that in 1965, after his text "Про одну політичну помилку" and letters/protests on Russification, he was not tried for a new crime but sent to serve the remaining eight years and seven months of his old term. [S1] [S3]
-- **What survived / what was destroyed:** His lexicographic projects survived through decades of imprisonment and emigration, including a rhyme dictionary and later synonym and complex-lexis dictionaries. KHPG says he began a major Ukrainian rhyme dictionary in 1954 while imprisoned. [S1] [S3]
+Караванський народився в сім'ї інженера. 1938 року вступив до Одеського
+індустріального інституту, а 1939 року — також на заочне відділення інституту
+іноземних мов. ХПГ зазначає, що ще зі школи він писав вірші та оповідання,
+деякі з яких друкувалися в піонерській пресі, а під час навчання почав
+перекладати [S1]. 1940 року він залишив інститут і добровільно пішов до
+війська, маючи намір після служби вступити на філологічний факультет [S1].
 
-Karavanskyi's case shows how Soviet repression could recycle an old sentence as a tool against later language activism. This differs from the UHG cases where Article 62 prosecution itself was the main mechanism. [S1] [S3]
+У липні 1941 року частина, де він служив, опинилася в оточенні німецьких
+військ; на початку 1942 року Караванський повернувся до Одеси. Там він вступив
+на літературний факультет університету, зблизився з гуртком української
+молоді, пов'язаним з ОУН, організував книгарню української літератури
+«Основа», а виручені кошти передавав гуртку й українському театрові [S1].
+Цей короткий виклад не має перетворюватися на самостійний військовий чи
+організаційний сюжет: збережені джерела дають біографічну хронологію, а не
+підстави для ширших висновків про всю діяльність відповідного середовища.
 
-## 3. Major works
+1944 року він виїхав до Румунії, а в липні того самого року нелегально
+повернувся до Одеси. ХПГ подає, що його заарештували третього дня після
+повернення, коли він намагався відновити зв'язок з колишніми гуртківцями; під
+час слідства йому пропонували звільнення в обмін на доноси про студентську
+молодь, від чого він відмовився [S1]. 7 лютого 1945 року військовий трибунал
+Одеського військового округу засудив його за статтями 54-1б і 54-11 КК УРСР
+до 25 років позбавлення волі [S1]. У статті IEU названо близькі за змістом
+позначення статей як 54-16 та 54-11; для навчального матеріалу достатньо
+відзначити джерельну розбіжність і не вибудовувати на ній юридичну інтерпретацію
+[S1, S2].
 
-- `1954 onward` — *Словник українських рим*, begun in imprisonment; Ukrainian Wikipedia gives approximately 60,000 rhyme pairs. [S3]
-- `1965` — *Про одну політичну помилку*, samvydav text on Russification/political error, followed by search and arrest. [S3]
-- `1993` — *Практичний словник синонімів української мови*, lexicographic work. [S3]
-- `2004` — *Словник рим української мови*, published dictionary. [S3]
-- `2000s` — *Російсько-український словник складної лексики*, lexicographic work listed in Ukrainian Wikipedia. [S3]
-- `2000s` — *Пошук українського слова або Боротьба за національне "я"*, language essay/lexicographic-political work quoted by Wikiquote. [S5]
-- `2000s` — *Секрети української мови*, language work listed in Ukrainian Wikipedia. [S3]
+## 3. Табори, словник рим і перше звільнення
 
-## 4. Primary-source quotes (≥2 required)
+Караванський відбував покарання в різних таборах: ХПГ перелічує роботи на
+залізниці біля Печори, лісозаготівлі поблизу Магадана, видобування золота на
+Колимі, будівництво магістралі Тайшет — Лена та шиття одягу в Мордовії [S1].
+Після смерті Сталіна умови в таборах пом'якшилися, і він знову інтенсивно
+писав: вірші, віршовані казки, п'єси, переклади. 1954 року розпочав велику
+роботу над «Словником українських рим» [S1]. Тому словник не варто подавати
+як пізній еміграційний продукт: його задум і великий масив праці виникли в
+неволі.
 
-- "Гібридна війна — це не бліцкриґ." — from a Karavanskyi text quoted on Wikiquote via Zahyst Movy. It can introduce advanced learners to the long-duration logic of Russian aggression. [S5]
-- "Після погрому українства 30-х років..." — from *Пошук українського слова або Боротьба за національне "я"*, quoted on Wikiquote. It shows his lexicographic argument that terminology carries colonial history. [S5]
+19 грудня 1960 року Караванського звільнили після 16 років і п'яти місяців
+ув'язнення постановою Дубравного ВТТ на підставі амністійного указу 1955 року;
+термін було скорочено наполовину [S1]. IEU подає 16 років і шість місяців та
+так само пов'язує звільнення з адміністративним рішенням Дубравлагу [S2].
+Після повернення до Одеси він закінчив курси механіків ремонту обчислювальних
+машин, працював за цим фахом, слюсарем, перекладачем в обласній газеті,
+позаштатним кореспондентом журналу «Україна» й на інших роботах. ХПГ пояснює
+часту зміну праці тим, що його звільняли або брали тимчасово, коли дізнавалися
+про табірне минуле [S1].
 
-The quotes are retrieved through Wikiquote and linked web reproductions. For curriculum publication, retrieve the original essay/book page before finalizing.
+Водночас він перекладав, готував «Біографію слів», статті про мову, збірку
+гуморесок і фейлетонів, переклад роману «Джейн Ейр» Шарлотти Бронте та
+завершував розпочатий у таборі словник рим. ХПГ наводить оцінку обсягу близько
+тисячі друкованих сторінок і близько 60 тисяч римованих пар, складених самим
+автором, а не зібраних із поетичних творів [S1]. 1961 року він одружився з
+Ніною Строкатою, а 1962 року вступив на заочне відділення філологічного
+факультету Одеського університету [S1].
 
-## 5. Language register
+## 4. Самвидав, повторне ув'язнення і спротив
 
-- **Register:** lexicographic, polemical, publicistic, with occasional sharp political phrasing.
-- **CEFR readiness for full reading:** C1/C2 for essays and dictionary prefaces; B2 for selected synonym/rhyme examples.
-- **Lexicon notes:** terminology of de-Russification, technical lexical pairs, archaisms/traditional forms, and polemical neologism.
-- **Stylistic features:** dictionary structure, contrastive Ukrainian/Russian lexical analysis, and activist language critique. [S3] [S5]
+У 1960-х роках Караванський брав участь у громадському житті: збирав українські
+книжки для Кубані, виступав за українське дублювання фільмів і звертався щодо
+вшанування Миколи Лисенка [S1]. 1965 року, реагуючи на русифікацію шкіл і
+вищої освіти, він написав статтю «Про одну політичну помилку» та листа
+прокуророві України щодо дій міністра освіти. Його відхилені владою тексти й
+листи поширювалися у самвидаві [S1]. Тут важливо не підмінювати зміст його
+текстів фразами з неперевірених передруків: пряме джерело достатньо засвідчує
+сам факт авторства, звернень і позацензурного поширення.
 
-Karavanskyi is valuable for upper-level learners because he turns vocabulary work into historical inquiry. A lesson can move from one contested term to the larger story of colonial pressure on Ukrainian scientific and everyday lexicon. [S5]
+4 вересня 1965 року в нього провели обшук; наступного дня він розіслав протест
+щодо безпідставності обшуку, а пізніше передав польським і чехословацьким
+консулам листи про арешти української інтелігенції та порушення національної
+політики. 13 листопада його заарештували. За поданням КДБ генеральний прокурор
+СРСР опротестував попереднє звільнення: без нового суду й розслідування
+Караванського відправили відбувати решту старого строку — вісім років і сім
+місяців — у таборах суворого режиму [S1]. IEU підтверджує основний механізм:
+звільнення 1960 року було оголошене «помилкою», а невідбуту частину вироку
+відновили [S2].
 
-## 6. Contested points
+У таборі він оголошував голодування, писав звернення до офіційних інстанцій і
+громадськості; за це його карали штрафним ізолятором і бараком посиленого
+режиму [S1]. Після переведення до Владимирської тюрми він збирав свідчення
+в'язнів про Катинський розстріл, підготував статтю і намагався передати її на
+волю через дружину [S1, S2]. У 1970 році його додатково засудили в тюрмі;
+джерела відрізняються у тривалості нового покарання, але узгоджено вказують
+на закрите або формально «відкрите» тюремне провадження, позначення
+«особливо небезпечний рецидивіст» та продовження ув'язнення [S1, S2]. Урок
+має показувати саме механізм: радянські назви обвинувачень були інструментом
+контролю над листами, текстами й мовною працею.
 
-- **What's debated in modern UA scholarship:** retrieved sources do not provide a scholarly controversy, but his OUN-linked wartime biography requires careful non-Block-G handling: this dossier is not a military dossier and does not adjudicate wartime organizational history beyond the KHPG chronology. [S1] [S2]
-- **What gets simplified in popular memory:** "31 years in prison" can overshadow the linguistic labor; the module should keep the dictionaries central. [S1] [S3]
-- **Russian disinformation attack surface:** Soviet charges framed language activism and Ukrainian organizational ties as criminal; body prose must identify those as Soviet charges, not neutral labels. [S1]
-- **Other-perspective considerations:** KHPG records that he gathered testimony about Katyn while imprisoned; Polish historical connections need separate source work before classroom framing. [S2]
+## 5. УГГ, еміграція і лексикографічний доробок
+
+У лютому 1979 року Караванського оголосили членом Української Гельсінської
+групи. Після звільнення у вересні 1979 року він коротко жив у Тарусі разом з
+Ніною Строкатою, а 30 листопада подружжя виїхало до США після позбавлення
+радянського громадянства [S1, S2]. В Америці він продовжував літературну й
+мовознавчу роботу до смерті [S2].
+
+IEU перелічує його словники й мовні праці: «Практичний словник синонімів
+української мови» (видання 1995, 2000, 2008, 2012, 2014), «Секрети української
+мови» (1994, 2009), «Російсько-український словник складної лексики» (1998,
+2006, 2016) та «Словник рим української мови» (2004) [S2]. ХПГ фіксує близькі
+бібліографічні ряди й публікації з культури мови та мовної політики [S1].
+Тому центральний дидактичний сюжет — не «словник як метафора», а конкретна
+лексикографічна робота, що тривала до, під час і після репресії.
+
+## 6. Джерельний реєстр
+
+- **[S1]** І. Рапп, переклад В. Овсієнка, «КАРАВАНСЬКИЙ СВЯТОСЛАВ ЙОСИПОВИЧ»,
+  Віртуальний музей Харківської правозахисної групи:
+  <https://museum.khpg.org/1113912131>.
+- **[S2]** Ivan Jaworsky, «Karavansky, Sviatoslav», *Internet Encyclopedia of
+  Ukraine*: <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKaravanskySviatoslav.htm>.
 
 ## 7. Cross-track links
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - none verified for this dossier.
-- **Existing core language modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/c2/c2-1-practice-i.yaml`
-  - `curriculum/l2-uk-en/plans/c2/c2-2-practice-i.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - C2 lexical decolonization lesson using dictionary entries.
-  - Bio-to-bio connection with Nina Strokata-Karavanska and the public committee defending her case.
-- **Potential LIT additions surfaced by this research:**
-  - A short samvydav excerpt from *Про одну політичну помилку* if a stable text is retrieved.
+- **Existing LIT plan:**
+  `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml` —
+  позацензурне поширення текстів як контекст для його листів і статей.
+- **Existing core language plans:**
+  `curriculum/l2-uk-en/plans/c2/c2-1-practice-i.yaml` і
+  `curriculum/l2-uk-en/plans/c2/c2-2-practice-i.yaml` — можливе продовження
+  роботи з лексикографічними прикладами на високому рівні.
+- **Candidate Phase 2+ link:** окремий модуль про словник рим, синонімію та
+  мовну політику з перевірюваними виданнями як основним матеріалом.
 
-## 8. Naming-canonical
+## 8. Педагогічні межі
 
-- **Slug:** `sviatoslav-karavanskyi`
-- **EN canonical (BGN/PCGN 2010):** Sviatoslav Yosypovych Karavanskyi
-- **UA canonical (with patronymic if attested):** Святослав Йосипович Караванський
-- **Aliases (track these for `aliases:` YAML field):** Sviatoslav Karavansky; Sviatoslav Karavanskyi; Святослав Караванський
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Svyatoslav Iosifovich Karavansky; Святослав Иосифович Караванский
+Не варто вставляти до уроку афористичні «цитати Караванського» без перевірки
+за первинним виданням і точним локатором: цього реєстр не містить. Натомість
+можна будувати завдання на фактах, які прямо подано в джерелах: порівняти
+функції філолога, перекладача й лексикографа; пояснити, як відновлення старого
+строку стало інструментом покарання за пізнішу діяльність; простежити шлях
+словника рим від табору до видання. Військові, організаційні та польські
+історичні контексти слід обмежувати тим, що прямо засвідчено, без домислення.
 
-## 9. Image candidates
+## 9. Медійна нотатка
 
-- **Best PD/CC portrait:** source not found in retrieved sources; KHPG and Wikipedia portraits require license verification.
-- **Backup candidates:** Wikimedia Commons image if available and license permits; Zahyst Movy article image only after rights check.
-- **If no PD/CC portrait exists:** use a rights-cleared dictionary cover or neutral samvydav context image.
-- **Era-appropriate context image:** cover of *Словник українських рим* or *Практичний словник синонімів української мови*, rights status to verify.
+KHPG та IEU подають портретні зображення, але збережений реєстр не містить
+ліцензійного дозволу на повторне використання. Цей пакет зберігає текстовий
+портрет і не додає медіафайл.
 
-## 10. Sources used
+## 10. Деколонізаційна самоперевірка
 
-**Tier 1 (authoritative):**
-- [S6] Internet Encyclopedia of Ukraine, "Karavansky, Sviatoslav." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKaravanskySviatoslav.htm | accessed 2026-05-30.
-- [S7] "Караванський Святослав Йосипович," Енциклопедія Сучасної України. https://esu.com.ua/article-9625 | accessed 2026-05-30.
-
-**Tier 2 (institutional):**
-- [S1] "KARAVANSKY, Sviatoslav Josyfovych," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1142693664 | accessed 2026-05-30.
-- [S2] "КАРАВАНСЬКИЙ СВЯТОСЛАВ ЙОСИПОВИЧ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1113912131 | accessed 2026-05-30.
-
-**Tier 3 (encyclopedic):**
-- [S3] "Караванський Святослав Йосипович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Караванський_Святослав_Йосипович | accessed 2026-05-30.
-
-**Tier 4 (modern scholarly post-1991):**
-- Source not found in retrieved sources.
-
-**Tier 5 (general web):**
-- [S5] "Караванський Святослав Йосипович," Wikiquote. https://uk.wikiquote.org/wiki/Караванський_Святослав_Йосипович | accessed 2026-05-30.
-
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Articles 54-1b and 54-11 retrieved through KHPG; exact archival case file: source not found.
-
-## Decolonization self-check
-
-- [x] OUN-linked context is not inflated into a military Block G dossier
-- [x] Soviet charges are labeled as charges
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] Lexical decolonization is grounded in retrieved sources
-- [x] No invented case-file identifiers
+Досьє розглядає Караванського як українського філолога й автора, чию мовну
+роботу переслідувала радянська держава. Радянські статті, вироки й ярлики
+подано як історичні інструменти репресії, а не як самоопис людини. Його не
+зведено ані до тривалості ув'язнення, ані до одного словника: підкреслено
+тяглість письма, перекладу, самвидаву й лексикографії.

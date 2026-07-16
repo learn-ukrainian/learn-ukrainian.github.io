@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://museum.khpg.org/1113912131
+  type: external
+  title: КАРАВАНСЬКИЙ СВЯТОСЛАВ ЙОСИПОВИЧ — Віртуальний музей ХПГ
+  url: https://museum.khpg.org/1113912131
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKaravanskySviatoslav.htm
+  type: external
+  title: Karavansky, Sviatoslav — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKaravanskySviatoslav.htm

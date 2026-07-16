@@ -17,8 +17,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати «Після погрому українства 30-х років...» — термінологія як носій
-    колоніальної історії
+    Аналіз лексикографічної праці Караванського — термінологія як носій
+    колоніальної історії без неперевіреної прямої цитати
   placement: workbook
   type: critical-analysis
 - focus: >-
@@ -26,6 +26,10 @@ activity_hints:
     лексикографічна праця
   placement: workbook
   type: essay-response
+aliases:
+- Святослав Йосипович Караванський
+- Sviatoslav Karavanskyi
+- Svyatoslav Iosifovich Karavansky (FORBIDDEN in body text)
 cefr_min: C1
 connects_to:
 - bio-nadiia-svitlychna
@@ -71,8 +75,9 @@ content_outline:
     [!anti-hagiography] Тримати словники в центрі: «31 рік ув'язнення» не повинен
     заступати мовознавчу працю.
   - >-
-    Цитата «Після погрому українства 30-х років...» із праці «Пошук українського
-    слова або Боротьба за національне "я"» — термінологія несе колоніальну історію.
+    Праця «Пошук українського слова або Боротьба за національне "я"» дає тему
+    для аналізу зв'язку термінології з колоніальною історією; неперевірену пряму
+    цитату з неї не відтворювати.
   section: 'Діяльність: Словники як зброя проти русифікації'
   words: 1200
 - points:
@@ -104,8 +109,9 @@ content_outline:
     Еміграція 1979 року до США; лексикографічна праця тривала; помер 17 грудня 2016
     року в Балтиморі.
   - >-
-    Цитата «Гібридна війна — це не бліцкриґ.» — логіка тривалості російської агресії;
-    робота зі словником як історичне дослідження для рівнів C1/C2.
+    Робота зі словником як історичне дослідження для рівнів C1/C2: зіставити
+    рими, синоніми й складну лексику без приписування авторові неперевірених
+    афоризмів.
   - >-
     [!epistemic-humility] Свідчення про Катинь, зібрані в ув'язненні: польські
     історичні зв'язки потребують окремої джерельної роботи перед класним викладом.
@@ -141,33 +147,27 @@ persona:
     радянських репресій проти української мови.
   voice: Linguistic Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  reason: Сторінка ХПГ є біографічним джерелом, але цей прохід не встановив права на окремий портретний файл.
+  evidence_urls: [https://museum.khpg.org/1113912131]
+readings_contract_version: 2
 readings:
-- hosting: link-only
+- title: КАРАВАНСЬКИЙ СВЯТОСЛАВ ЙОСИПОВИЧ
+  source_name: Віртуальний музей «Дисидентський рух в Україні» ХПГ
+  learner_task: Простежити, як ув'язнення, мовна праця й словникарство утворюють одну біографічну траєкторію.
   language: uk
-  notes: Біографічна стаття.
-  role: primary
-  source: Енциклопедія Сучасної України (ЕСУ)
-  url: https://esu.com.ua/article-9625
+  source_url: https://museum.khpg.org/1113912131
+  hosting: link-only
+  rights: {basis: external-link, evidence_url: https://museum.khpg.org/1113912131, note: Повний текст не відтворюється; подано зовнішнє посилання.}
 references:
-- note: Біографічна стаття.
-  path: https://esu.com.ua/article-9625
-  title: Караванський Святослав Йосипович (ЕСУ)
-  type: reference
-- note: Профіль у Віртуальному музеї дисидентського руху (українською).
+- note: Біографічна стаття ХПГ; попередній URL ЕСУ article-9625 вилучено, бо він веде до статті про Караманa Станіслава Олександровича.
   path: https://museum.khpg.org/1113912131
   title: Караванський Святослав Йосипович (ХПГ)
   type: reference
-- note: Профіль у Віртуальному музеї дисидентського руху (англійською).
-  path: https://museum.khpg.org/1142693664
-  title: KARAVANSKY, Sviatoslav Josyfovych (KHPG)
-  type: reference
-- note: Біографія, перелік словників і життєві дати.
-  path: https://uk.wikipedia.org/wiki/Караванський_Святослав_Йосипович
-  title: Караванський Святослав Йосипович (Вікіпедія)
-  type: reference
-- note: Цитати з мовознавчих праць.
-  path: https://uk.wikiquote.org/wiki/Караванський_Святослав_Йосипович
-  title: Караванський Святослав Йосипович (Вікіцитати)
+- note: Енциклопедична довідка про життєпис, переклади й словники.
+  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKaravanskySviatoslav.htm
+  title: Karavansky, Sviatoslav (Internet Encyclopedia of Ukraine)
   type: reference
 sequence: 275
 slug: sviatoslav-karavanskyi

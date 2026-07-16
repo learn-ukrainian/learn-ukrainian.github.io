@@ -1,81 +1,181 @@
-# Надія Світлична — Research Dossier
+# Надія Світлична — дослідницьке досьє
 
-Canonical slug: `nadiia-svitlychna`
+**Канонічний ідентифікатор:** `nadiia-svitlychna`
+**Дослідницька межа:** біографічна довідка для BIO; лише два прямі джерела зі
+збереженого реєстру джерел.
+**Правило джерел:** усі фактичні твердження нижче спираються на ЕСУ [S1] або на
+біографічний запис Віртуального музею Харківської правозахисної групи [S2].
+Не використовуються вторинні перекази, Вікіпедія чи неперевірені цитатники.
 
-## 1. Identity and research scope
+## 1. Ідентичність і межі дослідження
 
-Надія Олексіївна Світлична (8 November 1936, Polovynkyne/Polovynkino, Starobilsk district, Luhansk region — 8 August 2006, United States; buried in Kyiv) was a Ukrainian шістдесятниця, rights defender, former political prisoner, editor of `Вісник репресій в Україні`, and member of the foreign representation of the Ukrainian Helsinki Group. ESU records her as a civic figure, sister of Ivan Svitlychnyi, Shevchenko Prize laureate, Vasyl Stus Prize laureate, and posthumous recipient of the Order For Courage [S1]. KHPG's Ukrainian profile corroborates the 1936 birth date, arrest, sentence, emigration, and editorial work [S2]. A KHPG English page retrieved by search gives 1939; because ESU and the Ukrainian KHPG profile give 1936, this dossier uses 1936 and notes the English discrepancy as source conflict.
+Надія Олексіївна Світлична народилася 8 листопада 1936 року в Половинкіному,
+нині Толоківці Старобільського району Луганської області, а померла 8 серпня
+2006 року у штаті Нью-Джерсі; похована в Києві. ЕСУ називає її громадською
+діячкою, а ХПГ — учасницею руху шістдесятників, правозахисницею, активною
+учасницею Закордонного представництва Української Гельсінської групи та
+редакторкою-укладачкою «Вісника репресій в Україні» [S1, S2]. Ці означення
+потрібно тримати разом: вони описують не один символічний статус, а тривалу
+послідовність учительської, редакторської, правозахисної й архівної роботи.
 
-## 2. Chronology
+Родинний зв'язок з Іваном Світличним є документованою частиною її біографії,
+але не може бути назвою її головної ролі. Обидва джерела показують її власну
+траєкторію: філологічну освіту, роботу на Луганщині й у Києві, участь у
+самвидаві, ув'язнення, післятабірний тиск, еміграцію та працю з інформацією
+про репресії [S1, S2]. Для BIO це дозволяє починати не з родинного дерева, а
+з того, як людина вчила, редагувала, поширювала тексти та зберігала свідчення.
 
-Світлична graduated from the Ukrainian language and literature department of Kharkiv University in 1958, worked in Donbas schools and libraries, and moved to Kyiv in 1963 [S1, S2]. She visited the Club of Creative Youth with her brother Ivan and formed close ties with future dissidents, including Alla Horska [S2]. On 8 November 1967 she, Ivan Svitlychnyi, Ivan Dziuba, and Lina Kostenko signed a protest letter to Petro Shelest concerning the trial of Viacheslav Chornovil [S1, S2].
+## 2. Освіта, праця й київське середовище
 
-KHPG records her involvement with samvydav, interrogations after the January 1972 arrests, and the seizure of texts and correspondence [S2]. She was arrested on 18 May 1972; on 23-24 May 1973 the Kyiv regional court sentenced her under Article 62 part 1 to four years in strict-regime camps [S2]. She served in Barashevo, Mordovia, with other women political prisoners and participated in protests and hunger strikes [S2].
+Світлична закінчила відділення української мови й літератури філологічного
+факультету Харківського університету 1958 року. Після цього вона працювала
+вчителькою та бібліотекаркою на Луганщині; ХПГ конкретизує також роботу в
+школі робітничої молоді в Краснодоні. Від 1963 року вона жила в Києві, де
+працювала в редакційній групі заочного сільськогосподарського технікуму, у
+видавництві «Радянська школа», в інституті педагогіки та у вечірній школі
+Дарниці [S1, S2]. Цей перелік важливий для уроку: перед репресією була не
+абстрактна «дисидентка», а філологиня з досвідом освіти, бібліотеки й
+редактури.
 
-Released in May 1976, she was denied registration, refused work, and threatened with prosecution for "parasitism" [S2]. In autumn 1976 she sent a statement refusing Soviet citizenship, explaining that it was beneath her dignity to be a citizen of the world's largest concentration camp [S2]. She left for Rome on 12 October 1978 and arrived in the United States on 8 November 1978 [S2]. From 1980 she worked in the UHG foreign representation and edited/compiled `Вісник репресій в Україні`; from 1983 to 1994 she worked in the Ukrainian service of Radio Liberty [S1, S2].
+У Києві вона відвідувала Клуб творчої молоді разом з Іваном Світличним,
+знайомилася та дружила з майбутніми учасниками дисидентського руху, зокрема з
+Аллою Горською [S1, S2]. 8 листопада 1967 року Надія Світлична, Іван
+Світличний, Іван Дзюба й Ліна Костенко надіслали Петрові Шелесту лист-протест
+щодо процесу над В'ячеславом Чорноволом. ЕСУ і ХПГ фіксують, що автори
+кваліфікували процес як порушення елементарних процесуальних норм [S1, S2].
+Згодом Світлична брала активну участь у поширенні самвидаву й 1968 року була
+звільнена з роботи [S1].
 
-## 3. Significance for the bio track
+Обидва джерела також документують її участь у пам'яті про Аллу Горську. У
+грудні 1970 року у Василькові Світлична разом з Євгеном Сверстюком знайшла
+вбиту художницю, організовувала похорон і встановлення пам'ятника на могилі
+[S1, S2]. Для викладання це не привід перетворювати особисту трагедію на
+ефектний епізод. Він показує, що мережі солідарності діяли також через
+похорон, догляд за пам'яттю та публічне називання втрати.
 
-Світлична is a bridge figure: Donbas-born Ukrainian-language teacher, Kyiv samvydav worker, mother under KGB pressure, camp resister, emigration-era information editor, and memory institution builder. Her dossier should make information labor visible: typing, carrying, editing, broadcasting, compiling, and preserving documents were political actions under Soviet rule [S1, S2].
+## 3. Арешт, ув'язнення і післятабірний тиск
 
-The Donbas dimension should be explicit. ESU and KHPG place her early education and work in Kharkiv, Krasnodon, and the Luhansk/Starobilsk region before her Kyiv period [S1, S2]. That geography helps learners avoid treating Ukrainian-language dissidence as something that only belonged to western Ukraine. Her anger over Ukrainian-language marginalization in Donbas, recorded in the KHPG profile, can support a language-policy discussion, but the exact classroom quote should be selected from the source and checked separately for length and context [S2].
+Після січневих арештів 1972 року Світличну майже щодня викликали на допити у
+справі брата. ХПГ подає, що слідство використало її дворічного сина Ярему як
+важіль: перед арештом вимагали письмово визначити, кому буде доручено його
+виховання, а після арешту дитину вивезли з ясел до будинку дитини. Родині
+вдалося повернути його завдяки зусиллям Леоніди Світличної [S2]. У навчальному
+матеріалі цей факт треба називати точно: це документований механізм тиску на
+матір, а не привід для психологічної реконструкції того, чого джерело не
+засвідчує.
 
-## 4. Persecution and pressure mechanisms
+18 травня 1972 року Світличну заарештували. Вона майже рік перебувала в
+ізоляторі КДБ на Володимирській у Києві. 23–24 травня 1973 року Київський
+обласний суд засудив її за статтею 62, частиною першою КК УРСР, формула якої в
+джерелі подана як «антирадянська агітація і пропаганда», до чотирьох років
+таборів суворого режиму [S2]. Радянське формулювання слід подавати саме як
+мову обвинувачення, а не як нейтральну характеристику її дій. Покарання вона
+відбувала в Барашевому, у Мордовії, в установі ЖХ-385/3-4; ХПГ фіксує її
+участь у протестах і голодуваннях ув'язнених жінок [S2].
 
-The pressure mechanisms included KGB interrogation, seizure of texts, child custody threats, Article 62 prosecution, strict-regime camp imprisonment, denial of residence registration, employment exclusion, threats under anti-parasite law, forced emigration pressure, and eventual deprivation of Soviet citizenship [S2]. Her case is especially useful for showing gendered pressure: KHPG records that investigators used her young son as leverage before arrest [S2].
+Після звільнення у травні 1976 року Світлична намагалася повернутися до Києва,
+але їй відмовляли в прописці та роботі, а також погрожували новим арештом за
+«дармоїдство». Вона жила із сином у Леоніди Світличної, яку штрафували за
+«порушення паспортного режиму» [S2]. Восени 1976 року Світлична надіслала до
+партійного керівництва та уряду заяву про відмову від радянського громадянства,
+пов'язуючи цей крок із переслідуванням українських правозахисників [S1, S2].
+Це джерельно зафіксований акт політичної позиції; у цьому досьє не наводяться
+її слова дослівно, бо для навчального цитування потрібна окрема перевірка
+первинного локатора.
 
-Primary-source quote: "Нижче моєї гідности..." from her citizenship refusal can anchor a lesson on dignity and state belonging [S2]. Exact archival case number: source not found.
+## 4. Еміграція як робота з інформацією
 
-The child-pressure episode needs careful handling. KHPG records that investigators used her two-year-old son in the pressure surrounding interrogations and arrest [S2]. This is not background pathos; it is evidence of a gendered coercive mechanism. A lesson should name the mechanism without sensationalizing it: parental responsibility was turned into leverage by the security apparatus.
+12 жовтня 1978 року Світлична виїхала до Італії, а 8 листопада прибула до
+США. Упродовж наступних восьми років її позбавили радянського громадянства
+[S1, S2]. ЕСУ згадує її роботу в Українському музеї у Нью-Йорку та
+перекладачкою в Гарвардському університеті. Від 1980 року вона брала участь у
+Закордонному представництві Української Гельсінської групи, а до 1985 року
+регулярно видавала «Вісник репресій в Україні» коштом української діаспори
+[S1, S2]. Від 1983 до 1994 року працювала в українській редакції радіо
+«Свобода» [S1, S2].
 
-## 5. Works and public actions
+Ця частина біографії не є додатком після «головної» історії табору. ХПГ прямо
+описує, що до Світличної надходила інформація про репресії в Україні, а вона
+розбирала передані з таборів матеріали й перетворювала їх на брошури, книжки
+та радіопередачі [S2]. Таким чином її праця складалася з послідовних,
+видимих операцій: прийняти звістку, впорядкувати матеріал, редакційно
+підготувати його, надрукувати або передати в ефір, зберегти для майбутнього
+читання. Це точніший опис, ніж узагальнення про «голос діаспори».
 
-Her public work included samvydav distribution, defense of Chornovil, care for Alla Horska's memory after the murder, `Вісник репресій в Україні`, Radio Liberty broadcasts, and preparation or editing of works by Vasyl Stus, Yaroslava Lesiv, Mykola Rudenko, Mykola Horbal, Helii Sniehirov, Yurii Lytvyn, and Ivan Svitlychnyi [S1, S2]. ESU notes that she prepared Stus's `Палімпсести` for publication and helped prepare Ivan Svitlychnyi's `У мене — тільки слово` and `Доброокий` [S1].
+ЕСУ і ХПГ документують також редакторську підготовку видань: «Палімпсестів»
+Василя Стуса, «Миті» Ярослави Лесіва, «За ґратами» Миколи Руденка,
+«Коломийки для Андрійка» Миколи Горбаля, «Творів» Гелія Снєгірьова та брошури
+Юрія Литвина. Після смерті Івана Світличного вона разом з його вдовою
+підготувала збірку «У мене — тільки слово» та книжку спогадів «Доброокий»
+[S1, S2]. Це окремо засвідчує її професійну редакторську роль, а не просто
+моральну підтримку інших авторів.
 
-The post-emigration period should not be framed as withdrawal. From the United States, she helped transform scattered reports into a durable record of repression [S1, S2]. This gives a strong cross-track bridge to diaspora, media, and archive lessons. Students can trace one fact pattern: arrest in Ukraine, report transmission, bulletin publication, radio amplification, and later museum/archive memory.
+## 5. Пам'ять, вшанування і джерельна обережність
 
-## 6. Source pack
+У пізній період Світлична редагувала жіночий журнал «Віра», працювала в
+Українському музеї у Нью-Йорку, збирала архів і кошти на пам'ятник Оксані
+Мешко та її матері, а також на козацький хрест «Убієнним синам України» в
+Сандармосі [S1, S2]. Вона була лауреаткою премії імені Василя Стуса 1992 року,
+разом з Іваном Світличним отримала Шевченківську премію 1994 року, а 2006 року
+посмертно була нагороджена орденом «За мужність» I ступеня [S1, S2]. Нагороди
+свідчать про пізніше суспільне визнання, але не мають заміняти опису її
+конкретної праці з текстами й документами.
 
-- [S1] `Світлична Надія Олексіївна`, Енциклопедія сучасної України, https://esu.com.ua/article-887407.
-- [S2] `СВІТЛИЧНА НАДІЯ ОЛЕКСІЇВНА`, KHPG Virtual Museum, https://museum.khpg.org/1113995960.
-- [S3] `Світлична Надія Олексіївна`, Ukrainian Wikipedia / MCP `query_wikipedia`, https://uk.wikipedia.org/wiki/Світлична_Надія_Олексіївна.
-- [S4] `Українська Гельсінська група`, MCP `search_sources` / Ukrainian Wikipedia corpus for UHG foreign-representation context, https://uk.wikipedia.org/wiki/Українська_Гельсінська_група.
+У двох збережених джерелах розходиться назва населеного пункту смерті: ЕСУ
+називає Ірвінґтон, ХПГ — Матаван, обидва у штаті Нью-Джерсі [S1, S2]. Для
+матеріалу BIO правильна реакція — не вибирати адресу за припущенням, а
+зафіксувати розбіжність і не робити її предметом уроку без додаткового
+авторитетного запису. Натомість узгоджені факти — дата смерті, поховання в
+Києві, освіта, ув'язнення та редакторська робота — можна подавати впевнено
+[S1, S2].
+
+## 6. Джерельний реєстр
+
+- **[S1]** В. В. Овсієнко, «Світлична Надія Олексіївна», *Енциклопедія
+  Сучасної України*: <https://esu.com.ua/article-887407>.
+- **[S2]** С. Карасик, «СВІТЛИЧНА НАДІЯ ОЛЕКСІЇВНА», Віртуальний музей
+  Харківської правозахисної групи: <https://museum.khpg.org/1113995960>.
 
 ## 7. Cross-track links
 
-- **Existing LIT plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit-essay/svitlychny-prison-lyrics.yaml` — Ivan Svitlychnyi context; use carefully as brother/editorial-memory connection, not as a direct Nadiia text module.
-- **Existing ISTORIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/ukrayinskyi-visnyk.yaml` — samvydav and repression reporting.
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml` — mechanics of circulation.
-  - `curriculum/l2-uk-en/plans/istorio/memorandum-uhh.yaml` — UHG and foreign representation.
-- **Existing BIO plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/ivan-dziuba.yaml` — 1967 protest letter context.
-  - `curriculum/l2-uk-en/plans/bio/alla-horska.yaml` — friendship and memory after Horska's murder.
-  - `curriculum/l2-uk-en/plans/bio/vasyl-symonenko.yaml` — KTYM network context.
-- **Candidate Phase 2+ links:**
-  - A "information labor of dissidence" cluster: typists, editors, broadcasters, archive builders.
+- **Existing LIT plans:**
+  `curriculum/l2-uk-en/plans/lit-essay/svitlychny-prison-lyrics.yaml` —
+  Іван Світличний і редакторська пам'ять про його тексти.
+- **Existing ISTORIO plans:**
+  `curriculum/l2-uk-en/plans/istorio/ukrayinskyi-visnyk.yaml`,
+  `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`,
+  `curriculum/l2-uk-en/plans/istorio/memorandum-uhh.yaml` — самвидав,
+  документування репресій і УГГ.
+- **Existing BIO plans:**
+  `curriculum/l2-uk-en/plans/bio/ivan-dziuba.yaml`,
+  `curriculum/l2-uk-en/plans/bio/alla-horska.yaml`,
+  `curriculum/l2-uk-en/plans/bio/vasyl-symonenko.yaml` — контекст листа
+  1967 року, мережі Клубу творчої молоді та пам'яті про Аллу Горську.
+- **Candidate Phase 2+ link:** модуль про документальну працю редакторок,
+  упорядниць і радіожурналісток у правозахисному русі.
 
-## 8. Pedagogical notes
+## 8. Педагогічні межі
 
-Avoid presenting her only as "Ivan Svitlychnyi's sister." Start with her own labor: teacher, samvydav worker, prisoner, editor, broadcaster. A useful activity is to map how information moved from Ukraine to the diaspora and back through radio, bulletins, and books.
+Матеріал має починатися з Надії Світличної як самостійної діячки. Урок може
+простежити документальний ланцюг «звістка з України — редакційна обробка —
+бюлетень або радіопередача — збереження в пам'яті», але не повинен вигадувати
+конкретний маршрут окремого документа, якщо його не подають [S1, S2]. Варто
+пояснювати радянські терміни «прописка», «дармоїдство» й формулу статті 62 як
+інструменти контролю. Не слід приписувати Світличній цитати, архівні номери,
+правові мотиви чи подробиці приватного життя поза тим, що прямо містять два
+джерела.
 
-A second activity can compare the two dates attached to her source pack: ESU/KHPG Ukrainian give 1936, while the KHPG English page found by search gives 1939. Students should learn that source conflict is not solved by guessing; it is recorded, weighted, and revisited if a primary civil record appears.
+## 9. Медійна нотатка
 
-For output, ask learners to create a "document chain" from one prison fact to one published bulletin item. They do not need to reconstruct a real unpublished chain unless a source provides it; the point is to understand roles: witness, courier, editor, broadcaster, archivist.
+Обидва джерела мають портретні зображення на сторінках, але збережений реєстр
+не містить ліцензійного підтвердження для повторного використання. Тому для
+цього пакета лишається доказово обмежений текстовий портрет; файл зображення
+не додається.
 
-This also keeps diaspora work tied to events in Ukraine rather than treating emigration as a separate ending.
+## 10. Деколонізаційна самоперевірка
 
-## 9. Media and image candidates
-
-ESU and KHPG provide portrait/image leads [S1, S2]. Radio Liberty archival audio may exist, but no rights-cleared classroom audio file was retrieved: source not found.
-
-## 10. Open questions
-
-- Resolve the KHPG English-page birth-year discrepancy against Ukrainian sources: ESU/KHPG Ukrainian support 1936; 1939 in the English page appears unsupported in the retrieved pack.
-- Exact case file number: source not found.
-- Rights-cleared audio/image asset: source not found.
-
-## Decolonization self-check
-
-The dossier emphasizes a Donbas-born Ukrainian cultural worker and resists a west-only picture of dissidence. Soviet legal categories are explained as coercive categories, not accepted as neutral truth.
+Досьє показує українськомовну культурну й правозахисну працю людини з
+Луганщини та Києва, не зводячи її до периферії «радянського дисидентства».
+Радянські обвинувачення й адміністративні категорії названі мовою репресивної
+системи. Її особа не підмінена біографією брата, а табір не подано єдиним
+змістом життя: освіта, редагування, радіо й архів мають власну доказову вагу.

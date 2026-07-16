@@ -4,21 +4,24 @@ activity_hints:
   items: 5
   placement: inline
   type: quiz
-- after_section: 'Діяльність: Українська Гельсінська група та «Ляментація»'
-  focus: Правда чи міф — перевірка фактів про заснування і керівництво УГГ та документ «Ляментація»
+- after_section: 'Діяльність: Українська Гельсінська група'
+  focus: Правда чи міф — перевірка фактів про заснування і фактичне керівництво УГГ
   items: 5
   placement: inline
   type: true-false
 - focus: Дебати — епітет «козацька матір» вшановує постать чи спрощує конкретні жорстокості репресій?
   placement: workbook
   type: debate
-- focus: 'Критичний аналіз документа «Ляментація» (1979): як мова правозахисного тексту викриває державний
-    терор'
+- focus: 'Критичний аналіз організаційної праці УГГ: як відкритий правозахист викривав державний терор'
   placement: workbook
   type: critical-analysis
 - focus: 'Есе-рефлексія: каральна психіатрія як інструмент тоталітарної держави проти інакодумства'
   placement: workbook
   type: essay-response
+aliases:
+- Мешко Оксана Яківна
+- Oksana Meshko
+- Оксана Яковлевна Мешко (FORBIDDEN in body text)
 cefr_min: C1
 connects_to:
 - bio-levko-lukyanenko
@@ -52,12 +55,12 @@ content_outline:
   - '[!anti-hagiography] Не публічна політикиня, а літня жінка, яка свідомо стала фактичною головою групи
     саме тоді, коли органи держбезпеки (КДБ) заарештовували її товаришів одного за одним наприкінці 1970-х
     років.'
-  - 'Документ «Ляментація» (1979), співавторство з Ніною Строкатою та Іриною Сеник: викриття сфабрикованих
-    справ і державного терору проти правозахисного руху.'
+  - 'Після арештів інших членів УГГ Мешко виконувала фактичну керівну й організаційну роботу, підтримуючи
+    відкритий правозахисний рух.'
   - Мати дисидента-шістдесятника Олеся Сергієнка; родина як частина спротиву, а не лише його жертва.
-  - Цитата з «Ляментації» про «ескалацію державного терору і наклепів проти учасників правозахисного руху
-    в Україні» як зразок мови опору (державний терор, наклеп, правозахисний рух).
-  section: 'Діяльність: Українська Гельсінська група та «Ляментація»'
+  - 'Зіставити документовані форми роботи — звернення, підтримку переслідуваних і збереження свідчень — без
+    відтворення неперевіреної прямої цитати.'
+  section: 'Діяльність: Українська Гельсінська група'
   words: 1200
 - points:
   - '[!anti-hagiography] Механізм терору не зупинявся на ув''язненні: проти фактичної голови УГГ держава
@@ -100,34 +103,28 @@ persona:
     проти інакодумців.
   voice: Human-Rights Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  reason: УІНП і НБУВ підтверджують життєпис, але цей прохід не встановив права на окремий портретний файл.
+  evidence_urls: [https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg, https://www.nbuv.gov.ua/node/4596]
+readings_contract_version: 2
 references:
-- author: Бажан О. Г.
-  note: Енциклопедія історії України, т. 6, С. 632.
-  title: Мешко Оксана Яківна
+- note: Історичний календар із життєписом, участю в УГГ та механізмами переслідування.
+  path: https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg
+  title: 1905 — народилася Оксана Мешко (УІНП)
   type: reference
-- author: Овсієнко В. В.
-  note: Енциклопедія сучасної України, т. 20, С. 317–318.
-  title: Мешко Оксана Яківна
+- note: Біографічна сторінка Національної бібліотеки України імені В. І. Вернадського.
+  path: https://www.nbuv.gov.ua/node/4596
+  title: Оксана Мешко (НБУВ)
   type: reference
-- note: Біографія, дати, роль у заснуванні та фактичному керівництві УГГ.
-  path: https://uk.wikipedia.org/wiki/Мешко_Оксана_Яківна
-  title: Мешко Оксана Яківна
-  type: reference
-- author: Овсієнко В.
-  note: Українки в історії (Київ, 2004), С. 148–156.
-  title: Козацька Матір
-  type: reference
-- author: Оксана Мешко
-  note: Мемуар-свідчення про Гулаг, каральну психіатрію та заслання.
-  title: Між смертю і життям
-  type: primary
-  work: Між смертю і життям
 readings:
-- hosting: link-only
+- title: 1905 – народилася Оксана Мешко, одна із засновниць УГГ
+  source_name: Український інститут національної пам'яті
+  learner_task: Побудувати окрему хронологію раннього терору щодо родини, участі в УГГ, психіатричного примусу та заслання.
   language: uk
-  role: Основна біографічна стаття про Оксану Мешко.
-  source: Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Мешко_Оксана_Яківна
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg
+  hosting: link-only
+  rights: {basis: external-link, evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/30/1905-narodylasya-oksana-meshko-odna-iz-zasnovnyc-ugg, note: Повний текст не відтворюється; подано зовнішнє посилання.}
 sequence: 278
 slug: oksana-meshko
 subtitle: The Cossack Mother of the Ukrainian Helsinki Group

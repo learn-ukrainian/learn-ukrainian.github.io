@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-31257
+  type: external
+  title: Горинь Богдан Миколайович — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-31257
+- id: S2
+  file: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/10/1936-narodyvsya-bogdan-goryn-dysydent
+  type: external
+  title: 1936 — народився Богдан Горинь — УІНП
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/10/1936-narodyvsya-bogdan-goryn-dysydent

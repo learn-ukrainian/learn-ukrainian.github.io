@@ -1,0 +1,11 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-887407
+  type: external
+  title: Світлична Надія Олексіївна — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-887407
+- id: S2
+  file: https://museum.khpg.org/1113995960
+  type: external
+  title: СВІТЛИЧНА НАДІЯ ОЛЕКСІЇВНА — Віртуальний музей ХПГ
+  url: https://museum.khpg.org/1113995960
