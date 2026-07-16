@@ -100,45 +100,53 @@ level: BIO
 module: bio-258
 objectives:
 - >-
-  Відокремити біографічні факти Тютюнника (Шилівка, батьківський арешт, бібліографія) від
-  спрощень «сумного сільського письменника».
+  Відокремити біографічні факти Тютюнника (Шилівка, батьківський арешт,
+  бібліографія) від спрощень «сумного сільського письменника».
 - Аналізувати новелістику як моральний реалізм, що не вкладався в соцреалізм.
 - Пояснити механізм непрямого тиску — цензура, критика, непублікація — без вигаданого КДБ-файлу.
 - Оцінити «Три зозулі з поклоном» як текст поза радянською «темою» і посмертне відновлення канону.
 pedagogy: CBI
 persona:
   role: >-
-    Модератор семінару про шістдесятників-прозаїків, який відокремлює документальні факти від
-    радянських ярликів і не вигадує арешт.
+    Модератор семінару про шістдесятників-прозаїків, який відокремлює
+    документальні факти від радянських ярликів і не вигадує арешт.
   voice: Rural Novella Historian
 phase: BIO
 readings:
-  - title: Григір Тютюнник. Біографічна довідка
-    source_name: Національна бібліотека України для дітей
-    source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
-    language: uk
-    genre: біографічна довідка
-    source_type: reference
-    role: contextual-reading
-    hosting: link-only
-    learner_task: Виписати факти, які відрізняють Григора від його єдинокровного брата Григорія, та простежити маршрут дитинства автора.
-    rights:
-      basis: external-link
-      evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
-      note: Відкрита україномовна бібліотечна довідка; її текст не відтворюється в курсі.
-  - title: Григір Тютюнник. Основні твори
-    source_name: Національна бібліотека України для дітей
-    source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
-    language: uk
-    genre: бібліографічний покажчик
-    source_type: bibliography
-    role: contextual-reading
-    hosting: link-only
-    learner_task: Побудувати коротку бібліографічну траєкторію творів, відокремлюючи назви видань від інтерпретацій про письменника.
-    rights:
-      basis: external-link
-      evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
-      note: Відкрита україномовна бібліографічна сторінка; тексти творів не відтворюються.
+- title: Григір Тютюнник. Біографічна довідка
+  source_name: Національна бібліотека України для дітей
+  source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+  language: uk
+  genre: біографічна довідка
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Виписати факти, які відрізняють Григора від його єдинокровного брата
+    Григорія, та простежити маршрут дитинства автора.
+  rights:
+    basis: external-link
+    evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+    note: >-
+      Відкрита україномовна бібліотечна довідка; її текст не відтворюється в
+      курсі.
+- title: Григір Тютюнник. Основні твори
+  source_name: Національна бібліотека України для дітей
+  source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+  language: uk
+  genre: бібліографічний покажчик
+  source_type: bibliography
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Побудувати коротку бібліографічну траєкторію творів, відокремлюючи назви
+    видань від інтерпретацій про письменника.
+  rights:
+    basis: external-link
+    evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+    note: >-
+      Відкрита україномовна бібліографічна сторінка; тексти творів не
+      відтворюються.
 readings_contract_version: 2
 references:
 - note: Базова англомовна енциклопедична стаття про життя і творчість.

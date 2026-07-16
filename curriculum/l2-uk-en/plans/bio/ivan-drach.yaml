@@ -1,7 +1,9 @@
 ---
 activity_hints:
 - after_section: 'Тінь: Цензура, інституції та межі джерел'
-  focus: Відрізнити зафіксований інституційний тиск на мистецтво від непідтверджених тверджень про арешт чи судову справу
+  focus: >-
+    Відрізнити зафіксований інституційний тиск на мистецтво від
+    непідтверджених тверджень про арешт чи судову справу
   items: 5
   placement: inline
   type: quiz
@@ -102,8 +104,12 @@ objectives:
 - >-
   Відокремити біографічні факти Драча (освіта, бібліографія, дати) від спрощень «соняшник»
   або партийної політики.
-- Аналізувати поетичну метафору та сценарій «Криниці для спраглих» як українське поетичне кіно.
-- Пояснити, що документовані культурні обмеження не дають підстав вигадувати арешт, вирок чи інші непідтверджені епізоди.
+- >-
+  Аналізувати поетичну метафору та сценарій «Криниці для спраглих» як
+  українське поетичне кіно.
+- >-
+  Пояснити, що документовані культурні обмеження не дають підстав вигадувати
+  арешт, вирок чи інші непідтверджені епізоди.
 - Оцінити складність кар''єри: інновація, тиск, компроміс і національно-демократична політика.
 pedagogy: CBI
 persona:
@@ -121,8 +127,11 @@ references:
   path: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
   title: «Криниця для спраглих». Стенограма (eKMAIR)
   type: reference
-- note: Інституційний матеріал про установчий з'їзд Руху та обрання Драча головою НРУ.
-  path: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+- note: >-
+    Інституційний матеріал про установчий з'їзд Руху та обрання Драча головою
+    НРУ.
+  path: >-
+    https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
   title: 1989 — відкрився Установчий з'їзд Народного руху України за перебудову (УІНП)
   type: reference
 sequence: 259
@@ -142,35 +151,49 @@ readings:
     basis: external-link
     evidence_url: https://esu.com.ua/article-21707
     note: Авторсько-правова стаття ЕСУ доступна лише за зовнішнім посиланням; текст не відтворюється в курсі.
-- title: '«Криниця для спраглих». Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966 року. Стенограма'
+- title: >-
+    «Криниця для спраглих». Засідання художньої ради Кіностудії імені О.
+    Довженка 29 січня 1966 року. Стенограма
   source_name: Електронний архів НаУКМА (eKMAIR)
   source_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
   language: uk
   source_type: primary-document
   role: document-reading
   hosting: link-only
-  learner_task: Визначити учасників, дату, вид документа і те, що стенограма справді засвідчує про обговорення фільму.
+  learner_task: >-
+    Визначити учасників, дату, вид документа і те, що стенограма справді
+    засвідчує про обговорення фільму.
   rights:
     basis: external-link
     evidence_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
-    note: Архівний запис і файл читаються на зовнішній інституційній платформі; повний текст у курсі не відтворюється.
+    note: >-
+      Архівний запис і файл читаються на зовнішній інституційній платформі;
+      повний текст у курсі не відтворюється.
 - title: '1989 – відкрився Установчий з''їзд «Народного руху України за перебудову»'
   source_name: Український інститут національної пам'яті
-  source_url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+  source_url: >-
+    https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
   language: uk
   source_type: institutional-history
   role: contextual-reading
   hosting: link-only
-  learner_task: Пояснити, яку посаду Драч обійняв після установчого з'їзду і чого цей матеріал не доводить про всю його політичну біографію.
+  learner_task: >-
+    Пояснити, яку посаду Драч обійняв після установчого з'їзду і чого цей
+    матеріал не доводить про всю його політичну біографію.
   rights:
     basis: external-link
-    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
-    note: Відкрита україномовна інституційна сторінка доступна лише як зовнішнє посилання; текст не відтворюється в курсі.
+    evidence_url: >-
+      https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+    note: >-
+      Відкрита україномовна інституційна сторінка доступна лише як зовнішнє
+      посилання; текст не відтворюється в курсі.
 readings_contract_version: 2
 portrait_fallback:
   type: text-only
   license: not-applicable
-  reason: Окремий портретний файл з доведеними авторством, джерелом походження та ліцензією в перевіреному пакеті не встановлено.
+  reason: >-
+    Окремий портретний файл з доведеними авторством, джерелом походження та
+    ліцензією в перевіреному пакеті не встановлено.
   evidence_url: https://esu.com.ua/article-21707
   disposition: no-portrait-until-rights-verified
   verified_on: '2026-07-17'

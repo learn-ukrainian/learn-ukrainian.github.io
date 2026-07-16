@@ -127,10 +127,12 @@ readings:
   rights:
     basis: external-link
     evidence_url: https://esu.com.ua/article-25016
-    note: Відкрита україномовна сторінка ЕСУ; її текст у курсі не відтворюється.
+    note: >-
+      Відкрита україномовна сторінка ЕСУ; її текст у курсі не відтворюється.
 - title: 'Гуцало Євген Пилипович. Орлами орано : оповідання, повість (1977)'
   source_name: Електронна бібліотека «Україніка», НБУВ
-  source_url: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+  source_url: >-
+    https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
   language: uk
   genre: оцифроване книжкове видання
   source_type: primary
@@ -141,8 +143,11 @@ readings:
     переносячи його повний текст або відомі рядки без точного локатора.
   rights:
     basis: external-link
-    evidence_url: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
-    note: НБУВ надає зовнішній доступ для навчального й наукового перегляду; повний текст не відтворюється.
+    evidence_url: >-
+      https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+    note: >-
+      НБУВ надає зовнішній доступ для навчального й наукового перегляду;
+      повний текст не відтворюється.
 portrait_fallback:
   type: text-only
   license: not-applicable
@@ -156,7 +161,8 @@ references:
   title: Гуцало Євген Пилипович (ЕСУ)
   type: reference
 - note: Точне оцифроване видання; доступ лише за зовнішнім посиланням.
-  path: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+  path: >-
+    https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
   title: Гуцало Євген Пилипович. Орлами орано (НБУВ)
   type: primary
 sequence: 255
