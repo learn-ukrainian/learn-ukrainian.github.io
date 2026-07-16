@@ -9,6 +9,7 @@ import {
   HttpAtlasDataSource,
 } from "@site/src/lib/lexicon/http-atlas-data-source";
 import {
+  COMPONENT_TOKEN_RE,
   resetSqliteAtlasDataSourceCachesForTests,
   SqliteAtlasDataSource,
 } from "@site/src/lib/lexicon/sqlite-atlas-data-source";
@@ -43,8 +44,6 @@ const componentTokenVectorsPath = resolve(
   process.cwd(),
   "../scripts/atlas/component_tokenization_vectors.json",
 );
-/** Twin of scripts/atlas/export_runtime_shards.py find_component_tokens / Sqlite COMPONENT_TOKEN_RE. */
-const COMPONENT_TOKEN_RE = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
 
 describe("atlas normalization vectors", () => {
   test("TypeScript normalizeAtlasText matches shared vectors", () => {

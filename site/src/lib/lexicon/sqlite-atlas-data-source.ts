@@ -38,7 +38,8 @@ import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
 import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
 import type { PracticeDeckData } from "./srs.ts";
 
-const COMPONENT_TOKEN_RE = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
+/** Shared with exporter Python + vitest vectors — letter/mark tokens only (no digits). */
+export const COMPONENT_TOKEN_RE = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
 const MORPHOLOGY_SUPPRESSED = new Set([
   "multiword_term",
   "expression",

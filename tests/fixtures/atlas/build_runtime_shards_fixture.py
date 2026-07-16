@@ -64,6 +64,9 @@ WANTED_ARTICLES = {
     "доконаний",  # component lemma
     "вид",  # component lemma
     "доконаний-вид",  # multiword + resolved component links
+    "мені-20-років",  # multiword with digit token (no digit chip)
+    "я",  # component target for Мені (via alias мені)
+    "рік",  # component target for років (via alias років)
 }
 WANTED_FORM_ROUTES = {"іване"}  # form_of → іван
 MISSING_SENTINEL = "fixture-missing-sentinel"

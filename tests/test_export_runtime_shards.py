@@ -12,6 +12,7 @@ import hashlib
 import json
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -59,7 +60,7 @@ def test_component_tokenization_vectors_match_python_rules() -> None:
 def test_script_path_invocation_exits_zero() -> None:
     """F007: ``python scripts/atlas/export_runtime_shards.py`` must not ModuleNotFoundError."""
     result = subprocess.run(
-        [str(ROOT / ".venv" / "bin" / "python"), str(EXPORTER_SCRIPT), "--help"],
+        [sys.executable, str(EXPORTER_SCRIPT), "--help"],
         cwd=ROOT,
         capture_output=True,
         text=True,
@@ -147,6 +148,14 @@ def test_fixture_covers_representative_entry_shapes(fixture_db: Path) -> None:
         {"text": "доконаний", "targetSlug": "доконаний"},
         {"text": "вид", "targetSlug": "вид"},
     ]
+
+    # Numeric multiword: letter tokens link; digit token must not become a chip.
+    numeric = by_slug["мені-20-років"]["renderContext"]["componentLinks"]
+    assert numeric == [
+        {"text": "Мені", "targetSlug": "я"},
+        {"text": "років", "targetSlug": "рік"},
+    ]
+    assert all(link["text"] != "20" and not any(ch.isdigit() for ch in link["text"]) for link in numeric)
 
 
 def test_trie_split_and_checksum_fail_closed(fixture_db: Path, tmp_path: Path) -> None:
