@@ -264,4 +264,44 @@ describe('lesson document v1 contract', () => {
 
     expect(lessonSchemaErrors(malformed)).toContain("'answer_key' is a required property");
   });
+
+  test('validates focus_status supported:true with notice_uk:null', () => {
+    const doc = structuredClone(lessonFixture);
+    (doc as any).focus_status = {
+      requested: 'вищий ступінь прикметників',
+      supported: true,
+      notice_uk: null,
+    };
+    expect(lessonSchemaErrors(doc)).toBe('');
+  });
+
+  test('validates focus_status supported:false with the Ukrainian notice string', () => {
+    const doc = structuredClone(lessonFixture);
+    (doc as any).focus_status = {
+      requested: 'вищий ступінь прикметників',
+      supported: false,
+      notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
+    };
+    expect(lessonSchemaErrors(doc)).toBe('');
+  });
+
+  test('rejects focus_status supported:true with a non-null notice_uk', () => {
+    const doc = structuredClone(lessonFixture);
+    (doc as any).focus_status = {
+      requested: 'вищий ступінь прикметників',
+      supported: true,
+      notice_uk: 'Опора не містить достатньо перевіреного матеріалу для фокусу «вищий ступінь прикметників». Вправи спираються лише на текст-опору; додайте приклади або змініть фокус.',
+    };
+    expect(lessonSchemaErrors(doc)).not.toBe('');
+  });
+
+  test('rejects focus_status supported:false with a null notice_uk', () => {
+    const doc = structuredClone(lessonFixture);
+    (doc as any).focus_status = {
+      requested: 'вищий ступінь прикметників',
+      supported: false,
+      notice_uk: null,
+    };
+    expect(lessonSchemaErrors(doc)).not.toBe('');
+  });
 });

@@ -45,7 +45,25 @@
       "items": { "$ref": "#/$defs/rejectedDraft" }
     },
     "created_at": { "type": "string", "format": "date-time" },
-    "updated_at": { "type": "string", "format": "date-time" }
+    "updated_at": { "type": "string", "format": "date-time" },
+    "focus_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "supported", "notice_uk"],
+      "properties": {
+        "requested": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "supported": { "type": "boolean" },
+        "notice_uk": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "supported": { "const": false } } },
+          "then": { "properties": { "notice_uk": { "type": "string" } } },
+          "else": { "properties": { "notice_uk": { "type": "null" } } }
+        }
+      ],
+      "description": "Outcome of the teacher's requested grammar/skill focus for this bake: whether the anchor text supports it, and (when unsupported) an honest learner-language notice explaining why. Absent when no focus was requested."
+    }
   },
   "allOf": [
     {
