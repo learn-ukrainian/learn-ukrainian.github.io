@@ -158,8 +158,8 @@
 ## Catalog-source disposition
 
 - **Institutional record:** ЕСУ, «Зеров Микола Костянтинович» — https://esu.com.ua/article-16057.
-- **Primary-material catalog:** «Сонети і елегії» — https://chtyvo.org.ua/authors/Zerov/Sonety_i_elehii/.
-- **Reading and rights disposition:** лише зовнішні українськомовні посилання; не відтворювати поезію без точного видання й сторінки.
+- **Contextual record:** IEU, «Zerov, Mykola» — https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CE%5CZerovMykola.htm.
+- **Reading and rights disposition:** learner-facing reading лишається зовнішнім українськомовним посиланням ЕСУ; IEU є англомовною контекстуальною опорою. Не відтворювати поезію без точного видання й сторінки.
 - **Image disposition:** текстовий варіант, бо права конкретного портрета не перевірено.
 
 ## Decolonization self-check (run before submitting)

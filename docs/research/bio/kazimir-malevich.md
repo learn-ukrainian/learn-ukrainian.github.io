@@ -157,8 +157,8 @@ His own account of the spark, set in the Ukrainian provinces — useful for grou
 ## Catalog-source disposition
 
 - **Institutional record:** ЕСУ, «Малевич Казимир Северинович» — https://esu.com.ua/article-61120.
-- **Primary-material catalog:** «Казимир Малевич — авторська тека» — https://chtyvo.org.ua/authors/Malevych_Kazymyr/.
-- **Reading and rights disposition:** обидва записи використовуються тільки як зовнішні українськомовні посилання. Жодного тексту не відтворювати без точного видання, локатора й окремої правової підстави.
+- **Contextual record:** IEU, «Malevich, Kazimir» — https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CA%5CMalevichKazimir.htm.
+- **Reading and rights disposition:** learner-facing reading лишається зовнішнім українськомовним посиланням ЕСУ; IEU є англомовною контекстуальною опорою. Жодного тексту не відтворювати без точного видання, локатора й окремої правової підстави.
 - **Image disposition:** текстовий варіант; ліцензію конкретного портрета не встановлено індивідуально.
 
 ## Decolonization self-check (run before submitting)
