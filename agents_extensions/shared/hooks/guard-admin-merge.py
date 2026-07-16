@@ -23,9 +23,31 @@ substring (case-insensitive); erring toward "treat as blocking" is the safe dire
 from __future__ import annotations
 
 import json
+import os
+import re
 import shlex
 import subprocess
 import sys
+
+# Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
+# `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> the guard reads
+# every check state as undeterminable and fail-closes, blocking the legitimate
+# advisory-only --admin merge it exists to permit (review B1, PR #5324). Every gh
+# subprocess below runs with the force vars REMOVED and NO_COLOR pinned; _decolorize()
+# strips any residual escapes. Kept identical to guard-pr-merge.py's copy.
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _gh_env() -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if k not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
+    env["NO_COLOR"] = "1"
+    env["CLICOLOR"] = "0"
+    return env
+
+
+def _decolorize(text: str) -> str:
+    return _ANSI_RE.sub("", text)
+
 
 # A check is treated as BLOCKING unless its name marks it explicitly advisory.
 # Rationale (anti-bypass safe direction): an allowlist of "known required" names would
@@ -215,10 +237,13 @@ def _pr_number(args: list[str]) -> str | None:
         out = subprocess.run(
             ["gh", "pr", "view", "--json", "number", "-q", ".number"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
             timeout=10,
         )
-        return out.stdout.strip() or None
+        # Decolorized before use, not just before json.loads: a colorized "5" is passed
+        # straight to the next gh call as the PR selector, where the escapes break it.
+        return _decolorize(out.stdout or "").strip() or None
     except Exception:
         return None
 
@@ -229,8 +254,9 @@ def _failing_blocking_checks(pr: str) -> list[str] | None:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, "--json", "name,bucket,state"],
             capture_output=True,
+            env=_gh_env(),
             text=True,
-            timeout=20,
+            timeout=8,
         )
     except Exception:
         return None
@@ -242,7 +268,7 @@ def _failing_blocking_checks(pr: str) -> list[str] | None:
         # failing checks" and lets the bypass through — the fail-open bug this closes.
         return [] if out.returncode == 0 else None
     try:
-        rows = json.loads(text)
+        rows = json.loads(_decolorize(text))
     except json.JSONDecodeError:
         return None
     if not isinstance(rows, list):
