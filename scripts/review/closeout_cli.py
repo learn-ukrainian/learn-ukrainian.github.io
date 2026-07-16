@@ -19,6 +19,7 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
+from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
@@ -38,7 +39,14 @@ from scripts.review.target_resolution import (
 
 def _load_state(state_file: Path) -> dict:
     if not state_file.exists():
-        return {"target": None, "target_args": None, "baseline": None, "cycle_outstanding_counts": [], "findings": []}
+        return {
+            "target": None,
+            "target_args": None,
+            "baseline": None,
+            "behavior_proof": {},
+            "cycle_outstanding_counts": [],
+            "findings": [],
+        }
     return json.loads(state_file.read_text(encoding="utf-8"))
 
 
@@ -302,6 +310,80 @@ def _cmd_finding(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_behavior_proof(args: argparse.Namespace) -> int:
+    """Record target-bound behavior proof from the frozen closeout state."""
+    state = _load_state(args.state_file)
+    if not state.get("baseline"):
+        print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
+        return 1
+    baseline = _baseline_from_state(state)
+    target_args = state.get("target_args") or {}
+    repo_root_raw = target_args.get("repo_root")
+    if not isinstance(repo_root_raw, str) or not repo_root_raw:
+        print(json.dumps({"error": "frozen target has no repository root"}), file=sys.stderr)
+        return 1
+    try:
+        target_input_sha256 = compute_target_input_fingerprint(Path(repo_root_raw), baseline.target)
+    except Exception as exc:
+        print(json.dumps({"error": f"target_fingerprint_unavailable:{exc}"}), file=sys.stderr)
+        return 1
+
+    proof = state.setdefault("behavior_proof", {})
+    if args.behavior_action == "emit":
+        if not proof:
+            print(json.dumps({"error": "no behavior proof recorded yet"}), file=sys.stderr)
+            return 1
+        print(json.dumps(proof, indent=2, sort_keys=True))
+        return 0
+
+    if args.status == "pass":
+        if args.command is None and args.step is None:
+            print(json.dumps({"error": "passing proof requires --command or --step"}), file=sys.stderr)
+            return 1
+        if args.command is not None and (not isinstance(args.cwd, str) or not args.cwd.strip()):
+            print(json.dumps({"error": "command proof requires --cwd"}), file=sys.stderr)
+            return 1
+        if args.exit_code is None and (not isinstance(args.result, str) or not args.result.strip()):
+            print(json.dumps({"error": "passing proof requires --exit-code or --result"}), file=sys.stderr)
+            return 1
+        if not isinstance(args.observation, str) or not args.observation.strip():
+            print(json.dumps({"error": "passing proof requires --observation"}), file=sys.stderr)
+            return 1
+        if not isinstance(args.evidence_ref, str) or not args.evidence_ref.strip():
+            print(json.dumps({"error": "passing proof requires --evidence-ref"}), file=sys.stderr)
+            return 1
+        clause: dict[str, object] = {
+            # The claim is derived from the frozen baseline; callers cannot
+            # provide a competing behavior-surface string.
+            "claim": baseline.intended_behavior,
+            "target_input_sha256": target_input_sha256,
+            "observation": args.observation,
+            "evidence_ref": args.evidence_ref,
+        }
+        if args.command is not None:
+            clause["command"] = args.command
+            clause["cwd"] = args.cwd
+        else:
+            clause["step"] = args.step
+        if args.exit_code is not None:
+            clause["exit_code"] = args.exit_code
+        else:
+            clause["result"] = args.result
+        surface: dict[str, object] = {"status": "pass", "clauses": [clause]}
+    else:
+        if args.status == "n/a" and (not isinstance(args.reason, str) or not args.reason.strip()):
+            print(json.dumps({"error": "n/a proof requires --reason"}), file=sys.stderr)
+            return 1
+        surface = {"status": args.status, "reason": args.reason}
+
+    if args.surface == "source_blind":
+        surface["blind_enforced"] = args.blind_enforced
+    proof[args.surface] = surface
+    _save_state(args.state_file, state)
+    print(json.dumps(proof, indent=2, sort_keys=True))
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--state-file", required=True, type=Path)
@@ -388,6 +470,29 @@ def _build_parser() -> argparse.ArgumentParser:
     frep = finding_sub.add_parser("report")
     frep.add_argument("--id", required=False, default=None, help="unused, present for CLI symmetry")
     p_finding.set_defaults(func=_cmd_finding)
+
+    p_behavior = sub.add_parser(
+        "behavior-proof",
+        help="Record or emit behavior proof bound to the frozen target",
+    )
+    behavior_sub = p_behavior.add_subparsers(dest="behavior_action", required=True)
+    behavior_record = behavior_sub.add_parser("record", help="Record one source-aware or source-blind proof surface")
+    behavior_record.add_argument("--surface", required=True, choices=["source_aware", "source_blind"])
+    behavior_record.add_argument("--status", required=True, choices=["pass", "fail", "n/a"])
+    command_or_step = behavior_record.add_mutually_exclusive_group()
+    command_or_step.add_argument("--command")
+    command_or_step.add_argument("--step")
+    behavior_record.add_argument("--cwd")
+    result = behavior_record.add_mutually_exclusive_group()
+    result.add_argument("--exit-code", type=int)
+    result.add_argument("--result")
+    behavior_record.add_argument("--observation")
+    behavior_record.add_argument("--evidence-ref")
+    behavior_record.add_argument("--reason")
+    behavior_record.add_argument("--blind-enforced", action="store_true")
+    behavior_record.set_defaults(func=_cmd_behavior_proof)
+    behavior_emit = behavior_sub.add_parser("emit", help="Print recorded proof JSON for verify_review")
+    behavior_emit.set_defaults(func=_cmd_behavior_proof)
 
     return parser
 

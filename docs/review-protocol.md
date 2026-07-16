@@ -132,7 +132,7 @@ Reviewer JSON is hashed separately as `reviewer_output_sha256`.
   --reviewer-model '...' --reviewer-family '...' --reviewer-harness '...' \
   --reviewer-selection-reason '...' \
   --tests-json '{"commands":["pytest ..."],"passed":true}' \
-  --behavior-proof-json '{"source_aware":{"status":"pass"},"source_blind":{"status":"pass"}}' \
+  --behavior-proof-state-file "$STATE_FILE" \
   --routing-lineage-json '{"implementation_agent":"...","accountable_advisor":"..."}' \
   --dispositions-json '{"F001":{"disposition":"in_scope_blocker","rationale":"..."}}' \
   --receipt-path /tmp/review-receipt.json
@@ -162,9 +162,16 @@ A valid **clean** or **actionable** receipt requires:
 - `tests` with concrete `commands` and `passed: true`, **or** explicitly
   supported `status: "n/a"` with a non-empty `reason`. `passed: false` /
   `status: "fail"` makes the receipt non-clean / `actionable` (never exit 0);
-- both `source_aware` and `source_blind` in `behavior_proof`, each with
-  `status: "pass"` or `status: "n/a"` + non-empty `reason`. `status: "fail"`
-  is non-clean / `actionable`; missing/invalid status is `incomplete`;
+- both `source_aware` and `source_blind` in `behavior_proof`. A `pass` needs
+  at least one complete clause: the frozen `intended_behavior` claim, a
+  command or manual step (and `cwd` for a command), exit/result, observation,
+  evidence reference, and the exact target-input fingerprint. Record it with
+  `closeout_cli behavior-proof record`; do not hand-author a competing surface
+  claim. `n/a` requires a non-empty `reason`; `fail` is non-clean / actionable;
+  missing or incomplete proof is `incomplete`;
+- `source_blind.blind_enforced` is `false` unless a target-bound isolation
+  attestation validates through the isolation interface. A false value is
+  rendered as `declared-blind/unenforced`, never as mechanically enforced;
 - explicit non-empty `routing_lineage` (supplied by the runner; not invented);
 - for every finding: disposition key present, disposition ∈
   `in_scope_blocker` | `follow_up` | `stop_and_escalate`, non-empty rationale;
@@ -184,6 +191,18 @@ Local / CI (no GitHub mutation) — full envelope example:
 TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --mode local --repo-root . | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["input_sha256"])')
 
+# After `target` and `freeze`, record the proof against that frozen state.
+# The command derives `claim` from `--intended-behavior`; it does not accept a
+# separate behavior-surface field.
+.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+  behavior-proof record --surface source_aware --status pass \
+  --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
+  --exit-code 0 --observation 'help rendered' --evidence-ref 'terminal:proof-aware'
+.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+  behavior-proof record --surface source_blind --status pass \
+  --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
+  --exit-code 0 --observation 'help rendered as a user' --evidence-ref 'terminal:proof-blind'
+
 .venv/bin/python scripts/verify_review.py --from-stdin --mode local \
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
@@ -193,7 +212,7 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --reviewer-model 'grok-4.5' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \
   --tests-json '{"commands":["pytest tests/test_verify_review.py"],"passed":true}' \
-  --behavior-proof-json '{"source_aware":{"status":"pass"},"source_blind":{"status":"n/a","reason":"no user-visible surface"}}' \
+  --behavior-proof-state-file "$STATE_FILE" \
   --routing-lineage-json '{"implementation_agent":"runner-supplied","accountable_advisor":"runner-supplied"}' \
   --receipt-path /tmp/review-receipt.json
 ```

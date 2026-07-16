@@ -119,6 +119,97 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert len(state["findings"]) == 3  # raised, adjudicated, applied
 
 
+def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    assert _run_cli(state_file, *_freeze_kwargs("#5302")).returncode == 0
+
+    common = (
+        "--status",
+        "pass",
+        "--command",
+        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        "--cwd",
+        str(repo),
+        "--exit-code",
+        "0",
+        "--observation",
+        "command completed and printed help",
+        "--evidence-ref",
+        "test:closeout-cli-help",
+    )
+    aware = _run_cli(state_file, "behavior-proof", "record", "--surface", "source_aware", *common)
+    blind = _run_cli(state_file, "behavior-proof", "record", "--surface", "source_blind", *common)
+    assert aware.returncode == 0, aware.stderr
+    assert blind.returncode == 0, blind.stderr
+
+    recorded = json.loads(_run_cli(state_file, "behavior-proof", "emit").stdout)
+    assert recorded["source_aware"]["clauses"][0]["claim"] == "add feature"
+    assert recorded["source_blind"]["blind_enforced"] is False
+
+    review_file = tmp_path / "review.json"
+    review_file.write_text(
+        json.dumps(
+            {
+                "schema_version": "code-review-findings.v1",
+                "overall": {"correctness": "correct", "explanation": "clean", "confidence": 0.9},
+                "findings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    project_root = Path(__file__).resolve().parent.parent
+    verify = subprocess.run(
+        [
+            ".venv/bin/python",
+            "scripts/verify_review.py",
+            "--review-file",
+            str(review_file),
+            "--mode",
+            "local",
+            "--repo-root",
+            str(repo),
+            "--expected-input-sha256",
+            recorded["source_aware"]["clauses"][0]["target_input_sha256"],
+            "--issue-ref",
+            "#5302",
+            "--scope-json",
+            '{"owner_boundary":"repo root"}',
+            "--author-model",
+            "author-model",
+            "--author-family",
+            "openai",
+            "--author-harness",
+            "codex",
+            "--author-selection-reason",
+            "implementation",
+            "--reviewer-model",
+            "reviewer-model",
+            "--reviewer-family",
+            "xai",
+            "--reviewer-harness",
+            "grok",
+            "--reviewer-selection-reason",
+            "cross-family-review",
+            "--tests-json",
+            '{"commands":["pytest"],"passed":true}',
+            "--behavior-proof-state-file",
+            str(state_file),
+            "--routing-lineage-json",
+            '{"implementation_agent":"test","accountable_advisor":"test"}',
+        ],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+    )
+    assert verify.returncode == 0, verify.stderr
+    receipt = json.loads(verify.stdout)
+    assert receipt["behavior_proof"]["source_aware"] == recorded["source_aware"]
+    assert receipt["behavior_proof"]["source_blind"]["blind_enforcement"] == "declared-blind/unenforced"
+
+
 def test_check_expansion_commit_mode_measures_committed_fixes_not_clean_tree(tmp_path):
     """A commit/branch/pr-mode baseline must be re-measured against the
     committed post-fix head, not the (always-clean) local working tree.
