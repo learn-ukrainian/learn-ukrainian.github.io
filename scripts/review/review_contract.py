@@ -10,6 +10,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -30,6 +32,7 @@ from scripts.review.target_resolution import ReviewTarget
 
 SCHEMA_VERSION = "code-review-findings.v1"
 RECEIPT_SCHEMA_VERSION = "code-review-receipt.v1"
+BEHAVIOR_PROOF_SCHEMA_VERSION = "behavior-proof.v1"
 SCHEMA_RELATIVE_PATH = "schemas/code-review-findings.v1.schema.json"
 
 # Stable exit classes (documented in docs/review-protocol.md).
@@ -258,6 +261,12 @@ class VerifyContext:
     expected_input_sha256: str | None = None
     tests: dict[str, Any] = field(default_factory=dict)
     behavior_proof: dict[str, Any] = field(default_factory=dict)
+    # Supplied only by the frozen closeout state. A passing clause must use
+    # this exact claim; callers must not substitute a free-text surface.
+    frozen_intended_behavior: str = ""
+    # #5285 owns actual isolation verification. This narrow boundary lets its
+    # attestation interface plug in without duplicating isolation logic here.
+    isolation_attestation_validator: Callable[[dict[str, Any], ReviewTarget], bool] | None = None
     dispositions: dict[str, dict[str, str]] = field(default_factory=dict)
     routing_lineage: dict[str, str] = field(default_factory=dict)
 
@@ -326,17 +335,26 @@ def _tests_envelope_status(tests: dict[str, Any]) -> tuple[list[str], list[str]]
 
 def _behavior_proof_envelope_status(
     behavior_proof: Any,
+    *,
+    target_input_sha256: str,
+    frozen_intended_behavior: str,
+    isolation_attestation_validator: Callable[[dict[str, Any], ReviewTarget], bool] | None,
+    target: ReviewTarget,
 ) -> tuple[list[str], list[str]]:
     """Validate source-aware / source-blind proof semantics.
 
-    Each side must be ``status: pass`` or ``status: n/a`` with a non-empty
-    reason. Explicit ``fail`` is a proof failure (non-clean/actionable).
-    Missing or invalid status remains incomplete.
+    Each side must be ``status: pass`` backed by a complete, target-bound
+    clause, or ``status: n/a`` with a non-empty reason. The clause claim is
+    the frozen intended behavior, never a separate free-text behavior-surface
+    field. Explicit ``fail`` is a proof failure (non-clean/actionable).
+    Missing or invalid evidence remains incomplete.
     """
     incomplete: list[str] = []
     failures: list[str] = []
     if not isinstance(behavior_proof, dict):
         return ["behavior_proof_invalid"], failures
+    if behavior_proof.get("schema_version") != BEHAVIOR_PROOF_SCHEMA_VERSION:
+        incomplete.append("behavior_proof_schema_version_invalid")
 
     for key in ("source_aware", "source_blind"):
         proof = behavior_proof.get(key)
@@ -348,10 +366,85 @@ def _behavior_proof_envelope_status(
             incomplete.append(f"behavior_proof.{key}_status_missing")
             continue
         status = status_raw.strip().lower()
+        if key == "source_blind":
+            blind_enforced = proof.get("blind_enforced")
+            if blind_enforced is not None and not isinstance(blind_enforced, bool):
+                incomplete.append("behavior_proof.source_blind_blind_enforced_invalid")
+            if status == "pass" and not isinstance(blind_enforced, bool):
+                incomplete.append("behavior_proof.source_blind_blind_enforced_missing")
+            if blind_enforced is True:
+                attestation = proof.get("isolation_attestation")
+                if not isinstance(attestation, dict) or not attestation:
+                    incomplete.append("behavior_proof.source_blind_enforced_without_attestation")
+                elif attestation.get("target_input_sha256") != target_input_sha256:
+                    incomplete.append("behavior_proof.source_blind_attestation_target_mismatch")
+                elif isolation_attestation_validator is None:
+                    incomplete.append("behavior_proof.source_blind_attestation_unvalidated")
+                else:
+                    try:
+                        valid_attestation = isolation_attestation_validator(attestation, target)
+                    except Exception:
+                        valid_attestation = False
+                    if valid_attestation is not True:
+                        incomplete.append("behavior_proof.source_blind_attestation_invalid")
         if status == "fail":
             failures.append(f"behavior_proof.{key}_failed")
             continue
         if status == "pass":
+            if not isinstance(frozen_intended_behavior, str) or not frozen_intended_behavior.strip():
+                incomplete.append(f"behavior_proof.{key}_frozen_intended_behavior_missing")
+                continue
+            clauses = proof.get("clauses")
+            if not isinstance(clauses, list) or not clauses:
+                incomplete.append(f"behavior_proof.{key}_clauses_missing")
+                continue
+
+            complete_clause_found = False
+            for clause in clauses:
+                if not isinstance(clause, dict):
+                    continue
+                claim = clause.get("claim")
+                binding = clause.get("target_input_sha256")
+                command = clause.get("command")
+                step = clause.get("step")
+                has_command = isinstance(command, str) and bool(command.strip())
+                has_step = isinstance(step, str) and bool(step.strip())
+                has_cwd = isinstance(clause.get("cwd"), str) and bool(clause["cwd"].strip())
+                exit_code = clause.get("exit_code")
+                has_exit = isinstance(exit_code, int) and not isinstance(exit_code, bool)
+                result = clause.get("result")
+                has_result = isinstance(result, str) and bool(result.strip())
+                observation = clause.get("observation")
+                evidence_ref = clause.get("evidence_ref")
+                complete = (
+                    claim == frozen_intended_behavior
+                    and binding == target_input_sha256
+                    and (has_command ^ has_step)
+                    and (not has_command or has_cwd)
+                    and (has_exit or has_result)
+                    and isinstance(observation, str)
+                    and bool(observation.strip())
+                    and isinstance(evidence_ref, str)
+                    and bool(evidence_ref.strip())
+                )
+                if complete:
+                    complete_clause_found = True
+                    break
+            if not complete_clause_found:
+                incomplete.append(f"behavior_proof.{key}_complete_clause_missing")
+                if not any(
+                    isinstance(clause, dict)
+                    and clause.get("target_input_sha256") == target_input_sha256
+                    for clause in clauses
+                ):
+                    incomplete.append(f"behavior_proof.{key}_target_binding_mismatch")
+                if not any(
+                    isinstance(clause, dict)
+                    and clause.get("claim") == frozen_intended_behavior
+                    for clause in clauses
+                ):
+                    incomplete.append(f"behavior_proof.{key}_claim_mismatch")
+                continue
             continue
         if status in {"n/a", "na"}:
             reason = proof.get("reason")
@@ -425,7 +518,13 @@ def validate_closeout_envelope(
     incomplete.extend(t_incomplete)
     proof_failures.extend(t_failures)
 
-    b_incomplete, b_failures = _behavior_proof_envelope_status(ctx.behavior_proof)
+    b_incomplete, b_failures = _behavior_proof_envelope_status(
+        ctx.behavior_proof,
+        target_input_sha256=ctx.input_sha256,
+        frozen_intended_behavior=ctx.frozen_intended_behavior,
+        isolation_attestation_validator=ctx.isolation_attestation_validator,
+        target=ctx.target,
+    )
     incomplete.extend(b_incomplete)
     proof_failures.extend(b_failures)
 
@@ -558,7 +657,7 @@ def build_receipt(
         "reviewer_output_sha256": ctx.reviewer_output_sha256,
         "findings": [v.to_dict() for v in validations],
         "tests": ctx.tests,
-        "behavior_proof": ctx.behavior_proof,
+        "behavior_proof": _render_behavior_proof(ctx.behavior_proof),
         "final_disposition": final_disposition,
         "exit_code": exit_code,
         "error": error,
@@ -572,6 +671,15 @@ def build_receipt(
             "finding_ids": [f["id"] for f in payload.get("findings", [])],
         }
     return receipt
+
+
+def _render_behavior_proof(behavior_proof: dict[str, Any]) -> dict[str, Any]:
+    """Make declared-but-unenforced source-blind proof explicit in receipts."""
+    rendered = deepcopy(behavior_proof)
+    source_blind = rendered.get("source_blind")
+    if isinstance(source_blind, dict) and source_blind.get("blind_enforced") is False:
+        source_blind["blind_enforcement"] = "declared-blind/unenforced"
+    return rendered
 
 
 def verify_review(

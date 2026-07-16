@@ -47,6 +47,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
+    BEHAVIOR_PROOF_SCHEMA_VERSION,
     EXIT_INVALID,
     AgentIdentity,
     ContractError,
@@ -129,6 +130,54 @@ def _receipt_path_allowed(path: Path) -> bool:
     if "review" in parts and path.name.endswith("-review.md"):
         return False
     return "telemetry" not in parts
+
+
+def _load_behavior_proof_state(
+    state_file: Path,
+    *,
+    target,
+) -> tuple[dict, str]:
+    """Load proof and its claim from the canonical frozen closeout state."""
+    try:
+        state = json.loads(state_file.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ContractError(
+            f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID
+        ) from exc
+    except json.JSONDecodeError as exc:
+        raise ContractError(
+            f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID
+        ) from exc
+    if not isinstance(state, dict):
+        raise ContractError("behavior_proof_state_must_be_object", exit_code=EXIT_INVALID)
+    baseline = state.get("baseline")
+    proof = state.get("behavior_proof")
+    if not isinstance(baseline, dict) or not isinstance(proof, dict):
+        raise ContractError("behavior_proof_state_incomplete", exit_code=EXIT_INVALID)
+    if proof.get("schema_version") != BEHAVIOR_PROOF_SCHEMA_VERSION:
+        raise ContractError("behavior_proof_state_schema_version_invalid", exit_code=EXIT_INVALID)
+    intended_behavior = baseline.get("intended_behavior")
+    saved_target = baseline.get("target")
+    if not isinstance(intended_behavior, str) or not intended_behavior.strip():
+        raise ContractError("behavior_proof_state_intended_behavior_missing", exit_code=EXIT_INVALID)
+    if not isinstance(saved_target, dict):
+        raise ContractError("behavior_proof_state_target_missing", exit_code=EXIT_INVALID)
+    stable_target_fields = {
+        "mode": target.mode,
+        "base_sha": target.base_sha,
+        "head_sha": target.head_sha,
+        "changed_paths": list(target.changed_paths),
+        "non_test_loc": target.non_test_loc,
+        "clean_tree": target.clean_tree,
+    }
+    if any(field not in saved_target for field in stable_target_fields):
+        raise ContractError("behavior_proof_state_target_invalid", exit_code=EXIT_INVALID)
+    if any(
+        saved_target[field] != expected_value
+        for field, expected_value in stable_target_fields.items()
+    ):
+        raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
+    return proof, intended_behavior
 
 
 def _post_summary(issue: int, receipt: dict) -> None:
@@ -231,7 +280,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--behavior-proof-json",
         default="",
-        help="JSON object with source_aware / source_blind proof fields",
+        help="Legacy JSON object; passing proof needs --behavior-proof-state-file for its frozen claim",
+    )
+    parser.add_argument(
+        "--behavior-proof-state-file",
+        type=Path,
+        help=(
+            "Canonical closeout state from `closeout_cli behavior-proof record`; "
+            "loads target-bound proof and frozen intended behavior without hand-authored JSON"
+        ),
     )
     parser.add_argument(
         "--dispositions-json",
@@ -325,9 +382,6 @@ def main(argv: list[str] | None = None) -> int:
     try:
         scope = _load_json_arg(args.scope_json or None, label="--scope-json")
         tests = _load_json_arg(args.tests_json or None, label="--tests-json")
-        behavior_proof = _load_json_arg(
-            args.behavior_proof_json or None, label="--behavior-proof-json"
-        )
         dispositions = _load_json_arg(
             args.dispositions_json or None, label="--dispositions-json"
         )
@@ -360,6 +414,36 @@ def main(argv: list[str] | None = None) -> int:
         )
         return EXIT_INVALID
 
+    try:
+        if args.behavior_proof_state_file is not None:
+            if args.behavior_proof_json:
+                raise ContractError(
+                    "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file",
+                    exit_code=EXIT_INVALID,
+                )
+            behavior_proof, frozen_intended_behavior = _load_behavior_proof_state(
+                args.behavior_proof_state_file,
+                target=target,
+            )
+        else:
+            behavior_proof = _load_json_arg(
+                args.behavior_proof_json or None, label="--behavior-proof-json"
+            )
+            frozen_intended_behavior = ""
+    except ContractError as exc:
+        print(
+            json.dumps(
+                {
+                    "error": str(exc),
+                    "final_disposition": "invalid",
+                    "exit_code": EXIT_INVALID,
+                },
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_INVALID
+
     ctx = VerifyContext(
         issue_ref=issue_ref,
         scope=scope,
@@ -383,6 +467,7 @@ def main(argv: list[str] | None = None) -> int:
         expected_input_sha256=args.expected_input_sha256 or None,
         tests=tests,
         behavior_proof=behavior_proof,
+        frozen_intended_behavior=frozen_intended_behavior,
         dispositions={
             str(k): v if isinstance(v, dict) else {"disposition": str(v)}
             for k, v in dispositions.items()

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,7 @@ from scripts.review.evidence import (
     split_lines_preserve_content,
 )
 from scripts.review.review_contract import (
+    BEHAVIOR_PROOF_SCHEMA_VERSION,
     EXIT_ACTIONABLE,
     EXIT_CLEAN,
     EXIT_INCOMPLETE,
@@ -136,6 +138,19 @@ def _finding(
 def _full_envelope_kwargs(repo: Path, target, **overrides):
     """Runner envelope sufficient for clean/actionable closeout."""
     fp = compute_target_input_fingerprint(repo, target)
+    intended_behavior = "test intended behavior"
+
+    def clause(surface: str) -> dict:
+        return {
+            "claim": intended_behavior,
+            "target_input_sha256": fp,
+            "command": f"prove {surface}",
+            "cwd": str(repo),
+            "exit_code": 0,
+            "observation": f"{surface} observed",
+            "evidence_ref": f"test:{surface}",
+        }
+
     base = {
         "issue_ref": "#5284",
         "scope": {"owner_boundary": "scripts/verify_review.py"},
@@ -148,9 +163,15 @@ def _full_envelope_kwargs(repo: Path, target, **overrides):
         ),
         "tests": {"commands": ["pytest"], "passed": True},
         "behavior_proof": {
-            "source_aware": {"status": "pass"},
-            "source_blind": {"status": "pass", "note": "cli-proof"},
+            "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
+            "source_aware": {"status": "pass", "clauses": [clause("source-aware")]},
+            "source_blind": {
+                "status": "pass",
+                "clauses": [clause("source-blind")],
+                "blind_enforced": False,
+            },
         },
+        "frozen_intended_behavior": intended_behavior,
         "routing_lineage": {
             "implementation_agent": "test-impl",
             "accountable_advisor": "test-advisor",
@@ -182,6 +203,7 @@ def _ctx(
         expected_input_sha256=env.get("expected_input_sha256"),
         tests=env["tests"],
         behavior_proof=env["behavior_proof"],
+        frozen_intended_behavior=env["frozen_intended_behavior"],
         dispositions=env["dispositions"],
         routing_lineage=env["routing_lineage"],
     )
@@ -190,6 +212,40 @@ def _ctx(
 def _cli_envelope_args(repo: Path, *, dispositions: dict | None = None) -> list[str]:
     target = resolve_local_target(repo)
     fp = compute_target_input_fingerprint(repo, target)
+    intended_behavior = "test intended behavior"
+    state_file = repo.parent / "behavior-proof-state.json"
+
+    def clause(surface: str) -> dict:
+        return {
+            "claim": intended_behavior,
+            "target_input_sha256": fp,
+            "command": f"prove {surface}",
+            "cwd": str(repo),
+            "exit_code": 0,
+            "observation": f"{surface} observed",
+            "evidence_ref": f"test:{surface}",
+        }
+
+    state_file.write_text(
+        json.dumps(
+            {
+                "baseline": {
+                    "intended_behavior": intended_behavior,
+                    "target": asdict(target),
+                },
+                "behavior_proof": {
+                    "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
+                    "source_aware": {"status": "pass", "clauses": [clause("source-aware")]},
+                    "source_blind": {
+                        "status": "pass",
+                        "clauses": [clause("source-blind")],
+                        "blind_enforced": False,
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
     args = [
         "--mode",
         "local",
@@ -219,13 +275,8 @@ def _cli_envelope_args(repo: Path, *, dispositions: dict | None = None) -> list[
         "cross-family-gate",
         "--tests-json",
         json.dumps({"commands": ["pytest"], "passed": True}),
-        "--behavior-proof-json",
-        json.dumps(
-            {
-                "source_aware": {"status": "pass"},
-                "source_blind": {"status": "pass"},
-            }
-        ),
+        "--behavior-proof-state-file",
+        str(state_file),
         "--routing-lineage-json",
         json.dumps(
             {
@@ -745,6 +796,19 @@ def test_target_fingerprint_changes_after_local_mutation(tmp_path):
     assert len(fp1) == 64
 
 
+def test_target_fingerprint_ignores_equivalent_ref_description(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "feature")
+    target = resolve_commit_target(repo, "HEAD")
+    equivalent_ref = replace(target, description="same commit via branch name")
+
+    assert compute_target_input_fingerprint(
+        repo, target
+    ) == compute_target_input_fingerprint(repo, equivalent_ref)
+
+
 def test_missing_expected_fingerprint_cannot_exit_clean(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
@@ -1261,6 +1325,7 @@ def test_failed_behavior_proof_cannot_exit_clean(tmp_path):
             target,
             raw,
             behavior_proof={
+                "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
                 "source_aware": {"status": "fail"},
                 "source_blind": {"status": "fail"},
             },
@@ -1269,6 +1334,134 @@ def test_failed_behavior_proof_cannot_exit_clean(tmp_path):
     assert result.exit_code == EXIT_ACTIONABLE
     assert "behavior_proof.source_aware_failed" in (result.error or "")
     assert "behavior_proof.source_blind_failed" in (result.error or "")
+
+
+def test_bare_passing_behavior_proof_is_incomplete(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            behavior_proof={
+                "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
+                "source_aware": {"status": "pass"},
+                "source_blind": {"status": "pass", "blind_enforced": False},
+            },
+        ),
+    )
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_aware_clauses_missing" in (result.error or "")
+    assert "behavior_proof.source_blind_clauses_missing" in (result.error or "")
+
+
+def test_mismatched_behavior_proof_target_binding_is_incomplete(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    proof["source_aware"]["clauses"][0]["target_input_sha256"] = "wrong-target"
+    result = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_aware_target_binding_mismatch" in (result.error or "")
+
+
+def test_missing_behavior_proof_target_binding_is_incomplete(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    del proof["source_aware"]["clauses"][0]["target_input_sha256"]
+    result = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_aware_target_binding_mismatch" in (result.error or "")
+
+
+def test_blind_enforcement_requires_attestation_and_unenforced_is_rendered(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    unenforced = verify_review(raw, _ctx(repo, target, raw))
+    assert unenforced.exit_code == EXIT_CLEAN
+    assert (
+        unenforced.receipt["behavior_proof"]["source_blind"]["blind_enforcement"]
+        == "declared-blind/unenforced"
+    )
+
+    enforced_proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    enforced_proof["source_blind"]["blind_enforced"] = True
+    enforced = verify_review(raw, _ctx(repo, target, raw, behavior_proof=enforced_proof))
+    assert enforced.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_blind_enforced_without_attestation" in (enforced.error or "")
+
+
+def test_na_blind_proof_requires_reason_but_not_blind_enforced(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    del proof["source_blind"]["blind_enforced"]
+    missing_pass_boolean = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert missing_pass_boolean.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_blind_blind_enforced_missing" in (
+        missing_pass_boolean.error or ""
+    )
+
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    proof["source_blind"] = {"status": "n/a"}
+    missing_reason = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert missing_reason.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_blind_na_reason_empty" in (missing_reason.error or "")
+
+    proof["source_blind"] = {
+        "status": "n/a",
+        "reason": "no user-visible surface",
+        "blind_enforced": True,
+    }
+    unjustified_enforcement = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert unjustified_enforcement.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof.source_blind_enforced_without_attestation" in (
+        unjustified_enforcement.error or ""
+    )
+
+
+def test_unversioned_green_behavior_proof_cannot_exit_clean(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    del proof["schema_version"]
+    result = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
+    assert result.exit_code == EXIT_INCOMPLETE
+    assert "behavior_proof_schema_version_invalid" in (result.error or "")
+
+
+def test_blind_enforcement_uses_optional_target_bound_attestation_validator(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    raw = json.dumps(_clean_payload())
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    proof["source_blind"]["blind_enforced"] = True
+    proof["source_blind"]["isolation_attestation"] = {
+        "target_input_sha256": compute_target_input_fingerprint(repo, target),
+        "attestation_id": "provided-by-5285",
+    }
+    ctx = _ctx(repo, target, raw, behavior_proof=proof)
+    ctx.isolation_attestation_validator = lambda attestation, reviewed_target: (
+        attestation["attestation_id"] == "provided-by-5285" and reviewed_target == target
+    )
+    result = verify_review(raw, ctx)
+    assert result.exit_code == EXIT_CLEAN
 
 
 def test_same_family_lineage_cannot_exit_clean(tmp_path):
@@ -1300,6 +1493,11 @@ def test_justified_na_tests_and_behavior_proof_can_exit_clean(tmp_path):
     (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
     target = resolve_local_target(repo)
     raw = json.dumps(_clean_payload())
+    behavior_proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    behavior_proof["source_blind"] = {
+        "status": "n/a",
+        "reason": "no user-visible surface",
+    }
     result = verify_review(
         raw,
         _ctx(
@@ -1310,13 +1508,7 @@ def test_justified_na_tests_and_behavior_proof_can_exit_clean(tmp_path):
                 "status": "n/a",
                 "reason": "no automated suite for docs-only surface",
             },
-            behavior_proof={
-                "source_aware": {"status": "pass"},
-                "source_blind": {
-                    "status": "n/a",
-                    "reason": "no user-visible surface",
-                },
-            },
+            behavior_proof=behavior_proof,
         ),
     )
     assert result.exit_code == EXIT_CLEAN
@@ -1335,6 +1527,7 @@ def test_missing_behavior_status_is_incomplete(tmp_path):
             target,
             raw,
             behavior_proof={
+                "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
                 "source_aware": {"note": "present without status"},
                 "source_blind": {"status": "pass"},
             },
@@ -1490,6 +1683,78 @@ def test_cli_malformed_envelope_json_exits_invalid(tmp_path, capsys):
         assert "invalid_json" in data["error"]
 
 
+def test_behavior_proof_state_rejects_invalid_shapes_and_bytes(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    state_file = tmp_path / "state.json"
+
+    state_file.write_text("{not-json", encoding="utf-8")
+    with pytest.raises(ContractError, match="behavior_proof_state_invalid_json") as exc:
+        verify_review_cli._load_behavior_proof_state(state_file, target=target)
+    assert exc.value.exit_code == EXIT_INVALID
+
+    state_file.write_bytes(b"\xff")
+    with pytest.raises(ContractError, match="behavior_proof_state_unreadable") as exc:
+        verify_review_cli._load_behavior_proof_state(state_file, target=target)
+    assert exc.value.exit_code == EXIT_INVALID
+
+    state_file.write_text(json.dumps({"baseline": {"intended_behavior": "x"}, "behavior_proof": None}), encoding="utf-8")
+    with pytest.raises(ContractError, match="behavior_proof_state_incomplete"):
+        verify_review_cli._load_behavior_proof_state(state_file, target=target)
+
+
+def test_behavior_proof_state_checks_stable_target_identity_not_description(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "feature")
+    target = resolve_commit_target(repo, "HEAD")
+    proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
+    state_file = tmp_path / "state.json"
+    state_file.write_text(
+        json.dumps(
+            {
+                "baseline": {
+                    "intended_behavior": "test intended behavior",
+                    "target": {**asdict(target), "description": "equivalent ref display"},
+                },
+                "behavior_proof": proof,
+            }
+        ),
+        encoding="utf-8",
+    )
+    loaded_proof, claim = verify_review_cli._load_behavior_proof_state(state_file, target=target)
+    assert loaded_proof == proof
+    assert claim == "test intended behavior"
+
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    state["baseline"]["target"]["changed_paths"] = ["different.py"]
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    with pytest.raises(ContractError, match="behavior_proof_state_target_mismatch"):
+        verify_review_cli._load_behavior_proof_state(state_file, target=target)
+
+    state["baseline"]["target"] = asdict(target)
+    state["behavior_proof"] = {key: value for key, value in proof.items() if key != "schema_version"}
+    state_file.write_text(json.dumps(state), encoding="utf-8")
+    with pytest.raises(ContractError, match="behavior_proof_state_schema_version_invalid"):
+        verify_review_cli._load_behavior_proof_state(state_file, target=target)
+
+
+def test_cli_rejects_dual_behavior_proof_sources(tmp_path, capsys):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
+    review = tmp_path / "review.json"
+    review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
+    args = _cli_envelope_args(repo)
+    code = verify_review_cli.main(
+        ["--review-file", str(review), *args, "--behavior-proof-json", json.dumps({})]
+    )
+    assert code == EXIT_INVALID
+    data = json.loads(capsys.readouterr().err)
+    assert data["error"] == "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file"
+
+
 def test_cli_failed_proof_and_same_family_non_clean(tmp_path, capsys):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
@@ -1539,6 +1804,7 @@ def test_cli_failed_proof_and_same_family_non_clean(tmp_path, capsys):
             "--behavior-proof-json",
             json.dumps(
                 {
+                    "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
                     "source_aware": {"status": "fail"},
                     "source_blind": {"status": "fail"},
                 }
@@ -1562,8 +1828,9 @@ def test_cli_failed_proof_and_same_family_non_clean(tmp_path, capsys):
             "--behavior-proof-json",
             json.dumps(
                 {
-                    "source_aware": {"status": "pass"},
-                    "source_blind": {"status": "pass"},
+                    "schema_version": BEHAVIOR_PROOF_SCHEMA_VERSION,
+                    "source_aware": {"status": "n/a", "reason": "not exercised"},
+                    "source_blind": {"status": "n/a", "reason": "not exercised"},
                 }
             ),
         ]

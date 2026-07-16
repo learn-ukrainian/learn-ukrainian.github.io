@@ -273,6 +273,30 @@ happen. There is no repo-wide "verify" skill or tool that does this for
 you generically; do not invoke or reference one that doesn't exist. Use
 whatever real, product-specific surface applies:
 
+Record each surface through the canonical closeout state; do not hand-author
+`--behavior-proof-json`. This binds the proof to the frozen target and derives
+its clause claim from the frozen `intended_behavior`:
+
+```bash
+.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+  behavior-proof record --surface source_aware --status pass \
+  --command '<actual command>' --cwd . --exit-code 0 \
+  --observation '<what happened>' --evidence-ref '<durable evidence reference>'
+.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+  behavior-proof record --surface source_blind --status pass \
+  --command '<actual user-facing command>' --cwd . --exit-code 0 \
+  --observation '<what happened>' --evidence-ref '<durable evidence reference>'
+```
+
+The recorder emits `behavior_proof.schema_version: behavior-proof.v1`; the
+verifier rejects unversioned proof. Then pass `--behavior-proof-state-file
+"$STATE_FILE"` to `scripts/verify_review.py`. A `source_blind` `pass` records
+an explicit `blind_enforced: false` by default; its receipt is explicitly
+`declared-blind/unenforced` unless a target-bound isolation attestation is
+validated by the isolation interface. Any `blind_enforced: true` requires that
+attestation, including `n/a`; ordinary `n/a` has a non-empty reason and omits
+the field.
+
 - **Python CLI** (e.g. this closeout CLI itself): invoke the actual
   entry point from a shell with real arguments —
   `.venv/bin/python -m <module> <args>` — and read its stdout/stderr/exit

@@ -19,6 +19,7 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
+from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
@@ -35,11 +36,32 @@ from scripts.review.target_resolution import (
     rev_parse,
 )
 
+BEHAVIOR_PROOF_SCHEMA_VERSION = "behavior-proof.v1"
+
+
+class CloseoutStateError(RuntimeError):
+    """The canonical closeout state is malformed or cannot be read."""
+
 
 def _load_state(state_file: Path) -> dict:
     if not state_file.exists():
-        return {"target": None, "target_args": None, "baseline": None, "cycle_outstanding_counts": [], "findings": []}
-    return json.loads(state_file.read_text(encoding="utf-8"))
+        return {
+            "target": None,
+            "target_args": None,
+            "baseline": None,
+            "behavior_proof": {},
+            "cycle_outstanding_counts": [],
+            "findings": [],
+        }
+    try:
+        state = json.loads(state_file.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError) as exc:
+        raise CloseoutStateError(f"state_unreadable:{exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise CloseoutStateError(f"state_invalid_json:{exc.msg}") from exc
+    if not isinstance(state, dict):
+        raise CloseoutStateError("state_must_be_object")
+    return state
 
 
 def _save_state(state_file: Path, state: dict) -> None:
@@ -47,16 +69,48 @@ def _save_state(state_file: Path, state: dict) -> None:
     state_file.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
 
 
-def _target_from_dict(data: dict) -> ReviewTarget:
+def _target_from_dict(data: object) -> ReviewTarget:
+    if not isinstance(data, dict):
+        raise CloseoutStateError("target_must_be_object")
+    mode = data.get("mode")
+    base_sha = data.get("base_sha")
+    head_sha = data.get("head_sha")
+    changed_paths = data.get("changed_paths")
+    non_test_loc = data.get("non_test_loc")
+    clean_tree = data.get("clean_tree")
+    description = data.get("description")
+    if mode not in {"local", "commit", "branch", "pr"}:
+        raise CloseoutStateError("target_mode_invalid")
+    if not all(value is None or isinstance(value, str) for value in (base_sha, head_sha)):
+        raise CloseoutStateError("target_sha_invalid")
+    if not isinstance(changed_paths, list) or not all(
+        isinstance(path, str) and path for path in changed_paths
+    ):
+        raise CloseoutStateError("target_changed_paths_invalid")
+    if not isinstance(non_test_loc, int) or isinstance(non_test_loc, bool) or non_test_loc < 0:
+        raise CloseoutStateError("target_non_test_loc_invalid")
+    if not isinstance(clean_tree, bool):
+        raise CloseoutStateError("target_clean_tree_invalid")
+    if not isinstance(description, str) or not description.strip():
+        raise CloseoutStateError("target_description_invalid")
     return ReviewTarget(
-        mode=data["mode"],
-        base_sha=data["base_sha"],
-        head_sha=data["head_sha"],
-        changed_paths=tuple(data["changed_paths"]),
-        non_test_loc=data["non_test_loc"],
-        clean_tree=data["clean_tree"],
-        description=data["description"],
+        mode=mode,
+        base_sha=base_sha,
+        head_sha=head_sha,
+        changed_paths=tuple(changed_paths),
+        non_test_loc=non_test_loc,
+        clean_tree=clean_tree,
+        description=description,
     )
+
+
+def _target_args_from_state(state: dict) -> dict:
+    target_args = state.get("target_args")
+    if target_args is None:
+        return {}
+    if not isinstance(target_args, dict):
+        raise CloseoutStateError("target_args_must_be_object")
+    return target_args
 
 
 def _ledger_from_state(state: dict) -> FindingsLedger:
@@ -120,7 +174,7 @@ def _cmd_freeze(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
-    if not state.get("target"):
+    if state.get("target") is None:
         print(json.dumps({"error": "no target resolved yet — run the `target` subcommand first"}), file=sys.stderr)
         return 1
 
@@ -152,17 +206,46 @@ def _cmd_freeze(args: argparse.Namespace) -> int:
 
 
 def _baseline_from_state(state: dict) -> ScopeBaseline:
-    data = state["baseline"]
+    data = state.get("baseline")
+    if not isinstance(data, dict):
+        raise CloseoutStateError("baseline_must_be_object")
+    required_strings = (
+        "issue_ref",
+        "intended_behavior",
+        "non_goals",
+        "owner_boundary",
+        "review_profile",
+        "risk",
+    )
+    for key in required_strings:
+        value = data.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise CloseoutStateError(f"baseline_{key}_invalid")
+    frozen_files = data.get("frozen_files")
+    frozen_non_test_loc = data.get("frozen_non_test_loc")
+    if not isinstance(frozen_files, list) or not all(
+        isinstance(path, str) and path for path in frozen_files
+    ):
+        raise CloseoutStateError("baseline_frozen_files_invalid")
+    if (
+        not isinstance(frozen_non_test_loc, int)
+        or isinstance(frozen_non_test_loc, bool)
+        or frozen_non_test_loc < 0
+    ):
+        raise CloseoutStateError("baseline_frozen_non_test_loc_invalid")
+    target = data.get("target")
+    if not isinstance(target, dict):
+        raise CloseoutStateError("baseline_target_invalid")
     return ScopeBaseline(
         issue_ref=data["issue_ref"],
         intended_behavior=data["intended_behavior"],
         non_goals=data["non_goals"],
         owner_boundary=data["owner_boundary"],
-        target=_target_from_dict(data["target"]),
+        target=_target_from_dict(target),
         review_profile=data["review_profile"],
         risk=data["risk"],
-        frozen_files=frozenset(data["frozen_files"]),
-        frozen_non_test_loc=data["frozen_non_test_loc"],
+        frozen_files=frozenset(frozen_files),
+        frozen_non_test_loc=frozen_non_test_loc,
     )
 
 
@@ -180,12 +263,12 @@ def _cmd_check_expansion(args: argparse.Namespace) -> int:
     mode the baseline was actually frozen under.
     """
     state = _load_state(args.state_file)
-    if not state.get("baseline"):
+    if state.get("baseline") is None:
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
         return 1
     baseline = _baseline_from_state(state)
     repo_root = Path(args.repo_root).resolve()
-    target_args = state.get("target_args") or {}
+    target_args = _target_args_from_state(state)
     mode = target_args.get("mode") or baseline.target.mode
 
     try:
@@ -230,7 +313,7 @@ def _cmd_check_expansion(args: argparse.Namespace) -> int:
 
 def _cmd_record_cycle(args: argparse.Namespace) -> int:
     state = _load_state(args.state_file)
-    if not state.get("baseline"):
+    if state.get("baseline") is None:
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
         return 1
     if args.outstanding_count < 0:
@@ -299,6 +382,90 @@ def _cmd_finding(args: argparse.Namespace) -> int:
     state["findings"] = [asdict(e) for e in ledger.events()]
     _save_state(args.state_file, state)
     print(json.dumps({"ok": True, "finding_id": args.id}))
+    return 0
+
+
+def _cmd_behavior_proof(args: argparse.Namespace) -> int:
+    """Record target-bound behavior proof from the frozen closeout state."""
+    state = _load_state(args.state_file)
+    if state.get("baseline") is None:
+        print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
+        return 1
+    baseline = _baseline_from_state(state)
+    target_args = _target_args_from_state(state)
+    repo_root_raw = target_args.get("repo_root")
+    if not isinstance(repo_root_raw, str) or not repo_root_raw:
+        print(json.dumps({"error": "frozen target has no repository root"}), file=sys.stderr)
+        return 1
+    try:
+        target_input_sha256 = compute_target_input_fingerprint(Path(repo_root_raw), baseline.target)
+    except Exception as exc:
+        print(json.dumps({"error": f"target_fingerprint_unavailable:{exc}"}), file=sys.stderr)
+        return 1
+
+    proof = state.get("behavior_proof", {})
+    if not isinstance(proof, dict):
+        raise CloseoutStateError("behavior_proof_must_be_object")
+    if proof and proof.get("schema_version") != BEHAVIOR_PROOF_SCHEMA_VERSION:
+        raise CloseoutStateError("behavior_proof_schema_version_invalid")
+    if args.behavior_action == "emit":
+        if not any(key in proof for key in ("source_aware", "source_blind")):
+            print(json.dumps({"error": "no behavior proof recorded yet"}), file=sys.stderr)
+            return 1
+        print(json.dumps(proof, indent=2, sort_keys=True))
+        return 0
+
+    if args.status == "pass":
+        command = args.command.strip() if isinstance(args.command, str) else None
+        step = args.step.strip() if isinstance(args.step, str) else None
+        has_command = bool(command)
+        has_step = bool(step)
+        if has_command == has_step:
+            print(json.dumps({"error": "passing proof requires --command or --step"}), file=sys.stderr)
+            return 1
+        if has_command and (not isinstance(args.cwd, str) or not args.cwd.strip()):
+            print(json.dumps({"error": "command proof requires --cwd"}), file=sys.stderr)
+            return 1
+        if args.exit_code is None and (not isinstance(args.result, str) or not args.result.strip()):
+            print(json.dumps({"error": "passing proof requires --exit-code or --result"}), file=sys.stderr)
+            return 1
+        if not isinstance(args.observation, str) or not args.observation.strip():
+            print(json.dumps({"error": "passing proof requires --observation"}), file=sys.stderr)
+            return 1
+        if not isinstance(args.evidence_ref, str) or not args.evidence_ref.strip():
+            print(json.dumps({"error": "passing proof requires --evidence-ref"}), file=sys.stderr)
+            return 1
+        clause: dict[str, object] = {
+            # The claim is derived from the frozen baseline; callers cannot
+            # provide a competing behavior-surface string.
+            "claim": baseline.intended_behavior,
+            "target_input_sha256": target_input_sha256,
+            "observation": args.observation,
+            "evidence_ref": args.evidence_ref,
+        }
+        if has_command:
+            clause["command"] = command
+            clause["cwd"] = args.cwd
+        else:
+            clause["step"] = step
+        if args.exit_code is not None:
+            clause["exit_code"] = args.exit_code
+        else:
+            clause["result"] = args.result
+        surface: dict[str, object] = {"status": "pass", "clauses": [clause]}
+    else:
+        if args.status == "n/a" and (not isinstance(args.reason, str) or not args.reason.strip()):
+            print(json.dumps({"error": "n/a proof requires --reason"}), file=sys.stderr)
+            return 1
+        surface = {"status": args.status, "reason": args.reason}
+
+    proof["schema_version"] = BEHAVIOR_PROOF_SCHEMA_VERSION
+    if args.surface == "source_blind" and (args.status == "pass" or args.blind_enforced):
+        surface["blind_enforced"] = args.blind_enforced
+    proof[args.surface] = surface
+    state["behavior_proof"] = proof
+    _save_state(args.state_file, state)
+    print(json.dumps(proof, indent=2, sort_keys=True))
     return 0
 
 
@@ -389,13 +556,40 @@ def _build_parser() -> argparse.ArgumentParser:
     frep.add_argument("--id", required=False, default=None, help="unused, present for CLI symmetry")
     p_finding.set_defaults(func=_cmd_finding)
 
+    p_behavior = sub.add_parser(
+        "behavior-proof",
+        help="Record or emit behavior proof bound to the frozen target",
+    )
+    behavior_sub = p_behavior.add_subparsers(dest="behavior_action", required=True)
+    behavior_record = behavior_sub.add_parser("record", help="Record one source-aware or source-blind proof surface")
+    behavior_record.add_argument("--surface", required=True, choices=["source_aware", "source_blind"])
+    behavior_record.add_argument("--status", required=True, choices=["pass", "fail", "n/a"])
+    command_or_step = behavior_record.add_mutually_exclusive_group()
+    command_or_step.add_argument("--command")
+    command_or_step.add_argument("--step")
+    behavior_record.add_argument("--cwd")
+    result = behavior_record.add_mutually_exclusive_group()
+    result.add_argument("--exit-code", type=int)
+    result.add_argument("--result")
+    behavior_record.add_argument("--observation")
+    behavior_record.add_argument("--evidence-ref")
+    behavior_record.add_argument("--reason")
+    behavior_record.add_argument("--blind-enforced", action="store_true")
+    behavior_record.set_defaults(func=_cmd_behavior_proof)
+    behavior_emit = behavior_sub.add_parser("emit", help="Print recorded proof JSON for verify_review")
+    behavior_emit.set_defaults(func=_cmd_behavior_proof)
+
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except CloseoutStateError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
