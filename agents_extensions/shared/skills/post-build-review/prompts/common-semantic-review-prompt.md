@@ -63,7 +63,7 @@ inside this result only: they never set readiness, demote a warning, change the
 categorical verdict, or authorize a release. `BLOCK` is this contract's name
 for the legacy standing-rule `REJECT`; the quality target remains 9+.
 
-Use these half-open bands exactly: `PASS` `[8.0, 10.0]`, `REVISE` `[6.0, 8.0)`,
+Use these bands exactly: `PASS` `[8.0, 10.0]`, `REVISE` `[6.0, 8.0)`,
 `BLOCK` `[0.0, 6.0)`, and `INCOMPLETE` `null`. Use at most one decimal place.
 Apply the following anchored rubric within the bands:
 

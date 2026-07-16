@@ -370,6 +370,28 @@ def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
         assert (comparison["left"] == comparison["right"]) is comparison["expected"]
 
 
+@pytest.mark.parametrize("invalid_bound", ["8.0", True, float("nan"), float("inf")])
+def test_score_calibration_policy_rejects_non_numeric_or_non_finite_bounds(
+    invalid_bound: object,
+) -> None:
+    policy = pbr.load_track_policy()
+    policy["score_calibration"]["bands"]["PASS"]["minimum"] = invalid_bound
+
+    with pytest.raises(pbr.ReviewProtocolError, match="bounds must be"):
+        pbr.quality_dimension_score_bands(policy)
+
+
+def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
+    bilash_packet: dict,
+) -> None:
+    prompt = bilash_packet["semantic_prompt"]
+
+    assert "`PASS` `[8.0, 10.0]`" in prompt
+    assert "`REVISE` `[6.0, 8.0)`" in prompt
+    assert "`BLOCK` `[0.0, 6.0)`" in prompt
+    assert "half-open bands" not in prompt
+
+
 @pytest.mark.parametrize(
     ("label", "mutate", "error_fragment"),
     [

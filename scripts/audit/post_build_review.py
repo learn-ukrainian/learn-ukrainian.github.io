@@ -152,11 +152,16 @@ def quality_dimension_score_bands(
             raise ReviewProtocolError(
                 f"Track policy score band {status} must define minimum, maximum, and includes_maximum"
             )
-        try:
-            minimum = Decimal(str(band["minimum"]))
-            maximum = Decimal(str(band["maximum"]))
-        except (InvalidOperation, ValueError) as exc:
-            raise ReviewProtocolError(f"Track policy score band {status} bounds must be numeric") from exc
+        raw_minimum = band["minimum"]
+        raw_maximum = band["maximum"]
+        if type(raw_minimum) not in {int, float} or type(raw_maximum) not in {int, float}:
+            raise ReviewProtocolError(
+                f"Track policy score band {status} bounds must be numeric YAML scalars"
+            )
+        minimum = Decimal(str(raw_minimum))
+        maximum = Decimal(str(raw_maximum))
+        if not minimum.is_finite() or not maximum.is_finite():
+            raise ReviewProtocolError(f"Track policy score band {status} bounds must be finite")
         includes_maximum = band["includes_maximum"]
         if type(includes_maximum) is not bool:
             raise ReviewProtocolError(
