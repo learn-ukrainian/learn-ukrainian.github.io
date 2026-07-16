@@ -113,21 +113,33 @@ persona:
   voice: Rural Novella Historian
 phase: BIO
 readings:
-- hosting: resource.history.org.ua
-  language: uk
-  note: Енциклопедична стаття про життя і творчість Тютюнника.
-  role: context
-  source: https://history.org.ua/?termin=Tiutiunnyk_H_M
-- hosting: uhb.chl.kiev.ua
-  language: uk
-  note: Довідка для дитячої літератури та бібліографія.
-  role: context
-  source: https://uhb.chl.kiev.ua/autors/338-hryhir-hryhorii-mykhailovych-tiutiunnyk
-- hosting: reading-needed
-  language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for "Три зозулі з поклоном".'
-  role: reading-needed
-  source: 'reading-needed: hryhir-tiutiunnyk-primary'
+  - title: Григір Тютюнник. Біографічна довідка
+    source_name: Національна бібліотека України для дітей
+    source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+    language: uk
+    genre: біографічна довідка
+    source_type: reference
+    role: contextual-reading
+    hosting: link-only
+    learner_task: Виписати факти, які відрізняють Григора від його єдинокровного брата Григорія, та простежити маршрут дитинства автора.
+    rights:
+      basis: external-link
+      evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+      note: Відкрита україномовна бібліотечна довідка; її текст не відтворюється в курсі.
+  - title: Григір Тютюнник. Основні твори
+    source_name: Національна бібліотека України для дітей
+    source_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+    language: uk
+    genre: бібліографічний покажчик
+    source_type: bibliography
+    role: contextual-reading
+    hosting: link-only
+    learner_task: Побудувати коротку бібліографічну траєкторію творів, відокремлюючи назви видань від інтерпретацій про письменника.
+    rights:
+      basis: external-link
+      evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+      note: Відкрита україномовна бібліографічна сторінка; тексти творів не відтворюються.
+readings_contract_version: 2
 references:
 - note: Базова англомовна енциклопедична стаття про життя і творчість.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CI%5CTiutiunnykHryhir.htm
@@ -144,6 +156,12 @@ references:
   title: Три зозулі з поклоном
   type: primary
   work: Три зозулі з поклоном
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Перевірені бібліотечні сторінки не надають окремого портретного файла з доведеною ліцензією та походженням.
+  evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+  disposition: no-portrait-until-rights-verified
 sequence: 258
 slug: hryhir-tiutiunnyk
 subtitle: Rural Novellas, Censorship Pressure, and No Fabricated Arrest

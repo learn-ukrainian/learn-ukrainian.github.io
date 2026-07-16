@@ -1,114 +1,172 @@
-# Руденко Микола Данилович (Mykola Rudenko) — Research Dossier
+# Руденко Микола Данилович — дослідницьке досьє
 
 **Slug:** `mykola-rudenko`
-**Block:** E (Шістдесятники / Українська Гельсінська група — human-rights resistance)
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Claude (Opus 4.8)
-**Completed:** 2026-05-29
+**Блок:** Соціальний опір і Українська Гельсінська група
+**Рівень підготовки:** 3
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Руденко Микола Данилович
-- **Pseudonyms / aliases:** Mykola Rudenko (EN); no underground pseudonym attested
-- **Born:** 1920-12-19 | село Юр'ївка, Луганський повіт, Донецька губернія (нині Лутугинський район, Луганська область) | Українська СРР
-- **Died:** 2004-04-01 | Київ | Україна | died of natural causes after release; buried in the Baikove Cemetery (ділянка № 49б)
-- **Family / education key facts:** Son of a miner who died in a mine disaster when Rudenko was six; lived through dekulakization, collectivization, and the Holodomor as a child. Entered the philology faculty of Kyiv University in 1939; mobilized after two months. WWII combatant, severely wounded near Leningrad on 1941-10-04 and survived the blockade. Founder and **first head of the Ukrainian Helsinki Group (9 Nov 1976)**. Hero of Ukraine (2000); Shevchenko National Prize (1993).
+- **Канонічне ім'я:** Руденко Микола Данилович.
+- **Народився:** 19 грудня 1920 року в Юр'ївці на Луганщині.
+- **Помер:** 1 квітня 2004 року в Києві.
+- **Освіта:** 1939 року вступив на факультет мови й літератури Київського
+  університету, але через мобілізацію навчався лише два місяці.
+- **Ролі:** письменник, поет, філософ, правозахисник, засновник УГГ.
 
-Cited from ≥2 sources:
-- uk.wikipedia.org "Руденко Микола Данилович" (intro + Життєпис) confirms 1920-12-19 birth, 2004-04-01 death, and "Засновник та голова Української Гельсінської Групи. Герой України (2000)."
-- Encyclopedia of the History of Ukraine (ЕІУ) and the Ukrpošta 2020 commemorative postage block «Лицарі духу. Діячі українського правозахисного руху» (issued 2020-11-20) corroborate the 1920–2004 dates and his status as a member-founder of the UHG.
+Музейна довідка Харківської правозахисної групи подає ці дати, походження,
+навчання, поранення 4 жовтня 1941 року біля Ленінграда, літературну працю та
+пізні громадські ролі [S1]. Батько Руденка був шахтарем і загинув у виробничій
+аварії 1927 року; родина пережила примусову колективізацію, а пам'ять про
+Голодомор залишилася для нього важливою [S1]. Це життєве тло, не готова
+психологічна причина кожного його пізнішого рішення.
 
-## 2. Oppression mechanism
+Після війни Руденко працював у видавництві «Радянський письменник», редагував
+«Дніпро», був партійним секретарем Спілки письменників і членом київської
+організації КПУ [S1]. Ці факти забороняють спрощувати ранню біографію до
+легенди про вродженого дисидента. Водночас вони не є доказом того, що всі його
+пізніші погляди були незмінними або що інституційна посада дорівнювала повній
+свободі дії.
 
-- **What happened:** Stripped of Party and Writers'-Union membership, then twice arrested; sentenced to camps and internal exile for "anti-Soviet agitation and propaganda."
-- **When (specific dates):** Expelled from the CPSU (1974) and from the Writers' Union of Ukraine (1975). First arrested 1975-04-18 (amnestied as a war veteran during the slidstvo). Re-arrested 1977-02-05 in Kyiv; tried 1977-06-23 to 1977-07-01 in Druzhkivka, Donetsk Oblast (the joint "Rudenko–Tykhy trial").
-- **By whom (specific Soviet agency):** КДБ УРСР (Ukrainian SSR KGB); sentence handed down by the Donetsk regional court apparatus under Art. 62 of the Criminal Code of the UkrSSR.
-- **Document references:** 1977 court verdict (Druzhkivka), quoted in his biography; Holovlit UkrSSR order (1978) withdrawing all 17 of his titles from libraries and shops.
-- **Mechanism specifics:** During a 1976-12-23/24 search the KGB "found" 39 planted US dollars, later used to frame him. He was sentenced to **7 years strict-regime camps + 5 years exile**. He served in camps ЖХ-385/19 and ЖХ-385/3 (Mordovia), then — after smuggling out poems through his wife — was transferred in Sept 1981 to the special-regime camp ВС-389/36 in Kuchino, Perm Oblast. His wife, Raisa Rudenko, was herself arrested (1981-10-15) for UHG activity and sentenced to 5 years. Exiled in 1984 to с. Майма (Gorno-Altai); released December 1987, his confiscated Kyiv flat gone.
-- **What survived / what was destroyed:** All 17 of his published titles were pulled from circulation by Holovlit (1978); his Kyiv apartment was confiscated. His camp diary, long thought lost, resurfaced in Israel in 2017 (preserved by dissident Viktor Fulmakht). His poems, memoir, and philosophical works survived and were republished after 1991.
+## 2. Механізм переслідування
 
-## 3. Major works
+На початку 1970-х книжки Руденка перестали друкувати. 1974 року його виключили
+з КПРС за радянською формулою «метафізичне викривлення марксизму», а 1975 року
+— зі Спілки письменників; після цього він працював нічним сторожем [S1]. Цю
+формулу слід подавати як мову радянської установи, а не нейтральний опис його
+творів. 18 квітня 1975 року його заарештували через правозахисну діяльність,
+але під час слідства амністували як учасника війни [S1].
 
-- `1974` — *Енергія прогресу. Нариси з фізичної економії* — philosophical economics; circulated in samvydav, first openly published 1994.
-- `1975` — *Економічні монологи* — samvydav treatise rejecting Marx's theory of surplus value.
-- `1976` — *Хрест* (poem) — written in the year the UHG was founded.
-- `1970` / `1981` — *Орлова балка* (novel) — earned him the Shevchenko National Prize in 1993.
-- `1980` — *За ґратами* (poetry collection composed in detention).
-- `1998` — *Найбільше диво — життя. Спогади* — memoirs.
+На початку 1976 року Руденка примусом повели на психіатричне обстеження, коли
+він звернувся по продовження пенсії як інвалід війни [S1]. Це окремий засіб
+тиску, який не треба змішувати з наступним кримінальним переслідуванням.
+Після другого арешту він відбував покарання в політичних таборах ЖХ-385/19 у
+Лєсному та ЖХ-385/3 у Барашеві. ХПГ також фіксує переведення у вересні 1981
+року до ВС-389/36 у Кучині Пермської області [S1].
 
-## 4. Primary-source quotes (≥2 required)
+Джерело пояснює переведення тим, що після арешту Раїси Руденко адміністрація не
+хотіла лишати подружжя у двох частинах одного табору [S1]. Раїсу заарештували
+15 серпня 1981 року за участь в УГГ і захист чоловіка, засудивши до п'яти років
+табору суворого режиму й п'яти років заслання [S1]. Її не можна зводити до
+додатка до чоловікової біографії: це документована самостійна дія та окремий
+вирок. Руденко за участь у страйках ув'язнених і зривання табірної нашивки
+неодноразово потрапляв до ізолятора [S1]. Пакет не домислює щоденних умов
+неволі, яких пряме джерело не описує.
 
-> «Довго я залишався дуже партійним… був вірним сталінцем, багато написав присвячених вождю віршів, була навіть поема про Сталіна.»
-- **Source:** Rudenko interview, quoted in his biography (uk.wikipedia.org, Життєпис; ЕІУ). Verbatim from the verified extract.
-- **Context:** His own account of breaking with Stalinism after the 20th CPSU Congress — a documented self-reckoning. Useful at B2/C1 for discussing conscience, ideology, and renunciation.
+## 3. Праці
 
-> «[Праця] має ворожий характер, у ній наведені вигадки, які паплюжать радянський державний і суспільний лад.»
-- **Source:** 1977 court verdict on *Енергія прогресу* (Druzhkivka), quoted in his biography. A primary-source persecution document.
-- **Context:** Shows how the Soviet state criminalized scholarship; excellent C1 material on the language of repression versus the language of resistance.
+- `1947` — *З походу*, перша поетична книжка, після якої автора прийняли до
+  Спілки письменників України [S1].
+- `1993` — *Орлова балка*, роман, за який Руденко отримав Шевченківську премію [S1].
+- `1998` — *Найбільше диво — життя*, спогади [S1].
+- `1998` — *Енергія прогресу*, праця з філософської економії [S1].
 
-## 5. Language register
+Цей короткий перелік свідомо не вигадує дат першого поширення, складу самвидаву
+чи видавничих історій, яких у прийнятих двох джерелах немає. Роман, мемуари,
+економічна праця й інтерв'ю — різні жанри. «Енергію прогресу» не можна назвати
+ані вироком, ані загальновизнаною економічною теорією без окремої академічної
+рецензії. Пакет встановлює факт видання та лишає оцінку її наукового статусу
+спеціалізованому дослідженню.
 
-- **Register:** Literary, philosophical, and publicistic; poetry ranges from civic to metaphysical.
-- **CEFR readiness for full reading:** C1 (philosophy/poetry); B2 for biographical narrative.
-- **Lexicon notes:** Mixes lyric vocabulary with the legal-political lexicon of the dissident era (правозахисник, самвидав, антирадянська агітація, заслання, реабілітація).
-- **Stylistic features:** Cosmological and theological imagery ("єднання зі Всесвітом", openness to God) sit beside a precise critique of Marxist political economy.
+## 4. Первинне свідчення
 
-## 6. Contested points
+Прийнятим первинним читанням є авторське інтерв'ю Руденка про створення УГГ
+[S2]. У ньому він описує появу групи як відкритий виступ українських
+інтелігентів усупереч офіційній ідеології та очікуваній загрозі ув'язнення
+[S2]. Інтерв'ю дає голос учасника, але не є стенограмою всіх консультацій,
+повним архівом УГГ або судовим документом. Тому в плані воно подане тільки як
+зовнішнє посилання, а повний текст не відтворюється.
 
-- **What's debated in modern UA scholarship:** His "physical economy" (фізична економія) — the claim that surplus value derives from solar energy via photosynthesis, not labour-exploitation — is treated as an original but heterodox economic philosophy rather than mainstream economics.
-- **What gets simplified in popular memory:** He is sometimes remembered only as a decorated war veteran or only as a science-fiction author, flattening the arc from "вірний сталінець" to founder of Ukraine's human-rights movement.
-- **Where modern Russian disinformation attacks:** Russian narratives recast the entire Helsinki movement as Western-funded "nationalism"; Rudenko's framing of the USSR as an imperial structure to be left directly contradicts that, which is why his memory is suppressed in occupied Donbas/Luhansk.
+Дослівні цитати з інтерв'ю досьє не наводить. Для такої цитати потрібно
+зафіксувати точний сталий фрагмент і перевірити пунктуацію за сторінкою; для
+перевидання також потрібна окрема правова підстава. Переказаний зміст
+позначено як авторське свідчення, а не як незалежний факт про кожного учасника
+руху. Це не зменшує цінності голосу Руденка, а робить його походження видимим.
 
-## 7. Cross-track links
+## 5. Мовний регістр
 
-- **Existing bio modules referencing this figure:**
-  - None yet — this dossier seeds the Block E plan for Rudenko. Sibling dissident bio plans already exist: `plans/bio/levko-lukyanenko.yaml`, `plans/bio/myroslav-marynovych.yaml`, `plans/bio/viacheslav-chornovil.yaml`, `plans/bio/vasyl-stus.yaml`.
-- **Existing HIST modules referencing this figure's era/events:**
-  - `plans/hist/ukrainska-helsinska-hrupa.yaml` (the UHG he founded and led), `plans/hist/shistdesiatnyky.yaml`, `plans/hist/destalinizatsiia.yaml`, `plans/hist/holodomor-pamiat.yaml` (the Holodomor he witnessed as a child).
-- **Existing ISTORIO (source-study) modules:**
-  - `plans/istorio/memorandum-uhh.yaml` (the UHG Memorandum #1 he co-signed), `plans/istorio/samvydav-shcho-tse.yaml`, `plans/istorio/syntez-dysydentski-dzherela.yaml`.
-- **Potential (Phase 2+) candidates surfaced by this research:**
-  - A dedicated Rudenko bio plan under `plans/bio/` (Block E); a Donbas-rooted reading pairing him with Olexa Tykhy.
+Біографічні матеріали Руденка поєднують літературну, правничу, політичну й
+мемуарну лексику. Для читання потрібні слова **правозахисник**, **самвидав**,
+**ув'язнення**, **заслання**, **реабілітація**, **свідчення**, **радянська
+формула обвинувачення**. Повний текст мемуарів, інтерв'ю й економічної праці
+доцільно відносити до C1: складність визначає не лише окреме слово, а й
+історичний контекст, жанр і необхідність розрізняти голос учасника від позиції
+установи. Військова або партійна лексика не повинна автоматично задавати
+національну ідентичність автора.
 
-## 8. Naming-canonical
+## 6. Складні місця
 
-- **Slug:** `mykola-rudenko`
-- **EN canonical (BGN/PCGN 2010):** Mykola Rudenko
-- **UA canonical (with patronymic):** Руденко Микола Данилович
-- **Aliases (for `aliases:` YAML field):** Mykola Danylovych Rudenko
-- **Forbidden forms (Russian-imperial transliterations to flag):** Nikolai Rudenko, Nikolay Rudenko (FORBIDDEN — Russified given name)
+9 листопада 1976 року Руденко після консультацій з Петром Григоренком, Оксаною
+Мешко, Олесем Бердником, Левком Лук'яненком, Іваном Кандибою, Олексою Тихим,
+Миколою Матусевичем, Мирославом Мариновичем і Ніною Строкатою повідомив
+іноземним журналістам про створення Української Громадської групи сприяння
+виконанню Гельсінкських угод [S1]. Ця хронологія підтверджує його роль, але не
+стирає внески інших членів. Не можна переносити на Руденка їхні особисті
+арешти, вироки, тексти або стан здоров'я.
 
-## 9. Image candidates
+Він повернувся до Києва у вересні 1990 року, йому поновили громадянство та
+повністю реабілітували [S1]. Шевченківська премія 1993 року, орден «За заслуги»
+1996 року й діяльність у партіях після відновлення незалежності є перевіреними
+пізніми фактами [S1]. Однак реабілітація не стирає шкоди неволі, а нагорода не
+робить людину поза критичним читанням. Антиімперська перспектива має називати
+КДБ, партійні структури й систему таборів конкретно, не приймаючи їхньої
+лексики як опису українського правозахисника і не перетворюючи його життя на
+одновимірну святу історію.
 
-- **Best PD/CC portrait:** Verify the Ukrpošta 2020 stamp block «Лицарі духу» (Микола Руденко, 1920–2004) on Wikimedia Commons — postage stamps are often usable under documented terms; confirm licence before use.
-- **Backup candidates:** Memorial-plaque photographs (Rolit building, Kyiv, вул. Богдана Хмельницького, 68) and the Lutuhyne literary-museum collection — check rights.
-- **If no PD/CC portrait exists:** Use a fair-use low-resolution crop from a published memoir cover, clearly attributed.
-- **Era-appropriate context image:** A photograph of the Kuchino (ВС-389/36) special-regime camp, where he was held.
+Важливо також не називати Руденка тільки «жертвою таборів». Музейна довідка
+показує послідовність праць і ролей до, під час та після репресії: ранню
+поетичну книжку, видавничу працю, філософські пошуки, створення УГГ, мемуари,
+роман і пізню публічну участь [S1]. У кожному з цих видів діяльності діє інша
+мова: поезія не тотожна інтерв'ю, мемуари не тотожні музейній довідці, а
+партійна посада не пояснює автоматично наступний правозахисний вибір. Така
+жанрова обережність дає змогу бачити зміну й відповідальність без психологічної
+спекуляції.
 
-## 10. Sources used
+Інтерв'ю про УГГ має особливе місце саме тому, що фіксує авторське пояснення
+відкритої дії [S2]. Його не треба читати як «чистий» документ поза пам'яттю:
+це розмова, записана після подій, із власним добором акцентів. Проте вона не
+стає менш цінною через суб'єктивність. Навпаки, зіставлення інтерв'ю з
+музейною хронологією навчає розрізняти пережитий досвід, підтверджену дату та
+історичну інтерпретацію. Для біографії правозахисника це спосіб не замовчувати
+голос людини й не оголошувати його єдиним можливим голосом епохи.
 
-**Tier 1 (authoritative):**
-- Бажан О. Г. та ін. *Енциклопедія історії України* — entry on Mykola Rudenko | Accessed 2026-05-29
+## 7. Міжтрекові зв'язки
 
-**Tier 2 (institutional):**
-- Музей-архів дисидентського руху / «Дисидентський рух в Україні» — Rudenko profile | Accessed 2026-05-29
+- **Наявні й перевірені:** `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`;
+  `curriculum/l2-uk-en/plans/istorio/memorandum-uhh.yaml`.
+- **Кандидати:** окреме читання документів УГГ, історія правозахисних мереж,
+  зіставлення мемуарів із судовими й архівними матеріалами.
+- **Вирівнювання з HIST:** УГГ, радянські репресії та повернення після 1990 року
+  описано як історичний контекст, а не як індивідуальну легенду.
 
-**Tier 3 (encyclopedic):**
-- uk.wikipedia.org "Руденко Микола Данилович" (summary + extract) | Accessed 2026-05-29
+## 8. Називання
 
-**Tier 5 (general web, corroborating):**
-- Verkhovna Rada resolution on the 100th anniversary (2020) of Rudenko's birth; Ukrpošta 2020 commemorative issue | Accessed 2026-05-29
+- **Slug:** `mykola-rudenko`.
+- **Українська канонічна форма:** Руденко Микола Данилович.
+- **Англійська форма:** Mykola Rudenko.
+- **Не вживати в українському тілі:** *Nikolai Rudenko*; русифікована форма
+  може бути лише в дослівних метаданих зовнішнього джерела.
 
----
+## 9. Зображення
 
-## Decolonization self-check (run before submitting)
+Прийняті сторінки ХПГ не доводять окремої ліцензії на портрет. Тому план
+фіксує текстову заміну портрета. Фото на музеєфікованій сторінці не стає
+вільним зображенням лише через публічну доступність. Для додавання ілюстрації
+потрібні автор, походження файлу, умови ліцензії та посилання на доказ.
 
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text (forbidden forms confined to §8, labelled FORBIDDEN)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms (Soviet labels quoted as persecution evidence, not endorsed)
-- [x] No "lost his life" euphemisms — persecution stated plainly (framed/planted evidence, camps, exile)
-- [x] All place names use modern UA canonical form (Kyiv, Luhansk, Donetsk)
-- [x] Holodomor referenced as Holodomor
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable
+## 10. Використані джерела
+
+- **[S1] Tier 2:** «РУДЕНКО МИКОЛА ДАНИЛОВИЧ», Віртуальний музей
+  «Дисидентський рух в Україні», Харківська правозахисна група.
+  https://museum.khpg.org/1113938027 (перевірено 2026-07-17).
+- **[S2] Первинне свідчення:** «Руденко Микола Данилович. Інтерв'ю про
+  створення УГГ», Віртуальний музей «Дисидентський рух в Україні», ХПГ.
+  https://museum.khpg.org/1383042150 (перевірено 2026-07-17).
+
+## Самоперевірка деколонізації
+
+- [x] Не приписано Руденкові біографію інших членів УГГ.
+- [x] Радянські формули подано як формули установ, а не як нейтральні оцінки.
+- [x] Не повторено неперевірених цитат і не додано вигаданого архівного шифру.
+- [x] Ранню партійну участь не вилучено і не перетворено на остаточний вирок.

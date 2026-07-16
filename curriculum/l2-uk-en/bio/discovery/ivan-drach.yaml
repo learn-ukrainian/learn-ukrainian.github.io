@@ -1,0 +1,14 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Іван Драч
+  - 'Іван Драч ЕСУ'
+  - 'Іван Драч «Криниця для спраглих» стенограма eKMAIR'
+  - 'Іван Драч Рух УІНП'
+source_urls:
+  - https://esu.com.ua/article-21707
+  - https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+  - https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+rag_chunks: []
+rag_literary: []
+warning: Прямий україномовний пакет; усі URL збігаються зі strict-v2 реєстром читань плану.

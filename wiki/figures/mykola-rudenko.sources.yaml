@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/mykola-rudenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://museum.khpg.org/1113938027
+  type: external
+  title: РУДЕНКО МИКОЛА ДАНИЛОВИЧ — Віртуальний музей ХПГ
+  url: https://museum.khpg.org/1113938027
+  metadata:
+    publisher: Харківська правозахисна група
+    language: uk
+    verified_on: '2026-07-17'
+- id: S2
+  file: https://museum.khpg.org/1383042150
+  type: external
+  title: Руденко Микола Данилович. Інтерв’ю про створення УГГ — Віртуальний музей ХПГ
+  url: https://museum.khpg.org/1383042150
+  metadata:
+    publisher: Харківська правозахисна група
+    language: uk
+    verified_on: '2026-07-17'

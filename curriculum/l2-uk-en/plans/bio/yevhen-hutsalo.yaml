@@ -111,32 +111,54 @@ persona:
     радянських ярликів і шкільних спрощень.
   voice: Rural Prose Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: esu.com.ua
+- title: Гуцало Євген Пилипович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-25016
   language: uk
-  note: Базова енциклопедична стаття про Гуцала (ЕСУ).
-  role: context
-  source: https://esu.com.ua/article-25016
-- hosting: reading-needed
+  genre: енциклопедична стаття
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Відокремити підтверджені біографічні дані та бібліографію від
+    інтерпретацій про цілий літературний напрям.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-25016
+    note: Відкрита україномовна сторінка ЕСУ; її текст у курсі не відтворюється.
+- title: 'Гуцало Євген Пилипович. Орлами орано : оповідання, повість (1977)'
+  source_name: Електронна бібліотека «Україніка», НБУВ
+  source_url: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
   language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for excerpt of "Лось" or "Ментальність орди".'
-  role: reading-needed
-  source: 'reading-needed: yevhen-hutsalo-primary'
+  genre: оцифроване книжкове видання
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: >-
+    Перевірити автора, назву, видавця, рік і обсяг конкретного видання, не
+    переносячи його повний текст або відомі рядки без точного локатора.
+  rights:
+    basis: external-link
+    evidence_url: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+    note: НБУВ надає зовнішній доступ для навчального й наукового перегляду; повний текст не відтворюється.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    У перевіреному наборі немає окремо доведеного вільного портрета; сторінка
+    ЕСУ не є ліцензією на повторне використання зображення.
+  verified_on: '2026-07-17'
 references:
 - note: Дати, бібліографія, нагороди, освіта.
   path: https://esu.com.ua/article-25016
   title: Гуцало Євген Пилипович (ЕСУ)
   type: reference
-- note: Уривок з *Лося* у шкільному контексті.
-  title: Уривок з «Лось» (підручник з української літератури, 5 клас)
+- note: Точне оцифроване видання; доступ лише за зовнішнім посиланням.
+  path: https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+  title: Гуцало Євген Пилипович. Орлами орано (НБУВ)
   type: primary
-  work: Лось
-- note: Попередження про радянське оформлення постаті шістдесятника.
-  title: Гуцало — шістдесятники (локальний curriculum wiki)
-  type: reference
-- note: Базова енциклопедична довідка.
-  title: Гуцало Євген Пилипович (Вікіпедія)
-  type: reference
 sequence: 255
 slug: yevhen-hutsalo
 subtitle: Lyrical Prose and Soviet Framing Without Imprisonment

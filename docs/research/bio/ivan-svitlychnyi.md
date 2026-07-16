@@ -1,126 +1,161 @@
-# Світличний Іван Олексійович — Research Dossier
+# Світличний Іван Олексійович — дослідницьке досьє
 
 **Slug:** `ivan-svitlychnyi`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** культурний опір 1960–1980-х років
+**Рівень підготовки:** 2
+**Досліджено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Світличний Іван Олексійович.
-- **Pseudonyms / aliases:** Ivan Svitlychny; Ivan Svitlychnyi; Іван Світличний.
-- **Born:** 1929-09-20 | Половинкине, тоді Луганська округа / нині Луганська область | Українська СРР. Sources: IEU "Svitlychny, Ivan"; KHPG "Світличний Іван Олексійович"; НБУВ anniversary note.
-- **Died:** 1992-10-25 | Kyiv | independent Ukraine. Sources: IEU; KHPG; Radio Svoboda "Країна Інкогніта: Іван Світличний".
-- **Family / education key facts:** Brother of dissident Nadiia Svitlychna; graduated from Kharkiv University philology in 1952; worked in literary studies and lexicography before political dismissal. IEU lists his work at *Radianske literaturoznavstvo*, the Institute of Literature, and the dictionary department of the Institute of Linguistics; KHPG and НБУВ corroborate the literary-critic, poet, translator, and human-rights profile.
+Іван Олексійович Світличний народився 20 вересня 1929 року в селі Половинкине
+на Луганщині й помер 25 жовтня 1992 року в Києві. Національна бібліотека України
+імені В. І. Вернадського називає його правозахисником, поетом, перекладачем,
+літературознавцем і літературним критиком; ця сукупність фахів важлива, бо не
+дозволяє звести людину ані до табірної біографії, ані до одного афоризму [НБУВ].
+Після філологічної освіти він працював у літературній критиці та лексикографії,
+перекладав із кількох європейських мов, а також працював над перекладом «Слова
+про Ігореву січ». Бібліотечна довідка перелічує серед мов його перекладацької
+праці французьку, чеську, польську, сербсько-хорватську й турецьку [НБУВ].
 
-The sources agree on the core dates. KHPG gives the richest account of the apartment on Umanska Street as a hub of shistdesiatnyky networking and samvydav; IEU gives the compact scholarly baseline.
+Світличний був братом Надії Світличної, але його участь у культурному та
+правозахисному русі має самостійний документальний контур. Музейна довідка КХПГ
+описує його як учасника дисидентського руху, пов’язаного з поширенням самвидаву,
+літературною критикою і київським середовищем шістдесятників [КХПГ]. Це не
+підстава оголошувати його «єдиним керівником» цілого руху: джерела фіксують
+мережу авторів, читачів, перекладачів і тих, хто переписував та передавав тексти.
+Його життєпис показує, що культурна праця в УРСР могла ставати предметом
+кримінального переслідування саме через незалежні горизонтальні зв’язки.
 
-## 2. Oppression mechanism
+## 2. Механізм переслідування
 
-- **What happened:** Political surveillance, dismissal, two arrests, imprisonment, internal exile, health destruction.
-- **When:** Fired and first arrested in 1965; released after about eight months. Second arrest occurred in the January 1972 crackdown, with search on 1972-01-12 and later trial on 1973-04-27 to 1973-04-29. Sentence: 7 years strict-regime camps plus 5 years internal exile.
-- **By whom:** KGB / КДБ of the Ukrainian SSR; Kyiv regional court; Soviet camp administration in Perm camps ВС-389/35 and ВС-389/36.
-- **Document references:** KHPG identifies the "Справа Добоша" as the formal pretext; KHPG states the charge under Article 62 part 1 of the Criminal Code of the UkrSSR, "anti-Soviet agitation and propaganda." IEU states the charge as contributing to and distributing samvydav.
-- **Mechanism specifics:** KHPG records that the 1972 search removed Ukrainian and Russian samvydav, books, a typewriter, a radio receiver, and magnetic tapes with recordings of Vasyl Symonenko, Vasyl Stus, and others. The state attempted to recast cultural circulation as a foreign-linked conspiracy after the arrest of Belgian citizen Yaroslav Dobosh. IEU reports that Svitlychnyi was sentenced on 1972-era samvydav activity; KHPG gives the court dates and the exact sentence. In the camps he joined collective protest actions and hunger strikes; KHPG records a 56-day hunger strike and punishment in SHIZO/PKT. In January 1978, KHPG says he contracted Botkin's disease through an unclean syringe in the zone hospital; on 1978-05-07 he was sent into exile to Ust-Kan in the Gorno-Altai region, arriving 1978-06-27.
-- **What survived / what was destroyed:** IEU and Radio Svoboda both state that he returned to Kyiv severely disabled after strokes suffered in exile. KHPG quotes Leonida Svitlychna's judgment that, physically, he died in 1992, but as a creative person he was destroyed by the August 1981 stroke in Altai. His poetry and criticism survived through post-Soviet publication, especially *Серце для куль і для рим* (1991).
+НБУВ подає дві дати арештів: 30 серпня 1965 року та 12 січня 1972 року. Перший
+арешт був пов’язаний зі статтею 62 частиною 1 КК УРСР, а після другого Світличного
+засудили 27–29 квітня 1973 року до семи років таборів суворого режиму і п’яти
+років заслання [НБУВ]. У цих формулюваннях треба зберігати різницю між мовою
+обвинувачення та встановленою дією людини: радянська стаття називала
+ненасильницьку культурну й громадянську діяльність «антирадянською агітацією»,
+натомість музейна сторінка пов’язує справу з самвидавом та дисидентським рухом
+[КХПГ].
 
-## 3. Major works
+НБУВ також засвідчує, що покарання відбував у Пермській області РРФСР, а після
+інсульту 20 серпня 1981 року його визнали інвалідом першої групи; 23 січня 1983
+року він повернувся до Києва [НБУВ]. Ці факти достатні, щоб назвати інституційний
+характер шкоди: арешт, вирок, табори, заслання і наслідки для здоров’я. Вони не
+дають права без окремого медичного чи архівного документа визначати точний
+фізіологічний механізм усіх хвороб або приписувати кожен епізод одній посадовій
+особі. У тексті майбутньої біографії не слід романтизувати страждання: його
+наслідком була втрата звичайного часу для праці, родини й приватного життя.
 
-- `1950s-1960s` — literary-critical articles in *Вітчизна*, *Радянське літературознавство*, and *Дніпро*; IEU notes that these began appearing while he was still a student.
-- `1960s` — criticism of socialist-realist simplification and support for shistdesiatnyky writing, including Ivan Dziuba, Vasyl Stus, and the Kyiv-Lviv network; KHPG identifies him as a moral authority of the movement.
-- `1960s-1970s` — translations from Czech, Slovak, French, and *Слово о полку Ігоревім*; IEU lists Nezval, Halas, Mahen, Hanzlik, Rufus, La Fontaine, Beranger, and Baudelaire.
-- `1970s` — camp and exile poetry; IEU states that some appeared in the West before Soviet-era rehabilitation.
-- `1991` — *Серце для куль і для рим*, poetry collection; IEU and Radio Svoboda identify it as his late-life collection.
-- `1994` — *У мене - тільки слово*; cited by Wikiquote's source notes for individual poems.
-- `2008` — *З живучого племені Дон Кіхотів* (with Nadiia Svitlychna), source collection cited by Wikiquote and later scholarship.
+## 3. Праця й твори
 
-## 4. Primary-source quotes
+До повного корпусу належать критичні статті, переклади, вірші, листи та пізні
+видання. НБУВ згадує працю над словником синонімів, переклади Бодлера, Беранже,
+Лафонтена, Незвала, Ганзліка, Словацького й інших авторів [НБУВ]. Такий перелік
+не є просто ознакою ерудиції: він показує прагнення вводити українську мову у
+рівноправний діалог із різними літературами. Збірка «Серце для куль і для рим»
+вийшла 1990 року за даними НБУВ, а велике спільне з Надією Світличною видання
+«З живучого племені Дон Кіхотів» зафіксовано в бібліографічному записі НБУВ як
+книга 2008 року [НБУВ].
 
-> "Я - теж Вітчизна."
+Первинний літературний текст для навчального відтворення тут не обрано. Доступні
+у пакеті інституційні сторінки є біографічними й бібліографічними, а не окремо
+ліцензованим цифровим виданням конкретного вірша чи перекладу. Це не означає,
+що творчість відсутня; це означає, що назву твору не можна підміняти неясним
+повнотекстовим сайтом або переносити в курс чужий текст без правової підстави.
 
-Source: Ivan Svitlychnyi poem excerpt, cited in Wikiquote from *З живучого племені Дон Кіхотів* / *У мене - тільки слово*. This compact line is useful for B2-C1 learners because it turns patriotism from slogan into ethical responsibility.
+## 4. Мова, жанри й читання
 
-> "Серце - мішень для куль і для рим."
+Для читача української як другої мови Світличний цікавий поєднанням критичного,
+публіцистичного, листовного й ліричного регістрів. Його критика потребує рівня
+C1 через щільну абстрактну лексику, культурні алюзії та полемічні переходи.
+Добірні короткі вірші й листи можуть бути доступнішими за умови окремо
+перевіреного джерела й прав. Слова `самвидав`, `заслання`, `шістдесятники`,
+`літературознавство`, `переклад` та `правозахист` слід пояснювати не як музейні
+ярлики, а як назви конкретних практик: переписування, читання, листування,
+видавничої праці, судового переслідування й солідарності.
 
-Source: Ivan Svitlychnyi line cited in Wikiquote and echoed by the 1991 collection title *Серце для куль і для рим*. It gives a direct bridge between poetic form and political violence: rhyme and bullets aim at the same heart.
+## 5. Складні місця та деколонізаційна рамка
 
-## 5. Language register
+Популярна пам’ять іноді залишає від Світличного лише образ мученика або лише
+образ «доброго» морального авторитета. Обидва скорочення неповні. Вони ховають
+його професійну дисципліну, перекладацьку роботу, здатність читати й обговорювати
+тексти, а також колективний характер шістдесятницького середовища. З іншого боку,
+не слід виправдовувати будь-яку сучасну інтерпретацію самим фактом ув’язнення.
+Кожну думку про поетику, вплив чи роль квартири в культурній мережі треба
+прив’язувати до окремого джерела, спогаду або видання.
 
-- **Register:** Compressed lyric, aphoristic public speech, learned literary criticism.
-- **CEFR readiness for full reading:** C1 for criticism; B2-C1 for selected poems.
-- **Lexicon notes:** Learners should know `самвидав`, `заслання`, `шістдесятники`, `русифікація`, `правозахисник`; VESUM verification found these forms and did not find the Russianism `русофікація`.
-- **Stylistic features:** Dense antithesis, ethical aphorism, prison lyric understatement, and intertextual references to Ukrainian and European poetry.
+Деколонізоване прочитання не робить Луганщину «неукраїнською периферією» й не
+перетворює радянські обвинувачення на нейтральний опис. Походження зі сходу,
+робота в Києві й мережеві зв’язки з іншими містами показують багаторегіональність
+української культури. Водночас не можна стверджувати, ніби всі люди цього кола
+мали одну біографію або однакові судові справи. Історичне зіставлення з курсами
+про шістдесятників має працювати через точні документи, а не через перенос
+досвіду Стуса, Дзюби чи Надії Світличної на Івана Світличного.
 
-## 6. Contested points
+## 6. Зв’язки з іншими напрямами
 
-- **What's debated in modern UA scholarship:** How to weigh Svitlychnyi's role as poet against his larger role as organizer, critic, reader, and private cultural institution. IEU and KHPG both stress that his influence exceeded his published corpus.
-- **What gets simplified in popular memory:** He is sometimes remembered only as "доброокий" or as a victim of the 1972 arrests. KHPG and Radio Svoboda show a more precise role: bridge between Kyiv and Lviv, distributor of samvydav, translator, and camp-resistance participant.
-- **Where modern Russian disinformation attacks them:** The usual Soviet label, "anti-Soviet nationalist activity," should be quoted only as prosecution language. The evidence retrieved shows literary circulation, recordings, and samvydav, not violence.
-- **Other-perspective considerations:** He connected eastern Ukrainian origins, Kyiv literary circles, and Lviv dissident networks; this counters the false regional split often imposed on Ukrainian cultural history.
+Історичне тло для цього життєпису не слід будувати з однієї абстрактної назви
+«відлига». Після сталінського терору в УРСР справді з’явилися нові можливості
+для публічної культурної праці, але межі дозволеного залишалися встановленими
+партійним контролем, цензурою та органами безпеки. У 1960-х роках літературна
+критика могла бути способом говорити про естетичну свободу, мову й канон, а не
+лише супроводжувати офіційне видавництво. Відтак зв’язок Світличного з
+шістдесятниками потрібно пояснювати через практики читання і взаємності, а не
+через тезу, ніби всі учасники мали ту саму політичну програму.
 
-## 7. Cross-track links
+Самвидав також не треба ідеалізувати як простір без помилок або як окрему
+«паралельну державу». Це був крихкий спосіб зберегти незалежний обіг думок за
+умов, коли офіційний друк контролювала влада. Люди ризикували часом, роботою,
+здоров’ям і безпекою родин; тому джерельна відповідальність особливо важлива.
+Якщо музейна сторінка називає участь Світличного в самвидаві, вона підтримує
+саме цей факт [КХПГ]. Вона не дає права без додаткового документа визначати
+авторство кожної машинописної копії або приписувати йому весь культурний рух.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit-essay/svitlychny-prison-lyrics.yaml`
-  - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`
-  - `curriculum/l2-uk-en/plans/hist/movna-polityka.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Nadiia Svitlychna, Ivan Dziuba, Yevhen Sverstiuk, Vasyl Stus, Ihor Kalynets, and the Horyn brothers.
-- **Potential LIT additions surfaced by this research:**
-  - A short C1 text pack on Svitlychnyi as translator, using only verified poems and rights-cleared excerpts.
+У пізній пам’яті корисно поставити два питання. Перше: як цензура і вирок
+вплинули на можливість автора друкувати, перекладати, викладати та спілкуватися
+з читачами? Друге: як після 1991 року видання, бібліотеки й музеї повертали
+його ім’я без перетворення біографії на спрощений культ? Відповідь не може бути
+одним епітетом. Вона має поєднати названі НБУВ професії, документоване
+переслідування, пізні книжки та власні межі джерельного пакета [НБУВ].
 
-## 8. Naming-canonical
+**Перевірені наявні плани:** `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`,
+`curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`,
+`curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`. Вони можуть дати
+історичний і видавничий контекст, але не замінюють індивідуального досьє.
+**Кандидатні зв’язки:** Надія Світлична, Іван Дзюба, Василь Стус, Євген
+Сверстюк, Ігор Калинець. Для кожного потрібна окрема звірка імен, дат і джерел.
 
-- **Slug:** `ivan-svitlychnyi`
-- **EN canonical (BGN/PCGN 2010):** Ivan Svitlychnyi
-- **UA canonical (with patronymic):** Світличний Іван Олексійович
-- **Aliases (track these for `aliases:` YAML field):** Ivan Svitlychny, Ivan Svitlychnyj, Ivan Svitlychnyĭ, Іван Світличний
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Ivan Svetlichny, Ivan Svetlichnyi (FORBIDDEN except as archival metadata)
+## 7. Назва й права на зображення
 
-## 9. Image candidates
+Канонічна українська форма — **Іван Світличний**; розширена — **Світличний Іван
+Олексійович**; латинка BGN/PCGN — **Ivan Svitlychnyi**. Варіанти `Ivan
+Svitlychny` та `Іван Світличний` слугують пошуковими псевдонімами, не новими
+особами. Окремого файла портрета з доведеною ліцензією не перевірено, тому
+прийнято текстову заміну портрета. Фотографія, вбудована в сторонню сторінку,
+не є сама по собі ліцензією на відтворення.
 
-- **Best PD/CC portrait:** IEU image "Ivan Svitlychny (arrest photo)" and shistdesiatnyky group photos on IEU; license must be checked before reuse.
-- **Backup candidates:** KHPG Virtual Museum portrait; НБУВ anniversary page imagery if rights allow.
-- **If no PD/CC portrait exists:** Use a rights-cleared scan of a book cover only as a fallback and only after legal review.
-- **Era-appropriate context image:** A verified photo of the Kyiv Club of Creative Youth or a rights-cleared samvydav/typewriter image.
+## 8. Джерела
 
-## 10. Sources used
+- **T1:** Національна бібліотека України імені В. І. Вернадського, «Народився
+  Іван Світличний…» — https://www.nbuv.gov.ua/node/4288 (перевірено 2026-07-17).
+- **T2:** Віртуальний музей Харківської правозахисної групи, «Світличний Іван
+  Олексійович» — https://museum-old.khpg.org/1113995279 (перевірено 2026-07-17).
+- **T2:** НБУВ, бібліографічний запис «З живучого племені Дон Кіхотів» —
+  https://www.nbuv.gov.ua/node/537 (перевірено 2026-07-17).
 
-**Tier 1 (authoritative):**
-- *Енциклопедія українознавства* / Internet Encyclopedia of Ukraine, "Svitlychny, Ivan" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSvitlychnyIvan.htm | accessed 2026-05-30
+## 9. Робочий висновок
 
-**Tier 2 (institutional):**
-- Борис Захаров, "Світличний Іван Олексійович," Дисидентський рух в Україні / KHPG Virtual Museum | https://museum-old.khpg.org/1113995279 | accessed 2026-05-30
-- НБУВ, "Народився Іван Світличний..." | https://www.nbuv.gov.ua/node/4288 | accessed 2026-05-30
-- Radio Svoboda, "Країна Інкогніта: Іван Світличний" | https://www.radiosvoboda.org/a/941323.html | accessed 2026-05-30
+Світличний важливий для біографічного каталогу не тому, що його життя легко
+перетворити на моральну формулу. Його важливість у поєднанні фахової роботи й
+громадянської відповідальності: критика вчила уважного читання, переклад
+розширював український літературний простір, а самвидав підтримував вільний
+обіг текстів. Радянська відповідь на ці практики мала інституційну форму —
+стеження, арешт, суд, табір і заслання. Досьє не дописує до неї неподані в
+джерелах драматичні деталі, бо саме точність робить цю історію переконливою.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikiquote, "Світличний Іван Олексійович" | accessed 2026-05-30
-- Ukrainian Wikipedia, "Світличний Іван Олексійович" via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## Самоперевірка деколонізації
 
-**Tier 4 (modern scholarly post-1991):**
-- Roman Mokryk, *Бунт проти імперії* (cited by Wikiquote source notes; not directly accessed).
-
-**Primary-source documents accessed:**
-- KHPG biography's reproduced court/prosecution details for Article 62 and the Dobosh case.
-
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text
-- [x] No Russocentric periodization
-- [x] Soviet labels quoted only as prosecution language
-- [x] No euphemism for state-caused health destruction
-- [x] Place names use modern UA canonical forms where applicable
-- [x] Holodomor not central here
-- [x] Crimea/2014/2022 not applicable
+- [x] Радянське обвинувачення названо мовою репресивної норми, а не нейтральним фактом.
+- [x] Не перенесено на Світличного факти про інших шістдесятників.
+- [x] Не вжито неперевірених цитат і не заявлено прав на текст чи портрет.
+- [x] Українські назви місць і імен подано в канонічній формі.

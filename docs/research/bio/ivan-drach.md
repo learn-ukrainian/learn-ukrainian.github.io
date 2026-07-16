@@ -1,124 +1,202 @@
-# Драч Іван Федорович — Research Dossier
+# Драч Іван Федорович — дослідницьке досьє
 
 **Slug:** `ivan-drach`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** E — література, кіно і громадське життя
+**Рівень:** 2
+**Дослідник:** Codex GPT-5
+**Оновлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Драч Іван Федорович.
-- **Pseudonyms / aliases:** Ivan Drach.
-- **Born:** 1936-10-17 | Теліжинці, Kyiv region, Ukrainian SSR. ESU and Ukrainian Wikipedia via `mcp__sources.query_wikipedia` agree. [S1] [S4]
-- **Died:** 2018-06-19 | Kyiv, Ukraine; buried in his native village according to ESU. [S1]
-- **Family / education key facts:** Worked as teacher and Komsomol activist after school, served in the army, studied philology at Kyiv University, worked at *Literaturna hazeta*, and completed the Higher Scriptwriting Courses in Moscow according to retrieved textbook source. [S5]
+Іван Федорович Драч народився 17 жовтня 1936 року в селі Теліжинці, нині
+Тетіївського району Київської області; помер 19 червня 2018 року в Києві й
+похований у рідному селі [S1]. ЕСУ визначає його як поета, сценариста,
+перекладача та громадсько-політичного діяча [S1]. Це важливий перелік фахів,
+а не готова характеристика людини: кожен із них має власну хронологію,
+а джерела різної сили висвітлюють їх нерівномірно.
 
-## 2. Oppression mechanism
+ЕСУ фіксує навчання в Київському університеті 1958–1961 років, закінчення
+Вищих сценарних курсів у Москві 1964 року, роботу в сценарному відділі
+Київської кіностудії художніх фільмів імені О. Довженка в 1964–1974 роках та
+в редакції журналу «Вітчизна» [S1]. Отже, рання поетична й кінематографічна
+праця формувалася в українських культурних інституціях радянського часу. Сам
+факт роботи в цих інституціях не дорівнює ні безумовній лояльності, ні
+прихованому опору; обидві крайні схеми стирають конкретні рішення, жанри та
+обмеження.
 
-- **What happened:** Soviet censorship, party criticism, pressure after contact with dissidents, and film suppression.
-- **When:** Especially 1965-1966 after the *Тіні забутих предків* protest atmosphere and the suppression/criticism of *Криниця для спраглих*.
-- **By whom:** Soviet party/censorship bodies, film-studio and Communist Party cultural administration.
-- **Document references:** Retrieved EKMAIR item identifies the Dovzhenko Studio artistic council transcript for *Криниця для спраглих* on 1966-01-29. Ukrainian Wikipedia/MCP and textbook retrieval note Central Committee criticism in 1966 and Drach's forced public repentance after dissident contacts. [S2] [S5]
-- **Mechanism specifics:** Drach was not retrieved as a prisoner. His mechanism is pressure and constraint inside official literary/cinematic institutions. The film *Криниця для спраглих*, with Drach as screenwriter and Yurii Illienko as director, was filmed in 1965, sharply criticized, and withheld from viewers until the late Soviet period. EKMAIR's cataloged transcript grounds the film-studio discussion; retrieved textbook and Wikipedia context ground the broader 1966 pressure on Drach. [S2] [S5]
+Дебютна збірка «Соняшник» вийшла 1962 року; ЕСУ подає її поряд із ранніми
+книжками покоління шістдесятників і відзначає метафоричну винахідливість,
+асоціативність та ритмомелодику [S1]. «Протуберанці серця» датовано 1965
+роком, а за «Корінь і крона» (1974) Драч отримав Шевченківську премію 1976
+року [S1]. У біографічній оповіді ці дати не повинні підміняти аналіз самих
+текстів: ЕСУ є сильним орієнтиром для бібліографії й рецепції, але не замінює
+видання з точним локатором для цитування.
 
-The dossier should not turn Drach into a clean dissident hero or a simple collaborator. The sourced frame is harder: he had early dissident contacts, was pressured into public repentance, remained a major poet and screenwriter, and later became a public figure in the national-democratic movement. [S1] [S5]
+## 2. Інституційний тиск і межі доказу
 
-- **What survived / what was destroyed:** Poetry, screenplays, and later public record survived. Some film work was delayed or shelved; the pressure damaged the public space for Ukrainian poetic cinema.
+Для Драча не встановлено архівного запису про арешт, вирок, табір або заслання
+в перевіреному пакеті [S1–S3]. Тому неприпустимо називати його політв'язнем
+або добудовувати біографію переказом про «каяття». Відсутність такого доказу
+не означає відсутності тиску в культурній сфері. ЕСУ прямо пише, що до початку
+кампанії проти так званих «формалістів» і «абстракціоністів» Драч уже здобув
+авторитет і міг надалі друкувати твори, хоча не всі [S1]. Це джерельно
+обмежене, але важливе твердження: воно фіксує зміну меж публікації, не даючи
+права вигадувати єдиний каральний епізод.
 
-## 3. Major works
+Найконкретніший документ у пакеті — архівний запис eKMAIR: «Криниця для
+спраглих». Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966
+року. Стенограма [S2]. Репозитарій називає автора, дату, видання «Кіно-Театр»
+1998 року, № 1, сторінки 38–42, а також надає файл [S2]. Це придатний
+первинний документ для аналізу обговорення фільму. Він не доводить автоматично
+кожну ширшу тезу про цензуру, заборону, персональні мотиви учасників чи всю
+культурну політику держави. Майбутнє близьке читання має спочатку встановити,
+хто говорить, про який проєкт і в якому контексті, а вже потім формулювати
+висновки.
 
-- `1962` — *Соняшник*, debut collection. [S1]
-- `1965` — *Протуберанці серця*, poetry. [S1]
-- `1965` — *Криниця для спраглих*, screenplay; filmed by Yurii Illienko and suppressed. [S2]
-- `1966` — *Балади буднів*, poetry. [S1]
-- `1974` — *Корінь і крона*, Shevchenko Prize collection. [S1]
-- `1976` — *Київське небо*, poetry. [S1]
-- `1981` — *Шабля і хустина*, poetry. [S1]
-- `1983` — *Духовний меч*, literary-critical essays. [S1]
-- `1985` — *Теліжинці*, poetry. [S1]
-- `1988` — *Храм сонця*, poetry. [S1]
-- `1988` — *Чорнобильська мадонна*, long poem; include after edition verification in Phase 2.
+Такий підхід особливо потрібний для українського поетичного кіно. Не варто
+описувати його як «регіональний радянський колорит»: сценарій, студійна рада,
+українська літературна мова й локальні культурні мережі мають власну
+суб'єктність. Але так само не можна перетворювати кожен формальний експеримент
+на прихований політичний маніфест без текстового або архівного доказу.
 
-## 4. Primary-source quotes
+## 3. Твори й робота між жанрами
 
-> "В соняшника були руки і ноги"
+- `1962` — *Соняшник*, дебютна поетична збірка [S1].
+- `1965` — *Протуберанці серця*, збірка, що розвиває інтелектуалізовану
+  образність раннього Драча [S1].
+- `1965` — сценарій до фільму *Криниця для спраглих*; документальним входом до
+  його історії є стенограма ради 29 січня 1966 року [S2].
+- `1966` — *Балади буднів*, поетична книжка [S1].
+- `1974` — *Корінь і крона*, збірка, відзначена Шевченківською премією [S1].
+- `1983` — *Духовний меч*, добірка літературно-критичних статей [S1].
+- `1988` — *Чорнобильська мадонна*, поема, яку ЕСУ читає не як переказ аварії,
+  а як суб'єктивно пережитий морально-філософський потряс [S1].
 
-Source: line from Drach cited in `mcp__sources.search_literary` through Rusanivskyi's history of literary language, with work context tied to the "соняшник" image. Useful for showing animation/metaphor to B1-B2 learners. [S6]
+Цей перелік показує не «зміну професій», а взаємодію поезії, критики й кіно.
+Драч працював із модерною метафорою, драматичним діалогом, перекладом,
+сценарною формою та публіцистичною оцінкою літератури [S1]. Чорнобильська тема
+не повинна перетворюватися на символ без історії: для загального контексту
+аварії слід спиратися на окремі історичні джерела, а для читання поеми — на
+перевірене видання. У цьому пакеті повний текст поеми не відтворюється.
 
-> "Кому - жом у господу"
+## 4. Первинні тексти й цитування
 
-Source: Drach line cited in the literary encyclopedia chunk retrieved by `mcp__sources.search_literary` under dissonance. Use as a short stylistic example only; consult a full edition before building learner exercises. [S6]
+Цей пакет не містить дослівної цитати з поезії Драча. Відомий рядок або
+популярний переказ не є достатнім, якщо не вказано точне україномовне видання,
+сторінку чи сталий розділ і правову підставу для використання. Натомість [S2]
+є точно ідентифікованим документом: назва, дата засідання, журнальна
+публікація, номер і сторінки визначені в архівному записі. Він придатний як
+зовнішнє посилання, але не як дозвіл відтворити файл у курсі.
 
-## 5. Language register
+## 5. Мовний регістр
 
-- **Register:** High modernist metaphor, publicistic essay, film-poetic image, later civic rhetoric.
-- **CEFR readiness for full reading:** B2 for selected poems; C1-C2 for *Ніж у сонці* and *Чорнобильська мадонна*.
-- **Lexicon notes:** scientific metaphor (`протуберанець`), cinematic terms, biblical/civic vocabulary, neologistic compounds.
-- **Stylistic features:** Extended metaphor, syncretic imagery, ballad form, publicistic address, and sudden register shifts.
+Поетичний регістр Драча поєднує асоціативну метафору, наукову лексику,
+баладну форму, публіцистичний жест і драматичний діалог [S1]. Для повного
+читання складних поем доцільний рівень C1–C2; окремі короткі тексти можна
+вивчати лише після перевірки конкретного видання. Корисні мовні спостереження:
+як абстрактне поняття стає образом, як ритм змінює інтонацію, як поетична мова
+не зводиться до фольклорної стилізації та як назва книжки може вводити лексику
+сучасної науки в літературний контекст.
 
-## 6. Contested points
+## 6. Суперечності, політика і пам'ять
 
-- **What's debated in modern UA scholarship:** Drach's place between Sixtier experimentation, Soviet accommodation, and later national-democratic politics.
-- **What gets simplified in popular memory:** He is often reduced either to the sunflower poem or to Rukh politics. The source pack shows poetry, cinema, criticism, and public life.
-- **Where modern Russian disinformation attacks them:** Ukrainian poetic cinema is often framed as "regional Soviet color." The censorship record shows that Ukrainian folk-modernist form was politically sensitive, not merely decorative.
-- **Polish / Jewish / other-perspective considerations:** Retrieved sources did not surface a specific Polish/Jewish controversy for Drach. Source not found.
-- **Pedagogical caution:** Do not omit the forced-repentance/pressure episode, but also do not flatten the whole career into that episode.
-- **Source-balance note:** ESU is strong for works and awards but less direct on the coercive 1966 mechanism. The textbook retrieval gives the pedagogical frame for Sixtier pressure, while the eKMAIR record is important because it names a real, inspectable transcript connected to *Криниця для спраглих*. A Phase 2 module should quote from the transcript itself only after reading the full item.
-- **Risk note:** Drach's later prominence in official culture can tempt a simplified "successful Soviet poet" reading. The sourced record is more useful: innovation, pressure, compromise, return to public national politics, and an unusually broad genre range.
+Драч був головою Народного руху України у 1989–1992 роках за даними ЕСУ [S1].
+УІНП окремо засвідчує, що на установчому з'їзді НРУ 8–10 вересня 1989 року його
+обрали головою [S3]. Це не дозволяє назвати його одноосібним автором Руху,
+приписати йому всі позиції організації або ретроспективно звести до політики
+весь попередній літературний доробок. І навпаки, поетична репутація не скасовує
+потреби критично читати його пізні громадські ролі.
 
-## 7. Cross-track links
+Для радянського періоду точна формула — не «жертва» і не «співучасник», а
+розмежування перевірених речей: професійна робота в установах, рання художня
+інновація, кампанія проти формалізму, нерівні можливості друку і документована
+стенограма ради [S1, S2]. Інші твердження мають лишатися питаннями для
+дослідження, а не навчальними фактами. Це антиагіографічне правило не
+нівелює український культурний внесок, а робить його видимим без радянських
+ярликів і без пізніших легенд.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/drach-knife-sun.yaml`
-  - `curriculum/l2-uk-en/plans/lit/drach-ballads.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio links to Serhii Paradzhanov, Yurii Illienko, Ivan Svitlychnyi, Viacheslav Chornovil, Sixtiers, and Ukrainian poetic cinema.
-- **Potential LIT additions surfaced by this research:**
-  - C1 module around *Криниця для спраглих* using the EKMAIR transcript and film excerpts, if rights/permissions are cleared.
-  - A contrast activity can pair a short early image from *Соняшник* with a later civic/Chornobyl passage, showing why Drach cannot be taught as a single-register poet.
-  - A media-literacy task can compare a poem, a screenplay, and a party-censorship discussion, so students see genre pressure rather than treating "Soviet literature" as one stable register or neutral category.
+Три джерельні площини також не можна міняти місцями. ЕСУ дає перевірний
+біографічний і бібліографічний каркас, але не є стенограмою засідання художньої
+ради [S1]. Архівний запис eKMAIR засвідчує саме документ про «Криницю для
+спраглих», а не повну політичну історію студії чи всі наміри режисера й
+сценариста [S2]. Матеріал УІНП фіксує дату з'їзду та обрання голови Руху, але
+не замінює дослідження програмних суперечок усередині організації [S3]. Таке
+розмежування потрібне, щоб не перетворити Драча ані на безмовний символ, ані на
+суму чужих суджень: документований авторський доробок, робота в інституціях і
+публічний вибір мають різний доказовий масштаб.
 
-## 8. Naming-canonical
+Для читання «Чорнобильської мадонни» ця межа особливо важлива. ЕСУ пов'язує
+поему з пережитим потрясінням і морально-філософським осмисленням катастрофи
+[S1]. Звідси випливає обережне завдання: простежити, як поетичний образ
+висловлює тривогу, біль, відповідальність або пам'ять. Звідси не випливає
+право перетворювати художній текст на технічний звіт, приписувати авторові
+точні знання про роботу станції чи подавати поетичну метафору як свідчення
+очевидця. Так само зв'язок митця з культурним рухом не знімає потреби бачити
+відмінність між літературною мовою, сценарною працею, інституційною посадою та
+громадським представництвом. У кожному випадку семінар повертається до
+конкретного джерела, його дати, жанру й межі того, що воно справді дозволяє
+стверджувати.
 
-- **Slug:** `ivan-drach`
-- **EN canonical (BGN/PCGN 2010):** Ivan Drach
-- **UA canonical (with patronymic):** Драч Іван Федорович
-- **Aliases (track these for `aliases:` YAML field):** Ivan Fedorovych Drach.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Ivan Fedorovich Drach as Russian-style patronymic rendering (FORBIDDEN except source metadata).
+## 7. Перехресні зв'язки
 
-## 9. Image candidates
+**Наявні й перевірені:**
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait candidates; verify individual license.
-- **Backup candidates:** ESU image; rights not established.
-- **If no PD/CC portrait exists:** Use a rights-cleared image from a public literary event or memorial.
-- **Era-appropriate context image:** Rights-cleared still/poster from *Криниця для спраглих* or *Тіні забутих предків* context.
+- `curriculum/l2-uk-en/plans/lit/drach-knife-sun.yaml`;
+- `curriculum/l2-uk-en/plans/lit/drach-ballads.yaml`.
 
-## 10. Sources used
+**Кандидатні зв'язки, не позначені як наявні матеріали:** шістдесятники,
+українське поетичне кіно, Юрій Іллєнко, історія Руху, культурні реакції на
+Чорнобильську катастрофу. Для кожного потрібен власний джерельний пакет.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Драч Іван Федорович" | https://esu.com.ua/article-21707 | accessed 2026-05-30
+## 8. Канонічне іменування
 
-**Tier 2 (institutional):**
-- eKMAIR/NaUKMA repository, "\"Криниця для спраглих\". Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966 року. Стенограма" | https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7 | accessed 2026-05-30
+- **Slug:** `ivan-drach`.
+- **Українська канонічна форма:** Іван Федорович Драч.
+- **Латинкою за BGN/PCGN:** Ivan Drach.
+- **Допустимий пошуковий варіант:** Ivan Fedorovych Drach.
+- **Не вживати в українському викладі:** російську форму патроніма; вона може
+  з'явитися лише в точних метаданих чужомовного каталогу.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Драч Іван Федорович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## 9. Зображення
 
-**Tier 4 (modern scholarly post-1991):**
-- `mcp__sources.search_text`, Grade 11 Ukrainian literature textbook retrieval for Drach biography and 1966 pressure context | accessed 2026-05-30
-- `mcp__sources.search_literary`, literary encyclopedia/Rusanivskyi chunks for Drach style and quotations | accessed 2026-05-30
+На сторінці ЕСУ є фотографія, але сама наявність ілюстрації не доводить її
+авторства, першої публікації чи окремої ліцензії [S1]. У перевіреному пакеті
+не знайдено індивідуально ліцензованого портретного файла. Тому обрано
+`portrait_fallback: text-only`; до появи окремої сторінки файла з доказом прав
+портрет не слід додавати.
 
-**Primary-source documents accessed:**
-- Dovzhenko Studio transcript record via eKMAIR; short poem excerpts via literary corpus. Party file/case number: source not found.
+## 10. Використані джерела
 
----
+- **[S1] Tier 1:** І. М. Дзюба, «Драч Іван Федорович», *Енциклопедія Сучасної
+  України*, НАН України й НТШ, 2008, оновлено 2018. https://esu.com.ua/article-21707
+  (відкрито 2026-07-17).
 
-## Decolonization self-check
+## Методичне застереження
 
-- [x] Pressure/censorship distinguished from imprisonment
-- [x] Existing paths verified
-- [x] Soviet film suppression named
-- [x] No fabricated party file ID
-- [x] Russian-imperial transliterations confined to naming metadata
+Три джерела цього досьє не утворюють повної критичної бібліографії. ЕСУ
+підтверджує базову хронологію і подає літературознавчу оцінку; її авторська
+стаття не є заміною першодруків або повних академічних коментарів. eKMAIR дає
+доступ до конкретної стенограми, але її не можна без перевірки поширювати на
+всі рішення студії, держави чи покоління. Матеріал УІНП підтверджує обрання
+голови на певному з'їзді, але не є біографією всієї політичної діяльності.
+Такий розподіл доказової сили допомагає уникати двох помилок: романтичного
+переказу про «забороненого генія» і радянського знецінення українського
+модерного мистецтва. Якщо в подальшій роботі з'явиться архівна справа,
+достовірне листування або ліцензоване цифрове видання поезій, його слід
+додавати як окреме джерело з точною роллю, датою доступу й локатором.
+- **[S2] Tier 2 / первинний документ:** І. Драч, «Криниця для спраглих».
+  Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966 року.
+  Стенограма, *Кіно-Театр*, 1998, № 1, с. 38–42; запис eKMAIR.
+  https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+  (відкрито 2026-07-17).
+- **[S3] Tier 2:** «1989 — відкрився Установчий з'їзд “Народного руху України
+  за перебудову”», Український інститут національної пам'яті.
+  https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+  (відкрито 2026-07-17).
+
+## Деколонізаційна самоперевірка
+
+- [x] Українські інституції та культурна агентність названі прямо.
+- [x] Радянські формули подано як мову контролю, а не як нейтральний опис.
+- [x] Немає вигаданих арештів, покарань, цитат, мотивів або ліцензій.
+- [x] Політична роль не стирає поетичну й кінематографічну працю, і навпаки.

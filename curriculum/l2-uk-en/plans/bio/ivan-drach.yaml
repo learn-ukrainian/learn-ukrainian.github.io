@@ -1,7 +1,7 @@
 ---
 activity_hints:
-- after_section: 'Тінь: Цензура й примусове «каяття» без ув''язнення'
-  focus: Перевірка розуміння механізму тиску — критика ЦК, стоп-кадр «Криниці», без вигаданого арешту
+- after_section: 'Тінь: Цензура, інституції та межі джерел'
+  focus: Відрізнити зафіксований інституційний тиск на мистецтво від непідтверджених тверджень про арешт чи судову справу
   items: 5
   placement: inline
   type: quiz
@@ -10,7 +10,7 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: Дебат — чи можна звести кар''єру Драча до одного «соняшника» чи до одного «каяття»?
+- focus: Дебат — чи можна звести кар''єру Драча до одного «соняшника» або лише до політичної ролі?
   placement: workbook
   type: debate
 - focus: >-
@@ -36,7 +36,7 @@ content_outline:
     літературний критик, громадський діяч.
   - >-
     Провокаційне питання: як поет і кіносценарист міг залишатися в системі й водночас
-    потрапляти під партійний тиск?
+    зустрічати обмеження в радянських культурних інституціях?
   section: Розминка
   words: 400
 - points:
@@ -68,18 +68,19 @@ content_outline:
   words: 1200
 - points:
   - >-
-    [!anti-hagiography] Драч не був ув''язненим — не вигадувати табір чи судовий процес; механізм
-    — цензура, партійна критика, тиск після контактів із дисидентами.
+    [!anti-hagiography] У перевіреному пакеті немає підстав називати Драча політв'язнем,
+    приписувати йому судову справу або пояснювати всю його працю одним політичним ярликом.
   - >-
-    Особливо 1965–1966: атмосфера протесту навколо «Тіней забутих предків»; різка критика й
-    стоп-кадр «Криниці для спраглих»; примусове публічне «каяття» після дисидентських контактів.
+    Кампанія проти «формалістів» і «абстракціоністів», про яку пише ЕСУ, позначила межі
+    допустимого для раннього експерименту; джерело не дозволяє перетворювати це на
+    універсальне пояснення кожного тексту чи вчинку Драча.
   - >-
     Стенограма засідання художньої ради кіностудії ім. Довженка 29 січня 1966 (eKMAIR) —
     документ обговорення сценарію.
   - >-
     [!epistemic-humility] Не робити з Драча ні чистого дисидента-героя, ні простого колаборанта:
     зафіксована рамка — інновація, тиск, компроміс, повернення до громадянської політики.
-  section: 'Тінь: Цензура й примусове «каяття» без ув''язнення'
+  section: 'Тінь: Цензура, інституції та межі джерел'
   words: 1600
 - points:
   - >-
@@ -88,13 +89,13 @@ content_outline:
     Спадщина: поезія, сценарії, есеїстика; «Криниця для спраглих» відновлена у пізньому
     радянському періоді; тиск пошкодив простір українського поетичного кіно.
   - >-
-    [!decolonization] [!myth-buster] Не редукувати до «соняшника» або до політики Руху; не видаляти
-    примусове «каяття», але не сплощувати кар''єру до одного епізоду.
+    [!decolonization] [!myth-buster] Не редукувати до «соняшника» або до політики Руху:
+    поетична, кінематографічна, критична й громадська праця мають окремі джерела та хронології.
   section: 'Підсумок: Від «Соняшника» до громадянської ролі'
   words: 1000
 focus: >-
-  Іван Драч — поет, сценарист і громадський діяч. Аналіз цензури, стоп-кадру «Криниці для спраглих»
-  та примусового «каяття» без вигаданого арешту.
+  Іван Драч — поет, сценарист і громадський діяч. Аналіз раннього експерименту,
+  документованої стенограми про «Криницю для спраглих», Чорнобильської мадонни та Руху.
 level: BIO
 module: bio-259
 objectives:
@@ -102,13 +103,13 @@ objectives:
   Відокремити біографічні факти Драча (освіта, бібліографія, дати) від спрощень «соняшник»
   або партийної політики.
 - Аналізувати поетичну метафору та сценарій «Криниці для спраглих» як українське поетичне кіно.
-- Пояснити механізм непрямого тиску — цензура, критика ЦК, примусове «каяття» — без арешту.
+- Пояснити, що документовані культурні обмеження не дають підстав вигадувати арешт, вирок чи інші непідтверджені епізоди.
 - Оцінити складність кар''єри: інновація, тиск, компроміс і національно-демократична політика.
 pedagogy: CBI
 persona:
   role: >-
-    Модератор семінару про шістдесятників-поетів, який не вигадує арешт і не сплощує
-    кар''єру до одного епізоду.
+    Модератор семінару про шістдесятників-поетів, який розрізняє документовані факти,
+    інтерпретації та прогалини джерел.
   voice: Poetic Cinema Historian
 phase: BIO
 references:
@@ -120,40 +121,60 @@ references:
   path: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
   title: «Криниця для спраглих». Стенограма (eKMAIR)
   type: reference
-- note: Базова енциклопедична довідка.
-  title: Драч Іван Федорович (Вікіпедія)
+- note: Інституційний матеріал про установчий з'їзд Руху та обрання Драча головою НРУ.
+  path: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+  title: 1989 — відкрився Установчий з'їзд Народного руху України за перебудову (УІНП)
   type: reference
-- note: Дебютна збірка поезії (1962).
-  title: Соняшник
-  type: primary
-  work: Соняшник
 sequence: 259
 slug: ivan-drach
 subtitle: Poetry, Suppressed Cinema, and Coerced Repentance Without Imprisonment
 title: 'Іван Драч: поетичне кіно під цензурою'
 readings:
-- title: "Драч Іван Федорович"
-  source_name: "Енциклопедія Сучасної України"
-  source_url: "https://esu.com.ua/article-21707"
-  language: "uk"
-  role: "reference"
-  hosting: "link-only"
-  rights_note: "Open-access reference entry from a Ukrainian encyclopedia platform."
-- title: "Стенограма художньої ради кіностудії ім. Довженка (29 січня 1966)"
-  source_name: "eKMAIR"
-  source_url: "https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7"
-  language: "uk"
-  role: "primary"
-  hosting: "link-only"
-  rights_note: "Institutional repository entry with archival document."
-- title: "Поезія Івана Драча (вибірка)"
-  source_name: "reading-needed"
-  source_url: "reading-needed"
-  language: "uk"
-  role: "reading-needed"
-  hosting: "reading-needed"
-  rights_note: "reading-needed: verify links to rights-cleared Ukrainian learner-facing primary-text excerpts."
-version: '1.1'
+- title: Драч Іван Федорович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-21707
+  language: uk
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: Відокремити хронологію книжок, сценарної роботи та громадських посад від критичних оцінок творчості.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-21707
+    note: Авторсько-правова стаття ЕСУ доступна лише за зовнішнім посиланням; текст не відтворюється в курсі.
+- title: '«Криниця для спраглих». Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966 року. Стенограма'
+  source_name: Електронний архів НаУКМА (eKMAIR)
+  source_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+  language: uk
+  source_type: primary-document
+  role: document-reading
+  hosting: link-only
+  learner_task: Визначити учасників, дату, вид документа і те, що стенограма справді засвідчує про обговорення фільму.
+  rights:
+    basis: external-link
+    evidence_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+    note: Архівний запис і файл читаються на зовнішній інституційній платформі; повний текст у курсі не відтворюється.
+- title: '1989 – відкрився Установчий з''їзд «Народного руху України за перебудову»'
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+  language: uk
+  source_type: institutional-history
+  role: contextual-reading
+  hosting: link-only
+  learner_task: Пояснити, яку посаду Драч обійняв після установчого з'їзду і чого цей матеріал не доводить про всю його політичну біографію.
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+    note: Відкрита україномовна інституційна сторінка доступна лише як зовнішнє посилання; текст не відтворюється в курсі.
+readings_contract_version: 2
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: Окремий портретний файл з доведеними авторством, джерелом походження та ліцензією в перевіреному пакеті не встановлено.
+  evidence_url: https://esu.com.ua/article-21707
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
+version: '4.2'
 vocabulary_hints:
 - definition: образ, що переносить властивості людини на неживу силу
   pos: ж.

@@ -1,0 +1,14 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Євген Гуцало
+- Євген Гуцало Енциклопедія Сучасної України
+- Євген Гуцало Орлами орано НБУВ Україніка
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://esu.com.ua/article-25016
+- https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID=
+warning: >-
+  Пакет містить статтю ЕСУ та точне оцифроване видання НБУВ. Цитати з прози
+  не відтворено: для них потрібен точний локатор у виданні й окрема правова підстава.

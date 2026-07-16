@@ -1,121 +1,174 @@
-# Гуцало Євген Пилипович — Research Dossier
+# Гуцало Євген Пилипович — дослідницьке досьє
 
 **Slug:** `yevhen-hutsalo`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Літературна культура і громадянська пам'ять
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Гуцало Євген Пилипович.
-- **Pseudonyms / aliases:** Yevhen Hutsalo, Evhen Hutsalo, Eugene Hutsalo.
-- **Born:** 1937-01-14 | Старий Животів, now Новоживотів, Vinnytsia region, Ukrainian SSR. ESU gives date and place; Ukrainian Wikipedia via `mcp__sources.query_wikipedia` agrees. [S1] [S4]
-- **Died:** 1995-07-14 | Kyiv, Ukraine. ESU gives 14 July 1995; this differs from some casual web summaries that give 4 July, so the dossier follows ESU. [S1]
-- **Family / education key facts:** Graduated from Nizhyn Pedagogical Institute in 1959; worked in regional newspapers, *Literaturna Ukraina*, and the Soviet/Ukrainian Writers publishing house. [S1]
+- **Канонічне ім'я:** Гуцало Євген Пилипович.
+- **Народився:** 14 січня 1937 року, село Старий Животів, нині Новоживотів
+  Вінницької області.
+- **Помер:** 14 липня 1995 року в Києві.
+- **Освіта й праця:** закінчив Ніжинський педагогічний інститут 1959 року;
+  працював у редакціях газет, «Літературній Україні» та видавництві
+  «Радянський письменник».
 
-## 2. Oppression mechanism
+Ці факти подає стаття Івана Дзюби в Енциклопедії Сучасної України [S1]. Для
+дати смерті прийнято саме її, а не поширений у неатрибутованих вебпереказах
+варіант. Стаття ЕСУ є підписаним інституційним джерелом і подає бібліографічний
+опис, відомості про нагороди, освіту, працю та жанровий склад доробку. Вона не
+є архівною справою про кожен епізод життя, тому цьому пакетові не приписано
+непідтверджених особистих обставин.
 
-- **What happened:** Indirect Soviet cultural pressure: censorship, ideological framing, and pressure to fit Ukrainian prose into Soviet literary categories.
-- **When:** 1960s-1980s, especially during the post-Thaw disciplining of Sixtiers and Ukrainian cultural production.
-- **By whom:** Soviet literary institutions, censorship systems, party-controlled publishing and criticism.
-- **Document references:** No single censorship ruling against Hutsalo was retrieved. Source not found for a personal KGB/censorship file.
-- **Mechanism specifics:** Hutsalo was not retrieved as an imprisoned dissident. His oppression mechanism is the quieter Block E form: a Ukrainian prose writer whose language, rural memory, and national-cultural attention were published inside a Soviet system that reframed such work as acceptable "Soviet" literature. A local curriculum source retrieved by `mcp__sources.search_sources` explicitly warns that Soviet references framed him as a "рад. writer," emphasized CPSU membership from 1977, and blurred national narrative into Soviet "international" language. [S5]
+Гуцало був поетом, новелістом, автором повістей, романів, публіцистом та
+есеїстом [S1]. Такий перелік потрібний проти двох хибних скорочень. Перше
+зводить автора до «дитячого письменника», бо окремі його тексти увійшли до
+шкільного читання. Друге перетворює сільську тематику на обмежену жанрову
+етикетку. Перевірене джерело показує значно ширший корпус, але не дає права
+називати всі його книги рівнозначними за впливом чи доступністю.
 
-The source-grounded way to teach him is not to claim arrest or exile. It is to show how lyrical prose, children in nature, village memory, and later anti-imperial essays made Ukrainian-language continuity visible even when the official system tried to domesticate that continuity. [S1] [S5]
+## 2. Тиск, інституції та межа доказу
 
-- **What survived / what was destroyed:** More than 200 lyrical stories and many longer prose works survived in print. What was damaged was the interpretive frame: Soviet criticism often made Ukrainian moral/ecological prose serve Soviet categories.
+У перевіреному наборі немає особової справи КДБ, постанови про заборону книжки,
+вироку, дати обшуку або іншого документа, який підтверджував би персональний
+арешт Гуцала. Отже, його не можна називати ув'язненим дисидентом і не можна
+переносити на нього біографію інших шістдесятників. Відсутність такого запису
+в цьому наборі не доводить, що жодного тиску ніколи не було; вона визначає
+межу твердження, яке цей пакет може відповідально зробити.
 
-## 3. Major works
+Робота в «Літературній Україні» й видавництві з радянською назвою документована
+ЕСУ [S1]. Назва установи належить історичному контексту, але сама по собі не
+доводить ані особистої лояльності, ані прихованого опору автора. Так само факт
+друку в радянські роки не є доказом повної свободи від ідеологічного контролю.
+Для персональної історії цензури необхідні конкретні дата, орган, документ і
+зв'язок із твором. Цього порогу тут дотримано, щоб не замінити історію
+припущенням, яке зручне для героїчного сюжету.
 
-- `1961` — *Зелена радість конвалій*, poetic cycle. [S1]
-- `1962` — *Люди серед людей*, first story collection, noted by ESU for fresh emotional tone. [S1]
-- `1964` — *Яблука з осіннього саду*, stories. [S1]
-- `1966` — *Хустина шовку зеленого*, stories. [S1]
-- `1969` — *У лелечому селі*, one of the strong Ukrainian children's-story books of the period. [S1]
-- `1969` — *Подорожні*, wartime-memory prose. [S1]
-- `1971` — *Дівчата на виданні*, village moral drama. [S1]
-- `1973` — *Шкільний хліб*, postwar rural teachers. [S1]
-- `1982` — *Позичений чоловік*, comic/folkloric novel. [S1]
-- `1990s` — *Ментальність орди*, anti-imperial essay cycle; curriculum source retrieves it as part of the decolonial turn. [S5]
+Гуцала часто розміщують у хронологічному оточенні шістдесятників. ЕСУ фіксує
+ранній поетичний цикл 1961 року та збірки прози 1964 і 1966 років [S1]. Це
+дозволяє говорити про час його входження в літературу, але не про формальне
+членство в групі, контакти з кожним її представником чи участь у самвидаві.
+У досьє не використовуються вторинні готові списки «шістдесятників» як заміна
+прямому джерелу. Біографічний факт і контекстуальна класифікація лишаються
+різними речами.
 
-## 4. Primary-source quotes
+## 3. Твори й бібліографічна точність
 
-> "Лось був старий та бувалий самець"
+ЕСУ називає «Зелену радість конвалій» (1961), «Яблука з осіннього саду»
+(1964), «Скупану в любистку» (1965), «Хустину шовку зеленого» (1966),
+«Мертву зону» (1967), «Родинне вогнище» (1968), «Запах кропу» (1969),
+«Серпень, спалах любові» (1970), «Дівчат на виданні» (1971), «Весну
+високосного року» (1973), «За обручем» (1976), «Орлами орано» (1977),
+«З вогню воскресли» (1978), «Полювання з гончим псом» (1980) і «Пролетіли
+коні» (1984) [S1]. Це не канонічний рейтинг і не повна бібліографія; це
+перевірений перелік, з яким можна розпочати точне зіставлення назв і років.
 
-Source: *Лось*, excerpt in Grade 5 Ukrainian literature textbook retrieved via `mcp__sources.search_text`. This short line is useful for A2-B1 learners because it introduces animal description, age, and narrative voice. [S6]
+Для первинного читання прийнято конкретний цифровий об'єкт НБУВ: «Орлами
+орано : оповідання, повість», Київ, «Радянський письменник», 1977, 373, [2]
+сторінки [S2]. У такий спосіб «твір» не плутається з абстрактною назвою,
+передруком або шкільним фрагментом. Оцифрована книжка — пряме джерело для
+перевірки заголовка, автора, видавця, року й розміщення тексту. Вона не дає
+дозволу переписати повний текст до курсу.
 
-> "Ми вчителі, ми не хочемо нікого обманювати"
+НБУВ зазначає, що інформаційні ресурси електронної бібліотеки доступні для
+навчального і наукового некомерційного використання з обов'язковим зазначенням
+авторства, без права повторного відтворення повних текстів [S2]. Тому план
+залишає це джерело посиланням, а не розміщеною читанкою. Відомі фрази з
+оповідань, знайдені без сторінки й редакції, вилучено. Навіть коротка цитата
+має мати точний локатор; популярність рядка не є його бібліографічною адресою.
 
-Source: *Шкільний хліб*, quoted in ESU. Pedagogically, it shows the moral plain style that lets rural teachers carry ethical pressure without slogans. [S1]
+## 4. Первинні висловлювання
 
-## 5. Language register
+У цьому пакеті не відтворено жодної цитати Гуцала. ЕСУ містить критичну
+характеристику творів, а НБУВ надає доступ до конкретної книжки, проте до
+робочого реєстру не внесено сторінку, на якій звірено текст майбутньої цитати.
+Короткі фрази з «Лося», «Шкільного хліба» чи пізньої есеїстики не повинні
+переходити з підручникового переказу, пошукового уривка або пам'яті редактора
+в біографічний документ. Відсутність цитати тут є обережністю, а не прогалиною,
+яку можна заповнити схожим за стилем реченням.
 
-- **Register:** Lyrical prose, rural Ukrainian, ecological/ethical narrative, later polemical essay.
-- **CEFR readiness for full reading:** B1 for *Лось* excerpts; B2-C1 for adult prose; C1 for *Ментальність орди*.
-- **Lexicon notes:** `заповідник`, `ратиці`, `підберезник`, village household words, sensory nature vocabulary, anti-imperial essay terms.
-- **Stylistic features:** Dense nature description, moral understatement, child focalization, oral idioms, and non-urban Ukrainian phraseology.
+## 5. Мовний регістр і читання
 
-## 6. Contested points
+ЕСУ описує ранню новелістику Гуцала як просту за оповідною формою, але містку:
+стан людини передається жестом, поглядом, словом чи короткою ситуацією [S1].
+Це критична характеристика, не універсальна формула для всіх текстів. Для
+семінарного читання корисно розрізняти новелу, ліричну інтонацію, деталь,
+психологізм, бібліографічний опис і рецепцію. Повний текст прози доречний
+переважно для рівня C1, бо навіть видима простота оповіді може містити густу
+образність, сільську лексику та моральні підтексти.
 
-- **What's debated in modern UA scholarship:** How to balance Hutsalo's publication within Soviet institutions and his preservation of Ukrainian rural/national language worlds.
-- **What gets simplified in popular memory:** School curricula often reduce him to *Лось*. ESU shows a much broader body: poetry, stories, novels, essays, and journalism. [S1]
-- **Where modern Russian disinformation attacks them:** The pressure is subtler than direct disinformation: imperial framing can dismiss his anti-imperial essays as "nationalist" while treating his children's prose as apolitical.
-- **Polish / Jewish / other-perspective considerations:** Retrieved sources did not surface a specific Polish or Jewish lens for Hutsalo. Source not found.
-- **Pedagogical caution:** Do not invent an arrest. Teach Soviet pressure as censorship/framing unless a personal repression file is retrieved.
-- **Source-balance note:** ESU is the authority for dates, awards, education, and the breadth of the bibliography. The retrieved school-text excerpts are not enough to define the whole career, but they are valuable because they show which Hutsalo text already lives in classroom circulation. The local curriculum retrieval is useful for the decolonization warning: it names the Soviet habit of absorbing Ukrainian prose into an all-Soviet identity frame.
-- **Risk note:** The date of death is a good example of why this dossier follows Tier 1 over casual web memory. ESU gives 14 July 1995. If a later editor sees a conflicting 4 July date, the conflict should be flagged with a retrieved source rather than silently changed.
+Важливо не робити героя оповідання біографічним двійником письменника. ЕСУ
+згадує в «Дівчатах на виданні» конфлікт між природним моральним відчуттям і
+формальною пристойністю [S1]. Це дає тему для аналізу твору, але не доказує
+поглядів автора поза текстом. Така межа особливо потрібна, коли шкільна пам'ять
+прагне перетворити художній сюжет на коротку моральну довідку.
 
-## 7. Cross-track links
+## 6. Складні місця й рецепція
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/yevhen-hutsalo-shistdesiatnyky.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio links to Hryhir Tiutiunnyk, Valerii Shevchuk, Ivan Drach, rural prose after the Thaw, and ecological ethics in children's literature.
-- **Potential LIT additions surfaced by this research:**
-  - A B1 reading around *Лось* and a C1 reading around *Ментальність орди* as two very different Hutsalo registers.
-  - A vocabulary bridge can move from concrete animal/nature words in *Лось* to abstract political vocabulary in *Ментальність орди*, making one writer useful across a wide CEFR span without pretending the registers are equally easy.
-  - A source task can ask learners why a children's-story excerpt is a primary text while a Soviet-era label such as "радянський письменник" is an interpretive frame.
+Нагороди Гуцала — премія імені Юрія Яновського 1982 року, Державна премія
+України імені Тараса Шевченка 1985 року, міжнародна премія фундації Олени і
+Тараса Антоновичів 1995 року — підтверджені ЕСУ [S1]. Вони показують
+інституційне визнання, але не означають, що критичне читання стає зайвим.
+Рецепція потребує окремих рецензій, історії перевидань, програм навчання та
+архівів видавництв; таких джерел у прийнятому наборі немає.
 
-## 8. Naming-canonical
+Деколонізований підхід не прирівнює автора, що писав українською в радянській
+інституційній системі, до «радянського» культурного додатка. Водночас він не
+компенсує імперське стирання новою легендою про тайного героя. Джерела
+підтверджують українського письменника з широким доробком і конкретним місцем
+у видавничому полі [S1, S2]. Вони не підтверджують персональних драм, яких
+немає в документах. Саме ця точність дає змогу уникнути і радянського
+розчинення, і романтичного домислу.
 
-- **Slug:** `yevhen-hutsalo`
-- **EN canonical (BGN/PCGN 2010):** Yevhen Hutsalo
-- **UA canonical (with patronymic):** Гуцало Євген Пилипович
-- **Aliases (track these for `aliases:` YAML field):** Evhen Hutsalo, Eugene Hutsalo.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Evgenii Gutsalo, Yevgeny Gutsalo (FORBIDDEN except source metadata).
+## 7. Міжтрекові зв'язки
 
-## 9. Image candidates
+- **Наявне й перевірене:** `curriculum/l2-uk-en/plans/lit/yevhen-hutsalo-shistdesiatnyky.yaml`.
+- **Кандидати:** літературний огляд української новели 1960–1980-х років;
+  окреме джерельне дослідження шкільної рецепції «Лося»; бібліографія пізньої
+  есеїстики лише після перевірки конкретних видань.
+- **Історичне вирівнювання:** цей пакет не створює твердження про участь
+  Гуцала в дисидентських мережах без архівного або авторського джерела.
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait candidate; verify license before use.
-- **Backup candidates:** ESU image; rights not established by page alone.
-- **If no PD/CC portrait exists:** Use a rights-cleared image of Новоживотів or Nizhyn Pedagogical Institute context.
-- **Era-appropriate context image:** Cover of a rights-cleared edition of *Лось* or *Позичений чоловік*.
+## 8. Називання
 
-## 10. Sources used
+- **Slug:** `yevhen-hutsalo`.
+- **Українська канонічна форма:** Гуцало Євген Пилипович.
+- **Англійська форма:** Yevhen Hutsalo.
+- **Варіанти для пошуку:** Evhen Hutsalo, Eugene Hutsalo.
+- **Не вживати в українському тілі:** русифіковані форми імені на кшталт
+  *Yevgeny Gutsalo*; вони можуть бути лише в дослівних метаданих джерела.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Гуцало Євген Пилипович" | https://esu.com.ua/article-25016 | accessed 2026-05-30
+## 9. Зображення
 
-**Tier 2 (institutional):**
-- `mcp__sources.search_text`, Grade 5 Ukrainian literature textbook excerpts from *Лось* | accessed 2026-05-30
+Перевірені ЕСУ й НБУВ сторінки не є доказом окремої вільної ліцензії на
+портрет. План тому фіксує `portrait_fallback: text-only`. Наявність фотографії
+на біографічній сторінці не означає права завантажувати, обрізати чи
+перевикористовувати її. Портрет може з'явитися лише після окремої перевірки
+автора, походження файлу та ліцензії.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Гуцало Євген Пилипович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## 10. Використані джерела
 
-**Tier 4 (modern scholarly post-1991):**
-- `mcp__sources.search_sources`, local curriculum/wiki source `wiki/literature/works/yevhen-hutsalo-shistdesiatnyky.md` | accessed 2026-05-30
+- **[S1] Tier 1:** Дзюба І. «Гуцало Євген Пилипович», *Енциклопедія Сучасної
+  України*, Інститут енциклопедичних досліджень НАН України.
+  https://esu.com.ua/article-25016 (перевірено 2026-07-17).
+- **[S2] Tier 1:** Гуцало Євген Пилипович. *Орлами орано : оповідання,
+  повість*. Київ: «Радянський письменник», 1977. Електронна бібліотека
+  «Україніка», НБУВ.
+  https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0013181&Z21ID= (перевірено 2026-07-17).
 
-**Primary-source documents accessed:**
-- Textbook excerpt from *Лось*; ESU quotation from *Шкільний хліб*. Personal censorship file: source not found.
+## Самоперевірка деколонізації
 
----
+Досьє лишає відкритим завдання подальшої перевірки: знайти архівні документи
+про редакційні рішення, достовірні рецензії та первинні видання пізньої
+есеїстики. Відкрите завдання не перетворено на твердження про вже знайдений
+матеріал. Така чесність потрібна, щоб наступний дослідник міг додати джерело
+до реєстру, а не виправляти помилку, яка виникла з бажання завершити історію
+надто швидко.
 
-## Decolonization self-check
-
-- [x] No arrest invented
-- [x] ESU date used over unstable web date
-- [x] Soviet framing named as framing
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+- [x] Не вигадано арешту, особової справи чи особистого цензурного рішення.
+- [x] Радянські назви установ передано як історичні назви, не як ідентичність автора.
+- [x] Не переплутано художній сюжет і біографічний факт.
+- [x] Цитати вилучено до появи точного локатора.

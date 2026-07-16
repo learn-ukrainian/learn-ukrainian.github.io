@@ -1,127 +1,167 @@
-# Тютюнник Григір Михайлович — Research Dossier
+# Тютюнник Григір Михайлович — дослідницьке досьє
 
 **Slug:** `hryhir-tiutiunnyk`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** література й культурна пам’ять 1960–1980-х років
+**Рівень підготовки:** 2
+**Досліджено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Особа, ім’я, родина
 
-- **Full name (UA, canonical):** Тютюнник Григір Михайлович; civil given-name form Григорій.
-- **Pseudonyms / aliases:** Hryhir Tiutiunnyk; Hryhorii Tiutiunnyk; Григір Тютюнник.
-- **Born:** 1931-12-05 | Shylivka, Zinkiv raion, Poltava oblast | Ukrainian SSR. Sources: IEU "Tiutiunnyk, Hryhir"; Ukrainian Wikipedia via MCP; `mcp__sources.search_text` Grade 11 textbook results.
-- **Died:** 1980-03-06 in Kyiv according to Ukrainian Wikipedia and school-textbook sources; IEU gives 1980-03-07. This dossier flags the discrepancy rather than silently resolving it. The event is described as suicide in IEU and Ukrainian Wikipedia; the exact overnight timing likely explains the one-day difference.
-- **Family / education key facts:** Son of Mykhailo Tiutiunnyk and Hanna Syvokin; father arrested during the Great Terror in the night of 1937-11-29/30 and posthumously rehabilitated in 1958, per Ukrainian Wikipedia and textbook excerpts retrieved by MCP. Younger brother of writer Hryhorii Tiutiunnyk. Graduated from Kharkiv University in 1962, per IEU and Ukrainian Wikipedia.
+Григір (Григорій) Михайлович Тютюнник народився 5 грудня 1931 року в селі
+Шилівка на Полтавщині. Національна бібліотека України для дітей прямо пояснює,
+що **Григір** — літературне ім’я, обране для відрізнення від єдинокровного брата
+Григорія Тютюнника (1920–1961), теж українського прозаїка [ЧЛ-1]. Це не дрібна
+бібліографічна деталь: змішування двох авторів переносить чужі твори, дати й
+біографічні обставини на людину, про яку йдеться. У цьому пакеті канонічним
+позначенням є «Григір Тютюнник», а «Григорій» допускається лише як пояснення
+повної паспортної форми та походження псевдоніма.
 
-## 2. Oppression mechanism
+Бібліотечна довідка повідомляє, що батька, Михайла Васильовича, репресували як
+«ворога народу» і він не повернувся з таборів. Дитинство Григора минало також у
+родині дядька на станції Щотове Луганської області; під час війни хлопець ішов
+пішки через окуповану територію до рідного села, рятуючись від голоду [ЧЛ-1].
+Це джерело дозволяє говорити про наслідки державного терору і війни для родини,
+але не дозволяє вигадувати власну кримінальну справу письменника. Різниця між
+переслідуванням батька та професійним тиском на сина є обов’язковою для чесної
+біографії.
 
-- **What happened:** Family repression, censorship and hostile official criticism, non-publication of works during life, psychological pressure; no sourced arrest of Hryhir Tiutiunnyk himself was found.
-- **When:** Father's arrest in 1937; writer's censorship/criticism intensified through the 1970s. IEU states that Soviet critics were hostile because his prose diverged from socialist realism and that in response to the critics' hostility he committed suicide. Ukrainian Wikipedia states that works were printed reluctantly, criticized harshly, and some were not published in his lifetime. `mcp__sources.search_literary` textbook result says *Три зозулі з поклоном* was written in 1976 and not printed during the author's lifetime.
-- **By whom:** NKVD for the father's arrest; Soviet literary censorship/official criticism for the writer's professional pressure. Specific KGB file or court case for Hryhir himself: source not found.
-- **Document references:** Source not found for a named KGB case against Hryhir Tiutiunnyk. IEU and textbook sources support censorship/criticism but do not give a file number.
-- **Mechanism specifics:** His prose centered rural trauma, moral injury, orphaned childhood, hunger, and loneliness without conforming to Soviet triumphalist formulas. IEU explicitly states that he did not conform to socialist realism and that critics were ill-disposed to his work. Textbook sources retrieved through MCP show that *Три зозулі з поклоном* was withheld during his lifetime and framed as a work of "love supreme" rather than Soviet heroic plot. The father-arrest trauma was not background decoration: school-textbook excerpts preserve his own recollection that his father was arrested when he turned forty.
-- **What survived / what was destroyed:** The posthumous two-volume *Твори* (1985) and Shevchenko Prize recognition in 1989 restored his place in the canon. IEU notes posthumous recognition during democratization; Ukrainian Wikipedia lists posthumously published works and later editions.
+## 2. Освіта, мова, професійна траєкторія
 
-## 3. Major works
+Григір Тютюнник належить до покоління прозаїків, для яких повоєнна сільська й
+міська дійсність не зводилася до офіційної формули «світлого життя». У довідці
+НБУ для дітей названо його прозаїком, перекладачем і педагогом, а бібліографічна
+сторінка фіксує широкий корпус оповідань, повістей і дитячих книжок [ЧЛ-1,
+ЧЛ-2]. Джерела цього пакета не дають підстави будувати психологічний діагноз або
+одну всеохопну причину будь-якого творчого рішення. Натомість вони дозволяють
+простежити, як досвід дитинства, жива розмовна мова, спостереження за людьми та
+лаконічна новелістична форма стали матеріалом письма.
 
-- `1961` — "В сумерки," first publication in Russian; Ukrainian Wikipedia states he later switched to Ukrainian.
-- `1966` — *Зав'язь*, first short-story collection, per IEU and textbook sources.
-- `1969` — *Деревій*, short-story collection and title story recognized in a 1968 competition, per IEU and Ukrainian Wikipedia.
-- `1969` — *Облога*, novella, per IEU.
-- `1970` — *Ласочка*, children's stories, per Ukrainian Wikipedia.
-- `1972` — *Батьківські пороги*, collection, per IEU.
-- `1973` — *Степова казка*, children's book, per Ukrainian Wikipedia.
-- `1975` — *Крайнебо*, collection, per IEU.
-- `1976` — *Климко*, novella; Lesia Ukrainka Prize recognition in 1980, per Ukrainian Wikipedia.
-- `1976` — "Три зозулі з поклоном," novella; textbook source says not printed during his lifetime.
-- `1978` — *Коріння*, collection, per Ukrainian Wikipedia and textbook sources.
-- `1979` — *Вогник далеко в степу*, novella, per Ukrainian Wikipedia.
-- `1981` — *Вибрані твори*, posthumous edition.
-- `1985` — *Твори*, two volumes; IEU says it marked posthumous recognition.
+Перші публікації російською мовою не треба описувати як «природний доказ»
+російської культурної належності. У радянській Україні мовний вибір відбувався в
+нерівних умовах; пізніша українська проза Тютюнника є самостійним фактом його
+літературної роботи. Водночас не варто робити з цього автоматичну моральну
+схему: мовна траєкторія має читатися поруч із конкретними текстами та виданнями,
+а не як готова легенда про «навернення».
 
-## 4. Primary-source quotes
+## 3. Твори та видання
 
-> "Ніколи не працював над темою."
+Бібліографія НБУ для дітей дає перевірний матеріальний каркас. У ній наявні
+«Батьківські пороги» (Київ: Молодь, 1972), вибрані твори, «Климко» у кількох
+виданнях, «Облога» (Київ: Пульсари, 2004) та «Степова казка» [ЧЛ-2]. Перелік
+важливий саме як бібліографія: він встановлює, що певні видання існують і як
+вони названі, але не доводить автоматично авторський намір, реакцію всіх
+сучасників чи правовий статус цифрової копії. Серед центральних назв для
+майбутнього читання — «Зав’язь», «Деревій», «Климко», «Вогник далеко в степу»,
+«Три зозулі з поклоном», «Ласочка» та «Степова казка».
 
-Source: Grade 7/11 textbook corpus result via `mcp__sources.search_text`, quoting Tiutiunnyk's craft statement that he worked on feelings rather than topics. It is excellent for learners because it shifts literary analysis from plot labels to emotional precision.
+«Три зозулі з поклоном» часто стає єдиним знаком у шкільній пам’яті про автора.
+Такий вибір може бути зручним для аналізу, проте він звужує корпус. Дитячі
+оповідання, повісті про воєнне дитинство, короткі психологічні новели й
+перекладацька праця створюють іншу шкалу: Тютюнник не тільки «автор сумного
+села», а майстер оповіді про вразливість, мовчання, відповідальність і
+відношення людини до людини. Водночас пакетом не перевірено відкриту ліцензію
+повних текстів цих творів, тож назви не перетворюються на дозвіл їх копіювати.
 
-> "Любові всевишній присвячується."
+## 4. Цензура, критика та межі причинності
 
-Source: dedication to "Три зозулі з поклоном," retrieved in `mcp__sources.search_literary` Grade 11 Borzenko result. It frames the novella outside Soviet ideological categories.
+Біографія Тютюнника потребує особливої обережності. У наявному наборі немає
+прямого архівного документа, який підтверджував би арешт, вирок чи справу КДБ
+проти самого Григора Тютюнника. Тому таких тверджень бути не може. Його батько
+був жертвою сталінського терору; це не робить сина політичним в’язнем за
+замовчуванням. Відомості про цензурні обмеження, різку офіційну критику й
+непублікацію окремих текстів треба пов’язувати лише з названими джерелами або
+пізніше доданою академічною працею.
 
-## 5. Language register
+Смерть Тютюнника в Києві 1980 року є чутливою темою. Поширені вторинні довідки
+називають самогубство й намагаються прямо вивести його з критики або цензури.
+Цей пакет не має медичного документа, передсмертного листа чи достатньої
+архівної бази, щоб установлювати психологічну причинність. Коректна формула
+така: професійний тиск і критика є частиною задокументованого культурного
+контексту, а причинність смерті не слід спрощувати до однієї кампанії, однієї
+установи чи одного діагнозу. Така стриманість не применшує жорстокості
+радянської видавничої системи; вона захищає людину від посмертного використання.
 
-- **Register:** Rural psychological realism, compressed novella prose, colloquial-lyrical narration.
-- **CEFR readiness for full reading:** B2 for guided short stories; C1 for full stylistic analysis.
-- **Lexicon notes:** Rural speech, emotional understatement, kinship vocabulary, hunger/war childhood terms, and moral-ethical lexicon such as `милосердя`, `самовідданість`, `доброта`.
-- **Stylistic features:** Exact detail, dialogue-driven characterization, silence, restrained tragedy, and folk-inflected idiom without folklore decoration.
+## 5. Мова та поетика
 
-## 6. Contested points
+Проза Тютюнника придатна для C1-читання завдяки точному синтаксису, діалогам,
+регіональним словам, емоційному недомовленню і густій предметній деталі. Для
+україномовного читання як другої мови варто відокремлювати лексику побуту,
+родинних відносин, дороги, голоду, праці й дитинства від інтерпретаційного
+словника: `новела`, `оповідач`, `підтекст`, `цензура`, `співчуття`,
+`самотність`. «Сільське» у його прозі не є нижчим стилем або етнографічною
+декорацією: це простір точних соціальних стосунків і мовних виборів.
 
-- **What's debated in modern UA scholarship:** How directly to connect his suicide to censorship and official hostility. IEU supports the link to hostile criticism; claims of a specific KGB campaign against him were not retrieved and should not be asserted without evidence.
-- **What gets simplified in popular memory:** He is often reduced to a "sad rural prose writer." The sources show a highly disciplined modern short-prose artist, translator, children's writer, and shistdesiatnyky-era prose innovator.
-- **Where modern Russian disinformation attacks them:** The Soviet simplification would read his refusal of socialist-realist optimism as pessimism or lack of ideological clarity. The retrieved sources support teaching it as moral realism.
-- **Other-perspective considerations:** His father's Great Terror arrest and his own Russian-to-Ukrainian language shift make his biography a strong decolonization case without needing to invent direct imprisonment.
+Не подаємо дослівних цитат. Для кожної відомої формули потрібні конкретне
+авторське видання, сторінка або записник; посилання на цитатник, підручниковий
+переказ чи пошуковий фрагмент не є достатнім локатором. Усі читання в плані
+залишено зовнішніми бібліотечними довідками, а не незаконним відтворенням
+повного літературного тексту.
 
-## 7. Cross-track links
+## 6. Пам’ять, деколонізація та зв’язки
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/tiutiunnyk-novella-mastery.yaml`
-  - `curriculum/l2-uk-en/plans/lit/tiutiunnyk-three-cuckoos.yaml`
-  - `curriculum/l2-uk-en/plans/lit/yevhen-hutsalo-shistdesiatnyky.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Hryhorii Tiutiunnyk, Yevhen Hutsalo, Valerii Shevchuk, and Oles Honchar.
-- **Potential LIT additions surfaced by this research:**
-  - A source-study activity comparing the 1980-03-06 / 1980-03-07 death-date discrepancy.
+У роботі з Тютюнником треба розвести щонайменше чотири типи тверджень. Перший
+— бібліографічний: книжка або видання названі, датовані, описані в каталозі.
+Другий — біографічний: джерело повідомляє про родину, дитинство, освіту чи
+професію. Третій — історико-культурний: дослідник зіставляє твір із цензурою,
+офіційною критикою або шістдесятництвом. Четвертий — психологічний: хтось
+тлумачить особистий досвід чи мотив. Надійність не переходить автоматично з
+першого рівня на четвертий. Бібліографія добре встановлює назву книжки, але не
+може сама довести внутрішній стан автора під час її написання.
 
-## 8. Naming-canonical
+Це розрізнення допомагає читати новелу без шкільного шаблону. Не треба шукати в
+кожному персонажі прямий портрет самого автора або кожну сумну сцену оголошувати
+політичним шифром. Натомість слід запитати, які слова, діалоги, предмети і
+паузи створюють досвід персонажа. Таке читання одночасно поважає літературну
+форму й не відриває текст від реальностей війни, бідності, цензури та мовної
+нерівності радянської України.
 
-- **Slug:** `hryhir-tiutiunnyk`
-- **EN canonical (BGN/PCGN 2010):** Hryhir Tiutiunnyk
-- **UA canonical (with patronymic):** Тютюнник Григір Михайлович
-- **Aliases (track these for `aliases:` YAML field):** Григорій Тютюнник, Hryhorii Tiutiunnyk, Hryhir Tyutyunnyk
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Grigor Tyutyunnik, Grigor Tiutiunnik (FORBIDDEN except as archival metadata)
+Після 1980 року повернення творів у читацький обіг не означало остаточного
+зникнення проблеми. Канон може так само спрощувати, коли робить з автора одну
+«тему» або лише приклад трагічної долі. Бібліотечні записи залишають видимими
+книжки та різні жанри, а не один символічний текст [ЧЛ-2]. Саме тому каталог
+має вести від конкретного видання до уважного читання, а не від готового міфу
+до вибраних «підтверджень».
 
-## 9. Image candidates
+Деколонізація тут означає назвати радянський терор над родиною терором, а не
+безликою «складною добою», і водночас не виготовити нову агіографію. Схід України
+в дитячому маршруті автора — український регіон його життєвого світу, а не
+доказ відчуженості від української культури. Проте досвід письменника не можна
+підміняти досвідом інших шістдесятників, яких ув’язнювали за іншими справами.
 
-- **Best PD/CC portrait:** IEU image "Hryhir Tiutiunnyk"; verify license before reuse.
-- **Backup candidates:** Wikimedia Commons or Central State Archive-Museum of Literature and Art materials; verify rights.
-- **If no PD/CC portrait exists:** Use no portrait until rights are confirmed.
-- **Era-appropriate context image:** Rights-cleared image of Shylivka/Poltava rural landscape only if not falsely presented as a specific biographical site.
+**Перевірені плани:** `curriculum/l2-uk-en/plans/lit/tiutiunnyk-novella-mastery.yaml`,
+`curriculum/l2-uk-en/plans/lit/tiutiunnyk-three-cuckoos.yaml`,
+`curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`. **Кандидатні зв’язки:**
+Григорій Тютюнник, Євген Гуцало, Валерій Шевчук, Олесь Гончар. Кандидатність
+означає необхідність окремої звірки, а не наявність уже створеного матеріалу.
 
-## 10. Sources used
+## 7. Назва, зображення, джерела
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine, "Tiutiunnyk, Hryhir" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CI%5CTiutiunnykHryhir.htm | accessed 2026-05-30
+Канонічна форма: **Григір Тютюнник**; повна: **Тютюнник Григір Михайлович**;
+латинка: **Hryhir Tiutiunnyk**. Не слід уживати російські транслітерації як
+канонічні. Перевірені сторінки не містять окремого файла з доказом прав на
+портрет, тому прийнято текстову заміну.
 
-**Tier 2 (institutional):**
-- Ukrainian textbook corpus via `mcp__sources.search_text` and `mcp__sources.search_literary`, including Grade 11 Avramenko/Borzenko chunks on Tiutiunnyk | accessed 2026-05-30
-- Ukrainian Bibliography for Children, "Тютюнник Григір (Григорій) Михайлович" | https://uhb.chl.kiev.ua/autors/338-hryhir-hryhorii-mykhailovych-tiutiunnyk | accessed 2026-05-30
+- **T2:** Національна бібліотека України для дітей, «Григір Тютюнник.
+  Біографічна довідка» — https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+  (перевірено 2026-07-17).
+- **T2:** Національна бібліотека України для дітей, «Григір Тютюнник. Основні
+  твори» — https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm (перевірено 2026-07-17).
+- **T2:** НБУ для дітей, бібліографічна сторінка «Григір Тютюнник» —
+  https://chl.kiev.ua/default.aspx?id=1849 (перевірено 2026-07-17).
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia "Тютюнник Григір Михайлович" via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## 8. Робочий висновок
 
-**Tier 4 (modern scholarly post-1991):**
-- Oleksii Nezhyvyi, Tiutiunnyk textual/source-study bibliography from Ukrainian Wikipedia references; not directly accessed.
+Григір Тютюнник постає як автор, чия коротка проза вимагає великої уважності до
+слова й мовчання. Родинна історія державного терору та воєнного дитинства є
+реальним тлом, але не ліцензією на вигадування його власного ув’язнення або
+психологічних пояснень. Його місце в українській культурі стає яснішим, коли
+поруч тримаються бібліографія, мовна форма, історичний контекст і межі знання.
+Такий підхід не робить постать менш трагічною; він робить її людською та
+джерельно відповідальною.
 
-**Primary-source documents accessed:**
-- Textbook-corpus excerpts quoting Tiutiunnyk's craft statements and *Три зозулі з поклоном* dedication.
+## Самоперевірка
 
----
-
-## Decolonization self-check (run before submitting)
-
-- [x] No Russocentric framing
-- [x] No fabricated KGB case; direct KGB persecution marked source not found
-- [x] No Russian-imperial transliterations in body text
-- [x] Date discrepancy flagged
-- [x] Existing paths verified
-- [x] Place names use Ukrainian canonical forms
-- [x] Holodomor not central except broader rural trauma context
-- [x] Crimea/2014/2022 not applicable
+- [x] Григора відрізнено від Григорія Тютюнника.
+- [x] Не вигадано справи КДБ, арешту або точного психологічного діагнозу.
+- [x] Не відтворено текстів і не приписано портрету невстановлену ліцензію.
+- [x] Російськоцентричне читання мови й регіону не використано.

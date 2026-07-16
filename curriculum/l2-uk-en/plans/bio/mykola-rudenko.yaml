@@ -112,36 +112,54 @@ persona:
     судового переслідування.
   voice: Human Rights Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: museum.khpg.org
+- title: РУДЕНКО МИКОЛА ДАНИЛОВИЧ
+  source_name: Віртуальний музей «Дисидентський рух в Україні» Харківської правозахисної групи
+  source_url: https://museum.khpg.org/1113938027
   language: uk
-  note: Профіль у музеї-архіві дисидентського руху.
-  role: context
-  source: https://museum.khpg.org/1113912354
-- hosting: reading-needed
+  genre: біографічна архівна довідка
+  source_type: reference
+  role: contextual-reading
+  hosting: link-only
+  learner_task: >-
+    Побудувати обережну хронологію УГГ, арешту, вироку, таборів, заслання й
+    повернення, позначаючи дані, які потребують зіставлення з первинним голосом.
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113938027
+    note: Відкрита україномовна музейна сторінка; текст у курсі не відтворюється.
+- title: Руденко Микола Данилович. Інтерв’ю про створення УГГ
+  source_name: Віртуальний музей «Дисидентський рух в Україні» Харківської правозахисної групи
+  source_url: https://museum.khpg.org/1383042150
   language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for primary text "Енергія прогресу" або "Хрест".'
-  role: reading-needed
-  source: 'reading-needed: mykola-rudenko-primary'
+  genre: авторське інтерв’ю
+  source_type: primary
+  role: primary-reading
+  hosting: link-only
+  learner_task: >-
+    Прочитати авторський виклад створення УГГ як окреме свідчення та зіставити
+    його з біографічною довідкою, не переносивши текст інтерв’ю до курсу.
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1383042150
+    note: Інтерв’ю доступне лише за зовнішнім посиланням; відтворення не дозволено цим записом.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Перевірені сторінки містять біографічний матеріал, але не окремий доказ
+    ліцензії на портрет; пакет не прирівнює наявність фото до права повторного використання.
+  verified_on: '2026-07-17'
 references:
-- note: Базова енциклопедична стаття про життя і діяльність.
-  title: Руденко Микола Данилович (ЕІУ)
-  type: reference
 - note: Профіль у музеї-архіві дисидентського руху.
+  path: https://museum.khpg.org/1113938027
   title: Руденко Микола Данилович (Дисидентський рух в Україні)
   type: reference
-- note: Дати, УГГ, нагороди.
-  title: Руденко Микола Данилович (Вікіпедія)
-  type: reference
-- note: Самвидавний трактат, цитований у вироку 1977 року.
-  title: Енергія прогресу. Нариси з фізичної економії
+- note: Авторська розмова про створення Української Гельсінської групи.
+  path: https://museum.khpg.org/1383042150
+  title: Руденко Микола Данилович. Інтерв’ю про створення УГГ (ХПГ)
   type: primary
-  work: Енергія прогресу
-- author: Микола Руденко
-  note: Спогади, опубліковані 1998 року.
-  title: Найбільше диво — життя. Спогади
-  type: primary
-  work: Найбільше диво — життя
 sequence: 256
 slug: mykola-rudenko
 subtitle: From Stalinist Loyalist to Founder of the Ukrainian Helsinki Group

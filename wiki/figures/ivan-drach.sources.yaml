@@ -1,0 +1,31 @@
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-21707
+    type: external
+    title: Драч Іван Федорович
+    url: https://esu.com.ua/article-21707
+    rights:
+      basis: external-link
+      evidence_url: https://esu.com.ua/article-21707
+      license: Авторське право ЕСУ; використання як зовнішнього посилання
+      attribution: І. М. Дзюба / Енциклопедія Сучасної України
+  - id: S2
+    file: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+    type: external
+    title: '«Криниця для спраглих». Засідання художньої ради Кіностудії імені О. Довженка 29 січня 1966 року. Стенограма'
+    url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+    rights:
+      basis: external-link
+      evidence_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
+      license: Архівний запис eKMAIR; документ доступний лише за зовнішнім посиланням
+      attribution: Іван Драч / Електронний архів НаУКМА
+  - id: S3
+    file: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+    type: external
+    title: '1989 – відкрився Установчий з''їзд «Народного руху України за перебудову»'
+    url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+    rights:
+      basis: external-link
+      evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
+      license: Інституційна сторінка УІНП; використання як зовнішнього посилання
+      attribution: Український інститут національної пам'яті

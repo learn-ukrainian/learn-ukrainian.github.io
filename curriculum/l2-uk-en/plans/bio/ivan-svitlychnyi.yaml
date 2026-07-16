@@ -117,21 +117,33 @@ persona:
   voice: Samvydav Network Historian
 phase: BIO
 readings:
-- hosting: museum-old.khpg.org
-  language: uk
-  note: Профіль у віртуальному музеї дисидентського руху; деталі суду й таборів.
-  role: context
-  source: https://museum-old.khpg.org/1113995279
-- hosting: nbuv.gov.ua
-  language: uk
-  note: Ювілейна довідка Національної бібліотеки України.
-  role: context
-  source: https://www.nbuv.gov.ua/node/4288
-- hosting: reading-needed
-  language: uk
-  note: 'reading-needed: verify stable ukrainian hosting for primary text "Серце для куль і для рим".'
-  role: reading-needed
-  source: 'reading-needed: ivan-svitlychnyi-primary'
+  - title: Народився Іван Світличний, український правозахисник, поет, перекладач, літературознавець, літературний критик
+    source_name: Національна бібліотека України імені В. І. Вернадського
+    source_url: https://www.nbuv.gov.ua/node/4288
+    language: uk
+    genre: біографічна довідка
+    source_type: reference
+    role: contextual-reading
+    hosting: link-only
+    learner_task: Виписати окремо факти про фах, арешти, покарання та пізні видання, не перетворюючи бібліографічну довідку на повний життєпис.
+    rights:
+      basis: external-link
+      evidence_url: https://www.nbuv.gov.ua/node/4288
+      note: Відкрита україномовна сторінка НБУВ; повний текст на сторінці курсу не відтворюється.
+  - title: Світличний Іван Олексійович
+    source_name: Віртуальний музей Харківської правозахисної групи
+    source_url: https://museum-old.khpg.org/1113995279
+    language: uk
+    genre: музейна біографічна довідка
+    source_type: reference
+    role: contextual-reading
+    hosting: link-only
+    learner_task: Зіставити музейну хронологію переслідування з бібліотечною довідкою й позначити, що саме кожне джерело підтверджує.
+    rights:
+      basis: external-link
+      evidence_url: https://museum-old.khpg.org/1113995279
+      note: Відкрита україномовна музейна сторінка; повний текст не відтворюється.
+readings_contract_version: 2
 references:
 - note: Базова англомовна енциклопедична стаття про життя і діяльність.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSvitlychnyIvan.htm
@@ -149,6 +161,12 @@ references:
   title: Серце для куль і для рим
   type: primary
   work: Серце для куль і для рим
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: У перевірених інституційних джерелах не знайдено окремого портретного файла з установленими автором, походженням і ліцензією.
+  evidence_url: https://www.nbuv.gov.ua/node/4288
+  disposition: no-portrait-until-rights-verified
 sequence: 257
 slug: ivan-svitlychnyi
 subtitle: Literary Critic, Samvydav Hub, and the Dobosh Case
