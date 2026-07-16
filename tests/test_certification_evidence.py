@@ -919,6 +919,7 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
         {"path": "/outside/current.json", "sha256": current_sha, "value": current},
         {"path": "/outside/integration.json", "sha256": _sha("integration"), "value": integration},
     ]
+    ledger["state"] = "PRODUCTION_QG_REQUIRED"
     ledger["production_qg_authorization"] = {
         "approval_id": "qg-arm-stale-after-contract-drift",
         "qualification_path": "/outside/qualification.json",
@@ -945,6 +946,15 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     assert projection["reason"] == (
         "recorded production-QG authorization does not bind the current QG contract"
     )
+    _, resumed = tc.resume_run(
+        inputs["target"],
+        run_id=ledger["run"]["run_id"],
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert resumed["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    assert resumed["production_qg_authorization"] is None
 
 
 def test_actual_qg_policy_source_drift_changes_only_qg_identity(tmp_path: Path) -> None:
