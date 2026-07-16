@@ -142,7 +142,12 @@ def _run_claude_sync_via_runtime(
     # Decide session handling
     session_id_to_pass: str | None = None
     is_new_session_flag = False
-    if claude_session_id:
+    if review:
+        # Isolated reviews never resume or reserve task session state. Persisting
+        # a UUID that is not passed to Claude leaves the next ordinary ask with
+        # a nonexistent session to resume.
+        print("   Review session: ephemeral")
+    elif claude_session_id:
         session_id_to_pass = claude_session_id
         is_new_session_flag = False
         print(f"   Resuming session: {claude_session_id[:8]}...")
@@ -157,10 +162,6 @@ def _run_claude_sync_via_runtime(
         "cmd_prefix": CLAUDE_CMD,
         "is_new_session": is_new_session_flag,
     }
-    if review:
-        # Fresh session for review — never resume project memory/session state.
-        session_id_to_pass = None
-        tool_config["is_new_session"] = False
 
     _response_sent = False
     try:

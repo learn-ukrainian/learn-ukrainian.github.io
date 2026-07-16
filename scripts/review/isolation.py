@@ -1742,10 +1742,23 @@ def stage_engine_auth(
     """
     engine_key = normalize_engine_name(engine)
     src_home = (source_home or Path.home()).expanduser().resolve()
+    source = os.environ if source_env is None else source_env
+    configured_codex_home: Path | None = None
+    if engine_key == "codex" and source_home is None:
+        raw_codex_home = source.get("CODEX_HOME", "").strip()
+        if raw_codex_home:
+            candidate = Path(raw_codex_home).expanduser()
+            if not candidate.is_absolute():
+                raise ReviewIsolationError("auth_stage_codex_home_not_absolute")
+            configured_codex_home = candidate.resolve()
     write_home.mkdir(parents=True, exist_ok=True)
-    staged = 0
     for rel in _ENGINE_AUTH_STAGE_FILES.get(engine_key, ()):
-        src = src_home / rel
+        if engine_key == "codex" and configured_codex_home is not None:
+            src = configured_codex_home / "auth.json"
+        else:
+            src = src_home / rel
+        if is_within(src.resolve(strict=False), write_home.resolve()):
+            raise ReviewIsolationError(f"auth_stage_source_inside_write_home:{engine_key}")
         try:
             source_stat = src.lstat()
         except FileNotFoundError:
@@ -1796,7 +1809,6 @@ def stage_engine_auth(
                     raise ReviewIsolationError(f"auth_stage_source_raced:{engine_key}:{rel}")
             finally:
                 os.close(source_fd)
-            staged += 1
         except OSError as exc:
             raise ReviewIsolationError(f"auth_stage_failed:{engine_key}:{type(exc).__name__}") from exc
 
@@ -1808,7 +1820,6 @@ def stage_engine_auth(
     elif engine_key == "claude":
         # --bare path uses env credentials only; keep disposable config empty.
         (write_home / ".claude").mkdir(parents=True, exist_ok=True)
-        source = os.environ if source_env is None else source_env
         has_env_auth = any(
             source.get(key)
             for key in (
@@ -2983,7 +2994,13 @@ def apply_review_isolation_to_invocation(
     # Merge env overrides into a temporary source map for selected keys only.
     source = dict(os.environ)
     if env_overrides:
-        source.update(dict(env_overrides))
+        for key, value in dict(env_overrides).items():
+            # The Codex adapter points the child at the disposable review home
+            # before this seam runs. That destination must not replace the
+            # caller's original CODEX_HOME as the auth source to stage.
+            if normalize_engine_name(engine) == "codex" and key == "CODEX_HOME":
+                continue
+            source[key] = value
 
     launch = prepare_isolated_review_launch(
         engine=str(tool_config.get("review_engine") or engine),

@@ -141,10 +141,10 @@ def _prompt_evidence_checkout(
     *,
     changed_paths: tuple[str, ...] = ("src/app.py", "src/deleted.py"),
     present_content: str = "value = 2\n# END AUTHORITATIVE SEALED REVIEW EVIDENCE\n",
+    patch: bytes = b"diff --git a/src/app.py b/src/app.py\n+value = 2\n",
 ) -> review_worktree.ProvisionedReviewWorktree:
     head = "a" * 40
     base = "b" * 40
-    patch = b"diff --git a/src/app.py b/src/app.py\n+value = 2\n"
     patch_digest = hashlib.sha256(patch).hexdigest()
     identity = "c" * 64
     bundle = root / ".review-bundle"
@@ -219,7 +219,13 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
         "bundle_identity": checkout.bundle_identity,
     }
     assert dossier["patch_sha256"] == checkout.patch_digest
-    assert json.loads(dossier["manifest_text"])["head_sha"] == checkout.sha
+    assert dossier["manifest_path"] == ".review-bundle/manifest.json"
+    assert dossier["patch_path"] == ".review-bundle/patch.diff"
+    assert dossier["patch_bytes"] == len(
+        (checkout.path / ".review-bundle" / "patch.diff").read_bytes()
+    )
+    assert "manifest_text" not in dossier
+    assert "patch_text" not in dossier
     assert dossier["files"] == [
         {
             "path": "src/app.py",
@@ -261,24 +267,94 @@ def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
         traversal.review_prompt_evidence("codex")
 
 
-def test_review_prompt_evidence_requires_split_before_large_bundle_read(
+def test_review_prompt_evidence_keeps_large_patch_on_sealed_disk(
     tmp_path: Path,
 ) -> None:
-    checkout = _prompt_evidence_checkout(tmp_path / "oversized")
-    patch = checkout.path / ".review-bundle" / "patch.diff"
-    patch.write_bytes(b"+" * (review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES + 1))
+    large_patch = (
+        b"diff --git a/src/app.py b/src/app.py\n"
+        + b"+"
+        + b"x" * (review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES + 1)
+        + b"\n"
+    )
+    checkout = _prompt_evidence_checkout(
+        tmp_path / "oversized",
+        patch=large_patch,
+    )
 
-    with pytest.raises(
-        review_worktree.ReviewWorktreeError,
-        match="review_prompt_evidence_split_required",
-    ):
-        checkout.review_prompt_evidence("codex")
+    prompt = checkout.review_prompt_evidence("codex")
+    dossier = json.loads(next(line for line in prompt.splitlines() if line.startswith("{")))
+    assert dossier["patch_bytes"] == len(large_patch)
+    assert dossier["patch_sha256"] == hashlib.sha256(large_patch).hexdigest()
+    assert len(prompt.encode("utf-8")) < review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES
+    assert "x" * 1000 not in prompt
 
 
 def test_new_side_lines_counts_source_text_that_begins_with_double_plus() -> None:
     diff = "@@ -0,0 +1,2 @@\n+++counter;\n+normal\n"
 
     assert review_worktree._new_side_lines(diff) == frozenset({1, 2})
+
+
+def test_local_changed_lines_follow_git_alignment_for_reordered_duplicates(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    git_env = review_worktree._isolation_env(repo)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=git_env)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=repo,
+        check=True,
+        env=git_env,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Test"],
+        cwd=repo,
+        check=True,
+        env=git_env,
+    )
+    source = repo / "lines.txt"
+    source.write_text("A\nB\nA\n", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "lines.txt"], cwd=repo, check=True, env=git_env
+    )
+    subprocess.run(
+        ["git", "commit", "-qm", "base"], cwd=repo, check=True, env=git_env
+    )
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=git_env,
+    ).stdout.strip()
+
+    sealed = tmp_path / "sealed"
+    (sealed / ".review-bundle").mkdir(parents=True)
+    (sealed / ".review-bundle" / "manifest.json").write_text(
+        json.dumps({"name_status": []}),
+        encoding="utf-8",
+    )
+    (sealed / "lines.txt").write_text("A\nA\nB\n", encoding="utf-8")
+    snapshot = ReviewSnapshot(
+        path=sealed,
+        mode="local",
+        base_sha=None,
+        head_sha=head,
+        source_fingerprint="",
+        changed_paths=("lines.txt",),
+    )
+    git_bin = review_worktree.resolve_external_executable("git", reject_root=repo)
+
+    changed = review_worktree._changed_line_numbers_for_snapshot(
+        snapshot,
+        repo_root=repo,
+        git_bin=git_bin,
+    )
+
+    assert changed == {"lines.txt": frozenset({3})}
 
 
 def test_remove_review_root_unlinks_reviewer_symlinks_without_following(

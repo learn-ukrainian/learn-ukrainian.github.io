@@ -20,6 +20,7 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
     )
     checkout.path.mkdir()
     captured: dict[str, object] = {}
+    persisted_sessions: list[tuple[object, ...]] = []
     msg = {
         "id": 9,
         "task_id": "branch-review",
@@ -38,7 +39,11 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
     monkeypatch.setattr(_claude, "_write_pid_file", lambda *_args: None)
     monkeypatch.setattr(_claude, "_remove_pid_file", lambda *_args: None)
     monkeypatch.setattr(_claude.atexit, "register", lambda *_args: None)
-    monkeypatch.setattr(_claude, "set_session", lambda *_args: None)
+    monkeypatch.setattr(
+        _claude,
+        "set_session",
+        lambda *args: persisted_sessions.append(args),
+    )
     monkeypatch.setattr(_claude, "provision_review_worktree", fake_checkout)
     monkeypatch.setattr(
         ProvisionedReviewWorktree,
@@ -82,3 +87,5 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
 
     assert captured["cwd"] == checkout.path
     assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
+    assert captured["session_id"] is None
+    assert persisted_sessions == []

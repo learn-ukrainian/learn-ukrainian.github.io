@@ -45,6 +45,7 @@ from scripts.review.snapshot import (
     DIAG_BINARY,
     DIAG_CHANGED_SECRET,
     DIAG_DRIFT,
+    DIAG_GITLINK,
     DIAG_SYMLINK,
     DIAG_TRAVERSAL,
     ImmutableFileRecord,
@@ -2887,6 +2888,189 @@ def test_local_capture_neutralizes_textconv_and_clean_filter_processes(
     capture = capture_local_review_state(repo)
     assert not marker.exists()
     assert b"+changed" in capture.patch_bytes
+
+
+def test_branch_secret_scan_covers_git_path_with_spaces(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    target = repo / "with space.txt"
+    target.write_text(
+        f"OPENAI_API_KEY={_secret_openai_sk_long()}\n",
+        encoding="utf-8",
+    )
+    _git(repo, "add", target.name)
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "secret base",
+    )
+    base = _head_sha(repo)
+    target.write_text("safe\n", encoding="utf-8")
+    _git(repo, "add", target.name)
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "remove secret",
+    )
+    head = _head_sha(repo)
+
+    with pytest.raises(ReviewSnapshotError, match=DIAG_CHANGED_SECRET):
+        materialize_review_snapshot(
+            repo,
+            mode="branch",
+            base_sha=base,
+            head_sha=head,
+            temp_parent=tmp_path / "tmp",
+        )
+
+
+def test_local_patch_uses_git_quoting_for_control_character_paths(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    rel_path = "odd\ndiff --git a-fake b-fake"
+    (repo / rel_path).write_text("safe\n", encoding="utf-8")
+
+    capture = capture_local_review_state(repo)
+
+    assert rel_path in capture.changed_paths
+    assert b"odd\\ndiff --git a-fake b-fake" in capture.patch_bytes
+    assert b"a/odd\ndiff --git a-fake" not in capture.patch_bytes
+
+
+def test_local_patch_preserves_captured_crlf_bytes(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    (repo / "windows.txt").write_bytes(b"one\r\ntwo\r\n")
+
+    capture = capture_local_review_state(repo)
+
+    assert b"+one\r\n+two\r\n" in capture.patch_bytes
+
+
+def test_local_patch_is_bound_to_immutable_records_during_source_race(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    from scripts.review import snapshot as snapshot_module
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    target = repo / "race.txt"
+    target.write_text("one\n", encoding="utf-8")
+    _git(repo, "add", "race.txt")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "race base",
+    )
+    target.write_text("two\n", encoding="utf-8")
+    real_patch = snapshot_module._immutable_local_patch
+
+    def racing_patch(*args, **kwargs):
+        target.write_text("three\n", encoding="utf-8")
+        try:
+            return real_patch(*args, **kwargs)
+        finally:
+            target.write_text("two\n", encoding="utf-8")
+
+    monkeypatch.setattr(snapshot_module, "_immutable_local_patch", racing_patch)
+
+    capture = capture_local_review_state(repo)
+
+    assert b"+two\n" in capture.patch_bytes
+    assert b"+three\n" not in capture.patch_bytes
+
+
+def test_local_capture_supports_split_index(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    _git(repo, "config", "core.splitIndex", "true")
+    _git(repo, "update-index", "--split-index")
+    (repo / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+
+    capture = capture_local_review_state(repo)
+
+    assert "src/app.py" in capture.changed_paths
+    assert b"+VALUE = 2" in capture.patch_bytes
+
+
+def test_local_capture_refuses_untracked_nested_repository(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    nested = repo / "nested"
+    nested.mkdir()
+    _git(nested, "init")
+    (nested / "inside.txt").write_text("nested\n", encoding="utf-8")
+
+    with pytest.raises(ReviewSnapshotError, match=DIAG_GITLINK):
+        capture_local_review_state(repo)
+
+
+def test_local_capture_refuses_fifo_without_blocking(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    target = repo / "pipe.txt"
+    target.write_text("regular\n", encoding="utf-8")
+    _git(repo, "add", "pipe.txt")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "fifo base",
+    )
+    target.unlink()
+    os.mkfifo(target)
+
+    with pytest.raises(ReviewSnapshotError, match="non_regular_file"):
+        capture_local_review_state(repo)
+
+
+def test_codex_auth_staging_honors_custom_codex_home(tmp_path: Path) -> None:
+    custom_home = tmp_path / "custom-codex"
+    custom_home.mkdir()
+    auth = custom_home / "auth.json"
+    auth.write_text('{"account":"custom"}\n', encoding="utf-8")
+    auth.chmod(0o600)
+    write_home = tmp_path / "review-home"
+
+    env = stage_engine_auth(
+        "codex",
+        write_home=write_home,
+        source_env={"CODEX_HOME": str(custom_home)},
+    )
+
+    assert (write_home / ".codex" / "auth.json").read_text(
+        encoding="utf-8"
+    ) == '{"account":"custom"}\n'
+    assert env == {"CODEX_HOME": str(write_home / ".codex")}
 
 
 def test_f18_changed_binary_denied_unchanged_binary_preserved(tmp_path: Path) -> None:

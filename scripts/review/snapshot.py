@@ -278,6 +278,7 @@ def _run_git(
     cwd: Path,
     check: bool = True,
     text: bool = True,
+    input_data: str | bytes | None = None,
 ) -> subprocess.CompletedProcess[str] | subprocess.CompletedProcess[bytes]:
     cmd = [
         str(git_bin),
@@ -301,6 +302,7 @@ def _run_git(
         cwd=str(cwd),
         capture_output=True,
         text=text,
+        input=input_data,
         env=_git_env(cwd),
         check=False,
     )
@@ -348,10 +350,18 @@ def _neutral_local_git_view(
         ["rev-parse", "--path-format=absolute", "--git-common-dir"],
         cwd=repo_root,
     )
+    shared_proc = _run_git(
+        git_bin,
+        ["rev-parse", "--path-format=absolute", "--shared-index-path"],
+        cwd=repo_root,
+    )
     assert isinstance(index_proc.stdout, str)
     assert isinstance(common_proc.stdout, str)
+    assert isinstance(shared_proc.stdout, str)
     index_path = Path(index_proc.stdout.strip())
     common_dir = Path(common_proc.stdout.strip())
+    shared_raw = shared_proc.stdout.strip()
+    shared_path = Path(shared_raw) if shared_raw else None
     objects_dir = common_dir / "objects"
     if not index_path.is_absolute() or not objects_dir.is_dir():
         raise ReviewSnapshotError("neutral_git_source_paths_invalid")
@@ -360,6 +370,22 @@ def _neutral_local_git_view(
         index_path.name,
         allow_binary=True,
     )
+    shared_bytes: bytes | None = None
+    if shared_path is not None:
+        if (
+            not shared_path.is_absolute()
+            or not re.fullmatch(r"sharedindex\.[0-9a-f]{40}|sharedindex\.[0-9a-f]{64}", shared_path.name)
+            or not (
+                is_within(shared_path, index_path.parent)
+                or is_within(shared_path, common_dir)
+            )
+        ):
+            raise ReviewSnapshotError("neutral_git_shared_index_path_invalid")
+        shared_bytes, _shared_mode = _read_regular_file_stable(
+            shared_path.parent,
+            shared_path.name,
+            allow_binary=True,
+        )
     neutral_parent = Path(tempfile.mkdtemp(prefix="lu-review-neutral-git-"))
     neutral = neutral_parent / "git"
     try:
@@ -370,6 +396,8 @@ def _neutral_local_git_view(
         )
         (neutral / "HEAD").write_text(f"{head_sha}\n", encoding="ascii")
         (neutral / "index").write_bytes(index_bytes)
+        if shared_path is not None and shared_bytes is not None:
+            (neutral / shared_path.name).write_bytes(shared_bytes)
         info = neutral / "objects" / "info"
         info.mkdir(parents=True, exist_ok=True)
         (info / "alternates").write_text(
@@ -570,7 +598,7 @@ def _read_regular_file_stable(
             current_fd = next_fd
         file_fd = os.open(
             parts[-1],
-            os.O_RDONLY | nofollow | cloexec,
+            os.O_RDONLY | nofollow | cloexec | getattr(os, "O_NONBLOCK", 0),
             dir_fd=current_fd,
         )
         before = os.fstat(file_fd)
@@ -1118,7 +1146,6 @@ def derive_changed_paths_and_patch(
         base_sha=base_sha,
         head_sha=head_sha,
         paths=preflight_paths,
-        entries=entries,
         patch_bytes=patch_bytes,
     )
 
@@ -1136,7 +1163,6 @@ def _preflight_changed_contents(
     base_sha: str,
     head_sha: str,
     paths: Sequence[str],
-    entries: list[dict[str, str]],
     patch_bytes: bytes,
 ) -> None:
     """Fail closed on secret-like material in changed names/content/patch.
@@ -1145,20 +1171,12 @@ def _preflight_changed_contents(
     truncation or path-based exemptions. Secrets are denied in tests/,
     fixtures, docs, examples, and production paths alike.
     """
-    deleted: set[str] = set()
-    for entry in entries:
-        status = entry.get("status", "")
-        if status.startswith("D"):
-            deleted.add(entry.get("path", ""))
-
     for path in paths:
         if not path:
             continue
-        # Prefer head blob; fall back to base for pure deletions.
-        blob: bytes | None = None
-        for rev in (head_sha, base_sha):
-            if path in deleted and rev == head_sha:
-                continue
+        # Scan both sides. A removed credential can be absent from the head
+        # while still appearing in the transmitted patch.
+        for rev in dict.fromkeys((head_sha, base_sha)):
             proc = _run_git(
                 git_bin,
                 ["cat-file", "-e", f"{rev}:{path}"],
@@ -1174,21 +1192,22 @@ def _preflight_changed_contents(
                 text=False,
                 check=False,
             )
-            if show.returncode == 0 and isinstance(show.stdout, (bytes, bytearray)):
-                blob = bytes(show.stdout)
-                break
-        if blob is None:
-            continue
-        # Changed/added/renamed binary or non-UTF-8 content cannot be secret-scanned safely.
-        if b"\x00" in blob:
-            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
-        try:
-            text = blob.decode("utf-8")
-        except UnicodeDecodeError as exc:
-            raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
-        hits = secret_like_findings(text)
-        if hits:
-            raise ReviewSnapshotError(f"{DIAG_CHANGED_SECRET}:{path}:{','.join(hits)}")
+            if show.returncode != 0 or not isinstance(show.stdout, (bytes, bytearray)):
+                continue
+            blob = bytes(show.stdout)
+            # Changed/added/renamed binary or non-UTF-8 content cannot be
+            # secret-scanned safely.
+            if b"\x00" in blob:
+                raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}")
+            try:
+                text = blob.decode("utf-8")
+            except UnicodeDecodeError as exc:
+                raise ReviewSnapshotError(f"{DIAG_BINARY}:{path}") from exc
+            hits = secret_like_findings(text)
+            if hits:
+                raise ReviewSnapshotError(
+                    f"{DIAG_CHANGED_SECRET}:{path}:{','.join(hits)}"
+                )
 
     # Full patch scan without truncation or path-based exemptions.
     # Ambiguous Git binary patches are fail-closed (cannot validate secret semantics).
@@ -1198,34 +1217,14 @@ def _preflight_changed_contents(
         patch_text = patch_bytes.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise ReviewSnapshotError(f"{DIAG_BINARY_PATCH}:non_utf8_patch") from exc
-    current_path: str | None = None
-    section: list[str] = []
-
-    def _flush() -> None:
-        nonlocal section, current_path
-        if current_path is None:
-            section = []
-            return
-        body = "\n".join(section)
-        section = []
-        hits = secret_like_findings(body)
-        if hits:
-            raise ReviewSnapshotError(f"{DIAG_CHANGED_SECRET}:patch:{current_path}:{','.join(hits)}")
-
-    for line in patch_text.splitlines():
-        if line.startswith("diff --git "):
-            _flush()
-            # diff --git a/foo b/bar
-            parts = line.split()
-            current_path = None
-            if len(parts) >= 4:
-                right = parts[3]
-                if right.startswith("b/"):
-                    current_path = right[2:]
-            section = [line]
-            continue
-        section.append(line)
-    _flush()
+    # Scan the complete patch as one inert payload. This does not depend on
+    # parsing Git's quoted path grammar and therefore cannot skip sections for
+    # spaces, tabs, newlines, or undecodable labels.
+    hits = secret_like_findings(patch_text)
+    if hits:
+        raise ReviewSnapshotError(
+            f"{DIAG_CHANGED_SECRET}:patch:{','.join(hits)}"
+        )
 
 
 def _overlay_entries_digest(entries: Sequence[OverlayIdentityEntry]) -> str:
@@ -1640,22 +1639,17 @@ def materialize_review_snapshot(
             derived_patch = b""
         # Local nonempty change sets require a faithful nonempty patch.
         # When callers supply immutable overlay records without a patch (unit
-        # tests / partial seams), synthesize from captured bytes only — never
-        # reread the mutable working tree.
+        # tests / partial seams), derive it from a private index populated with
+        # those exact bytes — never reread the mutable working tree.
         if mode == "local" and derived_paths and not (derived_patch or b"").strip():
-            synthesized = b""
-            for rec in (*dirty_tracked_records, *untracked_records):
-                synthesized += _synthetic_untracked_diff(
-                    rec.rel_path,
-                    rec.content,
-                    mode=rec.mode,
-                )
-            for rel in deleted_paths:
-                synthesized += (
-                    f"diff --git a/{rel} b/{rel}\ndeleted file mode 100644\n--- a/{rel}\n+++ /dev/null\n"
-                ).encode()
-            for old, new in rename_pairs:
-                synthesized += (f"diff --git a/{old} b/{new}\nrename from {old}\nrename to {new}\n").encode()
+            synthesized = _immutable_local_patch(
+                root,
+                git_bin=git,
+                head_sha=head_sha,
+                records=(*dirty_tracked_records, *untracked_records),
+                deleted_paths=deleted_paths,
+                rename_pairs=rename_pairs,
+            )
             if not synthesized.strip():
                 raise ReviewSnapshotError("local_patch_empty_for_nonempty_changes")
             derived_patch = synthesized
@@ -1971,28 +1965,124 @@ def provision_review_snapshot(
         cleanup_snapshot_state(state)
 
 
-def _synthetic_untracked_diff(rel_path: str, content: bytes, *, mode: int = 0o644) -> bytes:
-    """Build a unified diff for an untracked file from immutable captured bytes."""
-    git_mode = "100755" if mode & 0o111 else "100644"
-    text = content.decode("utf-8")
-    lines = text.splitlines()
-    body = "\n".join(f"+{line}" for line in lines)
-    if text and not text.endswith("\n"):
-        body += "\n\\ No newline at end of file"
-    elif text.endswith("\n") and lines:
-        pass
-    header = (
-        f"diff --git a/{rel_path} b/{rel_path}\n"
-        f"new file mode {git_mode}\n"
-        f"--- /dev/null\n"
-        f"+++ b/{rel_path}\n"
-        f"@@ -0,0 +1,{max(len(lines), 1) if text else 0} @@\n"
+def _immutable_local_patch(
+    repo_root: Path,
+    *,
+    git_bin: Path,
+    head_sha: str,
+    records: Sequence[ImmutableFileRecord],
+    deleted_paths: Sequence[str],
+    rename_pairs: Sequence[tuple[str, str]],
+) -> bytes:
+    """Build a canonical Git patch exclusively from immutable captured bytes."""
+    common_proc = _run_git(
+        git_bin,
+        ["rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=repo_root,
     )
-    if not text:
-        return (
-            f"diff --git a/{rel_path} b/{rel_path}\nnew file mode {git_mode}\n--- /dev/null\n+++ b/{rel_path}\n"
-        ).encode()
-    return (header + body + ("\n" if not body.endswith("\n") else "")).encode()
+    assert isinstance(common_proc.stdout, str)
+    common_dir = Path(common_proc.stdout.strip())
+    objects_dir = common_dir / "objects"
+    if not common_dir.is_absolute() or not objects_dir.is_dir():
+        raise ReviewSnapshotError("immutable_patch_object_store_invalid")
+
+    present: dict[str, ImmutableFileRecord] = {}
+    for record in records:
+        rel_path = _validate_rel_path(record.rel_path)
+        previous = present.get(rel_path)
+        if previous is not None and (
+            previous.sha256 != record.sha256 or previous.mode != record.mode
+        ):
+            raise ReviewSnapshotError(f"immutable_patch_duplicate_record:{rel_path}")
+        present[rel_path] = record
+    removed = {
+        _validate_rel_path(path)
+        for path in (*deleted_paths, *(old for old, _new in rename_pairs))
+    }
+
+    neutral_parent = Path(tempfile.mkdtemp(prefix="lu-review-immutable-patch-"))
+    neutral = neutral_parent / "git"
+    try:
+        _run_git(
+            git_bin,
+            ["init", "--bare", "--template=", str(neutral)],
+            cwd=neutral_parent,
+        )
+        (neutral / "HEAD").write_text(f"{head_sha}\n", encoding="ascii")
+        info = neutral / "objects" / "info"
+        info.mkdir(parents=True, exist_ok=True)
+        (info / "alternates").write_text(
+            f"{objects_dir.resolve()}\n",
+            encoding="utf-8",
+        )
+        neutral_git = [
+            f"--git-dir={neutral}",
+            f"--work-tree={repo_root}",
+            "-c",
+            "core.bare=false",
+            "-c",
+            "core.quotePath=true",
+        ]
+        _run_git(git_bin, [*neutral_git, "read-tree", head_sha], cwd=repo_root)
+
+        object_ids: dict[str, str] = {}
+        for rel_path, record in present.items():
+            hashed = _run_git(
+                git_bin,
+                [*neutral_git, "hash-object", "-w", "--stdin"],
+                cwd=repo_root,
+                text=False,
+                input_data=record.content,
+            )
+            assert isinstance(hashed.stdout, (bytes, bytearray))
+            oid = bytes(hashed.stdout).strip().decode("ascii", errors="strict")
+            if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", oid):
+                raise ReviewSnapshotError(f"immutable_patch_object_id_invalid:{rel_path}")
+            object_ids[rel_path] = oid
+
+        zero_oid = "0" * len(head_sha)
+        index_records: list[bytes] = []
+        for rel_path in sorted(removed):
+            index_records.append(
+                f"0 {zero_oid}\t{rel_path}".encode("utf-8", errors="strict") + b"\0"
+            )
+        for rel_path in sorted(present):
+            record = present[rel_path]
+            git_mode = "100755" if record.mode & 0o111 else "100644"
+            index_records.append(
+                f"{git_mode} {object_ids[rel_path]}\t{rel_path}".encode(
+                    "utf-8", errors="strict"
+                )
+                + b"\0"
+            )
+        if index_records:
+            _run_git(
+                git_bin,
+                [*neutral_git, "update-index", "-z", "--index-info"],
+                cwd=repo_root,
+                text=False,
+                input_data=b"".join(index_records),
+            )
+
+        diff = _run_git(
+            git_bin,
+            [
+                *neutral_git,
+                "diff",
+                "--cached",
+                "--binary",
+                "--find-renames",
+                "--no-ext-diff",
+                "--no-textconv",
+                head_sha,
+            ],
+            cwd=repo_root,
+            text=False,
+        )
+        assert isinstance(diff.stdout, (bytes, bytearray))
+        return bytes(diff.stdout)
+    finally:
+        shutil.rmtree(neutral_parent, ignore_errors=True)
 
 
 def capture_local_review_state(
@@ -2089,8 +2179,10 @@ def capture_local_review_state(
             continue
 
         i += 1
-        if not path or path.endswith("/"):
+        if not path:
             continue
+        if path.endswith("/"):
+            raise ReviewSnapshotError(f"{DIAG_GITLINK}:{path.rstrip('/')}")
         path = _validate_rel_path(path)
         full = root / path
         if full.is_symlink():
@@ -2161,24 +2253,16 @@ def capture_local_review_state(
             )
         )
 
-    # Immutable tracked patch (staged + unstaged vs HEAD), then append untracked.
-    with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
-        tracked_patch_proc = _run_git(
-            git,
-            [
-                *neutral_git,
-                "diff",
-                "HEAD",
-                "--binary",
-                "--find-renames",
-                "--no-ext-diff",
-                "--no-textconv",
-            ],
-            cwd=root,
-            text=False,
-        )
-    assert isinstance(tracked_patch_proc.stdout, (bytes, bytearray))
-    patch_bytes = bytes(tracked_patch_proc.stdout)
+    # Build one canonical patch from the immutable records and exact HEAD tree.
+    # No diff byte is derived from a later read of the mutable working tree.
+    patch_bytes = _immutable_local_patch(
+        root,
+        git_bin=git,
+        head_sha=capture_head,
+        records=(*dirty, *untracked),
+        deleted_paths=deleted,
+        rename_pairs=renames,
+    )
     if _patch_contains_binary_markers(patch_bytes):
         raise ReviewSnapshotError(f"{DIAG_BINARY_PATCH}:local_changed_binary")
     # Reject null-byte / non-UTF-8 tracked patches (binary changes).
@@ -2189,13 +2273,6 @@ def capture_local_review_state(
     except UnicodeDecodeError as exc:
         raise ReviewSnapshotError(f"{DIAG_BINARY_PATCH}:local_non_utf8_patch") from exc
 
-    for rec in untracked:
-        patch_bytes += _synthetic_untracked_diff(
-            rec.rel_path,
-            rec.content,
-            mode=rec.mode,
-        )
-
     # Secret-scan patch sections and overlay texts (no path exemptions).
     if patch_bytes.strip():
         _preflight_changed_contents(
@@ -2204,7 +2281,6 @@ def capture_local_review_state(
             base_sha="HEAD",
             head_sha="HEAD",
             paths=[p for p in changed if p not in {r.rel_path for r in untracked}],
-            entries=name_status,
             patch_bytes=patch_bytes,
         )
     preflight_review_inputs(
