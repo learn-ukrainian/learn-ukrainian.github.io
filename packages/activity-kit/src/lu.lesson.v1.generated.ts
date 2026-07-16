@@ -79,4 +79,9 @@ export type LuLessonV1 = {
   }>;
   created_at: string;
   updated_at: string;
+  focus_status?: {
+    requested: string;
+    supported: boolean;
+    notice_uk: string | null;
+  };
 };
