@@ -1,0 +1,37 @@
+version: 1
+profiles:
+  sol_lead:
+    profile_id: sol_lead
+    transport: claudex
+    main_model_id: gpt-5.6-sol
+    model_id_patterns:
+      - '^gpt-5\.6-sol$'
+    main_context_window_tokens: 372000
+    auto_compact_capacity_tokens: 353000
+    cold_start_profile: compact
+    cold_start_budget_tokens: 37200
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
+  native_claude:
+    profile_id: native_claude
+    transport: native
+    main_model_id: claude-native-family
+    model_id_patterns:
+      - '^claude-'
+      - '^(opus|sonnet|haiku)$'
+    main_context_window_tokens: 1000000
+    auto_compact_capacity_tokens: null
+    cold_start_profile: full
+    cold_start_budget_tokens: 100000
+    rollover_warning_percentages: [75.0, 85.0, 95.0]
+
+  fallback:
+    profile_id: fallback
+    transport: unknown
+    main_model_id: unknown
+    model_id_patterns: []
+    main_context_window_tokens: 0
+    auto_compact_capacity_tokens: null
+    cold_start_profile: compact
+    cold_start_budget_tokens: 20000
+    rollover_warning_percentages: [75.0, 85.0, 90.0]

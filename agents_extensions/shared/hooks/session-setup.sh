@@ -62,9 +62,129 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
   exit 0
 fi
 
+# Read hook stdin exactly once, then parse all official fields in one jq pass.
+STDIN_JSON=""
+if [ ! -t 0 ]; then
+  STDIN_JSON=$(cat)
+fi
+
+HOOK_FIELDS=()
+if [ -n "$STDIN_JSON" ]; then
+  while IFS= read -r -d '' _hook_field; do
+    HOOK_FIELDS+=("$_hook_field")
+  done < <(printf '%s' "$STDIN_JSON" | jq -j '
+    [
+      (if (.session_id | type) == "string" then .session_id else "" end),
+      (if (.transcript_path | type) == "string" then .transcript_path else "" end),
+      (if (.source | type) == "string" then .source else "" end),
+      (if (.model | type) == "string" then .model
+       elif (.model | type) == "object" then (.model.id // "")
+       else "" end),
+      (if (.agent_type | type) == "string" then .agent_type else "" end)
+    ] | .[] | tostring, ([0] | implode)
+  ' 2>/dev/null)
+fi
+SESSION_ID="${HOOK_FIELDS[0]:-}"
+TRANSCRIPT_PATH="${HOOK_FIELDS[1]:-}"
+SOURCE="${HOOK_FIELDS[2]:-}"
+OBSERVED_MODEL="${HOOK_FIELDS[3]:-}"
+AGENT_TYPE="${HOOK_FIELDS[4]:-}"
+unset HOOK_FIELDS _hook_field
+
+if [ -z "$SESSION_ID" ]; then
+  SESSION_ID="${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}"
+fi
+
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 ISSUES=()
 INFO=()
+
+if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+else
+  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+  else
+    CANONICAL_ROOT="$PROJECT_DIR"
+  fi
+fi
+
+if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
+  HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
+elif [[ "${0:-}" == *"/.codex/"* ]]; then
+  HANDOFF_AGENT="codex"
+elif [[ "${0:-}" == *"/.gemini/"* ]]; then
+  HANDOFF_AGENT="gemini"
+elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
+  HANDOFF_AGENT="codex"
+else
+  HANDOFF_AGENT="claude"
+fi
+
+# Resolve the main-session route. Model mismatches are recorded as an untrusted
+# compact fallback; they must not abort SessionStart or fabricate a 1M window.
+REQUESTED_PROFILE_ID="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-}"
+PROFILE_RESOLVER_SH="${CLAUDE_PROFILE_RESOLVER_SH:-$PROJECT_DIR/scripts/lib/profile_resolver.sh}"
+if [ ! -f "$PROFILE_RESOLVER_SH" ]; then
+  echo "Error: context-profile resolver not found." >&2
+  exit 1
+fi
+# shellcheck disable=SC1090
+source "$PROFILE_RESOLVER_SH"
+if ! resolve_context_profile "$REQUESTED_PROFILE_ID" "$OBSERVED_MODEL"; then
+  echo "Error: main-session context-profile resolution failed." >&2
+  exit 1
+fi
+if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
+  ISSUES+=("CONTEXT PROFILE UNTRUSTED: $LEARN_UKRAINIAN_RESOLUTION_REASON. Compact startup is active without a trusted context denominator or forced auto-compaction.")
+fi
+
+# Persist official SessionStart identity and the resolved route in the canonical
+# checkout. Build argv as an array so exact transcript paths are never split.
+SESSION_RECORD_SCRIPT="${CLAUDE_SESSION_RECORD_SCRIPT:-$PROJECT_DIR/scripts/lib/session_record.py}"
+SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+if [ -n "$SESSION_ID" ] && [ -f "$SESSION_RECORD_SCRIPT" ] && [ -x "$SESSION_RECORD_PYTHON" ]; then
+  SESSION_RECORD_CMD=(
+    "$SESSION_RECORD_PYTHON" "$SESSION_RECORD_SCRIPT" --state-root "$CANONICAL_ROOT"
+    update --session-id "$SESSION_ID" --provenance "SessionStart" --append-env
+  )
+  [ -n "$TRANSCRIPT_PATH" ] && SESSION_RECORD_CMD+=(--transcript-path "$TRANSCRIPT_PATH")
+  [ -n "$SOURCE" ] && SESSION_RECORD_CMD+=(--source "$SOURCE")
+  [ -n "$OBSERVED_MODEL" ] && SESSION_RECORD_CMD+=(--observed-model "$OBSERVED_MODEL")
+  [ -n "$AGENT_TYPE" ] && SESSION_RECORD_CMD+=(--agent-type "$AGENT_TYPE")
+  [ -n "$REQUESTED_PROFILE_ID" ] && SESSION_RECORD_CMD+=(--profile-id "$REQUESTED_PROFILE_ID")
+  if ! "${SESSION_RECORD_CMD[@]}" >/dev/null; then
+    ISSUES+=("SESSION RECORD FAILED: official SessionStart identity could not be persisted.")
+  fi
+  unset SESSION_RECORD_CMD
+elif [ -n "$SESSION_ID" ]; then
+  ISSUES+=("SESSION RECORD UNAVAILABLE: canonical runtime record helper is missing.")
+fi
+
+# A supervised Claudex child inherits a random run id and generation. Bind those
+# to Claude Code's official SessionStart id before any rollover can be requested.
+if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
+  CLAUDEX_SUPERVISOR_SCRIPT="${CLAUDEX_SUPERVISOR_SCRIPT:-$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py}"
+  CLAUDEX_SUPERVISOR_PYTHON="${CLAUDEX_SUPERVISOR_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+  if [ -z "$SESSION_ID" ] || [ ! -f "$CLAUDEX_SUPERVISOR_SCRIPT" ] || [ ! -x "$CLAUDEX_SUPERVISOR_PYTHON" ]; then
+    ISSUES+=("CLAUDEX SUPERVISOR BIND FAILED: official session identity or runtime helper is unavailable.")
+  else
+    SUPERVISOR_BIND_CMD=(
+      "$CLAUDEX_SUPERVISOR_PYTHON" "$CLAUDEX_SUPERVISOR_SCRIPT" bind-session
+      --run-id "$LEARN_UKRAINIAN_CLAUDEX_RUN_ID"
+      --launch-generation "${LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION:-}"
+      --session-id "$SESSION_ID"
+      --handoff-agent "$HANDOFF_AGENT"
+    )
+    [ -n "$SOURCE" ] && SUPERVISOR_BIND_CMD+=(--source "$SOURCE")
+    [ -n "$OBSERVED_MODEL" ] && SUPERVISOR_BIND_CMD+=(--model "$OBSERVED_MODEL")
+    if ! "${SUPERVISOR_BIND_CMD[@]}" >/dev/null 2>&1; then
+      ISSUES+=("CLAUDEX SUPERVISOR BIND FAILED: SessionStart did not match the owned child generation.")
+    fi
+    unset SUPERVISOR_BIND_CMD
+  fi
+fi
 
 # 1. Check .venv exists and has correct Python
 if [ ! -f "$PROJECT_DIR/.venv/bin/python" ]; then
@@ -81,41 +201,43 @@ if [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
   ISSUES+=("ENV MISSING: CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS not set. Add to .bashrc: export CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000")
 fi
 
-# 3. Check message broker DB exists
-MCP_DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
-if [ ! -f "$MCP_DB" ]; then
-  INFO+=("Message broker DB not found at $MCP_DB — Gemini comms unavailable")
-fi
+if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" != "compact" ]; then
+  # 3. Check message broker DB exists
+  MCP_DB="$PROJECT_DIR/.mcp/servers/message-broker/messages.db"
+  if [ ! -f "$MCP_DB" ]; then
+    INFO+=("Message broker DB not found at $MCP_DB — Gemini comms unavailable")
+  fi
 
-# 4. Check for stale orchestration state (in-progress builds older than 24h)
-STALE_COUNT=0
-if [ -d "$PROJECT_DIR/curriculum" ]; then
-  while IFS= read -r -d '' state_file; do
-    if [ -f "$state_file" ]; then
-      if grep -q '"in_progress"' "$state_file" 2>/dev/null; then
-        MOD_TIME=$(stat -f %m "$state_file" 2>/dev/null || stat -c %Y "$state_file" 2>/dev/null)
-        NOW=$(date +%s)
-        AGE=$(( (NOW - MOD_TIME) / 3600 ))
-        if [ "$AGE" -gt 24 ]; then
-          STALE_COUNT=$((STALE_COUNT + 1))
+  # 4. Check for stale orchestration state (in-progress builds older than 24h)
+  STALE_COUNT=0
+  if [ -d "$PROJECT_DIR/curriculum" ]; then
+    while IFS= read -r -d '' state_file; do
+      if [ -f "$state_file" ]; then
+        if grep -q '"in_progress"' "$state_file" 2>/dev/null; then
+          MOD_TIME=$(stat -f %m "$state_file" 2>/dev/null || stat -c %Y "$state_file" 2>/dev/null)
+          NOW=$(date +%s)
+          AGE=$(( (NOW - MOD_TIME) / 3600 ))
+          if [ "$AGE" -gt 24 ]; then
+            STALE_COUNT=$((STALE_COUNT + 1))
+          fi
         fi
       fi
-    fi
-  done < <(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -print0 2>/dev/null)
-fi
+    done < <(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -print0 2>/dev/null)
+  fi
 
-if [ "$STALE_COUNT" -gt 0 ]; then
-  INFO+=("$STALE_COUNT stale orchestration state file(s) found (in_progress > 24h old). Consider cleanup.")
-fi
+  if [ "$STALE_COUNT" -gt 0 ]; then
+    INFO+=("$STALE_COUNT stale orchestration state file(s) found (in_progress > 24h old). Consider cleanup.")
+  fi
 
-# 5. Report in-progress module builds
-IN_PROGRESS_COUNT=0
-if [ -d "$PROJECT_DIR/curriculum" ]; then
-  IN_PROGRESS_COUNT=$(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -exec grep -l '"in_progress"' {} \; 2>/dev/null | wc -l | tr -d ' ')
-fi
+  # 5. Report in-progress module builds
+  IN_PROGRESS_COUNT=0
+  if [ -d "$PROJECT_DIR/curriculum" ]; then
+    IN_PROGRESS_COUNT=$(find "$PROJECT_DIR/curriculum" -name "state-v3.json" -exec grep -l '"in_progress"' {} \; 2>/dev/null | wc -l | tr -d ' ')
+  fi
 
-if [ "$IN_PROGRESS_COUNT" -gt 0 ]; then
-  INFO+=("$IN_PROGRESS_COUNT module build(s) currently in progress")
+  if [ "$IN_PROGRESS_COUNT" -gt 0 ]; then
+    INFO+=("$IN_PROGRESS_COUNT module build(s) currently in progress")
+  fi
 fi
 
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
@@ -131,18 +253,12 @@ if [ -f "$MEMORY_FILE" ]; then
 fi
 
 # 7. Check agents_extensions/shared/ → .claude/ sync drift
-# Excludes must match scripts/deploy_prompts.sh, derived dynamically from
-# scripts/deploy_orphan_paths.sh to avoid hand-maintained drift (issue #4610).
-# Without these, every cold start flags a false-positive drift.
 if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude" ]; then
   DIFF_EXCLUDES=(".DS_Store")
   ORPHAN_PATHS_SH="$PROJECT_DIR/scripts/deploy_orphan_paths.sh"
   if [ -f "$ORPHAN_PATHS_SH" ]; then
     # shellcheck disable=SC1090
     source "$ORPHAN_PATHS_SH"
-    # set -f: ORPHAN_PATHS_CLAUDE carries glob patterns (*-epic) that must reach
-    # diff --exclude LITERALLY; without noglob the unquoted expansion would match
-    # against the hook's cwd if a *-epic entry ever appears there.
     set -f
     # shellcheck disable=SC2086
     for item in $ORPHAN_PATHS_CLAUDE; do
@@ -153,7 +269,6 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
       DIFF_EXCLUDES+=("$(basename "$path")")
     done
   else
-    # Fallback to the old static list if deploy_orphan_paths.sh is missing (graceful degradation)
     for item in settings.local.json scheduled_tasks.lock worktrees folk-epic bio-epic critical-rules.md non-negotiable-rules.md workflow.md delegate-must-use-worktree.md cli-help-standard.md model-assignment.md; do
       DIFF_EXCLUDES+=("$item")
     done
@@ -171,160 +286,113 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
   fi
 fi
 
-# 8. Check MCP sources server health (historically called the RAG server)
-MCP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
-if [ "$MCP_STATUS" != "200" ] && [ "$MCP_STATUS" != "000" ]; then
-  # 000 means connection refused (server down), non-200 means server error
-  INFO+=("MCP sources server returned HTTP $MCP_STATUS — some tools may be unavailable")
-elif [ "$MCP_STATUS" = "000" ]; then
-  ISSUES+=("MCP sources server unreachable at 127.0.0.1:8766 — VESUM + textbook + dictionary tools unavailable. Start with: ./services.sh start sources")
-fi
-
-# 9. Check gemini-cli auth
-if command -v gemini >/dev/null 2>&1; then
-  GEMINI_CHECK=$(gemini --version 2>&1)
-  if [[ "$GEMINI_CHECK" == *"error"* ]] || [[ "$GEMINI_CHECK" == *"auth"* ]]; then
-    INFO+=("gemini-cli may need re-authentication: gemini auth login")
+if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" != "compact" ]; then
+  # 8. Check MCP sources server health (historically called the RAG server)
+  MCP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
+  if [ "$MCP_STATUS" != "200" ] && [ "$MCP_STATUS" != "000" ]; then
+    INFO+=("MCP sources server returned HTTP $MCP_STATUS — some tools may be unavailable")
+  elif [ "$MCP_STATUS" = "000" ]; then
+    ISSUES+=("MCP sources server unreachable at 127.0.0.1:8766 — VESUM + textbook + dictionary tools unavailable. Start with: ./services.sh start sources")
   fi
-else
-  INFO+=("gemini-cli not found — Gemini builds unavailable")
-fi
 
-# 10. Check for stale decisions
-if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/check_decisions.py" ]; then
-  STALE_DECISIONS=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/check_decisions.py" --quiet 2>/dev/null)
-  if [ -n "$STALE_DECISIONS" ]; then
-    INFO+=("$STALE_DECISIONS")
-  fi
-fi
-
-# 10b. Check ADR hygiene (sister to check_decisions). Process + rationale:
-# docs/best-practices/adr-management.md.
-if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_adrs.py" ]; then
-  ADR_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_adrs.py" --quiet 2>/dev/null)
-  ADR_EXIT=$?
-  if [ "$ADR_EXIT" -ge 2 ] && [ -n "$ADR_REPORT" ]; then
-    # Errors (missing required fields, broken supersede chains, numbering
-    # duplicates) should surface as blocking ISSUES.
-    ISSUES+=("ADR hygiene: $ADR_REPORT — see docs/best-practices/adr-management.md")
-  elif [ -n "$ADR_REPORT" ]; then
-    INFO+=("ADR hygiene: $ADR_REPORT")
-  fi
-fi
-
-# 10c. Check postmortem hygiene (sister to decisions + ADRs). Process:
-# docs/best-practices/postmortem-management.md.
-if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_postmortems.py" ]; then
-  POSTMORTEM_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_postmortems.py" --quiet 2>/dev/null)
-  if [ -n "$POSTMORTEM_REPORT" ]; then
-    ISSUES+=("Postmortem hygiene: $POSTMORTEM_REPORT — see docs/best-practices/postmortem-management.md")
-  fi
-fi
-
-# 11. Open GH issues summary
-if command -v gh >/dev/null 2>&1; then
-  OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
-  if [ $? -eq 0 ] && [ -n "$OPEN_ISSUES" ] && [ "$OPEN_ISSUES" != "[]" ]; then
-    ISSUE_COUNT=$(echo "$OPEN_ISSUES" | jq 'length')
-    ISSUE_LIST=$(echo "$OPEN_ISSUES" | jq -r '.[] | "  #\(.number): \(.title)"' | head -5)
-    INFO+=("$ISSUE_COUNT open issue(s):
-$ISSUE_LIST")
-  fi
-fi
-
-# 11b. Issue-stream hygiene (#4708) — cached, never blocks session start.
-# Fresh cache (<1h): surface orphans as ISSUES so every cold-starting agent
-# (Claude, Codex, agy, cursor) sees stream drift. Stale/no cache: kick a
-# background refresh so the NEXT start is covered.
-STREAM_AUDIT_CACHE="$PROJECT_DIR/batch_state/issue_stream_audit.json"
-if [ -f "$PROJECT_DIR/scripts/orchestration/issue_stream_audit.py" ]; then
-  STREAM_FRESH=0
-  if [ -f "$STREAM_AUDIT_CACHE" ]; then
-    STREAM_AGE=$(( $(date +%s) - $(jq -r '.generated_at // 0' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0) ))
-    [ "$STREAM_AGE" -lt 3600 ] && STREAM_FRESH=1
-  fi
-  if [ "$STREAM_FRESH" -eq 1 ]; then
-    ORPHAN_COUNT=$(jq -r '.orphans | length' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0)
-    if [ "$ORPHAN_COUNT" -gt 0 ]; then
-      ORPHAN_LIST=$(jq -r '.orphans[:5][] | "  #\(.number): \(.title)"' "$STREAM_AUDIT_CACHE" 2>/dev/null)
-      ISSUES+=("$ORPHAN_COUNT issue(s) in NO stream epic (link them — registry: scripts/config/issue_streams.yaml):
-$ORPHAN_LIST")
+  # 10. Check for stale decisions
+  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/check_decisions.py" ]; then
+    STALE_DECISIONS=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/check_decisions.py" --quiet 2>/dev/null)
+    if [ -n "$STALE_DECISIONS" ]; then
+      INFO+=("$STALE_DECISIONS")
     fi
-    MISSING_EPICS=$(jq -r '.closed_or_missing_epics | join(", ")' "$STREAM_AUDIT_CACHE" 2>/dev/null)
-    [ -n "$MISSING_EPICS" ] && ISSUES+=("Stream epic(s) closed/missing: #$MISSING_EPICS — fix scripts/config/issue_streams.yaml or reopen")
+  fi
 
-    # 11c. Research-registry strict adoption gate (ADR-011 P4, PR #4998 review):
-    # the fresh cache just confirmed above is exactly the input
-    # `--strict-adoption` needs — wire it in HERE so it is not a dead CLI.
-    # Offline (reads only the cache we already have), non-blocking (an ISSUES
-    # entry, never a session-start failure).
-    if [ -f "$PROJECT_DIR/scripts/audit/check_research_registry.py" ] && \
-       [ -f "$PROJECT_DIR/docs/references/research-registry.yaml" ] && \
-       [ -x "$PROJECT_DIR/.venv/bin/python" ]; then
-      STRICT_JSON=$(cd "$PROJECT_DIR" && "$PROJECT_DIR/.venv/bin/python" scripts/audit/check_research_registry.py --strict-adoption --json 2>/dev/null)
-      # NOTE: jq's `//` treats `false` as falsy too, so `.ok // empty` would
-      # silently discard a real `false` — read `.ok` directly instead.
-      STRICT_OK=$(echo "$STRICT_JSON" | jq -r '.ok' 2>/dev/null)
-      if [ "$STRICT_OK" = "false" ]; then
-        STRICT_ERRORS=$(echo "$STRICT_JSON" | jq -r '.errors[]? | "  - \(.)"' 2>/dev/null)
-        ISSUES+=("Research registry strict-adoption gate FAILED (ADR-011 P4 — ownership/consumer drift vs live GitHub, scripts/audit/check_research_registry.py --strict-adoption):
-$STRICT_ERRORS")
+  # 10b. Check ADR hygiene
+  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_adrs.py" ]; then
+    ADR_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_adrs.py" --quiet 2>/dev/null)
+    ADR_EXIT=$?
+    if [ "$ADR_EXIT" -ge 2 ] && [ -n "$ADR_REPORT" ]; then
+      ISSUES+=("ADR hygiene: $ADR_REPORT — see docs/best-practices/adr-management.md")
+    elif [ -n "$ADR_REPORT" ]; then
+      INFO+=("ADR hygiene: $ADR_REPORT")
+    fi
+  fi
+
+  # 10c. Check postmortem hygiene
+  if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_postmortems.py" ]; then
+    POSTMORTEM_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_postmortems.py" --quiet 2>/dev/null)
+    if [ -n "$POSTMORTEM_REPORT" ]; then
+      ISSUES+=("Postmortem hygiene: $POSTMORTEM_REPORT — see docs/best-practices/postmortem-management.md")
+    fi
+  fi
+
+  # 11. Open GH issues summary
+  if command -v gh >/dev/null 2>&1; then
+    OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
+    if [ $? -eq 0 ] && [ -n "$OPEN_ISSUES" ] && [ "$OPEN_ISSUES" != "[]" ]; then
+      ISSUE_COUNT=$(echo "$OPEN_ISSUES" | jq 'length')
+      ISSUE_LIST=$(echo "$OPEN_ISSUES" | jq -r '.[] | "  #\(.number): \(.title)"' | head -5)
+      INFO+=("$ISSUE_COUNT open issue(s):
+  $ISSUE_LIST")
+    fi
+  fi
+
+  # 11b. Issue-stream hygiene
+  STREAM_AUDIT_CACHE="$PROJECT_DIR/batch_state/issue_stream_audit.json"
+  if [ -f "$PROJECT_DIR/scripts/orchestration/issue_stream_audit.py" ]; then
+    STREAM_FRESH=0
+    if [ -f "$STREAM_AUDIT_CACHE" ]; then
+      STREAM_AGE=$(( $(date +%s) - $(jq -r '.generated_at // 0' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0) ))
+      [ "$STREAM_AGE" -lt 3600 ] && STREAM_FRESH=1
+    fi
+    if [ "$STREAM_FRESH" -eq 1 ]; then
+      ORPHAN_COUNT=$(jq -r '.orphans | length' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0)
+      if [ "$ORPHAN_COUNT" -gt 0 ]; then
+        ORPHAN_LIST=$(jq -r '.orphans[:5][] | "  #\(.number): \(.title)"' "$STREAM_AUDIT_CACHE" 2>/dev/null)
+        ISSUES+=("$ORPHAN_COUNT issue(s) in NO stream epic (link them — registry: scripts/config/issue_streams.yaml):
+  $ORPHAN_LIST")
       fi
+      MISSING_EPICS=$(jq -r '.closed_or_missing_epics | join(", ")' "$STREAM_AUDIT_CACHE" 2>/dev/null)
+      [ -n "$MISSING_EPICS" ] && ISSUES+=("Stream epic(s) closed/missing: #$MISSING_EPICS — fix scripts/config/issue_streams.yaml or reopen")
+
+      if [ -f "$PROJECT_DIR/scripts/audit/check_research_registry.py" ] && \
+         [ -f "$PROJECT_DIR/docs/references/research-registry.yaml" ] && \
+         [ -x "$PROJECT_DIR/.venv/bin/python" ]; then
+        STRICT_JSON=$(cd "$PROJECT_DIR" && "$PROJECT_DIR/.venv/bin/python" scripts/audit/check_research_registry.py --strict-adoption --json 2>/dev/null)
+        STRICT_OK=$(echo "$STRICT_JSON" | jq -r '.ok' 2>/dev/null)
+        if [ "$STRICT_OK" = "false" ]; then
+          STRICT_ERRORS=$(echo "$STRICT_JSON" | jq -r '.errors[]? | "  - \(.)"' 2>/dev/null)
+          ISSUES+=("Research registry strict-adoption gate FAILED (ADR-011 P4 — ownership/consumer drift vs live GitHub, scripts/audit/check_research_registry.py --strict-adoption):
+  $STRICT_ERRORS")
+        fi
+      fi
+    elif command -v gh >/dev/null 2>&1; then
+      (cd "$PROJECT_DIR" && nohup "$PROJECT_DIR/.venv/bin/python" -m scripts.orchestration.issue_stream_audit --json >/dev/null 2>&1 &)
+      INFO+=("issue-stream audit cache stale — background refresh started (#4708)")
     fi
-  elif command -v gh >/dev/null 2>&1; then
-    (cd "$PROJECT_DIR" && nohup "$PROJECT_DIR/.venv/bin/python" -m scripts.orchestration.issue_stream_audit --json >/dev/null 2>&1 &)
-    INFO+=("issue-stream audit cache stale — background refresh started (#4708)")
   fi
-fi
 
-# 12. Git hygiene — warn if too many dirty files accumulated.
-# See docs/best-practices/git-hygiene.md for policy.
-# Exempt paths (wiki/**, data/corpus_audit/draft_tickets/) can be legitimately
-# dirty during parallel builds; everything else is drift.
-if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
-  HYGIENE_THRESHOLD_WARN=5
-  HYGIENE_THRESHOLD_ISSUE=20
+  # 12. Git hygiene
+  if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
+    HYGIENE_THRESHOLD_WARN=5
+    HYGIENE_THRESHOLD_ISSUE=20
 
-  # Count dirty files NOT matched by any exemption pattern. Keep this
-  # in sync with docs/best-practices/git-hygiene.md § "Exemption paths".
-  DIRTY_NONEXEMPT=$(
-    git -C "$PROJECT_DIR" status --short 2>/dev/null \
-      | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)' \
-      | wc -l | tr -d ' '
-  )
+    DIRTY_NONEXEMPT=$(
+      git -C "$PROJECT_DIR" status --short 2>/dev/null \
+        | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)' \
+        | wc -l | tr -d ' '
+    )
 
-  if [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_ISSUE" ]; then
-    ISSUES+=("GIT HYGIENE: $DIRTY_NONEXEMPT dirty files outside exempt paths (threshold: $HYGIENE_THRESHOLD_ISSUE). Triage BEFORE starting work — see docs/best-practices/git-hygiene.md. Often these are stale-behind-main drift; \`git checkout HEAD -- <file>\` fixes each one.")
-  elif [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_WARN" ]; then
-    INFO+=("Git hygiene: $DIRTY_NONEXEMPT dirty files outside exempt paths. Under the issue threshold ($HYGIENE_THRESHOLD_ISSUE) but worth inspecting with \`git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'\`. Policy: docs/best-practices/git-hygiene.md.")
+    if [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_ISSUE" ]; then
+      ISSUES+=("GIT HYGIENE: $DIRTY_NONEXEMPT dirty files outside exempt paths (threshold: $HYGIENE_THRESHOLD_ISSUE). Triage BEFORE starting work — see docs/best-practices/git-hygiene.md. Often these are stale-behind-main drift; \`git checkout HEAD -- <file>\` fixes each one.")
+    elif [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_WARN" ]; then
+      INFO+=("Git hygiene: $DIRTY_NONEXEMPT dirty files outside exempt paths. Under the issue threshold ($HYGIENE_THRESHOLD_ISSUE) but worth inspecting with \`git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'\`. Policy: docs/best-practices/git-hygiene.md.")
+    fi
   fi
-fi
-
-# 13. Session handoff — engine-first, legacy-compatible fallback.
-if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
-    HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
-elif [[ "${0:-}" == *"/.codex/"* ]]; then
-    HANDOFF_AGENT="codex"
-elif [[ "${0:-}" == *"/.gemini/"* ]]; then
-    HANDOFF_AGENT="gemini"
-elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
-    HANDOFF_AGENT="codex"
 else
-    HANDOFF_AGENT="claude"
+  # 9. Compact mode orientation link
+  INFO+=("Lean orientation: http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}")
 fi
 
-if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
-  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
-else
-  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
-  if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
-    CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
-  else
-    # Non-Git fixtures and partially initialized checkouts remain isolated.
-    CANONICAL_ROOT="$PROJECT_DIR"
-  fi
-fi
-CURRENT_THREAD_ID="${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}"
+# 13. Session handoff. Claude uses the official SessionStart session id; Codex
+# retains its documented environment fallback for non-Claude fixtures.
+CURRENT_THREAD_ID="${SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}"
 ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 HANDOFF_CONTEXT=""
@@ -397,7 +465,6 @@ Output:
 $HANDOFF_CONTEXT"
   fi
 elif [ "$DETECT_STATUS" = "none" ]; then
-  # Legacy compatibility remains if no v2 live packet is active.
   HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
 
   if [ -f "$PROJECT_DIR/.agent/${HANDOFF_AGENT}-thread-handoff.md" ]; then
@@ -462,12 +529,7 @@ else
   HANDOFF_CONTEXT="ERROR: Unexpected detect status: $DETECT_STATUS"
 fi
 
-# Epic assignment banner — the FIRST thing the session reads. SESSION_EPIC is
-# exported by start-claude.sh from its launcher-only `--epic` flag. With an
-# epic: bind the session to that lane and point at the epic driver handoff.
-# Without: forbid the old "standalone = main orchestrator" default that caused
-# the 2026-07-13 atlas/hramatka/main lane collision — the session must resolve
-# its lane from the user's first message / .agent/lane-assignments.md, or ASK.
+# Epic assignment banner
 EPIC_BANNER=""
 if [ -n "${SESSION_EPIC:-}" ]; then
   EPIC_BANNER="ASSIGNED EPIC: ${SESSION_EPIC}.epic (binding — from the launch command).
@@ -487,22 +549,43 @@ Do NOT default to 'main orchestrator'. Resolve your lane in this order:
    claiming any lane, reading any thread handoff as your own, or touching queues."
 fi
 
-# Build output
-if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTEXT" ] && [ -z "$EPIC_BANNER" ]; then
-  exit 0
+# Build Profile Capsule
+CAPSULE_ORIENTATION_URL="http://localhost:8765/api/orient?session=${SESSION_ID:-}"
+if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
+  CAPSULE_ORIENTATION_URL="http://localhost:8765/api/orient?lean=true&session=${SESSION_ID:-}"
 fi
 
-CONTEXT=""
-if [ -n "$EPIC_BANNER" ]; then
-  CONTEXT="$EPIC_BANNER
+CAPSULE="--- SESSION PROFILE CAPSULE ---
+Profile: ${LEARN_UKRAINIAN_PROFILE_ID:-fallback}
+Requested Profile: ${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-None}
+Declared Model: ${LEARN_UKRAINIAN_EXPECTED_MAIN_MODEL_ID:-${LEARN_UKRAINIAN_MAIN_MODEL_ID:-unknown}}
+Declared Window: ${LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS:-0}
+Effective Window: ${LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS:-0}
+Observed Model: ${OBSERVED_MODEL:-None}
+Cold Start: ${LEARN_UKRAINIAN_COLD_START_PROFILE:-compact}
+Budget: ${LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS:-0}
+Auto-Compact Capacity: ${LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS:-None}
+Trusted: ${LEARN_UKRAINIAN_TRUSTED:-0} (${LEARN_UKRAINIAN_RESOLUTION_REASON:-missing-profile})
+Session ID: ${SESSION_ID:-None}
+Orientation URL: $CAPSULE_ORIENTATION_URL
+--------------------------------"
 
-"
+# Build output
+CONTEXT="$CAPSULE"
+if [ -n "$EPIC_BANNER" ]; then
+  CONTEXT="$CONTEXT
+
+$EPIC_BANNER"
 fi
 if [ -n "$HANDOFF_CONTEXT" ]; then
-  CONTEXT="${CONTEXT}$HANDOFF_CONTEXT
-"
+  CONTEXT="$CONTEXT
+
+$HANDOFF_CONTEXT"
 fi
-CONTEXT="${CONTEXT}SESSION SETUP CHECK:"
+
+CONTEXT="$CONTEXT
+
+SESSION SETUP CHECK:"
 
 if [ ${#ISSUES[@]} -gt 0 ]; then
   CONTEXT="$CONTEXT

@@ -12,21 +12,15 @@
 #   (branch*)      git branch + `*` if dirty
 #   [ctx: UK/BK (N%)] context window — color-coded green<50, yellow 50-79,
 #                    red 80+. U=used Ktokens, B=budget Ktokens, N=percent.
-#                    Used tokens read with three-tier degradation:
-#                      1) PRIMARY: .transcript_path → tail JSONL → sum
-#                         .message.usage.{input_tokens, cache_read_input_tokens,
-#                         cache_creation_input_tokens} from latest assistant
-#                         turn. Most reliable — .transcript_path is in the
-#                         official statusline schema.
-#                      2) FALLBACK: .context_window.used_tokens (or
-#                         .input_tokens / .tokens.used). Works on clients
-#                         that populate the context_window block directly.
-#                      3) BARE: .context_window.used_percentage as the last
-#                         resort if no token count is available.
-#                    Budget read from .context_window.budget (or .max_tokens
-#                    / .total_tokens), else the CLAUDE_CODE_AUTO_COMPACT_WINDOW
-#                    env var, else 1000000. Omitted entirely until the first
-#                    API call populates usage.
+#                    Used tokens prefer official Claude Code fields:
+#                      1) .context_window.total_input_tokens;
+#                      2) input/cache fields inside .context_window.current_usage;
+#                      3) legacy direct token keys;
+#                      4) latest assistant input/cache usage from transcript JSONL.
+#                    Output tokens are never added to current-context usage.
+#                    Capacity prefers .context_window.context_window_size, then
+#                    the canonical per-session record. There is no universal 1M
+#                    or auto-compaction fallback; unknown capacity stays hidden.
 #   [effort: ...]  .effort.level — low/medium default, high/xhigh bold,
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
@@ -96,51 +90,108 @@ if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   [ -n "$branch" ] && branch_seg="($branch$dirty)"
 fi
 
-# Context window — UK/BK (N%) format with three-tier degradation.
-#
-# Tier 1 (primary): .transcript_path → tail the JSONL → sum the latest
-#   assistant turn's .message.usage.{input_tokens, cache_read_input_tokens,
-#   cache_creation_input_tokens}. This is the documented, stable path —
-#   .transcript_path is in the official statusline schema and the usage
-#   shape is the Anthropic API contract.
-# Tier 2 (fallback): direct .context_window.* JSON reads, in case a
-#   future client version populates that block.
-# Tier 3 (bare): .context_window.used_percentage with no K/K, if neither
-#   tier produced a token count.
+# Official Claude Code identity and context fields.
+session_id=$(json_get '.session_id')
+transcript_path=$(json_get '.transcript_path')
+observed_model_id=$(json_get '.model.id')
+observed_window=$(json_get '.context_window.context_window_size')
+ctx_budget="$observed_window"
+ctx_used=$(json_get '.context_window.total_input_tokens')
+if [ -z "$ctx_used" ]; then
+  ctx_used=$(json_get '
+    if (.context_window.current_usage | type) == "object" then
+      ((.context_window.current_usage.input_tokens // 0)
+       + (.context_window.current_usage.cache_read_input_tokens // 0)
+       + (.context_window.current_usage.cache_creation_input_tokens // 0))
+    else empty end')
+  [ "$ctx_used" = "0" ] && ctx_used=""
+fi
+
+is_positive_integer() {
+  case "${1:-}" in
+    ""|*[!0-9]*) return 1 ;;
+    *) [ "$1" -gt 0 ] ;;
+  esac
+}
+
+# Locate the checkout containing the canonical session-record helper. The helper
+# itself resolves linked worktrees back to the primary checkout's private state.
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$cwd}"
+if [ ! -f "$PROJECT_DIR/scripts/lib/session_record.py" ]; then
+  PROJECT_DIR=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
+fi
+PYTHON_BIN="$PROJECT_DIR/.venv/bin/python"
+SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
+record_json=""
+if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
+  record_json=$("$PYTHON_BIN" "$SESSION_RECORD" get --session-id "$session_id" 2>/dev/null || true)
+
+  # Persist only changed official observations. This makes the record the shared
+  # denominator for hooks and Monitor telemetry without rewriting it per event.
+  stored_model=$(printf '%s' "$record_json" | jq -r '.observed_model_id // empty' 2>/dev/null)
+  stored_window=$(printf '%s' "$record_json" | jq -r '.observed_context_window_tokens // empty' 2>/dev/null)
+  stored_transcript=$(printf '%s' "$record_json" | jq -r '.transcript_path // empty' 2>/dev/null)
+  update_args=(update --session-id "$session_id" --provenance statusline)
+  update_needed=0
+  if [ -n "$observed_model_id" ] && [ "$observed_model_id" != "$stored_model" ]; then
+    update_args+=(--observed-model "$observed_model_id" --observed-model-provenance statusline.model.id)
+    update_needed=1
+  fi
+  if is_positive_integer "$observed_window" && [ "$observed_window" != "$stored_window" ]; then
+    update_args+=(--observed-context-window "$observed_window" --observed-context-window-provenance statusline.context_window.context_window_size)
+    update_needed=1
+  fi
+  if [ -n "$transcript_path" ] && [ "${transcript_path#/}" != "$transcript_path" ] \
+     && [ "$transcript_path" != "$stored_transcript" ]; then
+    update_args+=(--transcript-path "$transcript_path" --transcript-path-provenance statusline.transcript_path)
+    update_needed=1
+  fi
+  if [ "$update_needed" -eq 1 ]; then
+    if [ -z "$record_json" ] && [ -n "${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-}" ]; then
+      update_args+=(--profile-id "$LEARN_UKRAINIAN_REQUESTED_PROFILE_ID")
+    fi
+    "$PYTHON_BIN" "$SESSION_RECORD" "${update_args[@]}" >/dev/null 2>&1 || true
+    record_json=$("$PYTHON_BIN" "$SESSION_RECORD" get --session-id "$session_id" 2>/dev/null || true)
+  fi
+fi
+
+declared_model=$(printf '%s' "$record_json" | jq -r '.expected_model_id // .effective_model_id // empty' 2>/dev/null)
+declared_window=$(printf '%s' "$record_json" | jq -r '.expected_context_window_tokens // .effective_context_window_tokens // empty' 2>/dev/null)
+actual_window=$(printf '%s' "$record_json" | jq -r '.actual_context_window_tokens // empty' 2>/dev/null)
+model_mismatch=$(printf '%s' "$record_json" | jq -r '.model_mismatch // false' 2>/dev/null)
+window_mismatch=$(printf '%s' "$record_json" | jq -r '.window_mismatch // false' 2>/dev/null)
+[ -z "$ctx_budget" ] && ctx_budget="$actual_window"
+[ -z "$observed_model_id" ] && observed_model_id=$(printf '%s' "$record_json" | jq -r '.observed_model_id // .effective_model_id // empty' 2>/dev/null)
+
+mismatch_seg=""
+if [ "$model_mismatch" = "true" ]; then
+  mismatch_seg="\033[31m[MISMATCH MODEL: ${observed_model_id:-unknown} vs ${declared_model:-unknown}]\033[0m"
+fi
+if [ "$window_mismatch" = "true" ]; then
+  mismatch_seg="${mismatch_seg:+$mismatch_seg }\033[31m[MISMATCH WINDOW: ${ctx_budget:-unknown} vs ${declared_window:-unknown}]\033[0m"
+fi
+
 ctx_seg=""
 ctx_pct=$(json_get '.context_window.used_percentage')
-ctx_used=""
 
-# Tier 1: transcript-JSONL parsing.
-transcript_path=$(json_get '.transcript_path')
-if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+# Compatibility fallbacks for older Claude Code clients.
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.used_tokens')
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.input_tokens')
+[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.tokens.used')
+if [ -z "$ctx_used" ] && [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
   usage_json=$(tail -200 "$transcript_path" 2>/dev/null \
     | jq -s '[.[] | select(.type == "assistant" and .message.usage != null)] | last | .message.usage // empty' 2>/dev/null)
   if [ -n "$usage_json" ] && [ "$usage_json" != "null" ] && [ "$usage_json" != "empty" ]; then
     inp=$(printf '%s' "$usage_json" | jq -r '.input_tokens // 0' 2>/dev/null)
-    cr=$(printf '%s'  "$usage_json" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
-    cc=$(printf '%s'  "$usage_json" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
+    cr=$(printf '%s' "$usage_json" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
+    cc=$(printf '%s' "$usage_json" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
     ctx_used=$(( ${inp:-0} + ${cr:-0} + ${cc:-0} ))
-    [ "$ctx_used" = "0" ] && ctx_used=""    # no usage yet → treat as missing
+    [ "$ctx_used" = "0" ] && ctx_used=""
   fi
 fi
 
-# Tier 2: direct JSON field reads.
-[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.used_tokens')
-[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.input_tokens')
-[ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.tokens.used')
-
-# Budget — same precedence as before.
-ctx_budget=$(json_get '.context_window.budget')
-[ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.max_tokens')
-[ -z "$ctx_budget" ] && ctx_budget=$(json_get '.context_window.total_tokens')
-[ -z "$ctx_budget" ] && ctx_budget="${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-1000000}"
-
-# If JSON didn't give us a percent but we have used+budget numerics, compute it.
-if [ -z "$ctx_pct" ] && [ -n "$ctx_used" ] && [ -n "$ctx_budget" ] \
-   && printf '%d' "$ctx_used"   >/dev/null 2>&1 \
-   && printf '%d' "$ctx_budget" >/dev/null 2>&1 \
-   && [ "$ctx_budget" -gt 0 ]; then
+# Compute a percentage only when both values are trustworthy positive integers.
+if [ -z "$ctx_pct" ] && is_positive_integer "$ctx_used" && is_positive_integer "$ctx_budget"; then
   ctx_pct=$(( ctx_used * 100 / ctx_budget ))
 fi
 
@@ -151,10 +202,7 @@ if [ -n "$ctx_pct" ]; then
     elif [ "$ctx_int" -ge 50 ]; then ctx_color="\033[33m"   # yellow
     else                             ctx_color="\033[32m"   # green
     fi
-    # Render UK/BK (N%) when we have numeric token counts; else bare N%.
-    if [ -n "$ctx_used" ] && printf '%d' "$ctx_used" >/dev/null 2>&1 \
-       && [ -n "$ctx_budget" ] && printf '%d' "$ctx_budget" >/dev/null 2>&1; then
-      # Round to nearest thousand: (x + 500) / 1000.
+    if is_positive_integer "$ctx_used" && is_positive_integer "$ctx_budget"; then
       ctx_used_k=$(( (ctx_used + 500) / 1000 ))
       ctx_budget_k=$(( (ctx_budget + 500) / 1000 ))
       ctx_seg="${ctx_color}[ctx: ${ctx_used_k}K/${ctx_budget_k}K (${ctx_int}%)]\033[0m"
@@ -204,6 +252,7 @@ parts+=("$cwd_name")
 [ -n "$wt_seg" ]     && parts+=("$wt_seg")
 [ -n "$branch_seg" ] && parts+=("$branch_seg")
 [ -n "$ctx_seg" ]    && parts+=("$ctx_seg")
+[ -n "$mismatch_seg" ] && parts+=("$mismatch_seg")
 [ -n "$effort_seg" ] && parts+=("$effort_seg")
 [ -n "$thinking_seg" ] && parts+=("$thinking_seg")
 [ -n "$rl5h_seg" ]   && parts+=("$rl5h_seg")

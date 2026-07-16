@@ -28,10 +28,10 @@ functional role.
 Shell equivalent:
 
 ```bash
-# Pass your session id on the telemetry-bearing endpoints (manifest/rules/orient) so responses
-# carry live context-window telemetry (_telemetry.ctx) instead of null. Claude Code exports it as
-# $CLAUDE_CODE_SESSION_ID; empty is fine (the API falls back to a best-effort newest-transcript hint).
-S="${CLAUDE_CODE_SESSION_ID:-}"
+# Pass the documented SessionStart identity persisted by the project on telemetry-bearing
+# endpoints (manifest/rules/orient). If it is unavailable, treat `_telemetry.ctx` as unavailable;
+# never substitute another session's newest transcript.
+S="${LEARN_UKRAINIAN_SESSION_ID:-}"
 curl -s "http://localhost:8765/api/state/manifest?session=$S"           # ~1 KB index
 curl -s "http://localhost:8765/api/rules?format=markdown&session=$S"    # only if hash changed
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed

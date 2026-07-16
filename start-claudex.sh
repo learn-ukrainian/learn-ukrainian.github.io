@@ -64,6 +64,21 @@ while (($#)); do
     esac
 done
 
+# Resolve the Sol lead contract before delegated-model selection. The delegated
+# model must not influence any main-session capacity or cold-start field.
+# shellcheck source=scripts/lib/profile_resolver.sh
+source "$PROJECT_DIR/scripts/lib/profile_resolver.sh"
+if ! resolve_context_profile "sol_lead" "$LEAD_MODEL"; then
+    echo "Error: could not resolve the certified Sol lead profile." >&2
+    exit 1
+fi
+if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ] || [ "$LEARN_UKRAINIAN_PROFILE_ID" != "sol_lead" ]; then
+    echo "Error: the Sol lead route did not resolve to its certified profile." >&2
+    exit 1
+fi
+export LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="sol_lead"
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS"
+
 if ! SUBAGENT_MODEL="$(resolve_model "$SUBAGENT")"; then
     echo "Error: unsupported subagent '$SUBAGENT' (choose sol, terra, or luna)." >&2
     exit 2
@@ -77,7 +92,8 @@ unset ANTHROPIC_API_KEY
 export CLAUDE_CODE_SUBAGENT_MODEL="$SUBAGENT_MODEL"
 export CLAUDE_CODE_ALWAYS_ENABLE_EFFORT=1
 export CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=3
-export ENABLE_TOOL_SEARCH=false
+# Defer MCP schemas so the 372k Sol route does not preload every tool definition.
+export ENABLE_TOOL_SEARCH=true
 
 if ! command -v curl >/dev/null 2>&1; then
     echo "Error: curl is required to check CLIProxyAPI." >&2
@@ -87,11 +103,11 @@ fi
 if ! curl --fail --silent --show-error --output /dev/null --header @- \
     --connect-timeout 1 --max-time 3 "$ANTHROPIC_BASE_URL/v1/models" \
     <<< "Authorization: Bearer $ANTHROPIC_AUTH_TOKEN"; then
-    echo "Error: CLIProxyAPI check failed at $ANTHROPIC_BASE_URL (unreachable or credential rejected)." >&2
+    echo "Error: CLIProxyAPI check failed (unreachable or credential rejected)." >&2
     echo "   macOS: brew install cliproxyapi && brew services start cliproxyapi" >&2
     echo "   Connect: cliproxyapi --codex-login" >&2
     exit 1
 fi
 
-echo "Claudex: lead=$LEAD_MODEL subagent=$SUBAGENT_MODEL proxy=$ANTHROPIC_BASE_URL"
-exec "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${FORWARD_ARGS[@]}"
+echo "Claudex: lead=$LEAD_MODEL subagent=$SUBAGENT_MODEL profile=$LEARN_UKRAINIAN_PROFILE_ID"
+exec "$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py" "$PROJECT_DIR/start-claude.sh" --model "$LEAD_MODEL" "${FORWARD_ARGS[@]}"

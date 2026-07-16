@@ -39,24 +39,19 @@ initialPrompt: |
      durable orientation. Do not scan flat `.agent/*-thread-handoff.md` paths or parse rollover leases yourself.
      Handoff identity for this lane is `claude-infra` (also when launched with `--epic harness` — #5201);
      never expect a phantom `claude-harness` slot.
-  4. Orient via Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
-     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$CLAUDE_CODE_SESSION_ID"`
-       — small (hashes + identity). The `?session=` param is how you get `_telemetry.ctx` (your live
-       context-TOKEN count, not a %); MEASURE ctx from it, never estimate. (Known gap #5265: an
-       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null.
-       If caller-matched telemetry is unavailable, state that it is unavailable rather than adopting
-       another session's telemetry.)
+  4. Orient via Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract.
+     Use the official SessionStart value exported as `LEARN_UKRAINIAN_SESSION_ID`; never guess from the
+     newest transcript. The session-bound manifest reports `_telemetry.ctx`, the declared and observed
+     model/window, the actual denominator, provenance, and mismatch state. If caller-matched telemetry is
+     unavailable, say so rather than adopting another session's telemetry.
+     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
      - **Do NOT bulk-fetch `/api/rules` at cold-start.** The operator-contract digest is ALREADY
-       injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. The full
-       endpoint is ~76 KB and, with the telemetry footer enabled (the live config), returns a full
-       body + no ETag/304 on a matching `If-None-Match` — so re-pulling it every cold-start is pure
-       duplication. Fetch it (or `docs/best-practices/agent-activity-matrix.md`)
-       ON-DEMAND, once, before your FIRST dispatch (for the live model-assignment/routing table), and
-       re-pull only when the manifest `rules.hash` changed. API down → offline fallback
-       `agents_extensions/shared/rules/*.md`.
-     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$CLAUDE_CODE_SESSION_ID"`
-       — lean cold-start orientation; pull only critical signals (active worktree and PR targets).
-       Preserve full orient or explicit sections as ON-DEMAND only.
+       injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. Fetch the full
+       rules ON-DEMAND before the first dispatch, and re-pull only when the manifest `rules.hash` changes.
+       API down → offline fallback `agents_extensions/shared/rules/*.md`.
+     - Follow the SessionStart capsule's `Orientation URL`. A `compact` profile uses
+       `/api/orient?lean=true&session=$LEARN_UKRAINIAN_SESSION_ID`; a certified `full` profile uses
+       `/api/orient?session=$LEARN_UKRAINIAN_SESSION_ID`. Explicit `sections=` remains on-demand.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/delegate/active` — verify claimed in-flight
        dispatches before believing the handoff.
      - `curl -s --max-time 2 http://127.0.0.1:8765/api/worktrees`

@@ -6,13 +6,18 @@ import sqlite3
 import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from scripts.lib import session_record
+from scripts.orchestration import claudex_supervisor as cs
 from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
 from scripts.orchestration.task_family import rollover
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def sample_snapshot(tmp_path: Path) -> dict:
@@ -61,6 +66,59 @@ def sample_snapshot(tmp_path: Path) -> dict:
 def clean_invoking_checkout(monkeypatch):
     """Unit CLI fixtures run outside Git; model the clean bound checkout."""
     monkeypatch.setattr(th, "gather_git_state", lambda root: sample_snapshot(root)["git"])
+    for variable in (
+        "LEARN_UKRAINIAN_CLAUDEX_RUN_ID",
+        "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION",
+        "LEARN_UKRAINIAN_SESSION_ID",
+    ):
+        monkeypatch.delenv(variable, raising=False)
+
+
+def seed_supervised_claudex(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    session_id: str = "official-session-5265",
+) -> cs.ClaudexSupervisor:
+    (tmp_path / ".venv").symlink_to(_REPO_ROOT / ".venv", target_is_directory=True)
+    supervisor_env = os.environ.copy()
+    supervisor_env.update(
+        {
+            "LEARN_UKRAINIAN_PROFILE_ID": "sol_lead",
+            "LEARN_UKRAINIAN_MAIN_MODEL_ID": "gpt-5.6-sol",
+            "LEARN_UKRAINIAN_TRANSPORT": "claudex",
+            "LEARN_UKRAINIAN_TRUSTED": "1",
+            "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-5.6-terra",
+        }
+    )
+    supervisor = cs.ClaudexSupervisor(
+        "/bin/true",
+        [
+            "--model",
+            "gpt-5.6-sol",
+            "--agent",
+            "infra-orchestrator",
+            "--epic",
+            "harness",
+        ],
+        state_root=tmp_path,
+        env=supervisor_env,
+    )
+    supervisor.child = SimpleNamespace(pid=4242)  # type: ignore[assignment]
+    supervisor._write_runtime("running")
+    cs.bind_session(
+        state_root=tmp_path,
+        run_id=supervisor.run_id,
+        launch_generation=0,
+        session_id=session_id,
+        source="startup",
+        model_id="gpt-5.6-sol",
+        handoff_agent="claude-infra",
+    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_RUN_ID", supervisor.run_id)
+    monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "0")
+    monkeypatch.setenv("LEARN_UKRAINIAN_SESSION_ID", session_id)
+    return supervisor
 
 
 def prepared(*, agent: str = "orchestrator", thread_id: str = "old-thread") -> dict:
@@ -316,6 +374,47 @@ def test_confirm_started_rejects_missing_pending_replacement():
             strict_verdict=Path("missing-verdict.json"),
             state_root=Path("."),
         )
+
+
+def test_handoff_policy_uses_recorded_actual_window_and_profile_tier(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_SESSION_ID", "recorded-sol-session")
+    monkeypatch.setattr(
+        session_record,
+        "read_record",
+        lambda session_id: {
+            "session_id": session_id,
+            "effective_profile_id": "sol_lead",
+            "actual_context_window_tokens": 360_000,
+            "actual_context_window_provenance": (
+                "statusline.context_window.context_window_size"
+            ),
+            "rollover_warning_percentages": [75.0, 85.0, 92.0],
+        },
+    )
+
+    assert th.resolve_handoff_policy(th.DEFAULT_CONTEXT_THRESHOLD) == (
+        85.0,
+        360_000,
+        "sol_lead",
+        "statusline.context_window.context_window_size",
+    )
+
+
+def test_handoff_policy_unknown_route_has_no_fabricated_window(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_SESSION_ID", raising=False)
+    monkeypatch.setenv("LEARN_UKRAINIAN_REQUESTED_PROFILE_ID", "unknown-route")
+    monkeypatch.setenv("LEARN_UKRAINIAN_MAIN_MODEL_ID", "unknown-model")
+
+    assert th.resolve_handoff_policy(th.DEFAULT_CONTEXT_THRESHOLD) == (
+        85.0,
+        0,
+        "fallback",
+        "unavailable",
+    )
 
 
 def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
@@ -582,6 +681,139 @@ def test_prepare_rejects_dirty_source_checkout_without_writing_packet(tmp_path: 
     assert payload["old_automation_ready_to_delete"] is False
     rollover_root = tmp_path / ".agent/thread-rollovers"
     assert [path for path in rollover_root.rglob("*") if path.is_file() and path.name != ".native-intent.lock"] == []
+
+
+def test_supervised_claudex_prepare_emits_one_typed_request(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    supervisor = seed_supervised_claudex(tmp_path, monkeypatch)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude-infra",
+            ]
+        )
+        == 0
+    )
+    payload = json.loads(capsys.readouterr().out)
+    request_path = cs._request_path(tmp_path, supervisor.run_id)
+    request = json.loads(request_path.read_text(encoding="utf-8"))
+
+    assert payload["lineage_id"] == th.lineage_id_for(
+        "claude-infra", "official-session-5265"
+    )
+    assert payload["claudex_rollover_request"] == {
+        "request_id": request["request_id"],
+        "rollover_id": payload["rollover_id"],
+        "run_id": supervisor.run_id,
+    }
+    assert request["source_session_id"] == "official-session-5265"
+    assert request["launch_generation"] == 0
+    assert request["profile_id"] == "sol_lead"
+    assert request["lead_model_id"] == "gpt-5.6-sol"
+    assert request["subagent_model_id"] == "gpt-5.6-terra"
+    assert request["handoff_agent"] == "claude-infra"
+    assert len(list(supervisor.run_dir.glob("request.json"))) == 1
+
+
+def test_supervised_claudex_request_failure_preserves_prepared_lease(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    supervisor = seed_supervised_claudex(tmp_path, monkeypatch)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "1")
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude-infra",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+    lease_path = tmp_path / payload["state_file"]
+    lease = json.loads(lease_path.read_text(encoding="utf-8"))
+
+    assert "request launch generation is stale" in payload["error"]
+    assert payload["old_automation_ready_to_delete"] is False
+    assert lease["replacement"]["status"] == "pending_start"
+    assert lease["replacement"]["rollover_id"] == payload["rollover_id"]
+    assert not cs._request_path(tmp_path, supervisor.run_id).exists()
+
+
+def test_prepare_without_claudex_supervisor_keeps_native_lifecycle(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude",
+                "--active-thread-id",
+                "native-session",
+            ]
+        )
+        == 0
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert "claudex_rollover_request" not in payload
+    assert payload["next_native_action"]["tool"] == "create_thread"
+    assert not (tmp_path / ".agent/claudex-supervisors").exists()
+
+
+def test_prepare_dry_run_never_prints_canary_bearing_prompt(
+    tmp_path: Path,
+    capsys,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    challenge = "a" * 64
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setattr(th, "new_canary_challenge", lambda: challenge)
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--active-thread-id",
+                "old-thread",
+                "--dry-run",
+            ]
+        )
+        == 0
+    )
+    raw = capsys.readouterr().out
+    payload = json.loads(raw)
+
+    assert challenge not in raw
+    assert "bootstrap_prompt" not in payload
+    assert payload["bootstrap_prompt_bytes"] > 0
+    assert len(payload["bootstrap_prompt_sha256"]) == 64
+    assert not (tmp_path / payload["bootstrap_file"]).exists()
 
 
 def test_register_created_context_failure_reports_cleanly(tmp_path: Path, capsys):

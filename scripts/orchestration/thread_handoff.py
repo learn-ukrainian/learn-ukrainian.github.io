@@ -22,7 +22,7 @@ import urllib.error
 import urllib.request
 import uuid
 from collections.abc import Callable, Mapping
-from contextlib import closing
+from contextlib import closing, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -54,13 +54,7 @@ ROLLOVER_ID_RE = re.compile(r"^rollover-[a-z0-9]+(?:-[a-z0-9]+)*$")
 DEFAULT_ROUTER_PATH = Path("docs/session-state/current.md")
 ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.md")
 DEFAULT_STALE_HOURS = 12
-# Rollover warn point as a percent of the context window. Raised 82.0 → 88.0
-# (user direction 2026-06-15): Opus 4.8 has NO >200K long-context premium and no
-# brain-rot cliff, so staying high is cheap (cache-read tax ≈ $0.50 per 1M-of-context
-# per turn) — warn later to avoid early-nag and waste less of the window. 88% on a 1M
-# window ≈ 880K, leaving ~120K margin below the hard wall for the handoff write (~35K)
-# + clean-execution headroom. Measure context deterministically, not by gut estimate
-# (self-estimate runs ~1.8× high; see memory/MEMORY.md #2).
+# Default warning threshold (percentage of window)
 DEFAULT_CONTEXT_THRESHOLD = 88.0
 
 
@@ -623,7 +617,96 @@ def write_text_atomic(path: Path, text: str) -> None:
 
 
 def active_thread_id_from_env() -> str | None:
-    return os.environ.get("CODEX_THREAD_ID") or os.environ.get("CODEX_SESSION_ID")
+    return (
+        os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
+        or os.environ.get("CODEX_THREAD_ID")
+        or os.environ.get("CODEX_SESSION_ID")
+    )
+
+
+def request_claudex_rollover(
+    *,
+    repo_root: Path,
+    state_root: Path,
+    lineage_id: str,
+    replacement: Mapping[str, Any],
+) -> dict[str, str] | None:
+    """Ask the owning Claudex supervisor to restart after durable prepare.
+
+    Native Claude and Codex sessions have no Claudex run id and therefore keep
+    the existing handoff lifecycle. A supervised Claudex session must provide
+    the exact launch generation and official SessionStart id; the supervisor
+    revalidates all route, process, lease, and native-lifecycle bindings.
+    """
+    run_id = os.environ.get("LEARN_UKRAINIAN_CLAUDEX_RUN_ID")
+    if not run_id:
+        return None
+
+    launch_generation_raw = os.environ.get(
+        "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION"
+    )
+    session_id = os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
+    if not launch_generation_raw or not session_id:
+        raise ValueError(
+            "supervised Claudex rollover requires launch generation and official session identity"
+        )
+    try:
+        launch_generation = int(launch_generation_raw)
+    except ValueError as exc:
+        raise ValueError(
+            "supervised Claudex launch generation must be an integer"
+        ) from exc
+    if launch_generation < 0:
+        raise ValueError(
+            "supervised Claudex launch generation must be non-negative"
+        )
+
+    rollover_generation = replacement.get("generation")
+    rollover_id = replacement.get("rollover_id")
+    if not isinstance(rollover_generation, int) or rollover_generation < 1:
+        raise ValueError("prepared rollover generation is malformed")
+    if not isinstance(rollover_id, str):
+        raise ValueError("prepared rollover id is malformed")
+
+    supervisor_script = Path(__file__).with_name("claudex_supervisor.py")
+    result = run_command(
+        [
+            os.fspath(repo_root / ".venv/bin/python"),
+            os.fspath(supervisor_script),
+            "request-rollover",
+            "--state-root",
+            os.fspath(state_root),
+            "--run-id",
+            run_id,
+            "--launch-generation",
+            str(launch_generation),
+            "--session-id",
+            session_id,
+            "--lineage-id",
+            lineage_id,
+            "--rollover-generation",
+            str(rollover_generation),
+            "--rollover-id",
+            rollover_id,
+        ],
+        cwd=repo_root,
+    )
+    if result.returncode != 0:
+        detail = result.stderr or result.stdout or "request command failed"
+        raise ValueError(f"Claudex rollover request failed: {detail}")
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError("Claudex rollover request returned malformed JSON") from exc
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != {"request_id", "run_id", "rollover_id"}
+        or payload.get("run_id") != run_id
+        or payload.get("rollover_id") != rollover_id
+        or not isinstance(payload.get("request_id"), str)
+    ):
+        raise ValueError("Claudex rollover request returned mismatched identity")
+    return {key: str(value) for key, value in payload.items()}
 
 
 def new_rollover_id() -> str:
@@ -685,7 +768,7 @@ def prepare_state(
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("schema v2 state is required; migrate v1 explicitly before preparing")
     if not active_thread_id:
-        raise ValueError("--active-thread-id (or CODEX_THREAD_ID) is required for a v2 rollover")
+        raise ValueError("--active-thread-id (or LEARN_UKRAINIAN_SESSION_ID/CODEX_THREAD_ID) is required for a v2 rollover")
 
     prepared = dict(state)
     prepared["schema_version"] = SCHEMA_VERSION
@@ -1129,11 +1212,29 @@ def summarize_commits(commits: list[dict[str, str]]) -> str:
     return format_table(rows, ["SHA", "Subject"])
 
 
-def context_line(context_percent: float | None, threshold: float) -> str:
+def context_line(
+    context_percent: float | None,
+    threshold: float,
+    window: int = 0,
+    profile_id: str = "unknown",
+    provenance: str = "default",
+) -> str:
     if context_percent is None:
         return "Context percent was not supplied; use --context-percent from a statusline or manual estimate."
     state = "ROLL OVER NOW" if context_percent >= threshold else "below rollover threshold"
-    return f"Context estimate: {context_percent:.1f}% ({state}; threshold {threshold:.1f}%)."
+    if window > 0:
+        abs_point = int(threshold * window / 100.0)
+        abs_used = int(context_percent * window / 100.0)
+        return (
+            f"Context estimate: {context_percent:.1f}% ({state}; threshold {threshold:.1f}%). "
+            f"Observed/estimated used: {abs_used}/{window} tokens (Warning at: {abs_point} tokens). "
+            f"Policy profile: {profile_id} (Provenance: {provenance})."
+        )
+    else:
+        return (
+            f"Context estimate: {context_percent:.1f}% ({state}; threshold {threshold:.1f}%). "
+            f"Policy profile: {profile_id} (No assumed denominator; Provenance: {provenance})."
+        )
 
 
 def first_turn_checklist_lines(
@@ -1154,6 +1255,72 @@ def first_turn_checklist_lines(
     ]
 
 
+def resolve_handoff_policy(context_threshold: float) -> tuple[float, int, str, str]:
+    """Resolve the session record's actual capacity and rollover policy.
+
+    Official statusline observations win over the declared launcher profile. A
+    missing or untrusted route has no denominator; it must never inherit 1M.
+    """
+    project_root = Path(__file__).resolve().parents[2]
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
+    from scripts.lib.context_profiles import resolve_profile
+    from scripts.lib.session_record import read_record
+
+    session_id = (
+        os.environ.get("LEARN_UKRAINIAN_SESSION_ID")
+        or os.environ.get("CODEX_SESSION_ID")
+        or os.environ.get("CODEX_THREAD_ID")
+    )
+    record = read_record(session_id) if session_id else None
+
+    if record is not None:
+        window_raw = record.get("actual_context_window_tokens")
+        window = window_raw if isinstance(window_raw, int) and window_raw > 0 else 0
+        active_profile_id = str(record.get("effective_profile_id") or "fallback")
+        percentages = record.get("rollover_warning_percentages")
+        provenance = str(
+            record.get("actual_context_window_provenance") or "unavailable"
+        )
+    else:
+        requested_profile_id = (
+            os.environ.get("LEARN_UKRAINIAN_REQUESTED_PROFILE_ID")
+            or os.environ.get("LEARN_UKRAINIAN_PROFILE_ID")
+        )
+        observed_model_id = (
+            os.environ.get("LEARN_UKRAINIAN_OBSERVED_MODEL_ID")
+            or os.environ.get("LEARN_UKRAINIAN_MAIN_MODEL_ID")
+        )
+        profile = resolve_profile(requested_profile_id, observed_model_id)
+        trusted_window = profile.get("main_context_window_tokens")
+        window = (
+            trusted_window
+            if profile.get("trusted")
+            and isinstance(trusted_window, int)
+            and trusted_window > 0
+            else 0
+        )
+        active_profile_id = str(profile.get("profile_id") or "fallback")
+        percentages = profile.get("rollover_warning_percentages")
+        provenance = "declared-profile" if window > 0 else "unavailable"
+
+    valid_percentages = (
+        percentages
+        if isinstance(percentages, list)
+        and len(percentages) == 3
+        and all(isinstance(value, int | float) for value in percentages)
+        else [75.0, 85.0, 90.0]
+    )
+    derived_threshold = float(valid_percentages[1])
+    active_threshold = (
+        derived_threshold
+        if context_threshold == DEFAULT_CONTEXT_THRESHOLD
+        else context_threshold
+    )
+    return active_threshold, window, active_profile_id, provenance
+
+
 def render_bootstrap_prompt(
     snapshot: dict[str, Any],
     state: dict[str, Any],
@@ -1165,6 +1332,7 @@ def render_bootstrap_prompt(
     state_root: Path | None = None,
     context_threshold: float,
 ) -> str:
+    active_thresh, window, active_profile, provenance = resolve_handoff_policy(context_threshold)
     git = snapshot["git"]
     monitor = snapshot["monitor"]
     github = snapshot["github"]
@@ -1256,7 +1424,7 @@ def render_bootstrap_prompt(
                 "",
                 "Current snapshot:",
                 f"- Branch: {git.get('branch')} @ {git.get('head')}",
-                f"- {context_line(float(context_percent) if context_percent is not None else None, context_threshold)}",
+                f"- {context_line(float(context_percent) if context_percent is not None else None, active_thresh, window, active_profile, provenance)}",
                 f"- Active delegates: {(monitor.get('active_delegates') or {}).get('total', 'unknown') if isinstance(monitor.get('active_delegates'), dict) else 'unknown'}",
                 f"- Open PRs: {len(github.get('open_prs')) if isinstance(github.get('open_prs'), list) else 'unknown'}",
                 f"- Bootstrap prompt source: {prompt_path}",
@@ -1275,6 +1443,7 @@ def render_current_markdown(
     state_root: Path | None = None,
     context_threshold: float,
 ) -> str:
+    active_thresh, window, active_profile, provenance = resolve_handoff_policy(context_threshold)
     git = snapshot["git"]
     monitor = snapshot["monitor"]
     github = snapshot["github"]
@@ -1327,7 +1496,10 @@ def render_current_markdown(
         "",
         context_line(
             float(handoff["context_percent"]) if handoff.get("context_percent") is not None else None,
-            context_threshold,
+            active_thresh,
+            window,
+            active_profile,
+            provenance,
         ),
         "",
         "## Git State",
@@ -1510,8 +1682,9 @@ def check_state(
     if cleanup.get("old_automation_ready_to_delete") and not replacement.get("thread_id"):
         warnings.append("cleanup says ready, but replacement thread_id is missing")
 
-    if context_percent is not None and context_percent >= context_threshold:
-        warnings.append(f"context estimate {context_percent:.1f}% is at/above threshold {context_threshold:.1f}%")
+    active_thresh, _, _, _ = resolve_handoff_policy(context_threshold)
+    if context_percent is not None and context_percent >= active_thresh:
+        warnings.append(f"context estimate {context_percent:.1f}% is at/above threshold {active_thresh:.1f}%")
 
     return facts, warnings
 
@@ -1561,7 +1734,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         print(
             json.dumps(
                 {
-                    "error": "--active-thread-id (or CODEX_THREAD_ID) is required for a v2 rollover",
+                    "error": "--active-thread-id (or LEARN_UKRAINIAN_SESSION_ID/CODEX_THREAD_ID) is required for a v2 rollover",
                     "agent": agent,
                 },
                 indent=2,
@@ -1703,6 +1876,7 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
     )
 
     if args.dry_run:
+        prompt_bytes = prompt.encode("utf-8")
         output = {
             "dry_run": True,
             "agent": agent,
@@ -1726,7 +1900,8 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             "intended_title": replacement["display"]["title"],
             "title_source": replacement["display"]["title_source"],
             "native_lifecycle": replacement["native_lifecycle"],
-            "bootstrap_prompt": prompt,
+            "bootstrap_prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
+            "bootstrap_prompt_bytes": len(prompt_bytes),
         }
         print(json.dumps(output, indent=2))
         return 0
@@ -1840,6 +2015,28 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         write_text_atomic(router_path, router_md)
         wrote_router = True
 
+    try:
+        claudex_request = request_claudex_rollover(
+            repo_root=repo_root,
+            state_root=state_root,
+            lineage_id=lineage_id,
+            replacement=replacement,
+        )
+    except ValueError as exc:
+        print(
+            json.dumps(
+                {
+                    "error": str(exc),
+                    "state_file": rel(state_path, state_root),
+                    "rollover_id": replacement["rollover_id"],
+                    "old_automation_ready_to_delete": False,
+                    "recovery": "The prepared handoff remains intact. Repair the supervisor identity or start the replacement manually; do not delete the lease.",
+                },
+                indent=2,
+            )
+        )
+        return 2
+
     output = {
         "agent": agent,
         "lineage_id": lineage_id,
@@ -1869,6 +2066,8 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             "source_thread_id": prepared_state["active"]["thread_id"],
         },
     }
+    if claudex_request is not None:
+        output["claudex_rollover_request"] = claudex_request
     print(json.dumps(output, indent=2))
     return 0
 

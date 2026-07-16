@@ -811,7 +811,6 @@
     ]
   },
   "plansDirectory": "docs/plans",
-  "autoCompactWindow": 1000000,
   "respectGitignore": true,
   "language": "auto",
   "agent": "curriculum-orchestrator",

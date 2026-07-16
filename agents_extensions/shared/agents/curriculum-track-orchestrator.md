@@ -13,13 +13,11 @@ initialPrompt: |
   ## COLD-START (API mode — do this BEFORE anything else)
   1. Read the task prompt / user message → which track are you helping this session?
   2. Orient via the Monitor API (127.0.0.1:8765), lane-scoped — pull SIGNAL, not the whole contract:
-     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$CLAUDE_CODE_SESSION_ID"`
-       — small (hashes + identity). The `?session=` param is how you get `_telemetry.ctx` (your live
-       context-TOKEN count, not a %); MEASURE ctx from it, never estimate. (Known gap #5265: an
-       unresolved session returns `session-transcript-not-found` + `caller_match:false` → ctx null,
-       and the response OMITS the `newest_transcript` sidecar. Until it lands, if `caller_match` is
-       false re-request the manifest WITHOUT `?session=` and read `_telemetry.newest_transcript.ctx`
-       — that sidecar is present ONLY on no-session requests — yours when you're the only session here.)
+     - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
+       — small (hashes + identity). SessionStart persists Claude Code's documented session id in that
+       project-private variable. The response's `_telemetry.ctx` is your live context-TOKEN count,
+       not a percentage; measure from it, never estimate. If `caller_match` is false or `ctx` is null,
+       treat context telemetry as unavailable — never substitute another session's newest transcript.
      - **Do NOT bulk-fetch `/api/rules` at cold-start.** The operator-contract digest is ALREADY
        injected into your system prompt (CLAUDE.md § Operator Contract) — that binds. The full
        endpoint is ~76 KB and, with the telemetry footer enabled (the live config), returns a full
