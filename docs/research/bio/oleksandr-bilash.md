@@ -67,6 +67,8 @@
 - `1964` — music for the Shevchenko biographical film *Сон*; includes
   «Лелеченьки», lyrics Дмитро Павличко [T3].
 - `1965` — opera *Гайдамаки*, after Taras Shevchenko [T1: ЕСУ] [T1: ВУЕ].
+- Film work documented by ЕСУ includes «Роман і Франческа», «Сон» and «Вир»; this supports a film-music claim, not the assumption that every Bilash song was written for film [T1: ЕСУ].
+- His institutional record includes leadership of the Kyiv organization of the Union of Composers; present the position as Soviet cultural-system context, neither proof of artistic merit nor a moral verdict [T1: ЕСУ] [T1: ВУЕ].
 - Later large-form Soviet-theme works include *Павло Корчагін*,
   *Прапороносці*, and *Дзвони Росії*; name these as context, not as the central
   interpretive frame.
@@ -76,15 +78,18 @@
 **Do not assert** Bilash setting «Любіть Україну» unless a stronger T1/T2
 source is found; current leads are lower-tier sheet-music/song sites.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Short quotations with verified attribution
 
 - **Quote 1 — poet-composer self-description:**
   - Full canonical UA text (with proper Ukrainian orthography): «Так і живу
     між звуками й словами, / Немов між небом і землею я живу...»
   - Source: title, year, page section: Національна бібліотека України для
     дітей, "Я народився разом із весною, щоб все живе будить від сну...",
-    methodological bibliography PDF, page 9; corroborated by *Україна молода*
-    and ZN.ua features.
+    2016 methodological bibliography PDF, page 9,
+    https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf; the same two
+    lines are also reproduced in the institution's 2022 bibliography
+    «Вічна магія музики» and in *Україна молода*. This is a short quotation
+    from Bilash's poem, not a lyric from a co-authored song.
   - 1-2 line context on why this quote matters pedagogically: Use to show
     learners that Bilash understood his art as movement between music and
     Ukrainian poetic language.
@@ -93,13 +98,18 @@ source is found; current leads are lower-tier sheet-music/song sites.
     поет, бо поетами народжуються, а композиторами стають».
   - Source: title, year, page section: Національна бібліотека України для
     дітей, "Я народився разом із весною, щоб все живе будить від сну...",
-    methodological bibliography PDF, page 9.
+    2016 methodological bibliography PDF, page 9,
+    https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf. The PDF presents
+    this as reported speech («говорив Олександр Іванович»), not as a retrieved
+    audio transcript; preserve that attribution limit.
   - 1-2 line context on why this quote matters pedagogically: Use cautiously as
-    a short primary-voice anchor for the "composer and poet" thread.
+    institutionally transmitted reported speech for the "composer and poet"
+    thread, not as a primary recording.
 - **Module-use warning:** These are dossier-level source anchors, not automatic
-  lesson excerpts. Before module writing, verify the poem text against a
-  published Bilash poetry collection such as *Мелодія*, *Криниця*, or
-  *Мамине крило* if a longer excerpt is needed.
+  lesson excerpts. The live institutional PDF verifies these two short anchors;
+  before module writing, verify the poem against a published Bilash poetry
+  collection such as *Мелодія*, *Криниця*, or *Мамине крило* if any longer
+  excerpt is needed. The previous mismatched path has been removed.
 
 ## 5. Language register
 
@@ -226,8 +236,9 @@ List tier labels per `docs/best-practices/bio-research-source-tiers.md` (#2312):
   https://www.youtube.com/watch?v=P6_-jd0nvRU. Upload date 2026-06-28.
 - Національна бібліотека України для дітей. "Я народився разом із весною,
   щоб все живе будить від сну..." Methodological bibliography PDF.
-  https://uhb.chl.kiev.ua/images/uploaded_files/mbm/1959/pdf/1959.pdf.
-  Accessed 2026-06-29.
+  https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf, p. 9.
+  Verified and accessed 2026-07-16; this live institutional URL replaces the
+  previous mismatched path.
 
 **Tier 3 (encyclopedic):**
 
@@ -272,7 +283,7 @@ List tier labels per `docs/best-practices/bio-research-source-tiers.md` (#2312):
 - [x] No Russocentric periodization (Civil War vs Українська революція, etc.)
 - [x] No uncritical Soviet propaganda terms (буржуазний націоналізм in body
   text)
-- [x] No "lost his life" euphemisms documented executions
+- [x] Execution-euphemism check not applicable: this dossier contains no documented execution
 - [x] All place names use modern UA canonical form (Kyiv not Kiev, etc.)
-- [x] Holodomor referenced as Holodomor, not "Soviet famine"
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable
+- [x] Holodomor terminology check not applicable: this dossier makes no Holodomor claim
+- [x] Crimea/2014/2022 framing check not applicable: this dossier makes no claim about those events

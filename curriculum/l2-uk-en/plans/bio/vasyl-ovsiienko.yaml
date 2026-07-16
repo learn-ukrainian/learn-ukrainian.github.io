@@ -15,6 +15,8 @@ references:
     url: https://museum.khpg.org/1321393033
   - title: Овсієнко Василь
     url: https://museum.khpg.org/1162154592
+  - title: Овсієнко Василь Васильович
+    url: https://esu.com.ua/article-74762
 readings_contract_version: 2
 readings:
   - title: Овсієнко Василь Васильович
@@ -35,4 +37,13 @@ readings:
     hosting: link-only
     learner_task: Порівняти біографічну довідку зі свідченням і назвати межі кожного типу джерела.
     rights: {basis: external-link, evidence_url: https://museum.khpg.org/1162154592, note: Повний текст не відтворюється в курсі.}
+  - title: Овсієнко Василь Васильович
+    source_name: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-74762
+    language: uk
+    type: encyclopedia
+    role: independent-biographical-context
+    hosting: link-only
+    learner_task: Незалежно звірити хронологію, дату смерті та післятабірну правозахисну й архівну працю.
+    rights: {basis: external-link, evidence_url: https://esu.com.ua/article-74762, note: Повний текст не відтворюється в курсі.}
 portrait_fallback: {type: text-only, license: not-applicable, reason: Індивідуально ліцензований портрет не підтверджено, disposition: no-portrait-until-rights-verified}

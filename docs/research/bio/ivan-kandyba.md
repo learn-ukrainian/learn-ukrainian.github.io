@@ -58,7 +58,7 @@ Kandyba was an organizer and publicist rather than a literary author; his docume
 ## 6. Contested points
 
 - **What's debated in modern UA scholarship:** His post-1991 leadership of the OUN in Ukraine places him in the politically-charged nationalist tradition; scholarship distinguishes his **human-rights / UHG legacy** from later party politics. (Per project policy, politically-charged framing follows `docs/best-practices/politically-charged-bios.md`.)
-- **What gets simplified in popular memory:** He is often listed only as "a UHG co-founder," obscuring the earlier УРСС case and the full **25 years** across two terms that the camps took from him.
+- **What gets simplified in popular memory:** He is often listed only as "a UHG co-founder," obscuring the earlier УРСС case and two long terms. The sentences totaled 25 years before exile, but he actually served approximately 22 years: about 15 years from 1961 to January 1976 and about 7 years from 1981 to September 1988. Do not turn the sum of sentences into time served.
 - **Where modern Russian disinformation attacks:** Russian narratives conflate all Ukrainian dissent with "Banderite extremism"; Kandyba's documented record began with a *legal* and *international-law* argument (the UN appeal), not violence.
 
 ## 7. Cross-track links
@@ -84,7 +84,7 @@ Kandyba was an organizer and publicist rather than a literary author; his docume
 
 - **Best PD/CC portrait:** Search Wikimedia Commons for "Іван Кандиба" / "Ivan Kandyba"; verify licence before use.
 - **Backup candidates:** Photographs from «Дисидентський рух в Україні» archival profile; Lychakiv Cemetery memorial — check rights.
-- **If no PD/CC portrait exists:** Use a fair-use crop from a published biographical profile, clearly attributed.
+- **If no PD/CC portrait exists:** Use the plan's text-only fallback; do not copy or crop a portrait without a verified licence or explicit permission.
 - **Era-appropriate context image:** A masthead of *Нескорена нація* or a UHG-documents facsimile.
 
 ## 10. Sources used
@@ -111,7 +111,7 @@ Kandyba was an organizer and publicist rather than a literary author; his docume
 - [x] No Russian-imperial transliterations in body text (forbidden forms confined to §8, labelled FORBIDDEN)
 - [x] No Russocentric periodization
 - [x] No uncritical Soviet propaganda terms (Soviet labels quoted as persecution evidence, not endorsed)
-- [x] No "lost his life" euphemisms — two prison terms (≈25 years) and forced family resettlement stated plainly
+- [x] No "lost his life" euphemisms — two prison terms (approximately 22 years actually served; 25 years was the sum of sentences before exile) and forced family resettlement stated plainly
 - [x] All place names use modern UA canonical form (Lviv, Hlyniany, Pustomyty)
 - [x] Holodomor referenced where relevant (N/A to this bio; forced 1945 resettlement noted instead)
 - [x] Crimea/2014/2022 events framed as Russian aggression where applicable

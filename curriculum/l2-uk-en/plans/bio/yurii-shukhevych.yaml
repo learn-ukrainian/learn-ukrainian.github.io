@@ -15,6 +15,8 @@ references:
     url: https://museum.khpg.org/1114002064
   - title: Шухевич Юрій-Богдан Романович — народний депутат України VIII скликання
     url: https://people.rada.gov.ua/body/view/mp-rp5_skl8
+  - title: Шухевич Юрій-Богдан Романович
+    url: https://uk.wikipedia.org/wiki/Шухевич_Юрій-Богдан_Романович
 readings_contract_version: 2
 readings:
   - title: ШУХЕВИЧ (БЕРЕЗИНСЬКИЙ) ЮРІЙ РОМАНОВИЧ
@@ -35,4 +37,13 @@ readings:
     hosting: link-only
     learner_task: Зіставити радянський досвід ув'язнення з документованою публічною діяльністю в незалежній Україні.
     rights: {basis: external-link, evidence_url: https://people.rada.gov.ua/body/view/mp-rp5_skl8, note: Повний текст не відтворюється в курсі.}
+  - title: Шухевич Юрій-Богдан Романович
+    source_name: Українська Вікіпедія
+    source_url: https://uk.wikipedia.org/wiki/Шухевич_Юрій-Богдан_Романович
+    language: uk
+    type: encyclopedia
+    role: contested-political-context
+    hosting: link-only
+    learner_task: Перевірити, як енциклопедична стаття описує УНА-УНСО, ультраправу політичну належність, втрату зору та державну нагороду, і не переносити ці пізні ролі на радянські вироки.
+    rights: {basis: external-link, evidence_url: https://uk.wikipedia.org/wiki/Шухевич_Юрій-Богдан_Романович, note: Повний текст не відтворюється в курсі; твердження звіряються з наведеними у статті джерелами.}
 portrait_fallback: {type: text-only, license: not-applicable, reason: Індивідуально ліцензований портрет не підтверджено, disposition: no-portrait-until-rights-verified}

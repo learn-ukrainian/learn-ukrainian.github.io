@@ -12,10 +12,10 @@
 - **Full name (UA, canonical):** Василь Васильович Овсієнко. [S1] [S2] [S3]
 - **Pseudonyms / aliases:** Vasyl Ovsienko; Vasyl Ovsiyenko; Василь Овсієнко. Forbidden Russian-imperial form for body prose: `Василий Васильевич Овсиенко`. [S1] [S2]
 - **Born:** 8 April 1949, с. Ставки, Radomyshl district, Zhytomyr oblast, Ukrainian SSR. Ukrainian Wikipedia and KHPG biographical pages agree on the village and family setting; KHPG interview supplies family detail. [S1] [S2] [S3]
-- **Died:** 19 July 2023, Kyiv, Ukraine, according to Ukrainian Wikipedia. KHPG interview pages predate death and do not provide the death date. [S3]
+- **Died:** 19 July 2023, Kyiv, Ukraine, according to the Encyclopedia of Modern Ukraine. KHPG interview pages predate death and do not provide the death date. [S6]
 - **Family / education key facts:** KHPG's memoir/interview page gives parents Vasyl and Frosyna, rural family origins in Stavy, and a family memory shaped by work, hunger, and local village life; Ukrainian Wikipedia reports Kyiv University philology studies from 1967 to 1972. [S1] [S3]
 
-Овсієнко is both a participant in the Ukrainian Helsinki Group and one of the people who preserved the movement's memory through interviews, archives, and KHPG work. His dossier therefore covers both repression and later documentation work. [S1] [S3]
+Овсієнко is both a participant in the Ukrainian Helsinki Group and one of the people who preserved the movement's memory through interviews, archives, and KHPG work. His dossier therefore covers both repression and later documentation work. The ESU biography independently corroborates the core chronology, the 2023 death, and his later publishing and rights-documentation roles [S1] [S6].
 
 ## 2. Oppression mechanism
 
@@ -94,7 +94,7 @@ Ovsienko is especially useful for teaching learners how testimony differs from b
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
-- [S6] "Овсієнко Василь Васильович," Енциклопедія Сучасної України. https://esu.com.ua/article-75192 | accessed 2026-05-30.
+- [S6] "Овсієнко Василь Васильович," Енциклопедія Сучасної України. https://esu.com.ua/article-74762 | corrected and accessed 2026-07-16. The previously recorded article number 75192 was unrelated and has been retired.
 
 **Tier 2 (institutional):**
 - [S1] "Овсієнко Василь Васильович," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1321393033 | accessed 2026-05-30.

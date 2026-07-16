@@ -15,6 +15,8 @@ references:
     url: https://esu.com.ua/article-39952
   - title: Білаш, Олександр Іванович
     url: https://vue.gov.ua/Білаш,_Олександр_Іванович
+  - title: Я народився разом із весною, щоб все живе будить від сну
+    url: https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf
 readings_contract_version: 2
 readings:
   - title: Білаш Олександр Іванович
@@ -38,4 +40,13 @@ readings:
       basis: external-link
       evidence_url: "https://vue.gov.ua/Білаш,_Олександр_Іванович"
       note: Повний текст і пісенні тексти не відтворюються в курсі.
+  - title: Я народився разом із весною, щоб все живе будить від сну
+    source_name: Національна бібліотека України для дітей
+    source_url: https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf
+    language: uk
+    type: methodological-bibliography
+    role: quotation-verification
+    hosting: link-only
+    learner_task: На сторінці 9 розрізнити рядки авторського вірша Білаша і подану укладачами його усну самооцінку; не відтворювати довші тексти.
+    rights: {basis: external-link, evidence_url: https://chl.kiev.ua/mbm/тексти/2016/bilash_color_2016.pdf, note: Повний PDF і пісенні тексти не відтворюються в курсі; дозволена лише коротка атрибутована цитата для перевірки.}
 portrait_fallback: {type: text-only, license: not-applicable, reason: Окрема ліцензія на портрет не підтверджена; пісенні тексти та зображення не використовуються без правової підстави., disposition: no-portrait-until-rights-verified}
