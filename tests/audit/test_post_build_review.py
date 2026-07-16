@@ -1494,6 +1494,7 @@ def test_seminar_level_meta_variants_are_mechanical_revise_findings() -> None:
             "C1-читача цікавить соціальний режим.\n"
             "Добра C1-відповідь спирається на джерело.\n"
             "Мовна якість C1\n"
+            "Мова C1\n"
             "Теза сформульована засобами мови рівня C1.\n"
             "Це придатне для серйозного C1-семінару.\n"
             "Використайте C1 лексику.\n"
@@ -1511,12 +1512,12 @@ def test_seminar_level_meta_variants_are_mechanical_revise_findings() -> None:
         if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"
     ]
 
-    assert len(level_meta) == 10
+    assert len(level_meta) == 11
     assert {finding["category"] for finding in level_meta} == {
         "learner_level_meta_leakage"
     }
     assert {finding["severity"] for finding in level_meta} == {"medium"}
-    assert len({finding["location"] for finding in level_meta}) == 10
+    assert len({finding["location"] for finding in level_meta}) == 11
 
 
 def test_level_meta_policy_fails_closed_over_semantic_pass() -> None:
@@ -2134,6 +2135,32 @@ def test_tampered_prompt_packet_fails_closed(bilash_packet: dict) -> None:
     target = {"files": {"content": "/etc/passwd"}}
     with pytest.raises(pbr.ReviewProtocolError, match="must be relative"):
         pbr.hash_target_files(target)
+
+
+def test_live_source_drift_returns_structured_incomplete(
+    bilash_packet: dict, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    changed_hashes = copy.deepcopy(bilash_packet["source_hashes"])
+    changed_hashes["content"] = "0" * 64
+    monkeypatch.setattr(
+        pbr,
+        "hash_target_files",
+        lambda target, *, repo_root=pbr.PROJECT_ROOT: changed_hashes,
+    )
+
+    result = pbr.finalize_review(
+        bilash_packet,
+        _raw(_passing_semantic(bilash_packet)),
+    )
+
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+    assert any(
+        finding["category"] == "source_drift" and finding["severity"] == "blocker"
+        for finding in result["findings"]
+    )
+    assert not any(
+        finding["category"] == "packet_integrity" for finding in result["findings"]
+    )
 
 
 def test_skill_forbids_mutating_legacy_paths() -> None:

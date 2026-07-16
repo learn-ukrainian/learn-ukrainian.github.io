@@ -1125,18 +1125,47 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
         repo_root=repo_root,
         policy=policy,
     )
-    expected_materials = snapshot_target_materials(
-        packet["target"], packet["source_hashes"], repo_root=repo_root
-    )
-    expected_prompt, expected_paths = assemble_semantic_prompt(
-        packet["target"],
-        track_policy,
-        packet["deterministic"],
-        packet["source_hashes"],
-        expected_materials,
-        repo_root=repo_root,
-    )
     failures: list[str] = []
+    raw_materials = packet.get("target_materials")
+    if not isinstance(raw_materials, Mapping):
+        expected_materials: dict[str, Mapping[str, Any]] = {}
+        failures.append("target_materials is not a mapping")
+    else:
+        expected_materials = deepcopy(dict(raw_materials))
+        target_files = packet["target"].get("files")
+        source_hashes = packet.get("source_hashes")
+        if not isinstance(target_files, Mapping) or not isinstance(source_hashes, Mapping):
+            failures.append("target files and source_hashes must be mappings")
+        else:
+            if set(expected_materials) != set(target_files):
+                failures.append("target_materials keys do not match target files")
+            for name, path in target_files.items():
+                material = expected_materials.get(name)
+                if not isinstance(material, Mapping):
+                    failures.append(f"target material {name} is missing or invalid")
+                    continue
+                if material.get("path") != path:
+                    failures.append(f"target material {name} path does not match target")
+                if material.get("sha256") != source_hashes.get(name):
+                    failures.append(f"target material {name} sha256 does not match source_hashes")
+                try:
+                    target_material_text(material)
+                except ReviewProtocolError as exc:
+                    failures.append(f"target material {name} is invalid: {exc}")
+
+    try:
+        expected_prompt, expected_paths = assemble_semantic_prompt(
+            packet["target"],
+            track_policy,
+            packet["deterministic"],
+            packet["source_hashes"],
+            expected_materials,
+            repo_root=repo_root,
+        )
+    except ReviewProtocolError as exc:
+        expected_prompt = None
+        expected_paths = None
+        failures.append(f"target materials cannot reconstruct the canonical prompt: {exc}")
     if packet.get("target") != expected_target:
         failures.append("target does not match canonical selector resolution")
     if packet.get("packet_version") != CURRENT_PACKET_VERSION:
@@ -1144,10 +1173,8 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
     actual_prompt = str(packet.get("semantic_prompt") or "")
     if sha256_text(actual_prompt) != packet.get("prompt_sha256"):
         failures.append("semantic_prompt does not match prompt_sha256")
-    if actual_prompt != expected_prompt or packet.get("prompt_paths") != expected_paths:
+    if expected_prompt is None or actual_prompt != expected_prompt or packet.get("prompt_paths") != expected_paths:
         failures.append("semantic prompt does not match current canonical assembly")
-    if packet.get("target_materials") != expected_materials:
-        failures.append("target_materials do not match the hash-bound target snapshot")
     for key in (
         "review_protocol_version",
         "deterministic_contract_version",
@@ -1335,7 +1362,8 @@ def _validate_semantic_finding_ownership(semantic: Mapping[str, Any]) -> None:
     if orphan_finding_ids:
         raise ReviewProtocolError(
             "Every semantic finding must be referenced by a quality dimension, "
-            "claim, or learner-evidence entry: " + ", ".join(orphan_finding_ids)
+            "claim, learner-evidence, alignment-audit, or vocabulary-coverage entry: "
+            + ", ".join(orphan_finding_ids)
         )
 
 
@@ -2137,7 +2165,7 @@ def combine_disposition(
     if deterministic_high:
         return {"status": "BLOCK", "reasons": ["high-severity mechanical finding is unresolved"]}
     if semantic["verdict"] == "REVISE" or severities.intersection({"high", "medium"}):
-        return {"status": "REVISE", "reasons": ["actionable semantic finding is unresolved"]}
+        return {"status": "REVISE", "reasons": ["actionable finding is unresolved"]}
     return {"status": "PASS", "reasons": ["deterministic and semantic review passed"]}
 
 
