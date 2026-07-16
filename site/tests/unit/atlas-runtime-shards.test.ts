@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
@@ -27,6 +27,8 @@ const vectorsPath = resolve(
 );
 const exportRoot = resolve(process.cwd(), "../build/atlas-runtime");
 const atlasDbPath = resolve(process.cwd(), "../data/atlas.db");
+const hasAtlasDb = existsSync(atlasDbPath);
+const hasExportRoot = existsSync(resolve(exportRoot, "atlas/current.json"));
 
 const FIXTURE_SLUGS = [
   "прапор", // rich lemma
@@ -49,7 +51,7 @@ describe("atlas normalization vectors", () => {
 });
 
 describe("AtlasDataSource runtime shards", () => {
-  test.skipIf(!atlasDbPath || !exportRoot)(
+  test.skipIf(!hasAtlasDb || !hasExportRoot)(
     "Sqlite and Http entry records match for parity fixtures",
     async () => {
       resetAtlasPayloadCacheForTests();
@@ -72,7 +74,7 @@ describe("AtlasDataSource runtime shards", () => {
     },
   );
 
-  test.skipIf(!atlasDbPath || !exportRoot)(
+  test.skipIf(!hasAtlasDb || !hasExportRoot)(
     "WordAtlasArticle HTML is byte-identical across Sqlite vs Http entries",
     async () => {
       resetAtlasPayloadCacheForTests();
@@ -134,7 +136,7 @@ describe("AtlasDataSource runtime shards", () => {
     },
   );
 
-  test.skipIf(!exportRoot)(
+  test.skipIf(!hasExportRoot)(
     "search exact/prefix fixtures match legacy ranker and keep families separate",
     async () => {
       const http = new HttpAtlasDataSource(createFileAtlasFetch(exportRoot));
@@ -176,7 +178,7 @@ describe("AtlasDataSource runtime shards", () => {
     },
   );
 
-  test.skipIf(!exportRoot)("version mismatch never combines two manifests", async () => {
+  test.skipIf(!hasExportRoot)("version mismatch never combines two manifests", async () => {
     const http = new HttpAtlasDataSource(createFileAtlasFetch(exportRoot));
     await expect(http.getEntry("прапор", { expectedVersion: "atlas-v1-deadbeefdeadbeef" })).rejects.toBeInstanceOf(
       AtlasDataSourceError,
@@ -189,7 +191,7 @@ describe("AtlasDataSource runtime shards", () => {
     }
   });
 
-  test.skipIf(!exportRoot)("deck parts share one deckVersion", async () => {
+  test.skipIf(!hasExportRoot)("deck parts share one deckVersion", async () => {
     const http = new HttpAtlasDataSource(createFileAtlasFetch(exportRoot));
     const deck = await http.getDeck("A1");
     expect(deck.kind).toBe("deck");
@@ -198,7 +200,7 @@ describe("AtlasDataSource runtime shards", () => {
     expect(deck.data.deckVersion).toBe(deck.deckVersion);
   });
 
-  test.skipIf(!exportRoot)("one-byte corruption fails closed", async () => {
+  test.skipIf(!hasExportRoot)("one-byte corruption fails closed", async () => {
     const current = JSON.parse(
       readFileSync(resolve(exportRoot, "atlas/current.json"), "utf-8"),
     ) as { dataVersion: string; manifestUrl: string };

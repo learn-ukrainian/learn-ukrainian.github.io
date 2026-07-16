@@ -5,10 +5,10 @@
  * types plus typed failures. SqliteAtlasDataSource is the SSG/parity baseline.
  */
 
-import type { LexiconEntry } from "./atlasDb";
-import type { PracticeLevel } from "./runtime-contract";
-import type { PracticeDeckData } from "./srs";
-import type { SearchAlias, SearchResult, SearchRow } from "./search";
+import type { LexiconEntry } from "./atlasDb.ts";
+import type { PracticeLevel } from "./runtime-contract.ts";
+import type { PracticeDeckData } from "./srs.ts";
+import type { SearchAlias, SearchResult, SearchRow } from "./search.ts";
 
 export type EntryKind = "article" | "form_route";
 

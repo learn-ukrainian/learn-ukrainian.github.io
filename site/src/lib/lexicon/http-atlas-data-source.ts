@@ -17,11 +17,11 @@ import {
   type EntryRecord,
   type EntryResult,
   type SearchResponse,
-} from "./atlas-data-source";
-import { normalizeAtlasText, normalizeSlugForHash } from "./normalize";
-import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract";
-import { rankSearchResults, type SearchAlias, type SearchRow } from "./search";
-import type { PracticeDeckData } from "./srs";
+} from "./atlas-data-source.ts";
+import { normalizeAtlasText, normalizeSlugForHash } from "./normalize.ts";
+import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
+import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
+import type { PracticeDeckData } from "./srs.ts";
 
 export interface AtlasFetch {
   (url: string): Promise<Uint8Array>;

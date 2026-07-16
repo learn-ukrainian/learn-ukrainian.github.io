@@ -14,7 +14,7 @@ import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
   type LexiconEntry,
-} from "./atlasDb";
+} from "./atlasDb.ts";
 import {
   AtlasDataSourceError,
   isValidAtlasSlug,
@@ -27,11 +27,11 @@ import {
   type PublicAlias,
   type PublicRelation,
   type SearchResponse,
-} from "./atlas-data-source";
-import { normalizeAtlasText } from "./normalize";
-import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract";
-import { rankSearchResults, type SearchAlias, type SearchRow } from "./search";
-import type { PracticeDeckData } from "./srs";
+} from "./atlas-data-source.ts";
+import { normalizeAtlasText } from "./normalize.ts";
+import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
+import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
+import type { PracticeDeckData } from "./srs.ts";
 
 const COMPONENT_TOKEN_RE = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu;
 const MORPHOLOGY_SUPPRESSED = new Set([

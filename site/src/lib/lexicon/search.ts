@@ -1,4 +1,4 @@
-import { normalizeAtlasText } from "./normalize";
+import { normalizeAtlasText } from "./normalize.ts";
 
 export interface SearchRow {
   l: string;
