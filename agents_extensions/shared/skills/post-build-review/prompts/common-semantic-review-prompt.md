@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.0`
+Semantic prompt version: `6.0.1`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -175,6 +175,15 @@ class `CLEAR` only with exact cited evidence for the comparison, `FOUND` with
 every corresponding deterministic and semantic finding ID, or `INCOMPLETE`
 with an integrity finding. For mechanically supplied findings, reuse the exact
 IDs from the resolved context instead of emitting duplicate semantic findings.
+After finalizing the finding objects, audit each `FOUND` class against its
+`finding_ids`. Except for `VOCABULARY_INTEGRATION`, include at least one
+alignment evidence entry at every owned finding object's exact primary location and line.
+Copy that locator exactly from the finding object (or from
+the resolved supplied finding); do not substitute a related occurrence. You
+may add additional cross-cutting comparison evidence to show why a defect is
+redundant or misaligned, but it supplements rather than replaces the primary-
+locator entry. One primary-locator entry may cover multiple findings only when
+those findings genuinely have the same exact locator.
 The review summary must name every material class found. A high-quality
 paragraph or activity never cancels a defect elsewhere. If any class was not
 actually compared, return `INCOMPLETE`. If a semantic dimension is `REVISE`,

@@ -96,6 +96,12 @@ before inference. This transport accommodation does not relax the canonical
 contract: finalization independently enforces exact vocabulary source order and
 exact source-resource sets, and any mismatch produces `INCOMPLETE`.
 
+For every `FOUND` alignment class other than `VOCABULARY_INTEGRATION`, the
+audit evidence must include each owned finding's exact primary target-file
+locator. Related comparison lines may be added, but cannot replace the primary
+locator. This keeps the model-authored finding ledger and its alignment audit
+machine-checkable without repairing or deriving evidence after inference.
+
 Dimension scores preserve the accepted raw reviewer response after strict
 Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
 `BLOCK` is `[0.0, 6.0)`, and `INCOMPLETE` has a null score/rationale. The

@@ -2489,6 +2489,8 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "reuse each supplied finding's exact",
         "never emit a supplied finding object",
         "only genuinely new semantic defects",
+        "every owned finding object's exact primary location and line",
+        "additional cross-cutting comparison evidence",
     ):
         assert required in prompt_lower
 
@@ -2718,6 +2720,56 @@ def test_vocabulary_alignment_uses_coverage_ledger_for_absence_proof() -> None:
         "missing-2",
         "missing-3",
     ]
+
+
+def test_alignment_found_rejects_related_evidence_without_primary_finding_locators() -> None:
+    source_lookup = {
+        "module.md": (
+            "Нагорода не пояснює художньої форми.\n"
+            "Цю тезу повторено без нового доказу.\n"
+            "Завдання вже містить готову відповідь.\n"
+            "Порівняльний рядок стосується обох дефектів.\n"
+        )
+    }
+    findings = [
+        {
+            "id": "repeated-framing",
+            "issue_id": "SEMANTIC_REDUNDANCY",
+            "location": "module.md:2",
+        },
+        {
+            "id": "task-restates-answer",
+            "issue_id": "SEMANTIC_REDUNDANCY",
+            "location": "module.md:3",
+        },
+    ]
+    representative = [{
+        "location": "module.md:4",
+        "excerpt": "Порівняльний рядок стосується обох дефектів.",
+        "supports": "A related comparison line discusses both findings.",
+    }]
+    raw_audit = {
+        audit_class: {
+            "status": "FOUND" if audit_class == "SEMANTIC_REDUNDANCY" else "CLEAR",
+            "evidence": copy.deepcopy(representative),
+            "finding_ids": [finding["id"] for finding in findings]
+            if audit_class == "SEMANTIC_REDUNDANCY"
+            else [],
+        }
+        for audit_class in pbr.ALIGNMENT_AUDIT_CLASSES
+    }
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match="must cite each finding's exact immutable locator",
+    ):
+        pbr._normalize_alignment_audit(
+            raw_audit,
+            verdict="REVISE",
+            semantic_findings=findings,
+            external_findings=[],
+            source_lookup=source_lookup,
+        )
 
 
 def test_finalize_accepts_representative_multi_missing_alignment_evidence(
@@ -3205,7 +3257,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "6.0.1"
-    assert len(rows) == 63
+    assert len(rows) == 64
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

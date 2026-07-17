@@ -371,3 +371,15 @@ regressions:
     version_field: review_protocol_version
     input: A canonical v6 packet is submitted to a strict structured-output provider that rejects Draft 2020-12 prefixItems before inference.
     expected: The provider-facing schema uses portable order-agnostic array constraints, while the canonical finalizer still rejects missing, duplicated, reordered, or unmapped vocabulary and source entries fail-closed.
+  - bug_id: alignment-evidence-omitted-semantic-finding-primary-locators
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.0.1
+    version_field: semantic_prompt_version
+    input: >-
+      A FOUND alignment class owns every semantic finding ID but cites only
+      related comparison lines, omitting each finding object's exact primary
+      location and line.
+    expected: >-
+      Require one alignment evidence entry at every owned non-vocabulary
+      finding's exact primary locator; additional cross-cutting comparison
+      evidence may supplement but never replace those entries.
