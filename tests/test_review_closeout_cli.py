@@ -94,7 +94,10 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
     assert reviewer_proc.returncode == 0, reviewer_proc.stderr
     resolution = json.loads(reviewer_proc.stdout)
-    assert resolution["selected"]["name"] == "deepseek-v4-flash"
+    assert resolution["selected"]["name"] == "gemini-3.1-pro"
+    assert resolution["selected"]["route"] == "agy"
+    assert resolution["policy_version"] == "model-catalog.v1"
+    assert resolution["resolved_risk"] == "medium"
 
     raise_proc = _run_cli(state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "reviewer:grok")
     assert raise_proc.returncode == 0, raise_proc.stderr
@@ -117,6 +120,28 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert state["baseline"]["issue_ref"] == "#5283"
     assert state["cycle_outstanding_counts"] == [5, 5, 5]
     assert len(state["findings"]) == 3  # raised, adjudicated, applied
+
+
+def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_path):
+    state_file = tmp_path / "state.json"
+    invalid_risk = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "codex",
+        "--risk",
+        "bogus",
+    )
+    assert invalid_risk.returncode != 0
+
+    unknown_author = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "unknown-seat",
+    )
+    assert unknown_author.returncode != 0
+    assert json.loads(unknown_author.stdout)["selected"] is None
 
 
 def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):

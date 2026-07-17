@@ -233,12 +233,11 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "kimi": {
         # Native Kimi Code OAuth subscription lane (no proxy-provider route).
-        # K3 exposes a 262K context window and max effort only; the managed
-        # seat's usage window depletes FAST (operator, 2026-07-16), so
-        # dispatch defaults to the window-frugal coding model and K3 stays
-        # the deep-ask model (bridge default). Content capabilities remain
-        # gated on the dedicated UA probe; keep routing narrow until the
-        # #5326 probe battery establishes quality.
+        # K3 is the max-effort consequential-coding/review seat. Its public
+        # provider docs do not currently substantiate a context-size claim,
+        # so keep that number out of routing policy. Dispatch defaults to the
+        # window-frugal coding model; callers select K3 when risk warrants it.
+        # Ukrainian content capabilities remain separately gated.
         "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
         "default_model": "k2.7-coding",
         "default_effort": "max",

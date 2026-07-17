@@ -4,12 +4,33 @@
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 
+## Canonical model catalog and refresh contract
+
+The machine-readable inventory and reviewer ladders live in
+`scripts/config/model_catalog.yaml`. It records current preferred models, model families,
+quality tiers, strengths, weaknesses, transports, official sources, and risk-specific review
+ladders. Provider pickers may expose additional legacy models; CodexBar is a health/quota signal,
+not the inventory. The catalog is the union of runtime registry, native CLI catalogs, bridge routes,
+Cursor's catalog, and CodexBar health.
+
+The catalog expires after 30 days. Refresh means re-enumerating the live catalogs, checking current
+official model documentation, checking local bakeoff deltas, updating `reviewed_on`, and running:
+
+```bash
+.venv/bin/python scripts/lint/lint_model_catalog.py
+```
+
+Selection order is binding: **independence and hard gates → risk quality tier → health/quota within
+that tier → cost among equivalent fits**. Cost never lowers the quality floor. An `unhealthy` route
+is unavailable; `degraded` and `near_cap` only break ties inside a quality rung. `cursor:auto` is
+never an acceptable formal-review identity.
+
 | Task | Tool + model |
-|---|---|
+| --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
 | Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, wiki fixes, mechanical PR babysitting | **Sonnet 5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Reserve the frontier Claude tier (Opus 4.8 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
 | Code change >5 LOC, mechanical / pattern-applying / fixtures | `delegate.py dispatch --agent codex --mode danger --worktree --base origin/main` (no `--model`) |
-| Code Review (PR diff) — cheap second opinion | `delegate.py dispatch --agent deepseek --model deepseek-v4-flash --mode read-only` (default first-party DeepSeek; opt-in `--provider openrouter` for pinned US path per #4358). (hermes; PR #2107 adapter). Empirical winner 2026-05-17 bakeoff (A+ at 15s). ⚠️ ALWAYS pass `--silence-timeout` — the lane can silent-stall with zero stdout and failover does NOT trigger on silence (#4672, stalled 2/2 on PR #4667). On stall: reroute **grok** (validated adversarial reviewer 2026-07-07 — live worktree verification, 81s, caught-nothing-false) |
+| Code Review (PR diff) | Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile code --risk <low\|medium\|high\|critical>`. **Critical/high:** frontier authority first (Opus/Fable ↔ Sol), then frontier-practical Gemini 3.1 Pro · native Grok 4.5 · Kimi K3 · GLM-5.2 · Sonnet 5 · DeepSeek V4 Pro · Composer 2.5. **Medium:** frontier-practical/strong models. **Low:** Pool or DeepSeek Flash/Gemini Flash. Execute the returned `invocation`; preserve its `route`, `transport`, and `requires_silence_timeout` receipt. Do not hand-pick Flash for medium/high. |
 | Content Review with VESUM verification (load-bearing) | `delegate.py dispatch --agent deepseek --model deepseek-v4-pro` (first-party DeepSeek default per #4358; hermes/MCP-backed: proactively calls `sources` `verify_words`, `query_cefr_level`, `check_russian_shadow`). Validated by PR #2112 write-mode dispatch on artifacts-MD feature |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `delegate.py dispatch --agent agy` (write) or `ab ask-agy --to-model gemini-3.1-pro-high` (review). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
 | Ukrainian CONTENT (authoring · russicism/quality review) — **we AUTHOR UK content, we do NOT translate EN→UK** | Written in Ukrainian, immersion-first, grounded in VESUM/`sources` MCP. **Per-profile authoring — BAKEOFF-BACKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/`, deterministic VESUM + russian-shadow, 5 candidates):** all of codex (gpt-5.6-terra default; 5.5 retained for pinned workflows)/agy/claude/deepseek/cursor wrote **0-russicism, 95-100%-VESUM** content on all 3 profiles → **gpt-5.5 is not uniquely best; it can and should delegate.** A1-A2 English-support → **agy** (best immersion teaching-voice) ≈ **codex**; B1-C2 pure → **codex ≈ agy ≈ claude**. **Seminars — FACT-CHECKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/SEMINAR-SCORECARD.md`; tool-backed vs uk.wikipedia + VESUM, cross-verified by an independent 3-family review codex/agy/deepseek):** the probe can't rank seminar content (all clean), so the «Веснянки» sample was fact-verified. **Writers → codex + claude + agy** (all factually clean, mutually cross-family). **deepseek + cursor are NOT seminar writers:** deepseek made 1 hard error (царинні conflated with юр'ївські cattle-drive songs — confident scholarly specificity that was wrong; it conceded on review), cursor made 2 (веснянки «від хати до хати» = over-generalised риндзівки/волочебні; «мелодії легкі, м'які, співочі» = inverted musicology). **Seminar review → deepseek (+ agy)** for **non-folk** seminars, **always paired with a source-enforced fact-check gate** (`seminar-content-review` skill + `sources` MCP) — never a bare LLM pass. ⚠️ **FOLK carve-out (hard): NO deepseek for folk** (see the module-content panel note + `docs/folk-epic/folk-review-rubric.md`) — the царинні slip is fresh proof. **Lesson: "sounds scholarly" ≠ "is accurate" — verify confident specificity, don't trust it.** **Review (russicism/surzhyk/CEFR):** deepseek-v4-pro + `sources` MCP (`verify_words`, `check_russian_shadow`, `query_cefr_level`); agy also strong. ⚠️ **cursor**: usable UK but emits non-canonical apostrophes (U+2019) + had a text-dependent russicism («перекатні») on harder text → keep a VESUM + apostrophe-normalization gate; not the first pick. **Never pool/glm for UK content** (code models — glm anglicizes, pool worse). |
@@ -25,17 +46,23 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **Writer routing refinement (user-confirmed 2026-07-07):** general content writing runs on **codex + agy** (agy = the standout A1-A2 immersion teaching voice per the 2026-07-04 bakeoff — do not forget it exists); the Claude window is SAVED for judgment work (architecture, adversarial review, hard bugs — codex is the primary coder, not Claude). The **V7 PIPELINE writer seat is separate**: it stays `claude-tools` because that seat is in-harness TOOL-CALLING fit, not prose (codex-tools emitted `tool_calls=0`); after any Claude-model rotation, spot-check ONE module before the next batch.
 
-**CodexBar / routing-budget (live 2026-07-16):** `/api/state/routing-budget` + `delegate --check-budget` = the never-trip window check for SUBSCRIPTION lanes (claude/codex/gemini/cursor/**grok**/**kimi**) — consult before big fanouts. **grok is a SUBSCRIPTION lane (xAI sub, user-corrected 2026-07-07), NOT API-billed** — it appears in the CodexBar snapshot (5h window) and `grok` (native CLI seat; historical alias `grok-build`) is the seat to use for coding + adversarial review; grok-4.5 is the only live Grok model. (xAI catalog rotation 2026-07-15; grok-4.5 re-won the bakeoff, #5197) **Kimi K3 is a separate native OAuth subscription lane** (`kimi-code/k3`, 262K context, max effort; added 2026-07-16). API-billed lanes (deepseek/openrouter) are absent from CodexBar BY DESIGN (the user tracks dollar spend himself): **absence from the snapshot ≠ unavailable** — route them freely by quality fit. Any ranked-headroom view must treat absent lanes as unmetered (constraint pinned on #4640). **Deficit routing (pace > 1× of the weekly window): shed work from the over-pace lanes to the FULL relief roster — agy / grok / cursor / kimi (coding dispatches; Kimi stays canary-only until benchmarked) · deepseek (dirt-cheap API: execution via hermes + the default review seat) · glm (idle Zhipu sub — standing slice of off-seat deep/security review, LOCAL-ONLY guard unchanged) · gemma (cheap surface review). Don't forget the cheap lanes exist (user reminder 2026-07-07).**
+**CodexBar / routing-budget:** `/api/state/routing-budget` + `delegate --check-budget` is the
+never-trip window check for subscription lanes. It does not list every API/routed model and therefore
+must never define the fleet by itself. Grok 4.5 and GPT/Codex never route through Hermes. Kimi K3 is a separate
+native OAuth subscription lane (`kimi-code/k3`, max effort, tool/image/video input; do not publish a
+context-size claim until the native provider documents it). API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown
+headroom, not unavailability. Shed load only to models that meet the same task-risk quality floor.
 
-**kimi — CANDIDATE lane (UNTESTED, zero automatic weight; onboarded 2026-07-16, #5326):** native
-kimi-code CLI seat (managed subscription via device-code OAuth, `~/.kimi-code/bin/kimi`; models `k3`
-(deep/ask default, 256K ctx, effort max-only) · `k2.7-coding` (dispatch default) ·
-`k2.7-coding-highspeed`). Operator-declared niche: **webdev/frontend first-pick candidate** —
-believed frontier-tier ("Fable/Sol level"), UNVERIFIED until the #5326 probe battery (frontend coding
-probe · code-review head-to-head · deterministic UA probe) posts a scorecard. Until then: EXPLICIT
-dispatch only (`delegate.py dispatch --agent kimi` / `ab ask-kimi`), member of NO automatic
-failover chain or substitution map (absence-pin), NOT a UA-content/folk seat, and NOT a QG judge
-(judge pairing is gemini↔gpt only, user order 2026-07-16).
+**Kimi lane:** native Kimi Code OAuth only. Use K3 (`kimi-code/k3`, always-thinking,
+max effort) for consequential coding, strong cross-family review, long-context debugging, and deep
+asks. Use `k2.7-coding` / `k2.7-coding-highspeed` for routine or bulk coding. Do not demote K3 merely
+because the cheaper model exists; risk and fit establish the quality floor first. Kimi is Moonshot
+family. Composer 2.5 is Cursor-trained from a Kimi K2.5 checkpoint, so conservatively treat Composer
+and Kimi as the same Moonshot independence family. Neither is currently a Ukrainian factual/folk gate.
+K3 is **not a QG judge**; the standing judge pairing remains Gemini↔GPT.
+**Supersession (user directive 2026-07-17):** K3 is now operator-classified as a top model and is
+eligible for automatic cross-family code-review ladders. This replaces the 2026-07-16 canary-only /
+zero-automatic-weight restriction; continued local bakeoffs refine its ordering but do not erase it.
 
 ## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11)
 
@@ -57,12 +84,12 @@ above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the st
 
 ### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)
 
-Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/routing-budget` (+ `delegate --check-budget`) before any fanout. Live 2026-07-11: **claude 82% HOT (~1d to reset) → push load off the orchestrator seat to codex (89% free) + the cheap lanes.** Each lane's full strengths/caveats live in the per-task table + panel notes; this is the consolidated ranking.
+Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/routing-budget` (+ `delegate --check-budget`) before any fanout. Never persist a live percentage in routing policy; it becomes false as soon as a quota window moves. Each lane's current strengths/caveats live in the catalog, the per-task table, and the panel notes.
 
 | Work type | 1st pick | 2nd | 3rd | gate / never |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **codex** — `terra` default · `luna` = fast-bounded | **agy** — bounded scripts, docs-near-code | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; luna never sole authority |
-| **Code review** (cross-family = outside author's family) | **deepseek-v4-flash** — cheap, A+ fast (ALWAYS `--silence-timeout`) | **grok** — sharpest gate + deepseek stall-failover | pool (FREE) · glm (LOCAL: security + big-context coherence) | codex = same family as Sol/terra/luna; claude seat = prefer inline |
+| **Code review** (cross-family = outside author's family) | **critical/high:** Opus/Fable ↔ Sol | **medium:** Gemini 3.1 Pro · native Grok 4.5 · Kimi K3 · GLM-5.2 · Sonnet 5 · DeepSeek V4 Pro · Composer 2.5 | **low/second dissent:** Pool · DeepSeek Flash · Gemini 3.5 Flash | resolve from catalog by exact author family; cost never lowers quality floor |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | — | NO deepseek for FOLK; cursor apostrophe/russicism gate; never pool/glm/gemma-sole |
 | **Content / factual / CEFR review** (VESUM-gated) | **deepseek-v4-pro** (+ `sources` MCP) | **agy** (pedagogy/CEFR) | **gemma** (cheap surface: russicism/calque/Latin-leak/decolonization) | NO deepseek for FOLK; gemma not sole factual/seminar reviewer |
 | **Research / recon / triage** | **luna** (fast bounded) | Explore-haiku (grep/find) | terra (deeper) | luna never sole authority on consequential calls |
@@ -70,14 +97,14 @@ Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/rout
 
 **Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high–max`** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis. Convene BEFORE committing a substantive design; never for routine. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
-**Kimi onboarding (native `kimi`, added 2026-07-16):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi` (defaults to `k2.7-coding` — the window-frugal seat; short names `k3` / `k2.7-coding` / `k2.7-coding-highspeed` all accepted, full `kimi-code/*` aliases too). All models: 262K context, tool/image/video input; K3 = max-only effort, reserved for deep asks (`ab ask-kimi` defaults to it) — **the managed seat's 5h window depletes FAST (operator 2026-07-16), never burn it on bulk**. Moonshot family — a clean cross-family reviewer for GPT/Gemini/Claude/xAI-authored work once benchmarked. Until role-specific bakeoffs land, use it for bounded code implementation, recon, triage, and second-opinion canaries; it is not a sole architecture/release authority and is not routed to Ukrainian curriculum prose or factual review. Full guardrails: the CANDIDATE block above.
+**Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi`; explicitly select `--model k3` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (max-only effort); `k2.7-coding` and its high-speed variant are routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
 
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
 
-- **Module-content panel** (writers, content review): **agy** (gemini-pro) · **gpt-5.5** (codex, `--effort xhigh`) · **cursor** (composer-2.5). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
-- **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** · **gpt-5.5** (codex) · **cursor** (auto) · **grok** · **kimi K3** (canary-only until benchmarked) · **deepseek-v4-pro** (code review) · **pool** (poolside.ai `laguna-m.1`, **free** — cross-family code review + live web fact-check, `ask-pool`) · **glm** (Zhipu `glm-5.2` — deep security/bug review + large-context cross-file coherence audits, `ask-glm`; ⚠️ China-hosted → **LOCAL-ONLY, never CI**) · **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it` — $0 default**, user key + order 2026-07-07: AIS-direct, Gemma has NO paid SKU on the Gemini API (triple-verified: pricing page · opencode cost:0 · guard) — runs TOOLLESS (`chat` agent); PAID OR `-it` ~$0.12/$0.35 per M tok via explicit `--model` fallback (OR `:free` is pool-starved, avoid); guard refuses `google-ais/` non-gemma ids (postpay project — Gemini WOULD bill) — cheap surface review + source-constrained wiki drafting, `ask-gemma`; ⚠️ **NOT a sole seminar writer or factual reviewer** — gate seminar/factual work behind a non-Gemma check; Google-family so not a clean reviewer of agy/Gemini work).
+- **Module-content panel** (writers, content review): **agy** (Gemini 3.1 Pro) · **GPT-5.6 Terra/Sol by risk** · **cursor** (Composer 2.5). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
+- **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.1 Pro/3.5 Flash by risk) · **GPT-5.6 Terra/Sol** · **cursor Composer 2.5** · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Pro** · **Pool Laguna M.1** (free review volume) · **GLM-5.2** (deep security/bug review + large-context coherence; LOCAL-ONLY) · **Gemma 4** (surface review only). Pin Cursor's concrete model whenever family independence matters.
 
 Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.1-pro-high` · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek --model deepseek-v4-pro` (first-party by default; `--provider openrouter` for opt-in per #4358). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
 
@@ -89,10 +116,10 @@ A fleet member = MODEL × HARNESS. The same model behaves differently in differe
 several models are reachable through more than one. Know both axes before routing:
 
 | Harness | What it adds to ANY model it hosts | Models routed through it | Entry points¹ |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
-| **native CLIs** (codex, cursor, agy, grok, claude, kimi — CANDIDATE, untested) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native Kimi Code OAuth seat (models `k3` · `k2.7-coding` · `k2.7-coding-highspeed`) | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) |
+| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex and Grok are **native-only**: never route either family through Hermes. `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native Kimi Code OAuth seat (models `k3` · `k2.7-coding` · `k2.7-coding-highspeed`) | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -124,11 +151,13 @@ Consequences:
   tracked stub at `docs/best-practices/hermes-usage.md`). Prefer harness-level automation over
   hand-rolled polling where it fits.
 
-**Model names here are current-as-of-2026-07-16 EXAMPLES, not constants** — grok (native; alias grok-build), kimi, cursor, agy, hermes change CLIs/flags/models often. Confirm current capability via this file, `docs/best-practices/agent-activity-matrix.md`, the native CLI's `--help`, `ab check-model` where supported, or `docs/agent-runtime-guide.md` before relying on a specific string. Worked example: the 2026-06-23 Atlas warning-taxonomy plan — a 3-agent panel (codex, agy-pro, cursor) caught real defects no single seat saw.
+**Model names are rotating attributes, not constants.** The dated source of truth is
+`scripts/config/model_catalog.yaml`; its 30-day lint prevents this prose from being treated as a
+permanent capability claim. Confirm exact live strings in native CLI catalogs and bridge probes.
 
 ## GPT-5.6 family (Sol · Terra · Luna) — onboarded 2026-07-09 (user directive)
 
-All three tiers: **372K context (~353K effectively usable** before the context-management margin), text+image input. Tier choice = capability/cost routing, NEVER context. Effort levels apply on every tier.
+All three tiers expose **372K context (~353K effectively usable before the context-management margin)** on the native route and accept text+image input. Cursor may advertise a larger hosted window; do not use that picker label to size native Codex prompts. Tier choice = capability/cost routing, not context size. Effort levels apply on every tier.
 
 | Tier | Model id | Use for | Effort policy |
 | --- | --- | --- | --- |
