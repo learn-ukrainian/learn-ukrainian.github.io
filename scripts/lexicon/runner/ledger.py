@@ -347,6 +347,10 @@ class Ledger:
         self.crash_mid_seal = False
         self.crash_after_result = False
         self.crash_after_import = False
+        # When True, marks the target packet generation abandoned inside the
+        # commit_import write fence (before validation) to prove concurrent
+        # abandon cannot slip past pre-txn reads (PR #5365 review finding 4).
+        self.crash_import_concurrent_abandon = False
 
     # --- lock + open ---------------------------------------------------------
 
@@ -1298,113 +1302,137 @@ class Ledger:
 
         Rejects abandoned/stale packet generations and optional request-key mismatch
         (PR3 / spec §Phase 6).
+
+        All validation reads run under ``BEGIN IMMEDIATE`` so a concurrent
+        abandon cannot race past stale pre-txn checks (PR #5365 review finding 4).
         """
         conn = self._require()
         ts = self._now(now)
-        run = self.get_run(run_id)
-        if run is None:
-            return CasResult(status=CasStatus.NOT_FOUND, detail="run missing")
-        if expected_fingerprint is not None and str(run["fingerprint"]) != expected_fingerprint:
-            self._event(
-                ErrorCode.FINGERPRINT_MISMATCH_REFUSED.value,
-                run_id,
-                op="import",
-                lemma_id=lemma_id,
-            )
-            return CasResult(
-                status=CasStatus.FINGERPRINT_MISMATCH_REFUSED,
-                detail=ErrorCode.FINGERPRINT_MISMATCH_REFUSED.value,
-                run_id=run_id,
-            )
+        # Fence first: every validation read below is inside this transaction.
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            # Test hook: simulate concurrent abandon after the write fence is
+            # held but before validation — must still reject the import.
+            if self.crash_import_concurrent_abandon:
+                conn.execute(
+                    "UPDATE packets SET state = 'abandoned', abandoned_at = ? "
+                    "WHERE run_id = ? AND generation = ?",
+                    (ts, run_id, int(packet_generation)),
+                )
 
-        # Stale/abandoned packet generation: refuse before any state change.
-        if not self.packet_generation_active(run_id, int(packet_generation)):
-            # Allow no-op re-import of an already-committed matching hash even if
-            # the generation was later abandoned (artifacts already accepted).
-            existing_early = conn.execute(
+            run = self.get_run(run_id)
+            if run is None:
+                conn.execute("ROLLBACK")
+                return CasResult(status=CasStatus.NOT_FOUND, detail="run missing")
+            if expected_fingerprint is not None and str(run["fingerprint"]) != expected_fingerprint:
+                conn.execute("ROLLBACK")
+                self._event(
+                    ErrorCode.FINGERPRINT_MISMATCH_REFUSED.value,
+                    run_id,
+                    op="import",
+                    lemma_id=lemma_id,
+                )
+                return CasResult(
+                    status=CasStatus.FINGERPRINT_MISMATCH_REFUSED,
+                    detail=ErrorCode.FINGERPRINT_MISMATCH_REFUSED.value,
+                    run_id=run_id,
+                )
+
+            # Stale/abandoned packet generation: refuse before any state change.
+            if not self.packet_generation_active(run_id, int(packet_generation)):
+                # Allow no-op re-import of an already-committed matching hash even if
+                # the generation was later abandoned (artifacts already accepted).
+                existing_early = conn.execute(
+                    "SELECT result_hash FROM imports "
+                    "WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
+                    (run_id, lemma_id, int(packet_generation)),
+                ).fetchone()
+                if existing_early is not None and str(existing_early["result_hash"]) == result_hash:
+                    conn.execute("ROLLBACK")
+                    return CasResult(
+                        status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
+                    )
+                conn.execute("ROLLBACK")
+                self._event(
+                    "stale_packet_generation_rejected",
+                    run_id,
+                    lemma_id=lemma_id,
+                    packet_generation=int(packet_generation),
+                )
+                return CasResult(
+                    status=CasStatus.INVALID_STATE,
+                    detail="stale_packet_generation",
+                    run_id=run_id,
+                )
+
+            if expected_request_key is not None:
+                key_row = conn.execute(
+                    "SELECT request_key, packet_generation FROM unit_request_keys "
+                    "WHERE run_id = ? AND unit_id = ? AND phase = ?",
+                    (run_id, lemma_id, phase),
+                ).fetchone()
+                if key_row is not None:
+                    if str(key_row["request_key"]) != expected_request_key:
+                        conn.execute("ROLLBACK")
+                        return CasResult(
+                            status=CasStatus.INVALID_STATE,
+                            detail="request_key_mismatch",
+                            run_id=run_id,
+                        )
+                    if int(key_row["packet_generation"]) != int(packet_generation):
+                        conn.execute("ROLLBACK")
+                        return CasResult(
+                            status=CasStatus.INVALID_STATE,
+                            detail="stale_packet_generation",
+                            run_id=run_id,
+                        )
+
+            existing = conn.execute(
                 "SELECT result_hash FROM imports "
                 "WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
                 (run_id, lemma_id, int(packet_generation)),
             ).fetchone()
-            if existing_early is not None and str(existing_early["result_hash"]) == result_hash:
+            if existing is not None:
+                if str(existing["result_hash"]) == result_hash:
+                    conn.execute("ROLLBACK")
+                    return CasResult(
+                        status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
+                    )
+                conn.execute("ROLLBACK")
                 return CasResult(
-                    status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
+                    status=CasStatus.INVALID_STATE,
+                    detail="import hash conflict for same packet generation",
+                    run_id=run_id,
                 )
-            self._event(
-                "stale_packet_generation_rejected",
-                run_id,
-                lemma_id=lemma_id,
-                packet_generation=int(packet_generation),
-            )
-            return CasResult(
-                status=CasStatus.INVALID_STATE,
-                detail="stale_packet_generation",
-                run_id=run_id,
-            )
 
-        if expected_request_key is not None:
-            key_row = conn.execute(
-                "SELECT request_key, packet_generation FROM unit_request_keys "
-                "WHERE run_id = ? AND unit_id = ? AND phase = ?",
+            # Optional work-unit fencing when a leased import unit exists.
+            unit = conn.execute(
+                "SELECT * FROM work_units WHERE run_id = ? AND unit_id = ? AND phase = ?",
                 (run_id, lemma_id, phase),
             ).fetchone()
-            if key_row is not None:
-                if str(key_row["request_key"]) != expected_request_key:
-                    return CasResult(
-                        status=CasStatus.INVALID_STATE,
-                        detail="request_key_mismatch",
-                        run_id=run_id,
-                    )
-                if int(key_row["packet_generation"]) != int(packet_generation):
-                    return CasResult(
-                        status=CasStatus.INVALID_STATE,
-                        detail="stale_packet_generation",
-                        run_id=run_id,
-                    )
+            if (
+                unit is not None
+                and str(unit["state"]) == SchedulableState.LEASED.value
+                and (
+                    str(unit["owner"]) != owner
+                    or int(unit["lease_generation"]) != int(lease_generation)
+                )
+            ):
+                conn.execute("ROLLBACK")
+                self._event(
+                    ErrorCode.STALE_COMMIT_REJECTED.value,
+                    run_id,
+                    unit_id=lemma_id,
+                    op="commit_import",
+                    lease_generation=lease_generation,
+                )
+                return CasResult(
+                    status=CasStatus.STALE_COMMIT_REJECTED,
+                    detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                    lease_generation=lease_generation,
+                    run_id=run_id,
+                )
 
-        existing = conn.execute(
-            "SELECT result_hash FROM imports "
-            "WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
-            (run_id, lemma_id, int(packet_generation)),
-        ).fetchone()
-        if existing is not None:
-            if str(existing["result_hash"]) == result_hash:
-                return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
-            return CasResult(
-                status=CasStatus.INVALID_STATE,
-                detail="import hash conflict for same packet generation",
-                run_id=run_id,
-            )
-
-        # Optional work-unit fencing when a leased import unit exists.
-        unit = conn.execute(
-            "SELECT * FROM work_units WHERE run_id = ? AND unit_id = ? AND phase = ?",
-            (run_id, lemma_id, phase),
-        ).fetchone()
-        if (
-            unit is not None
-            and str(unit["state"]) == SchedulableState.LEASED.value
-            and (
-                str(unit["owner"]) != owner
-                or int(unit["lease_generation"]) != int(lease_generation)
-            )
-        ):
-            self._event(
-                ErrorCode.STALE_COMMIT_REJECTED.value,
-                run_id,
-                unit_id=lemma_id,
-                op="commit_import",
-                lease_generation=lease_generation,
-            )
-            return CasResult(
-                status=CasStatus.STALE_COMMIT_REJECTED,
-                detail=ErrorCode.STALE_COMMIT_REJECTED.value,
-                lease_generation=lease_generation,
-                run_id=run_id,
-            )
-
-        conn.execute("BEGIN IMMEDIATE")
-        try:
             conn.execute(
                 "INSERT INTO imports("
                 "run_id, lemma_id, packet_generation, result_hash, "

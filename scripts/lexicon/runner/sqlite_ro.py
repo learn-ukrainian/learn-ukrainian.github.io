@@ -27,12 +27,21 @@ def open_immutable_ro(
     """Open a completed side DB for workers: mode=ro, immutable, query_only.
 
     Bounded page cache; large mmap disabled so workers do not pin giant mappings.
+    Network workers are hard-refused for sources.db (PR3 review delta).
     """
-    resolved = path.resolve()
+    from scripts.lexicon.runner.sources_guard import (
+        apply_network_connection_guards,
+        assert_not_sources_db,
+    )
+
+    # Resolve symlinks first so the guard sees the real target (review finding 2/3).
+    resolved = Path(path).resolve()
+    assert_not_sources_db(resolved)
     if not resolved.is_file():
         raise FileNotFoundError(resolved)
     uri = f"file:{resolved.as_posix()}?mode=ro&immutable=1"
     conn = sqlite3.connect(uri, uri=True)
+    apply_network_connection_guards(conn, resolved)
     conn.execute("PRAGMA query_only = ON")
     conn.execute(f"PRAGMA cache_size = -{int(cache_kib)}")
     conn.execute(f"PRAGMA mmap_size = {int(mmap_size)}")
@@ -45,12 +54,17 @@ def open_sources_ro(path: Path) -> sqlite3.Connection:
 
     Network workers are hard-refused (PR3 / spec §Phase 5).
     """
-    from scripts.lexicon.runner.sources_guard import assert_not_sources_db
+    from scripts.lexicon.runner.sources_guard import (
+        apply_network_connection_guards,
+        assert_not_sources_db,
+    )
 
-    assert_not_sources_db(path)
-    resolved = path.resolve()
+    # Resolve symlinks BEFORE asserting (review finding 2).
+    resolved = Path(path).resolve()
+    assert_not_sources_db(resolved)
     uri = f"file:{resolved.as_posix()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True)
+    apply_network_connection_guards(conn, resolved)
     conn.execute("PRAGMA query_only = ON")
     conn.row_factory = sqlite3.Row
     return conn

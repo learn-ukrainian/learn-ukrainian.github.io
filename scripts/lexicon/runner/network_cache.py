@@ -29,7 +29,7 @@ from scripts.lexicon.runner.contracts import (
     canonical_json,
 )
 from scripts.lexicon.runner.sources_guard import (
-    SourcesDbForbiddenError,
+    apply_network_connection_guards,
     assert_not_sources_db,
     guard_network_worker,
 )
@@ -274,6 +274,8 @@ class NetworkCache:
         lock_fh.flush()
 
         self._conn = sqlite3.connect(self.path, isolation_level=None)
+        # Network-side factory: always install ATTACH authorizer (PR #5365 review).
+        apply_network_connection_guards(self._conn, self.path, force_authorizer=True)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute("PRAGMA foreign_keys = ON")
         self._conn.execute("PRAGMA journal_mode = WAL")
@@ -805,11 +807,9 @@ class NetworkCache:
 def open_network_cache(path: Path, **kwargs: Any) -> NetworkCache:
     """Open a network cache under the network-worker sources.db guard."""
     with guard_network_worker():
-        # Refuse accidental sources.db path and any open attempt.
-        if path.name == "sources.db" or path.resolve().name == "sources.db":
-            raise SourcesDbForbiddenError(
-                f"network workers cannot open sources.db (refused path={path})"
-            )
+        # Refuse accidental sources.db path (URI/inode-aware) before connect.
+        assert_not_sources_db(path)
         cache = NetworkCache(path, **kwargs)
         cache.open()
         return cache
+

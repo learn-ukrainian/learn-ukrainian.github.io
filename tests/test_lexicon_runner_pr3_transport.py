@@ -13,6 +13,8 @@ Spec §PR3 / crash matrix:
 
 from __future__ import annotations
 
+import os
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -43,10 +45,12 @@ from scripts.lexicon.runner.network_worker import (
 from scripts.lexicon.runner.packet_export import export_request_packet
 from scripts.lexicon.runner.sources_guard import (
     SourcesDbForbiddenError,
+    assert_not_sources_db,
     guard_network_worker,
+    install_network_authorizer,
     is_network_worker,
 )
-from scripts.lexicon.runner.sqlite_ro import open_sources_ro
+from scripts.lexicon.runner.sqlite_ro import open_immutable_ro, open_sources_ro
 from scripts.lexicon.runner.transport import (
     BundleItem,
     HashMismatchError,
@@ -107,7 +111,6 @@ def test_network_workers_cannot_open_sources_db(tmp_path: Path) -> None:
     assert not is_network_worker()
     # empty file still opens as sqlite (creates schema on connect for non-uri? mode=ro needs file)
     # We only assert the guard path; offline open of a non-db may error — use a real sqlite.
-    import sqlite3
 
     conn = sqlite3.connect(sources)
     conn.execute("CREATE TABLE t(x)")
@@ -115,6 +118,180 @@ def test_network_workers_cannot_open_sources_db(tmp_path: Path) -> None:
     conn.close()
     ro = open_sources_ro(sources)
     ro.close()
+
+
+def test_sources_guard_rejects_uri_query_forms(tmp_path: Path) -> None:
+    """Finding 1: URI / query forms must not bypass basename checks."""
+    sources = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources)
+    conn.execute("CREATE TABLE t(x)")
+    conn.commit()
+    conn.close()
+
+    uri_forms = [
+        "sources.db?mode=ro",
+        "file:sources.db?mode=ro",
+        f"file:{sources.as_posix()}?mode=ro",
+        f"file:///{sources.as_posix().lstrip('/')}?mode=ro&immutable=1",
+        "SOURCES.DB?mode=ro",
+        f"file:{sources.as_posix().upper()}?mode=RO",
+    ]
+    with guard_network_worker():
+        for form in uri_forms:
+            with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+                assert_not_sources_db(form)
+            with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+                refuse_sources_db(form)
+
+
+def test_sources_guard_rejects_symlink_to_sources(tmp_path: Path) -> None:
+    """Finding 2: resolve symlinks before asserting — alias path must refuse."""
+    sources = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources)
+    conn.execute("CREATE TABLE t(x)")
+    conn.commit()
+    conn.close()
+    alias = tmp_path / "not_sources.db"
+    alias.symlink_to(sources)
+
+    with guard_network_worker():
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            open_sources_ro(alias)
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            assert_not_sources_db(alias)
+
+
+def test_open_immutable_ro_refuses_sources_db(tmp_path: Path) -> None:
+    """Finding 3: open_immutable_ro must apply the sources guard."""
+    sources = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources)
+    conn.execute("CREATE TABLE t(x)")
+    conn.commit()
+    conn.close()
+    alias = tmp_path / "side_alias.db"
+    alias.symlink_to(sources)
+
+    with guard_network_worker():
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            open_immutable_ro(sources)
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            open_immutable_ro(alias)
+
+
+def test_commit_import_txn_fence_rejects_concurrent_abandon(
+    ledger: Ledger, tmp_path: Path
+) -> None:
+    """Finding 4: BEGIN IMMEDIATE before validation — abandon race rejects import.
+
+    Crash hook marks the packet generation abandoned inside the write fence
+    (after BEGIN, before validation reads). Pre-txn validation would have
+    seen the generation as active; the fenced path must still refuse.
+    """
+    fp = compute_run_fingerprint(cohort_digest="import-fence")
+    run = ledger.start_run(fp).run_id
+    assert run
+    work = [NetworkWorkItem(lemma_id="fence-a", method="GET", url="https://example.test/fence")]
+    exported = export_request_packet(
+        ledger,
+        run_id=run,
+        fingerprint=fp,
+        items=work,
+        output_dir=tmp_path / "packets-fence",
+        now=1.0,
+    )
+    gen = exported.generation
+    assert ledger.packet_generation_active(run, gen)
+
+    ledger.crash_import_concurrent_abandon = True
+    result = ledger.commit_import(
+        run,
+        "fence-a",
+        "imp",
+        1,
+        packet_generation=gen,
+        result_hash="body-fence",
+        expected_fingerprint=fp,
+        now=2.0,
+    )
+    ledger.crash_import_concurrent_abandon = False
+
+    assert result.status is CasStatus.INVALID_STATE
+    assert result.detail == "stale_packet_generation"
+    n = ledger._require().execute(
+        "SELECT COUNT(*) AS n FROM imports WHERE run_id = ? AND lemma_id = ?",
+        (run, "fence-a"),
+    ).fetchone()
+    assert int(n["n"]) == 0
+
+
+def test_network_cache_authorizer_denies_attach_sources(tmp_path: Path, monkeypatch) -> None:
+    """Finding 5: ATTACH of sources.db denied on network-side connections."""
+    sources = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources)
+    conn.execute("CREATE TABLE secret(x)")
+    conn.commit()
+    conn.close()
+    monkeypatch.setenv("LEXICON_SOURCES_DB", str(sources))
+
+    # Hardlink with a non-sources basename — path string alone is not enough.
+    hardlink = tmp_path / "innocent_hardlink.db"
+    try:
+        os.link(sources, hardlink)
+    except OSError:
+        hardlink = None  # some FS (e.g. some network mounts) disallow hardlinks
+
+    cache = NetworkCache(tmp_path / "net.cache.sqlite")
+    cache.open()
+    try:
+        with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
+            cache._require().execute(f"ATTACH DATABASE '{sources.as_posix()}' AS sources")
+        with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
+            cache._require().execute(
+                f"ATTACH DATABASE 'file:{sources.as_posix()}?mode=ro' AS sources"
+            )
+        if hardlink is not None:
+            with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
+                cache._require().execute(
+                    f"ATTACH DATABASE '{hardlink.as_posix()}' AS sources"
+                )
+    finally:
+        cache.close()
+
+    # Direct factory helper also installs the authorizer under the network role.
+    side = tmp_path / "allowed.db"
+    c2 = sqlite3.connect(side)
+    c2.execute("CREATE TABLE t(x)")
+    c2.commit()
+    c2.close()
+    with guard_network_worker():
+        ro = open_immutable_ro(side)
+        try:
+            install_network_authorizer(ro, force=True)
+            with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
+                ro.execute(f"ATTACH DATABASE '{sources.as_posix()}' AS sources")
+        finally:
+            ro.close()
+
+
+def test_sources_guard_rejects_hardlink_via_inode(tmp_path: Path, monkeypatch) -> None:
+    """Finding 5 (inode): hardlink to configured sources.db is refused by path."""
+    sources = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources)
+    conn.execute("CREATE TABLE t(x)")
+    conn.commit()
+    conn.close()
+    monkeypatch.setenv("LEXICON_SOURCES_DB", str(sources))
+    hardlink = tmp_path / "alias_inode.db"
+    try:
+        os.link(sources, hardlink)
+    except OSError:
+        pytest.skip("filesystem does not support hardlinks")
+
+    with guard_network_worker():
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            assert_not_sources_db(hardlink)
+        with pytest.raises(SourcesDbForbiddenError, match=r"cannot open sources\.db"):
+            open_sources_ro(hardlink)
 
 
 # --- 2. atomic raw cache + fenced claims -------------------------------------
