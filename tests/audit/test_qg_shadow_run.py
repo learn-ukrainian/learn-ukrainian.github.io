@@ -277,3 +277,24 @@ def test_main_exits_4_when_evidence_vanishes(tmp_path: Path, monkeypatch: pytest
     )
 
     assert rc == 4
+
+
+def test_shadow_driver_surfaces_skip_reason(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+
+    with pytest.raises(ValueError) as excinfo:
+        qg_shadow_run.run_shadow_module(
+            _target(module_dir),
+            audit_dir=tmp_path / "audit",
+            shadow_db=tmp_path / "shadow.db",
+            author_family="openai",
+            reviewer=_dispatch,
+            live_reviewer=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            max_cost_usd=1.0,
+            layerb_dry_run=True,
+        )
+    assert "skipped_canary_required" in str(excinfo.value)
+    assert "exact_canary_required" in str(excinfo.value)
+
