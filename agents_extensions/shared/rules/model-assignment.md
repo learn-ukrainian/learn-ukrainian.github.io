@@ -192,7 +192,7 @@ permitted — the `-p` sunset was cancelled, user 2026-06-22 — but it costs th
    to unblock something).
 
 Non-Claude reviewers are UNAFFECTED for NON-LANGUAGE work (LANGUAGE-LANES RULE binds for anything judging Ukrainian text) — keep routing the bulk of CODE/infra reviews to them: DeepSeek (rows above) for PR
-diffs + VESUM content review, Codex for novel-architecture catches. The *Claude* seat is **preferred** in-session for cost.
+diffs, Codex for novel-architecture catches. (VESUM/content review = language work → the four language lanes only.) The *Claude* seat is **preferred** in-session for cost.
 (The headless `--agent claude` / `claude -p` lane is AVAILABLE again — the mid-June 2026 sunset / "native binary not
 installed" fiasco was cancelled, user 2026-06-22; Claude may be used for ANY task, incl. dispatched review, when needed.
 The cost economics above stand regardless: dispatched Claude is far pricier than inline, so route by need, not by ban.)
