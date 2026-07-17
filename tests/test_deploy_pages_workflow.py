@@ -42,3 +42,27 @@ def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     upload = by_name["Upload artifact"]
     assert steps.index(size_gate) < steps.index(upload)
     assert steps.index(build_site) < steps.index(size_gate)
+
+
+def test_pages_deploy_vendors_atlas_tree_after_build_before_size_gate() -> None:
+    """PR3 D1/R1/R7: feature-flagged atlas vendoring between build and size gate."""
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["deploy"]["steps"]
+    by_name = {step.get("name"): step for step in steps}
+
+    build_site = by_name["Build Site"]
+    vendor = by_name["Vendor Atlas runtime tree"]
+    size_gate = by_name["Check published-site size (fail-closed)"]
+    upload = by_name["Upload artifact"]
+
+    assert "scripts/deploy/vendor_atlas_tree.py" in vendor["run"]
+    assert vendor["env"]["ATLAS_TREE_ASSET_ID"] == "${{ vars.ATLAS_TREE_ASSET_ID }}"
+    assert vendor["env"]["ATLAS_TREE_SHA256"] == "${{ vars.ATLAS_TREE_SHA256 }}"
+    # Pin is asset id + digest — never a mutable release tag env.
+    env_blob = yaml.safe_dump(vendor.get("env") or {})
+    assert "ATLAS_TREE_TAG" not in env_blob
+    assert "release_tag" not in env_blob
+
+    assert steps.index(build_site) < steps.index(vendor)
+    assert steps.index(vendor) < steps.index(size_gate)
+    assert steps.index(size_gate) < steps.index(upload)
