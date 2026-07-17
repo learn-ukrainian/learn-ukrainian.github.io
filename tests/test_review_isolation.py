@@ -3161,7 +3161,9 @@ def test_local_capture_reuses_one_neutral_index_for_status_pair(
     target = repo / "src" / "app.py"
     target.write_text("VALUE = 2\n", encoding="utf-8")
     original = snapshot_module._neutral_local_git_view
+    original_capped = snapshot_module._run_git_bytes_capped
     entered = 0
+    status_caps: list[int] = []
 
     @contextlib.contextmanager
     def counted(*args: object, **kwargs: object):
@@ -3171,10 +3173,34 @@ def test_local_capture_reuses_one_neutral_index_for_status_pair(
             yield neutral
 
     monkeypatch.setattr(snapshot_module, "_neutral_local_git_view", counted)
+
+    def counted_capped(
+        git_bin: Path,
+        args: list[str],
+        *,
+        cwd: Path,
+        max_bytes: int,
+        timeout_seconds: float = snapshot_module.GIT_EVIDENCE_TIMEOUT_SECONDS,
+    ) -> bytes:
+        if "status" in args:
+            status_caps.append(max_bytes)
+        return original_capped(
+            git_bin,
+            args,
+            cwd=cwd,
+            max_bytes=max_bytes,
+            timeout_seconds=timeout_seconds,
+        )
+
+    monkeypatch.setattr(snapshot_module, "_run_git_bytes_capped", counted_capped)
     capture = capture_local_review_state(repo)
 
     assert "src/app.py" in capture.changed_paths
     assert entered == 1
+    assert status_caps == [
+        snapshot_module.MAX_CHANGED_EVIDENCE_BYTES,
+        snapshot_module.MAX_CHANGED_EVIDENCE_BYTES,
+    ]
 
 
 def test_branch_capture_treats_colon_prefixed_paths_literally(tmp_path: Path) -> None:

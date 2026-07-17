@@ -495,17 +495,26 @@ def _neutral_local_git_view(
             "-c",
             "core.bare=false",
         ]
-        # Rewriting the copied index changes its own timestamp while retaining
-        # entry stat data. Force Git to recheck content so same-size edits
-        # cannot be misclassified as clean, especially with split indexes.
-        refreshed = _run_git(
+        # Rebuild the copied index from its own staged entries. ``--index-info``
+        # creates zeroed stat records, so Git must compare every tracked
+        # worktree path with its blob instead of trusting stale size/mtime data.
+        # This also materializes split-index entries into the disposable index
+        # without changing the source repository's index.
+        staged_entries = _run_git_bytes_capped(
             git_bin,
-            [*neutral_git, "update-index", "--really-refresh"],
+            [*neutral_git, "ls-files", "--stage", "-z"],
             cwd=repo_root,
-            check=False,
+            max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
         )
-        if refreshed.returncode not in {0, 1}:
-            raise ReviewSnapshotError("neutral_git_refresh_failed")
+        _run_git(git_bin, [*neutral_git, "read-tree", "--empty"], cwd=repo_root)
+        if staged_entries:
+            _run_git(
+                git_bin,
+                [*neutral_git, "update-index", "-z", "--index-info"],
+                cwd=repo_root,
+                text=False,
+                input_data=staged_entries,
+            )
         yield neutral_git
     finally:
         shutil.rmtree(neutral_parent, ignore_errors=True)
@@ -2365,13 +2374,16 @@ def _capture_local_review_state_with_neutral_view(
     expected_head_sha: str | None,
 ) -> LocalReviewCapture:
     """Capture and recheck status through one immutable copied index."""
-    proc = _run_git(
+    captured_status_bytes = _run_git_bytes_capped(
         git,
         [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
         cwd=root,
+        max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
-    assert isinstance(proc.stdout, str)
-    captured_status = proc.stdout
+    try:
+        captured_status = captured_status_bytes.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ReviewSnapshotError("malformed_local_status_encoding") from exc
     dirty: list[ImmutableFileRecord] = []
     untracked: list[ImmutableFileRecord] = []
     deleted: list[str] = []
@@ -2381,7 +2393,7 @@ def _capture_local_review_state_with_neutral_view(
     overlay_entries: list[OverlayIdentityEntry] = []
     captured_bytes = 0
 
-    entries = [e for e in proc.stdout.split("\0") if e]
+    entries = [e for e in captured_status.split("\0") if e]
     i = 0
     while i < len(entries):
         entry = entries[i]
@@ -2565,13 +2577,17 @@ def _capture_local_review_state_with_neutral_view(
             raise ReviewSnapshotError(
                 f"{DIAG_DRIFT}:local_head_after_capture:expected={expected_head_sha}:actual={after}"
             )
-    after_status = _run_git(
+    after_status_bytes = _run_git_bytes_capped(
         git,
         [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
         cwd=root,
+        max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
-    assert isinstance(after_status.stdout, str)
-    if after_status.stdout != captured_status:
+    try:
+        after_status = after_status_bytes.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ReviewSnapshotError("malformed_local_status_encoding") from exc
+    if after_status != captured_status:
         raise ReviewSnapshotError(f"{DIAG_DRIFT}:local_status_during_capture")
 
     return LocalReviewCapture(
