@@ -51,6 +51,11 @@ EXTRACTION_SPEC_VERSION: str = "2026-07-v1-ua-learner-activities"
 K_DEFAULT: int = 8
 DF_N_DEFAULT: int = 5  # tuned post-baseline with user; report the value used
 
+SCOPED_CORPUS_WARNING: str = (
+    "WARNING: DF counts and the verify_quote allowlist are computed over the scoped corpus only. "
+    "Ratios are NOT comparable to full-index runs and MUST NOT set enforcement thresholds without a full-index delta check."
+)
+
 # Corpus tables we index at full strength (RIGHT side). Order matters for fingerprints.
 FULL_CORPORA: list[tuple[str, str, str, str]] = [
     ("textbooks", "chunk_id", "text", "textbooks"),
@@ -620,7 +625,8 @@ class ShingleIndex:
         self.conn.commit()
 
         shingle_to_chunks: dict[str, set[tuple[str, str]]] = defaultdict(set)
-        total_shingles = 0
+        total_shingles = 0  # post-deduplication count (number of actual postings inserted)
+        total_shingles_pre_dedup = 0  # pre-deduplication raw occurrence count
 
         for table, id_col, text_col, corpus_label in corpora:
             try:
@@ -637,11 +643,12 @@ class ShingleIndex:
                 shs = make_shingles(toks, self.k)
                 for sh in shs:
                     shingle_to_chunks[sh].add((corpus_label, cid))
-                total_shingles += len(shs)
+                total_shingles_pre_dedup += len(shs)
                 # insert postings (char_offset 0 is sufficient; LCS recovers exact)
                 # deduplicate postings to unique (shingle_key, corpus, chunk_id) before insert
                 if shs:
                     unique_shs = list(dict.fromkeys(shs))
+                    total_shingles += len(unique_shs)
                     self.conn.executemany(
                         "INSERT INTO postings (shingle_key, corpus, chunk_id, char_offset) VALUES (?, ?, ?, 0)",
                         [(sh, corpus_label, cid) for sh in unique_shs],
@@ -658,11 +665,14 @@ class ShingleIndex:
         self.set_meta("k", str(self.k))
         self.set_meta("extraction_spec", EXTRACTION_SPEC_VERSION)
         self.set_meta("total_shingles", str(total_shingles))
+        self.set_meta("total_shingles_pre_dedup", str(total_shingles_pre_dedup))
         self.set_meta("indexed_corpora", json.dumps([c[3] for c in corpora]))
         self.conn.commit()
 
         if progress:
-            print(f"Index built. fingerprint={fp} shingles~{total_shingles}")
+            print(
+                f"Index built. fingerprint={fp} shingles~{total_shingles} (pre-dedup~{total_shingles_pre_dedup})"
+            )
         return fp
 
     def _compute_fingerprint(self, conn: sqlite3.Connection, corpora: list) -> str:
@@ -752,10 +762,7 @@ def compute_metrics(
     default_labels = {c[3] for c in default_corpora}
     scope_note = None
     if set(indexed_corpora) != default_labels:
-        scope_note = (
-            "WARNING: DF counts and the verify_quote allowlist are computed over the scoped corpus only. "
-            "Ratios are NOT comparable to full-index runs and MUST NOT set enforcement thresholds without a full-index delta check."
-        )
+        scope_note = SCOPED_CORPUS_WARNING
 
     if verify_quote_fn is None:
 
@@ -1121,10 +1128,7 @@ def cmd_baseline_sweep(args: argparse.Namespace) -> int:
     default_corpora = FULL_CORPORA + SELF_CORPORA
     default_labels = {c[3] for c in default_corpora}
     if set(indexed_corpora) != default_labels:
-        out["scope_note"] = (
-            "WARNING: DF counts and the verify_quote allowlist are computed over the scoped corpus only. "
-            "Ratios are NOT comparable to full-index runs and MUST NOT set enforcement thresholds without a full-index delta check."
-        )
+        out["scope_note"] = SCOPED_CORPUS_WARNING
 
     print(json.dumps(out, indent=2, ensure_ascii=False))
     sources_conn.close()
