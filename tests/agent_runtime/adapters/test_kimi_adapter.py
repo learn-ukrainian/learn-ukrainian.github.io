@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from scripts.agent_runtime.adapters.kimi import (
+    _MODE_FLAGS,
+    _READ_ONLY_REFUSAL,
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
     KIMI_MODEL_ALIASES,
@@ -25,7 +28,7 @@ def _build(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     *,
-    mode: str = "read-only",
+    mode: str = "workspace-write",
     model: str | None = None,
     effort: str | None = None,
 ):
@@ -45,22 +48,29 @@ def _build(
     )
 
 
-@pytest.mark.parametrize(
-    ("mode", "expected_flag"),
-    [
-        ("read-only", None),
-        ("workspace-write", "--auto"),
-        ("danger", "--yolo"),
-    ],
-)
-def test_build_invocation_maps_permission_modes(tmp_path, monkeypatch, mode, expected_flag):
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_build_invocation_uses_flagless_write_modes(tmp_path, monkeypatch, mode):
     plan = _build(tmp_path, monkeypatch, mode=mode)
 
     assert plan.cmd[0] == str(tmp_path / "kimi")
     assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
     assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
-    assert "--plan" not in plan.cmd  # Kimi rejects --prompt + --plan.
-    assert (expected_flag in plan.cmd) if expected_flag else not ({"--auto", "--yolo"} & set(plan.cmd))
+    assert not ({"--auto", "--yolo", "--plan"} & set(plan.cmd))
+
+
+def test_mode_flag_mapping_is_empty_for_all_headless_modes():
+    assert _MODE_FLAGS == {
+        "read-only": (),
+        "workspace-write": (),
+        "danger": (),
+    }
+
+
+def test_read_only_refuses_before_kimi_binary_resolution(tmp_path, monkeypatch):
+    with patch("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary") as resolve_binary:
+        with pytest.raises(ValueError, match=re.escape(_READ_ONLY_REFUSAL)):
+            _build(tmp_path, monkeypatch, mode="read-only")
+    resolve_binary.assert_not_called()
 
 
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):

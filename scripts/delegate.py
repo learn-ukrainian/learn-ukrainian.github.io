@@ -1909,6 +1909,16 @@ def _classify_final_status(
     return "failed"
 
 
+def _first_error_line(stderr_excerpt: str | None) -> str | None:
+    """Return the first non-blank captured stderr line for task summaries."""
+    if not stderr_excerpt:
+        return None
+    return next(
+        (line.strip() for line in stderr_excerpt.splitlines() if line.strip()),
+        None,
+    )
+
+
 def _emit_terminal_dispatch_event(
     *,
     task_id: str,
@@ -2187,6 +2197,13 @@ def _run_worker(
     if needs_finalize:
         final_status = "needs_finalize"
 
+    last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+    if last_error:
+        # Task logs capture this worker's stderr, while agent_runtime captures
+        # the CLI child's stderr internally. Re-emit the excerpt so an
+        # instant CLI failure is visible in both task state and its stderr log.
+        print(stderr_excerpt, file=sys.stderr, flush=True)
+
     worktree_reap: dict[str, Any] | None = None
     if (
         worktree_path
@@ -2219,6 +2236,8 @@ def _run_worker(
             "stderr_excerpt": stderr_excerpt,
             "returncode": returncode,
             "returncode_reason": returncode_reason,
+            "last_error": last_error,
+            "exit_code": returncode,
             "worktree_dirty_on_exit": dirty_on_exit,
             "commits_ahead": commits_ahead,
             "needs_finalize": needs_finalize,
@@ -2484,6 +2503,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "stderr_excerpt": None,
             "returncode": None,
             "returncode_reason": None,
+            "last_error": None,
+            "exit_code": None,
             "substitution": None,
         }
         if lifecycle_carrier is not None:
@@ -2624,6 +2645,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "stderr_excerpt": None,
         "returncode": None,
         "returncode_reason": None,
+        "last_error": None,
+        "exit_code": None,
         "substitution": None,
     }
     if lifecycle_carrier is not None:
@@ -2737,14 +2760,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
+            spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
             failed_state = _read_state(state_path) or initial_state
             failed_state.update(
                 {
                     "status": "failed",
                     "finished_at": datetime.now(UTC).isoformat(),
-                    "stderr_excerpt": (f"Popen failed: {type(exc).__name__}: {exc}")[:500],
+                    "stderr_excerpt": spawn_error,
                     "returncode": None,
                     "returncode_reason": "worker process was not started",
+                    "last_error": _first_error_line(spawn_error),
+                    "exit_code": None,
                 }
             )
             failed_state.update(
