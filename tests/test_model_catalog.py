@@ -77,6 +77,13 @@ def test_gpt_and_grok_formal_routes_are_native_only():
     assert candidates["grok-4.5"]["transport"] == "native_grok"
 
 
+def test_bridge_only_reviewers_expose_executable_invocations():
+    candidates = load_model_catalog()["review_candidates"]
+    assert candidates["pool"]["invocation"].endswith("ask-pool")
+    assert candidates["glm-5.2"]["invocation"].endswith("ask-glm")
+    assert candidates["gemini-3.1-pro"]["health_keys"] == ["gemini"]
+
+
 def test_catalog_rejects_unknown_candidate_model_reference():
     broken = deepcopy(load_model_catalog())
     broken["review_candidates"]["pool"]["model_id"] = "missing-model"

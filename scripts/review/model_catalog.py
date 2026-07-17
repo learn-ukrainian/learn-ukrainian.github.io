@@ -165,6 +165,16 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name}.transport {transport!r} is not listed in "
                 f"models.{model_id}.transports"
             )
+        _require_string(
+            candidate.get("invocation"), f"review_candidates.{name}.invocation"
+        )
+        health_keys = candidate.get("health_keys", [])
+        if not isinstance(health_keys, list) or not all(
+            isinstance(item, str) and item.strip() for item in health_keys
+        ):
+            raise ModelCatalogError(
+                f"review_candidates.{name}.health_keys must be a list of strings"
+            )
         _require_string_list(
             candidate.get("capabilities"), f"review_candidates.{name}.capabilities"
         )

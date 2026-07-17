@@ -208,7 +208,9 @@ class ReviewerCandidate:
     concrete_model: str
     route: str
     transport: str
+    invocation: str
     quality_tier: str
+    health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
     # data_egress_policy exactly matches this value. None = no egress gate.
@@ -238,7 +240,9 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         concrete_model=model_id,
         route=raw["route"],
         transport=raw["transport"],
+        invocation=raw["invocation"],
         quality_tier=model["tier"],
+        health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
         capabilities=frozenset(raw.get("capabilities", [])),
@@ -286,6 +290,7 @@ QWEN = ReviewerCandidate(
     concrete_model="qwen3-max",
     route="qwen",
     transport="hermes",
+    invocation=".venv/bin/python scripts/delegate.py dispatch --agent qwen",
     quality_tier="specialist",
     always_excluded_reason="excluded from routine/automatic routing (cost) — model-assignment.md",
 )
@@ -387,6 +392,7 @@ class CandidateResult:
     family: str
     route: str
     transport: str
+    invocation: str
     quality_tier: str
     requires_silence_timeout: bool
     status: CandidateStatus
@@ -419,6 +425,10 @@ def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None)
         or snapshot.get(candidate.route)
         or snapshot.get(candidate.concrete_model)
         or snapshot.get(candidate.family)
+        or next(
+            (snapshot[key] for key in sorted(candidate.health_keys) if key in snapshot),
+            None,
+        )
     )
 
 
@@ -475,6 +485,7 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            invocation=candidate.invocation,
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="advisory_only",
@@ -488,6 +499,7 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            invocation=candidate.invocation,
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
@@ -503,6 +515,7 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            invocation=candidate.invocation,
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
@@ -516,6 +529,7 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            invocation=candidate.invocation,
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
@@ -529,6 +543,7 @@ def evaluate_candidate(
         family=candidate.family,
         route=candidate.route,
         transport=candidate.transport,
+        invocation=candidate.invocation,
         quality_tier=candidate.quality_tier,
         requires_silence_timeout=candidate.requires_silence_timeout,
         status="eligible",
@@ -632,6 +647,7 @@ def resolve_reviewer(
                 family=best.family,
                 route=best.route,
                 transport=best.transport,
+                invocation=best.invocation,
                 quality_tier=best.quality_tier,
                 requires_silence_timeout=best.requires_silence_timeout,
                 status="selected",
@@ -654,12 +670,29 @@ def resolve_reviewer(
                 f"{selected_rung_index} higher-quality rung(s)"
             )
         elif default_first is not None and selected.name != default_first.name:
-            default_result = next(
-                (entry for entry in trace if entry.name == default_first.name), None
-            )
-            if default_result is not None and default_result.status == "eligible":
+            selected_rung_names = {candidate.name for candidate in active_ladder[0]}
+            rung_results = [entry for entry in trace if entry.name in selected_rung_names]
+            unavailable = [
+                entry.name
+                for entry in rung_results
+                if entry.status == "excluded"
+                and entry.reason == "lane health is unhealthy — route is operationally unavailable"
+            ]
+            if unavailable:
                 substitution_note = (
-                    f"selected {selected.name} over {default_first.name} by lane health "
+                    f"selected {selected.name}: same-quality route(s) unavailable by health: "
+                    f"{', '.join(unavailable)}"
+                )
+            else:
+                better_health_than = [
+                    entry.name
+                    for entry in rung_results
+                    if entry.status == "eligible"
+                    and _health_rank(selected.health) < _health_rank(entry.health)
+                ]
+            if not substitution_note and better_health_than:
+                substitution_note = (
+                    f"selected {selected.name} over {', '.join(better_health_than)} by lane health "
                     "within the same quality rung"
                 )
 

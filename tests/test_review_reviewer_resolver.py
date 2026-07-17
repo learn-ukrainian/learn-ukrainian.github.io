@@ -175,7 +175,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     snapshot = {
         "generated_at": "2026-07-17T00:00:00Z",
         "agents": {
-            "agy": {"status": "hot", "health": {"healthy": True}},
+            "gemini": {"status": "hot", "health": {"healthy": True}},
             "grok": {"status": "cool", "health": {"healthy": True}},
             "claude": {"status": "warm", "health": {"healthy": True}},
         },
@@ -185,6 +185,22 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     )
     assert resolution.selected.name == "grok-4.5"
     assert resolution.selected.health == "healthy"
+
+
+def test_real_gemini_lane_outage_excludes_agy_candidates():
+    snapshot = {
+        "agents": {
+            "gemini": {"status": "unknown", "health": {"healthy": False}},
+            "grok": {"status": "cool", "health": {"healthy": True}},
+        }
+    }
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
+    )
+    assert resolution.selected.name == "grok-4.5"
+    gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
+    assert gemini.health == "unhealthy"
+    assert gemini.status == "excluded"
 
 
 def test_health_statuses_are_case_normalized_and_unknown_values_fail_closed():
@@ -252,6 +268,19 @@ def test_family_exclusion_is_not_mislabeled_as_a_substitution():
     assert resolution.substitution_note is None
 
 
+def test_same_rung_unhealthy_route_emits_substitution_receipt():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini",
+            risk="medium",
+            routing_snapshot={"grok": "unhealthy"},
+        )
+    )
+    assert resolution.selected.name == "kimi-k3"
+    assert "grok-4.5" in resolution.substitution_note
+    assert "unavailable by health" in resolution.substitution_note
+
+
 def test_deepseek_receipt_carries_required_silence_timeout():
     resolution = resolve_reviewer(
         ResolverInputs(
@@ -262,6 +291,7 @@ def test_deepseek_receipt_carries_required_silence_timeout():
     )
     assert resolution.selected.name == "deepseek-v4-flash"
     assert resolution.selected.requires_silence_timeout is True
+    assert "--agent deepseek" in resolution.selected.invocation
 
 
 def test_folk_content_excludes_both_deepseek_models():
@@ -341,4 +371,6 @@ def test_candidate_constants_preserve_expected_identity():
     assert KIMI_K3.concrete_model == "kimi-code/k3"
     assert KIMI_K3.transport == "native_kimi"
     assert POOL.concrete_model == "poolside/laguna-m.1"
+    assert POOL.invocation.endswith("ask-pool")
     assert GLM.requires_data_egress_policy == "local_interactive"
+    assert GLM.invocation.endswith("ask-glm")

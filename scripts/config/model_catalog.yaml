@@ -274,48 +274,58 @@ review_candidates:
     model_id: claude-opus-4-8
     route: claude
     transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
     capabilities: [code_review]
   openai_frontier:
     model_id: gpt-5.6-sol
     route: codex
     transport: native_codex
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex
     capabilities: [code_review]
     advisory_only_for_author_families: [openai]
   claude-fable-5:
     model_id: claude-fable-5
     route: cursor
     transport: cursor
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
     capabilities: [code_review]
   gemini-3.1-pro:
     model_id: gemini-3.1-pro-high
     route: agy
     transport: agy
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high
+    health_keys: [gemini]
     capabilities: [code_review]
   grok-4.5:
     model_id: grok-4.5
     route: grok
     transport: native_grok
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.5
     capabilities: [code_review]
   kimi-k3:
     model_id: kimi-code/k3
     route: kimi
     transport: native_kimi
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
     capabilities: [code_review]
   glm-5.2:
     model_id: glm-5.2
     route: glm
     transport: opencode
+    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
     capabilities: [code_review]
     requires_data_egress_policy: local_interactive
   claude-sonnet-5:
     model_id: claude-sonnet-5
     route: claude
     transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
     capabilities: [code_review]
   deepseek-v4-pro:
     model_id: deepseek-v4-pro
     route: deepseek
     transport: hermes
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-pro
     capabilities: [code_review]
     requires_silence_timeout: true
     domain_excluded_from: [folk_content]
@@ -323,16 +333,19 @@ review_candidates:
     model_id: composer-2.5
     route: cursor
     transport: cursor
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model composer-2.5
     capabilities: [code_review]
   pool:
     model_id: poolside/laguna-m.1
     route: pool
     transport: opencode
+    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
     capabilities: [code_review]
   deepseek-v4-flash:
     model_id: deepseek-v4-flash
     route: deepseek
     transport: hermes
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash
     capabilities: [code_review]
     requires_silence_timeout: true
     domain_excluded_from: [folk_content]
@@ -340,6 +353,8 @@ review_candidates:
     model_id: gemini-3.5-flash-high
     route: agy
     transport: agy
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.5-flash-high
+    health_keys: [gemini]
     capabilities: [code_review]
 
 review_ladders:
