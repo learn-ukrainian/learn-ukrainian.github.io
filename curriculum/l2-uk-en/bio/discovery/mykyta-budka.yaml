@@ -1,0 +1,23 @@
+direct_sources:
+- "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S2\
+  1FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Budka_N&Z21ID="
+- "https://esu.com.ua/article-36541"
+- "https://synod.ugcc.ua/data/vladyka-nykyta-budka-3395/"
+- "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages\\B\\U\\BudkaNykyta.htm"
+- "https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html"
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Микита Будка
+- Будка Никита Енциклопедія історії України перший єпископ Канади
+- Будка Никита Енциклопедія Сучасної України Емігрант Вінніпег
+- Владика Никита Будка Синод єпископів УГКЦ Карлаг поховання
+- Budka Nykyta Internet Encyclopedia of Ukraine Canadian Institute of Ukrainian Studies
+- Будка беатифікація 27 червня 2001 Апостольська столиця
+rag_chunks: []
+rag_literary: []
+warning: 'П''ять прямих джерел збігаються з планом і реєстром; три українські читання мігровано на strict-v2.
+  Читання «Емігрант» знято з reading-needed: ЕСУ засвідчує, що Будка заснував цей місячник 1910 року й
+  редагував до 1912 року. Розбіжності зафіксовано з атрибуцією: дата народження (7 червня проти 7 вересня),
+  дата смерті (1 проти 6 жовтня 1949), строк (вісім проти п''яти років). Канадське та ватиканське видання
+  англомовні й лишаються поза набором читань.'

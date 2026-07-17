@@ -1,0 +1,18 @@
+direct_sources:
+- "https://vue.gov.ua/Величковський,_Василь_Всеволод"
+- "https://synod.ugcc.ua/data/vladyka-vasyl-velychkovskyy-11715/"
+- "https://synod.ugcc.ua/data/1-chervnya-1903-roku-narodyvsya-svyashchmch-vasyliy-velychkovskyy-9231/"
+- "https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html"
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Василь Величковський
+- Величковський Василь Всеволод Велика українська енциклопедія
+- Владика Василь Величковський Синод єпископів УГКЦ
+- Василій Величковський 1903 народження свящмч Синод УГКЦ
+- Величковський беатифікація 27 червня 2001 Апостольська столиця
+rag_chunks: []
+rag_literary: []
+warning: Чотири прямі джерела збігаються з планом і реєстром; три українські читання мігровано на strict-v2.
+  Твердження про отруєння залишено в статусі версії та атрибутованого свідчення; розбіжність про місце
+  хіротонії (готель проти помешкання) зафіксовано.

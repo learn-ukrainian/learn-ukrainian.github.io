@@ -1,123 +1,183 @@
-# Липківський Василь Костянтинович — Research Dossier
+# Василь Липківський — дослідницьке досьє
 
 **Slug:** `vasyl-lypkivskyi`
-**Block:** J
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і доказова рамка
 
-- **Full name (UA, canonical):** Липківський Василь Костянтинович; as church hierarch, митрополит Василь.
-- **Pseudonyms / aliases:** Vasyl Lypkivskyi, Metropolitan Vasyl, Василь (Липківський).
-- **Born:** 1864-03-19 | Попудня, modern Cherkasy region | Russian Empire. Source: UINP birth calendar page.
-- **Died:** 1937-11-27 | Kyiv | Ukrainian SSR | executed by NKVD after special-troika sentence. Source: UINP death calendar page.
-- **Family / education key facts:** UINP says he came from an old priestly family, studied at the Uman religious school, Kyiv Theological Seminary, and Kyiv Theological Academy, and received a candidate of theology degree. He was ordained in 1891 and later became a leader of Ukrainian church autocephaly.
+Цей пакет розділяє п'ять різних рівнів: особисту біографію священника, тривалу
+мовно-перекладацьку працю, інституційне рішення собору 1921 року, державний
+механізм тиску й знищення та пізнішу конфесійну оцінку. Основний академічний
+життєпис дає «Енциклопедія історії України» [S1]; довідкову рамку з
+пізнішими адміністративними прив'язками додає «Велика українська енциклопедія»
+[S5]. Дві сторінки історичного календаря Українського інституту національної
+пам'яті постачають цитати, формулювання обвинувачення та дані про пам'ять
+[S2; S3]. Авторську позицію самого митрополита представляє точно ідентифіковане
+видання 1961 року [S4].
 
-## 2. Oppression mechanism
+Досьє не приймає радянських категорій як опису мотивів і не приймає конфесійного
+титулу як доказу біографічних тверджень. Кожна цитата має перевірений локатор:
+обидві використані цитати знайдено прямим зчитуванням живої сторінки [S2], а не
+переказом. Вислів «ми мусимо вискочити з-під московської церковної влади», що
+циркулював у попередній версії плану й досьє, вилучено: його єдиним покликанням
+була сторінка `old.uinp.gov.ua/page/lyudi-svobodi`, яка на дату перевірки не
+відповідає (код 000, нуль байтів), а на жодній із двох живих сторінок УІНП цього
+речення немає. Непідтверджена цитата не використовується навіть тоді, коли вона
+зручно ілюструє тезу.
 
-- **What happened:** Surveillance, dismissal, arrests, removal from office under state pressure, liquidation of the UAOC, final arrest, NKVD troika death sentence, execution.
-- **When:** UINP states he was dismissed from teaching in 1905 for liberal views and "Ukrainophilism" and kept under police surveillance. It records two Soviet arrests before the 1927 church council, a three-month imprisonment before that council, the 1927 forced removal from metropolitan service, UAOC liquidation in 1929, final arrest on 1937-10-22, sentence about a month later, and execution on 1937-11-27.
-- **By whom:** Russian imperial police surveillance; Soviet special services; NKVD special troika at the Kyiv administration.
-- **Document references:** UINP gives the special-troika body and charge phrase "anti-Soviet agitation on a large scale." Archival case number: source not found.
-- **Mechanism specifics:** UINP frames Lypkivskyi as creator and first metropolitan of the revived 1921 Ukrainian Autocephalous Orthodox Church. His oppression was tied to the church's Ukrainian-language liturgy, claim to autocephaly, and refusal to remain under Moscow church authority. In 1927, state pressure forced the council to remove him from metropolitan service. In 1929 the Soviet state labeled the UAOC part of an anti-Soviet underground and liquidated it. His final arrest in October 1937 ended with a special-troika death sentence and execution in Kyiv; UINP says he was probably buried in Bykivnia, while a memorial cross stands at Lukianivka.
-- **What survived / what was destroyed:** UINP says his *History of the Ukrainian Orthodox Church* survived because it was passed to the West. The institutional UAOC structure was broken by the Soviet liquidation campaign, but its memory was revived with the 1990 UAOC restoration and 1997 canonization.
+## Ім'я, рід і освіта
 
-## 3. Major works
+Канонічне ім'я для навчального тексту — **Василь Липківський**; повна форма —
+**Липківський Василь Костянтинович** [S1]. Як ієрарх — митрополит Василь [S5].
+Російсько-імперські транслітерації (Vasilii Lipkovskii, Vasily Lipkovsky)
+допустимі лише як архівна метадана й не вживаються в тексті.
 
-- `1891` — priestly ordination and parish/school work, pastoral institution-building.
-- `1905` — public conflict with imperial church-school authorities, leading to dismissal and surveillance per UINP.
-- `1917` — cofounder-level work in the Brotherhood of the Resurrection of Christ and the autocephaly movement.
-- `1919` — first Ukrainian-language liturgy in Kyiv's Mykilska cathedral, pastoral-liturgical milestone per UINP.
-- `1919` — rector of Saint Sophia Cathedral, Kyiv, per UINP UNR figure page.
-- `1921` — first metropolitan of Kyiv and all Ukraine of the UAOC after the October 1921 council at Saint Sophia.
-- `1920s` — translations of theological and liturgical texts into Ukrainian, per UINP.
-- `1930` — memoir and analytical writing on the "conciliar liquidation" of the UAOC, quoted by UINP.
-- `1930s` — *Історія Української Православної Церкви*, manuscript preserved in the West per UINP.
+Народився 7 (19) березня 1864 року в селі Попудня Липовецького повіту Київської
+губернії [S1]. Сучасну прив'язку джерела подають по-різному: ЕІУ називає
+Монастирищенський район Черкаської області [S1], ВУЕ — Уманський район [S5].
+Розбіжність пояснюється датами редакцій і адміністративною реформою, а не
+сумнівом щодо села. Батько — Костянтин Фотієвич, мати — Вікторія Гаврилівна; рід
+Липківських прийшов із Галичини й осів на Наддніпрянщині [S5].
 
-## 4. Primary-source quotes
+Освіта: Уманське духовне училище (1873–1879), Київська духовна семінарія
+(1879–1884), Київська духовна академія з кандидатським ступенем богослов'я
+(1889); дисертація — про боротьбу Маккавеїв із сирійськими царями [S1; S5].
+Висвячений на священника 20 жовтня 1891 року; від 1892 року — настоятель собору
+в Липовці [S1].
 
-> "Не нову церкву для нашого народу ми утворюємо"
+## Українська праця в церкві до революції
 
-Source: sermon quoted on UINP birth page. The line matters because it frames autocephaly as restoration of a native church, not invention of a sect.
+1903 року отримав сан протоієрея і 7 серпня очолив новостворену Київську
+церковно-вчительську школу [S5]. У жовтні 1905 року головував на з'їзді
+духовенства Київської єпархії, де обговорювали церковну реформу й українську
+традицію [S1; S5]. Того ж року за поданням київського митрополита його усунули
+з директорської посади за українофільські погляди та перевели до
+Свято-Покровської церкви на Солом'янці [S5]. У 1905–1917 роках він поєднував
+парафію, педагогіку, публіцистику й переклад богослужбових текстів українською
+мовою [S5].
 
-> "ми мусимо вискочити з-під московської церковної влади"
+Методично це важливо: мовна праця передувала політичній нагоді. Переклади
+існували до 1917 року, тому автокефалія 1921 року постає як продовження
+тривалої пастирської й філологічної роботи, а не як імпровізація.
 
-Source: memoir quotation on UINP "Люди Свободи" page. This is a direct anti-imperial ecclesiastical formulation and should be taught with the 1686 Moscow-patriarchate context.
+## Собор 1921 року: установа й особа
 
-## 5. Language register
+Після Лютневої революції Липківський головував на київському єпархіальному
+зібранні, брав участь у заснуванні Братства воскресіння Христа (травень 1917)
+і став заступником голови Всеукраїнської православної церковної ради [S1].
+Перше українськомовне богослужіння відправив 22 травня 1919 року в Микільському
+соборі, першу повну службу — 29 червня 1919 року в Софії Київській [S1]. Від
+1919 до 1929 року був настоятелем Софійського собору [S5].
 
-- **Register:** Sermonic, polemical, ecclesiastical-publicistic.
-- **CEFR readiness for full reading:** C1 for sermons and memoirs; B2 for adapted excerpts.
-- **Lexicon notes:** `автокефалія`, `митрополит`, `собор`, `богослужіння`, `московський патріярх`, `церковна влада`, `антирадянська агітація`.
-- **Stylistic features:** Biblical appeals, rhetorical questions, church-canonical vocabulary, and emotionally direct anti-imperial framing.
+Собор розпочався на Покрову 14 (1) жовтня 1921 року в Софії Київській; 20 жовтня
+1921 року делегати через покладання рук поставили протоієрея Липківського
+митрополитом УАПЦ [S1]. ВУЕ фіксує його як першого предстоятеля УАПЦ і датує
+служіння 1921–1927 роками [S5].
 
-## 6. Contested points
+Тут пролягає головна межа досьє. Автокефалію проголосив **собор**, а не одна
+людина; спосіб поставлення 1921 року за відсутності єпископів залишається
+предметом церковно-історичної дискусії про канонічність [S1]. Досьє не оголошує
+цю дискусію розв'язаною в жодний бік і не приписує Липківському особистого
+авторства кожного соборного рішення. Інституційна автокефалія та особиста
+відповідальність — різні категорії.
 
-- **What's debated in modern UA scholarship:** Canonical legitimacy and procedures of the 1921 UAOC consecrations are church-history debates. The dossier states only what UINP documents: the council proclaimed autocephaly and elected him metropolitan.
-- **What gets simplified in popular memory:** He is sometimes reduced to martyrdom. UINP shows decades of pedagogy, translation, parish organizing, and church governance before the 1937 execution.
-- **Where modern Russian disinformation attacks them:** Russian church-imperial framing often presents Ukrainian autocephaly as illegitimate separatism. The dossier grounds the claim in Ukrainian institutional sources and avoids accepting Moscow's categories.
-- **Polish / Jewish / other-perspective considerations:** Not central in retrieved sources. The key "other perspective" is intra-Orthodox canonical disagreement, which should be handled without erasing Soviet coercion.
-- **Pedagogical caution:** The UINP pages give enough specificity for a repression arc, including arrest date, troika body, charge phrase, and execution date. They do not give a case number, so lesson materials should not simulate an archival dossier citation.
-- **Source-balance note:** The retrieved source set is institutionally Ukrainian but not a critical edition of his papers. Treat sermon quotations as access excerpts until manuscript or printed-edition citations are added.
+## Тиск, усунення й ліквідація церкви
 
-## 7. Cross-track links
+За даними ЕІУ, попри арешти, заборони проповідувати й обмеження пересування
+Липківський об'їхав близько п'ятисот парафій; за авторитет серед вірян його
+називали «народним митрополитом» [S1; S2]. Другий Всеукраїнський собор у жовтні
+1927 року під тиском Державного політичного управління усунув його від
+керівництва УАПЦ [S1].
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/tomos.yaml`
-  - `curriculum/l2-uk-en/plans/hist/pravoslavna-tserkva-17.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/radianska-antyrelihiyna-polityka.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-relihiina-identychnist.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Volodymyr Chekhivskyi, Agatangel Krymskyi, UAOC 1921 council, and Bykivnia memory.
-- **Potential LIT additions surfaced by this research:**
-  - A C1 church-publicistic excerpt module from Lypkivskyi's sermons.
+Хронологію знищення церкви слід подавати точно, бо джерела дають різні вузли.
+УІНП пише, що в 1929 році влада оголосила УАПЦ «однією з ланок антирадянського
+підпілля» і невдовзі розпустила її [S2]. ЕІУ датує остаточну ліквідацію
+надзвичайним собором у січні 1930 року [S1]. Це не суперечність, а дві стадії:
+державне таврування 1929 року й формальний «соборний» акт 1930 року. Попередня
+версія досьє писала просто «ліквідація 1929 року» — це усунуто як неточність.
 
-## 8. Naming-canonical
+Власні слова Липківського фіксують, як він сам читав цей акт: «Радвлада утворила
+цю "соборну ліквідацію УАПЦ" запевне лише про людське око» [S2]. Про ізоляцію
+після усунення він писав, що майже ніхто, крім Володимира Чехівського, не заходив
+до нього — «всі як чуми цуралися» [S2]. Ці цитати доказові щодо його оцінки, а
+не щодо задуму держави.
 
-- **Slug:** `vasyl-lypkivskyi`
-- **EN canonical (BGN/PCGN 2010):** Vasyl Lypkivskyi
-- **UA canonical (with patronymic):** Липківський Василь Костянтинович
-- **Aliases (track these for `aliases:` YAML field):** Василь (Липківський), Metropolitan Vasyl, Vasyl Lypkivsky
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Vasilii Lipkovskii, Vasily Lipkovsky (FORBIDDEN except as archival metadata)
+## Арешт, вирок, розстріл і поховання
 
-## 9. Image candidates
+У вересні 1937 року Липківського запросили очолити Українську церкву в Канаді;
+задум перервав арешт 22 жовтня [S2]. Особлива трійка при Київському управлінні
+НКВД винесла смертний вирок; ЕІУ датує вирок 20 листопада 1937 року [S1].
+Формулювання обвинувачення УІНП подає у двох варіантах: «антирадянська агітація
+у великих розмірах» [S2] і «у великих масштабах» [S3]. Розстріл стався 27
+листопада 1937 року в Києві [S2; S3]. Номер архівної справи в прийнятих джерелах
+відсутній, тому досьє його не імітує.
 
-- **Best PD/CC portrait:** Wikimedia Commons, `File:Vasyl_Lypkivskiy_01.jpg` | public-domain claim on Commons page; verify before publication.
-- **Backup candidates:** UINP article images from artefact.org.ua / lypkivskyivasyl.in.ua; rights require confirmation.
-- **If no PD/CC portrait exists:** Use a rights-cleared photograph of Saint Sophia Cathedral with captioned church-history context.
-- **Era-appropriate context image:** Bykivnia or Lukianivka memorial cross image, if rights-cleared.
+Щодо поховання джерела прямо розходяться, і цю розбіжність збережено:
+сторінка УІНП про народження припускає Биківнянський ліс («вірогідно») [S2],
+сторінка того ж інституту про розстріл стверджує, що місце невідоме [S3], і ЕІУ
+також пише про невідоме місце та символічну могилу з хрестом на Лук'янівському
+цвинтарі [S1]. Реабілітація — 1989 рік, за відсутністю складу злочину [S1].
 
-## 10. Sources used
+## Текст, пам'ять і межі конфесійної оцінки
 
-**Tier 1 (authoritative):**
-- Ukrainian Institute of National Memory, "1864 – народився Василь Липківський..." | https://uinp.gov.ua/istorychnyy-kalendar/berezen/19/1864-narodyvsya-vasyl-lypkivskyy-tvorec-i-pershyy-mytropolyt-uapc | accessed 2026-05-30
-- Ukrainian Institute of National Memory, "1937 - розстріляно митрополита УАПЦ Василя Липківського" | https://uinp.gov.ua/istorychnyy-kalendar/lystopad/27/1937-rozstrilyano-mytropolyta-uapc-vasylya-lypkivskogo | accessed 2026-05-30
+Рукопис «Історії Української Православної Церкви» вцілів, бо його передали на
+Захід [S2]. Сьомий розділ — «Відродження Української Церкви» — вийшов у
+Вінніпезі 1961 року накладом Фундації Івана Ґрищука, 181 сторінка [S4]. Це
+первинне джерело авторської тези, а не незалежне підтвердження її правильності.
 
-**Tier 2 (institutional):**
-- UINP UNR figure page, "Липківський Василь" | https://unr.uinp.gov.ua/figures/lipkivskiy-vasil | accessed 2026-05-30
-- UINP, "Люди Свободи" | https://old.uinp.gov.ua/page/lyudi-svobodi | accessed 2026-05-30
+Відновлення УАПЦ проголошено на Всеукраїнському православному соборі 6 червня
+1990 року [S2]. У 1997 році Собор УАПЦ канонізував Липківського та інших
+церковних мучеників 1920–1930-х років, день пам'яті — 27 листопада [S2; S3].
+Канонізація тут — акт конкретної церкви з конкретною датою: вона засвідчує
+конфесійний статус, а не підтверджує кожне біографічне твердження.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Василь (Липківський)," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## Права, читання й зображення
 
-**Tier 4 (modern scholarly post-1991):**
-- Source not found in retrieved set beyond UINP institutional synthesis.
+Усі п'ять джерел українською мовою, з точною ідентичністю та публічними
+адресами. Прийняті читання — [S1], [S2], [S3], [S4]; [S5] лишається довідковою
+рамкою в реєстрі та статті. Диспозиція для всіх — **link-only**, підстава —
+`external-link`: відкритий доступ для читання не є ліцензією на відтворення.
+Видання 1961 року має завантажувані файли на «Діаспоріані», але курс лише
+посилається й не розміщує копії.
 
-**Tier 5 (general web):**
-- Patriarchia sermon access page for Lypkivskyi sermon tradition | https://patriarchia.org.ua/news/propovid-na-nedilyu-shostu-po-trijczi-mytropolyt-lypkivskyj-pro-proshhennya-grihiv/ | accessed 2026-05-30
+Портрет: окремого файлу з доведеною індивідуальною ліцензією (автор, перше
+оприлюднення, ліцензія) не знайдено. Попередній дослідник називав файл
+Wikimedia Commons як «best PD/CC portrait» з приміткою «verify before
+publication» — ця перевірка не була виконана, тому претензія на суспільне
+надбання не підтверджена й не переноситься. Застосовано текстовий
+`portrait_fallback` з диспозицією `no-portrait-until-rights-verified`.
 
-**Primary-source documents accessed:**
-- Lypkivskyi sermon and memoir excerpts quoted by UINP. Archival case number: source not found.
+## Перехресні зв'язки в курсі
 
----
+Перевірені прямим `test -e` плани, дотичні до теми: `plans/hist/tomos.yaml`,
+`plans/hist/pravoslavna-tserkva-17.yaml`,
+`plans/istorio/radianska-antyrelihiyna-polityka.yaml`,
+`plans/istorio/syntez-relihiina-identychnist.yaml`. Усі чотири існують на диску.
 
-## Decolonization self-check
+## Прийняті джерела
 
-- [x] Russian church-imperial framing rejected
-- [x] NKVD troika and charge specified
-- [x] No archival file number invented
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+- **[S1]** Зінченко А. Липківський Василь Костянтинович // Енциклопедія історії
+  України. Т. 6 (Ла-Мі). Київ: Наукова думка, 2009 — академічний життєпис.
+- **[S2]** УІНП, історичний календар, 19 березня — цитати, обвинувачення,
+  відновлення 1990 року, канонізація 1997 року.
+- **[S3]** УІНП, історичний календар, 27 листопада — розстріл, невідоме місце
+  поховання.
+- **[S4]** Липківський В., митр. Історія Української Православної Церкви:
+  розд. 7: Відродження Української Церкви. Вінніпег: Фундація Івана Ґрищука,
+  1961. 181 с. — первинний текст.
+- **[S5]** Присухін С. Василь (Липківський) // Велика українська енциклопедія,
+  оприлюднено 30 жовтня 2020 року.
+
+Вилучено з попереднього набору: `old.uinp.gov.ua/page/lyudi-svobodi` (мертве
+посилання, код 000) і сторінка `patriarchia.org.ua` з проповіддю (жива, але без
+даних про видання та походження тексту, тому не використовується як доказ).
+
+## Висновок готовності
+
+Стан: **catalog-source ready**. П'ять джерел перевірено прямим запитом; чотири
+читання мігровано на strict-v2 з точною ідентичністю, публічною адресою,
+українською мовою, диспозицією link-only, підставою `external-link` і збіжним
+`evidence_url`. Холдів немає: кожне потрібне читання має документну ідентичність,
+публічну адресу, мовний статус і правову підставу.

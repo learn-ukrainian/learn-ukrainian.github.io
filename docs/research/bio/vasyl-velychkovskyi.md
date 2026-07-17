@@ -1,122 +1,182 @@
-# Величковський Василь Володимирович — Research Dossier
+# Василь Величковський — дослідницьке досьє
 
 **Slug:** `vasyl-velychkovskyi`
-**Block:** J
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і доказова рамка
 
-- **Full name (UA, canonical):** Величковський Василь Володимирович; church form Василь (Величковський), ЧНІ.
-- **Pseudonyms / aliases:** Vasyl Velychkovskyi, Vasyl Velychkovskyj, Basil Velychkovsky, Bishop Vasyl.
-- **Born:** 1903-06-01 | Stanislaviv, now Ivano-Frankivsk | Austria-Hungary. Sources: UGCC bishop profile and UGCC birth page.
-- **Died:** 1973-06-30 | Winnipeg, Canada | after Soviet imprisonment and deportation. Sources: UGCC bishop profile; Vatican beatification list.
-- **Family / education key facts:** UGCC says he was born into a priestly family, studied in Chortkiv-area schools and the Basilian Institute of Saint Josaphat, completed gymnasium in Horodenka, and entered the Greek Catholic seminary in Lviv in 1920. Vatican confirms seminary entry, Redemptorist vows in 1925, and priestly ordination on 1925-10-09.
+Пакет розділяє чотири рівні: чернечу й місіонерську біографію, підпільне
+церковне управління, радянський репресивний механізм і конфесійно-правовий
+статус блаженного. Основний академічний життєпис дає «Велика українська
+енциклопедія» [S1]; церковно-інституційну хронологію — дві довідки Синоду
+єпископів УГКЦ [S2; S3]; статус беатифікації — офіційний перелік Апостольської
+столиці [S4].
 
-## 2. Oppression mechanism
+Центральне методичне зобов'язання цього досьє — **межа причинного твердження про
+отруєння**. Жодне прийняте джерело не подає отруєння як установлений медичний
+факт: ВУЕ пише «за однією з версій — зловмисно отруєний у в'язниці» [S1], а
+Синод атрибутує твердження свідченню брата Василя Стеця [S2]. Досьє зберігає цей
+статус версії й окремо фіксує те, що ВУЕ стверджує прямо: під час другого
+ув'язнення Величковський зазнав фізичних і психічних тортур та став об'єктом
+медичних експериментів [S1]. Розтину, експертизи чи медичного висновку в
+прийнятих джерелах немає, тому досьє їх не імітує.
 
-- **What happened:** NKVD arrest, pressure to accept Orthodoxy, death sentence commuted to ten years in Vorkuta camps, underground episcopal work, second arrest, strict-regime imprisonment, deportation from the USSR.
-- **When:** UGCC says NKVD arrested him on 1945-08-07 in the monastery; Vatican says he was arrested in 1945 and taken to Kyiv. UGCC gives second arrest in January 1969 after searches on 1968-10-18; sentence to three years; release/deportation on 1972-01-27.
-- **By whom:** NKVD for the first arrest; later Soviet security and court system for the second prosecution.
-- **Document references:** UGCC states the first sentence was death for "active anti-Soviet propaganda," later commuted to ten years in Vorkuta. For the second case, UGCC says the trial charged him with "anti-Soviet propaganda" and listening to Vatican religious broadcasts. Stable archival case number: source not found.
-- **Mechanism specifics:** The first case sought to break Greek Catholic resistance by pressuring clergy to accept Orthodoxy. Velychkovskyi refused, was sentenced to death, and then sent to camps. After release in 1955 he returned to Lviv and served the underground UGCC. In 1963, Yosyf Slipyi consecrated him bishop in a Moscow apartment and appointed him a locum tenens for the Church in Ukraine. The second prosecution targeted his underground church leadership and his religious booklet on the Mother of Perpetual Help; UGCC preserves his own explanation that the authorities punished his work as priest and bishop.
-- **What survived / what was destroyed:** His underground ordinations and episcopal continuity survived through the catacomb UGCC, including Bishop Volodymyr Sterniuk. The physical toll of prison survived in trauma and illness; UGCC biography says he died in Canada within a year of deportation.
+Вислів «Несподівано скоро проминуло мені моїх десять літ кари», що фігурував у
+попередній версії плану як матеріал для аналізу, вилучено: у прийнятих джерелах
+його немає, локатора не встановлено. Непідтверджена цитата не використовується.
 
-## 3. Major works
+## Ім'я, рід і освіта
 
-- `1925` — Redemptorist vows and priestly ordination, beginning of missionary work.
-- `1942` — hegumen of the Ternopil monastery, per Vatican.
-- `1945-1955` — Vorkuta camp witness after commuted death sentence, per UGCC/Vatican.
-- `1955-1969` — underground pastoral work in Lviv, private liturgies, seminary formation, and spiritual direction, per UGCC.
-- `1963` — episcopal consecration by Yosyf Slipyi in Moscow, per UGCC.
-- `1963-1969` — locum tenens leadership of the clandestine UGCC in Ukraine, per UGCC/Vatican.
-- `1960s` — booklet *Історія чудотворної ікони Матері Божої Неустанної Помочі*, named by UGCC as the text used against him in the second trial.
-- `1964` — episcopal consecration of Volodymyr Sterniuk, per UGCC.
-- `1972` — deportation from the USSR after second prison term, per UGCC.
-- `2001` — beatification in the group of Ukrainian Greek Catholic martyrs, per Vatican.
+Канонічна форма — **Василь Величковський**. ВУЕ подає повну форму
+**Величковський Василь Всеволод** і світське ім'я Василь Володимирович [S1];
+церковні джерела вживають форму **Василій** [S3]. Народився 1 червня 1903 року в
+Станіславі, тепер Івано-Франківську; помер 30 червня 1973 року у Вінніпезі [S1;
+S2]. Походив із давнього козацького й священницького роду; батько був парохом у
+Шупарках, мати — донькою священника [S1].
 
-## 4. Primary-source quotes
+Освіта: початкова школа в Пробіжній; у 1913–1914 роках Місійний інститут імені
+святого Йосафата в Бучачі; гімназійний цикл — у Городенківській українській
+приватній гімназії «Рідна школа» імені Т. Шевченка [S1]. Під час Першої світової
+війни воював у лавах Українських січових стрільців [S1]. Примітка до джерела:
+ВУЕ друкує при цьому роки «1818–1820», що є очевидною друкарською помилкою
+замість 1918–1920; досьє не відтворює цієї цифри й не використовує її як дату.
 
-> "Несподівано скоро проминуло мені моїх десять літ кари"
+Після повернення з армії 1920 року студіював богослов'я та філософію у
+Львівській духовній семінарії, де догматику викладав отець Йосиф Сліпий, і
+водночас вступив на правничий факультет Українського таємного університету у
+Львові [S1].
 
-Source: Velychkovskyi memoir quotation on the UGCC bishop profile. It gives a direct prison-return voice without romanticizing the camp term.
+## Редемпторист, Волинь і зв'язок із когортою
 
-> "Я завжди був щасливий, повний радости"
+1922 року отримав дияконські свячення з рук митрополита Андрея Шептицького; 29
+серпня 1925 року склав перші монаші обітниці в Чині Найсвятішого Ізбавителя, 9
+жовтня був висвячений на священника єпископом луцьким і острозьким Йосифом
+Боцяном [S1; S2]. Учителював у малій семінарії редемптористів у Збоїщах; 1927
+року переведений до станіславівського монастиря [S1].
 
-Source: UGCC vocation article quoting his recollection of religious calling. It gives learners pastoral-memoir language and shows how he narrated vocation under later persecution.
+Упродовж **1928–1935 років** був помічником єпископа **Миколая Чарнецького** на
+Волині [S1] — документований зв'язок усередині цієї когорти. Від 1935 року
+ігумен; 1941–1942 — Кам'янець-Подільський, 1942–1945 — Тернопіль [S1].
 
-## 5. Language register
+Зміст місійної праці конкретний: доповідь «Методи унійної співпраці між
+нез'єдиненими православними на Волині» на Львівському з'їзді українських
+богословів 22–25 грудня 1936 року [S1]; серед найуспішніших місій — поява
+греко-католицької парафії в Колодяжному, родинному селі Лесі Українки, де серед
+новонавернених були молодший брат поетеси Микола Косач та його син Юрій [S1].
 
-- **Register:** Pastoral memoir, underground ecclesiastical, devotional.
-- **CEFR readiness for full reading:** B2 for short memoir quotes; C1 for full theological or hagiographic prose.
-- **Lexicon notes:** `редемпторист`, `Воркута`, `місцеблюститель`, `катакомбна Церква`, `антисовєтська пропаганда`, `депортація`.
-- **Stylistic features:** Personal testimony, spiritual vocabulary, and Soviet legal accusation language that must be marked as accusation.
+## Перший вирок: смерть, замінена на десять років
 
-## 6. Contested points
+Величковський відмовився перейти з УГКЦ до Російської православної церкви [S1].
+Арешт НКВС — 7 серпня 1945 року, звинувачення «активна антирадянська пропаганда»
+[S1]; Синод уточнює, що арешт стався в Тернополі, а місцем відбування називає
+Воркуту [S2]. 1946 року — смертний вирок, невдовзі замінений, за формулюванням
+ВУЕ, «з гуманітарних мотивів» на десять років таборів ГУЛАГу [S1]. Близько трьох
+місяців він провів у камері смертників, де на прохання співкамерників катехизував,
+сповідав і відправляв літургії [S1].
 
-- **What's debated in modern UA scholarship:** The detailed legal record of both cases needs archival retrieval; the retrieved UGCC/Vatican sources provide chronology but not case numbers.
-- **What gets simplified in popular memory:** He is often remembered only as a martyr in Canada/Winnipeg shrine contexts. UGCC sources show a much longer underground leadership role in Lviv.
-- **Where modern Russian disinformation attacks them:** Soviet framing criminalized religious texts and contact with Vatican broadcasts as anti-Soviet propaganda. This dossier quotes that framing only as prosecution language.
-- **Polish / Jewish / other-perspective considerations:** Not central in retrieved sources. The broader issue is Catholic-Orthodox coercion under Soviet occupation; do not recast it as voluntary "reunion."
-- **Pedagogical caution:** The second prosecution is especially useful for showing that repression did not end with Stalin's death. The UGCC source gives a 1969 trial and 1972 deportation, so avoid compressing his biography into only the 1945 arrest.
+Звільнений 1955 року; повернувся до Львова. У його оселі на площі Соборній, 11,
+помешканні 3, упродовж 1955–1969 років нелегально діяв центр УГКЦ [S1].
 
-## 7. Cross-track links
+## Хіротонія 1963 року та її завершення 1967 року
 
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/hreko-katolytska-tserkva.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/radianska-antyrelihiyna-polityka.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-relihiina-identychnist.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Yosyf Slipyi, Volodymyr Sterniuk, Mykola Charnetskyi, and underground seminary networks.
-- **Potential LIT additions surfaced by this research:**
-  - A C1 testimony excerpt sequence from prison memoirs if a critical edition is retrieved.
+4 лютого 1963 року митрополит Йосиф Сліпий таємно рукоположив Величковського на
+єпископа в Москві, у переддень власної депортації з СРСР, і призначив його
+відповідальним місцеблюстителем УГКЦ [S1]. Джерела розходяться в одній
+подробиці: ВУЕ пише про готельний номер [S1], синодальна довідка — про
+помешкання [S2]. Досьє подає обидві версії.
 
-## 8. Naming-canonical
+Навесні 1967 року Величковський дістав дозвіл відвідати Загреб для побачення із
+сестрою Вірою Ніколіч; скориставшись нагодою, кардинал Йосиф Сліпий разом із
+митрополитом Максимом Германюком, архієпископом Гавриїлом Букатьком та єпископом
+Йоакимом Сегедою таємно прибули до Загреба, щоб офіційно завершити його
+єпископську хіротонію [S1]. Свячення 1963 року й формальне завершення 1967 року
+— дві різні події.
 
-- **Slug:** `vasyl-velychkovskyi`
-- **EN canonical (BGN/PCGN 2010):** Vasyl Velychkovskyi
-- **UA canonical (with patronymic):** Величковський Василь Володимирович
-- **Aliases (track these for `aliases:` YAML field):** Василь (Величковський), Vasyl Velychkovskyj, Basil Velychkovsky
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Vasilii Velichkovskii, Vasily Velichkovsky (FORBIDDEN except as archival metadata)
+## Мережа підпілля
 
-## 9. Image candidates
+За даними ВУЕ, Величковський таємно висвятив понад сорок священників і кількох
+ієрархів, з-поміж них єпископа-помічника **Володимира Стернюка з правом
+наступництва**; загальна кількість висвячених за ці роки достеменно невідома
+[S1]. Він організував таємні семінарії у Львові й Тернополі, групу мирян
+Третього Чину та придбав близько десяти будинків для зібрань сестер-василіянок
+[S1].
 
-- **Best PD/CC portrait:** UGCC bishop profile image; rights not established in retrieved source.
-- **Backup candidates:** Wikimedia Commons image of Vasyl Velychkovskyi and Mykola Charnetskyi church icon/photo; file-level license source not verified.
-- **If no PD/CC portrait exists:** Use a rights-cleared photo of the Winnipeg shrine or a memorial plaque.
-- **Era-appropriate context image:** Lviv underground apartment/museum image if rights-cleared.
+Попередня версія плану датувала свячення Стернюка 1964 роком. Прийняті джерела
+цієї дати не подають, тому її вилучено як неоправдану точність; сам факт свячення
+Стернюка з правом наступництва підтверджено [S1].
 
-## 10. Sources used
+1966 року Величковський уклав книгу «Історія чудотворної ікони Божої Матері
+Неустанної Помочі», і вона стала одним із пунктів звинувачення при наступному
+арешті [S1]. Це підтверджує тезу попереднього плану про криміналізацію релігійної
+літератури — тепер із конкретним джерелом.
 
-**Tier 1 (authoritative):**
-- Vatican, "Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine" | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
-- Vatican companion biographies page for Ukrainian Greek Catholic servants of God | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
+## Другий вирок, депортація й межа причинності
 
-**Tier 2 (institutional):**
-- UGCC Synod, "Владика Василь Величковський" | https://synod.ugcc.ua/data/vladyka-vasyl-velychkovskyy-11715/ | accessed 2026-05-30
-- UGCC Synod, "1 червня 1903 року народився..." | https://synod.ugcc.ua/data/1-chervnya-1903-roku-narodyvsya-svyashchmch-vasyliy-velychkovskyy-9231/ | accessed 2026-05-30
-- UGCC Synod, Marian/vocation articles on Velychkovskyi | accessed 2026-05-30
+Січень 1969 року — другий арешт за «порушення закону про відокремлення церкви від
+держави» та «розповсюдження наклепів на радянський державний і суспільний устрій»
+[S1]; Синод додає до звинувачень слухання ватиканського радіо [S2]. Після восьми
+місяців слідства — три роки позбавлення волі [S1]. Місце відбування джерела
+описують по-різному: ВУЕ — в'язниця або психіатрична лікарня суворого режиму в
+Комунарську, тепер Алчевську [S1]; Синод — табори суворого режиму в Комунарську
+[S2].
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Василь (Величковський)," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+Звільнений 1971 року; у січні 1972 року депортований з СРСР [S1], Синод датує
+депортацію 27 січня 1972 року [S2]. Загреб, Рим, зустріч із Павлом VI та Сліпим,
+де він поінформував папу про переслідування греко-католиків у СРСР [S1]; у червні
+1972 року на запрошення митрополита Максима Германюка переїхав до Канади [S1].
+Попри погіршення здоров'я, здійснив архієрейські візити до Торонто, Філадельфії,
+Едмонтона, Йорктона й Мінеаполіса; востаннє звернувся з пастирським словом 16–17
+червня 1973 року [S1].
 
-**Tier 4 (modern scholarly post-1991):**
-- Source not found in retrieved set beyond institutional UGCC/Vatican synthesis.
+**Три рівні тверджень про кінець життя** треба тримати окремо: (1) задокументовані
+тортури й медичні експерименти під час другого ув'язнення [S1]; (2) засвідчене
+швидке погіршення здоров'я, що завадило повернутися до активної діяльності [S1];
+(3) причинна версія про отруєння — «одна з версій» за ВУЕ [S1] та свідчення брата
+Василя Стеця за Синодом [S2]. Попередній план стверджував смерть «внаслідок
+тюремних тортур» як факт; це виправлено.
 
-**Tier 5 (general web):**
-- Wikimedia Commons image lead; license not verified enough for final publication | accessed 2026-05-30
+## Цитата з локатором
 
-**Primary-source documents accessed:**
-- Velychkovskyi memoir/recollection excerpts quoted by UGCC. Archival case numbers for 1945 and 1969 prosecutions: source not found.
+ВУЕ наводить його слова з покликанням на друковане видання: «Я вам приношу привіт
+з України, від українського народу, від рідної Церкви, від української молоді, що
+молиться потайки, щоб ворог не бачив і не чув» — цитата за виданням «Великого
+бажайте. 365 думок визначних постатей УГКЦ» (Львів: Свічадо, 2018, с. 65–72)
+[S1]. Це єдина цитата в пакеті, і вона вживається лише з цим локатором.
 
----
+## Права, читання й зображення
 
-## Decolonization self-check
+Три українськомовні читання — [S1], [S2], [S3] — мають точну ідентичність і
+публічні адреси; диспозиція **link-only**, підстава `external-link`. Англомовний
+перелік Апостольської столиці [S4] лишається в реєстрі як офіційне підтвердження
+статусу, а не як українськомовне читання.
 
-- [x] Soviet accusation language labeled
-- [x] First and second prosecutions separated
-- [x] No case file invented
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+Вилучено з попереднього набору: дубльоване покликання на ту саму ватиканську
+сторінку, що фігурувало в `references` двічі під різними примітками.
+
+Портрет: окремого файлу з доведеною індивідуальною ліцензією не знайдено;
+застосовано текстовий `portrait_fallback` з диспозицією
+`no-portrait-until-rights-verified`.
+
+## Перехресні зв'язки в курсі
+
+Перевірені прямим `test -e`: `plans/bio/josyf-slipyj.yaml`,
+`plans/bio/andrey-sheptytsky.yaml`, `plans/istorio/hreko-katolytska-tserkva.yaml`,
+`plans/istorio/radianska-antyrelihiyna-polityka.yaml`. Усі існують на диску.
+
+## Прийняті джерела
+
+- **[S1]** Присухін С. Величковський, Василь Всеволод // Велика українська
+  енциклопедія, оприлюднено 28 січня 2023 року.
+- **[S2]** Владика Василь Величковський // Синод єпископів УГКЦ.
+- **[S3]** 1 червня 1903 року народився свящмч. Василій (Величковський) //
+  Синод єпископів УГКЦ.
+- **[S4]** Beatifications Ukraine — 26–27 June 2001 // Апостольська столиця.
+
+## Висновок готовності
+
+Стан: **catalog-source ready**. Чотири джерела перевірено прямим запитом; три
+українські читання мігровано на strict-v2 з link-only та збіжним `evidence_url`.
+Відкриті питання зафіксовано: місце хіротонії 1963 року (готель проти помешкання)
+та характер установи в Комунарську. Холдів немає.
