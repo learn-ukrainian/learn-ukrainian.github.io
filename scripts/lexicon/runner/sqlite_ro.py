@@ -41,7 +41,13 @@ def open_immutable_ro(
 
 
 def open_sources_ro(path: Path) -> sqlite3.Connection:
-    """Open sources.db read-only (mutable file; no immutable=1)."""
+    """Open sources.db read-only (mutable file; no immutable=1).
+
+    Network workers are hard-refused (PR3 / spec §Phase 5).
+    """
+    from scripts.lexicon.runner.sources_guard import assert_not_sources_db
+
+    assert_not_sources_db(path)
     resolved = path.resolve()
     uri = f"file:{resolved.as_posix()}?mode=ro"
     conn = sqlite3.connect(uri, uri=True)
