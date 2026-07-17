@@ -784,6 +784,36 @@ def test_learner_level_meta_policy_finding_routes_to_built_artifact() -> None:
     }
 
 
+def test_assessment_gap_uses_category_owner_before_plan_evidence_location() -> None:
+    result = {
+        "combined_disposition": {"status": "REVISE"},
+        "findings": [
+            {
+                "id": "objective-two-subskills-unelicited",
+                "issue_id": "OBJECTIVE_ASSESSMENT_GAP",
+                "source": "semantic",
+                "category": "pedagogy",
+                "severity": "high",
+                "location": "curriculum/l2-uk-en/plans/bio/example.yaml:148",
+            }
+        ],
+    }
+
+    routing = tc.route_findings(result, config=_config())
+
+    assert routing == {
+        "owners": ["built_artifact"],
+        "findings": [
+            {
+                "finding_id": "objective-two-subskills-unelicited",
+                "category": "pedagogy",
+                "location": "curriculum/l2-uk-en/plans/bio/example.yaml:148",
+                "owner": "built_artifact",
+            }
+        ],
+    }
+
+
 def _fresh_fixture_from(tmp_path: Path) -> tuple[Path, Path, Path]:
     """Create the same fixture without depending on pytest fixture internals."""
     repo = tmp_path / "repo"

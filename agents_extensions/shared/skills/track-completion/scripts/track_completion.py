@@ -1256,15 +1256,20 @@ def route_findings(
         location = str(finding.get("location") or "")
         finding_id = str(finding.get("id") or "")
         source = str(finding.get("source") or "")
-        if location.startswith("curriculum/l2-uk-en/plans/") or category in plan_categories:
+        if category in plan_categories:
             owner = "plan_workflow"
         elif (
             category in tooling_categories
             or finding_id.startswith(tooling_prefixes)
-            or location.startswith(("scripts/", "agents_extensions/", ".codex/", ".claude/"))
         ):
             owner = "audit_tooling"
-        elif category in built_categories or location.startswith("curriculum/l2-uk-en/"):
+        elif category in built_categories:
+            owner = "built_artifact"
+        elif location.startswith("curriculum/l2-uk-en/plans/"):
+            owner = "plan_workflow"
+        elif location.startswith(("scripts/", "agents_extensions/", ".codex/", ".claude/")):
+            owner = "audit_tooling"
+        elif location.startswith("curriculum/l2-uk-en/"):
             owner = "built_artifact"
         elif source in {"deterministic", "track_policy"}:
             owner = "audit_tooling"
