@@ -55,7 +55,13 @@ def isolated_bridge(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     repo.mkdir()
     _init_repo(repo)
 
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "bridge.db")
+    # Patch both bindings — ``_db`` imports DB_PATH from ``_config`` by
+    # name, so they are independent (#5247 xdist leak class).
+    from ai_agent_bridge import _config
+
+    db_path = tmp_path / "bridge.db"
+    monkeypatch.setattr(_config, "DB_PATH", db_path)
+    monkeypatch.setattr(_db, "DB_PATH", db_path)
     monkeypatch.setattr(_channels_cli, "REPO_ROOT", repo)
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
