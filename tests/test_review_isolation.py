@@ -713,6 +713,7 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
         snapshot_root=snapshot,
     )
     assert argv[-1] == "-"
+    assert 'approval_policy="never"' in argv
     assert any("mcp_servers.sealed_review.command" in item for item in argv)
     assert any(str(snapshot) in item and str(helper) in item for item in argv)
 

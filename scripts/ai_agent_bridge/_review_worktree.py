@@ -531,6 +531,12 @@ class ProvisionedReviewWorktree:
             )
             payload = _strict_json_object(response)
             if self.changed_paths and payload.get("findings") == []:
+                overall = payload.get("overall")
+                correctness = overall.get("correctness") if isinstance(overall, dict) else None
+                if correctness != "correct":
+                    raise ReviewWorktreeError(
+                        f"review_clean_verdict_not_correct:{correctness or 'missing'}"
+                    )
                 read_proof = verify_clean_review_evidence_reads(
                     result,
                     engine=engine,

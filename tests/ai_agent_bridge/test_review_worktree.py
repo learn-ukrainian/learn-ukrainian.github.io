@@ -407,6 +407,23 @@ def test_bind_clean_review_rejects_schema_valid_no_read_response(tmp_path: Path)
             engine="claude",
         )
 
+    uncertain = json.dumps(
+        {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "uncertain",
+                "explanation": "Evidence was unavailable.",
+                "confidence": 1.0,
+            },
+            "findings": [],
+        }
+    )
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="not_correct:uncertain"):
+        checkout.bind_review_result(
+            SimpleNamespace(ok=True, response=uncertain, tool_calls=[]),
+            engine="codex",
+        )
+
 
 def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
     tmp_path: Path,

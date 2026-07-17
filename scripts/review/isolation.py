@@ -919,6 +919,8 @@ def _inject_codex_sealed_read_mcp(
     index = len(injected) - 1 if injected and injected[-1] == "-" else len(injected)
     injected[index:index] = [
         "-c",
+        'approval_policy="never"',
+        "-c",
         command,
         "-c",
         args,
