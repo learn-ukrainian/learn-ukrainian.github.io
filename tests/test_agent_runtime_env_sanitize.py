@@ -205,6 +205,17 @@ def test_hermes_home_override_reaches_hermes_backed_agents():
             assert env["HERMES_HOME"] == "/tmp/hermes-fallback-probe"
 
 
+def test_kimi_binary_override_reaches_the_native_kimi_process():
+    with patch.dict(
+        "os.environ",
+        {"PATH": "/usr/bin", "HOME": "/Users/example", "KIMI_CODE_BIN": "/opt/kimi"},
+        clear=True,
+    ):
+        env = build_agent_env(provider="kimi")
+
+    assert env["KIMI_CODE_BIN"] == "/opt/kimi"
+
+
 @dataclass
 class _SmokePlan:
     cmd: list[str]

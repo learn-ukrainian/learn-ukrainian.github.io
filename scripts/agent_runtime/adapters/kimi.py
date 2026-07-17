@@ -29,9 +29,33 @@ from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
 
-KIMI_DEFAULT_MODEL = "kimi-code/k3"
+KIMI_DEFAULT_MODEL = "k2.7-coding"
+KIMI_BRIDGE_DEFAULT_MODEL = "k3"
 KIMI_DEFAULT_EFFORT = "max"
-KIMI_ALLOWED_MODELS: frozenset[str] = frozenset({KIMI_DEFAULT_MODEL})
+# Fleet short names -> kimi-code CLI aliases. The managed seat's usage window
+# depletes fast (operator, 2026-07-16), so dispatch defaults to the coding
+# model; K3 (always-max reasoning) is reserved for deep asks.
+KIMI_MODEL_ALIASES: dict[str, str] = {
+    "k3": "kimi-code/k3",
+    "k2.7-coding": "kimi-code/kimi-for-coding",
+    "k2.7-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
+}
+KIMI_ALLOWED_MODELS: frozenset[str] = frozenset(KIMI_MODEL_ALIASES) | frozenset(
+    KIMI_MODEL_ALIASES.values()
+)
+
+
+def resolve_kimi_model(model: str | None) -> str:
+    """Map a fleet short name or full CLI alias; reject unregistered names."""
+    requested = model or KIMI_DEFAULT_MODEL
+    if requested in KIMI_MODEL_ALIASES:
+        return KIMI_MODEL_ALIASES[requested]
+    if requested in KIMI_MODEL_ALIASES.values():
+        return requested
+    raise ValueError(
+        f"KimiAdapter: unsupported Kimi model {requested!r}; "
+        f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
+    )
 
 _RATE_LIMIT_RE = re.compile(
     r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
@@ -70,14 +94,9 @@ class KimiAdapter:
                 f"(supported: {sorted(self.supported_modes)})"
             )
 
-        requested_model = model or self.default_model
-        if requested_model not in KIMI_ALLOWED_MODELS:
-            raise ValueError(
-                f"KimiAdapter: unsupported Kimi model {requested_model!r}; "
-                f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
-            )
+        requested_model = resolve_kimi_model(model)
 
-        if effort and effort != self.default_effort:
+        if effort and requested_model == KIMI_MODEL_ALIASES["k3"] and effort != self.default_effort:
             _logger.warning(
                 "Kimi K3 exposes max effort only; ignoring requested effort=%s",
                 effort,

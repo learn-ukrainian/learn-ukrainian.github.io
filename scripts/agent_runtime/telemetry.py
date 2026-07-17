@@ -190,6 +190,11 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         # caller's request disagrees with the config — telemetry has nothing
         # to resolve from the plan.
         return None
+    if agent_name == "kimi":
+        # K3 is always-max; the k2.7 coding models expose no effort knob.
+        # Read the resolved model off the plan so telemetry never mislabels
+        # an ignored caller request as effective (#5326 multi-model lane).
+        return "max" if _arg_after(plan.cmd, "-m") == "kimi-code/k3" else _NOT_EXPOSED
     return None
 
 
@@ -232,9 +237,10 @@ def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None)
     if agent_name in {"deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
-        # K3 exposes max effort only and the native CLI has no per-call effort
-        # flag. Never mislabel an ignored lower caller request as effective.
-        return _default_effort_for(agent_name) or "max"
+        # Without a plan the resolved model is unknowable (K3 is always-max,
+        # the k2.7 models expose no effort knob) — report the honest marker
+        # rather than guessing.
+        return _NOT_EXPOSED
     if requested_effort:
         return requested_effort
     if agent_name == "codex":

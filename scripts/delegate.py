@@ -135,10 +135,10 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
+    "kimi",  # managed native kimi-code CLI seat; no automatic fallback chain
     "deepseek",
     "agy",
     "cursor",
-    "kimi",
 )
 _MONITOR_API_BASE_URL = "http://localhost:8765"
 _logger = logging.getLogger(__name__)

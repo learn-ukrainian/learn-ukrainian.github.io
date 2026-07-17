@@ -498,7 +498,7 @@ work uses AGY; the legacy Gemini CLI route is unsupported.
 
 ```bash
 .venv/bin/python scripts/delegate.py dispatch \
-  --agent {codex|claude|agy|grok|grok-build|grok-hermes|deepseek|cursor} \
+  --agent {codex|claude|agy|grok|grok-build|grok-hermes|kimi|deepseek|cursor} \
   --task-id <id> \
   --prompt-file <file> \
   --worktree \

@@ -184,11 +184,11 @@ def test_registry_has_known_agents():
         "grok",
         "grok-build",
         "grok-hermes",
+        "kimi",
         "deepseek",
         "qwen",
         "agy",
         "cursor",
-        "kimi",
     }
 
 
@@ -216,11 +216,19 @@ def test_agy_entry_is_well_formed():
 def test_kimi_entry_is_well_formed():
     entry = get_agent_entry("kimi")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.kimi:KimiAdapter"
-    assert entry["default_model"] == "kimi-code/k3"
+    assert entry["default_model"] == "k2.7-coding"
     assert entry["default_effort"] == "max"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
-    assert {"code_writing", "code_review", "debugging", "multimodal"} <= entry["capabilities"]
+    assert entry["cost_tier"] == "medium"
+    assert {
+        "code_writing",
+        "code_review",
+        "adversarial_review",
+        "debugging",
+        "multimodal",
+    } <= entry["capabilities"]
+    assert not ({"content_writing", "content_review"} & entry["capabilities"])
 
 
 def test_grok_build_entry_is_well_formed():
@@ -275,7 +283,7 @@ def test_load_adapter_cursor():
 def test_load_adapter_kimi():
     adapter = _load_adapter("kimi")
     assert adapter.name == "kimi"
-    assert adapter.default_model == "kimi-code/k3"
+    assert adapter.default_model == "k2.7-coding"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 

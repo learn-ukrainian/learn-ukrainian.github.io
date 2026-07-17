@@ -36,6 +36,7 @@ from ._grok_build import (
     process_for_grok_build,
 )
 from ._hermes import HERMES_DEFAULT_MODEL, ask_hermes
+from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL, ask_kimi, process_for_kimi
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -420,7 +421,7 @@ def _handle_codex_usage(args) -> None:
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
     # Recipient/inbox choices must cover EVERY valid agent, not just the
-    # original claude/gemini/codex trio — otherwise grok-build, grok, agy, and
+    # original claude/gemini/codex trio — otherwise grok-build, grok, kimi, agy, and
     # cursor cannot be targeted by `send --to`, listed by `inbox --for`, or
     # cleared by `ack-all`, which silently second-classes those lanes.
     from ._channels import VALID_RECIPIENT_AGENTS
@@ -557,6 +558,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
     )
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+
+    proc_kimi_parser = subparsers.add_parser("process-kimi", help="Process message with native Kimi CLI (headless)")
+    proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
+    proc_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
+    proc_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
+    proc_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # process-ask is the detached-worker re-entry point for ``ask-* --background``.
     proc_ask_parser = subparsers.add_parser("process-ask", help=argparse.SUPPRESS)
@@ -837,12 +844,28 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
     ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
+    ask_kimi_parser = subparsers.add_parser(
+        "ask-kimi", help="Send message AND invoke native Kimi Code one-shot (use '-' to read from stdin)"
+    )
+    ask_kimi_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_kimi_parser.add_argument("--type", default="query", help="Message type")
+    ask_kimi_parser.add_argument("--data", help="Path to data file to attach")
+    ask_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
+    ask_kimi_parser.add_argument("--model", default=KIMI_BRIDGE_DEFAULT_MODEL, help=f"Kimi model (default {KIMI_BRIDGE_DEFAULT_MODEL})")
+    ask_kimi_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_kimi_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+    ask_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+
     for review_parser in (
         ask_claude_parser,
         ask_codex_parser,
         ask_gemini_parser,
         ask_agy_parser,
         ask_grok_build_parser,
+        ask_kimi_parser,
     ):
         review_target = review_parser.add_mutually_exclusive_group()
         review_target.add_argument(
@@ -867,6 +890,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_gemma_parser,
         ask_cursor_parser,
         ask_grok_build_parser,
+        ask_kimi_parser,
     ):
         ask_parser.add_argument(
             "--background",
@@ -991,9 +1015,10 @@ def _build_parser() -> argparse.ArgumentParser:
     # check-model
     check_model_parser = subparsers.add_parser(
         "check-model",
-        help="Check if an AGY model is available (slug or display label)",
+        help="Check if an AGY or Kimi model is available",
     )
-    check_model_parser.add_argument("model", help="AGY model slug or display label")
+    check_model_parser.add_argument("model", help="Model slug or display label")
+    check_model_parser.add_argument("--agent", choices=["agy", "kimi"], default="agy")
 
     # cleanup
     cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state and old acknowledged rows")
@@ -1184,6 +1209,8 @@ def _dispatch_command(args):
         process_for_codex(args.message_id, args.new_session, args.no_timeout)
     elif args.command in {"process-grok", "process-grok-build"}:
         process_for_grok_build(args.message_id, args.new_session, args.no_timeout, args.review)
+    elif args.command == "process-kimi":
+        process_for_kimi(args.message_id, args.new_session, args.no_timeout, args.review)
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)
     elif args.command == "asks":
@@ -1210,6 +1237,8 @@ def _dispatch_command(args):
         _handle_ask_cursor(args)
     elif args.command in {"ask-grok", "ask-grok-build"}:
         _handle_ask_grok_build(args)
+    elif args.command == "ask-kimi":
+        _handle_ask_kimi(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
         converse_gemini(content, args.task_id, args.model, getattr(args, "no_github", False))
@@ -1226,7 +1255,7 @@ def _dispatch_command(args):
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":
-        ok = check_model(args.model, force=True)
+        ok = check_model(args.model, agent=args.agent, force=True)
         sys.exit(0 if ok else 1)
     elif args.command == "cleanup":
         broker_cleanup(args.max_age, args.dry_run, args.older_than)
@@ -1533,6 +1562,27 @@ def _handle_ask_grok_build(args):
         data=data,
         new_session=args.new_session,
         from_llm=from_llm,
+        from_model=args.from_model,
+        to_model=args.to_model,
+        no_timeout=args.no_timeout,
+        review=args.review,
+        model=args.model,
+        **_review_target_kwargs(args),
+        **_background_kwargs(args),
+    )
+
+
+def _handle_ask_kimi(args):
+    """Handle ask-kimi subcommand."""
+    data = Path(args.data).read_text() if args.data else None
+    content = sys.stdin.read() if args.content == "-" else args.content
+    ask_kimi(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=data,
+        new_session=args.new_session,
+        from_llm=_resolve_from_llm(args),
         from_model=args.from_model,
         to_model=args.to_model,
         no_timeout=args.no_timeout,

@@ -698,6 +698,7 @@ def build_parser() -> argparse.ArgumentParser:
             "qwen",
             "agy",
             "cursor",
+            "kimi",
         ],
     )
     dispatch.add_argument("--prompt")

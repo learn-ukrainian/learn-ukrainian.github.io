@@ -12,6 +12,7 @@ import pytest
 from scripts.agent_runtime.adapters.kimi import (
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
+    KIMI_MODEL_ALIASES,
     KimiAdapter,
 )
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
@@ -56,21 +57,67 @@ def test_build_invocation_maps_permission_modes(tmp_path, monkeypatch, mode, exp
     plan = _build(tmp_path, monkeypatch, mode=mode)
 
     assert plan.cmd[0] == str(tmp_path / "kimi")
-    assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_DEFAULT_MODEL
+    assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
     assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
     assert "--plan" not in plan.cmd  # Kimi rejects --prompt + --plan.
     assert (expected_flag in plan.cmd) if expected_flag else not ({"--auto", "--yolo"} & set(plan.cmd))
 
 
-def test_k3_is_the_only_allowed_model_and_effort_is_max(tmp_path, monkeypatch, caplog):
-    with pytest.raises(ValueError, match="unsupported Kimi model"):
-        _build(tmp_path, monkeypatch, model="kimi-code/kimi-for-coding")
+def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
+    for requested, resolved in (
+        ("k3", "kimi-code/k3"),
+        ("k2.7-coding", "kimi-code/kimi-for-coding"),
+        ("k2.7-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
+        ("kimi-code/k3", "kimi-code/k3"),
+    ):
+        plan = _build(tmp_path, monkeypatch, model=requested)
+        assert plan.cmd[plan.cmd.index("-m") + 1] == resolved
 
+    with pytest.raises(ValueError, match="unsupported Kimi model"):
+        _build(tmp_path, monkeypatch, model="k1-classic")
+
+
+def test_effort_warning_fires_only_for_k3(tmp_path, monkeypatch, caplog):
     caplog.set_level(logging.WARNING)
-    plan = _build(tmp_path, monkeypatch, effort="high")
+    plan = _build(tmp_path, monkeypatch, model="k3", effort="high")
     assert KIMI_DEFAULT_EFFORT == "max"
     assert "max effort only" in caplog.text
     assert "--effort" not in plan.cmd
+
+    caplog.clear()
+    plan = _build(tmp_path, monkeypatch, model="k2.7-coding", effort="high")
+    assert "max effort only" not in caplog.text
+    assert "--effort" not in plan.cmd
+
+
+def test_empty_stdout_with_rc_zero_fails():
+    parsed = KimiAdapter().parse_response(stdout="", stderr="", returncode=0, output_file=None)
+
+    assert parsed.ok is False
+    assert parsed.response == ""
+
+
+def test_nonzero_returncode_fails_even_with_assistant_text():
+    stdout = json.dumps({"role": "assistant", "content": "looks fine"})
+    parsed = KimiAdapter().parse_response(stdout=stdout, stderr="boom", returncode=1, output_file=None)
+
+    assert parsed.ok is False
+    assert parsed.response == ""
+    assert "boom" in (parsed.stderr_excerpt or "")
+
+
+def test_non_assistant_event_stream_is_never_promoted_to_success():
+    """Silent-error-as-content guard: tool/status-only streams must fail."""
+    stdout = "\n".join(
+        [
+            json.dumps({"role": "tool", "name": "Read", "content": "raw dump"}),
+            json.dumps({"role": "meta", "type": "status", "state": "working"}),
+        ]
+    )
+    parsed = KimiAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+
+    assert parsed.ok is False
+    assert parsed.response == ""
 
 
 def test_parse_stream_json_response_session_and_tool_calls(tmp_path):
@@ -145,16 +192,28 @@ def test_kimi_mcp_request_fails_closed_without_per_call_selector():
     assert diagnostics["missing_server_names"] == ["sources"]
 
 
-def test_invocation_telemetry_reports_k3_max_and_native_cli_version(tmp_path, monkeypatch):
-    plan = _build(tmp_path, monkeypatch, effort="medium")
+def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_path, monkeypatch):
+    k3_plan = _build(tmp_path, monkeypatch, model="k3", effort="medium")
     with patch("scripts.agent_runtime.telemetry.kimi_cli_version", return_value="0.26.0"):
-        telemetry = resolve_invocation_telemetry(
+        k3_telemetry = resolve_invocation_telemetry(
             agent_name="kimi",
-            plan=plan,
+            plan=k3_plan,
             requested_model=None,
             requested_effort="medium",
         )
 
-    assert telemetry.model == KIMI_DEFAULT_MODEL
-    assert telemetry.effort == "max"
-    assert telemetry.cli_version == "0.26.0"
+    assert k3_telemetry.model == "kimi-code/k3"
+    assert k3_telemetry.effort == "max"  # K3 is always-max; caller request never mislabeled
+    assert k3_telemetry.cli_version == "0.26.0"
+
+    coding_plan = _build(tmp_path, monkeypatch, effort="medium")  # default: k2.7-coding
+    with patch("scripts.agent_runtime.telemetry.kimi_cli_version", return_value="0.26.0"):
+        coding_telemetry = resolve_invocation_telemetry(
+            agent_name="kimi",
+            plan=coding_plan,
+            requested_model=None,
+            requested_effort="medium",
+        )
+
+    assert coding_telemetry.model == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
+    assert coding_telemetry.effort == "not-exposed"  # k2.7 models have no effort knob

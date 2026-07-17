@@ -232,17 +232,22 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "kimi": {
-        # Native Kimi Code OAuth subscription lane. K3 currently exposes a
-        # 262K context window and max effort only. Keep capabilities narrow
-        # until the repository's role-specific bakeoffs establish quality.
+        # Native Kimi Code OAuth subscription lane (no proxy-provider route).
+        # K3 exposes a 262K context window and max effort only; the managed
+        # seat's usage window depletes FAST (operator, 2026-07-16), so
+        # dispatch defaults to the window-frugal coding model and K3 stays
+        # the deep-ask model (bridge default). Content capabilities remain
+        # gated on the dedicated UA probe; keep routing narrow until the
+        # #5326 probe battery establishes quality.
         "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
-        "default_model": "kimi-code/k3",
+        "default_model": "k2.7-coding",
         "default_effort": "max",
-        "cost_tier": "low",
+        "cost_tier": "medium",
         "capabilities": frozenset(
             {
                 "code_writing",
                 "code_review",
+                "adversarial_review",
                 "debugging",
                 "multimodal",
             }
