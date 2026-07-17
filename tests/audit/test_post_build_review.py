@@ -618,6 +618,25 @@ def test_target_resolution_routes_core_and_bio_families() -> None:
     assert seminar["files"]["content"].endswith("bio/oleksandr-bilash/module.md")
 
 
+def test_core_packet_inventories_claimable_learner_statements() -> None:
+    packet = pbr.prepare_review("a1/sounds-letters-and-hello", _reviewer())
+    units = packet["deterministic"]["statement_inventory"]["units"]
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+
+    assert units
+    assert set(schema["$defs"]["claim"]["properties"]["unit_id"]["enum"]) == {
+        unit["id"] for unit in units
+    }
+    assert "maxItems" not in schema["properties"]["claim_ledger"]
+    assert schema["properties"]["statement_coverage"]["minProperties"] == len(
+        units
+    )
+    Draft202012Validator(schema).validate(semantic)
+    result = pbr.finalize_review(packet, _raw(semantic))
+    assert result["semantic_response"]["contract_status"] == "valid"
+
+
 def test_core_semantic_exemplar_uses_core_family() -> None:
     exemplar = json.loads(CORE_EXEMPLAR.read_text(encoding="utf-8"))
     target = pbr.resolve_target(exemplar["target"])
@@ -1383,6 +1402,45 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
         Draft202012Validator(schema).validate(dismissed)
 
 
+@pytest.mark.parametrize("substitution", ["unbound", "drops_quantifier"])
+def test_risk_claim_surface_substitution_fails_closed(
+    malyshko_packet: dict,
+    substitution: str,
+) -> None:
+    semantic = _passing_semantic(malyshko_packet)
+    unit = next(
+        item
+        for item in malyshko_packet["deterministic"]["statement_inventory"][
+            "units"
+        ]
+        if "universal_quantifier" in item["signals"]
+    )
+    claim_id = semantic["statement_coverage"][unit["id"]]["claim_ids"][0]
+    claim = next(item for item in semantic["claim_ledger"] if item["id"] == claim_id)
+    if substitution == "unbound":
+        claim["claim"] = "Підмінене безпечне твердження."
+        error_fragment = "not a verbatim substring"
+    else:
+        quantifier = pbr.UNIVERSAL_QUANTIFIER_RE.search(unit["text"])
+        assert quantifier is not None
+        candidates = [
+            unit["text"][: quantifier.start()].strip(" ,.;:—-"),
+            unit["text"][quantifier.end() :].strip(" ,.;:—-"),
+        ]
+        claim["claim"] = max(
+            (candidate for candidate in candidates if candidate), key=len
+        )
+        assert claim["claim"] in unit["text"]
+        assert pbr.UNIVERSAL_QUANTIFIER_RE.search(claim["claim"]) is None
+        error_fragment = "must preserve its quantifier"
+
+    result = pbr.finalize_review(malyshko_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert error_fragment in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
 def test_stored_result_rejects_dropped_statement_coverage() -> None:
     packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
     result = pbr.finalize_review(packet, _raw(_passing_semantic(packet)))
@@ -1917,7 +1975,7 @@ def test_seminar_claim_counts_must_match_atomic_ledger() -> None:
             "claim_ledger": [
                 {
                     "id": f"claim-{index}",
-                    "claim": f"Atomic claim {index}",
+                    "claim": "The fixture contains one supported atomic claim.",
                     "location": "curriculum/example.md:1",
                     "status": "supported",
                     "evidence": "Authoritative fixture evidence.",
@@ -2058,6 +2116,24 @@ def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
     }
     assert mapped_attributions[("ЦДАМЛМ",)]["matched_resource_ids"]
     assert mapped_findings == []
+
+    incidental_materials = {
+        "content": material(
+            "curriculum/l2-uk-en/bio/fixture/module.md",
+            "За ЕСУ, ВАК згадано в історичному контексті.\n",
+        ),
+        "resources": materials["resources"],
+    }
+    incidental_inventories, incidental_findings = pbr.build_review_inventories(
+        incidental_materials,
+        family="seminar",
+        source_spec=policy["mechanical_checks"]["source_traceability"],
+    )
+    incidental_attributions = incidental_inventories[
+        "source_attribution_inventory"
+    ]["units"]
+    assert [entry["labels"] for entry in incidental_attributions] == [["ЕСУ"]]
+    assert incidental_findings == []
 
 
 def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
@@ -2594,7 +2670,7 @@ def test_audio_evidence_requires_matching_reviewer_capability() -> None:
             "claim_ledger": [
                 {
                     "id": "catalog-fact",
-                    "claim": "The catalog identifies the performer.",
+                    "claim": "The fixture contains one supported atomic claim.",
                     "location": "curriculum/example.md:1",
                     "status": "supported",
                     "evidence": "Catalog metadata.",
@@ -2635,7 +2711,7 @@ def test_metadata_only_perceptual_evidence_cannot_be_downgraded_to_info() -> Non
             "claim_ledger": [
                 {
                     "id": "catalog-fact",
-                    "claim": "The catalog identifies the performer.",
+                    "claim": "The fixture contains one supported atomic claim.",
                     "location": "curriculum/example.md:1",
                     "status": "supported",
                     "evidence": "Catalog metadata.",
@@ -2954,7 +3030,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "6.0.0"
-    assert len(rows) == 59
+    assert len(rows) == 61
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

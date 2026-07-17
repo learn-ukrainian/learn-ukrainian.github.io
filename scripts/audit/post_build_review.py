@@ -744,6 +744,16 @@ INSTRUCTION_OPEN_RE = re.compile(
 )
 
 
+def _normalized_claim_surface(text: str) -> str:
+    """Normalize only whitespace; semantic paraphrases remain distinguishable."""
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _claim_surface_is_bound(claim: str, statement: str) -> bool:
+    """Return whether a claim is a verbatim contiguous statement substring."""
+    return _normalized_claim_surface(claim) in _normalized_claim_surface(statement)
+
+
 def _inventory_payload(units: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     payload = {"units": deepcopy(list(units))}
     return {
@@ -783,14 +793,13 @@ def build_learner_statement_inventory(
     *,
     family: str,
 ) -> dict[str, Any]:
-    """Inventory every seminar learner statement before semantic review.
+    """Inventory every learner statement before semantic review.
 
     Statement coverage is deliberately broader than factual-claim extraction:
     headings and instructions remain visible so the reviewer must explicitly
     classify them as non-claims instead of silently skipping arbitrary prose.
     """
-    if family != "seminar":
-        return _inventory_payload([])
+    del family  # Retained in the public helper signature for versioned callers.
     units: list[dict[str, Any]] = []
     for name in ("content", "activities", "vocabulary", "resources"):
         material = target_materials.get(name)
@@ -886,18 +895,6 @@ def build_source_attribution_inventory(
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     aliases = _source_alias_config(spec)
     context_pattern = _configured_pattern(spec)
-    raw_acronym_pattern = spec.get("acronym_regex") or r"\b[А-ЯІЇЄҐ]{2,10}\b"
-    if not isinstance(raw_acronym_pattern, str):
-        raise ReviewProtocolError("source_traceability acronym_regex must be a string")
-    try:
-        acronym_pattern = re.compile(raw_acronym_pattern)
-    except re.error as exc:
-        raise ReviewProtocolError(
-            f"Invalid source attribution acronym regex {raw_acronym_pattern!r}: {exc}"
-        ) from exc
-    ignored = {
-        str(item).casefold() for item in spec.get("ignored_labels") or []
-    }
     resources = resource_inventory.get("resources") or []
     resource_text = {
         str(resource["id"]): f"{resource['title']} {resource['url']}".casefold()
@@ -930,11 +927,6 @@ def build_source_attribution_inventory(
                 rf"(?<!\w){re.escape(label)}(?!\w)", label_text, re.IGNORECASE
             )
         }
-        labels.update(
-            match.group(0)
-            for match in acronym_pattern.finditer(label_text)
-            if match.group(0).casefold() not in ignored
-        )
         if not labels:
             labels = {"<unnamed-source>"}
         matched: set[str] = set()
@@ -983,11 +975,15 @@ def build_review_inventories(
     source_spec: object,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     statements = build_learner_statement_inventory(target_materials, family=family)
-    resources = build_resource_inventory(target_materials)
     if family != "seminar":
+        resources = {
+            "inventory_sha256": sha256_text(_stable_json({"resources": []})),
+            "resources": [],
+        }
         attributions = _inventory_payload([])
         source_findings: list[dict[str, Any]] = []
     else:
+        resources = build_resource_inventory(target_materials)
         if not isinstance(source_spec, Mapping):
             raise ReviewProtocolError(
                 "Seminar source_traceability mechanical policy must be a mapping"
@@ -2539,6 +2535,11 @@ def normalize_semantic_result(
             raise ReviewProtocolError(
                 f"Claim {claim_id} location does not match statement unit {unit_id}"
             )
+        claim_text = _nonempty_string(raw["claim"], f"claim text for {claim_id}")
+        if not _claim_surface_is_bound(claim_text, str(unit["text"])):
+            raise ReviewProtocolError(
+                f"Claim {claim_id} text is not a verbatim substring of statement unit {unit_id}"
+            )
         claim_status = raw["status"]
         if claim_status not in claim_statuses:
             raise ReviewProtocolError(f"Invalid claim status: {claim_status!r}")
@@ -2553,13 +2554,14 @@ def normalize_semantic_result(
             {
                 "id": claim_id,
                 "unit_id": unit_id,
-                "claim": _nonempty_string(raw["claim"], f"claim text for {claim_id}"),
+                "claim": claim_text,
                 "location": location,
                 "status": claim_status,
                 "evidence": _nonempty_string(raw["evidence"], f"claim evidence for {claim_id}"),
                 "finding_id": finding_id,
             }
         )
+    claims_by_id = {claim["id"]: claim for claim in claims}
     actual_checked = sum(claim["status"] != "unverifiable" for claim in claims)
     actual_supported = sum(claim["status"] == "supported" for claim in claims)
     if claims_total != len(claims):
@@ -2627,12 +2629,19 @@ def normalize_semantic_result(
             raise ReviewProtocolError(
                 f"Risk-signaled statement unit {unit_id} must be classified as claims"
             )
+        if "universal_quantifier" in signals and not any(
+            UNIVERSAL_QUANTIFIER_RE.search(claims_by_id[claim_id]["claim"])
+            for claim_id in unit_claim_ids
+        ):
+            raise ReviewProtocolError(
+                f"Universal-quantifier statement unit {unit_id} must preserve its quantifier in a claim"
+            )
         for claim_id in unit_claim_ids:
             if claim_id not in claim_ids:
                 raise ReviewProtocolError(
                     f"statement coverage {unit_id} references unknown claim {claim_id}"
                 )
-            claim = next(item for item in claims if item["id"] == claim_id)
+            claim = claims_by_id[claim_id]
             if claim["unit_id"] != unit_id:
                 raise ReviewProtocolError(
                     f"Claim {claim_id} is assigned to a different statement unit"
@@ -3249,6 +3258,14 @@ def _validate_v6_statement_source_coverage(
             raise ReviewProtocolError(
                 f"Stored risk-signaled statement unit {unit_id} is not classified as claims"
             )
+        if "universal_quantifier" in signals and not any(
+            UNIVERSAL_QUANTIFIER_RE.search(claims_by_id[claim_id]["claim"])
+            for claim_id in unit_claim_ids
+            if claim_id in claims_by_id
+        ):
+            raise ReviewProtocolError(
+                f"Stored universal-quantifier statement unit {unit_id} does not preserve its quantifier"
+            )
         for claim_id in unit_claim_ids:
             claim = claims_by_id.get(claim_id)
             if claim is None or claim["unit_id"] != unit_id:
@@ -3267,6 +3284,10 @@ def _validate_v6_statement_source_coverage(
         if unit is None or claim["location"] != f"{unit['path']}:{unit['line']}":
             raise ReviewProtocolError(
                 f"Stored claim {claim['id']} location does not match its statement unit"
+            )
+        if not _claim_surface_is_bound(str(claim["claim"]), str(unit["text"])):
+            raise ReviewProtocolError(
+                f"Stored claim {claim['id']} text is not bound to its statement unit"
             )
 
     claim_coverage = semantic["claim_coverage"]
@@ -3900,13 +3921,15 @@ def semantic_response_schema(
                 {"universal_quantifier", "source_attribution"}
             )
         ]
-        semantic["properties"]["statement_coverage"] = {
+        statement_coverage_schema: dict[str, Any] = {
             "type": "object",
             "propertyNames": {"enum": statement_ids} if statement_ids else False,
             "additionalProperties": {"$ref": "#/$defs/statementCoverageEntry"},
             "minProperties": len(statement_units),
             "maxProperties": len(statement_units),
-            "allOf": [
+        }
+        if risk_statement_ids:
+            statement_coverage_schema["allOf"] = [
                 {
                     "properties": {
                         unit_id: {
@@ -3918,8 +3941,8 @@ def semantic_response_schema(
                     }
                 }
                 for unit_id in risk_statement_ids
-            ],
-        }
+            ]
+        semantic["properties"]["statement_coverage"] = statement_coverage_schema
         attribution_units = packet["deterministic"]["source_attribution_inventory"][
             "units"
         ]

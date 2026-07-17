@@ -269,7 +269,10 @@
       "properties": {
         "id": {"$ref": "#/$defs/nonempty"},
         "unit_id": {"$ref": "#/$defs/nonempty"},
-        "claim": {"$ref": "#/$defs/nonempty"},
+        "claim": {
+          "$ref": "#/$defs/nonempty",
+          "description": "A verbatim contiguous substring of the owning statement unit after whitespace normalization."
+        },
         "location": {"$ref": "#/$defs/nonempty"},
         "status": {"enum": ["supported", "contradicted", "imprecise", "unattested", "unverifiable"]},
         "evidence": {"$ref": "#/$defs/nonempty"},

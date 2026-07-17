@@ -28,14 +28,16 @@ interactive evidence. Code records matches, paths, lines, and modalities; the
 semantic reviewer decides whether the learner evidence is usable and
 pedagogically appropriate.
 
-For seminar modules, build a hash-bound statement inventory from every
+For every module, build a hash-bound statement inventory from every
 learner-visible content, activity, vocabulary, and resource-note statement.
 Record immutable unit IDs, exact paths and lines, text hashes, and conservative
-risk signals for universal quantifiers and source attributions. Separately
-inventory learner resources and every detected named-source attribution. A
+risk signals for universal quantifiers. For seminar modules, separately
+inventory learner resources and every detected named-source attribution, and
+add source-attribution signals to the corresponding statements. A
 configured source alias with no matching learner resource is a material
-`SOURCE_TRACEABILITY` finding; state/political acronyms explicitly excluded by
-policy are not treated as sources.
+`SOURCE_TRACEABILITY` finding. Only curated source aliases are named; an
+attribution context without one uses the fail-closed `<unnamed-source>` label,
+so incidental acronyms do not become spurious source identities.
 
 Allowed deterministic skips must remain explicit in the result. Version 2.0.0
 accepts the read-only omission of MDX regeneration validation, supersedes the

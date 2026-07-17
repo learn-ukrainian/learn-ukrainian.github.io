@@ -340,7 +340,19 @@ regressions:
     fixed_in_version: 6.0.0
     version_field: review_protocol_version
     input: A seminar reviewer reports internally consistent claim counts while omitting learner statements containing every or almost every.
-    expected: Exact packet statement coverage is required; quantifier-signaled units must own atomic claims and omission is contract-invalid.
+    expected: Exact packet statement coverage is required; quantifier-signaled units must own verbatim packet substrings and preserve the quantifier, so omission or safer substitution is contract-invalid.
+  - bug_id: core-statement-inventory-disabled-by-seminar-only-v6
+    responsible_layer: deterministic_code
+    fixed_in_version: 2.0.0
+    version_field: deterministic_contract_version
+    input: A core module contains factual claims, but an empty statement inventory makes complete claim coverage impossible.
+    expected: Core and seminar packets both inventory learner statements; core reviewers can bind factual claims to exact statement units.
+  - bug_id: incidental-acronym-became-source-label
+    responsible_layer: track_policy
+    fixed_in_version: 2.0.0
+    version_field: track_policy_version
+    input: A true attribution line contains a mapped source alias plus an unrelated Ukrainian acronym.
+    expected: Only curated source aliases become named labels; unknown attribution contexts use the singular fail-closed unnamed label instead of harvesting every acronym.
   - bug_id: named-source-passed-without-learner-resource
     responsible_layer: track_policy
     fixed_in_version: 2.0.0

@@ -77,11 +77,14 @@ and explanation of what that line supports; the finalizer hydrates the excerpt
 from the immutable packet rather than the live checkout. Omitting an alignment
 class or vocabulary lemma is contract-invalid, not an implicit pass.
 
-For seminar modules, v6 also classifies every deterministic learner-statement
-ID. Universal-quantifier and named-source units are forced into the atomic
-claim ledger, so reviewer-selected totals cannot conceal omitted high-risk
-claims. Named source aliases are compared with learner-visible resources; an
-unmapped configured source produces a material deterministic finding.
+V6 classifies every deterministic learner-statement ID in core and seminar
+modules. Universal-quantifier units are forced into the atomic claim ledger;
+each claim must quote a contiguous substring of its owning statement, and at
+least one claim must preserve the signaled quantifier. Reviewer-selected totals
+or safer paraphrases therefore cannot conceal omitted high-risk claims. For
+seminars, curated named-source aliases are compared with learner-visible
+resources; an unmapped configured source produces a material deterministic
+finding, while incidental acronyms do not become extra source labels.
 
 Dimension scores preserve the accepted raw reviewer response after strict
 Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
