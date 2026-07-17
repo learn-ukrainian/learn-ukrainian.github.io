@@ -1,121 +1,172 @@
-# Чарнецький Миколай Олександрович — Research Dossier
+# Миколай Чарнецький — дослідницьке досьє
 
 **Slug:** `mykola-charnetskyi`
-**Block:** J
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і доказова рамка
 
-- **Full name (UA, canonical):** Чарнецький Миколай Олександрович; church form Миколай (Чарнецький), ЧНІ.
-- **Pseudonyms / aliases:** Mykola Charnetskyi, Mykola Carneckyj, Mykola Čarneckyj, Bishop Mykola Charnetsky.
-- **Born:** 1884-12-14 | Семаківці, Horodenka district / Stanislaviv region | Austria-Hungary. Vatican biography and UGCC bishop profile agree on date and village; regional wording differs.
-- **Died:** 1959-04-02 | Lviv | Ukrainian SSR. Vatican and UGCC agree on date.
-- **Family / education key facts:** UGCC says he was the eldest child in a large peasant family. Vatican says he studied in Rome, received a doctorate in dogmatic theology, became professor and spiritual director at the Stanislaviv seminary, and entered the Redemptorist novitiate in 1919.
+Пакет розділяє чотири рівні: чернечу й академічну біографію, церковні посади,
+радянський репресивний механізм і конфесійно-правовий статус блаженного. Два
+академічні життєписи — «Велика українська енциклопедія» [S1] та «Енциклопедія
+Сучасної України» [S2] — становлять основу; вони незалежні один від одного й у
+кількох місцях розходяться, що зафіксовано прямо. Церковно-інституційну
+хронологію дає Синод єпископів УГКЦ [S3]; статус беатифікації підтверджують
+офіційні документи Апостольської столиці [S4; S5].
 
-## 2. Oppression mechanism
+Головне методичне правило цього досьє: **церковне свідчення не перетворюється на
+незалежне підтвердження державного запису**. Побожний переказ, декрет про
+беатифікацію, академічна довідка й архівна справа мають різний доказовий статус.
+Радянський вирок «агент Ватикану» так само не приймається як опис діяльності:
+це категорія репресивного апарату. Досьє не наводить жодної цитати Чарнецького:
+первинного авторського тексту з публічною адресою й доведеною правовою підставою
+в межах цієї перевірки не знайдено, тому цитат не вигадано й не переказано.
 
-- **What happened:** NKVD arrest, imprisonment, interrogation/torture, conviction as an "agent of the Vatican," forced-labor camps, release as terminally ill.
-- **When:** Vatican says he was arrested by the NKVD on 1945-04-11 and sentenced to six years of forced labor in Siberia. A UGCC profile page gives 1944-04-11 in its short note, while another UGCC/Redemptorist narrative and Vatican use 1945. This dossier flags the discrepancy and follows the Vatican date for the core chronology.
-- **By whom:** NKVD; Soviet court/camp system.
-- **Document references:** UGCC and Redemptorist parish biography report the accusation "agent of the Vatican" and a ten-year strict-regime sentence after Kyiv imprisonment. A stable archival case number was not retrieved. Source not found for file ID.
-- **Mechanism specifics:** Vatican's biography establishes the official beatification biography: in 1926 Pope Pius XI appointed him Apostolic Visitor to Greek Catholics in Volhynia and Polissia; he was ordained bishop in Rome in 1931; during the Soviet assault on the UGCC he was arrested by the NKVD. UGCC sources expand the suffering narrative: prison on Lontskoho Street, transfer to Kyiv, a trial after about a year, and a ten-year sentence as an "agent of the Vatican." Because sources disagree on sentence length and arrest date, the dossier records both rather than forcing a false harmonization.
-- **What survived / what was destroyed:** His institutional mission in Volhynia and Polissia was broken; his reputation as confessor/martyr survived through underground UGCC memory and the beatification process completed in 2001.
+Попередня версія досьє подавала повну форму імені з по батькові
+(«Чарнецький Миколай Олександрович»). Прийняті академічні джерела такої форми не
+підтверджують: ВУЕ називає батька Олексою, але по батькові не подає, а ЕСУ
+титулує статтю «Чарнецький Микола» [S1; S2]. Тому непідтверджену форму вилучено
+як приклад неоправданої точності.
 
-## 3. Major works
+## Ім'я, родина й освіта
 
-- `1909` — priestly ordination, pastoral service, per Vatican and UGCC.
-- `1910s` — professor and spiritual director at Stanislaviv seminary, formation work, per Vatican.
-- `1919` — entry into Redemptorist novitiate in Zboiska near Lviv, per Vatican.
-- `1926` — Apostolic Visitor for Greek Catholics in Volhynia and Polissia, per Vatican.
-- `1931` — episcopal consecration in Rome, per Vatican and UGCC.
-- `1939-1945` — service during Soviet and wartime disruption, UGCC pastoral context.
-- `1945-1956` — prison and camp witness; not an authored work, but a central confessor record in UGCC memory.
-- `1956-1959` — post-release secret pastoral presence in Lviv, per UGCC/Redemptorist narrative.
-- `2001` — beatification as martyr by Pope John Paul II during the Ukraine visit, per Vatican/UGCC.
+Канонічна форма для навчального тексту — **Миколай Чарнецький**; в академічному
+реєстрі трапляється світська форма **Микола Чарнецький** [S1; S2]. Народився 14
+грудня 1884 року в селі Семаківці, тепер Коломийського району Івано-Франківської
+області [S1; S2]; помер 2 квітня 1959 року у Львові [S1; S2]. Був найстаршим із
+дев'ятьох дітей Олекси та Параскевії Чарнецьких, які жили при греко-католицькій
+парафії [S1].
 
-## 4. Primary-source quotes
+Навчався в гімназії святого Миколая в Станіславі, потім у Станіславській духовній
+семінарії [S1]. У 1903 або 1904 році розпочав студії в Папській руській колегії
+в Римі — ВУЕ подає дату саме з цією невизначеністю, і досьє її не усуває [S1].
+Висвячений на священника 2 жовтня 1909 року в Станіславі єпископом **Григорієм
+Хомишиним** [S1] — це документований зв'язок із іншою постаттю цієї когорти.
+Доктор богослов'я від 16 листопада 1909 року (Папський Урбаніанський
+університет) [S1]; ЕСУ уточнює, що докторат був із догматичного богослов'я [S2].
+Від осені 1910 року — професор філософії та фундаментальної догматики й духівник
+семінарії в Станіславі [S1; S2]. Володів десятьма мовами [S1].
 
-> "ми є в Божих руках"
+## Редемпторист, Волинь і межа датування
 
-Source: recorded classroom remark preserved in Redemptorist/UGCC biography, said during an air raid when seminarians were afraid. It is a direct pastoral register useful for learner discussion of faith language under danger.
+Знайомство 1918 року з монахами Чину Найсвятішого Ізбавителя привело його до
+новіціату в Збоїськах у жовтні 1919 року; перші обітниці — 16 жовтня 1920 року,
+вічні — у вересні 1923 року [S1]. ЕСУ датує вступ до новіціату 1919 роком [S2].
+Від 1926 року працював у місійному осередку Львівської провінції в Ковелі, де
+1931 року відкрив монастир і церкву [S1].
 
-> "Набожністю до Найсвятішого Серця"
+Тут зафіксовано першу справжню розбіжність. ЕСУ пише, що апостольським
+візитатором для українців Волині й Полісся Папа Пій XI призначив його **1926
+року** [S2]. ВУЕ пов'язує титул апостольського візитатора з єпископським
+призначенням **2 лютого 1931 року**, коли Чарнецький став титулярним єпископом
+Лебедським [S1]. Досьє не узгоджує ці дати штучно: воно подає обидві з
+атрибуцією й позначає питання як відкрите.
 
-Source: answer attributed to Charnetskyi on how he formed seminarians, preserved on the Charnetskyi church biography page. This is a parish access copy, so it should be treated as a direct-voice lead rather than a critical edition.
+За даними ВУЕ, на Волині Чарнецький здобув пошану місцевих мешканців, зокрема й
+православного духовенства, завдяки ерудиції, скромності та аскетизмові [S1]. Цю
+деталь варто зберегти: вона документує міжконфесійний контакт, а не самі лише
+інституційні кордони.
 
-## 5. Language register
+## Єпископ у роки окупацій
 
-- **Register:** Pastoral, monastic, ecclesiastical.
-- **CEFR readiness for full reading:** B2 for short quotes; C1 for full hagiographic or theological biography.
-- **Lexicon notes:** `редемпторист`, `єпископська хіротонія`, `апостольський візитатор`, `екзарх`, `мученик`, `табір примусової праці`.
-- **Stylistic features:** Hagiographic memory, pastoral exhortation, and institutional Catholic terminology. Learners need help separating devotional register from historical claims.
+9 жовтня 1939 року митрополит Андрей Шептицький іменував Чарнецького екзархом
+Волині й Полісся [S1]. Того ж року після радянської окупації редемптористів
+вигнали з Волині, і він осів у львівському домі Чину [S1; S2]. 22 грудня 1939
+року разом із Шептицьким та єпископом **Никитою Будкою** він брав участь у
+хіротонії Йосифа Сліпого [S1] — другий документований зв'язок усередині когорти.
+Від 1941 року — професор відновленої Львівської богословської академії [S1].
 
-## 6. Contested points
+## Арешт, вирок і дві розбіжності
 
-- **What's debated in modern UA scholarship:** Arrest date and sentence length differ between Vatican and UGCC summaries. The dossier flags 1945 vs 1944/1945 wording and six-year vs ten-year sentence reporting.
-- **What gets simplified in popular memory:** He is often remembered only as a miracle-working martyr. Vatican and UGCC sources show his prior seminary, Redemptorist, and Volhynia/Polissia mission work.
-- **Where modern Russian disinformation attacks them:** Soviet anti-Catholic framing used "agent of the Vatican" as criminalizing language. The dossier quotes it only as accusation.
-- **Polish / Jewish / other-perspective considerations:** His Volhynia and Polissia mission sat in a multi-confessional borderland. Retrieved sources did not provide enough detail for a separate Polish or Jewish perspective section.
-- **Pedagogical caution:** Devotional biographies sometimes smooth chronology in service of witness. Curriculum prose should preserve the Vatican/UGCC date and sentence discrepancies rather than forcing a single neat timeline.
-- **Source-balance note:** The Vatican page is the strongest compact external authority for life dates and beatification context, while the UGCC and Redemptorist pages provide Ukrainian-language detail and recorded speech. Claims about interrogation hours, camp transfers, and sentence wording should stay tied to those institutional biographies unless a Soviet case file is later retrieved.
+Арешт стався під час масового ув'язнення єпископату УГКЦ разом із митрополитом
+Йосифом Сліпим та єпископом Григорієм Хомишиним. ВУЕ датує його ніччю проти 12
+квітня 1945 року [S1]; ЕСУ називає 11 квітня 1945 року [S2]. Ідеться про ту саму
+операцію, а різниця стосується того, як рахувати нічну годину.
 
-## 7. Cross-track links
+Слідство велося у внутрішній тюрмі управління НКВС у Львівській області — так
+званій тюрмі на Лонцького — із цілодобовими допитами й катуваннями; загалом
+близько півтора року у львівській, а потім київській тюрмах [S1].
 
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/hreko-katolytska-tserkva.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/radianska-antyrelihiyna-polityka.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-relihiina-identychnist.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Andrey Sheptytskyi, Yosyf Slipyi, Vasyl Velychkovskyi, Volhynia mission history, and the 2001 beatifications.
-- **Potential LIT additions surfaced by this research:**
-  - No literary-text module surfaced; potential C1 reading could use memoir/testimony excerpts if a critical edition is retrieved.
+Друга розбіжність суттєвіша. **ВУЕ:** десять років таборів посиленого режиму за
+вироком «агент Ватикану» [S1]. **ЕСУ:** шість років ув'язнення [S2]. Це не різне
+заокруглення, а різні цифри; досьє подає обидві з атрибуцією. Маршрут:
+заслання до Маріїнська разом зі Сліпим, близько тридцяти змінених тюрем і
+таборів, останні роки — у тюремному шпиталі в Мордовії [S1]. Звільнений 1956
+року; у липні того ж року повернувся до Львова [S1; S2].
 
-## 8. Naming-canonical
+## Підпілля, смерть і культ
 
-- **Slug:** `mykola-charnetskyi`
-- **EN canonical (BGN/PCGN 2010):** Mykola Charnetskyi
-- **UA canonical (with patronymic):** Чарнецький Миколай Олександрович
-- **Aliases (track these for `aliases:` YAML field):** Миколай (Чарнецький), Mykola Carneckyj, Mykola Čarneckyj, Bishop Mykola Charnetsky
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Nikolai Charnetskii, Nikolay Charnetsky (FORBIDDEN except as archival metadata)
+Решту життя мешкав у приватному будинку співбрата-редемпториста, який став його
+резиденцією й кафедрою; там висвячував священників для катакомбної церкви.
+Точна кількість невідома, а КДБ дізналося про тринадцятьох [S1]. Ця формула —
+зразок коректного письма про підпілля: вона називає межу знання.
 
-## 9. Image candidates
+Помер 2 квітня 1959 року у Львові. Похований спершу на Кульпарківському
+кладовищі, у 1960-х перепохований на Личаківському цвинтарі; 4 липня 2002 року
+мощі перенесено до церкви святого Йосафата у Львові [S1].
 
-- **Best PD/CC portrait:** UGCC bishop profile portrait; rights not established in retrieved source.
-- **Backup candidates:** Wikimedia Commons tomb image `File:Tomb_of_Mykolai_Charnetskyi_(01).jpg` | CC BY-SA 3.0 per Commons page; verify before publication.
-- **If no PD/CC portrait exists:** Use a rights-cleared image of his tomb or a Redemptorist church memorial.
-- **Era-appropriate context image:** Lontskoho prison museum image for Soviet religious persecution, if rights-cleared.
+Могила стала місцем паломництва: віряни свідчили про чудесні оздоровлення,
+прочани брали з поховання землю [S1]. Це засвідчений факт **культу**, а не
+медичне чи історичне твердження. Так само переказ про митру, що впала під час
+хіротонії 1931 року, ВУЕ подає як свідчення, що «дійшли», тобто як церковну
+традицію [S1]. Досьє зберігає цю різницю рівнів.
 
-## 10. Sources used
+## Беатифікація
 
-**Tier 1 (authoritative):**
-- Vatican, "Mykola Carneckyj (1884-1959)" | https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html | accessed 2026-05-30
-- Vatican, "Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine" | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
+Процес розпочався 1960 року; 2 березня 2001 року завершився на єпархіальному
+рівні; 6 квітня 2001 року богословська комісія ствердила факт мучеництва; 24
+квітня Іван Павло II підписав декрет; 27 червня 2001 року обряд провели у Львові
+[S1]. Офіційний перелік Апостольської столиці підтверджує дату 27 червня 2001
+року в межах візиту 23–27 червня 2001 року й подає Чарнецького як єпископа
+(1884–1959) [S4]; окрема офіційна нота супроводжує беатифікацію [S5].
 
-**Tier 2 (institutional):**
-- UGCC Synod, "Владика Миколай Чарнецький" | https://synod.ugcc.ua/data/vladyka-mykolay-charnetskyy-11728/ | accessed 2026-05-30
-- UGCC Synod, "Чудо стається не просто так..." | https://synod.ugcc.ua/data/chudo-staetsya-ne-prosto-tak-shcho-varto-znaty-pro-vladyku-mykolaya-charnetskogo-7627/ | accessed 2026-05-30
+Перевірка дати була необхідною: церковно-інституційні перекази подають день
+беатифікації неоднаково, тому досьє спирається на офіційний документ
+Апостольської столиці [S4]. Беатифікація засвідчує конфесійно-правовий статус, а
+не підтверджує кожне біографічне твердження.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Миколай (Чарнецький)," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## Права, читання й зображення
 
-**Tier 4 (modern scholarly post-1991):**
-- *Науковий вісник ІФБУ "Добрий Пастир"* article excerpts surfaced in search; used only as lead, not core citation.
+Три українськомовні читання — [S1], [S2], [S3] — мають точну ідентичність і
+публічні адреси; диспозиція **link-only**, підстава `external-link`. Англомовні
+документи Апостольської столиці [S4; S5] лишаються в реєстрі як офіційне
+підтвердження статусу, а не як українськомовні навчальні читання: контракт
+читань вимагає `language: uk`.
 
-**Tier 5 (general web):**
-- Parish biography, "Миколай Чарнецький" | https://charnetskyj.org.ua/mykolaj-charnetskyj/ | accessed 2026-05-30
+Вилучено з попереднього набору: `charnetskyj.org.ua` (парафіяльний сайт —
+меморіальна проза, не доказ) і синодальна сторінка «Чудо стається не просто
+так…» (побожний матеріал про чудо, не придатний як доказова база).
 
-**Primary-source documents accessed:**
-- Recorded sayings preserved in UGCC/Redemptorist biographies. Archival trial file: source not found.
+Портрет: окремого файлу з доведеною індивідуальною ліцензією не знайдено.
+Застосовано текстовий `portrait_fallback` з диспозицією
+`no-portrait-until-rights-verified`.
 
----
+## Перехресні зв'язки в курсі
 
-## Decolonization self-check
+Перевірені прямим `test -e`: `plans/bio/andrey-sheptytsky.yaml`,
+`plans/bio/josyf-slipyj.yaml`, `plans/istorio/hreko-katolytska-tserkva.yaml`,
+`plans/istorio/radianska-antyrelihiyna-polityka.yaml`. Усі існують на диску.
+Всередині когорти документовані зв'язки: висвячення Хомишиним 1909 року та
+спільна з Будкою хіротонія Сліпого 1939 року [S1].
 
-- [x] Soviet accusation language labeled
-- [x] Arrest-date discrepancy flagged
-- [x] No case file invented
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+## Прийняті джерела
+
+- **[S1]** Недавня О. Миколай Чарнецький, єпископ // Велика українська
+  енциклопедія, оприлюднено 17 червня 2024 року.
+- **[S2]** Дмитришин С. Чарнецький Микола // Енциклопедія Сучасної України.
+- **[S3]** Владика Миколай Чарнецький // Синод єпископів УГКЦ — церковна
+  хронологія, побожна проза.
+- **[S4]** Beatifications Ukraine — 26–27 June 2001 // Апостольська столиця —
+  офіційне підтвердження дати й статусу.
+- **[S5]** Mykola Carneckyj (1884-1959) // Апостольська столиця — офіційна
+  життєписна нота.
+
+## Висновок готовності
+
+Стан: **catalog-source ready**. П'ять джерел перевірено прямим запитом; три
+українські читання мігровано на strict-v2 з link-only та збіжним `evidence_url`.
+Відкриті питання зафіксовано, а не приховано: дата візитаторства (1926 проти
+1931) і довжина строку (шість проти десяти років). Холдів немає: кожне прийняте
+читання має документну ідентичність, публічну адресу, мовний статус і правову
+підставу.

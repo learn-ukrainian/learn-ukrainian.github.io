@@ -1,0 +1,68 @@
+sources:
+- id: S1
+  type: external
+  title: Липківський Василь Костянтинович
+  author: Арсеній Зінченко
+  file: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&\
+    I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&\
+    S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Lipkivsky_V_K&Z21ID="
+  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&\
+    I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&\
+    S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Lipkivsky_V_K&Z21ID="
+  notes: >-
+    Академічна стаття «Енциклопедії історії України», том 6 (Ла-Мі), Київ:
+    Наукова думка, 2009. Джерело хронології освіти, собору 1921 року, усунення
+    1927 року, ліквідації січня 1930 року, вироку 20 листопада 1937 року та
+    реабілітації 1989 року.
+- id: S2
+  type: external
+  title: 1864 – народився Василь Липківський, творець і перший митрополит УАПЦ
+  author: Український інститут національної пам'яті
+  file: "https://uinp.gov.ua/istorychnyy-kalendar/berezen/19/\
+    1864-narodyvsya-vasyl-lypkivskyy-tvorec-i-pershyy-mytropolyt-uapc"
+  url: "https://uinp.gov.ua/istorychnyy-kalendar/berezen/19/\
+    1864-narodyvsya-vasyl-lypkivskyy-tvorec-i-pershyy-mytropolyt-uapc"
+  notes: >-
+    Інституційна довідка історичного календаря. Джерело перевіреної проповідної
+    цитати «Не нову церкву…», мемуарних слів про «соборну ліквідацію УАПЦ»,
+    формулювання обвинувачення «у великих розмірах», відновлення УАПЦ 1990 року
+    та канонізації Собором УАПЦ 1997 року. Ця сторінка припускає поховання в
+    Биківні; сторінка S3 того ж інституту пише про невідоме місце.
+- id: S3
+  type: external
+  title: 1937 - розстріляно митрополита УАПЦ Василя Липківського
+  author: Український інститут національної пам'яті
+  file: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/27/\
+    1937-rozstrilyano-mytropolyta-uapc-vasylya-lypkivskogo"
+  url: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/27/\
+    1937-rozstrilyano-mytropolyta-uapc-vasylya-lypkivskogo"
+  notes: >-
+    Інституційна довідка про розстріл 27 листопада 1937 року. Подає
+    обвинувачення у формі «у великих масштабах» і прямо стверджує, що місце
+    поховання невідоме, а на Лук'янівському цвинтарі стоїть хрест на
+    символічній могилі.
+- id: S4
+  type: external
+  title: 'Історія Української Православної Церкви: розд. 7: Відродження Української Церкви'
+  author: Василь Липківський
+  file: "https://diasporiana.org.ua/religiya/\
+    7374-lipkivskiy-v-mitr-istoriya-ukrayinskoyi-pravoslavnoyi-tserkvi-rozd-7-\
+    vidrodzhennya-ukrayinskoyi-tserkvi/"
+  url: "https://diasporiana.org.ua/religiya/\
+    7374-lipkivskiy-v-mitr-istoriya-ukrayinskoyi-pravoslavnoyi-tserkvi-rozd-7-\
+    vidrodzhennya-ukrayinskoyi-tserkvi/"
+  notes: >-
+    Опублікований первинний текст: Вінніпег, Фундація Івана Ґрищука, 1961, 181
+    сторінка; електронна бібліотека «Діаспоріана». Авторська теза Липківського,
+    а не незалежне підтвердження фактів; link-only.
+- id: S5
+  type: external
+  title: Василь (Липківський)
+  author: Сергій Присухін
+  file: https://vue.gov.ua/Василь_(Липківський)
+  url: https://vue.gov.ua/Василь_(Липківський)
+  notes: >-
+    Стаття «Великої української енциклопедії», оприлюднена 30 жовтня 2020 року.
+    Джерело родинних і освітніх подробиць, дат протоієрейства та Солом'янської
+    парафії, служіння в Софійському соборі 1919–1929 років і формули «перший
+    предстоятель УАПЦ (1921–1927)».

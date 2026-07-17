@@ -1,0 +1,27 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Василь Липківський
+- Липківський Василь Костянтинович Енциклопедія історії України
+- Василь Липківський УІНП історичний календар УАПЦ
+- Василь Липківський розстріл 1937 трійка НКВД УІНП
+- Липківський Історія Української Православної Церкви Діаспоріана 1961
+- Василь (Липківський) Велика українська енциклопедія
+direct_sources:
+- "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&\
+  P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&\
+  S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Lipkivsky_V_K&Z21ID="
+- "https://uinp.gov.ua/istorychnyy-kalendar/berezen/19/\
+  1864-narodyvsya-vasyl-lypkivskyy-tvorec-i-pershyy-mytropolyt-uapc"
+- "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/27/\
+  1937-rozstrilyano-mytropolyta-uapc-vasylya-lypkivskogo"
+- "https://diasporiana.org.ua/religiya/\
+  7374-lipkivskiy-v-mitr-istoriya-ukrayinskoyi-pravoslavnoyi-tserkvi-rozd-7-\
+  vidrodzhennya-ukrayinskoyi-tserkvi/"
+- https://vue.gov.ua/Василь_(Липківський)
+rag_chunks: []
+rag_literary: []
+warning: >-
+  П'ять прямих джерел збігаються з планом і реєстром; чотири українські читання
+  мігровано на strict-v2. Мертве посилання old.uinp.gov.ua та непідтверджену
+  цитату «вискочити з-під московської церковної влади» вилучено.

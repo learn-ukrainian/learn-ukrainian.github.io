@@ -1,0 +1,19 @@
+direct_sources:
+- "https://vue.gov.ua/Миколай_Чарнецький,_єпископ"
+- "https://esu.com.ua/article-885229"
+- "https://synod.ugcc.ua/data/vladyka-mykolay-charnetskyy-11728/"
+- "https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html"
+- "https://www.vatican.va/news_services/liturgy/documents/ns_lit_doc_20010627_carneckyj_en.html"
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Миколай Чарнецький
+- Миколай Чарнецький єпископ Велика українська енциклопедія
+- Чарнецький Микола Енциклопедія Сучасної України редемпторист
+- Владика Миколай Чарнецький Синод єпископів УГКЦ
+- Чарнецький беатифікація 27 червня 2001 Апостольська столиця
+rag_chunks: []
+rag_literary: []
+warning: П'ять прямих джерел збігаються з планом і реєстром; три українські читання мігровано на strict-v2,
+  два англомовні документи Апостольської столиці лишаються підтвердженням конфесійного статусу. Розбіжності
+  про дату візитаторства та довжину строку зафіксовано з атрибуцією.

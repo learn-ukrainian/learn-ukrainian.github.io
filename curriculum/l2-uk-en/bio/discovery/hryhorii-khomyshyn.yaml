@@ -1,0 +1,22 @@
+direct_sources:
+- "https://zbruc.eu/node/36187"
+- "https://ukr-inst.lviv.ua/index.php/ukraina-polshcha/article/view/321"
+- "https://synod.ugcc.ua/data/materialy-arhivu-kolyshnogo-kdb-pro-uvyaznennya-vladyky-grygoriya-homyshyna-4850/"
+- "https://synod.ugcc.ua/data/vladyka-grygoriy-homyshyn-19207/"
+- "http://web.archive.org/web/20251221113432/https://er.ucu.edu.ua/items/37d576b9-c01c-44cd-a23f-5768866c23c8"
+- "https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html"
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Григорій Хомишин
+- Хомишин Українська проблєма 1932 повний текст Збруч
+- Хомишин Андрухів Україна-Польща історична спадщина 2025
+- Хомишин матеріали архіву КДБ Єгрешій Синод УГКЦ
+- Хомишин Мороз моральний авторитет Українська проблема репозиторій УКУ
+- Хомишин беатифікація 27 червня 2001 Апостольська столиця
+rag_chunks: []
+rag_literary: []
+warning: Шість прямих джерел збігаються з планом і реєстром; п'ять українських читань мігровано на strict-v2.
+  Непідтверджену цитату про пресу вилучено. Номер кримінальної справи № 35826, том 1 перевірено прямим
+  зчитуванням сторінки Синоду й збережено. Назву первинного тексту виправлено на «Українська проблєма».
+  Дослідження УКУ читається за архівним знімком, бо живий домен повертає 403.

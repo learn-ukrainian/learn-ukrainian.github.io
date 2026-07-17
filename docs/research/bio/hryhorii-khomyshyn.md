@@ -1,125 +1,190 @@
-# Хомишин Григорій Лукич — Research Dossier
+# Григорій Хомишин — дослідницьке досьє
 
 **Slug:** `hryhorii-khomyshyn`
-**Block:** J
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і доказова рамка
 
-- **Full name (UA, canonical):** Хомишин Григорій Лукич; church form Григорій (Хомишин).
-- **Pseudonyms / aliases:** Hryhorii Khomyshyn, Hryhorij Chomyshyn, Hryhory Khomyshyn, Bishop Gregory Khomyshyn.
-- **Born:** 1867-03-25 | Гадинківці, Ternopil district in UGCC/Vatican wording | Austria-Hungary. Sources: UGCC bishop profile; Vatican Ukrainian Greek Catholic martyr biography page.
-- **Died:** UGCC gives 1945-12-28 | Lukianivska prison hospital, Kyiv | Ukrainian SSR. Vatican biography page gives 1947-01-17 in Kyiv's NKVD prison. This dossier follows the more detailed UGCC archival account for the local date/place, while preserving the Vatican discrepancy.
-- **Family / education key facts:** UGCC says he came from a middle-peasant family, completed the Ternopil gymnasium in 1888, studied theology in Lviv, and defended a doctorate after studies in Vienna in 1899. Vatican confirms further theological education in Vienna from 1894 to 1899 and episcopal ordination in 1904.
+Хомишин — найсуперечливіша постать когорти, тому пакет розділяє п'ять рівнів:
+інституційну працю єпископа, його власний полемічний голос, політичне становище
+між українським націоналізмом і польською державою, радянську слідчу справу та
+конфесійний статус блаженного. Первинний текст доступний повністю [S1];
+академічну рамку дає стаття Івана Андрухіва [S2]; архівні матеріали впорядкував
+історик Олег Єгрешій [S3]; церковна довідка подає й життєпис, і архівну сигнатуру
+[S4]; окреме дослідження присвячене самому посланню [S5]; статус підтверджує
+Апостольська столиця [S6].
 
-## 2. Oppression mechanism
+Головне правило: **полемічні твердження не стають нейтральними фактами**. Ані
+тези Хомишина, ані звинувачення його опонентів, ані формули радянського слідства
+не є описом реальності — кожне з них позиція конкретного автора чи установи.
 
-- **What happened:** Soviet arrests, NKVD/NKGB investigation, long interrogations, fabricated political accusations, transfer to Kyiv, death in prison hospital.
-- **When:** Vatican and UGCC agree on a first arrest in 1939. UGCC gives second arrest on 1945-04-15 and states most other UGCC bishops were arrested on 1945-04-11. The UGCC archival article cites arrest warrant/order materials from 1945-03-26 and an arrest/search order no. 634 issued on 1945-04-11.
-- **By whom:** NKVD/NKGB Soviet security organs; UGCC identifies the 4th section of the 2nd Directorate of the NKGB of the Ukrainian SSR and names state-security officers including Captain Dubok and Captain Khodin in the published archival summary.
-- **Document references:** UGCC bishop profile states the last seven months are described in criminal case no. `35826`, volume 1, held in the Archive of the Security Service of Ukraine in Kyiv. It records 36 interrogation protocols, the last on 1945-09-11. The 1945 charge used articles 54-1a and 54-11 of the Criminal Code of the Ukrainian SSR; Soviet accusation language is quoted only as accusation.
-- **Mechanism specifics:** UGCC's archival article states that on 1945-05-10 Khomyshyn was charged with anti-Soviet agitation, slandering Soviet power, being an "agent of the Vatican," and trying to separate Ukrainians from the Russian people. The same source notes that the criminal language was written in the investigator's idiom, not Khomyshyn's own. On 1945-12-21, as his health deteriorated, he was moved from the inner NKVD prison to Lukianivska prison hospital, where UGCC says he died on 1945-12-28.
-- **What survived / what was destroyed:** His episcopal institutions were attacked, but UGCC preserves his pastoral letters, memoirs, press initiatives, case-file summary, and public memory through beatification. The exact physical fate of all manuscripts and diocesan papers: source not found.
+Виправлення попередньої версії, зроблені прямою перевіркою:
 
-## 3. Major works
+- Цитату «вона фактично має владу над людським мисленням», приписану промові 1931
+  року про пресу, **вилучено**: у прийнятих джерелах її немає, локатора не
+  встановлено.
+- Твердження, ніби «Ватикан подає 17 січня 1947» як дату смерті, **вилучено як
+  хибне**: офіційний перелік Апостольської столиці подає Хомишина як єпископа
+  (1867–1945) [S6]. Розбіжності дати смерті між Ватиканом і УГКЦ немає.
+- Статті «54-1a і 54-11 КК УРСР» **вилучено**: у прийнятих джерелах їх немає.
+- Твердження, ніби повний український текст «Української проблеми» у стабільному
+  джерелі не знайдено, **спростовано**: текст доступний повністю [S1].
+- Номер кримінальної справи **№ 35826, том 1** — навпаки, **перевірено й
+  збережено**: він прямо названий на сторінці Синоду разом з обсягом справи та
+  кількістю протоколів [S4].
 
-- `1893` — priestly ordination by Bishop Yulian Sas-Kuilovskyi, per UGCC.
-- `1899` — doctorate after Vienna studies, per UGCC.
-- `1902-1904` — rector of the Lviv seminary, appointed by Metropolitan Andrey Sheptytsky, per Vatican/UGCC.
-- `1904` — bishop of Stanislaviv, episcopal consecration in Saint George Cathedral, per UGCC/Vatican.
-- `1907` — opening/support of Stanislaviv seminary, per UGCC.
-- `1925/1931` — Ukrainian Catholic Organization, later Ukrainian National Renewal, civic-religious organizing per UGCC.
-- `1926` — *Нова Зоря*, Catholic press initiative, per UGCC.
-- `1927` — *Правда*, Catholic press initiative, per UGCC.
-- `1931` — "Відозва ... про пресу," press address quoted by UGCC.
-- `1932` — *Українська проблема*, pastoral letter / publicistic treatise, available through Zbruc and Chytomo-style access copies.
-- `1934` — "Вісник Станиславівської єпархії" statements on press and religious reading, per UGCC.
-- `1935` — society *Скала*, religious/civic association against communism, per UGCC.
+## Ім'я й інституційна праця
 
-## 4. Primary-source quotes
+Канонічна форма для навчального тексту — **Григорій Хомишин**. Слідча справа
+називає його **Григорієм Лукичем Хомишиним**; ця форма по батькові засвідчена
+саме архівними документами [S4].
 
-> "вона фактично має владу над людським мисленням"
+Народився 25 березня 1867 року в Гадинківцях [S4]. Висвячений на священника 18
+листопада 1893 року єпископом Юліаном Сас-Куїловським; 1902 року — ректор
+Львівської духовної семінарії [S4]. Єпископське призначення — 16 квітня 1904
+року, хіротонія — 6 травня 1904 року у Львові [S4]. Очолив Станиславівську
+єпархію відразу після Андрея Шептицького й провадив нею **сорок один рік** [S3].
+1907 року відкрито єпархіальну семінарію [S4].
 
-Source: Khomyshyn's 1931 address on the press, quoted by UGCC bishop profile. It gives learners a concise way into his media ethics and explains why newspapers became part of his pastoral program.
+Синодальна довідка фіксує деталь, що одразу ускладнює образ «полонофіла»:
+польська влада противилася його призначенню, віддаючи перевагу кандидатам, які
+не були свідомими українцями [S4].
 
-> "коли впровадимо Боже царство в наші душі"
+Внутрішня арифметика первинного тексту підтверджує хронологію: 1932 року Хомишин
+пише, що за ним «близько сорок літ священства і близько трицять літ єпископської
+обсервації та праці» [S1], що узгоджується зі свяченням 1893 року та хіротонією
+1904 року.
 
-Source: *Українська проблєма* (1932), reprinted by Zbruc as an access copy. The line is useful because it shows his political argument was built from moral-theological categories, not from secular party language alone.
+## «Українська проблєма»: назва й голос
 
-## 5. Language register
+Точна назва первинного тексту — **«Українська проблєма»**, у правописі оригіналу
+[S1]; академічна література вживає нормалізовану форму «Українська проблема»
+[S5]. Обидві форми вживані; досьє не оголошує жодну хибною, а лише називає, яка
+де вжита. Попередня версія плану подавала лише форму «Українська проблема» — це
+уточнено.
 
-- **Register:** Pastoral-publicistic, ecclesiastical, moral-political.
-- **CEFR readiness for full reading:** C1-C2 for full pastoral letters; B2 for short adapted excerpts.
-- **Lexicon notes:** `єпископ`, `єпархія`, `пастирський лист`, `католицька акція`, `антирадянська агітація`, `НКДБ`, `Лук'янівська тюрма`.
-- **Stylistic features:** Formal church prose, moral antithesis, political diagnosis, and older Galician orthography in source reprints.
+Текст відкривається самопредставленням: «В шістьдесятьшестому році мого життя, на
+порозі старости, по довгому і дуже гіркому досвіді, опертому на кількадесятилітній
+праці між моїм українським народом, почуваюся до обовязку перед Богом і моєю
+совістю подати до публичного відома провідній верстві свого народу вислід того,
+що я передумав» [S1]. Автор прямо очікує опору: його думки викличуть «здивування,
+подразнення, або й обурення» [S1].
 
-## 6. Contested points
+Ядро аргументу морально-теологічне: «А коли се осягнемо, т. є. коли впровадимо
+Боже царство в наші душі, тоді витвориться позитивна акція і на зовні, тоді наша
+праця буде благословенна в реальні і тревалі успіхи, тоді будемо мати
+спроможність добитися ліпшої долі для нашого народу» [S1]. Академічне дослідження
+аналізує саме цю концепцію морального авторитету та поступу [S5].
 
-- **What's debated in modern UA scholarship:** His church politics, Latinization/Byzantinism positions, Ukrainian-Polish orientation, and criticism of radical nationalism are debated. Recent scholarly articles on Ukrainian-Polish cultural and church relations treat him as a complex borderland figure rather than a simple hagiographic symbol.
-- **What gets simplified in popular memory:** He can be flattened into "martyr bishop." UGCC sources show four decades of diocesan building, seminary work, press strategy, finance, schools, monastic institutions, and lay organizations before the prison death.
-- **Where modern Russian disinformation attacks them:** Soviet case language called him an "agent of the Vatican" and accused him of separating Ukrainians from Russians. This dossier treats that as Soviet criminalizing vocabulary, not reliable interpretation.
-- **Polish / Jewish / other-perspective considerations:** Polish-Ukrainian relations are central because his interwar public program worked inside the Second Polish Republic and was contested by Ukrainian movements. The dossier should not sanitize those disputes, but it must keep the Soviet prison-death mechanism distinct from interwar political disagreements.
-- **Pedagogical caution:** The Vatican date conflicts with the detailed UGCC archival chronology. Curriculum prose should state the discrepancy and use the case-file-backed UGCC date unless a newer Vatican correction or archival edition is retrieved.
+## Політичне становище
 
-## 7. Cross-track links
+Академічна рамка описує Хомишина як ключову постать українсько-польських взаємин,
+що обстоювала модерну українськість на католицькій основі суспільного розвитку й
+стратегічне зближення з європейською християнською традицією [S2].
 
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/hreko-katolytska-tserkva.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/radianska-antyrelihiyna-polityka.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-relihiina-identychnist.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Andrey Sheptytskyi, Yosyf Slipyi, Ivan Liatyshevskyi, Ukrainian Catholic press, and the Stanislaviv eparchy.
-- **Potential LIT additions surfaced by this research:**
-  - A C1/C2 excerpt module from *Українська проблема* focused on moral authority, media, and political language.
+Радянське слідство зафіксувало ту саму позицію з протилежного боку: у постанові
+йдеться, що Хомишин «з 1930 року вступив на шлях активної антирадянської
+діяльності, організувавши клерикально-націоналістичну організацію … „Українська
+Народна Обнова“», а її орган «Нова Зоря» «закликали український народ лояльно
+відноситись до польських властей» [S3]. Отже, держава ставила йому за провину
+саме те, за що його критикували українські націоналісти. Це не робить його ані
+правим, ані винним — це показує реальну політичну позицію з опонентами з обох
+боків.
 
-## 8. Naming-canonical
+## Слідча справа: перевірені числа
 
-- **Slug:** `hryhorii-khomyshyn`
-- **EN canonical (BGN/PCGN 2010):** Hryhorii Khomyshyn
-- **UA canonical (with patronymic):** Хомишин Григорій Лукич
-- **Aliases (track these for `aliases:` YAML field):** Григорій (Хомишин), Hryhorij Chomyshyn, Hryhory Khomyshyn, Bishop Gregory Khomyshyn
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Grigorii Khomishin, Grigory Khomishin (FORBIDDEN except as archival metadata)
+Матеріали архіву колишнього КДБ зібрав і підготував кандидат історичних наук,
+доцент **Олег Єгрешій** [S3] — фахова робота з архівними покликаннями, а не
+побожний переказ.
 
-## 9. Image candidates
+- Рішення про арешт — 26 березня 1945 року у Львові; постанову підписав капітан
+  держбезпеки Ходін [S3; S4].
+- 11 квітня 1945 року нарком державної безпеки УРСР і прокурор Львівської області
+  затвердили рішення; того ж дня слідчий Свистун дістав **ордер № 634** на арешт
+  і обшук за адресою: Станіслав, вулиця Червоноармійська, 16 [S3; S4].
+- У **ніч на 12 квітня 1945 року** заарештовано Йосифа Сліпого, Микиту Будку,
+  Миколая Чарнецького, Григорія Хомишина, Івана Лятишевського й багатьох
+  священників [S3] — той самий вузол, що й у трьох інших досьє когорти.
+- Після одинадцяти допитів (21 квітня — 9 травня 1945 року) 10 травня
+  підполковник Танельзон затвердив постанову про пред'явлення звинувачення;
+  ознайомлення — 12 травня 1945 року [S3].
+- **Кримінальна справа № 35826, том 1**: 390 сторінок, Архів Служби Безпеки
+  України в Києві; **36 протоколів допитів** — 28 удень, один уночі, решта
+  ввечері; тривалість від 2 годин 20 хвилин до **37 годин 20 хвилин**; останній
+  протокол — 11 вересня 1945 року; усі допити провадив капітан держбезпеки Дубок
+  [S4].
 
-- **Best PD/CC portrait:** UGCC bishop profile portrait; rights not established in retrieved page.
-- **Backup candidates:** Wikimedia Commons portrait candidates; verify file-level license before use.
-- **If no PD/CC portrait exists:** Use a rights-cleared image of Stanislaviv/Ivano-Frankivsk cathedral context or Lukianivska prison context.
-- **Era-appropriate context image:** *Нова Зоря* or *Українська проблема* title page, if rights-cleared.
+Ця арифметика важливіша за епітети: допит на тридцять сім годин — зафіксована
+процедура, а не метафора.
 
-## 10. Sources used
+**Розбіжність дати арешту** збережено: архівна публікація — ніч на 12 квітня 1945
+року [S3]; життєписна довідка того самого сайту — 15 квітня [S4].
 
-**Tier 1 (authoritative):**
-- Vatican, Ukrainian Greek Catholic martyr biography page | https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html | accessed 2026-05-30
-- UGCC Synod, "Владика Григорій Хомишин" | https://synod.ugcc.ua/data/vladyka-grygoriy-homyshyn-19207/ | accessed 2026-05-30
+## Смерть із медичним актом
 
-**Tier 2 (institutional):**
-- UGCC Synod, "Матеріали архіву колишнього КДБ про ув'язнення владики Григорія Хомишина" | https://synod.ugcc.ua/data/materialy-arhivu-kolyshnogo-kdb-pro-uvyaznennya-vladyky-grygoriya-homyshyna-4850/ | accessed 2026-05-30
-- UGCC Synod, "Сьогодні минає 80-та річниця..." | https://synod.ugcc.ua/data/sogodni-mynae-80-ta-richnytsya-vidhodu-do-vichnosti-epyskopa-grygoriya-homyshyna-18689/ | accessed 2026-05-30
+21 грудня 1945 року через погіршення здоров'я Хомишина перевели з внутрішньої
+тюрми НКВД УРСР до лікарні Лук'янівської в'язниці, де 28 грудня 1945 року він
+помер [S3]. У спеціальному акті лікар Фридберг записав, що смерть сталася «при
+явищах наростаючої серцевої слабкості, від старечої дряхлості і елементарної
+дистрофії» [S3]; синодальна довідка подає ті самі причини й уточнює годину [S4].
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Григорій (Хомишин)," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+Формулу акта варто читати точно. «Стареча дряхлість» і «елементарна дистрофія» —
+мова документа установи, що тримала 78-річного єпископа під слідством вісім
+місяців; дистрофія означає виснаження. Акт не називає причиною ув'язнення, але й
+не є доказом непричетності ув'язнення. Запис у документі та історична
+відповідальність — різні речі.
 
-**Tier 4 (modern scholarly post-1991):**
-- Ivan Andrukhiv, "Єпископ Григорій Хомишин: на перехресті українсько-польських культурних та церковних взаємин..." | https://ukr-inst.lviv.ua/index.php/ukraina-polshcha/article/view/321 | accessed 2026-05-30
-- Volodymyr Moroz, article on *Українська проблема* in UCU repository | https://er.ucu.edu.ua/items/37d576b9-c01c-44cd-a23f-5768866c23c8 | accessed 2026-05-30
+## Беатифікація
 
-**Tier 5 (general web):**
-- Zbruc, "Українська проблєма" access copy | https://zbruc.eu/node/36187 | accessed 2026-05-30
+Офіційний перелік Апостольської столиці подає Хомишина серед беатифікованих 27
+червня 2001 року й фіксує роки життя 1867–1945 [S6]. Беатифікація засвідчує
+визнання мучеництва цією церквою; вона не підтверджує кожне біографічне чи
+політичне твердження й не розв'язує суперечок про міжвоєнну програму.
 
-**Primary-source documents accessed:**
-- Criminal case no. `35826`, volume 1, Archive of the Security Service of Ukraine in Kyiv, as summarized and quoted by UGCC/Oleh Yehreshii.
-- Khomyshyn, *Українська проблєма* (1932), Zbruc access copy.
+## Права, читання й зображення
 
----
+П'ять українськомовних читань — [S1], [S2], [S3], [S4], [S5] — мають точну
+ідентичність і публічні адреси; диспозиція **link-only**, підстава
+`external-link`. Стаття [S2] має ліцензію CC BY 4.0 та відкритий повний текст —
+це не дозвіл розміщувати копію в курсі. Дослідження [S5] читається за датованим
+архівним знімком, бо живий домен репозиторію відповідає кодом 403 на автоматичні
+запити; постійний ідентифікатор запису — `hdl.handle.net/20.500.14570/1470`.
+Англомовний перелік [S6] лишається підтвердженням статусу, а не читанням.
 
-## Decolonization self-check
+Портрет: окремого файлу з доведеною індивідуальною ліцензією не знайдено;
+застосовано текстовий `portrait_fallback` з диспозицією
+`no-portrait-until-rights-verified`.
 
-- [x] Soviet accusation language labeled
-- [x] Vatican/UGCC death-date discrepancy flagged
-- [x] Case number included only from retrieved UGCC archival summary
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+## Перехресні зв'язки в курсі
+
+Перевірені прямим `test -e`: `plans/bio/andrey-sheptytsky.yaml`,
+`plans/bio/josyf-slipyj.yaml`, `plans/istorio/hreko-katolytska-tserkva.yaml`,
+`plans/istorio/radianska-antyrelihiyna-polityka.yaml`. Усі існують на диску.
+Всередині когорти: Хомишин висвятив Миколая Чарнецького 2 жовтня 1909 року, і
+обидва, разом із Будкою, заарештовані в ніч на 12 квітня 1945 року [S3].
+
+## Прийняті джерела
+
+- **[S1]** Хомишин Г. Українська проблєма (1932) // Збруч, публікація 18 травня
+  2015 року — первинний текст.
+- **[S2]** Андрухів І. Єпископ Григорій Хомишин: на перехресті
+  українсько-польських культурних та церковних взаємин першої половини XX
+  століття // Україна–Польща, № 19 (2025), DOI 10.33402/up.2025-19-05, CC BY 4.0.
+- **[S3]** Єгрешій О. Матеріали архіву колишнього КДБ про ув'язнення владики
+  Григорія Хомишина // Синод єпископів УГКЦ, 28 грудня 2020 року.
+- **[S4]** Владика Григорій Хомишин // Синод єпископів УГКЦ — життєпис і архівна
+  сигнатура справи № 35826.
+- **[S5]** Мороз В. Проблема морального авторитету та поступу в житті народу у
+  листі-посланні єпископа Григорія Хомишина «Українська проблема» (2016) //
+  репозиторій УКУ, архівний знімок від 21 грудня 2025 року.
+- **[S6]** Beatifications Ukraine — 26–27 June 2001 // Апостольська столиця.
+
+## Висновок готовності
+
+Стан: **catalog-source ready**. Шість джерел перевірено прямим запитом; п'ять
+українських читань мігровано на strict-v2 з link-only та збіжним `evidence_url`.
+Холдів немає: попередній запис «reading-needed» для «Української проблєми» знято
+знайденим повним текстом [S1]. Відкрите питання зафіксовано: дата арешту (12
+проти 15 квітня 1945 року).
