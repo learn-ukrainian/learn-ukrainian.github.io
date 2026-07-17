@@ -14,7 +14,7 @@ httpx>=0.28
 # RAG / embeddings
 qdrant-client>=1.14
 sentence-transformers>=5.6.0
-torch>=2.6
+torch>=2.13.0
 
 # NLP / Ukrainian
 pyahocorasick>=2.3
