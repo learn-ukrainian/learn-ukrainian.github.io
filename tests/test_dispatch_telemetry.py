@@ -310,6 +310,34 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
     assert captured_env["LU_SESSION_ID"] == "session-456"
 
 
+def test_resolve_dispatch_start_telemetry_kimi_resolves_binary(tmp_path, monkeypatch):
+    """The Kimi version probe must reuse the adapter's binary resolution logic,
+    so that if kimi lives in ~/.kimi-code/bin/kimi or LEARN_UK_KIMI_BIN, it finds it.
+    """
+    kimi_bin = tmp_path / "mock_kimi"
+    kimi_bin.write_text("#!/bin/sh\necho 'kimi version v0.42.1'\n", encoding="utf-8")
+    kimi_bin.chmod(0o755)
+
+    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(kimi_bin))
+
+    telemetry = resolve_dispatch_start_telemetry(
+        agent_name="kimi",
+        requested_model=None,
+        requested_effort=None,
+    )
+    assert telemetry.cli_version == "0.42.1"
+
+    # Also test with a plan to ensure it resolves successfully
+    plan = InvocationPlan(cmd=[str(kimi_bin), "-p", "hello"], cwd=tmp_path)
+    telemetry_with_plan = resolve_invocation_telemetry(
+        agent_name="kimi",
+        plan=plan,
+        requested_model=None,
+        requested_effort=None,
+    )
+    assert telemetry_with_plan.cli_version == "0.42.1"
+
+
 def setup_function() -> None:
     _reset_rate_limit_cache_for_tests()
     _reset_version_cache_for_tests()
