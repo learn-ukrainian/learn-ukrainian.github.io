@@ -5,16 +5,16 @@ model reachable through different tooling (native CLI, hermes, a `-tools`
 V7 seat) always resolves to the same family, so an author can't dodge the
 cross-family requirement by switching harness. Domain and data-egress
 exclusions are fail-closed: an unspecified or non-matching policy excludes
-a gated candidate, it does not admit it. Lane *health* is fail-open (no
-signal ≠ unhealthy, matching ``scripts/api/lane_health.py``'s convention)
-and used only as a tie-breaker among candidates that already passed every
-hard filter.
+a gated candidate, it does not admit it. Missing lane-health data is fail-open
+(no signal ≠ unhealthy, matching ``scripts/api/lane_health.py``'s convention),
+but an explicitly unhealthy route is unavailable. Degraded and near-capacity
+signals only break ties among candidates in the same quality rung; they never
+demote a model into a lower-quality rung.
 
-This module intentionally does not duplicate the full routing table from
-``agents_extensions/shared/rules/model-assignment.md`` — it owns a small,
-tested policy layer (the default code-review ladder + the family/exclusion
-tables below) and documents its provenance inline. Update both together if
-the canonical routing doc changes.
+The model inventory, candidate routes, and risk ladders are loaded from the
+versioned ``scripts/config/model_catalog.yaml`` catalog. Its separate freshness
+lint forces a provider/CLI/source review every 30 days without making a stale
+catalog an operational outage at runtime.
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
+from scripts.review.model_catalog import VALID_RISKS, load_model_catalog
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 
@@ -58,6 +59,7 @@ _FAMILY_BY_EXACT_SEAT: dict[str, str] = {
     "qwen": "alibaba",
     "qwen-tools": "alibaba",
     "kimi": "moonshot",
+    "composer": "moonshot",
 }
 
 # Model-id prefixes, for concrete model strings not covered by the seat table
@@ -79,6 +81,7 @@ _FAMILY_BY_MODEL_PREFIX: tuple[tuple[str, str], ...] = (
     ("glm-", "zhipu"),
     ("kimi-code/", "moonshot"),
     ("kimi-", "moonshot"),
+    ("composer-", "moonshot"),
 )
 
 
@@ -203,6 +206,8 @@ class ReviewerCandidate:
     name: str
     family: str
     concrete_model: str
+    route: str
+    transport: str
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
     # data_egress_policy exactly matches this value. None = no egress gate.
@@ -219,31 +224,56 @@ class ReviewerCandidate:
     advisory_only_for_author_families: frozenset[str] = field(default_factory=frozenset)
 
 
-DEEPSEEK_V4_FLASH = ReviewerCandidate(
-    name="deepseek-v4-flash",
-    family="deepseek",
-    concrete_model="deepseek-v4-flash",
-    requires_silence_timeout=True,
-    domain_excluded_from=frozenset({"folk_content"}),
-)
-GROK_4_5 = ReviewerCandidate(name="grok-4.5", family="xai", concrete_model="grok-4.5")
-POOL = ReviewerCandidate(name="pool", family="poolside", concrete_model="laguna-m.1")
-OPENAI_FRONTIER = ReviewerCandidate(
-    name="openai_frontier",
-    family="openai",
-    concrete_model="gpt-5.6-sol",
-    advisory_only_for_author_families=frozenset({"openai"}),
-)
+_MODEL_CATALOG = load_model_catalog()
 
-# Rungs in priority order; each rung is itself an ordered list of candidates
-# (health breaks ties within a rung; the first rung with any eligible
-# candidate wins over later rungs regardless of health).
-DEFAULT_CODE_LADDER: tuple[tuple[ReviewerCandidate, ...], ...] = (
-    (DEEPSEEK_V4_FLASH,),
-    (GROK_4_5,),
-    (POOL,),
-    (OPENAI_FRONTIER,),
-)
+
+def _catalog_candidate(name: str) -> ReviewerCandidate:
+    raw = _MODEL_CATALOG["review_candidates"][name]
+    model_id = raw["model_id"]
+    model = _MODEL_CATALOG["models"][model_id]
+    return ReviewerCandidate(
+        name=name,
+        family=model["family"],
+        concrete_model=model_id,
+        route=raw["route"],
+        transport=raw["transport"],
+        requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
+        requires_data_egress_policy=raw.get("requires_data_egress_policy"),
+        capabilities=frozenset(raw.get("capabilities", [])),
+        domain_excluded_from=frozenset(raw.get("domain_excluded_from", [])),
+        advisory_only_for_author_families=frozenset(
+            raw.get("advisory_only_for_author_families", [])
+        ),
+    )
+
+
+REVIEW_CANDIDATES: dict[str, ReviewerCandidate] = {
+    name: _catalog_candidate(name) for name in _MODEL_CATALOG["review_candidates"]
+}
+
+
+def _catalog_ladder(risk: str) -> tuple[tuple[ReviewerCandidate, ...], ...]:
+    return tuple(
+        tuple(REVIEW_CANDIDATES[name] for name in rung)
+        for rung in _MODEL_CATALOG["review_ladders"][risk]
+    )
+
+
+REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
+    risk: _catalog_ladder(risk) for risk in sorted(VALID_RISKS)
+}
+
+# Compatibility constants for direct candidate evaluation and callers that
+# explicitly imported the old default. Medium is the balanced default risk.
+CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
+OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
+GROK_4_5 = REVIEW_CANDIDATES["grok-4.5"]
+KIMI_K3 = REVIEW_CANDIDATES["kimi-k3"]
+DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
+DEEPSEEK_V4_FLASH = REVIEW_CANDIDATES["deepseek-v4-flash"]
+POOL = REVIEW_CANDIDATES["pool"]
+GLM = REVIEW_CANDIDATES["glm-5.2"]
+DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]
 
 # Known hard-filtered candidates outside the default ladder — kept here so the
 # fail-closed exclusion logic is directly testable even where model-assignment.md
@@ -252,13 +282,9 @@ QWEN = ReviewerCandidate(
     name="qwen",
     family="alibaba",
     concrete_model="qwen3-max",
+    route="qwen",
+    transport="hermes",
     always_excluded_reason="excluded from routine/automatic routing (cost) — model-assignment.md",
-)
-GLM = ReviewerCandidate(
-    name="glm",
-    family="zhipu",
-    concrete_model="glm-5.2",
-    requires_data_egress_policy="local_interactive",
 )
 
 _HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "unhealthy": 3}
@@ -301,6 +327,8 @@ class CandidateResult:
     name: str
     concrete_model: str
     family: str
+    route: str
+    transport: str
     status: CandidateStatus
     reason: str | None
     health: str | None
@@ -312,6 +340,9 @@ class ReviewerResolution:
     advisory: tuple[CandidateResult, ...]
     trace: tuple[CandidateResult, ...]
     substitution_note: str | None
+    policy_version: str
+    catalog_reviewed_on: str
+    resolved_risk: str
     # Set (non-None) instead of walking the ladder at all when the author's
     # model family could not be resolved to a concrete family — unknown,
     # ambiguous-harness, or conflicting-signal identities never get a formal
@@ -323,7 +354,12 @@ class ReviewerResolution:
 def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None) -> str | None:
     if not snapshot:
         return None
-    return snapshot.get(candidate.name) or snapshot.get(candidate.family)
+    return (
+        snapshot.get(candidate.name)
+        or snapshot.get(candidate.route)
+        or snapshot.get(candidate.concrete_model)
+        or snapshot.get(candidate.family)
+    )
 
 
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:
@@ -373,33 +409,66 @@ def evaluate_candidate(
 
     if same_family and family in candidate.advisory_only_for_author_families:
         return CandidateResult(
-            candidate.name,
-            candidate.concrete_model,
-            candidate.family,
-            "advisory_only",
-            f"same family as author ({family}) — advisory-only, not a formal cross-family gate",
-            health,
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            status="advisory_only",
+            reason=f"same family as author ({family}) — advisory-only, not a formal cross-family gate",
+            health=health,
         )
     if same_family:
         return CandidateResult(
-            candidate.name,
-            candidate.concrete_model,
-            candidate.family,
-            "excluded",
-            f"same family as author ({family}) — cross-family review requires a different family",
-            health,
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            status="excluded",
+            reason=f"same family as author ({family}) — cross-family review requires a different family",
+            health=health,
         )
 
     reason = _hard_exclusion_reason(candidate, inputs)
     if reason:
-        return CandidateResult(candidate.name, candidate.concrete_model, candidate.family, "excluded", reason, health)
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            status="excluded",
+            reason=reason,
+            health=health,
+        )
+    if health == "unhealthy":
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            status="excluded",
+            reason="lane health is unhealthy — route is operationally unavailable",
+            health=health,
+        )
 
-    return CandidateResult(candidate.name, candidate.concrete_model, candidate.family, "eligible", None, health)
+    return CandidateResult(
+        name=candidate.name,
+        concrete_model=candidate.concrete_model,
+        family=candidate.family,
+        route=candidate.route,
+        transport=candidate.transport,
+        status="eligible",
+        reason=None,
+        health=health,
+    )
 
 
 def resolve_reviewer(
     inputs: ResolverInputs,
-    ladder: tuple[tuple[ReviewerCandidate, ...], ...] = DEFAULT_CODE_LADDER,
+    ladder: tuple[tuple[ReviewerCandidate, ...], ...] | None = None,
 ) -> ReviewerResolution:
     """Walk the ladder in order; the first rung with an eligible candidate
     wins (health breaks ties within that rung). Advisory-only candidates
@@ -412,6 +481,22 @@ def resolve_reviewer(
     disambiguation, or a conflicting override). See
     :func:`resolve_author_family`.
     """
+    risk = (inputs.risk or "").strip().lower()
+    if ladder is None and risk not in VALID_RISKS:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_MODEL_CATALOG["schema_version"],
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=(
+                f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"
+            ),
+        )
+    active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
+
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
     if author_family in UNRESOLVED_AUTHOR_FAMILIES:
         reason = {
@@ -428,13 +513,22 @@ def resolve_reviewer(
                 f"disagrees with the declared author_family={inputs.author_family!r} override"
             ),
         }[author_family]
-        return ReviewerResolution(selected=None, advisory=(), trace=(), substitution_note=None, fail_closed_reason=reason)
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_MODEL_CATALOG["schema_version"],
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=reason,
+        )
 
     trace: list[CandidateResult] = []
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
 
-    for rung in ladder:
+    for rung in active_ladder:
         rung_eligible: list[CandidateResult] = []
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
@@ -446,7 +540,16 @@ def resolve_reviewer(
 
         if selected is None and rung_eligible:
             best = min(rung_eligible, key=lambda r: _health_rank(r.health))
-            promoted = CandidateResult(best.name, best.concrete_model, best.family, "selected", None, best.health)
+            promoted = CandidateResult(
+                name=best.name,
+                concrete_model=best.concrete_model,
+                family=best.family,
+                route=best.route,
+                transport=best.transport,
+                status="selected",
+                reason=None,
+                health=best.health,
+            )
             for i, entry in enumerate(trace):
                 if entry is best:
                     trace[i] = promoted
@@ -455,7 +558,7 @@ def resolve_reviewer(
 
     substitution_note = None
     if selected is not None:
-        default_first = ladder[0][0] if ladder and ladder[0] else None
+        default_first = active_ladder[0][0] if active_ladder and active_ladder[0] else None
         if default_first is not None and selected.name != default_first.name:
             substitution_note = f"substituted {selected.name} for default first pick {default_first.name}"
 
@@ -464,4 +567,7 @@ def resolve_reviewer(
         advisory=tuple(advisory),
         trace=tuple(trace),
         substitution_note=substitution_note,
+        policy_version=_MODEL_CATALOG["schema_version"],
+        catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+        resolved_risk=risk,
     )

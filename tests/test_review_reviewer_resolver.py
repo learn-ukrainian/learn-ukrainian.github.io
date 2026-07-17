@@ -1,4 +1,4 @@
-"""Tests for scripts/review/reviewer_resolver.py — cross-family reviewer resolution."""
+"""Tests for the quality-first cross-family reviewer resolver."""
 
 from __future__ import annotations
 
@@ -11,10 +11,13 @@ from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     DEEPSEEK_V4_FLASH,
+    DEEPSEEK_V4_PRO,
     GLM,
     GROK_4_5,
+    KIMI_K3,
     POOL,
     QWEN,
+    REVIEW_LADDERS,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -23,15 +26,14 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
 )
 
-# --- family resolution across model x harness aliases -------------------------
 
 def test_family_resolution_across_model_and_harness_aliases():
     cases = {
         "claude": "anthropic",
         "claude-tools": "anthropic",
-        "sonnet": "anthropic",
-        "opus": "anthropic",
-        "fable": "anthropic",
+        "claude-sonnet-5": "anthropic",
+        "claude-opus-4-8": "anthropic",
+        "claude-fable-5": "anthropic",
         "codex": "openai",
         "codex-tools": "openai",
         "gpt-5.6-sol": "openai",
@@ -40,343 +42,246 @@ def test_family_resolution_across_model_and_harness_aliases():
         "gemini": "google",
         "gemini-tools": "google",
         "agy": "google",
-        "agy-tools": "google",
-        "gemma": "google",
         "gemma-4-31b-it": "google",
         "grok": "xai",
-        "grok-build": "xai",  # permanent historical alias
-        "grok-hermes": "xai",  # demoted hermes-hosted path, still xAI
-        "grok-tools": "xai",  # V7 writer/reviewer seat alias
+        "grok-build": "xai",
+        "grok-hermes": "xai",
         "grok-4.5": "xai",
-        "deepseek": "deepseek",
-        "deepseek-tools": "deepseek",
         "deepseek-v4-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
         "pool": "poolside",
-        "glm": "zhipu",
         "glm-5.2": "zhipu",
-        "qwen": "alibaba",
-        "qwen-tools": "alibaba",
+        "qwen/qwen3.6-plus": "alibaba",
         "kimi": "moonshot",
         "kimi-code/k3": "moonshot",
+        "composer": "moonshot",
+        "composer-2.5": "moonshot",
     }
     for seat, expected_family in cases.items():
-        assert resolve_family(seat) == expected_family, f"{seat} -> expected {expected_family}"
+        assert resolve_family(seat) == expected_family, seat
 
 
-def test_family_resolution_unknown_and_empty():
+def test_family_resolution_unknown_and_bare_cursor_are_not_fabricated():
     assert resolve_family("") == "unknown"
-    assert resolve_family("some-made-up-seat-xyz") == "unknown"
-
-
-def test_family_resolution_bare_cursor_is_not_a_synthetic_family():
-    """Cursor is a multi-model harness, not a model family on its own — the
-    bare harness name must resolve as unrecognized via resolve_family, same
-    as any other unmapped string. Disambiguating it is resolve_author_family's
-    job (see the Cursor+GPT / Cursor+Claude / ambiguous / conflict fixtures
-    below), not a synthetic "cursor" family entry."""
+    assert resolve_family("some-made-up-seat") == "unknown"
     assert resolve_family("cursor") == "unknown"
     assert resolve_family("cursor-tools") == "unknown"
 
 
-# --- author identity resolution: ambiguous multi-model harnesses --------------
-
-def test_resolve_author_family_cursor_plus_gpt_resolves_openai():
-    assert resolve_author_family("cursor:gpt-5.6-sol") == "openai"
-
-
-def test_resolve_author_family_cursor_plus_claude_resolves_anthropic():
-    assert resolve_author_family("cursor:claude-opus-4-8") == "anthropic"
-
-
-def test_resolve_author_family_bare_cursor_with_no_override_is_ambiguous():
+def test_cursor_requires_concrete_model_identity():
     assert resolve_author_family("cursor") == AMBIGUOUS_AUTHOR_FAMILY
     assert resolve_author_family("cursor-tools") == AMBIGUOUS_AUTHOR_FAMILY
-
-
-def test_resolve_author_family_bare_cursor_with_validated_override_resolves():
-    """A bare ambiguous-harness identity can be disambiguated by an explicit,
-    validated author_family override (e.g. from inspecting session logs)."""
+    assert resolve_author_family("cursor:gpt-5.6-sol") == "openai"
+    assert resolve_author_family("cursor:claude-opus-4-8") == "anthropic"
+    assert resolve_author_family("cursor:composer-2.5") == "moonshot"
     assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
 
 
-def test_resolve_author_family_bare_cursor_with_invalid_override_stays_ambiguous():
-    """An override that isn't a recognized concrete family does not count as
-    "validated" — it must not silently rescue the ambiguous state."""
-    assert resolve_author_family("cursor", author_family="not-a-real-family") == AMBIGUOUS_AUTHOR_FAMILY
-
-
-def test_resolve_author_family_unknown_identity():
+def test_invalid_or_conflicting_author_identity_fails_closed():
     assert resolve_author_family("") == UNKNOWN_AUTHOR_FAMILY
-    assert resolve_author_family("some-made-up-seat-xyz") == UNKNOWN_AUTHOR_FAMILY
+    assert resolve_author_family("unknown-seat") == UNKNOWN_AUTHOR_FAMILY
+    assert (
+        resolve_author_family("cursor:gpt-5.6-sol", author_family="anthropic")
+        == CONFLICTING_AUTHOR_FAMILY
+    )
+    for inputs in (
+        ResolverInputs(author_model="cursor"),
+        ResolverInputs(author_model="unknown-seat"),
+        ResolverInputs(author_model="cursor:gpt-5.6-sol", author_family="anthropic"),
+    ):
+        resolution = resolve_reviewer(inputs)
+        assert resolution.selected is None
+        assert resolution.trace == ()
+        assert resolution.fail_closed_reason
 
 
-def test_resolve_author_family_conflicting_signals():
-    """The model embedded in a Cursor composite and an explicit author_family
-    override disagreeing is a conflict, not a silent pick of either side."""
-    assert resolve_author_family("cursor:gpt-5.6-sol", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
-
-
-def test_resolve_author_family_fixed_family_alias_unaffected():
-    """Ordinary, non-ambiguous seats keep resolving exactly as before —
-    the ambiguous-harness handling doesn't touch fixed-family aliases."""
-    assert resolve_author_family("claude") == "anthropic"
-    assert resolve_author_family("deepseek-v4-pro") == "deepseek"
-    assert resolve_author_family("grok-build") == "xai"
-    assert resolve_author_family("kimi-code/k3") == "moonshot"
-
-
-def test_default_ladder_kimi_author_gets_deepseek():
-    resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3"))
-    assert resolution.fail_closed_reason is None
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-
-
-# --- resolve_reviewer fail-closed on unresolved author identity ---------------
-
-def test_resolve_reviewer_fails_closed_for_bare_ambiguous_cursor_author():
-    resolution = resolve_reviewer(ResolverInputs(author_model="cursor"))
+def test_unsupported_risk_fails_closed():
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="urgent"))
     assert resolution.selected is None
     assert resolution.trace == ()
-    assert resolution.advisory == ()
-    assert resolution.fail_closed_reason is not None
-    assert "ambiguous" in resolution.fail_closed_reason.lower()
+    assert "unsupported review risk" in resolution.fail_closed_reason
 
 
-def test_resolve_reviewer_fails_closed_for_unknown_author():
-    resolution = resolve_reviewer(ResolverInputs(author_model="totally-unrecognized-seat"))
-    assert resolution.selected is None
-    assert resolution.fail_closed_reason is not None
-    assert "unknown" in resolution.fail_closed_reason.lower()
+def test_risk_materially_changes_openai_author_route():
+    critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
+    medium = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
+    low = resolve_reviewer(ResolverInputs(author_model="codex", risk="low"))
+
+    assert critical.selected.name == "claude-opus-4-8"
+    assert medium.selected.name == "gemini-3.1-pro"
+    assert low.selected.name == "pool"
+    assert critical.selected.family == "anthropic"
+    assert medium.selected.family == "google"
+    assert low.selected.family == "poolside"
 
 
-def test_resolve_reviewer_fails_closed_for_conflicting_author_identity():
-    resolution = resolve_reviewer(
-        ResolverInputs(author_model="cursor:gpt-5.6-sol", author_family="anthropic")
-    )
-    assert resolution.selected is None
-    assert resolution.fail_closed_reason is not None
-    assert "conflict" in resolution.fail_closed_reason.lower()
+def test_high_risk_anthropic_author_gets_sol_as_formal_gate():
+    resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
+    assert resolution.selected.name == "openai_frontier"
+    assert resolution.selected.concrete_model == "gpt-5.6-sol"
+    assert resolution.selected.route == "codex"
+    assert resolution.selected.transport == "native_codex"
 
 
-def test_resolve_reviewer_cursor_plus_gpt_picks_deepseek_same_as_codex_author():
-    """A disambiguated Cursor+GPT author must be treated exactly like a
-    native codex author for cross-family purposes: deepseek-v4-flash formally
-    selected, openai_frontier advisory-only (same family as the real model)."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:gpt-5.6-sol"))
-    assert resolution.fail_closed_reason is None
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-    assert len(resolution.advisory) == 1
-    assert resolution.advisory[0].name == "openai_frontier"
-
-
-def test_resolve_reviewer_cursor_plus_claude_picks_deepseek():
-    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:claude-opus-4-8"))
-    assert resolution.fail_closed_reason is None
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-
-
-# --- default code ladder: cross-family selection ------------------------------
-
-def test_default_ladder_picks_deepseek_for_anthropic_author():
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude"))
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-    assert resolution.substitution_note is None
-
-
-def test_default_ladder_excludes_same_family_and_falls_to_next_rung():
-    """Author IS deepseek — deepseek-v4-flash must be excluded (same family),
-    falling through to grok-4.5."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="deepseek-v4-pro"))
-    assert resolution.selected is not None
-    assert resolution.selected.name == "grok-4.5"
-    deepseek_trace = next(r for r in resolution.trace if r.name == "deepseek-v4-flash")
-    assert deepseek_trace.status == "excluded"
-    assert "same family" in deepseek_trace.reason
-    assert resolution.substitution_note is not None
-
-
-def test_default_ladder_grok_author_falls_to_deepseek():
-    resolution = resolve_reviewer(ResolverInputs(author_model="grok-build"))
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-
-
-def test_default_ladder_codex_author_gets_deepseek_and_openai_frontier_is_advisory():
-    resolution = resolve_reviewer(ResolverInputs(author_model="codex"))
-    assert resolution.selected is not None
-    assert resolution.selected.name == "deepseek-v4-flash"
-    assert len(resolution.advisory) == 1
-    assert resolution.advisory[0].name == "openai_frontier"
-    assert resolution.advisory[0].concrete_model == "gpt-5.6-sol"
+def test_high_risk_openai_author_gets_claude_and_sol_is_advisory():
+    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
+    assert resolution.selected.name == "claude-opus-4-8"
+    assert resolution.selected.transport == "native_claude"
+    assert [entry.name for entry in resolution.advisory] == ["openai_frontier"]
     assert resolution.advisory[0].status == "advisory_only"
 
 
-def test_openai_frontier_resolves_to_concrete_model_regardless_of_author():
-    """Even for a non-OpenAI author, openai_frontier must resolve to a concrete
-    model (gpt-5.6-sol) rather than a bare label."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude"))
-    frontier_entry = next(r for r in resolution.trace if r.name == "openai_frontier")
-    assert frontier_entry.concrete_model == "gpt-5.6-sol"
+def test_high_risk_kimi_author_gets_claude_not_composer():
+    resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
+    assert resolution.selected.name == "claude-opus-4-8"
+    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
+    assert composer.status == "excluded"
+    assert "same family" in composer.reason
 
 
-def test_openai_frontier_never_becomes_the_formal_gate_for_openai_author():
-    """No matter what happens upstream, an OpenAI-family author must never
-    get openai_frontier as the `selected` (formal, blocking) reviewer."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra"))
-    assert resolution.selected is None or resolution.selected.name != "openai_frontier"
-    assert any(r.name == "openai_frontier" and r.status == "advisory_only" for r in resolution.trace)
+def test_medium_risk_uses_frontier_practical_tier_before_economical_models():
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
+    assert resolution.selected.name == "gemini-3.1-pro"
+    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
 
 
-def test_openai_frontier_is_a_formal_eligible_candidate_for_non_openai_author():
-    """For a non-OpenAI author, openai_frontier is a normal (non-advisory)
-    ladder candidate — just ranked last by default."""
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude"))
-    frontier_entry = next(r for r in resolution.trace if r.name == "openai_frontier")
-    assert frontier_entry.status == "eligible"
+def test_low_risk_pool_author_falls_to_deepseek_flash():
+    resolution = resolve_reviewer(ResolverInputs(author_model="pool", risk="low"))
+    assert resolution.selected.name == "deepseek-v4-flash"
 
 
-# --- health tie-break ---------------------------------------------------------
+def test_policy_receipt_exposes_catalog_version_date_and_risk():
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
+    assert resolution.policy_version == "model-catalog.v1"
+    assert resolution.catalog_reviewed_on == "2026-07-17"
+    assert resolution.resolved_risk == "high"
 
-def test_health_does_not_override_ladder_priority_across_rungs():
-    """Health is a tie-breaker AMONG QUALIFIED ROUTES at the same priority —
-    it must not silently reroute away from a healthy-ranked-first candidate
-    just because a routing snapshot marks it degraded. That would make health
-    a hard filter instead of a tie-breaker, and hide a real ladder-priority
-    decision behind lane-health noise."""
+
+def test_unhealthy_route_is_unavailable_and_falls_within_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="claude",
-            routing_snapshot={"deepseek-v4-flash": "unhealthy"},
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"gemini-3.1-pro": "unhealthy", "grok": "healthy"},
         )
     )
-    assert resolution.selected.name == "deepseek-v4-flash"
-    assert resolution.selected.health == "unhealthy"
+    assert resolution.selected.name == "grok-4.5"
+    gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
+    assert gemini.status == "excluded"
+    assert "unhealthy" in gemini.reason
 
 
-def test_health_breaks_genuine_ties_within_a_rung():
-    grok_variant = GROK_4_5
-    deepseek_variant = DEEPSEEK_V4_FLASH
-    same_rung_ladder = ((deepseek_variant, grok_variant),)
+def test_near_cap_only_breaks_ties_inside_same_quality_rung():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="claude",
-            routing_snapshot={"deepseek-v4-flash": "unhealthy", "grok-4.5": "healthy"},
-        ),
-        ladder=same_rung_ladder,
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"agy": "near_cap", "grok": "healthy", "pool": "healthy"},
+        )
     )
     assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.health == "healthy"
+    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
 
 
-def test_health_missing_signal_is_fail_open_not_excluded():
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude", routing_snapshot={}))
-    assert resolution.selected.name == "deepseek-v4-flash"
-    resolution_none = resolve_reviewer(ResolverInputs(author_model="claude", routing_snapshot=None))
-    assert resolution_none.selected.name == "deepseek-v4-flash"
-
-
-# --- domain carve-out (folk content) -------------------------------------------
-
-def test_folk_content_domain_excludes_deepseek():
-    result = evaluate_candidate(
-        DEEPSEEK_V4_FLASH,
-        ResolverInputs(author_model="claude", domain="folk_content"),
-        author_family="anthropic",
+def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
+    snapshot = {
+        "claude": "unhealthy",
+        "cursor": "unhealthy",
+        "codex": "unhealthy",
+        "agy": "healthy",
+    }
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="kimi-code/k3", risk="critical", routing_snapshot=snapshot)
     )
-    assert result.status == "excluded"
-    assert "folk_content" in result.reason
+    assert resolution.selected.name == "gemini-3.1-pro"
 
 
-def test_non_folk_domain_does_not_exclude_deepseek():
-    result = evaluate_candidate(
-        DEEPSEEK_V4_FLASH,
-        ResolverInputs(author_model="claude", domain="code"),
-        author_family="anthropic",
+def test_missing_health_signal_is_fail_open():
+    empty = resolve_reviewer(
+        ResolverInputs(author_model="codex", risk="low", routing_snapshot={})
     )
-    assert result.status == "eligible"
-
-
-# --- fail-closed data-egress + hard cost exclusions ----------------------------
-
-def test_glm_excluded_when_data_egress_policy_unspecified_fail_closed():
-    result = evaluate_candidate(
-        GLM,
-        ResolverInputs(author_model="claude", data_egress_policy=None),
-        author_family="anthropic",
+    absent = resolve_reviewer(
+        ResolverInputs(author_model="codex", risk="low", routing_snapshot=None)
     )
-    assert result.status == "excluded"
-    assert "fail-closed" in result.reason
+    assert empty.selected.name == absent.selected.name == "pool"
 
 
-def test_glm_excluded_for_wrong_policy_value():
-    result = evaluate_candidate(
-        GLM,
-        ResolverInputs(author_model="claude", data_egress_policy="ci_automated"),
-        author_family="anthropic",
-    )
-    assert result.status == "excluded"
+def test_folk_content_excludes_both_deepseek_models():
+    for candidate in (DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH):
+        result = evaluate_candidate(
+            candidate,
+            ResolverInputs(author_model="claude", domain="folk_content"),
+            author_family="anthropic",
+        )
+        assert result.status == "excluded"
+        assert "folk_content" in result.reason
 
 
-def test_glm_eligible_only_for_matching_local_interactive_policy():
-    result = evaluate_candidate(
+def test_glm_data_egress_gate_is_fail_closed():
+    for policy in (None, "ci_automated"):
+        result = evaluate_candidate(
+            GLM,
+            ResolverInputs(author_model="claude", data_egress_policy=policy),
+            author_family="anthropic",
+        )
+        assert result.status == "excluded"
+    eligible = evaluate_candidate(
         GLM,
         ResolverInputs(author_model="claude", data_egress_policy="local_interactive"),
         author_family="anthropic",
     )
-    assert result.status == "eligible"
+    assert eligible.status == "eligible"
 
 
-def test_qwen_always_excluded_regardless_of_policy():
+def test_qwen_is_excluded_from_automatic_routing():
     result = evaluate_candidate(
         QWEN,
-        ResolverInputs(author_model="claude", data_egress_policy="local_interactive"),
+        ResolverInputs(author_model="claude"),
         author_family="anthropic",
     )
     assert result.status == "excluded"
     assert "cost" in result.reason
 
 
-# --- required capabilities / isolation ------------------------------------------
-
-def test_missing_required_capability_excludes_candidate():
-    result = evaluate_candidate(
+def test_required_capabilities_and_isolation_fail_closed():
+    missing = evaluate_candidate(
         POOL,
         ResolverInputs(author_model="claude", required_capabilities=frozenset({"vesum_mcp"})),
         author_family="anthropic",
     )
-    assert result.status == "excluded"
-    assert "capabilities" in result.reason
+    assert missing.status == "excluded"
+    assert "capabilities" in missing.reason
 
-
-def test_isolation_required_excludes_candidate_without_it():
-    result = evaluate_candidate(
+    isolation = evaluate_candidate(
         GROK_4_5,
         ResolverInputs(author_model="claude", isolation_required=True),
         author_family="anthropic",
     )
-    assert result.status == "excluded"
-    assert "isolation" in result.reason
+    assert isolation.status == "excluded"
+    assert "isolation" in isolation.reason
 
 
-# --- receipt visibility ---------------------------------------------------------
-
-def test_trace_covers_every_ladder_candidate_for_receipt_visibility():
-    resolution = resolve_reviewer(ResolverInputs(author_model="claude"))
-    traced_names = {r.name for r in resolution.trace}
-    assert traced_names == {"deepseek-v4-flash", "grok-4.5", "pool", "openai_frontier"}
-
-
-def test_no_eligible_candidate_leaves_selected_none():
-    """An author family that happens to match every ladder rung (contrived,
-    via a single-candidate custom ladder) must not silently promote an
-    excluded/advisory candidate to selected."""
+def test_custom_ladder_still_supported_for_focused_callers():
     resolution = resolve_reviewer(
-        ResolverInputs(author_model="deepseek-v4-pro"),
+        ResolverInputs(author_model="deepseek-v4-pro", risk="medium"),
         ladder=((DEEPSEEK_V4_FLASH,),),
     )
     assert resolution.selected is None
     assert resolution.trace[0].status == "excluded"
+
+
+def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
+    for risk, ladder in REVIEW_LADDERS.items():
+        names = [candidate.name for rung in ladder for candidate in rung]
+        assert len(names) == len(set(names))
+        resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
+        assert resolution.selected is not None
+        assert resolution.selected.family != "openai"
+
+
+def test_candidate_constants_preserve_expected_identity():
+    assert KIMI_K3.concrete_model == "kimi-code/k3"
+    assert KIMI_K3.transport == "native_kimi"
+    assert POOL.concrete_model == "poolside/laguna-m.1"
+    assert GLM.requires_data_egress_policy == "local_interactive"

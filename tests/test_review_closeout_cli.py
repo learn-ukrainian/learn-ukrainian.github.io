@@ -94,7 +94,10 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
     assert reviewer_proc.returncode == 0, reviewer_proc.stderr
     resolution = json.loads(reviewer_proc.stdout)
-    assert resolution["selected"]["name"] == "deepseek-v4-flash"
+    assert resolution["selected"]["name"] == "gemini-3.1-pro"
+    assert resolution["selected"]["route"] == "agy"
+    assert resolution["policy_version"] == "model-catalog.v1"
+    assert resolution["resolved_risk"] == "medium"
 
     raise_proc = _run_cli(state_file, "finding", "raise", "--id", "F1", "--summary", "issue", "--source", "reviewer:grok")
     assert raise_proc.returncode == 0, raise_proc.stderr

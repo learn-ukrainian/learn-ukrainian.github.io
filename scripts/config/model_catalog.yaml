@@ -1,0 +1,352 @@
+schema_version: model-catalog.v1
+reviewed_on: 2026-07-17
+refresh_after_days: 30
+
+# This is the preferred/current fleet, not every legacy model exposed by a
+# multi-model picker. Provider catalogs remain discovery inputs; this catalog
+# records the models that routing policy may actively select.
+quality_tiers:
+  frontier_authority: 1
+  frontier_practical: 2
+  strong_efficient: 3
+  economical: 4
+  specialist: 5
+  compatibility: 6
+
+policy:
+  quality_first: true
+  selection_order:
+    - independence_and_hard_gates
+    - task_risk_quality_tier
+    - health_and_quota_within_tier
+    - cost_within_equivalent_fit
+  inventory_sources:
+    - runtime_registry
+    - native_cli_catalogs
+    - bridge_routes
+    - cursor_model_catalog
+    - codexbar_health_and_quota
+  notes:
+    - CodexBar is a health and quota signal, not a complete model inventory.
+    - Cursor auto is a harness choice, never a model identity for formal review.
+    - GPT and Grok routes are native-only.
+    - Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.
+
+models:
+  gpt-5.6-sol:
+    family: openai
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, difficult_debugging, final_synthesis]
+    transports: [native_codex, cursor]
+    strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
+    weaknesses: [scarce_frontier_quota, wasteful_for_routine_work]
+    sources:
+      - https://developers.openai.com/api/docs/guides/latest-model
+  gpt-5.6-terra:
+    family: openai
+    tier: strong_efficient
+    lifecycle: active
+    roles: [implementation, investigation, standard_review]
+    transports: [native_codex, cursor]
+    strengths: [balanced_quality_cost, agentic_coding]
+    weaknesses: [not_default_final_authority]
+    sources:
+      - https://developers.openai.com/api/docs/guides/latest-model
+  gpt-5.6-luna:
+    family: openai
+    tier: economical
+    lifecycle: active
+    roles: [recon, bounded_checks, log_triage]
+    transports: [native_codex, cursor]
+    strengths: [speed, high_volume]
+    weaknesses: [not_sole_consequential_authority]
+    sources:
+      - https://developers.openai.com/api/docs/guides/latest-model
+  claude-fable-5:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, long_horizon_coding]
+    transports: [cursor, native_claude]
+    strengths: [highest_anthropic_capability, long_horizon_work]
+    weaknesses: [stricter_refusal_surface, cursor_route_no_zdr]
+    sources:
+      - https://www.anthropic.com/news/claude-fable-5-mythos-5
+  claude-opus-4-8:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, security_review, orchestration]
+    transports: [native_claude, cursor]
+    strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
+    weaknesses: [frontier_quota_cost]
+    sources:
+      - https://www.anthropic.com/news/claude-opus-4-8
+  claude-sonnet-5:
+    family: anthropic
+    tier: frontier_practical
+    lifecycle: active
+    roles: [implementation, agentic_coding, strong_review]
+    transports: [native_claude, cursor]
+    strengths: [speed_intelligence_balance, complex_instruction_following]
+    weaknesses: [less_final_authority_than_opus, tokenizer_uses_more_tokens]
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
+  gemini-3.1-pro-high:
+    family: google
+    tier: frontier_practical
+    lifecycle: active
+    aliases: [gemini-3.1-pro-preview, gemini-3.1-pro]
+    roles: [deep_review, agentic_coding, factual_review, multimodal_analysis]
+    transports: [agy, cursor]
+    strengths: [complex_reasoning, precise_tool_use, multimodal_long_context]
+    weaknesses: [preview_lifecycle, legacy_gemini_cli_retired]
+    sources:
+      - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+  gemini-3.5-flash-high:
+    family: google
+    tier: strong_efficient
+    lifecycle: active
+    aliases: [gemini-3.5-flash]
+    roles: [implementation, subagent_work, routine_review, multimodal_analysis]
+    transports: [agy, cursor]
+    strengths: [frontier_speed_balance, sustained_agentic_work, low_cost]
+    weaknesses: [not_default_critical_authority]
+    sources:
+      - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
+  grok-4.5:
+    family: xai
+    tier: frontier_practical
+    lifecycle: active
+    roles: [coding, adversarial_review, debugging]
+    transports: [native_grok, cursor]
+    strengths: [strong_coding, sharp_review, agentic_work]
+    weaknesses: [native_subscription_window]
+    sources:
+      - https://docs.x.ai/developers/grok-4-5
+  kimi-code/k3:
+    family: moonshot
+    tier: frontier_practical
+    lifecycle: active
+    aliases: [k3]
+    roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
+    transports: [native_kimi]
+    strengths: [one_million_context, max_effort, image_video_tools]
+    weaknesses: [public_model_card_detail_is_limited, max_effort_only]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
+  kimi-code/kimi-for-coding:
+    family: moonshot
+    tier: economical
+    lifecycle: active
+    aliases: [k2.7-coding]
+    roles: [routine_coding, bounded_implementation]
+    transports: [native_kimi]
+    strengths: [coding_specialization, subscription_capacity]
+    weaknesses: [not_critical_authority]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/guides/getting-started.html
+  kimi-code/kimi-for-coding-highspeed:
+    family: moonshot
+    tier: economical
+    lifecycle: active
+    aliases: [k2.7-coding-highspeed]
+    roles: [fast_routine_coding]
+    transports: [native_kimi]
+    strengths: [speed]
+    weaknesses: [not_critical_authority]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/guides/getting-started.html
+  glm-5.2:
+    family: zhipu
+    tier: frontier_practical
+    lifecycle: active
+    roles: [long_context_review, security_review, complex_debugging]
+    transports: [opencode]
+    strengths: [long_horizon_coding, one_million_context, strong_open_model]
+    weaknesses: [china_data_egress, local_interactive_only, quota_multiplier]
+    sources:
+      - https://z.ai/blog/glm-5.2
+  deepseek-v4-pro:
+    family: deepseek
+    tier: frontier_practical
+    lifecycle: active
+    roles: [strong_review, coding, long_context_reasoning]
+    transports: [hermes, opencode]
+    strengths: [quality_per_dollar, one_million_context, tool_calling]
+    weaknesses: [silent_stall_history, not_for_folk_content]
+    sources:
+      - https://api-docs.deepseek.com/news/news260424/
+      - https://api-docs.deepseek.com/quick_start/pricing
+  deepseek-v4-flash:
+    family: deepseek
+    tier: economical
+    lifecycle: active
+    roles: [routine_review, bounded_agentic_work]
+    transports: [hermes, opencode]
+    strengths: [very_low_cost, speed]
+    weaknesses: [not_sole_high_risk_reviewer, silent_stall_history, not_for_folk_content]
+    sources:
+      - https://api-docs.deepseek.com/news/news260424/
+      - https://api-docs.deepseek.com/quick_start/pricing
+  poolside/laguna-m.1:
+    family: poolside
+    tier: economical
+    lifecycle: active
+    aliases: [laguna-m.1, pool]
+    roles: [routine_review, high_volume_dissent, web_fact_check]
+    transports: [opencode]
+    strengths: [free_current_subscription, coding_specialization, review_volume]
+    weaknesses: [not_sole_critical_gate]
+    sources:
+      - https://poolside.ai/assets/laguna/laguna-m1-xs2-technical-report.pdf
+  composer-2.5:
+    family: moonshot
+    lab: cursor
+    tier: strong_efficient
+    lifecycle: active
+    roles: [long_running_coding, implementation, strong_review]
+    transports: [cursor]
+    strengths: [sustained_agentic_work, complex_instruction_following, effort_calibration]
+    weaknesses: [not_independent_from_kimi_lineage, cursor_only]
+    sources:
+      - https://cursor.com/blog/composer-2-5
+  google-ais/gemma-4-31b-it:
+    family: google
+    tier: specialist
+    lifecycle: active
+    aliases: [gemma-4-31b-it, gemma]
+    roles: [surface_review, source_constrained_drafting]
+    transports: [opencode]
+    strengths: [low_cost, surface_language_checks]
+    weaknesses: [not_sole_factual_or_critical_reviewer]
+    sources:
+      - https://ai.google.dev/gemma/docs/core
+  gpt-oss-120b:
+    family: openai
+    tier: specialist
+    lifecycle: active
+    roles: [bounded_open_model_work, routine_fact_check]
+    transports: [agy]
+    strengths: [open_weight, tool_calling]
+    weaknesses: [not_frontier_authority]
+    sources:
+      - https://developers.openai.com/cookbook/articles/gpt-oss/run-vllm
+  qwen/qwen3.6-plus:
+    family: alibaba
+    tier: specialist
+    lifecycle: hold
+    roles: [explicit_bakeoff_only]
+    transports: [hermes]
+    strengths: [coding_and_reasoning]
+    weaknesses: [excluded_from_automatic_routing_pending_fresh_evidence]
+    sources:
+      - https://github.com/QwenLM/Qwen3.6
+  claude-sonnet-4.6-thinking:
+    family: anthropic
+    tier: compatibility
+    lifecycle: fallback
+    roles: [compatibility_only]
+    transports: [agy]
+    strengths: [existing_route_compatibility]
+    weaknesses: [superseded_by_sonnet_5]
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/overview
+  claude-opus-4.6-thinking:
+    family: anthropic
+    tier: compatibility
+    lifecycle: fallback
+    roles: [compatibility_only]
+    transports: [agy]
+    strengths: [existing_route_compatibility]
+    weaknesses: [superseded_by_opus_4.8]
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/overview
+
+review_candidates:
+  claude-opus-4-8:
+    model_id: claude-opus-4-8
+    route: claude
+    transport: native_claude
+    capabilities: [code_review]
+  openai_frontier:
+    model_id: gpt-5.6-sol
+    route: codex
+    transport: native_codex
+    capabilities: [code_review]
+    advisory_only_for_author_families: [openai]
+  claude-fable-5:
+    model_id: claude-fable-5
+    route: cursor
+    transport: cursor
+    capabilities: [code_review]
+  gemini-3.1-pro:
+    model_id: gemini-3.1-pro-high
+    route: agy
+    transport: agy
+    capabilities: [code_review]
+  grok-4.5:
+    model_id: grok-4.5
+    route: grok
+    transport: native_grok
+    capabilities: [code_review]
+  kimi-k3:
+    model_id: kimi-code/k3
+    route: kimi
+    transport: native_kimi
+    capabilities: [code_review]
+  glm-5.2:
+    model_id: glm-5.2
+    route: glm
+    transport: opencode
+    capabilities: [code_review]
+    requires_data_egress_policy: local_interactive
+  claude-sonnet-5:
+    model_id: claude-sonnet-5
+    route: claude
+    transport: native_claude
+    capabilities: [code_review]
+  deepseek-v4-pro:
+    model_id: deepseek-v4-pro
+    route: deepseek
+    transport: hermes
+    capabilities: [code_review]
+    requires_silence_timeout: true
+    domain_excluded_from: [folk_content]
+  composer-2.5:
+    model_id: composer-2.5
+    route: cursor
+    transport: cursor
+    capabilities: [code_review]
+  pool:
+    model_id: poolside/laguna-m.1
+    route: pool
+    transport: opencode
+    capabilities: [code_review]
+  deepseek-v4-flash:
+    model_id: deepseek-v4-flash
+    route: deepseek
+    transport: hermes
+    capabilities: [code_review]
+    requires_silence_timeout: true
+    domain_excluded_from: [folk_content]
+  gemini-3.5-flash:
+    model_id: gemini-3.5-flash-high
+    route: agy
+    transport: agy
+    capabilities: [code_review]
+
+review_ladders:
+  critical: &high_risk_ladder
+    - [claude-opus-4-8, openai_frontier, claude-fable-5]
+    - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
+    - [pool, deepseek-v4-flash]
+  high: *high_risk_ladder
+  medium:
+    - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
+    - [pool, deepseek-v4-flash, gemini-3.5-flash]
+    - [claude-opus-4-8, openai_frontier]
+  low:
+    - [pool, deepseek-v4-flash, gemini-3.5-flash]
+    - [composer-2.5, grok-4.5, kimi-k3]
