@@ -47,6 +47,7 @@ from scripts.lexicon.manifest_fingerprint import (
     build_fingerprint,
     write_fingerprint,
 )
+from scripts.lexicon.source_attribution import apply_entry_attribution
 from scripts.sync.promote_module import _write_atomically
 
 DEFAULT_CANDIDATES = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
@@ -170,9 +171,10 @@ def promote_grow_candidates(
 
     # Fill before validation: the prospective gate must inspect the exact post-fill
     # manifest state that would ship, including its translation/source enrichment.
-    cached_anchor_fills, anchorless_promoted = _fill_cached_anchors_for_new_entries(
-        newly_promoted_entries
-    )
+    cached_anchor_fills, anchorless_promoted = _fill_cached_anchors_for_new_entries(newly_promoted_entries)
+
+    for entry in newly_promoted_entries:
+        apply_entry_attribution(entry)
 
     if promoted:
         _refresh_manifest_metadata(manifest)
@@ -298,10 +300,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--approval-ledger",
         type=Path,
-        help=(
-            "Require an exact, checksum-bound atlas_grow_promotion_ledger; "
-            "only its approve decisions are promoted"
-        ),
+        help=("Require an exact, checksum-bound atlas_grow_promotion_ledger; only its approve decisions are promoted"),
     )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--write", action="store_true", help="Write the manifest and held-review report")
@@ -370,9 +369,7 @@ def _approved_candidate_entries(
     if not isinstance(payload, Mapping):
         raise ValueError(f"approval ledger must be a mapping: {approval_ledger_path}")
     if payload.get("kind") != APPROVAL_LEDGER_KIND:
-        raise ValueError(
-            f"approval ledger kind must be {APPROVAL_LEDGER_KIND!r}: {approval_ledger_path}"
-        )
+        raise ValueError(f"approval ledger kind must be {APPROVAL_LEDGER_KIND!r}: {approval_ledger_path}")
 
     provenance = payload.get("provenance")
     if not isinstance(provenance, Mapping):
@@ -380,9 +377,7 @@ def _approved_candidate_entries(
     expected_sha256 = str(provenance.get("candidates_sha256") or "").strip()
     actual_sha256 = hashlib.sha256(candidates_path.read_bytes()).hexdigest()
     if expected_sha256 != actual_sha256:
-        raise ValueError(
-            "approval ledger candidate SHA-256 does not match the supplied candidates file"
-        )
+        raise ValueError("approval ledger candidate SHA-256 does not match the supplied candidates file")
 
     raw_decisions = payload.get("decisions")
     if not isinstance(raw_decisions, list):
@@ -417,16 +412,9 @@ def _approved_candidate_entries(
             details.append(f"missing decisions={len(missing)}")
         if unexpected:
             details.append(f"unexpected decisions={len(unexpected)}")
-        raise ValueError(
-            "approval ledger does not exactly cover auto-merge candidates "
-            f"({', '.join(details)})"
-        )
+        raise ValueError(f"approval ledger does not exactly cover auto-merge candidates ({', '.join(details)})")
 
-    return [
-        candidate
-        for candidate in candidates
-        if decision_by_key[_candidate_decision_key(candidate)] == "approve"
-    ]
+    return [candidate for candidate in candidates if decision_by_key[_candidate_decision_key(candidate)] == "approve"]
 
 
 def _candidate_decision_key(candidate: Mapping[str, Any]) -> tuple[str, str]:

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "25afa3cf734e878d42af25e88bb16048a44356518ed5a56f198373bf946d0fcf",
+  "fingerprint": "5740b2b32db1d2fef57fc593a676a0aa6414df40bb8c658af2bcd213152cd569",
   "inputs": {
     "lexicon_code": [
       {
@@ -156,7 +156,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "86b02e3403b53e0577325f4f0b39e67060e4bef406f24048839b334749ac1ef9"
+        "sha256": "de3e8f0081b37f5210147825147dca6a6236de1c05e6ee361ddce38419552d12"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -180,7 +180,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "7216342e9293ed9d43e27d82d5b54dcb09cbc7f8e9322a477d77d9ef820befff"
+        "sha256": "c999d218e5b95d28a8debe60dd093a0a90358ffb90419ca3cef317c3300e0431"
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
