@@ -21,6 +21,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -42,6 +43,11 @@ def _load_hook():
 guard = _load_hook()
 
 
+def _any_judged_merge(command: str) -> bool:
+    """Whether any segment of `command` — `bash -c` payloads included — is a judged merge."""
+    return any(guard._merge_args(s.argv) is not None for s in guard._judged_segments(command))
+
+
 def _run(
     monkeypatch,
     command: str,
@@ -58,13 +64,13 @@ def _run(
     """
     payload = json.dumps({"tool_input": {"command": command}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: pr)
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: pr)
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None: ({"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta),
+        lambda p, repo=None, cwd=None: ({"isDraft": False, "baseRefName": "main", "url": _URL} if meta is None else meta),
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: checks)
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: checks)
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: owner_repo)
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: protected)
     return guard.main()
@@ -168,10 +174,10 @@ def test_unknown_pr_fails_closed(monkeypatch):
 
 def test_undeterminable_pr_meta_fails_closed(monkeypatch):
     # _pr_meta returning None (gh error/timeout) → block, never "assume not a draft".
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: None)
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: None)
     payload = json.dumps({"tool_input": {"command": "gh pr merge 5 --squash"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
     assert guard.main() == 2
 
 
@@ -280,9 +286,9 @@ def test_auto_on_base_with_empty_required_checks_is_blocked(monkeypatch):
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: False)
     payload = json.dumps({"tool_input": {"command": "gh pr merge 5 --auto --squash"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: "owner/repo")
     assert guard.main() == 2
 
@@ -421,11 +427,11 @@ def test_repeated_auto_flags_on_unprotected_base_is_blocked(monkeypatch):
 )
 def test_shell_c_payload_is_judged(cmd):
     # A `bash -c` payload really executes the merge; the segment merely starts with `bash`.
-    assert any(guard._merge_args(s) is not None for s in guard._judged_segments(cmd))
+    assert _any_judged_merge(cmd)
 
 
 def test_shell_c_without_merge_is_not_judged():
-    assert not any(guard._merge_args(s) is not None for s in guard._judged_segments("bash -c 'git status'"))
+    assert not _any_judged_merge("bash -c 'git status'")
 
 
 def test_shell_c_merge_blocks_end_to_end(monkeypatch):
@@ -473,13 +479,13 @@ def test_owner_repo_from_url(url, expected):
 def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
     # The PR url decides which repo's protection is read, not the cwd.
     seen = {}
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "https://github.com/other/repo/pull/9")
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "https://github.com/other/repo/pull/9")
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": "https://github.com/other/repo/pull/9"},
+        lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": "https://github.com/other/repo/pull/9"},
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: seen.setdefault("repo", o) and True)
     payload = json.dumps({"tool_input": {"command": "gh pr merge https://github.com/other/repo/pull/9 --auto"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
@@ -504,7 +510,7 @@ def test_pr_meta_requires_url_field(monkeypatch):
 def test_clustered_c_not_last_is_judged(cmd):
     # `bash -cx 'cmd'` runs cmd (verified: `bash -cx 'echo hi'` executes, exit 0), so
     # requiring the cluster to END in c missed a real merge.
-    assert any(guard._merge_args(s) is not None for s in guard._judged_segments(cmd))
+    assert _any_judged_merge(cmd)
 
 
 @pytest.mark.parametrize(
@@ -518,7 +524,7 @@ def test_dollar_quoted_shell_payload_is_judged(cmd):
     # Bash's $'...' (ANSI-C) and $"..." (locale) quoting run the command for real, but
     # survive tokenizing as a literal `$` glued to the payload — first token `$gh`,
     # matching nothing. Verified: `bash -c $'echo ansi-c-ran'` executes.
-    assert any(guard._merge_args(s) is not None for s in guard._judged_segments(cmd))
+    assert _any_judged_merge(cmd)
 
 
 def test_strip_dollar_quote():
@@ -527,10 +533,7 @@ def test_strip_dollar_quote():
 
 
 def test_valid_nested_shell_is_judged():
-    assert any(
-        guard._merge_args(s) is not None
-        for s in guard._judged_segments("""bash -c 'bash -c "gh pr merge 5 --squash"'""")
-    )
+    assert _any_judged_merge("""bash -c 'bash -c "gh pr merge 5 --squash"'""")
 
 
 def test_recursion_cap_fails_closed(monkeypatch):
@@ -538,15 +541,15 @@ def test_recursion_cap_fails_closed(monkeypatch):
     # through. Regression for an inert sentinel: the marker segment carries no PR
     # selector, and _pr_ref falls back to the CURRENT BRANCH's PR — so without an
     # explicit marker check, a green current branch would approve an unread payload.
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None: "5")
-    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None: ([], []))  # all green
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL})
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))  # all green
     assert guard._judge([guard._UNREADABLE_MARKER]) is not None
 
 
 def test_deep_nesting_emits_unparsed_marker():
     segs = guard._judged_segments("bash -c 'gh pr merge 5 --squash'", guard._MAX_SHELL_DEPTH)
-    assert guard._UNPARSED in segs
+    assert guard._UNPARSED in [s.argv for s in segs]
 
 
 @pytest.mark.parametrize(
@@ -561,7 +564,7 @@ def test_flag_looking_values_do_not_suppress_judging(cmd):
     # pflag takes the next token as a string flag's VALUE even when it looks like a flag.
     # `--subject --disable-auto` is a normal merge whose subject is "--disable-auto";
     # reading that value as the flag skipped judging entirely — a fail-open.
-    assert any(guard._merge_args(s) is not None for s in guard._judged_segments(cmd))
+    assert _any_judged_merge(cmd)
 
 
 def test_flag_looking_value_does_not_force_auto_path():
@@ -711,10 +714,7 @@ def test_cluster_value():
 
 
 def test_xargs_shell_form_is_judged():
-    assert any(
-        guard._merge_args(s) is not None
-        for s in guard._judged_segments("printf '' | xargs sh -c 'gh pr merge 5 --auto'")
-    )
+    assert _any_judged_merge("printf '' | xargs sh -c 'gh pr merge 5 --auto'")
 
 
 # --- codex re-review round 5 (PR #5324): xargs is not a transparent prefix ----
@@ -886,3 +886,295 @@ def test_colorized_empty_required_checks_still_unprotected(monkeypatch):
     completed = subprocess.CompletedProcess(args=[], returncode=0, stdout=colorized, stderr="")
     monkeypatch.setattr(guard.subprocess, "run", lambda *a, **k: completed)
     assert guard._base_protected("owner/repo", "main") is False
+
+
+# --- cd-target resolution: judge the PR in the repo the merge RUNS in ---------
+
+
+def test_cd_target_literal_and_home():
+    assert guard._cd_target(["cd", "/tmp"]) == "/tmp"
+    assert guard._cd_target(["cd", "~/x"]) == os.path.expanduser("~/x")
+    assert guard._cd_target(["cd"]) == os.path.expanduser("~")
+    assert guard._cd_target(["ls", "-la"]) is None
+
+
+def test_cd_target_unreadable_forms():
+    assert guard._cd_target(["cd", "-"]) is guard._CD_UNREADABLE
+    assert guard._cd_target(["cd", "$DIR"]) is guard._CD_UNREADABLE
+
+
+def test_cd_then_merge_threads_cwd(monkeypatch):
+    """`cd <repo> && gh pr merge N` must judge N in <repo> — captured via the cwd
+    handed to _judge. Wrong-repo judgment is dangerous BOTH ways (false block, or a
+    false ALLOW off a same-numbered green PR elsewhere)."""
+    seen = {}
+
+    def fake_judge(args, cwd=None):
+        seen["cwd"] = cwd
+        return None
+
+    payload = json.dumps(
+        {"tool_input": {"command": "cd /tmp && gh pr merge 7 --squash"}}
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    monkeypatch.setattr(guard, "_judge", fake_judge)
+    assert guard.main() == 0
+    assert seen["cwd"] == "/tmp"
+
+
+def test_unreadable_cd_before_merge_blocks(monkeypatch):
+    payload = json.dumps(
+        {"tool_input": {"command": 'cd "$WORKDIR" && gh pr merge 7 --squash'}}
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+def test_plain_merge_has_no_cwd(monkeypatch):
+    seen = {}
+
+    def fake_judge(args, cwd=None):
+        seen["cwd"] = cwd
+        return None
+
+    payload = json.dumps({"tool_input": {"command": "gh pr merge 7 --squash"}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    monkeypatch.setattr(guard, "_judge", fake_judge)
+    assert guard.main() == 0
+    assert seen["cwd"] is None
+
+
+def test_cd_target_skips_options():
+    """`cd -- /tmp` targets /tmp, not `--`; `cd -LP /tmp` targets /tmp, not `-LP`.
+
+    A wrong path is not a safe one: gh misses there, and a fine command fails closed.
+    """
+    assert guard._cd_target(["cd", "--", "/tmp"]) == "/tmp"
+    assert guard._cd_target(["cd", "-LP", "/tmp"]) == "/tmp"
+    assert guard._cd_target(["cd", "-P", "-L", "/tmp"]) == "/tmp"
+    # `--` does NOT demote `-` to a literal directory: `cd -- -` still toggles to OLDPWD
+    # (verified against bash with a real ./- directory in place — only `cd -- ./-` reaches
+    # it). Unreadable either way, so the toggle keeps its meaning here too.
+    assert guard._cd_target(["cd", "--", "-"]) is guard._CD_UNREADABLE
+    assert guard._cd_target(["cd", "-"]) is guard._CD_UNREADABLE
+    assert guard._cd_target(["cd", "--", "./-"]) == os.path.abspath("./-")
+
+
+# --- #5333: `cd` scope must not leak across shell boundaries ------------------
+#
+# Verified against real bash before these were written: `bash -c 'cd /inner && true'`
+# and `(cd /inner && true)` both leave the CALLER's cwd untouched, while a `bash -c`
+# payload does INHERIT the spawning shell's cwd. The guard must model both halves —
+# reading a merge in the wrong repo is wrong in both directions, and the dangerous one
+# is the false ALLOW off a same-numbered green PR in the other repo.
+
+
+def _judged_cwds(monkeypatch, command: str) -> list[tuple[str, str | None]]:
+    """(PR selector, cwd) per merge main() judges — the scope decision, made visible."""
+    seen: list[tuple[str, str | None]] = []
+
+    def fake_judge(args, cwd=None):
+        seen.append((args[0], cwd))
+        return None
+
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    monkeypatch.setattr(guard, "_judge", fake_judge)
+    assert guard.main() == 0
+    return seen
+
+
+def test_shell_c_cd_does_not_leak_out(monkeypatch):
+    """LEAK, direction 1: an inner `cd` adopted by an OUTER merge (false-ALLOW).
+
+    `bash -c 'cd /inner && true'` ends with the outer shell still where it started, so
+    PR 9 is resolved there — not in /inner, whose PR 9 is a different PR entirely.
+    """
+    assert _judged_cwds(monkeypatch, "bash -c 'cd /inner && true' && gh pr merge 9") == [
+        ("9", None)
+    ]
+
+
+def test_subshell_cd_does_not_leak_out(monkeypatch):
+    """LEAK, direction 1 via `( ... )` — the subshell's cd dies at its `)`."""
+    assert _judged_cwds(monkeypatch, "(cd /inner && true) && gh pr merge 9") == [("9", None)]
+
+
+def test_shell_c_payload_inherits_cwd_but_does_not_export_it(monkeypatch):
+    """LEAK, direction 2: an OUTER merge inheriting an inner `cd` it never ran.
+
+    Both halves in one command: A really does run in /inner (the payload inherited
+    /outer, then cd'd), while B runs in /outer — the payload's cd died with it.
+    """
+    assert _judged_cwds(
+        monkeypatch,
+        "cd /outer && bash -c 'cd /inner && gh pr merge 1' && gh pr merge 2",
+    ) == [("1", "/inner"), ("2", "/outer")]
+
+
+def test_merge_inside_subshell_is_judged_in_the_subshell_cwd(monkeypatch):
+    """Scoping must not overshoot: a merge INSIDE the cd's scope is judged there."""
+    assert _judged_cwds(monkeypatch, "(cd /inner && gh pr merge 5)") == [("5", "/inner")]
+
+
+def test_merge_inside_shell_c_is_judged_in_the_payload_cwd(monkeypatch):
+    assert _judged_cwds(monkeypatch, 'bash -c "cd /inner && gh pr merge 5"') == [("5", "/inner")]
+
+
+def test_nested_subshells_restore_each_level(monkeypatch):
+    """Each `)` restores exactly one level — /b, then /a, then the session's cwd."""
+    assert _judged_cwds(
+        monkeypatch,
+        "(cd /a && (cd /b && gh pr merge 1) && gh pr merge 2) && gh pr merge 3",
+    ) == [("1", "/b"), ("2", "/a"), ("3", None)]
+
+
+def test_glued_subshell_operators_keep_scope(monkeypatch):
+    """`&&(` and `)&&` tokenize as one glued punctuation run (#4876) — the parens in
+    them still open and close scopes, in order."""
+    assert _judged_cwds(monkeypatch, "cd /a&&(cd /b&&gh pr merge 1)&&gh pr merge 2") == [
+        ("1", "/b"),
+        ("2", "/a"),
+    ]
+
+
+def test_command_substitution_cd_does_not_leak(monkeypatch):
+    """`$(...)` runs in a subshell, so its cd dies at the `)` — as bash does."""
+    assert _judged_cwds(monkeypatch, "cd /a && echo $(cd /b; pwd) && gh pr merge 1") == [
+        ("1", "/a")
+    ]
+
+
+def test_unreadable_cd_inside_payload_does_not_escape(monkeypatch):
+    """An unreadable cd is scoped too: it blocks the merge INSIDE the payload..."""
+    payload = json.dumps({"tool_input": {"command": "bash -c 'cd $D && gh pr merge 7'"}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+def test_unreadable_cd_in_subshell_does_not_block_outer_merge(monkeypatch):
+    """...but does NOT taint a merge outside it, which that cd never touched."""
+    assert _judged_cwds(monkeypatch, '(cd "$D" && true) && gh pr merge 7') == [("7", None)]
+
+
+def test_unattributable_scope_boundary_fails_closed(monkeypatch):
+    """A `)` with no `(` desyncs the scope model — block rather than guess a cwd."""
+    payload = json.dumps({"tool_input": {"command": "(cd /a)) && gh pr merge 7"}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+def test_cd_after_merge_does_not_apply_to_it(monkeypatch):
+    """A `cd` the merge never reached cannot move it: the merge already ran."""
+    assert _judged_cwds(monkeypatch, "gh pr merge 7 && cd /elsewhere") == [("7", None)]
+
+
+def test_cd_threads_across_lines(monkeypatch):
+    """cwd survives the line break, as it does in a real script — `cd` and merge on
+    separate lines are still the same shell."""
+    assert _judged_cwds(monkeypatch, "cd /repo\ngh pr merge 7 --squash") == [("7", "/repo")]
+
+
+def test_multiline_merges_track_their_own_cwd(monkeypatch):
+    assert _judged_cwds(
+        monkeypatch, "cd /a\ngh pr merge 1\ncd /b\ngh pr merge 2"
+    ) == [("1", "/a"), ("2", "/b")]
+
+
+# --- #5333 r2: the fail-closed path's own two bugs ----------------------------
+#
+# The scope fix above closed the leak, but its new fail-closed path shipped two of its
+# own defects (cross-family r2 review). Both are regression-locked here.
+
+
+def test_repo_option_is_honoured_when_cwd_is_unreadable(monkeypatch):
+    """B1: `-R owner/repo` is the remedy the block message advertises — so it must WORK.
+
+    An unreadable cwd is only a problem because the PR number is resolved relative to it.
+    `-R owner/repo` removes that dependency outright, so there is nothing left to fail
+    closed about. Verified against real gh, from /tmp (NOT a git repo at all):
+    `gh pr view 9 --repo cli/cli --json number` -> rc=0 `{"number":9}`. cwd is never
+    consulted once --repo names the repo.
+
+    The `case` arm's bare `)` is what makes the cwd unreadable here (see N1 below).
+    """
+    assert _judged_cwds(
+        monkeypatch, "case x in y) true;; esac; gh pr merge 9 --squash -R owner/repo"
+    ) == [("9", None)]
+
+
+def test_repo_option_under_unreadable_cwd_is_judged_not_waved_through(monkeypatch):
+    """B1 must not become a bypass: `-R` skips the cwd block, it does not skip _judge.
+
+    A draft PR named with `-R` is still a draft.
+    """
+    monkeypatch.setattr(guard, "_pr_meta", lambda pr, repo=None, cwd=None: {"isDraft": True})
+    payload = json.dumps(
+        {"tool_input": {"command": "case x in y) true;; esac; gh pr merge 9 -R owner/repo"}}
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+def test_unreadable_cwd_without_repo_option_still_fails_closed(monkeypatch):
+    """B1's fix is scoped to `-R`: without it, an unreadable cwd still blocks."""
+    payload = json.dumps({"tool_input": {"command": 'cd "$D" && gh pr merge 9 --squash'}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo ')' && gh pr merge 9 --squash",
+        'echo ")" && gh pr merge 9 --squash',
+        "printf '%s' ')' ; gh pr merge 9 --squash",
+    ],
+)
+def test_quoted_paren_is_not_a_scope_boundary(monkeypatch, command):
+    """B2: a quoted `)` is an ARGUMENT, not a shell boundary.
+
+    shlex strips quotes, so `')'` and a bare `)` arrive as the same token — the scope scan
+    read the quoted one as a real close, desynced, and blocked a merge bash runs happily.
+    """
+    assert _judged_cwds(monkeypatch, command) == [("9", None)]
+
+
+def test_quoted_close_paren_does_not_pop_a_real_scope(monkeypatch):
+    """B2, the dangerous half: a fake `close` POPS a real subshell, and the merge after it
+    is judged in the wrong repo — the #5333 false-ALLOW class, re-entered by a new door.
+
+    Bash runs this merge inside the subshell, in /a. Reading `')'` as a real `)` restores
+    the session cwd early and judges PR 9 there instead — a different PR 9.
+    """
+    assert _judged_cwds(monkeypatch, "(cd /a && echo ')' && gh pr merge 9)") == [("9", "/a")]
+
+
+def test_quoted_open_paren_does_not_push_a_scope(monkeypatch):
+    """B2, mirror: a fake `open` swallows the real `)`, so a real subshell's `cd` leaks
+    out to the merge that follows it. Bash runs PR 9 in the session cwd."""
+    assert _judged_cwds(monkeypatch, "echo '(' && (cd /a && true) && gh pr merge 9") == [
+        ("9", None)
+    ]
+
+
+def test_quoted_paren_stays_in_argv():
+    """The root fix, at the tokenizer: a quoted paren is argv text, not an operator run —
+    so it neither splits the segment nor moves the scope. Multi-char quoted strings
+    already behaved (one token); single-char ones must now behave the same way."""
+    assert guard._segments("echo ')'") == [["echo", ")"]]
+    assert guard._segments("echo '(cd /X)'") == [["echo", "(cd /X)"]]
+
+
+def test_escaped_paren_is_not_a_scope_boundary(monkeypatch):
+    r"""`\)` is escaped, not a boundary — bash passes it to echo as a literal."""
+    assert _judged_cwds(monkeypatch, "cd /a && echo \\) && gh pr merge 9") == [("9", "/a")]
+
+
+def test_bare_unmatched_paren_still_fails_closed(monkeypatch):
+    """N1, accepted fail-closed: a GENUINELY bare `)` (a `case` arm) is still an
+    unattributable boundary. The r2 fix narrows what counts as bare — it does not make
+    the guard `case`-aware. Blocking a `case`-plus-merge one-liner is the accepted cost;
+    a literal `cd` (or `-R`, above) recovers."""
+    payload = json.dumps({"tool_input": {"command": "case x in y) true;; esac; gh pr merge 9"}})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    assert guard.main() == 2
