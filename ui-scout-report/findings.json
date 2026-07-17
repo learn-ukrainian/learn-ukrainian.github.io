@@ -1,0 +1,1319 @@
+{
+  "generated": "2026-07-17",
+  "findings": [
+    {
+      "id": 1,
+      "surface": "/lexicon/ dictionary-size impression",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/ at 1280×900; compare viewport vs full page",
+      "what": "Above-the-fold (viewport shot) shows hero \"Атлас слів\", search field, \"Перегляд А–Я →\". The number 8 206 appears in a \"ДАНІ / Покриття Атласу\" panel labelled \"ПУБЛІЧНИЙ АТЛАС\" (UA), with subline \"9 969 пошукових словоформ · 66 сегментів пошуку\". Bounding box of 8206: {\"x\":176.1875,\"y\":655.796875,\"width\":279.09375,\"height\":24.796875}; below fold (~y>860): false. Also on page: МАНІФЕСТ 8 552, СЛОВА ДНЯ 300. No English \"8,206 words\" phrasing in default УКР locale. Snippet: Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. | ПУБЛІЧНИЙ АТЛАС | 8 206 | 9 969 пошукових словоформ · 66 сегментів пошуку | МАНІФЕСТ | 8 552 | 8 542 публічні записи · 10 внутрішніх | API | 4 | /api/lexicon/contract.json | СЛОВА ДНЯ | 300 | Навчальна добірка | ПРАКТИКА | 4 858 | atlas-practice-v1-fa1f37b28c7aa8cd | ПРОПУСКИ | 22 | 52 джерел · 56 дозволено | ДЖЕРЕЛА | 519 | 0 / 0 / 0 | Learn Ukrainian | Self-study is welcome here, but t",
+      "hurts": "A first-time visitor looking for an obvious English \"8,206 words\" may miss the scale — the count is UA-labelled, in a data panel, and may sit below the fold.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/002-desktop-lexicon-landing-viewport.png",
+      "evidence": {
+        "fullPage": "ui-scout-report/shots/001-desktop-lexicon-landing-full.png",
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 2,
+      "surface": "/lexicon/ locale toggle",
+      "repro": "Click УКР/ENG locale toggle on atlas landing",
+      "what": "Toggle label reads \"УКРENG\" (concatenated). After click, page text changes. Still shows 8206: true. EN snippet: Перейти до вмісту | LU | Learn Ukrainian | Головна | A1 | A2 | B1 | B2 | Слова дня | Атлас слів | Хрестоматія | GitHub | 🌙 | ENG | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. | ПУБЛІЧНИЙ АТЛАС | 8 206 | 9 969 пошукових словоформ · 66 сегментів пошуку | МАНІФЕСТ | 8 552 | 8 542 публічні записи · 10 внутрішніх | API | 4 | /api/lexicon/contract.json | СЛОВА ДНЯ | 300 | Навчальна добірка | ПРАКТИКА | 4 858 | atlas-practice-v1-fa1f37b28c7aa8cd | ПРОПУСКИ | 22 | 52 джере. Toggle control itself still looks like \"УКРENG\" mashed together.",
+      "hurts": "Locale control looks broken (УКРENG); beginners may not realize English chrome exists, and stats labels may stay opaque.",
+      "severity": "major",
+      "screenshot": "ui-scout-report/shots/003-desktop-lexicon-locale-eng.png",
+      "evidence": {
+        "beforeHasPublicAtlas": true,
+        "afterSnippet": "Перейти до вмісту | LU | Learn Ukrainian | Головна | A1 | A2 | B1 | B2 | Слова дня | Атлас слів | Хрестоматія | GitHub | 🌙 | ENG | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. | ПУБЛІЧНИЙ АТЛАС | 8 206 | 9 969 пошукових словоформ · 66 сегментів пошук"
+      }
+    },
+    {
+      "id": 3,
+      "surface": "/lexicon/ typeahead Latin",
+      "repro": "Focus search (placeholder=\"офіс / ofis / office\", aria=\"\"); type Latin \"voda\"",
+      "what": "Options/listbox nodes≈12. Page after typing: Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | вода | water | слово | гаряча вода | hot water | термін | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. | ПУБЛІЧНИЙ АТЛАС",
+      "hurts": "Learners without Cyrillic keyboard need Latin→lemma lookup.",
+      "severity": "polish",
+      "screenshot": "ui-scout-report/shots/004-desktop-typeahead-latin-voda.png"
+    },
+    {
+      "id": 4,
+      "surface": "/lexicon/ typeahead Escape",
+      "repro": "With suggestions open, press Escape",
+      "what": "Input value=\"\"; option count=0",
+      "hurts": "Keyboard users expect Escape to dismiss the dropdown.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/005-desktop-typeahead-escape.png"
+    },
+    {
+      "id": 5,
+      "surface": "/lexicon/ typeahead Cyrillic",
+      "repro": "Type Cyrillic \"вода\"",
+      "what": "role=option count=2; value=\"вода\"; Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | вода | water | слово | гаряча вода | hot water | термін | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Сло",
+      "hurts": "Cyrillic typeahead is the primary path for prepared learners.",
+      "severity": "polish",
+      "screenshot": "ui-scout-report/shots/006-desktop-typeahead-cyrillic-voda.png"
+    },
+    {
+      "id": 6,
+      "surface": "/lexicon/ typeahead paste",
+      "repro": "Paste/fill \"алергія\" into search",
+      "what": "value=\"алергія\"; options=1",
+      "hurts": "Paste from chat/notes is a common dictionary entry path.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/007-desktop-typeahead-paste-alergiya.png"
+    },
+    {
+      "id": 7,
+      "surface": "/lexicon/ typeahead Enter",
+      "repro": "Type \"вода\", ArrowDown, Enter",
+      "what": "Navigated to https://learn-ukrainian.github.io/lexicon/%D0%B3%D0%B0%D1%80%D1%8F%D1%87%D0%B0-%D0%B2%D0%BE%D0%B4%D0%B0/",
+      "hurts": "Enter must open a word page; staying on landing feels broken.",
+      "severity": "polish",
+      "screenshot": "ui-scout-report/shots/008-desktop-typeahead-enter.png"
+    },
+    {
+      "id": 8,
+      "surface": "/lexicon/browse landing",
+      "repro": "Open /lexicon/browse/",
+      "what": "Shows letter buttons (not links). Text includes \"8206 записів Атласу · 33 літери\". Empty state: \"Оберіть літеру…\". Snippet: Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | Є | Ж | З | И | І | Ї | Й | К | Л | М | Н | О | П | Р | С | Т | У | Ф | Х | Ц | Ч | Ш | Щ | Ь | Ю | Я | уникати | русизм | калька | архаїзм | діалектизм | історизм | ПОШУК В АТЛАСІ | 8206 записів Атласу · 33 літери | Оберіть літеру алфавіту, щоб переглянути слова | Learn Ukrainian | Self-study is ",
+      "hurts": "Size is stated as \"записів\" (records) in UA — clearer than landing for count, but still UA-first.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/009-desktop-browse-landing.png"
+    },
+    {
+      "id": 9,
+      "surface": "/lexicon/browse global search",
+      "repro": "Type \"вода\" in browse search, Enter",
+      "what": "URL=https://learn-ukrainian.github.io/lexicon/browse/?q=%D0%B2%D0%BE%D0%B4%D0%B0; Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | Є | Ж | З | И | І | Ї | Й | К | Л | М | Н | О | П | Р | С | Т | У | Ф | Х | Ц | Ч | Ш | Щ | Ь | Ю | Я | уникати | русизм | калька | архаїзм | діалектизм | історизм | ПОШУК В АТЛАСІ | 2 збігів | По",
+      "hurts": "Browse search that fails silently blocks dictionary discovery.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/010-desktop-browse-search-voda.png"
+    },
+    {
+      "id": 10,
+      "surface": "/lexicon/browse all letters",
+      "repro": "Click every button.atlas-letter-link А–Я; record counts and word links",
+      "what": "Probed 33 letters. Empty/missing: И,Ь. Zero-count labels: И,Ь. Ж example: {\"letter\":\"Ж\",\"url\":\"https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%96\",\"countLabel\":\"Ж: 54 запис\",\"countNum\":54,\"wordLinkCount\":54,\"showMore\":false,\"empty\":false,\"snippet\":\"Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | \"}. Full table in evidence.",
+      "hurts": "Any letter with zero rows looks like a broken alphabet index.",
+      "severity": "major",
+      "screenshot": "ui-scout-report/shots/desktop-browse-letter-*",
+      "evidence": {
+        "letterResults": [
+          {
+            "letter": "А",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%90",
+            "countLabel": "А: 129 запис",
+            "countNum": 129,
+            "wordLinkCount": 129,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Б",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%91",
+            "countLabel": "Б: 251 запис",
+            "countNum": 251,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "В",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%92",
+            "countLabel": "В: 700 запис",
+            "countNum": 700,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Г",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%93",
+            "countLabel": "Г: 217 запис",
+            "countNum": 217,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ґ",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D2%90",
+            "countLabel": "Ґ: 4 запис",
+            "countNum": 4,
+            "wordLinkCount": 4,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Д",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%94",
+            "countLabel": "Д: 458 запис",
+            "countNum": 458,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Е",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%95",
+            "countLabel": "Е: 64 запис",
+            "countNum": 64,
+            "wordLinkCount": 64,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Є",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%84",
+            "countLabel": "Є: 10 запис",
+            "countNum": 10,
+            "wordLinkCount": 10,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ж",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%96",
+            "countLabel": "Ж: 54 запис",
+            "countNum": 54,
+            "wordLinkCount": 54,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "З",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%97",
+            "countLabel": "З: 746 запис",
+            "countNum": 746,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "И",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/",
+            "disabled": true,
+            "empty": true,
+            "countNum": 0,
+            "countLabel": "И: disabled/empty (data-base-count=0)",
+            "wordLinkCount": 0,
+            "showMore": false,
+            "snippet": "Letter button disabled / is-empty"
+          },
+          {
+            "letter": "І",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%86",
+            "countLabel": "І: 97 запис",
+            "countNum": 97,
+            "wordLinkCount": 97,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ї",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%87",
+            "countLabel": "Ї: 11 запис",
+            "countNum": 11,
+            "wordLinkCount": 11,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Й",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%99",
+            "countLabel": "Й: 11 запис",
+            "countNum": 11,
+            "wordLinkCount": 11,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "К",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9A",
+            "countLabel": "К: 468 запис",
+            "countNum": 468,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Л",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9B",
+            "countLabel": "Л: 152 запис",
+            "countNum": 152,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "М",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9C",
+            "countLabel": "М: 308 запис",
+            "countNum": 308,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Н",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9D",
+            "countLabel": "Н: 549 запис",
+            "countNum": 549,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "О",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9E",
+            "countLabel": "О: 403 запис",
+            "countNum": 403,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "П",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%9F",
+            "countLabel": "П: 1451 запис",
+            "countNum": 1451,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Р",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A0",
+            "countLabel": "Р: 366 запис",
+            "countNum": 366,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "С",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A1",
+            "countLabel": "С: 763 запис",
+            "countNum": 763,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Т",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A2",
+            "countLabel": "Т: 248 запис",
+            "countNum": 248,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "У",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A3",
+            "countLabel": "У: 159 запис",
+            "countNum": 159,
+            "wordLinkCount": 150,
+            "showMore": true,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ф",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A4",
+            "countLabel": "Ф: 98 запис",
+            "countNum": 98,
+            "wordLinkCount": 98,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Х",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A5",
+            "countLabel": "Х: 102 запис",
+            "countNum": 102,
+            "wordLinkCount": 102,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ц",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A6",
+            "countLabel": "Ц: 59 запис",
+            "countNum": 59,
+            "wordLinkCount": 59,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ч",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A7",
+            "countLabel": "Ч: 126 запис",
+            "countNum": 126,
+            "wordLinkCount": 126,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ш",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A8",
+            "countLabel": "Ш: 82 запис",
+            "countNum": 82,
+            "wordLinkCount": 82,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Щ",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%A9",
+            "countLabel": "Щ: 46 запис",
+            "countNum": 46,
+            "wordLinkCount": 46,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Ь",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/",
+            "disabled": true,
+            "empty": true,
+            "countNum": 0,
+            "countLabel": "Ь: disabled/empty (data-base-count=0)",
+            "wordLinkCount": 0,
+            "showMore": false,
+            "snippet": "Letter button disabled / is-empty"
+          },
+          {
+            "letter": "Ю",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%AE",
+            "countLabel": "Ю: 7 запис",
+            "countNum": 7,
+            "wordLinkCount": 7,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          },
+          {
+            "letter": "Я",
+            "url": "https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%AF",
+            "countLabel": "Я: 67 запис",
+            "countNum": 67,
+            "wordLinkCount": 67,
+            "showMore": false,
+            "empty": false,
+            "snippet": "Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | "
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 11,
+      "surface": "word page a",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D0%B0/",
+      "what": "title=\"а · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":true}; etyToggle=null; main links=5; practiceHref=/words-of-the-day/practice/?lemmaId=а. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · А | а[а́] | сполучник · [a] · «and; but; while» | ✓ Питома українська лексика | CEFR A1 | Практикувати це слово → | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | готово | Значення | 3",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/020-desktop-word-a.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          },
+          {
+            "text": "Практикувати це слово →",
+            "href": "https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D0%B0"
+          },
+          {
+            "text": "miyklas.com.ua ↗",
+            "href": "https://www.miyklas.com.ua/p/ukrainska-mova/7-klas/spoluchnik-313253/spoluchniki-suriadnosti-ta-pidriadnosti-sinonimichni-spoluchniki-472385/re-6fc09994-a355-4f47-9236-cbe2c8c427ef"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/what-is-it-like/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/linking-ideas/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 12,
+      "surface": "word page voda",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D0%B2%D0%BE%D0%B4%D0%B0/",
+      "what": "title=\"вода · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":true}; etyToggle=clicked; main links=8; practiceHref=/words-of-the-day/practice/?lemmaId=вода. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · В | вода[вода́] | іменник · [wɔˈda] · «water» | ✓ Питома українська лексика | CEFR A1 | Практикувати це слово → | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | готово | Значення | 3 к",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/022-desktop-word-voda.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          },
+          {
+            "text": "Практикувати це слово →",
+            "href": "https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/stress-and-melody/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/my-morning/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/food-and-drink/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/i-eat-i-drink/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/checkpoint-food-shopping/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a2/shopping-and-health/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 13,
+      "surface": "word page alergiya",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D0%B0%D0%BB%D0%B5%D1%80%D0%B3%D1%96%D1%8F/",
+      "what": "title=\"алергія · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":true}; etyToggle=null; main links=5; practiceHref=/words-of-the-day/practice/?lemmaId=алергія. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · А | алергія[алергі́я] | іменник · [ɐɫerˈɦʲijɐ] · «allergy» | ✓ Питома українська лексика | CEFR A1 | Практикувати це слово → | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | готово",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/023-desktop-word-alergiya.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          },
+          {
+            "text": "Практикувати це слово →",
+            "href": "https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D0%B0%D0%BB%D0%B5%D1%80%D0%B3%D1%96%D1%8F"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a1/emergencies/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/a2/shopping-and-health/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/b1/health-at-the-doctor/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 14,
+      "surface": "word page zh-жаба",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D0%B6%D0%B0%D0%B1%D0%B0/",
+      "what": "title=\"жаба · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":false}; etyToggle=clicked; main links=2; practiceHref=null. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · Ж | жаба[жа́ба] | іменник · [ˈʒabɐ] · «frog» | ✓ Питома українська лексика | CEFR A2 | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | готово | Значення | 2 картки | ✓ | готово | Походження",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/025-desktop-word-zh-жаба.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/b2/idioms-animals/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 15,
+      "surface": "word page ts-цвіль",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D1%86%D0%B2%D1%96%D0%BB%D1%8C/",
+      "what": "title=\"цвіль · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":true}; etyToggle=null; main links=3; practiceHref=/words-of-the-day/practice/?lemmaId=цвіль. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · Ц | цвіль[цві́ль] | іменник · [ˈt͡sʋilʲ] · «mold» | ✓ Питома українська лексика | CEFR B2 · орієнтовно | Практикувати це слово → | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | го",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/026-desktop-word-ts-цвіль.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          },
+          {
+            "text": "Практикувати це слово →",
+            "href": "https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D1%86%D0%B2%D1%96%D0%BB%D1%8C"
+          },
+          {
+            "text": "відкрити →",
+            "href": "https://learn-ukrainian.github.io/b1/housing-and-renting/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 16,
+      "surface": "word page yu-юліанський",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D1%8E%D0%BB%D1%96%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B8%D0%B9/",
+      "what": "title=\"юліанський · Learn Ukrainian\"; 404=false; sections={\"meaning\":true,\"etymology\":true,\"morphology\":true,\"relations\":true,\"phraseology\":true,\"course\":true,\"audio\":false,\"practiceLink\":false}; etyToggle=null; main links=1; practiceHref=null. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · Ю | юліанський[юліа́нський] | прикметник · [jʊlʲiˈanʲsʲkei̯] · «Julian» | ✓ Питома українська лексика | CEFR C1 · орієнтовно | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | гото",
+      "hurts": "Missing sections (audio/relations/etymology) leave the entry feeling incomplete.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/027-desktop-word-yu-юліанський.png",
+      "evidence": {
+        "links": [
+          {
+            "text": "До Атласу",
+            "href": "https://learn-ukrainian.github.io/lexicon/"
+          }
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 17,
+      "surface": "word page вода — follow all main links",
+      "repro": "Open /lexicon/вода/; follow each main/article internal link",
+      "what": "Probed 8 links; broken=0: []",
+      "hurts": "Dead in-page links strand learners mid-entry.",
+      "severity": "polish",
+      "screenshot": "ui-scout-report/shots/022-desktop-word-voda.png",
+      "evidence": {
+        "linkProbe": [
+          {
+            "href": "https://learn-ukrainian.github.io/lexicon/",
+            "title": "Атлас слів · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0",
+            "title": "Практика — Слова дня · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a1/stress-and-melody/",
+            "title": "Наголос і мелодика · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a1/my-morning/",
+            "title": "Мій ранок · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a1/food-and-drink/",
+            "title": "Їжа та напої · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a1/i-eat-i-drink/",
+            "title": "Я їм, я п'ю · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a1/checkpoint-food-shopping/",
+            "title": "Підсумок: Їжа та покупки · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          },
+          {
+            "href": "https://learn-ukrainian.github.io/a2/shopping-and-health/",
+            "title": "На ринку та у лікаря · Learn Ukrainian",
+            "status": 200,
+            "broken": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "surface": "/lexicon/practice redirect + hub language",
+      "repro": "Visit /lexicon/practice; inventory chrome language",
+      "what": "Redirects to https://learn-ukrainian.github.io/words-of-the-day/practice/. Hub mixes dual lines (UA then / EN) for many stats, but H1 is \"Практика\" alone; back link \"← Слова дня\"; eyebrow \"СЛОВА ДНЯ · ПРАКТИКА\"; intro paragraph is Ukrainian-only. Locale toggle still \"УКРENG\". UK-only lines (34): УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Оберіть сесію практики · ДНІВ ПОСПІЛЬ · ДО ПОВТОРЕННЯ · НОВІ СЬОГОДНІ · СЬОГОДНІ · 0 до повторення + 8 нових ≈ 3 хв · до нуля · Почати сесію · РІВЕНЬ · скоро · Практика обмежена вашим рівнем і нижчими (накопичувально). · ФОКУС-ПРАКТИКА · Флешкартки · Картка за карткою з інтервальним повторенням. Згадайте значення, тоді оцініть відповідь. · Добір пар · З’єднайте українські слова з їхніми значеннями для швидкого закріплення зв’язків. · Вибір · Оберіть правильне значення або слово серед близьких варіантів з цієї ж колоди. · Пропуск · Впишіть слово у потрібній формі. Відмінок має збігатися з реченням. · Наголос · Оберіть голосну, на яку падає наголос у слові. · Група · Форма · Оберіть форму слова для потрібного відмінка й числа. · Синоніми · Доберіть синонім або антонім до українського слова. · Пароніми · Розрізняйте близькі за звуковим складом, але різні за значенням слова. · Спадщина · Оберіть питоме українське слово.",
+      "hurts": "Absolute beginner cannot understand UA-only intro/back-link/H1; owner requires dual-language practice chrome.",
+      "severity": "blocker",
+      "screenshot": "ui-scout-report/shots/028-desktop-practice-hub.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Оберіть сесію практики",
+          "ДНІВ ПОСПІЛЬ",
+          "ДО ПОВТОРЕННЯ",
+          "НОВІ СЬОГОДНІ",
+          "СЬОГОДНІ",
+          "0 до повторення + 8 нових ≈ 3 хв",
+          "до нуля",
+          "Почати сесію",
+          "РІВЕНЬ",
+          "скоро",
+          "Практика обмежена вашим рівнем і нижчими (накопичувально).",
+          "ФОКУС-ПРАКТИКА",
+          "Флешкартки",
+          "Картка за карткою з інтервальним повторенням. Згадайте значення, тоді оцініть відповідь.",
+          "Добір пар",
+          "З’єднайте українські слова з їхніми значеннями для швидкого закріплення зв’язків.",
+          "Вибір",
+          "Оберіть правильне значення або слово серед близьких варіантів з цієї ж колоди.",
+          "Пропуск",
+          "Впишіть слово у потрібній формі. Відмінок має збігатися з реченням.",
+          "Наголос",
+          "Оберіть голосну, на яку падає наголос у слові.",
+          "Група",
+          "Форма",
+          "Оберіть форму слова для потрібного відмінка й числа.",
+          "Синоніми",
+          "Доберіть синонім або антонім до українського слова.",
+          "Пароніми",
+          "Розрізняйте близькі за звуковим складом, але різні за значенням слова.",
+          "Спадщина",
+          "Оберіть питоме українське слово."
+        ],
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 19,
+      "surface": "practice — Start session (today)",
+      "repro": "Click \"Почати сесію / Start session\"",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Screen: Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Мікс · Флешкартки | / Mixed · Flashcards | 0/8 | посеред | preposition | A1 | in the very middle of; takes genitive | preposition | 1 | Ще раз | Again | 2 | Важко | Hard | 3 | Добре | Good | 4 | Легко | Easy | Learn Ukrainian | Self-study is welcome here, but the best learning happens with trained native Ukrainian teachers. These materials support practice; they do not replace devoted teacher. UK-only: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Мікс · Флешкартки · посеред · Ще раз · Важко · Добре · Легко",
+      "hurts": "In-session chrome that is UA-only blocks A1 completion of a review.",
+      "severity": "blocker",
+      "screenshot": "ui-scout-report/shots/029-desktop-practice-session-started.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Мікс · Флешкартки",
+          "посеред",
+          "Ще раз",
+          "Важко",
+          "Добре",
+          "Легко"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "surface": "practice keyboard-only",
+      "repro": "In a started session, press Space, Enter, 1, 2, ArrowRight, N, Escape",
+      "what": "After keys, URL=https://learn-ukrainian.github.io/words-of-the-day/practice/; Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | посеред: Ще раз | / посеред: Again | ← Додому | / ← Home | Мікс · Добір пар | / Mixed · Matching | 1/8 | 🔗Знайдіть пару / Match Up | ? | Доберіть пару для «ліфт» ",
+      "hurts": "Keyboard dead-ends force mouse-only practice.",
+      "severity": "major",
+      "screenshot": "ui-scout-report/shots/030-desktop-practice-keyboard-pass.png"
+    },
+    {
+      "id": 21,
+      "surface": "practice mode: Флешкартки",
+      "repro": "On practice hub, click mode-card \"Флешкартки\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Флешкартки | / Flashcards | 0/8 | спина | noun | A1 | back | noun | 1 | Ще раз | Again | 2 | Важко | Hard | 3 | Добре | Good | 4 | Легко | Eas. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Флешкартки · спина · Ще раз · Важко · Добре · Легко",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/031-desktop-practice-mode-Флешкартки.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Флешкартки",
+          "спина",
+          "Ще раз",
+          "Важко",
+          "Добре",
+          "Легко"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "surface": "practice mode: Добір пар",
+      "repro": "On practice hub, click mode-card \"Добір пар\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Добір пар | / Matching | 0/8 | 🔗Знайдіть пару / Match Up | ? | Доберіть пару для «звіт» / Match the pair for «зв. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Добір пар · звіт · базар · доступ · посуд · туалет · хід",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/033-desktop-practice-mode-Добір-пар.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Добір пар",
+          "звіт",
+          "базар",
+          "доступ",
+          "посуд",
+          "туалет",
+          "хід"
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "surface": "practice mode: Вибір",
+      "repro": "On practice hub, click mode-card \"Вибір\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Вибір | / Choice | 0/8 | Яке слово означає «to take a shower»? | / Which word means «to take a shower»? | Оберіт. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Вибір · Оберіть правильну відповідь · молочний відділ · вегетаріанське меню · м'ясний відділ · брати душ",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/035-desktop-practice-mode-Вибір.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Вибір",
+          "Оберіть правильну відповідь",
+          "молочний відділ",
+          "вегетаріанське меню",
+          "м'ясний відділ",
+          "брати душ"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "surface": "practice mode: Пропуск",
+      "repro": "On practice hub, click mode-card \"Пропуск\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Пропуск | / Cloze | 0/8 | Поставте слово „школа” у правильному відмінку. | / Put the word „школа” in the correc. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Пропуск · Поставте слово „школа” у правильному відмінку. · Я бачу ?. · Перевірити · АБО ОБЕРІТЬ · школа · склянка · склянку · школу",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/037-desktop-practice-mode-Пропуск.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Пропуск",
+          "Поставте слово „школа” у правильному відмінку.",
+          "Я бачу ?.",
+          "Перевірити",
+          "АБО ОБЕРІТЬ",
+          "школа",
+          "склянка",
+          "склянку",
+          "школу"
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "surface": "practice mode: Наголос",
+      "repro": "On practice hub, click mode-card \"Наголос\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Наголос | / Stress | 0/8 | Де наголос у слові «гуляти»? | / Where is the stress in the word «гуляти»? | Оберіть . UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Наголос · Де наголос у слові «гуляти»? · Оберіть наголошену голосну",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/039-desktop-practice-mode-Наголос.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Наголос",
+          "Де наголос у слові «гуляти»?",
+          "Оберіть наголошену голосну"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "surface": "practice mode: Група",
+      "repro": "On practice hub, click mode-card \"Група\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Група | / Classify | 0/8 | До якої групи належить «директор»? | / Which group does «директор» belong to? | рід | /. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Група · До якої групи належить «директор»? · рід",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/041-desktop-practice-mode-Група.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Група",
+          "До якої групи належить «директор»?",
+          "рід"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "surface": "practice mode: Форма",
+      "repro": "On practice hub, click mode-card \"Форма\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Форма | / Paradigm | 0/8 | Яка форма від «професія»? | / Which form is from «професія»? | місцевий відмінок, мно. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Форма · Яка форма від «професія»? · місцевий відмінок, множина · професія · професій · професіях · професіям",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/043-desktop-practice-mode-Форма.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Форма",
+          "Яка форма від «професія»?",
+          "місцевий відмінок, множина",
+          "професія",
+          "професій",
+          "професіях",
+          "професіям"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "surface": "practice mode: Синоніми",
+      "repro": "On practice hub, click mode-card \"Синоніми\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/0 | / Session 0/0 | ← Додому | / ← Home | Синоніми | / Synonyms | 0/0 | Усі картки на зараз повторено. | / All cards have been reviewed for now. | Learn U. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/0 · ← Додому · Синоніми · Усі картки на зараз повторено.",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/045-desktop-practice-mode-Синоніми.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/0",
+          "← Додому",
+          "Синоніми",
+          "Усі картки на зараз повторено."
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "surface": "practice mode: Пароніми",
+      "repro": "On practice hub, click mode-card \"Пароніми\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/3 | / Session 0/3 | ← Додому | / ← Home | Пароніми | / Paronyms | 0/3 | Оберіть правильний паронім. | / Choose the correct paronym. | ___ угоди запланован. UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/3 · ← Додому · Пароніми · Оберіть правильний паронім. · ___ угоди заплановано на наступний тиждень. · Підписання · Підпис",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/047-desktop-practice-mode-Пароніми.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/3",
+          "← Додому",
+          "Пароніми",
+          "Оберіть правильний паронім.",
+          "___ угоди заплановано на наступний тиждень.",
+          "Підписання",
+          "Підпис"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "surface": "practice mode: Спадщина",
+      "repro": "On practice hub, click mode-card \"Спадщина\"; attempt one answer/advance",
+      "what": "URL=https://learn-ukrainian.github.io/words-of-the-day/practice/. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Спадщина | / Heritage | 0/8 | Вправи зі спадщини для цього рівня ще готуються. | / Heritage exercises for this . UK-only sample: УКР · ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Спадщина · Вправи зі спадщини для цього рівня ще готуються.",
+      "hurts": "Each mode is a learner path; UA-only prompts or broken start = dead exercise type.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/049-desktop-practice-mode-Спадщина.png",
+      "evidence": {
+        "ukOnly": [
+          "УКР",
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Спадщина",
+          "Вправи зі спадщини для цього рівня ще готуються."
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "surface": "/words-of-the-day/",
+      "repro": "Open WOTD landing",
+      "what": "Dual H1 \"Слова дня / Words of the Day\". Practice CTA present. Level chips A1–C2. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | СЛОВА ДНЯ | Слова дня / Words of the Day | Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем. | Практика — інтервальне повторення вашого рівня → | Добірка на сьогодні | Слова оновлюються за календарною датою; кожна картка веде до повної статті Атласу. | РІВЕНЬ | A1 | A2 | B1 | B2 | C1 | C2 | A1 · 12 слів | фінал | finale | A1 | ведення | leading | A1 | одягатися | to get dressed | A1 | зберігається | is stored; is ",
+      "hurts": "WOTD is dual-titled while Atlas/Practice H1s are often UA-only — inconsistent mental model.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/051-desktop-wotd.png"
+    },
+    {
+      "id": 32,
+      "surface": "WOTD → Atlas word",
+      "repro": "Click first word card on WOTD",
+      "what": "href=/lexicon/; landed https://learn-ukrainian.github.io/lexicon/; title=Атлас слів · Learn Ukrainian",
+      "hurts": "Broken daily-word links break the WOTD habit loop.",
+      "severity": "polish",
+      "screenshot": "ui-scout-report/shots/052-desktop-wotd-to-atlas.png"
+    },
+    {
+      "id": 33,
+      "surface": "Reading reference cross-nav",
+      "repro": "From site nav open Reading reference; open first content link if present",
+      "what": "nav href=/readings/; URL=https://learn-ukrainian.github.io/readings/; title=Reading reference · Learn Ukrainian; Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | Reference · Primary sources | Reading reference | The full original texts the seminars teach from. Lessons study excerpts and link here for the complete work. | Home / Reading reference | A reference library of primary sources — the complete o",
+      "hurts": "Nav label language (EN \"Reading reference\") vs UA atlas chrome inconsistency.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/053-desktop-reading.png"
+    },
+    {
+      "id": 34,
+      "surface": "404 non-existent word",
+      "repro": "Open /lexicon/неіснуючесловоxyzqqq/",
+      "what": "URL=https://learn-ukrainian.github.io/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B5%D1%81%D0%BB%D0%BE%D0%B2%D0%BExyzqqq/; title=Page Not Found · Learn Ukrainian; recovery links apparent=true. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | 404 | Page Not Found | Hidden drafts and unknown routes fail clearly, with useful recovery paths. | Не вдалося завантажити | Мережева помилка під час завантаження «неіснуючесловоxyzqqq». | HTTP 404 fetching /atlas/current.json | Спробувати знову | Learn Ukrainian | Self-study is welcome here, but the best learning happens with trained native Ukr",
+      "hurts": "404 without recovery search/browse leaves learners stuck after a typo.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/054-desktop-404-неіснуючесловоxyzq.png",
+      "evidence": {
+        "console": [
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          },
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          }
+        ],
+        "network": [
+          {
+            "url": "https://learn-ukrainian.github.io/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B5%D1%81%D0%BB%D0%BE%D0%B2%D0%BExyzqqq/",
+            "status": 404
+          },
+          {
+            "url": "https://learn-ukrainian.github.io/atlas/current.json",
+            "status": 404
+          }
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "surface": "404 non-existent word",
+      "repro": "Open /lexicon/zzzz-not-a-lemma-999/",
+      "what": "URL=https://learn-ukrainian.github.io/lexicon/zzzz-not-a-lemma-999/; title=Page Not Found · Learn Ukrainian; recovery links apparent=true. Skip to content | LU | Learn Ukrainian | Home | A1 | A2 | B1 | B2 | Words of the Day | Word Atlas | Reading reference | GitHub | 🌙 | УКР | 404 | Page Not Found | Hidden drafts and unknown routes fail clearly, with useful recovery paths. | Не вдалося завантажити | Мережева помилка під час завантаження «zzzz-not-a-lemma-999». | HTTP 404 fetching /atlas/current.json | Спробувати знову | Learn Ukrainian | Self-study is welcome here, but the best learning happens with trained native Ukr",
+      "hurts": "404 without recovery search/browse leaves learners stuck after a typo.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/055-desktop-404-zzzz-not-a-lemma-9.png",
+      "evidence": {
+        "console": [
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          },
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          },
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          },
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 ()"
+          }
+        ],
+        "network": [
+          {
+            "url": "https://learn-ukrainian.github.io/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B5%D1%81%D0%BB%D0%BE%D0%B2%D0%BExyzqqq/",
+            "status": 404
+          },
+          {
+            "url": "https://learn-ukrainian.github.io/atlas/current.json",
+            "status": 404
+          },
+          {
+            "url": "https://learn-ukrainian.github.io/lexicon/zzzz-not-a-lemma-999/",
+            "status": 404
+          },
+          {
+            "url": "https://learn-ukrainian.github.io/atlas/current.json",
+            "status": 404
+          }
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "surface": "mobile-lexicon @390px",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/ at 390×844",
+      "what": "horizontalOverflow=false (scrollWidth=390, clientWidth=390). UK-only sample: ЛЕКСИКОН · Атлас слів · Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. · Шукати слово в Атласі · Перегляд А–Я → · ДАНІ · Покриття Атласу · Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. · ПУБЛІЧНИЙ АТЛАС · 9 969 пошукових словоформ · 66 сегментів пошуку · МАНІФЕСТ · 8 542 публічні записи · 10 внутрішніх · СЛОВА ДНЯ · Навчальна добірка · ПРАКТИКА. Skip to content | LU | Learn Ukrainian | Menu | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані. | ПУБЛІЧНИЙ АТЛАС | 8 206 | 9 969 пошукових словоформ · 66 сегментів пошуку | МАНІФЕСТ | 8 ",
+      "hurts": "Mobile density/language issues impede phone learners.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/057-mobile-lexicon-viewport.png",
+      "evidence": {
+        "full": "ui-scout-report/shots/056-mobile-lexicon.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "overflow": false
+        },
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 37,
+      "surface": "mobile-browse @390px",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/browse/ at 390×844",
+      "what": "horizontalOverflow=false (scrollWidth=390, clientWidth=390). UK-only sample: Пошук · Перегляд А–Я · Перегляд Атласу А–Я · Алфавітний покажчик відкриває слова по одній літері. · уникати · русизм · калька · архаїзм · діалектизм · історизм · ПОШУК В АТЛАСІ · 8206 записів Атласу · 33 літери · Оберіть літеру алфавіту, щоб переглянути слова. Skip to content | LU | Learn Ukrainian | Menu | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | Є | Ж | З | И | І | Ї | Й | К | Л | М | Н | О | П | Р | С | Т | У | Ф | Х | Ц | Ч | Ш | Щ | Ь | Ю | Я | уникати | русизм | калька | архаїзм | діалектизм | історизм | ПОШУК В АТЛАСІ | 8206 записів Атласу · 33 літери | Оберіть літеру алфавіту, щоб переглянути слова | Lea",
+      "hurts": "Mobile density/language issues impede phone learners.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/059-mobile-browse-viewport.png",
+      "evidence": {
+        "full": "ui-scout-report/shots/058-mobile-browse.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "overflow": false
+        },
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 38,
+      "surface": "mobile-word-voda @390px",
+      "repro": "Open https://learn-ukrainian.github.io/lexicon/%D0%B2%D0%BE%D0%B4%D0%B0/ at 390×844",
+      "what": "horizontalOverflow=false (scrollWidth=390, clientWidth=390). UK-only sample: Шукати слово в Лексиконі · До Атласу · Атлас слів (Лексикон) · ЛЕКСИКОН · A-Я · В · вода · [вода́] · ✓ Питома українська лексика · Практикувати це слово → · Питома українська лексика · Ця форма має українське джерельне підтвердження. · Дані Атласу · готово · Значення · 3 картки · Походження. Skip to content | LU | Learn Ukrainian | Menu | Шукати слово в Лексиконі | До Атласу | Атлас слів (Лексикон) | ЛЕКСИКОН · A-Я · В | вода | [вода́] | іменник · [wɔˈda] · «water» | ✓ Питома українська лексика | CEFR A1 | Практикувати це слово → | ✓ | Питома українська лексика | Ця форма має українське джерельне підтвердження. | Дані Атласу | ✓ | готово | Значення | 3 картки | ✓ | готово | Походж",
+      "hurts": "Mobile density/language issues impede phone learners.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/061-mobile-word-voda-viewport.png",
+      "evidence": {
+        "full": "ui-scout-report/shots/060-mobile-word-voda.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "overflow": false
+        },
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 39,
+      "surface": "mobile-practice @390px",
+      "repro": "Open https://learn-ukrainian.github.io/words-of-the-day/practice/ at 390×844",
+      "what": "horizontalOverflow=false (scrollWidth=390, clientWidth=390). UK-only sample: ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Оберіть сесію практики · ДНІВ ПОСПІЛЬ · ДО ПОВТОРЕННЯ · НОВІ СЬОГОДНІ · СЬОГОДНІ · 0 до повторення + 8 нових ≈ 3 хв · до нуля · Почати сесію · РІВЕНЬ · скоро · Практика обмежена вашим рівнем і нижчими (накопичувально). · ФОКУС-ПРАКТИКА · Флешкартки. Skip to content | LU | Learn Ukrainian | Menu | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Оберіть сесію практики | / Select a practice session | 🔥 0 | ДНІВ ПОСПІЛЬ | / DAYS STREAK | 0 | ДО ПОВТОРЕННЯ | / DUE FOR REVIEW | Du",
+      "hurts": "Mobile density/language issues impede phone learners.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/063-mobile-practice-viewport.png",
+      "evidence": {
+        "full": "ui-scout-report/shots/062-mobile-practice.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "overflow": false
+        },
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 40,
+      "surface": "mobile-wotd @390px",
+      "repro": "Open https://learn-ukrainian.github.io/words-of-the-day/ at 390×844",
+      "what": "horizontalOverflow=false (scrollWidth=390, clientWidth=390). UK-only sample: СЛОВА ДНЯ · Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем. · Практика — інтервальне повторення вашого рівня → · Добірка на сьогодні · Слова оновлюються за календарною датою; кожна картка веде до повної статті Атласу. · РІВЕНЬ · A1 · 12 слів · фінал · ведення · одягатися · зберігається · офіс · інтернет · дата · тест. Skip to content | LU | Learn Ukrainian | Menu | СЛОВА ДНЯ | Слова дня / Words of the Day | Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем. | Практика — інтервальне повторення вашого рівня → | Добірка на сьогодні | Слова оновлюються за календарною датою; кожна картка веде до повної статті Атласу. | РІВЕНЬ | A1 | A2 | B1 | B2 | C1 | C2 | A1 · 12 слів | фінал | finale",
+      "hurts": "Mobile density/language issues impede phone learners.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/065-mobile-wotd-viewport.png",
+      "evidence": {
+        "full": "ui-scout-report/shots/064-mobile-wotd.png",
+        "overflow": {
+          "scrollWidth": 390,
+          "clientWidth": 390,
+          "overflow": false
+        },
+        "console": [],
+        "network": []
+      }
+    },
+    {
+      "id": 41,
+      "surface": "mobile browse letter Ж",
+      "repro": "Tap Ж on browse @390px",
+      "what": "URL=https://learn-ukrainian.github.io/lexicon/browse/?letter=%D0%96; overflow={\"scrollWidth\":390,\"clientWidth\":390,\"overflow\":false}; Skip to content | LU | Learn Ukrainian | Menu | Пошук | Перегляд А–Я | Перегляд Атласу А–Я | Алфавітний покажчик відкриває слова по одній літері. | А | Б | В | Г | Ґ | Д | Е | Є | Ж | З | И | І | Ї | Й | К | Л | М | Н | О | П | Р | С | Т | У | Ф | Х | Ц | Ч | Ш | Щ | Ь | Ю | Я | уникати | русизм | калька | архаїзм | діалектизм | історизм | ПОШУК В АТЛАСІ | Ж: 54 записи | Ж | жаба | «frog» | A2 | жабка | «frog» | B1 | жайворонок | «lark (early bird)» | B2 | жал",
+      "hurts": "Letter strip or result list may wrap/clip on narrow screens.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/066-mobile-browse-zh.png"
+    },
+    {
+      "id": 42,
+      "surface": "mobile typeahead",
+      "repro": "Type вода in search @390px",
+      "what": "options=2; Skip to content | LU | Learn Ukrainian | Menu | ЛЕКСИКОН | Атлас слів | Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях. | Шукати слово в Атласі | вода | water | слово | гаряча вода | hot water | термін | Перегляд А–Я → | ДАНІ | Покриття Атласу | Дані узгоджені: пошук, перегляд, Слова дня і практика синх",
+      "hurts": "Mobile keyboard + suggestions overlap can hide results.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/067-mobile-typeahead-voda.png"
+    },
+    {
+      "id": 43,
+      "surface": "mobile practice session language",
+      "repro": "Start session on 390px; list UA-only chrome",
+      "what": "UK-only: ← Слова дня СЛОВА ДНЯ · ПРАКТИКА · Практика · Сесія 0/8 · ← Додому · Мікс · Група · До якої групи належить «водопостачання»? · рід. Skip to content | LU | Learn Ukrainian | Menu | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Мікс · Група | / Mixed · Classify | 0/8 | До якої групи належить «водопостачання»? | / Which group does «водопостачання» belong to? | ",
+      "hurts": "Phone is where beginners practice; UA-only chrome is a hard stop.",
+      "severity": "blocker",
+      "screenshot": "ui-scout-report/shots/068-mobile-practice-session.png",
+      "evidence": {
+        "ukOnly": [
+          "← Слова дня СЛОВА ДНЯ · ПРАКТИКА",
+          "Практика",
+          "Сесія 0/8",
+          "← Додому",
+          "Мікс · Група",
+          "До якої групи належить «водопостачання»?",
+          "рід"
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "surface": "mobile practice mode Флешкартки",
+      "repro": "Tap mode-card Флешкартки @390px",
+      "what": "Skip to content | LU | Learn Ukrainian | Menu | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Флешкартки | / Flashcards | 0/8 | пів на восьму | time chunk | A1 | half past seven | time chunk | 1 | Ще раз | Again | 2 | Важко | Hard | 3 | Добре | Good | 4 | ",
+      "hurts": "Mobile layout may clip options/inputs for this exercise.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/069-mobile-mode-Флешкартки.png"
+    },
+    {
+      "id": 45,
+      "surface": "mobile practice mode Вибір",
+      "repro": "Tap mode-card Вибір @390px",
+      "what": "Skip to content | LU | Learn Ukrainian | Menu | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Вибір | / Choice | 0/8 | Що означає «хотіти»? | / What does «хотіти» mean? | Оберіть правильну відповідь | / Select the correct answer | ",
+      "hurts": "Mobile layout may clip options/inputs for this exercise.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/070-mobile-mode-Вибір.png"
+    },
+    {
+      "id": 46,
+      "surface": "mobile practice mode Пропуск",
+      "repro": "Tap mode-card Пропуск @390px",
+      "what": "Skip to content | LU | Learn Ukrainian | Menu | ← Слова дня СЛОВА ДНЯ · ПРАКТИКА | Практика | Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері. | Сесія 0/8 | / Session 0/8 | ← Додому | / ← Home | Пропуск | / Cloze | 0/8 | Поставте слово „бібліотека” у правильному відмінку. | / Put the word „бібліотека” in the correct case. | Я б",
+      "hurts": "Mobile layout may clip options/inputs for this exercise.",
+      "severity": "minor",
+      "screenshot": "ui-scout-report/shots/071-mobile-mode-Пропуск.png"
+    }
+  ],
+  "pageEvidence": {
+    "desktop": {
+      "label": "desktop",
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        }
+      ],
+      "network4xx": [
+        {
+          "url": "https://learn-ukrainian.github.io/lexicon/%D0%BD%D0%B5%D1%96%D1%81%D0%BD%D1%83%D1%8E%D1%87%D0%B5%D1%81%D0%BB%D0%BE%D0%B2%D0%BExyzqqq/",
+          "status": 404
+        },
+        {
+          "url": "https://learn-ukrainian.github.io/atlas/current.json",
+          "status": 404
+        },
+        {
+          "url": "https://learn-ukrainian.github.io/lexicon/zzzz-not-a-lemma-999/",
+          "status": 404
+        },
+        {
+          "url": "https://learn-ukrainian.github.io/atlas/current.json",
+          "status": 404
+        }
+      ],
+      "requestFailed": [
+        {
+          "url": "https://learn-ukrainian.github.io/lexicon/practice-index.A1.json",
+          "error": "net::ERR_ABORTED"
+        }
+      ]
+    },
+    "mobile-390": {
+      "label": "mobile-390",
+      "console": [],
+      "network4xx": [],
+      "requestFailed": []
+    }
+  }
+}
