@@ -1,6 +1,6 @@
-review_protocol_version: 5.0.6
+review_protocol_version: 5.0.7
 deterministic_contract_version: 1.2.1
-semantic_prompt_version: 5.0.6
+semantic_prompt_version: 5.0.7
 track_policy_version: 1.9.0
 
 score_calibration:

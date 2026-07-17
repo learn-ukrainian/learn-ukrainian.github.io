@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.6`
+Semantic prompt version: `5.0.7`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -47,6 +47,12 @@ semantic findings.
   excludes those unrelated locators and the finalizer rejects them fail-closed.
 - Verify Ukrainian word, stress, morphology, grammar, Russicism, false-friend,
   and calque claims with project source tools. Never infer them from intuition.
+- For vocabulary integration, use only the packet's
+  `vocabulary_surface_candidates`. Those candidates were resolved
+  deterministically from learner content and activities with VESUM; never
+  invent, shorten, reorder, or synonym-substitute a surface or verification.
+  If the required lemma has no candidate that is meaningfully used, return
+  `MISSING` rather than authoring a new VESUM claim.
 - Verify factual, quotation, and attribution claims with the appropriate
   authoritative project sources. Plausible but unattested is not supported.
 - Treat missing tools, missing source support, or incomplete review coverage as
@@ -297,7 +303,7 @@ equal the statuses actually present in that array.
       "lemma": "exact vocabulary lemma in source order",
       "status": "INTEGRATED|MISSING|INCOMPLETE",
       "surface": "exact visible lesson/activity surface or null",
-      "verification": "exact lemma surface OR VESUM: lemma-token=surface-token; lemma-token=surface-token; never append synonym or prose commentary",
+      "verification": "copy the exact packet candidate verification; never author a new VESUM mapping",
       "evidence": [{"location": "learner content or activities path", "line": 1, "supports": "how the cited surface integrates this lemma"}],
       "finding_id": null
     }
@@ -363,6 +369,10 @@ visible lesson/activity surface and exact line evidence from the content or
 activities target file; a definition or usage example present only in
 `vocabulary.yaml` is not learner integration. `MISSING` and
 `INCOMPLETE` require a `VOCABULARY_INTEGRATION` finding and no surface evidence.
+Both `surface` and `verification` must be copied byte-for-byte from the
+source-order lemma's packet-bound candidate list. A candidate proves
+morphology and occurrence, not meaningful pedagogy; you must still judge
+whether its cited use integrates the term.
 The source-order vocabulary ledger is the exhaustive proof of individual
 absences: the `VOCABULARY_INTEGRATION` alignment entry must reference every
 matching finding but may cite representative comparison lines instead of an

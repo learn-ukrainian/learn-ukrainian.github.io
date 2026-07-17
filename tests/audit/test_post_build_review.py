@@ -142,37 +142,29 @@ def _vocabulary_contract(packet: dict) -> tuple[list[dict], list[dict]]:
     lemmas = _packet_vocabulary_lemmas(packet)
     if not lemmas:
         return [], []
-    files = packet["target"]["files"]
     source_texts = _packet_source_texts(packet)
-    learner_paths = [files[name] for name in ("content", "activities") if name in files]
-    vocabulary_path = files["vocabulary"]
+    vocabulary_path = packet["target"]["files"]["vocabulary"]
     vocabulary_lines = source_texts[vocabulary_path].splitlines()
+    candidate_entries = {
+        entry["lemma"]: entry["candidates"]
+        for entry in packet["vocabulary_surface_candidates"]["lemmas"]
+    }
     coverage: list[dict] = []
     findings: list[dict] = []
     for index, lemma in enumerate(lemmas, start=1):
-        match: tuple[str, int, str, str] | None = None
-        for path in learner_paths:
-            for line_number, visible in enumerate(
-                pbr._visible_source_lines(path, source_texts[path]), start=1
-            ):
-                start = visible.casefold().find(lemma.casefold())
-                if start >= 0:
-                    surface = visible[start : start + len(lemma)]
-                    match = (path, line_number, source_texts[path].splitlines()[line_number - 1], surface)
-                    break
-            if match is not None:
-                break
-        if match is not None:
-            path, line_number, _excerpt, surface = match
+        candidates = candidate_entries.get(lemma, [])
+        if candidates:
+            candidate = candidates[0]
+            location = candidate["locations"][0]
             coverage.append(
                 {
                     "lemma": lemma,
                     "status": "INTEGRATED",
-                    "surface": surface,
-                    "verification": "exact lemma surface",
+                    "surface": candidate["surface"],
+                    "verification": candidate["verification"],
                     "evidence": [{
-                        "location": path,
-                        "line": line_number,
+                        "location": location["location"],
+                        "line": location["line"],
                         "supports": "The exact target term occurs on this learner surface.",
                     }],
                     "finding_id": None,
@@ -1095,6 +1087,65 @@ def test_provider_schema_excludes_vocabulary_file_from_integration_evidence() ->
         Draft202012Validator(schema).validate(semantic)
 
 
+def test_packet_candidates_use_real_lemma_matches_not_model_synonyms() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [
+                {"line": index, "text": line}
+                for index, line in enumerate(text.splitlines(), start=1)
+            ],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        lemmas = {
+            "співтворчість": "співтворчість",
+            "відповідальним": "відповідальний",
+            "редактором": "редактор",
+        }
+        return {
+            word: ([{"lemma": lemmas[word]}] if word in lemmas else [])
+            for word in words
+        }
+
+    content = (
+        "Співтворчість поета й композитора тривала роками.\n"
+        "Він був відповідальним редактором журналу.\n"
+    )
+    vocabulary = "- lemma: співавторство\n- lemma: відповідальний редактор\n"
+    target = {
+        "files": {
+            "content": "module.md",
+            "vocabulary": "vocabulary.yaml",
+        }
+    }
+    candidates = pbr.build_vocabulary_surface_candidates(
+        target,
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    by_lemma = {
+        entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]
+    }
+
+    assert by_lemma["співавторство"] == []
+    assert {
+        (candidate["surface"], candidate["verification"])
+        for candidate in by_lemma["відповідальний редактор"]
+    } == {
+        (
+            "відповідальним редактором",
+            "VESUM: відповідальний=відповідальним; редактор=редактором",
+        )
+    }
+
+
 def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
@@ -1789,7 +1840,7 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "return the exact repo-relative",
         "at least eight non-whitespace",
         "exact locator belongs to a supplied deterministic",
-        "never append synonym or prose commentary",
+        "never author a new VESUM mapping",
     ):
         assert required in prompt
     prompt_lower = prompt.lower()
@@ -1838,10 +1889,8 @@ def test_malyshko_regression_exposes_unintegrated_vocabulary_surfaces() -> None:
     assert missing == {
         "фронтовий кореспондент",
         "співавторство",
-        "рецепція",
         "інституційна роль",
         "громадянське звернення",
-        "оцінка",
         "художня деталь",
     }
     assert result["semantic_response"]["contract_status"] == "valid"
@@ -2406,8 +2455,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.7"
-    assert len(rows) == 54
+    assert catalog["catalog_version"] == "5.0.8"
+    assert len(rows) == 55
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2441,6 +2490,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.4",
         "5.0.5",
         "5.0.6",
+        "5.0.7",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

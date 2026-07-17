@@ -19,6 +19,7 @@ import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
@@ -29,12 +30,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
     reject_stale_track_keys,
     resolve_profile_selectors,
 )
+from scripts.verification.vesum import verify_words
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SKILL_ROOT = PROJECT_ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
@@ -994,6 +997,7 @@ def assemble_semantic_prompt(
     deterministic: Mapping[str, Any],
     source_hashes: Mapping[str, str],
     target_materials: Mapping[str, Mapping[str, Any]],
+    vocabulary_surface_candidates: Mapping[str, Any],
     *,
     repo_root: Path = PROJECT_ROOT,
 ) -> tuple[str, list[str]]:
@@ -1009,6 +1013,7 @@ def assemble_semantic_prompt(
         "deterministic_findings": track_result.get("findings"),
         "mechanical_policy_findings": deterministic.get("policy_findings"),
         "learner_evidence_requirements": deterministic.get("evidence_requirements"),
+        "vocabulary_surface_candidates": vocabulary_surface_candidates,
         "skip_assessments": deterministic.get("skip_assessments"),
         "size_policy": deterministic["size_policy"].get("result"),
         "resolved_track_policy": {
@@ -1056,6 +1061,9 @@ def prepare_review(
     target_materials = snapshot_target_materials(
         target, source_hashes, repo_root=repo_root
     )
+    vocabulary_surface_candidates = build_vocabulary_surface_candidates(
+        target, target_materials, repo_root=repo_root
+    )
     deterministic = run_existing_deterministic_audits(target, repo_root=repo_root, policy=policy, runner=runner)
     track_result = deterministic["track_audit"].get("result") or {}
     deterministic["policy_findings"] = evaluate_mechanical_track_policy(
@@ -1077,6 +1085,7 @@ def prepare_review(
         deterministic,
         source_hashes,
         target_materials,
+        vocabulary_surface_candidates,
         repo_root=repo_root,
     )
     return {
@@ -1091,6 +1100,7 @@ def prepare_review(
         "target": target,
         "source_hashes": source_hashes,
         "target_materials": target_materials,
+        "vocabulary_surface_candidates": vocabulary_surface_candidates,
         "reviewer": dict(reviewer),
         "deterministic": deterministic,
     }
@@ -1154,12 +1164,29 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
                     failures.append(f"target material {name} is invalid: {exc}")
 
     try:
+        raw_candidates = packet.get("vocabulary_surface_candidates")
+        if not isinstance(raw_candidates, Mapping):
+            raise ReviewProtocolError(
+                "vocabulary_surface_candidates is not a mapping"
+            )
+        candidate_payload = {
+            key: deepcopy(value)
+            for key, value in raw_candidates.items()
+            if key != "candidate_sha256"
+        }
+        if raw_candidates.get("candidate_sha256") != sha256_text(
+            _stable_json(candidate_payload)
+        ):
+            raise ReviewProtocolError(
+                "vocabulary_surface_candidates does not match candidate_sha256"
+            )
         expected_prompt, expected_paths = assemble_semantic_prompt(
             packet["target"],
             track_policy,
             packet["deterministic"],
             packet["source_hashes"],
             expected_materials,
+            raw_candidates,
             repo_root=repo_root,
         )
     except ReviewProtocolError as exc:
@@ -1468,6 +1495,183 @@ def _contains_exact_token_sequence(value: str, phrase: str) -> bool:
     )
 
 
+def _vocabulary_lemmas_from_material(
+    vocabulary_material: Mapping[str, Any],
+) -> list[str]:
+    vocabulary = yaml.safe_load(target_material_text(vocabulary_material))
+    if not isinstance(vocabulary, list):
+        raise ReviewProtocolError("Vocabulary target material must be a list")
+    lemmas: list[str] = []
+    for index, entry in enumerate(vocabulary, start=1):
+        if not isinstance(entry, Mapping):
+            raise ReviewProtocolError(f"Vocabulary entry {index} must be a mapping")
+        lemmas.append(
+            _nonempty_string(entry.get("lemma"), f"vocabulary lemma {index}")
+        )
+    return lemmas
+
+
+def _packet_vocabulary_candidates(
+    packet: Mapping[str, Any],
+) -> dict[str, list[tuple[str, str]]]:
+    raw = packet.get("vocabulary_surface_candidates")
+    if not isinstance(raw, Mapping):
+        raise ReviewProtocolError(
+            "Semantic packet must contain vocabulary_surface_candidates"
+        )
+    raw_entries = raw.get("lemmas")
+    if not isinstance(raw_entries, list):
+        raise ReviewProtocolError("Vocabulary surface candidate lemmas must be a list")
+    expected_lemmas = _packet_vocabulary_lemmas(packet)
+    raw_lemmas = [
+        entry.get("lemma") if isinstance(entry, Mapping) else None
+        for entry in raw_entries
+    ]
+    if raw_lemmas != expected_lemmas:
+        raise ReviewProtocolError(
+            "Vocabulary surface candidates must enumerate source-order lemmas"
+        )
+    candidates: dict[str, list[tuple[str, str]]] = {}
+    for entry in raw_entries:
+        assert isinstance(entry, Mapping)
+        lemma = str(entry["lemma"])
+        raw_candidates = entry.get("candidates")
+        if not isinstance(raw_candidates, list):
+            raise ReviewProtocolError(f"Vocabulary candidates for {lemma} must be a list")
+        pairs: list[tuple[str, str]] = []
+        for candidate in raw_candidates:
+            if not isinstance(candidate, Mapping):
+                raise ReviewProtocolError(
+                    f"Vocabulary candidate for {lemma} must be a mapping"
+                )
+            surface = _nonempty_string(
+                candidate.get("surface"), f"{lemma} candidate surface"
+            )
+            verification = _nonempty_string(
+                candidate.get("verification"), f"{lemma} candidate verification"
+            )
+            pair = (surface, verification)
+            if pair not in pairs:
+                pairs.append(pair)
+        candidates[lemma] = pairs
+    return candidates
+
+
+def build_vocabulary_surface_candidates(
+    target: Mapping[str, Any],
+    target_materials: Mapping[str, Mapping[str, Any]],
+    *,
+    repo_root: Path = PROJECT_ROOT,
+    verify_words_fn: Callable[..., Mapping[str, Sequence[Mapping[str, Any]]]] = verify_words,
+) -> dict[str, Any]:
+    """Resolve packet-bound learner surfaces with deterministic VESUM morphology."""
+    vocabulary_material = target_materials.get("vocabulary")
+    if not isinstance(vocabulary_material, Mapping):
+        payload = {
+            "resolver_version": "vesum-surface-candidates.v1",
+            "vesum_status": "not_applicable",
+            "lemmas": [],
+        }
+        return {**payload, "candidate_sha256": sha256_text(_stable_json(payload))}
+    lemmas = _vocabulary_lemmas_from_material(vocabulary_material)
+    target_files = target.get("files")
+    if not isinstance(target_files, Mapping):
+        raise ReviewProtocolError("Review target files must be a mapping")
+    learner_materials: list[tuple[str, Mapping[str, Any]]] = []
+    for name in ("content", "activities"):
+        material = target_materials.get(name)
+        path = target_files.get(name)
+        if isinstance(material, Mapping) and isinstance(path, str):
+            learner_materials.append((path, material))
+
+    tokenized_lines: list[tuple[str, int, str, list[re.Match[str]]]] = []
+    unique_tokens: set[str] = set()
+    token_pattern = re.compile(r"[^\W_]+(?:[’'][^\W_]+)*", flags=re.UNICODE)
+    for path, material in learner_materials:
+        for line_number, visible in enumerate(
+            _visible_source_lines(path, target_material_text(material)), start=1
+        ):
+            matches = list(token_pattern.finditer(visible))
+            if not matches:
+                continue
+            tokenized_lines.append((path, line_number, visible, matches))
+            unique_tokens.update(match.group(0).casefold() for match in matches)
+
+    vesum_path = main_checkout_root(repo_root) / "data" / "vesum.db"
+    vesum_status = "available"
+    try:
+        verified = verify_words_fn(sorted(unique_tokens), db_path=vesum_path)
+    except (FileNotFoundError, OSError):
+        verified = {token: [] for token in unique_tokens}
+        vesum_status = "unavailable_exact_only"
+
+    lemma_entries: list[dict[str, Any]] = []
+    for lemma in lemmas:
+        lemma_tokens = _lexical_tokens(lemma)
+        candidates: dict[tuple[str, str], dict[str, Any]] = {}
+        width = len(lemma_tokens)
+        for path, line_number, visible, matches in tokenized_lines:
+            for start in range(len(matches) - width + 1):
+                window = matches[start : start + width]
+                if width > 1 and any(
+                    not visible[left.end() : right.start()].isspace()
+                    for left, right in pairwise(window)
+                ):
+                    continue
+                surface = visible[window[0].start() : window[-1].end()]
+                surface_tokens = [match.group(0).casefold() for match in window]
+                if surface.casefold() == lemma.casefold():
+                    verification = "exact lemma surface"
+                elif all(
+                    any(
+                        str(match.get("lemma") or "").casefold() == lemma_token
+                        for match in verified.get(surface_token, [])
+                    )
+                    for lemma_token, surface_token in zip(
+                        lemma_tokens, surface_tokens, strict=True
+                    )
+                ):
+                    verification = "VESUM: " + "; ".join(
+                        f"{lemma_token}={surface_token}"
+                        for lemma_token, surface_token in zip(
+                            lemma_tokens, surface_tokens, strict=True
+                        )
+                    )
+                else:
+                    continue
+                key = (surface, verification)
+                candidate = candidates.setdefault(
+                    key,
+                    {
+                        "surface": surface,
+                        "verification": verification,
+                        "locations": [],
+                    },
+                )
+                candidate["locations"].append({"location": path, "line": line_number})
+        lemma_entries.append(
+            {
+                "lemma": lemma,
+                "candidates": sorted(
+                    candidates.values(),
+                    key=lambda item: (
+                        str(item["surface"]).casefold(),
+                        str(item["verification"]),
+                    ),
+                ),
+            }
+        )
+    candidate_payload = {
+        "resolver_version": "vesum-surface-candidates.v1",
+        "vesum_status": vesum_status,
+        "lemmas": lemma_entries,
+    }
+    return {
+        **candidate_payload,
+        "candidate_sha256": sha256_text(_stable_json(candidate_payload)),
+    }
+
+
 def _validate_vesum_surface_mapping(lemma: str, surface: str, verification: str) -> None:
     """Validate explicit source-order morphology evidence without guessing stems."""
     if not verification.startswith("VESUM: "):
@@ -1592,6 +1796,7 @@ def _normalize_vocabulary_coverage(
     findings: Sequence[Mapping[str, Any]],
     source_lookup: Mapping[str, str],
     target_files: Mapping[str, str],
+    expected_candidates: Mapping[str, Sequence[tuple[str, str]]] | None = None,
 ) -> list[dict[str, Any]]:
     if not isinstance(raw_coverage, list):
         raise ReviewProtocolError("vocabulary_coverage must be a list")
@@ -1637,6 +1842,13 @@ def _normalize_vocabulary_coverage(
             surface = _nonempty_string(surface, f"{lemma} surface")
             if finding_id is not None:
                 raise ReviewProtocolError(f"Integrated vocabulary {lemma} cannot reference a finding")
+            if expected_candidates is not None and (
+                surface,
+                verification,
+            ) not in expected_candidates.get(lemma, ()):
+                raise ReviewProtocolError(
+                    f"Vocabulary {lemma} surface and verification are not packet-bound candidates"
+                )
             for item in evidence:
                 path, raw_line = item["location"].rsplit(":", 1)
                 if path not in allowed_paths:
@@ -1687,6 +1899,9 @@ def normalize_semantic_result(
     alignment_findings: Sequence[Mapping[str, Any]] = (),
     expected_vocabulary_lemmas: Sequence[str] = (),
     target_files: Mapping[str, str] | None = None,
+    expected_vocabulary_candidates: Mapping[
+        str, Sequence[tuple[str, str]]
+    ] | None = None,
 ) -> dict[str, Any]:
     _require_exact_keys(
         value,
@@ -1903,6 +2118,7 @@ def normalize_semantic_result(
         findings=findings,
         source_lookup=source_lookup,
         target_files=target_files or {},
+        expected_candidates=expected_vocabulary_candidates,
     )
     vocabulary_statuses = {item["status"] for item in vocabulary_coverage}
     vocabulary_audit = alignment_audit["VOCABULARY_INTEGRATION"]
@@ -2488,6 +2704,7 @@ def finalize_review(
                 _deterministic_findings(packet),
                 expected_vocabulary_lemmas,
                 packet["target"]["files"],
+                _packet_vocabulary_candidates(packet),
             )
         except ReviewProtocolError as exc:
             error = str(exc)
@@ -2586,15 +2803,7 @@ def _packet_vocabulary_lemmas(packet: Mapping[str, Any]) -> list[str]:
         return []
     if not isinstance(vocabulary_material, Mapping):
         raise ReviewProtocolError("Vocabulary target material must be a mapping")
-    vocabulary = yaml.safe_load(target_material_text(vocabulary_material))
-    if not isinstance(vocabulary, list):
-        raise ReviewProtocolError("Vocabulary target material must be a list")
-    lemmas: list[str] = []
-    for index, entry in enumerate(vocabulary, start=1):
-        if not isinstance(entry, Mapping):
-            raise ReviewProtocolError(f"Vocabulary entry {index} must be a mapping")
-        lemmas.append(_nonempty_string(entry.get("lemma"), f"vocabulary lemma {index}"))
-    return lemmas
+    return _vocabulary_lemmas_from_material(vocabulary_material)
 
 
 def _provider_locator_schema(
@@ -2700,7 +2909,9 @@ def _case_insensitive_literal_pattern(value: str) -> str:
     return "^" + "".join(parts) + "$"
 
 
-def _provider_vocabulary_coverage_item_schema(lemma: str | None = None) -> dict[str, Any]:
+def _provider_vocabulary_coverage_item_schema(
+    lemma: str | None = None,
+) -> dict[str, Any]:
     """Constrain status-specific vocabulary evidence before provider output."""
     required = ["lemma", "status", "surface", "verification", "evidence", "finding_id"]
     evidence = {
@@ -2728,7 +2939,9 @@ def _provider_vocabulary_coverage_item_schema(lemma: str | None = None) -> dict[
         if lemma is not None
         else {"$ref": "#/$defs/nonempty"}
     )
-    integrated_exact["properties"]["verification"] = {"const": "exact lemma surface"}
+    integrated_exact["properties"]["verification"] = {
+        "const": "exact lemma surface"
+    }
     integrated_vesum = deepcopy(integrated_shared)
     integrated_vesum["properties"]["surface"] = {"$ref": "#/$defs/nonempty"}
     integrated_vesum["properties"]["verification"] = {
@@ -2763,7 +2976,20 @@ def _provider_vocabulary_coverage_item_schema(lemma: str | None = None) -> dict[
     }
 
 
-def _provider_vocabulary_prefix_item_schema(lemma: str) -> dict[str, Any]:
+def _provider_vocabulary_prefix_item_schema(
+    lemma: str,
+    candidates: Sequence[tuple[str, str]],
+) -> dict[str, Any]:
+    allowed_pairs = [
+        {
+            "properties": {
+                "surface": {"const": surface},
+                "verification": {"const": verification},
+            },
+            "required": ["surface", "verification"],
+        }
+        for surface, verification in candidates
+    ]
     return {
         "allOf": [
             {"$ref": "#/$defs/vocabularyCoverageItem"},
@@ -2773,20 +2999,10 @@ def _provider_vocabulary_prefix_item_schema(lemma: str) -> dict[str, Any]:
             },
             {
                 "if": {
-                    "properties": {
-                        "verification": {"const": "exact lemma surface"},
-                    },
-                    "required": ["verification"],
+                    "properties": {"status": {"const": "INTEGRATED"}},
+                    "required": ["status"],
                 },
-                "then": {
-                    "properties": {
-                        "surface": {
-                            "type": "string",
-                            "pattern": _case_insensitive_literal_pattern(lemma),
-                        }
-                    },
-                    "required": ["surface"],
-                },
+                "then": {"oneOf": allowed_pairs} if allowed_pairs else False,
             },
         ]
     }
@@ -2904,8 +3120,11 @@ def semantic_response_schema(
     definitions["vocabularyEvidence"] = _provider_vocabulary_evidence_schema(packet)
     definitions["vocabularyCoverageItem"] = _provider_vocabulary_coverage_item_schema()
     if packet is not None:
+        candidate_pairs = _packet_vocabulary_candidates(packet)
         vocabulary_items = [
-            _provider_vocabulary_prefix_item_schema(lemma)
+            _provider_vocabulary_prefix_item_schema(
+                lemma, candidate_pairs.get(lemma, [])
+            )
             for lemma in _packet_vocabulary_lemmas(packet)
         ]
         semantic["properties"]["vocabulary_coverage"] = {
