@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import sys
 from collections.abc import Mapping, Sequence
 from contextlib import suppress
@@ -32,6 +33,9 @@ from scripts.audit import layerb_shadow, llm_qg_shadow_store, llm_reviewer_dispa
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
 from scripts.common.repo_root import resolve_repo_root
+
+_LOGGER = logging.getLogger("qg_shadow_run")
+
 
 SHADOW_ARTIFACT_ARM = "production_shadow"
 
@@ -101,6 +105,12 @@ def _require_writer_lineage(
             "production shadow capture requires resolvable writer lineage; "
             "pass --author-family or supply build metadata/git X-Agent lineage"
         )
+    norm_family = layerb_shadow.normalize_lineage_family(lineage.family)
+    if norm_family == "fixture":
+        raise ValueError(
+            f"writer lineage family '{lineage.family}' is classified as a fixture "
+            "and cannot be used for production shadow capture"
+        )
     return lineage
 
 
@@ -115,7 +125,14 @@ def _artifact_for_capture(
     payload = tier2.get("payload")
     tier2_run_id = tier2.get("tier2_run_id")
     if not isinstance(dispatch, Mapping) or not isinstance(payload, Mapping) or not isinstance(tier2_run_id, str):
-        raise ValueError("Tier-2 capture is unavailable; shadow runs require a fresh captured live dispatch")
+        status = tier2.get("status")
+        reason = tier2.get("reason")
+        err_msg = (
+            f"Tier-2 capture is unavailable; shadow runs require a fresh captured live dispatch "
+            f"(status={status}, reason={reason})"
+        )
+        _LOGGER.error(err_msg)
+        raise ValueError(err_msg)
     qg_workflow_meta = record.get("qg_workflow") if isinstance(record.get("qg_workflow"), Mapping) else {}
     reviewer_family = dispatch.get("reviewer_family") or tier2.get("reviewer_family")
     if not isinstance(reviewer_family, str) or not reviewer_family:
@@ -220,23 +237,25 @@ def _run_layerb(
         "--tau",
         str(layerb_shadow.DEFAULT_TAU),
     ]
+    judge_fields = {
+        "judge_command": judge_command,
+        "judge_family": judge_family,
+        "judge_model": judge_model,
+        "judge_model_version": judge_model_version,
+        "provider_account_lane": provider_account_lane,
+        "judge_attestation": judge_attestation,
+        "labels": labels,
+    }
+    if any(v is not None for v in judge_fields.values()) or not layerb_dry_run:
+        missing = [name for name, value in judge_fields.items() if value is None]
+        if missing:
+            raise ValueError("attested Layer-B shadow requires " + ", ".join(missing))
+
     if max_judge_calls is not None:
         args.extend(("--max-judge-calls", str(max_judge_calls)))
     if layerb_dry_run:
         args.append("--dry-run")
-    else:
-        required = {
-            "judge_command": judge_command,
-            "judge_family": judge_family,
-            "judge_model": judge_model,
-            "judge_model_version": judge_model_version,
-            "provider_account_lane": provider_account_lane,
-            "judge_attestation": judge_attestation,
-            "labels": labels,
-        }
-        missing = [name for name, value in required.items() if value is None]
-        if missing:
-            raise ValueError("attested Layer-B shadow requires " + ", ".join(missing))
+    if judge_command is not None:
         args.extend(
             (
                 "--judge-command",
@@ -255,10 +274,12 @@ def _run_layerb(
                 str(labels),
             )
         )
-        for manifest in corpus_manifests:
-            args.extend(("--corpus-manifest", str(manifest)))
-        for manifest in fixture_manifests:
-            args.extend(("--fixture-manifest", str(manifest)))
+
+    # Always append manifests if they are passed
+    for manifest in corpus_manifests:
+        args.extend(("--corpus-manifest", str(manifest)))
+    for manifest in fixture_manifests:
+        args.extend(("--fixture-manifest", str(manifest)))
     exit_code = layerb_shadow.main(args)
     if exit_code not in {0, 3}:
         raise RuntimeError(f"layerb_shadow failed with exit code {exit_code}")

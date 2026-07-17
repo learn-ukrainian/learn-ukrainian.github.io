@@ -1,0 +1,124 @@
+name: 'Paths Filter with Retry'
+description: 'Wrapper around dorny/paths-filter that retries on failure and fails open'
+inputs:
+  filters:
+    description: 'Path filter rules in YAML format'
+    required: true
+outputs:
+  content:
+    description: 'Whether content files changed'
+    value: ${{ steps.set-outputs.outputs.content }}
+  framing:
+    description: 'Whether framing files changed'
+    value: ${{ steps.set-outputs.outputs.framing }}
+  promote:
+    description: 'Whether promote files changed'
+    value: ${{ steps.set-outputs.outputs.promote }}
+  code:
+    description: 'Whether code files changed'
+    value: ${{ steps.set-outputs.outputs.code }}
+  python:
+    description: 'Whether python files changed'
+    value: ${{ steps.set-outputs.outputs.python }}
+  frontend:
+    description: 'Whether frontend files changed'
+    value: ${{ steps.set-outputs.outputs.frontend }}
+  agent_config:
+    description: 'Whether agent configuration files changed'
+    value: ${{ steps.set-outputs.outputs.agent_config }}
+  lesson_schema:
+    description: 'Whether lesson schema files changed'
+    value: ${{ steps.set-outputs.outputs.lesson_schema }}
+  atlas:
+    description: 'Whether atlas files changed'
+    value: ${{ steps.set-outputs.outputs.atlas }}
+  postmortems:
+    description: 'Whether postmortems files changed'
+    value: ${{ steps.set-outputs.outputs.postmortems }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Paths Filter (Attempt 1)
+      uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4 — SHA-pinned per supply-chain hardening 2026-05-19
+      id: filter1
+      continue-on-error: true
+      with:
+        filters: ${{ inputs.filters }}
+
+    - name: Sleep before retry 1
+      if: steps.filter1.outcome == 'failure'
+      run: sleep 5
+      shell: bash
+
+    - name: Paths Filter (Attempt 2)
+      if: steps.filter1.outcome == 'failure'
+      uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4 — SHA-pinned per supply-chain hardening 2026-05-19
+      id: filter2
+      continue-on-error: true
+      with:
+        filters: ${{ inputs.filters }}
+
+    - name: Sleep before retry 2
+      if: steps.filter1.outcome == 'failure' && steps.filter2.outcome == 'failure'
+      run: sleep 15
+      shell: bash
+
+    - name: Paths Filter (Attempt 3)
+      if: steps.filter1.outcome == 'failure' && steps.filter2.outcome == 'failure'
+      uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4 — SHA-pinned per supply-chain hardening 2026-05-19
+      id: filter3
+      continue-on-error: true
+      with:
+        filters: ${{ inputs.filters }}
+
+    - name: Set outputs and fail open if needed
+      id: set-outputs
+      run: |
+        if [ "${{ steps.filter1.outcome }}" = "success" ]; then
+          echo "content=${{ steps.filter1.outputs.content }}" >> "$GITHUB_OUTPUT"
+          echo "framing=${{ steps.filter1.outputs.framing }}" >> "$GITHUB_OUTPUT"
+          echo "promote=${{ steps.filter1.outputs.promote }}" >> "$GITHUB_OUTPUT"
+          echo "code=${{ steps.filter1.outputs.code }}" >> "$GITHUB_OUTPUT"
+          echo "python=${{ steps.filter1.outputs.python }}" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ steps.filter1.outputs.frontend }}" >> "$GITHUB_OUTPUT"
+          echo "agent_config=${{ steps.filter1.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
+          echo "lesson_schema=${{ steps.filter1.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
+          echo "atlas=${{ steps.filter1.outputs.atlas }}" >> "$GITHUB_OUTPUT"
+          echo "postmortems=${{ steps.filter1.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
+        elif [ "${{ steps.filter2.outcome }}" = "success" ]; then
+          echo "content=${{ steps.filter2.outputs.content }}" >> "$GITHUB_OUTPUT"
+          echo "framing=${{ steps.filter2.outputs.framing }}" >> "$GITHUB_OUTPUT"
+          echo "promote=${{ steps.filter2.outputs.promote }}" >> "$GITHUB_OUTPUT"
+          echo "code=${{ steps.filter2.outputs.code }}" >> "$GITHUB_OUTPUT"
+          echo "python=${{ steps.filter2.outputs.python }}" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ steps.filter2.outputs.frontend }}" >> "$GITHUB_OUTPUT"
+          echo "agent_config=${{ steps.filter2.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
+          echo "lesson_schema=${{ steps.filter2.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
+          echo "atlas=${{ steps.filter2.outputs.atlas }}" >> "$GITHUB_OUTPUT"
+          echo "postmortems=${{ steps.filter2.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
+        elif [ "${{ steps.filter3.outcome }}" = "success" ]; then
+          echo "content=${{ steps.filter3.outputs.content }}" >> "$GITHUB_OUTPUT"
+          echo "framing=${{ steps.filter3.outputs.framing }}" >> "$GITHUB_OUTPUT"
+          echo "promote=${{ steps.filter3.outputs.promote }}" >> "$GITHUB_OUTPUT"
+          echo "code=${{ steps.filter3.outputs.code }}" >> "$GITHUB_OUTPUT"
+          echo "python=${{ steps.filter3.outputs.python }}" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ steps.filter3.outputs.frontend }}" >> "$GITHUB_OUTPUT"
+          echo "agent_config=${{ steps.filter3.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
+          echo "lesson_schema=${{ steps.filter3.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
+          echo "atlas=${{ steps.filter3.outputs.atlas }}" >> "$GITHUB_OUTPUT"
+          echo "postmortems=${{ steps.filter3.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::path classification unavailable — running everything"
+          echo "content=true" >> "$GITHUB_OUTPUT"
+          echo "framing=true" >> "$GITHUB_OUTPUT"
+          echo "promote=true" >> "$GITHUB_OUTPUT"
+          echo "code=true" >> "$GITHUB_OUTPUT"
+          echo "python=true" >> "$GITHUB_OUTPUT"
+          echo "frontend=true" >> "$GITHUB_OUTPUT"
+          echo "agent_config=true" >> "$GITHUB_OUTPUT"
+          echo "lesson_schema=true" >> "$GITHUB_OUTPUT"
+          echo "atlas=true" >> "$GITHUB_OUTPUT"
+          echo "postmortems=true" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash

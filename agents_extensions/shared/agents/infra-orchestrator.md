@@ -209,6 +209,8 @@ durable sources); never turn Git/GitHub/Monitor facts into continuity anchors.
 
 ## Linguistic verification (when infra touches Ukrainian — Atlas/lexicon/gates)
 When tooling touches Ukrainian forms: verify, never invent — `mcp__sources__*` (VESUM
-`verify_word`/`verify_words`, `query_cefr_level`, `check_russian_shadow`). Authority hierarchy:
-VESUM → Правопис 2019 → Горох → Антоненко-Давидович → Грінченко. Curriculum CONTENT judgement is the
+`verify_word`/`verify_words`, `query_cefr_level`, `check_russian_shadow`). The authority to reach for
+depends on the facet of the question (forms vs stress vs meaning vs style) — canonical table:
+`agents_extensions/shared/rules/ukrainian-linguistics.md` §4. Note `check_russian_shadow` is a
+suspicion, not a verdict: heritage evidence overrides it. Curriculum CONTENT judgement is the
 content lane's job, not yours — your job is that the tooling around it is correct.

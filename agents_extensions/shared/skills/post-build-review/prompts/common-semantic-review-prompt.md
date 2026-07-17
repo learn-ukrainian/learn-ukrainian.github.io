@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.1`
+Semantic prompt version: `6.0.2`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -178,6 +178,13 @@ IDs from the resolved context instead of emitting duplicate semantic findings.
 After finalizing the finding objects, audit each `FOUND` class against its
 `finding_ids`. Except for `VOCABULARY_INTEGRATION`, include at least one
 alignment evidence entry at every owned finding object's exact primary location and line.
+When a semantic finding belongs to one of these seven alignment classes:
+set its `issue_id` to that alignment class's exact uppercase name. The finding's
+specific defect name belongs in its unique `id`, not in a competing
+`issue_id`.
+Create a precise custom `issue_id` only for a finding outside all seven alignment classes.
+This exact class identity is how the finalizer proves
+that every matching finding is owned by the corresponding `FOUND` entry.
 Copy that locator exactly from the finding object (or from
 the resolved supplied finding); do not substitute a related occurrence. You
 may add additional cross-cutting comparison evidence to show why a defect is
@@ -240,7 +247,8 @@ numeric scores and `null` if and only if the status is `INCOMPLETE`.
 Before returning, verify every quality-dimension `location` is an exact target
 path and every `line` is the one-based line containing the cited evidence.
 
-Use stable uppercase-underscore `issue_id` values for semantic findings.
+Use stable uppercase-underscore `issue_id` values for semantic findings,
+subject to the exact seven-class ownership rule above.
 Known calibration classes include `ENGLISH_LEAKAGE`,
 `AWKWARD_PASSIVE_RESULT_STATE`, `UNNATURAL_ANTHROPOMORPHISM`,
 `UKRAINIAN_GRAMMAR_CALQUE`, `AI_LEAKAGE`, `PATH_LEAKAGE`,

@@ -6,11 +6,20 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
 
-ENGINE_VERSION = "runner-pr1-v1"
+ENGINE_VERSION = "runner-pr3-v1"
 SERIALIZATION_VERSION = "lemma-artifact-v1"
 CEFR_ALGORITHM_VERSION = "grac-cohort-quantile-v1"
 RELATION_CLOSURE_VERSION = "reciprocal-closure-v1"
 SIDE_DB_SCHEMA_VERSION = "side-db-v1"
+LEDGER_SCHEMA_VERSION = "ledger-v1"
+NETWORK_CACHE_SCHEMA_VERSION = "network-cache-v1"
+ADAPTER_VERSION = "http-adapter-v1"
+REQUEST_POLICY_VERSION = "request-policy-v1"
+PARSER_VERSION = "parser-v1"
+NORMALIZER_VERSION = "normalizer-v1"
+PARSED_SCHEMA_VERSION = "parsed-schema-v1"
+PACKET_SCHEMA_VERSION = "packet-v1"
+BUNDLE_SCHEMA_VERSION = "bundle-v1"
 
 # Host memory policy (16 GiB local host). Platform/VPS ceilings are selected
 # below physical RAM with explicit OS headroom — never copy 8/10 onto a smaller host.
@@ -19,19 +28,25 @@ DEFAULT_MEMORY_MAX_BYTES = 10 * 1024**3
 
 
 class ChunkState(StrEnum):
-    """Chunk lifecycle states used by PR1 splits (ledger vocabulary expands in PR2)."""
+    """Chunk lifecycle states (PR1 splits + PR2 ledger vocabulary)."""
 
     PENDING = "pending"
+    LEASED = "leased"
     RUNNING = "running"
     DONE = "done"
     SUPERSEDED = "superseded"
     FAILED_TERMINAL = "failed_terminal"
+    SEALED = "sealed"
+    RETRY_SCHEDULED = "retry_scheduled"
 
 
 class ErrorCode(StrEnum):
     FAILED_OOM = "failed_oom"
     FINGERPRINT_MISMATCH_REFUSED = "fingerprint_mismatch_refused"
     STALE_COMMIT_REJECTED = "stale_commit_rejected"
+    DUPLICATE_RUNNER_REFUSED = "duplicate_runner_refused"
+    ATTEMPT_CAP_EXHAUSTED = "attempt_cap_exhausted"
+    LEASE_RECLAIMED = "lease_reclaimed"
 
 
 PhaseOutcome = Literal["done", "no_data", "failed_terminal", "retry_scheduled"]
@@ -91,32 +106,56 @@ class OomSplitChildren:
     split_epoch: int
 
 
-# --- PR2/PR3/PR4 stubs (interfaces only; not implemented in PR1) ---
+# --- PR4 stubs (PR3 network cache/transport is real — see network_cache/transport) ---
 
 
 @dataclass(frozen=True, slots=True)
 class LedgerStub:
-    """PR2: real-unit ledger, fencing, leases. PR1 does not open this for writing."""
+    """Compatibility handle pointing at a real PR2+ ledger run.
+
+    Prefer :class:`scripts.lexicon.runner.ledger.Ledger` for all writes.
+    """
 
     run_id: str
     fingerprint: str
-    note: str = "PR2 stub — ledger/leases/fencing not implemented in PR1"
+    note: str = "PR2/PR3 real-unit ledger (see scripts.lexicon.runner.ledger.Ledger)"
 
 
 @dataclass(frozen=True, slots=True)
-class PacketStub:
-    """PR3: content-addressed request packet (.tar.zst)."""
+class PacketRef:
+    """Content-addressed request packet (.tar.zst) — PR3."""
 
     packet_id: str
-    note: str = "PR3 stub — network cache/packets not implemented in PR1"
+    generation: int = 0
+    path: str = ""
+    content_hash: str = ""
+
+
+# Back-compat alias used by offline_engine until callers switch to PacketRef.
+PacketStub = PacketRef
+
+
+@dataclass(frozen=True, slots=True)
+class BundleRef:
+    """Content-addressed result bundle (.tar.zst) — PR3."""
+
+    bundle_id: str
+    packet_id: str
+    packet_generation: int
+    path: str = ""
+    content_hash: str = ""
 
 
 @dataclass(frozen=True, slots=True)
 class SealStub:
-    """PR4: leaf seal transaction + streaming assembly."""
+    """PR4: full streaming assembly + publication gate.
+
+    Leaf seal *transactions* are implemented in PR2 (CAS + leaf-only rules);
+    final streaming assembly remains PR4.
+    """
 
     chunk_id: str
-    note: str = "PR4 stub — leaf sealing/assembly not implemented in PR1"
+    note: str = "PR4 stub — streaming assembly/publication not implemented in PR2"
 
 
 def canonical_json(obj: Any) -> str:

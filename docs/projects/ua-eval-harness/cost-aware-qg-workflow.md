@@ -82,6 +82,9 @@ the tool-disabled judge does not. A judged invocation instead requires the
 attested judge command, exact route identity, attestation, labels, and frozen
 qualification manifests; `layerb_shadow` verifies all of them.
 
+> [!WARNING]
+> When minting the canary artifact for a seminar-level run, always run the canary generator with the specific target level (e.g. `folk` or `hist`), not the literal string `seminar`. Using `seminar` maps to the `b1_plus` policy family and `gemma_surface` route instead of `opencode_frontier`, which will fail validation.
+
 ```bash
 .venv/bin/python scripts/audit/qg_shadow_run.py \
   --module-dir curriculum/l2-uk-en/folk/vesnianky-hayivky \

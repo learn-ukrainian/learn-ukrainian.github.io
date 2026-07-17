@@ -179,7 +179,7 @@ data/
 ## Ukrainian Linguistic Rules
 1. **Admit uncertainty, never invent.** Flag with `<!-- VERIFY -->`. Check VESUM first.
 2. **Four separate checks:** Russianisms, Surzhyk, Calques, Paronyms — four DIFFERENT problems.
-3. **Authority hierarchy:** VESUM → Правопис 2019 → Горох → Антоненко-Давидович → Грінченко
+3. **Authority hierarchy:** facet-aware and tool-first — which authority is right depends on whether you are asking about forms, spelling, stress, meaning, frequency, style, paronyms, or etymology. There is no single chain, and VESUM does not carry stress. Canonical table: `agents_extensions/shared/rules/ukrainian-linguistics.md` §4.
 4. **Think in Ukrainian categories:** звук/літера, голосний/приголосний, відмінок, наголос
 5. **Your pre-training is contaminated by Russian — always verify.**
 

@@ -82,7 +82,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4 — SHA-pinned per supply-chain hardening 2026-05-19
+      - uses: ./.github/actions/paths-filter-retry
         id: filter
         with:
           filters: |
@@ -154,6 +154,14 @@ jobs:
               - '.github/workflows/ci.yml'
               - 'site/**'
               - 'curriculum/l2-uk-en/**'
+              # MDX generator entry + package (mdx-generation-drift invokes
+              # scripts/generate_mdx.py; mdx-source-parity treats package edits
+              # as generator changes). Missing these let generator-only PRs skip
+              # both drift/parity gates (#5354; class: #5351/#3873/#4888/#4936).
+              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
+              - 'scripts/generate_mdx.py'
+              - 'scripts/generate_mdx/**'
+              - 'scripts/yaml_activities.py'
             agent_config:
               - '.github/workflows/ci.yml'
               - '.mcp.json'
@@ -203,8 +211,14 @@ jobs:
               - 'site/src/data/lexicon-daily-pool.json'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+              # hashFiles + load_manifest read the pointer; missing it let
+              # pointer-only edits skip atlas-freshness (#5354; class: #5351).
+              # tests/test_mdx_atlas_filter_coverage.py enforces coverage.
+              - 'site/src/data/lexicon-manifest.pointer.json'
               - 'site/src/data/lexicon-practice-deck.pointer.json'
               - 'site/src/data/lexicon-practice-reviewed-sources.json'
+              # check_static_practice_assets.py DEFAULT_PRACTICE_DIR
+              - 'site/public/lexicon/**'
               - 'site/scripts/hydrate-practice-deck.mjs'
               - 'site/scripts/hydrate-lexicon-api-shards.ts'
             postmortems:
