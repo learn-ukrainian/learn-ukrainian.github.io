@@ -1,116 +1,192 @@
-# Катерина Миронівна Зарицька — Research Dossier
+# Катерина Миронівна Зарицька — дослідницьке досьє
 
 **Slug:** `kateryna-zarytska`
-**Block:** G
-**Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і межі
 
-- **Full name (UA, canonical):** Катерина Миронівна Зарицька.
-- **Pseudonyms / aliases:** Монета and other underground names require source-edition verification; English canonical: Kateryna Zarytska.
-- **Born:** 5 November 1914 | Kolomyia, Galicia | Austria-Hungary. IEU gives 5 November 1914; ЕСУ confirms the biographical entry and family context. [T1: IEU — Zarytska, Kateryna] [T1: ЕСУ — Зарицька Катерина Миронівна]
-- **Died:** 29 August 1986 | Lviv, Ukrainian SSR | after decades of imprisonment and restricted residence. [T1: IEU] [T1: ЕСУ]
-- **Family / education key facts:** Daughter of mathematician Myron Zarytskyi; student at Lviv Polytechnic; wife of Mykhailo Soroka and mother of Bohdan Soroka; OUN underground organizer; head of the Ukrainian Red Cross within the UPA underground. [T1: IEU] [T1: ЕСУ]
+Це досьє відмовляється від двох однаково хибних скорочень. Перше зводить
+Катерину Зарицьку до радянського ярлика «націоналістка» й тим самим робить
+репресію нібито природною. Друге замінює її документовані дії образом бездоганної
+підпільної героїні. Натомість пакет розділяє членство в ОУН, роботу в жіночій
+мережі, функцію референтки підпільного Українського Червоного Хреста, зв'язкову
+діяльність, пропагандистське авторство, арешти, вироки, в'язниці, табори й пізнє
+життя.
 
-No OS/NS discrepancy found. The birth date occasionally appears as 3 November in general web sources; IEU's 5 November is used here and the discrepancy should be checked before Phase 2 YAML.
+Контрольною біографією є оновлена 2025 року стаття ЕСУ [S1]. Опублікований том
+Лесі Онишко містить дослідження й великий корпус листів з неволі; для читання
+прийнято точно локалізований лист до сина від 26 серпня 1952 року, сторінки
+254–257 [S2]. Авторський політичний текст під псевдонімом У. Кужіль читається в
+передруку журналу «Ідея і чин», сторінки 464–474 [S3]. Польська та єврейська
+історіографії використовуються для організаційного контексту ОУН і УПА, але не
+для вигаданого обвинувачення конкретної особи [S4; S5]. Прямих цитат без
+сторінкового локатора немає.
 
-## 2. Oppression mechanism
+## Ім'я, родина й дата народження
 
-- **What happened:** Polish arrest and imprisonment; Soviet arrest in 1940; MGB arrest in 1947 and 25-year sentence; imprisonment in Russian prisons and Mordovian camps.
-- **When:** Polish arrest 8 November 1934; Soviet arrest 1940; MGB arrest 1947; imprisonment to 1968 with release/residence constraints until 1972. [T1: ЕСУ] [T1: IEU]
-- **By whom:** Polish authorities; Soviet NKVD/MGB; Soviet camp/prison administration.
-- **Document references:** No case-file fond/opys/sprava retrieved. IEU provides prisons: Verkhnouralsk, Vladimir, and Mordovia. [T1: IEU]
+Канонічне українське ім'я — **Катерина Миронівна Зарицька**. ЕСУ фіксує
+псевдоніми Калина, Орися, У. Кужіль, Маня та Монета [S1]. Псевдонім у
+конкретному виданні не треба перетворювати на окрему авторку, а неповний список
+не слід оголошувати вичерпним. У навчальному тексті основне ім'я стоїть першим,
+а псевдонім додається лише там, де він потрібен для атрибуції документа.
 
-Zarytska's oppression is specific and long. Polish authorities prosecuted her for OUN involvement around the Pieracki assassination case. Soviet authorities imprisoned her as an OUN member in 1940, then the MGB arrested her again in 1947 and imposed a 25-year sentence. IEU says she served time in Russian prisons and Mordovian camps and lived in Ternopil oblast after release. [T1: IEU]
+Оновлена ЕСУ подає 3 листопада 1914 року, Коломию, і цю дату пакет приймає як
+поточну контрольну [S1]. Попередній каталог використовував 5 листопада за
+старішою англомовною довідкою; цю дату не можна непомітно змішувати з новою.
+Зарицька була дочкою математика Мирона Зарицького, дружиною Михайла Сороки й
+матір'ю Богдана Сороки. Родинна належність пояснює частину середовища, але не
+замінює її власної агентності.
 
-The prison geography matters. Verkhnouralsk, Vladimir, and Mordovia place her punishment inside the Soviet/Russian carceral system rather than in an abstract "postwar hardship." A learner-facing biography should name that geography because it connects western Ukrainian underground history with the wider Soviet prison network used against Ukrainian political prisoners.
+## Освіта, ОУН і польське ув'язнення
 
-## 3. Major works
+Зарицька навчалася в Тернополі, у львівській гімназії сестер-василіянок і у
+Львівській політехніці. 1930 року вступила до «Юнацтва» ОУН і поширювала
+заборонену літературу. Від 1932 року була членкинею бойово-розвідувальної
+п'ятірки, підпорядкованої Крайовій екзекутиві ОУН [S1]. Слово «членство» тут не
+повинно приховувати характер структури, але й не доводить кожної дії, яку
+вчинила організація.
 
-- `1946` — *Науковість діалектичного матеріалізму*, underground critique of Soviet ideology. [T1: ЕСУ]
-- `1946` — *Найбільш демократичні вибори*, political text on Soviet electoral claims. [T1: ЕСУ]
-- `1946` — *Большевики і національне питання*, underground political analysis. [T1: ЕСУ]
-- `1946` — *Шляхи російського імперіалізму*, anti-imperial analysis. [T1: ЕСУ]
-- `1946` — *Чи большевики ведуть до комунізму*, underground critique. [T1: ЕСУ]
-- `1947` — editorial work for an underground journal listed by ЕСУ; title/page details require Phase 2 verification.
+8 листопада 1934 року польська поліція її заарештувала. ЕСУ перелічує
+обвинувачення у причетності до вбивств міністра Броніслава Пєрацького та Якова
+Бачинського й до замаху на тюремного підкомісара. Її засудили до восьми років,
+згодом строк скоротили до чотирьох з половиною; покарання вона відбувала у
+Львові, Чорткові й Станіславі. 8 травня 1939 року вийшла на волю [S1].
 
-## 4. Primary-source quotes (>=2 required)
+Цю частину не слід називати лише «переслідуванням за переконання». Формулювання
+обвинувачень і вирок є частиною польської судової історії, а міжвоєнна польська
+політика щодо українців — ширшим контекстом. Пакет не має первинної судової
+справи, тому не встановлює за пунктами, яку саме дію суд довів і якими доказами.
 
-Source not found for two page-verified direct quotations from Zarytska's own underground works in retrieved Tier 1/Tier 2 sources. The titles above are source-verified through ЕСУ, but titles are not a substitute for quoted passages.
+## Перший арешт НКВС і воєнний час
 
-Phase 2 should retrieve a printed or archival edition of her essays before learner-facing quotations. This is especially important because underground anti-Soviet texts often circulate in excerpted form without page control.
+22 березня 1940 року Зарицьку заарештував НКВС за обвинуваченням у
+націоналістичній діяльності. У вересні 1940 року у в'язниці вона народила сина.
+28 червня 1941 року, після початку німецько-радянської війни й розпаду
+радянської тюремної системи у Львові, вийшла на волю [S1; S2]. Ця хронологія
+показує механізм радянської репресії, але не потребує недокументованого опису
+кожної деталі втечі.
 
-## 5. Language register
+Далі Зарицька працювала в українській організації «Січ», була інструкторкою та
+членкинею проводу «Юнацтва» і жіночої мережі ОУН. Нацистська окупація є
+обов'язковим контекстом. Вона не була вільним простором українського
+державотворення: поруч відбувалися Голокост, примусова праця й репресія різних
+політичних груп. Водночас сам факт діяльності в окупованому місті не доводить
+служби нацистській владі без документа.
 
-- **Register:** underground political analysis; organizational and humanitarian vocabulary.
-- **CEFR readiness for full reading:** C1; B2 for selected excerpts.
-- **Lexicon notes:** `діалектичний матеріалізм`, `російський імперіалізм`, `національне питання`, `Український Червоний Хрест`, camp vocabulary.
-- **Stylistic features:** polemical critique, ideological analysis, practical underground register.
+## Український Червоний Хрест і зв'язкова діяльність
 
-## 6. Contested points
+Від 1943 року Зарицька була референткою підпільного Українського Червоного
+Хреста. Це означає організаційну відповідальність за окремий напрям допомоги,
+але не тотожне посаді керівниці всіх медичних практик УПА в кожному регіоні.
+1945 року після курсів пропагандистів її призначили особистою зв'язковою Романа
+Шухевича. Від 1946 року вона працювала в Головному осередку пропаганди ОУН, а
+1947 року — в редакції підпільного журналу «Ідея і чин» [S1; S2].
 
-- **What's debated in modern UA scholarship:** Zarytska is often presented through the humanitarian work of the Ukrainian Red Cross. That role was real, but it existed inside the OUN/UPA underground. A serious dossier should neither masculinize the story by treating her only as a courier for male commanders nor sanitize the movement by isolating humanitarian care from the armed network. [T1: IEU] [T1: ЕСУ]
-- **What gets simplified in popular memory:** Commemoration tends to emphasize endurance, motherhood, and imprisonment. Those are important, but her own writings listed by ЕСУ show a political intellectual who wrote against Soviet ideology and Russian imperialism. She was not merely a victim or helper.
-- **Where modern Russian disinformation attacks her:** Russian narratives present women in the OUN/UPA underground as "bandit accomplices" or erase them completely. The decolonized correction is to name her agency, her Ukrainian Red Cross work, and her Soviet imprisonment. The anti-hagiographic correction is to keep her within the contested OUN/UPA context.
-- **Polish / Jewish / other-perspective considerations:** Her 1934 Polish prosecution connects her to OUN political violence in interwar Poland, though she is not a Volhynia commander. Jewish/Holocaust perspectives matter as part of the wider OUN/UPA field, but no source retrieved in this pass ties her personally to anti-Jewish violence. Do not imply guilt by association; do not erase organizational context.
-- **NPOV-decolonized framing:** Zarytska should be taught as a Ukrainian underground organizer, writer, humanitarian-network leader, and long-term Soviet political prisoner. The controversy is how to place humanitarian service within an armed nationalist underground whose wider record is contested.
-- **Gender-history caution:** Do not reduce her to family roles even though her father, husband, and son are historically significant. Her own political writing and leadership of the underground medical/humanitarian network are independent reasons for inclusion. At the same time, the family network helps explain why Soviet repression targeted households and kinship structures, not only individual commanders.
-- **Terminology caution:** "Ukrainian Red Cross" in this context means the underground UPA-linked structure, not the international neutral organization.
-- **Source caution:** Her underground essays need page control before quotation because titles alone can overstate what the recovered text actually argues.
+Чотири ролі треба тримати окремо: референтка УЧХ, учасниця жіночої мережі,
+зв'язкова командувача УПА та авторка пропагандистських текстів. Вони могли
+перетинатися, але не є синонімами. Організаційна міфологія часто представляє
+медичну службу лише як гуманітарну, а радянський опис — лише як прикриття
+«бандитизму». Джерелознавча рамка запитує, які функції засвідчені, які тексти
+атрибутовані й де закінчується доказ.
 
-## 7. Cross-track links
+## Авторський текст У. Кужіль
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/oun.yaml`
-  - `curriculum/l2-uk-en/plans/hist/upa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/volyn-pamiat-i-travma.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/holokost-v-ukraini.yaml`
-- **Existing BIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
-  - `curriculum/l2-uk-en/plans/bio/vasyl-kuk.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Zarytska; women in the underground; Ukrainian Red Cross under UPA.
+ЕСУ зараховує Зарицькій низку суспільно-політичних праць, серед них
+«Науковість діалектичного матеріалізму» [S1]. Академічний передрук «Ідеї і
+чину» містить текст У. Кужіль «Науковість діялектичного матеріялізму» на
+сторінках 464–474 [S3]. Саме цей локатор дає змогу працювати з авторськими
+словами. Назву з історичним правописом у джерелі не треба непомітно
+модернізувати.
 
-## 8. Naming-canonical
+Текст є політичною полемікою підпілля проти марксистсько-ленінської доктрини.
+Він доводить авторство певних тез після сторінкової перевірки, але не є
+нейтральним описом радянського суспільства. Для вправи важливо розрізняти
+аргумент, риторичний прийом і твердження про факт. Інші названі в ЕСУ праці не
+цитуються, доки не встановлено точне видання й сторінки.
 
-- **Slug:** `kateryna-zarytska`
-- **EN canonical (BGN/PCGN 2010):** Kateryna Zarytska
-- **UA canonical:** Катерина Миронівна Зарицька
-- **Aliases:** Kateryna Zarytska; Kateryna Zarycka as library-search alias; daughter of Myron Zarytskyi.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Ekaterina Zaritskaya; Katerina Zaritskaia; Russian patronymic spellings.
+## Арешт 1947 року, вирок і неволя
 
-## 9. Image candidates
+21 вересня 1947 року радянські органи знову заарештували Зарицьку. ЕСУ
+повідомляє, що під час допиту вона намагалася вкоротити собі віку. 20 листопада
+1948 року її засудили до двадцяти п'яти років тюремного ув'язнення. Вона
+перебувала у Верхньоуральській і Владимирській в'язницях; 1969 року її перевели
+до табору суворого режиму в Мордовії. 21 вересня 1972 року звільнили [S1; S2].
 
-- **Best PD/CC portrait:** ЕСУ portrait; verify reuse rights.
-- **Backup candidates:** IEU page image if available; NBU/archival portrait if rights allow.
-- **Era-appropriate context image:** Ukrainian Red Cross underground document or camp-prison context image, rights-cleared.
+Попередня дата звільнення 1968 року є помилковою й вилучена. Точна послідовність
+важлива, бо змішування в'язниці, табору й звільнення стирає форми радянської
+репресії. Вирок не називається нейтральним «покаранням за політику»: це рішення
+репресивної системи щодо учасниці антирадянського підпілля. Водночас досьє не
+додає вигаданого медичного причинного ланцюга або конкретної табірної сцени.
 
-## 10. Sources used
+## Лист до сина як первинне джерело
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Зарицька Катерина Миронівна." <https://esu.com.ua/article-15538> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Zarytska, Kateryna." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZarytskaKateryna.htm>.
+У томі «Нам сонце всміхалось крізь ржавії ґрати…» опубліковано лист Зарицької
+до сина Богдана від 26 серпня 1952 року, номер 3, сторінки 254–257 [S2]. Це
+точна документальна одиниця, а не довільний уривок зі збірки. Лист показує
+родинний голос, практику тюремного листування й спосіб самопрезентації матері в
+умовах неволі.
 
-**Tier 2 (institutional):**
-- NBU Ukrainika / memorial leads for Zarytska; use only after page verification.
+Водночас лист не може сам довести повну хронологію вироку, адміністративний
+устрій табору або всі політичні погляди авторки. Особистий документ має власного
+адресата й комунікативну мету. Навчальне завдання повинно відрізняти слова
+Зарицької від заголовка упорядниці, примітки видавця та сучасної емоційної
+інтерпретації. Без точного сторінкового локатора жодна фраза з листа в курсі не
+відтворюється.
 
-**Tier 4 (modern scholarly post-1991):**
-- Scholarship on women in OUN/UPA and Ukrainian Red Cross; Phase 2 should add page-stable monographs/articles.
-- General OUN/UPA controversy sources: Himka, Rudling, Motyka for context, not individualized accusation.
+## Польська й єврейська перспективи та цивільна шкода
 
-**Primary-source documents accessed:**
-- No page-stable prison file or quotation retrieved in this pass.
+Зарицька належала до ОУН-Б і працювала поруч із командуванням УПА в час, коли
+підрозділи ОУН—УПА здійснили масове насильство проти польських цивільних на
+Волині та в Східній Галичині. Польська фахова стаття розглядає «антипольську
+акцію» як етнічне очищення й водночас аналізує довоєнну польську політику та
+німецько-радянський окупаційний контекст [S4]. Цей запис не можна викреслити
+посиланням на польські відплатні акції.
 
----
+Єврейська історіографія документує антисемітські дискусії в ОУН у 1929–1947
+роках [S5]. Належність Зарицької до організації вимагає назвати цей контекст,
+але прийнятий набір не містить особистого наказу, участі у вбивстві або
+антиєврейської заяви з її підписом. Отже, модуль не оголошує її індивідуально
+винною через асоціацію й не робить протилежного висновку, нібито організаційний
+контекст не стосується керівної учасниці.
 
-## Decolonization self-check (run before submitting)
+## Пізнє життя, смерть і пам'ять
 
-- [x] Soviet prison mechanism specific.
-- [x] Women's agency foregrounded without sanitizing OUN/UPA context.
-- [x] No guilt-by-association beyond sourced claims.
-- [x] Russian-imperial forms confined to §8.
-- [x] Quote and file gaps documented.
+Після звільнення Зарицька жила у Волочиську. Оновлена ЕСУ подає, що вона померла
+там 29 серпня 1986 року, а похована у Львові [S1]. Попередня формула «померла у
+Львові» змішувала місце смерті й поховання. Пізніші перепоховання, назви вулиць,
+відзнаки та меморіальні тексти є матеріалом політики пам'яті. Вони не
+використовуються як доказ функції в УЧХ або дати вироку.
+
+Хибний підпільний некролог, який повідомляв про її смерть приблизно 1947 року,
+було прямо перевірено, але відхилено як біографічне читання. Він може бути
+первинним свідченням інформаційної невизначеності підпілля, не фактом смерті.
+Для цього каталогу кращими первинними читаннями є власний лист і точно
+атрибутований політичний текст [S2; S3].
+
+## Права й зображення
+
+Три українськомовні читання мають точні ідентичності та публічні URL. ЕСУ є
+авторськоправною сторінкою [S1]. Обидва томи в електронній бібліотеці Інституту
+історії дають публічні повні PDF, але окрема репродукційна ліцензія для курсу не
+встановлена [S2; S3]. Тому всі читання — лише `link-only`; текст, листи й
+зображення не переносяться на сайт.
+
+Відомий портрет має невідомого автора й загальне посилання на вторинний сайт.
+Теги суспільного надбання без перевіреного походження не доводять індивідуальну
+ліцензію. Диспозиція — текстовий `portrait_fallback`.
+
+## Прийняті джерела
+
+- [S1] Онишко Л. «Зарицька Катерина Миронівна», ЕСУ. <https://esu.com.ua/article-15538>
+- [S2] Онишко Л. *Нам сонце всміхалось крізь ржавії ґрати… Катерина Зарицька в українському національно-визвольному русі*. <https://resource.history.org.ua/item/0015778>
+- [S3] *Ідея і чин: орган Проводу ОУН, 1942–1946*, передрук, том 24. <https://resource.history.org.ua/item/0015940>
+- [S4] Grelka F. M. „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej. <https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650>
+- [S5] Carynnyk M. “Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947.” <https://www.cambridge.org/core/journals/nationalities-papers/article/abs/foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/110829E5A0E4E7D3727ACCD4476F082D>
+
+## Висновок готовності
+
+Hold не потрібен. Виправлено дату народження, дату звільнення, місце смерті,
+роль в УЧХ і зв'язкову функцію. Прийняті первинні читання мають сторінкові
+локатори; помилковий некролог, неперевірені цитати й портрет відхилено.

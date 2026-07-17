@@ -1,0 +1,40 @@
+sources:
+- id: S1
+  type: external
+  title: Зарицька Катерина Миронівна
+  author: Леся Онишко
+  file: https://esu.com.ua/article-15538
+  url: https://esu.com.ua/article-15538
+  notes: Оновлена 2025 року авторськоправна академічна стаття ЕСУ; link-only.
+- id: S2
+  type: external
+  title: Нам сонце всміхалось крізь ржавії ґрати… Катерина Зарицька в українському національно-визвольному русі
+  author: Леся Онишко
+  file: https://resource.history.org.ua/item/0015778
+  url: https://resource.history.org.ua/item/0015778
+  notes: Літопис УПА, Бібліотека, том 8, 2007; лист № 3 від 26 серпня 1952 року на сторінках 254–257.
+- id: S3
+  type: external
+  title: 'Ідея і чин: орган Проводу ОУН, 1942–1946'
+  author: Літопис УПА, том 24
+  file: https://resource.history.org.ua/item/0015940
+  url: https://resource.history.org.ua/item/0015940
+  notes: Передрук журналу; текст У. Кужіль «Науковість діялектичного матеріялізму» на сторінках 464–474.
+- id: S4
+  type: external
+  title: „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej
+  author: Frank M. Grelka
+  file: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  url: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  notes: Польська фахова рамка цивільної шкоди ОУН—УПА; не доказ особистої участі Зарицької.
+- id: S5
+  type: external
+  title: 'Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947'
+  author: Marco Carynnyk
+  file: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  url: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  notes: Єврейська та голокостна рамка дискурсу ОУН; не доказ індивідуальної дії Зарицької.

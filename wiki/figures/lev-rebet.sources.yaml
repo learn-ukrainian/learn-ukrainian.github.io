@@ -1,0 +1,57 @@
+sources:
+- id: S1
+  type: external
+  title: Ребет Лев
+  author: Галина Герасимова
+  file: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&\
+    I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&\
+    S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rebet_L&Z21ID="
+  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&\
+    I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&\
+    S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rebet_L&Z21ID="
+  notes: Академічна стаття Енциклопедії історії України.
+- id: S2
+  type: external
+  title: Лев Ребет. Ідеолог існування незалежної України в сім'ї європейських народів
+  author: Служба зовнішньої розвідки України
+  file: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
+    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
+  url: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
+    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
+  notes: Офіційна архівна публікація з посиланнями на ГДА СЗРУ, фонд 1, справа 10488.
+- id: S3
+  type: external
+  title: Двійкарі
+  author: Анатолій Кентій
+  file: https://esu.com.ua/article-23761
+  url: https://esu.com.ua/article-23761
+  notes: Академічна стаття ЕСУ про конфлікт у ЗЧ ОУН та ОУН за кордоном.
+- id: S4
+  type: external
+  title: Формування української нації
+  author: Лев Ребет
+  file: "https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&\
+    I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&\
+    S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0001985&Z21ID="
+  url: "https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&\
+    I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&\
+    S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0001985&Z21ID="
+  notes: Мюнхен, Сучасна Україна, 1951, 55 і 2 сторінки; опублікований первинний текст, link-only.
+- id: S5
+  type: external
+  title: „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej
+  author: Frank M. Grelka
+  file: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  url: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  notes: Pamięć i Sprawiedliwość, 6(2), 2004, сторінки 279–307; польська історіографічна рамка.
+- id: S6
+  type: external
+  title: 'Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947'
+  author: Marco Carynnyk
+  file: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  url: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  notes: Nationalities Papers; фахова рамка дискусій ОУН про євреїв, не доказ індивідуальної дії Ребета.

@@ -1,0 +1,19 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Августин Волошин
+- Августин Волошин ЕСУ
+- Августин Волошин Інститут історії України
+- Августин Волошин шкільне право ДНПБ
+- Карпатська Україна єврейська громада УжНУ
+direct_sources:
+- https://esu.com.ua/article-27856
+- https://resource.history.org.ua/item/0015622
+- https://diasporiana.org.ua/politologiya/voloshyn-a-pro-shkilne-pravo-buduchoyi-ukrayinskoyi-derzhavy/
+- https://dnpb.gov.ua/ojs/npstudies/article/view/195
+- https://visnyk-ist.uzhnu.edu.ua/article/view/170513
+rag_chunks: []
+rag_literary: []
+warning: >-
+  П'ять прямих джерел збігаються з планом; точні дати празького затримання й
+  арешту звіряються в монографії, а портрет не використовується без окремої ліцензії.

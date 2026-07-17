@@ -1,0 +1,16 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Михайло Кравчук
+- Михайло Кравчук Енциклопедія історії України
+- Михайло Кравчук ЕСУ
+- Михайло Кравчук застосування способу моментів 1932
+direct_sources:
+- https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Kravchuk_M_P&Z21ID=
+- https://esu.com.ua/article-2611
+- https://commons.wikimedia.org/wiki/File:%D0%9A%D1%80%D0%B0%D0%B2%D1%87%D1%83%D0%BA_%D0%9C._%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F_%D1%81%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%D1%83_%D0%BC%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%96%D0%B2_%D0%B4%D0%BE_%D1%80%D0%BE%D0%B7%D0%B2%27%D1%8F%D0%B7%D0%B0%D0%BD%D0%BD%D1%8F_%D0%BB%D1%96%D0%BD%D1%96%D0%B9%D0%BD%D0%B8%D1%85_%D0%B4%D0%B8%D1%84%D0%B5%D1%80%D0%B5%D0%BD%D1%86%D1%96%D1%8F%D0%BB%D1%8C%D0%BD%D0%B8%D1%85_%D1%82%D0%B0_%D1%96%D0%BD%D1%82%D0%B5%D2%91%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D1%85_%D1%80%D1%96%D0%B2%D0%BD%D0%B0%D0%BD%D1%8C._1932.pdf
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Три прямі джерела збігаються з планом; конфлікт дати народження збережено,
+  а цифрова копія математичної праці використовується лише як зовнішнє посилання.

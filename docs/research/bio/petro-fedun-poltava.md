@@ -1,119 +1,183 @@
-# Петро Миколайович Федун «Полтава» — Research Dossier
+# Петро Миколайович Федун-«Полтава» — дослідницьке досьє
 
 **Slug:** `petro-fedun-poltava`
-**Block:** G
-**Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і межі атрибуції
 
-- **Full name (UA, canonical):** Петро Миколайович Федун.
-- **Pseudonyms / aliases:** Полтава, Север, Волянський; English canonical: Petro Fedun-Poltava.
-- **Born:** 24 February 1919 | Shnyriv, Brody area, Galicia | Second Polish Republic region after 1918; source gives the modern Ukrainian locality. [T1: ЕСУ — Федун Петро Миколайович]
-- **Died:** 23 December 1951 | western Ukraine, underground bunker during MGB operation | killed in Soviet security operation. [T1: ЕСУ]
-- **Family / education key facts:** OUN/UPA ideologue, publicist, member of the underground leadership, linked to the Ukrainian Supreme Liberation Council milieu; authored programmatic anti-Soviet and nationalist texts. [T1: ЕСУ]
+Петро Федун був одночасно підпільним організатором, політвиховником,
+пропагандистом, редактором і автором ідеологічних текстів. Ці функції не можна
+зводити до слова «ідеолог», бо тоді зникають і конкретні посади, і межі
+персональної відповідальності. Досьє спирається на оновлену академічну статтю
+ЕСУ [S1], предметне архівно-біографічне видання Михайла Романюка [S2] і точну
+картку авторського машинопису [S3]. Польська й єврейська історіографії дають
+контекст цивільного насильства та дискурсу ОУН, але не використовуються для
+приписування Федунові недокументованого наказу [S4; S5].
 
-No OS/NS discrepancy found. The exact death-place operational file and unit details require archival verification before Phase 2.
+Основне правило пакета: організаційний ранг не доводить автоматичного авторства
+кожного документа, а авторство політичного тексту не доводить виконання його
+заяв на практиці. Якщо немає назви, дати, сторінки або архівного шифру, документ
+не призначається Федунові. Жодної неперевіреної прямої цитати в досьє немає.
 
-## 2. Oppression mechanism
+## Ім'я, дата народження й псевдоніми
 
-- **What happened:** Hunted and killed by Soviet state security during counterinsurgency against the OUN/UPA underground.
-- **When:** 23 December 1951.
-- **By whom:** MGB / Soviet state-security operational forces.
-- **Document references:** ЕСУ supplies the death date and underground role; no stable MGB fond/opys/sprava retrieved in this pass.
+Канонічне ім'я — **Петро Миколайович Федун**. У підпіллі найвідомішим було
+псевдо **Петро Полтава**. ЕСУ також фіксує форми Волянський, Север, Зенон і П.
+Савчук [S1]. Їх треба подавати як псевдоніми однієї людини, не як співавторів і
+не як назви посад. У заголовку каталогу збережено форму Федун-«Полтава», але
+кожне джерело цитує ту форму, яку воно реально вживає.
 
-Fedun's oppression mechanism was Soviet counterinsurgency against an underground political writer. This matters because he was not only a fighter with a weapon; he was a producer of ideological texts the Soviet regime treated as dangerous. But the dossier should not treat Soviet persecution as proof that all of his ideas were democratic or all OUN/UPA conduct was justified. [T1: ЕСУ]
+Федун народився **23 лютого 1919 року** в селі Шнирів. Попередня дата 24 лютого
+не підтвердилася й вилучена. ЕСУ подає 23 лютого, а пізніше архівне дослідження
+Романюка посилається на метричний запис [S1; S2]. Це приклад, коли точний
+документ переважує повторювану календарну помилку.
 
-For Phase 2, the missing archival task is concrete: identify the MGB operation report for 23 December 1951 and the source edition for his collected writings. Until then, the dossier should say "killed by Soviet state security" and cite ЕСУ, but should not invent the unit, bunker coordinates, or last words.
+## Освіта, Червона армія й німецький полон
 
-## 3. Major works
+Федун закінчив гімназію у Бродах і вступив до Львівського медичного інституту.
+Його мобілізували до Червоної армії; ЕСУ пов'язує службу з радянсько-фінською та
+Другою світовою війнами. 1941 року він потрапив у німецький полон, а після
+звільнення продовжив навчання у Львові [S1].
 
-- `1943` — early underground political texts listed by ЕСУ; details require page verification.
-- `1945` — *Колоніяльна господарська політика большевицьких імперіялістів в Україні*, anti-colonial economic critique. [T1: ЕСУ]
-- `1946` — *Елементи революційності українського націоналізму*, ideological work. [T1: ЕСУ]
-- `1946` — *Концепція Самостійної України і основна тенденція ідейно-політичного розвитку сучасного світу*, programmatic text. [T1: ЕСУ]
-- `1947` — *Передпосилки поширення нашого руху в умовах большевицького СССР*, strategy text. [T1: ЕСУ]
-- `1947` — *Шлях активної, збройної боротьби проти окупантів — єдиноправильний шлях до національного визволення*, UPA anniversary text. [T1: ЕСУ]
-- `1948` — *Хто такі бандерівці і за що вони борються*, public explanation of the movement. [T1: ЕСУ]
-- `1940s` — *Ідея Української Самостійної Соборної Держави*, core ideological formula listed by ЕСУ. [T1: ЕСУ]
+Ця послідовність не підтверджує легенду про безперервну кар'єру «радянського
+офіцера, який став полковником УПА» без перевірки кожного звання. Вона також не
+дозволяє приховати досвід Червоної армії або німецького полону. Підпільна
+біографія починалася в умовах двох тоталітарних режимів, але це не робить
+будь-який пізніший політичний вибір неминучим.
 
-## 4. Primary-source quotes (>=2 required)
+## Посади в ОУН, УПА й УГВР
 
-- "Хто такі бандерівці і за що вони борються." Source: title of Fedun's 1948 work listed by ЕСУ. It is included because the title defines his public-facing explanatory project. [T1: ЕСУ]
-- "Колоніяльна господарська політика большевицьких імперіялістів в Україні." Source: title of Fedun's 1945 work listed by ЕСУ. It is useful as a compact anti-imperial economic frame. [T1: ЕСУ]
+Від середини 1930-х років Федун був пов'язаний з «Юнацтвом» ОУН. У 1942–1943
+роках очолював крайове юнацтво на західноукраїнських землях і редагував журнал
+«Юнак». 1944 року був комендантом школи кадрів та начальником політвиховного
+відділу крайового військового штабу УПА-Захід. Від 1946 року очолював
+політвиховний відділ Головного військового штабу УПА, референтуру пропаганди
+Центрального проводу ОУН(б) і Бюро інформації УГВР [S1; S2].
 
-Source gap: titles are source-verified but not sufficient for rich quotation. A page-stable edition of Fedun's collected works was not retrieved; do not add unsourced excerpts.
+Кожна назва вказує на іншу інституційну функцію. Політвиховний відділ працював
+із політичною освітою та мобілізаційною мовою; референтура пропаганди
+організовувала ширший інформаційний напрям; Бюро інформації УГВР представляло
+надорганізаційну політичну структуру. Їх не треба об'єднувати в міфічну посаду
+«головного автора всіх документів УПА».
 
-## 5. Language register
+Високий ранг створює підставу досліджувати організаційну відповідальність. Він
+не створює підстави вигадати підпис. Прийняті джерела не містять точного
+локатора, який доводив би, що Федун віддав конкретний наказ про вбивство
+польських чи єврейських цивільних. Тому модуль не приписує такого наказу. Однак
+він не приховує, що пропагандистська робота служила структурі, причетній до
+політичного й цивільного насильства.
 
-- **Register:** underground ideological-political, anti-colonial, programmatic.
-- **CEFR readiness for full reading:** C1-C2; B2 with glossary for short excerpts.
-- **Lexicon notes:** `колоніяльна`, `большевицькі імперіялісти`, `самостійна соборна держава`, `революційність`, older diaspora/underground orthography.
-- **Stylistic features:** abstract argument, programmatic title structure, ideological binaries, social-economic critique.
+## Точний первинний текст
 
-## 6. Contested points
+Електронний архів українського визвольного руху має картку «Брошура “Елементи
+революційності українського націоналізму”». Картка називає автором Петра
+Федуна-«Полтаву», організацією-видавцем — ОУН, роком — 1948, мовою — українську,
+способом відтворення — машинопис, а фондовою адресою — Галузевий державний
+архів СБУ, фонд 13, справа 372, том 11 [S3]. Академічний передрук локалізує текст
+у томі 24 «Літопису УПА» на сторінках 441–463.
 
-- **What's debated in modern UA scholarship:** Fedun is often cited as evidence that the late-war and postwar OUN/UPA underground shifted toward anti-imperial, social, and sometimes democratic language. That shift is real enough to study through his works. It must not be used to erase the earlier integral-nationalist and authoritarian OUN inheritance or civilian-harm record in the broader movement. [T1: ЕСУ] [T4: OUN/UPA scholarship]
-- **What gets simplified in popular memory:** Supportive memory presents him as the sophisticated theorist who proves UPA fought for national and social liberation. Critical memory can flatten him into a propagandist for an armed underground. Both simplifications miss the pedagogical value: his works show how the underground explained itself after direct contact with Soviet Ukraine, German occupation, and mass war.
-- **Where modern Russian disinformation attacks him:** Russian narratives treat the term "Banderites" as proof of fascism and ignore Fedun's explicit anti-imperial and anti-Soviet-colonial vocabulary. However, Ukrainian responses should not simply adopt Fedun's self-description as neutral truth. His own texts are primary sources for what the movement claimed about itself, not final adjudications of what it did.
-- **Polish / Jewish / other-perspective considerations:** Fedun was not the Volhynia field commander, but his explanatory texts belong to the same OUN-B/UPA tradition whose record includes Polish civilian killings and Holocaust-adjacent controversies. Learners should read his programmatic language alongside modules that include Polish and Jewish perspectives.
-- **NPOV-decolonized framing:** Teach Fedun as an important underground intellectual killed by Soviet security forces and as a source for OUN/UPA self-representation. Make clear that self-representation is not the same as independent historical judgment.
-- **Textual caution:** Fedun's titles use anti-colonial terms that are pedagogically valuable in a decolonized curriculum. They should be compared with independent scholarship, not treated as a neutral narrator's voice. That comparison lets learners see how underground actors named Soviet domination while also asking what their program did or did not say about non-Ukrainian civilians.
-- **Alias caution:** "Полтава" is a nom de guerre, not a birthplace claim. Keep the slug hyphenated to avoid collision with writers or place-based entries.
+Назва в передруку зберігає форму «революційности». Різниця між нею та
+модернізованою картковою назвою не означає два твори. Для цитування треба
+назвати конкретну редакцію й сторінку. У цьому каталозі текст читається як
+авторська політична самопрезентація: він показує, як Федун визначав
+революційність, державну мету й метод боротьби. Він не є незалежним доказом
+демократичності практики ОУН або ставлення підпілля до цивільних.
 
-## 7. Cross-track links
+ЕСУ перелічує й інші праці: про колоніальну господарську політику, програмові
+постанови, поняття самостійної держави, бандерівців, майбутній тип державного
+устрою та міжнародну ситуацію [S1]. Ці назви важливі для бібліографії, але досьє
+не відтворює їхніх нібито «ключових цитат» без точної сторінки. Назва сама по
+собі не дозволяє переказати висновок автора.
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/oun.yaml`
-  - `curriculum/l2-uk-en/plans/hist/upa.yaml`
-- **Existing LIT-WAR modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit-war/upa-underground-literature.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/volyn-pamiat-i-travma.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/holokost-v-ukraini.yaml`
-- **Existing BIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
-  - `curriculum/l2-uk-en/plans/bio/vasyl-kuk.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Fedun-Poltava; source-reading lesson on underground self-description versus external scholarship.
+## Ідеологія й програмна еволюція
 
-## 8. Naming-canonical
+Федун писав у середовищі ОУН-Б, успадкованому від міжвоєнного інтегрального й
+авторитарного націоналізму. Воєнні та повоєнні документи руху розширювали мову
+соціальних прав, рівності народів і представницького устрою. Цю зміну треба
+описувати як зміну, а не використовувати для твердження, нібито рання програма
+ніколи не існувала. Так само не можна читати кожен демократичний термін як
+доказ демократичної інституційної практики.
 
-- **Slug:** `petro-fedun-poltava`
-- **EN canonical (BGN/PCGN 2010):** Petro Fedun-Poltava
-- **UA canonical:** Петро Миколайович Федун «Полтава»
-- **Aliases:** Петро Полтава; Полтава; Север; Волянський; Petro Poltava.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Pyotr Fedun; Petr Fedun; Russian patronymic spellings.
+Політичні тексти Федуна гостро критикували радянський імперіалізм і сталінський
+лад. Така критика називала реальні механізми колонізації, репресії й
+централізації. Водночас антирадянська позиція не робить автоматично прийнятною
+власну модель нації, партії чи збройної боротьби. Деколонізаційне читання
+відмовляється і від радянського ярлика «бандит», і від думки, що ворог радянської
+імперії за визначенням не потребує критики.
 
-## 9. Image candidates
+## Польська й єврейська перспективи
 
-- **Best PD/CC portrait:** ЕСУ image or Wikimedia Commons portrait if license verified.
-- **Backup candidates:** UPA archive image; underground publication facsimile if rights allow.
-- **Era-appropriate context image:** Title page of *Хто такі бандерівці...* from a rights-cleared source edition.
+Польська фахова історіографія документує масове вбивство польських цивільних
+ОУН-Б та УПА на Волині й у Східній Галичині й описує його як стратегію етнічного
+очищення. Вона також розглядає довоєнну польську політику, німецьку й радянську
+окупації та українсько-польську ескалацію [S4]. Польські відплатні акції й
+дискримінація українців не скасовують масової цивільної шкоди.
 
-## 10. Sources used
+Єврейська історіографія простежує антисемітський дискурс в українському
+націоналістичному середовищі від 1929 до 1947 року [S5]. Для Федуна це рамка
+організації й інтелектуального середовища, не локатор особистого злочину. Якщо
+буде знайдено його конкретний текст про євреїв або поляків, його слід аналізувати
+за точною редакцією. До того часу не можна ані приписувати чужі слова, ані
+стверджувати, що питання не існувало.
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Федун Петро Миколайович." <https://esu.com.ua/article-886281> | accessed 2026-05-30.
+## Радянський розшук
 
-**Tier 2 (institutional):**
-- Local archive/RAG note on UPA underground literature and Fedun's works.
+Органи НКВС—МДБ розшукували керівників підпілля, використовували агентуру,
+військові групи й захоплені документи. Предметне видання Романюка простежує
+розшук Федуна в 1944–1951 роках і відтворює його переміщення та організаційні
+зв'язки на основі архівів [S2]. Радянські документи треба читати двічі: як
+джерело оперативної інформації та як мову репресивного органу, що називав
+політичних противників «бандитами».
 
-**Tier 4 (modern scholarly post-1991):**
-- Studies on OUN/UPA ideological change after 1943, including Patryliak and diaspora/CIUS scholarship.
-- Himka, Rudling, Motyka, and Snyder for broader movement controversies.
+Сам факт МДБівського переслідування не доводить кожну радянську характеристику.
+Водночас заперечення радянської лексики не дозволяє романтизувати збройне
+підпілля. У каталозі названо орган, період і метод переслідування, але не
+вигадано таємної операції чи агента без документальної назви.
 
-**Primary-source documents accessed:**
-- Work titles from ЕСУ; no page-stable text quotations or MGB case-file ID retrieved.
+## Смерть 23 грудня 1951 року
 
----
+ЕСУ подає, що 23 грудня 1951 року Федун загинув поблизу села Вишнів: після
+збройного опору в криївці, оточеній спецпідрозділом МДБ, він застрелився [S1].
+Предметне видання включає «Акт-звідомлення про обставини й здогадні причини
+загибелі» від сторінки 72 [S2]. Інше архівне дослідження локалізує бункер біля
+Новошинів у тій самій оперативній зоні. Тому пакет не примушує різні топонімічні
+формули звучати як одна надточна координата.
 
-## Decolonization self-check (run before submitting)
+Слова «загинув у бою» надто загальні, якщо приховують самогубство після опору;
+слова «героїчно поліг» додають оцінку. Належна форма атрибутує версію ЕСУ й
+залишає межі доказу. Не встановлено детального причинного ланцюга пожежі,
+пострілів і дій кожного мешканця криївки, тому досьє його не вигадує.
 
-- [x] Soviet MGB killing named.
-- [x] Fedun's anti-imperial language presented as primary self-description, not proof by itself.
-- [x] Broader OUN/UPA controversies retained.
-- [x] Russian-imperial forms confined to §8.
-- [x] No invented direct quotes.
+## Пам'ять, права й зображення
+
+Пізні відзнаки, назви вулиць і пам'ятники показують українську політику пам'яті.
+Вони не є доказом авторства документа або військового рангу. Націоналістична
+пам'ять схильна подавати Федуна як послідовного демократа й пророка; радянська
+та російська — як безособового «бандита». Обидві схеми стирають тексти,
+організаційні ролі та цивільний контекст.
+
+Три українськомовні читання мають публічні URL й точну ідентичність. ЕСУ
+захищена авторським правом [S1]. Інституційна бібліотека відкриває повний PDF
+біографічного видання, але не дає курсу окремої репродукційної ліцензії [S2].
+Архівна картка надає цифровий образ машинопису без дозволу переносити його на
+сайт [S3]. Усі читання — `link-only`.
+
+Перевірений портрет має невідомого автора, загальне вторинне походження й лише
+шаблонне твердження про суспільне надбання. Точну індивідуальну ліцензію не
+доведено. Диспозиція — текстовий `portrait_fallback`.
+
+## Прийняті джерела
+
+- [S1] Вєдєнєєв Д. «Федун Петро Миколайович», ЕСУ. <https://esu.com.ua/article-886281>
+- [S2] Романюк М. *Петро Федун — «Полтава» — провідний ідеолог ОУН та УПА*. <https://resource.history.org.ua/item/0015807>
+- [S3] Електронний архів українського визвольного руху. «Елементи революційності українського націоналізму». <https://avr.org.ua/viewDoc/11177>
+- [S4] Grelka F. M. „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej. <https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650>
+- [S5] Carynnyk M. “Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947.” <https://www.cambridge.org/core/journals/nationalities-papers/article/abs/foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/110829E5A0E4E7D3727ACCD4476F082D>
+
+## Висновок готовності
+
+Hold не потрібен. Виправлено дату народження, псевдоніми, посади й місце смерті;
+один авторський текст має точну архівну картку та сторінки передруку. Загальні
+назви творів, неперевірені накази, цитати й портрет не прийнято.

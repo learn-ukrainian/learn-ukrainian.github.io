@@ -1,0 +1,20 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+- Лев Ребет
+- Лев Ребет Енциклопедія історії України
+- Лев Ребет архів СЗРУ
+- Лев Ребет двійкарі ЕСУ
+- Лев Ребет Формування української нації НБУВ
+direct_sources:
+- https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rebet_L&Z21ID=
+- https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-
+- https://esu.com.ua/article-23761
+- https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0001985&Z21ID=
+- https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+- https://www.cambridge.org/core/journals/nationalities-papers/article/abs/foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/110829E5A0E4E7D3727ACCD4476F082D
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Шість прямих джерел збігаються з планом і реєстром; чотири українські читання
+  доповнено окремими польською та єврейською історіографічними рамками.

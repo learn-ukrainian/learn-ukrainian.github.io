@@ -1,128 +1,194 @@
-# Кравчук Михайло Пилипович — Research Dossier
+# Михайло Пилипович Кравчук — дослідницьке досьє
 
 **Slug:** `mykhailo-kravchuk`
-**Block:** H
-**Tier:** 1
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і межі
 
-- **Full name (UA, canonical):** Кравчук Михайло Пилипович.
-- **Pseudonyms / aliases:** Mykhailo Kravchuk, M. Kravchuk, Michel Krawtchouk in some international mathematical citation contexts.
-- **Born:** NAS and Internet Encyclopedia of Ukraine normalize birth as 1892-10-12 | Човниця, Луцький повіт, Волинь | Russian Empire. KPI presents 1892-09-27, so the date discrepancy is flagged.
-- **Died:** 1942-03-09 | near Magadan / Kolyma camp system | USSR. Sources: Internet Encyclopedia of Ukraine, NAS biography, KPI memorial page, and KHPG archival note.
-- **Family / education key facts:** Mathematician, professor at Kyiv Polytechnic Institute, academician of the All-Ukrainian Academy of Sciences, and author of work that gave his name to Kravchuk polynomials. Sources: IEU, NAS, ESU.
+Мета досьє — повернути Михайла Кравчука до історії математики й українських
+наукових інституцій, не зводячи його до жертви сталінського терору. Паралельно
+воно називає репресію без радянських евфемізмів і без вигаданих мученицьких
+деталей. «Енциклопедія історії України» є головним джерелом інституційної й
+репресивної хронології [S1]. «Енциклопедія Сучасної України» докладніше
+перелічує математичні напрями та праці [S2]. Цифрова копія авторської праці
+1932 року дозволяє перевірити точну публікаційну ідентичність за титульною
+сторінкою [S3].
 
-## 2. Oppression mechanism
+Три принципи обмежують текст. По-перше, розбіжність двох авторитетних дат
+народження не приховується. По-друге, судову реабілітацію 1956 року не
+змішують з поновленням членства в Академії 1992 року. По-третє, популярні
+твердження про комп'ютер, ЮНЕСКО, відомих учнів і пам'ятні вислови не
+переносяться до контрольної біографії без точного документа. Прямих цитат без
+сторінкового локатора немає.
 
-- **What happened:** NKVD arrest, fabricated political charges, long prison sentence, forced labor transfer, death in the Kolyma camp system.
-- **When:** 1938-02-21 arrest; 1938-09-23 sentence to 20 years in prison plus five years loss of rights; 1942-03-09 death.
-- **By whom:** NKVD of the Ukrainian SSR and Soviet prison/camp administration.
-- **Document references:** NBUV and KHPG source pack identify the arrest and sentence chronology. The indictment transcript cited in the source pack uses accusations of "bourgeois nationalism" and espionage; exact archival case number was not retrieved. Case ID: source not found.
-- **Mechanism specifics:** NBUV, KHPG, IEU, and NAS sources converge on the core sequence: Kravchuk was arrested in February 1938, sentenced in September 1938 to a twenty-year term, moved through Soviet prisons and transit points, and died in the Kolyma/Magadan camp region in March 1942. The charges belong to Stalinist political fabrication; this dossier mentions the Soviet accusation language only as accusation language, not as description.
+## Ім'я й транслітерація
 
-The academic loss was also institutional. ESU and IEU list a substantial mathematical bibliography, while the repression cut off his school and removed a leading Ukrainian-language mathematical scholar from public scientific life.
+Канонічне українське ім'я — **Михайло Пилипович Кравчук**. Канонічна англійська
+форма — **Mykhailo Kravchuk**. У франкомовному паралельному описі праці 1932
+року трапляється бібліографічна форма **M. Krawtchouk** [S3]. Вона допомагає
+шукати його математичну спадщину в міжнародній літературі, але не доводить, що
+особисте ім'я треба канонізувати як «Michel Krawtchouk». Російськомовна форма
+«Михаил Кравчук» не використовується як основна для українського вченого.
 
-- **What survived / what was destroyed:** Mathematical works, textbooks, and the named polynomial tradition survived. The retrieved sources did not supply a complete NKVD case file ID; that gap is declared.
+Назви математичних об'єктів у різних мовах можуть передавати прізвище як
+Kravchuk, Krawtchouk або близькі варіанти. Це не різні особи. У навчальному
+тексті українська форма є головною, а історична латинська подається лише для
+бібліографічного пошуку.
 
-Downstream text should avoid the vague phrase "died in exile." The retrieved sources support a more specific statement: he died after NKVD arrest, sentencing, transport through the Soviet prison system, and confinement in the Kolyma/Magadan camp region. The exact camp medical/death document was not retrieved.
+## Дата народження: відкрита розбіжність
 
-## 3. Major works
+ЕІУ подає 12 жовтня 1892 року, у дужках 30 вересня за старим стилем [S1]. ЕСУ
+подає 27 вересня за старим стилем і 9 жовтня за новим [S2]. Це не проста різниця
+між календарями: обидві пари відрізняються на три дні. Без метричної книги,
+церковного запису або іншого первинного документа каталог не має права
+оголосити одну версію остаточною.
 
-- `1919` — *Геометрія: Курс лекцій в Укр. нар. університеті*, lecture course, listed by ESU.
-- `1924` — *Про квадратичні форми та лінійні перетворення*, mathematical work, listed by ESU.
-- `1929` — *Алгебричні студії над аналітичними функціями*, mathematical work, listed by ESU.
-- `1929` — *Sur une généralisation des polynômes d'Hermite*, article associated with Kravchuk polynomial work, listed by ESU/IEU.
-- `1932` — *Вступ до вищої математики*, coauthored textbook, listed by ESU.
-- `1932` — *Застосування способу моментів до розв'язання лінійних диференціальних та інтегральних рівнянь*, monograph, Commons scan.
-- `1933` — *Елементи теорії визначників*, coauthored textbook, listed by ESU.
-- `1934` — *Диференціальні рівняння та їх застосування в природознавстві й техніці*, coauthored textbook, listed by ESU.
-- `1935` — *Sur quelques inégalités dans le problème des moments*, article, listed by ESU.
+Для хронологічного викладу можна використати 12 жовтня як дату ЕІУ та
+Національної бібліотеки, але поруч треба назвати альтернативу ЕСУ. Неприйнятний
+варіант — написати «9/12 жовтня» без пояснення або поєднати день зі старим
+стилем іншого джерела. Розбіжність є навчальною нагодою показати, що авторитетні
+довідники теж потребують джерелознавчої перевірки.
 
-## 4. Primary-source quotes
+## Освіта й початок кар'єри
 
-> "звільнитися від схеми"
+Кравчук народився в селі Човниця на Волині. Початкову освіту здобував удома,
+потім навчався в Луцькій гімназії. 1910 року вступив на фізико-математичний
+факультет Університету святого Володимира в Києві, який закінчив 1914 року.
+Працював під керівництвом Дмитра Ґраве й готувався до професорського звання
+[S1; S2].
 
-Source: Kravchuk, *Застосування способу моментів до розв'язання лінійних диференціальних та інтегральних рівнянь* (Kyiv, 1932), Commons PDF scan. The fragment shows technical prose aimed at method, not slogan.
+Після революції 1917 року Кравчук повернувся до Києва, склав магістерські
+іспити, прочитав пробну лекцію й став приват-доцентом. За Української Народної
+Республіки та Української Держави викладав у перших українських гімназіях і в
+Українському народному університеті. Ці установи важливі не як передмова до
+«справжньої» радянської науки, а як частина українського інституційного
+будівництва [S1].
 
-> "на власних розвідках"
+У 1920–1921 роках він працював директором школи в Саварці. Потім викладав у
+Київському університеті, Київському політехнічному інституті та інших закладах.
+Поєднання школи, університету й академії показує його як педагога й
+організатора, а не лише автора формул.
 
-Source: same 1932 monograph, Commons PDF scan. Pedagogically, this illustrates Ukrainian academic register in mathematics and the vocabulary of independent research.
+## Українська математична мова
 
-## 5. Language register
+Кравчук працював у правописно-термінологічній комісії Української академії
+наук і долучився до розроблення української математичної термінології [S1].
+Це була не декоративна українізація готової російської науки. Фахова мова
+визначала можливість викладати, укладати словники, перекладати підручники й
+створювати власні наукові праці українською.
 
-- **Register:** Technical academic Ukrainian, proof-oriented mathematical prose.
-- **CEFR readiness for full reading:** C2 for mathematical monographs; B2-C1 for short biographical excerpts and glossary work.
-- **Lexicon notes:** `рівняння`, `моменти`, `многочлен`, `перетворення`, `визначник`, `диференціальний`, `інтегральний`; terms may be valuable for STEM Ukrainian modules.
-- **Stylistic features:** Dense nominal phrases, theorem/proof sequencing, Ukrainian technical terminology, and occasional French international scholarly framing in titles.
+Його ранні курси й переклади сприяли тому, що математика стала доступною в
+українській школі та університеті. Водночас не кожен термін 1920–1930-х років
+збігається із сучасною нормою. Історичні форми «диференціяльних»,
+«інтегральних» і «рівнань» у точній назві видання не є помилками сучасного
+редактора; вони фіксують науковий правопис епохи [S3].
 
-## 6. Contested points
+Деколонізаційна перспектива тут не полягає в оголошенні кожного українського
+слова політичним подвигом. Вона відмовляється від уявлення, ніби українська
+математична мова була непотрібною провінційною копією. Кравчук творив
+термінологію в мережі українських інституцій, а сталінський розгром цих
+інституцій був політичним процесом.
 
-- **What's debated in modern UA scholarship:** Birth date normalization. NAS and IEU give 12 October 1892, while KPI gives 27 September 1892. This likely reflects calendar conversion or source tradition, but the dossier does not resolve beyond retrieved evidence.
-- **What gets simplified in popular memory:** The slogan "Україна і математика" circulates widely, but this dossier used retrieved primary monograph fragments instead of relying on an unattributed aphorism.
-- **Where modern Russian disinformation attacks them:** No specific modern disinformation campaign was retrieved. The Soviet accusation of "bourgeois nationalism" is recorded only as repressive charge language.
-- **Polish / Jewish / other-perspective considerations:** No specific issue was retrieved. Source not found.
-- **STEM pedagogy note:** His dossier can support Ukrainian-for-science vocabulary without reducing him to a victim biography; the retrieved bibliography gives enough mathematical anchors for terminology work.
+## Академія й математичні результати
 
-## 7. Cross-track links
+1924 року Кравчук здобув докторський ступінь, 1925 року став професором, а 1929
+року — дійсним членом Всеукраїнської академії наук. Працював у математичних та
+статистичних підрозділах Академії, очолював кафедру вищої математики в КПІ й
+брав участь в організації наукової роботи [S1; S2].
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - None found for this slug in the current plans tree.
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - None found for this slug in the current plans tree.
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - A STEM Ukrainian module on mathematical terminology using Kravchuk's 1932 monograph.
-  - A HIST/BIO connection to Stalinist repression of Ukrainian scientists and VUAN/Kyiv academic institutions.
-- **Potential LIT additions surfaced by this research:**
-  - Not a LIT addition; better handled as H-track science biography and terminology.
-  - If adapted for language courses, use short prefaces or definitions from the 1932 monograph rather than asking learners to parse proofs.
+ЕСУ пов'язує його дослідження з комутативними матрицями, квадратичними й
+білінійними формами, лінійними перетвореннями, функціями дійсної та комплексної
+змінної, наближеним розв'язанням диференціальних та інтегральних рівнянь,
+математичною статистикою й теорією ймовірностей. Найвідоміше ім'я в сучасній
+математиці мають многочлени Кравчука, пов'язані з біноміальним розподілом;
+також вживають поняття моментів, формул і осциляторів Кравчука [S2].
 
-## 8. Naming-canonical
+Цей перелік треба пояснювати, а не перетворювати на низку епітетів. Наприклад,
+многочлен — це алгебраїчний вираз, а «метод моментів» — спосіб працювати з
+наближеними розв'язками та статистичними оцінками. У модулі не слід заявляти,
+що Кравчук «створив сучасний комп'ютер» або одноосібно започаткував усі галузі,
+де пізніше застосовували його результати. Для таких причинних тверджень потрібні
+історико-наукові дослідження й точні документи.
 
-- **Slug:** `mykhailo-kravchuk`
-- **EN canonical (BGN/PCGN 2010):** Mykhailo Kravchuk
-- **UA canonical (with patronymic):** Кравчук Михайло Пилипович
-- **Aliases (track these for `aliases:` YAML field):** M. Kravchuk, Michel Krawtchouk, Mykhaylo Kravchuk
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Mikhail Kravchuk, Mikhail Krawtchouk (FORBIDDEN except as source metadata)
+## Публікація 1932 року
 
-## 9. Image candidates
+Титульна сторінка первинного видання встановлює точну назву: «Акад. М. Кравчук.
+Застосування способу моментів до розв'язання лінійних диференціяльних та
+інтегральних рівнань. Випуск І». Видання вийшло в Києві у Всеукраїнській
+академії наук 1932 року й має 388 сторінок [S3]. Метадані цифрового сховища
+помилково подають 1931 рік і невизначеного автора «Різні», тому контрольним є
+внутрішній титульний аркуш, а не картка платформи.
 
-- **Best PD/CC portrait:** Wikimedia Commons, `File:M.Kravchuk.jpg` | public-domain marking on Commons | https://commons.wikimedia.org/wiki/File:M.Kravchuk.jpg
-- **Backup candidates:** `File:Михайло_Кравчук.png` on Commons; NAS/KPI memorial images if reuse rights are explicit.
-- **If no PD/CC portrait exists:** Use a Commons portrait after checking Ukraine/U.S. public-domain status.
-- **Era-appropriate context image:** Commons PDF scan of the 1932 monograph; use only if page-image reuse is rights-cleared.
+Це читання призначене для аналізу мови й структури наукової праці, а не для
+вимоги опанувати всі 388 сторінок. Учень має перевірити автора, назву, випуск,
+місце, установу й рік, а потім розрізнити визначення, математичне твердження,
+приклад і бібліографічний апарат. Цитата можлива лише з точною сторінкою; у
+каталозі жодного уривка не відтворено.
 
-## 10. Sources used
+## Арешт і вирок
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine, "Kravchuk, Mykhailo" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CR%5CKravchukMykhailo.htm | accessed 2026-05-30
-- NAS biography page for Mykhailo Kravchuk | https://www.old.nas.gov.ua/UA/PersonalSite/Pages/Biography.aspx?PersonID=0000006684 | accessed 2026-05-30
-- Енциклопедія Сучасної України, "Кравчук Михайло Пилипович" | https://esu.com.ua/article-2611 | accessed 2026-05-30
+21 лютого 1938 року Кравчука заарештували. Радянська справа приписувала йому
+націоналізм і шпигунство. 23 вересня 1938 року його засудили до двадцяти років
+ув'язнення та п'яти років позбавлення політичних прав [S1]. Це був механізм
+сталінського терору проти українського науковця, а не нейтральний наслідок
+доведеного кримінального злочину.
 
-**Tier 2 (institutional):**
-- NBUV profile/note on Kravchuk | https://www.nbuv.gov.ua/node/4345 | accessed 2026-05-30
-- KPI memorial page | https://kpi.ua/kravchuk_mykhaylo | accessed 2026-05-30
+Арешт відбувався в ширшому розгромі українських культурних і наукових
+інституцій. Міжнародні контакти, праця з українською термінологією й академічна
+автономія ставали підставою для політичної підозри. Водночас досьє не вигадує
+конкретного донощика, катування або фразу слідчого без архівного локатора.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Кравчук Михайло Пилипович," retrieved via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+## Етапування, Колима й смерть
 
-**Tier 4 (modern scholarly post-1991):**
-- KHPG archive note | https://archive.khpg.org/1071235755 | accessed 2026-05-30
+Після вироку Кравчука утримували в тюрмах і 1939 року етапували через
+Новочеркаськ та Владивосток до Колими. Він працював у табірній системі, стан
+здоров'я погіршувався. Помер 9 березня 1942 року. Місце поховання невідоме [S1;
+S2]. Ці факти достатні, щоб назвати державну відповідальність за смерть
+ув'язненого в системі примусової праці.
 
-**Tier 5 (general web):**
-- Realna Istoriia video transcript indexed in the sources corpus, used only as a pointer to accusation wording and not as the sole source for chronology | accessed 2026-05-30
+Не треба додавати точну останню сцену, конкретну причину смерті, вигаданий
+передсмертний вислів або координати могили. Пізні популярні тексти часто
+перетворюють Колиму на мученицьку легенду, де драматична деталь важливіша за
+перевірку. Радянська традиція, навпаки, могла зводити смерть до безособового
+медичного факту. Відповідальна формула називає ув'язнення, табір, дату смерті й
+невідоме поховання, не виходячи за джерела.
 
-**Primary-source documents accessed:**
-- Kravchuk, *Застосування способу моментів до розв'язання лінійних диференціальних та інтегральних рівнянь* (1932), Commons PDF scan | accessed 2026-05-30
+## Реабілітація й академічне поновлення
 
----
+1956 року справу Кравчука переглянули й закрили через відсутність складу
+злочину [S1]. Це судово-правова реабілітація. 20 березня 1992 року загальні
+збори Академії наук України поновили його у складі дійсних членів [S1]. Це
+окрема інституційна дія, здійснена вже після відновлення незалежності України.
 
-## Decolonization self-check
+Змішування цих дат створює хибне враження, що Академія одразу після реабілітації
+повернула членство. Насправді між рішеннями минуло понад три десятиліття. Цей
+проміжок важливий для історії радянського замовчування й пізнішого повернення
+імені. Пам'ятники, назви вулиць і конференції показують подальшу
+меморіалізацію, але не замінюють двох точних актів.
 
-- [x] Soviet accusation language marked as accusation, not fact
-- [x] Birth-date discrepancy flagged
-- [x] NKVD file number gap declared
-- [x] No fabricated curriculum paths
-- [x] Scientific Ukrainian register centered
+## Права й зображення
+
+Стаття ЕІУ доступна за інституційним посиланням [S1]. ЕСУ позначає свою статтю
+як авторськоправну [S2]. Wikimedia Commons заявляє для скану 1932 року
+українську підставу суспільного надбання, але водночас містить застереження
+щодо статусу у США [S3]. Тому всі три читання використовуються як `link-only`;
+ані енциклопедичний текст, ані скан не переносяться на сайт.
+
+Портрет `M.Kravchuk.jpg` має невідомого автора, приблизну дату й неповне
+походження з газетного архіву. Шаблон суспільного надбання не доводить точного
+першого оприлюднення. Диспозиція — текстовий `portrait_fallback`.
+
+## Прийняті джерела
+
+- [S1] Грузін Д., Примаченко Я. «Кравчук Михайло Пилипович», ЕІУ. <https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Kravchuk_M_P&Z21ID=>
+- [S2] Вірченко Н. «Кравчук Михайло Пилипович», ЕСУ. <https://esu.com.ua/article-2611>
+- [S3] Кравчук М. *Застосування способу моментів до розв'язання лінійних диференціяльних та інтегральних рівнань. Випуск І*. <https://commons.wikimedia.org/wiki/File:%D0%9A%D1%80%D0%B0%D0%B2%D1%87%D1%83%D0%BA_%D0%9C._%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F_%D1%81%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%D1%83_%D0%BC%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%96%D0%B2_%D0%B4%D0%BE_%D1%80%D0%BE%D0%B7%D0%B2%27%D1%8F%D0%B7%D0%B0%D0%BD%D0%BD%D1%8F_%D0%BB%D1%96%D0%BD%D1%96%D0%B9%D0%BD%D0%B8%D1%85_%D0%B4%D0%B8%D1%84%D0%B5%D1%80%D0%B5%D0%BD%D1%86%D1%96%D1%8F%D0%BB%D1%8C%D0%BD%D0%B8%D1%85_%D1%82%D0%B0_%D1%96%D0%BD%D1%82%D0%B5%D2%91%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D1%85_%D1%80%D1%96%D0%B2%D0%BD%D0%B0%D0%BD%D1%8C._1932.pdf>
+
+## Висновок готовності
+
+Hold не потрібен. Українські читання мають точну ідентичність, публічні URL і
+link-only права. Конфлікт дати народження збережено, репресивну хронологію
+уточнено, судову реабілітацію відділено від академічного поновлення, а
+неперевірені цитати, комп'ютерна легенда та портрет відхилено.

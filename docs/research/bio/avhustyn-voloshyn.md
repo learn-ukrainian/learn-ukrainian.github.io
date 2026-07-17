@@ -1,113 +1,187 @@
-# Августин Іванович Волошин — Research Dossier
+# Августин Іванович Волошин — дослідницьке досьє
 
 **Slug:** `avhustyn-voloshyn`
-**Block:** G
-**Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Межі й метод
 
-- **Full name (UA, canonical):** Августин Іванович Волошин.
-- **Pseudonyms / aliases:** о. Августин Волошин; Monsignor Avhustyn Voloshyn; English canonical: Avhustyn Voloshyn.
-- **Born:** 17 March 1874 | Kelechyn, Transcarpathia | Austria-Hungary. [T1: ЕСУ — Волошин Августин Іванович] [T1: IEU — Voloshyn, Avhustyn]
-- **Died:** July 1945 | Moscow, USSR | died after Soviet arrest and imprisonment. IEU gives 19 July 1945 in Moscow; Ukrainian textbook RAG says Soviet counterintelligence arrested him on 1 May 1945 and transported him to a Soviet prison where he died; some Ukrainian memorial sources give 11 July, so the dossier flags 19 July as IEU/ЕСУ-preferred pending archival check. [T1: IEU] [T2: textbook RAG]
-- **Family / education key facts:** Greek Catholic priest, teacher, pedagogue, publisher, head of the autonomous Carpatho-Ukrainian government, and president of Carpatho-Ukraine declared in Khust on 15 March 1939. [T1: ЕСУ] [T1: IEU]
+Це досьє готує біографічний пакет, а не виносить моральний вирок. Воно розділяє
+п'ять площин: церковне служіння, педагогічну й видавничу працю, політику в
+Чехословаччині, керівництво автономним урядом та президентство в березні 1939
+року, а також радянське переслідування. Основною біографічною опорою є стаття
+«Енциклопедії Сучасної України» [S1]. Детальну політичну й тюремну хронологію
+дає монографія Інституту історії України 2021 року [S2]. Авторську освітню
+позицію представляє точно ідентифікована празька праця 1942 року [S3], а її
+сучасне критичне прочитання — рецензована стаття 2026 року [S4]. Ставлення
+урядовців і Карпатської Січі до єврейської громади перевіряється окремим
+дослідженням преси 1938–1939 років [S5].
 
-## 2. Oppression mechanism
+Жодне джерело не використовується поза своєю роллю. Меморіальне вшанування не
+доводить факт біографії. Авторський текст Волошина не є незалежним описом його
+політики. Пізніша монографія не перетворюється на первинний документ. Стаття про
+єврейську громаду не дає підстав автоматично приписати президентові всі дії
+Карпатської Січі. У досьє немає неперевірених прямих цитат.
 
-- **What happened:** Arrested by Soviet counterintelligence in Prague and transported to Moscow, where he died in Soviet custody.
-- **When:** Arrest on 1 May 1945; death in July 1945, with 19 July used by IEU and several references.
-- **By whom:** Soviet counterintelligence/SMERSH-era security apparatus.
-- **Document references:** Full interrogation/custody file ID not retrieved. The textbook RAG states the arrest and Soviet imprisonment; IEU and ЕСУ provide vital dates and Moscow death.
+## Ім'я, походження й освіта
 
-Voloshyn's oppression was direct Soviet state violence against the president of a short-lived Ukrainian polity. He was an elderly priest-educator in Prague when Soviet forces arrived, not an armed underground commander. This is why the mechanism should be framed as Soviet removal of a Ukrainian statehood symbol from Central Europe after the Second World War. [T1: IEU] [T2: textbook RAG]
+Канонічне українське ім'я — **Августин Іванович Волошин**. Народився 17 березня
+1874 року в Келечині в родині священника. Навчався в Ужгороді та Будапешті,
+здобув богословську й педагогічну підготовку, 1897 року був висвячений. Від
+початку професійної діяльності він поєднував служіння із викладанням, тому
+пізніше президентство не слід відривати від кількох десятиліть освітньої праці
+[S1; S2].
 
-Hungarian occupation and the collapse of Czechoslovakia are also essential context. Carpatho-Ukraine was declared as Nazi Germany dismantled Czechoslovakia and Hungary invaded. That context does not make Voloshyn a German puppet; nor does it make the one-day state free from authoritarian emergency politics.
+Волошин викладав в Ужгородській учительській семінарії, згодом очолював її.
+Писав підручники з мови, математики, педагогіки, психології, логіки, фізики й
+хімії, редагував періодику, працював у культурно-освітніх товариствах. Назви
+ранніх праць зберігають історичний правопис і тогочасну термінологію. Їх не
+треба механічно переписувати сучасною мовою або трактувати слово «руський» у
+кожному заголовку як доказ російської ідентичності. У Закарпатті співіснували
+руські, русинські й українські самоназви; Волошинова мовно-освітня діяльність
+належала до українського напряму, але регіональну багатоманітність не можна
+стирати [S1; S2].
 
-## 3. Major works
+## Освітня програма без канонізації
 
-- `1904` — *Азбука*, school textbook.
-- `1907` — *Практична граматика малоруської мови*, Hungarian-language grammar defending the living popular language and Ukrainian linguistic unity. [T1: ЕСУ]
-- `1919` — *Наука о числах для 1 и 2 классов народных школ*, mathematics textbook.
-- `1920` — *Педагогічна психологія*, pedagogical work.
-- `1920` — *Педагогіка і дидактика*, teacher-training work.
-- `1923` — *Исторія педагогики для учительських семинарій*, education history.
-- `1931` — *Коротка історія педагогіки для учительських семінарій*, textbook.
-- `1935` — *Логіка*, *Методика народно-шкільного навчання*, *Фізика й хемія*, school works.
-- `1942` — *Про шкільне право будучої української держави*, state-building education text.
+У Празі 1942 року Український вільний університет видав працю Волошина «Про
+шкільне право будучої Української Держави». Цифрова копія має вісімнадцять
+сторінок; назву, автора, місце, установу й рік встановлено за виданням, а не за
+пізнішою переказаною цитатою [S3]. Для курсу це первинний текст про уявну
+майбутню систему освіти, а не свідчення про подію 1939 року.
 
-## 4. Primary-source quotes (>=2 required)
+Міхно й Деревянко визначають цей текст як програмно-нормативний проєкт. Вони
+показують поєднання національної ідеї, релігійно-морального виховання, свободи,
+субсидіарності та децентралізації, але водночас наголошують на селекційній логіці
+й пануванні релігійного компонента. Тому працю не можна подавати як готову
+модель для сучасної світської та інклюзивної школи. Її треба читати в контексті
+часу й оцінювати через сучасні права людини [S4]. Така рамка не заперечує внеску
+Волошина в українську педагогіку, але не робить його погляди позаісторичними.
 
-- "Головною умовою культурного поступу ... є свобода культурної праці." Source: local RAG excerpt from Волошин, *Вибрані твори*. Useful for presenting education and culture as public freedom. [T2: local RAG, `wiki/mastery/c2/teaching-ukrainian-i.md`]
-- "Письменник своїми шляхетними думками... виховує свій нарід." Source: same local RAG excerpt. Useful for pedagogy because Voloshyn links literature, ethics, and national education. [T2: local RAG]
+## Чехословаччина, автономія і березень 1939 року
 
-Phase 2 should verify page numbers in the printed *Вибрані твори* edition before using the quotes in learner-facing materials.
+Після Першої світової війни політична діяльність Волошина розгорталася в
+Чехословаччині. Він представляв Народно-християнську партію, був депутатом
+чехословацького парламенту й тривалий час дотримувався прочехословацької
+орієнтації. 26 жовтня 1938 року чехословацький уряд призначив його
+прем'єр-міністром автономного уряду. Цю посаду не слід ретроспективно називати
+президентством незалежної держави: автономний етап мав іншу правову рамку [S1;
+S2].
 
-## 5. Language register
+15 березня 1939 року, коли Чехо-Словаччина розпадалася, Сойм у Хусті проголосив
+незалежність Карпатської України й обрав Волошина президентом. Угорське військо
+вже наступало; окупація зруйнувала можливість тривалого функціонування державних
+інституцій. Волошин залишив Хуст, перейшов до Румунії, далі через кілька країн
+дістався Праги [S1; S2]. Формула «одноденна держава» зручна, але неточна, коли
+вона стирає попередню автономію, вибори до Сойму, саме засідання, бойові дії та
+встановлення угорської військової адміністрації.
 
-- **Register:** pedagogical, clerical-public, early 20th-century Transcarpathian Ukrainian.
-- **CEFR readiness for full reading:** B2-C1 depending on orthography; A2/B1 only through adapted excerpts.
-- **Lexicon notes:** older school terms, Transcarpathian/Church vocabulary, historical spellings in titles.
-- **Stylistic features:** normative argument, teacherly clarity, moral vocabulary, nation-building through education.
+Антиімперська перспектива тут полягає у визнанні місцевої української політичної
+агентності. Вона не вимагає заперечувати залежність від ширшої центральноєвропейської
+кризи, тиск нацистської Німеччини чи угорські територіальні претензії. Монографія
+також документує дозвіл німецьким мешканцям організувати націонал-соціалістичну
+партію й використовувати свастичну символіку. Пізніша оцінка авторів, що
+зовнішньополітична орієнтація Волошина не дорівнювала активній колаборації, є
+інтерпретацією. Документоване рішення й наукову оцінку треба подавати окремо
+[S2].
 
-## 6. Contested points
+## Єврейська громада, цивільна шкода й межі відповідальності
 
-- **What's debated in modern UA scholarship:** The core debate is how to frame Carpatho-Ukraine in March 1939. Ukrainian scholarship treats it as a serious act of Ukrainian state-building in Transcarpathia, rooted in local institutions and an elected Soim. Critical scholarship also notes the impossible geopolitical setting: Czechoslovakia was collapsing, Germany was manipulating the region, Hungary invaded, and local emergency politics narrowed pluralism. [T1: ЕСУ] [T1: IEU] [T4: Vehesh/Vidnianskyi bibliography]
-- **What gets simplified in popular memory:** Ukrainian memory often presents Voloshyn as a saintly president-priest and Soviet martyr. That is not false in outline, but it risks flattening the messy 1938-39 politics, the role of Carpathian Sich, and minority/Rusyn-Hungarian tensions.
-- **Where modern Russian disinformation attacks him:** Russian and pro-imperial narratives sometimes portray Carpatho-Ukraine as an artificial German-backed project to deny Transcarpathian Ukrainian agency. The decolonized response is to show local institutions, education work, Ukrainian language activism, and the Soviet arrest after 1945. It is not to ignore the region's plural identities or German-Hungarian pressure.
-- **Polish / Jewish / other-perspective considerations:** Jewish and Hungarian communities in Transcarpathia were profoundly affected by the Hungarian occupation and the wider Holocaust context. Voloshyn's own dossier should not absorb all regional wartime history, but a module connected to him should not present Carpatho-Ukraine as ethnically simple.
-- **NPOV-decolonized framing:** Voloshyn is a Ukrainian priest, educator, and president of Carpatho-Ukraine who died in Soviet custody. He should be taught as a statehood figure and as a pedagogue, while the curriculum also names the emergency politics and regional minority complexities of 1938-39.
-- **Regional identity caution:** Older sources may use "Ruthenian," "Rusyn," "Carpatho-Ruthenian," or "Ukrainian" differently. The dossier should not retroactively erase local naming debates, but it should also avoid Russian-imperial claims that Transcarpathian identity was naturally anti-Ukrainian. Voloshyn's education and language work is evidence for a Ukrainian orientation within a plural region.
-- **Date caution:** Preserve the July 1945 death-date discrepancy in notes until an archival custody record is checked.
-- **Pedagogy caution:** His textbooks make him more than a one-day president; include the educator arc.
+Регіон не був етнічно однорідним. Єврейська громада була помітною частиною
+соціального й економічного життя Закарпаття, а угорська окупація відкрила шлях до
+подальшого переслідування та Голокосту. Дослідження Михайлюк показує, що офіційні
+урядові газети не друкували відкрито ксенофобських матеріалів, однак неофіційні
+упередження існували. Воно окремо аналізує керівництво й учасників Карпатської
+Січі та локальні антиєврейські акції, масштаб яких авторка вважає предметом
+подальшого з'ясування [S5].
 
-## 7. Cross-track links
+Цей матеріал не дозволяє сказати, ніби Волошин особисто наказав конкретне
+насильство: такого документа в прийнятому наборі немає. Він також не дозволяє
+описати його уряд як простір без антисемітизму. Належна атрибуція розрізняє
+офіційну політику, приватні погляди, дії парамілітарної структури, угорську
+окупаційну владу та пізніше масове переслідування. Польська перспектива входить
+до ширшої дипломатичної й прикордонної історії регіону, але цей пакет не
+приписує Волошинові анти-польський наказ або цивільну атаку без документа [S2;
+S5].
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/karpatska-ukraina.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/zakarpattia-tysiacholittia.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Voloshyn; education-history reading on his school textbooks; source analysis on Soviet arrest narratives.
+## Прага під час війни
 
-## 8. Naming-canonical
+У Празі Волошин працював в Українському вільному університеті, викладав
+педагогіку й обіймав академічні посади. Саме тут з'явилася праця про шкільне
+право [S2; S3]. Воєнний період не можна зображувати як порожню паузу між
+президентством і радянським арештом. Так само не можна вигадувати контакти,
+накази чи підпільні функції, яких джерела не локалізують.
 
-- **Slug:** `avhustyn-voloshyn`
-- **EN canonical (BGN/PCGN 2010):** Avhustyn Voloshyn
-- **UA canonical:** Августин Іванович Волошин
-- **Aliases:** о. Августин Волошин; Monsignor Avhustyn Voloshyn; Augustin Voloshyn as search alias.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Avgustin Voloshin; Augustin Ivanovich Voloshin; Russian patronymic spellings.
+Те, що радянська влада пізніше переслідувала Волошина, не доводить невинності
+кожного його політичного рішення. І навпаки, дискусія про надзвичайну політику
+1938–1939 років не робить радянський арешт законним. Ці два судження належать до
+різних доказових площин.
 
-## 9. Image candidates
+## СМЕРШ, затримання, арешт і смерть
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait of Avhustyn Voloshyn; verify license.
-- **Backup candidates:** ЕСУ page image; NBU/educational memorial page images if rights allow.
-- **Era-appropriate context image:** Khust/Carpatho-Ukraine Soim image or map, rights-cleared.
+Попередній каталог називав 1 травня 1945 року, але пряме дослідження цього не
+підтвердило. Монографія 2021 року розрізняє перше зіткнення зі СМЕРШем 11 травня:
+тоді відбулися затримання й обшук, після чого Волошина відпустили. Остаточний
+арешт у празькому помешканні вона датує 15 травня, посилаючись, зокрема, на
+повідомлення в особовій справі [S2]. ЕСУ подає 12 травня [S1]. Тому пакет
+приймає двоподієву хронологію монографії для пояснення, але відкрито фіксує
+розбіжність із енциклопедією.
 
-## 10. Sources used
+Волошина перевезли до Москви, утримували в Лефортовській, потім у Бутирській
+в'язниці. Він помер 19 липня 1945 року. Джерела дають достатньо підстав назвати
+арешт дією радянської репресивної системи проти колишнього керівника української
+державної формації. Водночас досьє не встановлює точного медичного причинного
+ланцюга й не повторює твердження про катування як доведений факт без первинного
+медичного або слідчого локатора [S1; S2].
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Волошин Августин Іванович." <https://esu.com.ua/article-27856> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Voloshyn, Avhustyn." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVoloshynAvhustyn.htm>.
+## Пам'ять і антиагіографічна рамка
 
-**Tier 2 (institutional):**
-- Ukrainian 10th-grade history textbook RAG excerpt on Voloshyn's arrest and Soviet prison death.
-- Vernadsky National Library / pedagogical bibliography page on Voloshyn's 150th anniversary and works.
+Волошина вшановують як педагога, священника, президента й жертву радянських
+репресій. Посмертне звання Героя України належить до державної політики пам'яті.
+Воно показує, як незалежна Україна інтерпретує постать, але не є джерелом для
+дати арешту чи характеристики урядового рішення [S1; S2]. Інша крайність —
+радянське й російсько-імперське зведення Карпатської України до штучного
+«сепаратистського» або «нацистського» проєкту. Воно стирає місцеві партії,
+виборний Сойм, тривалу освітню працю й насильство угорської окупації.
 
-**Tier 4 (modern scholarly post-1991):**
-- Mykola Vehesh and Stepan Vidnianskyi, *Августин Волошин і Карпатська Україна* / related Institute of History scholarship.
+Відповідальна біографія тримає разом кілька висновків. Волошин був важливим
+організатором української освіти. Він очолив автономний уряд і був обраний
+президентом у винятково короткій кризовій ситуації. Його урядові рішення та
+середовище Карпатської Січі потребують критики, зокрема щодо авторитарної
+консолідації й єврейської громади. Радянська спецслужба незаконно вивезла його
+до Москви, де він помер у неволі. Жоден із цих фактів не скасовує інших.
 
-**Primary-source documents accessed:**
-- Local RAG quotes from *Вибрані твори*; no Soviet custody file ID retrieved.
+## Імена, мова та права
 
----
+Українське ім'я: **Августин Волошин**; англійська канонічна форма для метаданих:
+**Avhustyn Voloshyn**. Форми, побудовані через російську транслітерацію, не
+використовуються. Історичні назви установ і праць зберігаються точно. Незвичні
+слова в авторському тексті 1942 року пояснюються як історичний правопис, а не
+«виправляються» в назві документа.
 
-## Decolonization self-check (run before submitting)
+Усі п'ять читань мають публічні URL та українськомовний статус. Вони
+розміщуються лише як зовнішні посилання. Стаття ЕСУ захищена авторським правом;
+сторінка Diasporiana не дає окремого дозволу на репродукцію; монографія
+доступна через інституційну бібліотеку; журнальні статті мають власні умови
+відкритого доступу [S1–S5]. Жоден текст або скан не переноситься на сайт.
 
-- [x] Soviet arrest/death named directly.
-- [x] Carpatho-Ukraine framed as Ukrainian statehood without erasing geopolitics.
-- [x] Minority/regional complexity acknowledged.
-- [x] No Russian-imperial spellings in body prose.
-- [x] Date discrepancy flagged.
+Перевірені портрети мають невідомих авторів, неповне походження або застереження
+щодо територіального статусу суспільного надбання. Тому пакет використовує
+`portrait_fallback` типу `text-only`. Посилання на сторінку з фотографією не є
+індивідуальною ліцензією на файл.
+
+## Прийняті джерела
+
+- [S1] Енциклопедія Сучасної України. «Волошин Августин Іванович». <https://esu.com.ua/article-27856>
+- [S2] Віднянський С., Вегеш М. *Августин Волошин і Карпатська Україна в історії українського державотворення*. <https://resource.history.org.ua/item/0015622>
+- [S3] Волошин А. *Про шкільне право будучої Української Держави*. Прага, 1942. <https://diasporiana.org.ua/politologiya/voloshyn-a-pro-shkilne-pravo-buduchoyi-ukrayinskoyi-derzhavy/>
+- [S4] Міхно О., Деревянко Т. «Концептуальні засади національної системи освіти…». <https://dnpb.gov.ua/ojs/npstudies/article/view/195>
+- [S5] Михайлюк М. «Закарпатська преса про ставлення урядовців… до єврейської громади». <https://visnyk-ist.uzhnu.edu.ua/article/view/170513>
+
+## Висновок готовності
+
+Підстав для hold немає. Документальна ідентичність, публічні URL,
+українськомовність і link-only права кожного читання встановлені. Застарілі
+перекази про арешт 1 травня, неперевірені цитати та невизначений портрет
+відхилено. Пакет готовий до окремого рішення ліда про подальшу побудову модуля.

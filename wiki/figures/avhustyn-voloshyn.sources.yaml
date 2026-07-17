@@ -1,0 +1,36 @@
+sources:
+- id: S1
+  type: external
+  title: Волошин Августин Іванович
+  author: Енциклопедія Сучасної України
+  file: https://esu.com.ua/article-27856
+  url: https://esu.com.ua/article-27856
+  notes: Авторськоправна академічна енциклопедична стаття; link-only.
+- id: S2
+  type: external
+  title: Августин Волошин і Карпатська Україна в історії українського державотворення
+  author: Степан Віднянський і Микола Вегеш
+  file: https://resource.history.org.ua/item/0015622
+  url: https://resource.history.org.ua/item/0015622
+  notes: Монографія Інституту історії України НАН України, 2021; повний український PDF.
+- id: S3
+  type: external
+  title: Про шкільне право будучої Української Держави
+  author: Августин Волошин
+  file: https://diasporiana.org.ua/politologiya/voloshyn-a-pro-shkilne-pravo-buduchoyi-ukrayinskoyi-derzhavy/
+  url: https://diasporiana.org.ua/politologiya/voloshyn-a-pro-shkilne-pravo-buduchoyi-ukrayinskoyi-derzhavy/
+  notes: Прага, Український вільний університет, 1942; український скан, link-only.
+- id: S4
+  type: external
+  title: Концептуальні засади національної системи освіти у праці Августина Волошина
+  author: Олександр Міхно і Тетяна Деревянко
+  file: https://dnpb.gov.ua/ojs/npstudies/article/view/195
+  url: https://dnpb.gov.ua/ojs/npstudies/article/view/195
+  notes: Рецензована стаття 2026 року, DOI 10.32405/2663-5739-2026-10-157-176.
+- id: S5
+  type: external
+  title: Закарпатська преса про ставлення урядовців Карпатської України та Карпатської Січі до єврейської громади
+  author: Марина Михайлюк
+  file: https://visnyk-ist.uzhnu.edu.ua/article/view/170513
+  url: https://visnyk-ist.uzhnu.edu.ua/article/view/170513
+  notes: Рецензована стаття 2019 року, DOI 10.24144/2523-4498.1(40).2019.170513.

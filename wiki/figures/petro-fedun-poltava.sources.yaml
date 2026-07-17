@@ -1,0 +1,40 @@
+sources:
+- id: S1
+  type: external
+  title: Федун Петро Миколайович
+  author: Дмитро Вєдєнєєв
+  file: https://esu.com.ua/article-886281
+  url: https://esu.com.ua/article-886281
+  notes: Академічна стаття ЕСУ, 2024; псевдоніми, посади, праці й смерть.
+- id: S2
+  type: external
+  title: Петро Федун — «Полтава» — провідний ідеолог ОУН та УПА
+  author: Михайло Романюк
+  file: https://resource.history.org.ua/item/0015807
+  url: https://resource.history.org.ua/item/0015807
+  notes: Літопис УПА, Події і люди, книга 6, 2009; повний український PDF.
+- id: S3
+  type: external
+  title: Елементи революційності українського націоналізму
+  author: Петро Федун — «Полтава»
+  file: https://avr.org.ua/viewDoc/11177
+  url: https://avr.org.ua/viewDoc/11177
+  notes: Архівна картка ГДА СБУ, фонд 13, справа 372, том 11; український машинопис.
+- id: S4
+  type: external
+  title: „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej
+  author: Frank M. Grelka
+  file: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  url: https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
+  notes: Польська фахова рамка цивільної шкоди ОУН—УПА; не доказ особистого наказу Федуна.
+- id: S5
+  type: external
+  title: 'Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947'
+  author: Marco Carynnyk
+  file: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  url: "https://www.cambridge.org/core/journals/nationalities-papers/article/abs/\
+    foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/\
+    110829E5A0E4E7D3727ACCD4476F082D"
+  notes: Єврейська та голокостна рамка дискурсу ОУН; не доказ особистих слів або дій Федуна.

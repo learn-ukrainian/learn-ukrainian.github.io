@@ -1,113 +1,179 @@
-# Лев Романович Ребет — Research Dossier
+# Лев Ребет — дослідницьке досьє
 
 **Slug:** `lev-rebet`
-**Block:** G
-**Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Роль роботи:** збирання доказів для каталогу BIO
+**Стан:** пакет джерел готовий, модуль не створювався
+**Дата перевірки:** 17 липня 2026 року
 
-## 1. Verified facts
+## Метод і доказова рамка
 
-- **Full name (UA, canonical):** Лев Романович Ребет.
-- **Pseudonyms / aliases:** no stable underground pseudonym retrieved; English canonical: Lev Rebet.
-- **Born:** 3 March 1912 | Stryi, Galicia | Austria-Hungary. [T1: IEU — Rebet, Lev]
-- **Died:** 12 October 1957 | Munich, Federal Republic of Germany | assassinated by Soviet agent Bohdan Stashynsky with a poison device. [T1: IEU] [T2: ICJ Bulletin no. 15]
-- **Family / education key facts:** Lawyer, journalist, OUN activist, member of the 1941 Ukrainian State Administration, later exile scholar and publicist; associated after the war with the more pluralist OUN-zakordon / OUN abroad milieu rather than Bandera's command line. [T1: IEU] [T2: ICJ Bulletin no. 15]
+Цей пакет розділяє особисту біографію, посаду в ОУН, роль в Українському
+державному правлінні 1941 року, нацистське ув'язнення, повоєнну науку й
+еміграційну політику та вбивство радянською спецслужбою. Основний академічний
+життєпис дає «Енциклопедія історії України» [S1]. Публікація Служби зовнішньої
+розвідки України вводить розсекречені матеріали, але її урочистий тон не
+приймається як доказ [S2]. Стаття ЕСУ про «двійкарів» локалізує післявоєнний
+організаційний конфлікт [S3]. Власну теорію Ребета представляє точно
+ідентифіковане видання 1951 року [S4]. Польська й єврейська історіографічні
+рамки подані окремо, щоб організаційну історію ОУН не зводити ані до радянської
+криміналізації, ані до націоналістичної апології [S5; S6].
 
-No OS/NS discrepancy was found. Some secondary web pages give inaccurate birth dates; IEU and the Stashynsky-trial record should control.
+Жодної прямої цитати без сторінкового локатора в досьє немає. Популярний вислів
+про те, що Ребет був «небезпечнішим за Бандеру», не використовується: поширення
+вторинного переказу не замінює протоколу суду або сторінки видання. Так само
+досьє не доводить причинний тезис, ніби КҐБ убив Ребета саме через певну книжку.
+Архівна публікація пов'язує стеження з політичною та інтелектуальною діяльністю,
+але мотив операції подається як атрибуція джерела [S2].
 
-## 2. Oppression mechanism
+## Ім'я й рання біографія
 
-- **What happened:** Nazi imprisonment and later Soviet KGB assassination in exile.
-- **When:** Nazi imprisonment followed the 1941 proclamation context; KGB killing on 12 October 1957.
-- **By whom:** German occupation/security authorities; Soviet KGB through Bohdan Stashynsky.
-- **Document references:** The Stashynsky trial summarized in ICJ Bulletin no. 15 is the retrieved legal source for the assassination; no KGB file ID retrieved.
+Для навчального тексту канонічне ім'я — **Лев Ребет**. У каталогах трапляється
+повна форма **Лев-Роман Михайлович Ребет**. Попередня форма «Лев Романович
+Ребет» не підтверджена авторитетною метаданою й вилучається. Радянський документ
+1946 року називає його «Кліщем», але це лише псевдонім, записаний у конкретній
+орієнтації МДБ; він не подається як загальновідоме підпільне ім'я [S2].
 
-Rebet's assassination is one of the clearest Cold War examples of Soviet extraterritorial murder of Ukrainian political opponents. The ICJ bulletin states that Stashynsky killed Rebet in 1957 and Bandera in 1959 with a specialized poison device after receiving Soviet orders. This is a Tier 2 legal-institutional source and should be preferred over popular retellings. [T2: ICJ Bulletin no. 15]
+Ребет народився 3 березня 1912 року в Стрию. Навчався на юридичному факультеті
+Львівського університету. Від юності був пов'язаний з Українською військовою
+організацією, згодом з Організацією українських націоналістів. Очолював провід
+ОУН у Стрийському повіті, а в середині 1930-х років — Крайову екзекутиву ОУН на
+західноукраїнських землях. Польська влада неодноразово його арештовувала [S1].
 
-The murder also shows why a dossier should not use public fame as a proxy for Soviet threat perception. Rebet is less internationally famous than Bandera, but the trial record indicates that Soviet handlers treated his exile journalism and ideological work as dangerous. For curriculum purposes, that makes him a useful bridge between political biography, KGB methods, and the history of Ukrainian diaspora institutions after 1945.
+Ця хронологія має два контексти. Польська держава дискримінувала частину
+українських політичних і культурних практик, а репресія сприяла радикалізації.
+Водночас міжвоєнна ОУН була авторитарним націоналістичним рухом і застосовувала
+політичне насильство. Посада Ребета в керівництві вимагає аналізу організаційної
+відповідальності. Проте прийнятий набір не містить точного документа, який
+приписував би йому особистий анти-польський або антиєврейський наказ чи конкретне
+вбивство. Відсутність такого локатора не робить ширший контекст необов'язковим,
+але забороняє індивідуальне приписування.
 
-## 3. Major works
+## Розкол ОУН і урядова роль 1941 року
 
-- `1940s-1950s` — articles in *Suchasna Ukraina*, *Chas*, and *Ukrainska Trybuna*; the Stashynsky trial record says Soviet handlers viewed these as ideological, not merely journalistic. [T2: ICJ Bulletin no. 15]
-- `1950s` — *Держава і нація*, political theory; page-stable edition not retrieved.
-- `1950s` — *Теорія нації*, political/sociological work; page-stable edition not retrieved.
-- `Posthumous` — collected works and studies of democratic nationalism in the OUN-z milieu.
+Після розколу ОУН 1940 року Ребет належав до фракції Степана Бандери. 30 червня
+1941 року у Львові прихильники цієї фракції проголосили Акт відновлення
+Української держави й сформували Українське державне правління під проводом
+Ярослава Стецька. Ребет був заступником, у частині джерел — другим заступником
+голови. Після арешту Стецька він певний час виконував керівні обов'язки [S1;
+S2]. Називати його без уточнення «прем'єр-міністром України» або «главою
+української держави» означало б ретроактивно надати короткочасній адміністрації
+інший статус.
 
-## 4. Primary-source quotes (>=2 required)
+Німецький напад на Радянський Союз створив для ОУН-Б можливість проголосити
+державність, але цей крок відбувся в просторі нацистської окупації та Голокосту.
+Єврейська історіографія документує антисемітські дискусії українських
+націоналістів у 1929–1947 роках і не дозволяє ізолювати уряд 1941 року від
+ідеологічного середовища [S6]. Це джерело не містить локатора особистого наказу
+Ребета, тому слова інших провідників або колективну програму не можна
+переписувати як його авторську заяву.
 
-Source not found for two page-verified direct quotations from Rebet's own works in retrieved Tier 1/Tier 2 sources. The dossier therefore identifies works but does not quote inspirational passages from unsourced websites.
+## Нацистський арешт і суперечлива табірна хронологія
 
-The ICJ trial summary records the Soviet rationale that Rebet was targeted as an ideological writer in exile. That is not Rebet's own voice, but it is a primary legal clue to why the KGB selected him. [T2: ICJ Bulletin no. 15]
+Німецька влада не визнала проголошення й заарештувала діячів ОУН-Б. ЕІУ подає,
+що Ребет від вересня 1941 до 1944 року був ув'язнений в Аушвіці [S1]. Архівний
+профіль СЗРУ описує понад рік у краківській в'язниці Монтелюпіх, потім Аушвіц,
+а також повідомляє про альтернативну версію з Оранієнбургом [S2]. Отже, формула
+«три безперервні роки в Аушвіці» є надмірно точною й не приймається.
 
-## 5. Language register
+Нацистське ув'язнення — самостійний факт переслідування. Воно спростовує
+примітивне твердження, нібито Ребет був просто слухняним нацистським службовцем.
+Але перебування в концтаборі не перетворює його попередню ідеологію на
+демократичну й не стирає організаційного контексту. Відповідальна біографія не
+вимагає вибирати між двома хибними образами — «нацистський посіпака» або
+«бездоганний в'язень-герой».
 
-- **Register:** analytical political theory, diaspora journalism.
-- **CEFR readiness for full reading:** C1-C2.
-- **Lexicon notes:** `нація`, `держава`, `демократичний націоналізм`, exile political vocabulary.
-- **Stylistic features:** argument-driven prose, sociological abstraction, less sloganized than OUN-B mobilizational texts.
+## Післявоєнна наука й політика
 
-## 6. Contested points
+Після війни Ребет оселився в Західній Німеччині. Працював у пресі, займався
+правом, політологією й соціологією, викладав державне право в Українському
+вільному університеті. Джерела розходяться щодо точного року захисту докторської
+дисертації: в одному академічному довіднику фігурує 1949 рік, в іншому старшому
+описі — 1947. Тому каталог не перетворює спірний рік на безумовний факт. Назва
+«Держава і нація» підтверджена як назва дисертації, але не як окремо видана
+книжка; без бібліографічного запису її не слід включати до переліку монографій.
 
-- **What's debated in modern UA scholarship:** Rebet complicates the easy OUN story. He belonged to the OUN milieu and the 1941 state-administration circle, so his early record must remain in the same contested field as Bandera and Stetsko. Yet after the war he became associated with a more democratic and anti-totalitarian nationalist current, and Soviet services identified him as an influential exile theorist. [T1: IEU] [T2: ICJ Bulletin no. 15]
-- **What gets simplified in popular memory:** Rebet is often remembered only as "the other KGB assassination before Bandera." That underplays his intellectual role and his split from Bandera-line authoritarianism. Conversely, some nationalist memory uses his later democratic profile to soften the earlier OUN context too quickly.
-- **Where modern Russian disinformation attacks him:** Russian narratives fold Rebet into a generic "fascist emigre" category to justify Soviet violence. The decolonized correction is to name the KGB assassination as state murder, while still placing his early OUN affiliation in the documented wartime controversy.
-- **Polish / Jewish / other-perspective considerations:** Rebet was part of the 1941 OUN-B environment; Jewish/Holocaust scholarship on OUN attitudes and Lviv 1941 is relevant background. He is not the central Volhynia command figure, so Polish civilian-harm debates should be referenced through OUN/UPA context rather than falsely individualized.
-- **NPOV-decolonized framing:** Rebet should be taught as a Ukrainian nationalist intellectual murdered by the KGB and as an OUN-linked actor whose later democratic-nationalist writing does not erase the contested 1941 context.
-- **Factional caution:** Rebet's later position outside Bandera's narrow command line is historically important. It should be used to explain ideological diversity and splits inside the nationalist exile world, not to create a purified "good nationalist" category. Learners should see that democratic language, anti-Soviet persecution, and early OUN entanglement can coexist in one biography.
-- **Assassination-framing caution:** Do not let the KGB murder become the whole story. It should anchor the oppression mechanism, but Rebet's inclusion depends also on his political writing, his editorship, and the fact that Soviet services treated Ukrainian exile analysis as a threat. That makes him different from a purely commemorative martyr profile.
-- **Source caution:** Because many Rebet summaries circulate through Bandera-focused narratives, Phase 2 should privilege IEU, trial documents, and page-verified Rebet editions over derivative web biographies.
+Точно перевірено видання «Формування української нації»: Мюнхен, видавництво
+«Сучасна Україна», 1951 рік, 55 і дві ненумеровані сторінки, серія «Мала
+політична бібліотека», частина 1 [S4]. Це первинне джерело авторської теорії,
+тому воно може довести, що Ребет написав певну тезу лише після перевірки
+сторінки. Воно не є незалежним доказом того, що історичний процес відбувався
+так, як його пояснював автор. Інші бібліографічні назви мають перевірятися
+окремо: точна форма пізнішої книжки — «Світла і тіні ОУН», Мюнхен, 1964, а не
+«Світло» і не 1954 рік.
 
-## 7. Cross-track links
+## «Двійкарі» та межі демократичної еволюції
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/oun.yaml`
-  - `curriculum/l2-uk-en/plans/hist/upa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/holokost-v-ukraini.yaml`
-- **Existing BIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
-  - `curriculum/l2-uk-en/plans/bio/dmytro-dontsov.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Rebet; comparative reading on KGB assassinations of Rebet and Bandera.
+На початку 1950-х років у Закордонних частинах ОУН загострився конфлікт щодо
+керівництва й ставлення до програмної еволюції підпілля. Ребет і Зиновій Матла
+виступили проти одноосібного домінування та згодом очолили середовище, яке
+називали «двійкарями». У грудні 1956 року постала ОУН за кордоном. Стаття ЕСУ
+пов'язує її програму з відмовою від авторитарної однопартійної моделі майбутньої
+держави [S3].
 
-## 8. Naming-canonical
+Ця зміна важлива, але не є ретроспективним очищенням. Повоєнна демократична
+мова не стирає участі Ребета в попередньому авторитарному середовищі ОУН-Б.
+Водночас рання належність не дає підстав ігнорувати реальний післявоєнний
+конфлікт і розвиток поглядів. Формула для модуля проста: ідеологія змінювалася;
+зміну треба описувати, а не використовувати для стирання ранішої програми.
 
-- **Slug:** `lev-rebet`
-- **EN canonical (BGN/PCGN 2010):** Lev Rebet
-- **UA canonical:** Лев Романович Ребет
-- **Aliases:** Lev Rebet; Лев Ребет.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Lev Romanovich Rebet; Russian patronymic spellings.
+## Польська й єврейська перспективи, цивільна шкода
 
-## 9. Image candidates
+Польська історіографія наголошує на масовому вбивстві польських цивільних ОУН-Б
+і УПА на Волині та в Східній Галичині. Стаття в журналі Інституту національної
+пам'яті Польщі розглядає цю «антипольську акцію» як стратегію етнічного
+очищення, водночас аналізуючи польську довоєнну політику й німецько-радянський
+окупаційний контекст [S5]. Її висновки не можна відкинути як російську
+пропаганду. Так само не можна механічно перенести події 1943–1944 років на
+особистий наказ Ребета, який на той час був у нацистському ув'язненні, без
+окремого документа.
 
-- **Best PD/CC portrait:** Wikimedia Commons / diaspora portrait of Lev Rebet, license to verify.
-- **Backup candidates:** IEU article image if rights allow; Ukrainian diaspora archive images.
-- **Era-appropriate context image:** ICJ/Stashynsky trial document excerpt or Munich memorial context, rights-cleared.
+Єврейська й голокостна історіографія показує антисемітський дискурс в ОУН та
+його зміни [S6]. Пакет не знайшов підтвердження популярному твердженню про
+єврейське походження Ребета й не використовує його як зручний аргумент проти
+аналізу антисемітизму. Належність людини до певної родини або наявність
+нацистського ув'язнення не розв'язує питання про програму організації.
 
-## 10. Sources used
+## Убивство агентом КҐБ
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine. "Rebet, Lev." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CE%5CRebetLev.htm>.
+12 жовтня 1957 року Ребета вбили в Мюнхені. Виконавцем був Богдан Сташинський,
+агент радянської державної безпеки. СЗРУ описує стеження, підготовку та застосування
+пристрою з отруйним газом; спочатку смерть вважали наслідком серцевої
+недостатності [S2]. Пізніше втеча Сташинського на Захід, його свідчення й суд
+встановили обставини операції. У цьому досьє відповідальність формулюється як
+документоване державне вбивство радянською спецслужбою, а не безособова
+«загадкова смерть».
 
-**Tier 2 (institutional):**
-- International Commission of Jurists. *Bulletin*, no. 15 (1963), Stashynsky trial summary. <https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf>.
+Факт убивства не є нагородою за ідеологічну правоту. Він показує, що СРСР
+застосовував таємне насильство проти політичних емігрантів за кордоном. Саме
+тому модуль має одночасно називати злочин КҐБ і критично читати націоналістичні
+праці Ребета. Пізніше перепоховання у Львові належить до історії пам'яті, а не
+до доказу мотиву операції.
 
-**Tier 4 (modern scholarly post-1991):**
-- John-Paul Himka, *Ukrainian Nationalists and the Holocaust*.
-- Karel Berkhoff and Marco Carynnyk, article on OUN and Stetsko's 1941 autobiography.
-- Studies of OUN-z and Ukrainian democratic nationalism; Phase 2 should add page-stable Rebet editions.
+## Права, читання й зображення
 
-**Primary-source documents accessed:**
-- ICJ trial summary; no page-stable Rebet work retrieved for quotation.
+Чотири українськомовні читання мають точну ідентичність і публічний URL: стаття
+ЕІУ [S1], архівний профіль СЗРУ [S2], стаття ЕСУ про «двійкарів» [S3] і книжка
+Ребета 1951 року [S4]. Усі вони використовуються як `link-only`. НБУВ дозволяє
+освітній некомерційний доступ з атрибуцією, але не подальше повнотекстове
+відтворення. Польська й англомовна наукові статті [S5; S6] є контекстними
+джерелами, а не українськими навчальними читаннями.
 
----
+Перевірений портрет з Аушвіца має невідомого автора, непідтверджене перше
+оприлюднення й неробоче первинне посилання. Цього недостатньо для точної
+індивідуальної ліцензії. Пакет використовує текстовий `portrait_fallback`.
 
-## Decolonization self-check (run before submitting)
+## Прийняті джерела
 
-- [x] KGB assassination named directly.
-- [x] Early OUN context not erased.
-- [x] Later democratic-nationalist profile distinguished from hagiography.
-- [x] Russian-imperial forms confined to §8.
-- [x] Quote gap documented.
+- [S1] Герасимова Г. «Ребет Лев», ЕІУ. <https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rebet_L&Z21ID=>
+- [S2] СЗРУ. «Лев Ребет. Ідеолог існування незалежної України в сім'ї європейських народів». <https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv->
+- [S3] Кентій А. «Двійкарі», ЕСУ. <https://esu.com.ua/article-23761>
+- [S4] Ребет Л. *Формування української нації*. <https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0001985&Z21ID=>
+- [S5] Grelka F. M. „Antypolska akcja” OUN-UPA na Wołyniu i w Galicji Wschodniej. <https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650>
+- [S6] Carynnyk M. “Foes of our rebirth: Ukrainian nationalist discussions about Jews, 1929–1947.” <https://www.cambridge.org/core/journals/nationalities-papers/article/abs/foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/110829E5A0E4E7D3727ACCD4476F082D>
+
+## Висновок готовності
+
+Hold не потрібен. Читання мають документальну ідентичність, публічні URL,
+українськомовний статус і достатню підставу для link-only. Виправлено ім'я,
+концтабірну хронологію, бібліографічний дрейф і надмірну причинну тезу про мотив
+КҐБ. Неперевірені цитати та портрет відхилено.
