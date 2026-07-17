@@ -4643,3 +4643,103 @@ entries:
       disposition: exception-approved
     cohort_promotion: *cohort_driver_e1a3_c24_review
     hold: *cohort_driver_e1a3_c24_hold
+  stepan-bandera:
+    dossier_grounding: &cohort_driver_f63b_c23_review
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_f63b_c23_review
+    wiki_quote_verification: *cohort_driver_f63b_c23_review
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_f63b_c23_review
+    hold: &cohort_driver_f63b_c23_hold
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      active: false
+      reason: Source, rights, quotation, discovery, and independent review blockers resolved.
+  yaroslav-stetsko:
+    dossier_grounding: *cohort_driver_f63b_c23_review
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_f63b_c23_review
+    wiki_quote_verification: *cohort_driver_f63b_c23_review
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_f63b_c23_review
+    hold: *cohort_driver_f63b_c23_hold
+  andrii-melnyk:
+    dossier_grounding: *cohort_driver_f63b_c23_review
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_f63b_c23_review
+    wiki_quote_verification: *cohort_driver_f63b_c23_review
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_f63b_c23_review
+    hold: *cohort_driver_f63b_c23_hold
+  dmytro-kliachkivskyi:
+    dossier_grounding: *cohort_driver_f63b_c23_review
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_f63b_c23_review
+    wiki_quote_verification: *cohort_driver_f63b_c23_review
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_f63b_c23_review
+    hold: *cohort_driver_f63b_c23_hold
+  yurii-tiutiunnyk:
+    dossier_grounding: *cohort_driver_f63b_c23_review
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: link-only-approved
+    wiki_grounding: *cohort_driver_f63b_c23_review
+    wiki_quote_verification: *cohort_driver_f63b_c23_review
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-17
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-5000234020
+      disposition: exception-approved
+    cohort_promotion: *cohort_driver_f63b_c23_review
+    hold: *cohort_driver_f63b_c23_hold
