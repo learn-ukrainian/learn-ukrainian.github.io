@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -76,3 +77,44 @@ def test_bakeoff_tooled_artifact_matches_pre_extraction_golden_hash(
     artifact = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
 
     assert hashlib.sha256(artifact.artifact_path.read_bytes()).hexdigest() == PRE_EXTRACTION_ARTIFACT_SHA256
+
+
+def test_run_canary_guards_against_invalid_level_trap() -> None:
+    with pytest.raises(ValueError, match="not a valid curriculum level or seminar track level"):
+        llm_reviewer_dispatch.run_canary(
+            level="seminar",
+            gate_version="test.v1",
+            author_family="openai",
+        )
+
+    # A valid level (e.g. 'folk' or 'b1') should not raise the validation ValueError,
+    # though it will fail later if we don't mock the dispatcher or evaluate_canaries.
+    # We can mock the dispatcher/evaluate_canaries or pass a mock runner to verify this.
+    def mock_runner(selected_route: llm_reviewer_dispatch.ReviewerRoute, *args: Any, **kwargs: Any) -> llm_reviewer_dispatch.DispatchResult:
+        import json
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=json.dumps({"findings": [], "fact_checks": [], "evidence_gaps": []}),
+            reviewer_model_id=selected_route.reviewer_model_id,
+            reviewer_family=selected_route.reviewer_family,
+            route_name=selected_route.route_name,
+            tool_call_count=0,
+            tools_used=(),
+            tool_events=(),
+        )
+
+    # Let's mock llm_qg_canaries.evaluate_canaries to avoid actual execution / file lookups
+    from scripts.audit import llm_qg_canaries
+    original_evaluate = llm_qg_canaries.evaluate_canaries
+    llm_qg_canaries.evaluate_canaries = lambda payload, level: {"passed": True}
+    try:
+        res = llm_reviewer_dispatch.run_canary(
+            level="folk",
+            gate_version="test.v1",
+            author_family="openai",
+            runner=mock_runner,
+        )
+        assert res["passed"] is True
+        assert res["level"] == "seminar"  # canonical level for folk
+    finally:
+        llm_qg_canaries.evaluate_canaries = original_evaluate
+

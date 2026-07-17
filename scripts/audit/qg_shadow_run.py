@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import sys
 from collections.abc import Mapping, Sequence
 from contextlib import suppress
@@ -32,6 +33,9 @@ from scripts.audit import layerb_shadow, llm_qg_shadow_store, llm_reviewer_dispa
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
 from scripts.common.repo_root import resolve_repo_root
+
+_LOGGER = logging.getLogger("qg_shadow_run")
+
 
 SHADOW_ARTIFACT_ARM = "production_shadow"
 
@@ -121,7 +125,14 @@ def _artifact_for_capture(
     payload = tier2.get("payload")
     tier2_run_id = tier2.get("tier2_run_id")
     if not isinstance(dispatch, Mapping) or not isinstance(payload, Mapping) or not isinstance(tier2_run_id, str):
-        raise ValueError("Tier-2 capture is unavailable; shadow runs require a fresh captured live dispatch")
+        status = tier2.get("status")
+        reason = tier2.get("reason")
+        err_msg = (
+            f"Tier-2 capture is unavailable; shadow runs require a fresh captured live dispatch "
+            f"(status={status}, reason={reason})"
+        )
+        _LOGGER.error(err_msg)
+        raise ValueError(err_msg)
     qg_workflow_meta = record.get("qg_workflow") if isinstance(record.get("qg_workflow"), Mapping) else {}
     reviewer_family = dispatch.get("reviewer_family") or tier2.get("reviewer_family")
     if not isinstance(reviewer_family, str) or not reviewer_family:

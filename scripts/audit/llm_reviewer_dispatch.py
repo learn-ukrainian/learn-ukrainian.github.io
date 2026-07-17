@@ -842,7 +842,32 @@ def run_canary(
     author_family: str,
     runner: ProviderRunner | None = None,
 ) -> dict[str, Any]:
-    """Run a live canary through the same dispatcher route used by a batch."""
+    """Run a live canary through the same dispatcher route used by a batch.
+
+    Route mapping details:
+    - Levels starting with 'a1' map to family 'a1' -> GEMMA_SURFACE_ROUTE (gemma_surface)
+    - Levels starting with 'a2' map to family 'a2' -> GEMMA_SURFACE_ROUTE (gemma_surface)
+    - Levels starting with 'b1', 'b2', 'c1', 'c2' map to family 'b1_plus' -> GEMMA_SURFACE_ROUTE (gemma_surface)
+    - Seminar levels (e.g. 'folk', 'hist', 'bio', etc.) map to family 'seminar' -> FRONTIER_OPENCODE_ROUTE (opencode_frontier)
+    """
+
+    clean = level.strip().lower()
+    from scripts.audit.content_surface_gates import SEMINAR_LEVELS
+    is_valid_cefr = (
+        clean.startswith("a1")
+        or clean.startswith("a2")
+        or clean.startswith("b1")
+        or clean.startswith("b2")
+        or clean.startswith("c1")
+        or clean.startswith("c2")
+    )
+    is_valid_seminar = clean in SEMINAR_LEVELS
+    if not (is_valid_cefr or is_valid_seminar):
+        raise ValueError(
+            f"Level {level!r} is not a valid curriculum level or seminar track level. "
+            "To mint a canary, you must use a specific target level (e.g., 'folk', 'hist', 'b1', etc.) "
+            "so it maps to the correct reviewer route family."
+        )
 
     policy = policy_for_level(level)
     prompt = build_canary_prompt(level)

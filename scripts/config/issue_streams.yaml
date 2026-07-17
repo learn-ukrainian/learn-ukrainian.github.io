@@ -11,7 +11,7 @@ schema_version: 1
 streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
-    epics: [4387, 4700]        # umbrella + UX-quality-wave child board
+    epics: [4387, 4700, 5331]  # umbrella + UX-quality-wave + #5331 fill_local divergence
   atlas-intake:
     title: "Word Atlas full-corpus intake"
     epics: [4220, 4378, 5224]        # intake epic + entry-model DB epic
