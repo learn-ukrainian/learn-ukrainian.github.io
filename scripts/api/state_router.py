@@ -792,6 +792,36 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 if cb_data.get("weekly_resets_at"):
                     agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
 
+        elif cb_data and cb_data.get("auth_error"):
+            # Provider/credential error from codexbar (e.g. Kimi CLI credentials
+            # expired — 2026-07-17 incident). The CLI positively reported the lane
+            # is unavailable, so override any ledger-derived "cool"/0%-burn verdict
+            # (an empty ledger with a cap would otherwise render the seat as 100%
+            # available, or a stale ledger as 0%). Surface status='unknown' with
+            # the error message carried; NEVER 0% remaining, never an absent row.
+            agents[lane]["status"] = "unknown"
+            agents[lane]["burn_pct_7d"] = None
+            agents[lane]["remaining_pct"] = None
+            agents[lane]["codexbar"] = {
+                "primary_used_pct": None,
+                "weekly_used_pct": None,
+                "monthly_cap_usd": None,
+                "monthly_used_usd": None,
+                "weekly_resets_at": None,
+                "weekly_pace_delta_pct": None,
+                "will_last_to_reset": None,
+                "pace_summary": None,
+                "stale": cb_data.get("stale", False),
+                "fetched_at": cb_data.get("fetched_at"),
+                "status": "unknown",
+                "auth_error": cb_data.get("auth_error"),
+                "error_kind": cb_data.get("error_kind"),
+                "error_code": cb_data.get("error_code"),
+            }
+            if lane == "claude":
+                agents[lane]["interactive"]["status"] = "unknown"
+                agents[lane]["interactive"]["burn_pct_7d"] = None
+
     if cb_sourced_any:
         is_stale = cb_stale
         data_age_s = cb_max_age_s

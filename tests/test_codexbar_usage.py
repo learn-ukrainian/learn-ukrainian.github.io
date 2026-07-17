@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 
+from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
 from scripts.api.codexbar_usage import _normalize_provider_data
 
@@ -325,3 +326,103 @@ def test_monthly_window_only_does_not_mislabel_weekly_used_pct():
     assert res["primary_used_pct"] == 10.0
     assert res["weekly_used_pct"] != 75.0
     assert res["weekly_used_pct"] == 10.0
+
+
+# Kimi healthy usage snapshot (weekly + primary windows present)
+KIMI_HEALTHY_FIXTURE = """[
+  {
+    "provider": "kimi",
+    "source": "oauth",
+    "usage": {
+      "primary": {
+        "windowMinutes": 300,
+        "usedPercent": 12,
+        "resetsAt": "2026-07-17T18:00:00Z"
+      },
+      "secondary": {
+        "windowMinutes": 10080,
+        "usedPercent": 40,
+        "resetsAt": "2026-07-20T18:00:00Z"
+      }
+    },
+    "pace": {
+      "secondary": {
+        "deltaPercent": -5,
+        "willLastToReset": true,
+        "summary": "5% in reserve | Expected 45% used"
+      }
+    }
+  }
+]"""
+
+
+# Kimi credential/provider error snapshot (the 2026-07-17 incident shape)
+KIMI_ERROR_FIXTURE = """[
+  {
+    "source": "auto",
+    "provider": "kimi",
+    "error": {
+      "code": 1,
+      "message": "Kimi Code CLI credential is expired, please re-authenticate",
+      "kind": "provider"
+    }
+  }
+]"""
+
+
+
+
+def test_normalize_kimi_healthy_shape():
+    """Healthy kimi payload yields a lane row with window numbers."""
+    raw = json.loads(KIMI_HEALTHY_FIXTURE)[0]
+    res = _normalize_provider_data("kimi", raw)
+
+    assert res["lane"] == "kimi"
+    assert res["primary_used_pct"] == 12.0
+    assert res["weekly_used_pct"] == 40.0
+    assert res["weekly_resets_at"] == "2026-07-20T18:00:00Z"
+    assert res["will_last_to_reset"] is True
+    assert res["source"] == "codexbar"
+
+
+def test_kimi_provider_error_surfaces_unknown(monkeypatch):
+    """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
+
+    class _FakeResult:
+        returncode = 0
+        stdout = KIMI_ERROR_FIXTURE
+        stderr = ""
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    # Never fall back to last-good data
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+
+    assert res is not None
+    assert res["lane"] == "kimi"
+    assert res["status"] == "unknown"
+    assert res["weekly_used_pct"] is None
+    assert res["primary_used_pct"] is None
+    assert "credential is expired" in res["auth_error"]
+    assert res["error_kind"] == "provider"
+    assert res["error_code"] == 1
+
+
+def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
+    """LIVE-verified gap (2026-07-17): the CLI exits rc=1 on credential errors
+    while printing the error JSON — rc alone must not swallow the payload."""
+
+    class _FakeResult:
+        returncode = 1
+        stdout = KIMI_ERROR_FIXTURE
+        stderr = ""
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", lambda cmd, **kw: _FakeResult())
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+
+    assert res is not None
+    assert res["status"] == "unknown"
+    assert "credential is expired" in res["auth_error"]
