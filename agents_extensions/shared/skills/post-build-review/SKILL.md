@@ -73,9 +73,10 @@ artifacts. Report findings; do not fix the module during this invocation.
    Bind that schema at the provider boundary and redirect its structured text
    channel directly to `<semantic_response_path>`. The packet binding constrains
    cited evidence to valid target-file paths and one-based line numbers; the
-   finalizer hydrates the exact Unicode line from the immutable packet. The v5
-   schema also requires all seven alignment classes and every vocabulary lemma,
-   so omitted audit work fails closed instead of disappearing. Keep
+   finalizer hydrates the exact Unicode line from the immutable packet. The v6
+   schema also requires all seven alignment classes, every vocabulary lemma,
+   every learner statement, and every detected seminar source attribution, so omitted
+   audit work fails closed instead of disappearing. Keep
    provider envelopes and stderr separate. Schema enforcement is preferred over prompt-only JSON
    compliance; it does not authorize extracting an embedded object from an
    unconstrained prose response.
@@ -99,8 +100,8 @@ artifacts. Report findings; do not fix the module during this invocation.
 - Disposition policy: [contracts/combined-disposition-policy.md](contracts/combined-disposition-policy.md)
 - Size policy: [contracts/evidence-derived-size-policy-contract.md](contracts/evidence-derived-size-policy-contract.md)
 - Track configuration: [config/track-policy.v1.yaml](config/track-policy.v1.yaml)
-- Current output schema: [schema/review-result.v5.schema.json](schema/review-result.v5.schema.json)
-- Historical schemas: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json), [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json), [schema/review-result.v3.schema.json](schema/review-result.v3.schema.json), [schema/review-result.v4.schema.json](schema/review-result.v4.schema.json)
+- Current output schema: [schema/review-result.v6.schema.json](schema/review-result.v6.schema.json)
+- Historical schemas: [schema/review-result.v1.schema.json](schema/review-result.v1.schema.json), [schema/review-result.v2.schema.json](schema/review-result.v2.schema.json), [schema/review-result.v3.schema.json](schema/review-result.v3.schema.json), [schema/review-result.v4.schema.json](schema/review-result.v4.schema.json), [schema/review-result.v5.schema.json](schema/review-result.v5.schema.json)
 
 The runner assembles the common prompt plus exactly one family prompt. Do not
 manually concatenate or substitute other review prompts.
@@ -111,7 +112,7 @@ manually concatenate or substitute other review prompts.
   the track audit, or `--run-mdx-generation-validate`; those paths may write to
   the repository.
 - Never let semantic `PASS` override a deterministic blocker/high finding.
-- Treat v5 dimension scores and `minimum_dimension_score` as diagnostic,
+- Treat v6 dimension scores and `minimum_dimension_score` as diagnostic,
   evidence-backed reporting only. Never use them as readiness thresholds,
   disposition inputs, score sidecars, or retry-selection criteria.
 - Treat `10.0` as an attestation about findings linked to that dimension, not
@@ -120,6 +121,14 @@ manually concatenate or substitute other review prompts.
 - Treat `alignment_audit` and `vocabulary_coverage` as required evidence
   ledgers. A prompt claim that a class was checked cannot replace the exact
   seven-class record or the source-order lemma enumeration.
+- Treat `statement_coverage` as an exact packet-bound ledger for both core and
+  seminar modules. Every statement ID must be classified; every claim must
+  belong to one unit and quote a contiguous substring of that unit; every
+  universal-quantifier unit must own a full-statement verbatim coverage claim,
+  so near-universal scope cannot be weakened to a bare quantifier.
+  For seminar modules, apply the same exactness to
+  `source_traceability_coverage`; an unmatched named source cannot be cleared
+  by a general quality impression.
 - Never infer audio, video, image, text, or interactive content from metadata.
   If the reviewer cannot inspect evidence required by a learner task, record it
   as `reviewer_unverified` and return `INCOMPLETE`.

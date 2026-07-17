@@ -48,9 +48,10 @@ SCHEMA_PATHS = {
     "post-build-review.result.v3": SKILL_ROOT / "schema" / "review-result.v3.schema.json",
     "post-build-review.result.v4": SKILL_ROOT / "schema" / "review-result.v4.schema.json",
     "post-build-review.result.v5": SKILL_ROOT / "schema" / "review-result.v5.schema.json",
+    "post-build-review.result.v6": SKILL_ROOT / "schema" / "review-result.v6.schema.json",
 }
-CURRENT_PACKET_VERSION = "post-build-review.packet.v5"
-CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v5"
+CURRENT_PACKET_VERSION = "post-build-review.packet.v6"
+CURRENT_RESULT_SCHEMA_VERSION = "post-build-review.result.v6"
 TRACK_AUDIT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
 
 CANONICAL_SEVERITIES = ("blocker", "high", "medium", "low", "info")
@@ -727,6 +728,313 @@ def _filter_yaml_keys_preserving_lines(text: str, keys: Sequence[str]) -> str:
     return "\n".join(output)
 
 
+UKRAINIAN_TEXT_RE = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
+STATEMENT_SPLIT_RE = re.compile(
+    r"(?<=[.!?…])\s+(?=[«“\"'A-ZА-ЯІЇЄҐ0-9])"
+)
+# VESUM-backed paradigms: кожен/кожн*, жоден/жодн*, plural усі/всі
+# declensions, and the singular весь/увесь families. Keep this morphological
+# surface explicit: a missed form can otherwise bypass the claim-ledger gate.
+UNIVERSAL_FORM_PATTERN = (
+    r"(?:кож(?:ен|н[а-яіїєґ'’\-]*)|жод(?:ен|н[а-яіїєґ'’\-]*)|"
+    r"усі(?:ма|ми|х|м)?|всі(?:ма|ми|х|м)?|"
+    r"увесь|ввесь|весь|уся|вся|усе|все|усю|всю|"
+    r"усього|всього|усьому|всьому|усій|всій|"
+    r"усієї|всієї|усією|всією|завжди|ніколи)"
+)
+UNIVERSAL_QUANTIFIER_RE = re.compile(
+    rf"\b(?:майже\s+)?{UNIVERSAL_FORM_PATTERN}\b", re.IGNORECASE
+)
+NEAR_UNIVERSAL_RE = re.compile(
+    rf"\bмайже\s+{UNIVERSAL_FORM_PATTERN}\b", re.IGNORECASE
+)
+INSTRUCTION_OPEN_RE = re.compile(
+    r"(?:\b[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|"
+    r"^[а-яіїєґ'’\-]{3,}ти\b)"
+)
+
+
+def _normalized_claim_surface(text: str) -> str:
+    """Normalize only whitespace; semantic paraphrases remain distinguishable."""
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _claim_surface_is_bound(claim: str, statement: str) -> bool:
+    """Return whether a claim is a verbatim contiguous statement substring."""
+    return _normalized_claim_surface(claim) in _normalized_claim_surface(statement)
+
+
+def _claims_preserve_universal_statement(
+    claims: Sequence[str], statement: str
+) -> bool:
+    """Require one full-statement anchor so quantifier scope cannot be diluted."""
+    expected = _normalized_claim_surface(statement).casefold()
+    return any(_normalized_claim_surface(claim).casefold() == expected for claim in claims)
+
+
+def _inventory_payload(units: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    payload = {"units": deepcopy(list(units))}
+    return {
+        "inventory_sha256": sha256_text(_stable_json(payload)),
+        **payload,
+    }
+
+
+def _learner_line_value(name: str, line: str) -> str:
+    value = line.strip()
+    if name != "content":
+        key_match = re.match(
+            r"^(?:-\s*)?[A-Za-z_][A-Za-z0-9_-]*\s*:\s*(?P<value>.*)$",
+            value,
+        )
+        if key_match is not None:
+            value = key_match.group("value").strip()
+        value = re.sub(r"^-\s*", "", value)
+        if value in {"", "|", "|-", ">", ">-", "---"}:
+            return ""
+    value = re.sub(r"^(?:#{1,6}|>|[-*+])\s*", "", value)
+    return value.strip(" \t\"'")
+
+
+def _statement_signals(text: str) -> list[str]:
+    universal = UNIVERSAL_QUANTIFIER_RE.search(text)
+    if universal is None:
+        return []
+    surface = re.sub(r"^[*_`]+", "", text)
+    instruction = INSTRUCTION_OPEN_RE.search(surface)
+    if instruction is not None and NEAR_UNIVERSAL_RE.search(text) is None:
+        colon = re.search(r"[:：]", surface)
+        framed_universal = (
+            colon is not None
+            and instruction.start() < colon.start()
+            and UNIVERSAL_QUANTIFIER_RE.search(surface[colon.end() :]) is not None
+        )
+        if not framed_universal:
+            return []
+    return ["universal_quantifier"]
+
+
+def build_learner_statement_inventory(
+    target_materials: Mapping[str, Mapping[str, Any]],
+    *,
+    family: str,
+) -> dict[str, Any]:
+    """Inventory every learner statement before semantic review.
+
+    Statement coverage is deliberately broader than factual-claim extraction:
+    headings and instructions remain visible so the reviewer must explicitly
+    classify them as non-claims instead of silently skipping arbitrary prose.
+    """
+    del family  # Retained in the public helper signature for versioned callers.
+    units: list[dict[str, Any]] = []
+    for name in ("content", "activities", "vocabulary", "resources"):
+        material = target_materials.get(name)
+        if not isinstance(material, Mapping):
+            continue
+        path = _nonempty_string(material.get("path"), f"{name} material path")
+        text = target_material_text(material)
+        if name == "resources":
+            text = _filter_yaml_keys_preserving_lines(
+                text,
+                ("notes", "note", "description", "instruction", "instructions", "caption"),
+            )
+        for line_no, raw_line in enumerate(text.splitlines(), start=1):
+            value = _learner_line_value(name, raw_line)
+            if not value or UKRAINIAN_TEXT_RE.search(value) is None:
+                continue
+            segments = [
+                segment.strip()
+                for segment in STATEMENT_SPLIT_RE.split(value)
+                if segment.strip()
+            ]
+            for segment in segments:
+                if len(re.sub(r"\s+", "", segment)) < 4:
+                    continue
+                units.append(
+                    {
+                        "id": f"s{len(units) + 1:04d}",
+                        "path": path,
+                        "line": line_no,
+                        "role": name,
+                        "text": segment,
+                        "text_sha256": sha256_text(segment),
+                        "signals": _statement_signals(segment),
+                    }
+                )
+    return _inventory_payload(units)
+
+
+def build_resource_inventory(
+    target_materials: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    material = target_materials.get("resources")
+    if not isinstance(material, Mapping):
+        return {"inventory_sha256": sha256_text(_stable_json({"resources": []})), "resources": []}
+    raw = yaml.safe_load(target_material_text(material))
+    if raw is None:
+        rows: list[object] = []
+    elif isinstance(raw, list):
+        rows = raw
+    else:
+        raise ReviewProtocolError("resources material must contain a YAML list")
+    resources: list[dict[str, str]] = []
+    for index, row in enumerate(rows, start=1):
+        if not isinstance(row, Mapping):
+            raise ReviewProtocolError("resources entries must be mappings")
+        title = _nonempty_string(row.get("title"), f"resource {index} title")
+        url = _nonempty_string(row.get("url"), f"resource {index} url")
+        resources.append(
+            {
+                "id": f"r{index:03d}",
+                "title": title,
+                "url": url,
+            }
+        )
+    payload = {"resources": resources}
+    return {
+        "inventory_sha256": sha256_text(_stable_json(payload)),
+        **payload,
+    }
+
+
+def _source_alias_config(spec: Mapping[str, Any]) -> dict[str, list[str]]:
+    raw_aliases = spec.get("aliases") or {}
+    if not isinstance(raw_aliases, Mapping):
+        raise ReviewProtocolError("source_traceability aliases must be a mapping")
+    aliases: dict[str, list[str]] = {}
+    for raw_label, raw_matches in raw_aliases.items():
+        label = _nonempty_string(raw_label, "source alias label")
+        if not isinstance(raw_matches, list) or any(
+            not isinstance(item, str) or not item.strip() for item in raw_matches
+        ):
+            raise ReviewProtocolError(
+                f"source_traceability alias {label} must contain non-empty match strings"
+            )
+        aliases[label] = [item.strip() for item in raw_matches]
+    return aliases
+
+
+def build_source_attribution_inventory(
+    statement_inventory: Mapping[str, Any],
+    resource_inventory: Mapping[str, Any],
+    spec: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    aliases = _source_alias_config(spec)
+    context_pattern = _configured_pattern(spec)
+    resources = resource_inventory.get("resources") or []
+    resource_text = {
+        str(resource["id"]): f"{resource['title']} {resource['url']}".casefold()
+        for resource in resources
+    }
+    units: list[dict[str, Any]] = []
+    findings: list[dict[str, Any]] = []
+    statements = list(statement_inventory.get("units") or [])
+    for statement_index, statement in enumerate(statements):
+        text = str(statement["text"])
+        if context_pattern.search(text) is None:
+            continue
+        label_text = text
+        if statement_index:
+            previous = statements[statement_index - 1]
+            same_line = (
+                previous["path"] == statement["path"]
+                and previous["line"] == statement["line"]
+            )
+            if (
+                same_line
+                and re.match(r"^[*_`]*Каталог\b", text, re.IGNORECASE)
+                and re.search(r"\bКартк\w*\b", str(previous["text"]), re.IGNORECASE)
+            ):
+                label_text = f"{previous['text']} {text}"
+        labels = {
+            label
+            for label in aliases
+            if re.search(
+                rf"(?<!\w){re.escape(label)}(?!\w)", label_text, re.IGNORECASE
+            )
+        }
+        if not labels:
+            labels = {"<unnamed-source>"}
+        matched: set[str] = set()
+        unmatched: list[str] = []
+        for label in sorted(labels):
+            match_terms = aliases.get(label) or [label]
+            label_matches = {
+                resource_id
+                for resource_id, haystack in resource_text.items()
+                if any(term.casefold() in haystack for term in match_terms)
+            }
+            if label_matches:
+                matched.update(label_matches)
+                continue
+            unmatched.append(label)
+            location = f"{statement['path']}:{statement['line']}"
+            findings.append(
+                _policy_finding(
+                    f"source-traceability-unmapped-{statement['id']}-{sha256_text(label)[:8]}",
+                    "source_traceability",
+                    str(spec.get("severity") or "medium"),
+                    (
+                        "A learner-visible source attribution is unnamed or has no "
+                        "identifiable learner resource mapping."
+                    ),
+                    evidence=label,
+                    location=location,
+                    issue_id="SOURCE_TRACEABILITY",
+                )
+            )
+        units.append(
+            {
+                "unit_id": str(statement["id"]),
+                "labels": sorted(labels),
+                "matched_resource_ids": sorted(matched),
+                "unmatched_labels": unmatched,
+            }
+        )
+    return _inventory_payload(units), findings
+
+
+def build_review_inventories(
+    target_materials: Mapping[str, Mapping[str, Any]],
+    *,
+    family: str,
+    source_spec: object,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    statements = build_learner_statement_inventory(target_materials, family=family)
+    if family != "seminar":
+        resources = {
+            "inventory_sha256": sha256_text(_stable_json({"resources": []})),
+            "resources": [],
+        }
+        attributions = _inventory_payload([])
+        source_findings: list[dict[str, Any]] = []
+    else:
+        resources = build_resource_inventory(target_materials)
+        if not isinstance(source_spec, Mapping):
+            raise ReviewProtocolError(
+                "Seminar source_traceability mechanical policy must be a mapping"
+            )
+        attributions, source_findings = build_source_attribution_inventory(
+            statements, resources, source_spec
+        )
+        source_unit_ids = {
+            str(unit["unit_id"]) for unit in attributions["units"]
+        }
+        statement_units = deepcopy(statements["units"])
+        for unit in statement_units:
+            if unit["id"] in source_unit_ids and "source_attribution" not in unit["signals"]:
+                unit["signals"].append("source_attribution")
+        statements = _inventory_payload(statement_units)
+    return (
+        {
+            "statement_inventory": statements,
+            "resource_inventory": resources,
+            "source_attribution_inventory": attributions,
+        },
+        source_findings,
+    )
+
+
 def scan_learner_workflow_leakage(
     texts: Mapping[str, str],
     spec: object,
@@ -1013,6 +1321,9 @@ def assemble_semantic_prompt(
         "deterministic_findings": track_result.get("findings"),
         "mechanical_policy_findings": deterministic.get("policy_findings"),
         "learner_evidence_requirements": deterministic.get("evidence_requirements"),
+        "statement_inventory": deterministic.get("statement_inventory"),
+        "resource_inventory": deterministic.get("resource_inventory"),
+        "source_attribution_inventory": deterministic.get("source_attribution_inventory"),
         "vocabulary_surface_candidates": vocabulary_surface_candidates,
         "skip_assessments": deterministic.get("skip_assessments"),
         "size_policy": deterministic["size_policy"].get("result"),
@@ -1066,13 +1377,24 @@ def prepare_review(
     )
     deterministic = run_existing_deterministic_audits(target, repo_root=repo_root, policy=policy, runner=runner)
     track_result = deterministic["track_audit"].get("result") or {}
-    deterministic["policy_findings"] = evaluate_mechanical_track_policy(
-        target,
-        track_policy,
-        repo_root=repo_root,
-        size_record=deterministic["size_policy"].get("result"),
-    )
     checks = track_policy.get("mechanical_checks")
+    inventories, source_findings = build_review_inventories(
+        target_materials,
+        family=str(track_policy.get("family") or ""),
+        source_spec=(
+            checks.get("source_traceability") if isinstance(checks, Mapping) else None
+        ),
+    )
+    deterministic.update(inventories)
+    deterministic["policy_findings"] = [
+        *evaluate_mechanical_track_policy(
+            target,
+            track_policy,
+            repo_root=repo_root,
+            size_record=deterministic["size_policy"].get("result"),
+        ),
+        *source_findings,
+    ]
     deterministic["evidence_requirements"] = inventory_evidence_requirements(
         _learner_surface_texts(target, repo_root=repo_root),
         checks.get("evidence_requirements") if isinstance(checks, Mapping) else None,
@@ -1179,6 +1501,31 @@ def packet_integrity_findings(packet: Mapping[str, Any], *, repo_root: Path = PR
         ):
             raise ReviewProtocolError(
                 "vocabulary_surface_candidates does not match candidate_sha256"
+            )
+        checks = track_policy.get("mechanical_checks")
+        expected_inventories, expected_source_findings = build_review_inventories(
+            expected_materials,
+            family=str(track_policy.get("family") or ""),
+            source_spec=(
+                checks.get("source_traceability")
+                if isinstance(checks, Mapping)
+                else None
+            ),
+        )
+        for inventory_name, expected_inventory in expected_inventories.items():
+            if packet["deterministic"].get(inventory_name) != expected_inventory:
+                failures.append(
+                    f"deterministic {inventory_name} does not match target materials"
+                )
+        actual_source_findings = [
+            finding
+            for finding in packet["deterministic"].get("policy_findings") or []
+            if finding.get("issue_id") == "SOURCE_TRACEABILITY"
+            and finding.get("category") == "source_traceability"
+        ]
+        if actual_source_findings != expected_source_findings:
+            failures.append(
+                "deterministic source traceability findings do not match target materials"
             )
         expected_prompt, expected_paths = assemble_semantic_prompt(
             packet["target"],
@@ -1385,11 +1732,17 @@ def _validate_semantic_finding_ownership(semantic: Mapping[str, Any]) -> None:
         for item in semantic.get("vocabulary_coverage", [])
         if item["finding_id"] is not None
     )
+    owned_finding_ids.update(
+        str(item["finding_id"])
+        for item in semantic.get("source_traceability_coverage", {}).values()
+        if item["finding_id"] is not None
+    )
     orphan_finding_ids = sorted(finding_ids - owned_finding_ids)
     if orphan_finding_ids:
         raise ReviewProtocolError(
             "Every semantic finding must be referenced by a quality dimension, "
-            "claim, learner-evidence, alignment-audit, or vocabulary-coverage entry: "
+            "claim, learner-evidence, alignment-audit, vocabulary-coverage, or "
+            "source-traceability entry: "
             + ", ".join(orphan_finding_ids)
         )
 
@@ -1914,6 +2267,9 @@ def normalize_semantic_result(
     expected_vocabulary_candidates: Mapping[
         str, Sequence[tuple[str, str]]
     ] | None = None,
+    expected_statement_inventory: Mapping[str, Any] | None = None,
+    expected_resource_inventory: Mapping[str, Any] | None = None,
+    expected_source_attribution_inventory: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     _require_exact_keys(
         value,
@@ -1925,6 +2281,8 @@ def normalize_semantic_result(
             "vocabulary_coverage",
             "claim_coverage",
             "claim_ledger",
+            "statement_coverage",
+            "source_traceability_coverage",
             "learner_evidence_ledger",
             "findings",
         },
@@ -2167,10 +2525,22 @@ def normalize_semantic_result(
     raw_claims = value["claim_ledger"]
     if not isinstance(raw_claims, list):
         raise ReviewProtocolError("claim_ledger must be a list")
+    statement_units = {
+        str(unit["id"]): unit
+        for unit in (expected_statement_inventory or {}).get("units") or []
+    }
     claims: list[dict[str, Any]] = []
     claim_ids: set[str] = set()
     claim_statuses = {"supported", "contradicted", "imprecise", "unattested", "unverifiable"}
-    expected_claim_keys = {"id", "claim", "location", "status", "evidence", "finding_id"}
+    expected_claim_keys = {
+        "id",
+        "unit_id",
+        "claim",
+        "location",
+        "status",
+        "evidence",
+        "finding_id",
+    }
     for raw in raw_claims:
         if not isinstance(raw, Mapping):
             raise ReviewProtocolError("claim_ledger entries must be mappings")
@@ -2179,6 +2549,23 @@ def normalize_semantic_result(
         if claim_id in claim_ids:
             raise ReviewProtocolError(f"Duplicate claim id: {claim_id}")
         claim_ids.add(claim_id)
+        unit_id = _nonempty_string(raw["unit_id"], f"unit_id for claim {claim_id}")
+        unit = statement_units.get(unit_id)
+        if unit is None:
+            raise ReviewProtocolError(
+                f"Claim {claim_id} references unknown statement unit {unit_id}"
+            )
+        expected_location = f"{unit['path']}:{unit['line']}"
+        location = _nonempty_string(raw["location"], f"claim location for {claim_id}")
+        if location != expected_location:
+            raise ReviewProtocolError(
+                f"Claim {claim_id} location does not match statement unit {unit_id}"
+            )
+        claim_text = _nonempty_string(raw["claim"], f"claim text for {claim_id}")
+        if not _claim_surface_is_bound(claim_text, str(unit["text"])):
+            raise ReviewProtocolError(
+                f"Claim {claim_id} text is not a verbatim substring of statement unit {unit_id}"
+            )
         claim_status = raw["status"]
         if claim_status not in claim_statuses:
             raise ReviewProtocolError(f"Invalid claim status: {claim_status!r}")
@@ -2192,13 +2579,15 @@ def normalize_semantic_result(
         claims.append(
             {
                 "id": claim_id,
-                "claim": _nonempty_string(raw["claim"], f"claim text for {claim_id}"),
-                "location": _nonempty_string(raw["location"], f"claim location for {claim_id}"),
+                "unit_id": unit_id,
+                "claim": claim_text,
+                "location": location,
                 "status": claim_status,
                 "evidence": _nonempty_string(raw["evidence"], f"claim evidence for {claim_id}"),
                 "finding_id": finding_id,
             }
         )
+    claims_by_id = {claim["id"]: claim for claim in claims}
     actual_checked = sum(claim["status"] != "unverifiable" for claim in claims)
     actual_supported = sum(claim["status"] == "supported" for claim in claims)
     if claims_total != len(claims):
@@ -2215,6 +2604,201 @@ def normalize_semantic_result(
         raise ReviewProtocolError("Complete claim coverage requires every claim to be checked")
     if status == "not_applicable" and (claims_total or claims_checked or claims_supported):
         raise ReviewProtocolError("not_applicable claim coverage requires an empty ledger")
+
+    raw_statement_coverage = value["statement_coverage"]
+    if not isinstance(raw_statement_coverage, Mapping):
+        raise ReviewProtocolError("statement_coverage must be a mapping")
+    if set(raw_statement_coverage) != set(statement_units):
+        raise ReviewProtocolError(
+            "statement_coverage must classify every packet statement unit exactly once"
+        )
+    normalized_statement_coverage: dict[str, dict[str, Any]] = {}
+    covered_claim_ids: set[str] = set()
+    for unit_id, raw_entry in raw_statement_coverage.items():
+        if not isinstance(raw_entry, Mapping):
+            raise ReviewProtocolError("statement_coverage entries must be mappings")
+        _require_exact_keys(
+            raw_entry,
+            {"classification", "claim_ids"},
+            f"statement coverage {unit_id}",
+        )
+        classification = raw_entry["classification"]
+        if classification not in {"claims", "no_checkable_claim"}:
+            raise ReviewProtocolError(
+                f"Invalid statement classification for {unit_id}: {classification!r}"
+            )
+        raw_unit_claim_ids = raw_entry["claim_ids"]
+        if not isinstance(raw_unit_claim_ids, list):
+            raise ReviewProtocolError(
+                f"statement coverage {unit_id} claim_ids must be a list"
+            )
+        unit_claim_ids = [
+            _nonempty_string(item, f"statement coverage {unit_id} claim id")
+            for item in raw_unit_claim_ids
+        ]
+        if len(unit_claim_ids) != len(set(unit_claim_ids)):
+            raise ReviewProtocolError(
+                f"statement coverage {unit_id} repeats a claim id"
+            )
+        if classification == "claims" and not unit_claim_ids:
+            raise ReviewProtocolError(
+                f"statement coverage {unit_id} claims classification requires claim_ids"
+            )
+        if classification == "no_checkable_claim" and unit_claim_ids:
+            raise ReviewProtocolError(
+                f"statement coverage {unit_id} no_checkable_claim requires no claim_ids"
+            )
+        signals = set(statement_units[unit_id].get("signals") or [])
+        if signals.intersection({"universal_quantifier", "source_attribution"}) and (
+            classification != "claims"
+        ):
+            raise ReviewProtocolError(
+                f"Risk-signaled statement unit {unit_id} must be classified as claims"
+            )
+        for claim_id in unit_claim_ids:
+            if claim_id not in claim_ids:
+                raise ReviewProtocolError(
+                    f"statement coverage {unit_id} references unknown claim {claim_id}"
+                )
+            claim = claims_by_id[claim_id]
+            if claim["unit_id"] != unit_id:
+                raise ReviewProtocolError(
+                    f"Claim {claim_id} is assigned to a different statement unit"
+                )
+            if claim_id in covered_claim_ids:
+                raise ReviewProtocolError(
+                    f"Claim {claim_id} is referenced by multiple statement units"
+                )
+            covered_claim_ids.add(claim_id)
+        if "universal_quantifier" in signals and not _claims_preserve_universal_statement(
+            [claims_by_id[claim_id]["claim"] for claim_id in unit_claim_ids],
+            str(statement_units[unit_id]["text"]),
+        ):
+            raise ReviewProtocolError(
+                f"Universal-quantifier statement unit {unit_id} must own a full-statement coverage claim"
+            )
+        normalized_statement_coverage[str(unit_id)] = {
+            "classification": classification,
+            "claim_ids": unit_claim_ids,
+        }
+    if covered_claim_ids != claim_ids:
+        missing = sorted(claim_ids - covered_claim_ids)
+        raise ReviewProtocolError(
+            "Every claim ledger entry must be owned by statement_coverage: "
+            + ", ".join(missing)
+        )
+
+    raw_source_coverage = value["source_traceability_coverage"]
+    if not isinstance(raw_source_coverage, Mapping):
+        raise ReviewProtocolError("source_traceability_coverage must be a mapping")
+    attribution_units = {
+        str(unit["unit_id"]): unit
+        for unit in (expected_source_attribution_inventory or {}).get("units") or []
+    }
+    if set(raw_source_coverage) != set(attribution_units):
+        raise ReviewProtocolError(
+            "source_traceability_coverage must classify every attribution unit exactly once"
+        )
+    resource_ids = {
+        str(resource["id"])
+        for resource in (expected_resource_inventory or {}).get("resources") or []
+    }
+    all_findings = {**external_findings_by_id, **{item["id"]: item for item in findings}}
+    normalized_source_coverage: dict[str, dict[str, Any]] = {}
+    for unit_id, raw_entry in raw_source_coverage.items():
+        if not isinstance(raw_entry, Mapping):
+            raise ReviewProtocolError(
+                "source_traceability_coverage entries must be mappings"
+            )
+        _require_exact_keys(
+            raw_entry,
+            {"status", "resource_ids", "finding_id"},
+            f"source traceability coverage {unit_id}",
+        )
+        source_status = raw_entry["status"]
+        if source_status not in {"MAPPED", "UNMAPPED", "NOT_ATTRIBUTION", "INCOMPLETE"}:
+            raise ReviewProtocolError(
+                f"Invalid source traceability status for {unit_id}: {source_status!r}"
+            )
+        raw_resource_ids = raw_entry["resource_ids"]
+        if not isinstance(raw_resource_ids, list):
+            raise ReviewProtocolError(
+                f"source traceability {unit_id} resource_ids must be a list"
+            )
+        covered_resource_ids = [
+            _nonempty_string(item, f"source traceability {unit_id} resource id")
+            for item in raw_resource_ids
+        ]
+        if len(covered_resource_ids) != len(set(covered_resource_ids)):
+            raise ReviewProtocolError(
+                f"source traceability {unit_id} repeats a resource id"
+            )
+        unknown_resources = sorted(set(covered_resource_ids) - resource_ids)
+        if unknown_resources:
+            raise ReviewProtocolError(
+                f"source traceability {unit_id} references unknown resources: "
+                + ", ".join(unknown_resources)
+            )
+        finding_id = raw_entry["finding_id"]
+        attribution = attribution_units[str(unit_id)]
+        deterministic_matches = set(attribution.get("matched_resource_ids") or [])
+        unmatched_labels = list(attribution.get("unmatched_labels") or [])
+        if source_status == "MAPPED":
+            if not covered_resource_ids or finding_id is not None or unmatched_labels:
+                raise ReviewProtocolError(
+                    f"Mapped source attribution {unit_id} requires resources, no finding, and no unmatched label"
+                )
+            if deterministic_matches and set(covered_resource_ids) != deterministic_matches:
+                raise ReviewProtocolError(
+                    f"Mapped source attribution {unit_id} must preserve deterministic resource matches"
+                )
+        elif source_status == "UNMAPPED":
+            if covered_resource_ids:
+                raise ReviewProtocolError(
+                    f"Unmapped source attribution {unit_id} cannot reference resources"
+                )
+            finding_id = _nonempty_string(
+                finding_id, f"source traceability {unit_id} finding id"
+            )
+            finding = all_findings.get(finding_id)
+            if (
+                finding is None
+                or finding.get("issue_id") != "SOURCE_TRACEABILITY"
+                or finding.get("severity") not in {"blocker", "high", "medium"}
+            ):
+                raise ReviewProtocolError(
+                    f"Unmapped source attribution {unit_id} requires a material SOURCE_TRACEABILITY finding"
+                )
+            if verdict == "PASS":
+                raise ReviewProtocolError(
+                    f"Unmapped source attribution {unit_id} is inconsistent with semantic PASS"
+                )
+        elif source_status == "NOT_ATTRIBUTION":
+            if covered_resource_ids or finding_id is not None:
+                raise ReviewProtocolError(
+                    f"NOT_ATTRIBUTION {unit_id} requires no resources or finding"
+                )
+            if deterministic_matches or unmatched_labels:
+                raise ReviewProtocolError(
+                    f"Packet-detected named source {unit_id} cannot be dismissed as NOT_ATTRIBUTION"
+                )
+        else:
+            if covered_resource_ids:
+                raise ReviewProtocolError(
+                    f"Incomplete source attribution {unit_id} cannot reference resources"
+                )
+            finding_id = _nonempty_string(
+                finding_id, f"source traceability {unit_id} finding id"
+            )
+            if verdict != "INCOMPLETE":
+                raise ReviewProtocolError(
+                    f"Incomplete source attribution {unit_id} requires semantic INCOMPLETE"
+                )
+        normalized_source_coverage[str(unit_id)] = {
+            "status": source_status,
+            "resource_ids": covered_resource_ids,
+            "finding_id": finding_id,
+        }
 
     raw_evidence = value["learner_evidence_ledger"]
     if not isinstance(raw_evidence, list):
@@ -2308,6 +2892,8 @@ def normalize_semantic_result(
             "claims_supported": claims_supported,
         },
         "claim_ledger": claims,
+        "statement_coverage": normalized_statement_coverage,
+        "source_traceability_coverage": normalized_source_coverage,
         "learner_evidence_ledger": evidence_ledger,
         "findings": findings,
     }
@@ -2356,6 +2942,8 @@ def _incomplete_semantic(family: str, error: str) -> dict[str, Any]:
             "claims_supported": 0,
         },
         "claim_ledger": [],
+        "statement_coverage": {},
+        "source_traceability_coverage": {},
         "learner_evidence_ledger": [],
         "findings": [finding],
     }
@@ -2636,6 +3224,179 @@ def _validate_normalized_alignment_vocabulary(
         )
 
 
+def _validate_v6_statement_source_coverage(
+    semantic: Mapping[str, Any],
+    deterministic: Mapping[str, Any],
+    external_findings: Sequence[Mapping[str, Any]],
+) -> None:
+    for name, collection_key in (
+        ("statement_inventory", "units"),
+        ("resource_inventory", "resources"),
+        ("source_attribution_inventory", "units"),
+    ):
+        inventory = deterministic[name]
+        payload = {collection_key: inventory[collection_key]}
+        if inventory["inventory_sha256"] != sha256_text(_stable_json(payload)):
+            raise ReviewProtocolError(f"Stored {name} does not match inventory_sha256")
+
+    semantic_integrity_failure = any(
+        finding.get("issue_id") == "SEMANTIC_RESPONSE_INTEGRITY"
+        for finding in semantic["findings"]
+    )
+    if (
+        semantic["verdict"] == "INCOMPLETE"
+        and semantic_integrity_failure
+        and not semantic["claim_ledger"]
+        and not semantic["statement_coverage"]
+        and not semantic["source_traceability_coverage"]
+    ):
+        return
+
+    statement_units = {
+        str(unit["id"]): unit
+        for unit in deterministic["statement_inventory"]["units"]
+    }
+    coverage = semantic["statement_coverage"]
+    if set(coverage) != set(statement_units):
+        raise ReviewProtocolError(
+            "Stored statement_coverage does not match deterministic statement inventory"
+        )
+    claims = semantic["claim_ledger"]
+    claims_by_id = {str(claim["id"]): claim for claim in claims}
+    if len(claims_by_id) != len(claims):
+        raise ReviewProtocolError("Stored claim ledger repeats a claim id")
+    owned_claim_ids: set[str] = set()
+    for unit_id, entry in coverage.items():
+        unit_claim_ids = [str(claim_id) for claim_id in entry["claim_ids"]]
+        classification = str(entry["classification"])
+        if classification == "claims" and not unit_claim_ids:
+            raise ReviewProtocolError(
+                f"Stored statement coverage {unit_id} claims classification is empty"
+            )
+        if classification == "no_checkable_claim" and unit_claim_ids:
+            raise ReviewProtocolError(
+                f"Stored statement coverage {unit_id} no_checkable_claim owns claims"
+            )
+        signals = set(statement_units[unit_id].get("signals") or [])
+        if signals.intersection({"universal_quantifier", "source_attribution"}) and (
+            classification != "claims"
+        ):
+            raise ReviewProtocolError(
+                f"Stored risk-signaled statement unit {unit_id} is not classified as claims"
+            )
+        if "universal_quantifier" in signals and not _claims_preserve_universal_statement(
+            [
+                claims_by_id[claim_id]["claim"]
+                for claim_id in unit_claim_ids
+                if claim_id in claims_by_id
+            ],
+            str(statement_units[unit_id]["text"]),
+        ):
+            raise ReviewProtocolError(
+                f"Stored universal-quantifier statement unit {unit_id} lacks a full-statement coverage claim"
+            )
+        for claim_id in unit_claim_ids:
+            claim = claims_by_id.get(claim_id)
+            if claim is None or claim["unit_id"] != unit_id:
+                raise ReviewProtocolError(
+                    f"Stored statement coverage {unit_id} references an unknown or foreign claim"
+                )
+            if claim_id in owned_claim_ids:
+                raise ReviewProtocolError(
+                    f"Stored claim {claim_id} has multiple statement owners"
+                )
+            owned_claim_ids.add(claim_id)
+    if owned_claim_ids != set(claims_by_id):
+        raise ReviewProtocolError("Stored claim ledger contains an unowned claim")
+    for claim in claims:
+        unit = statement_units.get(str(claim["unit_id"]))
+        if unit is None or claim["location"] != f"{unit['path']}:{unit['line']}":
+            raise ReviewProtocolError(
+                f"Stored claim {claim['id']} location does not match its statement unit"
+            )
+        if not _claim_surface_is_bound(str(claim["claim"]), str(unit["text"])):
+            raise ReviewProtocolError(
+                f"Stored claim {claim['id']} text is not bound to its statement unit"
+            )
+
+    claim_coverage = semantic["claim_coverage"]
+    actual_checked = sum(claim["status"] != "unverifiable" for claim in claims)
+    actual_supported = sum(claim["status"] == "supported" for claim in claims)
+    if (
+        claim_coverage["claims_total"] != len(claims)
+        or claim_coverage["claims_checked"] != actual_checked
+        or claim_coverage["claims_supported"] != actual_supported
+    ):
+        raise ReviewProtocolError("Stored claim_coverage does not match claim ledger")
+
+    attribution_units = {
+        str(unit["unit_id"]): unit
+        for unit in deterministic["source_attribution_inventory"]["units"]
+    }
+    source_coverage = semantic["source_traceability_coverage"]
+    if set(source_coverage) != set(attribution_units):
+        raise ReviewProtocolError(
+            "Stored source_traceability_coverage does not match attribution inventory"
+        )
+    resource_ids = {
+        str(resource["id"])
+        for resource in deterministic["resource_inventory"]["resources"]
+    }
+    known_findings = {
+        str(finding["id"]): finding
+        for finding in [*external_findings, *semantic["findings"]]
+    }
+    for unit_id, entry in source_coverage.items():
+        status = str(entry["status"])
+        entry_resource_ids = [str(item) for item in entry["resource_ids"]]
+        if set(entry_resource_ids) - resource_ids:
+            raise ReviewProtocolError(
+                f"Stored source traceability {unit_id} references unknown resources"
+            )
+        attribution = attribution_units[unit_id]
+        unmatched = attribution.get("unmatched_labels") or []
+        matches = set(attribution.get("matched_resource_ids") or [])
+        if status == "MAPPED":
+            if (
+                not entry_resource_ids
+                or entry["finding_id"] is not None
+                or unmatched
+                or (matches and set(entry_resource_ids) != matches)
+            ):
+                raise ReviewProtocolError(
+                    f"Stored mapped source attribution {unit_id} is inconsistent"
+                )
+        elif status == "UNMAPPED":
+            finding = known_findings.get(str(entry["finding_id"] or ""))
+            if (
+                entry_resource_ids
+                or finding is None
+                or finding.get("issue_id") != "SOURCE_TRACEABILITY"
+                or finding.get("severity") not in {"blocker", "high", "medium"}
+            ):
+                raise ReviewProtocolError(
+                    f"Stored unmapped source attribution {unit_id} lacks a material finding"
+                )
+            if semantic["verdict"] == "PASS":
+                raise ReviewProtocolError(
+                    f"Stored semantic PASS conflicts with unmapped source {unit_id}"
+                )
+        elif status == "NOT_ATTRIBUTION":
+            if entry_resource_ids or entry["finding_id"] is not None or matches or unmatched:
+                raise ReviewProtocolError(
+                    f"Stored NOT_ATTRIBUTION {unit_id} conflicts with packet evidence"
+                )
+        elif status == "INCOMPLETE":
+            if entry_resource_ids or not entry["finding_id"] or semantic["verdict"] != "INCOMPLETE":
+                raise ReviewProtocolError(
+                    f"Stored incomplete source attribution {unit_id} is inconsistent"
+                )
+        else:
+            raise ReviewProtocolError(
+                f"Stored source traceability {unit_id} has invalid status {status!r}"
+            )
+
+
 def validate_result(
     result: Mapping[str, Any], *, schema_path: Path | None = None, repo_root: Path = PROJECT_ROOT
 ) -> None:
@@ -2650,6 +3411,11 @@ def validate_result(
     schema_version = str(result.get("schema_version") or "")
     scored_versions = {
         "post-build-review.result.v4",
+        "post-build-review.result.v5",
+        CURRENT_RESULT_SCHEMA_VERSION,
+    }
+    alignment_versions = {
+        "post-build-review.result.v5",
         CURRENT_RESULT_SCHEMA_VERSION,
     }
     validated_versions = {"post-build-review.result.v3", *scored_versions}
@@ -2662,13 +3428,17 @@ def validate_result(
         ownership_required=schema_version in scored_versions,
         external_findings=(
             deterministic_findings
-            if schema_version == CURRENT_RESULT_SCHEMA_VERSION
+            if schema_version in alignment_versions
             else ()
         ),
     )
-    if schema_version == CURRENT_RESULT_SCHEMA_VERSION:
+    if schema_version in alignment_versions:
         _validate_normalized_alignment_vocabulary(
             result["semantic"], deterministic_findings
+        )
+    if schema_version == CURRENT_RESULT_SCHEMA_VERSION:
+        _validate_v6_statement_source_coverage(
+            result["semantic"], result["deterministic"], deterministic_findings
         )
     if schema_version in scored_versions:
         expected_minimum_score = minimum_dimension_score(result["semantic"]["quality_dimensions"])
@@ -2739,6 +3509,9 @@ def finalize_review(
                 expected_vocabulary_lemmas,
                 packet["target"]["files"],
                 _packet_vocabulary_candidates(packet),
+                packet["deterministic"].get("statement_inventory"),
+                packet["deterministic"].get("resource_inventory"),
+                packet["deterministic"].get("source_attribution_inventory"),
             )
         except ReviewProtocolError as exc:
             error = str(exc)
@@ -3168,6 +3941,106 @@ def semantic_response_schema(
             "minItems": len(vocabulary_items),
             "maxItems": len(vocabulary_items),
         }
+        statement_units = packet["deterministic"]["statement_inventory"]["units"]
+        statement_ids = [str(unit["id"]) for unit in statement_units]
+        risk_statement_ids = [
+            str(unit["id"])
+            for unit in statement_units
+            if set(unit.get("signals") or []).intersection(
+                {"universal_quantifier", "source_attribution"}
+            )
+        ]
+        statement_coverage_schema: dict[str, Any] = {
+            "type": "object",
+            "propertyNames": {"enum": statement_ids} if statement_ids else False,
+            "additionalProperties": {"$ref": "#/$defs/statementCoverageEntry"},
+            "minProperties": len(statement_units),
+            "maxProperties": len(statement_units),
+        }
+        if risk_statement_ids:
+            statement_coverage_schema["allOf"] = [
+                {
+                    "properties": {
+                        unit_id: {
+                            "properties": {
+                                "classification": {"const": "claims"},
+                                "claim_ids": {"minItems": 1},
+                            }
+                        }
+                    }
+                }
+                for unit_id in risk_statement_ids
+            ]
+        semantic["properties"]["statement_coverage"] = statement_coverage_schema
+        attribution_units = packet["deterministic"]["source_attribution_inventory"][
+            "units"
+        ]
+        source_properties: dict[str, Any] = {}
+        deterministic_findings = _deterministic_findings(packet)
+        for attribution in attribution_units:
+            unit_id = str(attribution["unit_id"])
+            unmatched = set(attribution.get("unmatched_labels") or [])
+            matched = list(attribution.get("matched_resource_ids") or [])
+            if unmatched:
+                unit = next(
+                    item for item in statement_units if str(item["id"]) == unit_id
+                )
+                location = f"{unit['path']}:{unit['line']}"
+                finding_ids = [
+                    str(finding["id"])
+                    for finding in deterministic_findings
+                    if finding.get("issue_id") == "SOURCE_TRACEABILITY"
+                    and finding.get("location") == location
+                    and finding.get("evidence") in unmatched
+                ]
+                source_properties[unit_id] = {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["status", "resource_ids", "finding_id"],
+                    "properties": {
+                        "status": {"const": "UNMAPPED"},
+                        "resource_ids": {"type": "array", "maxItems": 0},
+                        "finding_id": {"enum": finding_ids},
+                    },
+                }
+            else:
+                source_properties[unit_id] = {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["status", "resource_ids", "finding_id"],
+                    "properties": {
+                        "status": {"const": "MAPPED"},
+                        "resource_ids": {
+                            "type": "array",
+                            "prefixItems": [{"const": item} for item in matched],
+                            "items": False,
+                            "minItems": len(matched),
+                            "maxItems": len(matched),
+                        },
+                        "finding_id": {"type": "null"},
+                    },
+                }
+        semantic["properties"]["source_traceability_coverage"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [str(unit["unit_id"]) for unit in attribution_units],
+            "properties": source_properties,
+            "minProperties": len(attribution_units),
+            "maxProperties": len(attribution_units),
+        }
+        claim_definition = definitions["claim"]
+        statement_locations = sorted(
+            {f"{unit['path']}:{unit['line']}" for unit in statement_units}
+        )
+        if statement_ids:
+            claim_definition["properties"]["unit_id"] = {
+                "enum": statement_ids
+            }
+            claim_definition["properties"]["location"] = {
+                "enum": statement_locations
+            }
+        else:
+            semantic["properties"]["claim_ledger"]["maxItems"] = 0
     raw_finding["properties"]["location"] = {
         "oneOf": [{"type": "null"}, _provider_locator_schema(packet)]
     }

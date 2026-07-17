@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.8`
+Semantic prompt version: `6.0.0`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -17,6 +17,28 @@ Review the resolved built module, not an imagined template. Deterministic facts
 and mechanically verifiable track rules are already in the resolved context;
 do not re-score them or negotiate them down. Investigate the residual judgments
 that code cannot decide.
+
+Every module packet includes a hash-bound `statement_inventory`.
+Return exactly one `statement_coverage` entry for every supplied statement ID.
+Classify each statement as `claims` with all of its atomic claim IDs or as
+`no_checkable_claim`. A statement signaled as `universal_quantifier` or
+`source_attribution` is schema-bound to `claims` and cannot be dismissed. Every
+claim-ledger entry must name its owning `unit_id` and use that unit's exact
+packet location. Its `claim` text must be a verbatim contiguous substring of
+that unit after whitespace normalization; never replace the learner's words
+with a safer paraphrase. For a `universal_quantifier` unit, at least one owned
+claim must reproduce the full statement as a coverage anchor; an atomic split
+may accompany it, but a weaker quantifier or bare token cannot replace it. The
+inventory is exhaustive coverage scaffolding, not a claim that every heading
+or instruction is factual.
+
+The packet also includes learner `resource_inventory` and
+`source_attribution_inventory`. Return one `source_traceability_coverage` entry
+for every attribution unit. Preserve deterministic resource matches exactly.
+An attribution with an unmatched named source must be `UNMAPPED`, must reference
+the supplied material `SOURCE_TRACEABILITY` finding, and cannot coexist with
+semantic `PASS`. Never infer that a source is learner-accessible merely because
+the prose names it.
 
 The resolved context may already contain deterministic or track-policy
 findings. Those supplied finding objects already exist outside your semantic
@@ -317,13 +339,27 @@ equal the statuses actually present in that array.
   "claim_ledger": [
     {
       "id": "stable-atomic-claim-id",
-      "claim": "one checkable claim",
+      "unit_id": "exact packet statement ID",
+      "claim": "verbatim contiguous substring of the owning statement",
       "location": "repo-relative path and locator",
       "status": "supported|contradicted|imprecise|unattested|unverifiable",
       "evidence": "attributable source/tool evidence or why it is unverifiable",
       "finding_id": null
     }
   ],
+  "statement_coverage": {
+    "exact-packet-statement-id": {
+      "classification": "claims|no_checkable_claim",
+      "claim_ids": ["stable-atomic-claim-id"]
+    }
+  },
+  "source_traceability_coverage": {
+    "exact-packet-attribution-unit-id": {
+      "status": "MAPPED|UNMAPPED|NOT_ATTRIBUTION|INCOMPLETE",
+      "resource_ids": ["exact-packet-resource-id"],
+      "finding_id": null
+    }
+  },
   "learner_evidence_ledger": [
     {
       "id": "stable-evidence-object-id",
@@ -362,8 +398,8 @@ blocker, and `PASS` cannot reference a material finding. The overall verdict
 must fail closed when any dimension is not `PASS`. Do not repair, clamp,
 downgrade, round, reconcile, or otherwise change a score to fit a band.
 Do not emit an orphan semantic finding: every finding must be owned by a
-dimension, alignment-audit entry, vocabulary-coverage entry, claim-ledger
-entry, or learner-evidence-ledger entry. `vocabulary_coverage` must enumerate
+dimension, alignment-audit entry, vocabulary-coverage entry, claim-ledger,
+source-traceability entry, or learner-evidence-ledger entry. `vocabulary_coverage` must enumerate
 every vocabulary lemma exactly once in source order. `INTEGRATED` requires a
 visible lesson/activity surface and exact line evidence from the content or
 activities target file; a definition or usage example present only in

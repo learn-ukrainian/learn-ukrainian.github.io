@@ -1,6 +1,6 @@
 # Deterministic audit contract
 
-Deterministic contract version: `1.2.0`
+Deterministic contract version: `2.0.0`
 
 The canonical deterministic stage composes, without reimplementing:
 
@@ -28,7 +28,19 @@ interactive evidence. Code records matches, paths, lines, and modalities; the
 semantic reviewer decides whether the learner evidence is usable and
 pedagogically appropriate.
 
-Allowed deterministic skips must remain explicit in the result. Version 1.2.0
+For every module, build a hash-bound statement inventory from every
+learner-visible content, activity, vocabulary, and resource-note statement.
+Record immutable unit IDs, exact paths and lines, text hashes, and conservative
+risk signals for VESUM-backed universal paradigms, including `кожен`/`кожн*`,
+`жоден`/`жодн*`, and declined `усі`/`всі` forms. For seminar modules, separately
+inventory learner resources and every detected named-source attribution, and
+add source-attribution signals to the corresponding statements. A
+configured source alias with no matching learner resource is a material
+`SOURCE_TRACEABILITY` finding. Only curated source aliases are named; an
+attribution context without one uses the fail-closed `<unnamed-source>` label,
+so incidental acronyms do not become spurious source identities.
+
+Allowed deterministic skips must remain explicit in the result. Version 2.0.0
 accepts the read-only omission of MDX regeneration validation, supersedes the
 excluded legacy LLM-QG with the semantic stage, and records network liveness as
 an external advisory. None may disappear silently.

@@ -1,4 +1,4 @@
-catalog_version: 5.0.9
+catalog_version: 6.0.0
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -335,3 +335,33 @@ regressions:
     version_field: review_protocol_version
     input: A raw response uses legacy string locators or omits supports while a provider schema exists only as an optional transport hint.
     expected: Finalization revalidates the exact raw JSON against the packet-bound provider schema before hydration; mismatches become structured INCOMPLETE.
+  - bug_id: claim-count-matched-but-risky-surface-omitted
+    responsible_layer: schema
+    fixed_in_version: 6.0.0
+    version_field: review_protocol_version
+    input: A seminar reviewer reports internally consistent claim counts while omitting learner statements containing every or almost every.
+    expected: Exact packet statement coverage is required; quantifier-signaled units must own a full-statement verbatim coverage claim, so omission, near-to-bare dilution, token-only coverage, or safer substitution is contract-invalid.
+  - bug_id: universal-morphology-missed-risk-signal
+    responsible_layer: deterministic_code
+    fixed_in_version: 2.0.0
+    version_field: deterministic_contract_version
+    input: A learner-facing universal uses VESUM-attested кожен, жоден, усіх/всіх, or their ordinary declined forms rather than the previously matched кожн stem or bare усі/всі.
+    expected: Morphology-aware deterministic signaling forces exact statement coverage and the full-statement claim anchor for every supported paradigm form.
+  - bug_id: core-statement-inventory-disabled-by-seminar-only-v6
+    responsible_layer: deterministic_code
+    fixed_in_version: 2.0.0
+    version_field: deterministic_contract_version
+    input: A core module contains factual claims, but an empty statement inventory makes complete claim coverage impossible.
+    expected: Core and seminar packets both inventory learner statements; core reviewers can bind factual claims to exact statement units.
+  - bug_id: incidental-acronym-became-source-label
+    responsible_layer: track_policy
+    fixed_in_version: 2.0.0
+    version_field: track_policy_version
+    input: A true attribution line contains a mapped source alias plus an unrelated Ukrainian acronym.
+    expected: Only curated source aliases become named labels; unknown attribution contexts use the singular fail-closed unnamed label instead of harvesting every acronym.
+  - bug_id: named-source-passed-without-learner-resource
+    responsible_layer: track_policy
+    fixed_in_version: 2.0.0
+    version_field: track_policy_version
+    input: Learner prose attributes a fact to ЦДАМЛМ while resources.yaml contains no matching archive resource.
+    expected: Deterministic source attribution inventory emits material SOURCE_TRACEABILITY and the exact source ledger cannot return MAPPED or PASS.

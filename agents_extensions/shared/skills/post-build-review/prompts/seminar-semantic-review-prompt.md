@@ -1,6 +1,6 @@
 # Seminar semantic post-build review prompt
 
-Semantic prompt version: `5.0.8`
+Semantic prompt version: `6.0.0`
 
 Apply this only to FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, or RUTH,
 after the common prompt.
@@ -13,6 +13,14 @@ etymologies, quotations,
 attributions, causal claims presented as fact, image/rights claims, and source
 claims. Verify every item. Derive total, checked, and supported counts from the
 ledger. Any unchecked item makes claim coverage incomplete.
+
+Start from the packet's complete statement inventory rather than deciding which
+lines to notice. Classify every statement ID exactly once. Split multiple facts
+in one unit into separate claim IDs, and bind every claim back to the same unit.
+Universal and near-universal quantifiers such as **кожен**, **майже кожен**,
+**усі**, **завжди**, and **ніколи** require evidence for the quantified scope,
+not merely evidence that the general topic occurred. An article discussing many
+letters does not support “every letter” or “almost every letter.”
 
 Classify every ledger item as supported, contradicted, imprecise, unattested,
 or unverifiable and give attributable evidence. Do not emit aggregate counts
