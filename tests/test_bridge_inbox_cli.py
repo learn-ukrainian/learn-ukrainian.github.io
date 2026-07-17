@@ -564,6 +564,7 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
         "grok",
         "grok-build",
         "grok-hermes",
+        "kimi",
         "deepseek",
         "qwen",
         "cursor",
@@ -925,9 +926,9 @@ def test_ask_claude_literal_content_is_not_treated_as_stdin(monkeypatch):
 
 def test_recipient_choices_cover_every_valid_agent():
     # Regression: inbox --for / send --to / ack-all hardcoded {claude,gemini,codex},
-    # silently second-classing grok-build, grok, agy, and cursor.
+    # silently second-classing grok-build, grok, kimi, agy, and cursor.
     parser = _cli._build_parser()
-    for agent in ("grok-build", "grok", "agy", "cursor"):
+    for agent in ("grok-build", "grok", "kimi", "agy", "cursor"):
         assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
         assert parser.parse_args(["ack-all", agent]).agent == agent
         assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent

@@ -261,6 +261,10 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> No
         from ._grok_build import process_for_grok_build
 
         process_for_grok_build(message_id, new_session, no_timeout, review)
+    elif target == "kimi":
+        from ._kimi import process_for_kimi
+
+        process_for_kimi(message_id, new_session, no_timeout, review)
     elif target == "cursor":
         from ._cursor import process_for_cursor
 

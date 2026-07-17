@@ -80,6 +80,7 @@ VALID_AGENTS = (
     "grok",  # canonical native grok CLI seat
     "grok-build",  # PERMANENT alias → grok (trailers, inbox, dispatch)
     "grok-hermes",  # demoted Hermes/OpenRouter Grok path
+    "kimi",
     "deepseek",
     "qwen",
     "cursor",

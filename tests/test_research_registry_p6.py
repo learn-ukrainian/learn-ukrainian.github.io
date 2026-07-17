@@ -97,7 +97,7 @@ def test_orchestrator_dispatch_duty_reaches_every_agent_entry_point() -> None:
 
     scripts_doc = (root / "docs/SCRIPTS.md").read_text(encoding="utf-8")
     assert (
-        "--agent {codex|claude|agy|grok|grok-build|grok-hermes|deepseek|cursor}"
+        "--agent {codex|claude|agy|grok|grok-build|grok-hermes|kimi|deepseek|cursor}"
         in scripts_doc
     )
     assert "--worktree .worktrees/<agent>-<task-id>" not in scripts_doc

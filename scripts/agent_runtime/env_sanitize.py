@@ -108,6 +108,10 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "qwen": {
         "HERMES_HOME",
     },
+    "kimi": {
+        # Native CLI executable override; it is a path, never a credential.
+        "KIMI_CODE_BIN",
+    },
 }
 
 
