@@ -1147,7 +1147,16 @@ def derive_changed_paths_and_patch(
     # Raw name-status with renames (null-separated).
     ns_bytes = _run_git_bytes_capped(
         git,
-        ["diff", "--name-status", "-z", "--find-renames", base_sha, head_sha],
+        [
+            "diff",
+            "--name-status",
+            "-z",
+            "--find-renames",
+            "--find-copies",
+            "--find-copies-harder",
+            base_sha,
+            head_sha,
+        ],
         cwd=root,
         max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
@@ -1171,8 +1180,18 @@ def derive_changed_paths_and_patch(
             old_p = _validate_rel_path(tokens[i])
             new_p = _validate_rel_path(tokens[i + 1])
             i += 2
-            entries.append({"status": status, "old_path": old_p, "path": new_p, "kind": "rename"})
-            paths.extend([old_p, new_p])
+            entries.append(
+                {
+                    "status": status,
+                    "old_path": old_p,
+                    "path": new_p,
+                    "kind": "rename" if code == "R" else "copy",
+                }
+            )
+            if code == "R":
+                paths.extend([old_p, new_p])
+            else:
+                paths.append(new_p)
         else:
             if i >= len(tokens):
                 raise ReviewSnapshotError("malformed_name_status")
@@ -1184,7 +1203,16 @@ def derive_changed_paths_and_patch(
     # Detect changed specials via raw diff.
     raw_bytes = _run_git_bytes_capped(
         git,
-        ["diff", "--raw", "-z", "--find-renames", base_sha, head_sha],
+        [
+            "diff",
+            "--raw",
+            "-z",
+            "--find-renames",
+            "--find-copies",
+            "--find-copies-harder",
+            base_sha,
+            head_sha,
+        ],
         cwd=root,
         max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
@@ -1220,7 +1248,17 @@ def derive_changed_paths_and_patch(
     # Full patch including binary markers (no truncation).
     patch_bytes = _run_git_bytes_capped(
         git,
-        ["diff", "--binary", "--find-renames", "--no-ext-diff", "--no-textconv", base_sha, head_sha],
+        [
+            "diff",
+            "--binary",
+            "--find-renames",
+            "--find-copies",
+            "--find-copies-harder",
+            "--no-ext-diff",
+            "--no-textconv",
+            base_sha,
+            head_sha,
+        ],
         cwd=root,
         max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
@@ -1822,7 +1860,7 @@ def materialize_review_snapshot(
             status = str(entry.get("status") or "")
             if status.startswith("D") and entry.get("path"):
                 remove_paths.add(str(entry["path"]))
-            if entry.get("old_path"):
+            if status.startswith("R") and entry.get("old_path"):
                 remove_paths.add(str(entry["old_path"]))
         deleted_records = _capture_deleted_records(
             git,

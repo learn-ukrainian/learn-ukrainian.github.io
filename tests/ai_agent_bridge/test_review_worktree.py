@@ -17,7 +17,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from ai_agent_bridge import _agy, _claude, _cli, _codex, _grok_build
 from ai_agent_bridge import _review_worktree as review_worktree
 
-from scripts.review.snapshot import ReviewSnapshot, _SnapshotState
+from scripts.review.snapshot import (
+    ReviewSnapshot,
+    _SnapshotState,
+    cleanup_snapshot_state,
+    materialize_review_snapshot,
+)
 
 
 def _write_fake_bundle(root: Path) -> None:
@@ -644,6 +649,53 @@ def test_remote_changed_lines_keep_copy_source_and_destination_separate(tmp_path
     )
 
     assert changed == {"source.txt": frozenset({10}), "copy.txt": frozenset()}
+
+
+def test_remote_snapshot_detects_real_copy_and_preserves_source(tmp_path: Path) -> None:
+    repo = tmp_path / "copy-target"
+    repo.mkdir()
+    env = review_worktree._isolation_env(repo)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    original = "".join(f"stable line {number}\n" for number in range(1, 31))
+    (repo / "source.txt").write_text(original, encoding="utf-8")
+    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    base = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+    (repo / "copy.txt").write_text(original, encoding="utf-8")
+    subprocess.run(["git", "add", "copy.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "copy"], cwd=repo, check=True, env=env)
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+
+    snapshot, state = materialize_review_snapshot(
+        repo,
+        mode="branch",
+        base_sha=base,
+        head_sha=head,
+        temp_parent=tmp_path / "snapshots",
+    )
+    try:
+        manifest = json.loads(
+            (snapshot.path / ".review-bundle" / "manifest.json").read_text(encoding="utf-8")
+        )
+        assert manifest["name_status"] == [
+            {"kind": "copy", "old_path": "source.txt", "path": "copy.txt", "status": "C100"}
+        ]
+        assert snapshot.changed_paths == ("copy.txt",)
+        assert (snapshot.path / "source.txt").read_text(encoding="utf-8") == original
+        assert (snapshot.path / "copy.txt").read_text(encoding="utf-8") == original
+        git_bin = review_worktree.resolve_external_executable("git", reject_root=repo)
+        changed = review_worktree._changed_line_numbers_for_snapshot(
+            snapshot, repo_root=repo, git_bin=git_bin
+        )
+        assert changed == {"copy.txt": frozenset()}
+    finally:
+        cleanup_snapshot_state(state)
 
 
 def test_remove_review_root_unlinks_reviewer_symlinks_without_following(
