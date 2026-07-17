@@ -117,7 +117,7 @@ Valid track IDs:
 
     # Determine curriculum path
     script_dir = Path(__file__).parent
-    curriculum_path = script_dir.parent / 'curriculum' / 'l2-uk-en'
+    curriculum_path = script_dir.parent.parent / 'curriculum' / 'l2-uk-en'
 
     if not curriculum_path.exists():
         print(f"Error: Curriculum path not found: {curriculum_path}", file=sys.stderr)
