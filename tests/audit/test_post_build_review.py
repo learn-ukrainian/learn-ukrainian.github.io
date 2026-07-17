@@ -1071,6 +1071,30 @@ def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
         Draft202012Validator(schema).validate(false_exact)
 
 
+def test_provider_schema_excludes_vocabulary_file_from_integration_evidence() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    choices = schema["$defs"]["vocabularyEvidence"]["oneOf"]
+
+    allowed_paths = {
+        choice["properties"]["location"]["const"] for choice in choices
+    }
+    target_files = packet["target"]["files"]
+    assert allowed_paths == {target_files["content"], target_files["activities"]}
+    assert target_files["vocabulary"] not in allowed_paths
+
+    semantic = _passing_semantic(packet)
+    item = next(
+        entry
+        for entry in semantic["vocabulary_coverage"]
+        if entry["status"] == "INTEGRATED"
+    )
+    item["evidence"][0]["location"] = target_files["vocabulary"]
+    item["evidence"][0]["line"] = 1
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(semantic)
+
+
 def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
@@ -2335,8 +2359,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.5"
-    assert len(rows) == 52
+    assert catalog["catalog_version"] == "5.0.6"
+    assert len(rows) == 53
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2368,6 +2392,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.2",
         "5.0.3",
         "5.0.4",
+        "5.0.5",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

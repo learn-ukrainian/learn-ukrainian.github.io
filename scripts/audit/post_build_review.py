@@ -2596,7 +2596,11 @@ def _packet_vocabulary_lemmas(packet: Mapping[str, Any]) -> list[str]:
     return lemmas
 
 
-def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]:
+def _provider_locator_schema(
+    packet: Mapping[str, Any] | None,
+    *,
+    allowed_paths: set[str] | None = None,
+) -> dict[str, Any]:
     """Return a compact provider path/line schema bound to packet snapshots."""
     if packet is None:
         return {
@@ -2615,6 +2619,8 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
     }
     choices: list[dict[str, Any]] = []
     for path, material in _packet_materials_by_path(packet).items():
+        if allowed_paths is not None and path not in allowed_paths:
+            continue
         lines = material["lines"]
         eligible_lines = [
             entry["line"]
@@ -2642,8 +2648,10 @@ def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]
 
 def _provider_dimension_evidence_schema(
     packet: Mapping[str, Any] | None,
+    *,
+    allowed_paths: set[str] | None = None,
 ) -> dict[str, Any]:
-    locator = _provider_locator_schema(packet)
+    locator = _provider_locator_schema(packet, allowed_paths=allowed_paths)
     choices = locator.get("oneOf")
     if isinstance(choices, list):
         enriched = []
@@ -2656,6 +2664,26 @@ def _provider_dimension_evidence_schema(
     locator["required"].append("supports")
     locator["properties"]["supports"] = {"type": "string", "minLength": 8}
     return locator
+
+
+def _provider_vocabulary_evidence_schema(
+    packet: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Limit integration evidence to learner-visible lesson and activity files."""
+    if packet is None:
+        return _provider_dimension_evidence_schema(packet)
+    target = packet.get("target")
+    files = target.get("files") if isinstance(target, Mapping) else None
+    if not isinstance(files, Mapping):
+        raise ReviewProtocolError("Semantic packet target must contain files")
+    allowed_paths = {
+        str(files[name]) for name in ("content", "activities") if name in files
+    }
+    if not allowed_paths:
+        raise ReviewProtocolError(
+            "Semantic packet has no learner content or activities for vocabulary evidence"
+        )
+    return _provider_dimension_evidence_schema(packet, allowed_paths=allowed_paths)
 
 
 def _case_insensitive_literal_pattern(value: str) -> str:
@@ -2676,7 +2704,7 @@ def _provider_vocabulary_coverage_item_schema(lemma: str | None = None) -> dict[
     required = ["lemma", "status", "surface", "verification", "evidence", "finding_id"]
     evidence = {
         "type": "array",
-        "items": {"$ref": "#/$defs/dimensionEvidence"},
+        "items": {"$ref": "#/$defs/vocabularyEvidence"},
     }
     shared = {
         "lemma": {"const": lemma} if lemma is not None else {"$ref": "#/$defs/nonempty"},
@@ -2872,6 +2900,7 @@ def semantic_response_schema(
     raw_finding["required"] = [key for key in raw_finding["required"] if key != "source"]
     raw_finding["properties"].pop("source")
     definitions["dimensionEvidence"] = _provider_dimension_evidence_schema(packet)
+    definitions["vocabularyEvidence"] = _provider_vocabulary_evidence_schema(packet)
     definitions["vocabularyCoverageItem"] = _provider_vocabulary_coverage_item_schema()
     if packet is not None:
         vocabulary_items = [

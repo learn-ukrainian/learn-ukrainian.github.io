@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.4`
+Semantic prompt version: `5.0.5`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -359,5 +359,7 @@ Do not emit an orphan semantic finding: every finding must be owned by a
 dimension, alignment-audit entry, vocabulary-coverage entry, claim-ledger
 entry, or learner-evidence-ledger entry. `vocabulary_coverage` must enumerate
 every vocabulary lemma exactly once in source order. `INTEGRATED` requires a
-visible lesson/activity surface and exact line evidence; `MISSING` and
+visible lesson/activity surface and exact line evidence from the content or
+activities target file; a definition or usage example present only in
+`vocabulary.yaml` is not learner integration. `MISSING` and
 `INCOMPLETE` require a `VOCABULARY_INTEGRATION` finding and no surface evidence.
