@@ -31,6 +31,13 @@ When working with Ukrainian text (plans, content, reviews, code comments), follo
    | **Etymology** | `search_esum` (ЕСУМ, vols 1–6, А–Я) | `search_grinchenko_1907` — **attestation, not origin**; it witnesses pre-Soviet usage, it does not explain where a word came from | Горох (goroh.pp.ua) |
    | **Is it heritage or Russianism?** | `search_heritage` (merges Грінченко + ЕСУМ + slovnyk.me + Антоненко evidence) | — | — |
 
+   **Procedure — run every check in this order, no steps skipped:**
+
+   1. **Map the question to its facet row** above. Two facets, two rows — run both.
+   2. **Call that row's Primary MCP tool first.** Never memory, never web-first: a remembered answer is a guess (§2).
+   3. **A miss is not evidence of absence.** On an empty or thin result, escalate along the row as documented: the **Then** tool, then a full-text sweep of the relevant source (`search_text` / `search_sources`). Escalate unless the row states the miss *is* the verdict — VESUM's empty result is the one such case, and only for form existence.
+   4. **Only after row escalation is exhausted:** the §7 fallback URL, and the claim ships flagged `<!-- VERIFY -->`. Silence from the tools is never authoritative — not for existence, not for absence.
+
    Four things the table encodes that the old single chain got wrong — read them before using it:
 
    - **VESUM does not carry stress.** `verify_word` returns lemma, POS and morphological tags; there is no наголос in the result. Asking VESUM for stress and getting silence is not evidence of anything. Stress evidence is СУМ-20's accented headword.
