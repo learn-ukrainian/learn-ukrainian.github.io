@@ -1,0 +1,21 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-68906
+  type: external
+  title: Мороз Валентин Якович
+  url: https://esu.com.ua/article-68906
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-68906
+    license: Авторське право ЕСУ; використання тільки як зовнішнього посилання
+    attribution: Ю. Д. Зайцев / Енциклопедія Сучасної України
+- id: S2
+  file: https://museum.khpg.org/1113917542
+  type: external
+  title: МОРОЗ ВАЛЕНТИН ЯКОВИЧ
+  url: https://museum.khpg.org/1113917542
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113917542
+    license: Права на повторне використання не заявлено; тільки зовнішнє посилання
+    attribution: І. Рапп / Віртуальний музей КХПГ

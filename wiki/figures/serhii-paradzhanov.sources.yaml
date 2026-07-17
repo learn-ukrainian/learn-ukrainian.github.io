@@ -1,0 +1,31 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-887082
+  type: external
+  title: Параджанов Сергій Йосипович
+  url: https://esu.com.ua/article-887082
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-887082
+    license: Авторське право ЕСУ; використання тільки як зовнішнього посилання
+    attribution: С. В. Тримбач / Енциклопедія Сучасної України
+- id: S2
+  file: https://dovzhenkocentre.org/top-100/tini-zabutyh-predkiv/
+  type: external
+  title: Тіні забутих предків
+  url: https://dovzhenkocentre.org/top-100/tini-zabutyh-predkiv/
+  rights:
+    basis: external-link
+    evidence_url: https://dovzhenkocentre.org/top-100/tini-zabutyh-predkiv/
+    license: Всі права захищені; використання тільки як зовнішнього посилання
+    attribution: Довженко-Центр
+- id: S3
+  file: https://uinp.gov.ua/pres-centr/novyny/nackomisiya-reabilituvala-sergiya-paradzhanova
+  type: external
+  title: Нацкомісія реабілітувала Сергія Параджанова
+  url: https://uinp.gov.ua/pres-centr/novyny/nackomisiya-reabilituvala-sergiya-paradzhanova
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/pres-centr/novyny/nackomisiya-reabilituvala-sergiya-paradzhanova
+    license: Офіційна сторінка УІНП; використання тільки як зовнішнього посилання
+    attribution: Український інститут національної пам'яті

@@ -1,0 +1,13 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Юрій Литвин
+  - Литвин ЕСУ
+  - Литвин КХПГ
+  - Українська Гельсінська група Литвин
+direct_sources:
+  - https://esu.com.ua/article-55093
+  - https://museum.khpg.org/1121786042
+rag_chunks: []
+rag_literary: []
+warning: Пакет прямих джерел; обидва читання є зовнішніми посиланнями й точно відповідають плану.

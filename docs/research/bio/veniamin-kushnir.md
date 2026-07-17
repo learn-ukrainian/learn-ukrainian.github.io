@@ -1,140 +1,215 @@
-# Кушнір Веніамін Володимирович — Research Dossier
+# Веніамін Володимирович Кушнір — дослідницьке досьє
 
 **Slug:** `veniamin-kushnir`
-**Block:** E
-**Tier:** 1
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Шістдесятництво, образотворче мистецтво і культурний спротив
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Кушнір Веніамін Володимирович.
-- **Pseudonyms / aliases:** Веніамін Кушнір; Veniamin Kushnir; Benjamin/Veniamyn Kushnir in occasional English-facing references.
-- **Born:** 1926-01-07 | с. Купин, Кам'янець-Подільський повіт / нині Городоцький район Хмельницької області | Ukrainian SSR, USSR. ESU gives Купин; UARTLIB gives Рудка, Хмельницька область. This place-name discrepancy is flagged for Phase 2 verification.
-- **Died:** 1992-06-19 | Київ | independent Ukraine. ESU and Ukrainian Wikipedia search result agree.
-- **Family / education key facts:** Painter, not poet in retrieved Tier 1/2 sources. Graduated from the Lviv Institute of Applied and Decorative Art in 1953; teachers included Йосип Бокшай, Іван Гуторов, and Роман Сельський. Worked at the Dnipropetrovsk Art School in 1953-1955 and moved to Kyiv in 1956. Sources: ESU, UARTLIB, Ukrainian Wikipedia search via MCP.
+- **Канонічне ім'я:** Веніамін Володимирович Кушнір [S1].
+- **Народився:** 7 січня 1926 року [S1].
+- **Місце народження:** ЕСУ подає село Купин, нині Хмельницька область [S1];
+  Бібліотека українського мистецтва — село Рудка Хмельницької області [S2].
+- **Помер:** 19 червня 1992 року в Києві [S1].
+- **Фах:** живописець; член Спілки художників України від 1954 року [S1].
+- **Громадська роль:** учасник правозахисного руху, один з організаторів
+  Клубу творчої молоді «Сучасник», керівник секції художників і поширювач
+  самвидаву [S1, S2].
 
-## 2. Oppression mechanism
+Місце народження є відкритою джерельною розбіжністю. Вища за політикою
+авторитетності ЕСУ подає Купин, а спеціалізована Бібліотека українського
+мистецтва — Рудку [S1, S2]. Досьє використовує Купин як робочу форму, але не
+виправляє S2 мовчки й не вигадує пояснення. Для остаточного розв'язання
+потрібні метричний запис, особова справа або каталог із посиланням на
+первинний документ.
 
-- **What happened:** Ideological harassment, surveillance pressure, professional marginalization, and narrowing of exhibition/public activity.
-- **When:** Early 1960s activity in the Club of Creative Youth; 1970s harassment and persecution by authorities, per ESU; broader closure of "Сучасник" after the 1963 ideological campaign, per textbook retrieval.
-- **By whom:** Soviet party-ideological authorities and the KGB security environment. Personal case number: source not found.
-- **Document references:** ESU says he distributed and reproduced самвидав and in the 1970s suffered "цькування і переслідування з боку влади." It does not provide a file number. The grade 11 textbook source describes the state closure of "Сучасник" and other шістдесятники cells after ideological attacks. Exact KGB file: source not found.
-- **Mechanism specifics:** Кушнір's load-bearing oppression mechanism is cultural and professional rather than a retrieved prison biography. ESU identifies him as a participant in the rights movement, organizer of the Club of Creative Youth "Сучасник," head of the artists' section, and distributor/copier of самвидав. UARTLIB corroborates him as an active шістдесятник artist and says the repressive wave of the next decade forced him into long isolation. Grade 11 textbook retrieval supplies the broader mechanism: free artistic activity outside socialist realism was treated as dangerous; clubs were closed; those who did not abandon civic positions entered the machinery of repression.
+1953 року Кушнір закінчив Львівський інститут прикладного та декоративного
+мистецтва, де навчався у Йосипа Бокшая, Івана Гуторова й Романа Сельського
+[S1, S2]. У 1953–1955 роках викладав живопис у Дніпропетровському художньому
+училищі, а 1956 року переїхав до Києва [S1]. S2 підтверджує дворічну
+викладацьку працю, членство у Спілці художників і київський період [S2]. Це
+дає точний професійний маршрут між Львовом, Дніпром і Києвом.
 
-This dossier therefore avoids the false precision of a missing criminal case. The specific claim that can be taught is: his art and civic labor were pushed away from public cultural space by the Soviet system because he belonged to the шістдесятники network and helped circulate forbidden texts.
+## 2. Механізм переслідування
 
-- **What survived / what was destroyed:** His paintings, posthumous exhibitions, and the memory work of family/institutions survived. What was damaged was his public presence during life, especially in the 1970s, and access to a full institutional art career.
+Кушнір не є документованим у прийнятих джерелах в'язнем або підсудним. ЕСУ
+не подає арешту, судового вироку чи номера справи [S1]. Його механізм
+переслідування був передусім ідеологічним та професійним: у 1970-х роках він
+зазнав цькувань і переслідувань з боку влади [S1]. Бібліотека українського
+мистецтва пише про пильний контроль радянської влади й тривале усамітнення
+митця після активної праці 1960-х [S2].
 
-## 3. Major works
+Джерела пов'язують ризик із громадською діяльністю. На початку 1960-х Кушнір
+долучився до Клубу творчої молоді «Сучасник», став одним з організаторів та
+очолював художню секцію [S1, S2]. ЕСУ називає його контакти з Аллою Горською,
+Галиною Зубченко, Галиною Севрук, Іваном Світличним та Опанасом Заливахою
+[S1]. Вона також прямо фіксує розповсюдження й тиражування самвидаву [S1].
+Такі дії виходили за межі дозволеного державою мистецького обміну й робили
+художника видимим для системи контролю.
 
-- `1953` — *Б. Хмельницький із військом*, painting, listed by ESU.
-- `1953` — *Універсали Б. Хмельницького*, painting, listed by ESU.
-- `1957` — *З поля*, painting.
-- `1960` — *Плотогони*, painting; one of the large Kyiv-period canvases also noted by UARTLIB.
-- `1961` — *Трембітарі*, painting.
-- `1961` — *Червоні маки*, painting.
-- `1963` — *Дума про О. Довбуша*, painting.
-- `1964` — *Кобза*, painting.
-- `1968` — *Апостол Правди*, painting; title signals Shevchenko-centered civic memory.
-- `1968` — *Та не однаково мені...*, painting; Shevchenko allusion.
-- `1972` — *Зустріч на чужині (Леся Українка)*, painting.
-- `1975` — *Скорботна мати*, painting.
-- `1979` — *Скерцо. Зґвалтована Україна*, painting; explicitly political title in ESU list.
-- `1980` — *Трембіти сумують*, painting.
-- `1991` — *Автопортрет зі свічкою*, painting.
+Водночас із цих фактів не можна вивести конкретний наказ про заборону
+виставки, звільнення з посади або особисту справу КДБ. Попередній драфт
+стверджував закриття виставок без прямого документа. Цю деталь вилучено.
+Перевірене формулювання вужче: влада переслідувала й цькувала Кушніра,
+контроль сприяв тривалому усамітненню, але точні адміністративні кроки в S1 і
+S2 не названі.
 
-## 4. Primary-source quotes
+Таке звуження не применшує репресивного середовища. Воно показує різницю між
+кримінальним вироком і професійним витісненням. Радянська система контролювала
+виставкові інституції, спілки й публічний простір, однак у цьому конкретному
+досьє загальний контекст не замінює документа про особисту долю. Біографія
+Кушніра вчить говорити про тиск точно, без приписування йому чужих арештів або
+епізодів з біографій інших шістдесятників.
 
-Direct recorded speech by Кушнір in Tier 1/2 retrieved sources: source not found. ESU, UARTLIB, KPI, Boryviter search, MCP search, and the NAS PDF on шістдесятники supplied biography, work titles, and institutional context, but not two verified first-person statements.
+## 3. Основні роботи
 
-Primary artefact text that can still serve curriculum planning:
+ЕСУ подає широкий перелік станкового живопису й монументально-декоративних
+праць [S1]. Для хронологічної опори відібрано:
 
-> "Та не однаково мені..."
+- **1953** — «Б. Хмельницький із військом» [S1].
+- **1953** — «Універсали Б. Хмельницького» [S1].
+- **1957** — «З поля» [S1].
+- **1960** — «Плотогони» [S1, S2].
+- **1961** — «Трембітарі» й «Червоні маки» [S1, S2].
+- **1963** — «Дума про О. Довбуша» [S1].
+- **1964** — «Кобза» [S1].
+- **1967** — «Рапсоди» [S1].
+- **1968** — «Скерцо», «Апостол Правди», «Та не однаково мені…» [S1].
+- **1971** — «Ковалі» [S1].
+- **1972** — «Зустріч на чужині (Леся Українка)», «Матері», «Коні» [S1].
+- **1975** — «Скорботна мати» й «Наречена» [S1].
+- **1979** — «Скерцо. Зґвалтована Україна» [S1].
+- **1980** — «Трембіти сумують» [S1].
+- **1982** — «О. Довбуш» [S1].
+- **1986** — «Деснянська сіножать» [S1].
+- **1991** — «Автопортрет зі свічкою», «Прощальна мелодія», «Г. Сковорода»
+  [S1].
 
-Source: artwork title, ESU list of major works, 1968. The title quotes Shevchenko's civic lexicon and is useful for connecting painting to literature.
+Назви показують інтерес до історії, народної культури, пейзажу, портрета й
+українського літературного канону. Однак назва не дає права вигадувати
+композицію, кольори або авторський задум конкретної картини. Для такого
+аналізу потрібна репродукція, каталог і опис фахівця. S2 згадує київські
+полотна «Лісоруби», «Плотогони» та «Червоні маки», але «Лісорубів» немає в
+переліку основних творів S1; це не помилка, а різний ступінь відбору [S1, S2].
 
-> "Скерцо. Зґвалтована Україна"
+ЕСУ характеризує творчість Кушніра як національну за змістом і сучасну за
+формою, називає епічні полотна, пейзажі, портрети й натюрморти та виділяє
+образ української матері [S1]. Це мистецтвознавча оцінка автора
+енциклопедичної статті, а не дослівне самовизначення Кушніра. S2 також
+наголошує на портретах, пейзажах і натюрмортах, філософському осмисленні
+людини та романтичному баченні рідної землі [S2].
 
-Source: artwork title, ESU list of major works, 1979. This is not recorded speech, but it is primary title evidence for how national injury enters his visual language.
+## 4. Первинний голос і межі цитування
 
-Phase 2 should search archival exhibition catalogues and the 2017 album *Веніамін Кушнір* for verified first-person quotes before lesson writing.
+Відкриті S1 і S2 не містять інтерв'ю, листа або авторського виступу Кушніра з
+точним локатором. Тому досьє не подає дослівних висловлювань художника. Назви
+«Та не однаково мені…» та «Скерцо. Зґвалтована Україна» є назвами творів,
+підтвердженими ЕСУ [S1], а не цитатами з його мовлення.
 
-## 5. Language register
+Шевченківська алюзія в назві твору є перевіреним міжмистецьким зв'язком, але
+не доводить, який саме візуальний сюжет або політичний висновок заклав автор.
+Так само назва «Зґвалтована Україна» фіксує жорстку національну метафору, але
+без репродукції й каталожного опису не можна переказувати полотно. Майбутнє
+навчальне цитування потребує архівного інтерв'ю або альбому 2017 року з
+точними сторінками та перевіреними правами.
 
-- **Register:** Visual-symbolic, civic, folk-historical; biographical prose around him is art-historical and rights-movement language.
-- **CEFR readiness for full reading:** B1-B2 for adapted biography; B2-C1 for art-critical readings.
-- **Lexicon notes:** `живописець`, `шістдесятник`, `самвидав`, `правозахисний рух`, `цькування`, `переслідування`, `монументально-декоративне мистецтво`, `пейзаж`, `натюрморт`.
-- **Stylistic features:** Paintings use historical, maternal, landscape, and Shevchenko-coded titles. For L2 learners, titles can be introduced before dense art criticism.
+## 5. Мова й педагогічний регістр
 
-## 6. Contested points
+- **Регістр:** мистецтвознавча біографія, каталог творів, правозахисна
+  хронологія.
+- **Рівень читання:** B2 для біографічної довідки; C1 для аналізу взаємодії
+  мистецтва, самвидаву й радянського інституційного тиску.
+- **Ключові слова:** `живописець`, `станковий живопис`, `монументально-
+  декоративне мистецтво`, `портрет`, `натюрморт`, `самвидав`, `цькування`,
+  `усамітнення`, `репродукція`.
+- **Ризик:** не називати кожен народний мотив автоматично політичним протестом.
 
-- **What's debated in modern UA scholarship:** The exact geography of birth in public sources; how visible to make his самвидав work compared with his painting; how to place him among better-known шістдесятники artists without reducing him to a supporting name.
-- **What gets simplified in popular memory:** The prompt label "poet" is not supported by retrieved ESU/UARTLIB/MCP sources. He should be taught as a painter, teacher, and rights-movement participant.
-- **Where modern Russian disinformation attacks them:** The common Soviet move was to frame Ukrainian cultural autonomy and non-socialist-realist aesthetics as nationalism or formalism. Use that as context, not as neutral vocabulary.
-- **Other-perspective considerations:** His art draws on Ukrainian historical and folk motifs. Avoid treating folk sources as decorative ethnicity only; in the шістдесятники context, they also functioned as resistance to Russified Soviet cultural uniformity.
+Точна мова відрізняє джерельну характеристику від висновку укладача. Можна
+сказати, що ЕСУ називає творчість національною за змістом [S1], але не можна
+приписувати Кушнірові невідомий маніфест. Можна назвати роботу й рік, але не
+описувати кольорову гаму без доступу до зображення.
 
-## 7. Cross-track links
+## 6. Спірні точки й антиагіографічна рамка
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
+- **Місце народження:** Купин у S1, Рудка у S2. Робоча перевага надана ЕСУ,
+  розбіжність збережено.
+- **Межа між мистецтвом і правозахистом:** участь у клубі й поширення
+  самвидаву підтверджені [S1, S2], однак не кожне полотно є прямою політичною
+  декларацією.
+- **Механізм репресій:** джерела підтверджують переслідування, цькування,
+  контроль і усамітнення, але не арешт або конкретний заборонний наказ.
+- **Мережа шістдесятників:** знайомства з Горською, Севрук, Світличним,
+  Заливахою та іншими не дозволяють переносити на Кушніра їхні твори або
+  епізоди переслідування.
+- **Посмертна рецепція:** ЕСУ перелічує персональні виставки в Києві й Каневі
+  після смерті та музеї, де зберігаються роботи [S1]. Ці факти показують
+  повернення спадщини до інституцій, але не доводять повноти каталогу.
+
+Деколонізоване читання повертає українські історичні, фольклорні та
+шевченківські мотиви до сучасної мистецької мови, не розчиняючи їх у
+«загальнорадянській» естетиці. Антиагіографічна межа вимагає не називати
+кожну картину спротивом тільки через тему й не перебільшувати відомий
+репресивний механізм.
+
+## 7. Міждисциплінарні зв'язки
+
+- **Наявний план HIST, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/hist/shistdesiatnyky.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
+- **Наявні плани ISTORIO, перевірені через `test -e`:**
   - `curriculum/l2-uk-en/plans/istorio/pislya-stalina-shistdesiatnyky.yaml`
   - `curriculum/l2-uk-en/plans/istorio/kulturna-rezystentsiia.yaml`
-- **Existing C1 modules (VERIFIED present via `test -e`):**
+- **Наявний план C1, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/c1/obrazotvorche-mystetstvo-2.yaml`
-- **Existing LIT modules (VERIFIED present via `test -e`):**
+- **Наявний план LIT, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/lit/yevhen-hutsalo-shistdesiatnyky.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Алла Горська, Віктор Зарецький, Галина Севрук, Опанас Заливаха, Іван Світличний.
-  - Visual-art task on Shevchenko quotations in painting titles: *Та не однаково мені...*.
-- **Potential LIT additions surfaced by this research:**
-  - Pair his Shevchenko-titled works with a B2/C1 lesson on civic quotation in visual culture.
+- **Кандидатні зв'язки:** Клуб творчої молоді «Сучасник»; Алла Горська,
+  Галина Севрук й Опанас Заливаха як окремі біографії; шевченківська цитата у
+  візуальній культурі; самвидав як спільна практика митців і письменників.
 
-## 8. Naming-canonical
+## 8. Канонічне іменування
 
-- **Slug:** `veniamin-kushnir`
-- **EN canonical (BGN/PCGN 2010):** Veniamin Kushnir
-- **UA canonical (with patronymic):** Кушнір Веніамін Володимирович
-- **Aliases (track these for `aliases:` YAML field):** Веніамін Кушнір; Veniamyn Kushnir; Benjamin Kushnir
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Veniamin Kushnir as a Russian-language default context; Вениамин Кушнир (FORBIDDEN except archival/Russian-source metadata)
+- **Slug:** `veniamin-kushnir`.
+- **Канонічна українська форма:** Веніамін Володимирович Кушнір.
+- **Канонічна англійська форма:** Veniamin Volodymyrovych Kushnir.
+- **Пошукові варіанти:** Veniamyn Kushnir, Benjamin Kushnir.
+- **Російські форми:** не використовуються як основні в українському тексті;
+  допускаються лише в точній метаінформації іншомовного джерела.
 
-## 9. Image candidates
+## 9. Зображення і права
 
-- **Best PD/CC portrait:** ESU portrait at https://esu.com.ua/article-52533 | rights require verification before reuse.
-- **Backup candidates:** UARTLIB artist page image | https://uartlib.org/ukrayinski-hudozhniki/kushnir-veniamin/ | rights unclear; KPI exhibition page for "Стежками України" | https://kpi.ua/640-13 | rights unclear.
-- **If no PD/CC portrait exists:** use a rights-cleared image from a museum catalogue or request permission from estate/institution; otherwise use a text-only bio card.
-- **Era-appropriate context image:** Club of Creative Youth group photo or Museum of Sixtiers context image, only with verified license.
+Обидві сторінки містять ілюстрації, але не подають індивідуально перевіреної
+сторінки портретного файла з автором, походженням і ліцензією PD або CC.
+Умови Бібліотеки українського мистецтва дозволяють використання матеріалів за
+наявності гіперпосилання [S2], проте цей пакет не переносить ані текст, ані
+репродукції: усі читання лишаються зовнішніми посиланнями. Для портрета
+обрано `portrait_fallback: text-only`, бо загальні умови сайту не встановлюють
+окремо авторство й ліцензію конкретної фотографії.
 
-## 10. Sources used
+## 10. Використані джерела
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Кушнір Веніамін Володимирович" | https://esu.com.ua/article-52533 | accessed 2026-05-30.
+**S1 — Tier 1, авторитетна енциклопедія:**
 
-**Tier 2 (institutional):**
-- Бібліотека українського мистецтва, "Кушнір Веніамін" | https://uartlib.org/ukrayinski-hudozhniki/kushnir-veniamin/ | accessed 2026-05-30.
-- КПІ ім. Ігоря Сікорського, "Мальовничими стежками України" | https://kpi.ua/640-13 | accessed 2026-05-30.
+- Т. А. Лящук. «Кушнір Веніамін Володимирович». Енциклопедія Сучасної
+  України. https://esu.com.ua/article-52533. Переглянуто 17 липня 2026 року.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia search for "Кушнір Веніамін Володимирович" via `mcp__sources.query_wikipedia` | accessed 2026-05-30.
+**S2 — Tier 2, спеціалізована українська онлайн-бібліотека:**
 
-**Tier 4 (modern scholarly post-1991):**
-- NAS PDF retrieval mentioning Кушнір and the KTYM artists' section | https://files.nas.gov.ua/PublicMessages/Documents/0/2021/08/210826111923150-6270.pdf | accessed 2026-05-30.
-- Grade 11 history textbook retrievals via `mcp__sources.search_text` on Клуб творчої молоді and шістдесятники | accessed 2026-05-30.
+- «Веніамін Кушнір». Бібліотека українського мистецтва.
+  https://uartlib.org/ukrayinski-hudozhniki/kushnir-veniamin/. Переглянуто
+  17 липня 2026 року.
 
-**Tier 5 (general web):**
-- Boryviter biography page located by web search but not used for unsupported facts where T1/T2 sufficed.
+**Первинні документи:** відкритих особових справ, листів, інтерв'ю чи
+репресивних наказів у прийнятому пакеті немає. Назви картин є первинними
+метаданими творів, але не дозволом відтворювати зображення чи приписувати
+авторові висловлювання.
 
-**Primary-source documents accessed:**
-- ESU-listed artwork titles. First-person primary quotes: source not found in retrieved sources.
+## Деколонізаційна самоперевірка
 
----
-
-## Decolonization self-check
-
-- [x] Prompt role mismatch corrected rather than repeated
-- [x] No fabricated arrest/case number
-- [x] Soviet labels treated as repression vocabulary, not neutral fact
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to forbidden aliases
+- [x] Художника не названо поетом і не наділено чужою біографією.
+- [x] Розбіжність щодо місця народження збережено.
+- [x] Переслідування описано без вигаданого арешту чи наказу.
+- [x] Мистецьку інтерпретацію відокремлено від перевірених метаданих.
+- [x] Неперевірені цитати не додано.
+- [x] Портрет і репродукції не використано без індивідуальних прав.

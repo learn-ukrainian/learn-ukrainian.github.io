@@ -1,123 +1,218 @@
-# Параджанов Сергій Йосипович — Research Dossier
+# Сергій Йосипович Параджанов — дослідницьке досьє
 
 **Slug:** `serhii-paradzhanov`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Шістдесятництво, кіно і культурний спротив
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Параджанов Сергій Йосипович; ESU gives the birth name as Саркіс Параджанян. [S1]
-- **Pseudonyms / aliases:** Sergei Parajanov, Serhii Paradzhanov, Sarkis Parajaniants, Sarkis Paradzhanian.
-- **Born:** 1924-01-09 | Tbilisi, Georgian SSR, USSR. ESU and Ukrainian Wikipedia via `mcp__sources.query_wikipedia` agree on date and city. [S1] [S4]
-- **Died:** 1990-07-20 | Yerevan, Armenian SSR, USSR. ESU and Ukrainian Wikipedia agree. [S1] [S4]
-- **Family / education key facts:** Armenian family in Tbilisi; studied at VGIK under the Dovzhenko/Savchenko line of Soviet film education; worked for years in Kyiv and became a defining figure of Ukrainian poetic cinema. [S1] [S3]
+- **Канонічне ім'я українською:** Сергій Йосипович Параджанов.
+- **Ім'я при народженні:** Саркіс Параджанян, за ЕСУ [S1].
+- **Народився:** 9 січня 1924 року в Тифлісі, нині Тбілісі [S1].
+- **Помер:** 20 липня 1990 року в Єревані [S1].
+- **Фахові ролі:** кінорежисер, сценарист і художник [S1].
 
-## 2. Oppression mechanism
+Біографію Параджанова не можна втиснути в одну національну етикетку. ЕСУ
+подає його ім'я при народженні й тбіліське походження, навчання у Тбілісі та
+Москві, працю на Київській кіностудії, а згодом на «Вірменфільмі» й
+«Грузія-фільмі» [S1]. Вірменське родинне середовище, грузинське місто
+дитинства, київський професійний період і робота з вірменським та грузинським
+кіноматеріалом не суперечать одне одному. Вони становлять різні, документовані
+частини життя.
 
-- **What happened:** Surveillance/cultural repression, arrest, criminal conviction under sexual/pornography charges used against a politically and artistically nonconforming filmmaker, imprisonment in a labor camp, and professional bans.
-- **When:** Heightened pressure in the late 1960s; arrested in Kyiv in December 1973; sentenced to five years; released in 1977 after international pressure. [S1] [S4] [S7]
-- **By whom:** Soviet security/court/camp system.
-- **Document references:** ESU and retrieved scholarly/web sources describe the 1973 arrest and imprisonment but the full court-case number was not retrieved. Source not found for stable archival ID.
-- **Mechanism specifics:** Paradzhanov's Ukrainian breakthrough, *Тіні забутих предків*, made Hutsul language and folk aesthetics central to modern cinema. Klassiki describes the film as grounded in Hutsul traditions and part of Ukrainian poetic cinema; the movement was formally radical and politically subversive. [S3]
+До інституту кінематографії Параджанов навчався на будівельному факультеті
+Тбіліського інституту залізничного транспорту, у Тбіліській консерваторії та
+хореографічній студії при оперному театрі. 1945 року продовжив освіту в Москві,
+а 1952 року закінчив Всесоюзний інститут кінематографії, майстерню Ігоря
+Савченка [S1]. Від 1952 року працював у Києві асистентом режисера, а потім
+режисером кіностудії, що від 1957 року носила ім'я Олександра Довженка [S1].
+Ця хронологія важлива: український період був тривалою професійною працею, а
+не випадковим приїздом заради одного фільму.
 
-Soviet pressure used sexual-criminal charges, but retrieved sources also link the case to his nonconformist art, contacts with Ukrainian cultural circles, and perceived Ukrainian-national cultural influence. ESU is the base biographical authority; web retrievals around the Parajanov affair and Ukrainian rehabilitation confirm that Ukraine later treated the prosecution as politically motivated. [S1] [S7]
+## 2. Механізм переслідування
 
-- **What survived / what was destroyed:** He produced drawings, collages, and objects while imprisoned, but the camp and bans interrupted film projects and damaged decades of possible work. His film and collage legacy survived in Ukrainian, Armenian, Georgian, and international memory. [S1] [S4]
+Суперечність із радянською культурною системою визрівала до арешту. ЕСУ
+зазначає протести режисера проти жорсткої регламентації творчої діяльності на
+Київській кіностудії [S1]. Після київської прем'єри «Тіней забутих предків»
+4 вересня 1965 року, коли в кінотеатрі «Україна» пролунали протести проти
+арештів української інтелігенції, його ім'я ще тісніше пов'язували з
+протестним культурним середовищем [S1]. Довженко-Центр також називає прем'єру
+початком важливої дисидентської історії фільму [S2].
 
-## 3. Major works
+Інституційний тиск діяв через заборону роботи. Зйомки «Київських фресок» 1965
+року зупинили після проб, а сценарій «Інтермецо» за новелою Михайла
+Коцюбинського не дістав дозволу на постановку [S1]. «Колір гранату», створений
+на вірменському матеріалі, вийшов в обмежений прокат не в авторській версії,
+а після перероблення й перемонтажу [S1]. Отже, цензура впливала не лише на
+публічні заяви митця, а й на саму можливість завершувати й показувати фільми.
 
-- `1954` — early film work after VGIK; ESU treats pre-1965 work as formative but less central. [S1]
-- `1961` — *Українська рапсодія*, film. [S4]
-- `1965` — *Тіні забутих предків*, based on Mykhailo Kotsiubynskyi, with Ivan Chendei, Yurii Illienko, Myroslav Skoryk, and Ivan Mykolaichuk. [S3]
-- `1969` — *Колір граната*, Armenian film, internationally central to his reputation. [S4]
-- `1973-1977` — prison drawings, collages, miniature works; many later held in the Yerevan museum according to retrieved Wikipedia summary. [S4]
-- `1985` — *Легенда про Сурамську фортецю*, post-release film.
-- `1988` — *Ашик-Керіб*, late film.
-- `1991` — Shevchenko National Prize posthumously, per Ukrainian Wikipedia/ESU context. [S1] [S4]
-- `2023-2024` — Ukrainian rehabilitation/national recognition reported by retrieved web sources; use only with date-specific citation. [S7]
+17 грудня 1973 року Параджанова заарештували, а 25 квітня 1974 року за
+сфабрикованим обвинуваченням засудили до п'яти років ув'язнення [S1]. У
+відкритому пакеті немає номера справи, повного вироку або точного переліку
+статей, тому досьє не реконструює юридичні деталі з переказів. Важливо також
+не робити сексуалізовану мову радянського обвинувачення частиною ідентичності
+режисера. Перевіреним мінімумом є дата арешту, дата вироку, п'ятирічний строк,
+оцінка обвинувачення як сфабрикованого в ЕСУ та пізніше рішення про
+реабілітацію [S1, S3].
 
-## 4. Primary-source quotes
+1977 року режисера звільнили після клопотань радянських і закордонних митців,
+але йому не дозволили мешкати в Києві, тому він жив у Тбілісі [S1]. У лютому
+1982 року його знову заарештували в Тбілісі, цього разу за нібито спробу
+підкупу приймальної комісії для вступу племінника; в жовтні 1983 року суд
+призначив умовний строк і звільнив його в залі суду [S1]. Цю другу справу не
+можна автоматично ототожнювати з вироком 1974 року, але вона показує, що
+державний контроль не завершився після табору.
 
-> "Я вірменин, народжений у Тбілісі"
+Український інститут національної пам'яті повідомив 9 січня 2024 року, що
+Національна комісія з реабілітації реабілітувала Параджанова. За повідомленням
+УІНП, комісія проаналізувала кримінальну справу та інші архівні документи й
+виявила політичний мотив переслідування та засудження [S3]. Це офіційне
+рішення дає точнішу правову опору, ніж загальна формула про «незручного
+митця». Водночас сторінка S3 не публікує повного комплексу справи, тому досьє
+не приписує документам невідомих формулювань.
 
-Source: Paradzhanov self-description widely retrieved in Ukrainian cultural web coverage; use as identity quote with edition/interview verification before learner publication. [S6]
+## 3. Основні роботи
 
-> "Хай живе Україна!"
+- **1952** — короткометражний «Андрієш», дипломна робота [S1].
+- **1954** — повнометражний «Андрієш», у співавторстві з Яковом Базеляном [S1].
+- **1957** — документальні стрічки «Наталія Ужвій», «Думка», «Золоті руки» [S1].
+- **1958** — «Перший парубок» [S1].
+- **1961** — «Українська рапсодія» [S1].
+- **1962** — «Квітка на камені» [S1].
+- **1964** — «Тіні забутих предків», сценарій Івана Чендея і Сергія
+  Параджанова, оператор Юрій Іллєнко, Кіностудія імені Олександра Довженка
+  [S2]. Київська прем'єра відбулася 1965 року [S1].
+- **1965** — незавершені «Київські фрески»; змонтовані проби збереглися [S1].
+- **1968** — «Колір гранату», первісна назва «Саят-Нова» [S1].
+- **1984** — «Легенда про Сурамську фортецю» [S1].
+- **1988** — «Ашик-Керіб» [S1].
+- **1990** — робота над автобіографічною «Сповіддю», не завершена через смерть
+  режисера [S1].
 
-Source: quoted in Ukrainian history portal retrieval as from his last Ukrainian interview. Short, direct, but should be tied to the retrieved portal and verified against the interview recording in Phase 2. [S7]
+Окремий пласт становлять сценарії, колажі, малюнки, асамбляжі й предметні
+композиції. ЕСУ описує карнавальність, театральність, постійну зміну ролей та
+інтерес до міфопоетичного відтворення світу як риси різних практик митця [S1].
+Тому фільмографія потрібна як хронологічна опора, але не вичерпує доробку.
 
-## 5. Language register
+## 4. Первинний голос і межі цитування
 
-- **Register:** Film-poetic, multilingual, visual/collage, performative interview speech.
-- **CEFR readiness for full reading:** B2 for short interviews; C1-C2 for film criticism around his work.
-- **Lexicon notes:** `поетичне кіно`, `гуцульський`, `колаж`, `монтаж`, `андеграунд`, `реабілітація`.
-- **Stylistic features:** Visual symbolism, ritualized folk detail, tableau composition, multilingual identity performance, and aphoristic self-description.
+У цьому пакеті немає дослівних висловлювань Параджанова. S1, S2 і S3 є
+відкритими українськомовними інституційними сторінками, але жодна з них не
+надає перевіреного тексту інтерв'ю з точним первинним локатором. Відомі
+афоризми, самоописи національної належності та фінальні побажання Україні не
+відтворюються. Їхня популярність не замінює назви запису, дати, архівної
+одиниці або сторінки видання.
 
-## 6. Contested points
+Назви фільмів є перевіреними назвами творів, а не цитатами з мовлення
+режисера. Сторінка Довженко-Центру дозволяє встановити документальну
+ідентичність «Тіней забутих предків»: 1964 рік, Українська РСР, Кіностудія
+імені Олександра Довженка, 98 хвилин, режисер Сергій Параджанов, сценаристи
+Іван Чендей і Сергій Параджанов, оператор Юрій Іллєнко [S2]. Саме ці метадані,
+а не неперевірені репліки, становлять безпечний матеріал для читання.
 
-- **What's debated in modern UA scholarship:** His belonging is transnational: Armenian by family, born in Georgia, artistically central to Ukrainian poetic cinema, later important to Armenian cinema. A Ukrainian bio module should avoid appropriation and state all affiliations.
-- **What gets simplified in popular memory:** He can be reduced to *Тіні забутих предків* or to the prison case. ESU and film sources show a broader body: features, scripts, collages, drawings, and performance persona.
-- **Where modern Russian disinformation attacks them:** Soviet/Russian framing can use criminal charges to erase the cultural-political nature of repression. Curriculum should name the charges but not let them define the artist's identity.
-- **Polish / Jewish / other-perspective considerations:** Retrieved sources did not surface a specific Polish or Jewish issue. Armenian, Georgian, and Ukrainian perspectives are mandatory.
-- **Pedagogical caution:** Discuss sexuality-related charges carefully: the prosecution history is part of Soviet coercion, but classroom materials should avoid sensationalism.
-- **Source-balance note:** ESU is the main authority for identity, dates, and work list. Klassiki is used for the film-language and Ukrainian poetic cinema frame, while the rehabilitation/interview web sources are leads that need direct document or recording checks before becoming curriculum text. That distinction matters because Paradzhanov is often surrounded by memorable but poorly sourced aphorisms.
-- **Risk note:** The dossier deliberately keeps "Sergei Parajanov" as an international alias while using `serhii-paradzhanov` for the Ukrainian-track slug. The figure's transnational identity should be taught as a fact, not resolved into a single ownership claim.
+## 5. Мова й педагогічний регістр
 
-## 7. Cross-track links
+- **Регістр джерел:** енциклопедичний, кінокаталожний і офіційно-правовий.
+- **Рівень читання:** B2 для коротких каталогових відомостей; C1 для аналізу
+  естетики, цензури та багатокультурної належності.
+- **Ключова лексика:** `кінорежисер`, `сценарист`, `екранізація`, `монтаж`,
+  `міфопоетика`, `цензура`, `сфабриковане обвинувачення`, `реабілітація`.
+- **Методична межа:** називати джерело кожного часового й правового твердження,
+  не перетворювати мистецький аналіз на вигадану психологію автора.
 
-- **Existing C1/cinema module (VERIFIED present via `test -e`):**
+Різні роки біля «Тіней забутих предків» не є помилкою, якщо їх пояснити.
+Довженко-Центр дає 1964 рік створення [S2], а ЕСУ називає київську прем'єру
+4 вересня 1965 року [S1]. Відповідно, коректні формули — «фільм 1964 року» і
+«прем'єра 1965 року», а не змішування цих подій в одну непевну дату.
+
+## 6. Спірні точки й антиагіографічна рамка
+
+- **Культурна належність.** Параджанов працював у кількох культурних і
+  виробничих середовищах. Український курс має виразно назвати київську працю
+  й український фільм, не стираючи вірменського та грузинського вимірів [S1,
+  S2].
+- **Репресивна справа.** Офіційна реабілітація підтверджує політичний мотив
+  переслідування [S3]. Вона не дає права вигадувати номер справи, цитати з
+  вироку чи непублічні деталі.
+- **Авторство фільму.** Режисерська роль Параджанова центральна, але точні
+  метадані S2 також називають сценариста Івана Чендея, оператора Юрія Іллєнка
+  й акторський склад. Колективна природа кіно не зменшує авторства режисера.
+- **Пам'ять після смерті.** Посмертні звання, премії, пам'ятники й фестивалі
+  засвідчують рецепцію [S1], але не виправляють втрачений через цензуру та
+  ув'язнення робочий час.
+- **Міф про одного шедевра.** «Тіні забутих предків» є поворотною подією для
+  української культури, за Довженко-Центром [S2], проте ранні стрічки,
+  «Колір гранату», пізні грузинські фільми та образотворчий доробок не мають
+  зникати з біографії.
+
+Деколонізована рамка не розчиняє режисера в безнаціональному «радянському
+мистецтві», бо так зникають Київ, українська студія, Коцюбинський, гуцульський
+світ і протестна прем'єра. Вона також не оголошує всю творчість українською
+всупереч вірменським і грузинським роботам. Найточніша оповідь показує, де,
+коли й з ким створено кожен фільм.
+
+## 7. Міждисциплінарні зв'язки
+
+- **Наявний план C1, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/c1/ukrainske-kino.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio links to Ivan Drach, Yurii Illienko, Ivan Mykolaichuk, Mykhailo Kotsiubynskyi, Hutsul culture, Armenian cinema, and Ukrainian poetic cinema.
-- **Potential LIT additions surfaced by this research:**
-  - Pair *Тіні забутих предків* film clips with Kotsiubynskyi prose excerpts at B2-C1.
-  - A visual-literacy task can compare Hutsul cultural vocabulary in the film with the original prose setting, while noting which details come from cinema rather than Kotsiubynskyi's text.
+- **Кандидатні зв'язки, а не твердження про наявні модулі:**
+  - Михайло Коцюбинський і літературна основа «Тіней забутих предків».
+  - Іван Чендей, Юрій Іллєнко, Іван Миколайчук і Мирослав Скорик як окремі
+    творчі траєкторії всередині українського кіно.
+  - Клуби й мережі шістдесятників, арешти української інтелігенції 1965 року.
+  - Вірменське й грузинське кіно як самостійні контексти пізнішої роботи.
 
-## 8. Naming-canonical
+## 8. Канонічне іменування
 
-- **Slug:** `serhii-paradzhanov`
-- **EN canonical (BGN/PCGN 2010):** Serhii Paradzhanov for Ukrainian track; Sergei Parajanov as international film-history alias.
-- **UA canonical (with patronymic):** Параджанов Сергій Йосипович
-- **Aliases (track these for `aliases:` YAML field):** Sergei Parajanov, Serhii Paradzhanov, Sarkis Paradzhanian, Sarkis Parajaniants.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Sergei Iosifovich Paradzhanov as default Ukrainian-track form (FORBIDDEN except bibliography/source metadata).
+- **Slug:** `serhii-paradzhanov`.
+- **Канонічна українська форма:** Сергій Йосипович Параджанов.
+- **Канонічна англійська форма для українського треку:** Serhii Paradzhanov.
+- **Ідентифікована форма при народженні:** Саркіс Параджанян [S1].
+- **Міжнародні варіанти для пошуку:** Sergei Parajanov, Sergei Paradzhanov.
+- **Російська форма з по батькові:** не використовується як основне ім'я в
+  українському тексті; можлива лише як буквальна метаінформація іншомовного
+  джерела.
 
-## 9. Image candidates
+## 9. Зображення і права
 
-- **Best PD/CC portrait:** Wikimedia Commons category for Sergei Parajanov; verify specific image license.
-- **Backup candidates:** Sergei Parajanov Museum images; rights not established.
-- **If no PD/CC portrait exists:** Use rights-cleared still from a public-domain/licensed context or a licensed image of a Paradzhanov collage.
-- **Era-appropriate context image:** Licensed still from *Тіні забутих предків* or a Ukrainian poetic cinema poster.
+ЕСУ містить фотоілюстрації, Довженко-Центр — кадри й монтажні матеріали, а УІНП
+— ілюстрацію до новини. Жодна з відкритих сторінок не є окремою сторінкою
+файла з доведеними автором, походженням і ліцензією PD або CC. Позначка «всі
+права захищені» на сторінці Довженко-Центру додатково не дозволяє переносити
+кадри до курсу [S2]. Тому обрано `portrait_fallback: text-only`. Наявність
+зображення на авторитетному сайті підтверджує лише його використання тим
+сайтом, а не право проєкту на повторну публікацію.
 
-## 10. Sources used
+## 10. Використані джерела
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Параджанов Сергій Йосипович" | https://esu.com.ua/article-887082 | accessed 2026-05-30
+**S1 — Tier 1, авторитетна енциклопедія:**
 
-**Tier 2 (institutional):**
-- Klassiki, "Shadows of Forgotten Ancestors" | https://films.klassiki.online/shadows-of-forgotten-ancestors | accessed 2026-05-30
+- С. В. Тримбач. «Параджанов Сергій Йосипович». Енциклопедія Сучасної
+  України. https://esu.com.ua/article-887082. Переглянуто 17 липня 2026 року.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Параджанов Сергій Йосипович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+**S2 — Tier 2, національна кіноархівна інституція:**
 
-**Tier 4 (modern scholarly post-1991):**
-- Iris / University of Cagliari repository, "New perspectives on the Parajanov affair..." | https://iris.unica.it/handle/11584/326731 | accessed 2026-05-30
+- Довженко-Центр. «Тіні забутих предків».
+  https://dovzhenkocentre.org/top-100/tini-zabutyh-predkiv/. Переглянуто
+  17 липня 2026 року.
 
-**Tier 5 (general web):**
-- Kyiv Post, "Works of Director Parajanov Sparked Revival of Ukrainian Art Traditions" | https://www.kyivpost.com/post/11534 | accessed 2026-05-30
-- PortalHistoryUA, "Сергій Параджанов" | https://portalhistoryua.com/personality/sergij-paradzhanov/ | accessed 2026-05-30
+**S3 — Tier 2, офіційна інституція пам'яті:**
 
-**Primary-source documents accessed:**
-- Short interview/self-description quotes through retrieved web sources. Full trial file: source not found.
+- Український інститут національної пам'яті. «Нацкомісія реабілітувала Сергія
+  Параджанова». https://uinp.gov.ua/pres-centr/novyny/nackomisiya-reabilituvala-sergiya-paradzhanova.
+  Переглянуто 17 липня 2026 року.
 
----
+**Первинні документи:** кримінальну справу й архівні документи аналізувала
+Національна комісія, за повідомленням S3, але їхні повні тексти не оприлюднені
+в цьому пакеті. Дослівні цитати з них не використовуються.
 
-## Decolonization self-check
+## Деколонізаційна самоперевірка
 
-- [x] Armenian/Georgian/Ukrainian affiliations all named
-- [x] Soviet charges contextualized, not sensationalized
-- [x] Existing path verified
-- [x] No fabricated case ID
-- [x] Russian-imperial forms confined to naming metadata
+- [x] Український, вірменський і грузинський контексти розрізнено.
+- [x] Фільм не відірвано від української студії, літературної основи й команди.
+- [x] Радянське обвинувачення не перетворено на ідентичність митця.
+- [x] Політичний мотив переслідування прив'язано до офіційної реабілітації.
+- [x] Номер справи й неперевірені цитати не вигадано.
+- [x] Портрет не використано без індивідуально доведеної ліцензії.

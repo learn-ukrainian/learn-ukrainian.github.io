@@ -1,0 +1,21 @@
+sources:
+- id: S1
+  file: https://esu.com.ua/article-64046
+  type: external
+  title: Марченко Валерій Веніамінович
+  url: https://esu.com.ua/article-64046
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-64046
+    license: Авторське право ЕСУ; використання тільки як зовнішнього посилання
+    attribution: Енциклопедія Сучасної України
+- id: S2
+  file: https://museum.khpg.org/1113916697
+  type: external
+  title: МАРЧЕНКО ВАЛЕРІЙ ВЕНІАМІНОВИЧ
+  url: https://museum.khpg.org/1113916697
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113916697
+    license: Права на повторне використання не заявлено; тільки зовнішнє посилання
+    attribution: Ніна Марченко / Віртуальний музей КХПГ

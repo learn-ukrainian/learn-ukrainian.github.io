@@ -1,123 +1,208 @@
-# Юрій Тимонович Литвин — Research Dossier
+# Юрій Тимонович Литвин — дослідницьке досьє
 
 **Slug:** `yurii-lytvyn`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Українська Гельсінська група, табірне письмо і правозахист
+**Рівень підготовки:** 3
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Юрій Тимонович Литвин. ЕСУ metadata labels the entry "Тимофійович," but the ЕСУ article lead itself, KHPG, and the Ukrainian Literary Encyclopedia corpus give "Тимонович"; this dossier follows the cross-source "Тимонович" form and flags the metadata discrepancy <!-- VERIFY -->. [S1] [S2] [S3] [S8]
-- **Pseudonyms / aliases:** Yurii Lytvyn; Yuriy Litvin; Юрій Литвин. Forbidden Russian-imperial form for body prose: `Юрий Тимонович Литвин`. [S1] [S3]
-- **Born:** 26 November 1934, с. Ксаверівка, Vasylkiv district, Kyiv oblast, Ukrainian SSR. KHPG and the Ukrainian Literary Encyclopedia corpus agree. [S1] [S2]
-- **Died:** 5 September 1984, Kuchino / Chusovoy district, Perm oblast, RSFSR; his remains were reburied in Kyiv on 19 November 1989. [S1] [S2] [S3]
-- **Family / education key facts:** KHPG says he was born into a family of rural teachers; his father served at the front and later with the Kovpak partisan detachment, dying of wounds in 1944; Lytvyn later moved with his mother to Barakhty. [S1]
+- **Робоча канонічна форма:** Юрій Тимонович Литвин [S1, S2].
+- **Розбіжність у метаданих:** заголовок і поле імені на сторінці ЕСУ дають
+  `Тимофійович`, тоді як текст статті — `Тимонович`; КХПГ також уживає
+  `Тимонович` [S1, S2].
+- **Народився:** 26 листопада 1934 року в селі Ксаверівка на Київщині [S1].
+- **Помер:** 5 вересня 1984 року в місті Чусовому, нині Пермський край
+  Російської Федерації [S1].
+- **Перепохований:** 19 листопада 1989 року в Києві [S1].
+- **Ролі:** учасник правозахисного руху, поет і публіцист; КХПГ також називає
+  його письменником і членом Української Гельсінської групи [S1, S2].
 
-Литвин was a poet, prose writer, journalist, publicist, Ukrainian Helsinki Group member, and political prisoner. His biography is a sequence of Soviet prosecutions that culminated in death in special-regime custody the same year as Oleksa Tykhy, Valerii Marchenko, and Vasyl Stus. [S1] [S2] [S6]
+Розбіжність у формі по батькові не приховується й не розв'язується здогадом.
+ЕСУ суперечить сама собі між заголовковими метаданими та першим реченням
+статті [S1]. Оскільки форма `Тимонович` збігається в основному тексті ЕСУ й у
+профілі КХПГ, вона є робочою для плану й статті, але варіант `Тимофійович`
+лишається в пошукових метаданих. Це приклад того, як канонічне іменування має
+спиратися на явну джерельну примітку, а не на мовну інтуїцію.
 
-## 2. Oppression mechanism
+ЕСУ повідомляє, що батько Литвина під час Другої світової війни воював у
+партизанському з'єднанні Сидора Ковпака й 1944 року загинув на фронті [S1].
+КХПГ публікує нарис Василя Овсієнка «Любов. Добро. Свобода (Юрій Литвин)»
+[S2]. Це спогад співв'язня й дослідника дисидентського руху, а не безсторонній
+судово-медичний звіт. Він особливо важливий для табірної пам'яті, але кожна
+його інтерпретація повинна лишатися під авторством Овсієнка.
 
-- **What happened:** repeated imprisonment, confiscation of writings, UHG-linked persecution, special-regime imprisonment, and death in custody.
-- **When:** the Ukrainian Literary Encyclopedia corpus reports a fabricated conviction in 1953 after protest against local authorities, then four more imprisonments for so-called slanders against the Soviet order; KHPG reports he joined the Ukrainian Helsinki Group in June 1978 at Oksana Meshko's proposal; died 5 September 1984 in Kuchino. [S1] [S2]
-- **By whom:** Soviet courts, KGB/security apparatus, and penal-camp administration. [S1] [S2]
-- **Document references:** exact archival file IDs: source not found in retrieved sources. Retrieved sources identify works and charges but not stable file numbers. [S1] [S2]
-- **Mechanism specifics:** KHPG and the literary-encyclopedia corpus describe confiscation of most works written in prison and camps. KHPG sources identify *Правозахисний рух в Україні, його засади і перспективи* as a major incriminated text, published abroad and broadcast by Radio Liberty. [S1] [S2] [S7]
-- **What survived / what was destroyed:** The literary encyclopedia reports that most prison/camp works were confiscated by the KGB. Surviving titles include *Поема про проліски*, *Безумець*, *Трагічна галерея*, *Якщо Бога нема — все дозволено*, and *Правозахисний рух на Україні, його засади і перспективи*. [S2]
+## 2. Механізм переслідування
 
-Lytvyn's case is especially useful for teaching that samvydav persecution was not only about published books. Unpublished manuscripts, court statements, and essays could become the core evidence in a political case. [S1] [S2] [S7]
+Перша справа почалася після конфлікту з керівництвом колгоспу через довідку,
+потрібну для виїзду із села. 24 червня 1953 року Литвина заарештували, а
+29 липня у сфабрикованій кримінальній справі про нібито крадіжку державної
+власності засудили до дванадцяти років позбавлення волі [S1]. Покарання він
+відбував на будівництві Куйбишевської гідроелектростанції. 1955 року його
+звільнили після клопотання Сидора Ковпака [S1].
 
-## 3. Major works
+14 квітня 1955 року відбувся новий арешт. Цього разу Литвина звинуватили у
+створенні в таборі організації «Братство вільної України» й засудили до
+десяти років ув'язнення та трьох років обмеження прав [S1]. У таборах Сибіру
+й Мордовії він писав. ЕСУ називає поетичну збірку «Трагическая галерея»,
+присвячену Левкові Лук'яненку [S1]. Російська назва тут збережена як
+бібліографічний факт, а не як російська форма імені автора.
 
-- `1950s-1980s` — *Поема про проліски*, poetry; mostly prison/camp writing context. [S2]
-- `1950s-1980s` — *Безумець*, prose/longer work; confiscation context noted by literary encyclopedia. [S2]
-- `1950s-1980s` — *Робітнича справа*, Russian-language unpublished work listed by literary encyclopedia. [S2]
-- `1950s-1980s` — *Трагічна галерея*, work listed by literary encyclopedia. [S2]
-- `1950s-1980s` — *Якщо Бога нема — все дозволено*, work listed by literary encyclopedia. [S2]
-- `1979` — *Правозахисний рух в Україні, його засади і перспективи*, essay/narrative of the rights movement, quoted in Wikiquote and KHPG search snippets. [S3] [S7]
-- `1983` — *Ялинка*, unfinished work; the literary encyclopedia cites the letter-line "Сонце без Ялинки не приносить щастя..." [S2]
+Після звільнення 1965 року Литвин передав до посольства США в Москві
+інформацію про становище політичних в'язнів у СРСР і працював на виробництві
+[S1]. 14 листопада 1974 року його знову заарештували. 13 березня 1975 року за
+обвинуваченням у «наклепах на радянський державний лад» засудили до трьох
+років таборів суворого режиму, які він відбував у Комі АРСР [S1]. У березні
+1977 року він звертався до Комітету оборони прав людини ООН, доводячи
+безпідставність вироку; восени того року вийшов на волю [S1]. Радянське слово
+«наклеп» у цьому контексті є формулою криміналізації критики, а не нейтральним
+описом його текстів.
 
-## 4. Primary-source quotes (≥2 required)
+1978 року Литвин став членом Української Гельсінської групи [S1]. У квітні
+1979 року написав працю «Правозахисний рух в Україні, його засади і
+перспективи». ЕСУ наводить оцінку Петра Григоренка, який вважав її однією з
+фундаментальних праць УГГ [S1]. Це атрибутована оцінка Григоренка, не
+універсальний академічний консенсус. Текст праці не відкрито в цьому пакеті,
+тому її тези не відновлюються за назвою.
 
-- "Свободолюбство, демократизм..." — from *Правозахисний рух в Україні, його засади і перспективи*, 1979, via Wikiquote citing Radio Liberty. It is a concise entry into Lytvyn's theory of Ukrainian democratic tradition. [S3]
-- "Я не політик, я правозахисник..." — from Wikiquote, attributed to Lytvyn. Pedagogically, it helps contrast party politics with rights-defense identity. [S3]
+6 серпня 1979 року Литвина заарештували, а 17 грудня того ж року засудили до
+трьох років таборів суворого режиму за звинуваченням в опорі працівникам
+міліції [S1]. Він перебував у місцях ув'язнення в Білій Церкві, Бучі та
+Херсоні. 24 червня 1982 року, ще в неволі, Київський обласний суд визнав його
+особливо небезпечним рецидивістом і призначив десять років таборів особливого
+режиму та п'ять років заслання [S1]. 1983 року його етапували до табору в
+Кучино Пермської області [S1].
 
-The strongest retrieved quotes are via Wikiquote/Radio Liberty rather than a scanned primary edition. Phase 2 should retrieve the full Radio Liberty article or printed edition before classroom use.
+23 серпня 1984 року Литвина виявили в камері з пораненням живота; 5 вересня
+він помер у лікарні міста Чусового [S1]. Спогад Василя Овсієнка відтворює
+повторне свідоцтво про смерть, видане матері, й обговорює різні версії
+поранення [S2]. Овсієнко прямо визнає, що співв'язні не були присутні в
+момент події [S2]. Тому пакет не оголошує ані самогубство, ані вбивство
+доведеним фактом. Підтвердженими лишаються табір, поранення, лікарня, дата
+смерті та відсутність у відкритому пакеті повного незалежного розслідування.
 
-## 5. Language register
+## 3. Основні праці й форми діяльності
 
-- **Register:** prison essay, rights-publicistic, poetic-prose hybrid.
-- **CEFR readiness for full reading:** C1/C2; short aphoristic lines can be used at B2.
-- **Lexicon notes:** `правозахисний рух`, `інакомислячі`, `свободолюбство`, `демократизм`, court and camp vocabulary.
-- **Stylistic features:** moral address, courtroom rhetoric, abstract political vocabulary, and concentrated aphorism. [S2] [S3]
+- **Табірний період до 1965 року** — збірка «Трагическая галерея» [S1].
+- **1978** — російськомовна праця «Советское государство и советский рабочий
+  класс (глазами рабочего-диссидента)», яку ЕСУ називає головним
+  публіцистичним досягненням за авторською оцінкою; опублікована 1999 року
+  [S1].
+- **1979** — «Правозахисний рух в Україні, його засади і перспективи» [S1].
+- **Табірне письмо різних років** — поезія, проза, публіцистика й листи,
+  частково збережені через правозахисні мережі та пам'ять співв'язнів [S2].
 
-For learners, Lytvyn offers a way to discuss the word `правозахисник` as a self-definition, not merely a profession label. [S3]
+Перелік свідомо короткий. Попередній драфт додавав назви з енциклопедичних і
+вікіпедійних переказів, не синхронізованих із прийнятим джерельним набором.
+Тепер названо лише те, що прямо встановлюють S1 або S2. Наявність назви не
+означає, що повний текст доступний чи дозволений для відтворення.
 
-## 6. Contested points
+## 4. Первинний голос і межі цитування
 
-- **What's debated in modern UA scholarship:** retrieved sources do not expose a major scholarly controversy, but they show a source-preservation problem: many texts were confiscated or survive through rights-movement channels. [S1] [S2]
-- **What gets simplified in popular memory:** his name is often grouped with Stus, Tykhy, and Marchenko as "died in captivity"; the dossier should also preserve his writing and rights-theory contributions. [S2] [S6]
-- **Russian disinformation attack surface:** Soviet charges about "slander" are evidence of criminalization of dissent, not reliable description. [S2]
-- **Other-perspective considerations:** source not found for a specific Polish, Jewish, or minority-perspective issue in retrieved materials.
+Дослівних цитат Литвина в цьому пакеті немає. ЕСУ передає зміст його праць і
+окремі оцінки, а КХПГ публікує спогад Овсієнка з фрагментами усної табірної
+пам'яті [S1, S2]. Жодна з двох прийнятих сторінок не є точним первинним
+виданням Литвинової праці з номером сторінки або стабільним розділом. Тому
+поширені фрази про свободу, демократію чи самовизначення правозахисника
+вилучено з плану та досьє.
 
-## 7. Cross-track links
+Музейний спогад не можна використовувати так, ніби кожна репліка належить
+Литвинові. Текст S2 має автора, жанр і часову дистанцію. У семінарі його можна
+зіставляти з ЕСУ як джерело пам'яті, але прямий голос Литвина потребує окремого
+видання його праць або листів.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
+## 5. Мова й педагогічний регістр
+
+- **Регістр:** правозахисна публіцистика, політико-економічна критика, поезія,
+  табірний лист і мемуарне свідчення про автора.
+- **Рівень читання:** C1–C2 для повних публіцистичних праць; B2 для
+  джерельно розміченої хронології.
+- **Ключові слова:** `правозахисник`, `УГГ`, `сфабрикована справа`, `табір
+  особливого режиму`, `особливо небезпечний рецидивіст`, `рукопис`,
+  `перепоховання`.
+- **Ризик:** не змішувати українські праці, російськомовні назви окремих
+  творів і російську мову репресивних документів.
+
+Навчальна цінність біографії полягає в умінні будувати хронологію кількох
+справ, розрізняти юридичну формулу та історичну оцінку, читати свідчення з
+атрибуцією й не заповнювати архівні прогалини драматичним припущенням.
+
+## 6. Спірні точки й антиагіографічна рамка
+
+- **По батькові.** Метадані ЕСУ суперечать тексту статті; робоча форма
+  `Тимонович` пояснена, а не проголошена беззастережно [S1, S2].
+- **Ранні справи.** ЕСУ називає першу справу сфабрикованою [S1]. Оцінка другої
+  справи потребувала б повних судових матеріалів, яких у пакеті немає.
+- **Ідейна позиція.** ЕСУ відносить Литвина до анархо-синдикалістської течії
+  українського опозиційного руху [S1]. Це конкретніша характеристика, ніж
+  загальний ярлик «націоналіст», але для повного аналізу потрібні його праці.
+- **Обставини смерті.** S1 і S2 підтверджують поранення й смерть у лікарні,
+  однак не дають підстави встановити винуватця чи остаточний намір.
+- **Пам'ять 1984 року.** Литвина часто ставлять поруч з Олексою Тихим,
+  Валерієм Марченком і Василем Стусом. Порівняння доречне для системи таборів,
+  але не переносить між ними причини смерті, тексти чи деталі справ.
+
+Деколонізована біографія називає радянські суди, табори й механізм
+перекваліфікації справ, а не ховає виконавців за пасивною формою. Вона також
+не робить з Литвина лише символ: поетичний і публіцистичний доробок лишається
+окремим предметом, навіть коли значну частину текстів ще треба відшукати.
+
+## 7. Міждисциплінарні зв'язки
+
+- **Наявний план LIT, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
+- **Наявний план HIST, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
+- **Наявні плани ISTORIO, перевірені через `test -e`:**
   - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
   - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Comparative "1984 deaths in custody" unit with Tykhy, Marchenko, and Stus.
-  - Courtroom speech and rights-defense vocabulary module.
-- **Potential LIT additions surfaced by this research:**
-  - Excerpt from *Правозахисний рух в Україні* after retrieving a stable text source.
+- **Кандидатні зв'язки:** правозахисні звернення до міжнародних організацій;
+  табірне письмо; історія Кучинського табору; перепоховання 1989 року як дія
+  публічної пам'яті.
 
-## 8. Naming-canonical
+## 8. Канонічне іменування
 
-- **Slug:** `yurii-lytvyn`
-- **EN canonical (BGN/PCGN 2010):** Yurii Tymonovych Lytvyn
-- **UA canonical (with patronymic if attested):** Юрій Тимонович Литвин
-- **Aliases (track these for `aliases:` YAML field):** Yurii Lytvyn; Yuriy Litvin; Юрій Литвин
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Yuri Timonovich Litvin; Юрий Тимонович Литвин
+- **Slug:** `yurii-lytvyn`.
+- **Робоча українська форма:** Юрій Тимонович Литвин.
+- **Варіант у метаданих ЕСУ:** Юрій Тимофійович Литвин.
+- **Канонічна англійська форма:** Yurii Tymonovych Lytvyn.
+- **Пошуковий варіант:** Yuriy Litvin.
+- **Російські форми:** не використовуються в українській авторській оповіді;
+  можливі лише в точній назві російськомовного твору або документа.
 
-## 9. Image candidates
+## 9. Зображення і права
 
-- **Best PD/CC portrait:** source not found in retrieved sources; KHPG and Wikiquote/Wikipedia display images but license metadata was not retrieved.
-- **Backup candidates:** Wikimedia Commons image if available and license permits; KHPG portrait as identification lead only.
-- **If no PD/CC portrait exists:** use a rights-cleared image of Baikove reburial commemoration or a neutral UHG document image after rights review.
-- **Era-appropriate context image:** Perm-36/Kuchino context image, rights status to verify.
+ЕСУ і КХПГ показують портрет Литвина. S2 пояснює походження відомої світлини
+через спогад про Оксану Мешко, але не надає окремої ліцензійної сторінки
+файла [S2]. Історія походження фотографії не тотожна дозволу на повторне
+використання. Автор фотографії, правовласник і ліцензія PD або CC не доведені,
+тому обрано `portrait_fallback: text-only`.
 
-## 10. Sources used
+## 10. Використані джерела
 
-**Tier 1 (authoritative):**
-- [S8] "Литвин Юрій Тимофійович" / article lead "Литвин Юрій Тимонович," Енциклопедія Сучасної України. https://esu.com.ua/article-55093 | accessed 2026-05-30.
+**S1 — Tier 1, авторитетна енциклопедія:**
 
-**Tier 2 (institutional):**
-- [S1] "ЛИТВИН ЮРІЙ ТИМОНОВИЧ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1113914779 | accessed 2026-05-30.
-- [S7] "ЛИТВИН ЮРІЙ ТИМОНОВИЧ" / "Любов. Добро. Свобода," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1121786042 | accessed 2026-05-30.
-- [S6] "THE DISSIDENT MOVEMENT IN UKRAINE (1954-1987)," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/en/1628664471 | accessed 2026-05-30.
+- «Литвин Юрій Тимофійович»; у тексті статті — «Литвин Юрій Тимонович».
+  Енциклопедія Сучасної України. https://esu.com.ua/article-55093.
+  Переглянуто 17 липня 2026 року.
 
-**Tier 3 (encyclopedic):**
-- [S2] `mcp__sources.search_sources`, Ukrainian Literary Encyclopedia (1988-1995) entry "ЛИТВИН Юрій Тимонович," used cautiously for chronology and title list.
-- [S3] "Литвин Юрій Тимонович," Wikiquote. https://uk.wikiquote.org/wiki/Литвин_Юрій_Тимонович | accessed 2026-05-30.
+**S2 — Tier 2, атрибутований музейний спогад:**
 
-**Tier 4 (modern scholarly post-1991):**
-- Source not found in retrieved sources.
+- Василь Овсієнко. «Любов. Добро. Свобода (Юрій Литвин)». Віртуальний музей
+  «Дисидентський рух в Україні» КХПГ.
+  https://museum.khpg.org/1121786042. Переглянуто 17 липня 2026 року.
 
-**Tier 5 (general web):**
-- Radio Liberty quote page cited by Wikiquote: "Свободолюбство і демократизм характерні українцям" — URL retrieved through Wikiquote reference but not separately opened.
+**Первинні документи:** S2 переказує повторне свідоцтво про смерть, яке мала
+мати Литвина, але скан документа на прийнятій сторінці не подано. Повні
+вироки й архівні номери справ також відсутні. Їхні реквізити й цитати не
+вигадуються.
 
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Exact KGB/court file number: source not found in retrieved sources.
+## Деколонізаційна самоперевірка
 
-## Decolonization self-check
-
-- [x] No Soviet "slander" category is adopted
-- [x] ЕСУ patronymic metadata discrepancy is declared
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] No fabricated manuscript or case-file IDs
-- [x] Lytvyn's writer identity is not erased by martyrdom framing
+- [x] Радянські звинувачення не прийнято за нейтральний опис.
+- [x] Кожен арешт відокремлено за датою й обвинуваченням.
+- [x] Обставини смерті не перетворено на недоведену криміналістичну версію.
+- [x] Свідчення Овсієнка лишено атрибутованим.
+- [x] Тексти й деталі інших політв'язнів не перенесено на Литвина.
+- [x] Портрет і цитати не використано без доведених прав та локаторів.

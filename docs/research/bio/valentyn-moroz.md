@@ -1,123 +1,215 @@
-# Мороз Валентин Якович — Research Dossier
+# Валентин Якович Мороз — дослідницьке досьє
 
 **Slug:** `valentyn-moroz`
-**Block:** E
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Дисидентська есеїстика, радикальна полеміка і табірний спротив
+**Рівень підготовки:** 2
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Мороз Валентин Якович.
-- **Pseudonyms / aliases:** Valentyn Moroz, Valentyn Yakovych Moroz.
-- **Born:** 1936-04-15 | Холонів, Volyn region, Polish Republic / now Ukraine. ESU and KHPG agree on the date and village. [S1] [S2]
-- **Died:** 2019-04-16 | Lviv, Ukraine. ESU gives date and place; Ukrainian Wikipedia via `mcp__sources.query_wikipedia` agrees. [S1] [S5]
-- **Family / education key facts:** Graduated from Lviv University in 1958; worked as teacher and then lecturer at Lutsk and Ivano-Frankivsk pedagogical institutes. [S1] [S2]
+- **Канонічне ім'я:** Валентин Якович Мороз [S1, S2].
+- **Народився:** 15 квітня 1936 року в селі Холонів на Волині [S1, S2].
+- **Помер:** 16 квітня 2019 року у Львові [S1].
+- **Ролі:** учасник опозиційного руху, історик і публіцист [S1]. КХПГ
+  характеризує його як одного з найрадикальніших діячів українського
+  національного руху [S2].
+- **Освіта:** закінчив Львівський університет 1958 року [S1].
 
-## 2. Oppression mechanism
+Після університету Мороз учителював, а від 1964 року працював в
+Івано-Франківському педагогічному інституті [S1]. КХПГ додає роботу завучем,
+учителем сільської школи та викладачем Луцького й Івано-Франківського
+педагогічних інститутів [S2]. Ця академічна траєкторія важлива для розуміння
+пізнішої есеїстики: він входив у дисидентський рух як історик і викладач, а
+не лише як автор табірного свідчення.
 
-- **What happened:** Two Soviet arrests, convictions under Article 62 of the Criminal Code of the Ukrainian SSR, camp imprisonment, Vladimir Prison, hunger strikes, and eventual 1979 prisoner exchange.
-- **When:** First arrest September 1965, sentence to four years; second arrest 1970-06-01 for *Репортаж із заповідника імені Берія* and essays; sentenced to six years prison, three years special-regime camps, and five years exile according to KHPG/related retrievals; exchanged in 1979. [S1] [S2] [S6]
-- **By whom:** KGB/Soviet investigative apparatus, Ukrainian SSR courts, Soviet prison/camp system.
-- **Document references:** KHPG gives `ст. 62 КК УРСР`; PNU reports declassified trial materials and interrogation protocols but this dossier did not retrieve the full archival call number. Source not found for complete case ID. [S2] [S4]
-- **Mechanism specifics:** Moroz's first imprisonment produced *Репортаж із заповідника імені Берія*, a samvydav description of camp/KGB mechanisms. ESU says after release in 1969 he wrote *Мойсей і Датан*, *Серед снігів*, and *Хроніка опору*; on 1970-06-01 he was arrested again for those writings. [S1]
+Профіль КХПГ підписаний І. Раппом і поєднує хронологію з виразними оцінками
+Морозової поведінки та поглядів [S2]. ЕСУ дає компактніший інституційний
+каркас [S1]. Досьє не вважає сторінки незалежними в кожній подробиці, але
+зіставляє їхні різні функції: S1 встановлює дати, праці й посади, S2
+докладніше показує конфлікти всередині табірного середовища.
 
-His second case generated a major defense reaction. ESU names signatories and defenders including Oksana Meshko, Vasyl Stus, Ivan Dziuba, Ivan Svitlychnyi, Zynovia Franko, Viacheslav Chornovil, Yevhen Sverstiuk, the Kalynetses, Nina Strokata-Karavanska, and others. [S1]
+## 2. Механізм переслідування
 
-- **What survived / what was destroyed:** The Soviet state tried to isolate him physically and discredit him politically. The essays survived in samvydav/diaspora publication and later Ukrainian reference sources.
+1 вересня 1965 року Мороза заарештували [S1]. 20 січня 1966 року його
+засудили до чотирьох років таборів суворого режиму. До обвинувачення входили
+поширення самвидаву, «антирадянська пропаганда» серед студентів та агітація
+за вихід України зі складу СРСР [S1]. Усі ці означення треба читати як
+формули радянського вироку. Вони документують, що держава криміналізувала
+українську політичну суб'єктність і непідцензурний текст.
 
-## 3. Major works
+Покарання Мороз відбував у Мордовії та Владимирській тюрмі [S1]. У квітні
+1967 року написав «Репортаж із заповідника імені Берії», спрямований проти
+сваволі КДБ, табірної адміністрації та комуністичного режиму [S1]. Рукопис
+передали до Львова В'ячеславові Чорноволу, який його розмножив і поширив у
+самвидаві; 1968 року твір надрукувала мюнхенська «Сучасність» [S1]. Так
+табірний текст перейшов із рукописної мережі до закордонного видання.
 
-- `1967-1969` — *Репортаж із заповідника імені Берія*, samvydav camp essay. [S1] [S2]
-- `1969-1970` — *Мойсей і Датан*, essay on national subordination. [S1]
-- `1969-1970` — *Серед снігів*, essay on moral responsibility of national elites. [S1]
-- `1969-1970` — *Хроніка опору*, essay on destruction of national cultural heritage. [S1]
-- `1975` — *Есеї, листи, документи*, diaspora collection. [S2]
-- `1978` — *Мойсей і Датан*, Smoloskyp edition. [S2]
-- `1991-1993` — teaching and public work in Lviv after return. [S2]
-- `2005/2012/2016` — *Україна у двадцятому столітті*, multi-volume historical work listed by KHPG. [S2]
+1969 року Мороза звільнили. Після повернення до Івано-Франківська він написав
+«Мойсей і Датан», «Серед снігів» та «Хроніку опору» [S1]. ЕСУ пояснює їхні
+теми: національна вторинність, моральна відповідальність еліти й руйнування
+культурної спадщини [S1]. КХПГ наголошує, що українська інтелігенція
+сприйняла тексти неоднозначно, зокрема через різкий осуд Івана Дзюби та
+погляди на національну ідентичність [S2]. Ця відмінність між назвою теми й
+оцінкою полеміки має залишатися видимою.
 
-## 4. Primary-source quotes
+1 червня 1970 року Мороза заарештували вдруге за «Репортаж із заповідника
+імені Берії» та нові есеї [S1, S2]. На його захист зверталися Оксана Мешко,
+Василь Стус, Іван Дзюба, Іван Світличний, В'ячеслав Чорновіл, Євген Сверстюк,
+Ігор та Ірина Калинці й інші діячі [S1]. Під час закритого процесу Чорновіл,
+Дзюба та Борис Антоненко-Давидович відмовилися свідчити [S1, S2]. Солідарність
+із підсудним не означала автоматичної згоди з усіма його ідеями; вона могла
+бути протестом проти фальсифікації справи та порушень судової процедури.
 
-> "нація може жити тільки тоді"
+18 листопада 1970 року Мороза засудили до шести років тюрми, трьох років
+таборів особливого режиму й п'яти років заслання [S1]. Він знову перебував у
+Владимирській тюрмі та Мордовії, брав участь у протестах і голодуваннях [S1].
+КХПГ докладно описує тривале одиночне утримання, поранення співкамерником і
+голодування з вимогою переведення з тюрми до табору [S2]. Ці подробиці
+подаються з посиланням на музейний профіль, а не як відомості з окремо
+відкритої медичної чи тюремної справи.
 
-Source: *Мойсей і Датан* thesis quoted in ESU and confirmed by web retrieval. This line is strong but rhetorically radical; teaching should frame it as Moroz's position, not as course doctrine. [S1]
+У квітні 1979 року Мороз увійшов до групи п'ятьох дисидентів, яких обміняли
+на двох засуджених у США радянських шпигунів [S1, S2]. Він прибув до США, а
+потім жив у Канаді. ЕСУ зазначає навчання в Українському вільному університеті,
+докторську працю про етнонім «Україна», журнал «Анабазис», радіопрограму
+«Бумеранг-Контакт» і співпрацю з «Українськими вістями» [S1]. Обидва радянські
+вироки згодом було реабілітовано [S1].
 
-> "перша хвиля українського відродження"
+## 3. Основні праці
 
-Source: Moroz's description of the 1960s quoted by KHPG. It is useful for a discussion of how dissidents named their own generation. [S2]
+- **1967** — «Репортаж із заповідника імені Берії», табірний самвидавний есей;
+  виданий 1968 року в Мюнхені [S1].
+- **1969–1970** — «Мойсей і Датан» [S1].
+- **1969–1970** — «Серед снігів» [S1].
+- **1969–1970** — «Хроніка опору» [S1].
+- **1974** — «Бумеранг», видання, наведене в бібліографії ЕСУ [S1].
+- **1975** — «Есеї, листи й документи» [S1, S2].
+- **1978** — окреме видання «Мойсея і Датана» [S1, S2].
+- **1982** — «Лекції з історії України» [S1].
+- **1986** — «Шестидесяті роки в Україні» [S1].
+- **1992** — «Україна у 20-му столітті» [S1].
+- **1997** — «Націоналізм 21-го століття» [S1].
+- **1999** — «У пошуках українського Піночета?» [S1].
+- **2005, 2012, 2016** — три книжки праці «Україна у двадцятому столітті»
+  [S1].
 
-## 5. Language register
+Цей перелік показує перехід від табірної есеїстики до історичних лекцій і
+пізньої політичної публіцистики. Він не доводить наукової якості кожної праці
+й не робить авторську концепцію фактом. Для семінару назва й рік є
+бібліографічною опорою, а зміст потребує окремого читання видання.
 
-- **Register:** Polemical essay, prison testimony, nationalist publicistics, later historical synthesis.
-- **CEFR readiness for full reading:** C1-C2.
-- **Lexicon notes:** `самвидав`, `заповідник`, `КДБ`, `особливо небезпечний рецидивіст`, `голодівка`, `національна еліта`.
-- **Stylistic features:** Aphoristic statements, adversarial argument, moral absolutes, and high-pressure prison testimony.
+## 4. Первинний голос і межі цитування
 
-## 6. Contested points
+Дослівних цитат Мороза в цьому пакеті немає. ЕСУ цитує одну фразу з «Мойсея
+і Датана», а КХПГ переказує інтерв'ю та авторські оцінки шістдесятих років
+[S1, S2]. Однак ці вторинні сторінки не замінюють точного первинного видання
+з номером сторінки. Попередні цитатні завдання у плані вилучено.
 
-- **What's debated in modern UA scholarship:** Moroz's radical nationalism and conflicts with other prisoners should be included; KHPG records criticism from fellow political prisoners in 1977. [S2]
-- **What gets simplified in popular memory:** He is often either romanticized as a pure martyr or dismissed for radicalism. A reliable module must hold both: severe Soviet persecution and real intra-dissident controversy.
-- **Where modern Russian disinformation attacks them:** Soviet and post-Soviet framing leans on "anti-Soviet agitation" and "nationalist" labels to criminalize Ukrainian self-determination. Those labels are only quoted as regime categories.
-- **Polish / Jewish / other-perspective considerations:** Some intra-prison criticism involved accusations of intolerance; do not erase this when discussing broader solidarity networks.
-- **Pedagogical caution:** His rhetoric is powerful and often polarizing. It belongs at advanced CEFR levels with historical framing, not as unsourced inspirational quotation.
-- **Source-balance note:** ESU is the strongest compact source for the sequence from the first imprisonment to the second arrest and named defenders. KHPG adds the dissident-movement context and the later controversy among prisoners. The PNU page is a lead to declassified court materials, but because the full documents were not retrieved in this pass, the dossier does not claim protocol page numbers or archival signatures.
-- **Risk note:** Moroz is a case where decolonized framing is not the same as hagiography. Soviet punishment was real and severe; so were conflicts around his radical rhetoric. A useful lesson can ask students to identify what the Soviet state punished, what other dissidents criticized, and why those are different categories of evidence.
+Назви есеїв можна використовувати як перевірені назви творів. Авторські тези
+слід позначати як позицію Мороза, а не як загальновизнаний опис історії. Це
+особливо важливо для пізньої політичної публіцистики: репресивний статус
+автора не перетворює його полеміку на безпомилкову історіографію.
 
-## 7. Cross-track links
+## 5. Мова й педагогічний регістр
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - source not found
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - source not found
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio links to Viacheslav Chornovil, Vasyl Stus, Ivan Dziuba, Ukrainian samvydav, Article 62 cases, Vladimir Prison, and 1979 dissident exchange.
-- **Potential LIT additions surfaced by this research:**
-  - C2 excerpt from *Репортаж із заповідника імені Берія* with heavy annotation and controversy notes.
-  - A source-literacy exercise can compare ESU's encyclopedia phrasing with KHPG's biographical narrative and a declassified-trial exhibit, once the latter is fully downloaded and cited.
-  - An advanced discussion can separate "evidence of persecution" from "agreement with the author's politics," which is essential for teaching polarizing dissident texts responsibly.
+- **Регістр:** полемічний есей, табірне свідчення, націоналістична
+  публіцистика, історична синтеза.
+- **Рівень читання:** C1–C2.
+- **Ключові слова:** `самвидав`, `закритий суд`, `тюрма`, `табір особливого
+  режиму`, `голодівка`, `обмін політв'язнів`, `полеміка`, `реабілітація`.
+- **Методична межа:** відокремлювати факт переслідування, авторську тезу,
+  оцінку іншого дисидента й сучасний історичний висновок.
 
-## 8. Naming-canonical
+Морозова риторика придатна для аналізу лише тоді, коли студент бачить її
+автора, дату й жанр. Вона не повинна з'являтися як безіменне патріотичне
+гасло. Так само термін «радикальний» потребує уточнення: S2 застосовує його до
+позиції в русі, а не як юридичну підставу радянського вироку.
 
-- **Slug:** `valentyn-moroz`
-- **EN canonical (BGN/PCGN 2010):** Valentyn Moroz
-- **UA canonical (with patronymic):** Мороз Валентин Якович
-- **Aliases (track these for `aliases:` YAML field):** Valentyn Yakovych Moroz.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Valentin Yakovlevich Moroz (FORBIDDEN except bibliography/source metadata).
+## 6. Спірні точки й антиагіографічна рамка
 
-## 9. Image candidates
+Жорстоке радянське переслідування Мороза підтверджене обома джерелами [S1,
+S2]. Воно не скасовує суперечливості його поглядів і поведінки. КХПГ
+повідомляє, що в мордовському таборі 1977 року комітет політв'язнів, створений
+для взаємної поваги між людьми різних ідеологічних напрямів, суворо засудив
+Морозову поведінку [S2]. У профілі йдеться про звинувачення в розпалюванні
+національної ворожнечі, зокрема щодо росіян та євреїв, і про антисемітську
+позицію [S2]. Це серйозне, атрибутоване твердження музейного профілю; без
+протоколу комітету воно не подається як незалежно встановлена судова подія,
+але й не вилучається з біографії.
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait candidate; verify individual license.
-- **Backup candidates:** KHPG page image or public memorial photos; rights not established.
-- **If no PD/CC portrait exists:** Use a rights-cleared samvydav cover or protest-campaign image.
-- **Era-appropriate context image:** Declassified court-material exhibit from PNU if rights-cleared.
+Інші важливі розмежування:
 
-## 10. Sources used
+- **Солідарність і згода.** Протест проти закритого суду та надмірного вироку
+  не доводить згоди підписантів із кожним твердженням Мороза.
+- **Есеїстика й історіографія.** Авторська концепція України є предметом
+  аналізу, а не автоматичною історичною правдою.
+- **Реабілітація й репутація.** Реабілітація двох вироків означає визнання
+  неправомірності радянського переслідування [S1], але не є індульгенцією для
+  нетерпимих поглядів.
+- **Еміграційний період.** S1 документує викладання, журнал, радіо й наукову
+  роботу; S2 також описує відчуження частини західного середовища. Оціночну
+  лексику S2 не слід перетворювати на діагноз особистості.
+- **Повернення.** Від 1991 року Мороз працював професором і завідувачем кафедри
+  українознавства у Львові, згодом викладав у Львівському інституті фізичної
+  культури та інших установах [S1]. Пізній період має окрему хронологію.
 
-**Tier 1 (authoritative):**
-- Енциклопедія Сучасної України, "Мороз Валентин Якович" | https://esu.com.ua/article-68906 | accessed 2026-05-30
+Деколонізована рамка тут принципово не дорівнює агіографії. Вона називає
+українську суб'єктність, яку карала радянська влада, і водночас залишає
+видимими внутрішні конфлікти, антисемітські закиди й полемічні крайнощі.
 
-**Tier 2 (institutional):**
-- Харківська правозахисна група, "МОРОЗ ВАЛЕНТИН ЯКОВИЧ" | https://museum.khpg.org/1113917542 | accessed 2026-05-30
-- Прикарпатський національний університет, "Судовий процес Валентина Мороза: розсекречені матеріали" | https://pnu.edu.ua/blog/2021/12/23/35471/ | accessed 2026-05-30
+## 7. Міждисциплінарні зв'язки
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Мороз Валентин Якович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+- **Наявний план ISTORIO, перевірений через `test -e`:**
+  - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
+- **Кандидатні зв'язки, а не наявні файли:**
+  - Стаття 62 КК УРСР і закриті процеси 1960–1970-х років.
+  - В'ячеслав Чорновіл, Іван Дзюба, Євген Сверстюк, Василь Стус та Оксана
+    Мешко як окремі біографії й різні позиції в русі.
+  - Самвидав, закордонні видання й кампанії солідарності.
+  - Антисемітизм і міжнаціональна етика всередині табірного середовища.
+  - Дисидентський обмін 1979 року як міжнародно-політична подія.
 
-**Tier 4 (modern scholarly post-1991):**
-- Історична правда, "Валентин Мороз: історія України, побачена українськими очима" | https://www.istpravda.com.ua/dissidents/articles/618e5bc07568d/ | accessed 2026-05-30
-- `mcp__sources.search_sources`, modern literary retrieval on Moroz essays | accessed 2026-05-30
+## 8. Канонічне іменування
 
-**Primary-source documents accessed:**
-- Essay quotations through ESU/KHPG; full declassified trial materials: source not found in full text.
+- **Slug:** `valentyn-moroz`.
+- **Канонічна українська форма:** Валентин Якович Мороз.
+- **Канонічна англійська форма:** Valentyn Yakovych Moroz.
+- **Коротка англійська форма:** Valentyn Moroz.
+- **Російська форма `Valentin Yakovlevich Moroz`:** не використовується як
+  основна; можлива лише в точній метаінформації іншомовного документа.
 
----
+## 9. Зображення і права
 
-## Decolonization self-check
+ЕСУ та КХПГ показують фотографії Мороза, але не дають окремої сторінки файла
+з перевіреною ліцензією PD або CC. Публікація фото в енциклопедії чи музеї не
+є ліцензією для курсу. Тому обрано `portrait_fallback: text-only`. Зображення
+самвидавної книжки або судового документа також потребувало б окремої
+перевірки прав і походження.
 
-- [x] Article 62 regime language labeled
-- [x] Intra-dissident controversy included
-- [x] No invented case ID
-- [x] Existing path gap declared
-- [x] Russian-imperial transliterations confined to naming metadata
+## 10. Використані джерела
+
+**S1 — Tier 1, авторитетна енциклопедія:**
+
+- Ю. Д. Зайцев. «Мороз Валентин Якович». Енциклопедія Сучасної України.
+  https://esu.com.ua/article-68906. Переглянуто 17 липня 2026 року.
+
+**S2 — Tier 2, музейний профіль:**
+
+- І. Рапп. «МОРОЗ ВАЛЕНТИН ЯКОВИЧ». Віртуальний музей «Дисидентський рух в
+  Україні» КХПГ. https://museum.khpg.org/1113917542. Переглянуто 17 липня
+  2026 року.
+
+**Первинні документи:** S1 і S2 називають статтю 62, закритий процес, строки
+покарання та інкриміновані праці. Повних протоколів суду, архівного номера
+справи, протоколу табірного комітету або точного видання есеїв у прийнятому
+пакеті немає; цитати й реквізити не вигадуються.
+
+## Деколонізаційна самоперевірка
+
+- [x] Радянські формули обвинувачення історизовано.
+- [x] Факт репресій відокремлено від згоди з авторською політикою.
+- [x] Внутрішні конфлікти та антисемітські закиди не приховано.
+- [x] Оціночні твердження КХПГ лишено атрибутованими.
+- [x] Первинні цитати й архівні номери не вигадано.
+- [x] Портрет не використано без індивідуальної ліцензії.

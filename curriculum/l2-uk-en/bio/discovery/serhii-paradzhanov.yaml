@@ -1,0 +1,14 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Сергій Параджанов
+  - Параджанов ЕСУ
+  - Тіні забутих предків Довженко-Центр
+  - Параджанов реабілітація УІНП
+direct_sources:
+  - https://esu.com.ua/article-887082
+  - https://dovzhenkocentre.org/top-100/tini-zabutyh-predkiv/
+  - https://uinp.gov.ua/pres-centr/novyny/nackomisiya-reabilituvala-sergiya-paradzhanova
+rag_chunks: []
+rag_literary: []
+warning: Пакет прямих джерел; усі три читання є зовнішніми посиланнями й точно відповідають плану.

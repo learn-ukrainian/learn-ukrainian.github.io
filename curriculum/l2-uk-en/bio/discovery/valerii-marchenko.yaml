@@ -1,0 +1,13 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Валерій Марченко
+  - Марченко ЕСУ
+  - Марченко КХПГ
+  - Київський діалог
+direct_sources:
+  - https://esu.com.ua/article-64046
+  - https://museum.khpg.org/1113916697
+rag_chunks: []
+rag_literary: []
+warning: Пакет прямих джерел; обидва читання є зовнішніми посиланнями й точно відповідають плану.

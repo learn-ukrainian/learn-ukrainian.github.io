@@ -1,0 +1,13 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Валентин Мороз
+  - Мороз ЕСУ
+  - Мороз КХПГ
+  - Репортаж із заповідника імені Берія
+direct_sources:
+  - https://esu.com.ua/article-68906
+  - https://museum.khpg.org/1113917542
+rag_chunks: []
+rag_literary: []
+warning: Пакет прямих джерел; обидва читання є зовнішніми посиланнями й точно відповідають плану.

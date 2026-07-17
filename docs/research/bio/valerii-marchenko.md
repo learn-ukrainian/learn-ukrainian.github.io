@@ -1,122 +1,215 @@
-# Валерій Веніамінович Марченко — Research Dossier
+# Валерій Веніамінович Марченко — дослідницьке досьє
 
 **Slug:** `valerii-marchenko`
-**Block:** E
-**Tier:** 3
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Блок:** Правозахисний рух, самвидав і пізньорадянські репресії
+**Рівень підготовки:** 3
+**Підстава:** BIO #4431
+**Підготовлено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені факти
 
-- **Full name (UA, canonical):** Валерій Веніамінович Марченко. [S1] [S2] [S3]
-- **Pseudonyms / aliases:** Valerii Marchenko; Valery Marchenko; Валерій Марченко. Forbidden Russian-imperial form for body prose: `Валерий Вениаминович Марченко`. [S1] [S2]
-- **Born:** 16 September 1947, Kyiv, Ukrainian SSR. KHPG English and Ukrainian pages and Ukrainian Wikipedia agree. [S1] [S2] [S3]
-- **Died:** KHPG and Ukrainian Wikipedia lead give 7 October 1984, prison hospital in Leningrad; Ukrainian Wikipedia body notes reports of death on 5 October. This dossier flags the date discrepancy <!-- VERIFY --> and follows KHPG/lead date while noting uncertainty. [S1] [S2] [S3]
-- **Family / education key facts:** Grandson of historian Mykhailo Marchenko; mother Nina Marchenko was a Ukrainian-language teacher and methodology specialist; graduated from Kyiv State University philology; studied Turkic languages as an external student at Baku University; translated from Azerbaijani and Polish. [S1] [S2] [S3]
+- **Канонічне ім'я:** Валерій Веніамінович Марченко [S1, S2].
+- **Народився:** 16 вересня 1947 року в Києві [S1, S2].
+- **Помер:** 7 жовтня 1984 року в тюремній лікарні Ленінграда, нині
+  Санкт-Петербург [S1]. КХПГ позначає цю дату як приблизну [S2].
+- **Фахові ролі:** учасник правозахисного руху, літературознавець, перекладач,
+  журналіст і есеїст [S1, S2].
+- **Родина:** син мовознавиці Ніни Марченко й онук історика Михайла Марченка
+  [S1].
 
-Марченко is a late-Soviet dissident, translator, journalist, literary scholar, and human-rights activist whose second imprisonment ended in death from untreated severe kidney disease in Soviet custody. [S1] [S2] [S3]
+Марченко закінчив Київський університет 1970 року, а під час навчання
+стажувався в Азербайджанському університеті в Баку [S1]. Від 1970 року
+працював у редакції «Літературної України». Починав як перекладач з
+азербайджанської та польської мов і писав про українсько-азербайджанські
+літературні зв'язки [S1]. Ця професійна частина біографії принципова: вона
+показує культурний обмін без московського посередництва й не дозволяє звести
+Марченка до статусу в'язня.
 
-## 2. Oppression mechanism
+КХПГ публікує розлогий профіль, підписаний Ніною Марченко [S2]. Це близький
+родинний голос, важливий для побутових обставин, листування й пам'яті, однак
+він не є незалежним підтвердженням кожної оцінки. У цьому досьє дати, освіту,
+основні вироки й медичне рішення звірено з ЕСУ; матеріал КХПГ використано як
+атрибутовану музейну реконструкцію, а не як безіменну «другу довідку».
 
-- **What happened:** surveillance, arrest, political imprisonment, exile, second arrest, special-regime sentence, denial/delay of medical release, death in custody.
-- **When:** arrested 25 June 1973; sentenced 29 December 1973 under Article 62 part 1 to six years strict-regime camps and two years exile; arrested again 21 October 1983; tried 13-14 March 1984; sentenced to ten years special-regime camp and five years exile; died in Leningrad prison hospital in early October 1984. [S1] [S2] [S3]
-- **By whom:** Soviet KGB/security apparatus, Kyiv courts, and USSR penal-medical institutions. [S1] [S2]
-- **Document references:** Article 62 part 1 of the Criminal Code of the Ukrainian SSR for the 1973 sentence. Exact archival file number: source not found in retrieved sources. [S1] [S2]
-- **Mechanism specifics:** KHPG says his articles *За параваном ідейності*, *Страшний якийсь тягар*, and *Київський діалог*, oral/written agitation, and reading/distributing Ivan Dziuba's *Інтернаціоналізм чи русифікація?* were incriminated. The 1984 sentence treated him as an especially dangerous recidivist despite severe kidney disease; KHPG reports medical authorities decided he should be released as incurably ill, but the KGB did not allow release. [S1] [S2] [S7]
-- **What survived / what was destroyed:** His samvydav essays, letters, translations, and posthumous collections survived through family and dissident networks; many exact manuscript pathways need further source work. [S1] [S2]
+## 2. Механізм переслідування
 
-The oppression mechanism is medically specific: Marchenko was not simply "imprisoned"; he was returned to special-regime custody while visibly ill, then held in a prison hospital when release was medically indicated. [S1] [S7]
+ЕСУ пов'язує початок нагляду з відмовою Марченка співпрацювати з КДБ [S1].
+Його статті «За параваном ідейності», «Страшний якийсь тягар» і «Київський
+діалог» влада оголосила «антирадянськими» й «націоналістичними» [S1, S2]. Ці
+слова передають мову переслідувача. Їх не слід використовувати як нейтральну
+характеристику текстів, бо саме через такі категорії культурну й мовну критику
+перетворювали на кримінальне обвинувачення.
 
-## 3. Major works
+25 червня 1973 року Марченка заарештували [S1, S2]. Йому інкримінували усну й
+письмову «антирадянську агітацію», читання та поширення праці Івана Дзюби
+«Інтернаціоналізм чи русифікація?» і власні статті [S1, S2]. 29 грудня 1973
+року його засудили за частиною першою статті 62 КК УРСР до шести років
+таборів суворого режиму і двох років заслання [S2]. У відкритому пакеті немає
+архівного номера справи або повного тексту вироку, тому досьє не додає
+неперевірених позначок.
 
-- `1970s` — *Київський діалог*, essay/publicistic work incriminated in the 1973 case. [S2]
-- `1970s` — *За параваном ідейності*, essay incriminated in the 1973 case. [S2]
-- `1970s` — *Страшний якийсь тягар*, essay incriminated in the 1973 case. [S2]
-- `1970s` — translations from Azerbaijani and Polish; exact bibliographic list source not found in retrieved sources. [S1]
-- `1979` — co-compiler of the Moscow Helsinki Group report "On the position of prisoners in the labour camps of the USSR," Document No. 87, per KHPG English entry. [S1]
-- `1980s` — "найсвіжіший Валуєвський указ" critique of 1983 Russian-language school policy; retrieved through Ukrainian Wikipedia. [S3]
-- `posthumous` — *Вірити і тільки*, spiritual-Christian essays, published in 2005 per KHPG snippet on Nina Marchenko. [S7]
+Перший строк не завершив його авторської роботи. 1981 року він повернувся до
+Києва й через професійну заборону працював сторожем [S1]. Писав заяви проти
+беззаконня, сваволі та безправності колишніх політв'язнів. 1982 року створив
+нариси «Гулак» про Миколу Гулака і «Там, у Київських печерах», а також узяв
+інтерв'ю в Бориса Антоненка-Давидовича та Надії Суровцової [S1]. Такі факти
+показують, що повернення з табору не було поверненням до нормального
+професійного життя, але інтелектуальна праця тривала.
 
-## 4. Primary-source quotes (≥2 required)
+1983 року з'явився наказ міністра освіти УРСР про посилення вивчення
+російської мови в українських школах. ЕСУ повідомляє, що Марченко надіслав
+його діаспорі з коментарем, у якому порівняв документ з Валуєвським
+обмеженням [S1]. Повного первинного тексту цього коментаря в S1 і S2 немає,
+тому дослівна фраза не відтворюється. Перевіреним є сам факт передачі,
+історичного зіставлення і наступного переслідування.
 
-- "найсвіжіший Валуєвський указ" — Marchenko's phrase for the 1983 Russian-language school instruction, quoted in Ukrainian Wikipedia. It gives learners a concise way to connect Valuev-era prohibition with late-Soviet school policy. [S3]
-- "Царина Духа — явище досі нам не знане..." — from a Marchenko text quoted in the retrieved Ukrainian-wiki corpus on Ukrainian statehood. It marks his move from ideological critique to spiritual-moral resistance. [S4]
+21 жовтня 1983 року Марченка заарештували вдруге; ЕСУ зазначає, що тоді ж він
+став членом Української Гельсінської групи [S1]. 13 березня 1984 року, попри
+тяжку хворобу, його визнали особливо небезпечним рецидивістом і засудили до
+десяти років таборів особливого режиму та п'яти років заслання [S1]. КХПГ
+містить друкарську помилку в році цього суду, тому для дати використано ЕСУ,
+а не механічно повторено музейний запис.
 
-Both quotes are short and traceable, but exact page images were not retrieved. Use them in curriculum only after Phase 2 retrieves the edition page.
+Етапування тривало попри тяжкий стан. КХПГ описує прибуття до табору
+ВС-389/36 у Кучино, подальше переведення до лікарні в Пермі, а згодом до
+тюремної лікарні в Ленінграді [S2]. Медичне управління МВС СРСР дійшло
+висновку, що Марченка треба звільнити як невиліковно хворого, але КДБ не
+дозволив цього зробити [S1, S2]. Відтак смерть не подається як просто
+«природний наслідок хвороби»: каральний вирок, етап, утримання та блокування
+медичного звільнення становлять документований механізм державної
+відповідальності.
 
-## 5. Language register
+## 3. Основні праці й форми діяльності
 
-- **Register:** publicistic, juridical-moral, spiritual essay.
-- **CEFR readiness for full reading:** C1/C2; selected quote work possible at B2 with strong historical glosses.
-- **Lexicon notes:** Soviet legal terms, national-policy vocabulary, Christian/spiritual vocabulary, and intertextual references to nineteenth-century anti-Ukrainian language policy.
-- **Stylistic features:** sharp historical analogy, moral aphorism, and polemical compression. [S3] [S4]
+- **Початок 1970-х** — «За параваном ідейності», стаття, що стала матеріалом
+  першої справи [S1, S2].
+- **Початок 1970-х** — «Страшний якийсь тягар», стаття з матеріалів першої
+  справи [S1, S2].
+- **Початок 1970-х** — «Київський діалог», стаття з матеріалів першої справи
+  [S1, S2].
+- **До 1973 року** — переклади з азербайджанської та польської мов, нариси про
+  українсько-азербайджанські літературні зв'язки [S1].
+- **1982** — «Гулак», нарис про діяча Кирило-Мефодіївського братства Миколу
+  Гулака [S1].
+- **1982** — «Там, у Київських печерах», нарис [S1].
+- **1994, посмертно** — «Листи до матері з неволі», видання, перелічене ЕСУ
+  [S1].
+- **2001, посмертно** — «Творчість і життя» [S1].
+- **2005, посмертно** — «Вірити і тільки» [S1].
+- **2010, посмертно** — «Валерій і Сандра: Листування Валерія Марченка із
+  Сандрою Фапп'яно» та «Віршовані нотки» [S1].
 
-Marchenko is useful where the curriculum needs a bridge from rights documents to literary-moral prose. His texts ask learners to connect language policy, human dignity, and personal risk. [S1] [S3] [S4]
+Посмертні видання доводять збереження листів і частини корпусу, але сама
+бібліографічна згадка не дає права цитувати текст. Для навчального уривка
+потрібні конкретне видання, сторінка й окреме правове рішення.
 
-## 6. Contested points
+## 4. Первинний голос і межі цитування
 
-- **What's debated in modern UA scholarship:** the exact death date is uncertain in retrieved sources: KHPG and the Wikipedia lead give 7 October 1984, while Wikipedia body notes reports of 5 October. Preserve the discrepancy until a primary hospital/death document is retrieved. [S1] [S3]
-- **What gets simplified in popular memory:** his death can be remembered apart from his translation and literary work; the dossier should keep the philologist/translator identity visible. [S1] [S2]
-- **Russian disinformation attack surface:** Soviet accusations of "anti-Soviet" and "nationalist" writing were the mechanism of punishment, not a reliable description of his motives. [S2]
-- **Other-perspective considerations:** his Azerbaijani translation work opens a non-Russian imperial cultural link; detailed Azerbaijani reception source not found in retrieved materials. [S1]
+Дослівних цитат Марченка в цьому досьє немає. ЕСУ коротко цитує коментар до
+мовного наказу 1983 року, а музейний профіль передає родинну пам'ять і
+матеріали справи [S1, S2]. Проте завдання вимагає первинного локатора, а не
+цитати всередині вторинної статті. Поки не відкрито точного видання листа,
+есею або інтерв'ю з номером сторінки чи стабільним розділом, фрази не
+переносяться до навчального тексту.
 
-## 7. Cross-track links
+Назви статей, книжок та інтерв'юйовані особи є перевіреними бібліографічними
+фактами. Вони дозволяють планувати подальший пошук, але не реконструювати
+аргументацію за назвою. Так само свідчення Ніни Марченко не можна подавати як
+незалежне судове підтвердження: воно зберігає досвід родини й мусить лишатися
+підписаним її ім'ям.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
+## 5. Мова й педагогічний регістр
+
+- **Регістр:** публіцистичний, літературознавчий, епістолярний,
+  правозахисний.
+- **Рівень читання:** C1 для есеїв та листів; B2 для стислої хронології з
+  поясненням радянської правничої лексики.
+- **Ключові слова:** `самвидав`, `переклад`, `публіцистика`, `стаття 62`,
+  `табір особливого режиму`, `заслання`, `медичне звільнення`, `реабілітація`.
+- **Ризик:** радянські означення «націоналістичний» та «антирадянський» можна
+  вживати лише як атрибутовані формули обвинувачення.
+
+Корисною для семінару є відмінність між датою події й оцінкою події. Дата
+арешту, строк і рішення медичного управління підтверджені інституційними
+джерелами [S1, S2]. Формули про моральний сенс листів або внутрішні мотиви
+Марченка потребують читання самих текстів.
+
+## 6. Спірні точки й антиагіографічна рамка
+
+- **Дата смерті.** ЕСУ подає 7 жовтня 1984 року [S1]; КХПГ позначає дату як
+  приблизну [S2]. У навчальному викладі використовується дата ЕСУ, а музейна
+  обережність не приховується.
+- **Свідчення родини.** S2 підписане Ніною Марченко. Воно важливе, але не
+  дублює незалежно дані S1 там, де обидві сторінки спираються на спільну
+  пам'ять або документи.
+- **Членство в УГГ.** ЕСУ датують його другим арештом 21 жовтня 1983 року
+  [S1]. Не слід переносити членство на весь період після першого звільнення.
+- **Хвороба і смерть.** Відсутність у пакеті лікарняної карти не скасовує
+  підтвердженого висновку медичного управління та заборони КДБ на звільнення
+  [S1, S2]. Водночас досьє не встановлює непідтвердженого конкретного
+  медичного причинного ланцюга.
+- **Професійна ідентичність.** Мученицький образ не має затуляти переклади,
+  журналістику, літературознавство та інтерв'ю.
+
+Деколонізоване читання показує українську мовну й культурну працю як власну
+інтелектуальну діяльність, а не «відхилення» від російського центру. Воно не
+приймає радянський вирок за опис текстів і водночас не перетворює кожну
+родинну оцінку на судово доведений факт.
+
+## 7. Міждисциплінарні зв'язки
+
+- **Наявний план LIT, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
+- **Наявний план HIST, перевірений через `test -e`:**
   - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
+- **Наявні плани ISTORIO, перевірені через `test -e`:**
   - `curriculum/l2-uk-en/plans/istorio/samvydav-shcho-tse.yaml`
   - `curriculum/l2-uk-en/plans/istorio/syntez-dysydentski-dzherela.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Pair with Valuievan/Ems language-policy history for C1/C2 learners.
-  - Unit on medical abuse and denial of care in Soviet political imprisonment.
-- **Potential LIT additions surfaced by this research:**
-  - Short excerpt from *Вірити і тільки* after obtaining a stable edition and rights review.
+- **Кандидатні зв'язки:** імперські заборони української мови; українсько-
+  азербайджанський переклад; медичне насильство в системі політичних таборів;
+  родинне листування як джерело.
 
-## 8. Naming-canonical
+## 8. Канонічне іменування
 
-- **Slug:** `valerii-marchenko`
-- **EN canonical (BGN/PCGN 2010):** Valerii Veniaminovych Marchenko
-- **UA canonical (with patronymic if attested):** Валерій Веніамінович Марченко
-- **Aliases (track these for `aliases:` YAML field):** Valery Marchenko; Валерій Марченко
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Valeriy Veniaminovich Marchenko; Валерий Вениаминович Марченко
+- **Slug:** `valerii-marchenko`.
+- **Канонічна українська форма:** Валерій Веніамінович Марченко.
+- **Канонічна англійська форма:** Valerii Veniaminovych Marchenko.
+- **Пошуковий варіант:** Valery Marchenko.
+- **Заборонені як основні форми:** російські `Валерий Вениаминович Марченко`
+  та `Valeriy Veniaminovich Marchenko`; вони можливі лише в точній метаінформації
+  іншомовного документа.
 
-## 9. Image candidates
+## 9. Зображення і права
 
-- **Best PD/CC portrait:** source not found in retrieved sources; KHPG and Ukrainian Wikipedia images require license verification.
-- **Backup candidates:** Wikimedia Commons image linked from Wikipedia, if present and license permits; KHPG portrait as identification lead only.
-- **If no PD/CC portrait exists:** use a rights-cleared memorial/award image or book-cover image after permission.
-- **Era-appropriate context image:** Perm camp/Kuchino context image or Helsinki Group document image after rights verification.
+ЕСУ та КХПГ показують портрети Марченка, але відкриті сторінки не надають
+окремого файла з перевіреними фотографом, походженням і ліцензією PD або CC.
+Профіль КХПГ також не є дозволом автоматично переносити родинну фотографію.
+Тому пакет лишається текстовим: `portrait_fallback: text-only`. Будь-який
+майбутній портрет потребує окремої сторінки права й атрибуції.
 
-## 10. Sources used
+## 10. Використані джерела
 
-**Tier 1 (authoritative):**
-- [S8] "Марченко Валерій Веніамінович," Енциклопедія Сучасної України. https://esu.com.ua/article-65738 | accessed 2026-05-30.
+**S1 — Tier 1, авторитетна енциклопедія:**
 
-**Tier 2 (institutional):**
-- [S1] "MARCHENKO, Valery Venyaminovych," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/en/1142681251 | accessed 2026-05-30.
-- [S2] "МАРЧЕНКО ВАЛЕРІЙ ВЕНІАМІНОВИЧ," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1113916697 | accessed 2026-05-30.
-- [S7] "Українська Гельсінкська Група (УГГ)," Virtual Museum of the Dissident Movement / KHPG. https://museum.khpg.org/1160728419 | accessed 2026-05-30.
+- «Марченко Валерій Веніамінович». Енциклопедія Сучасної України.
+  https://esu.com.ua/article-64046. Переглянуто 17 липня 2026 року.
 
-**Tier 3 (encyclopedic):**
-- [S3] "Марченко Валерій Веніамінович," Ukrainian Wikipedia extract. https://uk.wikipedia.org/wiki/Марченко_Валерій_Веніамінович | accessed 2026-05-30.
+**S2 — Tier 2, музейний профіль і атрибутоване родинне свідчення:**
 
-**Tier 4 (modern scholarly post-1991):**
-- [S4] `mcp__sources.search_sources`, Ukrainian-wiki corpus chunks from "Українська державність у XX столітті" and Donbas historiography discussing Marchenko's spiritual framing and anti-russification thought.
+- Ніна Марченко. «МАРЧЕНКО ВАЛЕРІЙ ВЕНІАМІНОВИЧ». Віртуальний музей
+  «Дисидентський рух в Україні» КХПГ.
+  https://museum.khpg.org/1113916697. Переглянуто 17 липня 2026 року.
 
-**Tier 5 (general web):**
-- "Valeriy Marchenko: A Chronicle of a Murder," KHPG English article. https://museum.khpg.org/en/1628665430 | accessed 2026-05-30. Used as contextual narrative, corroborated by KHPG biography.
+**Первинні документи:** стаття 62 і зміст інкримінованих матеріалів названі в
+S1 та S2. Повного вироку, архівного номера справи, медичної карти або точного
+первинного тексту есеїв у пакеті немає; цитати й невідомі реквізити не
+додаються.
 
-**Primary-source documents accessed (NKVD files, KGB files, court records):**
-- Article 62 reference retrieved; exact KGB/court file number: source not found in retrieved sources.
+## Деколонізаційна самоперевірка
 
-## Decolonization self-check
-
-- [x] Death-date discrepancy is preserved
-- [x] Soviet accusations are not adopted as analytic language
-- [x] Existing cross-track paths were verified with `test -e`
-- [x] Medical-denial mechanism is stated specifically
-- [x] No fabricated archival IDs
+- [x] Радянські ярлики подано як мову обвинувачення.
+- [x] Перекладацька й журналістська праця не стерта табірною біографією.
+- [x] Родинне свідчення не видано за незалежне підтвердження.
+- [x] Медичне рішення і заборону КДБ названо конкретно.
+- [x] Номер справи, лікарняний документ і цитати не вигадано.
+- [x] Портрет не використано без індивідуальної ліцензії.
