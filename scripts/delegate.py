@@ -478,9 +478,7 @@ def _reap_runtime_tmp_lease(
             os.close(namespace_fd)
         result["tmp_bytes_freed"] = bytes_freed
     except Exception as exc:
-        result["tmp_reap_error"] = (
-            f"{type(exc).__name__}: {exc}"
-        )[:500]
+        result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
     return result
 
 
@@ -557,6 +555,15 @@ def _load_worktree_containment():
     from scripts.guardrails import worktree_containment
 
     return worktree_containment
+
+
+def _load_primary_write_guard():
+    """Import the primary write guard logic (#5389), ensuring repo root on path."""
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.guardrails import primary_write_guard
+
+    return primary_write_guard
 
 
 def _resolve_cwd_path(raw: str) -> Path:
@@ -688,6 +695,19 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
         return None
 
     entries = status.get("entries") or []
+
+    extra_diagnostic = ""
+    try:
+        pwg = _load_primary_write_guard()
+        writable = pwg.get_writable_tracked_files(_REPO_ROOT)
+        if writable:
+            offenders = [str(f.relative_to(_REPO_ROOT)) for f in writable]
+            extra_diagnostic = f"   writable tracked files (guard OFF): {', '.join(offenders)}\n"
+        else:
+            extra_diagnostic = "   writable tracked files (guard ON): (none)\n"
+    except Exception as exc:
+        extra_diagnostic = f"   could not check write guard status: {exc}\n"
+
     return (
         "❌ primary checkout is dirty; refusing write-capable dispatch before "
         "creating branch/worktree residue.\n"
@@ -695,6 +715,7 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
         f"   command: {status.get('checked_command')}\n"
         f"   branch: {status.get('branch')}\n"
         f"   dirty files: {_format_dirty_entries(entries)}\n"
+        f"{extra_diagnostic}"
         "   Clean/stash the primary checkout, or keep only gitignored local "
         "runtime state, then retry."
     )
@@ -736,16 +757,12 @@ def _validate_branch_reuse_name(branch: str) -> str:
     if not normalized:
         raise ValueError("--branch must name an existing non-protected branch")
     if normalized.startswith(("origin/", "refs/")):
-        raise ValueError(
-            "--branch must be a local branch name without origin/ or refs/ prefixes: "
-            f"got {branch!r}"
-        )
+        raise ValueError(f"--branch must be a local branch name without origin/ or refs/ prefixes: got {branch!r}")
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:
         raise ValueError(
-            f"refusing --branch {normalized!r}: protected branches may not be "
-            "attached to a dispatch worktree"
+            f"refusing --branch {normalized!r}: protected branches may not be attached to a dispatch worktree"
         )
     return normalized
 
@@ -761,9 +778,7 @@ def _fetch_existing_branch(branch: str) -> None:
         env=_sanitized_git_env(),
     )
     if proc.returncode != 0:
-        raise RuntimeError(
-            f"could not fetch existing branch {branch!r}: {_format_process_failure(proc)}"
-        )
+        raise RuntimeError(f"could not fetch existing branch {branch!r}: {_format_process_failure(proc)}")
     verify = subprocess.run(
         ["git", "rev-parse", "--verify", f"origin/{branch}"],
         cwd=_REPO_ROOT,
@@ -773,9 +788,7 @@ def _fetch_existing_branch(branch: str) -> None:
         env=_sanitized_git_env(),
     )
     if verify.returncode != 0:
-        raise RuntimeError(
-            f"origin/{branch} was not found after fetch; --branch requires an existing remote branch"
-        )
+        raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
 
 
 def _branch_worktree_paths(branch: str) -> list[Path]:
@@ -1387,21 +1400,16 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
         name = str(item).strip().strip("/")
         if not name or name in {".", ".."}:
             raise ValueError(
-                f"--sparse-include {item!r} is empty or invalid; "
-                f"pass a top-level name such as 'curriculum' or 'wiki'"
+                f"--sparse-include {item!r} is empty or invalid; pass a top-level name such as 'curriculum' or 'wiki'"
             )
         if "/" in name:
             top = name.split("/", 1)[0]
             raise ValueError(
-                f"--sparse-include {item!r} must be a top-level directory name "
-                f"(use {top!r}, not a nested path)"
+                f"--sparse-include {item!r} must be a top-level directory name (use {top!r}, not a nested path)"
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
             allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
-            raise ValueError(
-                f"--sparse-include {name!r} is not a default-excluded tree; "
-                f"allowed: {allowed}"
-            )
+            raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
         if name in seen:
             continue
         seen.add(name)
@@ -1459,9 +1467,7 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
     )
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
-        raise RuntimeError(
-            f"could not list top-level dirs in {worktree_path}: {detail}"
-        )
+        raise RuntimeError(f"could not list top-level dirs in {worktree_path}: {detail}")
     return [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
 
 
@@ -1505,9 +1511,7 @@ def _apply_dispatch_sparse_checkout(
         if proc.returncode != 0:
             detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
             telemetry["error"] = detail
-            raise RuntimeError(
-                f"failed to disable sparse-checkout in {worktree_path}: {detail}"
-            )
+            raise RuntimeError(f"failed to disable sparse-checkout in {worktree_path}: {detail}")
         telemetry["applied"] = True
         return telemetry
 
@@ -1525,9 +1529,7 @@ def _apply_dispatch_sparse_checkout(
         if proc.returncode != 0:
             detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
             telemetry["error"] = detail
-            raise RuntimeError(
-                f"failed to disable sparse-checkout in {worktree_path}: {detail}"
-            )
+            raise RuntimeError(f"failed to disable sparse-checkout in {worktree_path}: {detail}")
         telemetry["applied"] = True
         return telemetry
 
@@ -1535,9 +1537,7 @@ def _apply_dispatch_sparse_checkout(
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "sparse-checkout init failed").strip()
         telemetry["error"] = detail
-        raise RuntimeError(
-            f"failed to init sparse-checkout in {worktree_path}: {detail}"
-        )
+        raise RuntimeError(f"failed to init sparse-checkout in {worktree_path}: {detail}")
 
     proc = _run_git(["git", "sparse-checkout", "set", "--", *included])
     if proc.returncode != 0:
@@ -1636,8 +1636,7 @@ def _ensure_worktree(
 
     if dry_run:
         raise ValueError(
-            f"branch reuse dry-run found no existing worktree at {worktree_path}; "
-            "rerun without --dry-run to create one"
+            f"branch reuse dry-run found no existing worktree at {worktree_path}; rerun without --dry-run to create one"
         )
 
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
@@ -1671,9 +1670,7 @@ def _ensure_worktree(
     if requested_branch and _resolve_sha(_REPO_ROOT, f"refs/heads/{requested_branch}"):
         add_command.extend([str(worktree_path), requested_branch])
     elif requested_branch:
-        add_command.extend(
-            ["--track", "-b", requested_branch, str(worktree_path), f"origin/{requested_branch}"]
-        )
+        add_command.extend(["--track", "-b", requested_branch, str(worktree_path), f"origin/{requested_branch}"])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     proc = subprocess.run(
@@ -1770,14 +1767,10 @@ def _build_research_context(args: argparse.Namespace):
         if value is not None and len(value) > reg.MAX_QUERY_VALUE_LEN:
             raise ResearchContextError(f"{label} value too long (max {reg.MAX_QUERY_VALUE_LEN} chars)")
     if len(owned) > reg.MAX_OWNED_PATHS:
-        raise ResearchContextError(
-            f"too many --research-owned-path values ({len(owned)} > {reg.MAX_OWNED_PATHS})"
-        )
+        raise ResearchContextError(f"too many --research-owned-path values ({len(owned)} > {reg.MAX_OWNED_PATHS})")
     for path in owned:
         if len(path) > reg.MAX_OWNED_PATH_LEN:
-            raise ResearchContextError(
-                f"--research-owned-path value too long (max {reg.MAX_OWNED_PATH_LEN} chars)"
-            )
+            raise ResearchContextError(f"--research-owned-path value too long (max {reg.MAX_OWNED_PATH_LEN} chars)")
     return reg.normalize_context(role, family, track, owned)
 
 
@@ -1801,9 +1794,7 @@ def _render_research_prompt_block(pointers: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def _with_optional_research_state(
-    state: dict[str, Any], research_state: dict[str, Any] | None
-) -> dict[str, Any]:
+def _with_optional_research_state(state: dict[str, Any], research_state: dict[str, Any] | None) -> dict[str, Any]:
     """Add ``"research"`` to ``state`` only when ``research_state`` is non-``None``.
 
     ADR-011 P3 default-compatibility: a no-flags dispatch, a disabled registry, or
@@ -2400,9 +2391,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         return 2
 
     try:
-        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(
-            getattr(args, "lifecycle_file", None)
-        )
+        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
     except (OSError, ValueError) as exc:
         print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
         return 2
@@ -2442,11 +2431,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         dry_run_branch: str | None = None
         dry_run_worktree_telemetry: dict[str, Any] = {}
         if requested_branch:
-            resolved_raw = (
-                str(_auto_worktree_path(dispatch_agent, task_id))
-                if worktree_arg == "auto"
-                else worktree_arg
-            )
+            resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
             try:
                 (
