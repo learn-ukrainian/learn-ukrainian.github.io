@@ -91,3 +91,38 @@ def is_russian_pattern(
         "ukrainian_alternative": None,  # Without translation dict, we can't reliably guess the UK alt
         "confidence": conf
     }
+
+
+def check_russian_patterns_batch(
+    words: list[str],
+    threshold: float = 0.7,
+    *,
+    verified_words: set[str],
+) -> dict[str, dict]:
+    """Apply the Russian-shadow heuristic using already-batched VESUM results.
+
+    ``is_russian_pattern`` verifies VESUM for each call. Composite vocabulary
+    vetting has already completed that check in one SQL query, so this helper
+    preserves the same VESUM short-circuit without N extra database lookups.
+    """
+    normalized_verified = {word.lower().strip() for word in verified_words}
+    results: dict[str, dict] = {}
+    for raw_word in words:
+        word = raw_word.lower().strip()
+        if not word or word in normalized_verified:
+            results[raw_word] = {
+                "matches_russian": False,
+                "russian_lemma": None,
+                "ukrainian_alternative": None,
+                "confidence": 0.0,
+            }
+            continue
+
+        confidence, russian_lemma = get_ru_confidence(word)
+        results[raw_word] = {
+            "matches_russian": confidence >= threshold,
+            "russian_lemma": russian_lemma,
+            "ukrainian_alternative": None,
+            "confidence": confidence,
+        }
+    return results

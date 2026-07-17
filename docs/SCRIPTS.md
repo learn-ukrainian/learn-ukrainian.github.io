@@ -461,6 +461,7 @@ of a second server:
 Full list: [`.claude/rules/rag-and-dictionaries.md`](../.claude/rules/rag-and-dictionaries.md). Core tools used daily:
 
 - `mcp__rag__verify_word` - VESUM morphological check
+- `mcp__sources__vet_vocabulary` - batched VESUM/CEFR/Russian-shadow vocabulary vetting (optional SUM-11 gloss)
 - `mcp__rag__search_text` - textbook content search
 - `mcp__rag__search_definitions` - SUM-11 explanatory dictionary
 - `mcp__rag__search_style_guide` - Antonenko-Davydovych style guidance

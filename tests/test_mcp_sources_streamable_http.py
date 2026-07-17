@@ -82,7 +82,7 @@ def test_streamable_http_initialize_returns_capabilities(sources_http_url):
     assert "capabilities" in body["result"]
 
 
-def test_streamable_http_tools_list_contains_verify_words(sources_http_url):
+def test_streamable_http_tools_list_contains_vocabulary_vetting_tools(sources_http_url):
     response = httpx.post(
         f"{sources_http_url}/mcp",
         json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
@@ -93,6 +93,7 @@ def test_streamable_http_tools_list_contains_verify_words(sources_http_url):
     body = response.json()
     tool_names = {tool["name"] for tool in body["result"]["tools"]}
     assert "verify_words" in tool_names
+    assert "vet_vocabulary" in tool_names
 
 
 def test_streamable_http_tool_call_returns_valid_response(sources_http_url):

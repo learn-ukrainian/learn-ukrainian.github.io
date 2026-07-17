@@ -1826,9 +1826,103 @@ def _dict_lookup(
         _close_if_temporary(conn, db_path)
 
 
+def _batch_dict_lookup(
+    table: str,
+    words: list[str],
+    limit: int = 1,
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Look up many dictionary headwords without issuing one query per word.
+
+    This is the batch counterpart to :func:`_dict_lookup`: exact headwords
+    take precedence and unmatched requests then use its prefix fallback.  A
+    chunk is deliberately much smaller than SQLite's conservative 999
+    placeholder limit, so callers can batch the MCP tool's 500-word cap
+    safely on older SQLite builds too.
+    """
+    requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
+    results: dict[str, list[dict]] = {word: [] for word in requested}
+    if not requested:
+        return results
+
+    conn = None
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return results
+
+    try:
+        for start in range(0, len(requested), 400):
+            chunk = requested[start:start + 400]
+            values = ", ".join("(?)" for _ in chunk)
+            rows = conn.execute(
+                f"""
+                WITH requested(word) AS (VALUES {values}),
+                ranked AS (
+                    SELECT
+                        requested.word AS requested_word,
+                        dictionary.*,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY requested.word
+                            ORDER BY dictionary.word COLLATE NOCASE
+                        ) AS result_order
+                    FROM requested
+                    JOIN {table} AS dictionary
+                      ON dictionary.word = requested.word COLLATE NOCASE
+                )
+                SELECT * FROM ranked
+                WHERE result_order <= ?
+                """,
+                (*chunk, limit),
+            ).fetchall()
+            for row in rows:
+                item = dict(row)
+                requested_word = item.pop("requested_word")
+                item.pop("result_order", None)
+                results[requested_word].append(item)
+
+            missing = [word for word in chunk if not results[word]]
+            if not missing:
+                continue
+
+            prefix_values = ", ".join("(?)" for _ in missing)
+            rows = conn.execute(
+                f"""
+                WITH requested(word) AS (VALUES {prefix_values})
+                SELECT requested.word AS requested_word, dictionary.*
+                FROM requested
+                JOIN {table} AS dictionary
+                  ON dictionary.id = (
+                    SELECT candidate.id
+                    FROM {table} AS candidate
+                    WHERE candidate.word LIKE requested.word || '%' COLLATE NOCASE
+                    ORDER BY candidate.word COLLATE NOCASE
+                    LIMIT 1
+                  )
+                """,
+                missing,
+            ).fetchall()
+            for row in rows:
+                item = dict(row)
+                requested_word = item.pop("requested_word")
+                results[requested_word].append(item)
+    except sqlite3.OperationalError:
+        return results
+    finally:
+        _close_if_temporary(conn, db_path)
+
+    return results
+
+
 def search_definitions(word: str, limit: int = 10) -> list[dict]:
     """Look up word in СУМ-11 (Ukrainian explanatory dictionary)."""
     return _dict_lookup("sum11", word, limit)
+
+
+def search_definitions_batch(words: list[str]) -> dict[str, list[dict]]:
+    """Return the best СУМ-11 hit for each requested word in batched SQL."""
+    return _batch_dict_lookup("sum11", words, limit=1)
 
 
 def search_grinchenko_1907(
@@ -2030,6 +2124,11 @@ def search_synonyms(word: str, limit: int = 20) -> list[dict]:
 def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
     """Look up CEFR level for a word in PULS vocabulary."""
     return _dict_lookup("puls_cefr", word, limit=limit)
+
+
+def query_cefr_levels(words: list[str]) -> dict[str, list[dict]]:
+    """Return the best PULS CEFR hit for each requested word in batched SQL."""
+    return _batch_dict_lookup("puls_cefr", words, limit=1)
 
 
 def search_style_guide(

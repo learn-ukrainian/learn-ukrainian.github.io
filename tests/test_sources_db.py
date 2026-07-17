@@ -315,6 +315,19 @@ class TestSourcesDb:
         assert len(results) >= 1
         assert results[0]["level"] == "A1"
 
+    def test_batch_vocabulary_lookups(self, sample_data, monkeypatch):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import query_cefr_levels, search_definitions_batch
+
+        cefr = query_cefr_levels(["добре", "відсутнє"])
+        definitions = search_definitions_batch(["слово", "слов", "відсутнє"])
+
+        assert cefr["добре"][0]["level"] == "A1"
+        assert cefr["відсутнє"] == []
+        assert "Одиниця мови" in definitions["слово"][0]["definition"]
+        assert "Одиниця мови" in definitions["слов"][0]["definition"]
+        assert definitions["відсутнє"] == []
+
     def test_search_style_guide(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_style_guide

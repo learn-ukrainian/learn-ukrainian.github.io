@@ -49,7 +49,7 @@ class TestListTools:
         expected = {
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
-            "verify_word", "verify_source_attribution", "verify_words", "verify_lemma", "verify_quote", "check_modern_form",
+            "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
             "query_ulif_antonyms", "query_ulif_phraseology",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
@@ -147,6 +147,13 @@ class TestUlifHandlers:
         assert props["type"] == "array"
         assert props["items"]["type"] == "string"
 
+    def test_vet_vocabulary_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(tool for tool in tools if tool.name == "vet_vocabulary")
+        assert tool.inputSchema["required"] == ["words"]
+        assert tool.inputSchema["properties"]["words"]["type"] == "array"
+        assert tool.inputSchema["properties"]["include_definitions"]["default"] is False
+
     def test_verify_quote_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vq = next(t for t in tools if t.name == "verify_quote")
@@ -195,6 +202,13 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("verify_words", {"words": ["тест"]}))
             mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_vet_vocabulary_dispatches(self, server_module):
+        with patch.object(server_module, "handle_vet_vocabulary", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            args = {"words": ["тест"], "include_definitions": True}
+            _run(server_module.call_tool("vet_vocabulary", args))
+            mock.assert_called_once_with(args)
 
     def test_verify_quote_dispatches(self, server_module):
         with patch.object(server_module, "handle_verify_quote", new_callable=AsyncMock) as mock:
@@ -342,6 +356,109 @@ class TestVerifyWordsHandler:
             assert "Found: 1/2" in text
             assert "**стій** — FOUND" in text
             assert "**взяйте** — NOT FOUND" in text
+
+
+@pytest.fixture
+def vocabulary_vet_fixtures():
+    """One fixture payload for each source that composite vocabulary vetting uses."""
+    return {
+        "vesum": {
+            "кіт": [{"lemma": "кіт", "pos": "noun", "tags": "noun:anim:m:v_naz"}],
+            "вигадане": [],
+        },
+        "cefr": {"кіт": [{"level": "A1"}], "вигадане": []},
+        "shadow": {
+            "кіт": {
+                "matches_russian": False,
+                "russian_lemma": None,
+                "confidence": 0.0,
+            },
+            "вигадане": {
+                "matches_russian": True,
+                "russian_lemma": "выдуманный",
+                "confidence": 0.91,
+            },
+        },
+        "definitions": {
+            "кіт": [{"definition": "КІТ, кота, ч. Свійська тварина родини котячих."}],
+            "вигадане": [],
+        },
+    }
+
+
+class TestVetVocabularyHandler:
+    def test_reports_all_sources_and_missing_word(self, server_module, vocabulary_vet_fixtures):
+        fixtures = vocabulary_vet_fixtures
+        with (
+            patch("scripts.verification.vesum.verify_words", return_value=fixtures["vesum"]) as verify_words,
+            patch("wiki.sources_db.query_cefr_levels", return_value=fixtures["cefr"]) as query_cefr,
+            patch(
+                "scripts.verification.check_ru_morph.check_russian_patterns_batch",
+                return_value=fixtures["shadow"],
+            ) as check_shadow,
+            patch(
+                "wiki.sources_db.search_definitions_batch",
+                return_value=fixtures["definitions"],
+            ) as search_definitions,
+        ):
+            result = _run(
+                server_module.handle_vet_vocabulary(
+                    {"words": ["кіт", "вигадане"], "include_definitions": True}
+                )
+            )
+
+        text = result[0].text
+        assert text.splitlines()[0] == (
+            "- **кіт** | VESUM: valid (lemma=кіт, pos=noun, tags=noun:anim:m:v_naz) "
+            "| CEFR: A1 | Russian-shadow: not flagged (suspicion only, not a verdict) "
+            "| Gloss: КІТ, кота, ч. Свійська тварина родини котячих."
+        )
+        assert "**вигадане** | VESUM: not found" in text
+        assert "Russian-shadow: suspected (suspicion only, not a verdict; russian_lemma=выдуманный" in text
+        assert "Gloss: КІТ, кота, ч. Свійська тварина родини котячих." in text
+        assert "Gloss: not found" in text
+        verify_words.assert_called_once_with(["кіт", "вигадане"])
+        query_cefr.assert_called_once_with(["кіт", "вигадане"])
+        search_definitions.assert_called_once_with(["кіт", "вигадане"])
+        check_shadow.assert_called_once_with(
+            ["кіт", "вигадане"], verified_words={"кіт"}
+        )
+
+    def test_omits_gloss_without_definitions_toggle(self, server_module, vocabulary_vet_fixtures):
+        fixtures = vocabulary_vet_fixtures
+        with (
+            patch("scripts.verification.vesum.verify_words", return_value=fixtures["vesum"]),
+            patch("wiki.sources_db.query_cefr_levels", return_value=fixtures["cefr"]),
+            patch(
+                "scripts.verification.check_ru_morph.check_russian_patterns_batch",
+                return_value=fixtures["shadow"],
+            ),
+            patch("wiki.sources_db.search_definitions_batch") as search_definitions,
+        ):
+            result = _run(server_module.handle_vet_vocabulary({"words": ["кіт"]}))
+
+        assert "Gloss:" not in result[0].text
+        assert "Russian-shadow: not flagged (suspicion only, not a verdict)" in result[0].text
+        search_definitions.assert_not_called()
+
+    def test_honestly_truncates_after_500_words(self, server_module):
+        words = [f"слово-{index}" for index in range(501)]
+        first_500 = words[:500]
+        with (
+            patch("scripts.verification.vesum.verify_words", return_value={word: [] for word in first_500}) as verify_words,
+            patch("wiki.sources_db.query_cefr_levels", return_value={}),
+            patch(
+                "scripts.verification.check_ru_morph.check_russian_patterns_batch",
+                return_value={word: {"matches_russian": False} for word in first_500},
+            ),
+        ):
+            result = _run(server_module.handle_vet_vocabulary({"words": words}))
+
+        text = result[0].text
+        assert text.startswith("Note: received 501 words; processed the first 500 (hard cap).")
+        assert "**слово-499**" in text
+        assert "**слово-500**" not in text
+        verify_words.assert_called_once_with(first_500)
 
 
 def _shevchenko_quote_hits():
