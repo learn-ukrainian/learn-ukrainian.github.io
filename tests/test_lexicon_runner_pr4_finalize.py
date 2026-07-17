@@ -96,14 +96,10 @@ def _seed_sealed_run(
             (UnitOutcome.DONE.value, f"hash-{lid}", 2.0, run, lid, "offline_enrich"),
         )
 
-    commit = ledger.commit_result(
-        run, chunk_id, "coord", gen, "done", result_hash="chunk-hash", now=3.0
-    )
+    commit = ledger.commit_result(run, chunk_id, "coord", gen, "done", result_hash="chunk-hash", now=3.0)
     assert commit.ok
     # After result, owner released; seal uses generation on DONE leaf.
-    sealed = ledger.commit_seal(
-        run, chunk_id, "coord", gen, seal_sha256=f"seal-{chunk_id}", now=4.0
-    )
+    sealed = ledger.commit_seal(run, chunk_id, "coord", gen, seal_sha256=f"seal-{chunk_id}", now=4.0)
     assert sealed.ok, sealed.detail
     return run, fp
 
@@ -242,13 +238,9 @@ def test_double_assembly_byte_equality_normalized_zip(ledger: Ledger, tmp_path: 
         data_versions.append(str(result.data_version))
         bytes_list.append(Path(str(result.archive_path)).read_bytes())
         manifest = json.loads(
-            (
-                Path(str(result.tree_root))
-                / "atlas"
-                / "versions"
-                / str(result.data_version)
-                / "manifest.json"
-            ).read_text(encoding="utf-8")
+            (Path(str(result.tree_root)) / "atlas" / "versions" / str(result.data_version) / "manifest.json").read_text(
+                encoding="utf-8"
+            )
         )
         assert manifest["runFingerprint"] == fp
 
@@ -374,12 +366,7 @@ def test_first_run_escape_one_time_only(ledger: Ledger, tmp_path: Path) -> None:
     assert "first-run escape already consumed" in r2.detail or "not reusable" in r2.detail
 
     # With a real prior (bootstrap from first publish), finalization works without escape.
-    prior = (
-        Path(str(r1.tree_root))
-        / "atlas"
-        / "versions"
-        / "atlas-bootstrap-empty"
-    )
+    prior = Path(str(r1.tree_root)) / "atlas" / "versions" / "atlas-bootstrap-empty"
     assert prior.is_dir()
     out3 = tmp_path / "out3"
     r3 = finalize_run(
@@ -448,9 +435,7 @@ def test_rss_ceiling_constant_and_probe(ledger: Ledger, tmp_path: Path) -> None:
         assert result.dry_run.peak_rss_delta_bytes == result.peak_rss_delta_bytes
 
 
-def test_rss_ceiling_delta_ignores_preexisting_process_ballast(
-    ledger: Ledger, tmp_path: Path
-) -> None:
+def test_rss_ceiling_delta_ignores_preexisting_process_ballast(ledger: Ledger, tmp_path: Path) -> None:
     """Regression: ~300 MiB process ballast before finalize must not trip the gate.
 
     Proves the ceiling applies to assembly delta (peak − baseline), not whole-
@@ -468,9 +453,7 @@ def test_rss_ceiling_delta_ignores_preexisting_process_ballast(
         pre = _safe_rss_bytes()
         # Process high-water should reflect ballast when the probe works.
         if pre is not None:
-            assert pre >= ballast_size // 2, (
-                f"expected process RSS high-water ≥ ~150 MiB after ballast, got {pre}"
-            )
+            assert pre >= ballast_size // 2, f"expected process RSS high-water ≥ ~150 MiB after ballast, got {pre}"
         result = finalize_run(
             ledger=ledger,
             run_id=run,
@@ -492,20 +475,29 @@ def test_rss_ceiling_delta_ignores_preexisting_process_ballast(
 
 
 def test_rss_ceiling_trips_on_assembly_overuse(ledger: Ledger, tmp_path: Path) -> None:
-    """Genuine overuse: small ceiling override trips on a large synthetic payload."""
+    """Genuine overuse: injected probe reports assembly delta above ceiling.
+
+    Does not physically allocate to trip the gate: long-lived pytest workers can
+    reuse freed-but-retained pages so measured RSS delta stays ~0 (allocator-
+    dependent flake). Probe injection is the stable design for the trip path;
+    physical ballast coverage remains in
+    ``test_rss_ceiling_delta_ignores_preexisting_process_ballast``.
+    """
     arts = tmp_path / "arts"
-    # One ~32 MiB lemma body forces assembly high-water growth well past 1 MiB.
-    huge = "x" * (32 * 1024 * 1024)
-    run, fp = _seed_sealed_run(ledger, arts, lemmas=["huge"], cohort="rss-overuse")
-    lemma_path = arts / "chunk-0" / "huge.json"
-    entry = {"lemma": "huge", "url_slug": "huge", "gloss": huge}
-    lemma_path.write_text(
-        json.dumps(entry, ensure_ascii=False, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    run, fp = _seed_sealed_run(ledger, arts, lemmas=["a", "b"], cohort="rss-overuse")
     tree_root = tmp_path / "out-overuse" / "tree"
     tree_root.mkdir(parents=True)
     small_ceiling = 1 * 1024 * 1024  # 1 MiB incremental cap
+    baseline = 10 * 1024 * 1024
+    calls = {"n": 0}
+
+    def probe() -> int:
+        # First sample is the assembly baseline; later samples exceed ceiling.
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return baseline
+        return baseline + small_ceiling + 1
+
     with pytest.raises(FinalizeError, match=r"assembly RSS delta .* exceeded ceiling"):
         assemble_version_tree(
             ledger=ledger,
@@ -518,7 +510,9 @@ def test_rss_ceiling_trips_on_assembly_overuse(ledger: Ledger, tmp_path: Path) -
             first_run_escape_reason="test",
             assert_rss_ceiling=True,
             rss_ceiling_bytes=small_ceiling,
+            rss_probe=probe,
         )
+    assert calls["n"] >= 2, "probe must sample baseline then assembly growth"
 
 
 def test_deterministic_zip_writer_pin() -> None:
@@ -559,9 +553,7 @@ def test_seal_mid_transaction_still_rolls_back(ledger: Ledger) -> None:
     with pytest.raises(RuntimeError, match="injected crash: mid_seal"):
         ledger.commit_seal(run, "c1", "coord", gen, seal_sha256="s", now=3.0)
     ledger.crash_mid_seal = False
-    n = ledger._require().execute(
-        "SELECT COUNT(*) AS n FROM seals WHERE run_id = ?", (run,)
-    ).fetchone()
+    n = ledger._require().execute("SELECT COUNT(*) AS n FROM seals WHERE run_id = ?", (run,)).fetchone()
     assert int(n["n"]) == 0
     sealed = ledger.commit_seal(run, "c1", "coord", gen, seal_sha256="s", now=4.0)
     assert sealed.ok
@@ -583,10 +575,14 @@ def test_record_finalize_audit(ledger: Ledger, tmp_path: Path) -> None:
     assert actions >= 1
     events = ledger.list_events(run, event="run_finalized")
     assert events
-    phase = ledger._require().execute(
-        "SELECT seal_sha256 FROM run_phases WHERE run_id = ? AND phase = 'finalize'",
-        (run,),
-    ).fetchone()
+    phase = (
+        ledger._require()
+        .execute(
+            "SELECT seal_sha256 FROM run_phases WHERE run_id = ? AND phase = 'finalize'",
+            (run,),
+        )
+        .fetchone()
+    )
     assert phase is not None
     assert phase["seal_sha256"] == result.archive_sha256
     assert result.fingerprint == fp

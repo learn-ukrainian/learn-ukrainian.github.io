@@ -28,7 +28,7 @@ import shutil
 import sys
 import tempfile
 import time
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -56,6 +56,9 @@ from scripts.lexicon.runner.ledger import (
     DuplicateRunnerError,
     Ledger,
 )
+
+# RSS sample callable: returns process high-water bytes, or None if unavailable.
+RssProbe = Callable[[], int | None]
 
 # Incremental assembly RSS ceiling (PR4 criterion 2 / V2).
 #
@@ -90,6 +93,7 @@ def _safe_rss_bytes() -> int | None:
     if platform.system() == "Linux":
         return rss * 1024
     return rss
+
 
 # Bounded concurrent open handles while writing shards (V9).
 MAX_OPEN_SHARD_FDS = 8
@@ -182,9 +186,7 @@ def _gzip_bytes(data: bytes, *, compression_level: int = 9) -> bytes:
 
 
 def _canonical_json_bytes(payload: Any) -> bytes:
-    return (json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n").encode("utf-8")
 
 
 def _atomic_replace_dir(src: Path, dest: Path) -> None:
@@ -227,9 +229,7 @@ class FinalizeLock:
             fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             fh.close()
-            raise DuplicateRunnerError(
-                f"duplicate finalizer refused: lock held on {self.lock_path}"
-            ) from exc
+            raise DuplicateRunnerError(f"duplicate finalizer refused: lock held on {self.lock_path}") from exc
         fh.seek(0)
         fh.truncate()
         fh.write(f"{self.owner_id}\n{time.time():.6f}\n")
@@ -286,9 +286,7 @@ def stream_lemma_payloads(
         chunk_id = str(row["chunk_id"])
         path = resolve_artifact_path(artifacts_dir, chunk_id=chunk_id, lemma_id=lemma_id)
         if path is None:
-            raise FinalizeError(
-                f"missing sealed lemma artifact for {lemma_id!r} (chunk={chunk_id})"
-            )
+            raise FinalizeError(f"missing sealed lemma artifact for {lemma_id!r} (chunk={chunk_id})")
         # Read + parse one file; do not retain prior entries.
         raw = path.read_bytes()
         digest = _sha256_bytes(raw)
@@ -474,9 +472,7 @@ def _copy_prior_version(prior_dir: Path, versions_root: Path) -> str:
     shutil.copytree(prior_dir, dest)
     manifest = dest / "manifest.json"
     if not manifest.is_file():
-        raise FinalizeError(
-            f"prior version dir missing manifest.json: {prior_dir}"
-        )
+        raise FinalizeError(f"prior version dir missing manifest.json: {prior_dir}")
     return name
 
 
@@ -543,6 +539,7 @@ def assemble_version_tree(
     crash_mid_stream: bool = False,
     assert_rss_ceiling: bool = True,
     rss_ceiling_bytes: int = ASSEMBLY_RSS_CEILING_BYTES,
+    rss_probe: RssProbe | None = None,
 ) -> dict[str, Any]:
     """Stream sealed lemmas into a versioned atlas tree under ``tree_root/atlas``.
 
@@ -554,15 +551,21 @@ def assemble_version_tree(
     ``rss_ceiling_bytes`` on the *delta* (peak sample during assembly − baseline).
     Absolute process RSS is not gated here — that belongs to the PR-1 hard-capped
     worker subprocess.
+
+    ``rss_probe`` defaults to :func:`_safe_rss_bytes`. Tests may inject a
+    deterministic probe so the gate trip path does not depend on physical
+    allocation (allocator/reuse-dependent RSS deltas are flaky in long-lived
+    pytest workers).
     """
     artifacts_dir = Path(artifacts_dir)
     tree_root = Path(tree_root)
     tree_root.mkdir(parents=True, exist_ok=True)
     ceiling = int(rss_ceiling_bytes)
+    probe: RssProbe = rss_probe if rss_probe is not None else _safe_rss_bytes
 
     # Pre-scan digests for dataVersion (streaming — one file at a time).
     lemma_digests: list[tuple[str, str]] = []
-    baseline_rss = _safe_rss_bytes()
+    baseline_rss = probe()
     peak_rss_absolute = baseline_rss if baseline_rss is not None else 0
     peak_rss_delta = 0
 
@@ -570,7 +573,7 @@ def assemble_version_tree(
         nonlocal peak_rss_absolute, peak_rss_delta
         if not force and n % 32 != 0:
             return
-        rss = _safe_rss_bytes()
+        rss = probe()
         if rss is None:
             return
         peak_rss_absolute = max(peak_rss_absolute, rss)
@@ -583,9 +586,7 @@ def assemble_version_tree(
                 f"baseline={baseline_rss} peak_absolute={rss}"
             )
 
-    for n, (lemma_id, _entry, digest) in enumerate(
-        stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase)
-    ):
+    for n, (lemma_id, _entry, digest) in enumerate(stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase)):
         lemma_digests.append((lemma_id, digest))
         _note_rss(n=n)
 
@@ -599,9 +600,7 @@ def assemble_version_tree(
 
     # Build into same-partition temp, promote via rename (V7).
     staging_parent = tree_root
-    staging = Path(
-        tempfile.mkdtemp(prefix=f".atlas-assemble-{data_version}-", dir=str(staging_parent))
-    )
+    staging = Path(tempfile.mkdtemp(prefix=f".atlas-assemble-{data_version}-", dir=str(staging_parent)))
     try:
         atlas_staging = staging / "atlas"
         versions_root = atlas_staging / "versions"
@@ -614,9 +613,7 @@ def assemble_version_tree(
         current_shard = _entry_shard_id(shard_index)
         record_count = 0
 
-        for lemma_id, entry, digest in stream_lemma_payloads(
-            ledger, run_id, artifacts_dir, phase=phase
-        ):
+        for lemma_id, entry, digest in stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase):
             if crash_mid_stream and record_count == max(1, len(lemma_digests) // 2):
                 raise RuntimeError("injected crash: mid_stream_assembly")
             record = {
@@ -674,9 +671,7 @@ def assemble_version_tree(
         if prior_version_dir is not None:
             prior_name = _copy_prior_version(Path(prior_version_dir), versions_root)
             if prior_name == data_version:
-                raise FinalizeError(
-                    f"prior version name collides with current dataVersion {data_version}"
-                )
+                raise FinalizeError(f"prior version name collides with current dataVersion {data_version}")
         else:
             if not grant_first_run_escape:
                 raise FinalizeError(
@@ -777,9 +772,7 @@ def build_publication_archive(
             "schemaVersion": TREE_MANIFEST_SCHEMA_VERSION,
             "files": files_with_self,
         }
-        manifest_bytes = (
-            json.dumps(body, ensure_ascii=False, indent=2) + "\n"
-        ).encode("utf-8")
+        manifest_bytes = (json.dumps(body, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         if self_entry["bytes"] == len(manifest_bytes):
             break
         self_entry["bytes"] = len(manifest_bytes)
@@ -812,15 +805,10 @@ def verify_fingerprint_in_tree(tree_root: Path, expected: str) -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     got = manifest.get("runFingerprint")
     if got != expected:
-        raise FinalizeError(
-            f"fingerprint mismatch refuses publication: "
-            f"expected {expected}, got {got!r}"
-        )
+        raise FinalizeError(f"fingerprint mismatch refuses publication: expected {expected}, got {got!r}")
     current_fp = current.get("runFingerprint")
     if current_fp is not None and current_fp != expected:
-        raise FinalizeError(
-            f"current.json runFingerprint mismatch: expected {expected}, got {current_fp!r}"
-        )
+        raise FinalizeError(f"current.json runFingerprint mismatch: expected {expected}, got {current_fp!r}")
 
 
 def finalize_run(
@@ -841,6 +829,7 @@ def finalize_run(
     assert_rss_ceiling: bool = True,
     rss_ceiling_bytes: int = ASSEMBLY_RSS_CEILING_BYTES,
     expected_fingerprint: str | None = None,
+    rss_probe: RssProbe | None = None,
 ) -> FinalizeResult:
     """Run completion gate + streaming assembly + publication archive.
 
@@ -850,6 +839,9 @@ def finalize_run(
     *incremental* assembly growth against a baseline sampled at assembly start —
     not whole-process RSS. Absolute process caps remain the PR-1 hard-capped
     worker subprocess responsibility.
+
+    ``rss_probe`` is forwarded to :func:`assemble_version_tree` (defaults to the
+    real :func:`_safe_rss_bytes` reader).
     """
     out_dir = Path(out_dir)
     artifacts_dir = Path(artifacts_dir)
@@ -889,27 +881,19 @@ def finalize_run(
             ok=False,
             run_id=run_id,
             fingerprint=report.fingerprint,
-            detail=(
-                f"scale gate fail: estimated {report.estimated_payload_bytes} bytes "
-                f"≥ {report.scale_fail_bytes}"
-            ),
+            detail=(f"scale gate fail: estimated {report.estimated_payload_bytes} bytes ≥ {report.scale_fail_bytes}"),
             dry_run=report,
         )
 
     fingerprint = report.fingerprint
     if fingerprint is None:
-        return FinalizeResult(
-            ok=False, run_id=run_id, detail="run fingerprint missing", dry_run=report
-        )
+        return FinalizeResult(ok=False, run_id=run_id, detail="run fingerprint missing", dry_run=report)
     if expected_fingerprint is not None and expected_fingerprint != fingerprint:
         return FinalizeResult(
             ok=False,
             run_id=run_id,
             fingerprint=fingerprint,
-            detail=(
-                f"fingerprint_mismatch_refused: expected {expected_fingerprint}, "
-                f"ledger has {fingerprint}"
-            ),
+            detail=(f"fingerprint_mismatch_refused: expected {expected_fingerprint}, ledger has {fingerprint}"),
             dry_run=report,
         )
 
@@ -941,6 +925,7 @@ def finalize_run(
             crash_mid_stream=crash_mid_stream,
             assert_rss_ceiling=assert_rss_ceiling,
             rss_ceiling_bytes=rss_ceiling_bytes,
+            rss_probe=rss_probe,
         )
         # Propagate assembly RSS metrics onto the dry-run report for operators.
         baseline = assembly.get("baseline_rss_bytes")
