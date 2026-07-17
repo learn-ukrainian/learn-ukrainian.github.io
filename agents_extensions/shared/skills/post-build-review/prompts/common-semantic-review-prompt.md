@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.3`
+Semantic prompt version: `6.0.4`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -178,6 +178,8 @@ class `CLEAR` only with exact cited evidence for the comparison, `FOUND` with
 every corresponding deterministic and semantic finding ID, or `INCOMPLETE`
 with an integrity finding. For mechanically supplied findings, reuse the exact
 IDs from the resolved context instead of emitting duplicate semantic findings.
+`CLEAR` requires an empty `finding_ids` array. `FOUND` and `INCOMPLETE` each
+require at least one finding ID; never attach a finding ID to a `CLEAR` class.
 Every `FOUND` class must own only medium, high, or blocker findings and makes
 semantic `PASS` impossible; return `REVISE`, `BLOCK`, or `INCOMPLETE` as the
 evidence requires.

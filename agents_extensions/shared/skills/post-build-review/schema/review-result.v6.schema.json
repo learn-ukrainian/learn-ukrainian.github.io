@@ -330,13 +330,35 @@
       }
     },
     "alignmentAuditEntry": {
-      "type": "object", "additionalProperties": false,
-      "required": ["status", "evidence", "finding_ids"],
-      "properties": {
-        "status": {"enum": ["CLEAR", "FOUND", "INCOMPLETE"]},
-        "evidence": {"type": "array", "items": {"$ref": "#/$defs/dimensionEvidence"}},
-        "finding_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}
-      }
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "evidence", "finding_ids"],
+          "properties": {
+            "status": {"const": "CLEAR"},
+            "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dimensionEvidence"}},
+            "finding_ids": {"type": "array", "maxItems": 0, "items": {"$ref": "#/$defs/nonempty"}}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "evidence", "finding_ids"],
+          "properties": {
+            "status": {"const": "FOUND"},
+            "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dimensionEvidence"}},
+            "finding_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "evidence", "finding_ids"],
+          "properties": {
+            "status": {"const": "INCOMPLETE"},
+            "evidence": {"type": "array", "items": {"$ref": "#/$defs/dimensionEvidence"}},
+            "finding_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}}
+          }
+        }
+      ]
     },
     "alignmentAudit": {
       "type": "object", "additionalProperties": false,

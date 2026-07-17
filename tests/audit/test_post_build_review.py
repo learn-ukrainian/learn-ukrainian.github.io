@@ -1231,6 +1231,34 @@ def test_provider_schema_rejects_prose_suffixed_vesum_mapping() -> None:
         Draft202012Validator(schema).validate(semantic)
 
 
+@pytest.mark.parametrize(
+    ("status", "finding_ids"),
+    [
+        ("CLEAR", ["misowned-finding"]),
+        ("FOUND", []),
+        ("INCOMPLETE", []),
+    ],
+)
+def test_provider_schema_enforces_alignment_status_finding_id_cardinality(
+    status: str,
+    finding_ids: list[str],
+) -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    Draft202012Validator(schema).validate(semantic)
+    entry = semantic["alignment_audit"]["PLAN_INSTRUCTION_LEAKAGE"]
+    entry["status"] = status
+    entry["finding_ids"] = finding_ids
+
+    with pytest.raises(ValidationError) as error:
+        Draft202012Validator(schema).validate(semantic)
+    assert list(error.value.absolute_path) == [
+        "alignment_audit",
+        "PLAN_INSTRUCTION_LEAKAGE",
+    ]
+
+
 def test_provider_schema_is_portable_and_finalizer_binds_vocabulary_order() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     schema = pbr.semantic_response_schema(packet)
@@ -3502,8 +3530,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.3"
-    assert len(rows) == 69
+    assert catalog["catalog_version"] == "6.0.4"
+    assert len(rows) == 71
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3543,6 +3571,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "6.0.1",
         "6.0.2",
         "6.0.3",
+        "6.0.4",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
