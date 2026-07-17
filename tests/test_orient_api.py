@@ -361,7 +361,7 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     elapsed = time.perf_counter() - start
 
     assert response.status_code == 200
-    assert elapsed < 1.0, f"orient should short-circuit, took {elapsed}s"
+    assert_under_budget(elapsed, 1.0, f"orient should short-circuit, took {elapsed}s")
     data = response.json()
     assert "section_timeout" in data["pipeline"]["error"]
     # Other sections must still populate — failure isolation is the point.

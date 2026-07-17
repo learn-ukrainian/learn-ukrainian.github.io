@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api import git_hygiene_router
 from scripts.api.main import app
+from tests.latency_budget import assert_under_budget
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -103,6 +104,12 @@ def _cleanup_fixture(tmp_path: Path, monkeypatch) -> Path:
     )
 
     monkeypatch.setattr(git_hygiene_router, "PROJECT_ROOT", repo)
+    # The /cleanup ROUTE serves LIVE_REPO_ROOT (git_hygiene_router.py:738) — without
+    # patching it too, endpoint tests scan the REAL repository: 100+ branches and a
+    # dozen multi-GB worktrees on a working orchestrator machine → the resilience
+    # middleware's deadline converts the slow scan into a 504 (#5360 isolation class;
+    # it only ever passed on checkouts with no worktrees, e.g. CI).
+    monkeypatch.setattr(git_hygiene_router, "LIVE_REPO_ROOT", repo)
     return repo
 
 
@@ -193,4 +200,8 @@ def test_endpoint_performance_under_budget(tmp_path: Path, monkeypatch) -> None:
         "computed_at",
         "performance_ms",
     }
-    assert body["performance_ms"] < 500
+    assert_under_budget(
+        body["performance_ms"] / 1000.0,
+        0.5,
+        f"git cleanup performance_ms budget exceeded: {body['performance_ms']}ms",
+    )

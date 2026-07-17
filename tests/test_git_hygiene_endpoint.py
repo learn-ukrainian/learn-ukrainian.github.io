@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api import git_hygiene_router
 from scripts.api.main import app
+from tests.latency_budget import assert_under_budget
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -169,5 +170,13 @@ def test_hygiene_1000_untracked_files_stays_under_500ms(tmp_path: Path) -> None:
 
     assert result["dirty_total"] == 1000
     assert result["buckets"]["untracked_unexempted"]["count"] == 1000
-    assert result["performance_ms"] < 500
-    assert elapsed_ms < 500
+    assert_under_budget(
+        result["performance_ms"] / 1000.0,
+        0.5,
+        f"git hygiene performance_ms budget exceeded: {result['performance_ms']}ms",
+    )
+    assert_under_budget(
+        elapsed_ms / 1000.0,
+        0.5,
+        f"git hygiene endpoint wall-clock budget exceeded: {elapsed_ms:.0f}ms",
+    )
