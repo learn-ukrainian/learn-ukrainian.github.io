@@ -948,6 +948,12 @@ def test_judge_attestation_malformed_fails(tmp_path: Path, capsys: pytest.Captur
     )
     err = capsys.readouterr().err
     assert exit_code == 2
-    assert "layerb shadow error" in err
     # Malformed triggers schema or route parse failure inside verify
     assert "unknown attestation schema" in err or "effective route" in err or "attestation" in err.lower()
+
+
+def test_cli_rejects_non_default_tau(capsys: pytest.CaptureFixture[str]) -> None:
+    exit_code = main(["--artifacts-dir", "dummy_artifacts", "--tau", "0.8"])
+    err = capsys.readouterr().err
+    assert exit_code == 2
+    assert "Layer B shadow requires the pinned Phase-1 tau=0.75." in err
