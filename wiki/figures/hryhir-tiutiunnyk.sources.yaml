@@ -4,8 +4,26 @@ sources:
   type: external
   title: Григір Тютюнник. Біографічна довідка
   url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+  metadata:
+    publisher: Національна бібліотека України для дітей
+    language: uk
+    verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukbd.htm
+    license: Бібліотечна сторінка; використання лише як зовнішнього посилання
+    attribution: Національна бібліотека України для дітей
 - id: S2
   file: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
   type: external
   title: Григір Тютюнник. Основні твори
   url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+  metadata:
+    publisher: Національна бібліотека України для дітей
+    language: uk
+    verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
+    license: Бібліографічна сторінка; використання лише як зовнішнього посилання
+    attribution: Національна бібліотека України для дітей

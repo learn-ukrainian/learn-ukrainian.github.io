@@ -10,6 +10,11 @@ sources:
     publisher: Харківська правозахисна група
     language: uk
     verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1113938027
+    license: Сторінка ХПГ; використання лише як зовнішнього посилання
+    attribution: І. Рапп, В. Овсієнко / Харківська правозахисна група
 - id: S2
   file: https://museum.khpg.org/1383042150
   type: external
@@ -19,3 +24,8 @@ sources:
     publisher: Харківська правозахисна група
     language: uk
     verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1383042150
+    license: Інтерв'ю ХПГ; використання лише як зовнішнього посилання
+    attribution: Микола Руденко / Харківська правозахисна група

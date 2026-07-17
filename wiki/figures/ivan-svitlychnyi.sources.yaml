@@ -4,13 +4,26 @@ sources:
   type: external
   title: Народився Іван Світличний, український правозахисник, поет, перекладач, літературознавець, літературний критик
   url: https://www.nbuv.gov.ua/node/4288
+  metadata:
+    publisher: Національна бібліотека України імені В. І. Вернадського
+    language: uk
+    verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://www.nbuv.gov.ua/node/4288
+    license: Сторінка НБУВ; використання лише як зовнішнього посилання
+    attribution: Національна бібліотека України імені В. І. Вернадського
 - id: S2
   file: https://museum-old.khpg.org/1113995279
   type: external
   title: Світличний Іван Олексійович
   url: https://museum-old.khpg.org/1113995279
-- id: S3
-  file: https://www.nbuv.gov.ua/node/537
-  type: external
-  title: Слово рідне українське — бібліографічний запис видання З живучого племені Дон Кіхотів
-  url: https://www.nbuv.gov.ua/node/537
+  metadata:
+    publisher: Харківська правозахисна група
+    language: uk
+    verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: https://museum-old.khpg.org/1113995279
+    license: Сторінка ХПГ; використання лише як зовнішнього посилання
+    attribution: Борис Захаров / Харківська правозахисна група
