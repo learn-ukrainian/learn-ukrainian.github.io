@@ -426,3 +426,35 @@ def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
     assert res is not None
     assert res["status"] == "unknown"
     assert "credential is expired" in res["auth_error"]
+
+
+def test_healthy_record_carries_error_shape_defaults():
+    """Healthy and error records share one key shape (review-5386 F2)."""
+    raw_list = json.loads(KIMI_HEALTHY_FIXTURE)
+    res = _normalize_provider_data("kimi", raw_list[0])
+    assert res["status"] == "healthy"
+    assert res["auth_error"] is None
+    assert res["error_kind"] is None
+    assert res["error_code"] is None
+
+
+def test_missing_homebrew_binary_reaches_path_fallback(monkeypatch):
+    """FileNotFoundError on the homebrew path must not bypass the PATH fallback (review-5386 F1)."""
+    calls = []
+
+    def fake_run(cmd, **kw):
+        calls.append(cmd[0])
+        if cmd[0].startswith("/opt/homebrew"):
+            raise FileNotFoundError(cmd[0])
+
+        class _R:
+            returncode = 0
+            stdout = KIMI_HEALTHY_FIXTURE
+            stderr = ""
+
+        return _R()
+
+    monkeypatch.setattr(codexbar_usage_mod.subprocess, "run", fake_run)
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert calls == ["/opt/homebrew/bin/codexbar", "codexbar"]
+    assert res is not None and res["lane"] == "kimi" and res["status"] == "healthy"

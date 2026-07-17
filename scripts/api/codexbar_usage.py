@@ -83,14 +83,20 @@ def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str,
 def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | None:
     try:
         # Run codexbar usage --json --provider <provider>
-        cmd = ["/opt/homebrew/bin/codexbar", "usage", "--json", "--provider", provider]
-        res = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
-        )
+        try:
+            cmd = ["/opt/homebrew/bin/codexbar", "usage", "--json", "--provider", provider]
+            res = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+                check=False,
+            )
+        except FileNotFoundError:
+            # Homebrew path absent (Intel mac /usr/local, CI, Linux) — the
+            # PATH-fallback below must still get its chance (review-5386 F1:
+            # letting this reach the outer handler bypassed the fallback).
+            res = subprocess.CompletedProcess(cmd, returncode=127, stdout="", stderr="")
         if res.returncode != 0 and not _stdout_has_provider_payload(res.stdout):
             # Fallback to codexbar in system path
             cmd = ["codexbar", "usage", "--json", "--provider", provider]
@@ -253,6 +259,12 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "weekly_pace_delta_pct": weekly_pace_delta_pct,
         "will_last_to_reset": will_last_to_reset,
         "pace_summary": pace_summary,
+        # Same key shape as _normalize_provider_error so consumers can use
+        # bracket access on either record (review-5386 F2).
+        "status": "healthy",
+        "auth_error": None,
+        "error_kind": None,
+        "error_code": None,
         "source": "codexbar",
         "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
