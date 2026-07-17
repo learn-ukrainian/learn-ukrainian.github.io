@@ -138,10 +138,34 @@ describe('MatchUp', () => {
 
     await user.click(leftTiles(container)[0]);
     expect(leftTiles(container)[0].getAttribute('data-selected')).toBe('true');
+    expect(leftTiles(container)[0]).toHaveAttribute('aria-pressed', 'true');
+    expect(leftTiles(container)[0]).toHaveClass('selected');
 
     await user.click(leftTiles(container)[1]);
     expect(leftTiles(container)[0].getAttribute('data-selected')).toBe('false');
+    expect(leftTiles(container)[0]).toHaveAttribute('aria-pressed', 'false');
+    expect(leftTiles(container)[0]).not.toHaveClass('selected');
     expect(leftTiles(container)[1].getAttribute('data-selected')).toBe('true');
+    expect(leftTiles(container)[1]).toHaveAttribute('aria-pressed', 'true');
+    expect(leftTiles(container)[1]).toHaveClass('selected');
+  });
+
+  test('selected left tile stays visibly marked until its pair is chosen', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MatchUp pairs={pairs} />);
+
+    await user.click(leftTiles(container)[0]);
+    const selected = leftTiles(container)[0];
+    expect(selected).toHaveClass('selected');
+    expect(selected).toHaveAttribute('aria-pressed', 'true');
+    expect(selected).toHaveAttribute('data-selected', 'true');
+
+    // Still selected before the right tile is chosen.
+    expect(leftTiles(container)[0]).toHaveClass('selected');
+
+    await user.click(findRightByText(container, 'Meow'));
+    expect(leftTiles(container)[0]).not.toHaveClass('selected');
+    expect(leftTiles(container)[0]).toHaveAttribute('aria-pressed', 'false');
   });
 
   test('clicking a right tile without a left selection is a no-op', async () => {

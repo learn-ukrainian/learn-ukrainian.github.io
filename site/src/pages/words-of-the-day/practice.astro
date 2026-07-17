@@ -20,18 +20,18 @@ const frontmatter = {
     <section class="lexicon-practice-intro" aria-labelledby="lexicon-practice-page-title">
       <a class="lexicon-practice-back" href="/words-of-the-day/">
         <span class="lu-i18n">
-          <span data-loc="en">← Слова дня / Words of the Day</span>
+          <span data-loc="en">← Words of the Day</span>
           <span data-loc="uk">← Слова дня</span>
         </span>
       </a>
       <span class="lexicon-practice-badge">
         <span class="lu-i18n">
-          <span data-loc="en">СЛОВА ДНЯ · ПРАКТИКА / WORDS OF THE DAY · PRACTICE</span>
+          <span data-loc="en">WORDS OF THE DAY · PRACTICE</span>
           <span data-loc="uk">СЛОВА ДНЯ · ПРАКТИКА</span>
         </span>
       </span>
       <h1 id="lexicon-practice-page-title" class="lu-i18n-block">
-        <span data-loc="en">Практика / Practice</span>
+        <span data-loc="en">Practice</span>
         <span data-loc="uk">Практика</span>
       </h1>
       <p>
@@ -186,10 +186,18 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice-modes button.active),
-  :global(.lexicon-practice-levels-row button.active) {
+  :global(.lexicon-practice-levels-row button.active),
+  :global(.lexicon-session-budgets button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
     color: var(--lu-on-primary);
+  }
+
+  /* Selection fills the control; focus ring must stay distinct from that fill. */
+  :global(.lexicon-session-budgets button.active:focus-visible) {
+    outline: 2px solid var(--lu-text);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
   :global(.lexicon-practice-progress) {
@@ -900,6 +908,12 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  /* Form/drill prompt: question + grammatical descriptor in one text flow. */
+  :global(.mc-q .mc-descriptor) {
+    font-weight: 700;
+    color: var(--lu-text-muted);
+  }
+
   :global(.mc-sub) {
     margin: 0 0 0.3rem;
     color: var(--lu-text-muted);
@@ -1089,10 +1103,12 @@ const frontmatter = {
     font-weight: 900;
   }
 
-  :global(.lexicon-practice-stage [data-selected="true"]) {
+  :global(.lexicon-practice-stage [data-selected="true"]),
+  :global(.lexicon-practice-stage .matchItem.selected) {
     border-color: var(--lu-primary);
-    background: var(--lu-state-active);
-    box-shadow: 0 0 0 2px var(--lu-state-active);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lu-primary) 35%, transparent);
   }
 
   :global(.lexicon-practice-stage [data-matched="true"]) {

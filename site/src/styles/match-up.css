@@ -40,8 +40,10 @@
 }
 
 .matchItem.selected {
-  border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 2px var(--lu-state-active);
+  border-color: var(--lu-primary, var(--ifm-color-primary));
+  background: var(--lu-primary, var(--ifm-color-primary));
+  color: var(--lu-on-primary, #fff);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lu-primary, var(--ifm-color-primary)) 35%, transparent);
 }
 
 .matchItem.matched {
@@ -108,9 +110,14 @@
 }
 
 /* Dark Mode Overrides */
-[data-theme='dark'] .matchColumn:first-child .matchItem,
-[data-theme='dark'] .matchItem.selected {
+[data-theme='dark'] .matchColumn:first-child .matchItem {
   background: var(--lu-state-active);
+}
+
+[data-theme='dark'] .matchItem.selected {
+  border-color: var(--lu-primary, var(--ifm-color-primary));
+  background: var(--lu-primary, var(--ifm-color-primary));
+  color: var(--lu-on-primary, #fff);
 }
 
 [data-theme='dark'] .matchColumn:last-child .matchItem {
