@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
 
-ENGINE_VERSION = "runner-pr3-v1"
+ENGINE_VERSION = "runner-pr4-v1"
 SERIALIZATION_VERSION = "lemma-artifact-v1"
 CEFR_ALGORITHM_VERSION = "grac-cohort-quantile-v1"
 RELATION_CLOSURE_VERSION = "reciprocal-closure-v1"
@@ -106,7 +106,7 @@ class OomSplitChildren:
     split_epoch: int
 
 
-# --- PR4 stubs (PR3 network cache/transport is real — see network_cache/transport) ---
+# --- Shared handles (PR2 ledger / PR3 transport / PR4 finalize) ---------------
 
 
 @dataclass(frozen=True, slots=True)
@@ -118,7 +118,7 @@ class LedgerStub:
 
     run_id: str
     fingerprint: str
-    note: str = "PR2/PR3 real-unit ledger (see scripts.lexicon.runner.ledger.Ledger)"
+    note: str = "PR2/PR3/PR4 real-unit ledger (see scripts.lexicon.runner.ledger.Ledger)"
 
 
 @dataclass(frozen=True, slots=True)
@@ -147,15 +147,18 @@ class BundleRef:
 
 
 @dataclass(frozen=True, slots=True)
-class SealStub:
-    """PR4: full streaming assembly + publication gate.
+class FinalizeRef:
+    """PR4: streaming assembly + publication-archive handoff result."""
 
-    Leaf seal *transactions* are implemented in PR2 (CAS + leaf-only rules);
-    final streaming assembly remains PR4.
-    """
+    run_id: str
+    data_version: str
+    archive_sha256: str
+    fingerprint: str
+    note: str = "PR4 finalize — see scripts.lexicon.runner.finalize"
 
-    chunk_id: str
-    note: str = "PR4 stub — streaming assembly/publication not implemented in PR2"
+
+# Back-compat name used in earlier stubs.
+SealStub = FinalizeRef
 
 
 def canonical_json(obj: Any) -> str:
