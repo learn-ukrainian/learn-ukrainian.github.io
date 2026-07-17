@@ -146,7 +146,15 @@ def test_fetch_kimi_message_returns_none_for_an_unaddressed_row(monkeypatch, cap
     assert "not addressed to kimi" in capsys.readouterr().out
 
 
-def test_check_model_builds_read_only_native_kimi_probe_and_uses_agent_cache(monkeypatch):
+def test_check_model_builds_read_only_native_kimi_probe_and_uses_agent_cache(monkeypatch, tmp_path):
+    # Stub the CLI binary (same pattern as test_kimi_adapter.py): plan building
+    # resolves it via _resolve_kimi_binary, and CI runners have no kimi install —
+    # unstubbed, this test only passes on machines with the real CLI (#5326).
+    binary = tmp_path / "kimi"
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    binary.chmod(0o755)
+    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
+
     plan = _build_kimi_probe_plan("k3")
     assert plan is not None
     assert plan.cmd[plan.cmd.index("-m") + 1] == "kimi-code/k3"
