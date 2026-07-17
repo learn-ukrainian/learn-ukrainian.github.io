@@ -367,9 +367,7 @@ class Ledger:
             fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             lock_fh.close()
-            raise DuplicateRunnerError(
-                f"duplicate runner refused: ledger lock held on {lock_path}"
-            ) from exc
+            raise DuplicateRunnerError(f"duplicate runner refused: ledger lock held on {lock_path}") from exc
         self._lock_fh = lock_fh
         self._locked = True
         lock_fh.seek(0)
@@ -426,8 +424,7 @@ class Ledger:
     def find_incomplete_by_fingerprint(self, fingerprint: str) -> str | None:
         conn = self._require()
         row = conn.execute(
-            "SELECT run_id FROM runs WHERE fingerprint = ? AND status = ? "
-            "ORDER BY created_at DESC LIMIT 1",
+            "SELECT run_id FROM runs WHERE fingerprint = ? AND status = ? ORDER BY created_at DESC LIMIT 1",
             (fingerprint, RunStatus.RUNNING.value),
         ).fetchone()
         return None if row is None else str(row["run_id"])
@@ -455,10 +452,7 @@ class Ledger:
                 return StartRunResult(
                     status=CasStatus.INVALID_STATE,
                     resumable_run_id=existing,
-                    detail=(
-                        f"incomplete run already exists for fingerprint; "
-                        f"resume run_id={existing}"
-                    ),
+                    detail=(f"incomplete run already exists for fingerprint; resume run_id={existing}"),
                 )
         run_id = f"run-{uuid.uuid4().hex}"
         conn.execute(
@@ -750,9 +744,7 @@ class Ledger:
             ).fetchone()
             if row is None:
                 conn.execute("ROLLBACK")
-                return ClaimResult(
-                    status=CasStatus.NOT_FOUND, unit_id=unit_id, detail="unit missing"
-                )
+                return ClaimResult(status=CasStatus.NOT_FOUND, unit_id=unit_id, detail="unit missing")
 
             state = str(row["state"])
             attempt_count = int(row["attempt_count"])
@@ -1170,9 +1162,7 @@ class Ledger:
                     lemma_ids=failed.lemma_ids,
                 )
                 conn.execute("COMMIT")
-                return CasResult(
-                    status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
-                )
+                return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
 
             cur = conn.execute(
                 "UPDATE chunks SET state = ?, is_leaf = 0, owner = NULL, "
@@ -1315,8 +1305,7 @@ class Ledger:
             # held but before validation — must still reject the import.
             if self.crash_import_concurrent_abandon:
                 conn.execute(
-                    "UPDATE packets SET state = 'abandoned', abandoned_at = ? "
-                    "WHERE run_id = ? AND generation = ?",
+                    "UPDATE packets SET state = 'abandoned', abandoned_at = ? WHERE run_id = ? AND generation = ?",
                     (ts, run_id, int(packet_generation)),
                 )
 
@@ -1343,15 +1332,12 @@ class Ledger:
                 # Allow no-op re-import of an already-committed matching hash even if
                 # the generation was later abandoned (artifacts already accepted).
                 existing_early = conn.execute(
-                    "SELECT result_hash FROM imports "
-                    "WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
+                    "SELECT result_hash FROM imports WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
                     (run_id, lemma_id, int(packet_generation)),
                 ).fetchone()
                 if existing_early is not None and str(existing_early["result_hash"]) == result_hash:
                     conn.execute("ROLLBACK")
-                    return CasResult(
-                        status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
-                    )
+                    return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
                 conn.execute("ROLLBACK")
                 self._event(
                     "stale_packet_generation_rejected",
@@ -1388,16 +1374,13 @@ class Ledger:
                         )
 
             existing = conn.execute(
-                "SELECT result_hash FROM imports "
-                "WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
+                "SELECT result_hash FROM imports WHERE run_id = ? AND lemma_id = ? AND packet_generation = ?",
                 (run_id, lemma_id, int(packet_generation)),
             ).fetchone()
             if existing is not None:
                 if str(existing["result_hash"]) == result_hash:
                     conn.execute("ROLLBACK")
-                    return CasResult(
-                        status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
-                    )
+                    return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
                 conn.execute("ROLLBACK")
                 return CasResult(
                     status=CasStatus.INVALID_STATE,
@@ -1413,10 +1396,7 @@ class Ledger:
             if (
                 unit is not None
                 and str(unit["state"]) == SchedulableState.LEASED.value
-                and (
-                    str(unit["owner"]) != owner
-                    or int(unit["lease_generation"]) != int(lease_generation)
-                )
+                and (str(unit["owner"]) != owner or int(unit["lease_generation"]) != int(lease_generation))
             ):
                 conn.execute("ROLLBACK")
                 self._event(
@@ -1578,9 +1558,7 @@ class Ledger:
             return False
         return any(str(r["state"]) != "abandoned" for r in rows)
 
-    def get_packet(
-        self, run_id: str, packet_id: str, generation: int
-    ) -> dict[str, Any] | None:
+    def get_packet(self, run_id: str, packet_id: str, generation: int) -> dict[str, Any] | None:
         conn = self._require()
         row = conn.execute(
             "SELECT * FROM packets WHERE run_id = ? AND packet_id = ? AND generation = ?",
@@ -1717,12 +1695,9 @@ class Ledger:
             )
         # CAS: active lease owner+generation, OR a DONE leaf with matching generation
         # after the coordinator already released the owner (seal pass).
-        owner_ok = str(chunk["owner"]) == owner and int(chunk["lease_generation"]) == int(
+        owner_ok = str(chunk["owner"]) == owner and int(chunk["lease_generation"]) == int(lease_generation)
+        done_ok = str(chunk["state"]) == ChunkLedgerState.DONE.value and int(chunk["lease_generation"]) == int(
             lease_generation
-        )
-        done_ok = (
-            str(chunk["state"]) == ChunkLedgerState.DONE.value
-            and int(chunk["lease_generation"]) == int(lease_generation)
         )
         if not owner_ok and not done_ok:
             self._event(
@@ -1747,8 +1722,7 @@ class Ledger:
         try:
             # Re-check leaf under the write transaction.
             again = conn.execute(
-                "SELECT is_leaf, state, lease_generation, owner FROM chunks "
-                "WHERE run_id = ? AND chunk_id = ?",
+                "SELECT is_leaf, state, lease_generation, owner FROM chunks WHERE run_id = ? AND chunk_id = ?",
                 (run_id, chunk_id),
             ).fetchone()
             if again is None or int(again["is_leaf"]) != 1:
@@ -1760,6 +1734,54 @@ class Ledger:
                     status=CasStatus.STALE_COMMIT_REJECTED,
                     detail=ErrorCode.STALE_COMMIT_REJECTED.value,
                 )
+
+            # Every constituent lemma must be terminal-successful (done/no_data)
+            # before a leaf seal is allowed — otherwise publish ships missing
+            # entries (issue #5370). Use a json_each join against the stored
+            # lemma_ids_json (bound param count stays O(1); no IN-list of ids).
+            bad_rows = conn.execute(
+                "SELECT CAST(je.value AS TEXT) AS lemma_id, "
+                "COALESCE(wu.state, 'missing') AS state "
+                "FROM chunks c "
+                "JOIN json_each(c.lemma_ids_json) AS je "
+                "LEFT JOIN work_units wu "
+                "  ON wu.run_id = c.run_id "
+                " AND wu.unit_id = CAST(je.value AS TEXT) "
+                " AND wu.phase = ? "
+                " AND wu.unit_kind = 'lemma' "
+                "WHERE c.run_id = ? AND c.chunk_id = ? "
+                "  AND COALESCE(wu.state, '') NOT IN (?, ?) "
+                "ORDER BY lemma_id",
+                (
+                    phase,
+                    run_id,
+                    chunk_id,
+                    UnitOutcome.DONE.value,
+                    UnitOutcome.NO_DATA.value,
+                ),
+            ).fetchall()
+            if bad_rows:
+                conn.execute("ROLLBACK")
+                offenders = [f"{r['lemma_id']} ({r['state']})" for r in bad_rows]
+                preview = ", ".join(offenders[:20])
+                if len(offenders) > 20:
+                    preview += f", ... (+{len(offenders) - 20} more)"
+                detail = "constituent lemmas not terminal-successful: " + preview
+                self._event(
+                    "seal_blocked_constituent_lemmas",
+                    run_id,
+                    chunk_id=chunk_id,
+                    offending_count=len(offenders),
+                    offending_lemma_ids=[str(r["lemma_id"]) for r in bad_rows[:50]],
+                    detail=detail,
+                )
+                return CasResult(
+                    status=CasStatus.INVALID_STATE,
+                    detail=detail,
+                    lease_generation=lease_generation,
+                    run_id=run_id,
+                )
+
             conn.execute(
                 "INSERT INTO seals("
                 "run_id, chunk_id, seal_sha256, lemma_ids_json, "
@@ -1855,8 +1877,9 @@ class Ledger:
                 status=CasStatus.INVALID_STATE,
                 detail=f"retry-failed only applies to failed_terminal, got {row['state']}",
             )
+        unit_kind = str(row["unit_kind"])
         # work_units + chunks + run epoch + audit row must move atomically
-        # (review #5341 finding 1).
+        # (review #5341 finding 1; issue #5370 parent-chunk reset for lemmas).
         conn.execute("BEGIN IMMEDIATE")
         try:
             conn.execute(
@@ -1865,17 +1888,92 @@ class Ledger:
                 "WHERE run_id = ? AND unit_id = ? AND phase = ?",
                 (SchedulableState.PENDING.value, ts, run_id, unit_id, phase),
             )
+            parent_chunk_id: str | None = None
+            if unit_kind == "chunk":
+                # Chunk unit: reset the matching chunk row (existing behaviour).
+                conn.execute(
+                    "UPDATE chunks SET state = ?, error_code = NULL, result_hash = NULL, "
+                    "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
+                    "WHERE run_id = ? AND chunk_id = ?",
+                    (ChunkLedgerState.PENDING.value, ts, run_id, unit_id),
+                )
+                parent_chunk_id = unit_id
+            elif unit_kind == "lemma":
+                # Constituent lemma: resolve parent leaf via json_each (not
+                # WHERE chunk_id = lemma_id — that never matches) and CAS-reset
+                # the parent to PENDING so the lemma reschedules with its chunk.
+                parent = conn.execute(
+                    "SELECT c.chunk_id AS chunk_id, c.lease_generation AS lease_generation, "
+                    "c.state AS state "
+                    "FROM chunks c "
+                    "JOIN json_each(c.lemma_ids_json) AS je "
+                    "  ON CAST(je.value AS TEXT) = ? "
+                    "WHERE c.run_id = ? "
+                    "  AND c.is_leaf = 1 "
+                    "  AND c.state != ? "
+                    "ORDER BY c.split_epoch DESC, c.chunk_id "
+                    "LIMIT 1",
+                    (unit_id, run_id, ChunkLedgerState.SUPERSEDED.value),
+                ).fetchone()
+                if parent is not None:
+                    parent_chunk_id = str(parent["chunk_id"])
+                    parent_gen = int(parent["lease_generation"])
+                    if str(parent["state"]) == ChunkLedgerState.SEALED.value:
+                        conn.execute("ROLLBACK")
+                        return CasResult(
+                            status=CasStatus.INVALID_STATE,
+                            detail=(f"parent chunk {parent_chunk_id} is sealed; cannot reopen via lemma retry"),
+                            run_id=run_id,
+                        )
+                    # Generation-guarded CAS: concurrent lease bump refuses the reset.
+                    cur = conn.execute(
+                        "UPDATE chunks SET state = ?, error_code = NULL, result_hash = NULL, "
+                        "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
+                        "WHERE run_id = ? AND chunk_id = ? AND lease_generation = ?",
+                        (
+                            ChunkLedgerState.PENDING.value,
+                            ts,
+                            run_id,
+                            parent_chunk_id,
+                            parent_gen,
+                        ),
+                    )
+                    if cur.rowcount != 1:
+                        conn.execute("ROLLBACK")
+                        return CasResult(
+                            status=CasStatus.STALE_COMMIT_REJECTED,
+                            detail=(
+                                f"parent chunk CAS miss while resetting for lemma retry (chunk_id={parent_chunk_id})"
+                            ),
+                            lease_generation=parent_gen,
+                            run_id=run_id,
+                        )
+                    # Reschedule the chunk work unit (list_pending_chunk_ids
+                    # only sees chunk-kind units).
+                    conn.execute(
+                        "UPDATE work_units SET state = ?, error_code = NULL, "
+                        "result_hash = NULL, owner = NULL, leased_until = NULL, "
+                        "attempt_count = 0, updated_at = ? "
+                        "WHERE run_id = ? AND unit_id = ? AND phase = ? "
+                        "AND unit_kind = 'chunk'",
+                        (
+                            SchedulableState.PENDING.value,
+                            ts,
+                            run_id,
+                            parent_chunk_id,
+                            phase,
+                        ),
+                    )
             conn.execute(
-                "UPDATE chunks SET state = ?, error_code = NULL, result_hash = NULL, "
-                "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
-                "WHERE run_id = ? AND chunk_id = ?",
-                (ChunkLedgerState.PENDING.value, ts, run_id, unit_id),
-            )
-            conn.execute(
-                "UPDATE runs SET manual_retry_epoch = manual_retry_epoch + 1, updated_at = ? "
-                "WHERE run_id = ?",
+                "UPDATE runs SET manual_retry_epoch = manual_retry_epoch + 1, updated_at = ? WHERE run_id = ?",
                 (ts, run_id),
             )
+            payload: dict[str, Any] = {
+                "prior_lease_generation": int(row["lease_generation"]),
+                "unit_kind": unit_kind,
+            }
+            if parent_chunk_id is not None and unit_kind == "lemma":
+                payload["parent_chunk_id"] = parent_chunk_id
             conn.execute(
                 "INSERT INTO operator_actions("
                 "run_id, action, reason, unit_id, phase, created_at, payload_json"
@@ -1887,7 +1985,7 @@ class Ledger:
                     unit_id,
                     phase,
                     ts,
-                    canonical_json({"prior_lease_generation": int(row["lease_generation"])}),
+                    canonical_json(payload),
                 ),
             )
             self._event(
@@ -1896,6 +1994,8 @@ class Ledger:
                 unit_id=unit_id,
                 phase=phase,
                 reason=reason,
+                unit_kind=unit_kind,
+                parent_chunk_id=parent_chunk_id,
             )
             conn.execute("COMMIT")
         except Exception:
