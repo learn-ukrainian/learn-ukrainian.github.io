@@ -27,6 +27,7 @@ PROVIDER_TO_LANE = {
     "gemini": "gemini",
     "antigravity": "gemini",
     "grok": "grok",
+    "kimi": "kimi",
 }
 
 # In-memory storage for the last successfully fetched usage data (lasts the lifetime of the process)
@@ -82,15 +83,21 @@ def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str,
 def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | None:
     try:
         # Run codexbar usage --json --provider <provider>
-        cmd = ["/opt/homebrew/bin/codexbar", "usage", "--json", "--provider", provider]
-        res = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
-        )
-        if res.returncode != 0:
+        try:
+            cmd = ["/opt/homebrew/bin/codexbar", "usage", "--json", "--provider", provider]
+            res = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+                check=False,
+            )
+        except FileNotFoundError:
+            # Homebrew path absent (Intel mac /usr/local, CI, Linux) — the
+            # PATH-fallback below must still get its chance (review-5386 F1:
+            # letting this reach the outer handler bypassed the fallback).
+            res = subprocess.CompletedProcess(cmd, returncode=127, stdout="", stderr="")
+        if res.returncode != 0 and not _stdout_has_provider_payload(res.stdout):
             # Fallback to codexbar in system path
             cmd = ["codexbar", "usage", "--json", "--provider", provider]
             res = subprocess.run(
@@ -100,7 +107,12 @@ def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | 
                 timeout=timeout_s,
                 check=False,
             )
-            if res.returncode != 0:
+            # The CLI exits NON-zero on provider/credential errors while still
+            # printing the error JSON on stdout (live-verified 2026-07-17: kimi
+            # expired credential → rc=1 + error payload). Bail only when there
+            # is no parseable payload at all — otherwise fall through so the
+            # error surfaces as status='unknown' instead of a silent None.
+            if res.returncode != 0 and not _stdout_has_provider_payload(res.stdout):
                 return None
 
         parsed = json.loads(res.stdout)
@@ -109,8 +121,9 @@ def _fetch_single_provider(provider: str, timeout_s: float) -> dict[str, Any] | 
 
         first_entry = parsed[0]
         if "error" in first_entry:
-            return None
-
+            # Provider/credential error (e.g. expired Kimi credentials): surface
+            # as status='unknown' with the message carried, never as zero usage.
+            return _normalize_provider_error(provider, first_entry["error"])
         return _normalize_provider_data(provider, first_entry)
     except Exception:
         return None
@@ -246,8 +259,61 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "weekly_pace_delta_pct": weekly_pace_delta_pct,
         "will_last_to_reset": will_last_to_reset,
         "pace_summary": pace_summary,
+        # Same key shape as _normalize_provider_error so consumers can use
+        # bracket access on either record (review-5386 F2).
+        "status": "healthy",
+        "auth_error": None,
+        "error_kind": None,
+        "error_code": None,
         "source": "codexbar",
         "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+
+
+def _stdout_has_provider_payload(stdout: str) -> bool:
+    """True when the CLI printed a parseable provider list despite rc != 0."""
+    try:
+        parsed = json.loads(stdout)
+    except (TypeError, ValueError):
+        return False
+    return isinstance(parsed, list) and bool(parsed)
+
+
+def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
+    """Normalize a codexbar provider-level error object.
+
+    The CLI can return an error instead of usage, e.g. expired Kimi credentials:
+        [{"source":"auto","provider":"kimi","error":{"code":1,"message":"...","kind":"provider"}}]
+
+    This MUST surface as status='unknown' with the message carried (auth_error),
+    NEVER as 0% remaining and never as a silently absent row for a subscription lane.
+    Mirrors _normalize_provider_data's shape so consumers see a uniform record.
+    """
+    lane = PROVIDER_TO_LANE.get(provider, provider)
+    message: str | None = None
+    code: Any = None
+    kind: str | None = None
+    if isinstance(error, dict):
+        message = error.get("message")
+        code = error.get("code")
+        kind = error.get("kind")
+
+    return {
+        "lane": lane,
+        "primary_used_pct": None,
+        "weekly_used_pct": None,
+        "monthly_cap_usd": None,
+        "monthly_used_usd": None,
+        "weekly_resets_at": None,
+        "weekly_pace_delta_pct": None,
+        "will_last_to_reset": None,
+        "pace_summary": None,
+        "source": "codexbar",
+        "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "status": "unknown",
+        "auth_error": message,
+        "error_kind": kind,
+        "error_code": code,
     }
 
 
@@ -263,7 +329,7 @@ def trigger_background_refresh() -> None:
 
 def _run_all_refreshes() -> None:
     # List of unique providers to refresh
-    providers = ["claude", "codex", "cursor", "gemini", "grok"]
+    providers = ["claude", "codex", "cursor", "gemini", "grok", "kimi"]
     for provider in providers:
         try:
             data = fetch_codexbar_usage(provider)
@@ -320,4 +386,5 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "stale": False,
         "age_s": None,
         "status": "unknown",
+        "auth_error": None,
     }
