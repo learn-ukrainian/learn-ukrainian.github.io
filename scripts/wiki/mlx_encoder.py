@@ -24,8 +24,6 @@ from mlx_embeddings import load
 MODEL_NAME = "mlx-community/bge-m3-mlx-fp16"
 EMBEDDING_DIMS = 1024
 
-os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
-
 
 def _log(message: str) -> None:
     print(message, file=sys.stderr, flush=True)
@@ -99,6 +97,9 @@ class MLXEncoderWorker:
 
 
 def main() -> int:
+    # Must NOT run at import time — importing this module from tests must
+    # have zero process-env side effects (CI env-leak class #5247).
+    os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
     try:
         _configure_memory_limit()
     except Exception as exc:  # pragma: no cover - startup diagnostics only

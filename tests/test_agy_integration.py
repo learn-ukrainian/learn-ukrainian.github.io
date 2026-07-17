@@ -14,6 +14,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _VENV_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
 
@@ -45,6 +47,51 @@ def _resolve_test_python() -> str:
 
 
 _TEST_PYTHON = _resolve_test_python()
+
+
+def _ensure_scripts_path() -> None:
+    scripts_dir = str(_REPO_ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+
+
+@pytest.fixture(autouse=True)
+def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Per-test isolation for module-global bridge ``DB_PATH`` (#5247).
+
+    ``_db`` binds ``DB_PATH`` via ``from ._config import DB_PATH``, so the
+    two names are independent. Tests that only patch ``_db.DB_PATH`` leave
+    ``_config.DB_PATH`` pointing at the shared broker file; under xdist a
+    sibling worker/test can then make ``create_channel`` / ``get_channel``
+    disagree and ``ab discuss`` exits before ``runtime_invoke``.
+
+    Autouse so every test in this module — including future discuss
+    siblings — inherits isolation without reintroducing the leak.
+    """
+    _ensure_scripts_path()
+    from ai_agent_bridge import _config, _db
+
+    db_path = tmp_path / "bridge.db"
+    monkeypatch.setattr(_config, "DB_PATH", db_path)
+    monkeypatch.setattr(_db, "DB_PATH", db_path)
+    return db_path
+
+
+@pytest.fixture
+def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Stub channel I/O for discuss tests; relies on ``_isolate_bridge_db_path``."""
+    _ensure_scripts_path()
+    from ai_agent_bridge import _channels
+
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
+    monkeypatch.setattr(
+        _channels,
+        "load_channel_context",
+        lambda channel: {"body": "", "revs": {}, "missing": []},
+    )
+    _channels.create_channel("shared", exist_ok=True)
+    _channels.create_channel("agy-topic", exist_ok=True)
 
 
 def test_registry_exposes_agy():
@@ -108,28 +155,13 @@ def test_ab_channels_cli_marks_agy_cli_available():
 
 
 def test_ab_discuss_accepts_agy_in_with_list(
-    tmp_path, monkeypatch,
+    discuss_bridge, monkeypatch,
 ):
     """``ab discuss --with agy`` passes agent validation and invokes runtime."""
     from types import SimpleNamespace
 
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-
-    from ai_agent_bridge import _channels, _channels_cli, _db
-
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "bridge.db")
-    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
-    monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
-    monkeypatch.setattr(
-        _channels,
-        "load_channel_context",
-        lambda channel: {"body": "", "revs": {}, "missing": []},
-    )
-
-    _channels.create_channel("shared", exist_ok=True)
-    _channels.create_channel("agy-topic", exist_ok=True)
+    _ensure_scripts_path()
+    from ai_agent_bridge import _channels_cli
 
     invoked: list[str] = []
     invoke_kwargs: list[dict] = []
@@ -160,27 +192,12 @@ def test_ab_discuss_accepts_agy_in_with_list(
     assert invoke_kwargs[0].get("model") is None
 
 
-def test_ab_discuss_passes_agy_pro_model_override(tmp_path, monkeypatch):
+def test_ab_discuss_passes_agy_pro_model_override(discuss_bridge, monkeypatch):
     """``--models agy:gemini-3.1-pro-high`` reaches runtime_invoke as model=."""
     from types import SimpleNamespace
 
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-
-    from ai_agent_bridge import _channels, _channels_cli, _db
-
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "bridge.db")
-    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
-    monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
-    monkeypatch.setattr(
-        _channels,
-        "load_channel_context",
-        lambda channel: {"body": "", "revs": {}, "missing": []},
-    )
-
-    _channels.create_channel("shared", exist_ok=True)
-    _channels.create_channel("agy-topic", exist_ok=True)
+    _ensure_scripts_path()
+    from ai_agent_bridge import _channels_cli
 
     invoke_kwargs: list[dict] = []
 
