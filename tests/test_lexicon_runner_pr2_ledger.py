@@ -189,8 +189,88 @@ def test_attempt_cap_exhaustion_and_operator_retry(ledger: Ledger) -> None:
     assert int(run_row["manual_retry_epoch"]) == 1
 
 
+def test_attempt_cap_syncs_chunk_row(ledger: Ledger) -> None:
+    """Attempt-cap terminal marking must update work_units AND chunks together."""
+    ledger.max_attempts = 1
+    fp = compute_run_fingerprint(cohort_digest="cap-chunk")
+    run = ledger.start_run(fp).run_id
+    assert run
+    ledger.register_chunk_work_units(run, [("chunk-cap", ["x", "y"])])
+    c1 = ledger.claim_unit(run, "chunk-cap", "owner-1", now=10.0)
+    assert c1.ok
+    assert ledger.commit_result(
+        run,
+        "chunk-cap",
+        "owner-1",
+        int(c1.lease_generation or 0),
+        "retry_scheduled",
+        error_code="transient",
+        now=11.0,
+    ).ok
+    exhausted = ledger.claim_unit(run, "chunk-cap", "owner-2", now=12.0)
+    assert exhausted.status is CasStatus.ATTEMPT_CAP_EXHAUSTED
+    unit = ledger.get_work_unit(run, "chunk-cap")
+    chunk = ledger.get_chunk(run, "chunk-cap")
+    assert unit is not None and chunk is not None
+    assert unit["state"] == UnitOutcome.FAILED_TERMINAL.value
+    assert chunk["state"] == ChunkLedgerState.FAILED_TERMINAL.value
+    assert chunk["error_code"] == "attempt_cap_exhausted"
+
+
+def test_claim_crash_mid_transaction_rolls_back_both_tables(ledger: Ledger) -> None:
+    """crash_after_claim fires inside the write txn so neither table commits."""
+    fp = compute_run_fingerprint(cohort_digest="claim-crash")
+    run = ledger.start_run(fp).run_id
+    assert run
+    ledger.register_chunk_work_units(run, [("chunk-c", ["a"])])
+    ledger.crash_after_claim = True
+    with pytest.raises(RuntimeError, match="injected crash: after_claim"):
+        ledger.claim_unit(run, "chunk-c", "owner", now=1.0)
+    ledger.crash_after_claim = False
+    unit = ledger.get_work_unit(run, "chunk-c")
+    chunk = ledger.get_chunk(run, "chunk-c")
+    assert unit is not None and chunk is not None
+    assert unit["state"] == SchedulableState.PENDING.value
+    assert int(unit["lease_generation"]) == 0
+    assert chunk["state"] == ChunkLedgerState.PENDING.value
+    assert int(chunk["lease_generation"]) == 0
+    # Retry claim succeeds after the crash flag is cleared.
+    ok = ledger.claim_unit(run, "chunk-c", "owner", now=2.0)
+    assert ok.ok and ok.lease_generation == 1
+
+
+def test_result_crash_mid_transaction_rolls_back_both_tables(ledger: Ledger) -> None:
+    """crash_after_result fires inside the write txn so neither table commits."""
+    fp = compute_run_fingerprint(cohort_digest="result-crash")
+    run = ledger.start_run(fp).run_id
+    assert run
+    ledger.register_chunk_work_units(run, [("chunk-r", ["a"])])
+    claim = ledger.claim_unit(run, "chunk-r", "owner", now=1.0)
+    gen = int(claim.lease_generation or 0)
+    ledger.crash_after_result = True
+    with pytest.raises(RuntimeError, match="injected crash: after_result"):
+        ledger.commit_result(
+            run, "chunk-r", "owner", gen, "done", result_hash="h1", now=2.0
+        )
+    ledger.crash_after_result = False
+    unit = ledger.get_work_unit(run, "chunk-r")
+    chunk = ledger.get_chunk(run, "chunk-r")
+    assert unit is not None and chunk is not None
+    assert unit["state"] == SchedulableState.LEASED.value
+    assert chunk["state"] == ChunkLedgerState.LEASED.value
+    assert unit["result_hash"] is None
+    # Retry commit succeeds.
+    assert ledger.commit_result(
+        run, "chunk-r", "owner", gen, "done", result_hash="h1", now=3.0
+    ).ok
+    unit2 = ledger.get_work_unit(run, "chunk-r")
+    assert unit2 is not None
+    assert unit2["state"] == UnitOutcome.DONE.value
+    assert unit2["result_hash"] == "h1"
+
+
 def test_split_interruption_and_deterministic_children(ledger: Ledger) -> None:
-    """Crash mid-split: parent remains active; retry creates same child IDs."""
+    """Crash mid-split (inside txn): parent remains active; retry creates same child IDs."""
     fp = compute_run_fingerprint(cohort_digest="split")
     run = ledger.start_run(fp).run_id
     assert run
@@ -206,11 +286,14 @@ def test_split_interruption_and_deterministic_children(ledger: Ledger) -> None:
         ledger.commit_split(run, parent_id, "coord", gen, now=51.0)
     ledger.crash_mid_split = False
 
-    # Parent still leased (no partial children).
+    # Parent still leased (no partial children) — crash rolled back mid-txn write.
     parent = ledger.get_chunk(run, parent_id)
     assert parent is not None
     assert parent["state"] == ChunkLedgerState.LEASED.value
     assert int(parent["is_leaf"]) == 1
+    parent_wu = ledger.get_work_unit(run, parent_id)
+    assert parent_wu is not None
+    assert parent_wu["state"] == SchedulableState.LEASED.value
 
     # Retry completes deterministically.
     done = ledger.commit_split(run, parent_id, "coord", gen, now=52.0)
@@ -232,18 +315,35 @@ def test_split_interruption_and_deterministic_children(ledger: Ledger) -> None:
 
 
 def test_single_lemma_oom_failed_terminal_no_split(ledger: Ledger) -> None:
+    """Single-lemma OOM marks chunks + work_units FAILED_TERMINAL atomically."""
     fp = compute_run_fingerprint(cohort_digest="oom1")
     run = ledger.start_run(fp).run_id
     assert run
     ledger.register_chunk_work_units(run, [("leaf", ["only"])])
     claim = ledger.claim_unit(run, "leaf", "coord", now=1.0)
     assert claim.ok
-    res = ledger.commit_split(run, "leaf", "coord", int(claim.lease_generation or 0), now=2.0)
+    gen = int(claim.lease_generation or 0)
+
+    # Mid-txn crash on single-lemma path: neither table advances.
+    ledger.crash_mid_split = True
+    with pytest.raises(RuntimeError, match="injected crash: mid_split"):
+        ledger.commit_split(run, "leaf", "coord", gen, now=2.0)
+    ledger.crash_mid_split = False
+    leaf_mid = ledger.get_chunk(run, "leaf")
+    wu_mid = ledger.get_work_unit(run, "leaf")
+    assert leaf_mid is not None and wu_mid is not None
+    assert leaf_mid["state"] == ChunkLedgerState.LEASED.value
+    assert wu_mid["state"] == SchedulableState.LEASED.value
+
+    res = ledger.commit_split(run, "leaf", "coord", gen, now=3.0)
     assert res.ok
     leaf = ledger.get_chunk(run, "leaf")
-    assert leaf is not None
+    wu = ledger.get_work_unit(run, "leaf")
+    assert leaf is not None and wu is not None
     assert leaf["state"] == ChunkLedgerState.FAILED_TERMINAL.value
     assert leaf["error_code"] == ErrorCode.FAILED_OOM.value
+    assert wu["state"] == UnitOutcome.FAILED_TERMINAL.value
+    assert wu["error_code"] == ErrorCode.FAILED_OOM.value
 
 
 def test_seal_interruption_and_leaf_only_rules(ledger: Ledger) -> None:
@@ -356,6 +456,63 @@ def test_import_cas_and_stale_generation(ledger: Ledger) -> None:
         now=6.0,
     )
     assert stale.status is CasStatus.STALE_COMMIT_REJECTED
+
+
+def test_import_reclaimed_lease_rejected(ledger: Ledger) -> None:
+    """After reclaim to PENDING, stale importer cannot commit_import (CAS bypass fix)."""
+    fp = compute_run_fingerprint(cohort_digest="import-reclaim")
+    run = ledger.start_run(fp).run_id
+    assert run
+    ledger.register_work_unit(run, "lemma-r", unit_kind="lemma", phase="network_import")
+    claim = ledger.claim_unit(run, "lemma-r", "imp-old", phase="network_import", now=100.0)
+    gen = int(claim.lease_generation or 0)
+    reclaimed = ledger.reclaim_expired(run, now=10_000.0)
+    assert "lemma-r" in reclaimed
+    unit = ledger.get_work_unit(run, "lemma-r", phase="network_import")
+    assert unit is not None
+    assert unit["state"] == SchedulableState.PENDING.value
+
+    stale = ledger.commit_import(
+        run,
+        "lemma-r",
+        "imp-old",
+        gen,
+        packet_generation=7,
+        result_hash="stale-body",
+        expected_fingerprint=fp,
+        phase="network_import",
+        now=10_001.0,
+    )
+    assert stale.status is CasStatus.STALE_COMMIT_REJECTED
+    # Import row must not exist after rejected stale commit.
+    imports = ledger._require().execute(
+        "SELECT COUNT(*) AS n FROM imports WHERE run_id = ? AND lemma_id = ?",
+        (run, "lemma-r"),
+    ).fetchone()
+    assert int(imports["n"]) == 0
+    unit2 = ledger.get_work_unit(run, "lemma-r", phase="network_import")
+    assert unit2 is not None
+    assert unit2["state"] == SchedulableState.PENDING.value
+
+    # Fresh claim + import still succeeds.
+    c2 = ledger.claim_unit(run, "lemma-r", "imp-new", phase="network_import", now=10_002.0)
+    assert c2.ok
+    ok = ledger.commit_import(
+        run,
+        "lemma-r",
+        "imp-new",
+        int(c2.lease_generation or 0),
+        packet_generation=7,
+        result_hash="fresh-body",
+        expected_fingerprint=fp,
+        phase="network_import",
+        now=10_003.0,
+    )
+    assert ok.ok
+    unit3 = ledger.get_work_unit(run, "lemma-r", phase="network_import")
+    assert unit3 is not None
+    assert unit3["state"] == UnitOutcome.DONE.value
+    assert unit3["result_hash"] == "fresh-body"
 
 
 def test_abandon_packet_operator_record(ledger: Ledger) -> None:

@@ -724,121 +724,151 @@ class Ledger:
                 )
 
         self.reclaim_expired(run_id, now=ts)
-        row = conn.execute(
-            "SELECT * FROM work_units WHERE run_id = ? AND unit_id = ? AND phase = ?",
-            (run_id, unit_id, phase),
-        ).fetchone()
-        if row is None:
-            return ClaimResult(status=CasStatus.NOT_FOUND, unit_id=unit_id, detail="unit missing")
 
-        state = str(row["state"])
-        attempt_count = int(row["attempt_count"])
-        if state in {
-            UnitOutcome.DONE.value,
-            UnitOutcome.NO_DATA.value,
-            UnitOutcome.FAILED_TERMINAL.value,
-            ChunkLedgerState.SEALED.value,
-            ChunkLedgerState.SUPERSEDED.value,
-        }:
-            return ClaimResult(
-                status=CasStatus.INVALID_STATE,
-                unit_id=unit_id,
-                detail=f"unit not claimable in state={state}",
-            )
-        if state == SchedulableState.LEASED.value and float(row["leased_until"] or 0) >= ts:
-            return ClaimResult(
-                status=CasStatus.INVALID_STATE,
-                unit_id=unit_id,
-                detail="unit already leased",
-            )
-        if attempt_count >= self.max_attempts:
-            conn.execute(
-                "UPDATE work_units SET state = ?, error_code = ?, updated_at = ? "
-                "WHERE run_id = ? AND unit_id = ? AND phase = ?",
-                (
-                    UnitOutcome.FAILED_TERMINAL.value,
+        # work_units + chunks must move atomically (review #5341 finding 1, 4).
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            row = conn.execute(
+                "SELECT * FROM work_units WHERE run_id = ? AND unit_id = ? AND phase = ?",
+                (run_id, unit_id, phase),
+            ).fetchone()
+            if row is None:
+                conn.execute("ROLLBACK")
+                return ClaimResult(
+                    status=CasStatus.NOT_FOUND, unit_id=unit_id, detail="unit missing"
+                )
+
+            state = str(row["state"])
+            attempt_count = int(row["attempt_count"])
+            if state in {
+                UnitOutcome.DONE.value,
+                UnitOutcome.NO_DATA.value,
+                UnitOutcome.FAILED_TERMINAL.value,
+                ChunkLedgerState.SEALED.value,
+                ChunkLedgerState.SUPERSEDED.value,
+            }:
+                conn.execute("ROLLBACK")
+                return ClaimResult(
+                    status=CasStatus.INVALID_STATE,
+                    unit_id=unit_id,
+                    detail=f"unit not claimable in state={state}",
+                )
+            if state == SchedulableState.LEASED.value and float(row["leased_until"] or 0) >= ts:
+                conn.execute("ROLLBACK")
+                return ClaimResult(
+                    status=CasStatus.INVALID_STATE,
+                    unit_id=unit_id,
+                    detail="unit already leased",
+                )
+            if attempt_count >= self.max_attempts:
+                conn.execute(
+                    "UPDATE work_units SET state = ?, error_code = ?, updated_at = ? "
+                    "WHERE run_id = ? AND unit_id = ? AND phase = ?",
+                    (
+                        UnitOutcome.FAILED_TERMINAL.value,
+                        "attempt_cap_exhausted",
+                        ts,
+                        run_id,
+                        unit_id,
+                        phase,
+                    ),
+                )
+                # Mirror terminal outcome onto chunk row when unit is a chunk.
+                conn.execute(
+                    "UPDATE chunks SET state = ?, error_code = ?, owner = NULL, "
+                    "leased_until = NULL, updated_at = ? "
+                    "WHERE run_id = ? AND chunk_id = ?",
+                    (
+                        ChunkLedgerState.FAILED_TERMINAL.value,
+                        "attempt_cap_exhausted",
+                        ts,
+                        run_id,
+                        unit_id,
+                    ),
+                )
+                self._event(
                     "attempt_cap_exhausted",
+                    run_id,
+                    unit_id=unit_id,
+                    phase=phase,
+                    attempt_count=attempt_count,
+                )
+                conn.execute("COMMIT")
+                return ClaimResult(
+                    status=CasStatus.ATTEMPT_CAP_EXHAUSTED,
+                    unit_id=unit_id,
+                    attempt_count=attempt_count,
+                    detail="total automatic attempts exhausted",
+                )
+
+            new_gen = int(row["lease_generation"]) + 1
+            new_attempts = attempt_count + 1
+            leased_until = ts + self.lease_ttl_seconds
+            cur = conn.execute(
+                "UPDATE work_units SET state = ?, lease_generation = ?, owner = ?, "
+                "leased_until = ?, attempt_count = ?, updated_at = ? "
+                "WHERE run_id = ? AND unit_id = ? AND phase = ? "
+                "AND lease_generation = ? AND state IN (?, ?, ?)",
+                (
+                    SchedulableState.LEASED.value,
+                    new_gen,
+                    owner,
+                    leased_until,
+                    new_attempts,
                     ts,
                     run_id,
                     unit_id,
                     phase,
+                    int(row["lease_generation"]),
+                    SchedulableState.PENDING.value,
+                    UnitOutcome.RETRY_SCHEDULED.value,
+                    SchedulableState.LEASED.value,
+                ),
+            )
+            if cur.rowcount != 1:
+                conn.execute("ROLLBACK")
+                return ClaimResult(
+                    status=CasStatus.STALE_COMMIT_REJECTED,
+                    unit_id=unit_id,
+                    detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                )
+
+            # Keep chunk row in sync when unit is a chunk scheduling unit.
+            conn.execute(
+                "UPDATE chunks SET state = ?, lease_generation = ?, owner = ?, "
+                "leased_until = ?, attempt_count = ?, updated_at = ? "
+                "WHERE run_id = ? AND chunk_id = ? AND is_leaf = 1 "
+                "AND state IN (?, ?)",
+                (
+                    ChunkLedgerState.LEASED.value,
+                    new_gen,
+                    owner,
+                    leased_until,
+                    new_attempts,
+                    ts,
+                    run_id,
+                    unit_id,
+                    ChunkLedgerState.PENDING.value,
+                    ChunkLedgerState.LEASED.value,
                 ),
             )
             self._event(
-                "attempt_cap_exhausted",
+                "chunk_claimed" if str(row["unit_kind"]) == "chunk" else "unit_claimed",
                 run_id,
                 unit_id=unit_id,
                 phase=phase,
-                attempt_count=attempt_count,
+                lease_generation=new_gen,
+                owner=owner,
+                attempt_count=new_attempts,
             )
-            return ClaimResult(
-                status=CasStatus.ATTEMPT_CAP_EXHAUSTED,
-                unit_id=unit_id,
-                attempt_count=attempt_count,
-                detail="total automatic attempts exhausted",
-            )
+            # Crash mid-transaction: both work_units and chunks roll back together.
+            if self.crash_after_claim:
+                raise RuntimeError("injected crash: after_claim")
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
 
-        new_gen = int(row["lease_generation"]) + 1
-        new_attempts = attempt_count + 1
-        leased_until = ts + self.lease_ttl_seconds
-        cur = conn.execute(
-            "UPDATE work_units SET state = ?, lease_generation = ?, owner = ?, "
-            "leased_until = ?, attempt_count = ?, updated_at = ? "
-            "WHERE run_id = ? AND unit_id = ? AND phase = ? "
-            "AND lease_generation = ? AND state IN (?, ?, ?)",
-            (
-                SchedulableState.LEASED.value,
-                new_gen,
-                owner,
-                leased_until,
-                new_attempts,
-                ts,
-                run_id,
-                unit_id,
-                phase,
-                int(row["lease_generation"]),
-                SchedulableState.PENDING.value,
-                UnitOutcome.RETRY_SCHEDULED.value,
-                SchedulableState.LEASED.value,
-            ),
-        )
-        if cur.rowcount != 1:
-            return ClaimResult(
-                status=CasStatus.STALE_COMMIT_REJECTED,
-                unit_id=unit_id,
-                detail=ErrorCode.STALE_COMMIT_REJECTED.value,
-            )
-
-        # Keep chunk row in sync when unit is a chunk scheduling unit.
-        conn.execute(
-            "UPDATE chunks SET state = ?, lease_generation = ?, owner = ?, "
-            "leased_until = ?, attempt_count = ?, updated_at = ? "
-            "WHERE run_id = ? AND chunk_id = ? AND is_leaf = 1 "
-            "AND state IN (?, ?)",
-            (
-                ChunkLedgerState.LEASED.value,
-                new_gen,
-                owner,
-                leased_until,
-                new_attempts,
-                ts,
-                run_id,
-                unit_id,
-                ChunkLedgerState.PENDING.value,
-                ChunkLedgerState.LEASED.value,
-            ),
-        )
-        self._event(
-            "chunk_claimed" if str(row["unit_kind"]) == "chunk" else "unit_claimed",
-            run_id,
-            unit_id=unit_id,
-            phase=phase,
-            lease_generation=new_gen,
-            owner=owner,
-            attempt_count=new_attempts,
-        )
-        if self.crash_after_claim:
-            raise RuntimeError("injected crash: after_claim")
         return ClaimResult(
             status=CasStatus.OK,
             unit_id=unit_id,
@@ -925,41 +955,6 @@ class Ledger:
                 detail=f"invalid outcome {outcome_s!r}",
             )
         new_state = outcome_s
-        # All outcomes release the active lease; retry_scheduled returns to pending
-        # so the scheduler can reclaim after cooldown without holding owner.
-        cur = conn.execute(
-            "UPDATE work_units SET state = ?, result_hash = ?, error_code = ?, "
-            "owner = NULL, leased_until = NULL, updated_at = ? "
-            "WHERE run_id = ? AND unit_id = ? AND phase = ? "
-            "AND owner = ? AND lease_generation = ? AND state = ?",
-            (
-                new_state,
-                result_hash,
-                error_code,
-                ts,
-                run_id,
-                unit_id,
-                phase,
-                owner,
-                int(lease_generation),
-                SchedulableState.LEASED.value,
-            ),
-        )
-        if cur.rowcount != 1:
-            self._event(
-                ErrorCode.STALE_COMMIT_REJECTED.value,
-                run_id,
-                unit_id=unit_id,
-                op="commit_result",
-                lease_generation=lease_generation,
-                owner=owner,
-            )
-            return CasResult(
-                status=CasStatus.STALE_COMMIT_REJECTED,
-                detail=ErrorCode.STALE_COMMIT_REJECTED.value,
-                lease_generation=lease_generation,
-                run_id=run_id,
-            )
         # Mirror terminal outcomes onto chunk rows when unit is a chunk.
         chunk_state = {
             UnitOutcome.DONE.value: ChunkLedgerState.DONE.value,
@@ -967,30 +962,74 @@ class Ledger:
             UnitOutcome.FAILED_TERMINAL.value: ChunkLedgerState.FAILED_TERMINAL.value,
             UnitOutcome.RETRY_SCHEDULED.value: ChunkLedgerState.PENDING.value,
         }[new_state]
-        conn.execute(
-            "UPDATE chunks SET state = ?, result_hash = ?, error_code = ?, "
-            "owner = NULL, leased_until = NULL, updated_at = ? "
-            "WHERE run_id = ? AND chunk_id = ? AND lease_generation = ?",
-            (
-                chunk_state,
-                result_hash,
-                error_code,
-                ts,
+        # work_units + chunks must move atomically (review #5341 finding 1).
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            # All outcomes release the active lease; retry_scheduled returns to pending
+            # so the scheduler can reclaim after cooldown without holding owner.
+            cur = conn.execute(
+                "UPDATE work_units SET state = ?, result_hash = ?, error_code = ?, "
+                "owner = NULL, leased_until = NULL, updated_at = ? "
+                "WHERE run_id = ? AND unit_id = ? AND phase = ? "
+                "AND owner = ? AND lease_generation = ? AND state = ?",
+                (
+                    new_state,
+                    result_hash,
+                    error_code,
+                    ts,
+                    run_id,
+                    unit_id,
+                    phase,
+                    owner,
+                    int(lease_generation),
+                    SchedulableState.LEASED.value,
+                ),
+            )
+            if cur.rowcount != 1:
+                conn.execute("ROLLBACK")
+                self._event(
+                    ErrorCode.STALE_COMMIT_REJECTED.value,
+                    run_id,
+                    unit_id=unit_id,
+                    op="commit_result",
+                    lease_generation=lease_generation,
+                    owner=owner,
+                )
+                return CasResult(
+                    status=CasStatus.STALE_COMMIT_REJECTED,
+                    detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                    lease_generation=lease_generation,
+                    run_id=run_id,
+                )
+            conn.execute(
+                "UPDATE chunks SET state = ?, result_hash = ?, error_code = ?, "
+                "owner = NULL, leased_until = NULL, updated_at = ? "
+                "WHERE run_id = ? AND chunk_id = ? AND lease_generation = ?",
+                (
+                    chunk_state,
+                    result_hash,
+                    error_code,
+                    ts,
+                    run_id,
+                    unit_id,
+                    int(lease_generation),
+                ),
+            )
+            self._event(
+                "result_committed",
                 run_id,
-                unit_id,
-                int(lease_generation),
-            ),
-        )
-        self._event(
-            "result_committed",
-            run_id,
-            unit_id=unit_id,
-            outcome=new_state,
-            result_hash=result_hash,
-            lease_generation=lease_generation,
-        )
-        if self.crash_after_result:
-            raise RuntimeError("injected crash: after_result")
+                unit_id=unit_id,
+                outcome=new_state,
+                result_hash=result_hash,
+                lease_generation=lease_generation,
+            )
+            # Crash mid-transaction: both work_units and chunks roll back together.
+            if self.crash_after_result:
+                raise RuntimeError("injected crash: after_result")
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
         return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
 
     def set_host_cooldown(self, host: str, next_allowed_at: float) -> None:
@@ -1061,58 +1100,64 @@ class Ledger:
             state=ChunkState.PENDING,
         )
         split_result = split_on_oom(parent_spec)
-        if not isinstance(split_result, OomSplitChildren):
-            failed, code = split_result
-            # Single-lemma OOM: failed_terminal, never split.
-            cur = conn.execute(
-                "UPDATE chunks SET state = ?, error_code = ?, owner = NULL, "
-                "leased_until = NULL, updated_at = ? "
-                "WHERE run_id = ? AND chunk_id = ? AND owner = ? AND lease_generation = ?",
-                (
-                    ChunkLedgerState.FAILED_TERMINAL.value,
-                    code,
-                    ts,
-                    run_id,
-                    parent_chunk_id,
-                    owner,
-                    int(lease_generation),
-                ),
-            )
-            if cur.rowcount != 1:
-                return CasResult(
-                    status=CasStatus.STALE_COMMIT_REJECTED,
-                    detail=ErrorCode.STALE_COMMIT_REJECTED.value,
-                )
-            conn.execute(
-                "UPDATE work_units SET state = ?, error_code = ?, owner = NULL, "
-                "leased_until = NULL, updated_at = ? "
-                "WHERE run_id = ? AND unit_id = ? AND phase = ? "
-                "AND owner = ? AND lease_generation = ?",
-                (
-                    UnitOutcome.FAILED_TERMINAL.value,
-                    code,
-                    ts,
-                    run_id,
-                    parent_chunk_id,
-                    phase,
-                    owner,
-                    int(lease_generation),
-                ),
-            )
-            self._event(
-                "failed_oom",
-                run_id,
-                chunk_id=parent_chunk_id,
-                lemma_ids=failed.lemma_ids,
-            )
-            return CasResult(status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id)
 
-        if self.crash_mid_split:
-            # Simulate interruption after validation, before the write transaction commits.
-            raise RuntimeError("injected crash: mid_split")
-
+        # Single-lemma and multi-lemma paths both need atomic work_units+chunks
+        # transitions (review #5341 findings 1, 3).
         conn.execute("BEGIN IMMEDIATE")
         try:
+            if not isinstance(split_result, OomSplitChildren):
+                failed, code = split_result
+                # Single-lemma OOM: failed_terminal, never split.
+                cur = conn.execute(
+                    "UPDATE chunks SET state = ?, error_code = ?, owner = NULL, "
+                    "leased_until = NULL, updated_at = ? "
+                    "WHERE run_id = ? AND chunk_id = ? AND owner = ? AND lease_generation = ?",
+                    (
+                        ChunkLedgerState.FAILED_TERMINAL.value,
+                        code,
+                        ts,
+                        run_id,
+                        parent_chunk_id,
+                        owner,
+                        int(lease_generation),
+                    ),
+                )
+                if cur.rowcount != 1:
+                    conn.execute("ROLLBACK")
+                    return CasResult(
+                        status=CasStatus.STALE_COMMIT_REJECTED,
+                        detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                    )
+                # Crash after first write, before work_units sync — exercises rollback.
+                if self.crash_mid_split:
+                    raise RuntimeError("injected crash: mid_split")
+                conn.execute(
+                    "UPDATE work_units SET state = ?, error_code = ?, owner = NULL, "
+                    "leased_until = NULL, updated_at = ? "
+                    "WHERE run_id = ? AND unit_id = ? AND phase = ? "
+                    "AND owner = ? AND lease_generation = ?",
+                    (
+                        UnitOutcome.FAILED_TERMINAL.value,
+                        code,
+                        ts,
+                        run_id,
+                        parent_chunk_id,
+                        phase,
+                        owner,
+                        int(lease_generation),
+                    ),
+                )
+                self._event(
+                    "failed_oom",
+                    run_id,
+                    chunk_id=parent_chunk_id,
+                    lemma_ids=failed.lemma_ids,
+                )
+                conn.execute("COMMIT")
+                return CasResult(
+                    status=CasStatus.OK, lease_generation=lease_generation, run_id=run_id
+                )
+
             cur = conn.execute(
                 "UPDATE chunks SET state = ?, is_leaf = 0, owner = NULL, "
                 "leased_until = NULL, updated_at = ? "
@@ -1134,17 +1179,30 @@ class Ledger:
                     status=CasStatus.STALE_COMMIT_REJECTED,
                     detail=ErrorCode.STALE_COMMIT_REJECTED.value,
                 )
-            conn.execute(
+            # Crash mid-transaction (after parent chunk write, before children).
+            if self.crash_mid_split:
+                raise RuntimeError("injected crash: mid_split")
+            # CAS fence on parent work unit (review #5341 finding 3).
+            cur_unit = conn.execute(
                 "UPDATE work_units SET state = ?, owner = NULL, leased_until = NULL, "
-                "updated_at = ? WHERE run_id = ? AND unit_id = ? AND phase = ?",
+                "updated_at = ? WHERE run_id = ? AND unit_id = ? AND phase = ? "
+                "AND owner = ? AND lease_generation = ?",
                 (
                     ChunkLedgerState.SUPERSEDED.value,
                     ts,
                     run_id,
                     parent_chunk_id,
                     phase,
+                    owner,
+                    int(lease_generation),
                 ),
             )
+            if cur_unit.rowcount != 1:
+                conn.execute("ROLLBACK")
+                return CasResult(
+                    status=CasStatus.STALE_COMMIT_REJECTED,
+                    detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                )
             for child in (split_result.left, split_result.right):
                 # INSERT OR IGNORE keeps child IDs stable across crash-retry.
                 conn.execute(
@@ -1189,19 +1247,19 @@ class Ledger:
                             ts,
                         ),
                     )
+            self._event(
+                "chunk_split",
+                run_id,
+                parent=parent_chunk_id,
+                left=split_result.left.chunk_id,
+                right=split_result.right.chunk_id,
+                split_epoch=split_result.split_epoch,
+            )
             conn.execute("COMMIT")
         except Exception:
             conn.execute("ROLLBACK")
             raise
 
-        self._event(
-            "chunk_split",
-            run_id,
-            parent=parent_chunk_id,
-            left=split_result.left.chunk_id,
-            right=split_result.right.chunk_id,
-            split_epoch=split_result.split_epoch,
-        )
         # Prove child_id formula matches split module.
         assert split_result.left.chunk_id == child_chunk_id(
             parent_chunk_id, split_result.split_epoch, split_result.left.lemma_ids
@@ -1318,11 +1376,15 @@ class Ledger:
                         int(lease_generation),
                     ),
                 )
-                if cur.rowcount != 1 and str(unit["state"]) == SchedulableState.LEASED.value:
+                # Always reject when CAS misses — including reclaimed PENDING units
+                # (review #5341 finding 2: prior-state LEASED guard was a bypass).
+                if cur.rowcount != 1:
                     conn.execute("ROLLBACK")
                     return CasResult(
                         status=CasStatus.STALE_COMMIT_REJECTED,
                         detail=ErrorCode.STALE_COMMIT_REJECTED.value,
+                        lease_generation=lease_generation,
+                        run_id=run_id,
                     )
             conn.execute("COMMIT")
         except Exception:
@@ -1399,9 +1461,6 @@ class Ledger:
             lemma_ids = json.loads(str(chunk["lemma_ids_json"]))
         lemma_list = [str(x) for x in lemma_ids]
 
-        if self.crash_mid_seal:
-            raise RuntimeError("injected crash: mid_seal")
-
         conn.execute("BEGIN IMMEDIATE")
         try:
             # Re-check leaf under the write transaction.
@@ -1434,6 +1493,9 @@ class Ledger:
                     ts,
                 ),
             )
+            # Crash mid-transaction after seal insert — no half-seal rows survive.
+            if self.crash_mid_seal:
+                raise RuntimeError("injected crash: mid_seal")
             conn.execute(
                 "UPDATE chunks SET state = ?, seal_sha256 = ?, owner = NULL, "
                 "leased_until = NULL, updated_at = ? "
@@ -1511,44 +1573,52 @@ class Ledger:
                 status=CasStatus.INVALID_STATE,
                 detail=f"retry-failed only applies to failed_terminal, got {row['state']}",
             )
-        conn.execute(
-            "UPDATE work_units SET state = ?, error_code = NULL, result_hash = NULL, "
-            "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
-            "WHERE run_id = ? AND unit_id = ? AND phase = ?",
-            (SchedulableState.PENDING.value, ts, run_id, unit_id, phase),
-        )
-        conn.execute(
-            "UPDATE chunks SET state = ?, error_code = NULL, result_hash = NULL, "
-            "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
-            "WHERE run_id = ? AND chunk_id = ?",
-            (ChunkLedgerState.PENDING.value, ts, run_id, unit_id),
-        )
-        conn.execute(
-            "UPDATE runs SET manual_retry_epoch = manual_retry_epoch + 1, updated_at = ? "
-            "WHERE run_id = ?",
-            (ts, run_id),
-        )
-        conn.execute(
-            "INSERT INTO operator_actions("
-            "run_id, action, reason, unit_id, phase, created_at, payload_json"
-            ") VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (
+        # work_units + chunks + run epoch + audit row must move atomically
+        # (review #5341 finding 1).
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            conn.execute(
+                "UPDATE work_units SET state = ?, error_code = NULL, result_hash = NULL, "
+                "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
+                "WHERE run_id = ? AND unit_id = ? AND phase = ?",
+                (SchedulableState.PENDING.value, ts, run_id, unit_id, phase),
+            )
+            conn.execute(
+                "UPDATE chunks SET state = ?, error_code = NULL, result_hash = NULL, "
+                "owner = NULL, leased_until = NULL, attempt_count = 0, updated_at = ? "
+                "WHERE run_id = ? AND chunk_id = ?",
+                (ChunkLedgerState.PENDING.value, ts, run_id, unit_id),
+            )
+            conn.execute(
+                "UPDATE runs SET manual_retry_epoch = manual_retry_epoch + 1, updated_at = ? "
+                "WHERE run_id = ?",
+                (ts, run_id),
+            )
+            conn.execute(
+                "INSERT INTO operator_actions("
+                "run_id, action, reason, unit_id, phase, created_at, payload_json"
+                ") VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (
+                    run_id,
+                    OperatorActionKind.RETRY_FAILED.value,
+                    reason,
+                    unit_id,
+                    phase,
+                    ts,
+                    canonical_json({"prior_lease_generation": int(row["lease_generation"])}),
+                ),
+            )
+            self._event(
+                "operator_retry_failed",
                 run_id,
-                OperatorActionKind.RETRY_FAILED.value,
-                reason,
-                unit_id,
-                phase,
-                ts,
-                canonical_json({"prior_lease_generation": int(row["lease_generation"])}),
-            ),
-        )
-        self._event(
-            "operator_retry_failed",
-            run_id,
-            unit_id=unit_id,
-            phase=phase,
-            reason=reason,
-        )
+                unit_id=unit_id,
+                phase=phase,
+                reason=reason,
+            )
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
         return CasResult(status=CasStatus.OK, run_id=run_id)
 
     def abandon_packet(
