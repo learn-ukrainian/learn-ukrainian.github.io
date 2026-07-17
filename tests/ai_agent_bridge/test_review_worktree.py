@@ -342,6 +342,42 @@ def _codex_exec_read_calls(
     return calls
 
 
+def _codex_batch_read_calls(
+    checkout: review_worktree.ProvisionedReviewWorktree,
+) -> list[dict[str, object]]:
+    direct_calls = _codex_read_calls(checkout)
+    calls: list[dict[str, object]] = []
+    for start in range(0, len(direct_calls), review_worktree.MAX_CODEX_SEALED_READ_BATCH):
+        batch = direct_calls[start : start + review_worktree.MAX_CODEX_SEALED_READ_BATCH]
+        pairs: list[list[object]] = []
+        result: list[dict[str, object]] = [
+            {
+                "type": "input_text",
+                "text": "Script completed\nWall time 0.0 seconds\nOutput:\n",
+            }
+        ]
+        for direct in batch:
+            arguments = direct["arguments"]
+            assert isinstance(arguments, dict)
+            pairs.append([arguments["path"], arguments["offset"]])
+            result.append(
+                {
+                    "type": "input_text",
+                    "text": json.dumps(direct["result"], separators=(",", ":")),
+                }
+            )
+        raw = (
+            '// @exec: {"max_output_tokens":100000}\n'
+            f"const q={json.dumps(pairs, separators=(',', ':'))};"
+            "for(const[p,o]of q){const r=await "
+            "tools.mcp__sealed_review__read_file("
+            "{path:p,offset:o,max_bytes:65536});text(JSON.stringify(r));}"
+        )
+        assert len(raw) <= 500
+        calls.append({"name": "exec", "arguments": {"_raw": raw}, "result": result})
+    return calls
+
+
 def test_clean_review_requires_complete_hash_bound_tool_reads(tmp_path: Path) -> None:
     checkout = _prompt_evidence_checkout(tmp_path / "read-proof")
     calls = _codex_read_calls(checkout)
@@ -439,7 +475,54 @@ def test_codex_exec_read_trace_accepts_only_canonical_nested_mcp_calls(tmp_path:
     assert proof["covered_path_count"] == 3
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_exec_form" in prompt
-    assert "substituting only its path and numeric offset placeholders" in prompt
+    assert "Use read_protocol.codex_exec_form only" in prompt
+
+
+def test_codex_batch_exec_trace_accepts_bounded_hash_bound_reads(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-batch-read-proof")
+    calls = _codex_batch_read_calls(checkout)
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["covered_path_count"] == 3
+    assert len(calls) == 1
+    prompt = checkout.review_prompt_evidence("codex")
+    assert "codex_exec_batch_form" in prompt
+    assert "Do not run a tool-discovery cell" in prompt
+
+
+@pytest.mark.parametrize(
+    "mutate_raw",
+    [
+        lambda raw: raw.replace("100000", "10000", 1),
+        lambda raw: raw + "notify('forged');",
+        lambda raw: raw.replace("const q=", "const q=[[\"extra\",0],", 1),
+    ],
+)
+def test_codex_batch_exec_trace_rejects_noncanonical_javascript(
+    tmp_path: Path,
+    mutate_raw,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-batch-rejected")
+    calls = _codex_batch_read_calls(checkout)
+    arguments = calls[0]["arguments"]
+    assert isinstance(arguments, dict)
+    raw = arguments["_raw"]
+    assert isinstance(raw, str)
+    arguments["_raw"] = mutate_raw(raw)
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=calls),
+            engine="codex",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
 
 
 @pytest.mark.parametrize(
