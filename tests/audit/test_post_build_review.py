@@ -1039,6 +1039,38 @@ def test_provider_schema_rejects_prose_suffixed_vesum_mapping() -> None:
         Draft202012Validator(schema).validate(semantic)
 
 
+def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    expected_lemmas = pbr._packet_vocabulary_lemmas(packet)
+    coverage_schema = schema["properties"]["vocabulary_coverage"]
+
+    assert coverage_schema["minItems"] == len(expected_lemmas)
+    assert coverage_schema["maxItems"] == len(expected_lemmas)
+    assert len(coverage_schema["prefixItems"]) == len(expected_lemmas)
+    Draft202012Validator(schema).validate(semantic)
+
+    wrong_order = copy.deepcopy(semantic)
+    wrong_order["vocabulary_coverage"][0], wrong_order["vocabulary_coverage"][1] = (
+        wrong_order["vocabulary_coverage"][1],
+        wrong_order["vocabulary_coverage"][0],
+    )
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(wrong_order)
+
+    false_exact = copy.deepcopy(semantic)
+    integrated = next(
+        item
+        for item in false_exact["vocabulary_coverage"]
+        if item["status"] == "INTEGRATED"
+    )
+    integrated["surface"] = "співтворчість"
+    integrated["verification"] = "exact lemma surface"
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(false_exact)
+
+
 def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
 
@@ -2303,8 +2335,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.4"
-    assert len(rows) == 51
+    assert catalog["catalog_version"] == "5.0.5"
+    assert len(rows) == 52
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

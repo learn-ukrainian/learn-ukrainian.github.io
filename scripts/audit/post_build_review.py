@@ -2477,25 +2477,7 @@ def finalize_review(
                 path: target_material_text(material)
                 for path, material in materials_by_path.items()
             }
-            target_materials = packet.get("target_materials")
-            if not isinstance(target_materials, Mapping):
-                raise ReviewProtocolError("Semantic packet must contain target_materials")
-            vocabulary_material = target_materials.get("vocabulary")
-            expected_vocabulary_lemmas: list[str] = []
-            if vocabulary_material is not None:
-                if not isinstance(vocabulary_material, Mapping):
-                    raise ReviewProtocolError("Vocabulary target material must be a mapping")
-                vocabulary = yaml.safe_load(target_material_text(vocabulary_material))
-                if not isinstance(vocabulary, list):
-                    raise ReviewProtocolError("Vocabulary target material must be a list")
-                for index, entry in enumerate(vocabulary, start=1):
-                    if not isinstance(entry, Mapping):
-                        raise ReviewProtocolError(
-                            f"Vocabulary entry {index} must be a mapping"
-                        )
-                    expected_vocabulary_lemmas.append(
-                        _nonempty_string(entry.get("lemma"), f"vocabulary lemma {index}")
-                    )
+            expected_vocabulary_lemmas = _packet_vocabulary_lemmas(packet)
             semantic = normalize_semantic_result(
                 hydrated_semantic_input,
                 family,
@@ -2594,6 +2576,26 @@ def _packet_materials_by_path(packet: Mapping[str, Any]) -> dict[str, Mapping[st
     return by_path
 
 
+def _packet_vocabulary_lemmas(packet: Mapping[str, Any]) -> list[str]:
+    materials = packet.get("target_materials")
+    if not isinstance(materials, Mapping):
+        raise ReviewProtocolError("Semantic packet must contain target_materials")
+    vocabulary_material = materials.get("vocabulary")
+    if vocabulary_material is None:
+        return []
+    if not isinstance(vocabulary_material, Mapping):
+        raise ReviewProtocolError("Vocabulary target material must be a mapping")
+    vocabulary = yaml.safe_load(target_material_text(vocabulary_material))
+    if not isinstance(vocabulary, list):
+        raise ReviewProtocolError("Vocabulary target material must be a list")
+    lemmas: list[str] = []
+    for index, entry in enumerate(vocabulary, start=1):
+        if not isinstance(entry, Mapping):
+            raise ReviewProtocolError(f"Vocabulary entry {index} must be a mapping")
+        lemmas.append(_nonempty_string(entry.get("lemma"), f"vocabulary lemma {index}"))
+    return lemmas
+
+
 def _provider_locator_schema(packet: Mapping[str, Any] | None) -> dict[str, Any]:
     """Return a compact provider path/line schema bound to packet snapshots."""
     if packet is None:
@@ -2656,7 +2658,20 @@ def _provider_dimension_evidence_schema(
     return locator
 
 
-def _provider_vocabulary_coverage_item_schema() -> dict[str, Any]:
+def _case_insensitive_literal_pattern(value: str) -> str:
+    parts: list[str] = []
+    for char in value:
+        variants = sorted({char.casefold(), char.lower(), char.upper()})
+        if len(variants) == 1:
+            parts.append(re.escape(char))
+        elif all(len(variant) == 1 for variant in variants):
+            parts.append("[" + "".join(re.escape(variant) for variant in variants) + "]")
+        else:
+            parts.append("(?:" + "|".join(re.escape(variant) for variant in variants) + ")")
+    return "^" + "".join(parts) + "$"
+
+
+def _provider_vocabulary_coverage_item_schema(lemma: str | None = None) -> dict[str, Any]:
     """Constrain status-specific vocabulary evidence before provider output."""
     required = ["lemma", "status", "surface", "verification", "evidence", "finding_id"]
     evidence = {
@@ -2664,32 +2679,35 @@ def _provider_vocabulary_coverage_item_schema() -> dict[str, Any]:
         "items": {"$ref": "#/$defs/dimensionEvidence"},
     }
     shared = {
-        "lemma": {"$ref": "#/$defs/nonempty"},
+        "lemma": {"const": lemma} if lemma is not None else {"$ref": "#/$defs/nonempty"},
         "verification": {"$ref": "#/$defs/nonempty"},
     }
-    integrated = {
+    integrated_shared = {
         "type": "object",
         "additionalProperties": False,
         "required": required,
         "properties": {
             **shared,
             "status": {"const": "INTEGRATED"},
-            "surface": {"$ref": "#/$defs/nonempty"},
-            "verification": {
-                "oneOf": [
-                    {"const": "exact lemma surface"},
-                    {
-                        "type": "string",
-                        "pattern": (
-                            r"^VESUM: [^\s=;]+=[^\s=;]+"
-                            r"(?:; [^\s=;]+=[^\s=;]+)*$"
-                        ),
-                    },
-                ]
-            },
             "evidence": {**evidence, "minItems": 1},
             "finding_id": {"type": "null"},
         },
+    }
+    integrated_exact = deepcopy(integrated_shared)
+    integrated_exact["properties"]["surface"] = (
+        {"type": "string", "pattern": _case_insensitive_literal_pattern(lemma)}
+        if lemma is not None
+        else {"$ref": "#/$defs/nonempty"}
+    )
+    integrated_exact["properties"]["verification"] = {"const": "exact lemma surface"}
+    integrated_vesum = deepcopy(integrated_shared)
+    integrated_vesum["properties"]["surface"] = {"$ref": "#/$defs/nonempty"}
+    integrated_vesum["properties"]["verification"] = {
+        "type": "string",
+        "pattern": (
+            r"^VESUM: [^\s=;]+=[^\s=;]+"
+            r"(?:; [^\s=;]+=[^\s=;]+)*$"
+        ),
     }
 
     def unavailable(status: str) -> dict[str, Any]:
@@ -2706,7 +2724,43 @@ def _provider_vocabulary_coverage_item_schema() -> dict[str, Any]:
             },
         }
 
-    return {"oneOf": [integrated, unavailable("MISSING"), unavailable("INCOMPLETE")]}
+    return {
+        "oneOf": [
+            integrated_exact,
+            integrated_vesum,
+            unavailable("MISSING"),
+            unavailable("INCOMPLETE"),
+        ]
+    }
+
+
+def _provider_vocabulary_prefix_item_schema(lemma: str) -> dict[str, Any]:
+    return {
+        "allOf": [
+            {"$ref": "#/$defs/vocabularyCoverageItem"},
+            {
+                "properties": {"lemma": {"const": lemma}},
+                "required": ["lemma"],
+            },
+            {
+                "if": {
+                    "properties": {
+                        "verification": {"const": "exact lemma surface"},
+                    },
+                    "required": ["verification"],
+                },
+                "then": {
+                    "properties": {
+                        "surface": {
+                            "type": "string",
+                            "pattern": _case_insensitive_literal_pattern(lemma),
+                        }
+                    },
+                    "required": ["surface"],
+                },
+            },
+        ]
+    }
 
 
 def hydrate_provider_dimension_evidence(
@@ -2819,6 +2873,18 @@ def semantic_response_schema(
     raw_finding["properties"].pop("source")
     definitions["dimensionEvidence"] = _provider_dimension_evidence_schema(packet)
     definitions["vocabularyCoverageItem"] = _provider_vocabulary_coverage_item_schema()
+    if packet is not None:
+        vocabulary_items = [
+            _provider_vocabulary_prefix_item_schema(lemma)
+            for lemma in _packet_vocabulary_lemmas(packet)
+        ]
+        semantic["properties"]["vocabulary_coverage"] = {
+            "type": "array",
+            "prefixItems": vocabulary_items,
+            "items": False,
+            "minItems": len(vocabulary_items),
+            "maxItems": len(vocabulary_items),
+        }
     raw_finding["properties"]["location"] = {
         "oneOf": [{"type": "null"}, _provider_locator_schema(packet)]
     }
