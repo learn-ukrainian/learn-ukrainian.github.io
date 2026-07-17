@@ -134,8 +134,9 @@ readings:
     role: repatriation-and-initial-identification
     hosting: link-only
     learner_task: >-
-      Розрізнити факт повернення, маркування останків, початкове зіставлення ДНК
-      і прохання родини про додаткову перевірку.
+      Розрізнити факт повернення останків, атрибуцію до МВС, початкове
+      твердження про ідентифікацію за ДНК і прохання родини про кілька
+      експертиз. Початку ідентифікації це повідомлення не датує.
     rights:
       basis: external-link
       evidence_url: >-
@@ -152,6 +153,8 @@ readings:
     learner_task: >-
       Зафіксувати межу судово-медичного висновку й не робити з описаних
       ушкоджень самостійного висновку про безпосередню причину смерті.
+      Саме це джерело, з атрибуцією до прокурора, датує початок
+      ідентифікації 28 лютого 2025 року.
     rights:
       basis: external-link
       evidence_url: "https://suspilne.media/1002693-ofis-genprokurora-stan-\
@@ -220,7 +223,7 @@ portrait_fallback:
     але не мають окремого файла з підтвердженим автором і відкритою ліцензією.
   disposition: no-portrait-until-rights-verified
   verified_on: '2026-07-17'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
   - word: етапування
     pos: с.
