@@ -26,6 +26,7 @@ import { absoluteSitePath } from "../lib/lexicon/site-base";
 import {
   analyticsClassForState,
   loadAtlasClientShellEntry,
+  preflightAtlasSlugInSearchIndex,
   type AtlasClientShellState,
 } from "../lib/lexicon/word-atlas-client-shell";
 
@@ -126,19 +127,29 @@ export default function WordAtlasClientShell({
     let cancelled = false;
     setState({ status: "loading", slug });
 
-    const source = new HttpAtlasDataSource(createBrowserAtlasFetch(fetchImpl), {
-      assetBaseUrl: atlasBase,
-      pointerTtlMs: 0,
-    });
+    const run = async () => {
+      const fetchFn = fetchImpl ?? fetch.bind(globalThis);
+      const preflight = await preflightAtlasSlugInSearchIndex(slug, fetchFn, resolvedBase);
+      if (cancelled) return;
+      if (preflight === "missing") {
+        setState({ status: "not_found", slug });
+        return;
+      }
 
-    void loadAtlasClientShellEntry(slug, source).then((next) => {
+      const source = new HttpAtlasDataSource(createBrowserAtlasFetch(fetchImpl), {
+        assetBaseUrl: atlasBase,
+        pointerTtlMs: 0,
+      });
+      const next = await loadAtlasClientShellEntry(slug, source);
       if (!cancelled) setState(next);
-    });
+    };
+
+    void run();
 
     return () => {
       cancelled = true;
     };
-  }, [slug, atlasBase, fetchImpl, retryToken]);
+  }, [slug, atlasBase, fetchImpl, retryToken, resolvedBase]);
 
   useEffect(() => {
     if (!state || state.status === "loading") return;
@@ -174,15 +185,27 @@ export default function WordAtlasClientShell({
         data-http-status="404"
         className="atlas-client-shell-state"
       >
-        <h1>Слово не знайдено</h1>
-        <p>
-          Немає публічної статті для «{state.slug}».
+        <h1 className="lu-i18n-block">
+          <span data-loc="en">Word not found</span>
+          <span data-loc="uk">Слово не знайдено</span>
+        </h1>
+        <p className="lu-i18n-block">
+          <span data-loc="en">No public article for «{state.slug}».</span>
+          <span data-loc="uk">Немає публічної статті для «{state.slug}».</span>
         </p>
         <p>
-          <a href={absoluteSitePath("/lexicon/", resolvedBase)}>До Атласу</a>
+          <a href={absoluteSitePath("/lexicon/", resolvedBase)}>
+            <span className="lu-i18n">
+              <span data-loc="en">Back to Atlas</span>
+              <span data-loc="uk">До Атласу</span>
+            </span>
+          </a>
           {" · "}
           <a href={absoluteSitePath("/lexicon/", resolvedBase) + "#lexicon-landing-search"}>
-            Пошук
+            <span className="lu-i18n">
+              <span data-loc="en">Search</span>
+              <span data-loc="uk">Пошук</span>
+            </span>
           </a>
         </p>
       </div>

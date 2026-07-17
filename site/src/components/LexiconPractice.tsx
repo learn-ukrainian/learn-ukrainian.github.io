@@ -1176,7 +1176,24 @@ function LexiconPracticeIsland({
   // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
   // due-count effect are not re-fetched by ensure, and no shard is fetched twice.
   const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
-  const showEnglishSubtitles = learnerLevel === 'A1';
+  const [chromeLocale, setChromeLocale] = useState<'en' | 'uk'>(() =>
+    typeof document !== 'undefined'
+      ? ((document.documentElement.dataset.chromeLocale as 'en' | 'uk') || 'en')
+      : 'en',
+  );
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const el = document.documentElement;
+    setChromeLocale((el.dataset.chromeLocale as 'en' | 'uk') || 'en');
+    const obs = new MutationObserver(() =>
+      setChromeLocale((el.dataset.chromeLocale as 'en' | 'uk') || 'en'),
+    );
+    obs.observe(el, { attributes: true, attributeFilter: ['data-chrome-locale'] });
+    return () => obs.disconnect();
+  }, []);
+  // A1 scaffolding stays bilingual regardless of chrome locale; EN chrome also
+  // dual-labels practice chrome (K3 A1 / Sol-approved data-chrome-locale).
+  const showEnglishSubtitles = learnerLevel === 'A1' || chromeLocale === 'en';
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
   const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
@@ -2820,7 +2837,7 @@ function LexiconPracticeIsland({
                   <span lang="uk">Усі картки на зараз повторено.</span>
                   {showEnglishSubtitles ? (
                     <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                      / All cards have been reviewed for now.
+                      / All cards are reviewed for now.
                     </span>
                   ) : null}
                 </p>
@@ -3159,6 +3176,7 @@ function PracticeParonym({
               href={`/lexicon/${item.lemmaId}/`}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Відкрити в Атласі (нова вкладка)"
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
               <span lang="uk">Відкрити в Атласі →</span>
@@ -3244,6 +3262,7 @@ function PracticeHeritage({
               href={`/lexicon/${item.lemmaId}/`}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Відкрити в Атласі (нова вкладка)"
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
               <span lang="uk">Відкрити в Атласі →</span>
@@ -3332,7 +3351,7 @@ function PracticeCloze({
           className="cz-input"
           value={input}
           disabled={answerLocked}
-          placeholder={showEnglishSubtitles ? "наберіть слово у потрібній формі… / type the word in the correct form…" : "наберіть слово у потрібній формі…"}
+          placeholder={showEnglishSubtitles ? 'введіть слово / type the word' : 'введіть слово'}
           autoComplete="off"
           autoCapitalize="off"
           autoCorrect="off"
@@ -3400,6 +3419,7 @@ function PracticeCloze({
               href={`/lexicon/${selection.lemma.lemmaId}/`}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Відкрити в Атласі (нова вкладка)"
               style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
             >
               <span lang="uk">Відкрити в Атласі →</span>

@@ -9,6 +9,7 @@ import {
   type AtlasDataSource,
   type EntryRecord,
 } from "./atlas-data-source.ts";
+import { absoluteSitePath } from "./site-base.ts";
 
 export type AtlasClientShellState =
   | { status: "loading"; slug: string }
@@ -63,6 +64,38 @@ function mapError(
     slug,
     message: error instanceof Error ? error.message : String(error),
   };
+}
+
+/**
+ * Preflight against the public search index so unknown lemma 404 surfaces
+ * never request `/atlas/current.json` (K3 B2).
+ *
+ * Returns `missing` when the index loads and the slug is absent; `unknown`
+ * when the index is unavailable (caller falls through to HttpAtlasDataSource).
+ */
+export async function preflightAtlasSlugInSearchIndex(
+  slug: string,
+  fetchImpl: typeof fetch,
+  baseUrl = "/",
+): Promise<"found" | "missing" | "unknown"> {
+  const url = absoluteSitePath("/lexicon/search-index.json", baseUrl);
+  try {
+    const response = await fetchImpl(url);
+    if (!response.ok) return "unknown";
+    const data: unknown = await response.json();
+    if (!Array.isArray(data)) return "unknown";
+    const hit = data.some(
+      (row) =>
+        row &&
+        typeof row === "object" &&
+        "s" in row &&
+        typeof (row as { s: unknown }).s === "string" &&
+        (row as { s: string }).s === slug,
+    );
+    return hit ? "found" : "missing";
+  } catch {
+    return "unknown";
+  }
 }
 
 /**

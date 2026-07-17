@@ -242,4 +242,33 @@ describe("WordAtlasClientShell React mount", () => {
       expect(document.querySelector("[data-word-atlas]")).toBeTruthy();
     });
   });
+
+  test("not_found via search-index preflight never requests current.json", async () => {
+    const requested: string[] = [];
+    const fetchImpl = (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      requested.push(url);
+      if (url.includes("search-index.json")) {
+        return new Response(JSON.stringify([{ l: "прапор", s: "прапор", g: "flag" }]), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      return new Response("should-not-fetch", { status: 500 });
+    }) as typeof fetch;
+
+    render(
+      createElement(WordAtlasClientShell, {
+        pathname: "/lexicon/неіснуючесловоxyzqqq/",
+        assetBaseUrl: "/atlas",
+        fetchImpl,
+      }),
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveAttribute("data-word-atlas-state", "not_found");
+    });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Word not found|Слово не знайдено/);
+    expect(requested.some((url) => url.includes("current.json"))).toBe(false);
+    expect(requested.some((url) => url.includes("search-index.json"))).toBe(true);
+  });
 });

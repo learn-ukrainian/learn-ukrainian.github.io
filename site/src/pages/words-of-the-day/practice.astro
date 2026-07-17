@@ -18,12 +18,33 @@ const frontmatter = {
 >
   <main class="word-atlas lexicon-practice-page" data-word-atlas>
     <section class="lexicon-practice-intro" aria-labelledby="lexicon-practice-page-title">
-      <a class="lexicon-practice-back" href="/words-of-the-day/">← Слова дня</a>
-      <span class="lexicon-practice-badge">СЛОВА ДНЯ · ПРАКТИКА</span>
-      <h1 id="lexicon-practice-page-title">Практика</h1>
+      <a class="lexicon-practice-back" href="/words-of-the-day/">
+        <span class="lu-i18n">
+          <span data-loc="en">← Слова дня / Words of the Day</span>
+          <span data-loc="uk">← Слова дня</span>
+        </span>
+      </a>
+      <span class="lexicon-practice-badge">
+        <span class="lu-i18n">
+          <span data-loc="en">СЛОВА ДНЯ · ПРАКТИКА / WORDS OF THE DAY · PRACTICE</span>
+          <span data-loc="uk">СЛОВА ДНЯ · ПРАКТИКА</span>
+        </span>
+      </span>
+      <h1 id="lexicon-practice-page-title" class="lu-i18n-block">
+        <span data-loc="en">Практика / Practice</span>
+        <span data-loc="uk">Практика</span>
+      </h1>
       <p>
-        Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки,
-        добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері.
+        <span lang="uk">
+          Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки,
+          добір, вибір і пропуски. Прогрес зберігається локально у цьому браузері.
+        </span>
+      </p>
+      <p class="lexicon-practice-intro-en lu-i18n-block" lang="en">
+        <span data-loc="en">
+          Spaced repetition for your level (CEFR, cumulative) — cards, matching,
+          choice, and cloze. Progress stays locally in this browser.
+        </span>
       </p>
     </section>
 
@@ -70,6 +91,10 @@ const frontmatter = {
     color: var(--lu-text-muted);
     font-size: 1.05rem;
     line-height: 1.65;
+  }
+
+  :global(html[data-chrome-locale='uk']) .lexicon-practice-intro-en {
+    display: none;
   }
 
   :global(.lexicon-practice) {

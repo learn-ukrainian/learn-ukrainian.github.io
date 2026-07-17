@@ -467,6 +467,8 @@ beforeEach(() => {
   localStorage.clear();
   loadState(localStorage, NOW);
   vi.restoreAllMocks();
+  // Preserve prior A2+/uk-only chrome expectations unless a test opts into EN.
+  document.documentElement.dataset.chromeLocale = 'uk';
 });
 
 describe('LexiconPractice', () => {
@@ -1304,15 +1306,83 @@ describe('LexiconPractice', () => {
     expect(denominator).toBeLessThan(1150);
   });
 
-  test('A1 renders English subtitles on session labels; A2 does not', async () => {
-    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+  test("A1 renders English subtitles on session labels; A2 does not when chrome locale is uk", async () => {
+    document.documentElement.dataset.chromeLocale = "uk";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
     const { unmount } = render(<LexiconPractice />);
-    expect(screen.getByText('Start session')).toBeInTheDocument();
+    expect(screen.getByText("Start session")).toBeInTheDocument();
     unmount();
 
-    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
     render(<LexiconPractice />);
-    expect(screen.queryByText('Start session')).not.toBeInTheDocument();
+    expect(screen.queryByText("Start session")).not.toBeInTheDocument();
+  });
+
+  test("A2 shows English chrome when data-chrome-locale is en", async () => {
+    document.documentElement.dataset.chromeLocale = "en";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
+    render(<LexiconPractice />);
+    expect(screen.getByText("Start session")).toBeInTheDocument();
+  });
+
+  test("toggling data-chrome-locale updates practice chrome without remount", async () => {
+    document.documentElement.dataset.chromeLocale = "uk";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "B1");
+    render(<LexiconPractice />);
+    expect(screen.queryByText("Start session")).not.toBeInTheDocument();
+
+    await act(async () => {
+      document.documentElement.dataset.chromeLocale = "en";
+    });
+    await waitFor(() => {
+      expect(screen.getByText("Start session")).toBeInTheDocument();
+    });
+  });
+
+  test("heritage empty state is dual-language when chrome locale is en", async () => {
+    document.documentElement.dataset.chromeLocale = "en";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck({ includeItems: false })}
+        autoStart
+        initialMode="heritage"
+      />,
+    );
+    expect(await screen.findByTestId("practice-heritage-empty")).toHaveTextContent(
+      /Heritage exercises for this level are still being prepared/,
+    );
+  });
+
+  test("synonyms empty catch-all is dual-language when chrome locale is en", async () => {
+    document.documentElement.dataset.chromeLocale = "en";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
+    const deck = sampleDeckWithOnlyMode("knyha", "synonym");
+    deck.synonym = [];
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="synonym" />);
+    await waitFor(() => {
+      expect(screen.getByText(/All cards are reviewed for now/)).toBeInTheDocument();
+    });
+  });
+
+  test("cloze placeholder is short and bilingual when chrome locale is en", async () => {
+    document.documentElement.dataset.chromeLocale = "en";
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
+    const clozeDeck = sampleDeck();
+    render(<LexiconPractice initialDeck={clozeDeck} autoStart initialMode="cloze" />);
+    const input = await screen.findByRole("textbox");
+    expect(input.getAttribute("placeholder")).toBe("введіть слово / type the word");
+  });
+
+  test("atlas links announce нова вкладка for screen readers", async () => {
+    document.documentElement.dataset.chromeLocale = "en";
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+    await user.click(
+      within(screen.getByTestId("practice-heritage")).getByRole("button", { name: /дом/ }),
+    );
+    const link = await screen.findByRole("link", { name: /нова вкладка/i });
+    expect(link).toHaveAttribute("target", "_blank");
   });
 
   test('unpublished C2 level button is disabled with «скоро»', () => {

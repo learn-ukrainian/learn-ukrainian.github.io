@@ -60,6 +60,8 @@ describe("WordAtlasPageShell dormant states", () => {
     expect(html).toContain('data-http-status="404"');
     expect(html).toContain("немає");
     expect(html).toContain('href="/lexicon/"');
+    expect(html).toContain("Слово не знайдено");
+    expect(html).toContain("Word not found");
     expect(html).not.toContain("data-word-atlas=");
   });
 

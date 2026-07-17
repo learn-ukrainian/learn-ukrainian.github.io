@@ -22,8 +22,18 @@ const frontmatter = {
 >
   <div class="word-atlas lexicon-browse-page" data-word-atlas>
     <nav class="atlas-view-nav" aria-label="Навігація Атласу">
-      <a href="/lexicon/">Пошук</a>
-      <a href="/lexicon/browse/" aria-current="page">Перегляд А–Я</a>
+      <a href="/lexicon/">
+        <span class="lu-i18n">
+          <span data-loc="en">Search</span>
+          <span data-loc="uk">Пошук</span>
+        </span>
+      </a>
+      <a href="/lexicon/browse/" aria-current="page">
+        <span class="lu-i18n">
+          <span data-loc="en">Browse A–Z</span>
+          <span data-loc="uk">Перегляд А–Я</span>
+        </span>
+      </a>
     </nav>
 
     <AtlasFullIndex />

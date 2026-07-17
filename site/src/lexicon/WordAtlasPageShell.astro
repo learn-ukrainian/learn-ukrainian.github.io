@@ -54,13 +54,30 @@ const { state } = Astro.props as Props;
   </div>
 ) : state.status === "missing" ? (
   <div role="alert" data-word-atlas-state="missing" data-http-status="404">
-    <h1>Статтю не знайдено</h1>
-    <p>Немає публічної статті для «{state.slug}».</p>
-    <p>
-      <a href="/lexicon/">До Атласу</a>
-      {" · "}
-      <a href="/lexicon/#lexicon-landing-search">Пошук</a>
+    <h1 class="lu-i18n-block">
+      <span data-loc="en">Word not found</span>
+      <span data-loc="uk">Слово не знайдено</span>
+    </h1>
+    <p class="lu-i18n-block">
+      <span data-loc="en">No public article for «{state.slug}».</span>
+      <span data-loc="uk">Немає публічної статті для «{state.slug}».</span>
     </p>
+    <p>
+      <a href="/lexicon/">
+        <span class="lu-i18n">
+          <span data-loc="en">Back to Atlas</span>
+          <span data-loc="uk">До Атласу</span>
+        </span>
+      </a>
+      {" · "}
+      <a href="/lexicon/#lexicon-landing-search">
+        <span class="lu-i18n">
+          <span data-loc="en">Search</span>
+          <span data-loc="uk">Пошук</span>
+        </span>
+      </a>
+    </p>
+    <AtlasTypeahead id="atlas-missing-search" label="Шукати слово в Лексиконі" />
   </div>
 ) : state.status === "offline" ? (
   <div role="alert" data-word-atlas-state="offline" data-http-status="503">
