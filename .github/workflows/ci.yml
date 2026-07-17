@@ -183,6 +183,13 @@ jobs:
               - 'docs/lesson-schema.yaml'
               - 'scripts/build/contracts/**/*.md'
               - 'scripts/build/generate_lesson_schema.py'
+              # Generator INPUTS (hashed into generated_from / shaping output).
+              # Missing these let drift accumulate silently on main and red
+              # unrelated ci.yml-touching PRs (#5351; class: #3873/#4888/#4936).
+              # tests/test_lesson_schema_filter_coverage.py enforces coverage.
+              - 'site/src/components/**'
+              - 'scripts/pipeline/config_tables.py'
+              - 'scripts/build/lesson_schema_extractor.mjs'
             atlas:
               - '.github/workflows/ci.yml'
               - 'scripts/audit/audit_atlas_poc_richness.py'
