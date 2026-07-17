@@ -310,6 +310,38 @@ def _codex_read_calls(
     return calls
 
 
+def _codex_exec_read_calls(
+    checkout: review_worktree.ProvisionedReviewWorktree,
+) -> list[dict[str, object]]:
+    calls: list[dict[str, object]] = []
+    for direct in _codex_read_calls(checkout):
+        arguments = direct["arguments"]
+        assert isinstance(arguments, dict)
+        raw_path = json.dumps(arguments["path"], ensure_ascii=True)
+        raw = (
+            "const r = await tools.mcp__sealed_review__read_file("
+            f"{{path:{raw_path},offset:{arguments['offset']},"
+            f"max_bytes:{arguments['max_bytes']}}}); text(JSON.stringify(r));"
+        )
+        calls.append(
+            {
+                "name": "exec",
+                "arguments": {"_raw": raw},
+                "result": [
+                    {
+                        "type": "input_text",
+                        "text": "Script completed\nWall time 0.0 seconds\nOutput:\n",
+                    },
+                    {
+                        "type": "input_text",
+                        "text": json.dumps(direct["result"], separators=(",", ":")),
+                    },
+                ],
+            }
+        )
+    return calls
+
+
 def test_clean_review_requires_complete_hash_bound_tool_reads(tmp_path: Path) -> None:
     checkout = _prompt_evidence_checkout(tmp_path / "read-proof")
     calls = _codex_read_calls(checkout)
@@ -390,6 +422,56 @@ def test_codex_read_payload_accepts_normalized_content_list(tmp_path: Path) -> N
         changed_paths=checkout.changed_paths,
     )
     assert proof["covered_path_count"] == 3
+
+
+def test_codex_exec_read_trace_accepts_only_canonical_nested_mcp_calls(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-exec-read-proof")
+    calls = _codex_exec_read_calls(checkout)
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["mode"] == "hash_bound_byte_chunks"
+    assert proof["covered_path_count"] == 3
+    prompt = checkout.review_prompt_evidence("codex")
+    assert "codex_exec_form" in prompt
+    assert "substituting only its path and numeric offset placeholders" in prompt
+
+
+@pytest.mark.parametrize(
+    "mutate_raw",
+    [
+        lambda raw: raw.replace("offset:0", "offset:1", 1),
+        lambda raw: raw + " notify('forged');",
+        lambda raw: (
+            "// tools.mcp__sealed_review__read_file\n"
+            "const r = {}; text(JSON.stringify(r));"
+        ),
+    ],
+)
+def test_codex_exec_read_trace_rejects_unbound_or_noncanonical_javascript(
+    tmp_path: Path,
+    mutate_raw,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-exec-rejected")
+    calls = _codex_exec_read_calls(checkout)
+    arguments = calls[0]["arguments"]
+    assert isinstance(arguments, dict)
+    raw = arguments["_raw"]
+    assert isinstance(raw, str)
+    arguments["_raw"] = mutate_raw(raw)
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=calls),
+            engine="codex",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
 
 
 def test_bind_clean_review_rejects_schema_valid_no_read_response(tmp_path: Path) -> None:

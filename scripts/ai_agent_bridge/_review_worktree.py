@@ -69,6 +69,19 @@ MAX_BUILTIN_READ_LINES = 2000
 MAX_BUILTIN_READ_LINE_BYTES = 2000
 MAX_SEALED_REVIEW_FILE_BYTES = 16 * 1024 * 1024
 MAX_SEALED_REVIEW_TOTAL_BYTES = 64 * 1024 * 1024
+MAX_CODEX_NESTED_READ_RESULT_CHARS = SEALED_READ_CHUNK_BYTES * 16 + 4096
+MAX_CODEX_SEALED_READ_EXEC_CHARS = 4096
+_CODEX_SEALED_READ_EXEC_RE = re.compile(
+    r"""\A\s*
+    const\s+(?P<variable>[A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*await\s+
+    tools\.mcp__sealed_review__read_file\(\s*\{\s*
+    path\s*:\s*(?P<path>"(?:\\.|[^"\\])*")\s*,\s*
+    offset\s*:\s*(?P<offset>[0-9]{1,20})\s*,\s*
+    max_bytes\s*:\s*(?P<max_bytes>[0-9]{1,20})\s*
+    \}\s*\)\s*;\s*
+    text\(\s*JSON\.stringify\(\s*(?P=variable)\s*\)\s*\)\s*;\s*\Z""",
+    re.VERBOSE,
+)
 
 
 class ReviewWorktreeError(RuntimeError):
@@ -165,21 +178,87 @@ def _tool_result_texts(value: Any) -> list[str]:
     return []
 
 
-def _mcp_chunk_payload(result: Any) -> dict[str, Any] | None:
-    """Extract the hash-bound JSON payload from a sealed-reader tool result."""
-    candidate = result
-    if isinstance(candidate, list) and candidate and isinstance(candidate[0], dict):
-        candidate = candidate[0].get("text")
-    if isinstance(candidate, dict) and isinstance(candidate.get("content"), list):
-        content = candidate["content"]
-        if content and isinstance(content[0], dict):
-            candidate = content[0].get("text")
-    if isinstance(candidate, str):
+def _mcp_chunk_payloads(result: Any) -> list[dict[str, Any]]:
+    """Extract sealed-reader payloads through bounded provider wrappers."""
+    payloads: list[dict[str, Any]] = []
+
+    def visit(candidate: Any, *, depth: int) -> None:
+        if depth > 8 or len(payloads) >= 8:
+            return
+        if isinstance(candidate, dict):
+            if {
+                "path",
+                "sha256",
+                "offset",
+                "chunk_bytes",
+                "chunk_sha256",
+                "next_offset",
+                "total_bytes",
+                "eof",
+                "content",
+            }.issubset(candidate):
+                payloads.append(candidate)
+                return
+            for key in ("text", "content", "result"):
+                if key in candidate:
+                    visit(candidate[key], depth=depth + 1)
+            return
+        if isinstance(candidate, list):
+            for item in candidate[:16]:
+                visit(item, depth=depth + 1)
+            return
+        if isinstance(candidate, str) and len(candidate) <= MAX_CODEX_NESTED_READ_RESULT_CHARS:
+            try:
+                decoded = json.loads(candidate)
+            except json.JSONDecodeError:
+                return
+            if decoded != candidate:
+                visit(decoded, depth=depth + 1)
+
+    visit(result, depth=0)
+    return payloads
+
+
+def _codex_sealed_read_request(call: dict[str, Any], *, evidence_root: Path) -> dict[str, Any] | None:
+    """Return one trace-bound sealed-read request, including Codex JS exec."""
+    name = str(call.get("name") or "").lower()
+    arguments = call.get("arguments")
+    if not isinstance(arguments, dict):
+        return None
+    if name == "read_file" or name.endswith("sealed_review__read_file") or name.endswith(
+        "sealed_review.read_file"
+    ):
+        raw_path = arguments.get("path")
+        offset = arguments.get("offset", 0)
+        max_bytes = arguments.get("max_bytes", SEALED_READ_CHUNK_BYTES)
+    elif name == "exec":
+        raw = arguments.get("_raw")
+        if not isinstance(raw, str) or len(raw) > MAX_CODEX_SEALED_READ_EXEC_CHARS:
+            return None
+        match = _CODEX_SEALED_READ_EXEC_RE.fullmatch(raw)
+        if match is None:
+            return None
         try:
-            candidate = json.loads(candidate)
+            raw_path = json.loads(match.group("path"))
         except json.JSONDecodeError:
             return None
-    return candidate if isinstance(candidate, dict) else None
+        offset = int(match.group("offset"))
+        max_bytes = int(match.group("max_bytes"))
+    else:
+        return None
+    rel_path = _normalized_read_path(raw_path, evidence_root=evidence_root)
+    if (
+        rel_path is None
+        or not isinstance(offset, int)
+        or isinstance(offset, bool)
+        or not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or offset < 0
+        or max_bytes < 1
+        or max_bytes > SEALED_READ_CHUNK_BYTES
+    ):
+        return None
+    return {"path": rel_path, "offset": offset, "max_bytes": max_bytes}
 
 
 def _intervals_cover(intervals: list[tuple[int, int]], *, size: int) -> bool:
@@ -206,61 +285,53 @@ def _verify_codex_review_reads(
     coverage: dict[str, list[tuple[int, int]]] = {path: [] for path in required_paths}
     empty_reads: set[str] = set()
     for call in tool_calls:
-        name = str(call.get("name") or "").lower()
-        if not (
-            name == "read_file"
-            or name.endswith("sealed_review__read_file")
-            or name.endswith("sealed_review.read_file")
-        ):
-            continue
         if not _tool_result_succeeded(call):
             continue
-        arguments = call.get("arguments")
-        if not isinstance(arguments, dict):
+        request = _codex_sealed_read_request(call, evidence_root=evidence_root)
+        if request is None or request["path"] not in coverage:
             continue
-        rel_path = _normalized_read_path(arguments.get("path"), evidence_root=evidence_root)
-        if rel_path not in coverage:
-            continue
-        payload = _mcp_chunk_payload(call.get("result"))
-        if payload is None or payload.get("path") != rel_path:
-            continue
-        data = file_bytes[rel_path]
-        offset = payload.get("offset")
-        chunk_bytes = payload.get("chunk_bytes")
-        next_offset = payload.get("next_offset")
-        total_bytes = payload.get("total_bytes")
-        content = payload.get("content")
-        if (
-            not isinstance(offset, int)
-            or isinstance(offset, bool)
-            or not isinstance(chunk_bytes, int)
-            or isinstance(chunk_bytes, bool)
-            or not isinstance(next_offset, int)
-            or isinstance(next_offset, bool)
-            or not isinstance(total_bytes, int)
-            or isinstance(total_bytes, bool)
-            or not isinstance(content, str)
-            or offset < 0
-            or chunk_bytes < 0
-            or next_offset != offset + chunk_bytes
-            or total_bytes != len(data)
-            or next_offset > total_bytes
-        ):
-            continue
-        encoded = content.encode("utf-8")
-        if (
-            len(encoded) != chunk_bytes
-            or data[offset:next_offset] != encoded
-            or payload.get("sha256") != hashlib.sha256(data).hexdigest()
-            or payload.get("chunk_sha256") != hashlib.sha256(encoded).hexdigest()
-            or payload.get("eof") is not (next_offset == total_bytes)
-        ):
-            continue
-        if total_bytes == 0:
-            empty_reads.add(rel_path)
-            coverage[rel_path].append((0, 0))
-        elif chunk_bytes:
-            coverage[rel_path].append((offset, next_offset))
+        for payload in _mcp_chunk_payloads(call.get("result")):
+            rel_path = request["path"]
+            if payload.get("path") != rel_path:
+                continue
+            data = file_bytes[rel_path]
+            offset = payload.get("offset")
+            chunk_bytes = payload.get("chunk_bytes")
+            next_offset = payload.get("next_offset")
+            total_bytes = payload.get("total_bytes")
+            content = payload.get("content")
+            if (
+                not isinstance(offset, int)
+                or isinstance(offset, bool)
+                or not isinstance(chunk_bytes, int)
+                or isinstance(chunk_bytes, bool)
+                or not isinstance(next_offset, int)
+                or isinstance(next_offset, bool)
+                or not isinstance(total_bytes, int)
+                or isinstance(total_bytes, bool)
+                or not isinstance(content, str)
+                or offset != request["offset"]
+                or chunk_bytes < 0
+                or chunk_bytes > request["max_bytes"]
+                or next_offset != offset + chunk_bytes
+                or total_bytes != len(data)
+                or next_offset > total_bytes
+            ):
+                continue
+            encoded = content.encode("utf-8")
+            if (
+                len(encoded) != chunk_bytes
+                or data[offset:next_offset] != encoded
+                or payload.get("sha256") != hashlib.sha256(data).hexdigest()
+                or payload.get("chunk_sha256") != hashlib.sha256(encoded).hexdigest()
+                or payload.get("eof") is not (next_offset == total_bytes)
+            ):
+                continue
+            if total_bytes == 0:
+                empty_reads.add(rel_path)
+                coverage[rel_path].append((0, 0))
+            elif chunk_bytes:
+                coverage[rel_path].append((offset, next_offset))
 
     missing = [
         path
@@ -748,6 +819,11 @@ class ProvisionedReviewWorktree:
                 "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
                 "continue_field": "next_offset",
                 "complete_field": "eof",
+                "codex_exec_form": (
+                    "const r = await tools.mcp__sealed_review__read_file("
+                    '{path:"<required_path>",offset:<next_offset>,max_bytes:65536}); '
+                    "text(JSON.stringify(r));"
+                ),
                 "required_paths": list(required_read_paths),
             }
         else:
@@ -819,6 +895,12 @@ class ProvisionedReviewWorktree:
                 f"serialized_bytes={serialized_bytes}:"
                 f"limit={MAX_REVIEW_PROMPT_EVIDENCE_BYTES}"
             )
+        codex_exec_instruction = (
+            "Codex must use read_protocol.codex_exec_form once per chunk, "
+            "substituting only its path and numeric offset placeholders. "
+            if engine_key == "codex"
+            else ""
+        )
         return (
             "\n\nREVIEWER ISOLATION BOUNDARY (fail closed — issue #5285)\n"
             "You are running against a neutral evidence-only snapshot of the exact "
@@ -832,7 +914,9 @@ class ProvisionedReviewWorktree:
             "patch_path, and every present changed file. Follow read_protocol exactly: "
             "read bounded chunks from its start_offset and continue until the complete "
             "condition is reached for every required_path. A clean verdict is rejected "
-            "unless the trusted tool trace proves complete coverage. The dossier "
+            "unless the trusted tool trace proves complete coverage. "
+            f"{codex_exec_instruction}"
+            "The dossier "
             "authenticates those complete "
             "artifacts, and safe exact unchanged tracked text is available at its "
             "sealed_snapshot_root for proof-of-absence checks. "
