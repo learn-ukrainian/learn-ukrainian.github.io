@@ -64,3 +64,31 @@ sources:
     usage_note: >-
       окрема стаття про дружину — Ярославу Йосипівну Стецько; використовується
       для розмежування двох різних діячів з тим самим прізвищем.
+- id: S6
+  file: https://pure.knaw.nl/portal/en/publications/the-organization-of-ukrainian-nationalists-and-its-attitude-towar/
+  type: external
+  title: >-
+    Berkhoff K. C., Carynnyk M. "The Organization of Ukrainian Nationalists and
+    Its Attitude toward Germans and Jews: Iaroslav Stets'ko's 1941 Zhyttiepys"
+  url: https://pure.knaw.nl/portal/en/publications/the-organization-of-ukrainian-nationalists-and-its-attitude-towar/
+  metadata:
+    publisher: Royal Netherlands Academy of Arts and Sciences (KNAW)
+    work: 'Harvard Ukrainian Studies, т. 23, вип. 3-4 (1999), с. 149–184'
+    author: Berkhoff K. C., Carynnyk M.
+    language: en
+    verified_on: '2026-07-17'
+    document_identity: >-
+      запис інституційного репозиторію KNAW (NIOD Institute for War, Holocaust
+      and Genocide Studies), звірено 2026-07-17 (HTTP 200): тип «Article ›
+      Scientific › peer-review», Harvard Ukrainian Studies, т. 23, вип. 3-4,
+      с. 149–184, 36 с., рік 1999.
+    evidence_boundary: >-
+      КРИТИЧНО: звірено ЛИШЕ бібліографічний запис, не текст статті (повний
+      текст на ResearchGate віддає HTTP 403). Запис доводить ІДЕНТИЧНІСТЬ
+      статті — що рецензована праця з такою назвою про «Життєпис» Стецька 1941
+      року існує — і НЕ доводить жодного з її висновків. Цитувати як доказ
+      існування предмета в фаховій історіографії; НЕ переказувати висновків і
+      НЕ наводити цитат із «Життєпису» на його підставі.
+    usage_note: >-
+      англомовний запис; використовується як довідка (reference), не як learner
+      reading, бо контракт читань вимагає української мови.

@@ -5,24 +5,33 @@ query_keywords:
   - ЕІУ Стецько Ярослав Семенович Стасюк
   - ЕСУ Стецько Ярослав Семенович
   - ЕІУ Українське державне правління Патриляк 30 червня 1941
+  - ЕІУ Українська Держава 1941 Маєвський Акт 30 червня
   - ЕІУ Стецько Ярослава Йосипівна розмежування
   - Berkhoff Carynnyk Harvard Ukrainian Studies Stetsko 1941 Zhyttiepys
 direct_sources:
   - https://www.history.org.ua/?termin=Stetsko_Y_2
   - https://esu.com.ua/article-884618
   - https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  - https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
   - https://www.history.org.ua/?termin=Stetsko_Y_1
+  - https://pure.knaw.nl/portal/en/publications/the-organization-of-ukrainian-nationalists-and-its-attitude-towar/
 rag_chunks: []
 rag_literary: []
 warning: >-
   Direct-source packet. Вилучено заглушку reading-needed і дві нерозв'язані
   цитати, що мали голу назву замість URL (Harvard Ukrainian Studies 23;
   Ukrainian Nationalists and the Holocaust). Першу ідентифіковано точно
-  (Berkhoff — Carynnyk, HUS 23(3-4), 1999, с. 149–184) і повернуто до
-  references із записом репозиторію KNAW; вона англомовна, тому не є
-  learner reading. Прочитано лише бібліографічний запис, не текст статті
-  (ResearchGate віддає 403), тому висновків не переказано і цитат із
-  «Життєпису» не наведено. Питання антисемітизму не стверджується й не
+  (Berkhoff — Carynnyk, HUS 23(3-4), 1999, с. 149–184) і зареєстровано як S6
+  за записом репозиторію KNAW (звірено 2026-07-17, HTTP 200: «Article ›
+  Scientific › peer-review», с. 149–184, 36 с.); адресу внесено до
+  direct_sources, плану, досьє й реєстру — усі чотири поверхні синхронні.
+  Вона англомовна, тому не є learner reading. Прочитано лише бібліографічний
+  запис, не текст статті (ResearchGate віддає 403): запис доводить
+  ІДЕНТИЧНІСТЬ статті, а не її висновки, тому висновків не переказано і цитат
+  із «Життєпису» не наведено. Вилучено англомовну довідку IEU: до цього
+  пакета джерел вона не входила і дублювала українські статті. Додано
+  «Українська Держава 1941» (ЕІУ), яку цитує досьє й реєстр.
+  Питання антисемітизму не стверджується й не
   заперечується — зафіксовано як обов'язкову роботу окремого проходу.
   Розмежовано двох діячів на прізвище Стецько (Ярослав Семенович і його
   дружина Ярослава Йосипівна) за окремими статтями ЕІУ. Портрет не
