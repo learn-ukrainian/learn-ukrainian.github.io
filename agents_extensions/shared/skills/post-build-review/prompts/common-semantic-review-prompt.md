@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.2`
+Semantic prompt version: `6.0.3`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -25,8 +25,11 @@ Classify each statement as `claims` with all of its atomic claim IDs or as
 `source_attribution` is schema-bound to `claims` and cannot be dismissed. Every
 claim-ledger entry must name its owning `unit_id` and use that unit's exact
 packet location. Its `claim` text must be a verbatim contiguous substring of
-that unit after whitespace normalization; never replace the learner's words
-with a safer paraphrase. For a `universal_quantifier` unit, at least one owned
+that unit after whitespace normalization; copy the packet glyphs exactly when
+possible. The finalizer treats only `'`, `’`, and `ʼ` as equivalent Ukrainian
+apostrophe glyphs; it does not normalize any other punctuation or wording.
+Never replace the learner's words with a safer paraphrase. For a
+`universal_quantifier` unit, at least one owned
 claim must reproduce the full statement as a coverage anchor; an atomic split
 may accompany it, but a weaker quantifier or bare token cannot replace it. The
 inventory is exhaustive coverage scaffolding, not a claim that every heading
@@ -175,6 +178,9 @@ class `CLEAR` only with exact cited evidence for the comparison, `FOUND` with
 every corresponding deterministic and semantic finding ID, or `INCOMPLETE`
 with an integrity finding. For mechanically supplied findings, reuse the exact
 IDs from the resolved context instead of emitting duplicate semantic findings.
+Every `FOUND` class must own only medium, high, or blocker findings and makes
+semantic `PASS` impossible; return `REVISE`, `BLOCK`, or `INCOMPLETE` as the
+evidence requires.
 After finalizing the finding objects, audit each `FOUND` class against its
 `finding_ids`. Except for `VOCABULARY_INTEGRATION`, include at least one
 alignment evidence entry at every owned finding object's exact primary location and line.
@@ -428,6 +434,12 @@ Both `surface` and `verification` must be copied byte-for-byte from the
 source-order lemma's packet-bound candidate list. A candidate proves
 morphology and occurrence, not meaningful pedagogy; you must still judge
 whether its cited use integrates the term.
+An `INTEGRATED` ledger item proves that one meaningful learner-facing use
+exists; it does not force the broader `VOCABULARY_INTEGRATION` audit to
+`CLEAR`. When every target term has such a use but cross-bundle substitution,
+weak reinforcement, or inconsistent terminology still creates a material
+defect, keep the affected ledger item `INTEGRATED` and set the alignment audit
+to `FOUND` with the exact finding and evidence.
 The source-order vocabulary ledger is the exhaustive proof of individual
 absences: the `VOCABULARY_INTEGRATION` alignment entry must reference every
 matching finding but may cite representative comparison lines instead of an
