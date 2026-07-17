@@ -1515,6 +1515,60 @@ def _base_blob_bytes(
     return bytes(blob.stdout or b"")
 
 
+def _changed_lines_between_bytes(
+    before: bytes,
+    after: bytes,
+    *,
+    repo_root: Path,
+    git_bin: Path,
+    rel_path: str,
+) -> frozenset[int]:
+    """Derive new-side lines for two authenticated blob byte strings."""
+    with tempfile.TemporaryDirectory(prefix="lu-review-lines-") as raw_tmp:
+        temp_root = Path(raw_tmp)
+        before_path = temp_root / "before"
+        after_path = temp_root / "after"
+        before_path.write_bytes(before)
+        after_path.write_bytes(after)
+        env = _isolation_env(repo_root)
+        env.pop("GH_TOKEN", None)
+        env.pop("GITHUB_TOKEN", None)
+        proc = subprocess.run(
+            [
+                str(git_bin),
+                "--no-optional-locks",
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+                "core.hooksPath=/dev/null",
+                "diff",
+                "--no-index",
+                "-U0",
+                "--no-ext-diff",
+                "--no-textconv",
+                "--",
+                str(before_path),
+                str(after_path),
+            ],
+            cwd=temp_root,
+            capture_output=True,
+            check=False,
+            env=env,
+        )
+        if proc.returncode not in {0, 1}:
+            detail = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
+            raise ReviewWorktreeError(
+                f"review_evidence_changed_lines_failed:{rel_path}:{detail}"
+            )
+        try:
+            diff_text = (proc.stdout or b"").decode("utf-8", errors="strict")
+        except UnicodeDecodeError as exc:
+            raise ReviewWorktreeError(
+                f"review_evidence_changed_lines_binary:{rel_path}"
+            ) from exc
+    return _new_side_lines(diff_text)
+
+
 def _changed_line_numbers_for_snapshot(
     snapshot: ReviewSnapshot,
     *,
@@ -1536,15 +1590,20 @@ def _changed_line_numbers_for_snapshot(
         raise ReviewWorktreeError("review_evidence_manifest_name_status_invalid")
     rename_pairs: dict[str, tuple[str, str]] = {}
     renamed_from: dict[str, str] = {}
+    copied_from: dict[str, str] = {}
     for entry in entries:
         if isinstance(entry, dict) and str(entry.get("status", ""))[:1] in {"R", "C"}:
+            status = str(entry.get("status", ""))[:1]
             old_path = entry.get("old_path")
             path = entry.get("path")
             if isinstance(old_path, str) and isinstance(path, str):
-                pair = (old_path, path)
-                rename_pairs[old_path] = pair
-                rename_pairs[path] = pair
                 renamed_from[path] = old_path
+                if status == "R":
+                    pair = (old_path, path)
+                    rename_pairs[old_path] = pair
+                    rename_pairs[path] = pair
+                else:
+                    copied_from[path] = old_path
     if snapshot.mode != "local":
         if not snapshot.base_sha:
             raise ReviewWorktreeError("review_evidence_base_sha_missing")
@@ -1554,6 +1613,39 @@ def _changed_line_numbers_for_snapshot(
         remote_evidence: dict[str, frozenset[int]] = {}
         completed_pairs: set[tuple[str, str]] = set()
         for rel_path in snapshot.changed_paths:
+            copy_source = copied_from.get(rel_path)
+            if copy_source is not None:
+                current_path = snapshot.path / rel_path
+                if not current_path.is_file() or current_path.is_symlink():
+                    remote_evidence[rel_path] = frozenset()
+                    continue
+                try:
+                    current_bytes = current_path.read_bytes()
+                    current_bytes.decode("utf-8", errors="strict")
+                except (OSError, UnicodeDecodeError) as exc:
+                    raise ReviewWorktreeError(
+                        f"review_evidence_current_file_invalid:{rel_path}:{exc}"
+                    ) from exc
+                base_bytes = _base_blob_bytes(
+                    repo_root=repo_root,
+                    git_bin=git_bin,
+                    revision=snapshot.base_sha,
+                    rel_path=copy_source,
+                )
+                try:
+                    (base_bytes or b"").decode("utf-8", errors="strict")
+                except UnicodeDecodeError as exc:
+                    raise ReviewWorktreeError(
+                        f"review_evidence_base_file_binary:{copy_source}"
+                    ) from exc
+                remote_evidence[rel_path] = _changed_lines_between_bytes(
+                    base_bytes or b"",
+                    current_bytes,
+                    repo_root=repo_root,
+                    git_bin=git_bin,
+                    rel_path=rel_path,
+                )
+                continue
             pair = rename_pairs.get(rel_path)
             if pair is not None and pair in completed_pairs:
                 continue
@@ -1619,51 +1711,13 @@ def _changed_line_numbers_for_snapshot(
             (base_bytes or b"").decode("utf-8", errors="strict")
         except UnicodeDecodeError as exc:
             raise ReviewWorktreeError(f"review_evidence_base_file_binary:{base_path}") from exc
-        with tempfile.TemporaryDirectory(prefix="lu-review-lines-") as raw_tmp:
-            temp_root = Path(raw_tmp)
-            before_path = temp_root / "before"
-            after_path = temp_root / "after"
-            before_path.write_bytes(base_bytes or b"")
-            after_path.write_bytes(current_bytes)
-            env = _isolation_env(repo_root)
-            env.pop("GH_TOKEN", None)
-            env.pop("GITHUB_TOKEN", None)
-            proc = subprocess.run(
-                [
-                    str(git_bin),
-                    "--no-optional-locks",
-                    "-c",
-                    "core.fsmonitor=false",
-                    "-c",
-                    "core.hooksPath=/dev/null",
-                    "diff",
-                    "--no-index",
-                    "-U0",
-                    "--no-ext-diff",
-                    "--no-textconv",
-                    "--",
-                    str(before_path),
-                    str(after_path),
-                ],
-                cwd=temp_root,
-                capture_output=True,
-                check=False,
-                env=env,
-            )
-            if proc.returncode not in {0, 1}:
-                detail = (proc.stderr or b"").decode(
-                    "utf-8", errors="replace"
-                ).strip()
-                raise ReviewWorktreeError(
-                    f"review_evidence_changed_lines_failed:{rel_path}:{detail}"
-                )
-            try:
-                diff_text = (proc.stdout or b"").decode("utf-8", errors="strict")
-            except UnicodeDecodeError as exc:
-                raise ReviewWorktreeError(
-                    f"review_evidence_changed_lines_binary:{rel_path}"
-                ) from exc
-        evidence[rel_path] = _new_side_lines(diff_text)
+        evidence[rel_path] = _changed_lines_between_bytes(
+            base_bytes or b"",
+            current_bytes,
+            repo_root=repo_root,
+            git_bin=git_bin,
+            rel_path=rel_path,
+        )
     return evidence
 
 

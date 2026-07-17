@@ -590,6 +590,62 @@ def test_remote_changed_lines_preserve_rename_pairing(tmp_path: Path) -> None:
     assert edited == {"old.txt": frozenset(), "new.txt": frozenset({10})}
 
 
+def test_remote_changed_lines_keep_copy_source_and_destination_separate(tmp_path: Path) -> None:
+    repo = tmp_path / "copy-repo"
+    repo.mkdir()
+    env = review_worktree._isolation_env(repo)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    original = "".join(f"line {number}\n" for number in range(1, 21))
+    (repo / "source.txt").write_text(original, encoding="utf-8")
+    subprocess.run(["git", "add", "source.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    base = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+    (repo / "copy.txt").write_text(original, encoding="utf-8")
+    source_lines = original.splitlines()
+    source_lines[9] = "edited source line 10"
+    (repo / "source.txt").write_text("\n".join(source_lines) + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", "source.txt", "copy.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "copy and edit source"], cwd=repo, check=True, env=env)
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+
+    sealed = tmp_path / "copy-sealed"
+    (sealed / ".review-bundle").mkdir(parents=True)
+    (sealed / "source.txt").write_text((repo / "source.txt").read_text(encoding="utf-8"), encoding="utf-8")
+    (sealed / "copy.txt").write_text((repo / "copy.txt").read_text(encoding="utf-8"), encoding="utf-8")
+    (sealed / ".review-bundle" / "manifest.json").write_text(
+        json.dumps(
+            {
+                "name_status": [
+                    {"status": "C100", "old_path": "source.txt", "path": "copy.txt", "kind": "rename"},
+                    {"status": "M", "path": "source.txt", "kind": "path"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    snapshot = ReviewSnapshot(
+        path=sealed,
+        mode="remote",
+        base_sha=base,
+        head_sha=head,
+        source_fingerprint="",
+        changed_paths=("source.txt", "copy.txt"),
+    )
+    git_bin = review_worktree.resolve_external_executable("git", reject_root=repo)
+
+    changed = review_worktree._changed_line_numbers_for_snapshot(
+        snapshot, repo_root=repo, git_bin=git_bin
+    )
+
+    assert changed == {"source.txt": frozenset({10}), "copy.txt": frozenset()}
+
+
 def test_remove_review_root_unlinks_reviewer_symlinks_without_following(
     tmp_path: Path,
 ) -> None:
