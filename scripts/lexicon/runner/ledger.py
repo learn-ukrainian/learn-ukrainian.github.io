@@ -92,6 +92,8 @@ class OperatorActionKind(StrEnum):
     RETRY_FAILED = "retry_failed"
     ABANDON_PACKET = "abandon_packet"
     ACCEPT_FAILED = "accept_failed"
+    FIRST_RUN_ESCAPE = "first_run_escape"
+    FINALIZE = "finalize"
 
 
 SCHEMA_SQL = """
@@ -2080,6 +2082,339 @@ class Ledger:
             ),
         ).fetchall()
         return [str(r["chunk_id"]) for r in rows]
+
+    # --- PR4 completion gate (aggregate only; no IN-lists) -------------------
+
+    def assess_completion_gate(
+        self,
+        run_id: str,
+        *,
+        phase: str = "offline_enrich",
+    ) -> dict[str, Any]:
+        """Run-level completion closure (PR4 V4).
+
+        Closes over CURRENT LEAF chunks (``is_leaf=1``, state ≠ ``superseded``)
+        plus their constituent lemma work units. Superseded parents are excluded
+        entirely. Within the closure, ANY non-terminal unit or any
+        ``failed_terminal`` outcome refuses assembly (terminal ≠ resolved).
+
+        All queries are run-level aggregates / json_each joins — never IN-lists
+        of lemma ids (20k scale; V9).
+        """
+        conn = self._require()
+        run = conn.execute(
+            "SELECT run_id, fingerprint, status FROM runs WHERE run_id = ?",
+            (run_id,),
+        ).fetchone()
+        if run is None:
+            return {
+                "ok": False,
+                "run_id": run_id,
+                "fingerprint": None,
+                "reasons": ["run not found"],
+                "leaf_chunk_count": 0,
+                "sealed_leaf_count": 0,
+                "unsealed_leaf_count": 0,
+                "unsealed_leaf_ids": [],
+                "constituent_lemma_count": 0,
+                "unresolved_lemma_count": 0,
+                "failed_terminal_count": 0,
+                "non_terminal_count": 0,
+            }
+
+        leaf_stats = conn.execute(
+            "SELECT "
+            "COUNT(*) AS leaf_total, "
+            "SUM(CASE WHEN state = ? THEN 1 ELSE 0 END) AS sealed_count, "
+            "SUM(CASE WHEN state != ? THEN 1 ELSE 0 END) AS unsealed_count "
+            "FROM chunks "
+            "WHERE run_id = ? AND is_leaf = 1 AND state != ?",
+            (
+                ChunkLedgerState.SEALED.value,
+                ChunkLedgerState.SEALED.value,
+                run_id,
+                ChunkLedgerState.SUPERSEDED.value,
+            ),
+        ).fetchone()
+        leaf_total = int(leaf_stats["leaf_total"] or 0)
+        sealed_count = int(leaf_stats["sealed_count"] or 0)
+        unsealed_count = int(leaf_stats["unsealed_count"] or 0)
+
+        # Bounded sample of unsealed leaf ids for operator report (not full 20k).
+        unsealed_rows = conn.execute(
+            "SELECT chunk_id FROM chunks "
+            "WHERE run_id = ? AND is_leaf = 1 AND state != ? AND state != ? "
+            "ORDER BY chunk_id LIMIT 50",
+            (
+                run_id,
+                ChunkLedgerState.SUPERSEDED.value,
+                ChunkLedgerState.SEALED.value,
+            ),
+        ).fetchall()
+        unsealed_leaf_ids = [str(r["chunk_id"]) for r in unsealed_rows]
+
+        # Constituent lemma closure via json_each on current leaves only.
+        lemma_stats = conn.execute(
+            "SELECT "
+            "COUNT(*) AS lemma_total, "
+            "SUM(CASE WHEN COALESCE(wu.state, 'missing') IN (?, ?) THEN 1 ELSE 0 END) "
+            "  AS resolved_ok, "
+            "SUM(CASE WHEN COALESCE(wu.state, 'missing') = ? THEN 1 ELSE 0 END) "
+            "  AS failed_terminal, "
+            "SUM(CASE WHEN COALESCE(wu.state, 'missing') NOT IN (?, ?, ?) THEN 1 ELSE 0 END) "
+            "  AS non_terminal_or_missing "
+            "FROM chunks c "
+            "JOIN json_each(c.lemma_ids_json) AS je "
+            "LEFT JOIN work_units wu "
+            "  ON wu.run_id = c.run_id "
+            " AND wu.unit_id = CAST(je.value AS TEXT) "
+            " AND wu.phase = ? "
+            " AND wu.unit_kind = 'lemma' "
+            "WHERE c.run_id = ? AND c.is_leaf = 1 AND c.state != ?",
+            (
+                UnitOutcome.DONE.value,
+                UnitOutcome.NO_DATA.value,
+                UnitOutcome.FAILED_TERMINAL.value,
+                UnitOutcome.DONE.value,
+                UnitOutcome.NO_DATA.value,
+                UnitOutcome.FAILED_TERMINAL.value,
+                phase,
+                run_id,
+                ChunkLedgerState.SUPERSEDED.value,
+            ),
+        ).fetchone()
+        lemma_total = int(lemma_stats["lemma_total"] or 0)
+        failed_terminal = int(lemma_stats["failed_terminal"] or 0)
+        non_terminal = int(lemma_stats["non_terminal_or_missing"] or 0)
+        # unresolved = failed_terminal + non_terminal (failed is terminal but not resolved)
+        unresolved = failed_terminal + non_terminal
+
+        # Chunk work units for current leaves must not be failed_terminal / non-terminal
+        # either (except sealed, which is the post-seal state on the chunk unit).
+        chunk_unit_stats = conn.execute(
+            "SELECT "
+            "SUM(CASE WHEN COALESCE(wu.state, 'missing') = ? THEN 1 ELSE 0 END) AS failed_terminal, "
+            "SUM(CASE WHEN COALESCE(wu.state, 'missing') NOT IN (?, ?, ?, ?) THEN 1 ELSE 0 END) "
+            "  AS non_terminal "
+            "FROM chunks c "
+            "LEFT JOIN work_units wu "
+            "  ON wu.run_id = c.run_id "
+            " AND wu.unit_id = c.chunk_id "
+            " AND wu.phase = ? "
+            " AND wu.unit_kind = 'chunk' "
+            "WHERE c.run_id = ? AND c.is_leaf = 1 AND c.state != ?",
+            (
+                UnitOutcome.FAILED_TERMINAL.value,
+                UnitOutcome.DONE.value,
+                UnitOutcome.NO_DATA.value,
+                ChunkLedgerState.SEALED.value,
+                UnitOutcome.FAILED_TERMINAL.value,
+                phase,
+                run_id,
+                ChunkLedgerState.SUPERSEDED.value,
+            ),
+        ).fetchone()
+        chunk_failed = int(chunk_unit_stats["failed_terminal"] or 0) if chunk_unit_stats else 0
+        chunk_non_terminal = int(chunk_unit_stats["non_terminal"] or 0) if chunk_unit_stats else 0
+
+        reasons: list[str] = []
+        if leaf_total == 0:
+            reasons.append("no current leaf chunks in completion closure")
+        if unsealed_count > 0:
+            reasons.append(
+                f"{unsealed_count} unsealed leaf chunk(s) "
+                f"(sample: {', '.join(unsealed_leaf_ids[:5]) or 'n/a'})"
+            )
+        if failed_terminal > 0:
+            reasons.append(
+                f"{failed_terminal} failed_terminal lemma unit(s) in leaf closure "
+                "(terminal ≠ resolved; blocks assembly)"
+            )
+        if non_terminal > 0:
+            reasons.append(
+                f"{non_terminal} non-terminal or missing lemma unit(s) in leaf closure"
+            )
+        if chunk_failed > 0:
+            reasons.append(f"{chunk_failed} failed_terminal chunk unit(s) in leaf closure")
+        if chunk_non_terminal > 0:
+            reasons.append(
+                f"{chunk_non_terminal} non-terminal chunk unit(s) in leaf closure"
+            )
+
+        ok = not reasons
+        return {
+            "ok": ok,
+            "run_id": run_id,
+            "fingerprint": str(run["fingerprint"]),
+            "run_status": str(run["status"]),
+            "reasons": reasons,
+            "leaf_chunk_count": leaf_total,
+            "sealed_leaf_count": sealed_count,
+            "unsealed_leaf_count": unsealed_count,
+            "unsealed_leaf_ids": unsealed_leaf_ids,
+            "constituent_lemma_count": lemma_total,
+            "unresolved_lemma_count": unresolved,
+            "failed_terminal_count": failed_terminal + chunk_failed,
+            "non_terminal_count": non_terminal + chunk_non_terminal,
+        }
+
+    def iter_sealed_leaf_lemmas(
+        self,
+        run_id: str,
+        *,
+        phase: str = "offline_enrich",
+    ) -> list[dict[str, Any]]:
+        """Ordered sealed-leaf lemma descriptors for streaming assembly.
+
+        Returns one row per (chunk_id, lemma_id) in deterministic order.
+        Uses json_each over sealed leaves only — no Python-side IN-lists.
+        """
+        conn = self._require()
+        rows = conn.execute(
+            "SELECT c.chunk_id AS chunk_id, c.seal_sha256 AS seal_sha256, "
+            "CAST(je.value AS TEXT) AS lemma_id, "
+            "wu.result_hash AS result_hash "
+            "FROM chunks c "
+            "JOIN json_each(c.lemma_ids_json) AS je "
+            "LEFT JOIN work_units wu "
+            "  ON wu.run_id = c.run_id "
+            " AND wu.unit_id = CAST(je.value AS TEXT) "
+            " AND wu.phase = ? "
+            " AND wu.unit_kind = 'lemma' "
+            "WHERE c.run_id = ? AND c.is_leaf = 1 AND c.state = ? "
+            "ORDER BY c.chunk_id, lemma_id",
+            (phase, run_id, ChunkLedgerState.SEALED.value),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def first_run_escape_consumed(self, run_id: str | None = None) -> bool:
+        """True when a first-run publication escape has already been granted/used.
+
+        V5: one-time, publication-gated; not a reusable repo variable. Tracked as
+        an operator_action so it cannot survive silently past the first success.
+        """
+        conn = self._require()
+        if run_id is None:
+            row = conn.execute(
+                "SELECT 1 AS n FROM operator_actions WHERE action = ? LIMIT 1",
+                (OperatorActionKind.FIRST_RUN_ESCAPE.value,),
+            ).fetchone()
+        else:
+            row = conn.execute(
+                "SELECT 1 AS n FROM operator_actions "
+                "WHERE run_id = ? AND action = ? LIMIT 1",
+                (run_id, OperatorActionKind.FIRST_RUN_ESCAPE.value),
+            ).fetchone()
+        return row is not None
+
+    def record_first_run_escape(
+        self,
+        run_id: str,
+        reason: str,
+        *,
+        now: float | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> CasResult:
+        """Consume the one-time first-run escape under BEGIN IMMEDIATE (V5)."""
+        if not reason or not str(reason).strip():
+            return CasResult(status=CasStatus.INVALID_STATE, detail="reason required")
+        conn = self._require()
+        ts = self._now(now)
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            # Global one-time: any prior FIRST_RUN_ESCAPE anywhere blocks reuse.
+            existing = conn.execute(
+                "SELECT run_id FROM operator_actions WHERE action = ? LIMIT 1",
+                (OperatorActionKind.FIRST_RUN_ESCAPE.value,),
+            ).fetchone()
+            if existing is not None:
+                conn.execute("ROLLBACK")
+                return CasResult(
+                    status=CasStatus.INVALID_STATE,
+                    detail=(
+                        "first-run escape already consumed "
+                        f"(prior run_id={existing['run_id']}); not reusable (V5)"
+                    ),
+                    run_id=run_id,
+                )
+            conn.execute(
+                "INSERT INTO operator_actions("
+                "run_id, action, reason, unit_id, phase, created_at, payload_json"
+                ") VALUES (?, ?, ?, NULL, 'finalize', ?, ?)",
+                (
+                    run_id,
+                    OperatorActionKind.FIRST_RUN_ESCAPE.value,
+                    reason,
+                    ts,
+                    canonical_json(payload or {}),
+                ),
+            )
+            self._event("first_run_escape_granted", run_id, reason=reason)
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
+        return CasResult(status=CasStatus.OK, run_id=run_id)
+
+    def record_finalize(
+        self,
+        run_id: str,
+        *,
+        data_version: str,
+        archive_sha256: str,
+        fingerprint: str,
+        now: float | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> CasResult:
+        """Record a successful finalization (CAS-friendly audit row + phase seal)."""
+        conn = self._require()
+        ts = self._now(now)
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            body = {
+                "data_version": data_version,
+                "archive_sha256": archive_sha256,
+                "fingerprint": fingerprint,
+                **(payload or {}),
+            }
+            conn.execute(
+                "INSERT INTO operator_actions("
+                "run_id, action, reason, unit_id, phase, created_at, payload_json"
+                ") VALUES (?, ?, ?, NULL, 'finalize', ?, ?)",
+                (
+                    run_id,
+                    OperatorActionKind.FINALIZE.value,
+                    f"finalize dataVersion={data_version}",
+                    ts,
+                    canonical_json(body),
+                ),
+            )
+            # Phase row records the assembly seal hash (= archive digest).
+            row = conn.execute(
+                "SELECT generation FROM run_phases WHERE run_id = ? AND phase = ?",
+                (run_id, "finalize"),
+            ).fetchone()
+            gen = 0 if row is None else int(row["generation"]) + 1
+            conn.execute(
+                "INSERT INTO run_phases(run_id, phase, state, seal_sha256, generation, updated_at) "
+                "VALUES (?, 'finalize', 'done', ?, ?, ?) "
+                "ON CONFLICT(run_id, phase) DO UPDATE SET "
+                "state=excluded.state, seal_sha256=excluded.seal_sha256, "
+                "generation=excluded.generation, updated_at=excluded.updated_at",
+                (run_id, archive_sha256, gen, ts),
+            )
+            self._event(
+                "run_finalized",
+                run_id,
+                data_version=data_version,
+                archive_sha256=archive_sha256,
+                fingerprint=fingerprint,
+            )
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
+        return CasResult(status=CasStatus.OK, run_id=run_id)
 
     def get_chunk(self, run_id: str, chunk_id: str) -> dict[str, Any] | None:
         conn = self._require()

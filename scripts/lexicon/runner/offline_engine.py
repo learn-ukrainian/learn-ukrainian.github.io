@@ -65,8 +65,8 @@ def enrich_offline_slice(
 ) -> dict[str, Any]:
     """Run offline pipeline on a staged cohort with PR2 ledger fencing + resume.
 
-    PR3 packets remain stubs. Full streaming assembly/publication gate is PR4;
-    leaf seal CAS lives in the ledger.
+    Leaf seal CAS lives in the ledger. Streaming assembly + publication archive
+    is :func:`scripts.lexicon.runner.finalize.finalize_run` (PR4).
     """
     from scripts.lexicon import enrich_manifest as em
 
