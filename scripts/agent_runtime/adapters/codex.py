@@ -304,7 +304,14 @@ class CodexAdapter:
         # after the enable to actually suppress ``multi_agent``. The 2026-05-22
         # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
         # this ordering as a secondary leak path (see PR #2230 follow-up).
-        cmd.extend(self._mode_flags(mode))
+        if tc.get("review_isolation"):
+            # Codex's internal read-only mode cancels stdio MCP calls even
+            # when approval_policy=never. The verified parent OS sandbox is
+            # the review boundary, so bypass only the nested Codex sandbox to
+            # keep the sole sealed read-only MCP tool usable.
+            cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        else:
+            cmd.extend(self._mode_flags(mode))
         cmd.extend(self._tool_config_flags(tool_config))
         if has_session_to_resume:
             cmd.append(session_id)

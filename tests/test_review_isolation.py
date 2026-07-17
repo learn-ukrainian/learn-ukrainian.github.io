@@ -1027,6 +1027,8 @@ def test_codex_adapter_runs_from_instruction_free_parent_directory(tmp_path: Pat
 
     assert plan.cwd == write / "exec"
     assert plan.cmd[plan.cmd.index("-C") + 1] == str(write / "exec")
+    assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
+    assert "read-only" not in plan.cmd
     assert not plan.cwd.is_relative_to(snapshot)
     assert plan.stdin_payload and "AGENTS.md" in plan.stdin_payload
 
