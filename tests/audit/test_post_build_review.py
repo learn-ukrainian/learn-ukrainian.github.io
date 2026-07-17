@@ -1231,7 +1231,7 @@ def test_provider_schema_rejects_prose_suffixed_vesum_mapping() -> None:
         Draft202012Validator(schema).validate(semantic)
 
 
-def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
+def test_provider_schema_is_portable_and_finalizer_binds_vocabulary_order() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     schema = pbr.semantic_response_schema(packet)
     semantic = _passing_semantic(packet)
@@ -1240,7 +1240,32 @@ def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
 
     assert coverage_schema["minItems"] == len(expected_lemmas)
     assert coverage_schema["maxItems"] == len(expected_lemmas)
-    assert len(coverage_schema["prefixItems"]) == len(expected_lemmas)
+    assert "prefixItems" not in json.dumps(schema)
+    assert coverage_schema["items"]["allOf"][1]["properties"]["lemma"][
+        "enum"
+    ] == expected_lemmas
+    nested_schemas = []
+
+    def collect(value: object) -> None:
+        if isinstance(value, dict):
+            nested_schemas.append(value)
+            for item in value.values():
+                collect(item)
+        elif isinstance(value, list):
+            for item in value:
+                collect(item)
+
+    collect(schema)
+    assert all(
+        node.get("type") == "object"
+        for node in nested_schemas
+        if {"properties", "required"}.intersection(node)
+    )
+    assert all(
+        node.get("type") == "array"
+        for node in nested_schemas
+        if {"items", "minItems", "maxItems", "uniqueItems"}.intersection(node)
+    )
     Draft202012Validator(schema).validate(semantic)
 
     wrong_order = copy.deepcopy(semantic)
@@ -1248,8 +1273,13 @@ def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
         wrong_order["vocabulary_coverage"][1],
         wrong_order["vocabulary_coverage"][0],
     )
-    with pytest.raises(ValidationError):
-        Draft202012Validator(schema).validate(wrong_order)
+    # Provider portability may relax sequence enforcement, but the canonical
+    # boundary must still reject the exact raw response rather than repair it.
+    Draft202012Validator(schema).validate(wrong_order)
+    result = pbr.finalize_review(packet, _raw(wrong_order))
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "exactly once in source order" in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
 
     false_exact = copy.deepcopy(semantic)
     integrated = next(
@@ -1259,8 +1289,40 @@ def test_provider_schema_binds_vocabulary_order_and_exact_surface() -> None:
     )
     integrated["surface"] = "співтворчість"
     integrated["verification"] = "exact lemma surface"
+    Draft202012Validator(schema).validate(false_exact)
+    false_result = pbr.finalize_review(packet, _raw(false_exact))
+    assert false_result["semantic_response"]["contract_status"] == "invalid"
+    assert "not packet-bound candidates" in false_result[
+        "semantic_response"
+    ]["error"]
+    assert false_result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
+def test_provider_schema_resource_arrays_use_portable_set_constraints() -> None:
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+
+    assert "prefixItems" not in json.dumps(schema)
+    Draft202012Validator(schema).validate(semantic)
+
+    mapped_unit_id, mapped_entry = next(
+        (unit_id, entry)
+        for unit_id, entry in semantic["source_traceability_coverage"].items()
+        if entry["status"] == "MAPPED" and entry["resource_ids"]
+    )
+    resource_schema = schema["properties"]["source_traceability_coverage"][
+        "properties"
+    ][mapped_unit_id]["properties"]["resource_ids"]
+    assert resource_schema["items"]["enum"] == mapped_entry["resource_ids"]
+    assert resource_schema["uniqueItems"] is True
+
+    wrong_resource = copy.deepcopy(semantic)
+    wrong_resource["source_traceability_coverage"][mapped_unit_id][
+        "resource_ids"
+    ] = ["resource-not-in-packet"]
     with pytest.raises(ValidationError):
-        Draft202012Validator(schema).validate(false_exact)
+        Draft202012Validator(schema).validate(wrong_resource)
 
 
 def test_provider_schema_excludes_vocabulary_file_from_integration_evidence() -> None:
@@ -3142,8 +3204,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.0"
-    assert len(rows) == 62
+    assert catalog["catalog_version"] == "6.0.1"
+    assert len(rows) == 63
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3180,6 +3242,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.7",
         "5.0.8",
         "6.0.0",
+        "6.0.1",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

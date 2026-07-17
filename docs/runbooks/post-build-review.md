@@ -89,6 +89,13 @@ seminars, curated named-source aliases are compared with learner-visible
 resources; an unmapped configured source produces a material deterministic
 finding, while incidental acronyms do not become extra source labels.
 
+The provider-facing v6 schema deliberately uses a portable strict-output
+subset. In particular, packet-bound arrays use ordinary `items` constraints
+rather than Draft 2020-12 `prefixItems`, which some supported providers reject
+before inference. This transport accommodation does not relax the canonical
+contract: finalization independently enforces exact vocabulary source order and
+exact source-resource sets, and any mismatch produces `INCOMPLETE`.
+
 Dimension scores preserve the accepted raw reviewer response after strict
 Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
 `BLOCK` is `[0.0, 6.0)`, and `INCOMPLETE` has a null score/rationale. The
