@@ -4,7 +4,7 @@ query_keywords:
   - Борис Антоненко-Давидович
   - 'ЕСУ: Антоненко-Давидович Борис Дмитрович'
   - 'Енциклопедія історії України: Антоненко-Давидович Борис Дмитрович'
-  - 'Борис Антоненко-Давидович: Смерть'
+  - 'Борис Антоненко-Давидович: Смерть; Сибірські новели НБУ Ярослава Мудрого'
   - 'З порога смерті: Антоненко-Давидович Борис'
 direct_sources:
   - https://esu.com.ua/article-42948
@@ -12,7 +12,7 @@ direct_sources:
     COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Antonenko_Davy\
     dovych_B"
   - https://resource.history.org.ua/item/11213
-  - https://chtyvo.org.ua/authors/Antonenko-Davydovych/Smert/
+  - https://elib.nlu.org.ua/object.html?id=10607
 rag_chunks: []
 rag_literary: []
 warning: >-

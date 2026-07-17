@@ -1,21 +1,27 @@
-# Source registry for wiki/figures/oleksa-tykhyi.md
 sources:
 - id: S1
   file: https://esu.com.ua/article-887522
   type: external
   title: Тихий Олекса
   url: https://esu.com.ua/article-887522
-  metadata:
-    publisher: Інститут енциклопедичних досліджень НАН України
-    language: uk
-    verified_on: '2026-07-17'
-    portrait_fallback: text-only; page image does not establish a separate file author, provenance, and licence.
+  language: uk
+  hosting: link-only
+  disposition: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-887522
+    note: Сторінка використовується лише як зовнішнє посилання; текст і зображення не відтворюються.
+    attribution: Енциклопедія Сучасної України
 - id: S2
   file: https://museum.khpg.org/1114001053
   type: external
   title: ТИХИЙ ОЛЕКСІЙ ІВАНОВИЧ
   url: https://museum.khpg.org/1114001053
-  metadata:
-    publisher: Віртуальний музей дисидентського руху Харківської правозахисної групи
-    language: uk
-    verified_on: '2026-07-17'
+  language: uk
+  hosting: link-only
+  disposition: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1114001053
+    note: Сторінка використовується лише як зовнішнє посилання; текст і зображення не відтворюються.
+    attribution: Віртуальний музей дисидентського руху Харківської правозахисної групи

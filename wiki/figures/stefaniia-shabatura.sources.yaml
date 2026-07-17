@@ -1,22 +1,27 @@
-# Source registry for wiki/figures/stefaniia-shabatura.md
 sources:
 - id: S1
   file: https://museum.khpg.org/1114001603
   type: external
   title: ШАБАТУРА СТЕФАНІЯ МИХАЙЛІВНА
   url: https://museum.khpg.org/1114001603
-  metadata:
-    publisher: Віртуальний музей дисидентського руху Харківської правозахисної групи
-    language: uk
-    verified_on: '2026-07-17'
-    portrait_fallback: text-only; page images do not establish a separate file author, provenance, and licence.
+  language: uk
+  hosting: link-only
+  disposition: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1114001603
+    note: Сторінка використовується лише як зовнішнє посилання; текст і зображення не відтворюються.
+    attribution: Віртуальний музей дисидентського руху Харківської правозахисної групи
 - id: S2
   file: https://museum.khpg.org/1314388686
   type: external
-  title: Шабатура Стефанія Михайлівна. Інтерв'ю
+  title: Шабатура Стефанія Михайлівна. Інтерв'ю 26 червня 2008 року
   url: https://museum.khpg.org/1314388686
-  metadata:
-    publisher: Віртуальний музей дисидентського руху Харківської правозахисної групи
-    recorder: Василь Овсієнко
-    language: uk
-    verified_on: '2026-07-17'
+  language: uk
+  hosting: link-only
+  disposition: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1314388686
+    note: Інтерв'ю використовується лише як зовнішнє посилання; текст і зображення не відтворюються.
+    attribution: Василь Овсієнко; Віртуальний музей дисидентського руху Харківської правозахисної групи
