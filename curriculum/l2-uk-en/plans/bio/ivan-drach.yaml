@@ -146,6 +146,7 @@ readings:
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-21707
   language: uk
+  genre: енциклопедична стаття
   source_type: reference
   role: contextual-reading
   hosting: link-only
@@ -160,8 +161,9 @@ readings:
   source_name: Електронний архів НаУКМА (eKMAIR)
   source_url: https://ekmair.ukma.edu.ua/items/3fd967b0-ff6f-4ee6-a4bf-cf9848a3f8e7
   language: uk
-  source_type: primary-document
-  role: document-reading
+  genre: Стенограма
+  source_type: primary
+  role: primary-reading
   hosting: link-only
   learner_task: >-
     Визначити учасників, дату, вид документа і те, що стенограма справді
@@ -177,7 +179,8 @@ readings:
   source_url: >-
     https://uinp.gov.ua/istorychnyy-kalendar/veresen/8/1989-vidkryvsya-ustanovchyy-zyizd-narodnogo-ruhu-ukrayiny-za-perebudovu
   language: uk
-  source_type: institutional-history
+  genre: інституційна історична довідка
+  source_type: reference
   role: contextual-reading
   hosting: link-only
   learner_task: >-
@@ -200,7 +203,7 @@ portrait_fallback:
   evidence_url: https://esu.com.ua/article-21707
   disposition: no-portrait-until-rights-verified
   verified_on: '2026-07-17'
-version: '4.2'
+version: '1.2'
 vocabulary_hints:
 - definition: образ, що переносить властивості людини на неживу силу
   pos: ж.

@@ -141,6 +141,7 @@ readings:
   source_name: Віртуальний музей «Дисидентський рух в Україні» Харківської правозахисної групи
   source_url: https://museum.khpg.org/1383042150
   language: uk
+  interview_date: '1996-11-01'
   genre: авторське інтерв’ю
   source_type: primary
   role: primary-reading
@@ -168,7 +169,8 @@ references:
   type: reference
 - note: >-
     Авторська розмова про створення Української Громадської групи сприяння
-    виконанню Гельсінкських угод.
+    виконанню Гельсінкських угод; дата інтерв’ю за бібліографією S1 —
+    1996-11-01.
   path: https://museum.khpg.org/1383042150
   title: Руденко Микола Данилович. Інтерв’ю про створення УГГ (ХПГ)
   type: primary
@@ -176,7 +178,7 @@ sequence: 256
 slug: mykola-rudenko
 subtitle: From Stalinist Loyalist to Founder of the Ukrainian Helsinki Group
 title: 'Микола Руденко: самвидав, УГГ і ціна правди'
-version: '1.1'
+version: '1.2'
 vocabulary_hints:
 - definition: людина, яка захищає права людини в умовах переслідування
   pos: ч.
