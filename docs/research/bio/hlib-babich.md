@@ -1,126 +1,90 @@
-# Бабіч Гліб Валерійович — Research Dossier
+# Гліб Бабіч — дослідницьке досьє
 
 **Slug:** `hlib-babich`
-**Block:** F (War-killed / RF-captured)
-**Tier:** 5
-**Issue:** #2313 (Appendix extraction)
-**Researcher:** Antigravity Agent (Gemini)
-**Completed:** 2026-05-28
+**Стан пакета:** каталогові джерела перевірено 17 липня 2026 року
+**Тип роботи:** готовність джерел до майбутньої побудови модуля
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Бабіч Гліб Валерійович
-- **Pseudonyms / aliases:** Лєнтяй (military call sign), Gleb Babich (FORBIDDEN - Russian transliteration)
-- **Born:** 1969-03-02 | Mykolaiv | Ukrainian SSR
-- **Died:** 2022-07-28 | near Izium, Kharkiv Oblast | Ukraine | Killed in action (vehicle hit by enemy anti-tank mine)
-- **Family / education key facts:** Born to a family of an engineer and a doctor. He was deeply involved in music and poetry from his youth. In 2014, he volunteered for the Armed Forces of Ukraine, serving five years in the 10th Separate Mountain Assault Brigade ("Edelweiss") through six combat rotations. After a brief civilian period where he co-founded the NGO "Brothers in Arms" (Брати по зброї), he returned to the frontline on February 24, 2022.
+Канонічне ім'я — **Гліб Бабіч**. Український ПЕН у повідомленні від 29 липня 2022 року називає його поетом, автором пісень, волонтером, військовим, керівником і співзасновником громадської організації «Республіка. Брати по Зброї» [S1]. Суспільне Культура у матеріалі того самого дня називає його блогером, автором пісень, військовослужбовцем і волонтером та прямо пояснює, що первинне повідомлення про загибель редакція отримала від речника Одеської військової адміністрації Сергія Братчука [S2]. Отже, новинний матеріал не треба переказувати так, ніби редакція була очевидцем бою.
 
-## 2. Oppression mechanism
+ПЕН повідомляє, що Бабіч служив на сході України від 2014 до 2019 року, був пов'язаний з 10-ю окремою гірсько-штурмовою бригадою, займався волонтерством і після початку повномасштабного вторгнення повернувся на фронт [S1]. Ці деталі доречно подавати з атрибуцією до професійної письменницької організації. Пакет не використовує непідтверджені числа про кількість бойових ротацій або загальний обсяг написаних творів.
 
-- **What happened:** Killed in action while serving in the Territorial Defense Forces (and actively supporting his former brigade) during the full-scale invasion.
-- **When (specific dates):** 2022-07-28.
-- **By whom (specific Russian/Soviet/RF agency):** Armed Forces of the Russian Federation (likely mining units or sabotage/reconnaissance forces operating in the Izium sector).
-- **Document references:** Military casualty reports from the Izium front (July 2022); announcements by the "Brothers in Arms" NGO and Kozak System on July 28, 2022.
-- **Mechanism specifics:** On July 28, 2022, during the grueling battles to halt and reverse the Russian advance in the Kharkiv Oblast (specifically the Izium direction), Hlib Babich and his unit were conducting a combat mission. The vehicle carrying Babich and his comrades struck an enemy anti-tank mine planted by Russian forces. The resulting explosion was fatal. This was a direct consequence of the unprovoked Russian invasion and constitutes the physical destruction of a major contemporary Ukrainian military poet.
-- **What survived / what was destroyed:** His life was destroyed at age 53. However, his extensive catalog of over 500 poems and songs survived. His book "Вірші та пісні" (Poems and Songs) was published in 2021 before his death, and a posthumous bilingual edition "Камуфляжна мадонна" (Camouflage Madonna) was published subsequently, preserving his literary legacy.
+Суспільне Київ 5 серпня 2022 року опублікувало репортаж із церемонії прощання в Михайлівському Золотоверхому соборі та на Михайлівській площі. Редакція повідомила, що Бабіч загинув 28 липня у бою проти збройних сил Росії [S3]. Цей документ підтверджує дату, публічну церемонію й присутність родини та побратимів. Він не дає підстав додавати точний тип боєприпасу, маршрут автомобіля, координати або ім'я іншого загиблого, якщо цього немає в прийнятому наборі.
 
-## 3. Major works
+## 2. Творчість і точна ідентифікація видань
 
-Hlib Babich authored over 500 poems and songs. His major recognized works include:
+Книжкова палата України у державному бібліографічному покажчику «Літопис книг», № 20 за жовтень 2021 року, містить запис 13043: «Вірші та пісні / Гліб Бабіч», Київ, видавництво «Білка», 2021 рік. Запис подає обсяг 231 і шість ненумерованих сторінок, зазначає український та російський текст, наклад і ISBN 978-617-7792-05-4 [S4]. Це найточніша опора для первісного видання. Бібліографічний запис не описує зміст кожного вірша і не підтверджує популярні оцінки збірки.
 
-- `2018` — *Подай зброю* (Hand Me the Weapon), song lyrics (performed by Kozak System). Became the unofficial anthem of the 10th Separate Mountain Assault Brigade.
-- `2018` — *Мольфар* (Molfar), song lyrics / poetry (performed by Kozak System). A profound requiem for fallen Ukrainian soldiers.
-- `2021` — *Вірші та пісні* (Poems and Songs), poetry collection, Bilka Books. A comprehensive collection of his military and civic poetry, featuring both Ukrainian and Russian texts (reflecting the linguistic reality of the frontline).
-- `2024` — *Камуфляжна мадонна* (Camouflage Madonna), bilingual poetry collection, posthumously published. Solidified his place in the canon of contemporary Ukrainian military literature.
+Сторінка видавництва «Білка» ідентифікує інше видання — «Вірші та пісні. Спогади друзів», 2024 рік, 304 сторінки, ISBN 978-617-7792-40-5, мова видання українська [S5]. Видавець пояснює, що тексти, первісно написані російською, для цього видання перекладено українською, а книжку доповнено спогадами рідних, друзів і побратимів [S5]. Отже, версії 2021 і 2024 років не можна змішувати: вони мають різні назви, обсяг, ISBN, мовне оформлення і склад.
 
-## 4. Primary-source quotes (≥2 required)
+ПЕН окремо повідомляє про авторство текстів пісень гурту Kozak System і називає пісню «Подай зброю» [S1]. У пакеті зафіксовано лише сам факт і назву, які прямо подає джерело. Тексти пісень не копіюються, а символічні означення на кшталт «гімн покоління» не перетворюються на незалежний факт. Якщо майбутній модуль захоче аналізувати пісню, потрібні точний легальний текст, дозвіл або інша визначена правова підстава та окремий локатор.
 
-**Quote 1:**
-> «Коли смерть присяде на бруствер, спитає — "Ну що тут ти?"
-> Коли нас, як тісто, місить вогняний вал,
-> Я не стану смикати Бога — вийду в канал арти.
-> У піхоти з артою і Богом — зАвжди прямий канал»
-- **Source:** Poem from the collection *Вірші та пісні* (2021).
-- **Pedagogical context:** This is a masterful example of modern frontline vocabulary and dark military pragmatism. It introduces essential vocabulary (бруствер, арта, піхота, вогняний вал) while demonstrating how contemporary Ukrainian poets integrate raw combat experience into structured verse. Perfect for C1 modules on modern military literature.
+## 3. Військова, волонтерська і громадська діяльність
 
-**Quote 2:**
-> «Роки війни — це найбільш щирі й чесні та осмислені роки мого життя. Чиста совість і повне розуміння сенсів. Я свідомо провів межу між своїм минулим і нинішнім… Я зрозумів, що таке любити свою країну.»
-- **Source:** Interview reflecting on his combat experience prior to 2022.
-- **Pedagogical context:** Useful for B2 learners studying civil identity and the psychological impact of defending one's country. The phrases "повне розуміння сенсів" (complete understanding of meanings/purpose) and "провів межу" (drew a line) are excellent idiomatic expressions for advanced expression.
+Біографію Бабіча легко звузити до двох образів — «поет» або «військовий». Прийняті джерела натомість фіксують кілька паралельних ролей. ПЕН подає військову службу, волонтерство, працю з ветеранською громадською організацією та авторство пісенних текстів [S1]. Суспільне Культура додає редакційно перевірену на момент публікації рамку: народження в Миколаєві, участь у війні від 2014 року, вихід збірки 2021 року й повернення на фронт після повномасштабного вторгнення [S2].
 
-**Quote 3:**
-> «Не схиливши в покорі коліна,
-> Не піддавшись брехні і прокльонам
-> Усміхається Богу моя Україна —
-> В камуфляжному вбрáнні Мадонна.»
-- **Source:** Poem "Камуфляжна мадонна".
-- **Pedagogical context:** A powerful example of modern patriotic poetry using classical religious imagery (Madonna) juxtaposed with modern warfare (camouflage). Essential for discussing how the sacred and the militant intertwine in modern Ukrainian culture.
+Навчальний план має показати, що ці ролі перетинаються, але не є взаємозамінними. Волонтерська діяльність не доводить конкретної військової посади; громадське лідерство не є назвою підрозділу; авторство пісенного тексту не тотожне авторству музики або виконанню. Відомості про ГО слід подавати з точною назвою «Республіка. Брати по Зброї», як у ПЕН, без скорочення до іншої організації [S1].
 
-## 5. Language register
+Військові назви особливо чутливі. Прийнятий пакет дозволяє сказати, що ПЕН пов'язує службу Бабіча з 10-ю окремою гірсько-штурмовою бригадою [S1]. Він не дозволяє самостійно визначати підрозділ у кожну дату, посаду, звання, склад групи або завдання. Таке обмеження захищає і точність, і пам'ять про інших людей, яких не можна випадково злити в одну біографію.
 
-- **Register:** Military, poetic, direct, often colloquial but with high emotional resonance.
-- **CEFR readiness for full reading:** B2 / C1.
-- **Lexicon notes:** Heavy use of military slang and tactical terms (арта, бруствер, побратими, ротація). Use of specific cultural archetypes (Мольфар - Carpathian shaman/healer).
-- **Stylistic features:** Known as "poetry of war," his style is marked by vitalism, uncompromising directness, and rhythmic driving structures akin to rock music (which is why his texts adapt so well to Kozak System's musical style).
+## 4. Загибель і меморіальна атрибуція
 
-## 6. Contested points
+Суспільне Культура повідомляє про загибель на фронті та називає джерело першої новини — Сергія Братчука [S2]. ПЕН наступного дня публікує власне повідомлення про загибель, перелічує ролі Бабіча і подає меморіальний життєпис [S1]. Суспільне Київ згодом документує церемонію прощання і в редакційному тексті називає 28 липня датою загибелі [S3]. Разом ці документи дають узгоджену, але жанрово різну картину.
 
-- **What gets simplified in popular memory:** Sometimes Babich is remembered purely as a "lyricist for Kozak System." While the band popularized his words, Babich was a standalone poet and a seasoned combat veteran (six rotations) whose literary voice existed independently of musical adaptation.
-- **What's debated in modern UA scholarship:** The transition of Russian-speaking Ukrainians to Ukrainian. Babich's early frontline poetry included Russian texts, reflecting the organic reality of the early ATO period. His later work became exclusively Ukrainian. His 2021 book includes both, serving as a linguistic time capsule of the army's Ukrainianization.
-- **Where modern Russian disinformation attacks them:** Russian propaganda universally dismisses the genuine volunteer movement and the cultural output of the Ukrainian Armed Forces, portraying figures like Babich as "militants" or "nationalist extremists" rather than civic poets defending their homes.
+Меморіальний текст природно містить оцінки, слова жалоби й піднесений тон. Для досьє такий тон не є доказом конкретної обставини. Слова рідних і побратимів у репортажі Суспільного належать названим людям; вони не стають позицією редакції або встановленим фактом [S3]. Дослівні репліки не включено, бо сторінкове посилання без стабільного локатора абзацу не відповідає вимозі до точної первинної цитати.
 
-## 7. Cross-track links
+Пакет свідомо вилучає колишнє твердження про підрив автомобіля на протитанковій міні поблизу Ізюма. У прийнятому наборі прямих джерел немає документа, який одночасно дає точну ідентичність, перевірюваний публічний URL та достатню атрибуцію цієї деталі. Відсутність такого твердження не применшує загибелі; вона не дозволяє перетворити поширену версію на недатований факт.
 
-- **Existing LIT modules referencing this figure:**
-  - None currently.
-- **Potential LIT additions surfaced by this research (Phase 2+ candidates):**
-  - Belongs alongside the existing veteran-poet war-literature plans `plans/lit-war/maksym-kryvtsov-poetry.yaml`, `plans/lit-war/yaryna-chornohuz-war.yaml`, and `plans/lit-war/pavlo-vyshebaba-soldier-poetry.yaml`. A dedicated Hlib Babich module is a candidate, not yet planned.
-- **Existing HIST modules referencing this figure's era/events:**
-  - None directly. The war-history plans `plans/hist/viyna-donbas.yaml` and `plans/hist/syntez-viyna.yaml` cover the 2022 full-scale invasion (defence of Kharkiv/Izium) context.
-- **Existing bios that connect to this figure:**
-  - Research-dossier cross-reference: Maksym Kryvtsov (also a poet-soldier killed in action).
+## 5. Роботи і документи для читання
 
-## 8. Naming-canonical
+- Повідомлення Українського ПЕН — професійний меморіальний життєпис і перелік ролей [S1].
+- Матеріал Суспільного Культура — датована новина з названим джерелом первинного повідомлення [S2].
+- Репортаж Суспільного Київ — документ про церемонію прощання та редакційну хронологію [S3].
+- «Літопис книг» Книжкової палати України — державний бібліографічний запис першого видання 2021 року [S4].
+- Сторінка видавництва «Білка» — точна ідентифікація доповненого українськомовного видання 2024 року [S5].
 
-- **Slug:** `hlib-babich`
-- **EN canonical (BGN/PCGN 2010):** Hlib Babich
-- **UA canonical (with patronymic if attested):** Бабіч Гліб Валерійович
-- **Aliases (track these for `aliases:` YAML field):** Лєнтяй
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Gleb Babich
+Усі документи доступні українською або, у випадку державного покажчика, містять українську основну частину та паралельні службові елементи. Вони використовуються лише за посиланням. Книжкові сторінки не є дозволом відтворювати вірші, пісні, спогади чи обкладинки.
 
-## 9. Image candidates
+## 6. Цитати, мова і авторське право
 
-- **Best PD/CC portrait:** No verified PD/CC portrait currently exists on Wikimedia Commons.
-- **Fallback strategy:** Request permission to use promotional images from Bilka Books (his publisher) or from the NGO "Справа Громад" (Sprava Hromad) / "Брати по зброї," which he co-founded.
-- **Era-appropriate context image:** Cover of the book "Камуфляжна мадонна" or a photo of the 10th Separate Mountain Assault Brigade patch ("Edelweiss").
+Дослівних цитат із поезії, пісень, родинних спогадів або виступів не включено. Точна назва твору є бібліографічною відомістю, а не запрошенням цитувати його зміст. Навіть короткий пісенний рядок має окремий правовий і контекстуальний ризик. На етапі каталогової готовності достатньо зафіксувати назву, авторську роль, видання та легальний зовнішній перехід [S1] [S4] [S5].
 
-## 10. Sources used
+Видання 2021 року за записом Книжкової палати містить український і російський текст [S4]. Видання 2024 року видавець визначає як українськомовне й пояснює перекладацьке опрацювання частини матеріалу [S5]. Це дає підставу говорити про різний мовний склад двох видань, але не про «остаточний особистий мовний перехід» автора без його прямого датованого висловлювання.
 
-**Tier 1 (authoritative):**
-- Official announcements by NGO "Брати по зброї" and Kozak System (July 2022).
-- Babich, Hlib. *Вірші та пісні*. Bilka Books, 2021.
+## 7. Спірні або вилучені твердження
 
-**Tier 3 (encyclopedic):**
-- Wikipedia (UA) | Гліб Бабіч | Accessed: 2026-05-28
+Пакет не використовує число «понад 500 творів», кількість бойових ротацій, неперевірені відомості про батьків, популярні назви посмертніх збірок або загальні формули про канон. Жодне з цих тверджень не потрібне для джерельно готового модуля, якщо його не підтримує прийнятий прямий документ.
 
-**Tier 4 (modern scholarly post-1991):**
-- Chytomo | "Загинув поет і військовий Гліб Бабіч" | Accessed: 2026-05-28
-- Bilka Books Author Profile | "Гліб Бабіч" | Accessed: 2026-05-28
+Твердження, що «Подай зброю» була неофіційним гімном бригади, присутнє у повідомленні ПЕН [S1]. Якщо його буде використано, потрібно зберігати атрибуцію: саме ПЕН так характеризує статус пісні. Не можна підвищувати це до офіційного рішення військової частини без документа частини.
 
-**Tier 5 (general web):**
-- Texty.org.ua | "На фронті загинув поет і воїн Гліб Бабіч" | Accessed: 2026-05-28
-- Suspilne Media | "Пам'яті поета та військового Гліба Бабіча" | Accessed: 2026-05-28
-- Ukrinform | "На Харківщині загинув командир, поет Гліб Бабіч" | Accessed: 2026-05-28
+Сторінка видавця [S5] є первинною щодо реквізитів власного видання, але її емоційний опис книжки є промоційним текстом. Він не доводить літературну оцінку, репрезентативність для всього покоління або обов'язкове місце в каноні. Бібліографічна точність важливіша за рекламне означення.
 
----
+## 8. Іменування і розмежування сутностей
 
-## Decolonization self-check (run before submitting)
+- Канонічна українська форма: **Гліб Бабіч**.
+- У непрямих відмінках зберігається `і`: **Гліба Бабіча**, **Глібові Бабічу**, **з Глібом Бабічем**.
+- ГО: **«Республіка. Брати по Зброї»** [S1].
+- Військова частина в джерелі ПЕН: **10-та окрема гірсько-штурмова бригада** [S1].
+- Перше видання: **«Вірші та пісні»**, 2021 [S4].
+- Доповнене видання: **«Вірші та пісні. Спогади друзів»**, 2024 [S5].
 
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text (only allowed in `aliases:` field labeled FORBIDDEN)
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms
-- [x] No "lost his life" euphemisms for documented executions (explicitly stated: killed in action by enemy mine)
-- [x] All place names use modern UA canonical form (Mykolaiv, Izium, Kharkiv)
-- [x] Holodomor referenced correctly (N/A for this bio)
-- [x] Crimea/2014/2022 events framed as Russian aggression where applicable
+Назву пісні «Подай зброю» не слід змішувати з назвою збірки. Видавництво «Білка» не тотожне громадській організації, а Kozak System — музичний гурт, для якого ПЕН називає Бабіча автором текстів, а не військовий підрозділ [S1].
+
+## 9. Зображення і права
+
+Пошук сторінок окремих файлів у Wikimedia Commons не виявив індивідуального портрета Гліба Бабіча з перевірюваною вільною ліцензією. Фотографії на сторінках ПЕН і Суспільного мають редакційні або соціальномережеві підписи, але не окрему ліцензію для повторного використання. Обкладинка на сторінці видавця також не є вільним портретом або дозволом на републікацію.
+
+Тому диспозиція пакета — `portrait_fallback` типу `text-only`. Це не остаточне твердження, що ліцензованого зображення не існує; це межа дослідженого набору станом на 17 липня 2026 року. Зображення можна додати лише після перевірки індивідуальної сторінки файлу, автора, ліцензії та URL доказу прав.
+
+## 10. Джерела і деколонізаційна перевірка
+
+### Джерела
+
+- [S1] [Український ПЕН, «На війні з Росією загинув поет, військовий і волонтер Гліб Бабіч»](https://pen.org.ua/na-vijni-z-rosieyu-zaginuv-poet-vijskovij-i-volonter-glib-babich)
+- [S2] [Суспільне Культура, «На фронті загинув український поет і волонтер Гліб Бабіч»](https://suspilne.media/culture/265749-na-fronti-zaginuv-ukrainskij-poet-i-volonter-glib-babic/)
+- [S3] [Суспільне Київ, «У Києві попрощалися з загиблим Глібом Бабічем»](https://suspilne.media/kyiv/268196-u-kievi-poprosalisa-z-zagiblim-glibom-babicem/)
+- [S4] [Книжкова палата України, «Літопис книг», № 20 за 2021 рік](https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf)
+- [S5] [Видавництво «Білка», «Вірші та пісні. Спогади друзів»](https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich)
+
+Деколонізаційний опис прямо називає російську агресію та українську суб'єктність, але не перетворює життя на плакат. Бабіч постає як автор, військовий, волонтер і громадський діяч із різними видами праці. Повага до загиблого виявляється в точності назв, дат, видань і джерел, а не в додаванні неперевірених ефектних деталей.

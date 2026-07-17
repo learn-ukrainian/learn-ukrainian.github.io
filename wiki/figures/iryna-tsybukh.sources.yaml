@@ -1,0 +1,50 @@
+---
+sources:
+  - id: S1
+    file: https://www.pravda.com.ua/articles/2024/05/14/7455626/
+    type: external
+    title: Інтерв'ю Ірини Цибух — Українська правда
+    url: https://www.pravda.com.ua/articles/2024/05/14/7455626/
+  - id: S2
+    file: "https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-\
+      medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-\
+      moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/"
+    type: external
+    title: Інтерв'ю Ірини Цибух — ДМ Суспільного
+    url: "https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-\
+      medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-\
+      moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/"
+  - id: S3
+    file: "https://detector.media/infospace/article/227632/2024-05-31-shchob-\
+      maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-\
+      tsybukh-opublikuvav-ii-proshchalnyy-lyst/"
+    type: external
+    title: Родинне оприлюднення листа Ірини Цибух — Детектор медіа
+    url: "https://detector.media/infospace/article/227632/2024-05-31-shchob-\
+      maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-\
+      tsybukh-opublikuvav-ii-proshchalnyy-lyst/"
+  - id: S4
+    file: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
+    type: external
+    title: Порадник юним журналістам — Youth MediaLab
+    url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
+  - id: S5
+    file: https://corp.suspilne.media/newsdetails/2644/
+    type: external
+    title: Корпоративний запис про роботу Ірини Цибух — Суспільне
+    url: https://corp.suspilne.media/newsdetails/2644/
+  - id: S6
+    file: https://www.pravda.com.ua/news/2024/05/30/7458331/
+    type: external
+    title: Повідомлення про загибель Ірини Цибух — Українська правда
+    url: https://www.pravda.com.ua/news/2024/05/30/7458331/
+  - id: S7
+    file: https://www.president.gov.ua/documents/7502023-48905
+    type: external
+    title: Указ Президента України № 750/2023
+    url: https://www.president.gov.ua/documents/7502023-48905
+  - id: S8
+    file: https://www.president.gov.ua/documents/1442025-54025
+    type: external
+    title: Указ Президента України № 144/2025
+    url: https://www.president.gov.ua/documents/1442025-54025

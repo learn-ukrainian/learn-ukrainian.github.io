@@ -1,173 +1,230 @@
 ---
-activity_hints:
-- after_section: 'Тінь: Викрадення, СІЗО та загибель'
-  focus: Аналіз розслідувань щодо умов російського полону і порушення прав журналістів
-  items: 5
-  placement: inline
-  type: quiz
-- after_section: 'Діяльність: Журналістика на окупованих територіях'
-  focus: Перевірка розуміння методів роботи Вікторії Рощиної та її матеріалів 2022-2023 років
-  items: 5
-  placement: inline
-  type: true-false
-- focus: Дебати — чи є журналістський статус захистом в умовах окупації, чи лише причиною для посиленого переслідування?
-  placement: workbook
-  type: debate
-- focus: >-
-    Аналіз цитати — "Я кричала, що я журналістка і мене будуть шукати"
-    (професійна ідентичність проти свавільного затримання)
-  placement: workbook
-  type: critical-analysis
-- focus: Есе-рефлексія — небезпека документування злочинів тоталітарної системи та феномен "насильницьких зникнень"
-  placement: workbook
-  type: essay-response
-cefr_min: C1
-connects_to:
-- lit-doc-chronicles-as-testimony
-- lit-doc-vakulenko-occupation-diary
-- hist-viyna-donbas
-content_outline:
-- points:
-  - >-
-    [!biography] Знайомство з Вікторією Рощиною (1996–2024): українська фронтова
-    журналістка, авторка розслідувань про окупацію.
-  - >-
-    Провокаційне питання: чому російська окупаційна система найбільше боїться тих,
-    хто фіксує імена цивільних і маршрути евакуації?
-  section: Розминка
-  words: 400
-- points:
-  - >-
-    Професійний шлях: робота з Hromadske, "Українською правдою", "Радіо Свобода".
-    Спеціалізація на фронтових репортажах та темі окупованих територій.
-  - >-
-    [!decolonization] Протидія російській цензурі через фіксацію правди: репортажі з
-    Харківщини під обстрілами та дослідження життя на окупованих землях Запоріжжя.
-  - >-
-    Міжнародне визнання: лауреатка премії "Мужність у журналістиці" від IWMF.
-  section: 'Формування: Фронтова і розслідувальна журналістика'
-  words: 1000
-- points:
-  - >-
-    Березень 2022 року: перше затримання ФСБ та військовими РФ під час поїздки до Маріуполя.
-  - >-
-    Текст "Тиждень у полоні окупантів": свідоцтво Вікторії про методи тиску, допитів
-    та спроби змусити її записати пропагандистське відео ("Я наголосила, що нічого не буду вигадувати").
-  - >-
-    Ризик як усвідомлений вибір: повернення до репортажів з окупованих територій
-    після звільнення. Серпень 2023 року — поїздка, з якої журналістка не повернулася.
-  section: 'Діяльність: Журналістика на окупованих територіях'
-  words: 1200
-- points:
-  - >-
-    [!anti-hagiography] Вікторія не "загинула на війні", її було цілеспрямовано схоплено,
-    катовано і вбито в системі російських в'язниць.
-  - >-
-    Механізм примусового зникнення: мовчання влади РФ, етапні переведення, перебування
-    в Таганрозі та СІЗО-3 в Кізелі (Пермський край).
-  - >-
-    Розслідування: матеріали українських (Слідство.Інфо, Суспільне) та міжнародних
-    (RSF, Human Rights Watch) журналістів і правозахисників щодо умов її утримання.
-  - >-
-    [!epistemic-humility] Точна медична причина смерті 19 вересня 2024 року залишається
-    невстановленою через російське приховування доказів, але провина тюремної системи є беззаперечною.
-  section: 'Тінь: Викрадення, СІЗО та загибель'
-  words: 1600
-- points:
-  - >-
-    Спадщина Вікторії Рощиної: її тексти як джерело свідчень про злочини російської
-    окупації (фільтрація, евакуація, терор цивільних).
-  - >-
-    Етичний вимір розслідування смерті: складність і необхідність встановлення
-    правди, коли документація контролюється агресором.
-  - >-
-    Рощина як символ ціни свободи преси та загрози для журналістів під російською окупацією.
-  section: 'Підсумок: Ціна документації правди'
-  words: 1000
-focus: >-
-  Вікторія Рощина як фронтова журналістка, яка цілеспрямовано документувала життя на окупованих
-  територіях, її примусове зникнення та трагічна загибель у російському полоні внаслідок катувань.
+module: bio-291
 level: BIO
-module: bio-292
-objectives:
-- >-
-  Аналізувати репортажі Вікторії Рощиної як важливе джерело свідчень про життя
-  та спротив на окупованих Росією територіях.
-- Розуміти феномен "примусового зникнення" (enforced disappearance) та його використання як зброї терору.
-- Досліджувати методи російської окупаційної та пенітенціарної системи у переслідуванні медійників та цивільних.
-- Оцінювати роль міжнародних правозахисних організацій та незалежних ЗМІ у встановленні правди про долі полонених.
-pedagogy: CBI
-persona:
-  role: >-
-    Модератор семінару, який досліджує українську фронтову журналістику та правозахисні
-    аспекти утримання цивільних полонених Росією.
-  voice: Intellectual Historian
-phase: BIO
-references:
-- note: Заява RSF про загибель журналістки та необхідність розслідування.
-  path: https://rsf.org/en/ukrainian-journalist-victoria-roshchyna-has-died-russian-jail-rsf-demands-investigation
-  title: Ukrainian journalist Victoria Roshchyna has died in a Russian jail (RSF)
-  type: reference
-- author: Вікторія Рощина
-  note: Репортаж від першої особи про перший досвід полону у березні 2022 року.
-  title: Тиждень у полоні окупантів. Як я вибралася з рук ФСБ, «кадирівців» і дагестанців (Hromadske)
-  type: primary
-  work: Тиждень у полоні окупантів
-readings:
-- title: Тиждень у полоні окупантів
-  language: uk
-  genre: Репортаж від першої особи / свідчення
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: viktoriia-roshchyna-hromadske-captivity-report'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний URL Hromadske для українського репортажу
-    Вікторії Рощиної та використовувати як link-only джерело.
-  hosting: reading-needed
-  cefr_min: C1
-  learner_task: >-
-    Прочитати свідчення про перше затримання і виписати форми тиску, допиту та
-    професійної самоідентифікації журналістки.
-  caveats: Не хостити повний текст; працювати з короткими цитатами і правозахисним контекстом.
-- title: Український матеріал про загибель Вікторії Рощиної в російському полоні
-  language: uk
-  genre: Розслідування / правозахисний матеріал
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: viktoriia-roshchyna-ukrainian-investigation'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний український матеріал Суспільного,
-    Слідства.Інфо або іншого перевіреного медіа про обставини утримання і
-    смерті.
-  hosting: reading-needed
-  cefr_min: C1
-  learner_task: Зіставити документовані факти з поняттям примусового зникнення та свободою преси під окупацією.
-  caveats: >-
-    Англомовні правозахисні матеріали можуть бути джерелами для автора модуля,
-    але learner reading має бути українською або мати явний виняток.
-sequence: 292
+sequence: 291
 slug: viktoriia-roshchyna
-subtitle: The Frontline Journalist who Died in Russian Captivity
-title: 'Вікторія Рощина: Свідчення з окупації'
-version: '4.1'
-vocabulary_hints:
-- definition: позбавлення волі, взяття у заручники військовими або бойовиками
-  pos: ч.
-  word: полон
-- definition: таємне захоплення людини державою або політичною організацією з відмовою визнати її місцеперебування
-  pos: с.
-  word: примусове зникнення
-- definition: слідчий ізолятор, місце попереднього ув'язнення
-  pos: с.
-  word: СІЗО
-- definition: процес перевірки цивільного населення окупаційними військами з метою виявлення "небажаних" осіб
-  pos: ж.
-  word: фільтрація
-- definition: медичний або юридичний документ, що засвідчує факт та обставини смерті
-  pos: с.
-  word: свідоцтво про смерть
+title: 'Вікторія Рощина: журналістська праця, неволя і незавершене розслідування'
+subtitle: Reporting, Detention, Repatriation, Identification, and Investigative Limits
+focus: >-
+  Журналістська праця Вікторії Рощиної, її первинне свідчення про неволю
+  2022 року та джерельно обмежена хронологія затримання 2023 року, переміщень,
+  повідомлення про смерть, репатріації, ідентифікації й подальших розслідувань.
+content_outline:
+  - section: Хронологія повідомлень і межі встановленого
+    words: 5200
+    points:
+      - Відокремлення авторського свідчення 2022 року від пізніших реконструкцій.
+      - Послідовність російського підтвердження утримання, повідомлення про смерть, повернення тіла й ідентифікації.
+      - Відмова від непідтвердженої безпосередньої причини смерті або остаточно встановленої повної траєкторії неволі.
 word_target: 5200
+cefr_min: C1
+pedagogy: CBI
+objectives:
+  - Будувати хронологію за датами публікацій і називати орган, редакцію або свідка кожного твердження.
+  - Розрізняти репатріацію, попереднє зіставлення ДНК, остаточну ідентифікацію та встановлення причини смерті.
+  - Не перетворювати прокурорську підозру або журналістську реконструкцію на вирок.
+references:
+  - title: >-
+      Тиждень у полоні окупантів. Як я вибралася з рук ФСБ, «кадирівців»
+      і дагестанців
+    url: >-
+      https://hromadske.ua/posts/tizhden-u-poloni-okupantiv-yak-ya-vibralasya-z-ruk-fsb-kadirivciv-i-dagestanciv
+  - title: РФ уперше визнала, що утримує журналістку Вікторію Рощину
+    url: >-
+      https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
+  - title: У російському полоні померла українська журналістка Вікторія Рощина
+    url: https://www.pravda.com.ua/news/2024/10/10/7479122/
+  - title: >-
+      Проєкт «Вікторія». Історія полону та катувань, що пережила журналістка
+      Рощина й тисячі ув'язнених Росією українців
+    url: https://www.pravda.com.ua/articles/2025/04/29/7509612/
+  - title: В Україну повернули тіло журналістки Вікторії Рощиної — МВС
+    url: >-
+      https://suspilne.media/1002085-v-ukrainu-povernuli-tilo-zurnalistki-viktorii-rosinoi-mvs/
+  - title: >-
+      Офіс генпрокурора — стан тіла журналістки Рощиної не дає встановити точну
+      причину смерті
+    url: "https://suspilne.media/1002693-ofis-genprokurora-stan-tila-\
+      zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
+  - title: >-
+      Радіо Свобода — експертизи підтвердили ідентифікацію Вікторії Рощиної
+    url: >-
+      https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
+  - title: >-
+      «Били всіх дуже сильно, і жінок теж»: журналістку Вікторію Рощину
+      незадовго до загибелі етапували до ізолятора у Пермському краї РФ
+    url: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-sylno-i-\
+      zhinok-tezh-zhurnalistku-viktoriiu-roshchynu-nezadovho-do-zahybeli-\
+      etapuvaly-do-izoliatora-u-permskomu-krai-rf/"
+  - title: >-
+      «Віка не встає!»: свідки розповідають про останні дні Вікторії Рощиної,
+      української журналістки, затриманої та померлої в Росії
+    url: https://rsf.org/sites/default/files/medias/file/2026/04/Victoria%20Roshchyna%20_%20UA.pdf
+readings_contract_version: 2
+readings:
+  - title: Тиждень у полоні окупантів. Як я вибралася з рук ФСБ, «кадирівців» і дагестанців
+    source_name: hromadske
+    source_url: >-
+      https://hromadske.ua/posts/tizhden-u-poloni-okupantiv-yak-ya-vibralasya-z-ruk-fsb-kadirivciv-i-dagestanciv
+    language: uk
+    type: first-person-report
+    role: primary-testimony-2022
+    hosting: link-only
+    learner_task: >-
+      Побудувати маршрут лише за авторським текстом і позначити місця, де
+      Рощина передає власне спостереження, погрозу або примушування.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://hromadske.ua/posts/tizhden-u-poloni-okupantiv-yak-ya-vibralasya-z-ruk-fsb-kadirivciv-i-dagestanciv
+      note: Авторський український текст використовується link-only без копіювання.
+  - title: РФ уперше визнала, що утримує журналістку Вікторію Рощину
+    source_name: Суспільне Новини
+    source_url: https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
+    language: uk
+    type: document-attributed-news-report
+    role: detention-acknowledgment
+    hosting: link-only
+    learner_task: >-
+      Відділити зміст російського листа, слова батька, підтвердження МКЧХ
+      і редакційний контекст.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
+      note: Український матеріал Суспільного залишається зовнішнім джерелом.
+  - title: У російському полоні померла українська журналістка Вікторія Рощина
+    source_name: Українська правда
+    source_url: https://www.pravda.com.ua/news/2024/10/10/7479122/
+    language: uk
+    type: official-statements-news-report
+    role: initial-death-notice
+    hosting: link-only
+    learner_task: >-
+      Порівняти, що на дату публікації повідомляли Координаційний штаб, ГУР
+      і Уповноважений Верховної Ради з прав людини.
+    rights:
+      basis: external-link
+      evidence_url: https://www.pravda.com.ua/news/2024/10/10/7479122/
+      note: Датована новина використовується лише за посиланням.
+  - title: >-
+      Проєкт «Вікторія». Історія полону та катувань, що пережила журналістка
+      Рощина й тисячі ув'язнених Росією українців
+    source_name: Українська правда та Forbidden Stories
+    source_url: https://www.pravda.com.ua/articles/2025/04/29/7509612/
+    language: uk
+    type: collaborative-investigation
+    role: investigative-reconstruction
+    hosting: link-only
+    learner_task: >-
+      Розділити документи, свідчення, висновки авторів і ще не встановлені
+      елементи реконструкції.
+    rights:
+      basis: external-link
+      evidence_url: https://www.pravda.com.ua/articles/2025/04/29/7509612/
+      note: >-
+        Розслідування доступне українською; текст і візуальні матеріали
+        не відтворюються.
+  - title: В Україну повернули тіло журналістки Вікторії Рощиної — МВС
+    source_name: Суспільне Новини
+    source_url: https://suspilne.media/1002085-v-ukrainu-povernuli-tilo-zurnalistki-viktorii-rosinoi-mvs/
+    language: uk
+    type: ministry-attributed-news-report
+    role: repatriation-and-initial-identification
+    hosting: link-only
+    learner_task: >-
+      Розрізнити факт повернення, маркування останків, початкове зіставлення ДНК
+      і прохання родини про додаткову перевірку.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://suspilne.media/1002085-v-ukrainu-povernuli-tilo-zurnalistki-viktorii-rosinoi-mvs/
+      note: Матеріал Суспільного використовується link-only.
+  - title: Офіс генпрокурора — стан тіла журналістки Рощиної не дає встановити точну причину смерті
+    source_name: Суспільне Новини
+    source_url: "https://suspilne.media/1002693-ofis-genprokurora-stan-tila-\
+      zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
+    language: uk
+    type: prosecutor-attributed-news-report
+    role: forensic-limitation
+    hosting: link-only
+    learner_task: >-
+      Зафіксувати межу судово-медичного висновку й не робити з описаних
+      ушкоджень самостійного висновку про безпосередню причину смерті.
+    rights:
+      basis: external-link
+      evidence_url: "https://suspilne.media/1002693-ofis-genprokurora-stan-\
+        tila-zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
+      note: Українська новина використовується лише за посиланням.
+  - title: Експертизи підтвердили ідентифікацію Вікторії Рощиної
+    source_name: Радіо Свобода
+    source_url: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
+    language: uk
+    type: expert-and-family-attributed-report
+    role: identification-update
+    hosting: link-only
+    learner_task: >-
+      Простежити, які експертизи й організації названо та чим пізніше
+      підтвердження відрізняється від початкового збігу ДНК.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
+      note: Українськомовний матеріал залишається зовнішнім джерелом.
+  - title: >-
+      «Били всіх дуже сильно, і жінок теж»: журналістку Вікторію Рощину
+      незадовго до загибелі етапували до ізолятора у Пермському краї РФ
+    source_name: Слідство.Інфо
+    source_url: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-sylno-i-\
+      zhinok-tezh-zhurnalistku-viktoriiu-roshchynu-nezadovho-do-zahybeli-\
+      etapuvaly-do-izoliatora-u-permskomu-krai-rf/"
+    language: uk
+    type: investigative-report
+    role: later-transfer-reconstruction
+    hosting: link-only
+    learner_task: >-
+      Позначити походження кожної дати й твердження про переведення та не
+      подавати свідчення співкамерниць як офіційний російський облік.
+    rights:
+      basis: external-link
+      evidence_url: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-\
+        sylno-i-zhinok-tezh-zhurnalistku-viktoriiu-roshchynu-nezadovho-do-\
+        zahybeli-etapuvaly-do-izoliatora-u-permskomu-krai-rf/"
+      note: Розслідування використовується link-only без копіювання.
+  - title: >-
+      «Віка не встає!»: свідки розповідають про останні дні Вікторії Рощиної,
+      української журналістки, затриманої та померлої в Росії
+    source_name: Репортери без кордонів
+    source_url: https://rsf.org/sites/default/files/medias/file/2026/04/Victoria%20Roshchyna%20_%20UA.pdf
+    language: uk
+    type: professional-investigation-report
+    role: witness-based-latest-reconstruction
+    hosting: link-only
+    learner_task: >-
+      Розрізнити свідчення, організаційну реконструкцію, прокурорські відомості
+      та питання, які звіт прямо не вирішує.
+    rights:
+      basis: external-link
+      evidence_url: https://rsf.org/sites/default/files/medias/file/2026/04/Victoria%20Roshchyna%20_%20UA.pdf
+      note: >-
+        Український PDF доступний публічно; курс посилається на нього без
+        хостингу.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Перевірені редакційні й професійні сторінки мають портрети Вікторії Рощиної,
+    але не мають окремого файла з підтвердженим автором і відкритою ліцензією.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
+version: '4.2'
+vocabulary_hints:
+  - word: етапування
+    pos: с.
+    definition: примусове перевезення утримуваної людини між місцями несвободи
+  - word: репатріація
+    pos: ж.
+    definition: офіційне повернення людини або останків до держави походження
+  - word: ідентифікація
+    pos: ж.
+    definition: встановлення особи за сукупністю перевірених ознак і досліджень

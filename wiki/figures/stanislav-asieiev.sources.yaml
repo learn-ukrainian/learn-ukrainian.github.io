@@ -1,0 +1,27 @@
+---
+sources:
+  - id: S1
+    file: https://pen.org.ua/members/asyeyev-stanislav
+    type: external
+    title: Асєєв Станіслав — Український ПЕН
+    url: https://pen.org.ua/members/asyeyev-stanislav
+  - id: S2
+    file: https://www.radiosvoboda.org/a/aseev-polon-dnr-zaruchnyky-tortury/30447824.html
+    type: external
+    title: Інтерв'ю Станіслава Асєєва — Радіо Свобода
+    url: https://www.radiosvoboda.org/a/aseev-polon-dnr-zaruchnyky-tortury/30447824.html
+  - id: S3
+    file: https://starylev.com.ua/svitlyy-shlyah-istoriya-odnogo-konctaboru
+    type: external
+    title: Світлий шлях — Видавництво Старого Лева
+    url: https://starylev.com.ua/svitlyy-shlyah-istoriya-odnogo-konctaboru
+  - id: S4
+    file: https://www.kas.gov.ua/?p=36656
+    type: external
+    title: Повідомлення про вирок щодо ексочільника «Ізоляції» — Київський апеляційний суд
+    url: https://www.kas.gov.ua/?p=36656
+  - id: S5
+    file: https://www.pravda.com.ua/articles/2025/01/05/7491998/
+    type: external
+    title: Інтерв'ю Станіслава Асєєва, 5 січня 2025 року — Українська правда
+    url: https://www.pravda.com.ua/articles/2025/01/05/7491998/

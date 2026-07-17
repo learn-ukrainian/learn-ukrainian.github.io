@@ -1,171 +1,134 @@
 ---
-activity_hints:
-- after_section: 'Тінь: Вбивство в Гуті-Межигірській'
-  focus: Аналіз розслідування "Репортерів без кордонів" та доказів страти
-  items: 5
-  placement: inline
-  type: quiz
-- after_section: 'Діяльність: Від Іловайська до повномасштабного вторгнення'
-  focus: Перевірка розуміння фотодокументалістики Макса Левіна як засобу фіксації правди
-  items: 5
-  placement: inline
-  type: true-false
-- focus: >-
-    Дебати — роль фотодокументалістики: пасивне свідчення чи зброя проти агресії?
-  placement: workbook
-  type: debate
-- focus: >-
-    Аналіз цитати — "Кожен український фотограф мріє зробити фото, яке зупинить
-    війну" (мистецтво і медіа як інструмент миру)
-  placement: workbook
-  type: critical-analysis
-- focus: Есе-рефлексія — значення візуальних свідчень у документуванні воєнних злочинів Росії
-  placement: workbook
-  type: essay-response
-cefr_min: C1
-connects_to:
-- lit-war-polozhiy-ilovaisk
-- lit-war-amelina-new-renaissance
-- hist-viyna-donbas
-content_outline:
-- points:
-  - >-
-    [!biography] Знайомство з Максом Левіним (1981–2022): український фотожурналіст-документаліст,
-    співавтор проєкту AFTERILOVAISK.
-  - >-
-    Провокаційне питання: чи може об'єктив камери захистити фотографа від воєнних
-    злочинів армії, яка прагне знищити свідків?
-  section: Розминка
-  words: 400
-- points:
-  - >-
-    Освіта та початок кар'єри: навчання в Київському політехнічному інституті. Робота
-    для українських та міжнародних медіа (LB.ua, Reuters, BBC, AP).
-  - >-
-    Гуманістичний підхід до журналістики: зосередженість на людських історіях та
-    наслідках конфлікту для мирного населення ("Війна — це продовження історій людей").
-  - >-
-    [!decolonization] Відмова від знеособленої подачі воєнних дій: фокус на
-    ідентичності та досвіді українців у протистоянні збройній агресії.
-  section: 'Формування: Гуманізм у фотожурналістиці'
-  words: 1000
-- points:
-  - >-
-    Проєкт AFTERILOVAISK (з 2014 року): хроніка Іловайської трагедії. Документування
-    боїв, інтерв'ю з військовими та спроба опрацювання національної травми.
-  - >-
-    Повномасштабне вторгнення 2022 року: проєкт "Chronicles of the Russian invasion
-    of Ukraine 2022". Фіксація перших тижнів оборони Київщини.
-  - >-
-    Пошук втраченого дрона як спроба зберегти докази дій російської армії поблизу
-    Мощуна та Гути-Межигірської.
-  section: 'Діяльність: Від Іловайська до повномасштабного вторгнення'
-  words: 1200
-- points:
-  - >-
-    [!anti-hagiography] Спростування міфу про "випадкову смерть під перехресним вогнем".
-    Левін був цілеспрямовано страчений.
-  - >-
-    Механізм воєнного злочину: зникнення 13 березня 2022 року разом з Олексієм
-    Чернишовим. Перехоплення російськими військовими.
-  - >-
-    Розслідування "Репортерів без кордонів" (RSF): докази допиту, катувань та страти
-    Левіна (постріли зблизька) і спалення тіла його супровідника.
-  section: 'Тінь: Вбивство в Гуті-Межигірській'
-  words: 1600
-- points:
-  - >-
-    Спадщина Макса Левіна: його останні фотографії стали візуальними доказами та
-    були представлені в європейських парламентах.
-  - >-
-    Значення роботи документаліста: "фото, яке зупинить війну" як нездійснена,
-    але фундаментальна мета журналістики.
-  - >-
-    Місце Макса Левіна у пам'яті про українських культурних діячів і медійників,
-    убитих Росією.
-  section: 'Підсумок: Документалістика як пам''ять і доказ'
-  words: 1000
-focus: >-
-  Макс Левін як видатний український фотодокументаліст, його гуманістичний фокус на досвіді людей
-  під час війни та його цілеспрямована страта російськими військовими на Київщині навесні 2022 року.
+module: bio-287
 level: BIO
-module: bio-290
-objectives:
-- >-
-  Оцінювати роль Макса Левіна та його фотопроєктів (зокрема AFTERILOVAISK) у
-  документуванні російської агресії проти України з 2014 року.
-- Розуміти гуманістичну функцію журналістики у воєнний час, зосереджену на людських долях.
-- Аналізувати механізм цілеспрямованих страт цивільних та журналістів російською армією на основі розслідування RSF.
-- Обговорювати концепцію фотодокументалістики як доказової бази воєнних злочинів.
-pedagogy: CBI
-persona:
-  role: >-
-    Модератор семінару, який досліджує українську воєнну документалістику та злочини
-    російської армії проти медійників.
-  voice: Intellectual Historian
-phase: BIO
-references:
-- note: Звіт організації про страту Макса Левіна російськими військовими.
-  path: https://rsf.org/en/exclusive-rsf-investigation-death-maks-levin-information-and-evidence-collected-indicates
-  title: Exclusive RSF investigation into the death of Maks Levin (RSF)
-  type: reference
-- note: Біографічна інформація та цитати.
-  path: https://pen.org.ua/maks-levin
-  title: Maks Levin (PEN Ukraine)
-  type: reference
-readings:
-- title: Макс Левін
-  language: uk
-  genre: Біографічний нарис / меморіальний профіль
-  source_type: reference
-  role: orientation
-  source: PEN Ukraine
-  source_url: https://pen.org.ua/maks-levin
-  license: copyrighted
-  rights_note: Використовувати як link-only біографічний профіль; не хостити повний текст або фотографії.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Виписати біографічні факти, цитати і теми, які пояснюють гуманістичний фокус
-    фотодокументалістики Левіна.
-  caveats: Фотографії мають окремі права; не переносити зображення без перевірки ліцензій.
-- title: Український матеріал про розслідування вбивства Макса Левіна
-  language: uk
-  genre: Розслідування / правозахисний матеріал
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: maks-levin-ukrainian-investigation'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний український матеріал про висновки RSF або
-    українське розслідування без використання англомовного тексту як learner
-    reading.
-  hosting: reading-needed
-  cefr_min: C1
-  learner_task: Порівняти факти розслідування з етичними питаннями документування воєнних злочинів.
-  caveats: >-
-    Англомовний звіт RSF може бути джерелом для автора модуля, але learner
-    reading має бути українською або мати explicit exception.
-sequence: 290
+sequence: 287
 slug: maks-levin
-subtitle: The Photojournalist Executed by Russian Forces
-title: 'Макс Левін: Документалістика як зброя'
-version: '4.1'
-vocabulary_hints:
-- definition: галузь кіно та фотографії, що фіксує реальні події та людей
-  pos: ж.
-  word: документалістика
-- definition: насильницьке позбавлення життя, вбивство без законного суду
-  pos: ж.
-  word: страта
-- definition: насильницьке захоплення чужої території військовою силою
-  pos: ж.
-  word: окупація
-- definition: залишок, доказ або відбиток події, що допомагає встановити правду
-  pos: с.
-  word: свідчення
-- definition: безпілотний літальний апарат
-  pos: ч.
-  word: дрон
+title: 'Макс Левін: фотографія, свідчення та межі розслідування'
+subtitle: Photojournalism, First-Person War Reporting, and Attributed Investigations
+focus: >-
+  Фотожурналістська й документальна праця Макса Левіна, його власні тексти
+  про Іловайськ та розмежування попереднього повідомлення української
+  прокуратури і висновків професійного розслідування його загибелі 2022 року.
+content_outline:
+  - section: Авторський досвід, професійна пам'ять і розслідування
+    words: 5200
+    points:
+      - Читання двох авторських текстів Левіна як первинних джерел про Іловайськ.
+      - Відділення колегіальних спогадів про роботу від доказів щодо обставин загибелі.
+      - Точна атрибуція попередньої інформації прокуратури та висновків Репортерів без кордонів.
 word_target: 5200
+cefr_min: C1
+pedagogy: CBI
+objectives:
+  - Розрізняти авторський репортаж, меморіальний профіль, прокурорське повідомлення й професійне розслідування.
+  - Не перетворювати реконструкцію або версію на судово встановлений факт.
+  - Аналізувати роль фотографа як автора документа, не відтворюючи захищені світлини.
+references:
+  - title: Іловайськ. Хроніка втечі
+    url: https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html
+  - title: Іловайськ. Не забуду ніколи
+    url: https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html
+  - title: «Кожен український фотограф мріє зробити фото, яке зупинить війну». Пам'яті Макса Левіна
+    url: https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina
+  - title: Фотожурналіста Макса Левіна вбили російські військові — прокуратура
+    url: https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura
+  - title: 'Вбивство українського журналіста Макса Левіна: докази страти російськими військовими'
+    url: https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf
+readings_contract_version: 2
+readings:
+  - title: Іловайськ. Хроніка втечі
+    source_name: LB.ua
+    source_url: https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html
+    language: uk
+    type: first-person-report
+    role: primary-testimony
+    hosting: link-only
+    learner_task: >-
+      Відновити лише ту послідовність подій, яку Левін описує від першої особи,
+      і позначити межу його спостереження.
+    rights:
+      basis: external-link
+      evidence_url: https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html
+      note: >-
+        Авторський текст доступний українською; курс не копіює матеріал або
+        фотографії.
+  - title: Іловайськ. Не забуду ніколи
+    source_name: LB.ua
+    source_url: https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html
+    language: uk
+    type: first-person-retrospective
+    role: primary-testimony
+    hosting: link-only
+    learner_task: >-
+      Порівняти пізніший авторський спогад із текстом 2014 року, не змішуючи
+      час події з часом публікації.
+    rights:
+      basis: external-link
+      evidence_url: https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html
+      note: Українськомовний авторський матеріал використовується лише за посиланням.
+  - title: «Кожен український фотограф мріє зробити фото, яке зупинить війну». Пам'яті Макса Левіна
+    source_name: Український ПЕН
+    source_url: https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina
+    language: uk
+    type: professional-memorial-profile
+    role: career-context
+    hosting: link-only
+    learner_task: >-
+      Відокремити перевірювані професійні етапи від оцінок і спогадів названих
+      колег.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina
+      note: Сторінка ПЕН доступна українською; текст і портрет не відтворюються.
+  - title: Фотожурналіста Макса Левіна вбили російські військові — прокуратура
+    source_name: Інститут масової інформації
+    source_url: https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura
+    language: uk
+    type: prosecutor-attributed-news-report
+    role: preliminary-official-account
+    hosting: link-only
+    learner_task: >-
+      Виписати, що саме ІМІ приписує Офісу генерального прокурора і які
+      відомості названо попередніми.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura
+      note: Матеріал доступний українською і використовується link-only без відтворення.
+  - title: 'Вбивство українського журналіста Макса Левіна: докази страти російськими військовими'
+    source_name: Репортери без кордонів
+    source_url: https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf
+    language: uk
+    type: professional-investigation-report
+    role: attributed-investigative-reconstruction
+    hosting: link-only
+    learner_task: >-
+      Розділити зібрані організацією матеріали, її висновок, можливі сценарії
+      та питання, які звіт залишає відкритими.
+    rights:
+      basis: external-link
+      evidence_url: https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf
+      note: >-
+        Український звіт доступний публічно; курс лише посилається на PDF і не
+        хостить його.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портрета Макса Левіна з перевіреним автором і вільною ліцензією
+    не знайдено; контекстні світлини Commons не доводять, що на них зображено
+    Левіна.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
+version: '4.2'
+vocabulary_hints:
+  - word: фотожурналіст
+    pos: ч.
+    definition: журналіст, який документує події насамперед фотографією
+  - word: реконструкція
+    pos: ж.
+    definition: відновлення ймовірної послідовності подій за доступними матеріалами
+  - word: попередній
+    pos: прикм.
+    definition: такий, що може бути уточнений подальшим розслідуванням

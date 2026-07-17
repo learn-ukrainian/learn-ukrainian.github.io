@@ -1,106 +1,83 @@
-# Макс Левін (Maks Levin) — Research Dossier
+# Макс Левін — дослідницьке досьє
 
 **Slug:** `maks-levin`
-**Block:** F
-**Tier:** 5
-**Issue:** #2313
-**Researcher:** Antigravity + Gemini
-**Completed:** 2026-05-28
+**Стан пакета:** каталогові джерела перевірено 17 липня 2026 року
+**Тип роботи:** готовність джерел до майбутньої побудови модуля
 
-## 1. Verified facts
+## 1. Перевірена професійна рамка
 
-- **Full name (UA, canonical):** Левін Максим Євгенович
-- **Pseudonyms / aliases:** Макс Левін, Maks Levin
-- **Born:** 1981-07-07 | Boyarka, Kyiv Oblast | Ukrainian SSR
-- **Died:** 2022-03-13 (estimated, found 2022-04-01) | Huta-Mezhyhirska, Kyiv Oblast | Ukraine | Executed by Russian soldiers
-- **Family / education key facts:** Graduated from Igor Sikorsky Kyiv Polytechnic Institute. Father of four sons. Worked extensively as a documentary photojournalist for LB.ua, Reuters, BBC, TRT World, and AP.
+Макс Левін — український фотожурналіст і документаліст. У формальних документах може з'являтися повне ім'я Максим Євгенович Левін, але публічна професійна форма — Макс Левін. Український ПЕН у меморіальному профілі описує його роботу в українських і міжнародних медіа, документування війни від 2014 року та професійні зв'язки з іншими фотографами й журналістами [S3]. Це колегіальний матеріал: факти про публікації й проєкти треба відділяти від особистих спогадів та оцінок названих співрозмовників.
 
-Cite at least 2 sources for each non-trivial fact:
-- Reporters Without Borders (RSF) investigative report confirms date of disappearance as March 13, 2022, and discovery of the body on April 1, 2022, executed by Russian forces.
-- PEN Ukraine corroborates his birthdate (July 7, 1981) and birthplace (Boyarka).
+Для модуля важливо не зводити Левіна до обставин смерті. Два його тексти на LB.ua дають змогу читати фотографа як автора. «Іловайськ. Хроніка втечі» опубліковано 1 вересня 2014 року невдовзі після описаних подій [S1]. «Іловайськ. Не забуду ніколи» опубліковано 29 серпня 2018 року як пізніше повернення до пережитого [S2]. Перший матеріал має близькість до події, другий — часову відстань і роботу пам'яті. Обидва є первинними джерелами про досвід автора, але жоден не є повною історією Іловайської операції.
 
-## 2. Oppression mechanism
+Фотожурналіст у цих текстах не тільки спостерігає. Він обирає маршрут, оцінює ризик, взаємодіє з іншими людьми, пам'ятає побачене і згодом формує оповідь. Навчальна біографія має показати цю авторську суб'єктність. Фотографія є документом із рамкою, точкою зйомки, часом і редакційним контекстом, а не механічним «доказом без автора».
 
-- **What happened:** Executed (shot at close range)
-- **When (specific dates):** Disappeared on 2022-03-13; body found on 2022-04-01.
-- **By whom (specific Russian/Soviet/RF agency):** Russian Armed Forces (suspected elements of the 106th Guards Airborne Division or a specialized Russian Guard unit occupying the Moshchun/Huta-Mezhyhirska area).
-- **Document references:** Reporters Without Borders (RSF) Investigative Report: "How Ukrainian journalist Maks Levin was executed by Russian forces" (June 2022).
-- **Mechanism specifics:** Maks Levin and his escort, Ukrainian soldier Oleksiy Chernyshov, went to the forest near Huta-Mezhyhirska (north of Kyiv) on March 13, 2022, to recover a camera drone Levin had lost earlier while documenting the Russian invasion. According to the RSF investigation (which included on-site inspections between May 24 and June 3, 2022), the two men were intercepted by Russian forces. Physical evidence—including recovered bullets, Levin's burned identity documents, and DNA traces—indicates they were interrogated and tortured. Levin was executed with two bullet wounds to the head and one to the chest, likely fired at close range while he was already on the ground. Chernyshov's body was found burned.
-- **What survived / what was destroyed:** His drone was never recovered, but his final photographs from the early weeks of the invasion survived and have been exhibited internationally.
+## 2. Іловайськ як первинне свідчення
 
-## 3. Major works
+У тексті 2014 року Левін описує власний вихід із оточення та послідовність рішень у межах того, що бачив і пережив [S1]. Коректний переказ зберігає першу особу як межу знання. Не можна додавати до його маршруту дії інших груп, яких він не спостерігав, або перетворювати пізнішу військову реконструкцію на частину первинної розповіді.
 
-- `2014-2022` — *AFTERILOVAISK*, documentary photo project. Co-founded with Markiian Lyseiko. A unique chronicle documenting the 2014 Battle of Ilovaisk, featuring photos, videos, and testimonies from soldiers to help process national trauma.
-- `2022` — *Chronicles of the Russian invasion of Ukraine 2022: the beginning*, photojournalism. Exhibited posthumously in the Lithuanian Seimas and other European parliaments.
+Матеріал 2018 року повертається до Іловайська після чотирьох років [S2]. Час публікації важливий: пам'ять уже взаємодіє з публічною дискусією, роковинами й подальшою роботою автора. Порівняння двох текстів може навчити, як змінюється добір деталей без звинувачення автора в «суперечності» лише через інший жанр. Треба запитувати, коли створено текст, кому він адресований і яку частину досвіду автор намагається зафіксувати.
 
-## 4. Primary-source quotes (≥2 required)
+ПЕН розповідає про колег, про проєкт AfterIlovaisk і про те, як професійне середовище пам'ятає Левіна [S3]. Такі свідчення допомагають зрозуміти тривалість його роботи з темою, але не замінюють двох авторських матеріалів. У модулі не слід приписувати Левіну слова, які повторюють колеги, якщо немає точного первинного інтерв'ю з локатором.
 
-> «Кожен український фотограф мріє зробити фото, яке зупинить війну».
-- **Source:** Widely cited professional credo, frequently quoted in posthumous tributes (PEN Ukraine, NSJU).
-- **Context:** Highlights the pedagogical theme of art and journalism as a weapon against aggression and a tool for peace, essential for B2/C1 discussions on the role of media in wartime.
+## 3. Березень 2022 року: попередня офіційна інформація
 
-> «Ми маємо доносити до людей правду... Війна — це продовження історій людей».
-- **Source:** Interviews regarding the *AFTERILOVAISK* project.
-- **Context:** Demonstrates Levin's humanist approach to photojournalism, focusing on the human toll rather than just military action. Useful for advanced vocabulary related to empathy and storytelling.
+Інститут масової інформації 2 квітня 2022 року повідомив відомості, які редакція прямо приписала Офісу генерального прокурора. За цим повідомленням, тіло фотожурналіста знайшли в районі Гути-Межигірської, а попередня інформація стосувалася загибелі від двох пострілів зі стрілецької зброї; також було названо кримінальне провадження за статтею 438 Кримінального кодексу України [S4]. Усі ці деталі мають залишатися в рамці публікації ІМІ та первинного формулювання прокуратури.
 
-## 5. Language register
+Слово «попередня» не є декоративним. Воно означає, що відомості могли уточнюватися під час слідства і не становили остаточного судово-медичного або судового висновку. Повідомлення про початок провадження також не ідентифікує конкретного виконавця. Курс не повинен перетворювати ранню новину на завершений обвинувальний акт.
 
-- **Register:** Colloquial / journalistic.
-- **CEFR readiness for full reading:** B1 / B2.
-- **Lexicon notes:** His quotes and project descriptions utilize standard modern Ukrainian journalistic terminology (e.g., *документалістика*, *окупація*).
-- **Stylistic features:** Direct, unembellished, highly emotive through simplicity.
+Між фактом виявлення тіла, попередньою інформацією про поранення, правовою кваліфікацією провадження та встановленням винної особи існують різні доказові етапи. Зручна, але хибна розповідь стискає їх в одне речення. Джерельно точна розповідь називає дату повідомлення, орган, редакцію-посередника та статус відомостей [S4].
 
-## 6. Contested points
+## 4. Професійне розслідування Репортерів без кордонів
 
-- **What's debated in modern UA scholarship:** There is no debate about his legacy or the circumstances of his death, as the RSF report provided conclusive forensic evidence of a war crime.
-- **What gets simplified in popular memory:** Sometimes Levin is remembered simply as a "casualty of crossfire," which obscures the deliberate, targeted execution and torture documented by RSF.
-- **Where modern Russian disinformation attacks them (if applicable):** Russian state media broadly dismisses all evidence of war crimes in the Kyiv region (Bucha, Moshchun) as "staged", though they rarely address Levin's case individually.
+Репортери без кордонів опублікували у червні 2022 року українську версію звіту «Вбивство українського журналіста Макса Левіна: докази страти російськими військовими» [S5]. Організація описує власну польову роботу, зібрані матеріали, розташування предметів і реконструкцію останніх пошуків загубленого безпілотника. У звіті зафіксовано, що група РБК працювала в Україні наприкінці травня — на початку червня і передала зібрані матеріали українським слідчим [S5].
 
-## 7. Cross-track links
+Висновок РБК формулюється як висновок професійної організації на підставі зібраних нею доказів. Його треба називати саме так. Звіт не є вироком суду, а його можливі сценарії не є свідченням очевидця всієї послідовності. Організація розглядала можливість допиту або катування, але не мала свідка, який встановив би кожну дію. Тому в плані вилучено категоричні формули про підтверджене катування і точний момент страти.
 
-- **Existing LIT modules referencing this figure:**
-  - None currently.
-- **Potential LIT additions surfaced by this research (Phase 2+ candidates):**
-  - The documentary war-witness theme connects to the existing plans `plans/lit-war/polozhiy-ilovaisk.yaml` (Ilovaisk — the subject of Levin's *AFTERILOVAISK* project) and `plans/lit-war/amelina-new-renaissance.yaml` (fellow war chronicler killed by Russia).
-- **Existing HIST modules referencing this figure's era/events:**
-  - None directly. The war-history plan `plans/hist/viyna-donbas.yaml` covers the 2022 invasion / occupation-of-the-Kyiv-region context that frames Levin's death.
+Так само не можна приписати вбивство конкретному російському підрозділу лише тому, що звіт обговорює присутність військових формувань у районі. Присутність, можливість і доведене індивідуальне виконання — різні твердження. Досьє використовує назву звіту як документальну ідентичність, але в основній оповіді завжди додає: «за висновком Репортерів без кордонів» [S5].
 
-## 8. Naming-canonical
+## 5. Узгодження двох розслідувальних рівнів
 
-- **Slug:** `maks-levin`
-- **EN canonical (BGN/PCGN 2010):** Maks Levin
-- **UA canonical (with patronymic if attested):** Макс Левін (Левін Максим Євгенович)
-- **Aliases (track these for `aliases:` YAML field):** Maksym Levin
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Max Levin
+Рання публікація ІМІ та звіт РБК не дублюють один одного. ІМІ передає попередню інформацію української прокуратури станом на 2 квітня [S4]. РБК описує пізнішу незалежну польову роботу й професійну реконструкцію [S5]. Вони можуть підтримувати спільний загальний висновок про насильницьку смерть під час російської окупації району, але мають різні джерела знання, дати і процесуальний статус.
 
-## 9. Image candidates
+Майбутній модуль може запропонувати таблицю з чотирма колонками: твердження, публікатор, дата, статус. Наприклад, «тіло знайдено» має один рівень; «за попередньою інформацією, два постріли» — інший; «зібрані матеріали вказують на страту» — висновок РБК; «конкретна особа винна» — твердження, якого прийнятий пакет не встановлює. Така вправа формує медіаграмотність без знеособлення загиблого.
 
-- **Best PD/CC portrait:** Need to search Wikimedia Commons for `Maks Levin`.
-- **Backup candidates:** Photographs of Levin working with his camera (shared by LB.ua or RSF under fair use for memorial purposes).
-- **If no PD/CC portrait exists:** Use a fair-use low-resolution crop of his press badge.
-- **Era-appropriate context image:** A photograph from his *AFTERILOVAISK* project or the RSF investigative report cover.
+## 6. Цитати та права на тексти й фотографії
 
-## 10. Sources used
+Дослівних цитат у пакет не включено. Авторські тексти LB.ua доступні за стабільними URL, але сторінковий URL без точного абзацного якоря не є достатнім локатором для вилученої репліки. Популярну фразу про фотографію, яка зупинить війну, не подано як пряму цитату Левіна: ПЕН і колеги її повторюють, але прийнятий набір не містить первинного інтерв'ю з точним місцем [S3].
 
-**Tier 1 (authoritative):**
-- Reporters Without Borders (RSF), "How Ukrainian journalist Maks Levin was executed by Russian forces" (June 2022) | URL: rsf.org | Accessed 2026-05-28
-- PEN Ukraine, "Maks Levin" | URL: pen.org.ua | Accessed 2026-05-28
+Зовнішнє посилання на статтю або звіт не дозволяє хостити повний матеріал. Особливо це стосується фотографій. Авторство Левіна не означає, що курс автоматично отримує право повторно використовувати кожне його зображення; права могли належати автору, редакції, агенції або замовнику залежно від конкретної роботи.
 
-**Tier 2 (institutional):**
-- National Union of Journalists of Ukraine (NSJU), Statements on Maks Levin's death | URL: nsju.org | Accessed 2026-05-28
+## 7. Іменування і чутлива лексика
 
-**Tier 5 (general web):**
-- Wikipedia (Ukrainian and English), "Maks Levin" | URL: wikipedia.org | Accessed 2026-05-28
+- Публічна форма: **Макс Левін**.
+- Повна форма в офіційних документах: **Максим Євгенович Левін**.
+- Колега і співзасновник проєкту: **Маркіян Лисейко**; не виправляти ім'я за схожим прізвищем в окремому переказі.
+- Населений пункт: **Гута-Межигірська**; у разі цитування зберігати форму джерела.
+- Професійні назви: `фотожурналіст`, `фоторепортер`, `фотодокументаліст` — усі засвідчені сучасною українською морфологічною базою, але мають різні акценти ролі.
 
----
+Дієслова `вбили`, `розстріляли`, `стратили` не є взаємозамінними. Заголовок РБК містить власне формулювання, а в авторському тексті курсу воно потребує атрибуції до організації [S5]. Слово `катували` не вживається як установлений факт щодо Левіна, бо звіт описує це як можливість у межах сценаріїв.
 
-## Decolonization self-check (run before submitting)
+## 8. Деколонізаційна перспектива
 
-- [x] No Russocentric framing
-- [x] No Russian-imperial transliterations in body text
-- [x] No Russocentric periodization
-- [x] No uncritical Soviet propaganda terms
-- [x] No "lost his life" euphemisms for documented executions (Explicitly stated "Executed by Russian soldiers")
-- [x] All place names use modern UA canonical form (Kyiv)
-- [x] Holodomor referenced as Holodomor
-- [x] Crimea/2014/2022 events framed as Russian aggression
+Левін документував російсько-українську війну не як зовнішній екзотичний конфлікт, а як український журналіст, чиє суспільство зазнало агресії. Це не скасовує професійної перевірки; навпаки, робить точність формою поваги. Імперська рамка часто перетворює українського автора на безіменного постачальника зображень для міжнародної аудиторії. Пакет повертає йому авторство, голос і послідовність власних рішень [S1] [S2].
+
+Водночас деколонізація не означає приписування злочину конкретній особі або частині без доказу. Російська окупація району й професійний висновок РБК називаються прямо; межі встановленого також називаються прямо [S4] [S5]. Це сильніша позиція, ніж риторична надмірність, бо вона витримує перевірку документа.
+
+## 9. Зображення
+
+Пошук Wikimedia Commons, ПЕН, РБК та редакційних фотобаз не виявив окремого портрета Макса Левіна, для якого одночасно доведено, що на фото саме він, названо автора й подано вільну ліцензію на повторне використання. Commons має контекстні світлини проєкту AfterIlovaisk та церемоній, але їхні метадані не встановлюють портретну ідентичність. Редакційні підписи фотографа не є ліцензією.
+
+Тому план має `portrait_fallback: text-only`. Таке рішення можна переглянути лише після появи індивідуальної сторінки файла з автором, джерелом і ліцензією. «Добросовісне використання» не прийнято як заміна доказу прав.
+
+## 10. Джерела
+
+### Джерела
+
+- [S1] [Макс Левін, «Іловайськ. Хроніка втечі», LB.ua](https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html)
+- [S2] [Макс Левін, «Іловайськ. Не забуду ніколи», LB.ua](https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html)
+- [S3] [Український ПЕН, матеріал пам'яті Макса Левіна](https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina)
+- [S4] [ІМІ, повідомлення з атрибуцією Офісу генерального прокурора](https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura)
+- [S5] [Репортери без кордонів, український звіт 2022 року](https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf)
+
+Пакет готовий без hold: усі п'ять читань мають точну назву, публічний URL, українськомовний документ і зовнішньо-посилальну правову підставу. Невирішені питання позначені як межі тверджень, а не як відсутність придатного джерела.

@@ -1,171 +1,203 @@
 ---
-activity_hints:
-- after_section: 'Тінь: Загибель на Харківському напрямку та культура пам''яті'
-  focus: Аналіз етичного виміру посмертного листа та хвилин мовчання
-  items: 5
-  placement: inline
-  type: quiz
-- after_section: 'Діяльність: Суспільне та Госпітальєри'
-  focus: Перевірка розуміння зв'язку між медійною роботою та фронтовою медициною
-  items: 5
-  placement: inline
-  type: true-false
-- focus: Дебати — чи є перехід від журналіста до парамедика неминучим наслідком екзистенційної війни?
-  placement: workbook
-  type: debate
-- focus: >-
-    Аналіз цитати — "Будьте гідними подвигів наших героїв, не журіться, будьте
-    сміливими!" (імператив громадянської відповідальності у час втрат)
-  placement: workbook
-  type: critical-analysis
-- focus: Есе-рефлексія — "Свобода — це найбільша цінність" як практичний, а не абстрактний вибір
-  placement: workbook
-  type: essay-response
-cefr_min: C1
-connects_to:
-- lit-war-poetry-2014-2022
-- lit-war-yaryna-chornohuz-war
-- lit-war-war-lit-origins-2014
-content_outline:
-- points:
-  - >-
-    [!biography] Знайомство з Іриною Цибух (1998–2024): медіатренерка, журналістка
-    "Суспільного", бойова медикиня батальйону "Госпітальєри" (позивний "Чека").
-  - >-
-    Провокаційне питання: як пов'язані документування правди в медіа та збереження
-    життів на фронті під час повномасштабного вторгнення?
-  section: Розминка
-  words: 400
-- points:
-  - >-
-    Формування: участь у молодіжних ініціативах та волонтерському русі з 2014 року.
-    Ротації з "Госпітальєрами".
-  - >-
-    Журналістська та проєктна робота у філіях "Суспільного" (2017-2024).
-    Створення регіональних історій і медіаосвіта.
-  - >-
-    [!decolonization] Усвідомлення пам'яті як громадянської дії: боротьба
-    за український інформаційний простір як передумова незалежності.
-  section: 'Формування: Медіаосвіта та волонтерство'
-  words: 1000
-- points:
-  - >-
-    Повномасштабне вторгнення: повернення Ірини Цибух до безпосередньої медичної
-    евакуації на фронті як усвідомлений вибір.
-  - >-
-    Громадська позиція: розуміння збереження життів і пам'яті про загиблих як єдиного
-    процесу ("хвилина мовчання").
-  - >-
-    Визнання: Указ Президента України (2023) про нагородження орденом "За заслуги"
-    ІІІ ступеня за професійну та громадську діяльність.
-  - >-
-    Думки про цінності в інтерв'ю 2024 року: "Свобода — це найбільша цінність".
-  section: 'Діяльність: Суспільне та Госпітальєри'
-  words: 1200
-- points:
-  - >-
-    [!anti-hagiography] Запобігання перетворенню реальної людини на абстрактний
-    символ. Важливість розуміння її загибелі як наслідку конкретних дій армії РФ
-    на Харківщині 29 травня 2024 року.
-  - >-
-    Посмертний лист (написаний у квітні 2023 року): унікальний документ громадянської
-    зрілості, емоційної дисципліни і турботи про суспільство.
-  - >-
-    Заповідь: "Будьте гідними подвигів наших героїв, не журіться, будьте сміливими!".
-    Трансформація скорботи у відповідальність.
-  section: 'Тінь: Загибель на Харківському напрямку та культура пам''яті'
-  words: 1600
-- points:
-  - >-
-    Прощання та громадський резонанс: похорон у Києві та Львові, організований за
-    детальними інструкціями самої Ірини з акцентом на українську традицію.
-  - >-
-    Спадщина Ірини Цибух: модель сучасної української громадянської мови,
-    яка поєднує медійну, просвітницьку та захисну ролі.
-  - >-
-    Значення збереження індивідуальної пам'яті та формування нових ритуалів вшанування.
-  section: 'Підсумок: Відповідальність живих'
-  words: 1000
-focus: >-
-  Ірина Цибух як уособлення сучасної української громадянської відповідальності: поєднання роботи
-  в медіа з обов'язком бойового медика, та її роль у формуванні культури пам'яті про війну.
+module: bio-289
 level: BIO
-module: bio-291
-objectives:
-- >-
-  Аналізувати громадянський шлях Ірини Цибух від медіатренерки "Суспільного" до
-  бойової медикині "Госпітальєрів".
-- Досліджувати концепцію свободи та громадянської відповідальності у її посмертному листі та інтерв'ю.
-- Розуміти важливість етичного і непафосного ставлення до втрат на фронті.
-- Оцінювати внесок Ірини Цибух у розвиток української культури пам'яті та медійної грамотності.
-pedagogy: CBI
-persona:
-  role: >-
-    Модератор семінару, який досліджує український громадянський активізм, військову
-    медицину та етику пам'яті під час повномасштабного вторгнення.
-  voice: Intellectual Historian
-phase: BIO
-references:
-- note: Повідомлення про загибель та життєпис Ірини Цибух.
-  path: https://suspilne.media/757281-na-vijni-zaginula-zurnalistka-suspilnogo-ta-paramedikina-irina-cibuh/
-  title: На війні загинула журналістка Суспільного та парамедикиня Ірина Цибух (Суспільне)
-  type: reference
-- note: Інтерв'ю Ірини Цибух незадовго до її загибелі.
-  path: https://www.pravda.com.ua/eng/articles/2024/05/14/7455626/
-  title: Interview with Iryna Tsybukh (Українська правда English)
-  type: reference
-- note: Указ Президента про нагородження орденом "За заслуги".
-  path: https://www.president.gov.ua/documents/7502023-48905
-  title: Указ Президента України №750/2023
-  type: primary
-readings:
-- title: На війні загинула журналістка Суспільного та парамедикиня Ірина Цибух
-  language: uk
-  genre: Новинний життєпис / некролог
-  source_type: reference
-  role: orientation
-  source: Суспільне
-  source_url: https://suspilne.media/757281-na-vijni-zaginula-zurnalistka-suspilnogo-ta-paramedikina-irina-cibuh/
-  license: copyrighted
-  rights_note: Використовувати як link-only український матеріал; не хостити повний текст або фото.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: Виписати етапи медійної роботи, волонтерства, служби в "Госпітальєрах" і обставини загибелі.
-  caveats: Матеріал має меморіальний тон; модуль має уникати абстрактного героїзування.
-- title: Посмертний лист Ірини Цибух
-  language: uk
-  genre: Лист / особисте свідчення
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: iryna-tsybukh-posthumous-letter'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільну українську публікацію листа з дозволеним
-    link-only використанням; не хостити повний текст.
-  hosting: reading-needed
-  cefr_min: C1
-  learner_task: Проаналізувати, як лист формулює свободу, сміливість і відповідальність живих.
-  caveats: Працювати з короткими цитатами і етичним контекстом пам'яті.
-sequence: 291
+sequence: 289
 slug: iryna-tsybukh
-subtitle: The Journalist and Hospitallers Combat Medic
-title: 'Ірина Цибух: Свобода як найвища цінність'
-version: '4.1'
-vocabulary_hints:
-- definition: парамедик-жінка; людина без вищої медичної освіти, яка надає домедичну допомогу на фронті
-  pos: ж.
-  word: парамедикиня
-- definition: організоване вивезення поранених із зони бойових дій у безпечне місце
-  pos: ж.
-  word: евакуація
-- definition: ритуал вшанування пам'яті загиблих
-  pos: ж.
-  word: хвилина мовчання
-- definition: те, що має велике значення, важливість
-  pos: ж.
-  word: цінність
-- definition: період перебування на фронті або на позиції перед зміною
-  pos: ж.
-  word: ротація
+title: "Ірина Цибух: медіа, пам'ять і медична служба"
+subtitle: Public Media Work, Authored Texts, Hospitallers Service, and Source-Exact Awards
+focus: >-
+  Праця Ірини Цибух у Суспільному, її авторські й співавторські тексти,
+  волонтерство та медична служба у «Госпітальєрах», державні нагороди і
+  датоване повідомлення про загибель 29 травня 2024 року.
+content_outline:
+  - section: Професійна праця, авторські документи і точна хронологія служби
+    words: 5200
+    points:
+      - Розмежування роботи в Суспільному, просвітницьких проєктів і медичної служби.
+      - Перша ротація у 2020 році як кваліфікований власний спогад, а не початок усіх попередніх поїздок.
+      - Окреме читання указів, інтерв'ю, співавторського посібника і родинно оприлюдненого листа.
 word_target: 5200
+cefr_min: C1
+pedagogy: CBI
+objectives:
+  - Відрізняти трудову біографію, особисте інтерв'ю, родинну публікацію й державний указ.
+  - Не змішувати службу в «Госпітальєрах» зі згаданими у листі військовими підрозділами.
+  - Точно називати нагороду, дату, формулювання указу та межі посмертного повідомлення.
+references:
+  - title: >-
+      Ірина «Чека» Цибух: У 2014 нашим вразливим місцем був схід. Зараз, дай
+      Боже, щоб ним не стали мої однокласники у Львові
+    url: https://www.pravda.com.ua/articles/2024/05/14/7455626/
+  - title: >-
+      Бойова медикиня та співробітниця Суспільного Ірина Цибух: Хочу, щоб моїм
+      загиблим побратимам не було за мене соромно
+    url: >-
+      https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/
+  - title: >-
+      «Щоб мати силу бути вільною людиною, треба бути сміливим» — брат Ірини
+      Цибух опублікував її прощальний лист
+    url: >-
+      https://detector.media/infospace/article/227632/2024-05-31-shchob-maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-tsybukh-opublikuvav-ii-proshchalnyy-lyst/
+  - title: Порадник юним журналістам
+    url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
+  - title: >-
+      Як змінюється регіональне мовлення Суспільного та чого чекати мовникові
+      від місцевих виборів — обговорили в Дніпровській філії
+    url: https://corp.suspilne.media/newsdetails/2644/
+  - title: >-
+      На Харківському напрямку загинула «госпітальєрка» 25-річна Ірина Цибух
+    url: https://www.pravda.com.ua/news/2024/05/30/7458331/
+  - title: Указ Президента України № 750/2023
+    url: https://www.president.gov.ua/documents/7502023-48905
+  - title: Указ Президента України № 144/2025
+    url: https://www.president.gov.ua/documents/1442025-54025
+readings_contract_version: 2
+readings:
+  - title: >-
+      Ірина «Чека» Цибух: У 2014 нашим вразливим місцем був схід. Зараз, дай
+      Боже, щоб ним не стали мої однокласники у Львові
+    source_name: Українська правда
+    source_url: https://www.pravda.com.ua/articles/2024/05/14/7455626/
+    language: uk
+    type: primary-interview
+    role: service-and-memory-testimony
+    hosting: link-only
+    learner_task: >-
+      Зафіксувати її кваліфікований спогад про першу ротацію та відділити власні
+      оцінки від редакційного вступу.
+    rights:
+      basis: external-link
+      evidence_url: https://www.pravda.com.ua/articles/2024/05/14/7455626/
+      note: >-
+        Українськомовне інтерв'ю використовується лише за посиланням; текст і
+        фотографії не копіюються.
+  - title: >-
+      Бойова медикиня та співробітниця Суспільного Ірина Цибух: Хочу, щоб моїм
+      загиблим побратимам не було за мене соромно
+    source_name: ДМ Суспільного
+    source_url: >-
+      https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/
+    language: uk
+    type: primary-interview
+    role: media-and-medical-work-testimony
+    hosting: link-only
+    learner_task: >-
+      Простежити, як співрозмовниця розмежовує роботу в медіа, просвітницькі
+      поїздки й медичну службу.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/
+      note: Публічне українське інтерв'ю залишається зовнішнім матеріалом.
+  - title: «Щоб мати силу бути вільною людиною, треба бути сміливим» — брат Ірини Цибух опублікував її прощальний лист
+    source_name: Детектор медіа
+    source_url: >-
+      https://detector.media/infospace/article/227632/2024-05-31-shchob-maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-tsybukh-opublikuvav-ii-proshchalnyy-lyst/
+    language: uk
+    type: newsroom-mediated-family-publication
+    role: authored-letter-record
+    hosting: link-only
+    learner_task: >-
+      Визначити автора листа, дату в документі, особу родича-публікатора і межу
+      між листом та редакційним переказом.
+    rights:
+      basis: external-link
+      evidence_url: >-
+        https://detector.media/infospace/article/227632/2024-05-31-shchob-maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-tsybukh-opublikuvav-ii-proshchalnyy-lyst/
+      note: Сторінка не є ліцензією на хостинг або повне відтворення листа.
+  - title: Порадник юним журналістам
+    source_name: Youth MediaLab
+    source_url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
+    language: uk
+    type: coauthored-handbook
+    role: authored-work
+    hosting: link-only
+    learner_task: >-
+      Перевірити авторські кредити та прочитати розділ 3 про стандарти
+      журналістики на друкованих сторінках 25–39.
+    rights:
+      basis: external-link
+      evidence_url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
+      note: >-
+        PDF має видавниче повідомлення про авторське право; курс лише
+        посилається на документ.
+  - title: >-
+      Як змінюється регіональне мовлення Суспільного та чого чекати мовникові
+      від місцевих виборів — обговорили в Дніпровській філії
+    source_name: Суспільне Мовлення
+    source_url: https://corp.suspilne.media/newsdetails/2644/
+    language: uk
+    type: employer-record
+    role: dated-professional-context
+    hosting: link-only
+    learner_task: >-
+      Зафіксувати посаду й обсяг професійних обов'язків на дату корпоративної
+      публікації без перенесення їх на інші роки.
+    rights:
+      basis: external-link
+      evidence_url: https://corp.suspilne.media/newsdetails/2644/
+      note: Українська корпоративна сторінка використовується link-only.
+  - title: На Харківському напрямку загинула «госпітальєрка» 25-річна Ірина Цибух
+    source_name: Українська правда
+    source_url: https://www.pravda.com.ua/news/2024/05/30/7458331/
+    language: uk
+    type: battalion-attributed-news-report
+    role: death-notice
+    hosting: link-only
+    learner_task: >-
+      Виписати лише дату, напрямок і формулювання, які редакція приписує
+      «Госпітальєрам», не додаючи механізму загибелі.
+    rights:
+      basis: external-link
+      evidence_url: https://www.pravda.com.ua/news/2024/05/30/7458331/
+      note: Новина доступна українською і не відтворюється в курсі.
+  - title: Указ Президента України № 750/2023
+    source_name: Офіційне інтернет-представництво Президента України
+    source_url: https://www.president.gov.ua/documents/7502023-48905
+    language: uk
+    type: presidential-decree
+    role: state-award-record
+    hosting: link-only
+    learner_task: >-
+      Назвати нагороду, ступінь, дату й посаду Цибух, не звужуючи колективну
+      преамбулу указу до вигаданої індивідуальної підстави.
+    rights:
+      basis: external-link
+      evidence_url: https://www.president.gov.ua/documents/7502023-48905
+      note: >-
+        Офіційний документ доступний українською; курс зберігає зовнішнє
+        посилання.
+  - title: Указ Президента України № 144/2025
+    source_name: Офіційне інтернет-представництво Президента України
+    source_url: https://www.president.gov.ua/documents/1442025-54025
+    language: uk
+    type: presidential-decree
+    role: posthumous-state-award-record
+    hosting: link-only
+    learner_task: >-
+      Зафіксувати посмертне присвоєння звання Героя України, орден «Золота
+      Зірка» і точне означення ролі в указі.
+    rights:
+      basis: external-link
+      evidence_url: https://www.president.gov.ua/documents/1442025-54025
+      note: Офіційний український указ використовується лише за посиланням.
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портретного файла Ірини Цибух з підтвердженим автором і відкритою
+    ліцензією не знайдено; редакційні фото та фото меморіалу не передають таких
+    прав.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
+version: '4.2'
+vocabulary_hints:
+  - word: медикиня
+    pos: ж.
+    definition: фахівчиня або волонтерка, яка надає медичну допомогу
+  - word: ротація
+    pos: ж.
+    definition: визначений період роботи команди в іншому місці або на напрямку
+  - word: співавторка
+    pos: ж.
+    definition: одна з кількох авторок спільного твору

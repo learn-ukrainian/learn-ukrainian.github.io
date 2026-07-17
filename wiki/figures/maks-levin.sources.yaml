@@ -1,0 +1,27 @@
+---
+sources:
+  - id: S1
+    file: https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html
+    type: external
+    title: Іловайськ. Хроніка втечі — LB.ua
+    url: https://lb.ua/society/2014/09/01/277952_ilovaysk_hronika_vtechi.html
+  - id: S2
+    file: https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html
+    type: external
+    title: Іловайськ. Не забуду ніколи — LB.ua
+    url: https://lb.ua/blog/maks_levin/406186_ilovaysk_zabudu_nikoli.html
+  - id: S3
+    file: https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina
+    type: external
+    title: Пам'яті Макса Левіна — Український ПЕН
+    url: https://pen.org.ua/kozhen-ukrainskij-fotograf-mrie-zrobiti-foto-yake-zupinit-vijnu-pam-yati-maksa-levina
+  - id: S4
+    file: https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura
+    type: external
+    title: Повідомлення ІМІ з атрибуцією прокуратурі
+    url: https://imi.org.ua/russias-crimes/fotozhurnalista-maksa-levina-vbyly-rosijski-vijskovi-prokuratura
+  - id: S5
+    file: https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf
+    type: external
+    title: Український звіт Репортерів без кордонів про загибель Макса Левіна
+    url: https://rsf.org/sites/default/files/medias/file/2022/06/Rapport%20Ukraine_UK%20final.pdf

@@ -1,134 +1,85 @@
-# Ірина Володимирівна Цибух — Research Dossier
+# Ірина Цибух — дослідницьке досьє
 
 **Slug:** `iryna-tsybukh`
-**Block:** F (war-killed / RF-captured)
-**Tier:** 5
-**Issue:** #2322 (R5 — Block F war-killed/RF-captured)
-**Researcher:** Codex GPT-5.5
-**Completed:** 2026-05-29
+**Стан пакета:** каталогові джерела перевірено 17 липня 2026 року
+**Тип роботи:** готовність джерел до майбутньої побудови модуля
 
-<!-- ORCHESTRATOR-RESOLVE: dispatch text named "Ілля Цибух / Most"; high-trust Suspilne, UP, presidential, Ukrinform, and AP sources resolve this roster surname to Ірина Володимирівна Цибух ("Чека"). No high-trust source found for an "Ілля Цибух / Most" Block F figure. -->
+## 1. Перевірена професійна рамка
 
-**Identity resolution:** `Цибух` resolves to **Ірина Володимирівна Цибух**, Suspilne journalist, media trainer, and Hospitallers combat medic with callsign `Чека`, killed on 29 May 2024 on the Kharkiv direction. The dispatch's `Ілля/Most` identity was not confirmed; this file uses the canonical resolved identity and slug per F4. [T1: President of Ukraine — Decree №750/2023; T2: Suspilne; T2: Українська правда; T2: Ukrinform; T2: AP]
+Ірина Володимирівна Цибух, позивний Чека, працювала в Суспільному, брала участь у медійних і просвітницьких проєктах, а також служила медикинею добровольчого батальйону «Госпітальєри». Корпоративна сторінка Суспільного 2020 року фіксує її роботу з регіональним мовленням і на той час називає виконувачкою обов'язків продюсерки Дніпровської філії [S5]. Цей запис є датованим роботодавчим документом; посаду 2020 року не можна автоматично переносити на всі наступні роки.
 
-## 1. Verified facts
+В інтерв'ю ДМ Суспільного від 8 грудня 2023 року Цибух розповідає про роботу в суспільному мовнику, покази фільмів до повномасштабного вторгнення, підготовку у «Госпітальєрах» та медичну евакуацію [S2]. Інтерв'ю «Українській правді» від 14 травня 2024 року дає пізнішу авторську рефлексію про Донеччину, пам'ять, фільм «Відстань» і службу [S1]. Обидва тексти первинні щодо її власних слів, але редакційні вступи й запитання належать медіа.
 
-- **Full name (UA, canonical):** Ірина Володимирівна Цибух
-- **Pseudonyms / aliases:** Чека (callsign); Iryna Tsybukh; Іра Цибух in informal references. Forbidden/confusion forms: Illia Tsybukh / Ілля Цибух for this dossier unless the orchestrator later identifies a different figure.
-- **Born:** 1 June 1998 | Львів | Ukraine. [T2: Suspilne; T2: AP]
-- **Died:** 29 May 2024 | Kharkiv direction | Ukraine | killed during a combat rotation / medical-evacuation service with the Hospitallers. [T2: Suspilne; T2: Ukrinform; T2: AP]
-- **Family / education key facts:** Journalist and project manager at Suspilne, media educator, participant in youth and civic initiatives, and volunteer combat medic of the Hospitallers. She had served in rotations after 2014, returned to civilian media work, and rejoined frontline medical service after the full-scale invasion.
+## 2. Хронологія служби без ретроспективного спрощення
 
-**Source disagreement note:** The core death date and identity are stable. The exact munition/strike mechanism is not named in the high-trust sources accessed; this dossier therefore uses the verified wording "killed during rotation on the Kharkiv direction" rather than inventing shell type or Russian unit.
+Найважливіше виправлення стосується початку ротацій. В інтерв'ю 14 травня 2024 року Цибух, відповідаючи на пряме запитання, згадує, що перша справжня ротація з «Госпітальєрами» була, здається, 2020 року в Мар'їнці. Вона уточнює, що їздила й раніше, але ті поїздки складно було назвати ротаціями; після вишколу усвідомила потребу глибше вивчати тактичну медицину [S1]. Отже, формула «ротації від 2014 року» суперечить її власному кваліфікованому спогаду.
 
-## 2. Oppression mechanism
+Це не означає, що вся діяльність до 2020 року заперечується. Правильне розрізнення таке: ранні волонтерські й просвітницькі поїздки; перша ротація, як її згадує сама Цибух; подальша медична служба; перехід до повночасної фронтової роботи після 24 лютого 2022 року [S1] [S2]. Не можна називати лютий 2022 року її першим вступом до «Госпітальєрів», бо обидва інтерв'ю показують попередню підготовку й участь.
 
-- **What happened:** Killed while serving as a volunteer combat medic in Russia's full-scale war against Ukraine.
-- **When:** 29 May 2024, two days before her twenty-sixth birthday.
-- **By whom:** Russian armed forces as the belligerent attacking the Kharkiv direction; exact unit/munition unconfirmed in accessed sources.
-- **Document references:** President's Decree №750/2023 awarded her the Order of Merit III class before her death for media/public work; Suspilne obituary and Hospitallers statements document her death; Ukrinform and AP document the farewell letter and funeral/memorial context.
-- **Mechanism specifics:** Tsybukh's life joins two public-service domains: media work and battlefield medical evacuation. Suspilne identifies her as its journalist/project manager and a Hospitallers medic. On 29 May 2024 she was killed during rotation on the Kharkiv direction. The route from media to medic is not a career contradiction; it is the logic of civic defense under full-scale invasion. She understood memory work, minute-of-silence campaigns, and military medicine as one continuum: preserving the names of the dead, helping the living survive, and making society look at the cost of freedom.
-- **What survived / what was destroyed:** Her life, future media work, and medical service were destroyed. What survived includes her farewell letter, interviews, Suspilne projects, public memory campaigns, and a model of contemporary Ukrainian civic speech in which grief is organized into responsibility.
+Назва 80-ї бригади з'являється у прощальному листі в контексті роботи екіпажу для розвідки, як це передано публікацією Детектора медіа [S3]. З цього не випливає, що Цибух була військовослужбовицею цієї бригади. Її організаційна належність у державному указі 2025 року визначена як добровольчий батальйон «Госпітальєри» [S8].
 
-The identity mismatch in the dispatch should remain visible in editorial review because this is exactly the kind of roster error that can create fabricated biography. The verified record points to Iryna Tsybukh, not an Illia/Most figure, and her callsign is `Чека`. If a later source pack identifies a separate `Ілля Цибух`, this dossier should not be silently repurposed; it should either be split or replaced with an explicit resolution note. For now, the responsible action is to preserve the resolved high-trust identity and flag the mismatch.
+## 3. Праця в Суспільному і медійна освіта
 
-## 3. Major works
+Суспільне є важливою частиною біографії, а не коротким «цивільним вступом» до військової історії. Корпоративна публікація описує участь Цибух у роботі регіональної філії, обговоренні змін регіонального мовлення та підготовці до місцевих виборів [S5]. Інтерв'ю ДМ Суспільного розширює цю рамку: вона говорить про координацію контенту, роботу з регіональними командами й навчання колег [S2].
 
-- `2015 onward` — early rotations with the Hospitallers and war-related volunteer service.
-- `2017-2024` — work with Suspilne and media-literacy / regional storytelling projects.
-- `2023` — public recognition by President of Ukraine Decree №750/2023, Order of Merit III class.
-- `8 April 2023` — farewell letter later published by her brother after her death; a primary civic text for the dossier.
-- `2024` — Українська правда English interview on values, fighting, and memory shortly before her death.
-- `2024` — posthumous public farewell and funeral in Kyiv/Lviv context, documented by AP and Ukrainian media.
-- `ongoing` — minute-of-silence and memory initiatives associated with her name.
+«Порадник юним журналістам» є безпосередньо перевіреним співавторським твором. PDF Youth MediaLab називає авторський колектив, а друкована сторінка 118 містить кредити. За видавничим повідомленням Суспільного, Цибух працювала над розділом про стандарти журналістики; у самому посібнику це розділ 3 на друкованих сторінках 25–39 [S4]. Тому її треба називати співавторкою посібника й авторкою визначеного розділу, а не єдиною авторкою всієї книжки.
 
-## 4. Primary-source quotes
+Документ доступний через Google Drive, але містить позначення авторського права Youth MediaLab за 2020 рік. Публічний перегляд не є відкритою ліцензією. Курс може посилатися на PDF і давати завдання знайти розділ, проте не має хостити посібник або копіювати його сторінки.
 
-**Quote 1 — from her farewell letter:**
+## 4. Фільм і політика пам'яті
 
-> **Свобода — це найбільша цінність.**
+В інтерв'ю «Українській правді» Цибух називає документальний фільм «Відстань» про підлітків із Донеччини та Луганщини й описує заплановані покази напередодні повномасштабного вторгнення [S1]. Інтерв'ю ДМ Суспільного також пов'язує її медійну роботу з показами та розмовами в громадах [S2]. Прямого авторитетного URL повної версії фільму з визначеними правами пакет не знайшов, тому фільм залишається перевіреним твором у біографії, але не окремим читанням або ресурсом для хостингу.
 
-This sentence can be taught early, but the context is advanced: it is not an abstract civic slogan, but a planned posthumous message by a young medic who knew the risk. [T2: Ukrinform — brother published farewell letter; T2: Suspilne]
+Її мова про пам'ять у двох інтерв'ю поєднує професійну комунікацію, досвід сходу України та пам'ять про загиблих [S1] [S2]. Курс не повинен створювати з цих поглядів універсальну позицію всіх медиків або всіх працівників Суспільного. Це авторська перспектива Цибух, датована конкретними розмовами.
 
-**Quote 2 — from the same letter:**
+## 5. Прощальний лист: автор, публікатор і права
 
-> **Будьте гідними подвигів наших героїв, не журіться, будьте сміливими!**
+Детектор медіа 31 травня 2024 року опублікував матеріал про прощальний лист Ірини Цибух. Редакція назвала братом-публікатором Юрія Цибуха, вбудувала його допис і надрукувала окремий розділ «Прощальний лист Ірини Цибух (Чеки)»; у листі стоїть дата 8 квітня 2023 року й позначка Донеччини [S3]. Вихідний допис Instagram під час дослідження не вдалося безпосередньо завантажити через обмеження платформи, тому прийнятим документом є саме редакційна сторінка.
 
-The imperative forms make this a strong B1/B2 grammar anchor, while the ethical content belongs to C1 discussion. It converts mourning into civic behavior. [T2: Ukrinform; T2: AP funeral coverage]
+Це важливе розмежування. Лист написала Цибух; родич оприлюднив його після її смерті; Детектор медіа зробив редакційно опосередковану публікацію. Не можна писати, що редакція є автором листа, або стверджувати, що дослідник перевірив кожне зображення оригінального допису. Прийнята редакційна сторінка називає брата Юрієм; суперечливу форму Роман з іншої публікації вилучено з пакета [S3].
 
-## 5. Language register
+Дослівних цитат із листа в пакет не включено. Редакційний URL і назва розділу дають точний документальний орієнтир, але не ліцензію на повторне розміщення повного листа. На етапі модуля цитата потребуватиме окремої правової оцінки, мінімального обсягу й точного локатора.
 
-- **Register:** contemporary civic Ukrainian; direct, warm, emotionally disciplined; mixed media-professional and frontline-medic vocabulary.
-- **CEFR readiness for full reading:** B2 for farewell letter and interviews; C1 for full ethical discussion.
-- **Lexicon notes:** `ротація`, `парамедикиня`, `евакуація`, `цінність`, `пам'ять`, `хвилина мовчання`, `сміливість`, `гідність`.
-- **Stylistic features:** Short imperatives, direct address to family/community, and a non-sentimental handling of death. The style is unusually teachable because it is emotionally strong without ornate syntax.
+## 6. Державні та редакційні нагороди
 
-## 6. Contested points
+Указ Президента України № 750/2023 від 16 листопада 2023 року нагородив Ірину Володимирівну Цибух орденом «За заслуги» III ступеня й назвав її менеджеркою департаменту Дирекції регіонального мовлення НСТУ [S7]. Указ має колективну преамбулу, що охоплює внесок у телебачення, радіомовлення і зв'язок, мужність у захисті держави та сумлінну працю. Не можна звузити цю преамбулу до індивідуального формулювання, якого документ не містить.
 
-- **What's debated in modern UA scholarship/journalism:** The most important issue is how to teach very recent death without turning a real person's final letter into motivational decoration. The pedagogical unit should preserve grief, age, family, and consent.
-- **What gets simplified in popular memory:** She can be simplified as "journalist turned medic." Sources show a more integrated identity: media worker, memory activist, trainer, and combat medic.
-- **Where modern Russian disinformation attacks them:** Russian propaganda erases volunteer medics into the category of "combatants" and erases civilian public-service motivations. The dossier should name her medical-evacuation role and the Russian war context precisely.
-- **Other-perspective considerations:** She is a woman combat medic; avoid tokenizing gender. Her work is not "exceptional because female" but important because it joins media, care, and defense.
+В інтерв'ю ДМ Суспільного Цибух окремо пояснює, як сама розуміла цю нагороду — як визнання добровольчої роботи «Госпітальєрів» [S2]. Це її інтерпретація, а не юридична мотивувальна частина указу. Обидва твердження можна подати поруч лише з чітким розмежуванням.
 
-Recentness is another risk. Because family, colleagues, and comrades are still living with immediate grief, teaching materials should avoid extracting a "lesson" too quickly. The strongest angle is her own public language about memory and freedom, paired with careful context about consent, farewell-letter publication, and the civic practices she supported while alive.
+Редакційний вступ «Української правди» називає Цибух лауреаткою відзнаки «УП 100. Сила жінок» у березні 2024 року [S1]. Це визнання конкретної редакції, не державна нагорода. Указ № 144/2025 від 26 лютого 2025 року посмертно присвоїв їй звання Героя України з врученням ордена «Золота Зірка» та назвав громадською діячкою і керівницею екіпажу добровольчого батальйону «Госпітальєри» [S8]. Ці дві відзнаки не слід змішувати.
 
-## 7. Cross-track links
+## 7. Загибель і межі твердження
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/war-poetry-2014-2022.yaml` — war language and memory context.
-  - `curriculum/l2-uk-en/plans/lit-war/yaryna-chornohuz-war.yaml` — women, service, and war writing context.
-  - `curriculum/l2-uk-en/plans/lit-war/war-lit-origins-2014.yaml` — volunteer-service origins in war culture.
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/viyna-donbas.yaml` — long war background; Phase 2 needs a more exact Kharkiv-2024 link.
-- **Candidate cross-track connections (Phase 2+):**
-  - Media-and-memory module around minute-of-silence campaigns.
-  - Combat-medic vocabulary lesson using only consent-safe excerpts.
-- **Potential LIT additions surfaced by this research:**
-  - A short nonfiction reading on farewell letters, grief ethics, and public memory.
+Українська правда 30 травня 2024 року повідомила, посилаючись на «Госпітальєрів», що Ірина Цибух загинула 29 травня під час ротації на Харківському напрямку [S6]. Цього достатньо для дати, організаційної атрибуції та широкого місця. Прийняті джерела не встановлюють конкретного боєприпасу, точного місця, російського підрозділу або безпосередньої медичної причини.
 
-## 8. Naming-canonical
+Формула «загинула під час евакуації конкретного пораненого» також не прийнята, бо повідомлення батальйону, передане редакцією, говорить ширше — під час ротації. Меморіальні пізніші тексти можуть описувати її покликання й працю, але не мають ретроспективно додавати недоведені деталі до моменту смерті.
 
-- **Slug:** `iryna-tsybukh`
-- **EN canonical (BGN/PCGN 2010):** Iryna Tsybukh
-- **UA canonical:** Ірина Володимирівна Цибух
-- **Aliases:** Чека; Ірина Цибух; Iryna Tsybukh; Hospitaller medic.
-- **Forbidden/confusion forms:** Ілля Цибух / Illia Tsybukh for this dossier unless a separate verified figure is later identified; Russianized spellings.
+## 8. Іменування і мова
 
-## 9. Image candidates
+- Канонічна форма: **Ірина Цибух**; жіноче прізвище не відмінюється: **Ірини Цибух**, **Ірині Цибух**, **Іриною Цибух**.
+- Позивний: **Чека**; родовий відмінок — **Чеки**, орудний — **Чекою**.
+- Організація: **«Госпітальєри»**; форма `госпітальєрка` засвідчена сучасною морфологічною базою.
+- Форми `медикиня`, `медикині`, `медикинею`, `парамедикиня`, `парамедикинею`, `лауреатка` і `лавреатка` перевірено за VESUM. У пакеті послідовно вжито `лауреатка`, як у прийнятому медійному джерелі.
 
-- **Best PD/CC portrait:** no confirmed PD/CC portrait located; Suspilne portrait requires rights verification.
-- **Backup candidates:** AP funeral/memorial images may be licensable only through AP and are not preferred for open educational reuse; use only with clearance.
-- **If no PD/CC portrait exists:** text-only bio or a document-image fallback from the public farewell letter with permission.
-- **Sensitivity note:** prefer a living portrait or work portrait, not grief imagery, unless the lesson specifically concerns public mourning.
+Історичну назву міста в цитованому контексті треба передавати відповідно до політики офіційних українських топонімів, а не виправляти довільно. Назви підрозділів не розгортати з абревіатур без прямого офіційного джерела.
 
-## 10. Sources used
+## 9. Зображення
 
-**Tier 1 (authoritative):**
-- President of Ukraine. "УКАЗ ПРЕЗИДЕНТА УКРАЇНИ №750/2023. Про відзначення державними нагородами України." https://www.president.gov.ua/documents/7502023-48905. Accessed 2026-05-29.
+Редакційні портрети мають підписи авторів або джерел, але не окремі ліцензії на повторне використання. Фотографія меморіалу на Commons може мати відкриту ліцензію на сам знімок простору, однак це не доводить права на вкладений портрет Цибух. Тому пакет залишається текстовим.
 
-**Tier 2 (institutional / high-trust recent):**
-- Suspilne. "На війні загинула журналістка Суспільного та парамедикиня Ірина Цибух." https://suspilne.media/757281-na-vijni-zaginula-zurnalistka-suspilnogo-ta-paramedikina-irina-cibuh/. Accessed 2026-05-29.
-- Українська правда English. Interview with Iryna Tsybukh, 2024. https://www.pravda.com.ua/eng/articles/2024/05/14/7455626/. Accessed 2026-05-29.
-- Ukrinform. "Брат парамедикині Ірини Цибух опублікував її посмертний лист." Accessed 2026-05-29.
-- Associated Press. Funeral/memorial coverage for Iryna Tsybukh. Accessed 2026-05-29.
+`portrait_fallback` не означає, що зображення ніколи не можна додати. Потрібен окремий портретний файл, автор, джерело, ліцензія і URL доказу прав. Підпис «фото з Facebook» або «фото пресслужби» не задовольняє цю вимогу.
 
-**Tier 5 (general web, corroborated):**
-- Chytomo 2024 memorial roundup; used only for literature-community context after Suspilne/UP confirmation.
+## 10. Джерела
 
-**Primary-source documents accessed:**
-- President decree №750/2023.
-- Farewell letter published by her brother and reproduced by Ukrainian media.
-- Українська правда interview.
+### Джерела
 
----
+- [S1] [«Українська правда», інтерв'ю від 14 травня 2024 року](https://www.pravda.com.ua/articles/2024/05/14/7455626/)
+- [S2] [ДМ Суспільного, інтерв'ю від 8 грудня 2023 року](https://stv.detector.media/spilnota/read/8106/2023-12-08-boyova-medykynya-ta-spivrobitnytsya-suspilnogo-iryna-tsybukh-khochu-shchob-moim-zagyblym-pobratymam-ne-bulo-za-mene-soromno/)
+- [S3] [Детектор медіа, редакційна публікація прощального листа](https://detector.media/infospace/article/227632/2024-05-31-shchob-maty-sylu-buty-vilnoyu-lyudynoyu-treba-buty-smilyvym-brat-iryny-tsybukh-opublikuvav-ii-proshchalnyy-lyst/)
+- [S4] [Youth MediaLab, «Порадник юним журналістам»](https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view)
+- [S5] [Корпоративний сайт Суспільного, запис про роботу Дніпровської філії](https://corp.suspilne.media/newsdetails/2644/)
+- [S6] [«Українська правда», повідомлення з атрибуцією «Госпітальєрам»](https://www.pravda.com.ua/news/2024/05/30/7458331/)
+- [S7] [Указ Президента України № 750/2023](https://www.president.gov.ua/documents/7502023-48905)
+- [S8] [Указ Президента України № 144/2025](https://www.president.gov.ua/documents/1442025-54025)
 
-## Decolonization self-check
-
-- [x] No Russocentric framing
-- [x] Dispatch identity mismatch explicitly flagged
-- [x] No Russocentric periodization
-- [x] No uncritical Russian terms
-- [x] Death named as killed during service, without invented weapon/unit
-- [x] Ukrainian place names used
-- [x] Holodomor not applicable
-- [x] 2024 Kharkiv-direction context framed as Russian aggression
+Пакет готовий без hold. Він має прямі документи для роботи в Суспільному, служби, співавторського посібника, родинно оприлюдненого листа, двох державних нагород і загибелі. Англомовну версію інтерв'ю, невизначені посилання на Associated Press і Chytomo та неперевірені портрети вилучено.

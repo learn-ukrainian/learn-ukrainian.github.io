@@ -1,0 +1,27 @@
+---
+sources:
+  - id: S1
+    file: https://pen.org.ua/na-vijni-z-rosieyu-zaginuv-poet-vijskovij-i-volonter-glib-babich
+    type: external
+    title: Повідомлення про Гліба Бабіча — Український ПЕН
+    url: https://pen.org.ua/na-vijni-z-rosieyu-zaginuv-poet-vijskovij-i-volonter-glib-babich
+  - id: S2
+    file: https://suspilne.media/culture/265749-na-fronti-zaginuv-ukrainskij-poet-i-volonter-glib-babic/
+    type: external
+    title: Повідомлення про загибель Гліба Бабіча — Суспільне Культура
+    url: https://suspilne.media/culture/265749-na-fronti-zaginuv-ukrainskij-poet-i-volonter-glib-babic/
+  - id: S3
+    file: https://suspilne.media/kyiv/268196-u-kievi-poprosalisa-z-zagiblim-glibom-babicem/
+    type: external
+    title: Репортаж із прощання з Глібом Бабічем — Суспільне Київ
+    url: https://suspilne.media/kyiv/268196-u-kievi-poprosalisa-z-zagiblim-glibom-babicem/
+  - id: S4
+    file: https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf
+    type: external
+    title: Літопис книг № 20 за 2021 рік — Книжкова палата України
+    url: https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf
+  - id: S5
+    file: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+    type: external
+    title: Вірші та пісні. Спогади друзів — видавництво «Білка»
+    url: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich

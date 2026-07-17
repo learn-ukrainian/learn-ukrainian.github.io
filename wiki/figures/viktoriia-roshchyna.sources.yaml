@@ -1,0 +1,53 @@
+---
+sources:
+  - id: S1
+    file: https://hromadske.ua/posts/tizhden-u-poloni-okupantiv-yak-ya-vibralasya-z-ruk-fsb-kadirivciv-i-dagestanciv
+    type: external
+    title: Тиждень у полоні окупантів — hromadske
+    url: https://hromadske.ua/posts/tizhden-u-poloni-okupantiv-yak-ya-vibralasya-z-ruk-fsb-kadirivciv-i-dagestanciv
+  - id: S2
+    file: https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
+    type: external
+    title: Російське підтвердження утримання — Суспільне
+    url: https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
+  - id: S3
+    file: https://www.pravda.com.ua/news/2024/10/10/7479122/
+    type: external
+    title: Початкове повідомлення про смерть — Українська правда
+    url: https://www.pravda.com.ua/news/2024/10/10/7479122/
+  - id: S4
+    file: https://www.pravda.com.ua/articles/2025/04/29/7509612/
+    type: external
+    title: Проєкт «Вікторія» — Українська правда та Forbidden Stories
+    url: https://www.pravda.com.ua/articles/2025/04/29/7509612/
+  - id: S5
+    file: https://suspilne.media/1002085-v-ukrainu-povernuli-tilo-zurnalistki-viktorii-rosinoi-mvs/
+    type: external
+    title: Повернення тіла — Суспільне
+    url: https://suspilne.media/1002085-v-ukrainu-povernuli-tilo-zurnalistki-viktorii-rosinoi-mvs/
+  - id: S6
+    file: "https://suspilne.media/1002693-ofis-genprokurora-stan-tila-\
+      zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
+    type: external
+    title: Обмеження встановлення причини смерті — Суспільне
+    url: "https://suspilne.media/1002693-ofis-genprokurora-stan-tila-\
+      zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
+  - id: S7
+    file: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
+    type: external
+    title: Підтверджена ідентифікація — Радіо Свобода
+    url: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
+  - id: S8
+    file: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-sylno-i-\
+      zhinok-tezh-zhurnalistku-viktoriiu-roshchynu-nezadovho-do-zahybeli-\
+      etapuvaly-do-izoliatora-u-permskomu-krai-rf/"
+    type: external
+    title: Реконструкція етапування — Слідство.Інфо
+    url: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-sylno-i-\
+      zhinok-tezh-zhurnalistku-viktoriiu-roshchynu-nezadovho-do-zahybeli-\
+      etapuvaly-do-izoliatora-u-permskomu-krai-rf/"
+  - id: S9
+    file: https://rsf.org/sites/default/files/medias/file/2026/04/Victoria%20Roshchyna%20_%20UA.pdf
+    type: external
+    title: Український звіт Репортерів без кордонів 2026 року
+    url: https://rsf.org/sites/default/files/medias/file/2026/04/Victoria%20Roshchyna%20_%20UA.pdf
