@@ -2364,6 +2364,57 @@ def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
     assert incidental_findings == []
 
 
+def test_archival_guide_and_russian_state_library_aliases_map() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [
+                {"line": index, "text": line}
+                for index, line in enumerate(text.splitlines(), start=1)
+            ],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    materials = {
+        "content": material(
+            "curriculum/l2-uk-en/bio/fixture/module.md",
+            (
+                "Архівний путівник «Росархів» і каталог РДБ датують "
+                "заснування агентства 1961 роком.\n"
+            ),
+        ),
+        "resources": material(
+            "curriculum/l2-uk-en/bio/fixture/resources.yaml",
+            (
+                "---\n"
+                "- title: Агентство печати Новини — Путеводитель по фондам\n"
+                "  url: https://guides.rusarchives.ru/funds/6/agentstvo\n"
+                "- title: Устав Агентства печати Новости — РДБ\n"
+                "  url: https://search.rsl.ru/ru/record/01006425211\n"
+            ),
+        ),
+    }
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+
+    inventories, findings = pbr.build_review_inventories(
+        materials,
+        family="seminar",
+        source_spec=policy["mechanical_checks"]["source_traceability"],
+    )
+    attributions = inventories["source_attribution_inventory"]["units"]
+
+    assert attributions == [
+        {
+            "unit_id": attributions[0]["unit_id"],
+            "labels": ["РДБ", "Росархів"],
+            "matched_resource_ids": ["r001", "r002"],
+            "unmatched_labels": [],
+        }
+    ]
+    assert findings == []
+
+
 def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
     text = (
