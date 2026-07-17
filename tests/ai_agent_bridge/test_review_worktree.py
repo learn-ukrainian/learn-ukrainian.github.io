@@ -7,6 +7,7 @@ import stat
 import subprocess
 import sys
 from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -211,8 +212,9 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
 
     assert dossier["schema_version"] == "review-prompt-evidence.v1"
     assert dossier["changed_file_content_mode"] == (
-        "complete_via_sealed_snapshot_read_tools"
+        "complete_inline_parent_bound"
     )
+    assert dossier["clean_verdict_gate"] == "parent_bound_inline_complete"
     assert dossier["sealed_snapshot_root"] == str(checkout.path)
     assert dossier["prompt_evidence_limit_bytes"] == (
         review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES
@@ -249,6 +251,19 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     # A source-controlled delimiter-looking line remains escaped inside the
     # single JSON data line; it cannot terminate the evidence boundary.
     assert prompt_evidence.count("\nEND AUTHORITATIVE SEALED REVIEW EVIDENCE\n") == 1
+    assert prompt_evidence.count("\nEND AUTHORITATIVE INLINE REVIEW CONTENT\n") == 1
+    inline_line = next(
+        line
+        for line in prompt_evidence.splitlines()
+        if '"schema_version":"review-inline-evidence.v1"' in line
+    )
+    inline_payload = json.loads(inline_line)
+    assert [item["path"] for item in inline_payload["files"]] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+        "src/app.py",
+    ]
+    assert "codex-parent-inline-complete" in checkout.prompt_evidence_modes
 
     with pytest.raises(review_worktree.ReviewWorktreeError, match="split_required:long_line"):
         checkout.review_prompt_evidence("claude")
@@ -646,7 +661,7 @@ def test_codex_required_all_exec_trace_covers_scope_once(tmp_path: Path) -> None
     assert proof["covered_path_count"] == 3
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_required_all_exec_form" in prompt
-    assert "exactly once before reviewing" in prompt
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" in prompt
 
 
 @pytest.mark.parametrize(
@@ -818,6 +833,46 @@ def test_bind_clean_review_rejects_schema_valid_no_read_response(tmp_path: Path)
         )
 
 
+def test_bind_clean_codex_review_accepts_parent_bound_inline_complete_prompt(
+    tmp_path: Path,
+) -> None:
+    checkout = replace(
+        _prompt_evidence_checkout(tmp_path / "inline-clean"),
+        evidence_binder=review_worktree.ReviewIsolationEvidenceBinder(),
+        isolation={},
+    )
+    prompt = checkout.review_prompt_evidence("codex")
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" in prompt
+    clean = json.dumps(
+        {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "correct",
+                "explanation": "No defects found after complete inline review.",
+                "confidence": 0.95,
+            },
+            "findings": [],
+        }
+    )
+    checkout.bind_review_result(
+        SimpleNamespace(
+            ok=True,
+            response=clean,
+            tool_calls=[],
+            isolation_evidence={"schema_version": "fixture"},
+            isolation_capability_digest="a" * 64,
+            isolation_prompt_digest=hashlib.sha256(prompt.encode()).hexdigest(),
+            isolation_prompt_transport="stdin",
+        ),
+        engine="codex",
+    )
+
+    assert checkout.isolation is not None
+    proof = checkout.isolation["acceptance"]["evidence_reads"]
+    assert proof["mode"] == "parent_bound_inline_complete"
+    assert proof["covered_path_count"] == 3
+
+
 def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
     tmp_path: Path,
 ) -> None:
@@ -831,7 +886,7 @@ def test_review_prompt_evidence_fails_closed_on_bundle_drift_and_traversal(
         traversal.review_prompt_evidence("codex")
 
 
-def test_review_prompt_evidence_keeps_large_patch_on_sealed_disk(
+def test_review_prompt_evidence_inlines_large_patch_without_truncation(
     tmp_path: Path,
 ) -> None:
     large_patch = (
@@ -849,8 +904,21 @@ def test_review_prompt_evidence_keeps_large_patch_on_sealed_disk(
     dossier = json.loads(next(line for line in prompt.splitlines() if line.startswith("{")))
     assert dossier["patch_bytes"] == len(large_patch)
     assert dossier["patch_sha256"] == hashlib.sha256(large_patch).hexdigest()
-    assert len(prompt.encode("utf-8")) < review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES
-    assert "x" * 1000 not in prompt
+    assert len(prompt.encode("utf-8")) > review_worktree.MAX_REVIEW_PROMPT_EVIDENCE_BYTES
+    assert len(prompt.encode("utf-8")) < review_worktree.MAX_CODEX_INLINE_SERIALIZED_BYTES
+    assert "x" * 1000 in prompt
+
+
+def test_review_prompt_evidence_requires_scope_split_above_inline_limit(
+    tmp_path: Path,
+) -> None:
+    checkout = _prompt_evidence_checkout(
+        tmp_path / "inline-split",
+        present_content="x" * review_worktree.MAX_CODEX_REQUIRED_TOTAL_BYTES,
+    )
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="codex_total_bytes"):
+        checkout.review_prompt_evidence("codex")
 
 
 def test_new_side_lines_counts_source_text_that_begins_with_double_plus() -> None:
