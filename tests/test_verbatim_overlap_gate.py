@@ -809,3 +809,38 @@ def test_cross_scope_df_exclusion_warning(tmp_path: Path):
     conn.close()
     idx_full.close()
     idx_scoped.close()
+
+
+def test_total_shingles_meta_counts(tmp_path: Path):
+    """Test that total_shingles records post-dedup occurrences count, and
+    total_shingles_pre_dedup records the raw occurrences count before deduplication.
+    """
+    conn, _ = _tiny_sources_db()
+    # A single chunk with duplicated shingles within the chunk:
+    # "один два три один два три" (k=3 shingles: 4 raw, 3 unique)
+    _seed_corpus(
+        conn,
+        [{"table": "textbooks", "chunk_id": "c-meta", "text": "один два три один два три"}],
+    )
+
+    idx = ShingleIndex(tmp_path / "idx_meta.db", k=3)
+    idx.build(conn)
+
+    post_dedup = idx.get_meta("total_shingles")
+    pre_dedup = idx.get_meta("total_shingles_pre_dedup")
+
+    # Raw shingles:
+    # 1. один два три
+    # 2. два три один
+    # 3. три один два
+    # 4. один два три
+    # Unique:
+    # 1. один два три
+    # 2. два три один
+    # 3. три один два
+    assert post_dedup == "3"
+    assert pre_dedup == "4"
+
+    conn.close()
+    idx.close()
+
