@@ -132,15 +132,44 @@ def _tool_result_succeeded(call: dict[str, Any]) -> bool:
             return False
         if "error" in result and result.get("error") not in {None, ""}:
             return False
-    return not (
-        isinstance(result, str)
-        and result.lstrip().lower().startswith(("error", "failed"))
-    )
+    texts = _tool_result_texts(result)
+    lowered = "\n".join(texts).lower()
+    if any(
+        marker in lowered
+        for marker in (
+            "<tool_use_error>",
+            "<persisted-output>",
+            "tool result was too large",
+            "read output exceeded",
+        )
+    ):
+        return False
+    return not any(text.lstrip().lower().startswith(("error", "failed")) for text in texts)
+
+
+def _tool_result_texts(value: Any) -> list[str]:
+    """Flatten provider result wrappers without trusting requested ranges."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        texts: list[str] = []
+        for item in value:
+            texts.extend(_tool_result_texts(item))
+        return texts
+    if isinstance(value, dict):
+        texts = []
+        for key in ("text", "content", "result"):
+            if key in value:
+                texts.extend(_tool_result_texts(value[key]))
+        return texts
+    return []
 
 
 def _mcp_chunk_payload(result: Any) -> dict[str, Any] | None:
     """Extract the hash-bound JSON payload from a sealed-reader tool result."""
     candidate = result
+    if isinstance(candidate, list) and candidate and isinstance(candidate[0], dict):
+        candidate = candidate[0].get("text")
     if isinstance(candidate, dict) and isinstance(candidate.get("content"), list):
         content = candidate["content"]
         if content and isinstance(content[0], dict):
@@ -254,7 +283,7 @@ def _verify_builtin_review_reads(
     required_paths: tuple[str, ...],
 ) -> dict[str, Any]:
     _validate_review_read_sizes(evidence_root, required_paths)
-    line_totals: dict[str, int] = {}
+    file_lines: dict[str, list[str]] = {}
     coverage: dict[str, list[tuple[int, int]]] = {}
     empty_reads: set[str] = set()
     for rel_path in required_paths:
@@ -263,10 +292,10 @@ def _verify_builtin_review_reads(
             text = data.decode("utf-8", errors="strict")
         except UnicodeDecodeError as exc:
             raise ReviewWorktreeError(f"review_evidence_not_utf8:{rel_path}") from exc
-        lines = text.splitlines(keepends=True)
-        if any(len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES for line in lines):
+        lines_with_ends = text.splitlines(keepends=True)
+        if any(len(line.encode("utf-8")) > MAX_BUILTIN_READ_LINE_BYTES for line in lines_with_ends):
             raise ReviewWorktreeError(f"review_evidence_split_required:long_line:{rel_path}")
-        line_totals[rel_path] = len(lines)
+        file_lines[rel_path] = text.splitlines()
         coverage[rel_path] = []
 
     for call in tool_calls:
@@ -295,19 +324,32 @@ def _verify_builtin_review_reads(
         ):
             continue
         start = max(1, offset)
-        total = line_totals[rel_path]
+        lines = file_lines[rel_path]
+        total = len(lines)
         if total == 0:
             empty_reads.add(rel_path)
             coverage[rel_path].append((0, 0))
             continue
         if start > total:
             continue
-        coverage[rel_path].append((start - 1, min(total, start - 1 + limit)))
+        requested_end = min(total, start - 1 + limit)
+        returned: dict[int, str] = {}
+        for result_text in _tool_result_texts(call.get("result")):
+            for result_line in result_text.splitlines():
+                match = re.match(r"^\s*(\d+)\t(.*)$", result_line)
+                if match is None:
+                    continue
+                line_number = int(match.group(1))
+                if start <= line_number <= requested_end:
+                    returned[line_number] = match.group(2)
+        for line_number, content in returned.items():
+            if content == lines[line_number - 1]:
+                coverage[rel_path].append((line_number - 1, line_number))
 
     missing = [
         path
         for path, intervals in coverage.items()
-        if not (_intervals_cover(intervals, size=line_totals[path]) or path in empty_reads)
+        if not (_intervals_cover(intervals, size=len(file_lines[path])) or path in empty_reads)
     ]
     if missing:
         raise ReviewWorktreeError("review_evidence_reads_incomplete:" + ",".join(missing))
@@ -1476,6 +1518,27 @@ def _changed_line_numbers_for_snapshot(
     """Derive new-side evidence lines from sealed bytes and exact base blobs."""
     if not snapshot.changed_paths:
         return {}
+    manifest_path = snapshot.path / ".review-bundle" / "manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ReviewWorktreeError(f"review_evidence_manifest_invalid:{exc}") from exc
+    entries = manifest.get("name_status") if isinstance(manifest, dict) else None
+    if entries is None:
+        entries = []
+    if not isinstance(entries, list):
+        raise ReviewWorktreeError("review_evidence_manifest_name_status_invalid")
+    rename_pairs: dict[str, tuple[str, str]] = {}
+    renamed_from: dict[str, str] = {}
+    for entry in entries:
+        if isinstance(entry, dict) and str(entry.get("status", ""))[:1] in {"R", "C"}:
+            old_path = entry.get("old_path")
+            path = entry.get("path")
+            if isinstance(old_path, str) and isinstance(path, str):
+                pair = (old_path, path)
+                rename_pairs[old_path] = pair
+                rename_pairs[path] = pair
+                renamed_from[path] = old_path
     if snapshot.mode != "local":
         if not snapshot.base_sha:
             raise ReviewWorktreeError("review_evidence_base_sha_missing")
@@ -1483,7 +1546,12 @@ def _changed_line_numbers_for_snapshot(
         env.pop("GH_TOKEN", None)
         env.pop("GITHUB_TOKEN", None)
         remote_evidence: dict[str, frozenset[int]] = {}
+        completed_pairs: set[tuple[str, str]] = set()
         for rel_path in snapshot.changed_paths:
+            pair = rename_pairs.get(rel_path)
+            if pair is not None and pair in completed_pairs:
+                continue
+            pathspecs = list(pair) if pair is not None else [rel_path]
             proc = subprocess.run(
                 [
                     str(git_bin),
@@ -1500,7 +1568,7 @@ def _changed_line_numbers_for_snapshot(
                     snapshot.base_sha,
                     snapshot.head_sha,
                     "--",
-                    rel_path,
+                    *pathspecs,
                 ],
                 cwd=repo_root,
                 capture_output=True,
@@ -1512,26 +1580,15 @@ def _changed_line_numbers_for_snapshot(
                 raise ReviewWorktreeError(
                     f"review_evidence_changed_lines_failed:{rel_path}:{proc.stderr.strip()}"
                 )
-            remote_evidence[rel_path] = _new_side_lines(proc.stdout or "")
+            lines = _new_side_lines(proc.stdout or "")
+            if pair is not None:
+                old_path, new_path = pair
+                remote_evidence[old_path] = frozenset()
+                remote_evidence[new_path] = lines
+                completed_pairs.add(pair)
+            else:
+                remote_evidence[rel_path] = lines
         return remote_evidence
-
-    manifest_path = snapshot.path / ".review-bundle" / "manifest.json"
-    try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ReviewWorktreeError(f"review_evidence_manifest_invalid:{exc}") from exc
-    entries = manifest.get("name_status") if isinstance(manifest, dict) else None
-    if entries is None:
-        entries = []
-    if not isinstance(entries, list):
-        raise ReviewWorktreeError("review_evidence_manifest_name_status_invalid")
-    renamed_from: dict[str, str] = {}
-    for entry in entries:
-        if isinstance(entry, dict) and str(entry.get("status", ""))[:1] in {"R", "C"}:
-            old_path = entry.get("old_path")
-            path = entry.get("path")
-            if isinstance(old_path, str) and isinstance(path, str):
-                renamed_from[path] = old_path
 
     base_revision = snapshot.base_sha or snapshot.head_sha
     evidence: dict[str, frozenset[int]] = {}

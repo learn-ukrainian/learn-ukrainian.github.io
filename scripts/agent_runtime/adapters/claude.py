@@ -90,7 +90,7 @@ def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
     """Return the canonical structured-output schema for isolated reviews."""
     from scripts.review.isolation import (
         ReviewIsolationError,
-        canonical_isolated_review_schema,
+        transport_isolated_review_schema,
     )
 
     changed_paths = tool_config.get("review_changed_paths")
@@ -99,7 +99,7 @@ def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
     ):
         raise ValueError("ClaudeAdapter: isolated review changed paths required")
     try:
-        schema = canonical_isolated_review_schema(changed_paths)
+        schema = transport_isolated_review_schema()
     except ReviewIsolationError as exc:
         raise ValueError(f"ClaudeAdapter: {exc}") from exc
     return json.dumps(schema, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
@@ -280,8 +280,7 @@ class ClaudeAdapter:
         if use_bare is None:
             # Auto-decide: enable if no session and API key is set
             use_bare = not has_session and bool(os.environ.get("ANTHROPIC_API_KEY"))
-        # Review isolation (#5285): force bare/no-project load when requested.
-        if review_isolation or tc.get("use_bare"):
+        if tc.get("use_bare"):
             use_bare = True
         if use_bare and not has_session:
             cmd.append("--bare")
@@ -406,6 +405,11 @@ class ClaudeAdapter:
             output_file=None,
             env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=self._resolve_liveness_paths(cwd),
+            metadata=(
+                {"claude_home": str(review_write_root / "home")}
+                if review_write_root is not None
+                else {}
+            ),
         )
 
     def parse_response(
@@ -444,7 +448,13 @@ class ClaudeAdapter:
         # Session JSONL is authoritative when stream-json stdout drops tool rows
         # (measured: subscription tooled bakeoff cells with MCP, 2026-07-08).
         if plan is not None and plan.cwd is not None and session_id:
-            session_path = _claude_session_jsonl_path(plan.cwd, session_id)
+            raw_home = plan.metadata.get("claude_home")
+            claude_home = Path(raw_home) if isinstance(raw_home, str) else None
+            session_path = _claude_session_jsonl_path(
+                plan.cwd,
+                session_id,
+                home=claude_home,
+            )
             if session_path is not None:
                 recovered = _tool_calls_from_claude_session_jsonl(session_path)
                 if len(recovered) > len(tool_calls):
@@ -524,8 +534,14 @@ def _claude_project_slug(cwd: Path) -> str:
     return str(cwd.resolve()).replace("/", "-")
 
 
-def _claude_session_jsonl_path(cwd: Path, session_id: str) -> Path | None:
-    candidate = Path.home() / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
+def _claude_session_jsonl_path(
+    cwd: Path,
+    session_id: str,
+    *,
+    home: Path | None = None,
+) -> Path | None:
+    base = home or Path.home()
+    candidate = base / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
     return candidate if candidate.is_file() else None
 
 

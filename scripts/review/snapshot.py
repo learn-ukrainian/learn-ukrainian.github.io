@@ -60,6 +60,10 @@ DIAG_UNSAFE_PATH = "unsafe_path_denied"
 DIAG_BUNDLE = "bundle_identity_mismatch"
 DIAG_CHANGED_SECRET = "changed_secret_denied"
 DIAG_BINARY_PATCH = "binary_patch_ambiguous"
+DIAG_EVIDENCE_TOO_LARGE = "review_evidence_too_large"
+
+MAX_CHANGED_FILE_BYTES = 16 * 1024 * 1024
+MAX_CHANGED_EVIDENCE_BYTES = 64 * 1024 * 1024
 
 
 def _is_git_binary_marker_line(line: bytes) -> bool:
@@ -314,6 +318,69 @@ def _run_git(
         )
         raise ReviewSnapshotError(f"git_failed:{' '.join(args)}:{detail.strip() or result.returncode}")
     return result
+
+
+def _run_git_bytes_capped(
+    git_bin: Path,
+    args: list[str],
+    *,
+    cwd: Path,
+    max_bytes: int,
+) -> bytes:
+    """Stream Git stdout into a bounded buffer and fail before unbounded RAM use."""
+    cmd = [
+        str(git_bin),
+        "--no-optional-locks",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "maintenance.auto=false",
+        "-c",
+        "gc.auto=0",
+        "-c",
+        "submodule.recurse=false",
+        "-c",
+        "fetch.recurseSubmodules=false",
+        *args,
+    ]
+    with tempfile.TemporaryFile() as stderr_file:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=str(cwd),
+            stdout=subprocess.PIPE,
+            stderr=stderr_file,
+            env=_git_env(cwd),
+        )
+        chunks: list[bytes] = []
+        total = 0
+        try:
+            assert proc.stdout is not None
+            while True:
+                chunk = proc.stdout.read(1024 * 1024)
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > max_bytes:
+                    proc.kill()
+                    proc.wait(timeout=5)
+                    raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:git_output")
+                chunks.append(chunk)
+            returncode = proc.wait()
+            stderr_file.seek(0)
+            detail = stderr_file.read().decode("utf-8", errors="replace").strip()
+            if returncode != 0:
+                raise ReviewSnapshotError(
+                    f"git_failed:{' '.join(args)}:{detail or returncode}"
+                )
+            return b"".join(chunks)
+        except BaseException:
+            with contextlib.suppress(OSError, ProcessLookupError):
+                proc.kill()
+            with contextlib.suppress(OSError):
+                proc.wait(timeout=5)
+            raise
 
 
 def resolve_head_identity(
@@ -604,6 +671,8 @@ def _read_regular_file_stable(
         before = os.fstat(file_fd)
         if not stat.S_ISREG(before.st_mode):
             raise ReviewSnapshotError(f"non_regular_file:{rel}")
+        if before.st_size > MAX_CHANGED_FILE_BYTES:
+            raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:file:{rel}")
         chunks: list[bytes] = []
         while True:
             chunk = os.read(file_fd, 1024 * 1024)
@@ -949,11 +1018,12 @@ def _capture_deleted_records(
 ) -> tuple[ImmutableFileRecord, ...]:
     """Capture old-side regular-file bytes for deletion evidence."""
     records: list[ImmutableFileRecord] = []
+    total_bytes = 0
     for rel_path in sorted(set(paths)):
         path = _validate_rel_path(rel_path)
         tree = _run_git(
             git_bin,
-            ["ls-tree", "-z", revision, "--", path],
+            ["--literal-pathspecs", "ls-tree", "-z", "--full-tree", revision, "--", path],
             cwd=repo_root,
             text=False,
             check=False,
@@ -965,7 +1035,7 @@ def _capture_deleted_records(
         fields = header.split()
         if not separator or len(fields) != 3 or listed_path.decode("utf-8", errors="strict") != path:
             raise ReviewSnapshotError(f"deleted_evidence_malformed:{path}")
-        mode_raw, object_type, _oid = fields
+        mode_raw, object_type, oid_raw = fields
         if mode_raw == b"120000":
             raise ReviewSnapshotError(f"{DIAG_SYMLINK}:{path}")
         if mode_raw == b"160000":
@@ -974,9 +1044,24 @@ def _capture_deleted_records(
             raise ReviewSnapshotError(
                 f"deleted_evidence_unsupported:{path}:mode={mode_raw.decode(errors='replace')}"
             )
+        size_proc = _run_git(
+            git_bin,
+            ["cat-file", "-s", oid_raw.decode("ascii", errors="strict")],
+            cwd=repo_root,
+            check=False,
+        )
+        try:
+            blob_size = int(str(size_proc.stdout).strip()) if size_proc.returncode == 0 else -1
+        except ValueError:
+            blob_size = -1
+        if blob_size < 0:
+            raise ReviewSnapshotError(f"deleted_evidence_missing:{path}")
+        total_bytes += blob_size
+        if blob_size > MAX_CHANGED_FILE_BYTES or total_bytes > MAX_CHANGED_EVIDENCE_BYTES:
+            raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:deleted:{path}")
         blob = _run_git(
             git_bin,
-            ["cat-file", "-p", f"{revision}:{path}"],
+            ["cat-file", "blob", oid_raw.decode("ascii", errors="strict")],
             cwd=repo_root,
             text=False,
             check=False,
@@ -1060,15 +1145,19 @@ def derive_changed_paths_and_patch(
         raise ReviewSnapshotError("invalid_sha_for_diff")
 
     # Raw name-status with renames (null-separated).
-    ns = _run_git(
+    ns_bytes = _run_git_bytes_capped(
         git,
         ["diff", "--name-status", "-z", "--find-renames", base_sha, head_sha],
         cwd=root,
+        max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
-    assert isinstance(ns.stdout, str)
+    try:
+        ns_text = ns_bytes.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ReviewSnapshotError("malformed_name_status_encoding") from exc
     entries: list[dict[str, str]] = []
     paths: list[str] = []
-    tokens = [t for t in ns.stdout.split("\0") if t]
+    tokens = [t for t in ns_text.split("\0") if t]
     i = 0
     while i < len(tokens):
         status = tokens[i]
@@ -1093,13 +1182,17 @@ def derive_changed_paths_and_patch(
             paths.append(p)
 
     # Detect changed specials via raw diff.
-    raw = _run_git(
+    raw_bytes = _run_git_bytes_capped(
         git,
         ["diff", "--raw", "-z", "--find-renames", base_sha, head_sha],
         cwd=root,
+        max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
-    assert isinstance(raw.stdout, str)
-    raw_tokens = [t for t in raw.stdout.split("\0") if t]
+    try:
+        raw_text = raw_bytes.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ReviewSnapshotError("malformed_raw_diff_encoding") from exc
+    raw_tokens = [t for t in raw_text.split("\0") if t]
     # format: :oldmode newmode oldoid newoid status\0path[\0path2]
     j = 0
     while j < len(raw_tokens):
@@ -1125,14 +1218,12 @@ def derive_changed_paths_and_patch(
                 raise ReviewSnapshotError(f"{DIAG_GITLINK}:{path2 or path1}")
 
     # Full patch including binary markers (no truncation).
-    patch_proc = _run_git(
+    patch_bytes = _run_git_bytes_capped(
         git,
         ["diff", "--binary", "--find-renames", "--no-ext-diff", "--no-textconv", base_sha, head_sha],
         cwd=root,
-        text=False,
+        max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
-    assert isinstance(patch_proc.stdout, (bytes, bytearray))
-    patch_bytes = bytes(patch_proc.stdout)
 
     preflight_paths = list(dict.fromkeys(paths))
     for p in preflight_paths:
@@ -1171,6 +1262,8 @@ def _preflight_changed_contents(
     truncation or path-based exemptions. Secrets are denied in tests/,
     fixtures, docs, examples, and production paths alike.
     """
+    total_evidence_bytes = len(patch_bytes)
+    seen_oids: set[str] = set()
     for path in paths:
         if not path:
             continue
@@ -1179,15 +1272,52 @@ def _preflight_changed_contents(
         for rev in dict.fromkeys((head_sha, base_sha)):
             proc = _run_git(
                 git_bin,
-                ["cat-file", "-e", f"{rev}:{path}"],
+                ["--literal-pathspecs", "ls-tree", "-z", "--full-tree", rev, "--", path],
+                cwd=repo_root,
+                text=False,
+                check=False,
+            )
+            if proc.returncode != 0 or not proc.stdout:
+                continue
+            assert isinstance(proc.stdout, (bytes, bytearray))
+            records = [record for record in bytes(proc.stdout).split(b"\0") if record]
+            if len(records) != 1:
+                raise ReviewSnapshotError(f"changed_blob_ambiguous:{path}")
+            try:
+                header, raw_path = records[0].split(b"\t", 1)
+                mode_raw, object_type, oid_raw = header.split(b" ", 2)
+                listed_path = raw_path.decode("utf-8", errors="strict")
+                oid = oid_raw.decode("ascii", errors="strict")
+            except (ValueError, UnicodeDecodeError) as exc:
+                raise ReviewSnapshotError(f"changed_blob_malformed:{path}") from exc
+            if listed_path != path:
+                raise ReviewSnapshotError(f"changed_blob_unsupported:{path}")
+            if object_type == b"tree" and mode_raw == b"040000":
+                # File↔directory replacements include the directory path plus
+                # its changed descendants; only blob descendants carry bytes.
+                continue
+            if object_type != b"blob" or mode_raw not in {b"100644", b"100755"}:
+                raise ReviewSnapshotError(f"changed_blob_unsupported:{path}")
+            size_proc = _run_git(
+                git_bin,
+                ["cat-file", "-s", oid],
                 cwd=repo_root,
                 check=False,
             )
-            if proc.returncode != 0:
-                continue
+            try:
+                blob_size = int(str(size_proc.stdout).strip()) if size_proc.returncode == 0 else -1
+            except ValueError:
+                blob_size = -1
+            if blob_size < 0:
+                raise ReviewSnapshotError(f"changed_blob_missing:{path}")
+            if oid not in seen_oids:
+                seen_oids.add(oid)
+                total_evidence_bytes += blob_size
+            if blob_size > MAX_CHANGED_FILE_BYTES or total_evidence_bytes > MAX_CHANGED_EVIDENCE_BYTES:
+                raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:changed:{path}")
             show = _run_git(
                 git_bin,
-                ["cat-file", "-p", f"{rev}:{path}"],
+                ["cat-file", "blob", oid],
                 cwd=repo_root,
                 text=False,
                 check=False,
@@ -2064,7 +2194,7 @@ def _immutable_local_patch(
                 input_data=b"".join(index_records),
             )
 
-        diff = _run_git(
+        return _run_git_bytes_capped(
             git_bin,
             [
                 *neutral_git,
@@ -2077,10 +2207,8 @@ def _immutable_local_patch(
                 head_sha,
             ],
             cwd=repo_root,
-            text=False,
+            max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
         )
-        assert isinstance(diff.stdout, (bytes, bytearray))
-        return bytes(diff.stdout)
     finally:
         shutil.rmtree(neutral_parent, ignore_errors=True)
 
@@ -2107,11 +2235,29 @@ def capture_local_review_state(
             )
     capture_head = expected_head_sha or resolve_head_identity(root, git_bin=git)
     with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
-        proc = _run_git(
-            git,
-            [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
-            cwd=root,
+        return _capture_local_review_state_with_neutral_view(
+            root,
+            git=git,
+            neutral_git=neutral_git,
+            capture_head=capture_head,
+            expected_head_sha=expected_head_sha,
         )
+
+
+def _capture_local_review_state_with_neutral_view(
+    root: Path,
+    *,
+    git: Path,
+    neutral_git: Sequence[str],
+    capture_head: str,
+    expected_head_sha: str | None,
+) -> LocalReviewCapture:
+    """Capture and recheck status through one immutable copied index."""
+    proc = _run_git(
+        git,
+        [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
+        cwd=root,
+    )
     assert isinstance(proc.stdout, str)
     captured_status = proc.stdout
     dirty: list[ImmutableFileRecord] = []
@@ -2121,6 +2267,7 @@ def capture_local_review_state(
     changed: list[str] = []
     name_status: list[dict[str, str]] = []
     overlay_entries: list[OverlayIdentityEntry] = []
+    captured_bytes = 0
 
     entries = [e for e in proc.stdout.split("\0") if e]
     i = 0
@@ -2154,6 +2301,9 @@ def capture_local_review_state(
                 data, mode = _read_regular_file_stable(root, new_p, allow_binary=False)
             except ReviewSnapshotError as exc:
                 raise ReviewSnapshotError(f"rename_target_invalid:{new_p}:{exc}") from exc
+            captured_bytes += len(data)
+            if captured_bytes > MAX_CHANGED_EVIDENCE_BYTES:
+                raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:local_total")
             rec = ImmutableFileRecord.from_bytes(new_p, data, mode=mode)
             dirty.append(rec)
             overlay_entries.append(
@@ -2191,6 +2341,9 @@ def capture_local_review_state(
         xy = status
         if xy == "??":
             data, mode = _read_regular_file_stable(root, path, allow_binary=False)
+            captured_bytes += len(data)
+            if captured_bytes > MAX_CHANGED_EVIDENCE_BYTES:
+                raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:local_total")
             rec = ImmutableFileRecord.from_bytes(path, data, mode=mode)
             untracked.append(rec)
             changed.append(path)
@@ -2239,6 +2392,9 @@ def capture_local_review_state(
             continue
 
         data, mode = _read_regular_file_stable(root, path, allow_binary=False)
+        captured_bytes += len(data)
+        if captured_bytes > MAX_CHANGED_EVIDENCE_BYTES:
+            raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:local_total")
         rec = ImmutableFileRecord.from_bytes(path, data, mode=mode)
         dirty.append(rec)
         changed.append(path)
@@ -2297,12 +2453,11 @@ def capture_local_review_state(
             raise ReviewSnapshotError(
                 f"{DIAG_DRIFT}:local_head_after_capture:expected={expected_head_sha}:actual={after}"
             )
-    with _neutral_local_git_view(root, git_bin=git, head_sha=capture_head) as neutral_git:
-        after_status = _run_git(
-            git,
-            [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
-            cwd=root,
-        )
+    after_status = _run_git(
+        git,
+        [*neutral_git, "status", "--porcelain", "--untracked-files=all", "-z"],
+        cwd=root,
+    )
     assert isinstance(after_status.stdout, str)
     if after_status.stdout != captured_status:
         raise ReviewSnapshotError(f"{DIAG_DRIFT}:local_status_during_capture")

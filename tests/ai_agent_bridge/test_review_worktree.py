@@ -339,7 +339,13 @@ def test_clean_review_requires_complete_builtin_line_reads(tmp_path: Path) -> No
         {
             "name": "Read",
             "arguments": {"file_path": str(checkout.path / rel_path)},
-            "result": "complete",
+            "result": "\n".join(
+                f"{number}\t{line}"
+                for number, line in enumerate(
+                    (checkout.path / rel_path).read_text(encoding="utf-8").splitlines(),
+                    start=1,
+                )
+            ),
         }
         for rel_path in required
     ]
@@ -352,6 +358,32 @@ def test_clean_review_requires_complete_builtin_line_reads(tmp_path: Path) -> No
     )
 
     assert proof["mode"] == "sandboxed_line_chunks"
+    assert proof["covered_path_count"] == 3
+
+    calls[0]["result"] = "<tool_use_error>Read output exceeded the limit</tool_use_error>"
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=calls),
+            engine="claude",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
+
+
+def test_codex_read_payload_accepts_normalized_content_list(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-list-result")
+    calls = _codex_read_calls(checkout)
+    for call in calls:
+        wrapped = call["result"]
+        assert isinstance(wrapped, dict)
+        call["result"] = wrapped["content"]
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
     assert proof["covered_path_count"] == 3
 
 
@@ -477,6 +509,68 @@ def test_local_changed_lines_follow_git_alignment_for_reordered_duplicates(
     )
 
     assert changed == {"lines.txt": frozenset({3})}
+
+
+def test_remote_changed_lines_preserve_rename_pairing(tmp_path: Path) -> None:
+    repo = tmp_path / "rename-repo"
+    repo.mkdir()
+    env = review_worktree._isolation_env(repo)
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=repo, check=True, env=env)
+    original = "".join(f"line {number}\n" for number in range(1, 21))
+    (repo / "old.txt").write_text(original, encoding="utf-8")
+    subprocess.run(["git", "add", "old.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True, env=env)
+    base = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+    subprocess.run(["git", "mv", "old.txt", "new.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "rename"], cwd=repo, check=True, env=env)
+    rename_head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+    git_bin = review_worktree.resolve_external_executable("git", reject_root=repo)
+
+    def snapshot_at(root: Path, head: str) -> ReviewSnapshot:
+        (root / ".review-bundle").mkdir(parents=True)
+        (root / "new.txt").write_text((repo / "new.txt").read_text(encoding="utf-8"), encoding="utf-8")
+        (root / ".review-bundle" / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "name_status": [
+                        {"status": "R100", "old_path": "old.txt", "path": "new.txt", "kind": "rename"}
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        return ReviewSnapshot(
+            path=root,
+            mode="remote",
+            base_sha=base,
+            head_sha=head,
+            source_fingerprint="",
+            changed_paths=("old.txt", "new.txt"),
+        )
+
+    pure = review_worktree._changed_line_numbers_for_snapshot(
+        snapshot_at(tmp_path / "pure", rename_head), repo_root=repo, git_bin=git_bin
+    )
+    assert pure == {"old.txt": frozenset(), "new.txt": frozenset()}
+
+    lines = (repo / "new.txt").read_text(encoding="utf-8").splitlines()
+    lines[9] = "edited line 10"
+    (repo / "new.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", "new.txt"], cwd=repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-qm", "edit rename"], cwd=repo, check=True, env=env)
+    edited_head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True, env=env
+    ).stdout.strip()
+    edited = review_worktree._changed_line_numbers_for_snapshot(
+        snapshot_at(tmp_path / "edited", edited_head), repo_root=repo, git_bin=git_bin
+    )
+    assert edited == {"old.txt": frozenset(), "new.txt": frozenset({10})}
 
 
 def test_remove_review_root_unlinks_reviewer_symlinks_without_following(

@@ -382,7 +382,7 @@ _NETWORK_READ_PATHS = (
 
 # Narrow auth files staged into the disposable HOME (never whole provider trees).
 _ENGINE_AUTH_STAGE_FILES: dict[str, tuple[str, ...]] = {
-    "claude": (),  # --bare uses env API key only; no host .claude tree
+    "claude": (),  # subscription token is staged in env; no host .claude tree
     "codex": (".codex/auth.json",),
     "agy": (
         ".gemini/oauth_creds.json",
@@ -1684,7 +1684,6 @@ def build_claude_review_argv(
     if capabilities is None or "disable_project_instructions" in capabilities.capabilities:
         cmd.extend(
             [
-                "--bare",
                 "--safe-mode",
                 "--setting-sources",
                 "",
@@ -1761,7 +1760,10 @@ def review_isolation_tool_config(engine: str) -> dict[str, object]:
         base.update(
             {
                 "allowed_tools": "Read,Grep,Glob",
-                "use_bare": True,
+                # ``--safe-mode`` suppresses project/plugin/hook loading while
+                # preserving the normal subscription OAuth path. Claude Code
+                # 2.1.211 deliberately limits ``--bare`` to API-key auth.
+                "use_bare": False,
                 "setting_sources": "",
                 "strict_mcp_config": True,
                 "output_format": "stream-json",
@@ -1840,6 +1842,20 @@ def canonical_isolated_review_schema(changed_paths: Sequence[str]) -> dict[str, 
         }
     else:
         findings["maxItems"] = 0
+    return schema
+
+
+def transport_isolated_review_schema() -> dict[str, Any]:
+    """Return the bounded argv schema used only for provider transport.
+
+    Exact changed-path membership remains enforced by the parent with
+    :func:`canonical_isolated_review_schema`. Embedding every changed path in
+    one ``--json-schema`` argument can exceed the kernel's per-argument limit.
+    """
+    from scripts.review.review_contract import load_schema
+
+    schema = copy.deepcopy(load_schema())
+    schema.pop("$schema", None)
     return schema
 
 
@@ -2066,7 +2082,8 @@ def stage_engine_auth(
         codex_home.mkdir(parents=True, exist_ok=True)
         env_overrides["CODEX_HOME"] = str(codex_home)
     elif engine_key == "claude":
-        # --bare path uses env credentials only; keep disposable config empty.
+        # Keep disposable config empty; safe-mode can use a narrowly staged
+        # subscription token without exposing host Claude state.
         (write_home / ".claude").mkdir(parents=True, exist_ok=True)
         has_env_auth = any(
             source.get(key)
@@ -2113,10 +2130,7 @@ def stage_engine_auth(
                         and "\0" not in token
                         and token_fresh
                     ):
-                        # Claude --bare accepts the subscription access token
-                        # through ANTHROPIC_AUTH_TOKEN; it intentionally ignores
-                        # keychain-backed CLAUDE_CODE_OAUTH_TOKEN login state.
-                        env_overrides["ANTHROPIC_AUTH_TOKEN"] = token
+                        env_overrides["CLAUDE_CODE_OAUTH_TOKEN"] = token
                 except (
                     OSError,
                     subprocess.SubprocessError,

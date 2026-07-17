@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import os
@@ -620,7 +621,7 @@ def test_missing_engine_capability_refused_never_downgraded(tmp_path: Path) -> N
     )
     require_engine_isolation(good)
     argv = build_claude_review_argv(fake, prompt="review", json_schema={"type": "object"}, capabilities=good)
-    assert "--bare" in argv
+    assert "--bare" not in argv
     assert "--safe-mode" in argv
     assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob"
     assert json.loads(argv[argv.index("--json-schema") + 1]) == {"type": "object"}
@@ -946,6 +947,7 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
     )
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob"
     assert "--safe-mode" in plan.cmd
+    assert "--bare" not in plan.cmd
     assert "Bash" not in plan.cmd
     assert "review" not in plan.cmd
     assert plan.stdin_payload == "review"
@@ -955,9 +957,10 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
     output_schema = json.loads(plan.cmd[plan.cmd.index("--json-schema") + 1])
     assert "$schema" not in output_schema
     assert set(output_schema["properties"]) == {"schema_version", "overall", "findings"}
-    assert output_schema["$defs"]["location"]["properties"]["path"]["enum"] == [
-        "scripts/example.py"
-    ]
+    assert output_schema["$defs"]["location"]["properties"]["path"] == {
+        "$ref": "#/$defs/repo_relative_path"
+    }
+    assert plan.metadata == {"claude_home": str(write / "home")}
 
 
 def test_claude_parser_prefers_native_structured_output_over_model_preamble() -> None:
@@ -978,6 +981,18 @@ def test_claude_parser_prefers_native_structured_output_over_model_preamble() ->
     )
     parsed = ClaudeAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
     assert json.loads(parsed.response) == payload
+
+
+def test_claude_transport_schema_does_not_expand_with_changed_paths() -> None:
+    from scripts.agent_runtime.adapters.claude import _isolated_review_response_schema
+
+    one = _isolated_review_response_schema({"review_changed_paths": ["one.py"]})
+    many = _isolated_review_response_schema(
+        {"review_changed_paths": [f"very/long/path/{number:04d}/module.py" for number in range(2000)]}
+    )
+
+    assert many == one
+    assert len(many.encode("utf-8")) < 16 * 1024
 
 
 def test_codex_adapter_runs_from_instruction_free_parent_directory(tmp_path: Path) -> None:
@@ -1263,7 +1278,7 @@ def test_claude_keychain_auth_stages_only_fresh_access_token(monkeypatch: pytest
         source_home=tmp_path / "source-home",
         source_env={},
     )
-    assert staged == {"ANTHROPIC_AUTH_TOKEN": access}
+    assert staged == {"CLAUDE_CODE_OAUTH_TOKEN": access}
     assert refresh not in json.dumps(staged)
     assert not any((tmp_path / "home" / ".claude").iterdir())
 
@@ -3124,6 +3139,120 @@ def test_local_capture_supports_split_index(tmp_path: Path) -> None:
 
     assert "src/app.py" in capture.changed_paths
     assert b"+VALUE = 2" in capture.patch_bytes
+
+
+@pytest.mark.parametrize("split_index", [False, True])
+def test_local_capture_reuses_one_neutral_index_for_status_pair(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    split_index: bool,
+) -> None:
+    import scripts.review.snapshot as snapshot_module
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    if split_index:
+        _git(repo, "config", "core.splitIndex", "true")
+        _git(repo, "update-index", "--split-index")
+    target = repo / "src" / "app.py"
+    target.write_text("VALUE = 2\n", encoding="utf-8")
+    original = snapshot_module._neutral_local_git_view
+    entered = 0
+
+    @contextlib.contextmanager
+    def counted(*args: object, **kwargs: object):
+        nonlocal entered
+        entered += 1
+        with original(*args, **kwargs) as neutral:
+            yield neutral
+
+    monkeypatch.setattr(snapshot_module, "_neutral_local_git_view", counted)
+    capture = capture_local_review_state(repo)
+
+    assert "src/app.py" in capture.changed_paths
+    assert entered == 1
+
+
+def test_branch_capture_treats_colon_prefixed_paths_literally(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    (repo / ":foo").write_text("delete me\n", encoding="utf-8")
+    (repo / ":(glob)*").write_text("rename me\n", encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "colon paths",
+    )
+    base = _head_sha(repo)
+    (repo / ":foo").unlink()
+    (repo / ":(glob)*").rename(repo / ":renamed")
+    _git(repo, "add", "-A")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "delete and rename colon paths",
+    )
+    head = _head_sha(repo)
+
+    snap, state = materialize_review_snapshot(
+        repo,
+        mode="branch",
+        base_sha=base,
+        head_sha=head,
+        temp_parent=tmp_path / "tmp",
+    )
+    try:
+        manifest = json.loads(
+            (snap.path / ".review-bundle" / "manifest.json").read_text(encoding="utf-8")
+        )
+        deleted = {entry["path"]: entry["content"] for entry in manifest["deleted_files"]}
+        assert deleted[":foo"] == "delete me\n"
+        assert deleted[":(glob)*"] == "rename me\n"
+        assert (snap.path / ":renamed").read_text(encoding="utf-8") == "rename me\n"
+    finally:
+        cleanup_snapshot_state(state)
+
+
+def test_branch_capture_rejects_oversized_changed_blob_before_read(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    base = _head_sha(repo)
+    (repo / "large.txt").write_bytes(b"x" * (16 * 1024 * 1024 + 1))
+    _git(repo, "add", "large.txt")
+    _git(
+        repo,
+        "-c",
+        "user.email=test@example.com",
+        "-c",
+        "user.name=Test",
+        "commit",
+        "-m",
+        "large",
+    )
+    head = _head_sha(repo)
+
+    with pytest.raises(ReviewSnapshotError, match=r"review_evidence_too_large:changed:large\.txt"):
+        materialize_review_snapshot(
+            repo,
+            mode="branch",
+            base_sha=base,
+            head_sha=head,
+            temp_parent=tmp_path / "tmp",
+        )
 
 
 def test_local_capture_refuses_untracked_nested_repository(tmp_path: Path) -> None:
