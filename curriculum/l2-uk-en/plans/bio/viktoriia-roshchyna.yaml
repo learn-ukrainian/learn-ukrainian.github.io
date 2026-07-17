@@ -32,7 +32,7 @@ references:
   - title: РФ уперше визнала, що утримує журналістку Вікторію Рощину
     url: >-
       https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
-  - title: У російському полоні померла українська журналістка Вікторія Рощина
+  - title: У російському ув’язненні загинула українська журналістка Вікторія Рощина
     url: https://www.pravda.com.ua/news/2024/10/10/7479122/
   - title: >-
       Проєкт «Вікторія». Історія полону та катувань, що пережила журналістка
@@ -47,7 +47,8 @@ references:
     url: "https://suspilne.media/1002693-ofis-genprokurora-stan-tila-\
       zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
   - title: >-
-      Радіо Свобода — експертизи підтвердили ідентифікацію Вікторії Рощиної
+      Нові дані про смерть Вікторії Рощиної у російському полоні. Що встановили
+      експертиза та розслідування?
     url: >-
       https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
   - title: >-
@@ -93,7 +94,7 @@ readings:
       evidence_url: >-
         https://suspilne.media/755343-rf-uperse-viznala-so-utrimue-zurnalistku-viktoriu-rosinu/
       note: Український матеріал Суспільного залишається зовнішнім джерелом.
-  - title: У російському полоні померла українська журналістка Вікторія Рощина
+  - title: У російському ув’язненні загинула українська журналістка Вікторія Рощина
     source_name: Українська правда
     source_url: https://www.pravda.com.ua/news/2024/10/10/7479122/
     language: uk
@@ -156,7 +157,9 @@ readings:
       evidence_url: "https://suspilne.media/1002693-ofis-genprokurora-stan-\
         tila-zurnalistki-rosinoi-ne-dae-vstanoviti-tocnu-pricinu-smerti/"
       note: Українська новина використовується лише за посиланням.
-  - title: Експертизи підтвердили ідентифікацію Вікторії Рощиної
+  - title: >-
+      Нові дані про смерть Вікторії Рощиної у російському полоні. Що встановили
+      експертиза та розслідування?
     source_name: Радіо Свобода
     source_url: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
     language: uk

@@ -21,7 +21,9 @@ sources:
     title: Літопис книг № 20 за 2021 рік — Книжкова палата України
     url: https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf
   - id: S5
-    file: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+    file: "https://web.archive.org/web/20260510104740/https://bilkabooks.com/\
+      products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich"
     type: external
-    title: Вірші та пісні. Спогади друзів — видавництво «Білка»
-    url: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+    title: Архівна копія «Вірші та пісні. Спогади друзів» — видавництво «Білка», 10 травня 2026 року
+    url: "https://web.archive.org/web/20260510104740/https://bilkabooks.com/\
+      products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich"

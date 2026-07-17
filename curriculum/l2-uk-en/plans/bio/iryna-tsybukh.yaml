@@ -110,11 +110,12 @@ readings:
     source_url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
     language: uk
     type: coauthored-handbook
-    role: authored-work
+    role: coauthored-work
     hosting: link-only
     learner_task: >-
-      Перевірити авторські кредити та прочитати розділ 3 про стандарти
-      журналістики на друкованих сторінках 25–39.
+      Зіставити колективний список авторів на друкованій сторінці 118 зі
+      змістом, де розділ 3 про стандарти журналістики займає друковані
+      сторінки 25–39, не приписуючи розділ окремій авторці.
     rights:
       basis: external-link
       evidence_url: https://drive.google.com/file/d/1-QSpA0Ml8GEnDmLYswqOpRwovLKOsE4D/view
@@ -175,8 +176,8 @@ readings:
     role: posthumous-state-award-record
     hosting: link-only
     learner_task: >-
-      Зафіксувати посмертне присвоєння звання Героя України, орден «Золота
-      Зірка» і точне означення ролі в указі.
+      Зафіксувати посмертне присвоєння звання Героя України з удостоєнням
+      ордена «Золота Зірка» і точне означення ролі в указі.
     rights:
       basis: external-link
       evidence_url: https://www.president.gov.ua/documents/1442025-54025

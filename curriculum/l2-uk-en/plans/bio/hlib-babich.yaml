@@ -7,8 +7,9 @@ title: 'Гліб Бабіч: поезія, служба і громадська 
 subtitle: Poetry, Military Service, and Public Work in a Source-Bounded Biography
 focus: >-
   Поетична, пісенна, військова, волонтерська й громадська діяльність Гліба
-  Бабіча; окреме зіставлення бібліографічних записів, видавничої сторінки та
-  датованих повідомлень про його загибель у липні 2022 року.
+  Бабіча; окреме зіставлення бібліографічних записів, архівної копії
+  видавничої сторінки та датованих повідомлень про його загибель у липні 2022
+  року.
 content_outline:
   - section: Творчість, служба і межі меморіального джерела
     words: 5200
@@ -33,7 +34,8 @@ references:
   - title: Літопис книг. Державний бібліографічний покажчик України, № 20, жовтень 2021 року
     url: https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf
   - title: Книга «Вірші та пісні. Спогади друзів» Гліб Бабіч
-    url: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+    url: "https://web.archive.org/web/20260510104740/https://bilkabooks.com/\
+      products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich"
 readings_contract_version: 2
 readings:
   - title: На війні з Росією загинув поет, військовий і волонтер Гліб Бабіч
@@ -89,19 +91,22 @@ readings:
       evidence_url: https://ukrbook.net/litopys/Knigki/2021/L_k_20_2021.pdf
       note: Публічний бібліографічний покажчик засвідчує документ, але курс не хостить PDF і не відтворює книжку.
   - title: Книга «Вірші та пісні. Спогади друзів» Гліб Бабіч
-    source_name: Видавництво «Білка»
-    source_url: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+    source_name: Архівна копія сторінки видавництва «Білка»
+    source_url: "https://web.archive.org/web/20260510104740/https://bilkabooks.com/\
+      products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich"
     language: uk
-    type: publisher-record
+    type: archived-publisher-record
     role: revised-edition-identification
     hosting: link-only
     learner_task: Порівняти реквізити видання 2024 року з бібліографічним записом 2021 року й не змішувати дві редакції.
     rights:
       basis: external-link
-      evidence_url: https://bilkabooks.com/products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich
+      evidence_url: "https://web.archive.org/web/20260510104740/https://bilkabooks.com/\
+        products/kniga-virshi-ta-pisni-spogadi-druziv-glib-babich"
       note: >-
-        Сторінка видавця підтверджує українськомовне видання; вона не дозволяє
-        копіювати вірші, пісні, спогади або обкладинку.
+        Єдина прийнята копія сторінки видавця збережена Wayback Machine 10
+        травня 2026 року; архівний перегляд не дозволяє копіювати вірші, пісні,
+        спогади або обкладинку.
 portrait_fallback:
   type: text-only
   license: not-applicable

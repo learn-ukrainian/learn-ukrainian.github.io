@@ -13,7 +13,7 @@ sources:
   - id: S3
     file: https://www.pravda.com.ua/news/2024/10/10/7479122/
     type: external
-    title: Початкове повідомлення про смерть — Українська правда
+    title: У російському ув’язненні загинула українська журналістка Вікторія Рощина
     url: https://www.pravda.com.ua/news/2024/10/10/7479122/
   - id: S4
     file: https://www.pravda.com.ua/articles/2025/04/29/7509612/
@@ -35,7 +35,7 @@ sources:
   - id: S7
     file: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
     type: external
-    title: Підтверджена ідентифікація — Радіо Свобода
+    title: Нові дані про смерть Вікторії Рощиної у російському полоні. Що встановили експертиза та розслідування?
     url: https://www.radiosvoboda.org/a/novyny-pryazovya-smert-roshchyna-ekspertyzy/33497748.html
   - id: S8
     file: "https://www.slidstvo.info/articles/byly-vsikh-duzhe-sylno-i-\
