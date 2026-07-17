@@ -27,3 +27,21 @@ sources:
     evidence_url: https://chl.kiev.ua/95/Writer_1/Tytynnukot.htm
     license: Бібліографічна сторінка; використання лише як зовнішнього посилання
     attribution: Національна бібліотека України для дітей
+- id: S3
+  file: >-
+    https://chl.kiev.ua/mbm/%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B8/2016/tutunnyk_2016.pdf
+  type: external
+  title: >-
+    Великі Українці: «Немає загадки таланту. Є вічна загадка любові»
+  url: >-
+    https://chl.kiev.ua/mbm/%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B8/2016/tutunnyk_2016.pdf
+  metadata:
+    publisher: Національна бібліотека України для дітей
+    language: uk
+    verified_on: '2026-07-17'
+  rights:
+    basis: external-link
+    evidence_url: >-
+      https://chl.kiev.ua/mbm/%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B8/2016/tutunnyk_2016.pdf
+    license: Біобібліографічне видання; використання лише як зовнішнього посилання
+    attribution: Ю. В. Осадча / Національна бібліотека України для дітей
