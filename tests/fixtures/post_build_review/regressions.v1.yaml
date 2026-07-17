@@ -1,4 +1,4 @@
-catalog_version: 6.0.1
+catalog_version: 6.0.2
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -383,3 +383,15 @@ regressions:
       Require one alignment evidence entry at every owned non-vocabulary
       finding's exact primary locator; additional cross-cutting comparison
       evidence may supplement but never replace those entries.
+  - bug_id: alignment-finding-custom-issue-id-breaks-class-ownership
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.0.2
+    version_field: semantic_prompt_version
+    input: >-
+      A TASK_VALIDITY defect uses a precise custom uppercase issue_id while
+      the TASK_VALIDITY alignment entry references the finding's stable id.
+    expected: >-
+      Require findings owned by any seven-class alignment audit to use that
+      class's exact uppercase name as issue_id; keep the specific defect name
+      in id and reserve custom issue_id values for findings outside all seven
+      classes.

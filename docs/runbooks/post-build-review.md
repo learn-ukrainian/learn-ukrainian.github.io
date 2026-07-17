@@ -101,6 +101,11 @@ audit evidence must include each owned finding's exact primary target-file
 locator. Related comparison lines may be added, but cannot replace the primary
 locator. This keeps the model-authored finding ledger and its alignment audit
 machine-checkable without repairing or deriving evidence after inference.
+Semantic findings owned by one of the seven alignment classes also use that
+class's exact uppercase name as `issue_id`; the more specific defect identity
+belongs in `id`. Custom `issue_id` values are reserved for findings outside all
+seven classes, so prompt guidance and exhaustive finalizer ownership cannot
+contradict one another.
 
 Dimension scores preserve the accepted raw reviewer response after strict
 Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,

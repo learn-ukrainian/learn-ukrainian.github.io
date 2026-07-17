@@ -2491,6 +2491,8 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "only genuinely new semantic defects",
         "every owned finding object's exact primary location and line",
         "additional cross-cutting comparison evidence",
+        "set its `issue_id` to that alignment class's exact uppercase name",
+        "create a precise custom `issue_id` only for a finding outside all seven alignment classes",
     ):
         assert required in prompt_lower
 
@@ -2762,6 +2764,46 @@ def test_alignment_found_rejects_related_evidence_without_primary_finding_locato
     with pytest.raises(
         pbr.ReviewProtocolError,
         match="must cite each finding's exact immutable locator",
+    ):
+        pbr._normalize_alignment_audit(
+            raw_audit,
+            verdict="REVISE",
+            semantic_findings=findings,
+            external_findings=[],
+            source_lookup=source_lookup,
+        )
+
+
+def test_alignment_found_rejects_custom_issue_id_for_owned_finding() -> None:
+    source_lookup = {
+        "activities.yaml": "Завдання безпідставно узагальнює кожне звернення.\n"
+    }
+    findings = [
+        {
+            "id": "every-petition-overreach",
+            "issue_id": "UNIVERSAL_QUANTIFIER_OVERREACH",
+            "location": "activities.yaml:1",
+        }
+    ]
+    evidence = [{
+        "location": "activities.yaml:1",
+        "excerpt": "Завдання безпідставно узагальнює кожне звернення.",
+        "supports": "The task-validity finding's exact primary locator.",
+    }]
+    raw_audit = {
+        audit_class: {
+            "status": "FOUND" if audit_class == "TASK_VALIDITY" else "CLEAR",
+            "evidence": copy.deepcopy(evidence),
+            "finding_ids": ["every-petition-overreach"]
+            if audit_class == "TASK_VALIDITY"
+            else [],
+        }
+        for audit_class in pbr.ALIGNMENT_AUDIT_CLASSES
+    }
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match="TASK_VALIDITY FOUND must reference every matching finding",
     ):
         pbr._normalize_alignment_audit(
             raw_audit,
@@ -3256,8 +3298,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.1"
-    assert len(rows) == 64
+    assert catalog["catalog_version"] == "6.0.2"
+    assert len(rows) == 65
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3295,6 +3337,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.8",
         "6.0.0",
         "6.0.1",
+        "6.0.2",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
