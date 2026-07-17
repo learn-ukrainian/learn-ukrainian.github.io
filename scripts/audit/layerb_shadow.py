@@ -42,7 +42,7 @@ from typing import Any, Protocol
 
 import yaml
 
-from scripts.audit import layerb_qualify
+from scripts.audit import layerb_qualify, model_families
 
 if __package__ in {None, ""}:
     project_root = Path(__file__).resolve().parents[2]
@@ -257,64 +257,26 @@ def normalize_seat_key(seat_arm: Any) -> tuple[str, Mapping[str, Any]]:
     return f"seat-{_sha256_text(_canonical_json(metadata))[:16]}", metadata
 
 
-_LINEAGE_METADATA_FIELDS = (
-    "family",
-    "vendor",
-    "provider",
-    "pin",
-    "pin_slug",
-    "resolved_model",
-    "model",
-    "model_id",
-    "reviewer_model_id",
-    "writer_model_id",
-)
-
 # ``fixture`` identifies human-authored or synthetic fixture content that has
-# no model lineage.  The longer marker is retained in adversarial artifact
-# metadata so it cannot be mistaken for a real judge family, then normalizes
-# to the same non-model lineage domain used for route exclusion.
-_FIXTURE_LINEAGE_MARKERS = frozenset({"fixture", "adversarial-fixture"})
+# no model lineage. The marker is retained in adversarial artifact metadata so
+# it cannot be mistaken for a real judge family; it normalizes to the
+# non-model lineage domain used for route exclusion. The token→family mapping
+# itself lives in ``scripts.audit.model_families`` (single source of truth).
 
 
 def normalize_lineage_family(metadata: Any) -> str | None:
-    """Map seat/pin metadata to a conservative Layer-B lineage family.
+    """Map seat/pin metadata to a Layer-B lineage family.
 
-    This intentionally differs from the live-reviewer dispatcher's broader
-    routing labels.  Layer B needs one stable equality domain: Google includes
-    Gemma and Gemini; GPT includes OpenAI and Codex; and Grok and Cursor share
-    one fleet-accounting family.  Values outside that domain are not guessed.
+    Thin compatibility wrapper over the canonical
+    ``scripts.audit.model_families.normalize_lineage_family`` vocabulary — the
+    single source of truth shared with the live reviewer dispatcher. Returns
+    the family string for recognized lineage and ``None`` for ``UNKNOWN``;
+    Layer-B turns ``None`` into an explicit ``failure_class=LINEAGE_OR_ROUTE``
+    refusal rather than acceptance.
     """
 
-    candidates: set[str] = set()
-
-    def add_text(value: str) -> None:
-        text = value.strip().casefold()
-        if not text:
-            return
-        if text in _FIXTURE_LINEAGE_MARKERS:
-            candidates.add("fixture")
-        if re.search(r"(?:^|[^a-z0-9])(google|gemma|gemini)(?:$|[^a-z0-9])", text):
-            candidates.add("google")
-        if re.search(r"(?:^|[^a-z0-9])deepseek(?:$|[^a-z0-9])", text):
-            candidates.add("deepseek")
-        if re.search(r"(?:^|[^a-z0-9])(openai|codex|gpt)(?:$|[^a-z0-9])", text):
-            candidates.add("gpt")
-        if re.search(r"(?:^|[^a-z0-9])(anthropic|claude)(?:$|[^a-z0-9])", text):
-            candidates.add("claude")
-        if re.search(r"(?:^|[^a-z0-9])(grok|cursor|xai)(?:$|[^a-z0-9])", text):
-            candidates.add("grok-cursor")
-
-    def visit(value: Any) -> None:
-        if isinstance(value, str):
-            add_text(value)
-        elif isinstance(value, Mapping):
-            for field in _LINEAGE_METADATA_FIELDS:
-                if field in value:
-                    visit(value[field])
-
-    visit(metadata)
-    return next(iter(candidates)) if len(candidates) == 1 else None
+    family = model_families.normalize_lineage_family(metadata)
+    return None if family is model_families.Family.UNKNOWN else family.value
 
 
 def _first_present(*values: Any) -> Any | None:
@@ -769,8 +731,10 @@ def _select_route(
     if norm_reviewer is not None and norm_reviewer != "fixture":
         excluded.add(norm_reviewer)
 
-    excluded.add("grok")
-    excluded.add("grok-cursor")
+    # grok/xai is never a QG judge seat (model-assignment rule). cursor routes
+    # are already unsatisfiable: ``normalize_lineage_family("cursor")`` is
+    # UNKNOWN (cursor-Auto), so the ``is not None`` route guard skips them.
+    excluded.add(model_families.Family.XAI.value)
 
     return next(
         (

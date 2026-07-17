@@ -25,7 +25,7 @@ from uuid import uuid4
 
 import yaml
 
-from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, qg_schema
+from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, model_families, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -385,29 +385,17 @@ _MEASURED_COST_PROFILES: dict[str, MeasuredCostProfile] = {
 
 
 def normalize_family(raw: Any) -> str | None:
-    """Normalize agent/model labels into cross-review family buckets."""
+    """Normalize agent/model labels into cross-review family buckets.
 
-    if raw is None:
-        return None
-    text = str(raw).strip().lower()
-    if not text:
-        return None
-    text = text.replace("_", "-")
-    if "deepseek" in text:
-        return "deepseek"
-    if any(marker in text for marker in ("gemma", "gemini", "agy", "google")):
-        return "google"
-    if any(marker in text for marker in ("codex", "openai", "gpt-")):
-        return "openai"
-    if any(marker in text for marker in ("claude", "anthropic", "opus", "sonnet")):
-        return "anthropic"
-    if any(marker in text for marker in ("cursor", "composer")):
-        return "cursor"
-    if any(marker in text for marker in ("grok", "xai")):
-        return "xai"
-    if "qwen" in text:
-        return "qwen"
-    return text.split()[0].split("(")[0].strip("-") or None
+    Thin compatibility wrapper over the canonical
+    ``scripts.audit.model_families`` vocabulary — the single source of truth
+    shared with Layer-B. Returns the family string for every recognized token
+    and ``None`` for ``UNKNOWN`` (which the live path turns into an explicit
+    ``ReviewerLineageError`` refusal via ``validate_cross_family``).
+    """
+
+    family = model_families.normalize_family(raw)
+    return None if family is model_families.Family.UNKNOWN else family.value
 
 
 def route_for_review(

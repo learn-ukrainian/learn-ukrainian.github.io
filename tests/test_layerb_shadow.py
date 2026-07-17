@@ -134,20 +134,30 @@ def test_seat_key_is_canonical_not_python_dict_order() -> None:
     assert first_metadata == second_metadata
 
 
-def test_normalize_lineage_family_uses_conservative_vendor_families() -> None:
+def test_normalize_lineage_family_uses_canonical_vendor_families() -> None:
+    # Single source of truth: layer-B now agrees with the live dispatcher on
+    # every token (see test_model_families for the cross-layer agreement
+    # table). grok/cursor are SEPARATE; cursor-Auto is UNKNOWN (None here).
     cases = (
         ({"family": "deepseek", "pin": "openrouter/deepseek/deepseek-v4-flash"}, "deepseek"),
         ({"family": "google", "pin": "openrouter/google/gemma-4-31b-it"}, "google"),
-        ({"family": "openai", "pin": "gpt-5.6-terra"}, "gpt"),
-        ({"family": "anthropic", "pin": "claude-opus-4-6"}, "claude"),
-        ({"family": "cursor", "pin": "grok-4"}, "grok-cursor"),
+        ({"family": "openai", "pin": "gpt-5.6-terra"}, "openai"),
+        ({"family": "anthropic", "pin": "claude-opus-4-6"}, "anthropic"),
+        ({"family": "agy", "pin": "gemini-3.1-pro"}, "google"),
+        ({"family": "qwen", "pin": "qwen-2.5"}, "qwen"),
+        ({"family": "grok", "pin": "grok-4"}, "xai"),
+        # cursor seat with a pinned model inherits the pin's family.
+        ({"family": "cursor", "pin": "grok-4"}, "xai"),
+        # cursor-Auto (no pin) is UNKNOWN -> None at the compatibility seam.
+        ({"family": "cursor"}, None),
         ("adversarial-fixture", "fixture"),
+        # Ambiguous concrete signals fail closed.
         ({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"}, None),
         ({"family": "unmapped", "pin": "local/mystery-model"}, None),
     )
 
     for metadata, expected in cases:
-        assert normalize_lineage_family(metadata) == expected
+        assert normalize_lineage_family(metadata) == expected, metadata
 
 
 def test_route_selection_treats_gemma_writer_and_gemini_judge_as_same_family() -> None:
@@ -177,7 +187,9 @@ def test_route_selection_ignores_adversarial_fixture_reviewer_marker() -> None:
     assert route == gemini
 
 
-def test_route_selection_excludes_grok_and_grok_cursor() -> None:
+def test_route_selection_excludes_grok_xai_and_cursor_routes() -> None:
+    # grok/xai is never a QG judge seat; cursor-Auto is UNKNOWN and thus
+    # unsatisfiable. Both drop out, leaving the cross-family claude route.
     grok = JudgeRoute("grok", "grok-2")
     cursor = JudgeRoute("cursor", "cursor-fast")
     claude = JudgeRoute("claude", "claude-opus-4-6")
@@ -207,11 +219,11 @@ def test_route_selection_refuses_when_lineage_unnormalized() -> None:
         ({}, ("fixture", "google")),
         (
             {"writer_family": "openai", "dispatch": {"reviewer_family": "deepseek"}},
-            ("gpt", "deepseek"),
+            ("openai", "deepseek"),
         ),
         (
             {"writer_seat": {"family": "anthropic", "pin": "claude-opus-4-6"}},
-            ("claude", "google"),
+            ("anthropic", "google"),
         ),
         (
             {"dispatch": {"reviewer_family": "adversarial-fixture"}},

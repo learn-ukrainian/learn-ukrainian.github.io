@@ -9,7 +9,11 @@ import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff
 
-PRE_EXTRACTION_ARTIFACT_SHA256 = "0b06f32e84f99d8e5949b70b3bdf90eb96710d9a411465830f4bee06ce589b20"
+# Under the unified model_families vocabulary (issue #5385) the synthetic
+# experiment pin ``openrouter/test/parity-model`` classifies as UNKNOWN and
+# bakeoff_route_for_model falls back to the FRONTIER_OPENCODE family
+# (``google``) instead of smuggling the raw pin through as a family label.
+PRE_EXTRACTION_ARTIFACT_SHA256 = "b3173cf527f505a9bb563c35bbc66590a2c25897067df45342ee3f81a785d1f5"
 
 
 def test_bakeoff_tooled_artifact_matches_pre_extraction_golden_hash(
