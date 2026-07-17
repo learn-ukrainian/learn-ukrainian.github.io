@@ -14,11 +14,16 @@ sources:
   type: external
   title: Лев Ребет. Ідеолог існування незалежної України в сім'ї європейських народів
   author: Служба зовнішньої розвідки України
-  file: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
-    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
-  url: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
-    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
-  notes: Офіційна архівна публікація з посиланнями на ГДА СЗРУ, фонд 1, справа 10488.
+  file: "https://web.archive.org/web/20250827020552/https://szru.gov.ua/\
+    history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-\
+    ievropeiskykh-narodiv-"
+  url: "https://web.archive.org/web/20250827020552/https://szru.gov.ua/\
+    history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-\
+    ievropeiskykh-narodiv-"
+  notes: >-
+    Офіційна архівна публікація від 24 червня 2022 року з посиланнями на
+    ГДА СЗР України, фонд 1, справа 10488. Живий домен szru.gov.ua повертає 403,
+    тому реєстр фіксує архівний знімок від 27 серпня 2025 року.
 - id: S3
   type: external
   title: Двійкарі

@@ -12,7 +12,9 @@ activity_hints:
 - focus: Як відрізнити особисті погляди Ребета від програми ОУН і рішень її фракцій?
   placement: workbook
   type: debate
-- focus: Порівняння академічної біографії та посібника про архіви КҐБ
+- focus: >-
+    Порівняння академічної біографії ЕІУ з архівною публікацією СЗРУ: що кожна
+    з них доводить документом, а що подає як інституційну інтерпретацію
   placement: workbook
   type: critical-analysis
 - focus: Есе про право, націоналізм і політичне насильство без героїчного згладжування
@@ -76,7 +78,8 @@ content_outline:
 - points:
   - >-
     12 жовтня 1957 року агент КҐБ Богдан Сташинський убив Ребета в Мюнхені
-    пристроєм з отруйним газом; УІНП описує стеження та виконання завдання.
+    спеціальним засобом з отруйною речовиною; архівна публікація СЗРУ описує
+    збирання інформації та попередній план викрадення.
   - >-
     [!myth-buster] КДБівське вбивство є документованим злочином державної
     спецслужби, але не доводить безпомилковості поглядів жертви.
@@ -131,9 +134,12 @@ readings:
       S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Rebet_L&Z21ID="
     note: Академічна енциклопедична сторінка читається лише за зовнішнім посиланням.
 - title: Лев Ребет. Ідеолог існування незалежної України в сім'ї європейських народів
-  source_name: Служба зовнішньої розвідки України
-  source_url: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
-    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
+  source_name: >-
+    Служба зовнішньої розвідки України, архівний знімок Wayback Machine
+    від 27 серпня 2025 року
+  source_url: "https://web.archive.org/web/20250827020552/https://szru.gov.ua/\
+    history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-\
+    ievropeiskykh-narodiv-"
   language: uk
   hosting: link-only
   learner_task: >-
@@ -141,9 +147,13 @@ readings:
     становлять інституційну інтерпретацію біографії.
   rights:
     basis: external-link
-    evidence_url: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
-      nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
-    note: Офіційна архівно-історична сторінка; її текст та ілюстрації не відтворюються.
+    evidence_url: "https://web.archive.org/web/20250827020552/https://szru.gov.ua/\
+      history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-\
+      ievropeiskykh-narodiv-"
+    note: >-
+      Офіційна архівно-історична сторінка, опублікована 24 червня 2022 року.
+      Живий домен szru.gov.ua повертає 403 на автоматичні запити, тому читається
+      датований архівний знімок; текст та ілюстрації не відтворюються.
 - title: Двійкарі
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-23761
@@ -193,10 +203,13 @@ references:
   type: reference
   note: Академічна біографія, політичні й університетські ролі, концтабір та вбивство.
 - title: Лев Ребет. Ідеолог існування незалежної України в сім'ї європейських народів
-  path: "https://szru.gov.ua/history/stories/lev-rebet-ideoloh-isnuvannya-\
-    nezalezhnoi-ukrainy-v-simi-ievropeiskykh-narodiv-"
+  path: "https://web.archive.org/web/20250827020552/https://szru.gov.ua/\
+    history/stories/lev-rebet-ideoloh-isnuvannya-nezalezhnoi-ukrainy-v-simi-\
+    ievropeiskykh-narodiv-"
   type: reference
-  note: Офіційна публікація на основі розсекречених матеріалів СЗРУ.
+  note: >-
+    Офіційна публікація СЗРУ на основі розсекречених матеріалів ГДА СЗР України,
+    фонд 1, справа 10488; читається за архівним знімком від 27 серпня 2025 року.
 - title: Двійкарі
   path: https://esu.com.ua/article-23761
   type: reference
@@ -221,7 +234,7 @@ sequence: 305
 slug: lev-rebet
 subtitle: ОУН, нацистське ув'язнення, еміграційна наука та вбивство КҐБ
 title: 'Лев Ребет: політика, право і документована операція КҐБ'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - word: крайова екзекутива
   definition: територіальний керівний орган ОУН у міжвоєнний період

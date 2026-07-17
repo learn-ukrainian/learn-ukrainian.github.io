@@ -5,14 +5,18 @@ query_keywords:
 - Петро Федун Полтава ЕСУ
 - Петро Федун Полтава Інститут історії України
 - Петро Полтава Елементи революційности українського націоналізму архів
+- Петро Полтава Елементи революційности передрук Літопис УПА том 24
 direct_sources:
 - https://esu.com.ua/article-886281
 - https://resource.history.org.ua/item/0015807
 - https://avr.org.ua/viewDoc/11177
 - https://czasopisma.ipn.gov.pl/index.php/pis/article/view/650
 - https://www.cambridge.org/core/journals/nationalities-papers/article/abs/foes-of-our-rebirth-ukrainian-nationalist-discussions-about-jews-19291947/110829E5A0E4E7D3727ACCD4476F082D
+- https://resource.history.org.ua/item/0015940
 rag_chunks: []
 rag_literary: []
 warning: >-
-  П'ять прямих джерел збігаються з планом і реєстром; три українські читання
-  доповнено польською та єврейською історіографічними рамками.
+  Шість прямих джерел збігаються з планом і реєстром; три українські читання
+  доповнено польською та єврейською історіографічними рамками, а том 24
+  «Літопису УПА» зареєстровано з обмеженою довідковою роллю лише для локатора
+  передруку.
