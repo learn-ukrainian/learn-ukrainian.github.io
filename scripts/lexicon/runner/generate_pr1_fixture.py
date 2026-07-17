@@ -23,8 +23,6 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-os.environ.setdefault("LEXICON_SLOVNYK_OFFLINE", "1")
-
 from scripts.lexicon import enrich_manifest as em
 
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
@@ -193,6 +191,10 @@ def _legacy_cefr_and_relations(
 
 
 def main() -> int:
+    # Offline by default when run as a script. Must NOT run at import time —
+    # importing this module from tests must have zero process-env side effects
+    # (CI env-leak class #5247).
+    os.environ.setdefault("LEXICON_SLOVNYK_OFFLINE", "1")
     FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
     entries = _synthetic_entries(SLICE_SIZE)
     sources_path = FIXTURE_DIR / "sources_slice.sqlite"

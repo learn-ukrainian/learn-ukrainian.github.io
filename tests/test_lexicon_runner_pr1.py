@@ -54,7 +54,11 @@ def _ensure_fixture() -> None:
     if not all(path.is_file() for path in needed):
         from scripts.lexicon.runner.generate_pr1_fixture import main as gen
 
-        assert gen() == 0
+        # Explicit offline for fixture regen; do not rely on import-time env
+        # mutation (and undo after so later tests keep a clean process env).
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
+            assert gen() == 0
         assert all(path.is_file() for path in needed)
 
 
