@@ -2124,6 +2124,8 @@ def test_statement_inventory_forces_risky_bio_claim_units() -> None:
         "всіма",
         "жоден",
         "жодного",
+        "увесь",
+        "ввесь",
         "весь",
         "усього",
     ],
