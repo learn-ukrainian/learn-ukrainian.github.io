@@ -116,6 +116,8 @@ readings:
   source_name: Віртуальний музей дисидентського руху Харківської правозахисної групи
   source_url: https://museum.khpg.org/1114001603
   language: uk
+  source_type: biography
+  role: contextual-reading
   hosting: link-only
   rights:
     basis: external-link
@@ -128,6 +130,8 @@ readings:
   source_name: Віртуальний музей дисидентського руху Харківської правозахисної групи
   source_url: https://museum.khpg.org/1314388686
   language: uk
+  source_type: interview
+  role: close-reading
   hosting: link-only
   rights:
     basis: external-link

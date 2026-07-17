@@ -50,7 +50,8 @@ content_outline:
     Радянського Союзу; ЕСУ описує ранню поезію через світ прадавніх анімістичних уявлень.
   - >-
     Повернення до українського друку: *Зелен день* (1988), *Ікар на метеликових крилах* (1990),
-    *Калина об Різдві* (1992); Шевченківська премія 1994 року за дві останні збірки.
+    *Калина об Різдві* (1992); ЕСУ окремо фіксує Шевченківську премію 1994 року, не пов'язуючи
+    нагороду в цій статті з конкретними книжками.
   - >-
     Міфопоетика: фольклорні образи, анімістична уява, асоціативна логіка — не декоративний
     «фольклоризм», а глибинна поетична мова.
@@ -103,6 +104,8 @@ readings:
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-25281
   language: uk
+  source_type: biography
+  role: contextual-reading
   hosting: link-only
   rights:
     basis: external-link
@@ -113,6 +116,8 @@ readings:
   source_name: Українська літературна газета
   source_url: https://litgazeta.com.ua/interviews/vasyl-goloborodko-mene-pidstrelyly-na-zleti/
   language: uk
+  source_type: interview
+  role: close-reading
   hosting: link-only
   rights:
     basis: external-link

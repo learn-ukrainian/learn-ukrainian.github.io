@@ -10,4 +10,4 @@ direct_sources:
 rag_chunks: []
 rag_literary: []
 warning: >-
-  Прямий пакет: назви читань, URL і зовнішні правові підстави збігаються з планом strict-v2.
+  Direct-source packet; both URLs are the strict-v2 link-only reading records.
