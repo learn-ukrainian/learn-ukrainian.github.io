@@ -2140,6 +2140,20 @@ def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
     assert pbr._statement_signals("Позначте всі часові сполучники.") == []
 
 
+@pytest.mark.parametrize(
+    "statement",
+    [
+        "Зверніть увагу: кожен приклад потребує перевірки.",
+        "Пам'ятайте: усі твердження мають спиратися на джерела.",
+        "Зауважте： жоден виняток не скасовує правила.",
+    ],
+)
+def test_imperative_frame_does_not_hide_declarative_universal(
+    statement: str,
+) -> None:
+    assert pbr._statement_signals(statement) == ["universal_quantifier"]
+
+
 def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
     def material(path: str, text: str) -> dict:
         return {

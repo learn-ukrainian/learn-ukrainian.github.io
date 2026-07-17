@@ -749,7 +749,8 @@ NEAR_UNIVERSAL_RE = re.compile(
     rf"\bмайже\s+{UNIVERSAL_FORM_PATTERN}\b", re.IGNORECASE
 )
 INSTRUCTION_OPEN_RE = re.compile(
-    r"(?:\b[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|^[а-яіїєґ'’\-]{3,}ти\b)"
+    r"^(?:[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|"
+    r"[а-яіїєґ'’\-]{3,}ти\b)"
 )
 
 
@@ -799,9 +800,12 @@ def _statement_signals(text: str) -> list[str]:
     universal = UNIVERSAL_QUANTIFIER_RE.search(text)
     if universal is None:
         return []
-    instruction = INSTRUCTION_OPEN_RE.search(re.sub(r"^[*_`]+", "", text))
+    surface = re.sub(r"^[*_`]+", "", text)
+    instruction = INSTRUCTION_OPEN_RE.search(surface)
     if instruction is not None and NEAR_UNIVERSAL_RE.search(text) is None:
-        return []
+        colon = re.search(r"[:：]", surface)
+        if colon is None or UNIVERSAL_QUANTIFIER_RE.search(surface[colon.end() :]) is None:
+            return []
     return ["universal_quantifier"]
 
 
