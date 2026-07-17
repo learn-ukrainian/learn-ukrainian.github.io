@@ -76,7 +76,6 @@ interface LexiconPracticeProps {
   initialDeck?: PracticeDeckData | PracticeLexeme[];
   initialMode?: PracticeModeFilter;
   autoStart?: boolean;
-  advanceDelayMs?: number;
 }
 
 interface StreakState {
@@ -1096,7 +1095,6 @@ function LexiconPracticeIsland({
   initialDeck,
   initialMode = 'mixed',
   autoStart = false,
-  advanceDelayMs = 650,
 }: LexiconPracticeProps) {
   const [deck, setDeck] = useState<PracticeDeckData | null>(() => normalizeInitialDeck(initialDeck));
   const [clozeLoaded, setClozeLoaded] = useState(() => {
@@ -1134,9 +1132,8 @@ function LexiconPracticeIsland({
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
   const [answerLocked, setAnswerLocked] = useState(false);
-  // A WRONG answer parks its scored outcome here instead of auto-advancing, so the
-  // feedback panel (e.g. the §9.5 cited calque correction) dwells until the learner
-  // explicitly moves on via «Далі →» or Enter. Correct answers never set this.
+  // After ANY answer (correct or wrong), park the scored outcome here instead of
+  // auto-advancing so the learner explicitly continues via «Далі →» or Enter.
   const [pendingOutcome, setPendingOutcome] = useState<CompletionOutcome | null>(null);
   const [streak, setStreak] = useState<StreakState>({
     version: 1,
@@ -1160,14 +1157,11 @@ function LexiconPracticeIsland({
   const deckRequestId = useRef(0);
   const sessionStartedAtRef = useRef(Date.now());
   const didInitRef = useRef(false);
-  // Consumption source of truth for the parked wrong-answer outcome. `advancePending`
+  // Consumption source of truth for the parked answer outcome. `advancePending`
   // claims it via this ref (not the closed-over `pendingOutcome` state) so a rapid
   // double-advance (double-Enter, or Enter+click) before React re-renders resolves to
   // exactly ONE `completeSelection` — the second call reads a null ref and no-ops.
   const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
-  // Correct-answer auto-advance timer — cleared on exit/unmount so a late fire cannot
-  // mutate state after «← Додому» (or remount) and bounce the learner into the summary.
-  const advanceTimerRef = useRef<number | null>(null);
   const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
   // background lower-level shards). While history length is unchanged we keep returning the
@@ -1485,7 +1479,7 @@ function LexiconPracticeIsland({
     }
   }, [pairs, selection, sessionCompleted]);
 
-  // While a wrong answer dwells, Enter is a second way to advance (alongside the
+  // While an answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
   // the window level rather than on the stage. Bail when focus is already on an
   // interactive control (Atlas links, «← Додому», the «Далі →» button itself).
@@ -1502,7 +1496,7 @@ function LexiconPracticeIsland({
     return () => window.removeEventListener('keydown', handleEnter);
   }, [pendingOutcome, selection]);
 
-  // Wrong-answer dwell: move focus to «Далі →» so keyboard/SR users keep their place
+  // Answer dwell: move focus to «Далі →» so keyboard/SR users keep their place
   // after the clicked (now-disabled) option blurs to <body>.
   useEffect(() => {
     if (!pendingOutcome) return;
@@ -1517,15 +1511,6 @@ function LexiconPracticeIsland({
       document.title = previousTitle;
     };
   }, [mode, sessionPhase]);
-
-  useEffect(() => {
-    return () => {
-      if (advanceTimerRef.current != null) {
-        window.clearTimeout(advanceTimerRef.current);
-        advanceTimerRef.current = null;
-      }
-    };
-  }, []);
 
   async function ensureDeck(
     includeCloze = shouldLoadCloze(mode),
@@ -2105,7 +2090,7 @@ function LexiconPracticeIsland({
     completeSelection(current, outcome);
   }
 
-  /** Complete the parked (wrong-answer) selection once the learner chooses to advance. */
+  /** Complete the parked selection once the learner chooses to advance. */
   function advancePending() {
     // Claim the outcome via the ref FIRST so a second synchronous invocation (a rapid
     // double-Enter, or Enter racing a «Далі» click) reads null and no-ops — the closed-over
@@ -2134,20 +2119,7 @@ function LexiconPracticeIsland({
       uk: option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
       en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
     });
-    if (option.correct) {
-      if (advanceTimerRef.current != null) {
-        window.clearTimeout(advanceTimerRef.current);
-      }
-      advanceTimerRef.current = window.setTimeout(() => {
-        advanceTimerRef.current = null;
-        setAnswerLocked(false);
-        completeSelection(selection, outcome);
-      }, advanceDelayMs);
-      return;
-    }
-    // WRONG answer: dwell so the cited correction stays readable; the learner
-    // advances explicitly via «Далі →» / Enter (see advancePending). The ref mirrors
-    // the state so advancePending can claim the outcome race-free.
+    // Correct and wrong both dwell — never auto-advance; learner continues via «Далі →» / Enter.
     pendingOutcomeRef.current = outcome;
     setPendingOutcome(outcome);
   }
@@ -2170,14 +2142,8 @@ function LexiconPracticeIsland({
         textEn: `✓ ${cloze.form} (${translateGrammarTerm(cloze.caseRule.caseLabel)})`,
       });
       setAnswerLocked(true);
-      if (advanceTimerRef.current != null) {
-        window.clearTimeout(advanceTimerRef.current);
-      }
-      advanceTimerRef.current = window.setTimeout(() => {
-        advanceTimerRef.current = null;
-        setAnswerLocked(false);
-        completeSelection(selection, outcome);
-      }, advanceDelayMs);
+      pendingOutcomeRef.current = outcome;
+      setPendingOutcome(outcome);
       return;
     }
 
@@ -2275,10 +2241,6 @@ function LexiconPracticeIsland({
   };
 
   function finishPractice() {
-    if (advanceTimerRef.current != null) {
-      window.clearTimeout(advanceTimerRef.current);
-      advanceTimerRef.current = null;
-    }
     setSessionPhase('idle');
     setFocusWeakness(null);
     setHistory([]);
@@ -2472,12 +2434,13 @@ function LexiconPracticeIsland({
                   type="button"
                   className={sessionBudget === budget ? 'active' : ''}
                   aria-pressed={sessionBudget === budget}
+                  data-testid={`practice-session-budget-${budget === 'until-zero' ? 'until-zero' : budget}`}
                   aria-label={
                     budget === 10
-                      ? '10 карток на сесію'
+                      ? (showEnglishSubtitles ? '10 карток на сесію / 10 cards per session' : '10 карток на сесію')
                       : budget === 20
-                        ? '20 карток на сесію'
-                        : undefined
+                        ? (showEnglishSubtitles ? '20 карток на сесію / 20 cards per session' : '20 карток на сесію')
+                        : (showEnglishSubtitles ? 'до нуля / Until clear' : 'до нуля')
                   }
                   onClick={() => setSessionBudget(budget)}
                 >
@@ -2966,18 +2929,31 @@ function PracticeItem({
           answerLocked={answerLocked}
           onChoice={onChoice}
         />
-        <p className="lexicon-choice-prompt mc-q">
-          <span lang="uk">{drillPrompt.promptUk}</span>
+        <p className="lexicon-choice-prompt mc-q" data-testid="practice-form-prompt">
+          <span lang="uk">
+            {drillPrompt.promptUk}
+            {drillPrompt.subtitleUk ? (
+              <>
+                {' '}
+                <span className="mc-descriptor">— {drillPrompt.subtitleUk}</span>
+              </>
+            ) : null}
+          </span>
           {showEnglishSubtitles ? (
-            <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', fontWeight: 'normal', color: 'var(--lu-text-muted)', marginTop: '0.25rem' }}>
+            <span
+              className="btn-sub"
+              lang="en"
+              style={{
+                display: 'inline',
+                fontSize: '0.85em',
+                fontWeight: 'normal',
+                color: 'var(--lu-text-muted)',
+              }}
+            >
+              {' '}
               / {drillPrompt.promptEn}
+              {drillPrompt.subtitleEn ? ` — ${drillPrompt.subtitleEn}` : ''}
             </span>
-          ) : null}
-        </p>
-        <p className="mc-sub">
-          <span lang="uk">{drillPrompt.subtitleUk}</span>
-          {showEnglishSubtitles && drillPrompt.subtitleEn ? (
-            <span className="btn-sub" lang="en">/ {drillPrompt.subtitleEn}</span>
           ) : null}
         </p>
         <ul className="lexicon-option-list mc-options">

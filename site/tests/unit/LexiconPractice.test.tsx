@@ -673,7 +673,7 @@ describe('LexiconPractice', () => {
         initialDeck={heritageDeck()}
         autoStart
         initialMode="mixed"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -682,7 +682,7 @@ describe('LexiconPractice', () => {
     expect(screen.getByText(/Я бачу/)).toBeInTheDocument();
 
     mixedRender.unmount();
-    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} advanceDelayMs={10_000} />);
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} />);
     expect(screen.getByText('Спадщина')).toBeInTheDocument();
 
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="heritage"]')!);
@@ -697,7 +697,7 @@ describe('LexiconPractice', () => {
         initialDeck={heritageDeck()}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -725,7 +725,7 @@ describe('LexiconPractice', () => {
         initialDeck={heritageDeck()}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -754,7 +754,7 @@ describe('LexiconPractice', () => {
         initialDeck={heritageDeck()}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -796,7 +796,7 @@ describe('LexiconPractice', () => {
         initialDeck={deckWithRationale}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -823,7 +823,7 @@ describe('LexiconPractice', () => {
         initialDeck={deckWithoutRationale}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -843,7 +843,7 @@ describe('LexiconPractice', () => {
         initialDeck={heritageDeck()}
         autoStart
         initialMode="heritage"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -918,7 +918,7 @@ describe('LexiconPractice', () => {
         initialDeck={paronymDeck()}
         autoStart
         initialMode="mixed"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -927,7 +927,7 @@ describe('LexiconPractice', () => {
     expect(screen.getByText(/Вранці він/)).toBeInTheDocument();
 
     mixedRender.unmount();
-    const { container } = render(<LexiconPractice initialDeck={paronymDeck()} advanceDelayMs={10_000} />);
+    const { container } = render(<LexiconPractice initialDeck={paronymDeck()} />);
     expect(screen.getByText('Пароніми')).toBeInTheDocument();
 
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="paronym"]')!);
@@ -942,7 +942,7 @@ describe('LexiconPractice', () => {
         initialDeck={paronymDeck()}
         autoStart
         initialMode="paronym"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -969,7 +969,7 @@ describe('LexiconPractice', () => {
         initialDeck={paronymDeck()}
         autoStart
         initialMode="paronym"
-        advanceDelayMs={10_000}
+
       />,
     );
 
@@ -1415,9 +1415,8 @@ describe('LexiconPractice', () => {
     expect(good?.textContent).toMatch(/‹.+›/);
   });
 
-  test('wrong answer dwells: feedback stays and it never auto-advances past 650ms', async () => {
+  test('wrong answer dwells: feedback stays and never auto-advances', async () => {
     const user = userEvent.setup();
-    // Default 650ms auto-advance window; a wrong answer must ignore it entirely.
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
     await user.click(
@@ -1428,7 +1427,7 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
 
-    // Wait well past the 650ms correct-answer window — the item must still be here.
+    // Wait — the item must still be here with no timer-driven advance.
     await new Promise((resolve) => setTimeout(resolve, 750));
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
@@ -1437,7 +1436,7 @@ describe('LexiconPractice', () => {
   test('wrong answer advances on «Далі» click and on Enter', async () => {
     const clickUser = userEvent.setup();
     const clicked = render(
-      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />,
     );
     await clickUser.click(
       within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
@@ -1451,7 +1450,7 @@ describe('LexiconPractice', () => {
 
     const enterUser = userEvent.setup();
     render(
-      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />,
     );
     await enterUser.click(
       within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
@@ -1463,19 +1462,25 @@ describe('LexiconPractice', () => {
     );
   });
 
-  test('correct answer still auto-advances (never enters dwell)', async () => {
+  test('correct answer never auto-advances: next card waits for «Далі»', async () => {
     const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
     await user.click(
       within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
     );
 
-    // Correct answers keep the snappy auto-advance: no dwell control ever appears.
-    expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+    // Correct answers dwell identically to wrong ones — «Далі →» is required.
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+    expect(document.activeElement).toBe(screen.getByTestId('practice-advance-button'));
 
-    // The snappy timer fires and moves off the item on its own — no «Далі» needed.
+    // Still on the same card after a dwell window — no timer advance.
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('practice-advance-button'));
     await waitFor(() =>
       expect(screen.queryByTestId('practice-heritage-feedback')).not.toBeInTheDocument(),
     );
@@ -1483,8 +1488,7 @@ describe('LexiconPractice', () => {
 
   test('heritage calque citation stays visible until «Далі»', async () => {
     const user = userEvent.setup();
-    // Tiny auto-advance window — the cited correction must still outlast it.
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
     await user.click(
       within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
@@ -1494,7 +1498,6 @@ describe('LexiconPractice', () => {
       'Джерело: Антоненко-Давидович: fixture',
     );
 
-    // The cited §9.5 correction is the teaching moment — the 20ms timer must not erase it.
     await new Promise((resolve) => setTimeout(resolve, 200));
     expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
       'Джерело: Антоненко-Давидович: fixture',
@@ -1506,10 +1509,9 @@ describe('LexiconPractice', () => {
     );
   });
 
-  test('cloze wrong chip dwells (no auto-advance past 650ms) and «Далі» resets to a clean item', async () => {
+  test('cloze wrong chip dwells (no auto-advance) and «Далі» resets to a clean item', async () => {
     seedRecognitionMastery('knyha');
     const user = userEvent.setup();
-    // Default 650ms auto-advance window; a wrong chip pick must ignore it entirely.
     render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
 
     expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
@@ -1520,7 +1522,6 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
 
-    // Wait well past the 650ms correct-answer window — the wrong chip must still dwell.
     await new Promise((resolve) => setTimeout(resolve, 750));
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
@@ -1536,6 +1537,97 @@ describe('LexiconPractice', () => {
     expect(screen.getByLabelText(/Відповідь у знахідному відмінку/)).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
     expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+  });
+
+  test('cloze correct answer also requires «Далі» before the next card', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    await user.click(screen.getByRole('button', { name: 'книгу' }));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('книгу');
+
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('session-size buttons expose aria-pressed and active class for the selection', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    const twenty = screen.getByTestId('practice-session-budget-20');
+    const ten = screen.getByTestId('practice-session-budget-10');
+    expect(twenty).toHaveAttribute('aria-pressed', 'true');
+    expect(twenty).toHaveClass('active');
+    expect(ten).toHaveAttribute('aria-pressed', 'false');
+    expect(ten).not.toHaveClass('active');
+
+    await user.click(ten);
+    expect(ten).toHaveAttribute('aria-pressed', 'true');
+    expect(ten).toHaveClass('active');
+    expect(twenty).toHaveAttribute('aria-pressed', 'false');
+    expect(twenty).not.toHaveClass('active');
+  });
+
+  test('paradigm form question renders prompt + descriptor on one line', () => {
+    const entry = lexeme('semantyka', 'семантика', 'semantics', {
+      nominative: 'семантика',
+      accusative: 'семантику',
+      locative: 'семантиці',
+    });
+    const deck: PracticeDeckData = {
+      deckVersion: 'test-paradigm-oneline',
+      level: 'A1',
+      lexemes: [entry],
+      index: [
+        {
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['paradigm'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        },
+      ],
+      cloze: [],
+      paradigm: [
+        {
+          paradigmId: 'semantyka:paradigm:1',
+          lemmaId: 'semantyka',
+          lemma: 'семантика',
+          slot: {
+            case: 'орудний',
+            number: 'singular',
+            labelUk: 'орудний відмінок, однина',
+            labelEn: 'instrumental case, singular',
+          },
+          form: 'семантикою',
+          options: [
+            { label: 'семантикою', kind: 'answer' },
+            { label: 'семантика', kind: 'same-paradigm' },
+            { label: 'семантиці', kind: 'same-paradigm' },
+            { label: 'семантику', kind: 'same-paradigm' },
+          ],
+        },
+      ],
+    };
+
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="paradigm" />);
+    const prompt = screen.getByTestId('practice-form-prompt');
+    expect(prompt).toHaveTextContent('Яка форма від «семантика»?');
+    expect(prompt).toHaveTextContent('— орудний відмінок, однина');
+    // One text-flow node — not a stacked mc-q + mc-sub pair.
+    expect(prompt.querySelectorAll('p')).toHaveLength(0);
+    expect(screen.queryByText('орудний відмінок, однина', { selector: '.mc-sub' })).not.toBeInTheDocument();
+    expect(prompt).toMatchSnapshot();
   });
 
   test('weak-area chips: renders a UA case chip from a weak review log', async () => {
@@ -1674,7 +1766,7 @@ describe('LexiconPractice', () => {
     const { fn } = mockShardFetch({});
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
     // Wrong (calque) pick parks in a dwell state with an explicit advance control.
     await user.click(

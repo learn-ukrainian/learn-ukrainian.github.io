@@ -161,6 +161,7 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
               data-matched={matched.has(index) ? 'true' : 'false'}
               data-pair-color={matched.has(index) ? index % MATCH_PAIR_COLOR_COUNT : undefined}
               data-selected={selectedLeft === index ? 'true' : 'false'}
+              aria-pressed={selectedLeft === index}
               style={getMatchedPairStyle(index, matched.has(index))}
               onClick={() => handleLeftClick(index)}
               disabled={matched.has(index)}

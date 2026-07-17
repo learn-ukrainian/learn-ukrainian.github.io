@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LexiconPractice > paradigm form question renders prompt + descriptor on one line 1`] = `
+<p
+  class="lexicon-choice-prompt mc-q"
+  data-testid="practice-form-prompt"
+>
+  <span
+    lang="uk"
+  >
+    Яка форма від «семантика»?
+     
+    <span
+      class="mc-descriptor"
+    >
+      — 
+      орудний відмінок, однина
+    </span>
+  </span>
+  <span
+    class="btn-sub"
+    lang="en"
+    style="display: inline; font-size: 0.85em; font-weight: normal; color: var(--lu-text-muted);"
+  >
+     
+    / 
+    Which form is from «семантика»?
+     — instrumental case, singular
+  </span>
+</p>
+`;
