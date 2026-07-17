@@ -6,12 +6,20 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
 
-ENGINE_VERSION = "runner-pr2-v1"
+ENGINE_VERSION = "runner-pr3-v1"
 SERIALIZATION_VERSION = "lemma-artifact-v1"
 CEFR_ALGORITHM_VERSION = "grac-cohort-quantile-v1"
 RELATION_CLOSURE_VERSION = "reciprocal-closure-v1"
 SIDE_DB_SCHEMA_VERSION = "side-db-v1"
 LEDGER_SCHEMA_VERSION = "ledger-v1"
+NETWORK_CACHE_SCHEMA_VERSION = "network-cache-v1"
+ADAPTER_VERSION = "http-adapter-v1"
+REQUEST_POLICY_VERSION = "request-policy-v1"
+PARSER_VERSION = "parser-v1"
+NORMALIZER_VERSION = "normalizer-v1"
+PARSED_SCHEMA_VERSION = "parsed-schema-v1"
+PACKET_SCHEMA_VERSION = "packet-v1"
+BUNDLE_SCHEMA_VERSION = "bundle-v1"
 
 # Host memory policy (16 GiB local host). Platform/VPS ceilings are selected
 # below physical RAM with explicit OS headroom — never copy 8/10 onto a smaller host.
@@ -98,27 +106,44 @@ class OomSplitChildren:
     split_epoch: int
 
 
-# --- PR3/PR4 stubs (PR2 ledger is real — see scripts/lexicon/runner/ledger.py) ---
+# --- PR4 stubs (PR3 network cache/transport is real — see network_cache/transport) ---
 
 
 @dataclass(frozen=True, slots=True)
 class LedgerStub:
-    """Compatibility handle pointing at a real PR2 ledger run.
+    """Compatibility handle pointing at a real PR2+ ledger run.
 
     Prefer :class:`scripts.lexicon.runner.ledger.Ledger` for all writes.
     """
 
     run_id: str
     fingerprint: str
-    note: str = "PR2 real-unit ledger (see scripts.lexicon.runner.ledger.Ledger)"
+    note: str = "PR2/PR3 real-unit ledger (see scripts.lexicon.runner.ledger.Ledger)"
 
 
 @dataclass(frozen=True, slots=True)
-class PacketStub:
-    """PR3: content-addressed request packet (.tar.zst)."""
+class PacketRef:
+    """Content-addressed request packet (.tar.zst) — PR3."""
 
     packet_id: str
-    note: str = "PR3 stub — network cache/packets not implemented in PR1/PR2"
+    generation: int = 0
+    path: str = ""
+    content_hash: str = ""
+
+
+# Back-compat alias used by offline_engine until callers switch to PacketRef.
+PacketStub = PacketRef
+
+
+@dataclass(frozen=True, slots=True)
+class BundleRef:
+    """Content-addressed result bundle (.tar.zst) — PR3."""
+
+    bundle_id: str
+    packet_id: str
+    packet_generation: int
+    path: str = ""
+    content_hash: str = ""
 
 
 @dataclass(frozen=True, slots=True)
