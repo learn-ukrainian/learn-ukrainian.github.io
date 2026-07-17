@@ -3783,38 +3783,6 @@ def _provider_vocabulary_coverage_item_schema(
     }
 
 
-def _provider_vocabulary_prefix_item_schema(
-    lemma: str,
-    candidates: Sequence[tuple[str, str]],
-) -> dict[str, Any]:
-    allowed_pairs = [
-        {
-            "properties": {
-                "surface": {"const": surface},
-                "verification": {"const": verification},
-            },
-            "required": ["surface", "verification"],
-        }
-        for surface, verification in candidates
-    ]
-    return {
-        "allOf": [
-            {"$ref": "#/$defs/vocabularyCoverageItem"},
-            {
-                "properties": {"lemma": {"const": lemma}},
-                "required": ["lemma"],
-            },
-            {
-                "if": {
-                    "properties": {"status": {"const": "INTEGRATED"}},
-                    "required": ["status"],
-                },
-                "then": {"oneOf": allowed_pairs} if allowed_pairs else False,
-            },
-        ]
-    }
-
-
 def hydrate_provider_dimension_evidence(
     semantic: Mapping[str, Any],
     packet: Mapping[str, Any],
@@ -3927,19 +3895,26 @@ def semantic_response_schema(
     definitions["vocabularyEvidence"] = _provider_vocabulary_evidence_schema(packet)
     definitions["vocabularyCoverageItem"] = _provider_vocabulary_coverage_item_schema()
     if packet is not None:
-        candidate_pairs = _packet_vocabulary_candidates(packet)
-        vocabulary_items = [
-            _provider_vocabulary_prefix_item_schema(
-                lemma, candidate_pairs.get(lemma, [])
-            )
-            for lemma in _packet_vocabulary_lemmas(packet)
-        ]
+        vocabulary_lemmas = _packet_vocabulary_lemmas(packet)
         semantic["properties"]["vocabulary_coverage"] = {
             "type": "array",
-            "prefixItems": vocabulary_items,
-            "items": False,
-            "minItems": len(vocabulary_items),
-            "maxItems": len(vocabulary_items),
+            # Anthropic strict structured output accepts the portable `items`
+            # subset, but rejects Draft 2020-12 `prefixItems` before inference.
+            # Keep the transport schema order-agnostic and compact; the
+            # canonical normalizer independently enforces exact source order
+            # and packet-bound surface/verification pairs fail-closed.
+            "items": {
+                "allOf": [
+                    {"$ref": "#/$defs/vocabularyCoverageItem"},
+                    {
+                        "type": "object",
+                        "properties": {"lemma": {"enum": vocabulary_lemmas}},
+                        "required": ["lemma"],
+                    },
+                ]
+            },
+            "minItems": len(vocabulary_lemmas),
+            "maxItems": len(vocabulary_lemmas),
         }
         statement_units = packet["deterministic"]["statement_inventory"]["units"]
         statement_ids = [str(unit["id"]) for unit in statement_units]
@@ -3960,11 +3935,13 @@ def semantic_response_schema(
         if risk_statement_ids:
             statement_coverage_schema["allOf"] = [
                 {
+                    "type": "object",
                     "properties": {
                         unit_id: {
+                            "type": "object",
                             "properties": {
                                 "classification": {"const": "claims"},
-                                "claim_ids": {"minItems": 1},
+                                "claim_ids": {"type": "array", "minItems": 1},
                             }
                         }
                     }
@@ -4012,10 +3989,10 @@ def semantic_response_schema(
                         "status": {"const": "MAPPED"},
                         "resource_ids": {
                             "type": "array",
-                            "prefixItems": [{"const": item} for item in matched],
-                            "items": False,
+                            "items": {"enum": matched},
                             "minItems": len(matched),
                             "maxItems": len(matched),
+                            "uniqueItems": True,
                         },
                         "finding_id": {"type": "null"},
                     },
@@ -4048,8 +4025,29 @@ def semantic_response_schema(
         "$defs": definitions,
         **semantic,
     }
+    _normalize_provider_schema_types(provider_schema)
     Draft202012Validator.check_schema(provider_schema)
     return provider_schema
+
+
+def _normalize_provider_schema_types(value: object) -> None:
+    """Add strict-validator type annotations without changing constraints."""
+    if isinstance(value, list):
+        for item in value:
+            _normalize_provider_schema_types(item)
+        return
+    if not isinstance(value, dict):
+        return
+    for item in value.values():
+        _normalize_provider_schema_types(item)
+    if "type" in value:
+        return
+    if {"properties", "required", "minProperties", "maxProperties"}.intersection(
+        value
+    ):
+        value["type"] = "object"
+    elif {"items", "minItems", "maxItems", "uniqueItems"}.intersection(value):
+        value["type"] = "array"
 
 
 def write_semantic_prompt(
