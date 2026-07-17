@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
+from tests.latency_budget import assert_under_budget
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -276,7 +277,11 @@ def test_orient_completes_within_500ms(monkeypatch):
     elapsed = time.perf_counter() - start
 
     assert response.status_code == 200
-    assert elapsed < 0.5
+    assert_under_budget(
+        elapsed,
+        0.5,
+        f"/api/orient took {elapsed:.3f}s (budget 0.5s)",
+    )
 
 
 def test_orient_response_includes_meta_for_each_section(monkeypatch):

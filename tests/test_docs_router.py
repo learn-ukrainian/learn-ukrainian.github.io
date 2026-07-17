@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api import docs_router
 from scripts.api.main import app
+from tests.latency_budget import assert_under_budget
 
 
 @pytest.fixture()
@@ -298,7 +299,11 @@ def test_docs_router_serves_100kb_html_within_smoke_budget(
 
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert elapsed < 0.2
+    assert_under_budget(
+        elapsed,
+        0.2,
+        f"/artifacts/safe/large.html took {elapsed:.3f}s (budget 0.2s)",
+    )
 
 
 def test_docs_router_concurrent_access_sanity(controlled_client: TestClient):
