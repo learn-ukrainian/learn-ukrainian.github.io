@@ -6,10 +6,10 @@ sources:
     title: Василь Седляр — Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
     url: https://lib.kherson.ua/vasil-sedlyar.htm
   - id: S2
-    file: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21FMT=eiu_all&S21P03=TRN=&S21STR=Sedliar_V
     type: external
-    title: Реабілітовані історією. Харківська область. Книга друга — НАН України, Інститут національної пам'яті, СБУ
-    url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    title: Седляр Василь Феофанович — Енциклопедія історії України, Інститут історії України НАН України
+    url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21FMT=eiu_all&S21P03=TRN=&S21STR=Sedliar_V
   - id: S3
     file: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
     type: external
