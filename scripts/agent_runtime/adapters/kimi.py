@@ -1,17 +1,15 @@
 """Native Kimi Code CLI adapter for the Kimi K3 subscription lane.
 
 The local Kimi Code installation exposes K3 as ``kimi-code/k3`` and emits
-newline-delimited events in ``--output-format stream-json`` mode.  OAuth
+newline-delimited events in ``--output-format stream-json`` mode. OAuth
 credentials stay in Kimi's own home directory; this adapter never reads or
 injects them.
 
-Permission mapping for non-interactive prompt mode:
-
-- ``read-only``: Kimi's default approval mode.  Reads execute headlessly;
-  mutations still require approval.  ``--plan`` cannot be combined with
-  ``--prompt`` in Kimi Code 0.26.0, so it is deliberately not used here.
-- ``workspace-write``: ``--auto``.
-- ``danger``: ``--yolo`` (only after delegate.py validates a worktree).
+Kimi Code 0.27.0 evidence (2026-07-17): ``kimi --yolo -p \"…\"`` exits with
+``error: Cannot combine --prompt with --yolo.`` Bare ``kimi -p`` also writes
+without an approval prompt. Consequently, headless workspace-write and danger
+must be flagless (delegate.py already verifies their worktrees), while
+read-only is refused because the CLI cannot guarantee it.
 """
 
 from __future__ import annotations
@@ -63,9 +61,14 @@ _RATE_LIMIT_RE = re.compile(
 )
 _MODE_FLAGS: dict[str, tuple[str, ...]] = {
     "read-only": (),
-    "workspace-write": ("--auto",),
-    "danger": ("--yolo",),
+    "workspace-write": (),
+    "danger": (),
 }
+
+_READ_ONLY_REFUSAL = (
+    "kimi headless auto-approves mutations; read-only cannot be guaranteed "
+    "on CLI 0.27 — use another agent"
+)
 
 
 class KimiAdapter:
@@ -93,6 +96,8 @@ class KimiAdapter:
                 f"KimiAdapter: unsupported mode {mode!r} "
                 f"(supported: {sorted(self.supported_modes)})"
             )
+        if mode == "read-only":
+            raise ValueError(_READ_ONLY_REFUSAL)
 
         requested_model = resolve_kimi_model(model)
 

@@ -9,6 +9,7 @@ Issue: #1184.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import signal
@@ -1075,6 +1076,53 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["cli_version"] == "2.1.89"
     assert state["returncode"] == 0
     assert state["returncode_reason"] is None
+
+
+def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """An instant Kimi CLI error must survive runtime and dispatch capture."""
+    from agent_runtime import runner as runtime_runner
+
+    kimi_bin = tmp_path / "kimi"
+    kimi_bin.write_text(
+        "#!/bin/sh\nprintf '%s\\n' 'error: Cannot combine --prompt with --yolo.' >&2\nexit 2\n",
+        encoding="utf-8",
+    )
+    kimi_bin.chmod(0o755)
+    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(kimi_bin))
+    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
+    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
+    monkeypatch.setattr(runtime_runner, "_POLL_INTERVAL_S", 0.01)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    runtime_runner._ADAPTER_CACHE.pop("kimi", None)
+
+    task_id = "kimi-instant-exit"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    stderr_log = tmp_path / "kimi-instant-exit.stderr.log"
+    with stderr_log.open("w", encoding="utf-8") as handle, contextlib.redirect_stderr(handle):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Inspect the target.",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert rc == 1
+    assert state is not None
+    assert state["returncode"] == 2
+    assert state["exit_code"] == 2
+    assert state["last_error"] == "error: Cannot combine --prompt with --yolo."
+    assert state["stderr_excerpt"] == state["last_error"]
+    assert stderr_log.read_text(encoding="utf-8") == (
+        "error: Cannot combine --prompt with --yolo.\n"
+    )
 
 
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
@@ -3443,4 +3491,3 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
-

@@ -230,12 +230,15 @@ def _spawn_pty_subprocess(
     env: Mapping[str, str],
     stdin: Any = subprocess.DEVNULL,
     pty_window: tuple[int, int] = (40, 200),
-) -> tuple[subprocess.Popen, int, int]:
-    """Spawn ``cmd`` in a PTY so stdout/stderr line-buffer naturally.
+    stderr_pipe: bool = False,
+) -> tuple[subprocess.Popen, int, int | None]:
+    """Spawn ``cmd`` with PTY stdout and optionally pipe-backed stderr.
 
-    Returns ``(proc, stdout_master_fd, stderr_master_fd)``. The slave
-    fds are closed in the parent immediately after spawn so EOF / EIO
-    propagates cleanly when the child closes its side.
+    Returns ``(proc, stdout_master_fd, stderr_master_fd)``. When
+    ``stderr_pipe`` is true, the final item is ``None`` and stderr is drained
+    from ``proc.stderr`` instead. The slave fds are closed in the parent
+    immediately after spawn so EOF / EIO propagates when the child closes its
+    side.
 
     PTY usage forces the child's libc to detect a TTY and switch from
     block-buffered to line-buffered stdout. Without this, agents that
@@ -268,21 +271,25 @@ def _spawn_pty_subprocess(
         import termios
 
         stdout_master, stdout_slave = pty.openpty()
-        try:
-            stderr_master, stderr_slave = pty.openpty()
-        except (OSError, AttributeError):
-            with contextlib.suppress(OSError):
-                os.close(stdout_master)
-            with contextlib.suppress(OSError):
-                os.close(stdout_slave)
-            raise
+        stderr_master: int | None = None
+        stderr_slave: int | None = None
+        if not stderr_pipe:
+            try:
+                stderr_master, stderr_slave = pty.openpty()
+            except (OSError, AttributeError):
+                with contextlib.suppress(OSError):
+                    os.close(stdout_master)
+                with contextlib.suppress(OSError):
+                    os.close(stdout_slave)
+                raise
 
         # Disable OPOST on each slave so \n stays \n (no ONLCR rewrite).
         # Belt-and-suspenders: the streamer also strips \r\n → \n if a
         # platform somehow ignores the termios change. Suppression is
         # narrow — these calls are advisory; the spawn proceeds either
         # way.
-        for slave_fd in (stdout_slave, stderr_slave):
+        slave_fds = (stdout_slave,) if stderr_slave is None else (stdout_slave, stderr_slave)
+        for slave_fd in slave_fds:
             with contextlib.suppress(termios.error, OSError):
                 attrs = termios.tcgetattr(slave_fd)
                 attrs[1] &= ~termios.OPOST  # oflag
@@ -291,7 +298,7 @@ def _spawn_pty_subprocess(
         # Set sane window size so agents that query TIOCGWINSZ for output
         # formatting (e.g. ANSI tables) get reasonable defaults.
         winsize = struct.pack("HHHH", pty_window[0], pty_window[1], 0, 0)
-        for slave_fd in (stdout_slave, stderr_slave):
+        for slave_fd in slave_fds:
             with contextlib.suppress(OSError):
                 fcntl.ioctl(slave_fd, termios.TIOCSWINSZ, winsize)
     except (OSError, AttributeError) as exc:
@@ -310,23 +317,25 @@ def _spawn_pty_subprocess(
             env=dict(env),
             stdin=stdin,
             stdout=stdout_slave,
-            stderr=stderr_slave,
+            stderr=subprocess.PIPE if stderr_pipe else stderr_slave,
             text=text_mode,
             bufsize=1 if text_mode else -1,
             start_new_session=True,
         )
     except BaseException:
         for fd in (stdout_master, stderr_master, stdout_slave, stderr_slave):
+            if fd is None:
+                continue
             with contextlib.suppress(OSError):
                 os.close(fd)
         raise
 
     # Parent does NOT need slave fds; close them so EOF arrives on
     # master when child closes its side.
-    with contextlib.suppress(OSError):
-        os.close(stdout_slave)
-    with contextlib.suppress(OSError):
-        os.close(stderr_slave)
+    for slave_fd in (stdout_slave, stderr_slave):
+        if slave_fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(slave_fd)
 
     return proc, stdout_master, stderr_master
 
@@ -367,6 +376,7 @@ def _spawn_subprocess(
     cwd: Path | str,
     env: Mapping[str, str],
     stdin: Any,
+    stderr_pipe: bool = False,
 ) -> tuple[subprocess.Popen, int | None, int | None]:
     """Spawn ``cmd`` using PTY mode by default; pipe mode on opt-out.
 
@@ -383,7 +393,13 @@ def _spawn_subprocess(
     if _pty_disabled_via_env():
         return _spawn_pipe_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
     try:
-        return _spawn_pty_subprocess(cmd, cwd=cwd, env=env, stdin=stdin)
+        return _spawn_pty_subprocess(
+            cmd,
+            cwd=cwd,
+            env=env,
+            stdin=stdin,
+            stderr_pipe=stderr_pipe,
+        )
     except _PTYUnavailableError as exc:
         import warnings
 
@@ -1126,6 +1142,11 @@ def _execute_invocation_plan(
                 cwd=review_cwd,
                 env=env,
                 stdin=stdin_handle,
+                # PTYs make stdout line-buffered, but macOS can discard bytes
+                # still waiting on a PTY master when an instantly failing
+                # child closes its slave. Keep stderr on a pipe so CLI errors
+                # survive every nonzero exit for task-state/log reporting.
+                stderr_pipe=True,
             )
         except (FileNotFoundError, PermissionError, OSError) as exc:
             record = _build_usage_record(
