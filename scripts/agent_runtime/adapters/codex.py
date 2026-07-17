@@ -175,6 +175,13 @@ class CodexAdapter:
         Codex falls through to the config default (currently ``high``).
         See #1396.
         """
+        tc_early = tool_config or {}
+        review_write_root: Path | None = None
+        if tc_early.get("review_isolation"):
+            from scripts.review.isolation import validated_review_write_root
+
+            review_write_root = validated_review_write_root(tc_early)
+
         # Per-invocation scoped $CODEX_HOME (set by V7 writer via
         # ``tool_config["codex_home_override"]``). Stored on the
         # adapter BEFORE ``_reset_per_invocation_state`` so that the
@@ -187,7 +194,10 @@ class CodexAdapter:
         # a1-my-morning-20260522-205831 — codex wrote 38 valid MCP
         # calls into ``$TMPDIR/codex-v7-writer-501/sessions/...``, the
         # adapter scanned ``~/.codex/sessions/`` and saw 0.
-        self._codex_home_scope = (tool_config or {}).get("codex_home_override")
+        effective_codex_home = tc_early.get("codex_home_override")
+        if not effective_codex_home and review_write_root is not None:
+            effective_codex_home = str(review_write_root / "home" / ".codex")
+        self._codex_home_scope = str(effective_codex_home) if effective_codex_home else None
 
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
@@ -210,7 +220,13 @@ class CodexAdapter:
         # Resolve binary. shutil.which handles PATH lookup; fall back to
         # bare "codex" if not on PATH so subprocess.Popen can report the
         # error clearly.
-        codex_bin = shutil.which("codex") or "codex"
+        if tc_early.get("review_isolation"):
+            trusted = tc_early.get("review_engine_binary")
+            if not isinstance(trusted, str) or not Path(trusted).is_absolute():
+                raise ValueError("CodexAdapter: trusted review_engine_binary required")
+            codex_bin = trusted
+        else:
+            codex_bin = shutil.which("codex") or "codex"
 
         # Pick a unique output file inside /tmp.
         # Include task_id for human debuggability, but sanitize it:
@@ -223,12 +239,31 @@ class CodexAdapter:
         if task_id:
             safe = "".join(c if c.isalnum() or c in "-_." else "_" for c in task_id)
             safe_suffix = f"-{safe[:60]}"  # cap length too
-        with tempfile.NamedTemporaryFile(
-            prefix=f"codex-runtime{safe_suffix}-",
-            suffix=".txt",
-            delete=False,
-        ) as output_fd:
-            output_path = Path(output_fd.name)
+        write_root = review_write_root or (
+            Path(str(tc_early["review_write_root"])) if tc_early.get("review_write_root") else None
+        )
+        execution_cwd = cwd
+        if tc_early.get("review_isolation") and review_write_root is not None:
+            # Codex discovers AGENTS.md from its working root independently of
+            # --ignore-rules. Run from the parent-created instruction-free
+            # directory; complete changed content remains in the sealed prompt.
+            execution_cwd = review_write_root / "exec"
+        if tc_early.get("review_isolation") and write_root is not None:
+            out_dir = write_root / "tmp"
+            output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
+            fd = os.open(
+                output_path,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                0o600,
+            )
+            os.close(fd)
+        else:
+            with tempfile.NamedTemporaryFile(
+                prefix=f"codex-runtime{safe_suffix}-",
+                suffix=".txt",
+                delete=False,
+            ) as output_fd:
+                output_path = Path(output_fd.name)
 
         has_session_to_resume = session_id is not None
 
@@ -242,7 +277,7 @@ class CodexAdapter:
             [
                 "--skip-git-repo-check",
                 "-C",
-                str(cwd),
+                str(execution_cwd),
                 "--color",
                 "never",
                 "-o",
@@ -251,6 +286,15 @@ class CodexAdapter:
                 model or self.default_model,
             ]
         )
+        # Review isolation (#5285): ignore user/project config when the bridge
+        # marks the invocation as a fail-closed review. Missing flags on an
+        # older binary are the caller's responsibility to feature-detect; the
+        # bridge refuses engines that cannot prove these capabilities.
+        tc = tool_config or {}
+        if tc.get("review_isolation") or tc.get("ignore_user_config"):
+            cmd.append("--ignore-user-config")
+        if tc.get("review_isolation") or tc.get("ignore_rules"):
+            cmd.append("--ignore-rules")
         # ``_mode_flags`` emits ``--enable multi_agent`` for non-read-only
         # modes (matches start-codex.sh). ``_tool_config_flags`` emits the
         # writer-isolation ``--disable shell_tool / goals / browser_use /
@@ -260,7 +304,14 @@ class CodexAdapter:
         # after the enable to actually suppress ``multi_agent``. The 2026-05-22
         # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
         # this ordering as a secondary leak path (see PR #2230 follow-up).
-        cmd.extend(self._mode_flags(mode))
+        if tc.get("review_isolation"):
+            # Codex's internal read-only mode cancels stdio MCP calls even
+            # when approval_policy=never. The verified parent OS sandbox is
+            # the review boundary, so bypass only the nested Codex sandbox to
+            # keep the sole sealed read-only MCP tool usable.
+            cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        else:
+            cmd.extend(self._mode_flags(mode))
         cmd.extend(self._tool_config_flags(tool_config))
         if has_session_to_resume:
             cmd.append(session_id)
@@ -269,7 +320,7 @@ class CodexAdapter:
         env_overrides: dict[str, str] = {}
         if discussion_readonly:
             env_overrides["AB_DISCUSS_READONLY"] = "1"
-        codex_home_override = (tool_config or {}).get("codex_home_override")
+        codex_home_override = effective_codex_home
         if codex_home_override:
             # Per-invocation scoping of $CODEX_HOME — see
             # ``_tool_config_flags`` docstring for the rationale. The
@@ -282,7 +333,7 @@ class CodexAdapter:
 
         return InvocationPlan(
             cmd=cmd,
-            cwd=cwd,
+            cwd=execution_cwd,
             stdin_payload=prompt,
             output_file=output_path,
             env_overrides=env_overrides,

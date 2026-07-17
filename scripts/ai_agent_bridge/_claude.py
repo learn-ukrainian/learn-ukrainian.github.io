@@ -37,6 +37,7 @@ from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt
 from ._review_worktree import (
     ReviewWorktreeError,
+    append_review_prompt_evidence,
     provision_review_worktree,
     review_target_from_message,
     review_target_payload,
@@ -141,7 +142,12 @@ def _run_claude_sync_via_runtime(
     # Decide session handling
     session_id_to_pass: str | None = None
     is_new_session_flag = False
-    if claude_session_id:
+    if review:
+        # Isolated reviews never resume or reserve task session state. Persisting
+        # a UUID that is not passed to Claude leaves the next ordinary ask with
+        # a nonexistent session to resume.
+        print("   Review session: ephemeral")
+    elif claude_session_id:
         session_id_to_pass = claude_session_id
         is_new_session_flag = False
         print(f"   Resuming session: {claude_session_id[:8]}...")
@@ -161,9 +167,21 @@ def _run_claude_sync_via_runtime(
     try:
         target_model = _extract_target_model(msg)
         review_target = review_target_from_message(msg) if review else None
-        with provision_review_worktree(review_target, repo_root=REPO_ROOT) as checkout:
-            result = runtime_invoke(
-                "claude",
+        with provision_review_worktree(
+            review_target,
+            repo_root=REPO_ROOT,
+            allow_local_fallback=bool(review),
+        ) as checkout:
+            if review:
+                # Never use the live primary checkout as reviewer cwd/snapshot.
+                if checkout is None:
+                    raise ReviewWorktreeError(
+                        "exact-target-required: review requires a sealed neutral "
+                        "snapshot (branch/PR metadata or local sealed capture); "
+                        "refusing primary checkout fallback"
+                    )
+                tool_config.update(checkout.isolation_tool_config("claude"))
+            prompt = append_review_prompt_evidence(
                 build_claude_prompt(
                     msg,
                     review,
@@ -171,8 +189,15 @@ def _run_claude_sync_via_runtime(
                     review_pr_number=checkout.pr_number if checkout else None,
                     review_worktree_provisioned=checkout is not None,
                 ),
+                review=review,
+                checkout=checkout,
+                engine="claude",
+            )
+            result = runtime_invoke(
+                "claude",
+                prompt,
                 mode="read-only",
-                cwd=checkout.path if checkout else REPO_ROOT,
+                cwd=checkout.path if checkout is not None else REPO_ROOT,
                 model=target_model,
                 task_id=msg.get('task_id'),
                 session_id=session_id_to_pass,
@@ -187,6 +212,8 @@ def _run_claude_sync_via_runtime(
                 # after the dispatch.py bump. (#1184)
                 stall_timeout=min(600, timeout_val),
             )
+            if review and checkout is not None:
+                checkout.bind_review_result(result, engine="claude")
 
         if not result.ok:
             _response_sent = _handle_claude_error(
