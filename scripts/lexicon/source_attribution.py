@@ -12,7 +12,9 @@ import re
 from typing import Any
 from urllib.parse import quote, unquote, urlparse
 
-MIRROR_HOSTS = frozenset({"slovnyk.me", "goroh.pp.ua", "sum.in.ua", "www.slovnyk.me", "www.goroh.pp.ua", "www.sum.in.ua"})
+MIRROR_HOSTS = frozenset(
+    {"slovnyk.me", "goroh.pp.ua", "sum.in.ua", "www.slovnyk.me", "www.goroh.pp.ua", "www.sum.in.ua"}
+)
 # Astro mirror guard: site/src/lexicon/WordAtlasArticle.astro MIRROR_HOSTS (no www. prefix there).
 MIRROR_HOST_PATTERN = re.compile(
     r"(?:^|[\s/+])(slovnyk\.me|goroh\.pp\.ua|sum\.in\.ua)(?:[/:\s]|$)",
@@ -28,9 +30,7 @@ SLOVNYK_DICT_PATH_RE = re.compile(
 )
 SLOVNYK_SOURCE_PREFIX_RE = re.compile(r"^slovnyk\.me:\s*", re.IGNORECASE)
 
-SUM20_ACADEMIC_LABEL = (
-    "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)"
-)
+SUM20_ACADEMIC_LABEL = "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)"
 SUM20_SHORT_LABEL = "СУМ-20"
 VTS_ACADEMIC_LABEL = "Великий тлумачний словник сучасної української мови"
 VTS_SHORT_LABEL = "ВТС"
@@ -46,13 +46,15 @@ CORRECTION_DICTIONARIES_LABEL = "Словники мовних поправок"
 GRAC_LABEL = "Генеральний регіонально анотований корпус української мови (ГРАК)"
 MIYKLAS_LABEL = "навчальні матеріали МійКлас (корпусні пари)"
 GRINCHENKO_LABEL = "Словарь української мови Б. Грінченка (1907–1909)"
-MPHDICT_SYNONYMS_LABEL = (
-    "mphdict (ODbL/DbCL): Словник синонімів української мови та Орфографічний словник"
-)
+MPHDICT_SYNONYMS_LABEL = "mphdict (ODbL/DbCL): Словник синонімів української мови та Орфографічний словник"
 ESUM_LABEL = (
     "«Етимологічний словник української мови» "
     "(ЕСУМ, Ін-т мовознавства ім. О. О. Потебні НАН України; mphdict ODbL/DbCL)"
 )
+GRINCHYSHYN_LABEL = "Словник паронімів української мови (Д. Г. Гринчишин, О. А. Сербенська, 1986)"
+UKRMOVA_LABEL = "довідник «Укр-мова» (корпусні пари)"
+SYNONYM_VERDICTS_LABEL = "редакторські вердикти синонімів"
+
 
 RELATION_PAIRS_PREFIX = "relation_pairs/"
 UNMAPPED_SOURCE_PATTERN = re.compile(r"relation_pairs/", re.IGNORECASE)
@@ -104,6 +106,9 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         GRINCHENKO_LABEL,
         MPHDICT_SYNONYMS_LABEL,
         ESUM_LABEL,
+        GRINCHYSHYN_LABEL,
+        UKRMOVA_LABEL,
+        SYNONYM_VERDICTS_LABEL,
     }
 )
 
@@ -184,6 +189,12 @@ def _map_relation_pairs_corpus(corpus_key: str) -> str | None:
         return GRAC_LABEL
     if "miyklas" in lowered:
         return MIYKLAS_LABEL
+    if "grinchyshyn" in lowered:
+        return GRINCHYSHYN_LABEL
+    if "ukr-mova" in lowered:
+        return UKRMOVA_LABEL
+    if "synonym_verdicts" in lowered:
+        return SYNONYM_VERDICTS_LABEL
     return None
 
 

@@ -3264,7 +3264,7 @@ rejected:
     coffeehouse = _merge_synonym_relations(None, relations["кав'ярня"]["synonym"])
     assert cafe is not None and cafe["items"] == ["кав'ярня"]
     assert coffeehouse is not None and coffeehouse["items"] == ["кафе"]
-    assert "relation_pairs/synonym_verdicts" in cafe["source"]
+    assert "редакторські вердикти синонімів" in cafe["source"]
     assert relations["крамниця"]["synonym"][0]["item"] == "магазин"
     assert "крамниці" not in relations
 
