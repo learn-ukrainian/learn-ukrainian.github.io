@@ -679,6 +679,7 @@ def resolve_reviewer(
         elif default_first is not None and selected.name != default_first.name:
             selected_rung_names = {candidate.name for candidate in active_ladder[0]}
             rung_results = [entry for entry in trace if entry.name in selected_rung_names]
+            better_health_than: list[str] = []
             unavailable = [
                 entry.name
                 for entry in rung_results
