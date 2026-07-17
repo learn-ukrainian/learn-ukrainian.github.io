@@ -900,18 +900,28 @@ def test_grok_route_self_family_rows_fail_closed() -> None:
 
     xai_written = _case("xai-written-row", "raw")
     xai_written["lineage"] = {"writer_family": "xai", "qg_reviewer_family": "codex"}
-    cursor_reviewed = _case("cursor-reviewed-row", "raw")
-    cursor_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "cursor"}
     grok_reviewed = _case("grok-reviewed-row", "raw")
     grok_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "grok"}
 
-    for case in (xai_written, cursor_reviewed, grok_reviewed):
+    # xai writer / grok reviewer normalize into the xai lineage, which the
+    # grok route IS, so they are self-judgment and fail closed here.
+    for case in (xai_written, grok_reviewed):
         row = layerb_qualify.route_eligibility(case, grok)
         assert row["eligible"] is False, case["case_id"]
         assert row["reason"] == "GROK_SELF_FAMILY_EXCLUDED", case["case_id"]
         # The same rows stay eligible for a non-grok route: the exclusion is
         # self-judgment, not a blanket ban on grok-lineage content.
         assert layerb_qualify.route_eligibility(case, gpt)["eligible"] is True, case["case_id"]
+
+    # cursor-Auto is now UNKNOWN (separate from grok, 2026-07-17 routing
+    # decision): it fails closed via UNKNOWN_LINEAGE for EVERY route, not via
+    # the grok self-family guard, and is not eligible for gpt either.
+    cursor_reviewed = _case("cursor-reviewed-row", "raw")
+    cursor_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "cursor"}
+    for route in (grok, gpt):
+        row = layerb_qualify.route_eligibility(cursor_reviewed, route)
+        assert row["eligible"] is False, (route.family, row)
+        assert row["reason"] == "UNKNOWN_LINEAGE", (route.family, row)
 
 
 def test_unknown_route_family_still_refused() -> None:

@@ -284,7 +284,10 @@ def test_shadow_driver_rejects_fixture_family_on_real_module(tmp_path: Path, fam
     module_dir = _module(tmp_path)
     (module_dir / "writer_meta.json").write_text(f'{{"writer_family": "{family}"}}\n', encoding="utf-8")
 
-    with pytest.raises(ValueError, match=f"writer lineage family '{family}' is classified as a fixture"):
+    # Both fixture markers normalize to the canonical ``fixture`` family under
+    # the unified model_families vocabulary, so the rejection always echoes the
+    # canonical family (issue #5385) rather than the raw input marker.
+    with pytest.raises(ValueError, match="writer lineage family 'fixture' is classified as a fixture"):
         qg_shadow_run.run_shadow_module(
             _target(module_dir),
             audit_dir=tmp_path / "audit",

@@ -56,7 +56,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
-from scripts.audit import layerb_shadow  # isort: skip
+from scripts.audit import layerb_shadow, model_families  # isort: skip
 
 
 REPORT_VERSION = "qg-layer-b-qualification-report.v4"
@@ -652,12 +652,14 @@ def route_eligibility(case: Mapping[str, Any], route: EffectiveRoute) -> dict[st
             "reason": "GEMINI_SAME_VENDOR_REVIEWER_EXCLUDED",
         }
     # The grok route's third-family status is GUARDED, not assumed: any case
-    # whose writer or reviewer normalizes into the grok/cursor/xai lineage
-    # ("grok-cursor" in layerb_shadow.normalize_lineage_family's domain) is
-    # self-judgment and fails closed. Today's labels contain no such rows, so
-    # this changes nothing operationally — it exists so future grok/cursor-
-    # authored content can never be judged by its own lineage silently.
-    if route.family == "grok" and "grok-cursor" in {writer, reviewer}:
+    # whose writer or reviewer normalizes into the xai lineage is
+    # self-judgment and fails closed. cursor-Auto is now UNKNOWN (separate
+    # from grok per the 2026-07-17 routing decision), so a cursor-reviewed row
+    # fails closed earlier via UNKNOWN_LINEAGE rather than this guard. Today's
+    # labels contain no xai rows, so this changes nothing operationally — it
+    # exists so future grok/xai-authored content can never be judged by its
+    # own lineage silently.
+    if route.family == "grok" and model_families.Family.XAI.value in {writer, reviewer}:
         return {
             "case_id": case_id,
             "writer_family": writer,
