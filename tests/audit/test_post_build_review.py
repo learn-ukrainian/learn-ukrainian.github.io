@@ -1432,13 +1432,71 @@ def test_risk_claim_surface_substitution_fails_closed(
         )
         assert claim["claim"] in unit["text"]
         assert pbr.UNIVERSAL_QUANTIFIER_RE.search(claim["claim"]) is None
-        error_fragment = "must preserve its quantifier"
+        error_fragment = "full-statement coverage claim"
 
     result = pbr.finalize_review(malyshko_packet, _raw(semantic))
 
     assert result["semantic_response"]["contract_status"] == "invalid"
     assert error_fragment in result["semantic_response"]["error"]
     assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
+@pytest.mark.parametrize(
+    "substituted_claim",
+    [
+        "кожне громадянське звернення стосувалося житла.",
+        "кожне",
+    ],
+)
+def test_near_universal_scope_dilution_is_contract_invalid(
+    substituted_claim: str,
+) -> None:
+    statement = "Майже кожне громадянське звернення стосувалося житла."
+    unit = {
+        "id": "near-universal-fixture",
+        "path": "tests/fixtures/post_build_review",
+        "line": 1,
+        "role": "content",
+        "text": statement,
+        "text_sha256": pbr.sha256_text(statement),
+        "signals": ["universal_quantifier"],
+    }
+    statement_payload = {"units": [unit]}
+    empty_resources = {"resources": []}
+    empty_attributions = {"units": []}
+    packet = {
+        "deterministic": {
+            "evidence_requirements": [],
+            "track_audit": {"result": {"findings": []}},
+            "policy_findings": [],
+            "statement_inventory": {
+                "inventory_sha256": pbr.sha256_text(
+                    pbr._stable_json(statement_payload)
+                ),
+                **statement_payload,
+            },
+            "resource_inventory": {
+                "inventory_sha256": pbr.sha256_text(
+                    pbr._stable_json(empty_resources)
+                ),
+                **empty_resources,
+            },
+            "source_attribution_inventory": {
+                "inventory_sha256": pbr.sha256_text(
+                    pbr._stable_json(empty_attributions)
+                ),
+                **empty_attributions,
+            },
+        }
+    }
+    semantic = _passing_semantic(packet)
+    semantic["claim_ledger"][0]["claim"] = substituted_claim
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match="full-statement coverage claim",
+    ):
+        _normalize_fixture(semantic, packet=packet)
 
 
 def test_stored_result_rejects_dropped_statement_coverage() -> None:

@@ -340,7 +340,7 @@ regressions:
     fixed_in_version: 6.0.0
     version_field: review_protocol_version
     input: A seminar reviewer reports internally consistent claim counts while omitting learner statements containing every or almost every.
-    expected: Exact packet statement coverage is required; quantifier-signaled units must own verbatim packet substrings and preserve the quantifier, so omission or safer substitution is contract-invalid.
+    expected: Exact packet statement coverage is required; quantifier-signaled units must own a full-statement verbatim coverage claim, so omission, near-to-bare dilution, token-only coverage, or safer substitution is contract-invalid.
   - bug_id: core-statement-inventory-disabled-by-seminar-only-v6
     responsible_layer: deterministic_code
     fixed_in_version: 2.0.0

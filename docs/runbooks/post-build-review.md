@@ -78,10 +78,11 @@ from the immutable packet rather than the live checkout. Omitting an alignment
 class or vocabulary lemma is contract-invalid, not an implicit pass.
 
 V6 classifies every deterministic learner-statement ID in core and seminar
-modules. Universal-quantifier units are forced into the atomic claim ledger;
-each claim must quote a contiguous substring of its owning statement, and at
-least one claim must preserve the signaled quantifier. Reviewer-selected totals
-or safer paraphrases therefore cannot conceal omitted high-risk claims. For
+modules. Universal-quantifier units are forced into the claim ledger; each
+claim must quote a contiguous substring of its owning statement, and at least
+one claim must reproduce the full statement as a coverage anchor. Reviewer-
+selected totals, near-to-bare quantifier dilution, token-only claims, or safer
+paraphrases therefore cannot conceal omitted high-risk claims. For
 seminars, curated named-source aliases are compared with learner-visible
 resources; an unmapped configured source produces a material deterministic
 finding, while incidental acronyms do not become extra source labels.

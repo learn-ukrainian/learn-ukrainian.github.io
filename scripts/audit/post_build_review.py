@@ -754,6 +754,14 @@ def _claim_surface_is_bound(claim: str, statement: str) -> bool:
     return _normalized_claim_surface(claim) in _normalized_claim_surface(statement)
 
 
+def _claims_preserve_universal_statement(
+    claims: Sequence[str], statement: str
+) -> bool:
+    """Require one full-statement anchor so quantifier scope cannot be diluted."""
+    expected = _normalized_claim_surface(statement).casefold()
+    return any(_normalized_claim_surface(claim).casefold() == expected for claim in claims)
+
+
 def _inventory_payload(units: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     payload = {"units": deepcopy(list(units))}
     return {
@@ -2629,13 +2637,6 @@ def normalize_semantic_result(
             raise ReviewProtocolError(
                 f"Risk-signaled statement unit {unit_id} must be classified as claims"
             )
-        if "universal_quantifier" in signals and not any(
-            UNIVERSAL_QUANTIFIER_RE.search(claims_by_id[claim_id]["claim"])
-            for claim_id in unit_claim_ids
-        ):
-            raise ReviewProtocolError(
-                f"Universal-quantifier statement unit {unit_id} must preserve its quantifier in a claim"
-            )
         for claim_id in unit_claim_ids:
             if claim_id not in claim_ids:
                 raise ReviewProtocolError(
@@ -2651,6 +2652,13 @@ def normalize_semantic_result(
                     f"Claim {claim_id} is referenced by multiple statement units"
                 )
             covered_claim_ids.add(claim_id)
+        if "universal_quantifier" in signals and not _claims_preserve_universal_statement(
+            [claims_by_id[claim_id]["claim"] for claim_id in unit_claim_ids],
+            str(statement_units[unit_id]["text"]),
+        ):
+            raise ReviewProtocolError(
+                f"Universal-quantifier statement unit {unit_id} must own a full-statement coverage claim"
+            )
         normalized_statement_coverage[str(unit_id)] = {
             "classification": classification,
             "claim_ids": unit_claim_ids,
@@ -3258,13 +3266,16 @@ def _validate_v6_statement_source_coverage(
             raise ReviewProtocolError(
                 f"Stored risk-signaled statement unit {unit_id} is not classified as claims"
             )
-        if "universal_quantifier" in signals and not any(
-            UNIVERSAL_QUANTIFIER_RE.search(claims_by_id[claim_id]["claim"])
-            for claim_id in unit_claim_ids
-            if claim_id in claims_by_id
+        if "universal_quantifier" in signals and not _claims_preserve_universal_statement(
+            [
+                claims_by_id[claim_id]["claim"]
+                for claim_id in unit_claim_ids
+                if claim_id in claims_by_id
+            ],
+            str(statement_units[unit_id]["text"]),
         ):
             raise ReviewProtocolError(
-                f"Stored universal-quantifier statement unit {unit_id} does not preserve its quantifier"
+                f"Stored universal-quantifier statement unit {unit_id} lacks a full-statement coverage claim"
             )
         for claim_id in unit_claim_ids:
             claim = claims_by_id.get(claim_id)

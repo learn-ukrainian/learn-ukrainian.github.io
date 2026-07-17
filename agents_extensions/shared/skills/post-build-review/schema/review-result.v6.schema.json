@@ -271,7 +271,7 @@
         "unit_id": {"$ref": "#/$defs/nonempty"},
         "claim": {
           "$ref": "#/$defs/nonempty",
-          "description": "A verbatim contiguous substring of the owning statement unit after whitespace normalization."
+          "description": "A verbatim contiguous substring of the owning statement unit after whitespace normalization; universal-quantifier units also require one full-statement coverage claim."
         },
         "location": {"$ref": "#/$defs/nonempty"},
         "status": {"enum": ["supported", "contradicted", "imprecise", "unattested", "unverifiable"]},

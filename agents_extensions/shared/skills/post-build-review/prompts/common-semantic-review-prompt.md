@@ -27,8 +27,10 @@ claim-ledger entry must name its owning `unit_id` and use that unit's exact
 packet location. Its `claim` text must be a verbatim contiguous substring of
 that unit after whitespace normalization; never replace the learner's words
 with a safer paraphrase. For a `universal_quantifier` unit, at least one owned
-claim must preserve the signaled quantifier. The inventory is exhaustive
-coverage scaffolding, not a claim that every heading or instruction is factual.
+claim must reproduce the full statement as a coverage anchor; an atomic split
+may accompany it, but a weaker quantifier or bare token cannot replace it. The
+inventory is exhaustive coverage scaffolding, not a claim that every heading
+or instruction is factual.
 
 The packet also includes learner `resource_inventory` and
 `source_attribution_inventory`. Return one `source_traceability_coverage` entry

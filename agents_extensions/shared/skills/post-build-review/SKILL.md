@@ -124,7 +124,8 @@ manually concatenate or substitute other review prompts.
 - Treat `statement_coverage` as an exact packet-bound ledger for both core and
   seminar modules. Every statement ID must be classified; every claim must
   belong to one unit and quote a contiguous substring of that unit; every
-  universal-quantifier unit must preserve its quantifier in an owned claim.
+  universal-quantifier unit must own a full-statement verbatim coverage claim,
+  so near-universal scope cannot be weakened to a bare quantifier.
   For seminar modules, apply the same exactness to
   `source_traceability_coverage`; an unmatched named source cannot be cleared
   by a general quality impression.
