@@ -8,11 +8,11 @@ sources:
     basis: external-link
     evidence_url: https://esu.com.ua/article-55093
     license: Авторське право ЕСУ; використання тільки як зовнішнього посилання
-    attribution: Енциклопедія Сучасної України
+    attribution: В. В. Овсієнко / Енциклопедія Сучасної України
 - id: S2
   file: https://museum.khpg.org/1121786042
   type: external
-  title: Любов. Добро. Свобода (Юрій Литвин)
+  title: ЛИТВИН ЮРІЙ ТИМОНОВИЧ
   url: https://museum.khpg.org/1121786042
   rights:
     basis: external-link

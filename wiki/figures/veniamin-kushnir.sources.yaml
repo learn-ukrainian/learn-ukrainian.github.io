@@ -12,7 +12,7 @@ sources:
 - id: S2
   file: https://uartlib.org/ukrayinski-hudozhniki/kushnir-veniamin/
   type: external
-  title: Веніамін Кушнір
+  title: Кушнір Веніамін
   url: https://uartlib.org/ukrayinski-hudozhniki/kushnir-veniamin/
   rights:
     basis: external-link
