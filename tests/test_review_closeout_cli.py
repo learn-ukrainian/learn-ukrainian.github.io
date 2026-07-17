@@ -122,6 +122,28 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert len(state["findings"]) == 3  # raised, adjudicated, applied
 
 
+def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_path):
+    state_file = tmp_path / "state.json"
+    invalid_risk = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "codex",
+        "--risk",
+        "bogus",
+    )
+    assert invalid_risk.returncode != 0
+
+    unknown_author = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "unknown-seat",
+    )
+    assert unknown_author.returncode != 0
+    assert json.loads(unknown_author.stdout)["selected"] is None
+
+
 def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")

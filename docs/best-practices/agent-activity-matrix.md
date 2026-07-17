@@ -18,24 +18,24 @@ Each cell carries:
 - **Known weakness** — failure mode we've observed.
 - **Known strength** — what they do uniquely well.
 
-**Best ≠ primary.** Best = highest eval score. Primary = best after factoring quota, cost, latency, and parallel-load. Example: Opus 4.7 might be the *best* adversarial reviewer, but Codex is *primary* for routine reviews because of routine-work quota/cost economics (NOTE 2026-06-15: the post-2026-06-15 Claude-dispatch sunset was CANCELLED — the lane is available again; route by fit/cost; a better quota construct is TBD).
+**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. Example: Opus 4.8 may be the *best* adversarial reviewer, while Pool is primary for a low-risk review and Gemini 3.1 Pro for a medium-risk review. The machine-enforced ladder is `scripts/config/model_catalog.yaml`.
 
 ---
 
 ## 2. Agent roster
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
-|---|---|---|---|---|
-| **Claude** ⭐ | Opus 4.8 (orchestrator inline + headless dispatch + Q&A); Sonnet 4.x (mid-tier headless); Haiku (cheap Explore subagent grep/read) | Anthropic API (interactive weekly cap, doubled until ~mid-July 2026 promo) + `delegate.py --agent claude` headless | Metered; interactive cap shared with user sessions | **TOP-PRIORITY lane.** Dispatch lane **AVAILABLE** (the planned post-2026-06-15 sunset was CANCELLED). Architecture, V7 writer (claude-tools), hard-bug reasoning, adversarial review (**inline only — never `claude -p`/`--agent claude` subagent for the Claude review seat**). Cap 2 in-flight. |
-| **Codex** ⭐ | gpt-5.5 (default) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
+| --- | --- | --- | --- | --- |
+| **Claude** ⭐ | Opus 4.8 (frontier authority), Fable 5 (frontier authority through Cursor), Sonnet 5 (strong practical) | Native Claude CLI; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | **TOP-PRIORITY judgment lane.** Architecture, hard-bug reasoning, and adversarial review. Native read-only dispatch is valid when an independent Claude review is requested; use Sonnet for routine work. |
+| **Codex** ⭐ | GPT-5.6 Terra (default), Sol (frontier authority), Luna (bounded fast work) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
 | **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | Support lane: existing scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. |
-| **DeepSeek** | deepseek-v4-pro (content review + VESUM via `sources` MCP); deepseek-v4-flash (cheap PR code review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane — use it, don't review inline.** Primary PR-diff + content review. |
-| **Grok** | **`grok`** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`, **file-editing dispatch**, validated 2026-06-14); **grok-4.\*** via demoted Hermes seat (`--agent grok-hermes` / `ask-hermes`) | native grok CLI / Hermes (xai-oauth) | Cheap | **Active.** Prefer the native `grok` seat for coding/review; Hermes `grok-hermes` remains for V7 grok-tools content path. |
-| **Kimi** | K3 (`kimi-code/k3`; 262K context; max effort) | Native Kimi Code CLI OAuth: `scripts/delegate.py dispatch --agent kimi` | Subscription; CodexBar request windows | **Active onboarding lane.** Bounded code/recon/triage and second-opinion canaries only until role bakeoffs; not a sole high-stakes authority and not yet routed to Ukrainian content. |
+| **DeepSeek** | deepseek-v4-pro (strong code/content review + VESUM via `sources` MCP); deepseek-v4-flash (low-risk economical review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane.** Pro is the medium/high-quality choice; Flash is never the sole medium/high gate. |
+| **Grok** | **Grok 4.5** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
+| **Kimi** | K3 (`kimi-code/k3`; max effort) for consequential work; K2.7 coding variants for routine work | Native Kimi Code CLI OAuth: `scripts/delegate.py dispatch --agent kimi` | Subscription; CodexBar request windows | **Active frontier-practical coding/review lane.** K3 may be a formal cross-family gate outside Moonshot lineage; Ukrainian content remains separately gated. |
 | **cursor** | cursor-agent | `scripts/delegate.py dispatch --agent cursor` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
 | **pool** | poolside.ai `laguna-m.1` (`--variant high`/`max`) | `ab ask-pool` (opencode router + lightpanda MCP) | **Free** (poolside sub; watch weekly limits on bursts) | Differentiator = **free** cross-family code review + web-verify *volume*. NOT Ukrainian / translation / prose / pedagogy. Bridge (consult/review) only — no dispatch adapter yet. |
 | **glm** | Zhipu `glm-5.2` | `ab ask-glm` (opencode router + lightpanda MCP) | Z.AI Coding Plan (or `openrouter/z-ai/glm-5.2`) | Differentiator = deep code/security review + **large-context cross-file coherence audits**. ⚠️ **China-hosted (Zhipu/z.ai) → data egresses to China → LOCAL-ONLY, never CI / sensitive data** (`ask-glm` refuses under CI). NOT Ukrainian/prose. Bridge-only. |
-| _web-verify note_ | — | — | — | **Live web fact-check is an opencode + lightpanda HARNESS capability, not model-specific** — ANY opencode-hosted model browses (kubedojo-verified incl. deepseek). Don't attribute it to a single model. |
+| *web-verify note* | — | — | — | **Live web fact-check is an opencode + lightpanda HARNESS capability, not model-specific** — ANY opencode-hosted model browses (kubedojo-verified incl. deepseek). Don't attribute it to a single model. |
 | **Qwen** | — | — | — | ❌ **EXCLUDED** — too expensive (user 2026-05-29). Adapter exists but **do not route to it.** |
 
 **Sub-agents (children of the orchestrator session, not separate dispatches):**
@@ -53,7 +53,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors.
-  - **kimi K3:** bounded code/recon/triage canaries while the lane is new; pair consequential output with the normal cross-family review gate and collect bakeoff evidence before promotion.
+  - **kimi K3:** consequential coding, long-context debugging, and strong review; pair authored output with the normal cross-family gate and continue collecting local bakeoff evidence.
   - **DeepSeek:** any open PR diff or content+VESUM review — route reviews here off-seat; don't review inline.
   - **grok-4.\* / hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
@@ -67,7 +67,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
 Eleven canonical task types map onto the agent roster. Sub-rows are noted where the eval data differs (e.g. writing vs reviewing inside V7).
 
 | # | Task type | Description |
-|---|---|---|
+| --- | --- | --- |
 | 1 | V7 module writing | Generate one curriculum/l2-uk-en/{level}/{slug}/ module per invocation. Loads writer prompt + plan + RAG context; emits module.md + activities.yaml + vocabulary.yaml + resources.yaml. |
 | 2 | V7 module reviewing (per-dim) | LLM quality-gate per dimension. Cross-agent (writer ≠ reviewer). |
 | 3 | Wiki article writing | Ukrainian wiki entries for the curriculum's reference corpus. |
@@ -87,7 +87,7 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 ### 4.1 V7 module writing
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | Claude (claude-tools) | 4 MCP tool calls, vesum_verified=true (159/159), 1224-word module produced | 2026-05-12 | `audit/bakeoff-2026-05-12-night/REPORT.md` | "Default V7 writer until next bakeoff signal indicates otherwise" per decision card. |
 | Runner-up 1 | Codex (codex-tools) | **11 MCP tool calls in fair retest** (2026-05-13); content-register gap at A1: 996/1200 words, 51.77% immersion vs 24% A1 cap, truncation artifacts | 2026-05-13 (post-PR-#1907) | `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md:120-141` | **2026-05-12 night `tool_calls_total=0` verdict RETRACTED** — was a rollout-matcher bug in `scripts/agent_runtime/adapters/codex.py::_rollout_matches_plan`, fixed PR #1907. Real codex friction at A1 is **content register**, not tool wiring. At B1+ (immersion inverts) codex's high-Ukrainian tendency may become a feature. |
 | Runner-up 2 | Gemini (gemini-tools) | subprocess crash before writer phase | 2026-05-06 | `audit/bakeoff-2026-05-05/REPORT.md` | Adapter instability (#1708 writer subprocess timeout). Not a content-quality failure; infra. Re-bakeoff needed. |
@@ -106,7 +106,7 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 ### 4.2 V7 module reviewing (per-dim)
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | Codex (codex-tools) | reviewer-as-fixer ADR-007 contract honored; baseline shipping | 2026-04-26 | `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §2 | "Cross-agent, no self-review" — `SELF_REVIEW_DETECTED` audit gate enforces. Used for per-dim LLM QG. |
 | Runner-up 1 | Claude | reserved for cultural/creative nuance dims | 2026-04-26 | same | "When those reviewers need a different voice." |
 | Runner-up 2 | Grok (4.3) | judge-calibration in progress | 2026-05-15 → 2026-05-17 | `audit/2026-05-15-grok-4.3-judge-calibration/`, `audit/2026-05-17-judge-calibration-*` | 4-axis calibration matrix (with-mcp / effort-high / effort-xhigh). Outcome: see audit dirs (full read pending in evidence sweep). |
@@ -121,7 +121,7 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.md`):
 
 | Slot | Agent | F1 / accuracy | Last verified | Evidence |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Primary** | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
 | Runner-up 1 | AGY Gemini 3.1 Pro (High) | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
 | Runner-up 2 | GPT-5.5 (Codex) | high precision, lower recall (conservative) | 2026-05-15 | same |
@@ -136,7 +136,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.3 Wiki article writing
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | Gemini (always) | 100% wiki coverage across 22 tracks (1713 modules) | 2026-05-18 (live) | `/api/orient` `wiki.by_track` percentages | "Wiki writer: Gemini, always" per ADR. `scripts/wiki/compile.py` defaults to `--writer gemini`. |
 | Forbidden | Claude | n/a | n/a | `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §1 | "Never pass `--writer=claude` for wiki rebuilds." |
 
@@ -149,7 +149,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.4 Adversarial review of design / ADR
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary (pre-June-15)** | Claude headless Opus 4.7 xhigh | qualitative — caught the #2127 contract violation hypothesis before m20 build #1; flagged #1933 /goal driver gaps | 2026-05-12 / 2026-05-13 | `docs/dispatch-briefs/2026-05-08-night/1785-d4-decision-lineage.md`, multiple session-state files | Read-only mode; `delegate.py --agent claude --mode read-only --effort xhigh`. |
 | **Primary (post-June-15)** | Codex (gpt-5.5 xhigh) | analogous role; novel architectural catches | 2026-05-09 | "E:A+ on `user_-1` sentinel" per MEMORY #M-0 | Substitution per `agent_fallback_substitutions.yaml`. |
 | Runner-up | DeepSeek-pro hermes | recent addition; one shipped review | 2026-05-17 | PR #2107 adapter | Cheap second-opinion lane. |
@@ -163,7 +163,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.5 Code dispatch — mechanical refactor
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | AGY Gemini 3.5 Flash (High) | metered; routine pattern-application across multiple files | 2026-05-13 | MEMORY #M-0 reframe | "default for routine: running existing scripts, ingestion runs, tests/migrations/fixtures, docs-near-code" |
 | Runner-up | Codex | tighter on edge-cases; better for high-uncertainty refactors | 2026-05-12 | various recent merges (#2121, #2123) | Costs Codex quota; reserve for cases where Gemini's pattern-match might miss. |
 
@@ -174,7 +174,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.6 Code dispatch — novel implementation
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | Codex (gpt-5.5 xhigh) | recent PRs: #2121 healthz cache, #2122 silence-timeout bump, #2123 Path 3 PR3, #2124 PTY wrap, #2125 Path 3 PR4 | 2026-05-17 / 2026-05-18 | recent merge cascade | All required design judgment + tight scoping. |
 | Runner-up | Claude headless (pre-June-15) | 2026-05-13 dispatched #1965 jsx-uk-attribute extraction | 2026-05-13 | dispatch brief | Use for architectural novel-impl where Codex's bug pattern is unclear. |
 | Open | Gemini | not yet bakeoff'd for novel-impl | n/a | — | File a focused bakeoff to determine if Gemini can take pieces of this lane. |
@@ -184,7 +184,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.7 Code review (PR diff)
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | DeepSeek-flash (deepseek-v4-flash) | "E:A+ 15s" — cheap second-opinion via `delegate.py dispatch --agent deepseek --model deepseek-v4-flash` | 2026-05-15 | MEMORY #M-0 | New primary as of 2026-05-13 routing update. |
 | Runner-up 1 | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Reserve for novel-architectural cases. |
 | Runner-up 2 | Claude inline (orchestrator) | when context-continuity matters | ongoing | this session | I review PRs before merging during my drive. |
@@ -197,7 +197,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.8 Content review (with VESUM verification)
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | New primary as of 2026-05-17. |
 | Runner-up 1 | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Inline by orchestrator for ad-hoc verification. |
 | Runner-up 2 | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | When budget is tight. |
@@ -207,7 +207,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.9 Q&A / single-shot consult
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary (routine)** | AGY Gemini 3.5 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.5-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
 | **Primary (deep)** | AGY Gemini 3.1 Pro (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.1-pro-high` | qualitative | ongoing | same | When deep reasoning needed and Codex/Claude not on the question. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
@@ -218,7 +218,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.10 Search / grep / locate
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | `Agent(subagent_type="Explore", model="haiku")` | cheap, parallel, isolated | ongoing | `CLAUDE.md` "Agent Roster" | Use for "where is X" questions during this session. |
 | Runner-up | `ugrep` inline | faster than `grep`; parallel; binary-safe | ongoing | MEMORY "TOOL SELECTION" | Use when I know roughly where to look. |
 
@@ -227,7 +227,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ### 4.11 UI/browser testing
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Primary** | Claude inline (this session) with `mcp__claude-in-chrome__*` | qualitative | ongoing | MEMORY #0 "Role" | "Browser/UI testing... that IS mine." |
 | Runner-up | Codex Desktop | has `@browser`/`@browser-use` per 2026-05-09 correction | not recently used | MEMORY #M-3 | Available for multi-shot UI flows; requires explicit polling. |
 | Forbidden | Claude headless (`--bare`) | n/a | n/a | n/a | `--bare` is not authed for browser tools and not interactive. |
@@ -237,14 +237,14 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 ## 5. Routing recipes (canonical commands)
 
 | Task | Command |
-|---|---|
+| --- | --- |
 | V7 module writing | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree --writer claude-tools` (default writer omitted) |
 | Wiki article writing | `.venv/bin/python scripts/wiki/compile.py --writer gemini` (default) |
 | Code dispatch (mechanical) | `.venv/bin/python scripts/delegate.py dispatch --agent agy --task-id X --mode danger --worktree --prompt-file BRIEF` |
-| Code dispatch (novel) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.5 --effort xhigh --mode danger --worktree --silence-timeout 3600 --task-id X --prompt-file BRIEF` |
+| Code dispatch (novel) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-terra --effort high --mode danger --worktree --silence-timeout 3600 --task-id X --prompt-file BRIEF` |
 | Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
 | Adversarial review (post-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --effort xhigh --mode read-only ...` per substitutions YAML |
-| Code review (PR diff) | `.venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash --task-id review-{PR} --prompt-file ...` |
+| Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
 | Content review (load-bearing, VESUM) | `.venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-pro --task-id review-content-X --prompt-file ...` |
 | Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.5-flash-high` |
 | Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.1-pro-high` |
@@ -275,7 +275,7 @@ The matrix updates when bakeoff signal flips a champion. The protocol:
 Listed by priority for next-session fill:
 
 | Gap | Why | Next step |
-|---|---|---|
+| --- | --- | --- |
 | Gemini for novel-impl (4.6 runner-up = OPEN) | Routing routinely defers to Codex; Gemini may take pieces of this lane | File bakeoff: same well-scoped novel-impl brief to both Gemini + Codex |
 | DeepSeek for adversarial review (4.4 runner-up = limited) | Deepseek-pro only landed 2026-05-17; need more shipped reviews to score | Use it on next 2-3 design-review opportunities |
 | Grok for V7 reviewing (4.2 runner-up = calibration-in-progress) | Multiple calibration matrices in audit/2026-05-15-* and 2026-05-17-* | Finalize aggregator report → promote or eliminate |
@@ -292,7 +292,7 @@ Listed by priority for next-session fill:
 ### 8.1 V7 module writer (A1 register-precision; B1+ register-relaxed)
 
 | Rank @ A1 | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Claude Opus 4.7 (claude-tools) | $$$ | Default. 1224 words / 4 MCP / VESUM 159/159. Lane ends 2026-06-15. |
 | 2 ✅ | Codex GPT-5.5 (codex-tools) | $$ | Tools confirmed (11 calls). Content register gap: 996/1200, 51% immersion. Underperforms at A1. |
 | 3 ⚠️ | Gemini-3.1-pro (gemini-tools) | 0$ | Last bakeoff: infra crash (#1708). Re-bakeoff needed. |
@@ -306,7 +306,7 @@ Listed by priority for next-session fill:
 ### 8.2 V7 module reviewer (per-dim LLM QG)
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Codex GPT-5.5 (codex-tools) | $$ | Default per ADR. `<fixes>` contract honored. Bug surfaced #2127. |
 | 2 ⚠️ | DeepSeek-v4-pro hermes | $ | New (2026-05-17). Promote-protocol round 1 proposed split-by-phase prompt. Bakeoff queued. |
 | 3 ✅ | Claude Opus 4.7 | $$$ | Reserved for cultural/creative nuance. Best on Russianism (§4.2.a). |
@@ -316,7 +316,7 @@ Listed by priority for next-session fill:
 ### 8.2a Russianism / linguistic reviewer (empirical F1 ranking)
 
 | Rank | Model | F1 | Precision | Recall | Case acc | Cost | Notes |
-|---|---|---:|---:|---:|---:|---|---|
+| --- | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Primary. Highest recall in the field. |
 | 2 ✅ | AGY Gemini 3.1 Pro (High) | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
 | 3 ✅ | GPT-5.5 (Codex) | **78%** | 90% | 69% | 83% | $$ | Conservative, high precision. |
@@ -327,14 +327,14 @@ Listed by priority for next-session fill:
 ### 8.3 Wiki article writing
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Gemini-3.0-flash-preview | 0$ | Primary always. 100% wiki coverage across 22 tracks. |
 | FORBIDDEN | Claude | n/a | Per ADR — never pass `--writer=claude` for wiki. |
 
 ### 8.4 Adversarial review of design / ADR
 
 | Rank pre-June-15 | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Claude Opus 4.7 xhigh (read-only) | $$$ | Caught #2127, flagged #1933. Lane ends 2026-06-15. |
 | 2 ⚠️ | Codex GPT-5.5 xhigh | $$ | Substitution per `agent_fallback_substitutions.yaml`. Becomes primary post-June-15. |
 | 3 ⚠️ | DeepSeek-v4-pro | $ | One shipped (PR #2107). Promising cheap second-opinion. |
@@ -343,14 +343,14 @@ Listed by priority for next-session fill:
 ### 8.5 Code dispatch — mechanical refactor
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Gemini-3.0-flash-preview | 0$ | Default for routine. Unmetered. |
 | 2 ✅ | Codex GPT-5.5 | $$ | Reserve for high-uncertainty / edge-case-heavy refactors. |
 
 ### 8.6 Code dispatch — novel implementation
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | Codex GPT-5.5 xhigh | $$ | Recent: PRs #2121-#2125. Design judgment + tight scoping. |
 | 2 ⚠️ | Claude Opus 4.7 (pre-June-15) | $$$ | When Codex's bug pattern unclear. |
 | ❓ | Gemini-3.1-pro | 0$ | OPEN — runner-up bakeoff not run. |
@@ -358,7 +358,7 @@ Listed by priority for next-session fill:
 ### 8.7 Code review (PR diff)
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | DeepSeek-v4-flash | $ | E:A+ 15s, zero false positives. Primary as of 2026-05-13. |
 | 2 ✅ | Codex GPT-5.5 | $$ | Architectural catches. Reserve. |
 | ❓ | Qwen-3.6-flash | $ | Cheap candidate; untested. |
@@ -366,7 +366,7 @@ Listed by priority for next-session fill:
 ### 8.8 Content review (with VESUM verification)
 
 | Rank | Model | Cost | Quality status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 ✅ | DeepSeek-v4-pro hermes | $ | Primary 2026-05-17 (PR #2107/#2112). Proactive MCP use. |
 | 2 ⚠️ | Claude Opus xhigh | $$$ | Inline fast pass. |
 | 3 ⚠️ | DeepSeek-v4-flash | $ | Budget-tight option. |
@@ -375,7 +375,7 @@ Listed by priority for next-session fill:
 ### 8.9 Q&A / single-shot consult
 
 | Rank routine | Model | Cost |
-|---|---|---|
+| --- | --- | --- |
 | 1 ✅ | AGY Gemini 3.5 Flash (High) | metered |
 | 1 deep ✅ | AGY Gemini 3.1 Pro (High) | metered |
 | 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
@@ -386,20 +386,20 @@ Listed by priority for next-session fill:
 The user said: *"quality foremost, but if Chinese models bring quality we use them."* Status as of 2026-05-18:
 
 | Model | Origin | Already primary in a role? | Validation status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | DeepSeek-v4-pro | Chinese (DeepSeek AI) | **YES** — §8.8 content review with VESUM | ✅ Empirical bakeoff 2026-05-17 |
 | DeepSeek-v4-flash | Chinese (DeepSeek AI) | **YES** — §8.7 code review | ✅ Empirical bakeoff 2026-05-15 |
 | Qwen-3.6-plus | Chinese (Alibaba) | No (Russianism judge tested, did not earn primary) | ⚠️ F1 69% (rank 5/5) as Russianism judge per `audit/2026-05-19-qwen-3.6-judge-calibration/`. Conservative, high-precision profile. |
 | Qwen-3.6-max-preview | Chinese (Alibaba) | No | ❓ Untested |
 | Qwen-3.6-flash | Chinese (Alibaba) | No | ❓ Untested |
 | Kimi K2 | Chinese (Moonshot) | No | ⏸ EXCLUDED per user direction 2026-05-18 |
-| Kimi K3 | Chinese (Moonshot) | No | 🧪 Native OAuth lane added 2026-07-16; infrastructure-smoke only, role quality unbenchmarked |
+| Kimi K3 | Chinese (Moonshot) | No | Operator-classified frontier-practical coding/review model; native OAuth route; local matched-role scorecard still desirable |
 
 **Honest take:** DeepSeek has earned primary slots on quality, not just cost. Qwen integration just landed; needs role-specific bakeoffs to know if it earns slots or stays runner-up.
 
 **Recommended next bakeoffs to answer "which Chinese model is good enough for which role" (priority order):**
 
-Kimi K3 onboarding requires matched code-implementation, code-review, and Q&A cells before any primary/runner-up promotion. The earlier K2 exclusion remains historical evidence and does not substitute for a K3 result.
+Kimi K3 is eligible now for consequential coding and cross-family review by operator direction. Continue matched code-implementation, code-review, and Q&A cells so future ranking changes rest on local evidence as well as provider capability.
 
 1. **Qwen-3.6-plus as V7 module writer at B1+** (codex's tools+register issue at A1 may not exist at B1+ register; qwen plausibly fits well here at low cost) — cost ~$5-10/module
 2. ~~**Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set~~ **DONE 2026-05-19.** Verdict: F1 69%, precision 90%, recall 56%. Rank 5/5; doesn't earn primary. See `audit/2026-05-19-qwen-3.6-judge-calibration/REPORT.md`.
@@ -417,7 +417,7 @@ Kimi K3 onboarding requires matched code-implementation, code-review, and Q&A ce
 > All rows are stubbed `❓ pending bakeoff` until evidence exists.
 
 | Track bucket | Tracks | Register / pedagogy | Current default | Top runner-up | Status |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **A1 register-precision** | a1 (55) | Heavy English scaffold, ULP-derived immersion, PPP pedagogy | claude-tools (v3 ✅ §8.1) | codex-tools (gap: 996/1200 register undershoot) | ✅ §8.1 valid; lane ends 2026-06-15 |
 | **A2 transition** | a2 (69) | Transition completes to UA by end of A2, PPP→TTT | claude-tools (presumed; not separately bakeoffed) | ❓ | ❓ A2 bakeoff never run; A1 results assumed transferable for now |
 | **B1+ register-relaxed core** | b1 (94), b2 (93) | 100% UA except Tab 2, TTT pedagogy | ❓ | ❓ | ❓ Codex's high-UK bias plausibly becomes feature; deepseek-pro plausibly competitive at cost. Bakeoff is recommended next step (§8.10 #1). |
@@ -469,7 +469,7 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 
 ## 10. Provenance
 
-- v1.4: 2026-07-16 by Codex. Added native Kimi K3 as an unranked subscription lane; recorded its 262K/max-effort local capability contract and preserved the no-promotion-without-bakeoff rule.
+- v1.4: 2026-07-16 by Codex. Added native Kimi K3 as a subscription lane; its exact context size remains unpublished in current provider docs.
 - v1.2: 2026-05-18 by orchestrator (Claude inline). Added §8 Ranking-by-role with quality+cost view per user request. Added Qwen-3.6 row to §2 roster (newly wired). Updated §4.1 runner-ups to reflect the codex `tool_calls_total=0` retraction (PR #1907, 2026-05-13). Added DeepSeek + Qwen to writer Open slots pending bakeoff. Excluded Kimi K2 per user direction.
 - v1.1: 2026-05-18 by orchestrator (Claude inline). Added §4.2.a Russianism judge sub-cell from new evidence in `audit/INDEX-bakeoff-evidence.md`. Added promote-protocol round 1 results pointer to #2132.
 - v1: 2026-05-18 by orchestrator (Claude inline) per user direction.

@@ -48,12 +48,12 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **CodexBar / routing-budget:** `/api/state/routing-budget` + `delegate --check-budget` is the
 never-trip window check for subscription lanes. It does not list every API/routed model and therefore
-must never define the fleet by itself. Grok 4.5 and GPT/Codex are native-only. Kimi K3 is a separate
-native OAuth subscription lane (`kimi-code/k3`, live catalog: 1M context, max effort, tool/image/video
-input). API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown
+must never define the fleet by itself. Grok 4.5 and GPT/Codex never route through Hermes. Kimi K3 is a separate
+native OAuth subscription lane (`kimi-code/k3`, max effort, tool/image/video input; do not publish a
+context-size claim until the native provider documents it). API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown
 headroom, not unavailability. Shed load only to models that meet the same task-risk quality floor.
 
-**Kimi lane:** native Kimi Code OAuth only. Use K3 (`kimi-code/k3`, 1M context, always-thinking,
+**Kimi lane:** native Kimi Code OAuth only. Use K3 (`kimi-code/k3`, always-thinking,
 max effort) for consequential coding, strong cross-family review, long-context debugging, and deep
 asks. Use `k2.7-coding` / `k2.7-coding-highspeed` for routine or bulk coding. Do not demote K3 merely
 because the cheaper model exists; risk and fit establish the quality floor first. Kimi is Moonshot
@@ -93,7 +93,7 @@ Route by FIT, then shed from HOT lanes — consult **CodexBar** `/api/state/rout
 
 **Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high–max`** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis. Convene BEFORE committing a substantive design; never for routine. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
-**Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi`; explicitly select `--model k3` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (1M context, max-only effort); `k2.7-coding` and its high-speed variant are routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
+**Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi`; explicitly select `--model k3` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (max-only effort); `k2.7-coding` and its high-speed variant are routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
 
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
@@ -153,7 +153,7 @@ permanent capability claim. Confirm exact live strings in native CLI catalogs an
 
 ## GPT-5.6 family (Sol · Terra · Luna) — onboarded 2026-07-09 (user directive)
 
-All three tiers expose **1M context** in the current native/Cursor catalogs and accept text+image input. Tier choice = capability/cost routing, not context size. Effort levels apply on every tier.
+All three tiers expose **372K context (~353K effectively usable before the context-management margin)** on the native route and accept text+image input. Cursor may advertise a larger hosted window; do not use that picker label to size native Codex prompts. Tier choice = capability/cost routing, not context size. Effort levels apply on every tier.
 
 | Tier | Model id | Use for | Effort policy |
 | --- | --- | --- | --- |

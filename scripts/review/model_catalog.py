@@ -13,6 +13,12 @@ CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.y
 EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
+EXPECTED_SELECTION_ORDER = [
+    "independence_and_hard_gates",
+    "task_risk_quality_tier",
+    "health_and_quota_within_tier",
+    "cost_within_equivalent_fit",
+]
 
 
 class ModelCatalogError(ValueError):
@@ -67,9 +73,9 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     if (
         not isinstance(refresh_after_days, int)
         or isinstance(refresh_after_days, bool)
-        or not 1 <= refresh_after_days <= 31
+        or not 1 <= refresh_after_days <= 30
     ):
-        raise ModelCatalogError("refresh_after_days must be an integer from 1 through 31")
+        raise ModelCatalogError("refresh_after_days must be an integer from 1 through 30")
 
     tiers = _require_mapping(catalog.get("quality_tiers"), "quality_tiers")
     if not tiers or not all(
@@ -77,6 +83,28 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         for rank in tiers.values()
     ):
         raise ModelCatalogError("quality_tiers must map names to positive integer ranks")
+    if len(set(tiers.values())) != len(tiers):
+        raise ModelCatalogError("quality_tiers ranks must be unique")
+
+    policy = _require_mapping(catalog.get("policy"), "policy")
+    if policy.get("quality_first") is not True:
+        raise ModelCatalogError("policy.quality_first must be true")
+    if policy.get("selection_order") != EXPECTED_SELECTION_ORDER:
+        raise ModelCatalogError(
+            f"policy.selection_order must be exactly {EXPECTED_SELECTION_ORDER!r}"
+        )
+    risk_floor = _require_mapping(
+        policy.get("risk_quality_floor"), "policy.risk_quality_floor"
+    )
+    if set(risk_floor) != VALID_RISKS:
+        raise ModelCatalogError(
+            f"policy.risk_quality_floor must define exactly {sorted(VALID_RISKS)}"
+        )
+    for risk, tier in risk_floor.items():
+        if tier not in tiers:
+            raise ModelCatalogError(
+                f"policy.risk_quality_floor.{risk} references unknown tier {tier!r}"
+            )
 
     models = _require_mapping(catalog.get("models"), "models")
     if not models:
@@ -100,6 +128,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             values = _require_string_list(model.get(field), f"models.{model_id}.{field}")
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
+        if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
+            raise ModelCatalogError(
+                f"models.{model_id}.transports must not route GPT/Grok families through Hermes"
+            )
         aliases = model.get("aliases", [])
         if not isinstance(aliases, list) or not all(
             isinstance(alias, str) and alias.strip() for alias in aliases
@@ -165,11 +197,14 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if not isinstance(rungs, list) or not rungs:
             raise ModelCatalogError(f"review_ladders.{risk} must be a non-empty list")
         seen: set[str] = set()
+        previous_rank = 0
+        floor_rank = tiers[risk_floor[risk]]
         for rung in rungs:
             if not isinstance(rung, list) or not rung:
                 raise ModelCatalogError(
                     f"review_ladders.{risk} rungs must be non-empty lists"
                 )
+            rung_ranks: set[int] = set()
             for candidate_name in rung:
                 if candidate_name not in candidates:
                     raise ModelCatalogError(
@@ -180,6 +215,22 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                         f"review_ladders.{risk} repeats candidate {candidate_name!r}"
                     )
                 seen.add(candidate_name)
+                model_id = candidates[candidate_name]["model_id"]
+                rung_ranks.add(tiers[models[model_id]["tier"]])
+            if len(rung_ranks) != 1:
+                raise ModelCatalogError(
+                    f"review_ladders.{risk} mixes quality tiers in one rung"
+                )
+            rung_rank = next(iter(rung_ranks))
+            if rung_rank < previous_rank:
+                raise ModelCatalogError(
+                    f"review_ladders.{risk} improves quality in a later rung"
+                )
+            if rung_rank > floor_rank:
+                raise ModelCatalogError(
+                    f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor"
+                )
+            previous_rank = rung_rank
     return catalog
 
 

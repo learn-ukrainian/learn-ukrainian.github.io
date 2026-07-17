@@ -21,6 +21,7 @@ from pathlib import Path
 
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
+from scripts.review.model_catalog import VALID_RISKS
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
@@ -360,7 +361,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             indent=2,
         )
     )
-    return 0
+    return 1 if resolution.fail_closed_reason or resolution.selected is None else 0
 
 
 def _cmd_finding(args: argparse.Namespace) -> int:
@@ -532,7 +533,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     p_reviewer.add_argument("--review-profile", default="code")
-    p_reviewer.add_argument("--risk", default="medium")
+    p_reviewer.add_argument("--risk", default="medium", choices=sorted(VALID_RISKS))
     p_reviewer.add_argument("--domain", default="code")
     p_reviewer.add_argument("--required-capability", action="append")
     p_reviewer.add_argument("--data-egress-policy")

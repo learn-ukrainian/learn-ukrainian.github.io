@@ -145,9 +145,9 @@ def test_medium_risk_uses_frontier_practical_tier_before_economical_models():
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
 
 
-def test_low_risk_pool_author_falls_to_deepseek_flash():
+def test_low_risk_pool_author_uses_same_quality_gemini_flash():
     resolution = resolve_reviewer(ResolverInputs(author_model="pool", risk="low"))
-    assert resolution.selected.name == "deepseek-v4-flash"
+    assert resolution.selected.name == "gemini-3.5-flash"
 
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
@@ -171,6 +171,44 @@ def test_unhealthy_route_is_unavailable_and_falls_within_quality_tier():
     assert "unhealthy" in gemini.reason
 
 
+def test_real_routing_budget_payload_is_normalized_without_crashing():
+    snapshot = {
+        "generated_at": "2026-07-17T00:00:00Z",
+        "agents": {
+            "agy": {"status": "hot", "health": {"healthy": True}},
+            "grok": {"status": "cool", "health": {"healthy": True}},
+            "claude": {"status": "warm", "health": {"healthy": True}},
+        },
+    }
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
+    )
+    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.health == "healthy"
+
+
+def test_health_statuses_are_case_normalized_and_unknown_values_fail_closed():
+    unhealthy = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"},
+        )
+    )
+    assert unhealthy.selected.name == "grok-4.5"
+
+    invalid = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"agy": "cooldown"},
+        )
+    )
+    assert invalid.selected is None
+    assert invalid.trace == ()
+    assert "invalid routing snapshot" in invalid.fail_closed_reason
+
+
 def test_near_cap_only_breaks_ties_inside_same_quality_rung():
     resolution = resolve_reviewer(
         ResolverInputs(
@@ -182,6 +220,7 @@ def test_near_cap_only_breaks_ties_inside_same_quality_rung():
     assert resolution.selected.name == "grok-4.5"
     assert resolution.selected.health == "healthy"
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
+    assert "by lane health" in resolution.substitution_note
 
 
 def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
@@ -205,6 +244,24 @@ def test_missing_health_signal_is_fail_open():
         ResolverInputs(author_model="codex", risk="low", routing_snapshot=None)
     )
     assert empty.selected.name == absent.selected.name == "pool"
+
+
+def test_family_exclusion_is_not_mislabeled_as_a_substitution():
+    resolution = resolve_reviewer(ResolverInputs(author_model="gemini", risk="medium"))
+    assert resolution.selected.name == "grok-4.5"
+    assert resolution.substitution_note is None
+
+
+def test_deepseek_receipt_carries_required_silence_timeout():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini",
+            risk="low",
+            routing_snapshot={"pool": "unhealthy"},
+        )
+    )
+    assert resolution.selected.name == "deepseek-v4-flash"
+    assert resolution.selected.requires_silence_timeout is True
 
 
 def test_folk_content_excludes_both_deepseek_models():

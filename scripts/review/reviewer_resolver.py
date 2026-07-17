@@ -20,7 +20,7 @@ catalog an operational outage at runtime.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
@@ -208,6 +208,7 @@ class ReviewerCandidate:
     concrete_model: str
     route: str
     transport: str
+    quality_tier: str
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
     # data_egress_policy exactly matches this value. None = no egress gate.
@@ -237,6 +238,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         concrete_model=model_id,
         route=raw["route"],
         transport=raw["transport"],
+        quality_tier=model["tier"],
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
         capabilities=frozenset(raw.get("capabilities", [])),
@@ -284,10 +286,21 @@ QWEN = ReviewerCandidate(
     concrete_model="qwen3-max",
     route="qwen",
     transport="hermes",
+    quality_tier="specialist",
     always_excluded_reason="excluded from routine/automatic routing (cost) — model-assignment.md",
 )
 
 _HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "unhealthy": 3}
+_HEALTH_ALIASES: dict[str, str] = {
+    "healthy": "healthy",
+    "cool": "healthy",
+    "degraded": "degraded",
+    "warm": "degraded",
+    "near_cap": "near_cap",
+    "hot": "near_cap",
+    "unknown": "near_cap",
+    "unhealthy": "unhealthy",
+}
 
 
 def _health_rank(status: str | None) -> int:
@@ -295,7 +308,52 @@ def _health_rank(status: str | None) -> int:
     # matches scripts/api/lane_health.py's fail-open convention.
     if status is None:
         return 0
-    return _HEALTH_RANK.get(status, 0)
+    return _HEALTH_RANK[status]
+
+
+def _normalize_health_status(value: object, *, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} health status must be a non-empty string")
+    normalized = _HEALTH_ALIASES.get(value.strip().lower())
+    if normalized is None:
+        raise ValueError(
+            f"{label} has unsupported health status {value!r}; "
+            f"expected one of {sorted(_HEALTH_ALIASES)}"
+        )
+    return normalized
+
+
+def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[str, str]:
+    """Accept either a flat route->status map or `/api/state/routing-budget`."""
+    if not snapshot:
+        return {}
+    if not isinstance(snapshot, Mapping):
+        raise ValueError("routing snapshot must be a mapping")
+    if "agents" not in snapshot:
+        return {
+            str(route): _normalize_health_status(status, label=str(route))
+            for route, status in snapshot.items()
+        }
+
+    agents = snapshot.get("agents")
+    if not isinstance(agents, Mapping):
+        raise ValueError("routing snapshot agents must be a mapping")
+    normalized: dict[str, str] = {}
+    for route, raw in agents.items():
+        if not isinstance(raw, Mapping):
+            raise ValueError(f"routing snapshot agents.{route} must be a mapping")
+        health = raw.get("health")
+        if isinstance(health, Mapping) and health.get("healthy") is False:
+            normalized[str(route)] = "unhealthy"
+            continue
+        status = raw.get("status")
+        if status is None and isinstance(health, Mapping) and health.get("healthy") is True:
+            normalized[str(route)] = "healthy"
+            continue
+        normalized[str(route)] = _normalize_health_status(
+            status, label=f"agents.{route}"
+        )
+    return normalized
 
 
 @dataclass(frozen=True)
@@ -314,7 +372,7 @@ class ResolverInputs:
     # Fresh CodexBar/routing-budget snapshot: seat or family name -> health status
     # ("healthy" | "degraded" | "near_cap" | "unhealthy"). Optional — omit for a
     # snapshot-blind resolution (ladder order alone decides).
-    routing_snapshot: Mapping[str, str] | None = None
+    routing_snapshot: Mapping[str, object] | None = None
     # Explicit, caller-asserted author model family (e.g. from session logs),
     # validated against _VALID_CONCRETE_FAMILIES. Required to disambiguate a
     # bare ambiguous-harness author_model; optional corroboration otherwise —
@@ -329,6 +387,8 @@ class CandidateResult:
     family: str
     route: str
     transport: str
+    quality_tier: str
+    requires_silence_timeout: bool
     status: CandidateStatus
     reason: str | None
     health: str | None
@@ -404,7 +464,8 @@ def evaluate_candidate(
         if author_family is not None
         else resolve_author_family(inputs.author_model, inputs.author_family)
     )
-    health = _health_of(candidate, inputs.routing_snapshot)
+    normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
+    health = _health_of(candidate, normalized_snapshot)
     same_family = candidate.family == family
 
     if same_family and family in candidate.advisory_only_for_author_families:
@@ -414,6 +475,8 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
             status="advisory_only",
             reason=f"same family as author ({family}) — advisory-only, not a formal cross-family gate",
             health=health,
@@ -425,6 +488,8 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason=f"same family as author ({family}) — cross-family review requires a different family",
             health=health,
@@ -438,6 +503,8 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason=reason,
             health=health,
@@ -449,6 +516,8 @@ def evaluate_candidate(
             family=candidate.family,
             route=candidate.route,
             transport=candidate.transport,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason="lane health is unhealthy — route is operationally unavailable",
             health=health,
@@ -460,6 +529,8 @@ def evaluate_candidate(
         family=candidate.family,
         route=candidate.route,
         transport=candidate.transport,
+        quality_tier=candidate.quality_tier,
+        requires_silence_timeout=candidate.requires_silence_timeout,
         status="eligible",
         reason=None,
         health=health,
@@ -496,6 +567,20 @@ def resolve_reviewer(
             ),
         )
     active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
+    try:
+        normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
+    except ValueError as exc:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_MODEL_CATALOG["schema_version"],
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=f"invalid routing snapshot: {exc}",
+        )
+    inputs = replace(inputs, routing_snapshot=normalized_snapshot)
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
     if author_family in UNRESOLVED_AUTHOR_FAMILIES:
@@ -527,8 +612,9 @@ def resolve_reviewer(
     trace: list[CandidateResult] = []
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
+    selected_rung_index: int | None = None
 
-    for rung in active_ladder:
+    for rung_index, rung in enumerate(active_ladder):
         rung_eligible: list[CandidateResult] = []
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
@@ -546,6 +632,8 @@ def resolve_reviewer(
                 family=best.family,
                 route=best.route,
                 transport=best.transport,
+                quality_tier=best.quality_tier,
+                requires_silence_timeout=best.requires_silence_timeout,
                 status="selected",
                 reason=None,
                 health=best.health,
@@ -555,12 +643,25 @@ def resolve_reviewer(
                     trace[i] = promoted
                     break
             selected = promoted
+            selected_rung_index = rung_index
 
     substitution_note = None
-    if selected is not None:
+    if selected is not None and selected_rung_index is not None:
         default_first = active_ladder[0][0] if active_ladder and active_ladder[0] else None
-        if default_first is not None and selected.name != default_first.name:
-            substitution_note = f"substituted {selected.name} for default first pick {default_first.name}"
+        if selected_rung_index > 0:
+            substitution_note = (
+                f"fell back to {selected.name}: no eligible candidate remained in "
+                f"{selected_rung_index} higher-quality rung(s)"
+            )
+        elif default_first is not None and selected.name != default_first.name:
+            default_result = next(
+                (entry for entry in trace if entry.name == default_first.name), None
+            )
+            if default_result is not None and default_result.status == "eligible":
+                substitution_note = (
+                    f"selected {selected.name} over {default_first.name} by lane health "
+                    "within the same quality rung"
+                )
 
     return ReviewerResolution(
         selected=selected,

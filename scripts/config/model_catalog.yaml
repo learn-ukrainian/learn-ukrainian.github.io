@@ -20,6 +20,11 @@ policy:
     - task_risk_quality_tier
     - health_and_quota_within_tier
     - cost_within_equivalent_fit
+  risk_quality_floor:
+    critical: frontier_practical
+    high: frontier_practical
+    medium: strong_efficient
+    low: economical
   inventory_sources:
     - runtime_registry
     - native_cli_catalogs
@@ -132,8 +137,8 @@ models:
     aliases: [k3]
     roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
     transports: [native_kimi]
-    strengths: [one_million_context, max_effort, image_video_tools]
-    weaknesses: [public_model_card_detail_is_limited, max_effort_only]
+    strengths: [strong_agentic_coding, max_effort, image_video_tools]
+    weaknesses: [public_context_spec_is_not_verified, max_effort_only]
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-code/kimi-for-coding:
@@ -192,7 +197,7 @@ models:
       - https://api-docs.deepseek.com/quick_start/pricing
   poolside/laguna-m.1:
     family: poolside
-    tier: economical
+    tier: strong_efficient
     lifecycle: active
     aliases: [laguna-m.1, pool]
     roles: [routine_review, high_volume_dissent, web_fact_check]
@@ -204,7 +209,7 @@ models:
   composer-2.5:
     family: moonshot
     lab: cursor
-    tier: strong_efficient
+    tier: frontier_practical
     lifecycle: active
     roles: [long_running_coding, implementation, strong_review]
     transports: [cursor]
@@ -341,12 +346,10 @@ review_ladders:
   critical: &high_risk_ladder
     - [claude-opus-4-8, openai_frontier, claude-fable-5]
     - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
-    - [pool, deepseek-v4-flash]
   high: *high_risk_ladder
   medium:
     - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
-    - [pool, deepseek-v4-flash, gemini-3.5-flash]
-    - [claude-opus-4-8, openai_frontier]
+    - [pool, gemini-3.5-flash]
   low:
-    - [pool, deepseek-v4-flash, gemini-3.5-flash]
-    - [composer-2.5, grok-4.5, kimi-k3]
+    - [pool, gemini-3.5-flash]
+    - [deepseek-v4-flash]

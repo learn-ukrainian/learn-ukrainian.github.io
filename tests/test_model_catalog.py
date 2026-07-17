@@ -98,6 +98,27 @@ def test_catalog_rejects_candidate_transport_not_supported_by_model():
         validate_catalog(broken)
 
 
+def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["grok-4.5"]["transports"].append("hermes")
+    with pytest.raises(ModelCatalogError, match="must not route"):
+        validate_catalog(broken)
+
+
+def test_catalog_enforces_quality_floor_and_homogeneous_rungs():
+    broken = deepcopy(load_model_catalog())
+    broken["review_ladders"]["high"][0].append("deepseek-v4-flash")
+    with pytest.raises(ModelCatalogError, match="mixes quality tiers"):
+        validate_catalog(broken)
+
+
+def test_catalog_rejects_refresh_window_over_30_days():
+    broken = deepcopy(load_model_catalog())
+    broken["refresh_after_days"] = 31
+    with pytest.raises(ModelCatalogError, match="1 through 30"):
+        validate_catalog(broken)
+
+
 def test_catalog_validation_does_not_mutate_input():
     raw = deepcopy(load_model_catalog())
     raw["reviewed_on"] = date(2026, 7, 17)

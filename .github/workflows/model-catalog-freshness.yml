@@ -6,8 +6,10 @@ on:
       - 'scripts/config/model_catalog.yaml'
       - 'scripts/review/model_catalog.py'
       - 'scripts/review/reviewer_resolver.py'
+      - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
       - 'agents_extensions/shared/rules/model-assignment.md'
+      - 'docs/best-practices/agent-activity-matrix.md'
       - '.github/workflows/model-catalog-freshness.yml'
   push:
     branches: [main]
@@ -15,8 +17,10 @@ on:
       - 'scripts/config/model_catalog.yaml'
       - 'scripts/review/model_catalog.py'
       - 'scripts/review/reviewer_resolver.py'
+      - 'scripts/agent_runtime/registry.py'
       - 'scripts/lint/lint_model_catalog.py'
       - 'agents_extensions/shared/rules/model-assignment.md'
+      - 'docs/best-practices/agent-activity-matrix.md'
       - '.github/workflows/model-catalog-freshness.yml'
   schedule:
     - cron: '17 7 * * 1'
