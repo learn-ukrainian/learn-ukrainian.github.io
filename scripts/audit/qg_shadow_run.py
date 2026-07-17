@@ -101,6 +101,8 @@ def _require_writer_lineage(
             "production shadow capture requires resolvable writer lineage; "
             "pass --author-family or supply build metadata/git X-Agent lineage"
         )
+    if lineage.family == "fixture":
+        raise ValueError("writer_family=fixture on a real module is a hard error")
     return lineage
 
 
@@ -224,19 +226,7 @@ def _run_layerb(
         args.extend(("--max-judge-calls", str(max_judge_calls)))
     if layerb_dry_run:
         args.append("--dry-run")
-    else:
-        required = {
-            "judge_command": judge_command,
-            "judge_family": judge_family,
-            "judge_model": judge_model,
-            "judge_model_version": judge_model_version,
-            "provider_account_lane": provider_account_lane,
-            "judge_attestation": judge_attestation,
-            "labels": labels,
-        }
-        missing = [name for name, value in required.items() if value is None]
-        if missing:
-            raise ValueError("attested Layer-B shadow requires " + ", ".join(missing))
+    if judge_command is not None:
         args.extend(
             (
                 "--judge-command",
@@ -255,10 +245,25 @@ def _run_layerb(
                 str(labels),
             )
         )
-        for manifest in corpus_manifests:
-            args.extend(("--corpus-manifest", str(manifest)))
-        for manifest in fixture_manifests:
-            args.extend(("--fixture-manifest", str(manifest)))
+    elif not layerb_dry_run:
+        required = {
+            "judge_command": judge_command,
+            "judge_family": judge_family,
+            "judge_model": judge_model,
+            "judge_model_version": judge_model_version,
+            "provider_account_lane": provider_account_lane,
+            "judge_attestation": judge_attestation,
+            "labels": labels,
+        }
+        missing = [name for name, value in required.items() if value is None]
+        if missing:
+            raise ValueError("attested Layer-B shadow requires " + ", ".join(missing))
+
+    # Always append manifests if they are passed
+    for manifest in corpus_manifests:
+        args.extend(("--corpus-manifest", str(manifest)))
+    for manifest in fixture_manifests:
+        args.extend(("--fixture-manifest", str(manifest)))
     exit_code = layerb_shadow.main(args)
     if exit_code not in {0, 3}:
         raise RuntimeError(f"layerb_shadow failed with exit code {exit_code}")

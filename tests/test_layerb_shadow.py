@@ -177,6 +177,30 @@ def test_route_selection_ignores_adversarial_fixture_reviewer_marker() -> None:
     assert route == gemini
 
 
+def test_route_selection_excludes_grok_and_grok_cursor() -> None:
+    grok = JudgeRoute("grok", "grok-2")
+    cursor = JudgeRoute("cursor", "cursor-fast")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((grok, cursor, claude), writer_family="google", reviewer_family="gpt")
+    assert route == claude
+
+
+def test_route_selection_refuses_when_no_third_family_route() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((gemini, claude), writer_family="google", reviewer_family="claude")
+    assert route is None
+
+
+def test_route_selection_refuses_when_lineage_unnormalized() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+
+    route = _select_route((gemini,), writer_family="mystery", reviewer_family="gpt")
+    assert route is None
+
+
 @pytest.mark.parametrize(
     ("artifact_overrides", "expected"),
     (

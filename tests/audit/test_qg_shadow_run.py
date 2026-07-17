@@ -277,3 +277,168 @@ def test_main_exits_4_when_evidence_vanishes(tmp_path: Path, monkeypatch: pytest
     )
 
     assert rc == 4
+
+
+def test_shadow_driver_rejects_fixture_family_on_real_module(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    (module_dir / "writer_meta.json").write_text('{"writer_family": "fixture"}\n', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="writer_family=fixture on a real module is a hard error"):
+        qg_shadow_run.run_shadow_module(
+            _target(module_dir),
+            audit_dir=tmp_path / "audit",
+            shadow_db=tmp_path / "shadow.db",
+            reviewer=_dispatch,
+            live_reviewer=False,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            max_cost_usd=1.0,
+            layerb_dry_run=True,
+        )
+
+
+def test_shadow_driver_no_writes_outside_audit_dir_and_db(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    audit_dir = tmp_path / "audit"
+    shadow_db = tmp_path / "shadow.db"
+
+    qg_shadow_run.run_shadow_module(
+        _target(module_dir),
+        audit_dir=audit_dir,
+        shadow_db=shadow_db,
+        author_family="openai",
+        reviewer=_dispatch,
+        live_reviewer=False,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        max_cost_usd=1.0,
+        layerb_dry_run=True,
+    )
+
+    allowed_roots = {audit_dir.resolve(), shadow_db.resolve(), module_dir.resolve()}
+
+    for path in tmp_path.rglob("*"):
+        if path.is_file():
+            resolved_path = path.resolve()
+            assert any(resolved_path == root or root in resolved_path.parents for root in allowed_roots), (
+                f"File written outside allowed directories: {resolved_path}"
+            )
+
+
+def test_shadow_driver_third_family_route_refusal_outputs_audit_record(tmp_path: Path) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.audit import layerb_qualify
+
+    module_dir = _module(tmp_path)
+
+    att_dir = tmp_path / "attested"
+    att_dir.mkdir()
+
+    labels = att_dir / "labels.json"
+    labels.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    corpus_m = att_dir / "corpus.json"
+    fixture_m = att_dir / "fixture.json"
+    corpus_m.write_text(json.dumps({"corpus": "frozen"}), encoding="utf-8")
+    fixture_m.write_text(json.dumps({"fixture": "frozen"}), encoding="utf-8")
+    report_path = att_dir / "qualification-report.json"
+    raw_path = att_dir / "raw-call-manifest.json"
+
+    thresholds = {
+        "adversarial_probes": {"status": "PASS"},
+        "relation_agreement": {"status": "PASS"},
+        "terminal_decision_agreement": {"status": "PASS"},
+        "unsafe_accept_ucb": {"status": "PASS"},
+        "accept_recall": {"status": "PASS"},
+        "audit_rate": {"status": "PASS"},
+        "cost_envelope": {"status": "PASS"},
+        "layer_a_regression": {"status": "PASS"},
+        "integrity": {"status": "PASS", "failures": {}},
+        "semantic_stability": {
+            "required": True,
+            "seed": layerb_qualify.STABILITY_SEED,
+            "case_ids": [],
+            "status": "PASS",
+            "disagreements": [],
+        },
+    }
+    tier_evaluation = layerb_qualify._tier_evaluation(thresholds, "shadow")
+    route_input = {
+        "family": "claude",
+        "resolved_model": "sonnet-5",
+        "resolved_model_version": "2026-07-11",
+        "bridge_executable": "echo",
+        "bridge_config_sha256": "c" * 64,
+        "provider_account_lane": "subscription:test",
+        "tools_disabled": True,
+        "tools_disabled_evidence": "test-evidence",
+    }
+    route_obj = layerb_qualify.EffectiveRoute.from_mapping(route_input)
+    report = {
+        "verdict": "PASS_SHADOW",
+        "tier": "shadow",
+        "effective_route": route_obj.to_dict(),
+        "thresholds": thresholds,
+        "tier_evaluation": tier_evaluation,
+        "human_audit_of_new_accepts": {"complete": True},
+        "row_eligibility_matrix": [{"case_id": "row", "reason": "ELIGIBLE", "eligible": True}],
+        "raw_call_manifest": [{"case_id": "row", "raw": "recorded"}],
+    }
+    report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+    raw_path.write_text(json.dumps(report["raw_call_manifest"], sort_keys=True), encoding="utf-8")
+
+    att = layerb_qualify.create_attestation(
+        report_path=report_path,
+        raw_call_manifest_path=raw_path,
+        labels_path=labels,
+        corpus_manifests=[corpus_m],
+        fixture_manifests=[fixture_m],
+        expires_at=datetime.now(UTC) + timedelta(days=30),
+        require_frozen_main_hash=False,
+        tier="shadow",
+    )
+    att_path = att_dir / "qualification-attestation.json"
+    att_path.write_text(json.dumps(att, sort_keys=True), encoding="utf-8")
+
+    def _claude_dispatch(
+        _target: qg_workflow.ReviewTarget,
+        _prompt: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        res = _dispatch(_target, _prompt)
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=res.response_text,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="claude",
+            route_name="test-route",
+            tool_call_count=res.tool_call_count,
+            tools_used=res.tools_used,
+            tool_events=res.tool_events,
+        )
+
+    result = qg_shadow_run.run_shadow_module(
+        _target(module_dir),
+        audit_dir=tmp_path / "audit",
+        shadow_db=tmp_path / "shadow.db",
+        author_family="claude",
+        reviewer=_claude_dispatch,
+        live_reviewer=False,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="claude",
+        max_cost_usd=1.0,
+        layerb_dry_run=True,
+        judge_command="echo",
+        judge_family="claude",
+        judge_model="sonnet-5",
+        judge_model_version="2026-07-11",
+        provider_account_lane="subscription:test",
+        judge_attestation=att_path,
+        labels=labels,
+        corpus_manifests=[corpus_m],
+        fixture_manifests=[fixture_m],
+    )
+
+    report = json.loads(result.layerb_report_path.read_text(encoding="utf-8"))
+    assert report["records"]
+    detail = report["records"][0]["candidate_details"][0]
+    assert detail["relation"] == "AUDIT"
+    assert detail["failure_class"] == "LINEAGE_OR_ROUTE"
