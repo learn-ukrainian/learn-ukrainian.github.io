@@ -158,7 +158,10 @@ const listId = `${id}-list`;
         .join("");
       taList.hidden = false;
       taInput.setAttribute("aria-expanded", "true");
-      if (taActive >= 0) taInput.setAttribute("aria-activedescendant", taOptionId(taActive));
+      if (taActive >= 0) {
+        taInput.setAttribute("aria-activedescendant", taOptionId(taActive));
+        document.getElementById(taOptionId(taActive))?.scrollIntoView({ block: "nearest" });
+      }
     };
 
     const taLoadManifest = () => {
