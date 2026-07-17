@@ -9,46 +9,99 @@ const statusUrl = "/api/lexicon/status.json";
   data-status-url={statusUrl}
 >
   <div class="atlas-runtime-heading">
-    <span class="atlas-runtime-badge">Дані</span>
-    <h2 id="atlas-runtime-title">Покриття Атласу</h2>
-    <p data-runtime-status>Завантажуємо поточний стан...</p>
+    <span class="atlas-runtime-badge">
+      <span class="lu-i18n">
+        <span data-loc="en">Data</span>
+        <span data-loc="uk">Дані</span>
+      </span>
+    </span>
+    <h2 id="atlas-runtime-title" class="lu-i18n-block">
+      <span data-loc="en">Atlas coverage</span>
+      <span data-loc="uk">Покриття Атласу</span>
+    </h2>
+    <p data-runtime-status class="lu-i18n-block">
+      <span data-loc="en">Loading current status…</span>
+      <span data-loc="uk">Завантажуємо поточний стан...</span>
+    </p>
   </div>
 
   <dl class="atlas-runtime-grid" aria-live="polite">
     <div class="atlas-runtime-card">
-      <dt>Публічний Атлас</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Public Atlas</span>
+        <span data-loc="uk">Публічний Атлас</span>
+      </dt>
       <dd data-runtime-value="publicAtlas">-</dd>
-      <p data-runtime-detail="publicAtlas">Пошук і перегляд</p>
+      <p data-runtime-detail="publicAtlas" class="lu-i18n-block">
+        <span data-loc="en">Search and browse</span>
+        <span data-loc="uk">Пошук і перегляд</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>Маніфест</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Manifest</span>
+        <span data-loc="uk">Маніфест</span>
+      </dt>
       <dd data-runtime-value="manifest">-</dd>
-      <p data-runtime-detail="manifest">Маніфест релізу</p>
+      <p data-runtime-detail="manifest" class="lu-i18n-block">
+        <span data-loc="en">Release manifest</span>
+        <span data-loc="uk">Маніфест релізу</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>API</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">API</span>
+        <span data-loc="uk">API</span>
+      </dt>
       <dd data-runtime-value="api">-</dd>
-      <p data-runtime-detail="api">Контракт даних</p>
+      <p data-runtime-detail="api" class="lu-i18n-block">
+        <span data-loc="en">Data contract</span>
+        <span data-loc="uk">Контракт даних</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>Слова дня</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Words of the Day</span>
+        <span data-loc="uk">Слова дня</span>
+      </dt>
       <dd data-runtime-value="daily">-</dd>
-      <p data-runtime-detail="daily">Рівні A1-B1</p>
+      <p data-runtime-detail="daily" class="lu-i18n-block">
+        <span data-loc="en">Levels A1–B1</span>
+        <span data-loc="uk">Рівні A1-B1</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>Практика</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Practice</span>
+        <span data-loc="uk">Практика</span>
+      </dt>
       <dd data-runtime-value="practice">-</dd>
-      <p data-runtime-detail="practice">Лексеми в деці</p>
+      <p data-runtime-detail="practice" class="lu-i18n-block">
+        <span data-loc="en">Lexemes in the deck</span>
+        <span data-loc="uk">Лексеми в деці</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>Пропуски</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Cloze</span>
+        <span data-loc="uk">Пропуски</span>
+      </dt>
       <dd data-runtime-value="cloze">-</dd>
-      <p data-runtime-detail="cloze">Перевірені речення</p>
+      <p data-runtime-detail="cloze" class="lu-i18n-block">
+        <span data-loc="en">Reviewed sentences</span>
+        <span data-loc="uk">Перевірені речення</span>
+      </p>
     </div>
     <div class="atlas-runtime-card">
-      <dt>Джерела</dt>
+      <dt class="lu-i18n">
+        <span data-loc="en">Sources</span>
+        <span data-loc="uk">Джерела</span>
+      </dt>
       <dd data-runtime-value="sourceInventory">-</dd>
-      <p data-runtime-detail="sourceInventory">Слова дня / практика / пропуски</p>
+      <p data-runtime-detail="sourceInventory" class="lu-i18n-block">
+        <span data-loc="en">Words of the Day / practice / cloze</span>
+        <span data-loc="uk">Слова дня / практика / пропуски</span>
+      </p>
     </div>
   </dl>
 </section>
@@ -59,17 +112,34 @@ const statusUrl = "/api/lexicon/status.json";
   const numberFormatter = new Intl.NumberFormat("uk-UA");
   const formatCount = (value) =>
     typeof value === "number" ? numberFormatter.format(value) : "-";
-  const formatBytes = (value) =>
+  const formatBytesUk = (value) =>
+    typeof value === "number" ? `${(value / (1024 * 1024)).toFixed(1)} МБ` : "-";
+  const formatBytesEn = (value) =>
     typeof value === "number" ? `${(value / (1024 * 1024)).toFixed(1)} MB` : "-";
+  const escapeHtml = (value) =>
+    String(value ?? "").replace(
+      /[&<>"']/g,
+      (c) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c,
+    );
 
   function setRuntimeText(root, key, value) {
     const node = root.querySelector(`[data-runtime-value="${key}"]`);
     if (node) node.textContent = value;
   }
 
-  function setRuntimeDetail(root, key, value) {
+  function setRuntimeDetailHtml(root, key, uk, en) {
     const node = root.querySelector(`[data-runtime-detail="${key}"]`);
-    if (node) node.textContent = value;
+    if (!node) return;
+    node.innerHTML = `<span data-loc="uk">${escapeHtml(uk)}</span><span data-loc="en">${escapeHtml(en)}</span>`;
+    node.classList.add("lu-i18n-block");
+  }
+
+  function setRuntimeStatusHtml(root, uk, en) {
+    const statusNode = root.querySelector("[data-runtime-status]");
+    if (!statusNode) return;
+    statusNode.innerHTML = `<span data-loc="uk">${escapeHtml(uk)}</span><span data-loc="en">${escapeHtml(en)}</span>`;
+    statusNode.classList.add("lu-i18n-block");
   }
 
   function renderRuntimeStatus(root, status) {
@@ -81,10 +151,11 @@ const statusUrl = "/api/lexicon/status.json";
     const shardCount = status.publicAtlas.searchShards ?? 0;
     const shardLabel = pluralizeUk(shardCount, ["сегмент пошуку", "сегменти пошуку", "сегментів пошуку"]);
 
-    setRuntimeDetail(
+    setRuntimeDetailHtml(
       root,
       "publicAtlas",
       `${formatCount(aliasCount)} ${aliasLabel} · ${formatCount(shardCount)} ${shardLabel}`,
+      `${formatCount(aliasCount)} search wordforms · ${formatCount(shardCount)} search shards`,
     );
 
     setRuntimeText(root, "manifest", formatCount(status.manifest.records));
@@ -95,53 +166,71 @@ const statusUrl = "/api/lexicon/status.json";
     const grammarCount = status.manifest.grammarTermRecords ?? 0;
     const grammarLabel = pluralizeUk(grammarCount, ["внутрішній", "внутрішні", "внутрішніх"]);
 
-    setRuntimeDetail(
+    setRuntimeDetailHtml(
       root,
       "manifest",
       status.manifest.hydrated
         ? `${formatCount(publicCount)} ${publicLabel} · ${formatCount(grammarCount)} ${grammarLabel}`
-        : `${formatBytes(status.manifest.jsonBytes)} pinned`,
+        : `${formatBytesUk(status.manifest.jsonBytes)} закріплено`,
+      status.manifest.hydrated
+        ? `${formatCount(publicCount)} public records · ${formatCount(grammarCount)} internal`
+        : `${formatBytesEn(status.manifest.jsonBytes)} pinned`,
     );
 
     setRuntimeText(root, "api", "4");
-    setRuntimeDetail(root, "api", status.endpoints.contract);
+    setRuntimeDetailHtml(root, "api", status.endpoints.contract, status.endpoints.contract);
 
     setRuntimeText(root, "daily", formatCount(status.daily.poolEntries));
-    setRuntimeDetail(root, "daily", "Навчальна добірка");
+    setRuntimeDetailHtml(root, "daily", "Навчальна добірка", "Learning selection");
 
     setRuntimeText(root, "practice", formatCount(status.practice.totalLexemes));
-    setRuntimeDetail(
+    setRuntimeDetailHtml(
       root,
       "practice",
       status.practice.deckVersions.length
         ? status.practice.deckVersions.join(", ")
         : "Без версії",
+      status.practice.deckVersions.length
+        ? status.practice.deckVersions.join(", ")
+        : "No version",
     );
 
     setRuntimeText(root, "cloze", formatCount(status.cloze.totalItems));
-    setRuntimeDetail(
+    setRuntimeDetailHtml(
       root,
       "cloze",
       `${formatCount(status.cloze.sourceRows)} джерел · ${formatCount(
         status.cloze.reviewedSourceRows,
       )} дозволено`,
+      `${formatCount(status.cloze.sourceRows)} sources · ${formatCount(
+        status.cloze.reviewedSourceRows,
+      )} allowed`,
     );
 
     setRuntimeText(root, "sourceInventory", formatCount(status.sourceInventory.atlasRows));
-    setRuntimeDetail(
+    setRuntimeDetailHtml(
       root,
       "sourceInventory",
       `${formatCount(status.sourceInventory.dailyAdmitted)} / ${formatCount(
         status.sourceInventory.practiceAdmitted,
       )} / ${formatCount(status.sourceInventory.clozeAdmitted)}`,
+      `${formatCount(status.sourceInventory.dailyAdmitted)} / ${formatCount(
+        status.sourceInventory.practiceAdmitted,
+      )} / ${formatCount(status.sourceInventory.clozeAdmitted)}`,
     );
 
-    const statusNode = root.querySelector("[data-runtime-status]");
-    if (statusNode) {
-      statusNode.textContent =
-        status.status === "ok"
-          ? "Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані."
-          : "Дані потребують перевірки: одна з поверхонь Атласу не збігається.";
+    if (status.status === "ok") {
+      setRuntimeStatusHtml(
+        root,
+        "Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані.",
+        "Data aligned: search, browse, Words of the Day, and practice are in sync.",
+      );
+    } else {
+      setRuntimeStatusHtml(
+        root,
+        "Дані потребують перевірки: одна з поверхонь Атласу не збігається.",
+        "Data needs review: one Atlas surface is out of sync.",
+      );
     }
     root.dataset.runtimeLoaded = "true";
   }
@@ -155,8 +244,11 @@ const statusUrl = "/api/lexicon/status.json";
       })
       .then((status) => renderRuntimeStatus(root, status))
       .catch(() => {
-        const statusNode = root.querySelector("[data-runtime-status]");
-        if (statusNode) statusNode.textContent = "Стан Атласу зараз недоступний.";
+        setRuntimeStatusHtml(
+          root,
+          "Стан Атласу зараз недоступний.",
+          "Atlas status is unavailable right now.",
+        );
         root.dataset.runtimeLoaded = "false";
       });
   }

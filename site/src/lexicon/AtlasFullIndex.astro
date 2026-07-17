@@ -29,7 +29,11 @@ const atlasEntryNoun = (count: number): string => {
   return "записів";
 };
 const totalCount = browseMeta.total ?? 0;
-const totalLabel = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
+const alphabetWithEntries = UKRAINIAN_ALPHABET.filter(
+  (letter) => (letterCounts[letter] ?? 0) > 0,
+);
+const totalLabelUk = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
+const totalLabelEn = `${totalCount.toLocaleString("en-US")} atlas entries · ${UKRAINIAN_ALPHABET.length} letters`;
 ---
 
 <section
@@ -37,25 +41,31 @@ const totalLabel = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · 
   data-atlas-index
   data-browse-meta={JSON.stringify(browseMeta)}
   data-flagged-rows={JSON.stringify(flaggedRows)}
-  data-total-label={totalLabel}
+  data-total-label-uk={totalLabelUk}
+  data-total-label-en={totalLabelEn}
 >
   <div class="atlas-index-heading">
-    <h2>Перегляд Атласу А–Я</h2>
-    <p>Алфавітний покажчик відкриває слова по одній літері.</p>
+    <h2 class="lu-i18n-block">
+      <span data-loc="en">Browse the Atlas A–Z</span>
+      <span data-loc="uk">Перегляд Атласу А–Я</span>
+    </h2>
+    <p class="lu-i18n-block">
+      <span data-loc="en">The alphabetical index opens words one letter at a time.</span>
+      <span data-loc="uk">Алфавітний покажчик відкриває слова по одній літері.</span>
+    </p>
   </div>
 
   <nav class="atlas-letter-nav" aria-label="Літери українського алфавіту">
     {
-      UKRAINIAN_ALPHABET.map((letter) => {
+      alphabetWithEntries.map((letter) => {
         const count = letterCounts[letter] ?? 0;
         return (
           <button
             type="button"
-            class:list={["atlas-letter-link", count === 0 && "is-empty"]}
+            class="atlas-letter-link"
             data-letter={letter}
             data-base-count={count}
             aria-pressed="false"
-            disabled={count === 0}
           >
             {letter}
           </button>
@@ -63,6 +73,10 @@ const totalLabel = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · 
       })
     }
   </nav>
+  <p class="atlas-letter-nav-note lu-i18n-block">
+    <span data-loc="en">Showing letters that have Atlas entries.</span>
+    <span data-loc="uk">Показано літери, для яких є записи в Атласі.</span>
+  </p>
 
   {
     chips.length > 0 && (
@@ -92,11 +106,12 @@ const totalLabel = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · 
 </label>
 
   <p
-    class="atlas-index-status"
+    class="atlas-index-status lu-i18n-block"
     data-index-status
     aria-live="polite"
   >
-    {totalLabel}
+    <span data-loc="uk">{totalLabelUk}</span>
+    <span data-loc="en">{totalLabelEn}</span>
   </p>
 
   <section class="atlas-letter-section" data-letter-section hidden>
@@ -173,8 +188,22 @@ type BrowseRow = {
   const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
   const flaggedRows = JSON.parse(root.dataset.flaggedRows ?? "[]") as BrowseRow[];
   const totalCount = meta.total ?? 0;
-  const totalLabel = root.dataset.totalLabel
-    ?? `${atlasEntryCountLabel(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
+  const totalLabelUk =
+    root.dataset.totalLabelUk ??
+    `${atlasEntryCountLabel(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
+  const totalLabelEn =
+    root.dataset.totalLabelEn ??
+    `${totalCount.toLocaleString("en-US")} atlas entries · ${UKRAINIAN_ALPHABET.length} letters`;
+  const setStatusBilingual = (uk: string, en: string): void => {
+    if (!status) return;
+    status.classList.add("lu-i18n-block");
+    status.innerHTML = `<span data-loc="uk">${escapeHtml(uk)}</span><span data-loc="en">${escapeHtml(en)}</span>`;
+  };
+  const setStatusText = (value: string): void => {
+    if (!status) return;
+    status.classList.remove("lu-i18n-block");
+    status.textContent = value;
+  };
     const searchInput = root.querySelector<HTMLInputElement>("[data-index-search]");
     const status = root.querySelector<HTMLElement>("[data-index-status]");
     const section = root.querySelector<HTMLElement>("[data-letter-section]");
@@ -285,33 +314,33 @@ type BrowseRow = {
       if (!status) return;
     if (!state.letter) {
       if (state.loading) {
-        status.textContent = "Шукаємо…";
+        setStatusText("Шукаємо…");
         return;
       }
       if (state.error) {
-        status.textContent = state.error;
+        setStatusText(state.error);
         return;
       }
       if (state.q.trim()) {
-        status.textContent = `${state.cls ? `${CLS_LABELS[state.cls] ?? state.cls}: ` : ""}${filteredCount} збігів`;
+        setStatusText(`${state.cls ? `${CLS_LABELS[state.cls] ?? state.cls}: ` : ""}${filteredCount} збігів`);
         return;
       }
       if (state.cls) {
-        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${atlasEntryCountLabel(filteredCount)}`;
+        setStatusText(`${CLS_LABELS[state.cls] ?? state.cls}: ${atlasEntryCountLabel(filteredCount)}`);
         return;
       }
-      status.textContent = totalLabel;
+      setStatusBilingual(totalLabelUk, totalLabelEn);
       return;
     }
       if (state.loading) {
-        status.textContent = `Завантажуємо ${state.letter}…`;
+        setStatusText(`Завантажуємо ${state.letter}…`);
         return;
       }
       if (state.error) {
-        status.textContent = state.error;
+        setStatusText(state.error);
         return;
       }
-      status.textContent = `${state.letter}: ${atlasEntryCountLabel(filteredCount)}`;
+      setStatusText(`${state.letter}: ${atlasEntryCountLabel(filteredCount)}`);
     };
 
     const updateControls = (): void => {
@@ -589,11 +618,18 @@ type BrowseRow = {
     gap: 0.35rem;
   }
 
+  .atlas-letter-nav-note {
+    margin: 0;
+    color: var(--lu-text-muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
   .atlas-letter-nav {
     position: sticky;
     top: 0.25rem;
     z-index: 2;
-    padding: 0.6rem;
+    padding: 0.45rem;
     border: 1px solid var(--lu-border);
     border-radius: 8px;
     background: var(--lu-surface);
@@ -603,7 +639,7 @@ type BrowseRow = {
   .atlas-letter-link,
   .atlas-chip,
   .atlas-more-button {
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     border: 1px solid var(--lu-border);
     border-radius: 8px;
     background: var(--lu-surface);
@@ -614,7 +650,8 @@ type BrowseRow = {
   }
 
   .atlas-letter-link {
-    width: 2.25rem;
+    width: 2.75rem;
+    min-width: 2.75rem;
     padding: 0;
   }
 

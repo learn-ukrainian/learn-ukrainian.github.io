@@ -5,11 +5,15 @@
 import CourseLayout from "../../layouts/CourseLayout.astro";
 import AtlasRuntimeStatus from "../../lexicon/AtlasRuntimeStatus.astro";
 import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
+import browseMeta from "../../data/lexicon-browse-meta.json";
 
 const frontmatter = {
   title: "Атлас слів",
   description: "Пошук і А-Я перегляд українських слів курсу з джерелами, морфологією та місцями появи.",
 };
+const atlasWordCount = browseMeta.total ?? 0;
+const atlasWordsUk = `${atlasWordCount.toLocaleString("uk-UA")} слів`;
+const atlasWordsEn = `${atlasWordCount.toLocaleString("en-US")} words`;
 ---
 
 <CourseLayout
@@ -22,10 +26,19 @@ const frontmatter = {
 >
   <div class="word-atlas lexicon-landing" data-word-atlas>
     <section class="lexicon-landing-hero" aria-labelledby="lexicon-landing-title">
-      <span class="lexicon-badge">Лексикон</span>
-      <h1 id="lexicon-landing-title">Атлас слів</h1>
-      <p>
-        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
+      <span class="lexicon-badge">
+        <span class="lu-i18n">
+          <span data-loc="en">Lexicon</span>
+          <span data-loc="uk">Лексикон</span>
+        </span>
+      </span>
+      <h1 id="lexicon-landing-title" class="lu-i18n-block">
+        <span data-loc="en">Word Atlas</span>
+        <span data-loc="uk">Атлас слів</span>
+      </h1>
+      <p class="lu-i18n-block">
+        <span data-loc="en">Search course words with sources, morphology, and where they appear in modules.</span>
+        <span data-loc="uk">Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.</span>
       </p>
       <AtlasTypeahead
         id="lexicon-landing-search"
@@ -34,7 +47,16 @@ const frontmatter = {
         containerClass="atlas-typeahead-landing"
         labelClass="atlas-typeahead-label"
       />
-      <a class="lexicon-browse-link" href="/lexicon/browse/">Перегляд А–Я →</a>
+      <p class="lexicon-atlas-size lu-i18n-block" data-testid="atlas-dictionary-size">
+        <span data-loc="en">{atlasWordsEn}</span>
+        <span data-loc="uk">{atlasWordsUk}</span>
+      </p>
+      <a class="lexicon-browse-link" href="/lexicon/browse/">
+        <span class="lu-i18n">
+          <span data-loc="en">Browse A–Z →</span>
+          <span data-loc="uk">Перегляд А–Я →</span>
+        </span>
+      </a>
     </section>
 
     <AtlasRuntimeStatus />
@@ -80,6 +102,15 @@ const frontmatter = {
   color: var(--lu-text-muted);
   font-size: 1.1rem;
   line-height: 1.65;
+}
+
+.lexicon-atlas-size {
+  margin: 1.35rem auto 0;
+  color: var(--lu-text);
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
 }
 
 /* `.word-atlas.lexicon-landing` (0,3,0) deterministically beats the global

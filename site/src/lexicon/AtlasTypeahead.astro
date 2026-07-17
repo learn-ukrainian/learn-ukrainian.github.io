@@ -56,6 +56,10 @@ const listId = `${id}-list`;
     type SearchRow,
     type SearchShardManifest,
   } from "../lib/lexicon/search";
+  import {
+    resolveTypeaheadEnterSelection,
+    resolveTypeaheadEscapeAction,
+  } from "../lib/lexicon/atlas-typeahead-keys";
 
   const EMPTY_MESSAGE = "Нічого не знайдено — спробуйте українською, латиницею або англійською";
   const LOADING_MESSAGE = "Завантажуємо…";
@@ -270,7 +274,9 @@ const listId = `${id}-list`;
           if (request !== taRequest) return;
         }
         taItems = matches;
-        taActive = taItems.length ? 0 : -1;
+        // No auto-highlight — Enter prefers an exact lemma match until the
+        // learner arrows to a suggestion (scout #7 / K3 B1).
+        taActive = -1;
         taState = taItems.length ? null : "empty";
         taRender();
       });
@@ -279,6 +285,8 @@ const listId = `${id}-list`;
     const taGo = (slug: string | null) => {
       if (slug) window.location.assign(`/lexicon/${encodeURIComponent(slug)}/`);
     };
+
+    const taListboxOpen = () => !taList.hidden;
 
     taInput.addEventListener("focus", () => {
       void taLoadManifest().catch(() => taLoadFull()).then(() => taSearch(taInput.value));
@@ -296,24 +304,46 @@ const listId = `${id}-list`;
       if (ev.key === "ArrowDown") {
         ev.preventDefault();
         if (taItems.length) {
-          taActive = (taActive + 1) % taItems.length;
+          taActive = taActive < 0 ? 0 : (taActive + 1) % taItems.length;
           taRender();
         }
       } else if (ev.key === "ArrowUp") {
         ev.preventDefault();
         if (taItems.length) {
-          taActive = (taActive - 1 + taItems.length) % taItems.length;
+          taActive =
+            taActive < 0
+              ? taItems.length - 1
+              : (taActive - 1 + taItems.length) % taItems.length;
           taRender();
         }
       } else if (ev.key === "Enter") {
-        if (taItems[taActive]) {
+        const chosen = resolveTypeaheadEnterSelection(
+          taInput.value,
+          taItems.map((item) => ({
+            lemma: item.article.l,
+            slug: item.article.s,
+            item,
+          })),
+          taActive,
+        );
+        if (chosen) {
           ev.preventDefault();
-          taGo(taItems[taActive].article.s);
+          taGo(chosen.slug);
         }
       } else if (ev.key === "Escape") {
+        ev.preventDefault();
+        const action = resolveTypeaheadEscapeAction(taListboxOpen() && (taItems.length > 0 || taState !== null));
+        if (action === "close-listbox") {
+          taItems = [];
+          taState = null;
+          taActive = -1;
+          taRender();
+          return;
+        }
         taInput.value = "";
         taItems = [];
         taState = null;
+        taActive = -1;
         taRender();
       }
     });

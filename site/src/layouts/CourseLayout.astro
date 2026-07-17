@@ -206,6 +206,11 @@ const isActive = (href: string) => {
       html[data-chrome-locale='uk'] .lu-i18n [data-loc='uk'] { display: inline; }
       html[data-chrome-locale='uk'] .lu-i18n [data-loc='en'] { display: none; }
 
+      /* Block-level sibling (headings, paragraphs) — same locale rule as .lu-i18n. */
+      .lu-i18n-block [data-loc='uk'] { display: none; }
+      html[data-chrome-locale='uk'] .lu-i18n-block [data-loc='uk'] { display: block; }
+      html[data-chrome-locale='uk'] .lu-i18n-block [data-loc='en'] { display: none; }
+
       .lu-locale-toggle {
         display: inline-flex;
         align-items: center;

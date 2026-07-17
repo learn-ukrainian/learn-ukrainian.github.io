@@ -174,7 +174,13 @@ body {
   transform: translateY(-160%);
 }
 
-.lu-skip-link:focus {
+/* Visible only for keyboard focus; mouse/:focus without :focus-visible stays hidden
+   so Space/Enter practice keys never leave the skip link stuck on screen. */
+.lu-skip-link:focus:not(:focus-visible) {
+  transform: translateY(-160%);
+}
+
+.lu-skip-link:focus-visible {
   transform: translateY(0);
 }
 
