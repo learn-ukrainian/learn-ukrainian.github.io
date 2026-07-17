@@ -128,6 +128,27 @@ echo "=== Lint prompts ==="
 .venv/bin/python scripts/lint_prompts.py
 echo ""
 
+# Verify that all hooks in source directories are executable on disk
+echo "=== Verify hook permissions ==="
+hook_perm_fail=false
+for hook_dir in "$SHARED_EXTENSIONS/hooks" "gemini_extensions/hooks"; do
+    if [[ -d "$hook_dir" ]]; then
+        for hook in "$hook_dir"/*; do
+            if [[ -f "$hook" && ! -x "$hook" ]]; then
+                echo "  ❌ Hook file '$hook' is not executable." >&2
+                hook_perm_fail=true
+            fi
+        done
+    fi
+done
+
+if [[ "$hook_perm_fail" == true ]]; then
+    echo "❌ Deploy aborted: Hook files must be executable." >&2
+    exit 1
+fi
+echo "  ✅ All hook files are executable."
+echo ""
+
 echo "=== Lint agent skills ==="
 .venv/bin/python scripts/lint/lint_agent_skills.py
 echo ""
@@ -300,4 +321,15 @@ for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
 done
 rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
+
+# Ensure deployed hooks are executable in the destination
+echo "=== Ensuring deployed hooks are executable ==="
+for dest_hooks in .claude/hooks .agent/hooks .codex/hooks .gemini/hooks; do
+    if [[ -d "$dest_hooks" ]]; then
+        chmod +x "$dest_hooks"/* 2>/dev/null || true
+    fi
+done
+echo "  ✅ Destination hooks verified/chmod'd."
+echo ""
+
 echo "Deploy complete."
