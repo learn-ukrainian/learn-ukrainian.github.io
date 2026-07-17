@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
@@ -1002,6 +1003,64 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
         "$ref": "#/$defs/repo_relative_path"
     }
     assert plan.metadata == {"claude_home": str(write / "home")}
+
+
+def test_claude_trace_recovery_uses_disposable_review_home(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ambient_home = tmp_path / "ambient"
+    ambient_home.mkdir()
+    monkeypatch.setenv("HOME", str(ambient_home))
+    disposable_home = tmp_path / "disposable"
+    cwd = tmp_path / "work"
+    cwd.mkdir()
+    session_id = "abc-123"
+    slug = str(cwd.resolve()).replace("/", "-")
+    session_dir = disposable_home / ".claude" / "projects" / slug
+    session_dir.mkdir(parents=True)
+    session_file = session_dir / f"{session_id}.jsonl"
+    session_file.write_text(
+        "\n".join(
+            [
+                (
+                    '{"type":"assistant","message":{"content":['
+                    '{"type":"tool_use","id":"u1","name":"Read",'
+                    '"input":{"file_path":"changed.py"}}]}}'
+                ),
+                (
+                    '{"type":"user","message":{"content":['
+                    '{"type":"tool_result","tool_use_id":"u1","content":"ok"}]}}'
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    plan = InvocationPlan(
+        cmd=["claude"],
+        cwd=cwd,
+        stdin_payload="",
+        output_file=None,
+        env_overrides={},
+        metadata={"claude_home": str(disposable_home)},
+    )
+
+    result = ClaudeAdapter().parse_response(
+        stdout=(
+            '{"type":"result","subtype":"success","result":"Done.",'
+            '"session_id":"abc-123"}'
+        ),
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is True
+    assert len(result.tool_calls) == 1
+    assert result.tool_calls[0]["name"] == "Read"
+    assert result.tool_calls[0]["arguments"] == {"file_path": "changed.py"}
+    assert result.tool_calls[0]["output_summary"] == "ok"
 
 
 def test_claude_parser_prefers_native_structured_output_over_model_preamble() -> None:

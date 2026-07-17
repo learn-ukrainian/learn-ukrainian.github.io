@@ -76,15 +76,12 @@ def test_claude_stream_json_without_text_fails_loudly() -> None:
 def test_claude_adapter_recovers_tool_calls_from_session_jsonl(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    ambient_home = tmp_path / "ambient"
-    ambient_home.mkdir()
-    monkeypatch.setenv("HOME", str(ambient_home))
-    disposable_home = tmp_path / "disposable"
+    monkeypatch.setenv("HOME", str(tmp_path))
     cwd = tmp_path / "work"
     cwd.mkdir()
     session_id = "abc-123"
     slug = str(cwd.resolve()).replace("/", "-")
-    session_dir = disposable_home / ".claude" / "projects" / slug
+    session_dir = tmp_path / ".claude" / "projects" / slug
     session_dir.mkdir(parents=True)
     session_file = session_dir / f"{session_id}.jsonl"
     session_file.write_text(
@@ -111,7 +108,6 @@ def test_claude_adapter_recovers_tool_calls_from_session_jsonl(
         stdin_payload="",
         output_file=None,
         env_overrides={},
-        metadata={"claude_home": str(disposable_home)},
     )
     result = ClaudeAdapter().parse_response(
         stdout=stdout,
