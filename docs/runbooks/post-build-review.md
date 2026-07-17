@@ -82,7 +82,9 @@ modules. Universal-quantifier units are forced into the claim ledger; each
 claim must quote a contiguous substring of its owning statement, and at least
 one claim must reproduce the full statement as a coverage anchor. Reviewer-
 selected totals, near-to-bare quantifier dilution, token-only claims, or safer
-paraphrases therefore cannot conceal omitted high-risk claims. For
+paraphrases therefore cannot conceal omitted high-risk claims. The detector
+uses VESUM-verified `кожен`/`кожн*`, `жоден`/`жодн*`, and declined `усі`/`всі`
+surfaces rather than a single nominative spelling. For
 seminars, curated named-source aliases are compared with learner-visible
 resources; an unmapped configured source produces a material deterministic
 finding, while incidental acronyms do not become extra source labels.

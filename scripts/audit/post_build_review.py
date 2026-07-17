@@ -732,12 +732,21 @@ UKRAINIAN_TEXT_RE = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
 STATEMENT_SPLIT_RE = re.compile(
     r"(?<=[.!?…])\s+(?=[«“\"'A-ZА-ЯІЇЄҐ0-9])"
 )
+# VESUM-backed paradigms: кожен/кожн*, жоден/жодн*, plural усі/всі
+# declensions, and the singular весь/увесь families. Keep this morphological
+# surface explicit: a missed form can otherwise bypass the claim-ledger gate.
+UNIVERSAL_FORM_PATTERN = (
+    r"(?:кож(?:ен|н[а-яіїєґ'’\-]*)|жод(?:ен|н[а-яіїєґ'’\-]*)|"
+    r"усі(?:ма|ми|х|м)?|всі(?:ма|ми|х|м)?|"
+    r"увесь|весь|уся|вся|усе|все|усю|всю|"
+    r"усього|всього|усьому|всьому|усій|всій|"
+    r"усієї|всієї|усією|всією|завжди|ніколи)"
+)
 UNIVERSAL_QUANTIFIER_RE = re.compile(
-    r"\b(?:майже\s+)?кожн[а-яіїєґ'’\-]*\b|\b(?:усі|всі|завжди|ніколи)\b",
-    re.IGNORECASE,
+    rf"\b(?:майже\s+)?{UNIVERSAL_FORM_PATTERN}\b", re.IGNORECASE
 )
 NEAR_UNIVERSAL_RE = re.compile(
-    r"\bмайже\s+кожн[а-яіїєґ'’\-]*\b", re.IGNORECASE
+    rf"\bмайже\s+{UNIVERSAL_FORM_PATTERN}\b", re.IGNORECASE
 )
 INSTRUCTION_OPEN_RE = re.compile(
     r"(?:\b[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|^[а-яіїєґ'’\-]{3,}ти\b)"

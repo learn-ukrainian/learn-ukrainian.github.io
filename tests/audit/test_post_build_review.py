@@ -1421,14 +1421,10 @@ def test_risk_claim_surface_substitution_fails_closed(
         claim["claim"] = "Підмінене безпечне твердження."
         error_fragment = "not a verbatim substring"
     else:
-        quantifier = pbr.UNIVERSAL_QUANTIFIER_RE.search(unit["text"])
-        assert quantifier is not None
-        candidates = [
-            unit["text"][: quantifier.start()].strip(" ,.;:—-"),
-            unit["text"][quantifier.end() :].strip(" ,.;:—-"),
-        ]
-        claim["claim"] = max(
-            (candidate for candidate in candidates if candidate), key=len
+        quantifiers = list(pbr.UNIVERSAL_QUANTIFIER_RE.finditer(unit["text"]))
+        assert quantifiers
+        claim["claim"] = unit["text"][quantifiers[-1].end() :].strip(
+            " ,.;:—-"
         )
         assert claim["claim"] in unit["text"]
         assert pbr.UNIVERSAL_QUANTIFIER_RE.search(claim["claim"]) is None
@@ -1442,16 +1438,26 @@ def test_risk_claim_surface_substitution_fails_closed(
 
 
 @pytest.mark.parametrize(
-    "substituted_claim",
+    ("statement", "substituted_claim"),
     [
-        "кожне громадянське звернення стосувалося житла.",
-        "кожне",
+        (
+            "Майже кожне громадянське звернення стосувалося житла.",
+            "кожне громадянське звернення стосувалося житла.",
+        ),
+        ("Майже кожне громадянське звернення стосувалося житла.", "кожне"),
+        (
+            "Майже кожен лист стосувався житла.",
+            "кожен лист стосувався житла.",
+        ),
+        ("Майже кожен лист стосувався житла.", "кожен"),
+        ("Усіх звернень стосувалася житлова тема.", "Усіх"),
     ],
 )
 def test_near_universal_scope_dilution_is_contract_invalid(
+    statement: str,
     substituted_claim: str,
 ) -> None:
-    statement = "Майже кожне громадянське звернення стосувалося житла."
+    assert pbr._statement_signals(statement) == ["universal_quantifier"]
     unit = {
         "id": "near-universal-fixture",
         "path": "tests/fixtures/post_build_review",
@@ -2100,6 +2106,36 @@ def test_statement_inventory_forces_risky_bio_claim_units() -> None:
     assert by_text["Класифікуйте кожне речення за типом зв'язку."][
         "signals"
     ] == []
+
+
+@pytest.mark.parametrize(
+    "surface",
+    [
+        "кожен",
+        "майже кожен",
+        "кожного",
+        "усі",
+        "усіх",
+        "усім",
+        "усіма",
+        "всі",
+        "всіх",
+        "всім",
+        "всіма",
+        "жоден",
+        "жодного",
+        "весь",
+        "усього",
+    ],
+)
+def test_vesum_backed_universal_forms_are_risk_signaled(surface: str) -> None:
+    assert pbr._statement_signals(
+        f"{surface.capitalize()} звернення стосувалося житлової теми."
+    ) == ["universal_quantifier"]
+
+
+def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
+    assert pbr._statement_signals("Позначте всі часові сполучники.") == []
 
 
 def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
@@ -3088,7 +3124,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "6.0.0"
-    assert len(rows) == 61
+    assert len(rows) == 62
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

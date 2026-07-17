@@ -31,7 +31,8 @@ pedagogically appropriate.
 For every module, build a hash-bound statement inventory from every
 learner-visible content, activity, vocabulary, and resource-note statement.
 Record immutable unit IDs, exact paths and lines, text hashes, and conservative
-risk signals for universal quantifiers. For seminar modules, separately
+risk signals for VESUM-backed universal paradigms, including `кожен`/`кожн*`,
+`жоден`/`жодн*`, and declined `усі`/`всі` forms. For seminar modules, separately
 inventory learner resources and every detected named-source attribution, and
 add source-attribution signals to the corresponding statements. A
 configured source alias with no matching learner resource is a material

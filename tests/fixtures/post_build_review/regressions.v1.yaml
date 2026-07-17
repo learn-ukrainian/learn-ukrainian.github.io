@@ -341,6 +341,12 @@ regressions:
     version_field: review_protocol_version
     input: A seminar reviewer reports internally consistent claim counts while omitting learner statements containing every or almost every.
     expected: Exact packet statement coverage is required; quantifier-signaled units must own a full-statement verbatim coverage claim, so omission, near-to-bare dilution, token-only coverage, or safer substitution is contract-invalid.
+  - bug_id: universal-morphology-missed-risk-signal
+    responsible_layer: deterministic_code
+    fixed_in_version: 2.0.0
+    version_field: deterministic_contract_version
+    input: A learner-facing universal uses VESUM-attested кожен, жоден, усіх/всіх, or their ordinary declined forms rather than the previously matched кожн stem or bare усі/всі.
+    expected: Morphology-aware deterministic signaling forces exact statement coverage and the full-statement claim anchor for every supported paradigm form.
   - bug_id: core-statement-inventory-disabled-by-seminar-only-v6
     responsible_layer: deterministic_code
     fixed_in_version: 2.0.0
