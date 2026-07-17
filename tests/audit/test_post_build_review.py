@@ -379,6 +379,11 @@ def bilash_packet() -> dict:
     return packet
 
 
+@pytest.fixture(scope="module")
+def malyshko_packet() -> dict:
+    return pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+
+
 def test_track_resolution_covers_every_versioned_track() -> None:
     policy = pbr.load_track_policy()
     for track, config in policy["tracks"].items():
@@ -1546,6 +1551,32 @@ def test_combined_disposition_precedence(semantic_verdict: str, severity: str | 
     assert pbr.combine_disposition(deterministic, semantic, findings)["status"] == expected
 
 
+def test_combined_disposition_never_passes_missing_vocabulary() -> None:
+    deterministic = {
+        "track_audit": {"status": "complete"},
+        "size_policy": {"status": "complete"},
+        "skip_assessments": [],
+        "aggregate": {"status": "clear", "reasons": []},
+    }
+    semantic = {
+        "verdict": "PASS",
+        "claim_coverage": {
+            "status": "complete",
+            "claims_total": 1,
+            "claims_checked": 1,
+        },
+        "learner_evidence_ledger": [],
+        "vocabulary_coverage": [{"status": "MISSING"}],
+    }
+
+    disposition = pbr.combine_disposition(deterministic, semantic, [])
+
+    assert disposition == {
+        "status": "REVISE",
+        "reasons": ["vocabulary integration is incomplete"],
+    }
+
+
 def test_incomplete_coverage_fails_closed() -> None:
     deterministic = {
         "track_audit": {"status": "complete"},
@@ -2034,6 +2065,47 @@ def test_vocabulary_alignment_uses_coverage_ledger_for_absence_proof() -> None:
     ]
 
 
+def test_finalize_accepts_representative_multi_missing_alignment_evidence(
+    malyshko_packet: dict,
+) -> None:
+    semantic = _passing_semantic(malyshko_packet)
+    semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]["evidence"] = (
+        _alignment_evidence(malyshko_packet)
+    )
+
+    result = pbr.finalize_review(malyshko_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["combined_disposition"]["status"] == "REVISE"
+    pbr.validate_result(result)
+
+
+@pytest.mark.parametrize("severity", ["low", "info"])
+def test_missing_vocabulary_rejects_nonmaterial_severity_and_semantic_pass(
+    malyshko_packet: dict,
+    severity: str,
+) -> None:
+    semantic = _passing_semantic(malyshko_packet)
+    missing_ids = {
+        item["finding_id"]
+        for item in semantic["vocabulary_coverage"]
+        if item["status"] == "MISSING"
+    }
+    assert missing_ids
+    for finding in semantic["findings"]:
+        if finding["id"] in missing_ids:
+            finding["severity"] = severity
+    semantic["verdict"] = "PASS"
+
+    result = pbr.finalize_review(malyshko_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "MISSING requires a medium-or-higher finding" in result[
+        "semantic_response"
+    ]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
 def test_maiboroda_regression_replaces_audio_task_with_text_evidence() -> None:
     target = pbr.resolve_target("bio/platon-maiboroda")
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
@@ -2455,8 +2527,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.8"
-    assert len(rows) == 55
+    assert catalog["catalog_version"] == "5.0.9"
+    assert len(rows) == 57
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2491,6 +2563,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.5",
         "5.0.6",
         "5.0.7",
+        "5.0.8",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

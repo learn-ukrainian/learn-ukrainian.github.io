@@ -1,4 +1,4 @@
-catalog_version: 5.0.8
+catalog_version: 5.0.9
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -299,6 +299,18 @@ regressions:
     version_field: review_protocol_version
     input: A reviewer labels synonyms, different lemmas, reversed phrases, or one token from a multiword term as a VESUM mapping, such as співавторство=співтворчість.
     expected: Resolve exact and inflected learner surfaces deterministically against VESUM during preparation, bind candidate surface/verification pairs into the packet and provider schema, and reject every model-authored pair outside that immutable candidate set.
+  - bug_id: missing-vocabulary-severity-downgrade-bypassed-gate
+    responsible_layer: disposition
+    fixed_in_version: 5.0.8
+    version_field: review_protocol_version
+    input: A reviewer marks a source-order vocabulary lemma MISSING but assigns only low or info severity, returns semantic PASS, and leaves all five scored dimensions at 10.0.
+    expected: Reject semantic PASS and low/info severity for structural vocabulary absence; defense-in-depth combined disposition returns at least REVISE whenever any vocabulary item is MISSING.
+  - bug_id: stored-vocabulary-alignment-reimposed-exact-absence-locators
+    responsible_layer: schema
+    fixed_in_version: 5.0.8
+    version_field: review_protocol_version
+    input: A valid multi-MISSING vocabulary ledger uses representative alignment evidence while each source-order entry owns its exact absence finding.
+    expected: Stored-result revalidation mirrors normalization by exempting VOCABULARY_INTEGRATION from artificial per-finding locator coverage while still requiring all finding IDs and nonempty representative evidence.
   - bug_id: short-supplied-finding-evidence-rejected
     responsible_layer: orchestration
     fixed_in_version: 5.0.2

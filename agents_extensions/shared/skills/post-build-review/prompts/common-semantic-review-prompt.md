@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.7`
+Semantic prompt version: `5.0.8`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -369,6 +369,8 @@ visible lesson/activity surface and exact line evidence from the content or
 activities target file; a definition or usage example present only in
 `vocabulary.yaml` is not learner integration. `MISSING` and
 `INCOMPLETE` require a `VOCABULARY_INTEGRATION` finding and no surface evidence.
+Every `MISSING` item requires a medium, high, or blocker finding and makes
+semantic `PASS` impossible; do not downgrade structural absence to low/info.
 Both `surface` and `verification` must be copied byte-for-byte from the
 source-order lemma's packet-bound candidate list. A candidate proves
 morphology and occurrence, not meaningful pedagogy; you must still judge

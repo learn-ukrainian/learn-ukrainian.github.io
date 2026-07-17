@@ -1873,6 +1873,18 @@ def _normalize_vocabulary_coverage(
                 raise ReviewProtocolError(
                     f"Vocabulary {lemma} {status} requires a VOCABULARY_INTEGRATION finding"
                 )
+            if status == "MISSING" and finding.get("severity") not in {
+                "blocker",
+                "high",
+                "medium",
+            }:
+                raise ReviewProtocolError(
+                    f"Vocabulary {lemma} MISSING requires a medium-or-higher finding"
+                )
+            if status == "MISSING" and verdict == "PASS":
+                raise ReviewProtocolError(
+                    f"Vocabulary {lemma} MISSING is inconsistent with semantic PASS"
+                )
             if status == "INCOMPLETE" and verdict != "INCOMPLETE":
                 raise ReviewProtocolError(
                     f"Vocabulary {lemma} INCOMPLETE requires semantic INCOMPLETE"
@@ -2388,6 +2400,13 @@ def combine_disposition(
         reasons.append("reviewer could not verify required learner evidence")
     if semantic["verdict"] == "INCOMPLETE":
         reasons.append("semantic reviewer reported incomplete")
+    vocabulary_statuses = {
+        str(item.get("status"))
+        for item in semantic.get("vocabulary_coverage") or []
+        if isinstance(item, Mapping)
+    }
+    if "INCOMPLETE" in vocabulary_statuses:
+        reasons.append("vocabulary coverage is incomplete")
     incomplete_dimensions = sorted(
         dimension
         for dimension, assessment in semantic.get("quality_dimensions", {}).items()
@@ -2413,6 +2432,8 @@ def combine_disposition(
         return {"status": "BLOCK", "reasons": ["high-severity mechanical finding is unresolved"]}
     if semantic["verdict"] == "REVISE" or severities.intersection({"high", "medium"}):
         return {"status": "REVISE", "reasons": ["actionable finding is unresolved"]}
+    if "MISSING" in vocabulary_statuses:
+        return {"status": "REVISE", "reasons": ["vocabulary integration is incomplete"]}
     return {"status": "PASS", "reasons": ["deterministic and semantic review passed"]}
 
 
@@ -2532,20 +2553,21 @@ def _validate_normalized_alignment_vocabulary(
                 raise ReviewProtocolError(
                     f"Alignment audit {audit_class} FOUND must reference every matching finding"
                 )
-            evidence_locations = {
-                str(evidence["location"]) for evidence in entry["evidence"]
-            }
-            uncited = sorted(
-                finding_id
-                for finding_id in class_ids
-                if not known[finding_id].get("location")
-                or str(known[finding_id]["location"]) not in evidence_locations
-            )
-            if uncited:
-                raise ReviewProtocolError(
-                    f"Alignment audit {audit_class} FOUND must cite each finding's exact "
-                    "immutable locator: " + ", ".join(uncited)
+            if audit_class != "VOCABULARY_INTEGRATION":
+                evidence_locations = {
+                    str(evidence["location"]) for evidence in entry["evidence"]
+                }
+                uncited = sorted(
+                    finding_id
+                    for finding_id in class_ids
+                    if not known[finding_id].get("location")
+                    or str(known[finding_id]["location"]) not in evidence_locations
                 )
+                if uncited:
+                    raise ReviewProtocolError(
+                        f"Alignment audit {audit_class} FOUND must cite each finding's exact "
+                        "immutable locator: " + ", ".join(uncited)
+                    )
         if status == "INCOMPLETE" and (
             not finding_ids or semantic["verdict"] != "INCOMPLETE"
         ):
@@ -2580,6 +2602,18 @@ def _validate_normalized_alignment_vocabulary(
         if finding is None or finding.get("issue_id") != "VOCABULARY_INTEGRATION":
             raise ReviewProtocolError(
                 f"Vocabulary {lemma} {status} requires a VOCABULARY_INTEGRATION finding"
+            )
+        if status == "MISSING" and finding.get("severity") not in {
+            "blocker",
+            "high",
+            "medium",
+        }:
+            raise ReviewProtocolError(
+                f"Vocabulary {lemma} MISSING requires a medium-or-higher finding"
+            )
+        if status == "MISSING" and semantic["verdict"] == "PASS":
+            raise ReviewProtocolError(
+                f"Vocabulary {lemma} MISSING is inconsistent with semantic PASS"
             )
         if status == "INCOMPLETE" and semantic["verdict"] != "INCOMPLETE":
             raise ReviewProtocolError(
