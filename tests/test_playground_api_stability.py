@@ -17,6 +17,7 @@ import scripts.api.images_router as images_router
 import scripts.api.state_helpers as state_helpers
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
+from tests.latency_budget import assert_under_budget
 
 SAMPLE_COUNT = 3
 HEALTH_ENDPOINT = "/api/health"
@@ -278,9 +279,13 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
                     assert response.status_code in {200, 503}, f"{dashboard} {endpoint}"
                 else:
                     assert response.status_code < 500, f"{dashboard} {endpoint}"
-            assert p95_elapsed < endpoint_budget, (
+            # Absolute wall-clock budgets are advisory on CI (#5360): runner
+            # load produced a 5.0s→0.9s spread that reds unrelated PRs.
+            assert_under_budget(
+                p95_elapsed,
+                endpoint_budget,
                 f"{dashboard} {endpoint} p95-of-3 took {p95_elapsed:.3f}s "
-                f"(runs: {', '.join(f'{elapsed:.3f}s' for elapsed in timings)})"
+                f"(runs: {', '.join(f'{elapsed:.3f}s' for elapsed in timings)})",
             )
 
         dashboard_p95 = max(
@@ -288,8 +293,10 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
             if seen_dashboard == dashboard
         )
         dashboard_budget = max(BUDGETS[endpoint] for endpoint in endpoints)
-        assert dashboard_p95 < dashboard_budget, (
-            f"{dashboard} p95 budget exceeded: {dashboard_p95:.3f}s"
+        assert_under_budget(
+            dashboard_p95,
+            dashboard_budget,
+            f"{dashboard} p95 budget exceeded: {dashboard_p95:.3f}s",
         )
 
         health_responses, health_timings, health_p95 = three_run_perf_probe(
@@ -297,7 +304,9 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
         )
         for health in health_responses:
             assert health.status_code == 200
-        assert health_p95 < BUDGETS[HEALTH_ENDPOINT], (
+        assert_under_budget(
+            health_p95,
+            BUDGETS[HEALTH_ENDPOINT],
             f"{HEALTH_ENDPOINT} p95-of-3 took {health_p95:.3f}s after {endpoint} "
-            f"(runs: {', '.join(f'{elapsed:.3f}s' for elapsed in health_timings)})"
+            f"(runs: {', '.join(f'{elapsed:.3f}s' for elapsed in health_timings)})",
         )

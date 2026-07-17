@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
+from tests.latency_budget import assert_under_budget
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -276,7 +277,11 @@ def test_orient_completes_within_500ms(monkeypatch):
     elapsed = time.perf_counter() - start
 
     assert response.status_code == 200
-    assert elapsed < 0.5
+    assert_under_budget(
+        elapsed,
+        0.5,
+        f"/api/orient took {elapsed:.3f}s (budget 0.5s)",
+    )
 
 
 def test_orient_response_includes_meta_for_each_section(monkeypatch):
@@ -356,7 +361,7 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     elapsed = time.perf_counter() - start
 
     assert response.status_code == 200
-    assert elapsed < 1.0, f"orient should short-circuit, took {elapsed}s"
+    assert_under_budget(elapsed, 1.0, f"orient should short-circuit, took {elapsed}s")
     data = response.json()
     assert "section_timeout" in data["pipeline"]["error"]
     # Other sections must still populate — failure isolation is the point.
