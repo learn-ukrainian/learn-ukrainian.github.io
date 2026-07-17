@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.4 — updated 2026-07-16 (Kimi K3 native lane onboarding). **§2 roster + §8.10 inventory corrected; the per-task bakeoff SCORE cells (§3–§7) were NOT re-run and predate this lane — K3 stays canary-only until role-specific bakeoffs land.** v1.4 adds native Kimi Code OAuth (`kimi-code/k3`, 262K, max effort) as a dispatchable subscription worker without promoting it over evidence-backed incumbents. v1.3 corrected the June fleet roster and exclusions. See §10 Provenance for version history.
+> **Status:** v1.5 — updated 2026-07-17 for the quality-first fleet policy. K3 is an active consequential-work and cross-family review candidate, while remaining excluded from the Ukrainian factual/folk gate. The per-task bakeoff SCORE cells (§3–§7) are historical evidence; the current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. v1.4 added the native Kimi Code OAuth lane. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -185,9 +185,9 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary** | DeepSeek-flash (deepseek-v4-flash) | "E:A+ 15s" — cheap second-opinion via `delegate.py dispatch --agent deepseek --model deepseek-v4-flash` | 2026-05-15 | MEMORY #M-0 | New primary as of 2026-05-13 routing update. |
-| Runner-up 1 | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Reserve for novel-architectural cases. |
-| Runner-up 2 | Claude inline (orchestrator) | when context-continuity matters | ongoing | this session | I review PRs before merging during my drive. |
+| **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-07-17 | `scripts/config/model_catalog.yaml` | Resolve by risk. Critical/high starts with the frontier-authority peer tier; medium starts with the strong peer tier; low starts with Pool/Gemini Flash. |
+| Historical result | DeepSeek-flash (deepseek-v4-flash) | "E:A+ 15s" — cheap second-opinion via `delegate.py dispatch --agent deepseek --model deepseek-v4-flash` | 2026-05-15 | MEMORY #M-0 | Low-risk economical lane only; never the sole medium/high gate. |
+| Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 
 **Known weakness (DeepSeek-flash):** new lane; long-tail of evaluation pending.
 **Known strength:** 15-second turnaround; very low cost; surfaces obvious regressions.
@@ -359,9 +359,10 @@ Listed by priority for next-session fill:
 
 | Rank | Model | Cost | Quality status |
 | --- | --- | --- | --- |
-| 1 ✅ | DeepSeek-v4-flash | $ | E:A+ 15s, zero false positives. Primary as of 2026-05-13. |
-| 2 ✅ | Codex GPT-5.5 | $$ | Architectural catches. Reserve. |
-| ❓ | Qwen-3.6-flash | $ | Cheap candidate; untested. |
+| Policy | Risk-specific catalog ladder | varies | Machine-enforced quality floor; see `scripts/config/model_catalog.yaml`. |
+| Historical ✅ | DeepSeek-v4-flash | $ | E:A+ 15s in the 2026-05-13 bakeoff; retained only as a low-risk economical candidate. |
+| Historical ✅ | Codex GPT-5.5 | $$ | Architectural catches; cannot independently review OpenAI-authored work. |
+| Excluded | Qwen-3.6-flash | $ | User-excluded from active routing. |
 
 ### 8.8 Content review (with VESUM verification)
 
