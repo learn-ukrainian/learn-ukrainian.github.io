@@ -26,7 +26,7 @@ and combines both layers inside an invocation-unique directory allocated under
 | Mechanically verifiable track rules | `post-build-review/config/track-policy.v1.yaml` |
 | Semantic judgment | `post-build-review/prompts/*.md` |
 | Orchestration order and run isolation | `post-build-review/SKILL.md` plus `post_build_review.py allocate` |
-| Output shape | `post-build-review/schema/review-result.v4.schema.json` |
+| Output shape | `post-build-review/schema/review-result.v5.schema.json` |
 | Operator maintenance | This runbook |
 
 The evidence-derived size contract consumes the existing size-policy audit. It
@@ -47,10 +47,12 @@ Every result records:
 - exact raw semantic-response SHA-256, byte count, parser status, and contract status
 - atomic claim ledger with count-consistency enforcement
 - explicit pedagogical, naturalness, decolonization, engagement, and tone coverage
+- exact seven-class alignment audit plus source-order vocabulary coverage ledger
 - calibrated per-dimension diagnostic scores with score rationales and a
   reporting-only `minimum_dimension_score` (never an average or release gate)
 - deterministic argv/cwd/exit/output hashes/config provenance
-- source-file hashes and a normalized reproducibility key
+- hash-bound, line-addressable target snapshots during review, source-file
+  hashes in the result, and a normalized reproducibility key
 
 Bump the version responsible for a behavior change:
 
@@ -62,9 +64,15 @@ Bump the version responsible for a behavior change:
 | Track mapping, mechanical rule, skip classification | `track_policy_version` |
 
 Use semantic versioning. A breaking schema change requires a new schema id/file
-and review protocol major version. Schemas v1-v3 remain available for historical
-validation; new reviews emit v4. Prompt hashes change automatically from the
+and review protocol major version. Schemas v1-v4 remain available for historical
+validation; new reviews emit v5. Prompt hashes change automatically from the
 exact assembled common + family + resolved context.
+
+V5 revalidates the exact raw provider response against the packet-bound schema
+before hydration. Every non-incomplete citation carries a target path, line,
+and explanation of what that line supports; the finalizer hydrates the excerpt
+from the immutable packet rather than the live checkout. Omitting an alignment
+class or vocabulary lemma is contract-invalid, not an implicit pass.
 
 Dimension scores preserve the accepted raw reviewer response after strict
 Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
