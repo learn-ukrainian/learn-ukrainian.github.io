@@ -2138,6 +2138,9 @@ def test_vesum_backed_universal_forms_are_risk_signaled(surface: str) -> None:
 
 def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
     assert pbr._statement_signals("Позначте всі часові сполучники.") == []
+    assert pbr._statement_signals(
+        "У кожній версії простежте граматичну особу."
+    ) == []
 
 
 @pytest.mark.parametrize(
