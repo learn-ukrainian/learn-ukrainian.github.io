@@ -1,0 +1,6191 @@
+{
+  "cefr_estimates": {
+    "тестаф": {
+      "freq": 950000,
+      "grac_word": "тестаф",
+      "level": "A1",
+      "rank": 1,
+      "rel_freq": 950.0,
+      "total": 450
+    },
+    "тестах": {
+      "freq": 949000,
+      "grac_word": "тестах",
+      "level": "A1",
+      "rank": 2,
+      "rel_freq": 949.0,
+      "total": 450
+    },
+    "тестац": {
+      "freq": 948000,
+      "grac_word": "тестац",
+      "level": "A1",
+      "rank": 3,
+      "rel_freq": 948.0,
+      "total": 450
+    },
+    "тестач": {
+      "freq": 947000,
+      "grac_word": "тестач",
+      "level": "A1",
+      "rank": 4,
+      "rel_freq": 947.0,
+      "total": 450
+    },
+    "тесташ": {
+      "freq": 946000,
+      "grac_word": "тесташ",
+      "level": "A1",
+      "rank": 5,
+      "rel_freq": 946.0,
+      "total": 450
+    },
+    "тестащ": {
+      "freq": 945000,
+      "grac_word": "тестащ",
+      "level": "A1",
+      "rank": 6,
+      "rel_freq": 945.0,
+      "total": 450
+    },
+    "тестаю": {
+      "freq": 944000,
+      "grac_word": "тестаю",
+      "level": "A1",
+      "rank": 7,
+      "rel_freq": 944.0,
+      "total": 450
+    },
+    "тестая": {
+      "freq": 943000,
+      "grac_word": "тестая",
+      "level": "A1",
+      "rank": 8,
+      "rel_freq": 943.0,
+      "total": 450
+    },
+    "тестає": {
+      "freq": 942000,
+      "grac_word": "тестає",
+      "level": "A1",
+      "rank": 9,
+      "rel_freq": 942.0,
+      "total": 450
+    },
+    "тестаі": {
+      "freq": 941000,
+      "grac_word": "тестаі",
+      "level": "A1",
+      "rank": 10,
+      "rel_freq": 941.0,
+      "total": 450
+    },
+    "тестаї": {
+      "freq": 940000,
+      "grac_word": "тестаї",
+      "level": "A1",
+      "rank": 11,
+      "rel_freq": 940.0,
+      "total": 450
+    },
+    "тестаґ": {
+      "freq": 939000,
+      "grac_word": "тестаґ",
+      "level": "A1",
+      "rank": 12,
+      "rel_freq": 939.0,
+      "total": 450
+    },
+    "тестба": {
+      "freq": 938000,
+      "grac_word": "тестба",
+      "level": "A1",
+      "rank": 13,
+      "rel_freq": 938.0,
+      "total": 450
+    },
+    "тестбб": {
+      "freq": 937000,
+      "grac_word": "тестбб",
+      "level": "A1",
+      "rank": 14,
+      "rel_freq": 937.0,
+      "total": 450
+    },
+    "тестбв": {
+      "freq": 936000,
+      "grac_word": "тестбв",
+      "level": "A1",
+      "rank": 15,
+      "rel_freq": 936.0,
+      "total": 450
+    },
+    "тестбг": {
+      "freq": 935000,
+      "grac_word": "тестбг",
+      "level": "A1",
+      "rank": 16,
+      "rel_freq": 935.0,
+      "total": 450
+    },
+    "тестбд": {
+      "freq": 934000,
+      "grac_word": "тестбд",
+      "level": "A1",
+      "rank": 17,
+      "rel_freq": 934.0,
+      "total": 450
+    },
+    "тестбе": {
+      "freq": 933000,
+      "grac_word": "тестбе",
+      "level": "A1",
+      "rank": 18,
+      "rel_freq": 933.0,
+      "total": 450
+    },
+    "тестбж": {
+      "freq": 932000,
+      "grac_word": "тестбж",
+      "level": "A1",
+      "rank": 19,
+      "rel_freq": 932.0,
+      "total": 450
+    },
+    "тестбз": {
+      "freq": 931000,
+      "grac_word": "тестбз",
+      "level": "A1",
+      "rank": 20,
+      "rel_freq": 931.0,
+      "total": 450
+    },
+    "тестби": {
+      "freq": 930000,
+      "grac_word": "тестби",
+      "level": "A1",
+      "rank": 21,
+      "rel_freq": 930.0,
+      "total": 450
+    },
+    "тестбк": {
+      "freq": 929000,
+      "grac_word": "тестбк",
+      "level": "A1",
+      "rank": 22,
+      "rel_freq": 929.0,
+      "total": 450
+    },
+    "тестбл": {
+      "freq": 928000,
+      "grac_word": "тестбл",
+      "level": "A1",
+      "rank": 23,
+      "rel_freq": 928.0,
+      "total": 450
+    },
+    "тестбм": {
+      "freq": 927000,
+      "grac_word": "тестбм",
+      "level": "A1",
+      "rank": 24,
+      "rel_freq": 927.0,
+      "total": 450
+    },
+    "тестбн": {
+      "freq": 926000,
+      "grac_word": "тестбн",
+      "level": "A1",
+      "rank": 25,
+      "rel_freq": 926.0,
+      "total": 450
+    },
+    "тестбо": {
+      "freq": 925000,
+      "grac_word": "тестбо",
+      "level": "A1",
+      "rank": 26,
+      "rel_freq": 925.0,
+      "total": 450
+    },
+    "тестбп": {
+      "freq": 924000,
+      "grac_word": "тестбп",
+      "level": "A1",
+      "rank": 27,
+      "rel_freq": 924.0,
+      "total": 450
+    },
+    "тестбр": {
+      "freq": 923000,
+      "grac_word": "тестбр",
+      "level": "A1",
+      "rank": 28,
+      "rel_freq": 923.0,
+      "total": 450
+    },
+    "тестбс": {
+      "freq": 922000,
+      "grac_word": "тестбс",
+      "level": "A1",
+      "rank": 29,
+      "rel_freq": 922.0,
+      "total": 450
+    },
+    "тестбт": {
+      "freq": 921000,
+      "grac_word": "тестбт",
+      "level": "A1",
+      "rank": 30,
+      "rel_freq": 921.0,
+      "total": 450
+    },
+    "тестбу": {
+      "freq": 920000,
+      "grac_word": "тестбу",
+      "level": "A1",
+      "rank": 31,
+      "rel_freq": 920.0,
+      "total": 450
+    },
+    "тестбф": {
+      "freq": 919000,
+      "grac_word": "тестбф",
+      "level": "A1",
+      "rank": 32,
+      "rel_freq": 919.0,
+      "total": 450
+    },
+    "тестбх": {
+      "freq": 918000,
+      "grac_word": "тестбх",
+      "level": "A1",
+      "rank": 33,
+      "rel_freq": 918.0,
+      "total": 450
+    },
+    "тестбц": {
+      "freq": 917000,
+      "grac_word": "тестбц",
+      "level": "A1",
+      "rank": 34,
+      "rel_freq": 917.0,
+      "total": 450
+    },
+    "тестбч": {
+      "freq": 916000,
+      "grac_word": "тестбч",
+      "level": "A1",
+      "rank": 35,
+      "rel_freq": 916.0,
+      "total": 450
+    },
+    "тестбш": {
+      "freq": 915000,
+      "grac_word": "тестбш",
+      "level": "A1",
+      "rank": 36,
+      "rel_freq": 915.0,
+      "total": 450
+    },
+    "тестбщ": {
+      "freq": 914000,
+      "grac_word": "тестбщ",
+      "level": "A1",
+      "rank": 37,
+      "rel_freq": 914.0,
+      "total": 450
+    },
+    "тестбю": {
+      "freq": 913000,
+      "grac_word": "тестбю",
+      "level": "A1",
+      "rank": 38,
+      "rel_freq": 913.0,
+      "total": 450
+    },
+    "тестбя": {
+      "freq": 912000,
+      "grac_word": "тестбя",
+      "level": "A1",
+      "rank": 39,
+      "rel_freq": 912.0,
+      "total": 450
+    },
+    "тестбє": {
+      "freq": 911000,
+      "grac_word": "тестбє",
+      "level": "A1",
+      "rank": 40,
+      "rel_freq": 911.0,
+      "total": 450
+    },
+    "тестбі": {
+      "freq": 910000,
+      "grac_word": "тестбі",
+      "level": "A1",
+      "rank": 41,
+      "rel_freq": 910.0,
+      "total": 450
+    },
+    "тестбї": {
+      "freq": 909000,
+      "grac_word": "тестбї",
+      "level": "A1",
+      "rank": 42,
+      "rel_freq": 909.0,
+      "total": 450
+    },
+    "тестбґ": {
+      "freq": 908000,
+      "grac_word": "тестбґ",
+      "level": "A1",
+      "rank": 43,
+      "rel_freq": 908.0,
+      "total": 450
+    },
+    "тества": {
+      "freq": 907000,
+      "grac_word": "тества",
+      "level": "A1",
+      "rank": 44,
+      "rel_freq": 907.0,
+      "total": 450
+    },
+    "тествб": {
+      "freq": 906000,
+      "grac_word": "тествб",
+      "level": "A1",
+      "rank": 45,
+      "rel_freq": 906.0,
+      "total": 450
+    },
+    "тествв": {
+      "freq": 905000,
+      "grac_word": "тествв",
+      "level": "A1",
+      "rank": 46,
+      "rel_freq": 905.0,
+      "total": 450
+    },
+    "тествг": {
+      "freq": 904000,
+      "grac_word": "тествг",
+      "level": "A1",
+      "rank": 47,
+      "rel_freq": 904.0,
+      "total": 450
+    },
+    "тествд": {
+      "freq": 903000,
+      "grac_word": "тествд",
+      "level": "A1",
+      "rank": 48,
+      "rel_freq": 903.0,
+      "total": 450
+    },
+    "тестве": {
+      "freq": 902000,
+      "grac_word": "тестве",
+      "level": "A1",
+      "rank": 49,
+      "rel_freq": 902.0,
+      "total": 450
+    },
+    "тествж": {
+      "freq": 901000,
+      "grac_word": "тествж",
+      "level": "A1",
+      "rank": 50,
+      "rel_freq": 901.0,
+      "total": 450
+    },
+    "тествз": {
+      "freq": 900000,
+      "grac_word": "тествз",
+      "level": "A1",
+      "rank": 51,
+      "rel_freq": 900.0,
+      "total": 450
+    },
+    "тестви": {
+      "freq": 899000,
+      "grac_word": "тестви",
+      "level": "A1",
+      "rank": 52,
+      "rel_freq": 899.0,
+      "total": 450
+    },
+    "тествк": {
+      "freq": 898000,
+      "grac_word": "тествк",
+      "level": "A1",
+      "rank": 53,
+      "rel_freq": 898.0,
+      "total": 450
+    },
+    "тествл": {
+      "freq": 897000,
+      "grac_word": "тествл",
+      "level": "A1",
+      "rank": 54,
+      "rel_freq": 897.0,
+      "total": 450
+    },
+    "тествм": {
+      "freq": 896000,
+      "grac_word": "тествм",
+      "level": "A1",
+      "rank": 55,
+      "rel_freq": 896.0,
+      "total": 450
+    },
+    "тествн": {
+      "freq": 895000,
+      "grac_word": "тествн",
+      "level": "A1",
+      "rank": 56,
+      "rel_freq": 895.0,
+      "total": 450
+    },
+    "тество": {
+      "freq": 894000,
+      "grac_word": "тество",
+      "level": "A1",
+      "rank": 57,
+      "rel_freq": 894.0,
+      "total": 450
+    },
+    "тествп": {
+      "freq": 893000,
+      "grac_word": "тествп",
+      "level": "A1",
+      "rank": 58,
+      "rel_freq": 893.0,
+      "total": 450
+    },
+    "тествр": {
+      "freq": 892000,
+      "grac_word": "тествр",
+      "level": "A1",
+      "rank": 59,
+      "rel_freq": 892.0,
+      "total": 450
+    },
+    "тествс": {
+      "freq": 891000,
+      "grac_word": "тествс",
+      "level": "A1",
+      "rank": 60,
+      "rel_freq": 891.0,
+      "total": 450
+    },
+    "тествт": {
+      "freq": 890000,
+      "grac_word": "тествт",
+      "level": "A1",
+      "rank": 61,
+      "rel_freq": 890.0,
+      "total": 450
+    },
+    "теству": {
+      "freq": 889000,
+      "grac_word": "теству",
+      "level": "A1",
+      "rank": 62,
+      "rel_freq": 889.0,
+      "total": 450
+    },
+    "тествф": {
+      "freq": 888000,
+      "grac_word": "тествф",
+      "level": "A1",
+      "rank": 63,
+      "rel_freq": 888.0,
+      "total": 450
+    },
+    "тествх": {
+      "freq": 887000,
+      "grac_word": "тествх",
+      "level": "A1",
+      "rank": 64,
+      "rel_freq": 887.0,
+      "total": 450
+    },
+    "тествц": {
+      "freq": 886000,
+      "grac_word": "тествц",
+      "level": "A1",
+      "rank": 65,
+      "rel_freq": 886.0,
+      "total": 450
+    },
+    "тествч": {
+      "freq": 885000,
+      "grac_word": "тествч",
+      "level": "A1",
+      "rank": 66,
+      "rel_freq": 885.0,
+      "total": 450
+    },
+    "тествш": {
+      "freq": 884000,
+      "grac_word": "тествш",
+      "level": "A1",
+      "rank": 67,
+      "rel_freq": 884.0,
+      "total": 450
+    },
+    "тествщ": {
+      "freq": 883000,
+      "grac_word": "тествщ",
+      "level": "A1",
+      "rank": 68,
+      "rel_freq": 883.0,
+      "total": 450
+    },
+    "тествю": {
+      "freq": 882000,
+      "grac_word": "тествю",
+      "level": "A1",
+      "rank": 69,
+      "rel_freq": 882.0,
+      "total": 450
+    },
+    "тествя": {
+      "freq": 881000,
+      "grac_word": "тествя",
+      "level": "A1",
+      "rank": 70,
+      "rel_freq": 881.0,
+      "total": 450
+    },
+    "тествє": {
+      "freq": 880000,
+      "grac_word": "тествє",
+      "level": "A1",
+      "rank": 71,
+      "rel_freq": 880.0,
+      "total": 450
+    },
+    "тестві": {
+      "freq": 879000,
+      "grac_word": "тестві",
+      "level": "A1",
+      "rank": 72,
+      "rel_freq": 879.0,
+      "total": 450
+    },
+    "тествї": {
+      "freq": 878000,
+      "grac_word": "тествї",
+      "level": "A1",
+      "rank": 73,
+      "rel_freq": 878.0,
+      "total": 450
+    },
+    "тествґ": {
+      "freq": 877000,
+      "grac_word": "тествґ",
+      "level": "A1",
+      "rank": 74,
+      "rel_freq": 877.0,
+      "total": 450
+    },
+    "тестга": {
+      "freq": 876000,
+      "grac_word": "тестга",
+      "level": "A1",
+      "rank": 75,
+      "rel_freq": 876.0,
+      "total": 450
+    },
+    "тестгб": {
+      "freq": 875000,
+      "grac_word": "тестгб",
+      "level": "A1",
+      "rank": 76,
+      "rel_freq": 875.0,
+      "total": 450
+    },
+    "тестгв": {
+      "freq": 874000,
+      "grac_word": "тестгв",
+      "level": "A1",
+      "rank": 77,
+      "rel_freq": 874.0,
+      "total": 450
+    },
+    "тестгг": {
+      "freq": 873000,
+      "grac_word": "тестгг",
+      "level": "A1",
+      "rank": 78,
+      "rel_freq": 873.0,
+      "total": 450
+    },
+    "тестгд": {
+      "freq": 872000,
+      "grac_word": "тестгд",
+      "level": "A1",
+      "rank": 79,
+      "rel_freq": 872.0,
+      "total": 450
+    },
+    "тестге": {
+      "freq": 871000,
+      "grac_word": "тестге",
+      "level": "A1",
+      "rank": 80,
+      "rel_freq": 871.0,
+      "total": 450
+    },
+    "тестгж": {
+      "freq": 870000,
+      "grac_word": "тестгж",
+      "level": "A1",
+      "rank": 81,
+      "rel_freq": 870.0,
+      "total": 450
+    },
+    "тестгз": {
+      "freq": 869000,
+      "grac_word": "тестгз",
+      "level": "A1",
+      "rank": 82,
+      "rel_freq": 869.0,
+      "total": 450
+    },
+    "тестги": {
+      "freq": 868000,
+      "grac_word": "тестги",
+      "level": "A1",
+      "rank": 83,
+      "rel_freq": 868.0,
+      "total": 450
+    },
+    "тестгк": {
+      "freq": 867000,
+      "grac_word": "тестгк",
+      "level": "A1",
+      "rank": 84,
+      "rel_freq": 867.0,
+      "total": 450
+    },
+    "тестгл": {
+      "freq": 866000,
+      "grac_word": "тестгл",
+      "level": "A1",
+      "rank": 85,
+      "rel_freq": 866.0,
+      "total": 450
+    },
+    "тестгм": {
+      "freq": 865000,
+      "grac_word": "тестгм",
+      "level": "A1",
+      "rank": 86,
+      "rel_freq": 865.0,
+      "total": 450
+    },
+    "тестгн": {
+      "freq": 864000,
+      "grac_word": "тестгн",
+      "level": "A1",
+      "rank": 87,
+      "rel_freq": 864.0,
+      "total": 450
+    },
+    "тестго": {
+      "freq": 863000,
+      "grac_word": "тестго",
+      "level": "A1",
+      "rank": 88,
+      "rel_freq": 863.0,
+      "total": 450
+    },
+    "тестгп": {
+      "freq": 862000,
+      "grac_word": "тестгп",
+      "level": "A1",
+      "rank": 89,
+      "rel_freq": 862.0,
+      "total": 450
+    },
+    "тестгр": {
+      "freq": 861000,
+      "grac_word": "тестгр",
+      "level": "A1",
+      "rank": 90,
+      "rel_freq": 861.0,
+      "total": 450
+    },
+    "тестгс": {
+      "freq": 860000,
+      "grac_word": "тестгс",
+      "level": "A2",
+      "rank": 91,
+      "rel_freq": 860.0,
+      "total": 450
+    },
+    "тестгт": {
+      "freq": 859000,
+      "grac_word": "тестгт",
+      "level": "A2",
+      "rank": 92,
+      "rel_freq": 859.0,
+      "total": 450
+    },
+    "тестгу": {
+      "freq": 858000,
+      "grac_word": "тестгу",
+      "level": "A2",
+      "rank": 93,
+      "rel_freq": 858.0,
+      "total": 450
+    },
+    "тестгф": {
+      "freq": 857000,
+      "grac_word": "тестгф",
+      "level": "A2",
+      "rank": 94,
+      "rel_freq": 857.0,
+      "total": 450
+    },
+    "тестгх": {
+      "freq": 856000,
+      "grac_word": "тестгх",
+      "level": "A2",
+      "rank": 95,
+      "rel_freq": 856.0,
+      "total": 450
+    },
+    "тестгц": {
+      "freq": 855000,
+      "grac_word": "тестгц",
+      "level": "A2",
+      "rank": 96,
+      "rel_freq": 855.0,
+      "total": 450
+    },
+    "тестгч": {
+      "freq": 854000,
+      "grac_word": "тестгч",
+      "level": "A2",
+      "rank": 97,
+      "rel_freq": 854.0,
+      "total": 450
+    },
+    "тестгш": {
+      "freq": 853000,
+      "grac_word": "тестгш",
+      "level": "A2",
+      "rank": 98,
+      "rel_freq": 853.0,
+      "total": 450
+    },
+    "тестгщ": {
+      "freq": 852000,
+      "grac_word": "тестгщ",
+      "level": "A2",
+      "rank": 99,
+      "rel_freq": 852.0,
+      "total": 450
+    },
+    "тестгю": {
+      "freq": 851000,
+      "grac_word": "тестгю",
+      "level": "A2",
+      "rank": 100,
+      "rel_freq": 851.0,
+      "total": 450
+    },
+    "тестгя": {
+      "freq": 850000,
+      "grac_word": "тестгя",
+      "level": "A2",
+      "rank": 101,
+      "rel_freq": 850.0,
+      "total": 450
+    },
+    "тестгє": {
+      "freq": 849000,
+      "grac_word": "тестгє",
+      "level": "A2",
+      "rank": 102,
+      "rel_freq": 849.0,
+      "total": 450
+    },
+    "тестгі": {
+      "freq": 848000,
+      "grac_word": "тестгі",
+      "level": "A2",
+      "rank": 103,
+      "rel_freq": 848.0,
+      "total": 450
+    },
+    "тестгї": {
+      "freq": 847000,
+      "grac_word": "тестгї",
+      "level": "A2",
+      "rank": 104,
+      "rel_freq": 847.0,
+      "total": 450
+    },
+    "тестгґ": {
+      "freq": 846000,
+      "grac_word": "тестгґ",
+      "level": "A2",
+      "rank": 105,
+      "rel_freq": 846.0,
+      "total": 450
+    },
+    "тестда": {
+      "freq": 845000,
+      "grac_word": "тестда",
+      "level": "A2",
+      "rank": 106,
+      "rel_freq": 845.0,
+      "total": 450
+    },
+    "тестдб": {
+      "freq": 844000,
+      "grac_word": "тестдб",
+      "level": "A2",
+      "rank": 107,
+      "rel_freq": 844.0,
+      "total": 450
+    },
+    "тестдв": {
+      "freq": 843000,
+      "grac_word": "тестдв",
+      "level": "A2",
+      "rank": 108,
+      "rel_freq": 843.0,
+      "total": 450
+    },
+    "тестдг": {
+      "freq": 842000,
+      "grac_word": "тестдг",
+      "level": "A2",
+      "rank": 109,
+      "rel_freq": 842.0,
+      "total": 450
+    },
+    "тестдд": {
+      "freq": 841000,
+      "grac_word": "тестдд",
+      "level": "A2",
+      "rank": 110,
+      "rel_freq": 841.0,
+      "total": 450
+    },
+    "тестде": {
+      "freq": 840000,
+      "grac_word": "тестде",
+      "level": "A2",
+      "rank": 111,
+      "rel_freq": 840.0,
+      "total": 450
+    },
+    "тестдж": {
+      "freq": 839000,
+      "grac_word": "тестдж",
+      "level": "A2",
+      "rank": 112,
+      "rel_freq": 839.0,
+      "total": 450
+    },
+    "тестдз": {
+      "freq": 838000,
+      "grac_word": "тестдз",
+      "level": "A2",
+      "rank": 113,
+      "rel_freq": 838.0,
+      "total": 450
+    },
+    "тестди": {
+      "freq": 837000,
+      "grac_word": "тестди",
+      "level": "A2",
+      "rank": 114,
+      "rel_freq": 837.0,
+      "total": 450
+    },
+    "тестдк": {
+      "freq": 836000,
+      "grac_word": "тестдк",
+      "level": "A2",
+      "rank": 115,
+      "rel_freq": 836.0,
+      "total": 450
+    },
+    "тестдл": {
+      "freq": 835000,
+      "grac_word": "тестдл",
+      "level": "A2",
+      "rank": 116,
+      "rel_freq": 835.0,
+      "total": 450
+    },
+    "тестдм": {
+      "freq": 834000,
+      "grac_word": "тестдм",
+      "level": "A2",
+      "rank": 117,
+      "rel_freq": 834.0,
+      "total": 450
+    },
+    "тестдн": {
+      "freq": 833000,
+      "grac_word": "тестдн",
+      "level": "A2",
+      "rank": 118,
+      "rel_freq": 833.0,
+      "total": 450
+    },
+    "тестдо": {
+      "freq": 832000,
+      "grac_word": "тестдо",
+      "level": "A2",
+      "rank": 119,
+      "rel_freq": 832.0,
+      "total": 450
+    },
+    "тестдп": {
+      "freq": 831000,
+      "grac_word": "тестдп",
+      "level": "A2",
+      "rank": 120,
+      "rel_freq": 831.0,
+      "total": 450
+    },
+    "тестдр": {
+      "freq": 830000,
+      "grac_word": "тестдр",
+      "level": "A2",
+      "rank": 121,
+      "rel_freq": 830.0,
+      "total": 450
+    },
+    "тестдс": {
+      "freq": 829000,
+      "grac_word": "тестдс",
+      "level": "A2",
+      "rank": 122,
+      "rel_freq": 829.0,
+      "total": 450
+    },
+    "тестдт": {
+      "freq": 828000,
+      "grac_word": "тестдт",
+      "level": "A2",
+      "rank": 123,
+      "rel_freq": 828.0,
+      "total": 450
+    },
+    "тестду": {
+      "freq": 827000,
+      "grac_word": "тестду",
+      "level": "A2",
+      "rank": 124,
+      "rel_freq": 827.0,
+      "total": 450
+    },
+    "тестдф": {
+      "freq": 826000,
+      "grac_word": "тестдф",
+      "level": "A2",
+      "rank": 125,
+      "rel_freq": 826.0,
+      "total": 450
+    },
+    "тестдх": {
+      "freq": 825000,
+      "grac_word": "тестдх",
+      "level": "A2",
+      "rank": 126,
+      "rel_freq": 825.0,
+      "total": 450
+    },
+    "тестдц": {
+      "freq": 824000,
+      "grac_word": "тестдц",
+      "level": "A2",
+      "rank": 127,
+      "rel_freq": 824.0,
+      "total": 450
+    },
+    "тестдч": {
+      "freq": 823000,
+      "grac_word": "тестдч",
+      "level": "A2",
+      "rank": 128,
+      "rel_freq": 823.0,
+      "total": 450
+    },
+    "тестдш": {
+      "freq": 822000,
+      "grac_word": "тестдш",
+      "level": "A2",
+      "rank": 129,
+      "rel_freq": 822.0,
+      "total": 450
+    },
+    "тестдщ": {
+      "freq": 821000,
+      "grac_word": "тестдщ",
+      "level": "A2",
+      "rank": 130,
+      "rel_freq": 821.0,
+      "total": 450
+    },
+    "тестдю": {
+      "freq": 820000,
+      "grac_word": "тестдю",
+      "level": "A2",
+      "rank": 131,
+      "rel_freq": 820.0,
+      "total": 450
+    },
+    "тестдя": {
+      "freq": 819000,
+      "grac_word": "тестдя",
+      "level": "A2",
+      "rank": 132,
+      "rel_freq": 819.0,
+      "total": 450
+    },
+    "тестдє": {
+      "freq": 818000,
+      "grac_word": "тестдє",
+      "level": "A2",
+      "rank": 133,
+      "rel_freq": 818.0,
+      "total": 450
+    },
+    "тестді": {
+      "freq": 817000,
+      "grac_word": "тестді",
+      "level": "A2",
+      "rank": 134,
+      "rel_freq": 817.0,
+      "total": 450
+    },
+    "тестдї": {
+      "freq": 816000,
+      "grac_word": "тестдї",
+      "level": "A2",
+      "rank": 135,
+      "rel_freq": 816.0,
+      "total": 450
+    },
+    "тестдґ": {
+      "freq": 815000,
+      "grac_word": "тестдґ",
+      "level": "A2",
+      "rank": 136,
+      "rel_freq": 815.0,
+      "total": 450
+    },
+    "тестеа": {
+      "freq": 814000,
+      "grac_word": "тестеа",
+      "level": "A2",
+      "rank": 137,
+      "rel_freq": 814.0,
+      "total": 450
+    },
+    "тестеб": {
+      "freq": 813000,
+      "grac_word": "тестеб",
+      "level": "A2",
+      "rank": 138,
+      "rel_freq": 813.0,
+      "total": 450
+    },
+    "тестев": {
+      "freq": 812000,
+      "grac_word": "тестев",
+      "level": "A2",
+      "rank": 139,
+      "rel_freq": 812.0,
+      "total": 450
+    },
+    "тестег": {
+      "freq": 811000,
+      "grac_word": "тестег",
+      "level": "A2",
+      "rank": 140,
+      "rel_freq": 811.0,
+      "total": 450
+    },
+    "тестед": {
+      "freq": 810000,
+      "grac_word": "тестед",
+      "level": "A2",
+      "rank": 141,
+      "rel_freq": 810.0,
+      "total": 450
+    },
+    "тестее": {
+      "freq": 809000,
+      "grac_word": "тестее",
+      "level": "A2",
+      "rank": 142,
+      "rel_freq": 809.0,
+      "total": 450
+    },
+    "тестеж": {
+      "freq": 808000,
+      "grac_word": "тестеж",
+      "level": "A2",
+      "rank": 143,
+      "rel_freq": 808.0,
+      "total": 450
+    },
+    "тестез": {
+      "freq": 807000,
+      "grac_word": "тестез",
+      "level": "A2",
+      "rank": 144,
+      "rel_freq": 807.0,
+      "total": 450
+    },
+    "тестеи": {
+      "freq": 806000,
+      "grac_word": "тестеи",
+      "level": "A2",
+      "rank": 145,
+      "rel_freq": 806.0,
+      "total": 450
+    },
+    "тестек": {
+      "freq": 805000,
+      "grac_word": "тестек",
+      "level": "A2",
+      "rank": 146,
+      "rel_freq": 805.0,
+      "total": 450
+    },
+    "тестел": {
+      "freq": 804000,
+      "grac_word": "тестел",
+      "level": "A2",
+      "rank": 147,
+      "rel_freq": 804.0,
+      "total": 450
+    },
+    "тестем": {
+      "freq": 803000,
+      "grac_word": "тестем",
+      "level": "A2",
+      "rank": 148,
+      "rel_freq": 803.0,
+      "total": 450
+    },
+    "тестен": {
+      "freq": 802000,
+      "grac_word": "тестен",
+      "level": "A2",
+      "rank": 149,
+      "rel_freq": 802.0,
+      "total": 450
+    },
+    "тестео": {
+      "freq": 801000,
+      "grac_word": "тестео",
+      "level": "A2",
+      "rank": 150,
+      "rel_freq": 801.0,
+      "total": 450
+    },
+    "тестеп": {
+      "freq": 800000,
+      "grac_word": "тестеп",
+      "level": "A2",
+      "rank": 151,
+      "rel_freq": 800.0,
+      "total": 450
+    },
+    "тестер": {
+      "freq": 799000,
+      "grac_word": "тестер",
+      "level": "A2",
+      "rank": 152,
+      "rel_freq": 799.0,
+      "total": 450
+    },
+    "тестес": {
+      "freq": 798000,
+      "grac_word": "тестес",
+      "level": "A2",
+      "rank": 153,
+      "rel_freq": 798.0,
+      "total": 450
+    },
+    "тестет": {
+      "freq": 797000,
+      "grac_word": "тестет",
+      "level": "A2",
+      "rank": 154,
+      "rel_freq": 797.0,
+      "total": 450
+    },
+    "тестеу": {
+      "freq": 796000,
+      "grac_word": "тестеу",
+      "level": "A2",
+      "rank": 155,
+      "rel_freq": 796.0,
+      "total": 450
+    },
+    "тестеф": {
+      "freq": 795000,
+      "grac_word": "тестеф",
+      "level": "A2",
+      "rank": 156,
+      "rel_freq": 795.0,
+      "total": 450
+    },
+    "тестех": {
+      "freq": 794000,
+      "grac_word": "тестех",
+      "level": "A2",
+      "rank": 157,
+      "rel_freq": 794.0,
+      "total": 450
+    },
+    "тестец": {
+      "freq": 793000,
+      "grac_word": "тестец",
+      "level": "A2",
+      "rank": 158,
+      "rel_freq": 793.0,
+      "total": 450
+    },
+    "тестеч": {
+      "freq": 792000,
+      "grac_word": "тестеч",
+      "level": "A2",
+      "rank": 159,
+      "rel_freq": 792.0,
+      "total": 450
+    },
+    "тестеш": {
+      "freq": 791000,
+      "grac_word": "тестеш",
+      "level": "A2",
+      "rank": 160,
+      "rel_freq": 791.0,
+      "total": 450
+    },
+    "тестещ": {
+      "freq": 790000,
+      "grac_word": "тестещ",
+      "level": "A2",
+      "rank": 161,
+      "rel_freq": 790.0,
+      "total": 450
+    },
+    "тестею": {
+      "freq": 789000,
+      "grac_word": "тестею",
+      "level": "A2",
+      "rank": 162,
+      "rel_freq": 789.0,
+      "total": 450
+    },
+    "тестея": {
+      "freq": 788000,
+      "grac_word": "тестея",
+      "level": "A2",
+      "rank": 163,
+      "rel_freq": 788.0,
+      "total": 450
+    },
+    "тестеє": {
+      "freq": 787000,
+      "grac_word": "тестеє",
+      "level": "A2",
+      "rank": 164,
+      "rel_freq": 787.0,
+      "total": 450
+    },
+    "тестеі": {
+      "freq": 786000,
+      "grac_word": "тестеі",
+      "level": "A2",
+      "rank": 165,
+      "rel_freq": 786.0,
+      "total": 450
+    },
+    "тестеї": {
+      "freq": 785000,
+      "grac_word": "тестеї",
+      "level": "A2",
+      "rank": 166,
+      "rel_freq": 785.0,
+      "total": 450
+    },
+    "тестеґ": {
+      "freq": 784000,
+      "grac_word": "тестеґ",
+      "level": "A2",
+      "rank": 167,
+      "rel_freq": 784.0,
+      "total": 450
+    },
+    "тестжа": {
+      "freq": 783000,
+      "grac_word": "тестжа",
+      "level": "A2",
+      "rank": 168,
+      "rel_freq": 783.0,
+      "total": 450
+    },
+    "тестжб": {
+      "freq": 782000,
+      "grac_word": "тестжб",
+      "level": "A2",
+      "rank": 169,
+      "rel_freq": 782.0,
+      "total": 450
+    },
+    "тестжв": {
+      "freq": 781000,
+      "grac_word": "тестжв",
+      "level": "A2",
+      "rank": 170,
+      "rel_freq": 781.0,
+      "total": 450
+    },
+    "тестжг": {
+      "freq": 780000,
+      "grac_word": "тестжг",
+      "level": "A2",
+      "rank": 171,
+      "rel_freq": 780.0,
+      "total": 450
+    },
+    "тестжд": {
+      "freq": 779000,
+      "grac_word": "тестжд",
+      "level": "A2",
+      "rank": 172,
+      "rel_freq": 779.0,
+      "total": 450
+    },
+    "тестже": {
+      "freq": 778000,
+      "grac_word": "тестже",
+      "level": "A2",
+      "rank": 173,
+      "rel_freq": 778.0,
+      "total": 450
+    },
+    "тестжж": {
+      "freq": 777000,
+      "grac_word": "тестжж",
+      "level": "A2",
+      "rank": 174,
+      "rel_freq": 777.0,
+      "total": 450
+    },
+    "тестжз": {
+      "freq": 776000,
+      "grac_word": "тестжз",
+      "level": "A2",
+      "rank": 175,
+      "rel_freq": 776.0,
+      "total": 450
+    },
+    "тестжи": {
+      "freq": 775000,
+      "grac_word": "тестжи",
+      "level": "A2",
+      "rank": 176,
+      "rel_freq": 775.0,
+      "total": 450
+    },
+    "тестжк": {
+      "freq": 774000,
+      "grac_word": "тестжк",
+      "level": "A2",
+      "rank": 177,
+      "rel_freq": 774.0,
+      "total": 450
+    },
+    "тестжл": {
+      "freq": 773000,
+      "grac_word": "тестжл",
+      "level": "A2",
+      "rank": 178,
+      "rel_freq": 773.0,
+      "total": 450
+    },
+    "тестжм": {
+      "freq": 772000,
+      "grac_word": "тестжм",
+      "level": "A2",
+      "rank": 179,
+      "rel_freq": 772.0,
+      "total": 450
+    },
+    "тестжн": {
+      "freq": 771000,
+      "grac_word": "тестжн",
+      "level": "A2",
+      "rank": 180,
+      "rel_freq": 771.0,
+      "total": 450
+    },
+    "тестжо": {
+      "freq": 770000,
+      "grac_word": "тестжо",
+      "level": "B1",
+      "rank": 181,
+      "rel_freq": 770.0,
+      "total": 450
+    },
+    "тестжп": {
+      "freq": 769000,
+      "grac_word": "тестжп",
+      "level": "B1",
+      "rank": 182,
+      "rel_freq": 769.0,
+      "total": 450
+    },
+    "тестжр": {
+      "freq": 768000,
+      "grac_word": "тестжр",
+      "level": "B1",
+      "rank": 183,
+      "rel_freq": 768.0,
+      "total": 450
+    },
+    "тестжс": {
+      "freq": 767000,
+      "grac_word": "тестжс",
+      "level": "B1",
+      "rank": 184,
+      "rel_freq": 767.0,
+      "total": 450
+    },
+    "тестжт": {
+      "freq": 766000,
+      "grac_word": "тестжт",
+      "level": "B1",
+      "rank": 185,
+      "rel_freq": 766.0,
+      "total": 450
+    },
+    "тестжу": {
+      "freq": 765000,
+      "grac_word": "тестжу",
+      "level": "B1",
+      "rank": 186,
+      "rel_freq": 765.0,
+      "total": 450
+    },
+    "тестжф": {
+      "freq": 764000,
+      "grac_word": "тестжф",
+      "level": "B1",
+      "rank": 187,
+      "rel_freq": 764.0,
+      "total": 450
+    },
+    "тестжх": {
+      "freq": 763000,
+      "grac_word": "тестжх",
+      "level": "B1",
+      "rank": 188,
+      "rel_freq": 763.0,
+      "total": 450
+    },
+    "тестжц": {
+      "freq": 762000,
+      "grac_word": "тестжц",
+      "level": "B1",
+      "rank": 189,
+      "rel_freq": 762.0,
+      "total": 450
+    },
+    "тестжч": {
+      "freq": 761000,
+      "grac_word": "тестжч",
+      "level": "B1",
+      "rank": 190,
+      "rel_freq": 761.0,
+      "total": 450
+    },
+    "тестжш": {
+      "freq": 760000,
+      "grac_word": "тестжш",
+      "level": "B1",
+      "rank": 191,
+      "rel_freq": 760.0,
+      "total": 450
+    },
+    "тестжщ": {
+      "freq": 759000,
+      "grac_word": "тестжщ",
+      "level": "B1",
+      "rank": 192,
+      "rel_freq": 759.0,
+      "total": 450
+    },
+    "тестжю": {
+      "freq": 758000,
+      "grac_word": "тестжю",
+      "level": "B1",
+      "rank": 193,
+      "rel_freq": 758.0,
+      "total": 450
+    },
+    "тестжя": {
+      "freq": 757000,
+      "grac_word": "тестжя",
+      "level": "B1",
+      "rank": 194,
+      "rel_freq": 757.0,
+      "total": 450
+    },
+    "тестжє": {
+      "freq": 756000,
+      "grac_word": "тестжє",
+      "level": "B1",
+      "rank": 195,
+      "rel_freq": 756.0,
+      "total": 450
+    },
+    "тестжі": {
+      "freq": 755000,
+      "grac_word": "тестжі",
+      "level": "B1",
+      "rank": 196,
+      "rel_freq": 755.0,
+      "total": 450
+    },
+    "тестжї": {
+      "freq": 754000,
+      "grac_word": "тестжї",
+      "level": "B1",
+      "rank": 197,
+      "rel_freq": 754.0,
+      "total": 450
+    },
+    "тестжґ": {
+      "freq": 753000,
+      "grac_word": "тестжґ",
+      "level": "B1",
+      "rank": 198,
+      "rel_freq": 753.0,
+      "total": 450
+    },
+    "тестза": {
+      "freq": 752000,
+      "grac_word": "тестза",
+      "level": "B1",
+      "rank": 199,
+      "rel_freq": 752.0,
+      "total": 450
+    },
+    "тестзб": {
+      "freq": 751000,
+      "grac_word": "тестзб",
+      "level": "B1",
+      "rank": 200,
+      "rel_freq": 751.0,
+      "total": 450
+    },
+    "тестзв": {
+      "freq": 750000,
+      "grac_word": "тестзв",
+      "level": "B1",
+      "rank": 201,
+      "rel_freq": 750.0,
+      "total": 450
+    },
+    "тестзг": {
+      "freq": 749000,
+      "grac_word": "тестзг",
+      "level": "B1",
+      "rank": 202,
+      "rel_freq": 749.0,
+      "total": 450
+    },
+    "тестзд": {
+      "freq": 748000,
+      "grac_word": "тестзд",
+      "level": "B1",
+      "rank": 203,
+      "rel_freq": 748.0,
+      "total": 450
+    },
+    "тестзе": {
+      "freq": 747000,
+      "grac_word": "тестзе",
+      "level": "B1",
+      "rank": 204,
+      "rel_freq": 747.0,
+      "total": 450
+    },
+    "тестзж": {
+      "freq": 746000,
+      "grac_word": "тестзж",
+      "level": "B1",
+      "rank": 205,
+      "rel_freq": 746.0,
+      "total": 450
+    },
+    "тестзз": {
+      "freq": 745000,
+      "grac_word": "тестзз",
+      "level": "B1",
+      "rank": 206,
+      "rel_freq": 745.0,
+      "total": 450
+    },
+    "тестзи": {
+      "freq": 744000,
+      "grac_word": "тестзи",
+      "level": "B1",
+      "rank": 207,
+      "rel_freq": 744.0,
+      "total": 450
+    },
+    "тестзк": {
+      "freq": 743000,
+      "grac_word": "тестзк",
+      "level": "B1",
+      "rank": 208,
+      "rel_freq": 743.0,
+      "total": 450
+    },
+    "тестзл": {
+      "freq": 742000,
+      "grac_word": "тестзл",
+      "level": "B1",
+      "rank": 209,
+      "rel_freq": 742.0,
+      "total": 450
+    },
+    "тестзм": {
+      "freq": 741000,
+      "grac_word": "тестзм",
+      "level": "B1",
+      "rank": 210,
+      "rel_freq": 741.0,
+      "total": 450
+    },
+    "тестзн": {
+      "freq": 740000,
+      "grac_word": "тестзн",
+      "level": "B1",
+      "rank": 211,
+      "rel_freq": 740.0,
+      "total": 450
+    },
+    "тестзо": {
+      "freq": 739000,
+      "grac_word": "тестзо",
+      "level": "B1",
+      "rank": 212,
+      "rel_freq": 739.0,
+      "total": 450
+    },
+    "тестзп": {
+      "freq": 738000,
+      "grac_word": "тестзп",
+      "level": "B1",
+      "rank": 213,
+      "rel_freq": 738.0,
+      "total": 450
+    },
+    "тестзр": {
+      "freq": 737000,
+      "grac_word": "тестзр",
+      "level": "B1",
+      "rank": 214,
+      "rel_freq": 737.0,
+      "total": 450
+    },
+    "тестзс": {
+      "freq": 736000,
+      "grac_word": "тестзс",
+      "level": "B1",
+      "rank": 215,
+      "rel_freq": 736.0,
+      "total": 450
+    },
+    "тестзт": {
+      "freq": 735000,
+      "grac_word": "тестзт",
+      "level": "B1",
+      "rank": 216,
+      "rel_freq": 735.0,
+      "total": 450
+    },
+    "тестзу": {
+      "freq": 734000,
+      "grac_word": "тестзу",
+      "level": "B1",
+      "rank": 217,
+      "rel_freq": 734.0,
+      "total": 450
+    },
+    "тестзф": {
+      "freq": 733000,
+      "grac_word": "тестзф",
+      "level": "B1",
+      "rank": 218,
+      "rel_freq": 733.0,
+      "total": 450
+    },
+    "тестзх": {
+      "freq": 732000,
+      "grac_word": "тестзх",
+      "level": "B1",
+      "rank": 219,
+      "rel_freq": 732.0,
+      "total": 450
+    },
+    "тестзц": {
+      "freq": 731000,
+      "grac_word": "тестзц",
+      "level": "B1",
+      "rank": 220,
+      "rel_freq": 731.0,
+      "total": 450
+    },
+    "тестзч": {
+      "freq": 730000,
+      "grac_word": "тестзч",
+      "level": "B1",
+      "rank": 221,
+      "rel_freq": 730.0,
+      "total": 450
+    },
+    "тестзш": {
+      "freq": 729000,
+      "grac_word": "тестзш",
+      "level": "B1",
+      "rank": 222,
+      "rel_freq": 729.0,
+      "total": 450
+    },
+    "тестзщ": {
+      "freq": 728000,
+      "grac_word": "тестзщ",
+      "level": "B1",
+      "rank": 223,
+      "rel_freq": 728.0,
+      "total": 450
+    },
+    "тестзю": {
+      "freq": 727000,
+      "grac_word": "тестзю",
+      "level": "B1",
+      "rank": 224,
+      "rel_freq": 727.0,
+      "total": 450
+    },
+    "тестзя": {
+      "freq": 726000,
+      "grac_word": "тестзя",
+      "level": "B1",
+      "rank": 225,
+      "rel_freq": 726.0,
+      "total": 450
+    },
+    "тестзє": {
+      "freq": 725000,
+      "grac_word": "тестзє",
+      "level": "B1",
+      "rank": 226,
+      "rel_freq": 725.0,
+      "total": 450
+    },
+    "тестзі": {
+      "freq": 724000,
+      "grac_word": "тестзі",
+      "level": "B1",
+      "rank": 227,
+      "rel_freq": 724.0,
+      "total": 450
+    },
+    "тестзї": {
+      "freq": 723000,
+      "grac_word": "тестзї",
+      "level": "B1",
+      "rank": 228,
+      "rel_freq": 723.0,
+      "total": 450
+    },
+    "тестзґ": {
+      "freq": 722000,
+      "grac_word": "тестзґ",
+      "level": "B1",
+      "rank": 229,
+      "rel_freq": 722.0,
+      "total": 450
+    },
+    "тестиа": {
+      "freq": 721000,
+      "grac_word": "тестиа",
+      "level": "B1",
+      "rank": 230,
+      "rel_freq": 721.0,
+      "total": 450
+    },
+    "тестиб": {
+      "freq": 720000,
+      "grac_word": "тестиб",
+      "level": "B1",
+      "rank": 231,
+      "rel_freq": 720.0,
+      "total": 450
+    },
+    "тестив": {
+      "freq": 719000,
+      "grac_word": "тестив",
+      "level": "B1",
+      "rank": 232,
+      "rel_freq": 719.0,
+      "total": 450
+    },
+    "тестиг": {
+      "freq": 718000,
+      "grac_word": "тестиг",
+      "level": "B1",
+      "rank": 233,
+      "rel_freq": 718.0,
+      "total": 450
+    },
+    "тестид": {
+      "freq": 717000,
+      "grac_word": "тестид",
+      "level": "B1",
+      "rank": 234,
+      "rel_freq": 717.0,
+      "total": 450
+    },
+    "тестие": {
+      "freq": 716000,
+      "grac_word": "тестие",
+      "level": "B1",
+      "rank": 235,
+      "rel_freq": 716.0,
+      "total": 450
+    },
+    "тестиж": {
+      "freq": 715000,
+      "grac_word": "тестиж",
+      "level": "B1",
+      "rank": 236,
+      "rel_freq": 715.0,
+      "total": 450
+    },
+    "тестиз": {
+      "freq": 714000,
+      "grac_word": "тестиз",
+      "level": "B1",
+      "rank": 237,
+      "rel_freq": 714.0,
+      "total": 450
+    },
+    "тестии": {
+      "freq": 713000,
+      "grac_word": "тестии",
+      "level": "B1",
+      "rank": 238,
+      "rel_freq": 713.0,
+      "total": 450
+    },
+    "тестик": {
+      "freq": 712000,
+      "grac_word": "тестик",
+      "level": "B1",
+      "rank": 239,
+      "rel_freq": 712.0,
+      "total": 450
+    },
+    "тестил": {
+      "freq": 711000,
+      "grac_word": "тестил",
+      "level": "B1",
+      "rank": 240,
+      "rel_freq": 711.0,
+      "total": 450
+    },
+    "тестим": {
+      "freq": 710000,
+      "grac_word": "тестим",
+      "level": "B1",
+      "rank": 241,
+      "rel_freq": 710.0,
+      "total": 450
+    },
+    "тестин": {
+      "freq": 709000,
+      "grac_word": "тестин",
+      "level": "B1",
+      "rank": 242,
+      "rel_freq": 709.0,
+      "total": 450
+    },
+    "тестио": {
+      "freq": 708000,
+      "grac_word": "тестио",
+      "level": "B1",
+      "rank": 243,
+      "rel_freq": 708.0,
+      "total": 450
+    },
+    "тестип": {
+      "freq": 707000,
+      "grac_word": "тестип",
+      "level": "B1",
+      "rank": 244,
+      "rel_freq": 707.0,
+      "total": 450
+    },
+    "тестир": {
+      "freq": 706000,
+      "grac_word": "тестир",
+      "level": "B1",
+      "rank": 245,
+      "rel_freq": 706.0,
+      "total": 450
+    },
+    "тестис": {
+      "freq": 705000,
+      "grac_word": "тестис",
+      "level": "B1",
+      "rank": 246,
+      "rel_freq": 705.0,
+      "total": 450
+    },
+    "тестит": {
+      "freq": 704000,
+      "grac_word": "тестит",
+      "level": "B1",
+      "rank": 247,
+      "rel_freq": 704.0,
+      "total": 450
+    },
+    "тестиу": {
+      "freq": 703000,
+      "grac_word": "тестиу",
+      "level": "B1",
+      "rank": 248,
+      "rel_freq": 703.0,
+      "total": 450
+    },
+    "тестиф": {
+      "freq": 702000,
+      "grac_word": "тестиф",
+      "level": "B1",
+      "rank": 249,
+      "rel_freq": 702.0,
+      "total": 450
+    },
+    "тестих": {
+      "freq": 701000,
+      "grac_word": "тестих",
+      "level": "B1",
+      "rank": 250,
+      "rel_freq": 701.0,
+      "total": 450
+    },
+    "тестиц": {
+      "freq": 700000,
+      "grac_word": "тестиц",
+      "level": "B1",
+      "rank": 251,
+      "rel_freq": 700.0,
+      "total": 450
+    },
+    "тестич": {
+      "freq": 699000,
+      "grac_word": "тестич",
+      "level": "B1",
+      "rank": 252,
+      "rel_freq": 699.0,
+      "total": 450
+    },
+    "тестиш": {
+      "freq": 698000,
+      "grac_word": "тестиш",
+      "level": "B1",
+      "rank": 253,
+      "rel_freq": 698.0,
+      "total": 450
+    },
+    "тестищ": {
+      "freq": 697000,
+      "grac_word": "тестищ",
+      "level": "B1",
+      "rank": 254,
+      "rel_freq": 697.0,
+      "total": 450
+    },
+    "тестию": {
+      "freq": 696000,
+      "grac_word": "тестию",
+      "level": "B1",
+      "rank": 255,
+      "rel_freq": 696.0,
+      "total": 450
+    },
+    "тестия": {
+      "freq": 695000,
+      "grac_word": "тестия",
+      "level": "B1",
+      "rank": 256,
+      "rel_freq": 695.0,
+      "total": 450
+    },
+    "тестиє": {
+      "freq": 694000,
+      "grac_word": "тестиє",
+      "level": "B1",
+      "rank": 257,
+      "rel_freq": 694.0,
+      "total": 450
+    },
+    "тестиі": {
+      "freq": 693000,
+      "grac_word": "тестиі",
+      "level": "B1",
+      "rank": 258,
+      "rel_freq": 693.0,
+      "total": 450
+    },
+    "тестиї": {
+      "freq": 692000,
+      "grac_word": "тестиї",
+      "level": "B1",
+      "rank": 259,
+      "rel_freq": 692.0,
+      "total": 450
+    },
+    "тестиґ": {
+      "freq": 691000,
+      "grac_word": "тестиґ",
+      "level": "B1",
+      "rank": 260,
+      "rel_freq": 691.0,
+      "total": 450
+    },
+    "тестка": {
+      "freq": 690000,
+      "grac_word": "тестка",
+      "level": "B1",
+      "rank": 261,
+      "rel_freq": 690.0,
+      "total": 450
+    },
+    "тесткб": {
+      "freq": 689000,
+      "grac_word": "тесткб",
+      "level": "B1",
+      "rank": 262,
+      "rel_freq": 689.0,
+      "total": 450
+    },
+    "тесткв": {
+      "freq": 688000,
+      "grac_word": "тесткв",
+      "level": "B1",
+      "rank": 263,
+      "rel_freq": 688.0,
+      "total": 450
+    },
+    "тесткг": {
+      "freq": 687000,
+      "grac_word": "тесткг",
+      "level": "B1",
+      "rank": 264,
+      "rel_freq": 687.0,
+      "total": 450
+    },
+    "тесткд": {
+      "freq": 686000,
+      "grac_word": "тесткд",
+      "level": "B1",
+      "rank": 265,
+      "rel_freq": 686.0,
+      "total": 450
+    },
+    "тестке": {
+      "freq": 685000,
+      "grac_word": "тестке",
+      "level": "B1",
+      "rank": 266,
+      "rel_freq": 685.0,
+      "total": 450
+    },
+    "тесткж": {
+      "freq": 684000,
+      "grac_word": "тесткж",
+      "level": "B1",
+      "rank": 267,
+      "rel_freq": 684.0,
+      "total": 450
+    },
+    "тесткз": {
+      "freq": 683000,
+      "grac_word": "тесткз",
+      "level": "B1",
+      "rank": 268,
+      "rel_freq": 683.0,
+      "total": 450
+    },
+    "тестки": {
+      "freq": 682000,
+      "grac_word": "тестки",
+      "level": "B1",
+      "rank": 269,
+      "rel_freq": 682.0,
+      "total": 450
+    },
+    "тесткк": {
+      "freq": 681000,
+      "grac_word": "тесткк",
+      "level": "B1",
+      "rank": 270,
+      "rel_freq": 681.0,
+      "total": 450
+    },
+    "тесткл": {
+      "freq": 680000,
+      "grac_word": "тесткл",
+      "level": "B2",
+      "rank": 271,
+      "rel_freq": 680.0,
+      "total": 450
+    },
+    "тесткм": {
+      "freq": 679000,
+      "grac_word": "тесткм",
+      "level": "B2",
+      "rank": 272,
+      "rel_freq": 679.0,
+      "total": 450
+    },
+    "тесткн": {
+      "freq": 678000,
+      "grac_word": "тесткн",
+      "level": "B2",
+      "rank": 273,
+      "rel_freq": 678.0,
+      "total": 450
+    },
+    "тестко": {
+      "freq": 677000,
+      "grac_word": "тестко",
+      "level": "B2",
+      "rank": 274,
+      "rel_freq": 677.0,
+      "total": 450
+    },
+    "тесткп": {
+      "freq": 676000,
+      "grac_word": "тесткп",
+      "level": "B2",
+      "rank": 275,
+      "rel_freq": 676.0,
+      "total": 450
+    },
+    "тесткр": {
+      "freq": 675000,
+      "grac_word": "тесткр",
+      "level": "B2",
+      "rank": 276,
+      "rel_freq": 675.0,
+      "total": 450
+    },
+    "тесткс": {
+      "freq": 674000,
+      "grac_word": "тесткс",
+      "level": "B2",
+      "rank": 277,
+      "rel_freq": 674.0,
+      "total": 450
+    },
+    "тесткт": {
+      "freq": 673000,
+      "grac_word": "тесткт",
+      "level": "B2",
+      "rank": 278,
+      "rel_freq": 673.0,
+      "total": 450
+    },
+    "тестку": {
+      "freq": 672000,
+      "grac_word": "тестку",
+      "level": "B2",
+      "rank": 279,
+      "rel_freq": 672.0,
+      "total": 450
+    },
+    "тесткф": {
+      "freq": 671000,
+      "grac_word": "тесткф",
+      "level": "B2",
+      "rank": 280,
+      "rel_freq": 671.0,
+      "total": 450
+    },
+    "тесткх": {
+      "freq": 670000,
+      "grac_word": "тесткх",
+      "level": "B2",
+      "rank": 281,
+      "rel_freq": 670.0,
+      "total": 450
+    },
+    "тесткц": {
+      "freq": 669000,
+      "grac_word": "тесткц",
+      "level": "B2",
+      "rank": 282,
+      "rel_freq": 669.0,
+      "total": 450
+    },
+    "тесткч": {
+      "freq": 668000,
+      "grac_word": "тесткч",
+      "level": "B2",
+      "rank": 283,
+      "rel_freq": 668.0,
+      "total": 450
+    },
+    "тесткш": {
+      "freq": 667000,
+      "grac_word": "тесткш",
+      "level": "B2",
+      "rank": 284,
+      "rel_freq": 667.0,
+      "total": 450
+    },
+    "тесткщ": {
+      "freq": 666000,
+      "grac_word": "тесткщ",
+      "level": "B2",
+      "rank": 285,
+      "rel_freq": 666.0,
+      "total": 450
+    },
+    "тесткю": {
+      "freq": 665000,
+      "grac_word": "тесткю",
+      "level": "B2",
+      "rank": 286,
+      "rel_freq": 665.0,
+      "total": 450
+    },
+    "тесткя": {
+      "freq": 664000,
+      "grac_word": "тесткя",
+      "level": "B2",
+      "rank": 287,
+      "rel_freq": 664.0,
+      "total": 450
+    },
+    "тесткє": {
+      "freq": 663000,
+      "grac_word": "тесткє",
+      "level": "B2",
+      "rank": 288,
+      "rel_freq": 663.0,
+      "total": 450
+    },
+    "тесткі": {
+      "freq": 662000,
+      "grac_word": "тесткі",
+      "level": "B2",
+      "rank": 289,
+      "rel_freq": 662.0,
+      "total": 450
+    },
+    "тесткї": {
+      "freq": 661000,
+      "grac_word": "тесткї",
+      "level": "B2",
+      "rank": 290,
+      "rel_freq": 661.0,
+      "total": 450
+    },
+    "тесткґ": {
+      "freq": 660000,
+      "grac_word": "тесткґ",
+      "level": "B2",
+      "rank": 291,
+      "rel_freq": 660.0,
+      "total": 450
+    },
+    "тестла": {
+      "freq": 659000,
+      "grac_word": "тестла",
+      "level": "B2",
+      "rank": 292,
+      "rel_freq": 659.0,
+      "total": 450
+    },
+    "тестлб": {
+      "freq": 658000,
+      "grac_word": "тестлб",
+      "level": "B2",
+      "rank": 293,
+      "rel_freq": 658.0,
+      "total": 450
+    },
+    "тестлв": {
+      "freq": 657000,
+      "grac_word": "тестлв",
+      "level": "B2",
+      "rank": 294,
+      "rel_freq": 657.0,
+      "total": 450
+    },
+    "тестлг": {
+      "freq": 656000,
+      "grac_word": "тестлг",
+      "level": "B2",
+      "rank": 295,
+      "rel_freq": 656.0,
+      "total": 450
+    },
+    "тестлд": {
+      "freq": 655000,
+      "grac_word": "тестлд",
+      "level": "B2",
+      "rank": 296,
+      "rel_freq": 655.0,
+      "total": 450
+    },
+    "тестле": {
+      "freq": 654000,
+      "grac_word": "тестле",
+      "level": "B2",
+      "rank": 297,
+      "rel_freq": 654.0,
+      "total": 450
+    },
+    "тестлж": {
+      "freq": 653000,
+      "grac_word": "тестлж",
+      "level": "B2",
+      "rank": 298,
+      "rel_freq": 653.0,
+      "total": 450
+    },
+    "тестлз": {
+      "freq": 652000,
+      "grac_word": "тестлз",
+      "level": "B2",
+      "rank": 299,
+      "rel_freq": 652.0,
+      "total": 450
+    },
+    "тестли": {
+      "freq": 651000,
+      "grac_word": "тестли",
+      "level": "B2",
+      "rank": 300,
+      "rel_freq": 651.0,
+      "total": 450
+    },
+    "тестлк": {
+      "freq": 650000,
+      "grac_word": "тестлк",
+      "level": "B2",
+      "rank": 301,
+      "rel_freq": 650.0,
+      "total": 450
+    },
+    "тестлл": {
+      "freq": 649000,
+      "grac_word": "тестлл",
+      "level": "B2",
+      "rank": 302,
+      "rel_freq": 649.0,
+      "total": 450
+    },
+    "тестлм": {
+      "freq": 648000,
+      "grac_word": "тестлм",
+      "level": "B2",
+      "rank": 303,
+      "rel_freq": 648.0,
+      "total": 450
+    },
+    "тестлн": {
+      "freq": 647000,
+      "grac_word": "тестлн",
+      "level": "B2",
+      "rank": 304,
+      "rel_freq": 647.0,
+      "total": 450
+    },
+    "тестло": {
+      "freq": 646000,
+      "grac_word": "тестло",
+      "level": "B2",
+      "rank": 305,
+      "rel_freq": 646.0,
+      "total": 450
+    },
+    "тестлп": {
+      "freq": 645000,
+      "grac_word": "тестлп",
+      "level": "B2",
+      "rank": 306,
+      "rel_freq": 645.0,
+      "total": 450
+    },
+    "тестлр": {
+      "freq": 644000,
+      "grac_word": "тестлр",
+      "level": "B2",
+      "rank": 307,
+      "rel_freq": 644.0,
+      "total": 450
+    },
+    "тестлс": {
+      "freq": 643000,
+      "grac_word": "тестлс",
+      "level": "B2",
+      "rank": 308,
+      "rel_freq": 643.0,
+      "total": 450
+    },
+    "тестлт": {
+      "freq": 642000,
+      "grac_word": "тестлт",
+      "level": "B2",
+      "rank": 309,
+      "rel_freq": 642.0,
+      "total": 450
+    },
+    "тестлу": {
+      "freq": 641000,
+      "grac_word": "тестлу",
+      "level": "B2",
+      "rank": 310,
+      "rel_freq": 641.0,
+      "total": 450
+    },
+    "тестлф": {
+      "freq": 640000,
+      "grac_word": "тестлф",
+      "level": "B2",
+      "rank": 311,
+      "rel_freq": 640.0,
+      "total": 450
+    },
+    "тестлх": {
+      "freq": 639000,
+      "grac_word": "тестлх",
+      "level": "B2",
+      "rank": 312,
+      "rel_freq": 639.0,
+      "total": 450
+    },
+    "тестлц": {
+      "freq": 638000,
+      "grac_word": "тестлц",
+      "level": "B2",
+      "rank": 313,
+      "rel_freq": 638.0,
+      "total": 450
+    },
+    "тестлч": {
+      "freq": 637000,
+      "grac_word": "тестлч",
+      "level": "B2",
+      "rank": 314,
+      "rel_freq": 637.0,
+      "total": 450
+    },
+    "тестлш": {
+      "freq": 636000,
+      "grac_word": "тестлш",
+      "level": "B2",
+      "rank": 315,
+      "rel_freq": 636.0,
+      "total": 450
+    },
+    "тестлщ": {
+      "freq": 635000,
+      "grac_word": "тестлщ",
+      "level": "B2",
+      "rank": 316,
+      "rel_freq": 635.0,
+      "total": 450
+    },
+    "тестлю": {
+      "freq": 634000,
+      "grac_word": "тестлю",
+      "level": "B2",
+      "rank": 317,
+      "rel_freq": 634.0,
+      "total": 450
+    },
+    "тестля": {
+      "freq": 633000,
+      "grac_word": "тестля",
+      "level": "B2",
+      "rank": 318,
+      "rel_freq": 633.0,
+      "total": 450
+    },
+    "тестлє": {
+      "freq": 632000,
+      "grac_word": "тестлє",
+      "level": "B2",
+      "rank": 319,
+      "rel_freq": 632.0,
+      "total": 450
+    },
+    "тестлі": {
+      "freq": 631000,
+      "grac_word": "тестлі",
+      "level": "B2",
+      "rank": 320,
+      "rel_freq": 631.0,
+      "total": 450
+    },
+    "тестлї": {
+      "freq": 630000,
+      "grac_word": "тестлї",
+      "level": "B2",
+      "rank": 321,
+      "rel_freq": 630.0,
+      "total": 450
+    },
+    "тестлґ": {
+      "freq": 629000,
+      "grac_word": "тестлґ",
+      "level": "B2",
+      "rank": 322,
+      "rel_freq": 629.0,
+      "total": 450
+    },
+    "тестма": {
+      "freq": 628000,
+      "grac_word": "тестма",
+      "level": "B2",
+      "rank": 323,
+      "rel_freq": 628.0,
+      "total": 450
+    },
+    "тестмб": {
+      "freq": 627000,
+      "grac_word": "тестмб",
+      "level": "B2",
+      "rank": 324,
+      "rel_freq": 627.0,
+      "total": 450
+    },
+    "тестмв": {
+      "freq": 626000,
+      "grac_word": "тестмв",
+      "level": "B2",
+      "rank": 325,
+      "rel_freq": 626.0,
+      "total": 450
+    },
+    "тестмг": {
+      "freq": 625000,
+      "grac_word": "тестмг",
+      "level": "B2",
+      "rank": 326,
+      "rel_freq": 625.0,
+      "total": 450
+    },
+    "тестмд": {
+      "freq": 624000,
+      "grac_word": "тестмд",
+      "level": "B2",
+      "rank": 327,
+      "rel_freq": 624.0,
+      "total": 450
+    },
+    "тестме": {
+      "freq": 623000,
+      "grac_word": "тестме",
+      "level": "B2",
+      "rank": 328,
+      "rel_freq": 623.0,
+      "total": 450
+    },
+    "тестмж": {
+      "freq": 622000,
+      "grac_word": "тестмж",
+      "level": "B2",
+      "rank": 329,
+      "rel_freq": 622.0,
+      "total": 450
+    },
+    "тестмз": {
+      "freq": 621000,
+      "grac_word": "тестмз",
+      "level": "B2",
+      "rank": 330,
+      "rel_freq": 621.0,
+      "total": 450
+    },
+    "тестми": {
+      "freq": 620000,
+      "grac_word": "тестми",
+      "level": "B2",
+      "rank": 331,
+      "rel_freq": 620.0,
+      "total": 450
+    },
+    "тестмк": {
+      "freq": 619000,
+      "grac_word": "тестмк",
+      "level": "B2",
+      "rank": 332,
+      "rel_freq": 619.0,
+      "total": 450
+    },
+    "тестмл": {
+      "freq": 618000,
+      "grac_word": "тестмл",
+      "level": "B2",
+      "rank": 333,
+      "rel_freq": 618.0,
+      "total": 450
+    },
+    "тестмм": {
+      "freq": 617000,
+      "grac_word": "тестмм",
+      "level": "B2",
+      "rank": 334,
+      "rel_freq": 617.0,
+      "total": 450
+    },
+    "тестмн": {
+      "freq": 616000,
+      "grac_word": "тестмн",
+      "level": "B2",
+      "rank": 335,
+      "rel_freq": 616.0,
+      "total": 450
+    },
+    "тестмо": {
+      "freq": 615000,
+      "grac_word": "тестмо",
+      "level": "B2",
+      "rank": 336,
+      "rel_freq": 615.0,
+      "total": 450
+    },
+    "тестмп": {
+      "freq": 614000,
+      "grac_word": "тестмп",
+      "level": "B2",
+      "rank": 337,
+      "rel_freq": 614.0,
+      "total": 450
+    },
+    "тестмр": {
+      "freq": 613000,
+      "grac_word": "тестмр",
+      "level": "B2",
+      "rank": 338,
+      "rel_freq": 613.0,
+      "total": 450
+    },
+    "тестмс": {
+      "freq": 612000,
+      "grac_word": "тестмс",
+      "level": "B2",
+      "rank": 339,
+      "rel_freq": 612.0,
+      "total": 450
+    },
+    "тестмт": {
+      "freq": 611000,
+      "grac_word": "тестмт",
+      "level": "B2",
+      "rank": 340,
+      "rel_freq": 611.0,
+      "total": 450
+    },
+    "тестму": {
+      "freq": 610000,
+      "grac_word": "тестму",
+      "level": "B2",
+      "rank": 341,
+      "rel_freq": 610.0,
+      "total": 450
+    },
+    "тестмф": {
+      "freq": 609000,
+      "grac_word": "тестмф",
+      "level": "B2",
+      "rank": 342,
+      "rel_freq": 609.0,
+      "total": 450
+    },
+    "тестмх": {
+      "freq": 608000,
+      "grac_word": "тестмх",
+      "level": "B2",
+      "rank": 343,
+      "rel_freq": 608.0,
+      "total": 450
+    },
+    "тестмц": {
+      "freq": 607000,
+      "grac_word": "тестмц",
+      "level": "B2",
+      "rank": 344,
+      "rel_freq": 607.0,
+      "total": 450
+    },
+    "тестмч": {
+      "freq": 606000,
+      "grac_word": "тестмч",
+      "level": "B2",
+      "rank": 345,
+      "rel_freq": 606.0,
+      "total": 450
+    },
+    "тестмш": {
+      "freq": 605000,
+      "grac_word": "тестмш",
+      "level": "B2",
+      "rank": 346,
+      "rel_freq": 605.0,
+      "total": 450
+    },
+    "тестмщ": {
+      "freq": 604000,
+      "grac_word": "тестмщ",
+      "level": "B2",
+      "rank": 347,
+      "rel_freq": 604.0,
+      "total": 450
+    },
+    "тестмю": {
+      "freq": 603000,
+      "grac_word": "тестмю",
+      "level": "B2",
+      "rank": 348,
+      "rel_freq": 603.0,
+      "total": 450
+    },
+    "тестмя": {
+      "freq": 602000,
+      "grac_word": "тестмя",
+      "level": "B2",
+      "rank": 349,
+      "rel_freq": 602.0,
+      "total": 450
+    },
+    "тестмє": {
+      "freq": 601000,
+      "grac_word": "тестмє",
+      "level": "B2",
+      "rank": 350,
+      "rel_freq": 601.0,
+      "total": 450
+    },
+    "тестмі": {
+      "freq": 600000,
+      "grac_word": "тестмі",
+      "level": "B2",
+      "rank": 351,
+      "rel_freq": 600.0,
+      "total": 450
+    },
+    "тестмї": {
+      "freq": 599000,
+      "grac_word": "тестмї",
+      "level": "B2",
+      "rank": 352,
+      "rel_freq": 599.0,
+      "total": 450
+    },
+    "тестмґ": {
+      "freq": 598000,
+      "grac_word": "тестмґ",
+      "level": "B2",
+      "rank": 353,
+      "rel_freq": 598.0,
+      "total": 450
+    },
+    "тестна": {
+      "freq": 597000,
+      "grac_word": "тестна",
+      "level": "B2",
+      "rank": 354,
+      "rel_freq": 597.0,
+      "total": 450
+    },
+    "тестнб": {
+      "freq": 596000,
+      "grac_word": "тестнб",
+      "level": "B2",
+      "rank": 355,
+      "rel_freq": 596.0,
+      "total": 450
+    },
+    "тестнв": {
+      "freq": 595000,
+      "grac_word": "тестнв",
+      "level": "B2",
+      "rank": 356,
+      "rel_freq": 595.0,
+      "total": 450
+    },
+    "тестнг": {
+      "freq": 594000,
+      "grac_word": "тестнг",
+      "level": "B2",
+      "rank": 357,
+      "rel_freq": 594.0,
+      "total": 450
+    },
+    "тестнд": {
+      "freq": 593000,
+      "grac_word": "тестнд",
+      "level": "B2",
+      "rank": 358,
+      "rel_freq": 593.0,
+      "total": 450
+    },
+    "тестне": {
+      "freq": 592000,
+      "grac_word": "тестне",
+      "level": "B2",
+      "rank": 359,
+      "rel_freq": 592.0,
+      "total": 450
+    },
+    "тестнж": {
+      "freq": 591000,
+      "grac_word": "тестнж",
+      "level": "B2",
+      "rank": 360,
+      "rel_freq": 591.0,
+      "total": 450
+    },
+    "тестнз": {
+      "freq": 590000,
+      "grac_word": "тестнз",
+      "level": "C1",
+      "rank": 361,
+      "rel_freq": 590.0,
+      "total": 450
+    },
+    "тестни": {
+      "freq": 589000,
+      "grac_word": "тестни",
+      "level": "C1",
+      "rank": 362,
+      "rel_freq": 589.0,
+      "total": 450
+    },
+    "тестнк": {
+      "freq": 588000,
+      "grac_word": "тестнк",
+      "level": "C1",
+      "rank": 363,
+      "rel_freq": 588.0,
+      "total": 450
+    },
+    "тестнл": {
+      "freq": 587000,
+      "grac_word": "тестнл",
+      "level": "C1",
+      "rank": 364,
+      "rel_freq": 587.0,
+      "total": 450
+    },
+    "тестнм": {
+      "freq": 586000,
+      "grac_word": "тестнм",
+      "level": "C1",
+      "rank": 365,
+      "rel_freq": 586.0,
+      "total": 450
+    },
+    "тестнн": {
+      "freq": 585000,
+      "grac_word": "тестнн",
+      "level": "C1",
+      "rank": 366,
+      "rel_freq": 585.0,
+      "total": 450
+    },
+    "тестно": {
+      "freq": 584000,
+      "grac_word": "тестно",
+      "level": "C1",
+      "rank": 367,
+      "rel_freq": 584.0,
+      "total": 450
+    },
+    "тестнп": {
+      "freq": 583000,
+      "grac_word": "тестнп",
+      "level": "C1",
+      "rank": 368,
+      "rel_freq": 583.0,
+      "total": 450
+    },
+    "тестнр": {
+      "freq": 582000,
+      "grac_word": "тестнр",
+      "level": "C1",
+      "rank": 369,
+      "rel_freq": 582.0,
+      "total": 450
+    },
+    "тестнс": {
+      "freq": 581000,
+      "grac_word": "тестнс",
+      "level": "C1",
+      "rank": 370,
+      "rel_freq": 581.0,
+      "total": 450
+    },
+    "тестнт": {
+      "freq": 580000,
+      "grac_word": "тестнт",
+      "level": "C1",
+      "rank": 371,
+      "rel_freq": 580.0,
+      "total": 450
+    },
+    "тестну": {
+      "freq": 579000,
+      "grac_word": "тестну",
+      "level": "C1",
+      "rank": 372,
+      "rel_freq": 579.0,
+      "total": 450
+    },
+    "тестнф": {
+      "freq": 578000,
+      "grac_word": "тестнф",
+      "level": "C1",
+      "rank": 373,
+      "rel_freq": 578.0,
+      "total": 450
+    },
+    "тестнх": {
+      "freq": 577000,
+      "grac_word": "тестнх",
+      "level": "C1",
+      "rank": 374,
+      "rel_freq": 577.0,
+      "total": 450
+    },
+    "тестнц": {
+      "freq": 576000,
+      "grac_word": "тестнц",
+      "level": "C1",
+      "rank": 375,
+      "rel_freq": 576.0,
+      "total": 450
+    },
+    "тестнч": {
+      "freq": 575000,
+      "grac_word": "тестнч",
+      "level": "C1",
+      "rank": 376,
+      "rel_freq": 575.0,
+      "total": 450
+    },
+    "тестнш": {
+      "freq": 574000,
+      "grac_word": "тестнш",
+      "level": "C1",
+      "rank": 377,
+      "rel_freq": 574.0,
+      "total": 450
+    },
+    "тестнщ": {
+      "freq": 573000,
+      "grac_word": "тестнщ",
+      "level": "C1",
+      "rank": 378,
+      "rel_freq": 573.0,
+      "total": 450
+    },
+    "тестню": {
+      "freq": 572000,
+      "grac_word": "тестню",
+      "level": "C1",
+      "rank": 379,
+      "rel_freq": 572.0,
+      "total": 450
+    },
+    "тестня": {
+      "freq": 571000,
+      "grac_word": "тестня",
+      "level": "C1",
+      "rank": 380,
+      "rel_freq": 571.0,
+      "total": 450
+    },
+    "тестнє": {
+      "freq": 570000,
+      "grac_word": "тестнє",
+      "level": "C1",
+      "rank": 381,
+      "rel_freq": 570.0,
+      "total": 450
+    },
+    "тестні": {
+      "freq": 569000,
+      "grac_word": "тестні",
+      "level": "C1",
+      "rank": 382,
+      "rel_freq": 569.0,
+      "total": 450
+    },
+    "тестнї": {
+      "freq": 568000,
+      "grac_word": "тестнї",
+      "level": "C1",
+      "rank": 383,
+      "rel_freq": 568.0,
+      "total": 450
+    },
+    "тестнґ": {
+      "freq": 567000,
+      "grac_word": "тестнґ",
+      "level": "C1",
+      "rank": 384,
+      "rel_freq": 567.0,
+      "total": 450
+    },
+    "тестоа": {
+      "freq": 566000,
+      "grac_word": "тестоа",
+      "level": "C1",
+      "rank": 385,
+      "rel_freq": 566.0,
+      "total": 450
+    },
+    "тестоб": {
+      "freq": 565000,
+      "grac_word": "тестоб",
+      "level": "C1",
+      "rank": 386,
+      "rel_freq": 565.0,
+      "total": 450
+    },
+    "тестов": {
+      "freq": 564000,
+      "grac_word": "тестов",
+      "level": "C1",
+      "rank": 387,
+      "rel_freq": 564.0,
+      "total": 450
+    },
+    "тестог": {
+      "freq": 563000,
+      "grac_word": "тестог",
+      "level": "C1",
+      "rank": 388,
+      "rel_freq": 563.0,
+      "total": 450
+    },
+    "тестод": {
+      "freq": 562000,
+      "grac_word": "тестод",
+      "level": "C1",
+      "rank": 389,
+      "rel_freq": 562.0,
+      "total": 450
+    },
+    "тестое": {
+      "freq": 561000,
+      "grac_word": "тестое",
+      "level": "C1",
+      "rank": 390,
+      "rel_freq": 561.0,
+      "total": 450
+    },
+    "тестож": {
+      "freq": 560000,
+      "grac_word": "тестож",
+      "level": "C1",
+      "rank": 391,
+      "rel_freq": 560.0,
+      "total": 450
+    },
+    "тестоз": {
+      "freq": 559000,
+      "grac_word": "тестоз",
+      "level": "C1",
+      "rank": 392,
+      "rel_freq": 559.0,
+      "total": 450
+    },
+    "тестои": {
+      "freq": 558000,
+      "grac_word": "тестои",
+      "level": "C1",
+      "rank": 393,
+      "rel_freq": 558.0,
+      "total": 450
+    },
+    "тесток": {
+      "freq": 557000,
+      "grac_word": "тесток",
+      "level": "C1",
+      "rank": 394,
+      "rel_freq": 557.0,
+      "total": 450
+    },
+    "тестол": {
+      "freq": 556000,
+      "grac_word": "тестол",
+      "level": "C1",
+      "rank": 395,
+      "rel_freq": 556.0,
+      "total": 450
+    },
+    "тестом": {
+      "freq": 555000,
+      "grac_word": "тестом",
+      "level": "C1",
+      "rank": 396,
+      "rel_freq": 555.0,
+      "total": 450
+    },
+    "тестон": {
+      "freq": 554000,
+      "grac_word": "тестон",
+      "level": "C1",
+      "rank": 397,
+      "rel_freq": 554.0,
+      "total": 450
+    },
+    "тестоо": {
+      "freq": 553000,
+      "grac_word": "тестоо",
+      "level": "C1",
+      "rank": 398,
+      "rel_freq": 553.0,
+      "total": 450
+    },
+    "тестоп": {
+      "freq": 552000,
+      "grac_word": "тестоп",
+      "level": "C1",
+      "rank": 399,
+      "rel_freq": 552.0,
+      "total": 450
+    },
+    "тестор": {
+      "freq": 551000,
+      "grac_word": "тестор",
+      "level": "C1",
+      "rank": 400,
+      "rel_freq": 551.0,
+      "total": 450
+    },
+    "тестос": {
+      "freq": 550000,
+      "grac_word": "тестос",
+      "level": "C1",
+      "rank": 401,
+      "rel_freq": 550.0,
+      "total": 450
+    },
+    "тестот": {
+      "freq": 549000,
+      "grac_word": "тестот",
+      "level": "C1",
+      "rank": 402,
+      "rel_freq": 549.0,
+      "total": 450
+    },
+    "тестоу": {
+      "freq": 548000,
+      "grac_word": "тестоу",
+      "level": "C1",
+      "rank": 403,
+      "rel_freq": 548.0,
+      "total": 450
+    },
+    "тестоф": {
+      "freq": 547000,
+      "grac_word": "тестоф",
+      "level": "C1",
+      "rank": 404,
+      "rel_freq": 547.0,
+      "total": 450
+    },
+    "тестох": {
+      "freq": 546000,
+      "grac_word": "тестох",
+      "level": "C1",
+      "rank": 405,
+      "rel_freq": 546.0,
+      "total": 450
+    },
+    "тестоц": {
+      "freq": 545000,
+      "grac_word": "тестоц",
+      "level": "C1",
+      "rank": 406,
+      "rel_freq": 545.0,
+      "total": 450
+    },
+    "тесточ": {
+      "freq": 544000,
+      "grac_word": "тесточ",
+      "level": "C1",
+      "rank": 407,
+      "rel_freq": 544.0,
+      "total": 450
+    },
+    "тестош": {
+      "freq": 543000,
+      "grac_word": "тестош",
+      "level": "C1",
+      "rank": 408,
+      "rel_freq": 543.0,
+      "total": 450
+    },
+    "тестощ": {
+      "freq": 542000,
+      "grac_word": "тестощ",
+      "level": "C1",
+      "rank": 409,
+      "rel_freq": 542.0,
+      "total": 450
+    },
+    "тестою": {
+      "freq": 541000,
+      "grac_word": "тестою",
+      "level": "C1",
+      "rank": 410,
+      "rel_freq": 541.0,
+      "total": 450
+    },
+    "тестоя": {
+      "freq": 540000,
+      "grac_word": "тестоя",
+      "level": "C1",
+      "rank": 411,
+      "rel_freq": 540.0,
+      "total": 450
+    },
+    "тестоє": {
+      "freq": 539000,
+      "grac_word": "тестоє",
+      "level": "C1",
+      "rank": 412,
+      "rel_freq": 539.0,
+      "total": 450
+    },
+    "тестоі": {
+      "freq": 538000,
+      "grac_word": "тестоі",
+      "level": "C1",
+      "rank": 413,
+      "rel_freq": 538.0,
+      "total": 450
+    },
+    "тестої": {
+      "freq": 537000,
+      "grac_word": "тестої",
+      "level": "C1",
+      "rank": 414,
+      "rel_freq": 537.0,
+      "total": 450
+    },
+    "тестоґ": {
+      "freq": 536000,
+      "grac_word": "тестоґ",
+      "level": "C1",
+      "rank": 415,
+      "rel_freq": 536.0,
+      "total": 450
+    },
+    "тестпа": {
+      "freq": 535000,
+      "grac_word": "тестпа",
+      "level": "C1",
+      "rank": 416,
+      "rel_freq": 535.0,
+      "total": 450
+    },
+    "тестпб": {
+      "freq": 534000,
+      "grac_word": "тестпб",
+      "level": "C1",
+      "rank": 417,
+      "rel_freq": 534.0,
+      "total": 450
+    },
+    "тестпв": {
+      "freq": 533000,
+      "grac_word": "тестпв",
+      "level": "C1",
+      "rank": 418,
+      "rel_freq": 533.0,
+      "total": 450
+    },
+    "тестпг": {
+      "freq": 532000,
+      "grac_word": "тестпг",
+      "level": "C1",
+      "rank": 419,
+      "rel_freq": 532.0,
+      "total": 450
+    },
+    "тестпд": {
+      "freq": 531000,
+      "grac_word": "тестпд",
+      "level": "C1",
+      "rank": 420,
+      "rel_freq": 531.0,
+      "total": 450
+    },
+    "тестпе": {
+      "freq": 530000,
+      "grac_word": "тестпе",
+      "level": "C1",
+      "rank": 421,
+      "rel_freq": 530.0,
+      "total": 450
+    },
+    "тестпж": {
+      "freq": 529000,
+      "grac_word": "тестпж",
+      "level": "C1",
+      "rank": 422,
+      "rel_freq": 529.0,
+      "total": 450
+    },
+    "тестпз": {
+      "freq": 528000,
+      "grac_word": "тестпз",
+      "level": "C1",
+      "rank": 423,
+      "rel_freq": 528.0,
+      "total": 450
+    },
+    "тестпи": {
+      "freq": 527000,
+      "grac_word": "тестпи",
+      "level": "C1",
+      "rank": 424,
+      "rel_freq": 527.0,
+      "total": 450
+    },
+    "тестпк": {
+      "freq": 526000,
+      "grac_word": "тестпк",
+      "level": "C1",
+      "rank": 425,
+      "rel_freq": 526.0,
+      "total": 450
+    },
+    "тестпл": {
+      "freq": 525000,
+      "grac_word": "тестпл",
+      "level": "C1",
+      "rank": 426,
+      "rel_freq": 525.0,
+      "total": 450
+    },
+    "тестпм": {
+      "freq": 524000,
+      "grac_word": "тестпм",
+      "level": "C1",
+      "rank": 427,
+      "rel_freq": 524.0,
+      "total": 450
+    },
+    "тестпн": {
+      "freq": 523000,
+      "grac_word": "тестпн",
+      "level": "C1",
+      "rank": 428,
+      "rel_freq": 523.0,
+      "total": 450
+    },
+    "тестпо": {
+      "freq": 522000,
+      "grac_word": "тестпо",
+      "level": "C1",
+      "rank": 429,
+      "rel_freq": 522.0,
+      "total": 450
+    },
+    "тестпп": {
+      "freq": 521000,
+      "grac_word": "тестпп",
+      "level": "C1",
+      "rank": 430,
+      "rel_freq": 521.0,
+      "total": 450
+    },
+    "тестпр": {
+      "freq": 520000,
+      "grac_word": "тестпр",
+      "level": "C1",
+      "rank": 431,
+      "rel_freq": 520.0,
+      "total": 450
+    },
+    "тестпс": {
+      "freq": 519000,
+      "grac_word": "тестпс",
+      "level": "C1",
+      "rank": 432,
+      "rel_freq": 519.0,
+      "total": 450
+    },
+    "тестпт": {
+      "freq": 518000,
+      "grac_word": "тестпт",
+      "level": "C1",
+      "rank": 433,
+      "rel_freq": 518.0,
+      "total": 450
+    },
+    "тестпу": {
+      "freq": 517000,
+      "grac_word": "тестпу",
+      "level": "C1",
+      "rank": 434,
+      "rel_freq": 517.0,
+      "total": 450
+    },
+    "тестпф": {
+      "freq": 516000,
+      "grac_word": "тестпф",
+      "level": "C1",
+      "rank": 435,
+      "rel_freq": 516.0,
+      "total": 450
+    },
+    "тестпх": {
+      "freq": 515000,
+      "grac_word": "тестпх",
+      "level": "C1",
+      "rank": 436,
+      "rel_freq": 515.0,
+      "total": 450
+    },
+    "тестпц": {
+      "freq": 514000,
+      "grac_word": "тестпц",
+      "level": "C1",
+      "rank": 437,
+      "rel_freq": 514.0,
+      "total": 450
+    },
+    "тестпч": {
+      "freq": 513000,
+      "grac_word": "тестпч",
+      "level": "C1",
+      "rank": 438,
+      "rel_freq": 513.0,
+      "total": 450
+    },
+    "тестпш": {
+      "freq": 512000,
+      "grac_word": "тестпш",
+      "level": "C1",
+      "rank": 439,
+      "rel_freq": 512.0,
+      "total": 450
+    },
+    "тестпщ": {
+      "freq": 511000,
+      "grac_word": "тестпщ",
+      "level": "C1",
+      "rank": 440,
+      "rel_freq": 511.0,
+      "total": 450
+    },
+    "тестпю": {
+      "freq": 510000,
+      "grac_word": "тестпю",
+      "level": "C1",
+      "rank": 441,
+      "rel_freq": 510.0,
+      "total": 450
+    },
+    "тестпя": {
+      "freq": 509000,
+      "grac_word": "тестпя",
+      "level": "C1",
+      "rank": 442,
+      "rel_freq": 509.0,
+      "total": 450
+    },
+    "тестпє": {
+      "freq": 508000,
+      "grac_word": "тестпє",
+      "level": "C1",
+      "rank": 443,
+      "rel_freq": 508.0,
+      "total": 450
+    },
+    "тестпі": {
+      "freq": 507000,
+      "grac_word": "тестпі",
+      "level": "C1",
+      "rank": 444,
+      "rel_freq": 507.0,
+      "total": 450
+    },
+    "тестпї": {
+      "freq": 506000,
+      "grac_word": "тестпї",
+      "level": "C1",
+      "rank": 445,
+      "rel_freq": 506.0,
+      "total": 450
+    },
+    "тестпґ": {
+      "freq": 505000,
+      "grac_word": "тестпґ",
+      "level": "C1",
+      "rank": 446,
+      "rel_freq": 505.0,
+      "total": 450
+    },
+    "тестра": {
+      "freq": 504000,
+      "grac_word": "тестра",
+      "level": "C1",
+      "rank": 447,
+      "rel_freq": 504.0,
+      "total": 450
+    },
+    "тестрб": {
+      "freq": 503000,
+      "grac_word": "тестрб",
+      "level": "C1",
+      "rank": 448,
+      "rel_freq": 503.0,
+      "total": 450
+    },
+    "тестрв": {
+      "freq": 502000,
+      "grac_word": "тестрв",
+      "level": "C1",
+      "rank": 449,
+      "rel_freq": 502.0,
+      "total": 450
+    },
+    "тестрг": {
+      "freq": 501000,
+      "grac_word": "тестрг",
+      "level": "C1",
+      "rank": 450,
+      "rel_freq": 501.0,
+      "total": 450
+    }
+  },
+  "entry_lemmas": [
+    "теста",
+    "тестб",
+    "теств",
+    "тестг",
+    "тестд",
+    "тесте",
+    "тестж",
+    "тестз",
+    "тести",
+    "тестк",
+    "тестл",
+    "тестм",
+    "тестн",
+    "тесто",
+    "тестп",
+    "тестр",
+    "тестс",
+    "тестт",
+    "тесту",
+    "тестф",
+    "тестх",
+    "тестц",
+    "тестч",
+    "тестш",
+    "тестщ",
+    "тестю",
+    "тестя",
+    "тестє",
+    "тесті",
+    "тестї",
+    "тестґ",
+    "тестаа",
+    "тестаб",
+    "тестав",
+    "тестаг",
+    "тестад",
+    "тестае",
+    "тестаж",
+    "тестаз",
+    "тестаи",
+    "тестак",
+    "тестал",
+    "тестам",
+    "тестан",
+    "тестао",
+    "тестап",
+    "тестар",
+    "тестас",
+    "тестат",
+    "тестау",
+    "тестаф",
+    "тестах",
+    "тестац",
+    "тестач",
+    "тесташ",
+    "тестащ",
+    "тестаю",
+    "тестая",
+    "тестає",
+    "тестаі",
+    "тестаї",
+    "тестаґ",
+    "тестба",
+    "тестбб",
+    "тестбв",
+    "тестбг",
+    "тестбд",
+    "тестбе",
+    "тестбж",
+    "тестбз",
+    "тестби",
+    "тестбк",
+    "тестбл",
+    "тестбм",
+    "тестбн",
+    "тестбо",
+    "тестбп",
+    "тестбр",
+    "тестбс",
+    "тестбт",
+    "тестбу",
+    "тестбф",
+    "тестбх",
+    "тестбц",
+    "тестбч",
+    "тестбш",
+    "тестбщ",
+    "тестбю",
+    "тестбя",
+    "тестбє",
+    "тестбі",
+    "тестбї",
+    "тестбґ",
+    "тества",
+    "тествб",
+    "тествв",
+    "тествг",
+    "тествд",
+    "тестве",
+    "тествж",
+    "тествз",
+    "тестви",
+    "тествк",
+    "тествл",
+    "тествм",
+    "тествн",
+    "тество",
+    "тествп",
+    "тествр",
+    "тествс",
+    "тествт",
+    "теству",
+    "тествф",
+    "тествх",
+    "тествц",
+    "тествч",
+    "тествш",
+    "тествщ",
+    "тествю",
+    "тествя",
+    "тествє",
+    "тестві",
+    "тествї",
+    "тествґ",
+    "тестга",
+    "тестгб",
+    "тестгв",
+    "тестгг",
+    "тестгд",
+    "тестге",
+    "тестгж",
+    "тестгз",
+    "тестги",
+    "тестгк",
+    "тестгл",
+    "тестгм",
+    "тестгн",
+    "тестго",
+    "тестгп",
+    "тестгр",
+    "тестгс",
+    "тестгт",
+    "тестгу",
+    "тестгф",
+    "тестгх",
+    "тестгц",
+    "тестгч",
+    "тестгш",
+    "тестгщ",
+    "тестгю",
+    "тестгя",
+    "тестгє",
+    "тестгі",
+    "тестгї",
+    "тестгґ",
+    "тестда",
+    "тестдб",
+    "тестдв",
+    "тестдг",
+    "тестдд",
+    "тестде",
+    "тестдж",
+    "тестдз",
+    "тестди",
+    "тестдк",
+    "тестдл",
+    "тестдм",
+    "тестдн",
+    "тестдо",
+    "тестдп",
+    "тестдр",
+    "тестдс",
+    "тестдт",
+    "тестду",
+    "тестдф",
+    "тестдх",
+    "тестдц",
+    "тестдч",
+    "тестдш",
+    "тестдщ",
+    "тестдю",
+    "тестдя",
+    "тестдє",
+    "тестді",
+    "тестдї",
+    "тестдґ",
+    "тестеа",
+    "тестеб",
+    "тестев",
+    "тестег",
+    "тестед",
+    "тестее",
+    "тестеж",
+    "тестез",
+    "тестеи",
+    "тестек",
+    "тестел",
+    "тестем",
+    "тестен",
+    "тестео",
+    "тестеп",
+    "тестер",
+    "тестес",
+    "тестет",
+    "тестеу",
+    "тестеф",
+    "тестех",
+    "тестец",
+    "тестеч",
+    "тестеш",
+    "тестещ",
+    "тестею",
+    "тестея",
+    "тестеє",
+    "тестеі",
+    "тестеї",
+    "тестеґ",
+    "тестжа",
+    "тестжб",
+    "тестжв",
+    "тестжг",
+    "тестжд",
+    "тестже",
+    "тестжж",
+    "тестжз",
+    "тестжи",
+    "тестжк",
+    "тестжл",
+    "тестжм",
+    "тестжн",
+    "тестжо",
+    "тестжп",
+    "тестжр",
+    "тестжс",
+    "тестжт",
+    "тестжу",
+    "тестжф",
+    "тестжх",
+    "тестжц",
+    "тестжч",
+    "тестжш",
+    "тестжщ",
+    "тестжю",
+    "тестжя",
+    "тестжє",
+    "тестжі",
+    "тестжї",
+    "тестжґ",
+    "тестза",
+    "тестзб",
+    "тестзв",
+    "тестзг",
+    "тестзд",
+    "тестзе",
+    "тестзж",
+    "тестзз",
+    "тестзи",
+    "тестзк",
+    "тестзл",
+    "тестзм",
+    "тестзн",
+    "тестзо",
+    "тестзп",
+    "тестзр",
+    "тестзс",
+    "тестзт",
+    "тестзу",
+    "тестзф",
+    "тестзх",
+    "тестзц",
+    "тестзч",
+    "тестзш",
+    "тестзщ",
+    "тестзю",
+    "тестзя",
+    "тестзє",
+    "тестзі",
+    "тестзї",
+    "тестзґ",
+    "тестиа",
+    "тестиб",
+    "тестив",
+    "тестиг",
+    "тестид",
+    "тестие",
+    "тестиж",
+    "тестиз",
+    "тестии",
+    "тестик",
+    "тестил",
+    "тестим",
+    "тестин",
+    "тестио",
+    "тестип",
+    "тестир",
+    "тестис",
+    "тестит",
+    "тестиу",
+    "тестиф",
+    "тестих",
+    "тестиц",
+    "тестич",
+    "тестиш",
+    "тестищ",
+    "тестию",
+    "тестия",
+    "тестиє",
+    "тестиі",
+    "тестиї",
+    "тестиґ",
+    "тестка",
+    "тесткб",
+    "тесткв",
+    "тесткг",
+    "тесткд",
+    "тестке",
+    "тесткж",
+    "тесткз",
+    "тестки",
+    "тесткк",
+    "тесткл",
+    "тесткм",
+    "тесткн",
+    "тестко",
+    "тесткп",
+    "тесткр",
+    "тесткс",
+    "тесткт",
+    "тестку",
+    "тесткф",
+    "тесткх",
+    "тесткц",
+    "тесткч",
+    "тесткш",
+    "тесткщ",
+    "тесткю",
+    "тесткя",
+    "тесткє",
+    "тесткі",
+    "тесткї",
+    "тесткґ",
+    "тестла",
+    "тестлб",
+    "тестлв",
+    "тестлг",
+    "тестлд",
+    "тестле",
+    "тестлж",
+    "тестлз",
+    "тестли",
+    "тестлк",
+    "тестлл",
+    "тестлм",
+    "тестлн",
+    "тестло",
+    "тестлп",
+    "тестлр",
+    "тестлс",
+    "тестлт",
+    "тестлу",
+    "тестлф",
+    "тестлх",
+    "тестлц",
+    "тестлч",
+    "тестлш",
+    "тестлщ",
+    "тестлю",
+    "тестля",
+    "тестлє",
+    "тестлі",
+    "тестлї",
+    "тестлґ",
+    "тестма",
+    "тестмб",
+    "тестмв",
+    "тестмг",
+    "тестмд",
+    "тестме",
+    "тестмж",
+    "тестмз",
+    "тестми",
+    "тестмк",
+    "тестмл",
+    "тестмм",
+    "тестмн",
+    "тестмо",
+    "тестмп",
+    "тестмр",
+    "тестмс",
+    "тестмт",
+    "тестму",
+    "тестмф",
+    "тестмх",
+    "тестмц",
+    "тестмч",
+    "тестмш",
+    "тестмщ",
+    "тестмю",
+    "тестмя",
+    "тестмє",
+    "тестмі",
+    "тестмї",
+    "тестмґ",
+    "тестна",
+    "тестнб",
+    "тестнв",
+    "тестнг",
+    "тестнд",
+    "тестне",
+    "тестнж",
+    "тестнз",
+    "тестни",
+    "тестнк",
+    "тестнл",
+    "тестнм",
+    "тестнн",
+    "тестно",
+    "тестнп",
+    "тестнр",
+    "тестнс",
+    "тестнт",
+    "тестну",
+    "тестнф",
+    "тестнх",
+    "тестнц",
+    "тестнч",
+    "тестнш",
+    "тестнщ",
+    "тестню",
+    "тестня",
+    "тестнє",
+    "тестні",
+    "тестнї",
+    "тестнґ",
+    "тестоа",
+    "тестоб",
+    "тестов",
+    "тестог",
+    "тестод",
+    "тестое",
+    "тестож",
+    "тестоз",
+    "тестои",
+    "тесток",
+    "тестол",
+    "тестом",
+    "тестон",
+    "тестоо",
+    "тестоп",
+    "тестор",
+    "тестос",
+    "тестот",
+    "тестоу",
+    "тестоф",
+    "тестох",
+    "тестоц",
+    "тесточ",
+    "тестош",
+    "тестощ",
+    "тестою",
+    "тестоя",
+    "тестоє",
+    "тестоі",
+    "тестої",
+    "тестоґ",
+    "тестпа",
+    "тестпб",
+    "тестпв",
+    "тестпг",
+    "тестпд",
+    "тестпе",
+    "тестпж",
+    "тестпз",
+    "тестпи",
+    "тестпк",
+    "тестпл",
+    "тестпм",
+    "тестпн",
+    "тестпо",
+    "тестпп",
+    "тестпр",
+    "тестпс",
+    "тестпт",
+    "тестпу",
+    "тестпф",
+    "тестпх",
+    "тестпц",
+    "тестпч",
+    "тестпш",
+    "тестпщ",
+    "тестпю",
+    "тестпя",
+    "тестпє",
+    "тестпі",
+    "тестпї",
+    "тестпґ",
+    "тестра",
+    "тестрб",
+    "тестрв",
+    "тестрг"
+  ],
+  "relations": {
+    "antonym": {
+      "тестгя": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестгє",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгє": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестгя",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгі": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестгї",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгї": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестгі",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгґ": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестда",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестда": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестгґ",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдб": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдв",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдв": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдб",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдг": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдд",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдд": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдг",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестде": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдж",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдж": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестде",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдз": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестди",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестди": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдз",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдк": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдл",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдл": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдк",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдм": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдн",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдн": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдм",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдо": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдп",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдп": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдо",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдр": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдс",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдс": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдр",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдт": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестду",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестду": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдт",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдф": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдх",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдх": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдф",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдц": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдч",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдч": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдц",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдш": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдщ",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдщ": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдш",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдю": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдя",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдя": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдю",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдє": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестді",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестді": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдє",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдї": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдґ",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестдґ": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестдї",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестеа": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестеб",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестеб": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестеа",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестев": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестег",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестег": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестев",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестед": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестее",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестее": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестед",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестеж": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестез",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестез": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестеж",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестеи": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестек",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестек": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестеи",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестел": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестем",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестем": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестел",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестен": [
+        {
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестео",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестео": [
+        {
+          "direction": "reciprocal",
+          "gate": {
+            "vesum": "both valid"
+          },
+          "item": "тестен",
+          "pattern": "протилежне",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ]
+    },
+    "homonym": {},
+    "paronym": {},
+    "synonym": {
+      "тестаф": [
+        {
+          "item": "тестах",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестах",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестах": [
+        {
+          "direction": "reciprocal",
+          "item": "тестаф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестаф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестац": [
+        {
+          "item": "тестач",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестач",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестач": [
+        {
+          "direction": "reciprocal",
+          "item": "тестац",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестац",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тесташ": [
+        {
+          "item": "тестащ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестащ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестащ": [
+        {
+          "direction": "reciprocal",
+          "item": "тесташ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тесташ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестаю": [
+        {
+          "item": "тестая",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестая",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестая": [
+        {
+          "direction": "reciprocal",
+          "item": "тестаю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестаю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестає": [
+        {
+          "item": "тестаі",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестаі",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестаі": [
+        {
+          "direction": "reciprocal",
+          "item": "тестає",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестає",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестаї": [
+        {
+          "item": "тестаґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестаґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестаґ": [
+        {
+          "direction": "reciprocal",
+          "item": "тестаї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестаї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестба": [
+        {
+          "item": "тестбб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбб": [
+        {
+          "direction": "reciprocal",
+          "item": "тестба",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестба",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбв": [
+        {
+          "item": "тестбг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбг": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбд": [
+        {
+          "item": "тестбе",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбе",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбе": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбж": [
+        {
+          "item": "тестбз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбз": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестби": [
+        {
+          "item": "тестбк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбк": [
+        {
+          "direction": "reciprocal",
+          "item": "тестби",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестби",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбл": [
+        {
+          "item": "тестбм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбм": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбн": [
+        {
+          "item": "тестбо",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбо",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбо": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбп": [
+        {
+          "item": "тестбр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбр": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбс": [
+        {
+          "item": "тестбт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбт": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбу": [
+        {
+          "item": "тестбф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбф": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбу",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбу",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбх": [
+        {
+          "item": "тестбц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбц": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбч": [
+        {
+          "item": "тестбш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбш": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбщ": [
+        {
+          "item": "тестбю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбю": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбя": [
+        {
+          "item": "тестбє",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбє",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбє": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбя",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбя",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбі": [
+        {
+          "item": "тестбї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестбї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбї": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбі",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбі",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестбґ": [
+        {
+          "item": "тества",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тества",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тества": [
+        {
+          "direction": "reciprocal",
+          "item": "тестбґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестбґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествб": [
+        {
+          "item": "тествв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествв": [
+        {
+          "direction": "reciprocal",
+          "item": "тествб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествг": [
+        {
+          "item": "тествд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествд": [
+        {
+          "direction": "reciprocal",
+          "item": "тествг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестве": [
+        {
+          "item": "тествж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествж": [
+        {
+          "direction": "reciprocal",
+          "item": "тестве",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестве",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествз": [
+        {
+          "item": "тестви",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестви",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестви": [
+        {
+          "direction": "reciprocal",
+          "item": "тествз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествк": [
+        {
+          "item": "тествл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествл": [
+        {
+          "direction": "reciprocal",
+          "item": "тествк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествм": [
+        {
+          "item": "тествн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествн": [
+        {
+          "direction": "reciprocal",
+          "item": "тествм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тество": [
+        {
+          "item": "тествп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествп": [
+        {
+          "direction": "reciprocal",
+          "item": "тество",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тество",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествр": [
+        {
+          "item": "тествс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествс": [
+        {
+          "direction": "reciprocal",
+          "item": "тествр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествт": [
+        {
+          "item": "теству",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "теству",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "теству": [
+        {
+          "direction": "reciprocal",
+          "item": "тествт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествф": [
+        {
+          "item": "тествх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествх": [
+        {
+          "direction": "reciprocal",
+          "item": "тествф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествц": [
+        {
+          "item": "тествч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествч": [
+        {
+          "direction": "reciprocal",
+          "item": "тествц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествш": [
+        {
+          "item": "тествщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествщ": [
+        {
+          "direction": "reciprocal",
+          "item": "тествш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествю": [
+        {
+          "item": "тествя",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествя",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествя": [
+        {
+          "direction": "reciprocal",
+          "item": "тествю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествє": [
+        {
+          "item": "тестві",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестві",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестві": [
+        {
+          "direction": "reciprocal",
+          "item": "тествє",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествє",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествї": [
+        {
+          "item": "тествґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тествґ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тествґ": [
+        {
+          "direction": "reciprocal",
+          "item": "тествї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тествї",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестга": [
+        {
+          "item": "тестгб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгб",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгб": [
+        {
+          "direction": "reciprocal",
+          "item": "тестга",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестга",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгв": [
+        {
+          "item": "тестгг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгг",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгг": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгв",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгд": [
+        {
+          "item": "тестге",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестге",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестге": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгд",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгж": [
+        {
+          "item": "тестгз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгз",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгз": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгж",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестги": [
+        {
+          "item": "тестгк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгк",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгк": [
+        {
+          "direction": "reciprocal",
+          "item": "тестги",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестги",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгл": [
+        {
+          "item": "тестгм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгм",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгм": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгл",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгн": [
+        {
+          "item": "тестго",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестго",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестго": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгн",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгп": [
+        {
+          "item": "тестгр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгр",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгр": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгп",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгс": [
+        {
+          "item": "тестгт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгт",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгт": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгс",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгу": [
+        {
+          "item": "тестгф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгф",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгф": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгу",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгу",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгх": [
+        {
+          "item": "тестгц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгц",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгц": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгх",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгч": [
+        {
+          "item": "тестгш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгш",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгш": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгч",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгщ": [
+        {
+          "item": "тестгю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "direction": "reciprocal",
+          "item": "тестгю",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ],
+      "тестгю": [
+        {
+          "direction": "reciprocal",
+          "item": "тестгщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        },
+        {
+          "item": "тестгщ",
+          "pattern": "див.",
+          "source": "СУМ-11",
+          "vein": 1
+        }
+      ]
+    }
+  },
+  "schema": "runner-pr1-equivalence-v1",
+  "slice_size": 500
+}

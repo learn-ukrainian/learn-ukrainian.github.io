@@ -1,0 +1,3004 @@
+{
+  "entries": [
+    {
+      "gloss": "gloss-0",
+      "lemma": "теста",
+      "pos": "verb",
+      "url_slug": "теста"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестб",
+      "pos": "noun",
+      "url_slug": "тестб"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "теств",
+      "pos": "noun",
+      "url_slug": "теств"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестг",
+      "pos": "verb",
+      "url_slug": "тестг"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестд",
+      "pos": "noun",
+      "url_slug": "тестд"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тесте",
+      "pos": "noun",
+      "url_slug": "тесте"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестж",
+      "pos": "verb",
+      "url_slug": "тестж"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестз",
+      "pos": "noun",
+      "url_slug": "тестз"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тести",
+      "pos": "noun",
+      "url_slug": "тести"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестк",
+      "pos": "verb",
+      "url_slug": "тестк"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестл",
+      "pos": "noun",
+      "url_slug": "тестл"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестм",
+      "pos": "noun",
+      "url_slug": "тестм"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестн",
+      "pos": "verb",
+      "url_slug": "тестн"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тесто",
+      "pos": "noun",
+      "url_slug": "тесто"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестп",
+      "pos": "noun",
+      "url_slug": "тестп"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестр",
+      "pos": "verb",
+      "url_slug": "тестр"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестс",
+      "pos": "noun",
+      "url_slug": "тестс"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестт",
+      "pos": "noun",
+      "url_slug": "тестт"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тесту",
+      "pos": "verb",
+      "url_slug": "тесту"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестф",
+      "pos": "noun",
+      "url_slug": "тестф"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестх",
+      "pos": "noun",
+      "url_slug": "тестх"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестц",
+      "pos": "verb",
+      "url_slug": "тестц"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестч",
+      "pos": "noun",
+      "url_slug": "тестч"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестш",
+      "pos": "noun",
+      "url_slug": "тестш"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестщ",
+      "pos": "verb",
+      "url_slug": "тестщ"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестю",
+      "pos": "noun",
+      "url_slug": "тестю"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестя",
+      "pos": "noun",
+      "url_slug": "тестя"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестє",
+      "pos": "verb",
+      "url_slug": "тестє"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тесті",
+      "pos": "noun",
+      "url_slug": "тесті"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестї",
+      "pos": "noun",
+      "url_slug": "тестї"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестґ",
+      "pos": "verb",
+      "url_slug": "тестґ"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестаа",
+      "pos": "noun",
+      "url_slug": "тестаа"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестаб",
+      "pos": "noun",
+      "url_slug": "тестаб"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестав",
+      "pos": "verb",
+      "url_slug": "тестав"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестаг",
+      "pos": "noun",
+      "url_slug": "тестаг"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестад",
+      "pos": "noun",
+      "url_slug": "тестад"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестае",
+      "pos": "verb",
+      "url_slug": "тестае"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестаж",
+      "pos": "noun",
+      "url_slug": "тестаж"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестаз",
+      "pos": "noun",
+      "url_slug": "тестаз"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестаи",
+      "pos": "verb",
+      "url_slug": "тестаи"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестак",
+      "pos": "noun",
+      "url_slug": "тестак"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестал",
+      "pos": "noun",
+      "url_slug": "тестал"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестам",
+      "pos": "verb",
+      "url_slug": "тестам"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестан",
+      "pos": "noun",
+      "url_slug": "тестан"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестао",
+      "pos": "noun",
+      "url_slug": "тестао"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестап",
+      "pos": "verb",
+      "url_slug": "тестап"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестар",
+      "pos": "noun",
+      "url_slug": "тестар"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестас",
+      "pos": "noun",
+      "url_slug": "тестас"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестат",
+      "pos": "verb",
+      "url_slug": "тестат"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестау",
+      "pos": "noun",
+      "url_slug": "тестау"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестаф",
+      "pos": "noun",
+      "url_slug": "тестаф"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестах",
+      "pos": "verb",
+      "url_slug": "тестах"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестац",
+      "pos": "noun",
+      "url_slug": "тестац"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестач",
+      "pos": "noun",
+      "url_slug": "тестач"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тесташ",
+      "pos": "verb",
+      "url_slug": "тесташ"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестащ",
+      "pos": "noun",
+      "url_slug": "тестащ"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестаю",
+      "pos": "noun",
+      "url_slug": "тестаю"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестая",
+      "pos": "verb",
+      "url_slug": "тестая"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестає",
+      "pos": "noun",
+      "url_slug": "тестає"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестаі",
+      "pos": "noun",
+      "url_slug": "тестаі"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестаї",
+      "pos": "verb",
+      "url_slug": "тестаї"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестаґ",
+      "pos": "noun",
+      "url_slug": "тестаґ"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестба",
+      "pos": "noun",
+      "url_slug": "тестба"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестбб",
+      "pos": "verb",
+      "url_slug": "тестбб"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестбв",
+      "pos": "noun",
+      "url_slug": "тестбв"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестбг",
+      "pos": "noun",
+      "url_slug": "тестбг"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестбд",
+      "pos": "verb",
+      "url_slug": "тестбд"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестбе",
+      "pos": "noun",
+      "url_slug": "тестбе"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестбж",
+      "pos": "noun",
+      "url_slug": "тестбж"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестбз",
+      "pos": "verb",
+      "url_slug": "тестбз"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестби",
+      "pos": "noun",
+      "url_slug": "тестби"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестбк",
+      "pos": "noun",
+      "url_slug": "тестбк"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестбл",
+      "pos": "verb",
+      "url_slug": "тестбл"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестбм",
+      "pos": "noun",
+      "url_slug": "тестбм"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестбн",
+      "pos": "noun",
+      "url_slug": "тестбн"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестбо",
+      "pos": "verb",
+      "url_slug": "тестбо"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестбп",
+      "pos": "noun",
+      "url_slug": "тестбп"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестбр",
+      "pos": "noun",
+      "url_slug": "тестбр"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестбс",
+      "pos": "verb",
+      "url_slug": "тестбс"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестбт",
+      "pos": "noun",
+      "url_slug": "тестбт"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестбу",
+      "pos": "noun",
+      "url_slug": "тестбу"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестбф",
+      "pos": "verb",
+      "url_slug": "тестбф"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестбх",
+      "pos": "noun",
+      "url_slug": "тестбх"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестбц",
+      "pos": "noun",
+      "url_slug": "тестбц"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестбч",
+      "pos": "verb",
+      "url_slug": "тестбч"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестбш",
+      "pos": "noun",
+      "url_slug": "тестбш"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестбщ",
+      "pos": "noun",
+      "url_slug": "тестбщ"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестбю",
+      "pos": "verb",
+      "url_slug": "тестбю"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестбя",
+      "pos": "noun",
+      "url_slug": "тестбя"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестбє",
+      "pos": "noun",
+      "url_slug": "тестбє"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестбі",
+      "pos": "verb",
+      "url_slug": "тестбі"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестбї",
+      "pos": "noun",
+      "url_slug": "тестбї"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестбґ",
+      "pos": "noun",
+      "url_slug": "тестбґ"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тества",
+      "pos": "verb",
+      "url_slug": "тества"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тествб",
+      "pos": "noun",
+      "url_slug": "тествб"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тествв",
+      "pos": "noun",
+      "url_slug": "тествв"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тествг",
+      "pos": "verb",
+      "url_slug": "тествг"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тествд",
+      "pos": "noun",
+      "url_slug": "тествд"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестве",
+      "pos": "noun",
+      "url_slug": "тестве"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тествж",
+      "pos": "verb",
+      "url_slug": "тествж"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тествз",
+      "pos": "noun",
+      "url_slug": "тествз"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестви",
+      "pos": "noun",
+      "url_slug": "тестви"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тествк",
+      "pos": "verb",
+      "url_slug": "тествк"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тествл",
+      "pos": "noun",
+      "url_slug": "тествл"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тествм",
+      "pos": "noun",
+      "url_slug": "тествм"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тествн",
+      "pos": "verb",
+      "url_slug": "тествн"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тество",
+      "pos": "noun",
+      "url_slug": "тество"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тествп",
+      "pos": "noun",
+      "url_slug": "тествп"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тествр",
+      "pos": "verb",
+      "url_slug": "тествр"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тествс",
+      "pos": "noun",
+      "url_slug": "тествс"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тествт",
+      "pos": "noun",
+      "url_slug": "тествт"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "теству",
+      "pos": "verb",
+      "url_slug": "теству"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тествф",
+      "pos": "noun",
+      "url_slug": "тествф"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тествх",
+      "pos": "noun",
+      "url_slug": "тествх"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тествц",
+      "pos": "verb",
+      "url_slug": "тествц"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тествч",
+      "pos": "noun",
+      "url_slug": "тествч"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тествш",
+      "pos": "noun",
+      "url_slug": "тествш"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тествщ",
+      "pos": "verb",
+      "url_slug": "тествщ"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тествю",
+      "pos": "noun",
+      "url_slug": "тествю"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тествя",
+      "pos": "noun",
+      "url_slug": "тествя"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тествє",
+      "pos": "verb",
+      "url_slug": "тествє"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестві",
+      "pos": "noun",
+      "url_slug": "тестві"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тествї",
+      "pos": "noun",
+      "url_slug": "тествї"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тествґ",
+      "pos": "verb",
+      "url_slug": "тествґ"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестга",
+      "pos": "noun",
+      "url_slug": "тестга"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестгб",
+      "pos": "noun",
+      "url_slug": "тестгб"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестгв",
+      "pos": "verb",
+      "url_slug": "тестгв"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестгг",
+      "pos": "noun",
+      "url_slug": "тестгг"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестгд",
+      "pos": "noun",
+      "url_slug": "тестгд"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестге",
+      "pos": "verb",
+      "url_slug": "тестге"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестгж",
+      "pos": "noun",
+      "url_slug": "тестгж"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестгз",
+      "pos": "noun",
+      "url_slug": "тестгз"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестги",
+      "pos": "verb",
+      "url_slug": "тестги"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестгк",
+      "pos": "noun",
+      "url_slug": "тестгк"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестгл",
+      "pos": "noun",
+      "url_slug": "тестгл"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестгм",
+      "pos": "verb",
+      "url_slug": "тестгм"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестгн",
+      "pos": "noun",
+      "url_slug": "тестгн"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестго",
+      "pos": "noun",
+      "url_slug": "тестго"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестгп",
+      "pos": "verb",
+      "url_slug": "тестгп"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестгр",
+      "pos": "noun",
+      "url_slug": "тестгр"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестгс",
+      "pos": "noun",
+      "url_slug": "тестгс"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестгт",
+      "pos": "verb",
+      "url_slug": "тестгт"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестгу",
+      "pos": "noun",
+      "url_slug": "тестгу"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестгф",
+      "pos": "noun",
+      "url_slug": "тестгф"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестгх",
+      "pos": "verb",
+      "url_slug": "тестгх"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестгц",
+      "pos": "noun",
+      "url_slug": "тестгц"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестгч",
+      "pos": "noun",
+      "url_slug": "тестгч"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестгш",
+      "pos": "verb",
+      "url_slug": "тестгш"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестгщ",
+      "pos": "noun",
+      "url_slug": "тестгщ"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестгю",
+      "pos": "noun",
+      "url_slug": "тестгю"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестгя",
+      "pos": "verb",
+      "url_slug": "тестгя"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестгє",
+      "pos": "noun",
+      "url_slug": "тестгє"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестгі",
+      "pos": "noun",
+      "url_slug": "тестгі"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестгї",
+      "pos": "verb",
+      "url_slug": "тестгї"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестгґ",
+      "pos": "noun",
+      "url_slug": "тестгґ"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестда",
+      "pos": "noun",
+      "url_slug": "тестда"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестдб",
+      "pos": "verb",
+      "url_slug": "тестдб"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестдв",
+      "pos": "noun",
+      "url_slug": "тестдв"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестдг",
+      "pos": "noun",
+      "url_slug": "тестдг"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестдд",
+      "pos": "verb",
+      "url_slug": "тестдд"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестде",
+      "pos": "noun",
+      "url_slug": "тестде"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестдж",
+      "pos": "noun",
+      "url_slug": "тестдж"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестдз",
+      "pos": "verb",
+      "url_slug": "тестдз"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестди",
+      "pos": "noun",
+      "url_slug": "тестди"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестдк",
+      "pos": "noun",
+      "url_slug": "тестдк"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестдл",
+      "pos": "verb",
+      "url_slug": "тестдл"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестдм",
+      "pos": "noun",
+      "url_slug": "тестдм"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестдн",
+      "pos": "noun",
+      "url_slug": "тестдн"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестдо",
+      "pos": "verb",
+      "url_slug": "тестдо"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестдп",
+      "pos": "noun",
+      "url_slug": "тестдп"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестдр",
+      "pos": "noun",
+      "url_slug": "тестдр"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестдс",
+      "pos": "verb",
+      "url_slug": "тестдс"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестдт",
+      "pos": "noun",
+      "url_slug": "тестдт"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестду",
+      "pos": "noun",
+      "url_slug": "тестду"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестдф",
+      "pos": "verb",
+      "url_slug": "тестдф"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестдх",
+      "pos": "noun",
+      "url_slug": "тестдх"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестдц",
+      "pos": "noun",
+      "url_slug": "тестдц"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестдч",
+      "pos": "verb",
+      "url_slug": "тестдч"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестдш",
+      "pos": "noun",
+      "url_slug": "тестдш"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестдщ",
+      "pos": "noun",
+      "url_slug": "тестдщ"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестдю",
+      "pos": "verb",
+      "url_slug": "тестдю"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестдя",
+      "pos": "noun",
+      "url_slug": "тестдя"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестдє",
+      "pos": "noun",
+      "url_slug": "тестдє"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестді",
+      "pos": "verb",
+      "url_slug": "тестді"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестдї",
+      "pos": "noun",
+      "url_slug": "тестдї"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестдґ",
+      "pos": "noun",
+      "url_slug": "тестдґ"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестеа",
+      "pos": "verb",
+      "url_slug": "тестеа"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестеб",
+      "pos": "noun",
+      "url_slug": "тестеб"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестев",
+      "pos": "noun",
+      "url_slug": "тестев"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестег",
+      "pos": "verb",
+      "url_slug": "тестег"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестед",
+      "pos": "noun",
+      "url_slug": "тестед"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестее",
+      "pos": "noun",
+      "url_slug": "тестее"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестеж",
+      "pos": "verb",
+      "url_slug": "тестеж"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестез",
+      "pos": "noun",
+      "url_slug": "тестез"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестеи",
+      "pos": "noun",
+      "url_slug": "тестеи"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестек",
+      "pos": "verb",
+      "url_slug": "тестек"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестел",
+      "pos": "noun",
+      "url_slug": "тестел"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестем",
+      "pos": "noun",
+      "url_slug": "тестем"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестен",
+      "pos": "verb",
+      "url_slug": "тестен"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестео",
+      "pos": "noun",
+      "url_slug": "тестео"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестеп",
+      "pos": "noun",
+      "url_slug": "тестеп"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестер",
+      "pos": "verb",
+      "url_slug": "тестер"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестес",
+      "pos": "noun",
+      "url_slug": "тестес"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестет",
+      "pos": "noun",
+      "url_slug": "тестет"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестеу",
+      "pos": "verb",
+      "url_slug": "тестеу"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестеф",
+      "pos": "noun",
+      "url_slug": "тестеф"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестех",
+      "pos": "noun",
+      "url_slug": "тестех"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестец",
+      "pos": "verb",
+      "url_slug": "тестец"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестеч",
+      "pos": "noun",
+      "url_slug": "тестеч"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестеш",
+      "pos": "noun",
+      "url_slug": "тестеш"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестещ",
+      "pos": "verb",
+      "url_slug": "тестещ"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестею",
+      "pos": "noun",
+      "url_slug": "тестею"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестея",
+      "pos": "noun",
+      "url_slug": "тестея"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестеє",
+      "pos": "verb",
+      "url_slug": "тестеє"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестеі",
+      "pos": "noun",
+      "url_slug": "тестеі"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестеї",
+      "pos": "noun",
+      "url_slug": "тестеї"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестеґ",
+      "pos": "verb",
+      "url_slug": "тестеґ"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестжа",
+      "pos": "noun",
+      "url_slug": "тестжа"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестжб",
+      "pos": "noun",
+      "url_slug": "тестжб"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестжв",
+      "pos": "verb",
+      "url_slug": "тестжв"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестжг",
+      "pos": "noun",
+      "url_slug": "тестжг"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестжд",
+      "pos": "noun",
+      "url_slug": "тестжд"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестже",
+      "pos": "verb",
+      "url_slug": "тестже"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестжж",
+      "pos": "noun",
+      "url_slug": "тестжж"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестжз",
+      "pos": "noun",
+      "url_slug": "тестжз"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестжи",
+      "pos": "verb",
+      "url_slug": "тестжи"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестжк",
+      "pos": "noun",
+      "url_slug": "тестжк"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестжл",
+      "pos": "noun",
+      "url_slug": "тестжл"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестжм",
+      "pos": "verb",
+      "url_slug": "тестжм"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестжн",
+      "pos": "noun",
+      "url_slug": "тестжн"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестжо",
+      "pos": "noun",
+      "url_slug": "тестжо"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестжп",
+      "pos": "verb",
+      "url_slug": "тестжп"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестжр",
+      "pos": "noun",
+      "url_slug": "тестжр"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестжс",
+      "pos": "noun",
+      "url_slug": "тестжс"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестжт",
+      "pos": "verb",
+      "url_slug": "тестжт"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестжу",
+      "pos": "noun",
+      "url_slug": "тестжу"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестжф",
+      "pos": "noun",
+      "url_slug": "тестжф"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестжх",
+      "pos": "verb",
+      "url_slug": "тестжх"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестжц",
+      "pos": "noun",
+      "url_slug": "тестжц"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестжч",
+      "pos": "noun",
+      "url_slug": "тестжч"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестжш",
+      "pos": "verb",
+      "url_slug": "тестжш"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестжщ",
+      "pos": "noun",
+      "url_slug": "тестжщ"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестжю",
+      "pos": "noun",
+      "url_slug": "тестжю"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестжя",
+      "pos": "verb",
+      "url_slug": "тестжя"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестжє",
+      "pos": "noun",
+      "url_slug": "тестжє"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестжі",
+      "pos": "noun",
+      "url_slug": "тестжі"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестжї",
+      "pos": "verb",
+      "url_slug": "тестжї"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестжґ",
+      "pos": "noun",
+      "url_slug": "тестжґ"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестза",
+      "pos": "noun",
+      "url_slug": "тестза"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестзб",
+      "pos": "verb",
+      "url_slug": "тестзб"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестзв",
+      "pos": "noun",
+      "url_slug": "тестзв"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестзг",
+      "pos": "noun",
+      "url_slug": "тестзг"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестзд",
+      "pos": "verb",
+      "url_slug": "тестзд"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестзе",
+      "pos": "noun",
+      "url_slug": "тестзе"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестзж",
+      "pos": "noun",
+      "url_slug": "тестзж"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестзз",
+      "pos": "verb",
+      "url_slug": "тестзз"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестзи",
+      "pos": "noun",
+      "url_slug": "тестзи"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестзк",
+      "pos": "noun",
+      "url_slug": "тестзк"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестзл",
+      "pos": "verb",
+      "url_slug": "тестзл"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестзм",
+      "pos": "noun",
+      "url_slug": "тестзм"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестзн",
+      "pos": "noun",
+      "url_slug": "тестзн"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестзо",
+      "pos": "verb",
+      "url_slug": "тестзо"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестзп",
+      "pos": "noun",
+      "url_slug": "тестзп"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестзр",
+      "pos": "noun",
+      "url_slug": "тестзр"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестзс",
+      "pos": "verb",
+      "url_slug": "тестзс"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестзт",
+      "pos": "noun",
+      "url_slug": "тестзт"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестзу",
+      "pos": "noun",
+      "url_slug": "тестзу"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестзф",
+      "pos": "verb",
+      "url_slug": "тестзф"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестзх",
+      "pos": "noun",
+      "url_slug": "тестзх"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестзц",
+      "pos": "noun",
+      "url_slug": "тестзц"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестзч",
+      "pos": "verb",
+      "url_slug": "тестзч"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестзш",
+      "pos": "noun",
+      "url_slug": "тестзш"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестзщ",
+      "pos": "noun",
+      "url_slug": "тестзщ"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестзю",
+      "pos": "verb",
+      "url_slug": "тестзю"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестзя",
+      "pos": "noun",
+      "url_slug": "тестзя"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестзє",
+      "pos": "noun",
+      "url_slug": "тестзє"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестзі",
+      "pos": "verb",
+      "url_slug": "тестзі"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестзї",
+      "pos": "noun",
+      "url_slug": "тестзї"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестзґ",
+      "pos": "noun",
+      "url_slug": "тестзґ"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестиа",
+      "pos": "verb",
+      "url_slug": "тестиа"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестиб",
+      "pos": "noun",
+      "url_slug": "тестиб"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестив",
+      "pos": "noun",
+      "url_slug": "тестив"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестиг",
+      "pos": "verb",
+      "url_slug": "тестиг"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестид",
+      "pos": "noun",
+      "url_slug": "тестид"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестие",
+      "pos": "noun",
+      "url_slug": "тестие"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестиж",
+      "pos": "verb",
+      "url_slug": "тестиж"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестиз",
+      "pos": "noun",
+      "url_slug": "тестиз"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестии",
+      "pos": "noun",
+      "url_slug": "тестии"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестик",
+      "pos": "verb",
+      "url_slug": "тестик"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестил",
+      "pos": "noun",
+      "url_slug": "тестил"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестим",
+      "pos": "noun",
+      "url_slug": "тестим"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестин",
+      "pos": "verb",
+      "url_slug": "тестин"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестио",
+      "pos": "noun",
+      "url_slug": "тестио"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестип",
+      "pos": "noun",
+      "url_slug": "тестип"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестир",
+      "pos": "verb",
+      "url_slug": "тестир"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестис",
+      "pos": "noun",
+      "url_slug": "тестис"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестит",
+      "pos": "noun",
+      "url_slug": "тестит"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестиу",
+      "pos": "verb",
+      "url_slug": "тестиу"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестиф",
+      "pos": "noun",
+      "url_slug": "тестиф"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестих",
+      "pos": "noun",
+      "url_slug": "тестих"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестиц",
+      "pos": "verb",
+      "url_slug": "тестиц"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестич",
+      "pos": "noun",
+      "url_slug": "тестич"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестиш",
+      "pos": "noun",
+      "url_slug": "тестиш"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестищ",
+      "pos": "verb",
+      "url_slug": "тестищ"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестию",
+      "pos": "noun",
+      "url_slug": "тестию"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестия",
+      "pos": "noun",
+      "url_slug": "тестия"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестиє",
+      "pos": "verb",
+      "url_slug": "тестиє"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестиі",
+      "pos": "noun",
+      "url_slug": "тестиі"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестиї",
+      "pos": "noun",
+      "url_slug": "тестиї"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестиґ",
+      "pos": "verb",
+      "url_slug": "тестиґ"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестка",
+      "pos": "noun",
+      "url_slug": "тестка"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тесткб",
+      "pos": "noun",
+      "url_slug": "тесткб"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тесткв",
+      "pos": "verb",
+      "url_slug": "тесткв"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тесткг",
+      "pos": "noun",
+      "url_slug": "тесткг"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тесткд",
+      "pos": "noun",
+      "url_slug": "тесткд"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестке",
+      "pos": "verb",
+      "url_slug": "тестке"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тесткж",
+      "pos": "noun",
+      "url_slug": "тесткж"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тесткз",
+      "pos": "noun",
+      "url_slug": "тесткз"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестки",
+      "pos": "verb",
+      "url_slug": "тестки"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тесткк",
+      "pos": "noun",
+      "url_slug": "тесткк"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тесткл",
+      "pos": "noun",
+      "url_slug": "тесткл"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тесткм",
+      "pos": "verb",
+      "url_slug": "тесткм"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тесткн",
+      "pos": "noun",
+      "url_slug": "тесткн"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестко",
+      "pos": "noun",
+      "url_slug": "тестко"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тесткп",
+      "pos": "verb",
+      "url_slug": "тесткп"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тесткр",
+      "pos": "noun",
+      "url_slug": "тесткр"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тесткс",
+      "pos": "noun",
+      "url_slug": "тесткс"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тесткт",
+      "pos": "verb",
+      "url_slug": "тесткт"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестку",
+      "pos": "noun",
+      "url_slug": "тестку"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тесткф",
+      "pos": "noun",
+      "url_slug": "тесткф"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тесткх",
+      "pos": "verb",
+      "url_slug": "тесткх"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тесткц",
+      "pos": "noun",
+      "url_slug": "тесткц"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тесткч",
+      "pos": "noun",
+      "url_slug": "тесткч"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тесткш",
+      "pos": "verb",
+      "url_slug": "тесткш"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тесткщ",
+      "pos": "noun",
+      "url_slug": "тесткщ"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тесткю",
+      "pos": "noun",
+      "url_slug": "тесткю"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тесткя",
+      "pos": "verb",
+      "url_slug": "тесткя"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тесткє",
+      "pos": "noun",
+      "url_slug": "тесткє"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тесткі",
+      "pos": "noun",
+      "url_slug": "тесткі"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тесткї",
+      "pos": "verb",
+      "url_slug": "тесткї"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тесткґ",
+      "pos": "noun",
+      "url_slug": "тесткґ"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестла",
+      "pos": "noun",
+      "url_slug": "тестла"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестлб",
+      "pos": "verb",
+      "url_slug": "тестлб"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестлв",
+      "pos": "noun",
+      "url_slug": "тестлв"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестлг",
+      "pos": "noun",
+      "url_slug": "тестлг"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестлд",
+      "pos": "verb",
+      "url_slug": "тестлд"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестле",
+      "pos": "noun",
+      "url_slug": "тестле"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестлж",
+      "pos": "noun",
+      "url_slug": "тестлж"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестлз",
+      "pos": "verb",
+      "url_slug": "тестлз"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестли",
+      "pos": "noun",
+      "url_slug": "тестли"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестлк",
+      "pos": "noun",
+      "url_slug": "тестлк"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестлл",
+      "pos": "verb",
+      "url_slug": "тестлл"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестлм",
+      "pos": "noun",
+      "url_slug": "тестлм"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестлн",
+      "pos": "noun",
+      "url_slug": "тестлн"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестло",
+      "pos": "verb",
+      "url_slug": "тестло"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестлп",
+      "pos": "noun",
+      "url_slug": "тестлп"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестлр",
+      "pos": "noun",
+      "url_slug": "тестлр"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестлс",
+      "pos": "verb",
+      "url_slug": "тестлс"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестлт",
+      "pos": "noun",
+      "url_slug": "тестлт"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестлу",
+      "pos": "noun",
+      "url_slug": "тестлу"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестлф",
+      "pos": "verb",
+      "url_slug": "тестлф"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестлх",
+      "pos": "noun",
+      "url_slug": "тестлх"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестлц",
+      "pos": "noun",
+      "url_slug": "тестлц"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестлч",
+      "pos": "verb",
+      "url_slug": "тестлч"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестлш",
+      "pos": "noun",
+      "url_slug": "тестлш"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестлщ",
+      "pos": "noun",
+      "url_slug": "тестлщ"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестлю",
+      "pos": "verb",
+      "url_slug": "тестлю"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестля",
+      "pos": "noun",
+      "url_slug": "тестля"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестлє",
+      "pos": "noun",
+      "url_slug": "тестлє"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестлі",
+      "pos": "verb",
+      "url_slug": "тестлі"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестлї",
+      "pos": "noun",
+      "url_slug": "тестлї"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестлґ",
+      "pos": "noun",
+      "url_slug": "тестлґ"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестма",
+      "pos": "verb",
+      "url_slug": "тестма"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестмб",
+      "pos": "noun",
+      "url_slug": "тестмб"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестмв",
+      "pos": "noun",
+      "url_slug": "тестмв"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестмг",
+      "pos": "verb",
+      "url_slug": "тестмг"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестмд",
+      "pos": "noun",
+      "url_slug": "тестмд"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестме",
+      "pos": "noun",
+      "url_slug": "тестме"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестмж",
+      "pos": "verb",
+      "url_slug": "тестмж"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестмз",
+      "pos": "noun",
+      "url_slug": "тестмз"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестми",
+      "pos": "noun",
+      "url_slug": "тестми"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестмк",
+      "pos": "verb",
+      "url_slug": "тестмк"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестмл",
+      "pos": "noun",
+      "url_slug": "тестмл"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестмм",
+      "pos": "noun",
+      "url_slug": "тестмм"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестмн",
+      "pos": "verb",
+      "url_slug": "тестмн"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестмо",
+      "pos": "noun",
+      "url_slug": "тестмо"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестмп",
+      "pos": "noun",
+      "url_slug": "тестмп"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестмр",
+      "pos": "verb",
+      "url_slug": "тестмр"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестмс",
+      "pos": "noun",
+      "url_slug": "тестмс"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестмт",
+      "pos": "noun",
+      "url_slug": "тестмт"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестму",
+      "pos": "verb",
+      "url_slug": "тестму"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестмф",
+      "pos": "noun",
+      "url_slug": "тестмф"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестмх",
+      "pos": "noun",
+      "url_slug": "тестмх"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестмц",
+      "pos": "verb",
+      "url_slug": "тестмц"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестмч",
+      "pos": "noun",
+      "url_slug": "тестмч"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестмш",
+      "pos": "noun",
+      "url_slug": "тестмш"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестмщ",
+      "pos": "verb",
+      "url_slug": "тестмщ"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестмю",
+      "pos": "noun",
+      "url_slug": "тестмю"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестмя",
+      "pos": "noun",
+      "url_slug": "тестмя"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестмє",
+      "pos": "verb",
+      "url_slug": "тестмє"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестмі",
+      "pos": "noun",
+      "url_slug": "тестмі"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестмї",
+      "pos": "noun",
+      "url_slug": "тестмї"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестмґ",
+      "pos": "verb",
+      "url_slug": "тестмґ"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестна",
+      "pos": "noun",
+      "url_slug": "тестна"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестнб",
+      "pos": "noun",
+      "url_slug": "тестнб"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестнв",
+      "pos": "verb",
+      "url_slug": "тестнв"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестнг",
+      "pos": "noun",
+      "url_slug": "тестнг"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестнд",
+      "pos": "noun",
+      "url_slug": "тестнд"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестне",
+      "pos": "verb",
+      "url_slug": "тестне"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестнж",
+      "pos": "noun",
+      "url_slug": "тестнж"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестнз",
+      "pos": "noun",
+      "url_slug": "тестнз"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестни",
+      "pos": "verb",
+      "url_slug": "тестни"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестнк",
+      "pos": "noun",
+      "url_slug": "тестнк"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестнл",
+      "pos": "noun",
+      "url_slug": "тестнл"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестнм",
+      "pos": "verb",
+      "url_slug": "тестнм"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестнн",
+      "pos": "noun",
+      "url_slug": "тестнн"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестно",
+      "pos": "noun",
+      "url_slug": "тестно"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестнп",
+      "pos": "verb",
+      "url_slug": "тестнп"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестнр",
+      "pos": "noun",
+      "url_slug": "тестнр"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестнс",
+      "pos": "noun",
+      "url_slug": "тестнс"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестнт",
+      "pos": "verb",
+      "url_slug": "тестнт"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестну",
+      "pos": "noun",
+      "url_slug": "тестну"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестнф",
+      "pos": "noun",
+      "url_slug": "тестнф"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестнх",
+      "pos": "verb",
+      "url_slug": "тестнх"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестнц",
+      "pos": "noun",
+      "url_slug": "тестнц"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестнч",
+      "pos": "noun",
+      "url_slug": "тестнч"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестнш",
+      "pos": "verb",
+      "url_slug": "тестнш"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестнщ",
+      "pos": "noun",
+      "url_slug": "тестнщ"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестню",
+      "pos": "noun",
+      "url_slug": "тестню"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестня",
+      "pos": "verb",
+      "url_slug": "тестня"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестнє",
+      "pos": "noun",
+      "url_slug": "тестнє"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестні",
+      "pos": "noun",
+      "url_slug": "тестні"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестнї",
+      "pos": "verb",
+      "url_slug": "тестнї"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестнґ",
+      "pos": "noun",
+      "url_slug": "тестнґ"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестоа",
+      "pos": "noun",
+      "url_slug": "тестоа"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестоб",
+      "pos": "verb",
+      "url_slug": "тестоб"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестов",
+      "pos": "noun",
+      "url_slug": "тестов"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестог",
+      "pos": "noun",
+      "url_slug": "тестог"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестод",
+      "pos": "verb",
+      "url_slug": "тестод"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестое",
+      "pos": "noun",
+      "url_slug": "тестое"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестож",
+      "pos": "noun",
+      "url_slug": "тестож"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестоз",
+      "pos": "verb",
+      "url_slug": "тестоз"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестои",
+      "pos": "noun",
+      "url_slug": "тестои"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тесток",
+      "pos": "noun",
+      "url_slug": "тесток"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестол",
+      "pos": "verb",
+      "url_slug": "тестол"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестом",
+      "pos": "noun",
+      "url_slug": "тестом"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестон",
+      "pos": "noun",
+      "url_slug": "тестон"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестоо",
+      "pos": "verb",
+      "url_slug": "тестоо"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестоп",
+      "pos": "noun",
+      "url_slug": "тестоп"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестор",
+      "pos": "noun",
+      "url_slug": "тестор"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестос",
+      "pos": "verb",
+      "url_slug": "тестос"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестот",
+      "pos": "noun",
+      "url_slug": "тестот"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестоу",
+      "pos": "noun",
+      "url_slug": "тестоу"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестоф",
+      "pos": "verb",
+      "url_slug": "тестоф"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестох",
+      "pos": "noun",
+      "url_slug": "тестох"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестоц",
+      "pos": "noun",
+      "url_slug": "тестоц"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тесточ",
+      "pos": "verb",
+      "url_slug": "тесточ"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестош",
+      "pos": "noun",
+      "url_slug": "тестош"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестощ",
+      "pos": "noun",
+      "url_slug": "тестощ"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестою",
+      "pos": "verb",
+      "url_slug": "тестою"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестоя",
+      "pos": "noun",
+      "url_slug": "тестоя"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестоє",
+      "pos": "noun",
+      "url_slug": "тестоє"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестоі",
+      "pos": "verb",
+      "url_slug": "тестоі"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестої",
+      "pos": "noun",
+      "url_slug": "тестої"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестоґ",
+      "pos": "noun",
+      "url_slug": "тестоґ"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестпа",
+      "pos": "verb",
+      "url_slug": "тестпа"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестпб",
+      "pos": "noun",
+      "url_slug": "тестпб"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестпв",
+      "pos": "noun",
+      "url_slug": "тестпв"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестпг",
+      "pos": "verb",
+      "url_slug": "тестпг"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестпд",
+      "pos": "noun",
+      "url_slug": "тестпд"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестпе",
+      "pos": "noun",
+      "url_slug": "тестпе"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестпж",
+      "pos": "verb",
+      "url_slug": "тестпж"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестпз",
+      "pos": "noun",
+      "url_slug": "тестпз"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестпи",
+      "pos": "noun",
+      "url_slug": "тестпи"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестпк",
+      "pos": "verb",
+      "url_slug": "тестпк"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестпл",
+      "pos": "noun",
+      "url_slug": "тестпл"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестпм",
+      "pos": "noun",
+      "url_slug": "тестпм"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестпн",
+      "pos": "verb",
+      "url_slug": "тестпн"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестпо",
+      "pos": "noun",
+      "url_slug": "тестпо"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестпп",
+      "pos": "noun",
+      "url_slug": "тестпп"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестпр",
+      "pos": "verb",
+      "url_slug": "тестпр"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестпс",
+      "pos": "noun",
+      "url_slug": "тестпс"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестпт",
+      "pos": "noun",
+      "url_slug": "тестпт"
+    },
+    {
+      "gloss": "gloss-7",
+      "lemma": "тестпу",
+      "pos": "verb",
+      "url_slug": "тестпу"
+    },
+    {
+      "gloss": "gloss-8",
+      "lemma": "тестпф",
+      "pos": "noun",
+      "url_slug": "тестпф"
+    },
+    {
+      "gloss": "gloss-9",
+      "lemma": "тестпх",
+      "pos": "noun",
+      "url_slug": "тестпх"
+    },
+    {
+      "gloss": "gloss-10",
+      "lemma": "тестпц",
+      "pos": "verb",
+      "url_slug": "тестпц"
+    },
+    {
+      "gloss": "gloss-11",
+      "lemma": "тестпч",
+      "pos": "noun",
+      "url_slug": "тестпч"
+    },
+    {
+      "gloss": "gloss-12",
+      "lemma": "тестпш",
+      "pos": "noun",
+      "url_slug": "тестпш"
+    },
+    {
+      "gloss": "gloss-13",
+      "lemma": "тестпщ",
+      "pos": "verb",
+      "url_slug": "тестпщ"
+    },
+    {
+      "gloss": "gloss-14",
+      "lemma": "тестпю",
+      "pos": "noun",
+      "url_slug": "тестпю"
+    },
+    {
+      "gloss": "gloss-15",
+      "lemma": "тестпя",
+      "pos": "noun",
+      "url_slug": "тестпя"
+    },
+    {
+      "gloss": "gloss-16",
+      "lemma": "тестпє",
+      "pos": "verb",
+      "url_slug": "тестпє"
+    },
+    {
+      "gloss": "gloss-0",
+      "lemma": "тестпі",
+      "pos": "noun",
+      "url_slug": "тестпі"
+    },
+    {
+      "gloss": "gloss-1",
+      "lemma": "тестпї",
+      "pos": "noun",
+      "url_slug": "тестпї"
+    },
+    {
+      "gloss": "gloss-2",
+      "lemma": "тестпґ",
+      "pos": "verb",
+      "url_slug": "тестпґ"
+    },
+    {
+      "gloss": "gloss-3",
+      "lemma": "тестра",
+      "pos": "noun",
+      "url_slug": "тестра"
+    },
+    {
+      "gloss": "gloss-4",
+      "lemma": "тестрб",
+      "pos": "noun",
+      "url_slug": "тестрб"
+    },
+    {
+      "gloss": "gloss-5",
+      "lemma": "тестрв",
+      "pos": "verb",
+      "url_slug": "тестрв"
+    },
+    {
+      "gloss": "gloss-6",
+      "lemma": "тестрг",
+      "pos": "noun",
+      "url_slug": "тестрг"
+    }
+  ]
+}

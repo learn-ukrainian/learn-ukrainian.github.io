@@ -4392,7 +4392,16 @@ def _wiktionary_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
 
 
 def _load_kaikki_lookup(path: Path = KAIKKI_LOOKUP) -> dict[str, dict[str, Any]]:
-    """Load the compact Kaikki lookup if it has been preprocessed."""
+    """Load the compact Kaikki lookup if it has been preprocessed.
+
+    Prefer the immutable kaikki side DB when ``LEXICON_KAIKKI_SIDE_DB`` is set
+    (runner PR1) — workers never reparse the global JSON file.
+    """
+    side = os.environ.get("LEXICON_KAIKKI_SIDE_DB", "").strip()
+    if side:
+        from scripts.lexicon.runner.side_db import KaikkiSideDb
+
+        return KaikkiSideDb(Path(side)).as_mapping_proxy()  # type: ignore[return-value]
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -4862,6 +4871,22 @@ def _parse_translations(raw: object) -> list[str]:
 
 
 _BALLA_REVERSE_INDEX: dict[int, dict[str, list[tuple[str, str | None]]]] = {}
+# Runner PR1: immutable side-DB handles replace whole-table Python indexes.
+_BALLA_SIDE_DB: Any = None
+_DMKLINGER_SIDE_DB: Any = None
+
+
+def _install_balla_side_db(side_db: Any | None) -> None:
+    """Install a Balla reverse side-DB for this process (no whole-table dict)."""
+    global _BALLA_SIDE_DB
+    _BALLA_SIDE_DB = side_db
+
+
+def _install_dmklinger_side_db(side_db: Any | None) -> None:
+    """Install a dmklinger side-DB for this process (no whole-table dict)."""
+    global _DMKLINGER_SIDE_DB, _DMKLINGER_INDEX
+    _DMKLINGER_SIDE_DB = side_db
+    _DMKLINGER_INDEX = None  # force side-DB path / reload
 
 
 def _balla_reverse_headword(word: object) -> str | None:
@@ -4906,6 +4931,13 @@ def _balla_reverse_candidate_keys(token: str) -> list[tuple[str, str | None]]:
 
 
 def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str | None]]]:
+    """Legacy whole-table index. Prefer :func:`_install_balla_side_db` (runner PR1).
+
+    When a side DB is installed, this returns an empty dict and callers must use
+    :func:`_balla_reverse_lookup` instead (see ``_balla_reverse_translation``).
+    """
+    if _BALLA_SIDE_DB is not None:
+        return {}
     cache_key = id(conn)
     cached = _BALLA_REVERSE_INDEX.get(cache_key)
     if cached is not None:
@@ -4913,28 +4945,40 @@ def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[tuple[
     index: dict[str, list[tuple[str, str | None]]] = {}
     seen: set[tuple[str, str, str | None]] = set()
     try:
-        rows = conn.execute("SELECT word, definition FROM balla_en_uk ORDER BY word").fetchall()
+        # Bounded batches — never materialize the full table via fetchall.
+        cursor = conn.execute("SELECT word, definition FROM balla_en_uk ORDER BY word")
+        while True:
+            rows = cursor.fetchmany(2000)
+            if not rows:
+                break
+            for word, definition in rows:
+                headword = _balla_reverse_headword(word)
+                if not headword:
+                    continue
+                for segment in _balla_reverse_definition_segments(definition):
+                    tokens = _BALLA_REVERSE_UKRAINIAN_TOKEN_RE.findall(segment)
+                    if len(tokens) != 1:
+                        continue
+                    for key, pos in _balla_reverse_candidate_keys(tokens[0]):
+                        seen_key = (key, headword, pos)
+                        if seen_key in seen:
+                            continue
+                        seen.add(seen_key)
+                        index.setdefault(key, []).append((headword, pos))
     except sqlite3.OperationalError as exc:
         if _missing_table(exc):
             _BALLA_REVERSE_INDEX[cache_key] = {}
             return {}
         raise
-    for word, definition in rows:
-        headword = _balla_reverse_headword(word)
-        if not headword:
-            continue
-        for segment in _balla_reverse_definition_segments(definition):
-            tokens = _BALLA_REVERSE_UKRAINIAN_TOKEN_RE.findall(segment)
-            if len(tokens) != 1:
-                continue
-            for key, pos in _balla_reverse_candidate_keys(tokens[0]):
-                seen_key = (key, headword, pos)
-                if seen_key in seen:
-                    continue
-                seen.add(seen_key)
-                index.setdefault(key, []).append((headword, pos))
     _BALLA_REVERSE_INDEX[cache_key] = index
     return index
+
+
+def _balla_reverse_lookup(conn: sqlite3.Connection, lemma_key: str) -> list[tuple[str, str | None]]:
+    """Look up Balla reverse candidates without requiring a whole-table Python dict."""
+    if _BALLA_SIDE_DB is not None:
+        return list(_BALLA_SIDE_DB.lookup(lemma_key))
+    return list(_load_balla_reverse_index(conn).get(lemma_key, []))
 
 
 def _balla_reverse_hint_keys(gloss_hints: object) -> set[str]:
@@ -4986,11 +5030,10 @@ def _balla_reverse_translation(
     if not target_keys:
         return None
 
-    index = _load_balla_reverse_index(conn)
     english: list[str] = []
     seen: set[str] = set()
     for key in sorted(target_keys):
-        for headword, vesum_pos in index.get(key, []):
+        for headword, vesum_pos in _balla_reverse_lookup(conn, key):
             if headword not in allowed_headwords:
                 continue
             if target_pos and vesum_pos and vesum_pos != target_pos:
@@ -5027,24 +5070,40 @@ def _dmklinger_key(word: str) -> str:
 
 
 def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
-    """Load dmklinger_uk_en once, keyed by stress-stripped/casefolded headword."""
+    """Load dmklinger_uk_en once, keyed by stress-stripped/casefolded headword.
+
+    Legacy whole-table path. Prefer :func:`_install_dmklinger_side_db` (runner PR1).
+    """
     global _DMKLINGER_INDEX
+    if _DMKLINGER_SIDE_DB is not None:
+        return {}
     if _DMKLINGER_INDEX is not None:
         return _DMKLINGER_INDEX
     index: dict[str, list[tuple[str, str]]] = {}
     try:
-        rows = conn.execute("SELECT word, pos, translations FROM dmklinger_uk_en").fetchall()
+        cursor = conn.execute("SELECT word, pos, translations FROM dmklinger_uk_en")
+        while True:
+            rows = cursor.fetchmany(2000)
+            if not rows:
+                break
+            for word, pos, translations in rows:
+                key = _dmklinger_key(str(word or ""))
+                if key:
+                    index.setdefault(key, []).append((pos, translations))
     except sqlite3.OperationalError as exc:
         if _missing_table(exc):
             _DMKLINGER_INDEX = {}
             return _DMKLINGER_INDEX
         raise
-    for word, pos, translations in rows:
-        key = _dmklinger_key(str(word or ""))
-        if key:
-            index.setdefault(key, []).append((pos, translations))
     _DMKLINGER_INDEX = index
     return index
+
+
+def _dmklinger_lookup(conn: sqlite3.Connection, lemma_key: str) -> list[tuple[str, str]]:
+    """Look up dmklinger rows without requiring a whole-table Python dict."""
+    if _DMKLINGER_SIDE_DB is not None:
+        return list(_DMKLINGER_SIDE_DB.lookup(lemma_key))
+    return list(_load_dmklinger_index(conn).get(lemma_key, []))
 
 
 _SLOVNYK_UKRENG_PREFIX_LABELS = {
@@ -5308,28 +5367,26 @@ def _translation(
     exact Ukrainian token resolves to one unique English headword that matches an
     existing learner-gloss hint from the source entry. Returns up to six glosses.
     """
-    index = _load_dmklinger_index(conn)
-    if index:
-        for variant in _split_lemma_variants(lemma):
-            rows = index.get(_dmklinger_key(variant))
-            if not rows:
-                continue
-            english: list[str] = []
-            seen: set[str] = set()
-            pos: str | None = None
-            for row_pos, raw in rows:
-                if pos is None and row_pos:
-                    pos = clean_html_entities(str(row_pos).strip())
-                for gloss in _parse_translations(raw):
-                    key = gloss.casefold()
-                    if key not in seen:
-                        seen.add(key)
-                        english.append(gloss)
-            if english:
-                block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
-                if pos:
-                    block["pos"] = pos
-                return block
+    for variant in _split_lemma_variants(lemma):
+        rows = _dmklinger_lookup(conn, _dmklinger_key(variant))
+        if not rows:
+            continue
+        english: list[str] = []
+        seen: set[str] = set()
+        pos: str | None = None
+        for row_pos, raw in rows:
+            if pos is None and row_pos:
+                pos = clean_html_entities(str(row_pos).strip())
+            for gloss in _parse_translations(raw):
+                key = gloss.casefold()
+                if key not in seen:
+                    seen.add(key)
+                    english.append(gloss)
+        if english:
+            block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
+            if pos:
+                block["pos"] = pos
+            return block
     kaikki_translation = _kaikki_translation(kaikki_lookup or {}, lemma)
     if kaikki_translation:
         return kaikki_translation
@@ -6005,33 +6062,134 @@ def enrich_entry(
 
 
 def enrich() -> tuple[int, int]:
-    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    _normalize_manifest_entries(manifest)
-    kaikki_lookup = _load_kaikki_lookup()
-    # Reviewed synonym verdicts are first-class corpus facts for the manifest,
-    # not an atlas.db-only projection. This import never promotes mined
-    # candidates: it writes only YAML ``approved`` verdict rows with dedicated
-    # provenance before the read-only enrichment pass.
+    """Enrich the Atlas manifest.
+
+    When ``LEXICON_USE_RUNNER=1``, delegates to the PR1 offline runner (streaming
+    staging, sealed CEFR/relations, side DBs, hard-capped workers). Otherwise
+    uses the sealed CEFR + relation phases in-process (same semantics; foundation
+    for #5331) with optional side DBs under ``data/lexicon/side/``.
+    """
+    if os.environ.get("LEXICON_USE_RUNNER", "").strip() in {"1", "true", "yes", "on"}:
+        from scripts.lexicon.runner.memory import MemoryPolicy
+        from scripts.lexicon.runner.offline_engine import enrich_offline_slice
+
+        work = ROOT / "data" / "lexicon" / "runner_work"
+        # offline_engine warms GRAC via ``_ensure_grac_frequency_cache`` before seal.
+        result = enrich_offline_slice(
+            manifest_path=MANIFEST,
+            sources_db=SOURCES_DB,
+            kaikki_json=KAIKKI_LOOKUP,
+            work_dir=work,
+            output_path=MANIFEST,
+            grac_cache=_load_grac_frequency_cache(),
+            memory_policy=MemoryPolicy(),
+            require_memory_self_test=True,
+        )
+        return int(result["completed"]), int(result["entry_count"])
+
+    from scripts.lexicon.runner.phase_cefr import (
+        apply_sealed_cefr_to_engine_cache,
+        cefr_candidate_words,
+        load_sealed_cefr_map,
+        sealed_cefr_precompute,
+    )
+    from scripts.lexicon.runner.phase_relations import (
+        extract_and_close_relations,
+        load_closed_relations_by_headword,
+    )
+    from scripts.lexicon.runner.side_db import (
+        BallaReverseSideDb,
+        DmklingerSideDb,
+        KaikkiSideDb,
+        build_balla_reverse_side_db,
+        build_dmklinger_side_db,
+        build_kaikki_side_db,
+    )
+    from scripts.lexicon.runner.stream_manifest import (
+        StreamingCandidateWriter,
+        stage_manifest_to_sqlite,
+        stream_manifest_entries_sqlite,
+    )
+
+    side_dir = ROOT / "data" / "lexicon" / "side"
+    side_dir.mkdir(parents=True, exist_ok=True)
+    work_dir = ROOT / "data" / "lexicon" / "runner_work"
+    work_dir.mkdir(parents=True, exist_ok=True)
+
+    staged = stage_manifest_to_sqlite(MANIFEST, work_dir / "staged_manifest.sqlite")
+    # Reviewed synonym verdicts are first-class corpus facts for the manifest.
     load_approved_synonym_verdicts(SOURCES_DB)
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
+    entries: list[dict[str, Any]] = []
     try:
         has_sum11_flags = _sum11_has_flag_columns(conn)
-        _prepare_cefr_estimates(conn, manifest)
-        pointer_synonym_relations = _definition_pointer_relations_by_headword(
+        balla_art = build_balla_reverse_side_db(
             conn,
-            manifest,
-            has_sum11_flags=has_sum11_flags,
+            side_dir / "balla_reverse.sqlite",
+            candidate_keys=_balla_reverse_candidate_keys,
+            headword_fn=_balla_reverse_headword,
+            segment_fn=_balla_reverse_definition_segments,
+            token_re=_BALLA_REVERSE_UKRAINIAN_TOKEN_RE,
         )
-        pointer_antonym_relations = _definition_antonym_relations_by_headword(
+        dmk_art = build_dmklinger_side_db(
             conn,
-            manifest,
-            has_sum11_flags=has_sum11_flags,
+            side_dir / "dmklinger.sqlite",
+            key_fn=_dmklinger_key,
         )
-        pointer_homonym_relations = _homonym_relations_by_headword(conn, manifest)
-        pointer_paronym_relations = _paronym_relations_by_headword(conn, manifest)
-        corpus_relations = _corpus_relation_pairs_by_headword(conn, manifest)
-        for entry in manifest["entries"]:
+        kaikki_art = build_kaikki_side_db(KAIKKI_LOOKUP, side_dir / "kaikki.sqlite")
+        _install_balla_side_db(BallaReverseSideDb(Path(balla_art.path)))
+        _install_dmklinger_side_db(DmklingerSideDb(Path(dmk_art.path)))
+        kaikki_lookup = KaikkiSideDb(Path(kaikki_art.path)).as_mapping_proxy()
+
+        entries = list(stream_manifest_entries_sqlite(Path(staged["path"])))
+        _normalize_manifest_entries({"entries": entries})
+
+        cefr_path = work_dir / "seals" / "cefr.sqlite"
+        unique_words = cefr_candidate_words(
+            (str(e.get("lemma") or "") for e in entries),
+            puls_cefr_fn=lambda lemma: _puls_cefr(conn, lemma),
+            grac_lookup_key_fn=_grac_lookup_key,
+        )
+        _ensure_grac_frequency_cache(unique_words)
+        sealed_cefr_precompute(
+            lemmas=(str(e.get("lemma") or "") for e in entries),
+            puls_cefr_fn=lambda lemma: _puls_cefr(conn, lemma),
+            grac_lookup_key_fn=_grac_lookup_key,
+            grac_cache=_load_grac_frequency_cache(),
+            output_db=cefr_path,
+        )
+        apply_sealed_cefr_to_engine_cache(load_sealed_cefr_map(cefr_path), _CEFR_ESTIMATE_LEVEL_BY_KEY)
+
+        headwords = _manifest_headwords({"entries": entries})
+        rel_path = work_dir / "seals" / "relations.sqlite"
+        extract_and_close_relations(
+            entries=entries,
+            extractors={
+                "synonym": lambda entry: _definition_pointer_relations(
+                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11_flags
+                ),
+                "antonym": lambda entry: _definition_antonym_relations(
+                    conn, str(entry.get("lemma") or ""), has_sum11_flags=has_sum11_flags
+                ),
+                "homonym": lambda entry: _homonym_relations(conn, str(entry.get("lemma") or "")),
+                "paronym": lambda entry: _paronym_relations(conn, str(entry.get("lemma") or "")),
+            },
+            headwords=headwords,
+            canonical_term_fn=_canonical_synonym_term,
+            vesum_valid_fn=_vesum_valid_synonym,
+            output_db=rel_path,
+            reciprocal_kinds=frozenset({"synonym", "antonym"}),
+        )
+        pointer_synonym_relations = load_closed_relations_by_headword(rel_path, kind="synonym")
+        pointer_antonym_relations = load_closed_relations_by_headword(rel_path, kind="antonym")
+        pointer_homonym_relations = load_closed_relations_by_headword(rel_path, kind="homonym")
+        pointer_paronym_relations = load_closed_relations_by_headword(rel_path, kind="paronym")
+        # Corpus pairs remain a separate map (same as legacy enrich); closure seal
+        # covers dictionary pointer reciprocity. Corpus edges are cohort-local.
+        corpus_relations = _corpus_relation_pairs_by_headword(conn, {"entries": entries})
+
+        for entry in entries:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
             corpus_for_entry = corpus_relations.get(entry_key or "", {})
             if enrich_entry(
@@ -6059,15 +6217,25 @@ def enrich() -> tuple[int, int]:
                 enriched += 1
     finally:
         conn.close()
+        _install_balla_side_db(None)
+        _install_dmklinger_side_db(None)
+        _BALLA_REVERSE_INDEX.clear()
+
     fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
-    manifest["enrichment_generated"] = True
-    manifest["manifest_fingerprint"] = {
-        "schema_version": fingerprint_payload["schema_version"],
-        "fingerprint": fingerprint_payload["fingerprint"],
-    }
-    manifest = _clean_html_entities_in_obj(manifest)
-    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return enriched, len(manifest["entries"])
+    with StreamingCandidateWriter(
+        MANIFEST,
+        meta={
+            "enrichment_generated": True,
+            "manifest_fingerprint": {
+                "schema_version": fingerprint_payload["schema_version"],
+                "fingerprint": fingerprint_payload["fingerprint"],
+            },
+            "cohort_digest": staged["cohort_digest"],
+        },
+    ) as writer:
+        for entry in entries:
+            writer.write_entry(_clean_html_entities_in_obj(entry))  # type: ignore[arg-type]
+    return enriched, len(entries)
 
 
 def main() -> None:
