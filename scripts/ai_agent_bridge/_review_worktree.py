@@ -872,9 +872,10 @@ class ProvisionedReviewWorktree:
                         f"review_clean_verdict_not_correct:{correctness or 'missing'}"
                     )
                 engine_key = engine.strip().lower().replace("-build", "")
+                inline_mode = f"{engine_key}-parent-inline-complete"
                 if (
-                    engine_key == "codex"
-                    and "codex-parent-inline-complete" in self.prompt_evidence_modes
+                    engine_key in {"codex", "claude"}
+                    and inline_mode in self.prompt_evidence_modes
                 ):
                     required_paths = _required_review_read_paths(
                         self.path,
@@ -1091,48 +1092,58 @@ class ProvisionedReviewWorktree:
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
-        if engine_key == "codex":
+        if engine_key in {"codex", "claude"}:
             inline_serialized, inline_proof = _inline_required_evidence(
                 self.path,
                 required_read_paths,
             )
-            read_protocol = {
-                "tool": "mcp__sealed_review__read_file",
-                "unit": "utf8_bytes",
-                "start_offset": 0,
-                "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
-                "continue_field": "next_offset",
-                "complete_field": "eof",
-                "codex_required_all_exec_form": (
-                    '// @exec: {"max_output_tokens":500000}\n'
-                    "const r=await tools.mcp__sealed_review__read_required_all({});"
-                    "text(JSON.stringify(r));"
-                ),
-                "codex_required_total_bytes": inline_proof["raw_bytes"],
-                "codex_required_total_limit": MAX_CODEX_REQUIRED_TOTAL_BYTES,
-                "codex_required_exec_form": (
-                    '// @exec: {"max_output_tokens":200000}\n'
-                    "const r=await tools.mcp__sealed_review__read_required("
-                    "{index:<next_index>,offset:<next_offset>});"
-                    "text(JSON.stringify(r));"
-                ),
-                "codex_required_start": {"index": 0, "offset": 0},
-                "codex_required_chunks_per_call": MAX_CODEX_REQUIRED_READ_CHUNKS,
-                "codex_exec_form": (
-                    "const r = await tools.mcp__sealed_review__read_file("
-                    '{path:"<required_path>",offset:<next_offset>,max_bytes:65536}); '
-                    "text(JSON.stringify(r));"
-                ),
-                "codex_exec_batch_form": (
-                    '// @exec: {"max_output_tokens":100000}\n'
-                    'const q=[["<required_path>",<next_offset>],...];'
-                    "for(const[p,o]of q){const r=await "
-                    "tools.mcp__sealed_review__read_file("
-                    "{path:p,offset:o,max_bytes:65536});text(JSON.stringify(r));}"
-                ),
-                "codex_exec_batch_limit": MAX_CODEX_SEALED_READ_BATCH,
-                "required_paths": list(required_read_paths),
-            }
+            if engine_key == "codex":
+                read_protocol = {
+                    "tool": "mcp__sealed_review__read_file",
+                    "unit": "utf8_bytes",
+                    "start_offset": 0,
+                    "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
+                    "continue_field": "next_offset",
+                    "complete_field": "eof",
+                    "codex_required_all_exec_form": (
+                        '// @exec: {"max_output_tokens":500000}\n'
+                        "const r=await tools.mcp__sealed_review__read_required_all({});"
+                        "text(JSON.stringify(r));"
+                    ),
+                    "codex_required_total_bytes": inline_proof["raw_bytes"],
+                    "codex_required_total_limit": MAX_CODEX_REQUIRED_TOTAL_BYTES,
+                    "codex_required_exec_form": (
+                        '// @exec: {"max_output_tokens":200000}\n'
+                        "const r=await tools.mcp__sealed_review__read_required("
+                        "{index:<next_index>,offset:<next_offset>});"
+                        "text(JSON.stringify(r));"
+                    ),
+                    "codex_required_start": {"index": 0, "offset": 0},
+                    "codex_required_chunks_per_call": MAX_CODEX_REQUIRED_READ_CHUNKS,
+                    "codex_exec_form": (
+                        "const r = await tools.mcp__sealed_review__read_file("
+                        '{path:"<required_path>",offset:<next_offset>,max_bytes:65536}); '
+                        "text(JSON.stringify(r));"
+                    ),
+                    "codex_exec_batch_form": (
+                        '// @exec: {"max_output_tokens":100000}\n'
+                        'const q=[["<required_path>",<next_offset>],...];'
+                        "for(const[p,o]of q){const r=await "
+                        "tools.mcp__sealed_review__read_file("
+                        "{path:p,offset:o,max_bytes:65536});text(JSON.stringify(r));}"
+                    ),
+                    "codex_exec_batch_limit": MAX_CODEX_SEALED_READ_BATCH,
+                    "required_paths": list(required_read_paths),
+                }
+            else:
+                read_protocol = {
+                    "tool": "Read",
+                    "unit": "lines",
+                    "start_offset": 1,
+                    "max_chunk_lines": MAX_BUILTIN_READ_LINES,
+                    "required_paths": [],
+                    "inline_required_paths": list(required_read_paths),
+                }
         else:
             for rel_path in required_read_paths:
                 try:
@@ -1169,7 +1180,7 @@ class ProvisionedReviewWorktree:
             },
             "changed_file_content_mode": (
                 "complete_inline_parent_bound"
-                if engine_key == "codex"
+                if engine_key in {"codex", "claude"}
                 else "complete_via_sealed_snapshot_read_tools"
             ),
             "sealed_snapshot_root": str(self.path),
@@ -1193,7 +1204,7 @@ class ProvisionedReviewWorktree:
             "read_protocol": read_protocol,
             "clean_verdict_gate": (
                 "parent_bound_inline_complete"
-                if engine_key == "codex"
+                if engine_key in {"codex", "claude"}
                 else "complete_tool_trace_coverage_required"
             ),
         }
@@ -1210,12 +1221,12 @@ class ProvisionedReviewWorktree:
                 f"serialized_bytes={serialized_bytes}:"
                 f"limit={MAX_REVIEW_PROMPT_EVIDENCE_BYTES}"
             )
-        codex_exec_instruction = (
-            "Codex receives every required manifest, patch, source, and test byte in "
+        inline_instruction = (
+            f"{engine_key.capitalize()} receives every required manifest, patch, source, and test byte in "
             "the parent-bound inline section below; inspect all files before verdict. "
             "Do not re-read those required paths with tools. The sealed tools remain "
             "available only for targeted unchanged-context proof. "
-            if engine_key == "codex"
+            if engine_key in {"codex", "claude"}
             else ""
         )
         prompt_evidence = (
@@ -1229,7 +1240,7 @@ class ProvisionedReviewWorktree:
             "use a detached worktree, git, gh, or other shell command. "
             "Use the parent-bound evidence transport declared by the dossier. A clean "
             "verdict is rejected unless the trusted receipt proves complete delivery. "
-            f"{codex_exec_instruction}"
+            f"{inline_instruction}"
             "The dossier "
             "authenticates those complete "
             "artifacts, and safe exact unchanged tracked text is available at its "
@@ -1256,7 +1267,7 @@ class ProvisionedReviewWorktree:
                 f"{inline_serialized}\n"
                 "END AUTHORITATIVE INLINE REVIEW CONTENT\n"
             )
-            self.prompt_evidence_modes.add("codex-parent-inline-complete")
+            self.prompt_evidence_modes.add(f"{engine_key}-parent-inline-complete")
         return prompt_evidence
 
 

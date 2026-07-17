@@ -265,8 +265,9 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     ]
     assert "codex-parent-inline-complete" in checkout.prompt_evidence_modes
 
-    with pytest.raises(review_worktree.ReviewWorktreeError, match="split_required:long_line"):
-        checkout.review_prompt_evidence("claude")
+    claude_prompt = checkout.review_prompt_evidence("claude")
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" in claude_prompt
+    assert "claude-parent-inline-complete" in checkout.prompt_evidence_modes
 
     small_checkout = _prompt_evidence_checkout(tmp_path / "snapshot-small")
     claude_line = next(
@@ -275,7 +276,8 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
         if line.startswith("{")
     )
     claude_dossier = json.loads(claude_line)
-    assert claude_dossier["changed_file_content_mode"] == ("complete_via_sealed_snapshot_read_tools")
+    assert claude_dossier["changed_file_content_mode"] == "complete_inline_parent_bound"
+    assert claude_dossier["clean_verdict_gate"] == "parent_bound_inline_complete"
     assert "content" not in claude_dossier["files"][0]
     grok_line = next(
         line
@@ -865,6 +867,46 @@ def test_bind_clean_codex_review_accepts_parent_bound_inline_complete_prompt(
             isolation_prompt_transport="stdin",
         ),
         engine="codex",
+    )
+
+    assert checkout.isolation is not None
+    proof = checkout.isolation["acceptance"]["evidence_reads"]
+    assert proof["mode"] == "parent_bound_inline_complete"
+    assert proof["covered_path_count"] == 3
+
+
+def test_bind_clean_claude_review_accepts_parent_bound_inline_complete_prompt(
+    tmp_path: Path,
+) -> None:
+    checkout = replace(
+        _prompt_evidence_checkout(tmp_path / "claude-inline-clean"),
+        evidence_binder=review_worktree.ReviewIsolationEvidenceBinder(),
+        isolation={},
+    )
+    prompt = checkout.review_prompt_evidence("claude")
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" in prompt
+    clean = json.dumps(
+        {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "correct",
+                "explanation": "No defects found after complete inline review.",
+                "confidence": 0.95,
+            },
+            "findings": [],
+        }
+    )
+    checkout.bind_review_result(
+        SimpleNamespace(
+            ok=True,
+            response=clean,
+            tool_calls=[],
+            isolation_evidence={"schema_version": "fixture"},
+            isolation_capability_digest="a" * 64,
+            isolation_prompt_digest=hashlib.sha256(prompt.encode()).hexdigest(),
+            isolation_prompt_transport="stdin",
+        ),
+        engine="claude",
     )
 
     assert checkout.isolation is not None
