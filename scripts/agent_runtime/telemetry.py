@@ -368,7 +368,15 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
         return cursor_cli_version(prefix)
     if agent_name == "kimi":
-        prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("kimi",)
+        if plan is not None and plan.cmd:
+            bin_path = plan.cmd[0]
+        else:
+            try:
+                from .adapters.kimi import _resolve_kimi_binary
+                bin_path = _resolve_kimi_binary()
+            except Exception:
+                bin_path = "kimi"
+        prefix = (bin_path,)
         return kimi_cli_version(prefix)
     from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
 
