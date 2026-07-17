@@ -749,6 +749,12 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
                     "arguments": {"index": 0, "offset": 0},
                 },
             },
+            {
+                "jsonrpc": "2.0",
+                "id": 6,
+                "method": "tools/call",
+                "params": {"name": "read_required_all", "arguments": {}},
+            },
         )
     )
     completed = subprocess.run(
@@ -763,6 +769,7 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
         "list_files",
         "read_file",
         "read_required",
+        "read_required_all",
         "search_text",
     }
     content = json.loads(responses[2]["result"]["content"][0]["text"])
@@ -775,6 +782,13 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
         "safe.py",
     ]
     assert required["eof"] is True
+    required_all = json.loads(responses[5]["result"]["content"][0]["text"])
+    assert [chunk["path"] for chunk in required_all["chunks"]] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+        "safe.py",
+    ]
+    assert required_all["eof"] is True
 
 
 def test_codex_sealed_reader_returns_bounded_hash_bound_chunks(tmp_path: Path) -> None:

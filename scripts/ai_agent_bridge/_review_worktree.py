@@ -69,7 +69,9 @@ MAX_BUILTIN_READ_LINES = 2000
 MAX_BUILTIN_READ_LINE_BYTES = 2000
 MAX_SEALED_REVIEW_FILE_BYTES = 16 * 1024 * 1024
 MAX_SEALED_REVIEW_TOTAL_BYTES = 64 * 1024 * 1024
-MAX_CODEX_NESTED_READ_RESULT_CHARS = SEALED_READ_CHUNK_BYTES * 16 + 4096
+MAX_CODEX_REQUIRED_TOTAL_BYTES = 2 * 1024 * 1024
+MAX_CODEX_REQUIRED_ALL_CHUNKS = 64
+MAX_CODEX_NESTED_READ_RESULT_CHARS = MAX_CODEX_REQUIRED_TOTAL_BYTES * 8 + 4096
 MAX_CODEX_SEALED_READ_EXEC_CHARS = 4096
 MAX_CODEX_SEALED_READ_BATCH = 4
 MAX_CODEX_REQUIRED_READ_CHUNKS = 6
@@ -97,6 +99,12 @@ _CODEX_SEALED_REQUIRED_READ_RE = re.compile(
     r"""\A//\s*@exec:\s*\{"max_output_tokens":200000\}\s*
     const\s+r=await\s+tools\.mcp__sealed_review__read_required
     \(\{index:(?P<index>[0-9]{1,8}),offset:(?P<offset>[0-9]{1,20})\}\);
+    text\(JSON\.stringify\(r\)\);\s*\Z""",
+    re.VERBOSE,
+)
+_CODEX_SEALED_REQUIRED_ALL_RE = re.compile(
+    r"""\A//\s*@exec:\s*\{"max_output_tokens":500000\}\s*
+    const\s+r=await\s+tools\.mcp__sealed_review__read_required_all\(\{\}\);
     text\(JSON\.stringify\(r\)\);\s*\Z""",
     re.VERBOSE,
 )
@@ -201,7 +209,7 @@ def _mcp_chunk_payloads(result: Any) -> list[dict[str, Any]]:
     payloads: list[dict[str, Any]] = []
 
     def visit(candidate: Any, *, depth: int) -> None:
-        if depth > 12 or len(payloads) >= 8:
+        if depth > 12 or len(payloads) >= MAX_CODEX_REQUIRED_ALL_CHUNKS:
             return
         if isinstance(candidate, dict):
             if {
@@ -222,7 +230,7 @@ def _mcp_chunk_payloads(result: Any) -> list[dict[str, Any]]:
                     visit(candidate[key], depth=depth + 1)
             return
         if isinstance(candidate, list):
-            for item in candidate[:16]:
+            for item in candidate[: MAX_CODEX_REQUIRED_ALL_CHUNKS * 2]:
                 visit(item, depth=depth + 1)
             return
         if isinstance(candidate, str) and len(candidate) <= MAX_CODEX_NESTED_READ_RESULT_CHARS:
@@ -306,6 +314,44 @@ def _required_stream_requests(
     return requests
 
 
+def _all_required_requests(
+    *, evidence_root: Path, required_paths: tuple[str, ...]
+) -> list[dict[str, Any]]:
+    """Derive every bounded chunk for one all-required sealed read."""
+    total_bytes = sum((evidence_root / rel_path).stat().st_size for rel_path in required_paths)
+    if total_bytes > MAX_CODEX_REQUIRED_TOTAL_BYTES:
+        return []
+    requests: list[dict[str, Any]] = []
+    for rel_path in required_paths:
+        data = (evidence_root / rel_path).read_bytes()
+        offset = 0
+        while True:
+            end = min(len(data), offset + SEALED_READ_CHUNK_BYTES)
+            while end > offset:
+                try:
+                    data[offset:end].decode("utf-8", errors="strict")
+                    break
+                except UnicodeDecodeError as exc:
+                    if exc.reason != "unexpected end of data":
+                        return []
+                    end -= 1
+            requests.append(
+                {
+                    "path": rel_path,
+                    "offset": offset,
+                    "max_bytes": SEALED_READ_CHUNK_BYTES,
+                }
+            )
+            if len(requests) > MAX_CODEX_REQUIRED_ALL_CHUNKS:
+                return []
+            if end == len(data):
+                break
+            if end <= offset:
+                return []
+            offset = end
+    return requests
+
+
 def _codex_sealed_read_requests(
     call: dict[str, Any], *, evidence_root: Path, required_paths: tuple[str, ...]
 ) -> list[dict[str, Any]]:
@@ -333,6 +379,13 @@ def _codex_sealed_read_requests(
             index=arguments.get("index", 0),
             offset=arguments.get("offset", 0),
         )
+    if name == "read_required_all" or name.endswith(
+        "sealed_review__read_required_all"
+    ) or name.endswith("sealed_review.read_required_all"):
+        return _all_required_requests(
+            evidence_root=evidence_root,
+            required_paths=required_paths,
+        )
     if name != "exec":
         return []
     raw = arguments.get("_raw")
@@ -358,6 +411,11 @@ def _codex_sealed_read_requests(
             required_paths=required_paths,
             index=int(required_match.group("index")),
             offset=int(required_match.group("offset")),
+        )
+    if _CODEX_SEALED_REQUIRED_ALL_RE.fullmatch(raw) is not None:
+        return _all_required_requests(
+            evidence_root=evidence_root,
+            required_paths=required_paths,
         )
     batch_match = _CODEX_SEALED_READ_BATCH_RE.fullmatch(raw)
     if batch_match is None:
@@ -955,6 +1013,15 @@ class ProvisionedReviewWorktree:
         required_read_paths = _required_review_read_paths(self.path, self.changed_paths)
         _validate_review_read_sizes(self.path, required_read_paths)
         if engine_key == "codex":
+            required_total_bytes = sum(
+                (self.path / rel_path).stat().st_size for rel_path in required_read_paths
+            )
+            if required_total_bytes > MAX_CODEX_REQUIRED_TOTAL_BYTES:
+                raise ReviewWorktreeError(
+                    "review_evidence_split_required:"
+                    f"codex_total_bytes={required_total_bytes}:"
+                    f"limit={MAX_CODEX_REQUIRED_TOTAL_BYTES}"
+                )
             read_protocol = {
                 "tool": "mcp__sealed_review__read_file",
                 "unit": "utf8_bytes",
@@ -962,6 +1029,13 @@ class ProvisionedReviewWorktree:
                 "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
                 "continue_field": "next_offset",
                 "complete_field": "eof",
+                "codex_required_all_exec_form": (
+                    '// @exec: {"max_output_tokens":500000}\n'
+                    "const r=await tools.mcp__sealed_review__read_required_all({});"
+                    "text(JSON.stringify(r));"
+                ),
+                "codex_required_total_bytes": required_total_bytes,
+                "codex_required_total_limit": MAX_CODEX_REQUIRED_TOTAL_BYTES,
                 "codex_required_exec_form": (
                     '// @exec: {"max_output_tokens":200000}\n'
                     "const r=await tools.mcp__sealed_review__read_required("
@@ -1055,10 +1129,10 @@ class ProvisionedReviewWorktree:
                 f"limit={MAX_REVIEW_PROMPT_EVIDENCE_BYTES}"
             )
         codex_exec_instruction = (
-            "Codex must use read_protocol.codex_required_exec_form first with "
-            "codex_required_start, then repeat only with the returned next_index and "
-            "next_offset until eof=true. Do not run a tool-discovery cell. The "
-            "path-based exec forms are fallback-only if read_required returns an error. "
+            "Codex must execute read_protocol.codex_required_all_exec_form exactly "
+            "once before reviewing and must not run a tool-discovery cell. The result "
+            "contains every required path and chunk with eof=true. A tool error means "
+            "the review scope must be split; do not substitute a partial clean verdict. "
             if engine_key == "codex"
             else ""
         )

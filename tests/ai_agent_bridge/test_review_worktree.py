@@ -449,6 +449,56 @@ def _codex_required_read_calls(
     return calls
 
 
+def _codex_required_all_call(
+    checkout: review_worktree.ProvisionedReviewWorktree,
+) -> dict[str, object]:
+    direct_calls = _codex_read_calls(checkout)
+    required = review_worktree._required_review_read_paths(checkout.path, checkout.changed_paths)
+    chunks: list[dict[str, object]] = []
+    for direct in direct_calls:
+        wrapped = direct["result"]
+        assert isinstance(wrapped, dict)
+        content = wrapped["content"]
+        assert isinstance(content, list)
+        chunks.append(json.loads(content[0]["text"]))
+    total_bytes = sum((checkout.path / rel_path).stat().st_size for rel_path in required)
+    outer_payload = {
+        "required_path_count": len(required),
+        "total_bytes": total_bytes,
+        "eof": True,
+        "chunks": chunks,
+    }
+    wrapped_result = {
+        "content": [
+            {
+                "type": "text",
+                "text": json.dumps(outer_payload, separators=(",", ":")),
+            }
+        ],
+        "isError": False,
+    }
+    return {
+        "name": "exec",
+        "arguments": {
+            "_raw": (
+                '// @exec: {"max_output_tokens":500000}\n'
+                "const r=await tools.mcp__sealed_review__read_required_all({});"
+                "text(JSON.stringify(r));"
+            )
+        },
+        "result": [
+            {
+                "type": "input_text",
+                "text": "Script completed\nWall time 0.0 seconds\nOutput:\n",
+            },
+            {
+                "type": "input_text",
+                "text": json.dumps(wrapped_result, separators=(",", ":")),
+            },
+        ],
+    }
+
+
 def test_clean_review_requires_complete_hash_bound_tool_reads(tmp_path: Path) -> None:
     checkout = _prompt_evidence_checkout(tmp_path / "read-proof")
     calls = _codex_read_calls(checkout)
@@ -546,7 +596,6 @@ def test_codex_exec_read_trace_accepts_only_canonical_nested_mcp_calls(tmp_path:
     assert proof["covered_path_count"] == 3
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_exec_form" in prompt
-    assert "path-based exec forms are fallback-only" in prompt
 
 
 def test_codex_batch_exec_trace_accepts_bounded_hash_bound_reads(tmp_path: Path) -> None:
@@ -564,7 +613,6 @@ def test_codex_batch_exec_trace_accepts_bounded_hash_bound_reads(tmp_path: Path)
     assert len(calls) == 1
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_exec_batch_form" in prompt
-    assert "Do not run a tool-discovery cell" in prompt
 
 
 def test_codex_required_exec_trace_covers_authoritative_stream(tmp_path: Path) -> None:
@@ -582,7 +630,64 @@ def test_codex_required_exec_trace_covers_authoritative_stream(tmp_path: Path) -
     assert len(calls) == 1
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_required_exec_form" in prompt
-    assert "repeat only with the returned next_index" in prompt
+
+
+def test_codex_required_all_exec_trace_covers_scope_once(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-required-all-proof")
+    call = _codex_required_all_call(checkout)
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=[call]),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["covered_path_count"] == 3
+    prompt = checkout.review_prompt_evidence("codex")
+    assert "codex_required_all_exec_form" in prompt
+    assert "exactly once before reviewing" in prompt
+
+
+@pytest.mark.parametrize(
+    "mutate_raw",
+    [
+        lambda raw: raw.replace("500000", "10000", 1),
+        lambda raw: raw.replace("read_required_all", "read_required", 1),
+        lambda raw: raw + "notify('forged');",
+    ],
+)
+def test_codex_required_all_exec_trace_rejects_noncanonical_javascript(
+    tmp_path: Path,
+    mutate_raw,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-required-all-rejected")
+    call = _codex_required_all_call(checkout)
+    arguments = call["arguments"]
+    assert isinstance(arguments, dict)
+    raw = arguments["_raw"]
+    assert isinstance(raw, str)
+    arguments["_raw"] = mutate_raw(raw)
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=[call]),
+            engine="codex",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
+
+
+def test_codex_required_all_derivation_rejects_oversized_scope(tmp_path: Path) -> None:
+    root = tmp_path / "oversized"
+    root.mkdir()
+    large = root / "large.txt"
+    large.write_bytes(b"x" * (review_worktree.MAX_CODEX_REQUIRED_TOTAL_BYTES + 1))
+
+    assert review_worktree._all_required_requests(
+        evidence_root=root,
+        required_paths=("large.txt",),
+    ) == []
 
 
 @pytest.mark.parametrize(
