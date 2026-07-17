@@ -3258,6 +3258,45 @@ def test_branch_capture_rejects_oversized_changed_blob_before_read(tmp_path: Pat
         )
 
 
+def test_copy_detection_rejects_excessive_similarity_work_before_search(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    import scripts.review.snapshot as snapshot_module
+
+    calls: list[tuple[str, ...]] = []
+
+    def fake_capped(
+        _git: Path,
+        args: list[str],
+        *,
+        cwd: Path,
+        max_bytes: int,
+        timeout_seconds: float = 30.0,
+    ) -> bytes:
+        _ = (cwd, max_bytes, timeout_seconds)
+        calls.append(tuple(args))
+        if args[:2] == ["diff", "--name-status"]:
+            assert "--find-copies-harder" not in args
+            return b"A\0one.txt\0A\0two.txt\0"
+        if args[0] == "ls-tree":
+            return b"source-a\0source-b\0"
+        raise AssertionError(f"unexpected command: {args}")
+
+    monkeypatch.setattr(snapshot_module, "_run_git_bytes_capped", fake_capped)
+    monkeypatch.setattr(snapshot_module, "MAX_COPY_DETECTION_COMPARISONS", 3)
+
+    with pytest.raises(ReviewSnapshotError, match="copy_detection_too_expensive"):
+        snapshot_module.derive_changed_paths_and_patch(
+            tmp_path,
+            base_sha="a" * 40,
+            head_sha="b" * 40,
+            git_bin=Path("/usr/bin/git"),
+        )
+
+    assert len(calls) == 2
+
+
 def test_local_capture_refuses_untracked_nested_repository(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()

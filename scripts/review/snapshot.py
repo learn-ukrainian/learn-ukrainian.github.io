@@ -30,6 +30,7 @@ import shutil
 import stat
 import subprocess
 import tempfile
+import threading
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -64,6 +65,8 @@ DIAG_EVIDENCE_TOO_LARGE = "review_evidence_too_large"
 
 MAX_CHANGED_FILE_BYTES = 16 * 1024 * 1024
 MAX_CHANGED_EVIDENCE_BYTES = 64 * 1024 * 1024
+MAX_COPY_DETECTION_COMPARISONS = 1_000_000
+GIT_EVIDENCE_TIMEOUT_SECONDS = 30.0
 
 
 def _is_git_binary_marker_line(line: bytes) -> bool:
@@ -326,6 +329,7 @@ def _run_git_bytes_capped(
     *,
     cwd: Path,
     max_bytes: int,
+    timeout_seconds: float = GIT_EVIDENCE_TIMEOUT_SECONDS,
 ) -> bytes:
     """Stream Git stdout into a bounded buffer and fail before unbounded RAM use."""
     cmd = [
@@ -355,6 +359,16 @@ def _run_git_bytes_capped(
         )
         chunks: list[bytes] = []
         total = 0
+        timed_out = threading.Event()
+
+        def _kill_on_timeout() -> None:
+            timed_out.set()
+            with contextlib.suppress(OSError, ProcessLookupError):
+                proc.kill()
+
+        timer = threading.Timer(timeout_seconds, _kill_on_timeout)
+        timer.daemon = True
+        timer.start()
         try:
             assert proc.stdout is not None
             while True:
@@ -368,6 +382,8 @@ def _run_git_bytes_capped(
                     raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:git_output")
                 chunks.append(chunk)
             returncode = proc.wait()
+            if timed_out.is_set():
+                raise ReviewSnapshotError(f"{DIAG_EVIDENCE_TOO_LARGE}:git_timeout")
             stderr_file.seek(0)
             detail = stderr_file.read().decode("utf-8", errors="replace").strip()
             if returncode != 0:
@@ -381,6 +397,8 @@ def _run_git_bytes_capped(
             with contextlib.suppress(OSError):
                 proc.wait(timeout=5)
             raise
+        finally:
+            timer.cancel()
 
 
 def resolve_head_identity(
@@ -471,12 +489,24 @@ def _neutral_local_git_view(
             f"{objects_dir.resolve()}\n",
             encoding="utf-8",
         )
-        yield [
+        neutral_git = [
             f"--git-dir={neutral}",
             f"--work-tree={repo_root}",
             "-c",
             "core.bare=false",
         ]
+        # Rewriting the copied index changes its own timestamp while retaining
+        # entry stat data. Force Git to recheck content so same-size edits
+        # cannot be misclassified as clean, especially with split indexes.
+        refreshed = _run_git(
+            git_bin,
+            [*neutral_git, "update-index", "--really-refresh"],
+            cwd=repo_root,
+            check=False,
+        )
+        if refreshed.returncode not in {0, 1}:
+            raise ReviewSnapshotError("neutral_git_refresh_failed")
+        yield neutral_git
     finally:
         shutil.rmtree(neutral_parent, ignore_errors=True)
 
@@ -1144,22 +1174,70 @@ def derive_changed_paths_and_patch(
     if not re_full_sha(base_sha) or not re_full_sha(head_sha):
         raise ReviewSnapshotError("invalid_sha_for_diff")
 
-    # Raw name-status with renames (null-separated).
-    ns_bytes = _run_git_bytes_capped(
+    # First identify additions without exhaustive copy search. Copy detection
+    # is enabled only when needed and only below a fixed similarity-work cap.
+    preliminary_ns = _run_git_bytes_capped(
         git,
         [
             "diff",
             "--name-status",
             "-z",
             "--find-renames",
-            "--find-copies",
-            "--find-copies-harder",
             base_sha,
             head_sha,
         ],
         cwd=root,
         max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
     )
+    try:
+        preliminary_text = preliminary_ns.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ReviewSnapshotError("malformed_name_status_encoding") from exc
+    preliminary_tokens = [token for token in preliminary_text.split("\0") if token]
+    additions = 0
+    token_index = 0
+    while token_index < len(preliminary_tokens):
+        status = preliminary_tokens[token_index]
+        token_index += 1
+        if not status:
+            continue
+        if status[0] == "A":
+            additions += 1
+        path_count = 2 if status[0] in {"R", "C"} else 1
+        if token_index + path_count > len(preliminary_tokens):
+            raise ReviewSnapshotError("malformed_name_status")
+        token_index += path_count
+
+    ns_bytes = preliminary_ns
+    if additions:
+        base_tree = _run_git_bytes_capped(
+            git,
+            ["ls-tree", "-r", "-z", "--name-only", base_sha],
+            cwd=root,
+            max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
+        )
+        source_candidates = sum(bool(path) for path in base_tree.split(b"\0"))
+        comparisons = additions * source_candidates
+        if comparisons > MAX_COPY_DETECTION_COMPARISONS:
+            raise ReviewSnapshotError(
+                "copy_detection_too_expensive:"
+                f"additions={additions}:sources={source_candidates}:comparisons={comparisons}"
+            )
+        ns_bytes = _run_git_bytes_capped(
+            git,
+            [
+                "diff",
+                "--name-status",
+                "-z",
+                "--find-renames",
+                "--find-copies",
+                "--find-copies-harder",
+                base_sha,
+                head_sha,
+            ],
+            cwd=root,
+            max_bytes=MAX_CHANGED_EVIDENCE_BYTES,
+        )
     try:
         ns_text = ns_bytes.decode("utf-8", errors="strict")
     except UnicodeDecodeError as exc:
@@ -1208,8 +1286,6 @@ def derive_changed_paths_and_patch(
             "--raw",
             "-z",
             "--find-renames",
-            "--find-copies",
-            "--find-copies-harder",
             base_sha,
             head_sha,
         ],
@@ -1252,8 +1328,6 @@ def derive_changed_paths_and_patch(
             "diff",
             "--binary",
             "--find-renames",
-            "--find-copies",
-            "--find-copies-harder",
             "--no-ext-diff",
             "--no-textconv",
             base_sha,
