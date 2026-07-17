@@ -14,16 +14,18 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.guardrails import primary_write_guard as pwg
 
+# Mirror of scripts.common.git_context.GIT_REDIRECT_ENV_KEYS — keep in sync.
 _GIT_ENV = {
     "GIT_DIR",
     "GIT_WORK_TREE",
     "GIT_INDEX_FILE",
+    "GIT_PREFIX",
+    "GIT_COMMON_DIR",
     "GIT_OBJECT_DIRECTORY",
     "GIT_ALTERNATE_OBJECT_DIRECTORIES",
     "GIT_NAMESPACE",
     "GIT_CEILING_DIRECTORIES",
     "GIT_DISCOVERY_ACROSS_FILESYSTEM",
-    "GIT_COMMON_DIR",
 }
 
 
@@ -243,10 +245,16 @@ def test_install_hooks(temp_git_repo, monkeypatch):
     pwg.install_hooks()
 
     hooks_dir = main_dir / ".git" / "hooks"
-    for hook_name in ["post-merge", "post-checkout", "post-commit"]:
+    for hook_name in ["post-merge"]:
         hook_path = hooks_dir / hook_name
         assert hook_path.exists()
         content = hook_path.read_text(encoding="utf-8")
         assert "# AGY_PRIMARY_WRITE_GUARD_START" in content
         assert "primary_write_guard.py apply --hook" in content
         assert os.access(hook_path, os.X_OK)
+    # Review #5399: post-checkout / post-commit deliberately NOT installed
+    # (per-operation O(tracked) scan; post-commit touches no working files).
+    for hook_name in ["post-checkout", "post-commit"]:
+        hook_path = hooks_dir / hook_name
+        if hook_path.exists():
+            assert "# AGY_PRIMARY_WRITE_GUARD_START" not in hook_path.read_text(encoding="utf-8")

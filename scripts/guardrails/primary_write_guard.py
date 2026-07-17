@@ -33,10 +33,12 @@ except ImportError:
         from common.git_context import sanitized_git_env  # type: ignore[import-not-found]
     except ImportError:
         def sanitized_git_env() -> dict[str, str]:
+            # Mirror of scripts.common.git_context.GIT_REDIRECT_ENV_KEYS — keep in sync.
             _GIT_ENV = {
-                "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
-                "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
-                "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR"
+                "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX",
+                "GIT_COMMON_DIR", "GIT_OBJECT_DIRECTORY",
+                "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE",
+                "GIT_CEILING_DIRECTORIES", "GIT_DISCOVERY_ACROSS_FILESYSTEM",
             }
             return {k: v for k, v in os.environ.items() if k not in _GIT_ENV}
 
@@ -111,7 +113,13 @@ def get_writable_tracked_files(main_root: Path) -> list[Path]:
 
 
 def apply_guard(hook_mode: bool = False) -> None:
-    """Make all tracked files read-only (chmod a-w)."""
+    """Make all tracked files read-only (chmod a-w).
+
+    Note the deliberate asymmetry with :func:`release_guard`: apply strips ALL
+    write bits (u,g,o), release restores only the owner bit (u+w). A file that
+    was group-writable before the first apply stays group-read-only after a
+    release — accepted metadata loss; only the owner needs write access here.
+    """
     main_root = check_primary_checkout_root(hook_mode=hook_mode)
 
     try:
@@ -152,7 +160,7 @@ def apply_guard(hook_mode: bool = False) -> None:
 
 
 def release_guard() -> None:
-    """Restore write permission on tracked files (chmod u+w)."""
+    """Restore write permission on tracked files (chmod u+w only — see apply_guard docstring)."""
     main_root = check_primary_checkout_root(hook_mode=False)
 
     try:
@@ -237,7 +245,12 @@ def install_hooks() -> None:
             print(f"Error creating hooks directory: {e}", file=sys.stderr)
             sys.exit(1)
 
-    hook_names = ["post-merge", "post-checkout", "post-commit"]
+    # post-merge ONLY (review #5399): `git pull`/merge is the one automation path
+    # that (re)creates tracked files with write bits, so re-apply there. post-commit
+    # never touches working-tree files, and post-checkout would add an O(tracked)
+    # lstat scan to every checkout for a path that branch-switch guards already
+    # cover in the primary. Opt-in manually via `apply` if ever needed.
+    hook_names = ["post-merge"]
     hook_command = (
         "\n# AGY_PRIMARY_WRITE_GUARD_START\n"
         'if [ -f "scripts/guardrails/primary_write_guard.py" ]; then\n'
