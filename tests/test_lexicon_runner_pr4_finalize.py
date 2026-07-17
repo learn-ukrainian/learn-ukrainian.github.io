@@ -19,6 +19,7 @@ from scripts.lexicon.runner.deterministic_zip import (
 )
 from scripts.lexicon.runner.finalize import (
     ASSEMBLY_RSS_CEILING_BYTES,
+    FinalizeError,
     FinalizeLock,
     _safe_rss_bytes,
     assemble_version_tree,
@@ -412,7 +413,7 @@ def test_fingerprint_mismatch_refuses_publication(ledger: Ledger, tmp_path: Path
 
 
 def test_rss_ceiling_constant_and_probe(ledger: Ledger, tmp_path: Path) -> None:
-    """Criterion 2 / V2: 200 MiB RSS ceiling asserted during assembly."""
+    """Criterion 2 / V2: 200 MiB incremental assembly RSS ceiling (delta, not process total)."""
     assert ASSEMBLY_RSS_CEILING_BYTES == 200 * 1024 * 1024
     arts = tmp_path / "arts"
     run, _fp = _seed_sealed_run(
@@ -431,13 +432,93 @@ def test_rss_ceiling_constant_and_probe(ledger: Ledger, tmp_path: Path) -> None:
         assert_rss_ceiling=True,
     )
     assert result.ok, result.detail
-    # Peak may be None if the platform RSS probe is unavailable; when present it
-    # must stay under the 200 MiB ceiling.
+    # peak_rss_bytes is the assembly *delta*; process absolute may already be large.
     if result.peak_rss_bytes is not None:
         assert result.peak_rss_bytes < ASSEMBLY_RSS_CEILING_BYTES
-    rss = _safe_rss_bytes()
-    if rss is not None:
-        assert rss < ASSEMBLY_RSS_CEILING_BYTES
+    if result.peak_rss_delta_bytes is not None:
+        assert result.peak_rss_delta_bytes < ASSEMBLY_RSS_CEILING_BYTES
+        assert result.peak_rss_bytes == result.peak_rss_delta_bytes
+    if result.baseline_rss_bytes is not None and result.peak_rss_delta_bytes is not None:
+        assert result.baseline_rss_bytes >= 0
+        assert result.peak_rss_delta_bytes >= 0
+    # Dry-run report mirrors assembly metrics after a successful finalize.
+    assert result.dry_run is not None
+    assert result.dry_run.rss_ceiling_bytes == ASSEMBLY_RSS_CEILING_BYTES
+    if result.dry_run.peak_rss_delta_bytes is not None:
+        assert result.dry_run.peak_rss_delta_bytes == result.peak_rss_delta_bytes
+
+
+def test_rss_ceiling_delta_ignores_preexisting_process_ballast(
+    ledger: Ledger, tmp_path: Path
+) -> None:
+    """Regression: ~300 MiB process ballast before finalize must not trip the gate.
+
+    Proves the ceiling applies to assembly delta (peak − baseline), not whole-
+    process RSS. Without delta semantics, a pytest-xdist worker that already
+    holds a large high-water mark would false-fail small payloads.
+    """
+    arts = tmp_path / "arts"
+    run, _fp = _seed_sealed_run(ledger, arts, lemmas=["tiny-a", "tiny-b"], cohort="rss-delta")
+    # Touch pages so the OS actually accounts the ballast in ru_maxrss.
+    ballast_size = 300 * 1024 * 1024
+    ballast = bytearray(ballast_size)
+    for i in range(0, ballast_size, 4096):
+        ballast[i] = 1
+    try:
+        pre = _safe_rss_bytes()
+        # Process high-water should reflect ballast when the probe works.
+        if pre is not None:
+            assert pre >= ballast_size // 2, (
+                f"expected process RSS high-water ≥ ~150 MiB after ballast, got {pre}"
+            )
+        result = finalize_run(
+            ledger=ledger,
+            run_id=run,
+            artifacts_dir=arts,
+            out_dir=tmp_path / "out-delta",
+            grant_first_run_escape=True,
+            verify_vendor=False,
+            assert_rss_ceiling=True,
+        )
+        assert result.ok, result.detail
+        assert result.peak_rss_delta_bytes is not None
+        assert result.peak_rss_delta_bytes < ASSEMBLY_RSS_CEILING_BYTES
+        assert result.peak_rss_bytes == result.peak_rss_delta_bytes
+        # Absolute process sample remains large; only delta is gated.
+        if pre is not None and result.baseline_rss_bytes is not None:
+            assert result.baseline_rss_bytes >= ballast_size // 2
+    finally:
+        del ballast
+
+
+def test_rss_ceiling_trips_on_assembly_overuse(ledger: Ledger, tmp_path: Path) -> None:
+    """Genuine overuse: small ceiling override trips on a large synthetic payload."""
+    arts = tmp_path / "arts"
+    # One ~32 MiB lemma body forces assembly high-water growth well past 1 MiB.
+    huge = "x" * (32 * 1024 * 1024)
+    run, fp = _seed_sealed_run(ledger, arts, lemmas=["huge"], cohort="rss-overuse")
+    lemma_path = arts / "chunk-0" / "huge.json"
+    entry = {"lemma": "huge", "url_slug": "huge", "gloss": huge}
+    lemma_path.write_text(
+        json.dumps(entry, ensure_ascii=False, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    tree_root = tmp_path / "out-overuse" / "tree"
+    tree_root.mkdir(parents=True)
+    small_ceiling = 1 * 1024 * 1024  # 1 MiB incremental cap
+    with pytest.raises(FinalizeError, match=r"assembly RSS delta .* exceeded ceiling"):
+        assemble_version_tree(
+            ledger=ledger,
+            run_id=run,
+            fingerprint=fp,
+            artifacts_dir=arts,
+            tree_root=tree_root,
+            prior_version_dir=None,
+            grant_first_run_escape=True,
+            first_run_escape_reason="test",
+            assert_rss_ceiling=True,
+            rss_ceiling_bytes=small_ceiling,
+        )
 
 
 def test_deterministic_zip_writer_pin() -> None:

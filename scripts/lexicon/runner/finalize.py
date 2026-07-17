@@ -57,16 +57,24 @@ from scripts.lexicon.runner.ledger import (
     Ledger,
 )
 
-# Peak RSS ceiling for streaming assembly (PR4 criterion 2 / V2).
+# Incremental assembly RSS ceiling (PR4 criterion 2 / V2).
+#
+# The OS-level absolute process cap belongs to the runner's hard-capped
+# subprocess invocation (PR-1 pattern via ``run_capped_worker`` / memory
+# enforcement). This in-process gate only bounds INCREMENTAL assembly usage:
+# peak process high-water during assembly minus the baseline sampled at
+# finalize/assembly start. It must not compare absolute process RSS (which in
+# CI pytest-xdist workers already exceeds 200 MiB after unrelated tests).
 ASSEMBLY_RSS_CEILING_BYTES = 200 * 1024 * 1024  # 200 MiB
 
 
 def _safe_rss_bytes() -> int | None:
-    """Best-effort RSS for the 200 MiB assembly ceiling (telemetry + test assertion).
+    """Best-effort process high-water RSS sample (stdlib ``getrusage`` only).
 
-    Avoids the Darwin ctypes ``getrusage`` path in ``memory.current_rss_bytes``
-    (incorrect timeval layout → SIGSEGV under load). Uses stdlib
-    ``resource.getrusage`` only, with Linux KB→bytes conversion.
+    Used to compute assembly *delta* (sample − baseline at finalize start), not
+    as an absolute ceiling. Avoids the Darwin ctypes ``getrusage`` path in
+    ``memory.current_rss_bytes`` (incorrect timeval layout → SIGSEGV under
+    load). Linux reports KiB; macOS/BSD report bytes.
     """
     import platform
     import resource
@@ -129,6 +137,11 @@ class DryRunReport:
     first_run_escape_available: bool = False
     data_version_preview: str | None = None
     zip_writer_pin: dict[str, Any] = field(default_factory=lambda: dict(ZIP_WRITER_PIN))
+    # RSS telemetry: absolute high-water samples + assembly-attributed delta.
+    # ``peak_rss_bytes`` is the assembly delta (same as ``peak_rss_delta_bytes``)
+    # so operator surfaces and historical field names report the gated quantity.
+    baseline_rss_bytes: int | None = None
+    peak_rss_delta_bytes: int | None = None
     peak_rss_bytes: int | None = None
     rss_ceiling_bytes: int = ASSEMBLY_RSS_CEILING_BYTES
 
@@ -147,7 +160,9 @@ class FinalizeResult:
     tree_root: str | None = None
     detail: str = ""
     dry_run: DryRunReport | None = None
-    peak_rss_bytes: int | None = None
+    baseline_rss_bytes: int | None = None
+    peak_rss_delta_bytes: int | None = None
+    peak_rss_bytes: int | None = None  # assembly delta (gated quantity)
     vendor_ok: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
@@ -384,7 +399,10 @@ def build_dry_run_report(
         first_run_escape_required=first_run_required,
         first_run_escape_available=first_run_available,
         data_version_preview=data_version_preview,
-        peak_rss_bytes=_safe_rss_bytes(),
+        # Dry-run does not assemble; baseline is a process sample and delta is 0.
+        baseline_rss_bytes=_safe_rss_bytes(),
+        peak_rss_delta_bytes=0,
+        peak_rss_bytes=0,
     )
 
 
@@ -524,33 +542,45 @@ def assemble_version_tree(
     phase: str = "offline_enrich",
     crash_mid_stream: bool = False,
     assert_rss_ceiling: bool = True,
+    rss_ceiling_bytes: int = ASSEMBLY_RSS_CEILING_BYTES,
 ) -> dict[str, Any]:
     """Stream sealed lemmas into a versioned atlas tree under ``tree_root/atlas``.
 
     Builds entirely under a temp dir sibling, then atomically renames into
     ``tree_root/atlas`` (V7). Never leaves a partial ``versions/<dataVersion>``
     at the final path.
+
+    RSS gate (V2): samples process high-water at start as *baseline* and enforces
+    ``rss_ceiling_bytes`` on the *delta* (peak sample during assembly − baseline).
+    Absolute process RSS is not gated here — that belongs to the PR-1 hard-capped
+    worker subprocess.
     """
     artifacts_dir = Path(artifacts_dir)
     tree_root = Path(tree_root)
     tree_root.mkdir(parents=True, exist_ok=True)
+    ceiling = int(rss_ceiling_bytes)
 
     # Pre-scan digests for dataVersion (streaming — one file at a time).
     lemma_digests: list[tuple[str, str]] = []
-    peak_rss = _safe_rss_bytes() or 0
+    baseline_rss = _safe_rss_bytes()
+    peak_rss_absolute = baseline_rss if baseline_rss is not None else 0
+    peak_rss_delta = 0
 
     def _note_rss(*, force: bool = False, n: int = 0) -> None:
-        nonlocal peak_rss
+        nonlocal peak_rss_absolute, peak_rss_delta
         if not force and n % 32 != 0:
             return
         rss = _safe_rss_bytes()
         if rss is None:
             return
-        peak_rss = max(peak_rss, rss)
-        if assert_rss_ceiling and rss > ASSEMBLY_RSS_CEILING_BYTES:
+        peak_rss_absolute = max(peak_rss_absolute, rss)
+        delta = 0 if baseline_rss is None else max(0, rss - baseline_rss)
+        peak_rss_delta = max(peak_rss_delta, delta)
+        if assert_rss_ceiling and delta > ceiling:
             raise FinalizeError(
-                f"assembly RSS {rss} exceeded ceiling {ASSEMBLY_RSS_CEILING_BYTES} "
-                f"({ASSEMBLY_RSS_CEILING_BYTES // (1024 * 1024)} MiB)"
+                f"assembly RSS delta {delta} exceeded ceiling {ceiling} "
+                f"({ceiling // (1024 * 1024)} MiB); "
+                f"baseline={baseline_rss} peak_absolute={rss}"
             )
 
     for n, (lemma_id, _entry, digest) in enumerate(
@@ -700,7 +730,12 @@ def assemble_version_tree(
             "entry_shards": len(shard_ids),
             "tree_bytes": total_bytes,
             "object_count": object_count,
-            "peak_rss_bytes": peak_rss,
+            "baseline_rss_bytes": baseline_rss,
+            "peak_rss_delta_bytes": peak_rss_delta,
+            # peak_rss_bytes is the gated assembly delta (not process total).
+            "peak_rss_bytes": peak_rss_delta,
+            "peak_rss_absolute_bytes": peak_rss_absolute if baseline_rss is not None else None,
+            "rss_ceiling_bytes": ceiling,
             "atlas_root": str(final_atlas),
         }
     except Exception:
@@ -804,11 +839,17 @@ def finalize_run(
     verify_vendor: bool = True,
     crash_mid_stream: bool = False,
     assert_rss_ceiling: bool = True,
+    rss_ceiling_bytes: int = ASSEMBLY_RSS_CEILING_BYTES,
     expected_fingerprint: str | None = None,
 ) -> FinalizeResult:
     """Run completion gate + streaming assembly + publication archive.
 
     When ``dry_run`` is True, only the operator report is produced (no writes).
+
+    The 200 MiB RSS gate (overrideable via ``rss_ceiling_bytes``) measures
+    *incremental* assembly growth against a baseline sampled at assembly start —
+    not whole-process RSS. Absolute process caps remain the PR-1 hard-capped
+    worker subprocess responsibility.
     """
     out_dir = Path(out_dir)
     artifacts_dir = Path(artifacts_dir)
@@ -820,6 +861,7 @@ def finalize_run(
         grant_first_run_escape=grant_first_run_escape,
         phase=phase,
     )
+    report.rss_ceiling_bytes = int(rss_ceiling_bytes)
 
     if dry_run:
         return FinalizeResult(
@@ -828,6 +870,8 @@ def finalize_run(
             fingerprint=report.fingerprint,
             detail="dry-run only",
             dry_run=report,
+            baseline_rss_bytes=report.baseline_rss_bytes,
+            peak_rss_delta_bytes=report.peak_rss_delta_bytes,
             peak_rss_bytes=report.peak_rss_bytes,
         )
 
@@ -896,13 +940,31 @@ def finalize_run(
             phase=phase,
             crash_mid_stream=crash_mid_stream,
             assert_rss_ceiling=assert_rss_ceiling,
+            rss_ceiling_bytes=rss_ceiling_bytes,
         )
+        # Propagate assembly RSS metrics onto the dry-run report for operators.
+        baseline = assembly.get("baseline_rss_bytes")
+        delta = assembly.get("peak_rss_delta_bytes")
+        report.baseline_rss_bytes = None if baseline is None else int(baseline)
+        report.peak_rss_delta_bytes = None if delta is None else int(delta)
+        report.peak_rss_bytes = report.peak_rss_delta_bytes
+        report.rss_ceiling_bytes = int(assembly.get("rss_ceiling_bytes") or rss_ceiling_bytes)
+
         verify_fingerprint_in_tree(tree_root, fingerprint)
 
         if archive_path is None:
             archive_path = out_dir / "atlas-tree.zip"
         archive_path = Path(archive_path)
         digest = build_publication_archive(tree_root, archive_path)
+
+        def _rss_fields() -> dict[str, int | None]:
+            b = assembly.get("baseline_rss_bytes")
+            d = assembly.get("peak_rss_delta_bytes")
+            return {
+                "baseline_rss_bytes": None if b is None else int(b),
+                "peak_rss_delta_bytes": None if d is None else int(d),
+                "peak_rss_bytes": None if d is None else int(d),
+            }
 
         vendor_ok: bool | None = None
         if verify_vendor:
@@ -929,8 +991,8 @@ def finalize_run(
                     tree_root=str(tree_root),
                     detail=f"vendor gate refused: {exc}",
                     dry_run=report,
-                    peak_rss_bytes=int(assembly.get("peak_rss_bytes") or 0) or None,
                     vendor_ok=False,
+                    **_rss_fields(),
                 )
 
         ledger.record_finalize(
@@ -942,6 +1004,8 @@ def finalize_run(
                 "record_count": assembly["record_count"],
                 "entry_shards": assembly["entry_shards"],
                 "tree_bytes": assembly["tree_bytes"],
+                "baseline_rss_bytes": assembly.get("baseline_rss_bytes"),
+                "peak_rss_delta_bytes": assembly.get("peak_rss_delta_bytes"),
             },
         )
 
@@ -955,8 +1019,8 @@ def finalize_run(
             tree_root=str(tree_root),
             detail="finalized",
             dry_run=report,
-            peak_rss_bytes=int(assembly.get("peak_rss_bytes") or 0) or None,
             vendor_ok=vendor_ok,
+            **_rss_fields(),
         )
     except Exception as exc:
         return FinalizeResult(
@@ -965,7 +1029,9 @@ def finalize_run(
             fingerprint=fingerprint,
             detail=f"{type(exc).__name__}: {exc}",
             dry_run=report,
-            peak_rss_bytes=_safe_rss_bytes(),
+            baseline_rss_bytes=report.baseline_rss_bytes,
+            peak_rss_delta_bytes=report.peak_rss_delta_bytes,
+            peak_rss_bytes=report.peak_rss_delta_bytes,
         )
     finally:
         lock.release()
@@ -1042,7 +1108,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--no-rss-ceiling",
         action="store_true",
-        help="Disable 200 MiB RSS assertion (tests only)",
+        help="Disable incremental assembly RSS assertion (tests only)",
     )
     return parser
 
