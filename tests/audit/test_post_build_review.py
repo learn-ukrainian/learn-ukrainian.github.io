@@ -1938,6 +1938,53 @@ def test_vocabulary_coverage_accepts_source_order_vesum_mapping_only() -> None:
         )
 
 
+def test_vocabulary_alignment_uses_coverage_ledger_for_absence_proof() -> None:
+    source_lookup = {
+        "module.md": (
+            "Військовий кореспондент працював у редакції.\n"
+            "Співпраця поета й композитора тривала роками.\n"
+            "Звернення громадян стосувалися щоденних справ.\n"
+        )
+    }
+    findings = [
+        {
+            "id": f"missing-{index}",
+            "issue_id": "VOCABULARY_INTEGRATION",
+            "location": f"module.md:{index}",
+        }
+        for index in range(1, 4)
+    ]
+    representative = [{
+        "location": "module.md:1",
+        "excerpt": "Військовий кореспондент працював у редакції.",
+        "supports": "A representative near-surface comparison accompanies the exhaustive ledger.",
+    }]
+    raw_audit = {
+        audit_class: {
+            "status": "FOUND" if audit_class == "VOCABULARY_INTEGRATION" else "CLEAR",
+            "evidence": copy.deepcopy(representative),
+            "finding_ids": [finding["id"] for finding in findings]
+            if audit_class == "VOCABULARY_INTEGRATION"
+            else [],
+        }
+        for audit_class in pbr.ALIGNMENT_AUDIT_CLASSES
+    }
+
+    normalized = pbr._normalize_alignment_audit(
+        raw_audit,
+        verdict="REVISE",
+        semantic_findings=findings,
+        external_findings=[],
+        source_lookup=source_lookup,
+    )
+
+    assert normalized["VOCABULARY_INTEGRATION"]["finding_ids"] == [
+        "missing-1",
+        "missing-2",
+        "missing-3",
+    ]
+
+
 def test_maiboroda_regression_replaces_audio_task_with_text_evidence() -> None:
     target = pbr.resolve_target("bio/platon-maiboroda")
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
@@ -2359,8 +2406,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.6"
-    assert len(rows) == 53
+    assert catalog["catalog_version"] == "5.0.7"
+    assert len(rows) == 54
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2393,6 +2440,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.3",
         "5.0.4",
         "5.0.5",
+        "5.0.6",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

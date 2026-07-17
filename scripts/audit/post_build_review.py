@@ -1557,18 +1557,19 @@ def _normalize_alignment_audit(
                 raise ReviewProtocolError(
                     f"Alignment audit {audit_class} FOUND must reference every matching finding"
                 )
-            evidence_locations = {item["location"] for item in evidence}
-            uncited = sorted(
-                finding_id
-                for finding_id in class_ids
-                if not known[finding_id].get("location")
-                or str(known[finding_id]["location"]) not in evidence_locations
-            )
-            if uncited:
-                raise ReviewProtocolError(
-                    f"Alignment audit {audit_class} FOUND must cite each finding's exact "
-                    "immutable locator: " + ", ".join(uncited)
+            if audit_class != "VOCABULARY_INTEGRATION":
+                evidence_locations = {item["location"] for item in evidence}
+                uncited = sorted(
+                    finding_id
+                    for finding_id in class_ids
+                    if not known[finding_id].get("location")
+                    or str(known[finding_id]["location"]) not in evidence_locations
                 )
+                if uncited:
+                    raise ReviewProtocolError(
+                        f"Alignment audit {audit_class} FOUND must cite each finding's exact "
+                        "immutable locator: " + ", ".join(uncited)
+                    )
         if status == "INCOMPLETE" and (
             not finding_ids or verdict != "INCOMPLETE"
         ):

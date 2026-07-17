@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `5.0.5`
+Semantic prompt version: `5.0.6`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -363,3 +363,7 @@ visible lesson/activity surface and exact line evidence from the content or
 activities target file; a definition or usage example present only in
 `vocabulary.yaml` is not learner integration. `MISSING` and
 `INCOMPLETE` require a `VOCABULARY_INTEGRATION` finding and no surface evidence.
+The source-order vocabulary ledger is the exhaustive proof of individual
+absences: the `VOCABULARY_INTEGRATION` alignment entry must reference every
+matching finding but may cite representative comparison lines instead of an
+artificial exact defect line for each absent surface.
