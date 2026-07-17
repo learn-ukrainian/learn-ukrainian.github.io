@@ -1,7 +1,7 @@
-review_protocol_version: 5.0.8
-deterministic_contract_version: 1.2.1
-semantic_prompt_version: 5.0.8
-track_policy_version: 1.9.0
+review_protocol_version: 6.0.0
+deterministic_contract_version: 2.0.0
+semantic_prompt_version: 6.0.0
+track_policy_version: 2.0.0
 
 score_calibration:
   bands:
@@ -24,6 +24,21 @@ defaults:
     workflow_leakage_review: required
     modality_capability_provenance: required
   mechanical_checks:
+    source_traceability:
+      severity: medium
+      regex: >-
+        (?:\bза\s+(?:ЕСУ|ВУЕ|НБУВ|НБУ|НТКУ|ЦДАМЛМ|Держкіно)\b|(?:автор\w*\s+статт\w*|каталог\w*|архівн\w*\s+путівник\w*|путівник\w*|статут\w*)[^.\n]{0,120}(?:ЕСУ|ВУЕ|НБУВ|НБУ|НТКУ|ЦДАМЛМ|Держкіно|Медіатеки\s+Суспільного)\b|(?:архівн\w*\s+путівник\w*|путівник\w*|статут\w*|каталог\w*)[^.\n]{0,120}(?:датує|датують|фіксує|фіксують|подає|подають|називає|називають|вказує|вказують|засвідчує|засвідчують))
+      acronym_regex: '\b[А-ЯІЇЄҐ]{2,10}\b'
+      ignored_labels: [УРСР, СРСР, КПРС, ПНР, УРЕ, НАН]
+      aliases:
+        ЕСУ: [esu.com.ua, енциклопедія сучасної україни]
+        ВУЕ: [vue.gov.ua, велика українська енциклопедія]
+        НБУВ: [nbuv.gov.ua, нбув]
+        НБУ: [chl.kiev.ua, національна бібліотека україни для дітей]
+        НТКУ: [mediateka.suspilne.media, суспільне медіатека]
+        Медіатеки Суспільного: [mediateka.suspilne.media, суспільне медіатека]
+        ЦДАМЛМ: [csamm.archives.gov.ua, цдамлм]
+        Держкіно: [usfa.gov.ua, держкіно]
     learner_workflow_leakage:
       severity: high
       patterns:
@@ -96,7 +111,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v5
+      llm_qg: capabilities_absorbed_by_semantic_v6
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
   seminar:
@@ -125,7 +140,7 @@ families:
           severity: high
           message: Public-media rights remain unresolved; use text-only until cleared.
     skip_policy:
-      llm_qg: capabilities_absorbed_by_semantic_v5
+      llm_qg: capabilities_absorbed_by_semantic_v6
       mdx_generation_validate: accepted_read_only_omission
       external_resource_liveness: advisory_external
 

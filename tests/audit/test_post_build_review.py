@@ -27,6 +27,47 @@ SYNTHETIC_PATH = "tests/fixtures/post_build_review.md"
 SYNTHETIC_TEXT = "Synthetic quality-dimension evidence for the review contract.\n"
 
 
+def _synthetic_statement_inventory() -> dict:
+    unit = {
+        "id": "statement-fixture-1",
+        "path": "tests/fixtures/post_build_review",
+        "line": 1,
+        "role": "content",
+        "text": "The fixture contains one supported atomic claim.",
+        "text_sha256": pbr.sha256_text(
+            "The fixture contains one supported atomic claim."
+        ),
+        "signals": [],
+    }
+    payload = {"units": [unit]}
+    return {
+        "inventory_sha256": pbr.sha256_text(pbr._stable_json(payload)),
+        **payload,
+    }
+
+
+def _packet_inventories(packet: dict | None = None) -> tuple[dict, dict, dict]:
+    deterministic = (packet or {}).get("deterministic", {})
+    statements = deterministic.get("statement_inventory")
+    if not isinstance(statements, dict):
+        statements = _synthetic_statement_inventory()
+    resources = deterministic.get("resource_inventory")
+    if not isinstance(resources, dict):
+        resources = {
+            "inventory_sha256": pbr.sha256_text(
+                pbr._stable_json({"resources": []})
+            ),
+            "resources": [],
+        }
+    attributions = deterministic.get("source_attribution_inventory")
+    if not isinstance(attributions, dict):
+        attributions = {
+            "inventory_sha256": pbr.sha256_text(pbr._stable_json({"units": []})),
+            "units": [],
+        }
+    return statements, resources, attributions
+
+
 def _reviewer() -> dict[str, object]:
     return {
         "agent": "fixture",
@@ -207,8 +248,29 @@ def _normalize_fixture(
     packet: dict | None = None,
     reviewer: dict | None = None,
 ) -> dict:
+    semantic = copy.deepcopy(semantic)
     target_files = (packet or {}).get("target", {}).get("files", {})
     alignment_findings = pbr._deterministic_findings(packet) if packet else []
+    statements, resources, attributions = _packet_inventories(packet)
+    statement_units = statements["units"]
+    if statement_units:
+        default_unit = statement_units[0]
+        for claim in semantic.get("claim_ledger", []):
+            claim.setdefault("unit_id", default_unit["id"])
+            claim["location"] = f"{default_unit['path']}:{default_unit['line']}"
+    claims_by_unit: dict[str, list[str]] = {}
+    for claim in semantic.get("claim_ledger", []):
+        claims_by_unit.setdefault(claim["unit_id"], []).append(claim["id"])
+    semantic["statement_coverage"] = {
+        unit["id"]: {
+            "classification": (
+                "claims" if unit["id"] in claims_by_unit else "no_checkable_claim"
+            ),
+            "claim_ids": claims_by_unit.get(unit["id"], []),
+        }
+        for unit in statement_units
+    }
+    semantic.setdefault("source_traceability_coverage", {})
     return pbr.normalize_semantic_result(
         semantic,
         family,
@@ -217,6 +279,9 @@ def _normalize_fixture(
         alignment_findings=alignment_findings,
         expected_vocabulary_lemmas=_packet_vocabulary_lemmas(packet),
         target_files=target_files,
+        expected_statement_inventory=statements,
+        expected_resource_inventory=resources,
+        expected_source_attribution_inventory=attributions,
     )
 
 
@@ -242,28 +307,85 @@ def _passing_semantic(packet: dict) -> dict:
             ),
             "finding_ids": finding_ids,
         }
+    statements, resources, attributions = _packet_inventories(packet)
+    del resources
+    claim_units = [
+        unit
+        for unit in statements["units"]
+        if set(unit.get("signals") or []).intersection(
+            {"universal_quantifier", "source_attribution"}
+        )
+    ]
+    if not claim_units and statements["units"]:
+        claim_units = [statements["units"][0]]
+    claims = [
+        {
+            "id": f"fixture-claim-{index}",
+            "unit_id": unit["id"],
+            "claim": unit["text"],
+            "location": f"{unit['path']}:{unit['line']}",
+            "status": "supported",
+            "evidence": "Authoritative fixture evidence supports this atomic claim.",
+            "finding_id": None,
+        }
+        for index, unit in enumerate(claim_units, start=1)
+    ]
+    claims_by_unit: dict[str, list[str]] = {}
+    for claim in claims:
+        claims_by_unit.setdefault(claim["unit_id"], []).append(claim["id"])
+    statement_coverage = {
+        unit["id"]: {
+            "classification": (
+                "claims" if unit["id"] in claims_by_unit else "no_checkable_claim"
+            ),
+            "claim_ids": claims_by_unit.get(unit["id"], []),
+        }
+        for unit in statements["units"]
+    }
+    deterministic_findings_by_location = {
+        (finding.get("location"), finding.get("evidence")): finding["id"]
+        for finding in external_findings
+        if finding.get("issue_id") == "SOURCE_TRACEABILITY"
+    }
+    statement_by_id = {unit["id"]: unit for unit in statements["units"]}
+    source_traceability_coverage = {}
+    for attribution in attributions["units"]:
+        unit = statement_by_id[attribution["unit_id"]]
+        if attribution["unmatched_labels"]:
+            label = attribution["unmatched_labels"][0]
+            finding_id = deterministic_findings_by_location[
+                (f"{unit['path']}:{unit['line']}", label)
+            ]
+            source_traceability_coverage[attribution["unit_id"]] = {
+                "status": "UNMAPPED",
+                "resource_ids": [],
+                "finding_id": finding_id,
+            }
+        else:
+            source_traceability_coverage[attribution["unit_id"]] = {
+                "status": "MAPPED",
+                "resource_ids": attribution["matched_resource_ids"],
+                "finding_id": None,
+            }
+    source_unmapped = any(
+        entry["status"] == "UNMAPPED"
+        for entry in source_traceability_coverage.values()
+    )
     return {
-        "verdict": "REVISE" if vocabulary_findings else "PASS",
+        "verdict": "REVISE" if vocabulary_findings or source_unmapped else "PASS",
         "summary": "Fixture semantic review completed.",
         "quality_dimensions": _quality_dimensions(packet),
         "alignment_audit": alignment_audit,
         "vocabulary_coverage": vocabulary_coverage,
         "claim_coverage": {
             "status": "complete",
-            "claims_total": 1,
-            "claims_checked": 1,
-            "claims_supported": 1,
+            "claims_total": len(claims),
+            "claims_checked": len(claims),
+            "claims_supported": len(claims),
         },
-        "claim_ledger": [
-            {
-                "id": "fixture-claim-1",
-                "claim": "The fixture contains one supported atomic claim.",
-                "location": "tests/fixtures/post_build_review:1",
-                "status": "supported",
-                "evidence": "Synthetic fixture evidence.",
-                "finding_id": None,
-            }
-        ],
+        "claim_ledger": claims,
+        "statement_coverage": statement_coverage,
+        "source_traceability_coverage": source_traceability_coverage,
         "learner_evidence_ledger": [
             {
                 "id": f"fixture-{modality}-1",
@@ -345,7 +467,7 @@ def _claim_owned_finding_semantic(packet: dict) -> dict:
             "finding_id": "claim-only-language-finding",
         }
     )
-    semantic["claim_coverage"]["claims_supported"] = 0
+    semantic["claim_coverage"]["claims_supported"] -= 1
     return semantic
 
 
@@ -1041,6 +1163,15 @@ def test_semantic_response_schema_matches_raw_contract() -> None:
         for audit_class in pbr.ALIGNMENT_AUDIT_CLASSES
     }
     exemplar["vocabulary_coverage"] = []
+    for claim in exemplar["claim_ledger"]:
+        claim["unit_id"] = "statement-fixture-1"
+    exemplar["statement_coverage"] = {
+        "statement-fixture-1": {
+            "classification": "claims",
+            "claim_ids": [claim["id"] for claim in exemplar["claim_ledger"]],
+        }
+    }
+    exemplar["source_traceability_coverage"] = {}
 
     assert "$schema" not in schema
     assert "family" not in schema["required"]
@@ -1055,6 +1186,8 @@ def test_semantic_response_schema_matches_raw_contract() -> None:
         "vocabulary_coverage",
         "claim_coverage",
         "claim_ledger",
+        "statement_coverage",
+        "source_traceability_coverage",
         "learner_evidence_ledger",
         "findings",
     }
@@ -1216,7 +1349,72 @@ def test_packet_bound_semantic_schema_excludes_insufficient_evidence_lines() -> 
     assert allowed_lines == expected_lines
     assert 85 in allowed_lines
     assert 86 not in allowed_lines
-    assert len(json.dumps(schema, ensure_ascii=False)) < 35_000
+    # Exact statement IDs add exhaustive coverage without enumerating repeated
+    # statement text or evidence excerpts into the provider schema.
+    assert len(json.dumps(schema, ensure_ascii=False)) < 70_000
+
+
+def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    statement_schema = schema["properties"]["statement_coverage"]
+    units = packet["deterministic"]["statement_inventory"]["units"]
+
+    assert statement_schema["minProperties"] == len(units)
+    assert statement_schema["maxProperties"] == len(units)
+    assert set(statement_schema["propertyNames"]["enum"]) == {
+        unit["id"] for unit in units
+    }
+    Draft202012Validator(schema).validate(semantic)
+
+    missing = copy.deepcopy(semantic)
+    missing["statement_coverage"].pop(next(iter(missing["statement_coverage"])))
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(missing)
+
+    risk_unit = next(unit for unit in units if unit["signals"])
+    dismissed = copy.deepcopy(semantic)
+    dismissed["statement_coverage"][risk_unit["id"]] = {
+        "classification": "no_checkable_claim",
+        "claim_ids": [],
+    }
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(dismissed)
+
+
+def test_stored_result_rejects_dropped_statement_coverage() -> None:
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    result = pbr.finalize_review(packet, _raw(_passing_semantic(packet)))
+    assert result["semantic_response"]["contract_status"] == "valid"
+
+    tampered = copy.deepcopy(result)
+    tampered["semantic"]["statement_coverage"].pop(
+        next(iter(tampered["semantic"]["statement_coverage"]))
+    )
+    with pytest.raises((ValidationError, pbr.ReviewProtocolError)):
+        pbr.validate_result(tampered)
+
+
+def test_packet_integrity_rejects_tampered_statement_inventory() -> None:
+    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+    tampered = copy.deepcopy(packet)
+    tampered["deterministic"]["statement_inventory"]["units"][0]["text"] += (
+        " tampered"
+    )
+    payload = {
+        "units": tampered["deterministic"]["statement_inventory"]["units"]
+    }
+    tampered["deterministic"]["statement_inventory"]["inventory_sha256"] = (
+        pbr.sha256_text(pbr._stable_json(payload))
+    )
+
+    findings = pbr.packet_integrity_findings(tampered)
+
+    assert any(
+        "statement_inventory does not match target materials" in finding["message"]
+        for finding in findings
+    )
 
 
 def test_packet_bound_contract_finalizes_short_supplied_finding(
@@ -1416,7 +1614,7 @@ def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) ->
     assert deterministic["track_audit"]["provenance"]["config_version"] == "1"
     skips = {item["category"]: item["disposition"] for item in deterministic["skip_assessments"]}
     assert skips == {
-        "llm_qg": "capabilities_absorbed_by_semantic_v5",
+        "llm_qg": "capabilities_absorbed_by_semantic_v6",
         "mdx_generation_validate": "accepted_read_only_omission",
         "external_resource_liveness": "advisory_external",
     }
@@ -1746,6 +1944,120 @@ def test_duplicate_claim_ids_are_contract_invalid() -> None:
 
     with pytest.raises(pbr.ReviewProtocolError, match="Duplicate claim id"):
         _normalize_fixture(semantic)
+
+
+def test_statement_inventory_forces_risky_bio_claim_units() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [
+                {"line": index, "text": line}
+                for index, line in enumerate(text.splitlines(), start=1)
+            ],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    materials = {
+        "content": material(
+            "curriculum/l2-uk-en/bio/fixture/module.md",
+            (
+                "Майже кожне громадянське звернення стосувалося житла.\n"
+                "Класифікуйте кожне речення за типом зв'язку.\n"
+            ),
+        ),
+        "activities": material(
+            "curriculum/l2-uk-en/bio/fixture/activities.yaml",
+            "- Малишко опрацьовував кожне громадянське звернення.\n",
+        ),
+    }
+
+    inventory = pbr.build_learner_statement_inventory(materials, family="seminar")
+    by_text = {unit["text"]: unit for unit in inventory["units"]}
+
+    assert "universal_quantifier" in by_text[
+        "Майже кожне громадянське звернення стосувалося житла."
+    ]["signals"]
+    assert "universal_quantifier" in by_text[
+        "Малишко опрацьовував кожне громадянське звернення."
+    ]["signals"]
+    assert by_text["Класифікуйте кожне речення за типом зв'язку."][
+        "signals"
+    ] == []
+
+
+def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [
+                {"line": index, "text": line}
+                for index, line in enumerate(text.splitlines(), start=1)
+            ],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    materials = {
+        "content": material(
+            "curriculum/l2-uk-en/bio/fixture/module.md",
+            (
+                "За ЕСУ, поет працював редактором.\n"
+                "Архівний путівник ЦДАМЛМ України датує заснування 1961 роком.\n"
+                "Верховна Рада УРСР діяла в радянській системі.\n"
+            ),
+        ),
+        "resources": material(
+            "curriculum/l2-uk-en/bio/fixture/resources.yaml",
+            (
+                "---\n"
+                "- title: Малишко — Енциклопедія Сучасної України\n"
+                "  url: https://esu.com.ua/article-63095\n"
+                "  notes: Біографічна довідка.\n"
+            ),
+        ),
+    }
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+
+    inventories, findings = pbr.build_review_inventories(
+        materials,
+        family="seminar",
+        source_spec=policy["mechanical_checks"]["source_traceability"],
+    )
+    attributions = {
+        tuple(entry["labels"]): entry
+        for entry in inventories["source_attribution_inventory"]["units"]
+    }
+
+    assert attributions[("ЕСУ",)]["matched_resource_ids"]
+    assert attributions[("ЦДАМЛМ",)]["matched_resource_ids"] == []
+    assert not any("УРСР" in entry["labels"] for entry in attributions.values())
+    assert [finding["issue_id"] for finding in findings] == [
+        "SOURCE_TRACEABILITY"
+    ]
+    assert findings[0]["severity"] == "medium"
+    assert findings[0]["location"].endswith("module.md:2")
+
+    mapped_materials = copy.deepcopy(materials)
+    resources_text = pbr.target_material_text(mapped_materials["resources"]) + (
+        "- title: Центральний державний архів-музей літератури і мистецтва України\n"
+        "  url: https://csamm.archives.gov.ua/\n"
+        "  notes: Архівний путівник.\n"
+    )
+    mapped_materials["resources"] = material(
+        "curriculum/l2-uk-en/bio/fixture/resources.yaml", resources_text
+    )
+    mapped_inventories, mapped_findings = pbr.build_review_inventories(
+        mapped_materials,
+        family="seminar",
+        source_spec=policy["mechanical_checks"]["source_traceability"],
+    )
+    mapped_attributions = {
+        tuple(entry["labels"]): entry
+        for entry in mapped_inventories["source_attribution_inventory"]["units"]
+    }
+    assert mapped_attributions[("ЦДАМЛМ",)]["matched_resource_ids"]
+    assert mapped_findings == []
 
 
 def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
@@ -2372,6 +2684,16 @@ def test_schema_validates_historical_v1_v2_v3_and_rejects_missing_versions(
     historical_v3.pop("minimum_dimension_score")
     historical_v3["semantic"].pop("alignment_audit")
     historical_v3["semantic"].pop("vocabulary_coverage")
+    historical_v3["semantic"].pop("statement_coverage")
+    historical_v3["semantic"].pop("source_traceability_coverage")
+    for claim in historical_v3["semantic"]["claim_ledger"]:
+        claim.pop("unit_id")
+    for name in (
+        "statement_inventory",
+        "resource_inventory",
+        "source_attribution_inventory",
+    ):
+        historical_v3["deterministic"].pop(name)
     for assessment in historical_v3["semantic"]["quality_dimensions"].values():
         assessment.pop("score")
         assessment.pop("score_rationale")
@@ -2416,6 +2738,16 @@ def test_historical_v4_result_still_revalidates_numeric_scores(
     historical_v4["schema_version"] = "post-build-review.result.v4"
     historical_v4["semantic"].pop("alignment_audit")
     historical_v4["semantic"].pop("vocabulary_coverage")
+    historical_v4["semantic"].pop("statement_coverage")
+    historical_v4["semantic"].pop("source_traceability_coverage")
+    for claim in historical_v4["semantic"]["claim_ledger"]:
+        claim.pop("unit_id")
+    for name in (
+        "statement_inventory",
+        "resource_inventory",
+        "source_attribution_inventory",
+    ):
+        historical_v4["deterministic"].pop(name)
     historical_v4["semantic"]["findings"] = [
         finding
         for finding in historical_v4["semantic"]["findings"]
@@ -2453,7 +2785,7 @@ def test_current_bilash_result_is_reproducible(bilash_packet: dict) -> None:
     first = pbr.finalize_review(bilash_packet, response)
     second = pbr.finalize_review(bilash_packet, response)
 
-    assert first["schema_version"] == "post-build-review.result.v5"
+    assert first["schema_version"] == "post-build-review.result.v6"
     assert first["reproducibility_key"] == second["reproducibility_key"]
     assert first["combined_disposition"] == second["combined_disposition"]
     assert set(first["semantic"]["quality_dimensions"]) == set(pbr.QUALITY_DIMENSIONS)
@@ -2621,8 +2953,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "5.0.9"
-    assert len(rows) == 57
+    assert catalog["catalog_version"] == "6.0.0"
+    assert len(rows) == 59
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -2658,6 +2990,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "5.0.6",
         "5.0.7",
         "5.0.8",
+        "6.0.0",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
