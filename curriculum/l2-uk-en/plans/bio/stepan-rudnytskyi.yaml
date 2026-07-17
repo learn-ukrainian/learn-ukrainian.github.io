@@ -13,7 +13,9 @@ activity_hints:
 - focus: Дебати — географія як наука чи інструмент державотворення?
   placement: workbook
   type: debate
-- focus: Аналіз цитати — "земля, де живемо, зветься Україна"
+- focus: >-
+    Зіставлення джерел — як різні установи датують арешт 1933 року і що з цього
+    можна стверджувати
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — політичний географ як мішень тоталітарної системи
@@ -55,16 +57,16 @@ content_outline:
   words: 1200
 - points:
   - >-
-    [!anti-hagiography] Механізм терору: арешт 23 березня 1933 року.
-    Сфабриковані звинувачення в участі в "Українській Військовій Організації"
-    та шпигунстві.
+    [!anti-hagiography] Механізм терору: арешт у березні 1933 року. Херсонська
+    обласна бібліотека подає 23 березня, ЕСУ — 21 березня; розбіжність
+    показуємо, а не приховуємо. Звинувачення були сфабриковані.
   - >-
-    [!epistemic-humility] Засудження 23 вересня 1933 року до 5 років таборів
-    (Свірлаг, Білбалтлаг). Відсутність конкретного номера справи.
+    [!epistemic-humility] Засудження у вересні 1933 року до 5 років таборів;
+    ЕСУ подає 23 вересня. Конкретного номера архівної справи не встановлено.
   - >-
-    [!myth-buster] Страта: рішення спеціальної трійки УНКВС Ленінградської
-    області. Розстріляний 3 листопада 1937 року в урочищі Сандармох (Карелія).
-    Спростування старого міфу про смерть на Соловках.
+    [!myth-buster] Смертний вирок 9 жовтня 1937 року (ЕСУ); розстріляний
+    3 листопада 1937 року в урочищі Сандармох (Карелія) — так подають і УІНП,
+    і ЕСУ. Давніша версія про смерть на Соловках не підтверджується.
   section: 'Тінь: Сандармох та знищення'
   words: 1600
 - points:
@@ -92,79 +94,100 @@ persona:
   role: Модератор семінару, який досліджує українську політичну географію та сталінські репресії.
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портретного файла Степана Рудницького з підтвердженим автором,
+    роком і перевіреною ліцензією не знайдено. Позначка на файлосховищі не є
+    доказом суспільного надбання, тому портрет не використовуємо.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
 references:
-- note: Англомовна енциклопедична стаття про життя та доробок.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRudnytskyStepan.htm
-  title: Rudnytsky, Stepan (IEU)
-  type: reference
-- note: Історичний календар УІНП.
+- note: Історичний календар УІНП; ліцензія CC BY 4.0.
   path: https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy
-  title: Народився Степан Рудницький (УІНП)
+  title: 1877 - народився Степан Рудницький
+  type: reference
+- note: Стаття ЕСУ; автори Д. Є. Макаренко, О. І. Шаблій.
+  path: https://esu.com.ua/article-879325
+  title: Рудницький Степан Львович
   type: reference
 - note: Біографічна стаття Херсонської обласної бібліотеки.
   path: https://lib.kherson.ua/stepan-rudnitskiy.htm
-  title: Степан Рудницький (Херсонська обласна бібліотека)
+  title: Степан Рудницький
   type: reference
-- author: Степан Рудницький
-  note: Шкільний підручник географії.
-  title: Україна — наш рідний край
-  type: primary
-  work: Україна — наш рідний край
+- note: >-
+    Науково-документальна серія НАН України, Інституту національної пам'яті та
+    СБУ; контекст Інституту географії та картографії до арешту 1933 року.
+  path: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+  title: Реабілітовані історією. Харківська область. Книга друга
+  type: reference
 readings:
-- title: Народився Степан Рудницький
-  language: uk
-  genre: Історичний календар / біографічний нарис
-  source_type: reference
-  role: orientation
-  source: Український інститут національної пам'яті
+- title: 1877 - народився Степан Рудницький
+  source_name: Український інститут національної пам'яті
   source_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy
-  license: copyrighted
-  rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
+  language: uk
+  type: institutional-calendar
+  role: biographical-orientation
   hosting: link-only
-  cefr_min: C1
   learner_task: >-
-    Відстежити зв'язок між географією, політичною картою України та
-    радянськими репресіями проти науковця.
-  caveats: >-
-    Календарна стаття придатна для орієнтації, але не замінює source-edition
-    читання з географічної праці Рудницького.
+    Скласти хронологію життя й праці за календарною статтею та позначити,
+    які дати вона подає точно, а які лише роком.
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy
+    note: >-
+      Сторінка доступна українською; УІНП подає вміст за ліцензією CC BY 4.0,
+      проте курс однаково лише посилається на неї й не відтворює текст.
+- title: Рудницький Степан Львович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-879325
+  language: uk
+  type: academic-encyclopedia
+  role: scholarly-framing
+  hosting: link-only
+  learner_task: >-
+    Виписати наукові установи й посади за роками та відрізнити авторський
+    географічний доробок від пізнішої оцінки його ролі.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-879325
+    note: >-
+      Стаття українською, захищена авторським правом; курс посилається на
+      сторінку й не відтворює її тексту.
 - title: Степан Рудницький
-  language: uk
-  genre: Біографічна стаття / бібліотечний матеріал
-  source_type: reference
-  role: supplementary
-  source: Херсонська обласна універсальна наукова бібліотека
+  source_name: Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
   source_url: https://lib.kherson.ua/stepan-rudnitskiy.htm
-  license: copyrighted
-  rights_note: Використовувати як link-only матеріал; не переносити повний текст.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Знайти формулювання про Україну як рідний край і порівняти педагогічну
-    лексику з політичною географією модуля.
-  caveats: >-
-    Бібліотечний матеріал не встановлює прав на відтворення уривків із
-    підручника.
-- title: Page-stable скан або уривок з "Україна — наш рідний край"
   language: uk
-  genre: Підручник географії / джерельна публікація
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: stepan-rudnytskyi-ukraina-nash-ridnyi-krai-scan'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: зафіксувати стабільний URL скану 1921 року або іншого
-    правово безпечного видання; до перевірки використовувати тільки посилання,
-    а не розміщувати сторінки чи довгі уривки.
-  hosting: reading-needed
-  cefr_min: C1
+  type: institutional-biography
+  role: source-comparison
+  hosting: link-only
   learner_task: >-
-    Прочитати короткий фрагмент про географічне самоозначення України та
-    визначити, як шкільна мова переходить у державницький аргумент.
-  caveats: >-
-    Досьє згадує скан, але план ще не має page-stable URL і правової нотатки
-    для learner close reading.
+    Порівняти подану тут дату арешту з датою в ЕСУ й описати, як фіксують
+    розбіжність між двома установами, не обираючи одну з них мовчки.
+  rights:
+    basis: external-link
+    evidence_url: https://lib.kherson.ua/stepan-rudnitskiy.htm
+    note: >-
+      Бібліотечна сторінка українською з позначкою «Усі права застережено»;
+      цитати з передмови не переносимо без точного локатора видання.
+- title: Реабілітовані історією. Харківська область. Книга друга
+  source_name: НАН України, Інститут національної пам'яті, СБУ
+  source_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+  language: uk
+  type: documentary-series
+  role: institutional-context
+  hosting: link-only
+  learner_task: >-
+    Знайти згадки про Український науково-дослідний інститут географії та
+    картографії й показати, що документує том, а чого він не документує.
+  rights:
+    basis: external-link
+    evidence_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    note: >-
+      Публічний українськомовний PDF науково-документальної серії; курс
+      посилається на файл і не розміщує його сторінок у себе.
+readings_contract_version: 2
 sequence: 309
 slug: stepan-rudnytskyi
 subtitle: The Geographer Executed at Sandarmokh

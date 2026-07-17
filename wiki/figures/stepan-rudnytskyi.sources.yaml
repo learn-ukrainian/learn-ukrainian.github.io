@@ -1,0 +1,22 @@
+---
+sources:
+  - id: S1
+    file: https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy
+    type: external
+    title: 1877 - народився Степан Рудницький — Український інститут національної пам'яті
+    url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy
+  - id: S2
+    file: https://esu.com.ua/article-879325
+    type: external
+    title: Рудницький Степан Львович — Енциклопедія Сучасної України
+    url: https://esu.com.ua/article-879325
+  - id: S3
+    file: https://lib.kherson.ua/stepan-rudnitskiy.htm
+    type: external
+    title: Степан Рудницький — Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
+    url: https://lib.kherson.ua/stepan-rudnitskiy.htm
+  - id: S4
+    file: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    type: external
+    title: Реабілітовані історією. Харківська область. Книга друга — НАН України, Інститут національної пам'яті, СБУ
+    url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf

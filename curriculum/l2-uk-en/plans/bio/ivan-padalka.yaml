@@ -114,74 +114,60 @@ persona:
   role: Модератор семінару з історії мистецтв
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Портрет і твори Падалки потребують окремого доказу прав. Перевірені
+    сторінки містять репродукції, але не подають файла з підтвердженим автором
+    і відкритою ліцензією; біографічне джерело не ліцензує зображення.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
 references:
-- note: Авторитетна енциклопедична стаття про митця.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesP%5CA%5CPadalkaIvan
-  title: Padalka, Ivan (IEU)
-  type: reference
-- note: Розділ про бойчукістів із документальними матеріалами.
+- note: >-
+    Науково-документальна серія НАН України, Інституту національної пам'яті та
+    СБУ; с. 140-147 — нарис Людмили Соколюк «Бойчукіст Іван Падалка».
   path: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
-  title: Реабілітовані історією. Харківська область, книга 2
+  title: Реабілітовані історією. Харківська область. Книга друга
   type: reference
 - note: Музейна сторінка про життя та доробок художника.
   path: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
-  title: Український художник Іван Падалка (Музей книги, Херсон)
+  title: Український художник Іван Падалка. Музей книги. ХОУНБ ім. Олеся Гончара
   type: reference
 readings:
-- title: Український художник Іван Падалка
-  language: uk
-  genre: Музейна стаття / біографічний нарис
-  source_type: reference
-  role: orientation
-  source: Музей книги, Херсонська обласна бібліотека
+- title: Український художник Іван Падалка. Музей книги. ХОУНБ ім. Олеся Гончара
+  source_name: Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
   source_url: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
-  license: copyrighted
-  rights_note: Використовувати як link-only музейний матеріал; не хостити повний текст або репродукції.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Виписати освіту, бойчукістське середовище, графічні роботи й репресивний
-    фінал Падалки.
-  caveats: >-
-    Музейний нарис треба звіряти з документальними матеріалами про арешт і
-    справу; не переносити зображення без прав.
-- title: Реабілітовані історією. Харківська область, книга 2
   language: uk
-  genre: Документальна публікація / реабілітаційний корпус
-  source_type: reference
-  role: close-reading
-  source: Реабілітовані історією
+  type: institutional-biography
+  role: biographical-orientation
+  hosting: link-only
+  learner_task: >-
+    Виписати освіту, бойчукістське середовище й графічні роботи, позначивши,
+    які з відомостей сторінка подає без покликання на документ.
+  rights:
+    basis: external-link
+    evidence_url: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
+    note: >-
+      Сторінка українською з позначкою «Усі права застережено»; репродукції на
+      ній не переносимо — зображення потребує окремого доказу прав.
+- title: Реабілітовані історією. Харківська область. Книга друга
+  source_name: НАН України, Інститут національної пам'яті, СБУ
   source_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
-  license: copyrighted
-  rights_note: Використовувати як link-only PDF; не хостити повний корпус або довгі документи справи.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Прочитати короткий документальний фрагмент про АРМУ, арешт або архівні
-    посилання й відрізнити мову джерела від радянських звинувачень.
-  caveats: >-
-    Репресивні формули треба маркувати як мову слідства; не приймати їх за
-    нейтральний опис Падалки.
-- title: Page-stable українське читання з голосом Падалки
   language: uk
-  genre: Інтерв'ю / мистецька публіцистика
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: ivan-padalka-interview-or-armu-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: зафіксувати правово безпечне українське джерело для
-    короткого уривка з інтерв'ю або тексту Падалки про АРМУ; не хостити
-    журнальні репродукції чи ілюстрації без прав.
-  hosting: reading-needed
-  cefr_min: C1
+  type: documentary-series
+  role: scholarly-and-registry-evidence
+  hosting: link-only
   learner_task: >-
-    Проаналізувати власний голос Падалки про мистецький плюралізм або навчання
-    в Бойчука, не зводячи його до "учня" без самостійності.
-  caveats: >-
-    Досьє має цитати через вторинні access copies; для build потрібен
-    page-stable source або явне link-only обмеження.
+    Прочитати нарис Людмили Соколюк (с. 140-147) і відрізнити авторський
+    мистецький шлях від формул слідства, які том наводить як мову документа.
+  rights:
+    basis: external-link
+    evidence_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    note: >-
+      Публічний українськомовний PDF науково-документальної серії; курс
+      посилається на файл і не відтворює його сторінок або ілюстрацій.
+readings_contract_version: 2
 sequence: 316
 slug: ivan-padalka
 subtitle: The Muralist and Printmaker Executed in the Terror

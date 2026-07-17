@@ -110,75 +110,83 @@ persona:
   role: Модератор семінару з історії мистецтв
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портретного файла Василя Седляра з підтвердженим автором і
+    відкритою ліцензією не знайдено. Ілюстрації до «Кобзаря» та монументальні
+    роботи потребують власного доказу прав, якого біографічні сторінки не дають.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
 references:
-- note: Авторитетна енциклопедична стаття.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CE%5CSedliarVasyl.htm
-  title: Sedliar, Vasyl (IEU)
+- note: Біографічна стаття Херсонської обласної бібліотеки про самого Седляра.
+  path: https://lib.kherson.ua/vasil-sedlyar.htm
+  title: Василь Седляр
   type: reference
-- note: Матеріали про бойчукістів на ресурсі UA View.
-  path: https://uaview.ui.org.ua/ua/artist/Boichuk-Mykhaylo
-  title: Boichuk Mykhaylo (UA View)
+- note: >-
+    Науково-документальна серія НАН України, Інституту національної пам'яті та
+    СБУ; с. 534 — реєстрова стаття про В. Ф. Седляра.
+  path: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+  title: Реабілітовані історією. Харківська область. Книга друга
   type: reference
-- author: Сергій Білокін
-  note: Цитати з мистецтвознавчої статті 1934 року з посиланнями на сторінки.
+- author: Сергій Білокінь
+  note: >-
+    Дослідницька стаття про паризький досвід школи Бойчука; Седляр виступає як
+    свідок і тлумач, а не предмет статті.
   path: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
-  title: У Парижі (Білокін)
+  title: Сергій Білокінь - У Парижі
   type: reference
 readings:
-- title: Boichuk Mykhaylo
+- title: Василь Седляр
+  source_name: Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
+  source_url: https://lib.kherson.ua/vasil-sedlyar.htm
   language: uk
-  genre: Музейно-дослідницька сторінка / контекст бойчукізму
-  source_type: reference
-  role: orientation
-  source: UA View
-  source_url: https://uaview.ui.org.ua/ua/artist/Boichuk-Mykhaylo
-  license: copyrighted
-  rights_note: Використовувати як link-only матеріал; не хостити зображення творів або повний текст.
+  type: institutional-biography
+  role: biographical-orientation
   hosting: link-only
-  cefr_min: C1
   learner_task: >-
-    Знайти фрагмент про майстерню Бойчука й пояснити, чому дисципліна школи не
-    означала копіювання індивідуальності Седляра.
-  caveats: >-
-    Сторінка дає контекст бойчукізму, але не замінює окремого source edition
-    творів Седляра.
-- title: У Парижі
+    Скласти хронологію навчання, Межигірського технікуму й роботи над
+    «Кобзарем», відокремивши датовані відомості від загальних оцінок.
+  rights:
+    basis: external-link
+    evidence_url: https://lib.kherson.ua/vasil-sedlyar.htm
+    note: >-
+      Сторінка українською з позначкою «Усі права застережено»; курс
+      посилається на неї й не відтворює тексту або репродукцій.
+- title: Реабілітовані історією. Харківська область. Книга друга
+  source_name: НАН України, Інститут національної пам'яті, СБУ
+  source_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
   language: uk
-  genre: Мистецтвознавча стаття / цитування Седляра
-  source_type: reference
-  role: close-reading
-  source: Сергій Білокін
+  type: documentary-series
+  role: registry-evidence
+  hosting: link-only
+  learner_task: >-
+    Знайти реєстрову статтю (с. 534) і показати, що в ній є словами документа
+    доби терору, а що — перевіреними біографічними даними.
+  rights:
+    basis: external-link
+    evidence_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    note: >-
+      Публічний українськомовний PDF науково-документальної серії; курс
+      посилається на файл і не розміщує його сторінок.
+- title: Сергій Білокінь - У Парижі
+  source_name: Сергій Білокінь
   source_url: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
-  license: copyrighted
-  rights_note: Використовувати як link-only статтю; не хостити повний текст або репродукції.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Проаналізувати короткий уривок із цитуванням статті Седляра 1934 року й
-    визначити, як мистецька лексика працює в радянському журналі.
-  caveats: >-
-    Це цитування через дослідницьку статтю, а не повна публікація журналу
-    "Образотворче мистецтво"; довгі уривки не переносити.
-- title: Page-stable читання з "Кобзаря" 1931 року або статті Седляра
   language: uk
-  genre: Ілюстрована книжка / мистецтвознавча публіцистика
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: vasyl-sedliar-kobzar-or-1934-article-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний і правово безпечний доступ до ілюстрацій
-    "Кобзаря" 1931 року або статті Седляра; не хостити репродукції чи повні
-    журнальні сторінки без підтверджених прав.
-  hosting: reading-needed
-  cefr_min: C1
+  type: scholarly-article
+  role: contextual-testimony
+  hosting: link-only
   learner_task: >-
-    Порівняти короткий текстовий або візуальний фрагмент із темою культурного
-    стирання бойчукістів.
-  caveats: >-
-    Візуальні джерела є rights-sensitive; до перевірки вони мають лишатися
-    link-only або позначені як reading-needed.
+    Визначити, де Седляр виступає свідком і тлумачем чужого вчення, і чому
+    стаття про школу Бойчука не є біографією Седляра.
+  rights:
+    basis: external-link
+    evidence_url: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
+    note: >-
+      Автор дозволяє передрук за умови гіперпосилання, проте курс залишається
+      на рівні посилання й не переносить тексту.
+readings_contract_version: 2
 sequence: 317
 slug: vasyl-sedliar
 subtitle: The Master Illustrator Erased by the State

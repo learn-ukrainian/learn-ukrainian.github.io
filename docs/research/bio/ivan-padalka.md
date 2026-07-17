@@ -1,125 +1,119 @@
-# Падалка Іван Іванович — Research Dossier
+# Іван Падалка — дослідницьке досьє
 
 **Slug:** `ivan-padalka`
-**Block:** I
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Статус:** catalog-source readiness
+**Перевірено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Падалка Іван Іванович.
-- **Pseudonyms / aliases:** Ivan Padalka; no stable artistic pseudonym found in retrieved Tier 1/Tier 2 sources.
-- **Born:** IEU gives 1894-10-27 in Zhornoklovy, Zolotonosha county, Poltava gubernia. Kherson Museum of the Book gives 1894-11-15 in Zhornoklovy, modern Cherkasy region. This dossier flags the date discrepancy.
-- **Died:** 1937-07-13 | Kyiv | Ukrainian SSR | executed by Soviet authorities. IEU gives date/place; *Реабілітовані історією. Харківська область*, book 2, gives the same execution date and Kyiv.
-- **Family / education key facts:** Kherson Museum says he was born into a large farming family, studied first in parish and ministerial schools, then at the Myrhorod Applied Arts School under Opanas Slastion. IEU confirms study at Myrhorod, Kyiv Art School, and the Ukrainian State Academy of Arts under Mykhailo Boichuk and Vasyl Krychevskyi.
+Повне ім'я українською: Падалка Іван Іванович. Найґрунтовніше перевірене джерело — нарис Людмили Соколюк «Бойчукіст Іван Падалка» на сторінках 140–147 тому «Реабілітовані історією. Харківська область. Книга друга» (НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014) [РІ]. Покажчик тому підтверджує діапазон: «Падалка І. І. 140—147» [РІ].
 
-## 2. Oppression mechanism
+Реєстрова довідка на початку нарису подає: народився 1894 року в селі Жорнокльови Золотоніського повіту Полтавської губернії в бідній селянській родині; професор, викладач живопису Київського інституту образотворчого мистецтва; розстріляний 13 липня 1937 року в Києві за вироком військової колегії Верховного Суду СРСР від 13 липня 1937 року «за участь у націонал-фашистській українській організації»; реабілітований ВКВС СРСР 1 лютого 1958 року [РІ].
 
-- **What happened:** Arrest, fabricated political charge, death sentence, execution, confiscation/destruction of works and archive, family reprisals.
-- **When:** Kherson Museum gives arrest on 1936-09-29. IEU gives September 1936. *Реабілітовані історією. Харківська область*, book 2, states that the first of the Boichukists arrested in September 1936 was Ivan Padalka and that he was sentenced and shot on 1937-07-13.
-- **By whom:** NKVD; Military Collegium of the Supreme Court of the USSR.
-- **Document references:** *Реабілітовані історією. Харківська область*, book 2, cites HDA SBU Kharkiv, file `014860`, sheets 6, 20, 220, 221, 222, in the chapter on the Boichukists. The same volume's rehabilitated-persons register states that Padalka was accused under articles 54-8 and 54-11 of the Criminal Code of the Ukrainian SSR as a member of a "national-fascist Ukrainian organization"; this is Soviet accusation language, not accepted description.
-- **Mechanism specifics:** IEU gives the broad sequence: arrest by NKVD in September 1936, later execution, and posthumous rehabilitation in 1958. The rehabilitation volume adds the court body and date: the Military Collegium sentenced him to the highest measure of punishment on 1937-07-13, and he was shot the same day in Kyiv. Kherson Museum adds that his paintings were confiscated and his personal archive destroyed, and that his wife Mariia Pasko was later arrested and sent to Kolyma. The retrieved sources therefore support a precise Stalinist terror case, not a vague "persecution" label.
-- **What survived / what was destroyed:** IEU lists paintings, prints, book illustrations, and murals; Kherson Museum states that paintings were confiscated and the personal archive destroyed. IEU notes destroyed Lutsk barracks murals and the Chervonozavodskyi theater fresco context.
+Далі нарис уточнює дату народження: 27 жовтня 1894 року, село Жорнокльови Золотоніського повіту на Полтавщині, нині Драбівський район Черкаської області, багатодітна селянська родина [РІ].
 
-## 3. Major works
+**Розбіжність дати народження.** Поширені довідки називають 15 листопада 1894 року. Перевіреним джерелом цього досьє є нарис Соколюк, який подає 27 жовтня 1894 року [РІ]. Неперевірену дату не тиражуємо; розбіжність фіксуємо.
 
-- `1919` — Lutsk barracks murals in Kyiv, collective mural project under Boichuk, destroyed in 1922 per IEU.
-- `1919` — illustrations for *Барвінок* with Tymofii Boichuk, children's book/journal work, listed by IEU and Kherson Museum.
-- `1926` — *Apple*, print, listed by IEU.
-- `1927` — *Attack of the Red Cavalry*, painting, listed by IEU.
-- `1927` — *Photographer in the Village*, genre painting, listed by IEU.
-- `1928` — DniproHES series, prints, listed by IEU.
-- `1928` — illustrations to *Слово о полку Ігоревім*, book graphics, listed by IEU.
-- `1928` — cover for *Мистецтво Слобожанщини*, book design, pictured by IEU.
-- `1933` — illustrations for Denis Diderot's *Вибрані твори*, listed by Kherson Museum.
-- `1933-1935` — *Rest* fresco in Kharkiv Chervonozavodskyi Ukrainian Drama Theater, collective mural work, listed by IEU.
-- `1934` — illustration for Quevedo's *Історія життя пройдисвіта*, listed by Kherson Museum.
+Освітній шлях за нарисом: початкова освіта в місцевій церковнопарафіяльній школі, потім двокласна «міністерська» школа в сусідньому селі Нехайки; 1909 року — початок професійної освіти в художньо-промисловій керамічній школі імені М. В. Гоголя в Миргороді завдяки стипендії, яку виклопотав місцевий предводитель дворянства [РІ]. Учителем був Опанас Сластьон — художник, етнограф, збирач народних пісень і мемуарист, який прищеплював учням увагу до національної тематики, типажу й точності у відтворенні побутових деталей і костюмів [РІ].
 
-## 4. Primary-source quotes
+1912 року Падалку відрахували з миргородської школи. Після приблизно піврічної праці в полтавському етнографічному музеї, де він виготовляв копії українських килимів для ткацької майстерні Ханенків на Київщині, восени 1913 року він переїхав до Києва і вступив до Київського художнього училища, яке підпорядковувалося Санкт-Петербурзькій академії мистецтв [РІ].
 
-> "АРМУ не є організація якогось одного напряму майстрів"
+Херсонська обласна бібліотека (Музей книги) подає стисліший інституційний переказ: Падалка — видатний український художник, яскравий представник бойчукізму, учень Михайла Бойчука; життя обірвано розстрілом [ХОУНБ].
 
-Source: Padalka in *Червоний шлях* (1926, no. 2), quoted in *Реабілітовані історією. Харківська область*, book 2. The line matters because it shows Padalka defending a plural, organized Ukrainian art field before Socialist Realist control hardened.
+## 2. Механізм репресії і межі атрибуції
 
-> "На жаль, я був поганим учнем Бойчука"
+Формула вироку — «за участь у націонал-фашистській українській організації» [РІ] — є мовою обвинувачення, а не описом діяльності. Реабілітація 1 лютого 1958 року [РІ] скасовує вирок, але не робить радянське формулювання нейтральним фактом і не є «другою точкою зору».
 
-Source: 1929 interview quoted by Lyuk Media from the "Universalnyi zhurnal" auto-interview tradition. This is Tier 5 as an access copy; it is used only as a direct-voice lead. It helps learners avoid reducing him to an obedient Boichuk imitator.
+Вирок і виконання датовано одним днем — 13 липня 1937 року [РІ]. Це не помилка переказу, а властивість процедури: у реєстровій статті про Василя Седляра той самий том фіксує формулу «з негайним виконанням вироку», яка це пояснює.
 
-## 5. Language register
+**Межа висновку.** Репресія не є доказом мистецької чи політичної правоти. Держава вбила Падалку за те, ким його оголосила. З цього випливає злочин держави, а не автоматична бездоганність кожної позиції митця. Дзеркальний героїчний міф так само далекий від джерел, як і радянський.
 
-- **Register:** Art-critical, workshop-pedagogical, modernist-publicistic.
-- **CEFR readiness for full reading:** B2 for short interview excerpts; C1 for art-critical prose.
-- **Lexicon notes:** `бойчукізм`, `монументальне мистецтво`, `графіка`, `дереворит`, `фреска`, `АРМУ`, `формалізм` as Soviet attack vocabulary.
-- **Stylistic features:** Short polemical statements, institutional art terminology, and modernist vocabulary that benefits from visual support.
+**Мова кампанії.** Нарис прямо називає ярлики, якими цькували бойчукізм: «формалізм» і «буржуазний націоналізм» [РІ]. Це слова кампанії, а не мистецтвознавча класифікація; уживати їх можна лише в лапках і з поясненням.
 
-## 6. Contested points
+## 3. Авторська праця й інституційна роль
 
-- **What's debated in modern UA scholarship:** His exact birth date and the degree of independence from Boichuk's method. IEU gives one date; Ukrainian museum-memory pages give another.
-- **What gets simplified in popular memory:** He is often remembered only as "one of the Boichukists." IEU and Kherson Museum show a broader profile: teacher, printmaker, illustrator, muralist, and book designer.
-- **Where modern Russian disinformation attacks them:** The Soviet accusation of a "national-fascist Ukrainian organization" is attack language in the criminal case; the dossier labels it as such.
-- **Polish / Jewish / other-perspective considerations:** His art moved through Ukrainian modernist networks and European exhibitions. No specific Polish/Jewish contested point was found in retrieved sources.
+Падалка не був лише учнем. Том фіксує його серед учасників першого всеукраїнського з'їзду Асоціації революційного мистецтва України (АРМУ); у переліку поряд стоять І. І. Падалка, генеральний секретар асоціації В. Ф. Седляр, Олесь Довженко та інші [РІ]. Це показує самостійну організаційну роль у мистецькому самоврядуванні.
 
-## 7. Cross-track links
+Нарис подає й фахову оцінку його графіки: серед бойчукістів роботи Падалки вирізнялися фольклорним підходом, а його «неопримітивізм» визначався високим професійним рівнем [РІ]. Це мистецтвознавче твердження авторки нарису, а не документ доби, і воно має інший статус, ніж дати.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/rozstriliane-vidrodzennia-phenomenon.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/rozstriliane-vidrodzennia.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-rozstriliane.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Mykhailo Boichuk, Vasyl Sedliar, Sofiia Nalepynska-Boichuk, Oksana Pavlenko, and Opanas Slastion.
-- **Potential LIT additions surfaced by this research:**
-  - A B2 visual-reading activity using Padalka's *Слово о полку Ігоревім* illustrations.
+1933 року Падалка разом із М. Бойчуком, В. Седляром і О. Павленко працював над фресковими розписами в Харківському Червонозаводському театрі [РІ]. Той самий фрагмент наводить спогад Оксани Павленко про побачене в місті під час штучного Голодомору українського селянства [РІ]; це свідчення сучасниці, і саме так його треба називати.
 
-## 8. Naming-canonical
+Том містить репродукцію гравюри Івана Падалки із зображенням будинку Держпромисловості, датовану 1927 роком, із покликанням на журнал «Ударник держапарату» 1932 року [РІ].
 
-- **Slug:** `ivan-padalka`
-- **EN canonical (BGN/PCGN 2010):** Ivan Padalka
-- **UA canonical (with patronymic):** Падалка Іван Іванович
-- **Aliases (track these for `aliases:` YAML field):** Ivan Padalka, Ivan Ivanovych Padalka
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Ivan Ivanovich Padalka (FORBIDDEN except as archival metadata)
+## 4. Роботи і документи для читання
 
-## 9. Image candidates
+Ухвалений набір — два українськомовні джерела, обидва link-only:
 
-- **Best PD/CC portrait:** IEU group photograph of Mykhailo Boichuk and students including Ivan Padalka; rights need page-level confirmation before publication.
-- **Backup candidates:** Wikimedia Commons images of Padalka illustrations, including *Слово о полку Ігоревім* page; verify license before use.
-- **If no PD/CC portrait exists:** Use a rights-cleared reproduction of a book illustration.
-- **Era-appropriate context image:** HDA SBU / rehabilitation-volume citation page for the Boichukists, if permission allows.
+1. ХОУНБ ім. Олеся Гончара (Музей книги), «Український художник Іван Падалка» — інституційна орієнтація; «Усі права застережено».
+2. «Реабілітовані історією. Харківська область. Книга друга» — науковий нарис Соколюк (с. 140–147) плюс мова документів; публічний PDF.
 
-## 10. Sources used
+Попередній стан плану містив запис `reading-needed` з `source_url: reading-needed`. Його вилучено: плейсхолдер не є читанням.
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine, "Padalka, Ivan" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesP%5CA%5CPadalkaIvan | accessed 2026-05-30
-- *Реабілітовані історією. Харківська область*, book 2 | https://www.reabit.org.ua/files/store/Kharkiv_2.pdf | accessed 2026-05-30
+**Каталог свідомо не добирали до штучної кількості.** Перевірено й відхилено:
 
-**Tier 2 (institutional):**
-- Kherson Regional Universal Scientific Library, Museum of the Book, "Український художник Іван Падалка" | https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm | accessed 2026-05-30
-- National Library for Children, Padalka page | https://chl.kiev.ua/Default.aspx?id=11408 | accessed 2026-05-30
+- Сторінка Центрального державного архіву-музею літератури і мистецтва — повертає HTTP 403 навіть із браузерним User-Agent; це не публічно доступний URL, тому вносити її як джерело не можна.
+- Запис електронної бібліотеки «Україніка» (irbis-nbuv) — URL відкриває загальний навігаційний покажчик без запису про Падалку; це неспівпадіння URL і змісту.
+- Англомовна стаття Internet Encyclopedia of Ukraine — readings вимагають українськомовного статусу.
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Падалка Іван Іванович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+Два перевірені джерела кращі за третє непідтверджене. Нарис Соколюк дає вісім сторінок наукового тексту з покликаннями, тож глибина каталогу забезпечена якістю, а не кількістю.
 
-**Tier 4 (modern scholarly post-1991):**
-- Liudmyla Sokoliuk, "Бойчукіст Іван Падалка," cited in Kherson Museum source and in *Реабілітовані історією*.
+## 5. Цитати: прийняте й відхилене
 
-**Tier 5 (general web):**
-- Lyuk Media, "Про життя розстріляного бойчукіста Івана Падалки" | https://lyuk.media/city/ivan-padalka/ | accessed 2026-05-30
+**Прийнято — власний голос Падалки, з точним первинним локатором.** Нарис Соколюк на с. 142 наводить слова Падалки про АРМУ: що АРМУ не є організацією якогось одного напряму майстрів, а є асоціацією федеративного характеру, яка об'єднує художників різних напрямків [РІ]. Нарис прямо зазначає, що цим Падалка поділився у часописі «Червоний шлях», і подає виноску з повним локатором:
 
-**Primary-source documents accessed:**
-- Padalka article/interview excerpts quoted in *Реабілітовані історією* and Lyuk Media access copy.
-- HDA SBU Kharkiv case citation `014860`, sheets 6, 20, 220, 221, 222, as cited in *Реабілітовані історією*.
+> Література й мистецтво // Червоний шлях. — 1926. — № 2 (35). — С. 177, 178.
 
----
+Це повний локатор: видання, рік, число, сторінки. Цитату можна використовувати з подвійною атрибуцією — первинне джерело плюс «цит. за нарисом Соколюк, с. 142». Це найцінніший матеріал досьє: авторський голос про власну організацію, який показує Падалку захисником мистецького плюралізму, а не виконавцем чужого стилю.
 
-## Decolonization self-check
+**Відхилено.** Попередній стан досьє наводив другу цитату — «На жаль, я був поганим учнем Бойчука» — і сам позначав її як Tier 5 access copy з медійного переказу інтерв'ю. Прямий пошук у повному тексті нарису (с. 140–147) цієї фрази **не виявив**. Точного первинного локатора немає. Цитату вилучено як непідтверджену; відновлювати її можна лише після прямої перевірки за конкретним виданням і сторінкою.
 
-- [x] Soviet accusation language labeled as accusation
-- [x] Birth-date discrepancy flagged
-- [x] NKVD/court mechanism specific
-- [x] No case number invented beyond retrieved HDA SBU citation
-- [x] Existing paths verified
+## 6. Спірні або чутливі точки
+
+- **Дата народження:** 27 жовтня 1894 [РІ] проти поширеної 15 листопада. Приймаємо перевірену з атрибуцією.
+- **Причина відрахування 1912 року:** нарис розрізняє три рівні — офіційна причина (буцімто атеїзм), пояснення самого Падалки з його пізнішої біографії (організовані виступи проти адміністрації, шкільний страйк, читання української газети «Рада») і родинний спогад сестри Уляни про епізод із молебнем [РІ]. Три версії мають різний доказовий статус і не зводяться до однієї.
+- **Слово «організація»:** у джерелах воно позначає і реальну АРМУ, і вигадану слідством «націонал-фашистську організацію» [РІ]. Одне слово в двох контекстах не означає того самого факту.
+- **Оцінка проти документа:** «яскравий представник бойчукізму» [ХОУНБ] і «фольклорний підхід» [РІ] — оцінки, а не дати. Рівні не змішуємо.
+- **Ступінь самостійності від методу Бойчука:** предмет фахової дискусії; прийнята цитата про АРМУ [РІ] є аргументом на користь самостійної позиції, але не закриває питання.
+
+## 7. Крос-трекові зв'язки
+
+Наявних модулів LIT або HIST для цього слуга в поточному дереві планів не виявлено; жодних «Existing» шляхів не заявлено, щоб не створювати вигаданих покликань. Потенційні напрями (не наявні файли): бойчукізм і школа Михайла Бойчука; Розстріляне відродження; українська художня промисловість 1920-х; Голодомор у свідченнях митців.
+
+## 8. Іменування і мовний режим
+
+- Українська канонічна форма з по батькові: Падалка Іван Іванович.
+- Англійська канонічна форма (BGN/PCGN 2010): Ivan Padalka.
+- Варіанти для поля `aliases`: І. І. Падалка, Іван Падалка.
+- Відмінювання: Падалка, Падалки, Падалці, Падалкою.
+- Топоніми подаємо за джерелом із сучасним уточненням: Жорнокльови, Золотоніський повіт, Полтавська губернія — нині Драбівський район Черкаської області [РІ].
+- Ярлики «формалізм» і «буржуазний націоналізм» уживаємо тільки в лапках.
+
+## 9. Зображення і права
+
+Портрет не ухвалено. Окремого файла із засвідченим автором і відкритою ліцензією не знайдено. У плані діє `portrait_fallback` типу `text-only` з диспозицією `no-portrait-until-rights-verified`.
+
+Твори мають окремий правовий режим. Наявність гравюри Падалки в документальному томі [РІ] або репродукцій на музейній сторінці [ХОУНБ] не є ліцензією на відтворення. Біографічне джерело доводить біографічний факт; мистецький твір потребує власного доказу прав на конкретний файл. Це правило діє й тоді, коли твір давній: вік не є доказом правового статусу.
+
+## 10. Джерела і деколонізаційна перевірка
+
+Перевірка виконана прямим зверненням до кожного джерела 2026-07-17: PDF завантажено й опрацьовано локально, повний текст нарису вилучено посторінково, обидві цитати перевірено пошуком у тексті.
+
+### Джерела
+
+- [РІ] «Реабілітовані історією. Харківська область. Книга друга», НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014 — https://www.reabit.org.ua/files/store/Kharkiv_2.pdf — українською; 672 сторінки; нарис Л. Соколюк «Бойчукіст Іван Падалка», с. 140–147; реєстрова довідка с. 140; АРМУ с. 142–143; Червонозаводський театр с. 146; покажчик с. 668.
+- [ХОУНБ] «Український художник Іван Падалка. Музей книги. ХОУНБ ім. Олеся Гончара», Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара — https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm — українською; «Усі права застережено».
+
+**Первинний локатор прийнятої цитати:** Література й мистецтво // Червоний шлях. — 1926. — № 2 (35). — С. 177, 178 (цит. за нарисом Соколюк, с. 142).
+
+### Деколонізаційна перевірка
+
+- [x] Страту названо прямо, без евфемізмів.
+- [x] Формулу вироку марковано як мову обвинувачення.
+- [x] Ярлики кампанії подано в лапках із поясненням.
+- [x] Репресію не використано як доказ правоти всіх позицій митця.
+- [x] Розбіжність дати народження показано, а не усунено.
+- [x] Непідтверджену цитату вилучено; прийняту подано з повним первинним локатором.
+- [x] Права на твори відокремлено від біографічних джерел.
+- [x] Недоступні та неспівпадні URL відхилено, а не внесено «для кількості».
+- [x] Вигаданих «Existing» шляхів не заявлено.

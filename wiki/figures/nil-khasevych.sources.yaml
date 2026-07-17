@@ -1,0 +1,17 @@
+---
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-884470
+    type: external
+    title: Хасевич Ніл — Енциклопедія Сучасної України
+    url: https://esu.com.ua/article-884470
+  - id: S2
+    file: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902
+    type: external
+    title: 1905 - народився Ніл Хасевич, художник — Український інститут національної пам'яті
+    url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902
+  - id: S3
+    file: https://nibu.kyiv.ua/exhibitions/596/
+    type: external
+    title: Ніл Хасевич – іміджмейкер українських повстанців — Національна історична бібліотека України
+    url: https://nibu.kyiv.ua/exhibitions/596/

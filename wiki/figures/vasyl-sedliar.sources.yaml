@@ -1,0 +1,17 @@
+---
+sources:
+  - id: S1
+    file: https://lib.kherson.ua/vasil-sedlyar.htm
+    type: external
+    title: Василь Седляр — Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара
+    url: https://lib.kherson.ua/vasil-sedlyar.htm
+  - id: S2
+    file: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+    type: external
+    title: Реабілітовані історією. Харківська область. Книга друга — НАН України, Інститут національної пам'яті, СБУ
+    url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+  - id: S3
+    file: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
+    type: external
+    title: Сергій Білокінь - У Парижі
+    url: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html

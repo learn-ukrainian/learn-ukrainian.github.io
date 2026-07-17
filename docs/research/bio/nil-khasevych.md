@@ -1,117 +1,109 @@
-# Ніл Антонович Хасевич — Research Dossier
+# Ніл Хасевич — дослідницьке досьє
 
 **Slug:** `nil-khasevych`
-**Block:** G
-**Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Статус:** catalog-source readiness
+**Перевірено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Ніл Антонович Хасевич.
-- **Pseudonyms / aliases:** Бей-Зот, 333, Левко, Рибалка, Старий, Джміль, КВ-37, З-14, 85-10. [T1: ЕСУ — Хасевич Ніл]
-- **Born:** 25 November 1905 | Diuksyn, Volhynia | Russian Empire. ЕСУ and IEU confirm the date and Volhynian locality. [T1: ЕСУ] [T1: IEU — Khasevych, Nil]
-- **Died:** 4 March 1952 | near Sukhivtsi, Rivne region | killed in a Soviet MGB operation. ЕСУ states he died in combat with an operational group of the USSR Ministry of State Security. [T1: ЕСУ]
-- **Family / education key facts:** Ukrainian graphic artist, woodcut specialist, public-political underground participant; lost a leg in youth, studied art in Warsaw, became known for ex libris and later UPA underground graphics. [T1: ЕСУ] [T1: IEU]
+Повне ім'я українською: Хасевич Ніл Антонович. Енциклопедія Сучасної України у статті О. Й. Стасюка (ORCID 0000-0002-2957-0432; Інститут енциклопедичних досліджень НАН України, НТШ) подає народження 25 листопада 1905 року в селі Дюксин на Рівненщині та смерть 4 березня 1952 року в Сухівцях [ЕСУ]. Історичний календар Українського інституту національної пам'яті незалежно подає ту саму дату народження [УІНП].
 
-No OS/NS discrepancy found. The precise operational document for the 1952 MGB action was not retrieved.
+**Освіта.** ЕСУ подає гімназію в Рівному 1925 року та Варшавську академію мистецтв 1935 року за спеціальністю графіка [ЕСУ]. УІНП додає ранішу частину шляху: церковнопарафіяльна школа, духовна семінарія в Житомирі, іконописна майстерня, потім Варшавська академія від 1926 року, де він студіював малярство, ткацтво й графіку; диплом 1935 року з правом викладати в середніх школах [УІНП]. Національна історична бібліотека України незалежно підтверджує диплом Варшавської академії 1935 року [НІБУ].
 
-## 2. Oppression mechanism
+**Інвалідність.** УІНП подає, що 1918 року, у віці тринадцяти років, Хасевич втратив ліву ногу в залізничній пригоді й змайстрував дерев'яний протез [УІНП]. ЕСУ формулює стисліше: втратив ногу в дитинстві після наїзду потяга [ЕСУ]. НІБУ подає вік чотирнадцять років [НІБУ]. Розбіжність у рік фіксуємо.
 
-- **What happened:** Hunted and killed by Soviet MGB forces because of his role in the UPA underground and the circulation of anti-Soviet graphics.
-- **When:** 4 March 1952.
-- **By whom:** Ministry of State Security of the USSR (MGB) operational group.
-- **Document references:** ЕСУ provides the MGB killing mechanism; no fond/opys/sprava retrieved in this pass. [T1: ЕСУ]
+**Фахове визнання до підпілля.** ЕСУ подає нагороду Ватикану 1931 року за працю «Праня», диплом Варшавської академії 1932 року та третю премію на міжнародній виставці дереворитів у Варшаві 1937 року [ЕСУ]. Отже, Хасевич був сформованим європейським графіком ще до війни; підпільна праця — продовження фаху, а не аматорство обставин.
 
-Khasevych's case shows Soviet fear of images. He was not just a hidden artist; he made visual propaganda, awards, seals, bofony, and woodcuts for the underground. ЕСУ notes more than 150 insurgent-themed woodcuts and UPA military-award designs. Soviet security targeted the visual infrastructure of resistance because prints could cross borders and make repression visible. [T1: ЕСУ]
+**Підпільні ролі.** ЕСУ подає членство в ОУН від 1935 року, а від 1943 року — роботу в референтурі пропаганди Північно-західного українського краю [ЕСУ]. УІНП описує його як члена оунівського підпілля, вояка УПА від 1943 року й члена Української головної визвольної ради [УІНП].
 
-His disability should be handled with the same care as his politics. The loss of a leg is biographically relevant because it shaped how he fought and worked, but it should not become sentimental shorthand. The stronger pedagogical point is that a disabled artist built a technical visual language that Soviet security considered operationally dangerous.
+**Авторство друку.** ЕСУ подає понад 150 дереворитів на повстанську тематику, керівництво більш ніж двадцятьма підпільними друкарнями та авторство проєктів військових відзнак УПА [ЕСУ]. УІНП додає перелік: бофони, прапори, печатки, керівництво підпільною друкарнею [УІНП]. НІБУ подає близько 150 дереворитів, плакати та ілюстрації для видань «Український перець» і «Хрін» [НІБУ]. Три джерела дають узгоджену картину.
 
-## 3. Major works
+ЕСУ також подає, що праці часів підпілля вийшли в США в альбомах «Волинь у боротьбі» та «Графіка в бункерах УПА» у 1950–1952 роках [ЕСУ].
 
-- `1937` — prize-winning woodcuts at an international wood-engraving exhibition in Warsaw. [T1: ЕСУ]
-- `1939` — *Книжкові знаки Ніла Хасевича*, album, Warsaw. [T1: ЕСУ]
-- `1939` — *Екслібрис Ніла Хасевича*, album, Philadelphia. [T1: ЕСУ]
-- `1940s` — underground graphics for OUN/UPA publications, including satirical journals and leaflets. [T2: textbook RAG]
-- `1948` — selected UPA award designs and bofony; exact dates need archival verification.
-- `1949` — woodcut "20 років боротьби ОУН," noted in textbook RAG.
-- `Posthumous` — albums of Khasevych's graphics, often used in UPA memory work.
+## 2. Межі атрибуції: головне застереження слуга
 
-## 4. Primary-source quotes (>=2 required)
+**З організаційної ролі не випливає особистий наказ, мотив чи бойовий вчинок.** Належність до референтури пропаганди [ЕСУ] або статус вояка УПА [УІНП] доводять належність і функцію — і нічого більше. Приписувати Хасевичу конкретні рішення, накази чи дії, яких джерела не називають, означає домислювати. Пропагандистське авторство задокументоване; персональна відповідальність за дії організації — ні. Це правило захищає одночасно від радянської криміналізації й від героїчного домислу.
 
-- "Я не можу битися зброєю..." Source: Ukrainian 11th-grade history textbook RAG quoting Khasevych. The line presents the tool-of-art-as-weapon self-understanding. [T2: textbook RAG]
-- "Я хочу, щоб світ знав..." Source: same textbook RAG quote. Useful for teaching visual testimony and international communication. [T2: textbook RAG]
+**Графіка не є протоколом подій.** Дереворит — художній твір із власною мовою символів [ЕСУ] [НІБУ]. Він свідчить про те, що і як автор зображував, а не про перебіг конкретного бою. Мистецький аргумент і історичний факт — різні рівні.
 
-Phase 2 should verify the original letter or memoir source behind the textbook quotation before using the full quote in learner-facing material.
+**Інвалідність — факт, а не сюжет.** Джерела фіксують втрату ноги й виготовлення протеза [УІНП]. Формула «попри інвалідність став митцем» нав'язує оцінку, якої в документах немає. Фізичний стан був частиною життя фахівця.
 
-## 5. Language register
+## 3. Обставини загибелі: атрибутовано, не розв'язано
 
-- **Register:** visual-political rather than literary; captions and slogans are concise, mobilizational, and graphic.
-- **CEFR readiness for full reading:** B1-B2 for captions; C1 for art-historical essays about him.
-- **Lexicon notes:** `дереворит`, `екслібрис`, `бофон`, `відзнака`, `підпілля`, `різець`.
-- **Stylistic features:** stark contrast, emblematic composition, compressed slogans, martyrological imagery.
+ЕСУ подає смерть 4 березня 1952 року в селі Сухівці й формулює, що він загинув у бою з оперативною групою міністерства державної безпеки [ЕСУ]. УІНП подає ту саму дату й уточнює: поблизу села Сухівці Рівненського району, у перестрілці з підрозділами МДБ; місце поховання невідоме [УІНП].
 
-## 6. Contested points
+**Розбіжність.** НІБУ називає місцем загибелі криївку поблизу Клеваня на Рівненщині й датує подію березнем 1952 року [НІБУ]. Клевань і Сухівці — різні населені пункти того самого району. Дві установи називають Сухівці [ЕСУ] [УІНП], одна — околиці Клеваня [НІБУ]. Досьє не обирає версію мовчки.
 
-- **What's debated in modern UA scholarship:** Khasevych is less politically charged than Bandera or Kliachkivskyi, but his art is embedded in UPA propaganda. Art historians rightly study his technical skill, disability, training, and graphic innovation; historians must also name that he designed visual material for an armed underground whose political record is contested. [T1: ЕСУ] [T1: IEU]
-- **What gets simplified in popular memory:** Ukrainian memory often presents him as the heroic artist who fought with a chisel. That is a powerful and sourced self-image, but it should not turn his work into neutral art detached from OUN/UPA messaging. Conversely, dismissing the art as mere "bandit propaganda" repeats Soviet framing and erases a sophisticated Ukrainian graphic tradition.
-- **Where modern Russian disinformation attacks him:** Soviet/Russian narratives reduce UPA cultural production to criminal agitation. The decolonized correction is to analyze the prints as art, political communication, and anti-Soviet testimony. The anti-hagiographic correction is to ask what the images omit: Polish civilian suffering, Jewish catastrophe, and coercion inside wartime underground politics.
-- **Polish / Jewish / other-perspective considerations:** Khasevych's known role is visual production, not command of violence. Still, any UPA visual-culture module should be paired with Volhynia and Holocaust modules so learners do not encounter the iconography without the civilian-harm context.
-- **NPOV-decolonized framing:** Teach Khasevych as a major Ukrainian graphic artist killed by MGB forces and as an UPA propagandist. Both labels are necessary.
-- **Visual-source caution:** His woodcuts can be read at three levels: formal graphic design, underground communication, and political myth-making. A balanced lesson should ask what the print wants viewers to feel, what Soviet violence it documents, and what parts of the wartime record remain outside the image frame.
-- **Accessibility caution:** Because Khasevych's biography includes disability and visual art, future learner materials should avoid pity language. The stronger framing is agency: a disabled Ukrainian artist used reproducible graphic media to fight Soviet erasure and to build underground institutions.
-- **Museum caution:** If using a woodcut as an image asset, caption it as political print culture, not decorative illustration.
+**Межа опису.** Джерела узгоджено фіксують, що загибель сталася внаслідок дій радянської держбезпеки [ЕСУ] [УІНП] [НІБУ]. Це факт переслідування. З нього не випливає ні романтизація останнього бою, ні деталізація сцени: перевірені сторінки не подають перебігу, і реконструювати його з уяви не можна. Місце поховання лишається невідомим [УІНП] — ця прогалина є історичним свідченням, а не запрошенням до домислу. Оперативного документа МДБ не отримано.
 
-## 7. Cross-track links
+## 4. Роботи і документи для читання
 
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/upa.yaml`
-  - `curriculum/l2-uk-en/plans/hist/oun.yaml`
-- **Existing LIT-WAR modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit-war/upa-underground-literature.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/volyn-pamiat-i-travma.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/holokost-v-ukraini.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Khasevych; visual-literacy lesson on UPA woodcuts and Soviet anti-underground imagery.
+Ухвалений набір — три українськомовні джерела, усі link-only:
 
-## 8. Naming-canonical
+1. ЕСУ, «Хасевич Ніл» (автор О. Й. Стасюк) — академічна довідка; захищено авторським правом.
+2. УІНП, «1905 - народився Ніл Хасевич, художник» — інституційний нарис; ліцензія CC BY 4.0.
+3. НІБУ, «Ніл Хасевич – іміджмейкер українських повстанців» (13 жовтня 2022) — бібліографічний акцент; ліцензія CC BY-NC-SA 4.0.
 
-- **Slug:** `nil-khasevych`
-- **EN canonical (BGN/PCGN 2010):** Nil Khasevych
-- **UA canonical:** Ніл Антонович Хасевич
-- **Aliases:** Бей-Зот; 333; Левко; Рибалка; Старий; Джміль; КВ-37; З-14; 85-10.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Nil Khasevich; Nikolai Khasevich; Russian patronymic spellings.
+Попередній стан плану містив єдиний запис `reading-needed` з `source_url: reading-needed`. Його замінено трьома перевіреними джерелами.
 
-## 9. Image candidates
+**Перевірено й відхилено:**
 
-- **Best PD/CC portrait:** ЕСУ image / Wikimedia Commons portrait of Nil Khasevych; verify license.
-- **Backup candidates:** scanned albums of ex libris and woodcuts if public-domain or permission-cleared.
-- **Era-appropriate context image:** One rights-cleared woodcut, ideally with source-edition metadata and caption explaining propaganda context.
+- Стаття у «Віснику Книжкової палати» (`visnyk.ukrbook.net/article/view/254092`) — помилка захищеного з'єднання: сертифікат домену виданий лише на `journals.uran.ua`, тож ім'я хоста не збігається із сертифікатом. Це не чисте покликання, придатне для цитування.
+- Англомовна стаття Internet Encyclopedia of Ukraine — readings вимагають українськомовного статусу.
 
-## 10. Sources used
+Ліцензія CC BY-NC-SA прийнятна для цього проєкту, який має постійну некомерційну позицію. Проте ліцензія сторінки поширюється на її вміст, а не на твори чужого авторства, зображені на ній.
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Хасевич Ніл." <https://esu.com.ua/article-884470> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Khasevych, Nil." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CH%5CKhasevychNil.htm>.
+## 5. Цитати
 
-**Tier 2 (institutional):**
-- Ukrainian 10th/11th-grade history textbook RAG excerpts on Khasevych, underground printing, and the quoted chisel statement.
+Прямих цитат Хасевича з точним первинним локатором у перевірених джерелах не виявлено. Тому досьє **не наводить жодної цитати**. Псевдоніми, які подавав попередній стан досьє (Бей-Зот, 333, Левко та інші), у перевіреному тексті ЕСУ не підтверджено в цьому проході; їх не переносимо без прямої перевірки.
 
-**Tier 4 (modern scholarly post-1991):**
-- Studies on UPA visual culture and underground print networks; Phase 2 should add page-stable art-history sources.
-- General OUN/UPA context scholarship: Motyka, Himka, Rudling, Snyder.
+## 6. Спірні або чутливі точки
 
-**Primary-source documents accessed:**
-- Textbook-cited Khasevych quote; no MGB operation file ID retrieved.
+- **Місце загибелі:** Сухівці [ЕСУ] [УІНП] проти околиць Клеваня [НІБУ]. Не розв'язано.
+- **Вік під час пригоди:** тринадцять [УІНП] проти чотирнадцяти років [НІБУ]. Не розв'язано.
+- **Диплом 1932 року.** ЕСУ пов'язує його з портретом Мазепи [ЕСУ]. УІНП про портретний диплом 1932 року не згадує взагалі й подає лише диплом 1935 року [УІНП]. У популярних переказах трапляється версія про портрет Богдана Хмельницького — **жодне перевірене джерело її не підтверджує**. Приймаємо лише атрибутовану версію ЕСУ; версію про Хмельницького не вносимо.
+- **Кількість дереворитів:** «понад 150» [ЕСУ] і «близько 150» [НІБУ] — узгоджено в порядку величини; точного числа не стверджуємо.
+- **Політична рамка:** ОУН і УПА лишаються предметом фахової історіографічної дискусії. Досьє фіксує ролі з роками й не виносить підсумкового морального вироку за організацію.
 
----
+## 7. Крос-трекові зв'язки
 
-## Decolonization self-check (run before submitting)
+Наявних модулів LIT або HIST для цього слуга в поточному дереві планів не виявлено; жодних «Existing» шляхів не заявлено. Потенційні напрями (не наявні файли): український дереворит міжвоєння; підпільний друк і бофони як документ; Волинь у ХХ столітті; історіографія ОУН і УПА.
 
-- [x] MGB killing named directly.
-- [x] Art quality and propaganda function both named.
-- [x] OUN/UPA controversy connected without false individualized charges.
-- [x] Russian-imperial forms confined to §8.
-- [x] Image-rights caution included.
+## 8. Іменування і мовний режим
+
+- Українська канонічна форма з по батькові: Хасевич Ніл Антонович.
+- Англійська канонічна форма (BGN/PCGN 2010): Nil Khasevych.
+- Варіанти для поля `aliases`: Ніл Хасевич, Н. А. Хасевич.
+- Відмінювання: Хасевич, Хасевича, Хасевичем.
+- Топоніми за джерелами: Дюксин (Рівненщина) [ЕСУ] [УІНП]; Сухівці, Рівненський район [УІНП]; Клевань — лише як версія НІБУ [НІБУ].
+- Назви альбомів подаємо повністю: «Волинь у боротьбі», «Графіка в бункерах УПА» [ЕСУ].
+
+## 9. Зображення і права
+
+Портрет не ухвалено. Окремого файла із засвідченим автором і відкритою ліцензією не знайдено. У плані діє `portrait_fallback` типу `text-only` з диспозицією `no-portrait-until-rights-verified`.
+
+Дереворити є самостійними творами з власним правовим режимом. Те, що матеріал НІБУ доступний за ліцензією CC BY-NC-SA 4.0 [НІБУ], **не означає** ліцензії на самі твори: ліцензія сторінки поширюється на її вміст, а не автоматично на зображення чужого авторства. Курс не відтворює дереворитів без окремого доказу прав на конкретний файл. Розрізнення «права на текст сторінки» і «права на твір» є обов'язковим.
+
+## 10. Джерела і деколонізаційна перевірка
+
+Перевірка виконана прямим зверненням до кожного джерела 2026-07-17, а не за пошуковими фрагментами. Версію про портрет Хмельницького перевірено проти первинної сторінки УІНП і не підтверджено.
+
+### Джерела
+
+- [ЕСУ] «Хасевич Ніл», автор О. Й. Стасюк, Енциклопедія Сучасної України — https://esu.com.ua/article-884470 — українською; захищено авторським правом.
+- [УІНП] «1905 - народився Ніл Хасевич, художник», Український інститут національної пам'яті — https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902 — українською; ліцензія CC BY 4.0.
+- [НІБУ] «Ніл Хасевич – іміджмейкер українських повстанців», Національна історична бібліотека України, 13 жовтня 2022 — https://nibu.kyiv.ua/exhibitions/596/ — українською; ліцензія CC BY-NC-SA 4.0.
+
+### Деколонізаційна перевірка
+
+- [x] Переслідування держбезпекою названо прямо, без евфемізмів.
+- [x] Радянську криміналізацію відхилено; водночас героїчного домислу не додано.
+- [x] З організаційної ролі не виведено особистого наказу, мотиву чи бойового вчинку.
+- [x] Графіку не використано як доказ перебігу подій.
+- [x] Інвалідність подано як факт, а не як сентиментальний сюжет.
+- [x] Розбіжності щодо місця загибелі й віку показано, а не усунено.
+- [x] Непідтверджену версію про портрет Хмельницького не внесено.
+- [x] Непідтверджені псевдоніми не перенесено.
+- [x] Ліцензію сторінки відокремлено від прав на твори.
+- [x] Вигаданих «Existing» шляхів не заявлено.

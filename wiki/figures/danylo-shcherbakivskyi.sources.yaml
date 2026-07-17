@@ -1,0 +1,24 @@
+---
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-886127
+    type: external
+    title: Щербаківський Данило Михайлович — Енциклопедія Сучасної України
+    url: https://esu.com.ua/article-886127
+  - id: S2
+    file: https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi
+    type: external
+    title: >-
+      Данило Щербаківський: відданий музейній справі дослідник українського
+      мистецтва — Національний заповідник «Києво-Печерська лавра»
+    url: https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi
+  - id: S3
+    file: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
+    type: external
+    title: Прижиттєві видання Данила Щербаківського 1925 року — Національна історична бібліотека України
+    url: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
+  - id: S4
+    file: http://www.nbuv.gov.ua/node/4510
+    type: external
+    title: Народився Данило Щербаківський — Національна бібліотека України імені В. І. Вернадського
+    url: http://www.nbuv.gov.ua/node/4510

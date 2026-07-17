@@ -1,113 +1,118 @@
-# Щербаківський Данило Михайлович — Research Dossier
+# Данило Щербаківський — дослідницьке досьє
 
 **Slug:** `danylo-shcherbakivskyi`
-**Block:** I
-**Tier:** 1
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Статус:** catalog-source readiness
+**Перевірено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Щербаківський Данило Михайлович.
-- **Pseudonyms / aliases:** Данило Щербаківський; Danylo Shcherbakivskyi; Danylo Shcherbakivsky.
-- **Born:** 1877-12-17 Old Style / 1877-12-29 New Style | Shpychyntsi, Skvyra county, Kyiv gubernia | Russian Empire. ESU gives 17(29).12.1877.
-- **Died:** 1927-06-06 | Kyiv, Ukrainian SSR, USSR | suicide by drowning in the Dnipro after harassment and denunciations, per ESU and Ukrainian Wikipedia via MCP.
-- **Family / education key facts:** Brother of scholar Vadym Shcherbakivskyi. Studied history and philology at Kyiv University; worked as art historian, ethnographer, archaeologist, museum curator, and preservationist. ESU lists teaching and museum posts in Uman, Kyiv Art-Industrial and Scientific Museum, Kyiv Archaeological Institute, and the Ukrainian Scientific Society.
+Повне ім'я українською: Щербаківський Данило Михайлович. По батькові підтверджено двома джерелами: Енциклопедія Сучасної України у статті С. І. Білоконя (Інститут енциклопедичних досліджень НАН України) [ЕСУ] та матеріал Національного заповідника «Києво-Печерська лавра» [Лавра].
 
-## 2. Oppression mechanism
+**Дати.** ЕСУ подає народження 29 грудня 1877 року в селі Шпичинці на Київщині та смерть 6 червня 1927 року в Києві [ЕСУ]. Лавра подає ті самі роки життя й датує народження 17 грудня 1877 року [Лавра]. Це **не суперечність**: 17 грудня за старим стилем відповідає 29 грудня за новим. Саме так у довідках виникають «різні дати народження».
 
-- **What happened:** Bureaucratic harassment, denunciation, pressure against museum work, and suicide under institutional persecution.
-- **When:** Immediate death date is 1927-06-06. ESU and MCP-retrieved Ukrainian Wikipedia identify harassment and denunciations as the context; exact sequence of party/museum documents: source not found.
-- **By whom:** Soviet Ukrainian cultural bureaucracy and denunciation mechanisms around the museum sector. Specific GPU/NKVD agency involvement was not retrieved.
-- **Document references:** ESU states that due to harassment and denunciations he committed suicide by drowning in the Dnipro. Retrieved sources do not provide an archival case file, order number, or formal inquiry number.
-- **Mechanism specifics:** Shcherbakivskyi was a preservationist of Ukrainian material culture during the fragile post-imperial and early Soviet institutional period. His work depended on museum autonomy, fieldwork, and defense of church/art objects. The persecution mechanism appears in the retrieved sources as institutional baiting and denunciation rather than a criminal sentence. For teaching, this is important: Soviet cultural repression was not only shooting or camp imprisonment; it also used workplace pressure and accusations to make scholarly and museum labor unbearable.
-- **What survived / what was destroyed:** His cataloging, collecting, and published studies survived in later museum scholarship. The living continuity of the museum school was damaged by his death and by the broader Soviet pressure on independent Ukrainian art history.
+**Освіта.** ЕСУ подає третю гімназію 1897 року й Університет святого Володимира в Києві 1901 року [ЕСУ]. Університетська підготовка історика пояснює, чому подальша музейна праця мала дослідницький, а не лише збиральницький характер.
 
-The exact last-day documentary chain remains a source gap. ESU and the MCP-retrieved Wikipedia summary support the causal frame of harassment and denunciations; they do not supply a full dossier of the denunciation machinery. Phase 2 should therefore avoid dramatized dialogue or invented meeting scenes. The sourced, teachable claim is narrower and stronger: a Ukrainian museum scholar died by suicide in 1927 after documented institutional persecution, and later scholarship remembers the death as part of the pressure on Ukrainian cultural preservation.
+**Музейна праця.** ЕСУ подає, що у 1910–1927 роках він очолював історично-побутовий відділ і відділ народного мистецтва Київського художньо-промислового і наукового музею, який згодом став Всеукраїнським історичним музеєм імені Т. Шевченка [ЕСУ]. Лавра формулює те саме інакше: сімнадцять років він одночасно очолював історично-побутовий та етнографічний відділи [Лавра]. Дві установи описують ту саму працю різними назвами відділів — це нормально для музею, що змінював структуру й назву.
 
-## 3. Major works
+**Масштаб зібрання.** Лавра повідомляє, що Щербаківський проводив збиральницькі експедиції українськими регіонами й що завдяки їм музей поповнився понад тридцятьма тисячами пам'яток [Лавра]. Це головний кількісний аргумент про його значення.
 
-- `1906` — study on carpets in Poltava gubernia, early applied-art research listed by ESU.
-- `1907-1910` — archaeological and ethnographic fieldwork; collection-building for Ukrainian museums.
-- `1912` — *Буковинські і галицькі церкви, надгробні й придорожні хрести, фігури і каплиці*, preservation/art-historical study.
-- `1913` — work on Ukrainian wooden architecture and applied art.
-- `1914-1917` — wartime preservation and collection activity in Galicia and Bukovyna contexts, per ESU.
-- `1920s` — studies of Ukrainian portraiture, folk art, ceramics, embroidery, and church objects.
-- `1926` — "Культурні цінності в небезпеці!", public preservation text cited in later scholarship.
-- `Posthumous` — museum and ethnographic legacy recovered through National Art Museum and scholarly publications.
+**Академічні ролі.** ЕСУ подає, що він був першим науковим секретарем Української академії мистецтв у 1917–1918 роках і науковим секретарем мистецької секції Українського наукового товариства від вересня 1918 до травня 1919 року [ЕСУ].
 
-## 4. Primary-source quotes
+**Авторський доробок.** Національна історична бібліотека України присвятила матеріал прижиттєвим виданням 1925 року й розглядає три окремі публікації того року: працю про пам'ятки київського врядування, розвідку про першу театральну будівлю в Києві та дослідження українського портрета різних століть [НІБУ]. Це єдине з перевірених джерел, яке дає конкретні авторські праці з роком.
 
-- "Культурні цінності в небезпеці!" — title of his 1926 preservation article. The short title is pedagogically useful because it names the emergency logic of his museum work.
-- "Залишити музей... не маю сили" — suicide-note wording reproduced in later biographical accounts. It should be used carefully and with a source-gap note: retrieved sources did not expose the archival image of the note.
+Національна бібліотека України імені В. І. Вернадського подає календарну довідку, називаючи його етнографом, істориком і теоретиком мистецтва, організатором пам'яткоохоронної справи та громадським діячем, і повідомляє, що в 1910–1927 роках він постійно працював у Музеї старожитностей і мистецтв [НБУВ].
 
-## 5. Language register
+## 2. Механізм переслідування і межі атрибуції
 
-- **Register:** Art-historical, preservationist, museum-catalog, ethnographic.
-- **CEFR readiness for full reading:** C1 for full articles; B2 for titles, catalog descriptions, and short preservation excerpts.
-- **Lexicon notes:** *килими*, *церкви*, *надгробні хрести*, *каплиці*, *портрет*, *музейний фонд*, *пам'яткоохоронна робота*.
-- **Stylistic features:** Dense object naming, regional comparisons, and moral urgency around preservation.
+Інституційний конфлікт задокументовано двома джерелами, але різними словами.
 
-## 6. Contested points
+Лавра формулює прямо: 1923 року директором став, за висловом сторінки, неосвічений чекіст, який розгорнув проти Щербаківського кампанію, безпідставно звинувачуючи його в некомпетентності [Лавра]. ЕСУ називає інших дійових осіб поіменно: цькування з боку директора музею А. Винницького та агента НКВС А. Онищука [ЕСУ].
 
-- **What's debated in modern UA scholarship:** The exact institutional triggers before his death; how to assess his work within early Ukrainian art history versus Soviet museum administration; how much of his unpublished work remains scattered in archives.
-- **What gets simplified in popular memory:** His death can overshadow the breadth of his scholarship. The dossier should keep his collections and writings central.
-- **Where modern Russian disinformation attacks them:** Russocentric accounts may present Ukrainian museum work as provincial ethnography; Shcherbakivskyi's preservationism shows a national art-historical program.
-- **Other-perspective considerations:** His church-art preservation intersects with Orthodox, Greek Catholic, Polish, Jewish, and regional material cultures. Avoid turning preservation into a single-confession narrative.
+Обидва тексти сходяться в головному: проти музейника велася кампанія з боку керівництва, пов'язаного з органами. Деталі складу дійових осіб надійніші там, де названо прізвища [ЕСУ]. Лавра говорить про директора-чекіста без імені [Лавра].
 
-His art-history vocabulary also needs care. In older sources, "folk art", "church antiquities", and "Ukrainian art" can overlap without meaning the same thing. Curriculum writers should keep object type, ritual use, and national art-historical interpretation in separate layers. That makes the material useful for both language learners and cultural-history learners.
+**Звинувачення як інструмент.** Закид у некомпетентності [Лавра] суперечить задокументованій біографії — університет, багаторічні експедиції, публікації 1925 року [ЕСУ] [НІБУ]. Коли обвинувачення суперечить перевіреним фактам, саме обвинувачення стає предметом дослідження, а не джерелом відомостей про звинуваченого.
 
-## 7. Cross-track links
+**Механізм без вироку.** Це важливий педагогічний пункт: радянський тиск не зводився до розстрілу чи табору. Тут репресія діяла через посадовий тиск, доноси й фахову дискредитацію, роблячи наукову та музейну працю нестерпною. Кримінального вироку в перевірених джерелах немає; архівної справи, номера чи формального провадження не отримано.
 
-- **Existing C1/art modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/c1/obrazotvorche-mystetstvo-2.yaml`
-  - `curriculum/l2-uk-en/plans/c1/checkpoint-fine-arts.yaml`
-  - `curriculum/l2-uk-en/plans/c1/ukrainian-house.yaml`
-- **Existing HIST/ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/mekhanizm-teroru.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/ukrainska-m-iaka-syla.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan on museum persecution and material-culture preservation.
-  - Source activity around "cultural values in danger" and present-day heritage protection.
-- **Potential LIT additions surfaced by this research:**
-  - None until primary text scans are located; source not found for a clean public-domain full text excerpt.
+## 3. Обставини смерті: атрибутовано, не розв'язано
 
-## 8. Naming-canonical
+Джерела узгоджені щодо дати — 6 червня 1927 року [ЕСУ] [Лавра] — і щодо того, що смерть була самогубством. **Мотив кожне джерело подає по-своєму:**
 
-- **Slug:** `danylo-shcherbakivskyi`
-- **EN canonical (BGN/PCGN 2010):** Danylo Shcherbakivskyi.
-- **UA canonical (with patronymic if attested):** Щербаківський Данило Михайлович.
-- **Aliases (track these for `aliases:` YAML field):** Danylo Shcherbakivsky; Данило Щербаківський.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Daniil Mikhailovich Shcherbakovsky; "Southwestern Russian art" framing.
+- ЕСУ: цькування з боку Винницького й Онищука довело Щербаківського до самогубства, що мало значний громадський резонанс [ЕСУ].
+- Лавра: 6 червня 1927 року він вчинив самогубство на знак протесту [Лавра].
 
-## 9. Image candidates
+«Доведений цькуванням» і «на знак протесту» — **не тотожні** пояснення. Досьє не обирає між ними мовчки й не пропонує третього, «остаточного» варіанта. Обидві версії подаються з іменами джерел.
 
-- **Best PD/CC portrait:** source not found as a clear PD/CC portrait. Wikimedia Commons has a Creator page for Shcherbakivskyi's works, not a portrait | https://commons.wikimedia.org/wiki/Creator:Danylo_Shcherbakivskyi.
-- **Backup candidates:** ESU portrait | https://esu.com.ua/article-886127 | rights unclear; National Art Museum archival reproductions require permission.
-- **If no PD/CC portrait exists:** use a rights-cleared image of a preserved object he documented.
-- **Era-appropriate context image:** Kyiv Art-Industrial and Scientific Museum / Ukrainian art preservation material, if license permits.
+**Окремий факт, який часто плутають із датою смерті.** НБУВ повідомляє, що 10 червня 1927 року неподалік мосту було знайдено тіло Щербаківського з каменем на шиї [НБУВ]. Дата смерті (6 червня) і дата виявлення тіла (10 червня) — різні дати. Саме через це в довідках трапляються обидві.
 
-## 10. Sources used
+**Межа опису.** Ця деталь походить із календарної довідки національної бібліотеки [НБУВ] і належить до задокументованих обставин, а не до чуток. Але з неї не можна будувати драматичну сцену або робити висновки про перебіг подій, яких джерела не описують. Надмірна деталізація тут була б сенсаційністю, а не точністю. Обставини лишаються тим, що подають джерела, — не більше.
 
-**Tier 1 (authoritative):**
-- ЕСУ, "Щербаківський Данило Михайлович" | https://esu.com.ua/article-886127 | accessed 2026-05-30.
-- ЕСУ PDF, "Щербаківський Данило Михайлович" | https://esu.com.ua/pdf/file/886127.pdf | accessed 2026-05-30.
+## 4. Роботи і документи для читання
 
-**Tier 2 (institutional):**
-- Інститут мистецтвознавства, фольклористики та етнології ім. М. Т. Рильського НАН України, "Данило Михайлович Щербаківський" | https://www.etnolog.org.ua/index.php?id=1813&option=com_content&task=view | accessed 2026-05-30.
-- Національна історична бібліотека України, "Неповторні риси книг: Щербаківський Данило" | https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/ | accessed 2026-05-30.
-- Google Arts & Culture / museum story "Данило Щербаківський" | https://artsandculture.google.com/story/GwVhih-weG3yFw?hl=uk | accessed 2026-05-30.
+Ухвалений набір — чотири українськомовні джерела, усі link-only:
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia via `mcp__sources.query_wikipedia`, which states his art-historical, ethnographic, archaeological, and museum roles and links death to harassment/denunciations.
+1. ЕСУ, «Щербаківський Данило Михайлович» (автор С. І. Білокінь) — академічна довідка; захищено авторським правом.
+2. Національний заповідник «Києво-Печерська лавра» — музейний нарис з обсягом зібрання.
+3. НІБУ, «Прижиттєві видання Данила Щербаківського 1925 року» — авторський доробок; ліцензія CC BY-NC-SA 4.0.
+4. НБУВ — календарна довідка; «Всі права захищено».
 
-**Tier 4 (modern scholarly post-1991):**
-- Modern Ukrainian art-history articles on Shcherbakivskyi and preservation, retrieved through web search.
+Попередній стан плану містив запис `reading-needed` з `source_url: reading-needed`. Його замінено чотирма перевіреними джерелами.
 
-**Tier 5 (general web):**
-- Galinfo / local biographical memory articles, used only as leads for the suicide-note wording and preservation title.
+**Перевірено й відхилено.** Сторінку Інституту мистецтвознавства, фольклористики та етнології (`etnolog.org.ua`) не внесено: вона друкує заголовок як «Данило Григорович Щербакивський», тобто подає **інше по батькові** (Григорович замість Михайлович) і написання «Щербакивський» замість «Щербаківський». Це суперечить формі, засвідченій ЕСУ та Лаврою [ЕСУ] [Лавра]. Сторінка також подає дату народження 18/30 грудня 1877 року, що не збігається з 17/29 грудня. Як опору ідентичності таке джерело використовувати не можна без додаткової перевірки.
 
-**Primary-source documents accessed:**
-- Title of Shcherbakivskyi's article "Культурні цінності в небезпеці!" as cited in modern sources.
-- Archival note image and exact denunciation file: source not found.
+## 5. Цитати
+
+Прямих цитат Щербаківського з точним первинним локатором у перевірених джерелах не виявлено. Тому досьє **не наводить жодної цитати**. Праці 1925 року [НІБУ] є придатним напрямом для майбутнього пошуку первинного тексту з page-stable локатором; до такої перевірки цитат не вводимо.
+
+## 6. Спірні або чутливі точки
+
+- **Мотив смерті:** «доведений цькуванням» [ЕСУ] проти «на знак протесту» [Лавра]. Не розв'язано; обидві версії атрибутовано.
+- **Дата народження:** 17 грудня (старий стиль) [Лавра] і 29 грудня (новий стиль) [ЕСУ] — та сама дата у двох системах, а не суперечність. Версія 18/30 грудня походить із відхиленого джерела.
+- **Дві дати червня:** 6 червня — смерть [ЕСУ] [Лавра]; 10 червня — виявлення тіла [НБУВ]. Не плутати.
+- **Назви відділів:** «історично-побутовий і народного мистецтва» [ЕСУ] проти «історично-побутовий та етнографічний» [Лавра] — наслідок змін структури музею, а не суперечність.
+- **Посада, праця й пам'ять:** посади [ЕСУ], видання 1925 року [НІБУ], обсяг зібрання [Лавра] — факти. Премія 1993 року й перейменування вулиці 2016 року [ЕСУ] — акти пізнішого суспільства; вони нічого не доводять про життя людини.
+- **Родинні зв'язки:** попередній стан досьє називав його братом ученого Вадима Щербаківського. У перевірених джерелах цього проходу твердження не підтверджено, тому його не переносимо без прямої перевірки.
+
+## 7. Крос-трекові зв'язки
+
+Наявних модулів LIT або HIST для цього слуга в поточному дереві планів не виявлено; жодних «Existing» шляхів не заявлено. Потенційні напрями (не наявні файли): історія київських музеїв; українська етнографія початку ХХ століття; пам'яткоохоронна справа; український портрет як предмет дослідження.
+
+## 8. Іменування і мовний режим
+
+- Українська канонічна форма з по батькові: Щербаківський Данило Михайлович [ЕСУ] [Лавра].
+- Англійська канонічна форма (BGN/PCGN 2010): Danylo Shcherbakivskyi.
+- Варіанти для поля `aliases`: Данило Щербаківський, Д. М. Щербаківський.
+- Відмінювання: Щербаківський, Щербаківського, Щербаківському, Щербаківським.
+- **Заборонені форми:** «Щербакивський» і по батькові «Григорович» — обидві походять із відхиленого джерела й суперечать засвідченій формі.
+- Топонім за джерелом: село Шпичинці на Київщині [ЕСУ].
+
+## 9. Зображення і права
+
+Портрет не ухвалено. Окремого файла із засвідченим автором, роком і перевіреною ліцензією не знайдено. У плані діє `portrait_fallback` типу `text-only` з диспозицією `no-portrait-until-rights-verified`.
+
+Музейні та бібліотечні сторінки показують зображення [Лавра] [НІБУ], але не передають прав на них. Ліцензія CC BY-NC-SA 4.0 матеріалу НІБУ [НІБУ] поширюється на вміст сторінки, а не автоматично на скани видань або портрети чужого авторства.
+
+## 10. Джерела і деколонізаційна перевірка
+
+Перевірка виконана прямим зверненням до кожного джерела 2026-07-17, а не за пошуковими фрагментами.
+
+### Джерела
+
+- [ЕСУ] «Щербаківський Данило Михайлович», автор С. І. Білокінь, Енциклопедія Сучасної України — https://esu.com.ua/article-886127 — українською; захищено авторським правом.
+- [Лавра] «Данило Щербаківський: відданий музейній справі дослідник українського мистецтва», Національний заповідник «Києво-Печерська лавра» — https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi — українською.
+- [НІБУ] «Прижиттєві видання Данила Щербаківського 1925 року», Національна історична бібліотека України — https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/ — українською; ліцензія CC BY-NC-SA 4.0.
+- [НБУВ] «Народився Данило Щербаківський, етнограф, історик та теоретик мистецтва, організатор пам'яткоохоронної справи, громадський діяч», Національна бібліотека України імені В. І. Вернадського — http://www.nbuv.gov.ua/node/4510 — українською; «Всі права захищено».
+
+### Деколонізаційна перевірка
+
+- [x] Переслідування названо прямо, без евфемізмів.
+- [x] Звинувачення в некомпетентності марковано як інструмент кампанії, а не як оцінку.
+- [x] Обставини смерті атрибутовано джерелам; розбіжність мотиву не усунено й не «розв'язано».
+- [x] Смерть не сенсаціоналізовано; деталь про виявлення тіла подано стримано, без реконструкції сцени.
+- [x] Дві дати червня розведено; старий і новий стиль пояснено.
+- [x] Джерело з іншим по батькові відхилено, а не використано як опору ідентичності.
+- [x] Непідтверджене твердження про родинний зв'язок не перенесено.
+- [x] Пізнішу пам'ять (премія, вулиця) відокремлено від біографії.
+- [x] Ліцензію сторінки відокремлено від прав на зображення.
+- [x] Вигаданих «Existing» шляхів не заявлено.

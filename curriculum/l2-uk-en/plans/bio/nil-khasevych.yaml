@@ -111,35 +111,80 @@ persona:
   role: Модератор семінару з візуальної культури та опору
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портретного файла Ніла Хасевича з підтвердженим автором і
+    відкритою ліцензією не знайдено. Його дереворити є самостійними творами й
+    потребують власного доказу прав, якого біографічні сторінки не дають.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
 references:
-- note: Енциклопедична стаття про митця.
+- note: Стаття ЕСУ; автор О. Й. Стасюк.
   path: https://esu.com.ua/article-884470
-  title: Хасевич Ніл (ЕСУ)
+  title: Хасевич Ніл
   type: reference
-- note: Англомовна стаття Енциклопедії українознавства.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CH%5CKhasevychNil.htm
-  title: Khasevych, Nil (IEU)
+- note: Історичний календар УІНП; ліцензія CC BY 4.0.
+  path: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902
+  title: 1905 - народився Ніл Хасевич, художник
+  type: reference
+- note: >-
+    Матеріал Національної історичної бібліотеки України від 13 жовтня 2022
+    року; ліцензія CC BY-NC-SA 4.0.
+  path: https://nibu.kyiv.ua/exhibitions/596/
+  title: Ніл Хасевич – іміджмейкер українських повстанців
   type: reference
 readings:
-- title: Page-stable читання про життя і творчість Ніла Хасевича
+- title: Хасевич Ніл
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-884470
   language: uk
-  genre: Мистецтвознавча стаття / архівний документ
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: nil-khasevych-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний і правово безпечний доступ до україномовного
-    джерела про дереворити УПА; не хостити зображення творів або повні документи без підтверджених прав.
-  hosting: reading-needed
-  cefr_min: C1
+  type: academic-encyclopedia
+  role: scholarly-framing
+  hosting: link-only
   learner_task: >-
-    Проаналізувати текстовий фрагмент або опис деревориту, звернувши увагу на використання
-    візуальної комунікації як політичної зброї.
-  caveats: >-
-    Обережно з первинними джерелами (листи, документи МДБ); вони потребують перевірки,
-    а візуальні матеріали є rights-sensitive.
+    Розділити мистецьку освіту, нагороди, підпільні ролі й обставини загибелі
+    на окремі рядки та позначити, хто саме це стверджує.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-884470
+    note: >-
+      Стаття українською, захищена авторським правом; курс посилається на
+      сторінку й не відтворює її тексту.
+- title: 1905 - народився Ніл Хасевич, художник
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902
+  language: uk
+  type: institutional-calendar
+  role: biographical-orientation
+  hosting: link-only
+  learner_task: >-
+    Виписати відомості про навчання, протез і підпільний друк, зазначивши, які
+    деталі ця сторінка подає, а які лишає поза текстом.
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/25/7902
+    note: >-
+      Сторінка доступна українською; УІНП подає вміст за ліцензією CC BY 4.0,
+      проте курс лише посилається на неї й не відтворює тексту.
+- title: Ніл Хасевич – іміджмейкер українських повстанців
+  source_name: Національна історична бібліотека України
+  source_url: https://nibu.kyiv.ua/exhibitions/596/
+  language: uk
+  type: institutional-library-feature
+  role: source-comparison
+  hosting: link-only
+  learner_task: >-
+    Порівняти назву місцевості загибелі в цьому матеріалі та в ЕСУ й описати
+    розбіжність, не обираючи одну версію мовчки.
+  rights:
+    basis: external-link
+    evidence_url: https://nibu.kyiv.ua/exhibitions/596/
+    note: >-
+      Матеріал українською за ліцензією CC BY-NC-SA 4.0; курс посилається на
+      сторінку, а зображення творів потребують окремого доказу прав.
+readings_contract_version: 2
 sequence: 318
 slug: nil-khasevych
 subtitle: The Underground Graphic Artist of the UPA

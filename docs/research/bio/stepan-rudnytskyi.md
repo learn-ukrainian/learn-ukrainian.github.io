@@ -1,129 +1,111 @@
-# Рудницький Степан Львович — Research Dossier
+# Степан Рудницький — дослідницьке досьє
 
 **Slug:** `stepan-rudnytskyi`
-**Block:** H
-**Tier:** 1
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Статус:** catalog-source readiness
+**Перевірено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Рудницький Степан Львович.
-- **Pseudonyms / aliases:** Stepan Rudnytskyi, Stepan Rudnytsky, S. Rudnytskyi.
-- **Born:** 1877-12-03 | Перемишль | Austria-Hungary. Sources: Internet Encyclopedia of Ukraine; UINP historical calendar; Commons portrait metadata.
-- **Died:** 1937-11-03 | Sandarmokh, Karelia | USSR. Sources: UINP and Kherson library biography; Ukrainian Wikipedia via `mcp__sources.query_wikipedia` also flags the correction from earlier Solovky-death claims.
-- **Family / education key facts:** Geographer, cartographer, ethnographer, academician of VUAN, and founder figure for Ukrainian physical, political, and military geography. Sources: IEU, UINP, Ukrainian Wikipedia summary.
+Повне ім'я українською: Рудницький Степан Львович. Енциклопедія Сучасної України (стаття Д. Є. Макаренка та О. І. Шаблія, Інститут енциклопедичних досліджень НАН України) подає народження 3 грудня 1877 року в Перемишлі та смерть 3 листопада 1937 року в урочищі Сандармох поблизу Медвежогорська в Карелії [ЕСУ]. Історичний календар Українського інституту національної пам'яті незалежно подає розстріл 3 листопада 1937 року в Сандармосі [УІНП].
 
-## 2. Oppression mechanism
+Фах і кваліфікації: докторат із філософії 1901 року, професорське звання 1904 року, дійсне членство в Науковому товаристві імені Шевченка з 1901 року, звання академіка Всеукраїнської академії наук 1929 року [ЕСУ]. Освіта: Львівський університет до 1899 року, поглиблені студії у Віденському та Берлінському університетах [ЕСУ].
 
-- **What happened:** NKVD arrest, fabricated counterrevolutionary/espionage charges, camp sentence, special troika death sentence, execution.
-- **When:** 1933-03-23 arrest; 1933-09-23 sentence to five years; October 1937 special troika death sentence; 1937-11-03 execution.
-- **By whom:** NKVD and the special NKVD troika of Leningrad Oblast; Soviet camp administration.
-- **Document references:** UINP and the Kherson library page identify the accusation as membership in the alleged "Українська Військова Організація" and espionage. A specific archival case number was not retrieved. File ID: source not found.
-- **Mechanism specifics:** UINP states that Rudnytskyi was arrested in 1933 and charged without evidence with participation in a counterrevolutionary organization and espionage. The Kherson library source pack gives the sentence and camp path: Svirlag and the White Sea-Baltic camp before the 1937 troika decision. Both sources give 3 November 1937 as the execution date at Sandarmokh.
+Інституційна хронологія: викладання у Віденській торговельній академії та Віденському геологічному інституті у 1904–1908 роках і знову від 1919 року; кафедра географії Львівського університету у 1908–1919 роках; заснування Українського вільного університету у Відні 1919 року з подальшим перенесенням до Праги 1921 року; заснування й керівництво Українським науково-дослідним інститутом географії та картографії в Харкові від 1927 року [ЕСУ].
 
-This repression destroyed a geographer whose work explicitly treated Ukraine as a political-geographical subject. The retrieved `mcp__sources.search_sources` result from *Українська державність у XX столітті* preserves citations to Rudnytskyi's 1923 work *Українська справа зі становища політичної географії*, where Moscow is framed as politically and economically incompatible with Ukrainian independence.
+Ключове підтвердження: том «Реабілітовані історією. Харківська область. Книга друга» (НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014) у біографічному нарисі про Михайла Іваничука згадує інститут, «який до арешту в березні 1933-го очолював С. Л. Рудницький» [РІ]. Це незалежне підтвердження директорства й місяця арешту джерелом іншого жанру.
 
-- **What survived / what was destroyed:** Major geographical works, maps, and reprints survived. The institutional school in Soviet Ukraine was broken by Stalinist repression. Exact NKVD case ID was not retrieved.
+Праці: Херсонська обласна бібліотека перелічує «Коротку географію України» (1910, 1914), «Основи землезнання України» (1924, 1926), «Історію землезнання» (1925), «Тераси і долинові ступені порожнистої ділянки Дніпра» (1932) [ХОУНБ]. УІНП окремо називає «Геономію (астрономічна географія)» та «Ендогенну динаміку земної кори» [УІНП]; Херсонська сторінка подає ці дві праці як написані в таборах [ХОУНБ].
 
-The dossier keeps the older Solovky version only as a contested-point warning. Current lessons should use Sandarmokh and the 1937-11-03 execution date unless a cited primary archive requires more nuance.
+## 2. Механізм репресії і межі атрибуції
 
-## 3. Major works
+УІНП формулює стисло: у 1933-му заарештований, звинувачений у приналежності до контрреволюційної організації, шкідництві та шпигунстві, засуджений на 5 років таборів [УІНП]. Дня арешту ця сторінка не подає.
 
-- `1905` — *Нинїшна ґеоґрафія*, listed in Commons/IEU source pack.
-- `1908` — *Начерк географічної термінології*, terminology work, listed in the source pack.
-- `1910` — *Коротка ґеоґрафія України*, part 1, listed by IEU/UINP/source pack.
-- `1914` — *Коротка ґеоґрафія України*, part 2, listed by IEU/source pack.
-- `1916` — *Україна край і нарід*, geographic-political work, listed in IEU/source pack.
-- `1917` — *Україна наш рідний край*, school/pedagogical geography, cited by Kherson library.
-- `1919` — *Початкова ґеоґрафія для народніх шкіл*, listed in source pack.
-- `1921` — *Україна — наш рідний край*, edition/scanned work on Commons.
-- `1923` — *Огляд національної території України*, listed by IEU/source pack.
-- `1923` — *Українська справа зі становища політичної географії*, cited in `mcp__sources.search_sources` result from *Українська державність у XX столітті*.
-- `1924/1926` — *Основи землезнання України*, volumes 1-2, listed by IEU/source pack.
-- `1925/1927` — *Основи морфольоґії й ґеольоґії Підкарпатської Руси й Закарпаття взагалі*, listed by IEU/source pack.
+ЕСУ подає точніше: арешт 21 березня 1933 року, вирок 23 вересня 1933 року на п'ять років, ув'язнення в радянських таборах, зокрема на Біломор-Балтійському каналі та Соловках; смертний вирок 9 жовтня 1937 року; реабілітація 1965 року [ЕСУ].
 
-## 4. Primary-source quotes
+**Розбіжність, яку не можна ховати.** Херсонська обласна бібліотека подає дату арешту 23 березня 1933 року [ХОУНБ], ЕСУ — 21 березня [ЕСУ]. Обидві установи авторитетні; архівного документа жодна не наводить. Досьє не обирає дату мовчки: у плані, вікі та модулі розбіжність фіксується як предмет джерелознавчої вправи. Попередній стан плану стверджував 23 березня без застереження — це виправлено.
 
-> "земля, де живемо, зветься Україна"
+**Межі атрибуції.** Формули «контрреволюційна організація», «шкідництво», «шпигунство» [УІНП] є мовою обвинувачення, а не описом діяльності. Реабілітація 1965 року [ЕСУ] скасовує вирок, але не перетворює радянське формулювання на нейтральний факт. Водночас репресія не є доказом наукової чи політичної правоти: держава вбила географа за те, ким його оголосила, і це твердження про злочин держави, а не про безпомилковість жертви.
 
-Source: Rudnytskyi, *Коротка географія України*, quoted by Kherson library biography. This is a simple, powerful geography sentence for A2/B1 learners after adaptation.
+**Вирок і виконання — різні дати.** 9 жовтня 1937 року — рішення; 3 листопада 1937 року — страта [ЕСУ]. Плутати їх не можна.
 
-> "любов рідного краю"
+**Соловки як міф.** Давніші перекази пов'язували смерть із Соловками. Перевірені джерела цього не підтверджують: у записі ЕСУ Соловки є місцем ув'язнення, а не смерті [ЕСУ], а місцем страти обидва джерела називають Сандармох [УІНП] [ЕСУ]. Це типовий механізм помилки: етап табірного шляху перетворюється в переказі на місце загибелі.
 
-Source: Rudnytskyi, *Коротка географія України*, quoted by Kherson library biography. It links affective patriotism to geographic knowledge, a useful pedagogical frame.
+## 3. Наукова праця й інституційна роль
 
-## 5. Language register
+Рудницький був не лише автором, а й будівничим установи. Том «Реабілітовані історією» показує його як керівника, який запросив до Харкова учнів-галичан, і фіксує, що в інституті виникло напруження між місцевими українцями й галичанами, а директор, намагаючись бути об'єктивним і зважаючи на тогочасні критерії добору кадрів, не міг висувати на керівні посади лише «своїх» [РІ]. Це буденний адміністративний конфлікт, і саме тому він цінний: він показує живу людину в реальній установі, а не пам'ятник.
 
-- **Register:** Didactic geography, political geography, terminology-building academic prose.
-- **CEFR readiness for full reading:** B2 for selected school-geography sentences; C1-C2 for political-geography essays and terminology-heavy work.
-- **Lexicon notes:** `географія`, `територія`, `край`, `нарід`, `землезнання`, `морфологія`, `геологія`, `державність`; older orthography such as `ґеоґрафія` should be explained.
-- **Stylistic features:** Pedagogical definitions, spatial classification, national-territorial argument, and terminology creation.
+Той самий том фіксує, що серед обвинувачених разом із Іваничуком були колишні працівники того ж інституту географії та картографії [РІ], тобто репресія била по установі, а не лише по особі.
 
-## 6. Contested points
+## 4. Роботи і документи для читання
 
-- **What's debated in modern UA scholarship:** Death-place metadata. Ukrainian Wikipedia and the source pack note that older accounts placed his death at Solovky or used uncertain dates; post-1997 Sandarmokh research corrected the execution site and date to 1937-11-03.
-- **What gets simplified in popular memory:** He is sometimes remembered only as a geographer. The retrieved sources show cartography, terminology, political geography, and statehood argument as inseparable.
-- **Where modern Russian disinformation attacks them:** Soviet charges of "counterrevolutionary" organization and espionage are repressive accusations, not facts. Modern lessons must not reproduce them unmarked.
-- **Polish / Jewish / other-perspective considerations:** Born in Austrian-ruled Перемишль and worked across Habsburg and Soviet contexts; learners should avoid projecting later borders backward.
-- **Map-reading caution:** His territorial maps should be taught as political geography from their publication context, not as timeless ethnic-boundary diagrams.
+Ухвалений набір — чотири українськомовні джерела, усі link-only:
 
-## 7. Cross-track links
+1. УІНП, «1877 - народився Степан Рудницький» — календарна орієнтація; ліцензія CC BY 4.0.
+2. ЕСУ, «Рудницький Степан Львович» — академічна хронологія; авторським правом захищено.
+3. ХОУНБ ім. Олеся Гончара, «Степан Рудницький» — переказ і перелік праць; «Усі права застережено».
+4. «Реабілітовані історією. Харківська область. Книга друга» — інституційний контекст; публічний PDF.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - None found for this slug in the current plans tree.
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - None found for this slug in the current plans tree.
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - A HIST/GEO module on Ukrainian political geography and maps of national territory.
-  - A BIO link to VUAN scholars repressed in the 1930s.
-  - A C1 terminology module on `географія`, `землезнання`, `територія`, and statehood vocabulary.
-- **Potential LIT additions surfaced by this research:**
-  - Not primarily LIT; consider an interdisciplinary source-reading lesson from *Україна наш рідний край*.
+Попередній стан плану містив запис `reading-needed` з `source_url: reading-needed` для скану «Україна — наш рідний край». Його вилучено: плейсхолдер не є читанням, а page-stable URL правово безпечного видання не встановлено. Каталог не добирали до штучної кількості.
 
-## 8. Naming-canonical
+Вилучено також англомовне посилання на Internet Encyclopedia of Ukraine: readings вимагають українськомовного статусу, а англійська довідка не є прямим українським джерелом. Прибрано покликання на комерційну сторінку перевидання та на Вікіпедію — остання не є доказом.
 
-- **Slug:** `stepan-rudnytskyi`
-- **EN canonical (BGN/PCGN 2010):** Stepan Rudnytskyi
-- **UA canonical (with patronymic):** Рудницький Степан Львович
-- **Aliases (track these for `aliases:` YAML field):** Stepan Rudnytsky, S. Rudnytskyi, Степан Рудницький
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Stepan Rudnitsky, Stepan Lvovich Rudnitsky (FORBIDDEN except as source metadata)
+## 5. Цитати: рішення про неприйняття
 
-## 9. Image candidates
+Попередній стан досьє наводив дві цитати як первинні:
 
-- **Best PD/CC portrait:** Wikimedia Commons, `File:Рудницкий, Степан Львович.jpg` | public-domain marking on Commons | https://commons.wikimedia.org/wiki/File:%D0%A0%D1%83%D0%B4%D0%BD%D0%B8%D1%86%D0%BA%D0%B8%D0%B9%2C_%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD_%D0%9B%D1%8C%D0%B2%D0%BE%D0%B2%D0%B8%D1%87.jpg
-- **Backup candidates:** Commons map file `Оглядова карта українських земель, 1915.jpg`; Commons 1921 scan of *Україна — наш рідний край*.
-- **If no PD/CC portrait exists:** Use the Commons portrait after checking public-domain status.
-- **Era-appropriate context image:** Rudnytskyi map of Ukrainian lands, if the Commons public-domain metadata is valid.
+- «земля, де живемо, зветься Україна» — приписано «Короткій географії України» через Херсонську бібліотеку;
+- «любов рідного краю» — приписано тому самому джерелу.
 
-## 10. Sources used
+**Перевірка.** Пряме звернення до сторінки ХОУНБ показало: перша фраза справді присутня, але в довшому вигляді — «Ми українці, земля, де живемо, зветься Україна…» — і подана як частина передмови до видання 1910/1914 років [ХОУНБ]. Друга фраза, «любов рідного краю», на сторінці **відсутня**. Це непідтверджена цитата.
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine, "Rudnytsky, Stepan" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRudnytskyStepan.htm | accessed 2026-05-30
-- UINP historical calendar, "Народився Степан Рудницький" | https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy | accessed 2026-05-30
-- `mcp__sources.search_sources`, *Українська державність у XX столітті* result citing Rudnytskyi's *Українська справа зі становища політичної географії* | accessed 2026-05-30
+**Рішення.** Жодна з двох цитат не приймається. Друга — тому що не підтверджена. Перша — тому що бібліотечна сторінка є вторинним переказом без точного локатора (видання, сторінка, звірений текст); наявність фрази на сторінці установи не є ані первинним локатором, ані ліцензією на відтворення. Із плану вилучено завдання `critical-analysis`, побудоване на цій цитаті, і замінено на зіставлення джерел.
 
-**Tier 2 (institutional):**
-- Kherson regional library, "Степан Рудницький" | https://lib.kherson.ua/stepan-rudnitskiy.htm | accessed 2026-05-30
-- Commons scan, *Україна — наш рідний край* (1921) | accessed 2026-05-30
+## 6. Спірні або чутливі точки
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Рудницький Степан Львович," retrieved via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+- **Дата арешту:** 21 березня [ЕСУ] проти 23 березня [ХОУНБ]. Не розв'язано; фіксується як розбіжність.
+- **Місце смерті:** Сандармох підтверджено двома джерелами [УІНП] [ЕСУ]; версія «Соловки» не підтверджується.
+- **Детермінізм:** карти національної території не можна читати як позачасові етнічні межі. Це аргумент своєї доби, зроблений тодішніми методами.
+- **Канонізація:** формула «основоположник» [ЕСУ] є пізнішою оцінкою ролі, а не фактом на рівні дат і посад. Обидва рівні потрібні, але їх не змішують.
+- **Номер справи:** архівного номера жодне перевірене джерело не подає. Прогалину визнано, а не заповнено.
 
-**Tier 4 (modern scholarly post-1991):**
-- RVV reprint page for *Україна наш рідний край* (2025) | https://rvv.com.ua/product/ukrayina-nash-ridnyj-kraj-stepan-rudnyczqqkyj-2025/ | accessed 2026-05-30
+## 7. Крос-трекові зв'язки
 
-**Primary-source documents accessed:**
-- Rudnytskyi, *Україна — наш рідний край* (1921), Commons scan.
-- Rudnytskyi, *Українська справа зі становища політичної географії* (1923), cited through `mcp__sources.search_sources` result.
+Наявних модулів LIT або HIST для цього слуга в поточному дереві планів не виявлено; жодних «Existing» шляхів не заявлено, щоб не створювати вигаданих покликань. Потенційні напрями (не наявні файли): історія української географії та картографії; репресовані науковці ВУАН 1930-х; термінологічний модуль навколо понять `географія`, `землезнання`, `територія`.
 
----
+## 8. Іменування і мовний режим
 
-## Decolonization self-check
+- Українська канонічна форма з по батькові: Рудницький Степан Львович.
+- Англійська канонічна форма (BGN/PCGN 2010): Stepan Rudnytskyi.
+- Варіанти для поля `aliases`: Stepan Rudnytsky, S. Rudnytskyi, Степан Рудницький.
+- Заборонені в тексті форми: Stepan Rudnitsky, Stepan Lvovich Rudnitsky — імперські транслітерації, припустимі лише як метадані джерела.
+- Відмінювання: Рудницький, Рудницького, Рудницькому, Рудницьким.
+- Історичну орфографію праць (`ґеоґрафія`) зберігаємо в назвах, але не переносимо в авторську прозу.
 
-- [x] Execution named directly, not euphemized
-- [x] Soviet accusation language marked as allegation
-- [x] Sandarmokh/Solovky discrepancy flagged
-- [x] No fabricated existing paths
-- [x] Ukrainian territorial-geography frame preserved
+## 9. Зображення і права
+
+Портрет не ухвалено. Окремого файла із засвідченим автором, роком і перевіреною ліцензією не знайдено. Попередній стан досьє називав файл на Wikimedia Commons із «позначкою суспільного надбання» — позначка на файлосховищі не є доказом прав і не приймається. У плані діє `portrait_fallback` типу `text-only` з диспозицією `no-portrait-until-rights-verified`.
+
+Карти й скани видань мають той самий режим: біографічне джерело не ліцензує зображення. Будь-яка карта чи скан потребують окремого доказу прав на конкретний файл.
+
+## 10. Джерела і деколонізаційна перевірка
+
+Перевірка виконана прямим зверненням до кожного джерела 2026-07-17, а не за пошуковими фрагментами.
+
+### Джерела
+
+- [УІНП] «1877 - народився Степан Рудницький», Український інститут національної пам'яті — https://uinp.gov.ua/istorychnyy-kalendar/gruden/3/narodyvsya-stepan-rudnyckyy — українською; ліцензія CC BY 4.0.
+- [ЕСУ] «Рудницький Степан Львович», автори Д. Є. Макаренко, О. І. Шаблій, Енциклопедія Сучасної України — https://esu.com.ua/article-879325 — українською; захищено авторським правом.
+- [ХОУНБ] «Степан Рудницький», Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара — https://lib.kherson.ua/stepan-rudnitskiy.htm — українською; «Усі права застережено».
+- [РІ] «Реабілітовані історією. Харківська область. Книга друга», НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014 — https://www.reabit.org.ua/files/store/Kharkiv_2.pdf — українською; 672 сторінки; згадки на с. 106, 109.
+
+### Деколонізаційна перевірка
+
+- [x] Страту названо прямо, без евфемізмів.
+- [x] Радянські формули марковано як мову обвинувачення, а не як факт.
+- [x] Репресію не використано як доказ правоти всіх тез жертви.
+- [x] Розбіжність джерел щодо дати арешту показано, а не усунено.
+- [x] Міф про Соловки спростовано з покликанням.
+- [x] Етнічно-детерміністську риторику про карти відхилено.
+- [x] Непідтверджену цитату вилучено; підтверджену не прийнято через брак первинного локатора.
+- [x] Вигаданих «Existing» шляхів не заявлено.

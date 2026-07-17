@@ -111,39 +111,104 @@ persona:
   role: Модератор семінару з історії культури
   voice: Intellectual Historian
 phase: BIO
+portrait_fallback:
+  type: text-only
+  license: not-applicable
+  reason: >-
+    Окремого портретного файла Данила Щербаківського з підтвердженим автором,
+    роком і перевіреною ліцензією не знайдено; музейні та бібліотечні сторінки
+    показують зображення, але не передають прав на них.
+  disposition: no-portrait-until-rights-verified
+  verified_on: '2026-07-17'
 references:
-- note: Енциклопедична стаття про дослідника.
+- note: Стаття ЕСУ; автор С. І. Білокінь.
   path: https://esu.com.ua/article-886127
-  title: Щербаківський Данило Михайлович (ЕСУ)
+  title: Щербаківський Данило Михайлович
   type: reference
-- note: Стаття Інституту мистецтвознавства, фольклористики та етнології НАНУ.
-  path: https://www.etnolog.org.ua/index.php?id=1813&option=com_content&task=view
-  title: Данило Михайлович Щербаківський (ІМФЕ)
+- note: Матеріал Національного заповідника «Києво-Печерська лавра».
+  path: https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi
+  title: 'Данило Щербаківський: відданий музейній справі дослідник українського мистецтва'
   type: reference
-- note: Проєкт Національної історичної бібліотеки України про книги дослідника.
+- note: >-
+    Проєкт Національної історичної бібліотеки України про прижиттєві видання;
+    ліцензія CC BY-NC-SA 4.0.
   path: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
-  title: Неповторні риси книг — Щербаківський Данило (НІБУ)
+  title: Прижиттєві видання Данила Щербаківського 1925 року
+  type: reference
+- note: Календарний матеріал Національної бібліотеки України імені В. І. Вернадського.
+  path: http://www.nbuv.gov.ua/node/4510
+  title: >-
+    Народився Данило Щербаківський, етнограф, історик та теоретик мистецтва,
+    організатор пам'яткоохоронної справи, громадський діяч
   type: reference
 readings:
-- title: Page-stable читання про пам'яткоохоронну діяльність
+- title: Щербаківський Данило Михайлович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-886127
   language: uk
-  genre: Стаття / наукова праця
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: danylo-shcherbakivskyi-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний і правово безпечний доступ до праць Щербаківського
-    (напр. "Культурні цінності в небезпеці!") або аналітичних статей про нього; не хостити тексти без прав.
-  hosting: reading-needed
-  cefr_min: C1
+  type: academic-encyclopedia
+  role: scholarly-framing
+  hosting: link-only
   learner_task: >-
-    Прочитати фрагмент про збереження української старовини й пояснити, чому музейна
-    робота ставала об'єктом репресій.
-  caveats: >-
-    Спиратися на задокументовані факти цькування, уникати непідтверджених деталей 
-    останніх днів життя.
+    Виписати музейні та академічні посади за роками й позначити, де стаття
+    переходить від переліку фактів до авторського пояснення причин смерті.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-886127
+    note: >-
+      Стаття українською, захищена авторським правом; курс посилається на
+      сторінку й не відтворює її тексту.
+- title: 'Данило Щербаківський: відданий музейній справі дослідник українського мистецтва'
+  source_name: Національний заповідник «Києво-Печерська лавра»
+  source_url: https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi
+  language: uk
+  type: institutional-museum-feature
+  role: biographical-orientation
+  hosting: link-only
+  learner_task: >-
+    Знайти відомості про збиральницькі експедиції та обсяг зібрання й
+    відрізнити задокументовану музейну працю від оцінних формул.
+  rights:
+    basis: external-link
+    evidence_url: https://kplavra.kyiv.ua/ua/danylo-shcherbakivskyi
+    note: >-
+      Сторінка заповідника доступна українською; курс посилається на неї й не
+      відтворює тексту або зображень.
+- title: Прижиттєві видання Данила Щербаківського 1925 року
+  source_name: Національна історична бібліотека України
+  source_url: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
+  language: uk
+  type: institutional-library-feature
+  role: work-identification
+  hosting: link-only
+  learner_task: >-
+    Точно назвати праці 1925 року й показати, чому авторський доробок треба
+    відрізняти від посади та від пізнішої пам'яті про дослідника.
+  rights:
+    basis: external-link
+    evidence_url: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
+    note: >-
+      Матеріал українською за ліцензією CC BY-NC-SA 4.0; курс посилається на
+      сторінку й не відтворює сканів видань.
+- title: >-
+    Народився Данило Щербаківський, етнограф, історик та теоретик мистецтва,
+    організатор пам'яткоохоронної справи, громадський діяч
+  source_name: Національна бібліотека України імені В. І. Вернадського
+  source_url: http://www.nbuv.gov.ua/node/4510
+  language: uk
+  type: institutional-calendar
+  role: source-comparison
+  hosting: link-only
+  learner_task: >-
+    Зіставити дату смерті з датою виявлення тіла й пояснити, чому ці дві дати
+    не тотожні й не потребують домислювання.
+  rights:
+    basis: external-link
+    evidence_url: http://www.nbuv.gov.ua/node/4510
+    note: >-
+      Сторінка українською з позначкою «Всі права захищено»; курс посилається
+      на неї й не відтворює тексту.
+readings_contract_version: 2
 sequence: 319
 slug: danylo-shcherbakivskyi
 subtitle: The Museum Scholar Driven to Despair by the Regime

@@ -1,124 +1,117 @@
-# Седляр Василь Теофанович — Research Dossier
+# Василь Седляр — дослідницьке досьє
 
 **Slug:** `vasyl-sedliar`
-**Block:** I
-**Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Трек:** BIO
+**Статус:** catalog-source readiness
+**Перевірено:** 2026-07-17
 
-## 1. Verified facts
+## 1. Перевірені відомості
 
-- **Full name (UA, canonical):** Седляр Василь Теофанович.
-- **Pseudonyms / aliases:** Vasyl Sedliar, Vasyl Sedljar; no stable pseudonym found in retrieved sources.
-- **Born:** IEU gives 1899-04-12 in Zhorzhivka, Poltava gubernia. Some modern memorial sources use Khrystivka/Shyshaky-area wording; the retrieved Tier 1 source used here is IEU.
-- **Died:** 1937-07-13 | Kyiv | Ukrainian SSR | executed after NKVD arrest and Soviet charges. Source: IEU "Sedliar, Vasyl."
-- **Family / education key facts:** IEU says he studied at the Kyiv Art School from 1915 to 1919 and at the Ukrainian State Academy of Arts from 1919 to 1922 under Mykhailo Boichuk. He later directed the Mezhyhiria Ceramics Tekhnikum and taught at the Kyiv State Art Institute.
+Українська форма імені потребує окремого застереження. Реєстрова стаття тому «Реабілітовані історією. Харківська область. Книга друга» (НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014) подає на с. 534 форму **«Седляр Василь Феофанович»** [РІ]. Поширені довідки вживають форму **«Теофанович»**. Досьє не обирає мовчки: засвідченою документом є перша, і обидві треба називати.
 
-## 2. Oppression mechanism
+Реєстрова стаття подає: народився 1899 року на хуторі Хрестівка Зіньківського повіту Полтавської губернії; українець, із службовців, освіта вища, позапартійний; проживав у Харкові; секретар оргкомітету Спілки художників УСРР [РІ].
 
-- **What happened:** Arrest, accusation of terrorist activity, execution, destruction/banning of works.
-- **When:** IEU gives arrest on 1936-11-26 and execution on 1937-07-13. The same entry says he was executed with Mykhailo Boichuk and Ivan Padalka.
-- **By whom:** NKVD; the precise court body for Sedliar in retrieved sources is not as fully documented as Padalka's. Court file number: source not found.
-- **Document references:** IEU gives the arrest date, charge category, execution, destruction of works, and 1958 rehabilitation. A stable archival file ID for Sedliar's own case was not retrieved.
-- **Mechanism specifics:** IEU documents a clear Stalinist terror arc: the pressure on Sedliar increased in the mid-1930s, including attacks on the "Europe" series and Boichukist art as formalist or ideologically suspect. The 1931 *Kobzar* with seventy-five Sedliar illustrations was published before the terror peak; after his execution the edition was banned and destroyed. IEU states that most of his creative works, including thousands of paintings, were destroyed by the NKVD. The mechanism therefore combined physical murder with cultural erasure of a visual school.
-- **What survived / what was destroyed:** Surviving works include portraits, *In a Liknep School*, *An Execution in Mezhyhiria*, and some *Kobzar* illustrations. IEU explicitly records destroyed frescoes, destroyed majority of works, and the destroyed/banned *Kobzar* edition.
+Херсонська обласна бібліотека подає освітній шлях: Київська художня школа у 1915–1919 роках, потім Українська державна академія мистецтв, майстерня Михайла Бойчука [ХОУНБ]. Та сама сторінка подає призначення директором Межигірського керамічного технікуму 1923 року, налагодження роботи двадцяти верстатів і організацію виставок, що поєднували сучасне мистецтво з традиційними формами української кераміки [ХОУНБ].
 
-## 3. Major works
+**«Кобзар».** Херсонська сторінка подає точні числа: п'ятдесят великих і двадцять шість малих ілюстрацій та обкладинка; робота завершена 1929 року; перше видання — 1931 року, друге — 1933 року з кольоровими ілюстраціями [ХОУНБ]. Три дати (завершення роботи, перше видання, друге видання) — три різні факти, які часто зливають в один.
 
-- `1919` — Lutsk barracks murals in Kyiv, collective mural project under Boichuk, destroyed in 1922 per IEU.
-- `1924` — Kyiv Institute of Plastic Arts auditorium murals, collective frescoes, destroyed in 1934 per IEU.
-- `1924` — Mezhyhiria Ceramics Tekhnikum murals, collective mural work, listed by IEU.
-- `1924-1925` — *In a Liknep School*, painting, listed by IEU.
-- `1926` — *Portrait of Oksana Pavlenko*, painting, pictured/listed by IEU.
-- `1926-1927` — "Europe" series after travel with Boichuk, criticized by Communist Party critics per IEU.
-- `1927` — *An Execution in Mezhyhiria*, painting, listed by IEU.
-- `1931` — *Kobzar* with 75 illustrations, book art, later banned and destroyed per IEU.
-- `1931` — *Beside the Tractor*, painting, pictured by IEU.
-- `1933-1935` — Chervonozavodskyi Ukrainian Drama Theater frescoes, collective mural work, later destroyed per IEU.
-- `1934` — "Занепад сучасного буржуазного мистецтва на Заході," art-critical essay, cited by Serhii Bilokin.
+Том «Реабілітовані історією» незалежно фіксує організаційну роль: у переліку учасників першого всеукраїнського з'їзду Асоціації революційного мистецтва України (АРМУ) В. Ф. Седляр названий генеральним секретарем асоціації, поряд із І. І. Падалкою, Олесем Довженком та іншими [РІ]. Той самий том фіксує, що 1933 року Падалка разом із М. Бойчуком, В. Седляром і О. Павленко працював над фресковими розписами в Харківському Червонозаводському театрі [РІ].
 
-## 4. Primary-source quotes
+## 2. Механізм репресії і межі атрибуції
 
-> "Ця виучка ... ніколи не перешкоджала виявлятися їхнім особливостям"
+Реєстрова стаття подає повний склад: заарештований 26 листопада 1936 року як член контрреволюційної націонал-фашистської організації, що стояла на терористичних позиціях (статті 54-8, 54-11 КК УСРР), і військовою колегією Верховного Суду СРСР 13 липня 1937 року засуджений до розстрілу з конфіскацією особистого майна **з негайним виконанням вироку** [РІ].
 
-Source: Vasyl Sedliar as quoted on UA View's Boichuk project page, discussing the Boichuk workshop method. This quote is useful because it frames Boichukism as disciplined formation rather than mechanical copying.
+Херсонська сторінка подає загальніше: арешт наприкінці 1936 року, звинувачення в «ідеологічній диверсії» та контрреволюційній діяльності, страта 13 липня 1937 року [ХОУНБ]. У деталях перевагу має реєстрова стаття, бо вона подає день і статті.
 
-> "почуття релігійне, найплодотворніше джерело їх натхнення"
+Формула «з негайним виконанням вироку» [РІ] пояснює, чому дата вироку збігається з датою смерті. Це процесуальна властивість, а не помилка переказу.
 
-Source: Sedliar, "Занепад сучасного буржуазного мистецтва на Заході," *Образотворче мистецтво* (1934), quoted by Serhii Bilokin with page references. It matters pedagogically because Sedliar's language shows how a Soviet-era art article could still preserve premodern sacred-art vocabulary that later became dangerous.
+**Мова обвинувачення.** «Націонал-фашистська організація», «терористичні позиції» [РІ], «ідеологічна диверсія» [ХОУНБ] — формули слідства й вироку, створені для знищення мистецького середовища. Вони не описують Седляра й не є «другою точкою зору».
 
-## 5. Language register
+**Реабілітація: визнана прогалина.** Херсонська сторінка формулює розпливчасто — реабілітований Верховним Судом у 1980-х роках [ХОУНБ]. Перевірений фрагмент реєстрової статті дати реабілітації не подає [РІ]. Досьє **не називає** точного року: неточне джерело не можна «уточнити» здогадом. Для точної дати потрібен документ, якого перевірені сторінки не наводять.
 
-- **Register:** Art-critical, pedagogical, modernist-theoretical.
-- **CEFR readiness for full reading:** C1 for original criticism; B2 for selected captions and short excerpts.
-- **Lexicon notes:** `фреска`, `темпера`, `Кобзар`, `бойчукізм`, `монументальне мистецтво`, `лікнеп`, `формалізм`, `терористична діяльність` as Soviet accusation language.
-- **Stylistic features:** Dense art-historical comparisons, workshop terminology, and politically charged Soviet-era labels that need careful framing.
+**Межа висновку.** Седляр обіймав посаду секретаря оргкомітету Спілки художників УСРР [РІ], тобто працював усередині радянської інституційної системи, поки та сама система його не вбила. Ця складність не применшує злочину; вона робить портрет правдивим і не дозволяє звести людину до символу.
 
-## 6. Contested points
+## 3. Авторська праця й інституційна роль
 
-- **What's debated in modern UA scholarship:** The exact location wording of his birthplace, the size of the destroyed corpus, and how to describe Boichukism as school, method, or style.
-- **What gets simplified in popular memory:** He is often reduced to "the other Boichukist executed with Boichuk." IEU shows him as director, teacher, critic, illustrator, and a major *Kobzar* artist.
-- **Where modern Russian disinformation attacks them:** Soviet accusation language and later anti-formalist rhetoric framed Boichukists as dangerous nationalist formalists. The dossier treats that language as evidence of repression.
-- **Polish / Jewish / other-perspective considerations:** The "Europe" travel series and Bauhaus/Western factory visits show a transnational art-education context. Lessons should avoid implying a closed Ukrainian-only stylistic genealogy.
-- **Pedagogical caution:** The retrieved sources are strong for arrest, execution, destroyed works, and rehabilitation, but weak for the exact legal file. Curriculum prose should therefore say "charged with terrorist activity" per IEU and avoid inventing a courtroom narrative until an archival citation is retrieved.
-- **Source-balance note:** IEU is the grounding source for the repression facts; UA View and Bilokin are used for workshop voice and interpretive texture, not to override IEU chronology.
+Межигірський технікум — ключ до розуміння Седляра як організатора художньо-промислової освіти, а не лише станкового митця [ХОУНБ]. Виробництво, навчання й виставкова діяльність були одним комплексом.
 
-## 7. Cross-track links
+Ілюстрування «Кобзаря» не є доказом політичної програми. Це художнє завдання всередині української видавничої культури, виконане професіоналом із відомими параметрами роботи [ХОУНБ]. Читати видання 1931 року як зашифровану декларацію означає підмінювати мистецтвознавство здогадом.
 
-- **Existing LIT modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/lit/rozstriliane-vidrodzennia-phenomenon.yaml`
-- **Existing HIST modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/hist/rozstriliane-vidrodzennia.yaml`
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/istorio/rozstriliane-kontekst.yaml`
-  - `curriculum/l2-uk-en/plans/istorio/syntez-rozstriliane.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio links to Mykhailo Boichuk, Ivan Padalka, Sofiia Nalepynska-Boichuk, Oksana Pavlenko, and Taras Shevchenko as illustrated author.
-- **Potential LIT additions surfaced by this research:**
-  - A visual-reading lesson on the 1931 illustrated *Kobzar* and Soviet image censorship.
+## 4. Роботи і документи для читання
 
-## 8. Naming-canonical
+Ухвалений набір — три українськомовні джерела, усі link-only:
 
-- **Slug:** `vasyl-sedliar`
-- **EN canonical (BGN/PCGN 2010):** Vasyl Sedliar
-- **UA canonical (with patronymic):** Седляр Василь Теофанович
-- **Aliases (track these for `aliases:` YAML field):** Vasyl Sedliar, Vasyl Sedljar
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Vasilii Sedliar, Vasily Sedlyar (FORBIDDEN except as archival metadata)
+1. ХОУНБ ім. Олеся Гончара, «Василь Седляр» — біографічна орієнтація про самого Седляра; «Усі права застережено».
+2. «Реабілітовані історією. Харківська область. Книга друга» — реєстрова стаття (с. 534) і контекст АРМУ; публічний PDF.
+3. Сергій Білокінь, «У Парижі» — контекст школи Бойчука та цитати Седляра з покликанням.
 
-## 9. Image candidates
+**Вилучено як тангенційне джерело.** Попередній стан плану подавав першим читанням сторінку `uaview.ui.org.ua/ua/artist/Boichuk-Mykhaylo` під назвою «Boichuk Mykhaylo». Пряма перевірка показала: предметом сторінки є **Михайло Бойчук**, а Седляр згадується лише побіжно — як учень, супутник у подорожі 1926 року й керівник Межигірського технікуму. Джерело про вчителя доводить факти про вчителя; побіжна згадка учня не робить текст його біографією. Крім того, назва читання дублювала назву сторінки про іншу особу, тобто містила дрейф предмета. Сторінку замінено на біографічну сторінку ХОУНБ саме про Седляра [ХОУНБ].
 
-- **Best PD/CC portrait:** Wikimedia Commons, `File:Юродивий Василь Седляр.jpg` | Commons page lists CC BY-SA 4.0; verify before publication.
-- **Backup candidates:** IEU images of Sedliar portraits and works; rights require confirmation.
-- **If no PD/CC portrait exists:** Use a rights-cleared reproduction of the *Kobzar* cover or a surviving painting.
-- **Era-appropriate context image:** Destroyed Chervonozavodskyi theater fresco documentation, if rights-cleared.
+Також вилучено запис `reading-needed` з `source_url: reading-needed` та англомовне посилання на Internet Encyclopedia of Ukraine (readings вимагають українськомовного статусу).
 
-## 10. Sources used
+Стаття Білоконя лишається в наборі, але з виправленою роллю: вона не є біографією Седляра. Її предмет — паризький досвід школи Бойчука; Седляр виступає там хронікером і тлумачем чужого вчення [Білокінь]. Саме ця роль і зафіксована в полі `role` плану.
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine, "Sedliar, Vasyl" | https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CE%5CSedliarVasyl.htm | accessed 2026-05-30
+## 5. Цитати: прийнято з точним первинним локатором
 
-**Tier 2 (institutional):**
-- UA View / Museum of Contemporary Art NGO, Boichuk project page | https://uaview.ui.org.ua/ua/artist/Boichuk-Mykhaylo | accessed 2026-05-30
+Обидві цитати перевірено прямим зверненням до сторінки Білоконя. Обидві присутні, обидві належать Василеві Седляру й обидві мають **той самий повний бібліографічний локатор**, який наводить Білокінь:
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Седляр Василь Теофанович," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+> Седляр В. Занепад сучасного буржуазного мистецтва на Заході // Образотворче мистецтво. — Х.; К., 1934. — Альманах 1. — С. 212.
 
-**Tier 4 (modern scholarly post-1991):**
-- Serhii Bilokin, "У Парижі" | https://www.s-bilokin.name/Culture/Bojchuk/Paris.html | accessed 2026-05-30
+**Цитата 1** — про виучку в майстерні Бойчука: «Ця виучка, – казав він, – що суворо внушалась (втовкмачувалась) молодим малярам, ніколи не перешкоджала виявлятися їхнім особливостям» [Білокінь]. Вона показує бойчукізм як дисципліновану формацію, а не механічне копіювання, і робить це словами самого Седляра.
 
-**Tier 5 (general web):**
-- Ukrainian memorial article on Sedliar's anniversary | https://ukrpohliad.org/national-memory/do-127-richchya-mytczya-z-kogorty-rozstrilyanogo-vidrodzhennya-vasylya-sedlyara.html | accessed 2026-05-30
+**Цитата 2** — про релігійне почуття як джерело натхнення давніх майстрів: «…це почуття релігійне, найплодотворніше джерело їх натхнення» [Білокінь]. Вона показує, що радянська мистецтвознавча стаття 1934 року ще могла зберігати домодерну сакральну лексику, яка згодом стала небезпечною.
 
-**Primary-source documents accessed:**
-- Sedliar excerpts from *Образотворче мистецтво* (1934), quoted with page citations by Serhii Bilokin.
+**Виправлення атрибуції.** Попередній стан досьє приписував першу цитату сторінці UA View про Бойчука. Це неточно: пряма перевірка показала, що обидві цитати походять із тієї самої статті Седляра 1934 року й наведені у Білоконя з покликанням на с. 212. Атрибуцію виправлено.
 
----
+**Правило використання.** Наявність цитати на сторінці дослідника не є ліцензією на відтворення статті. Цитати вживаємо коротко, з подвійною атрибуцією (первинне видання плюс «цит. за С. Білоконем») і без перенесення тексту статті.
 
-## Decolonization self-check
+## 6. Спірні або чутливі точки
 
-- [x] Soviet accusation language labeled
-- [x] No archival case number invented
-- [x] Destroyed works documented through IEU
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+- **По батькові:** «Феофанович» за реєстровою статтею [РІ] проти «Теофанович» у довідковій традиції. Не розв'язано; фіксується.
+- **Дата реабілітації:** не встановлена за наявними джерелами. Прогалину визнано, а не заповнено.
+- **Межа предмета:** сторінка або стаття про Бойчука не є джерелом про Седляра, навіть якщо прізвище там трапляється. Це головний джерелознавчий урок слуга.
+- **«Кобзар» як аргумент:** ілюстрації не є політичною декларацією; це виконана робота з відомими параметрами [ХОУНБ].
+- **Монументальні роботи:** більшість розписів не збереглася; конкретні атрибуції потребують названого місця й року, як-от Червонозаводський театр 1933 року [РІ].
+
+## 7. Крос-трекові зв'язки
+
+Наявних модулів LIT або HIST для цього слуга в поточному дереві планів не виявлено; жодних «Existing» шляхів не заявлено. Потенційні напрями (не наявні файли): школа Михайла Бойчука; ілюстрування «Кобзаря» в українській видавничій традиції; українська кераміка й художня промисловість; Розстріляне відродження.
+
+## 8. Іменування і мовний режим
+
+- Українська канонічна форма: Седляр Василь Феофанович (за реєстровою статтею [РІ]); варіант «Теофанович» фіксуємо як поширену форму.
+- Англійська канонічна форма (BGN/PCGN 2010): Vasyl Sedliar.
+- Варіанти для поля `aliases`: В. Ф. Седляр, Василь Седляр.
+- Відмінювання: Седляр, Седляра, Седляреві, Седляром.
+- Топонім за джерелом: хутір Хрестівка, Зіньківський повіт, Полтавська губернія [РІ].
+- Ярлики «формалізм», «націонал-фашистська організація», «терористичні позиції» вживаємо тільки в лапках як мову обвинувачення.
+
+## 9. Зображення і права
+
+Портрет не ухвалено. Окремого файла із засвідченим автором і відкритою ліцензією не знайдено. У плані діє `portrait_fallback` типу `text-only` з диспозицією `no-portrait-until-rights-verified`.
+
+Ілюстрації до «Кобзаря» та монументальні розписи — самостійні мистецькі об'єкти з власним правовим режимом. Опис на біографічній сторінці [ХОУНБ] не є ліцензією. Курс не відтворює ілюстрацій без окремого доказу прав на конкретний файл. Дозвіл Білоконя на передрук його статей за умови гіперпосилання [Білокінь] стосується його власних текстів, а не творів Седляра.
+
+## 10. Джерела і деколонізаційна перевірка
+
+Перевірка виконана прямим зверненням до кожного джерела 2026-07-17: PDF завантажено й опрацьовано локально, реєстрову статтю вилучено посторінково, обидві цитати перевірено на сторінці Білоконя.
+
+### Джерела
+
+- [ХОУНБ] «Василь Седляр», Херсонська обласна універсальна наукова бібліотека ім. Олеся Гончара — https://lib.kherson.ua/vasil-sedlyar.htm — українською; «Усі права застережено».
+- [РІ] «Реабілітовані історією. Харківська область. Книга друга», НАН України, Інститут національної пам'яті, СБУ, Київ—Харків, 2014 — https://www.reabit.org.ua/files/store/Kharkiv_2.pdf — українською; 672 сторінки; реєстрова стаття про В. Ф. Седляра с. 534; АРМУ с. 143; Червонозаводський театр с. 146; покажчик с. 668.
+- [Білокінь] Сергій Білокінь, «У Парижі» — https://www.s-bilokin.name/Culture/Bojchuk/Paris.html — українською; «© 1970 – 2026 С. І. Білокінь. Передрук статей із сайту заохочується за умови посилання (гіперпосилання) на наш сайт».
+
+**Первинний локатор прийнятих цитат:** Седляр В. Занепад сучасного буржуазного мистецтва на Заході // Образотворче мистецтво. — Х.; К., 1934. — Альманах 1. — С. 212 (цит. за С. Білоконем).
+
+### Деколонізаційна перевірка
+
+- [x] Страту названо прямо, без евфемізмів.
+- [x] Формули вироку марковано як мову обвинувачення.
+- [x] Репресію не використано як доказ правоти всіх позицій митця; посаду в радянській системі названо чесно.
+- [x] Тангенційне джерело про іншу особу (Бойчук) вилучено; дрейф назви усунено.
+- [x] Розбіжність по батькові показано, а не усунено.
+- [x] Дату реабілітації не вигадано; прогалину визнано.
+- [x] Цитати збережено з повним первинним локатором; хибну атрибуцію виправлено.
+- [x] Права на твори відокремлено від дозволу на передрук статті дослідника.
+- [x] Вигаданих «Existing» шляхів не заявлено.
