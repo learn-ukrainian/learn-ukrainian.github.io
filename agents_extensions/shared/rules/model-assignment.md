@@ -25,6 +25,13 @@ that tier → cost among equivalent fits**. Cost never lowers the quality floor.
 is unavailable; `degraded` and `near_cap` only break ties inside a quality rung. `cursor:auto` is
 never an acceptable formal-review identity.
 
+**Lane updates (user-reported 2026-07-18):**
+- **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort
+  (`low`/`mid`/`high`) — set effort explicitly per dispatch; authoring/review seats run `high`.
+- **cursor**: **composer-2.5-fast is retired** — cursor has no cheap-fast tier; route quick
+  mechanical edits to agy/glm instead. Composer 2.5 (standard) remains the pinned-model choice
+  where family independence matters.
+
 | Task | Tool + model |
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
