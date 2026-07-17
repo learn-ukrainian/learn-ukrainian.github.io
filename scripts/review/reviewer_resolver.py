@@ -296,14 +296,17 @@ QWEN = ReviewerCandidate(
 )
 
 _HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "unhealthy": 3}
-_HEALTH_ALIASES: dict[str, str] = {
+_HEALTH_ALIASES: dict[str, str | None] = {
     "healthy": "healthy",
     "cool": "healthy",
+    "pre_launch": "healthy",
     "degraded": "degraded",
     "warm": "degraded",
     "near_cap": "near_cap",
     "hot": "near_cap",
-    "unknown": "near_cap",
+    # The endpoint uses unknown when budget evidence is absent. Preserve the
+    # module's fail-open convention by treating it exactly like a missing key.
+    "unknown": None,
     "unhealthy": "unhealthy",
 }
 
@@ -316,16 +319,16 @@ def _health_rank(status: str | None) -> int:
     return _HEALTH_RANK[status]
 
 
-def _normalize_health_status(value: object, *, label: str) -> str:
+def _normalize_health_status(value: object, *, label: str) -> str | None:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{label} health status must be a non-empty string")
-    normalized = _HEALTH_ALIASES.get(value.strip().lower())
-    if normalized is None:
+    token = value.strip().lower()
+    if token not in _HEALTH_ALIASES:
         raise ValueError(
             f"{label} has unsupported health status {value!r}; "
             f"expected one of {sorted(_HEALTH_ALIASES)}"
         )
-    return normalized
+    return _HEALTH_ALIASES[token]
 
 
 def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[str, str]:
@@ -335,10 +338,12 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
     if not isinstance(snapshot, Mapping):
         raise ValueError("routing snapshot must be a mapping")
     if "agents" not in snapshot:
-        return {
-            str(route): _normalize_health_status(status, label=str(route))
-            for route, status in snapshot.items()
-        }
+        normalized_flat: dict[str, str] = {}
+        for route, status in snapshot.items():
+            normalized_status = _normalize_health_status(status, label=str(route))
+            if normalized_status is not None:
+                normalized_flat[str(route)] = normalized_status
+        return normalized_flat
 
     agents = snapshot.get("agents")
     if not isinstance(agents, Mapping):
@@ -355,9 +360,11 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
         if status is None and isinstance(health, Mapping) and health.get("healthy") is True:
             normalized[str(route)] = "healthy"
             continue
-        normalized[str(route)] = _normalize_health_status(
+        normalized_status = _normalize_health_status(
             status, label=f"agents.{route}"
         )
+        if normalized_status is not None:
+            normalized[str(route)] = normalized_status
     return normalized
 
 

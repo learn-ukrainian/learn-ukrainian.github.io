@@ -60,6 +60,9 @@ because the cheaper model exists; risk and fit establish the quality floor first
 family. Composer 2.5 is Cursor-trained from a Kimi K2.5 checkpoint, so conservatively treat Composer
 and Kimi as the same Moonshot independence family. Neither is currently a Ukrainian factual/folk gate.
 K3 is **not a QG judge**; the standing judge pairing remains Gemini↔GPT.
+**Supersession (user directive 2026-07-17):** K3 is now operator-classified as a top model and is
+eligible for automatic cross-family code-review ladders. This replaces the 2026-07-16 canary-only /
+zero-automatic-weight restriction; continued local bakeoffs refine its ordering but do not erase it.
 
 ## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11)
 

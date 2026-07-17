@@ -203,7 +203,7 @@ def test_real_gemini_lane_outage_excludes_agy_candidates():
     assert gemini.status == "excluded"
 
 
-def test_health_statuses_are_case_normalized_and_unknown_values_fail_closed():
+def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed():
     unhealthy = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -223,6 +223,29 @@ def test_health_statuses_are_case_normalized_and_unknown_values_fail_closed():
     assert invalid.selected is None
     assert invalid.trace == ()
     assert "invalid routing snapshot" in invalid.fail_closed_reason
+
+
+def test_pre_launch_is_healthy_and_unknown_is_fail_open():
+    pre_launch = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"agy": "pre_launch", "grok": "near_cap"},
+        )
+    )
+    assert pre_launch.selected.name == "gemini-3.1-pro"
+    assert pre_launch.selected.health == "healthy"
+
+    unknown = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            routing_snapshot={"agy": "unknown", "grok": "unknown"},
+        )
+    )
+    missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
+    assert unknown.selected.name == missing.selected.name == "gemini-3.1-pro"
+    assert unknown.substitution_note is None
 
 
 def test_near_cap_only_breaks_ties_inside_same_quality_rung():
