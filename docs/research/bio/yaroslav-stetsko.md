@@ -3,61 +3,212 @@
 **Slug:** `yaroslav-stetsko`
 **Block:** G
 **Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Issue:** #4431
+**Researcher:** claude/bio-2def-cohort23
+**Completed:** 2026-07-17
+
+Усі твердження спираються на джерела, перевірені цим проходом (§10).
+Високоризикова тема: суб'єкт кожної дії названий, кожне число має
+атрибуцію, цитати без локаторів не наводяться.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Ярослав Семенович Стецько.
-- **Pseudonyms / aliases:** З. Карбович, Є. Орловський, С. Осинський, Б. Озерський, Я. Підлісецький; English canonical: Yaroslav Stetsko.
-- **Born:** 19 January 1912 | Ternopil, Galicia | Austria-Hungary. [T1: ЕСУ — Стецько Ярослав Семенович] [T1: IEU — Stetsko, Yaroslav]
-- **Died:** 5 July 1986 | Munich, Federal Republic of Germany. [T1: ЕСУ] [T1: IEU]
-- **Family / education key facts:** Studied law and philosophy in Krakow and Lviv; joined Ukrainian Nationalist Youth, UVO, and OUN; by 1932 held ideological responsibilities in OUN; husband of Slava Stetsko. [T1: IEU] [T1: ЕСУ]
+- **Full name (UA, canonical):** Ярослав Семенович Стецько. [S1] [S2]
+- **Born:** 19 січня 1912, м. Тернопіль, у сім'ї священника о. Семена і
+  Теодозії з роду Чубатих. [S1]
+- **Died:** 5 липня 1986, Мюнхен (ФРН); похований на кладовищі
+  Вальдфрідгоф. [S1]
+- **Роль:** ідеолог ОУН, учасник визвольних змагань 1940–50-х років,
+  голова УДП (1941), голова Проводу ОУН(б) (1968–1986), президент АБН
+  (1946–1986). [S1]
+- **Чоловік** Ярослави Йосипівни Стецько. [S1] [S5]
+- **Псевдоніми і криптоніми:** Б. Озерський, Б. О., Є. Орловський, Є. О.,
+  С. Осінський, С. О., Аскольд, Зиновій Карбович, З. К., Ю. Підлісецький
+  [S1]; ЕСУ додає: Орач, Басмач, Лука, Загірний [S2].
+- **Нагорода:** Золотий Хрест заслуги УПА (1951). [S2]
 
-No OS/NS discrepancy was found for his birth/death dates. The main source discrepancy is interpretive: diaspora and institutional encyclopedias foreground anti-Soviet activism and Nazi imprisonment, while Holocaust scholarship foregrounds antisemitic texts and the 1941 collaboration attempt.
+**Хронологія:**
+
+- Закінчив Тернопільську українську гімназію; 1929–34 навчався на
+  правничому та філософському факультетах Яґеллонського (Краків) і
+  Львівського університетів. [S2] (ЕІУ подає без років: «правничому та
+  філос. ф-тах Краківського і Львів. ун-тів». [S1])
+- Учасник нелегальної «Української націоналістичної молоді», член УВО та
+  ОУН (з 1929). [S1] [S2]
+- Окружний провідник ОУН Тернополя (1930); ідеологічний і вишкільний
+  референт Проводу Юнацтва ОУН ЗУЗ (1931). [S2]
+- **Від 1932** — член Крайової екзекутиви й **ідеологічний референт ОУН**. [S1] [S2]
+- Редактор перших підпільних видань ОУН: «Бюлетень Крайової екзекутиви ОУН
+  на західних українських землях», «Юнак», «Юнацтво». [S1] [S2]
+- Організатор і учасник Римського Великого збору ОУН (1939). [S1] [S2]
+- Співорганізатор Революційного Проводу ОУН(б); заступник голови Проводу
+  ОУН(б) (1940); учасник 2-го Великого збору ОУН(б) (квітень 1941). [S1] [S2]
+- 22 червня 1941 — Український національний комітет у Кракові (113 осіб,
+  представляв основні течії еміграції **за винятком мельниківської ОУН**)
+  надав Стецькові, керівникові однієї з похідних груп ОУН(б), повноваження
+  проголосити незалежну державу. [S3]
+- Вранці 30 червня 1941 — похідна група Стецька увійшла до Львова **разом
+  із передовими частинами Вермахту й батальйоном «Нахтігаль»**. [S3]
+- Ввечері 30 червня 1941 — Національні збори в будинку т-ва «Просвіта»,
+  площа Ринок, 10; понад 100 учасників; Стецько зачитав Акт відновлення
+  Української Держави. [S3] [S4]
+- 30 червня 1941 — утворено УДП: Стецько — голова і керівник ресорту
+  соціальних реформ; М. Панчишин — 1-й заступник і міністр здоров'я;
+  Л. Ребет — 2-й заступник; ген. В. Петрів — міністр оборони (заступники
+  Р. Шухевич, О. Гасин); М. Лебедь — міністр держбезпеки. [S4]
+- Українська Держава 1941 формально діяла **з 30 червня до 12 липня 1941**;
+  столицею до здобуття Києва ухвалено Львів. [S4]
+- **1941–44** — ув'язнений нацистами в концтаборі Заксенгаузен **за відмову
+  відкликати Акт**. [S1]
+- Наприкінці 1944 — працював в Українському національному комітеті. [S1]
+- 1945 — на Крайовій конференції обраний членом Бюро Проводу ОУН(б). [S1]
+- 1946–53 — керівник сектору зовнішньої політики ЗЧ ОУН. [S1]
+- **1968** — обраний головою Проводу ОУН(б); очолював до смерті. [S1]
+- **1946–86** — президент АБН: угода з Китайською антикомуністичною лігою;
+  місія АБН у Тайпеї (1957–60); сприяв заснуванню Світової
+  антикомуністичної ліги в Токіо (1970), член її Екзекутиви; ініціював
+  Європейську раду свободи, член Почесної президії (1968–74). [S1]
+
+**Розбіжність довідників (зафіксована, не усунена).** ЕІУ: «Політв'язень
+польс. тюрем (1934—37)» [S1]. ЕСУ докладніше: 1934 — ув'язнений польською
+владою, але **відпущений за браком доказів**; на Львівському процесі ОУН
+1936 — засуджений до 5 років позбавлення волі; після амністії 1937 виїхав
+за кордон [S2]. Версії не суперечать, але ЕІУ стискає три різні події в
+один діапазон. У модулі використовувати докладнішу версію ЕСУ з посиланням.
 
 ## 2. Oppression mechanism
 
-- **What happened:** Polish arrests and imprisonment; Nazi arrest after the 30 June 1941 proclamation and imprisonment in Sachsenhausen; long-term Soviet/KGB hostile targeting in exile through propaganda and anti-OUN operations.
-- **When:** Polish authorities sentenced him in 1936 and he was amnestied in 1937; German arrest followed July-September 1941, with Sachsenhausen confinement until 1944; postwar Soviet targeting continued through the Cold War.
-- **By whom:** Polish courts/police; German security authorities; Soviet state security and propaganda organs.
-- **Document references:** No Soviet case-file ID for Stetsko was retrieved. Nazi imprisonment is covered by IEU and Ukrainian textbook RAG. Polish imprisonment is covered by IEU. [T1: IEU] [T2: textbook RAG]
-
-Stetsko's oppression record is real but cannot be used as a shortcut to absolution. Polish imprisonment resulted from OUN underground activity. Nazi arrest resulted from the German refusal to accept OUN-B's unilateral restoration of Ukrainian statehood in Lviv. Soviet hostility came from his postwar role in OUN-B and the Anti-Bolshevik Bloc of Nations, but this pass did not retrieve a stable KGB archival file for a specific operation against him. [T1: ЕСУ] [T1: IEU]
+- **Польща (1934–1937):** арешт 1934 (звільнення за браком доказів), вирок
+  на 5 років на Львівському процесі ОУН 1936, амністія 1937. [S2]
+- **Нацистська Німеччина (1941–1944):** ув'язнення в Заксенгаузені **за
+  відмову відкликати Акт** проголошення незалежної Української Держави. [S1]
+  Причина названа в джерелі прямо — це головний контраргумент до тези про
+  «німецьких маріонеток», і він фактологічний, а не риторичний.
+- **СРСР:** прямих репресій щодо Стецька джерела цього проходу не фіксують;
+  він помер у Мюнхені 1986 року. [S1] Не переносити на нього сюжет Бандери
+  чи Ребета — це різні біографії.
 
 ## 3. Major works
 
-- `1938` — *Без національної революції немає соціяльної*, political brochure; shows the social-revolutionary language of OUN-B ideology.
-- `1939` — *Націоналізм і демократія*, ideological essay; important for the democracy-versus-authoritarianism controversy.
-- `1953` — *Сучасний стан в СССР і його політика*, Cold War anti-Soviet analysis.
-- `1954` — *Основні завваги до змісту нашої визвольної концепції*, programmatic text.
-- `1954` — *Ідейно-політичний резистанс організованого українського підпілля*, underground-memory text.
-- `1955` — *Міжнароднє становище і українська справа*, geopolitical pamphlet.
-- `1959` — *Бунт проти матеріялізму*, ideological text.
-- `1987` — *Українська визвольна концепція*, collected works, Munich, posthumous.
+За [S1]:
+
+- `1967` — **«30 червня 1941»** (книга про день, який він же й уособлює).
+- `1987` — **«Українська визвольна концепція»**, т. 1—2 (посмертне видання).
+- `1954` — «Сила — головний аргумент проти Росії».
+- `1954` — «Ідейно-політичний резистанс організованого українського підпілля».
+- `1955` — «Міжнароднє становище і українська справа».
+- `1959` — «Бунт проти матеріялізму».
+- Довголітній співробітник часопису «Визвольний шлях». [S1]
+
+**Page-stable сканованих видань цих праць цим проходом не отримано.** Тому
+жодних цитат із них у модулі бути не може, доки не звірено конкретне
+видання зі сторінками.
 
 ## 4. Primary-source quotes (>=2 required)
 
-- "Без національної революції немає соціяльної." Source: title of Stetsko's 1938 brochure listed by ЕСУ. It is a title, not a full passage, but it is a concise statement of the politics he wanted readers to hear. [T1: ЕСУ]
-- "Націоналізм і демократія." Source: title of his 1939 essay listed by ЕСУ. Pedagogically useful because the phrase opens the debate over whether his later democratic language overcame earlier authoritarian commitments. [T1: ЕСУ]
+**Цим проходом дослівних цитат Стецька з точними локаторами не отримано, і
+вони свідомо не наводяться.**
 
-Source gap: a page-verified scanned edition of Stetsko's own works was not retrieved, so this dossier does not add unsourced inspirational quotations. The 1941 antisemitic autobiography is discussed through Berkhoff/Carynnyk and Himka rather than quoted at length.
+Це не формальність, а суть завдання для цієї постаті. Стецько — автор
+великого корпусу програмних текстів [S1], і саме тому спокуса
+«процитувати з пам'яті» тут найбільша й найнебезпечніша. Жодне з джерел,
+перевірених цим проходом, не подає його авторських висловлювань із
+вказівкою сторінки.
+
+**Окремо про антисемітизм — межа доказу цього проходу.**
+
+Що **встановлено** цим проходом: питання є предметом рецензованої фахової
+історіографії, і конкретна праця ідентифікована точно. Berkhoff K. C.,
+Carynnyk M. «The Organization of Ukrainian Nationalists and Its Attitude
+toward Germans and Jews: Iaroslav Stets'ko's 1941 Zhyttiepys». *Harvard
+Ukrainian Studies*, т. 23, вип. 3-4 (1999), **с. 149–184**, 36 с. [S6]
+Бібліографічний запис звірено в інституційному репозиторії KNAW (NIOD
+Institute for War, Holocaust and Genocide Studies), тип — «Article ›
+Scientific › peer-review». [S6] Тобто предмет існує, він досліджений у
+рецензованій статті, і ця стаття аналізує ставлення ОУН до євреїв саме
+через «Життєпис» Стецька 1941 року — це видно вже з її назви й
+репозиторного запису.
+
+Що **не встановлено**: цим проходом прочитано **лише бібліографічний
+запис**, а не текст статті (повний текст на ResearchGate віддає HTTP 403).
+Отже, **висновків статті переказувати не можна**, і цитат із «Життєпису»
+наводити не можна.
+
+Різниця між цими двома абзацами — і є коректна робота з контроверсійним
+матеріалом: «існує рецензоване дослідження X про предмет Y, с. 149–184» є
+перевіреним твердженням; «дослідження довело, що…» — ні, доки статтю не
+прочитано. Що з цього випливає для модуля:
+
+- **Не наводити** цитат чи переказів його висловлювань з пам'яті — у цій
+  темі непідтверджене твердження шкодить у будь-якому напрямі.
+- **Не оголошувати** питання закритим і не викреслювати його: відсутність
+  джерела в одному проході не є доказом відсутності предмета.
+- Джерела, які **не** приймаються як доказ: копії «Мого життєпису» на
+  блогах і в соцмережах (анонімні агрегатори без ідентичності документа),
+  публіцистика, вікі-сторінки. Перевірено цим проходом: у видачі
+  трапляється копія на LiveJournal — як джерело не використовується.
+- **Обов'язкова робота окремого проходу:** дістати текст статті Berkhoff —
+  Carynnyk (HUS 23(3-4), 1999, с. 149–184) через бібліотечний доступ і
+  читати її з посторінковими локаторами; лише після цього формулювати
+  твердження про зміст «Життєпису». Стаття англомовна, тому вона є
+  `reference`, а не learner reading.
+- **Ще не розв'язано:** попередній план подавав ще одну працю —
+  John-Paul Himka, «Ukrainian Nationalists and the Holocaust» — з полем
+  `path: Ukrainian Nationalists and the Holocaust`, тобто **голою назвою
+  замість URL**. Це нерозв'язана цитата; цим проходом її не верифіковано,
+  тому з плану вилучено. Праця реальна й доречна — її треба ідентифікувати
+  точно (видання, рік, сторінки) і повернути з перевіреним записом.
+
+Ідеологічна характеристика, яку **можна** стверджувати вже зараз, бо вона
+є в джерелі: Стецько — **ідеолог ОУН** [S1], ідеологічний референт з 1932
+року [S1] [S2]. Крім того, у корпусі шкільних підручників
+(`mcp__sources__search_text`, 2026-07-17) підручник Гісема (10 кл., 2018,
+с. 168) формулює: «Основою діяльності ОУН став інтегральний націоналізм —
+тоталітарна (авторитарна) ідеологія». Це перевірений локатор для
+характеристики **ідеології руху** — але не для особистих висловлювань
+Стецька; не змішувати ці два рівні.
 
 ## 5. Language register
 
-- **Register:** high ideological-polemical, diaspora political prose.
-- **CEFR readiness for full reading:** C1-C2; B2 in short, heavily glossed excerpts.
-- **Lexicon notes:** `визвольна концепція`, `резистанс`, `матеріялізм`, `соціяльна`, OUN-era orthography, diaspora spellings.
-- **Stylistic features:** binaries, abstract nouns, revolutionary teleology, geopolitical framing.
+- **Register:** ідеологічно-програмна публіцистика, деклараційний і
+  політико-organізаційний текст.
+- **CEFR readiness:** C1.
+- **Морфологія:** 8 одиниць перевірено через VESUM цим проходом
+  (`mcp__sources__verify_words`, 2026-07-17), знайдено 8/8: `ідеолог`,
+  `референт`, `проголошення`, `відновлення`, `самостійність`, `концтабір`,
+  `еміграція`, `підпільний`.
+- **Не перевірялося:** наголоси; власні назви (Заксенгаузен, Вальдфрідгоф,
+  Тайпей).
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** Stetsko is central to the 30 June 1941 Act and the short-lived Ukrainian State Administration. The act was a declaration of Ukrainian statehood under catastrophic conditions at the opening of the German-Soviet war; it was not recognized by Germany, and Stetsko was arrested. That anti-imperial fact must be taught. But the text's pledge to cooperate with Nazi Germany, and Stetsko's own 1939-41 antisemitic writings, are also documented and cannot be minimized. [T1: IEU] [T4: Berkhoff/Carynnyk] [T4: Himka]
-- **What gets simplified in popular memory:** Commemorative accounts often move quickly from "proclaimed independence" to "Nazi prisoner." That sequence is true but incomplete: before arrest, OUN-B attempted a state project that imagined tactical cooperation with the German invasion, and Stetsko's ideological writing included anti-Jewish claims that mainstream Holocaust scholarship treats as serious evidence.
-- **Where modern Russian disinformation attacks him:** Russian narratives collapse the whole Ukrainian statehood tradition into "Nazi collaboration" by using Stetsko as a symbol. That is propagandistic because it erases German repression of OUN-B, Soviet occupation, and the broader Ukrainian anti-imperial struggle. It becomes credible only when Ukrainian memory work hides the antisemitic and authoritarian record.
-- **Polish / Jewish / other-perspective considerations:** Jewish perspectives are essential here. Berkhoff and Carynnyk's Harvard Ukrainian Studies article on Stetsko's 1941 autobiography and Himka's Holocaust work should frame any learner-facing claim about antisemitism. Polish perspectives matter indirectly through OUN interwar violence and wartime memory, though Stetsko is less directly a Volhynia command figure than Kliachkivskyi or Shukhevych.
-- **NPOV-decolonized framing:** The dossier should say: Stetsko was an anti-Soviet Ukrainian nationalist who suffered Polish and Nazi imprisonment and opposed Soviet imperial rule; he was also an OUN-B ideologue whose 1941 project and antisemitic writings belong in any honest account. Neither "freedom fighter, full stop" nor "Nazi puppet, full stop" is acceptable.
+- **«Людина одного дня».** Масова пам'ять стискає Стецька до 30 червня
+  1941 року, але УДП діяло **менш ніж два тижні** (30 червня — 12 липня
+  1941) [S4], а сам він прожив ще 45 років, з яких 40 — на чолі АБН [S1].
+  Біографія, зведена до одного дня, — теж викривлення.
+- **Вхід до Львова разом із Вермахтом** [S3] — документований факт. Його
+  не можна ні прибрати (це віддає тему опонентові), ні перетворити на
+  вирок: той самий текст пояснює, що збори вдалося провести саме тому, що
+  німецької цивільної адміністрації в місті ще не було [S3].
+- **Заксенгаузен за відмову відкликати Акт** [S1] — факт, що руйнує тезу
+  про маріонетку. Але він не скасовує ні ідеологічного профілю, ні
+  контексту входу до міста.
+- **Легітимність УДП:** УНК представляв основні течії еміграції **за
+  винятком мельниківської ОУН** [S3] — тобто уряд не був
+  загальноукраїнським консенсусом. Це важливо для розуміння конфлікту з
+  Мельником.
+- **Антисемітизм:** див. §4 — межа доказу цього проходу; ні ствердження,
+  ні заперечення без джерела з локаторами.
+- **Холодна війна:** АБН і Світова антикомуністична ліга [S1] — сюжет, у
+  якому Стецько діяв поряд із режимами й організаціями, чия репутація
+  окремо контроверсійна. Цей прохід фіксує лише інституційні факти з ЕІУ;
+  оцінок мережі не робить за браком джерел.
+- **Disambiguation (критично):** Ярослав Семенович Стецько ≠ **Ярослава
+  Йосипівна Стецько** (14.05.1920 — 12.03.2003), його дружина, окрема
+  діячка з окремою статтею ЕІУ [S5]. Обоє послідовно очолювали і Провід
+  ОУН (революційної), і АБН: він — Провід з 1968, АБН 1946–86; вона —
+  Провід 1986–2001, АБН 1986–2003 [S1] [S5]. Формулювання «Стецько,
+  голова Проводу ОУН» без імені — двозначне.
 
 ## 7. Cross-track links
 
@@ -70,46 +221,78 @@ Source gap: a page-verified scanned edition of Stetsko's own works was not retri
 - **Existing BIO modules (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/bio/dmytro-dontsov.yaml`
   - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Stetsko; source-analysis activity on the 30 June 1941 proclamation.
+  - `curriculum/l2-uk-en/plans/bio/stepan-bandera.yaml`
+- **Candidate cross-track connections (NOT existing files):**
+  - Джерелознавча вправа на Акті 30 червня 1941 року.
 
 ## 8. Naming-canonical
 
 - **Slug:** `yaroslav-stetsko`
 - **EN canonical (BGN/PCGN 2010):** Yaroslav Stetsko
 - **UA canonical:** Ярослав Семенович Стецько
-- **Aliases:** З. Карбович; Є. Орловський; С. Осинський; Б. Озерський; Я. Підлісецький.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Yaroslav Stetsko as "Jaroslav Stecko" without Ukrainian context; Iaroslav Stetsko only when quoting a source title; Russian patronymic spellings.
+- **Aliases:** див. §1 (псевдоніми ЕІУ + ЕСУ).
+- **Forbidden forms:** транслітерації через російське посередництво
+  (Yaroslav Stetzko, Stetsko Jaroslav у нім./польс. передачі — у тексті не
+  вживати як канонічні).
+- **Не плутати:** `Ярослава Йосипівна Стецько` — окрема особа [S5].
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait of Yaroslav Stetsko; verify license and source chain before Phase 4.
-- **Backup candidates:** ЕСУ page image; OUN archive photograph if rights are clear.
-- **Era-appropriate context image:** Facsimile of the 30 June 1941 proclamation from a Ukrainian source edition, if rights allow.
+- **Рішення цього проходу: `portrait_fallback` (text-only).** Окремої
+  ліцензії, автора й походження портретного файла **не доведено**; портрет
+  не оголошується. Запис — у `wiki/figures/yaroslav-stetsko.sources.yaml`.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Стецько Ярослав Семенович." <https://esu.com.ua/article-884618> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Stetsko, Yaroslav." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CT%5CStetskoYaroslav.htm> | accessed 2026-05-30.
+**Tier 1 (authoritative, перевірені 2026-07-17):**
+- [S1] Стасюк О. Й. «СТЕЦЬКО Ярослав Семенович». Енциклопедія історії
+  України, Інститут історії України НАН України.
+  <https://www.history.org.ua/?termin=Stetsko_Y_2>
+- [S2] «Стецько Ярослав Семенович». Енциклопедія Сучасної України.
+  <https://esu.com.ua/article-884618>
+- [S3] Патриляк І. К. «УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ». ЕІУ,
+  Україна—Українці, кн. 2 (2019).
+  <https://www.history.org.ua/?termin=Ukrainske_derzhavne>
+- [S4] Маєвський О. О. «УКРАЇНСЬКА ДЕРЖАВА 1941». ЕІУ.
+  <https://www.history.org.ua/?termin=ukrajinska_derzhava_1941>
+- [S5] Черченко Ю. А. «СТЕЦЬКО Ярослава Йосипівна». ЕІУ.
+  <https://www.history.org.ua/?termin=Stetsko_Y_1>
 
-**Tier 2 (institutional):**
-- Ukrainian 10th-grade history textbook RAG excerpts on the 30 June 1941 proclamation and German arrests.
+**Tier 4 (scholarship — бібліографічний запис звірено, текст НЕ прочитано):**
+- [S6] Berkhoff K. C., Carynnyk M. «The Organization of Ukrainian
+  Nationalists and Its Attitude toward Germans and Jews: Iaroslav Stets'ko's
+  1941 Zhyttiepys». *Harvard Ukrainian Studies*, 23 (3-4), 1999, с. 149–184.
+  Запис репозиторію KNAW / NIOD (peer-review):
+  <https://pure.knaw.nl/portal/en/publications/the-organization-of-ukrainian-nationalists-and-its-attitude-towar/>
+  Повний текст на ResearchGate недоступний (HTTP 403) — висновків не
+  переказувати.
 
-**Tier 4 (modern scholarly post-1991):**
-- Karel Berkhoff and Marco Carynnyk, "The Organization of Ukrainian Nationalists and Its Attitude toward Germans and Jews: Iaroslav Stets'ko's 1941 Zhyttiepys," *Harvard Ukrainian Studies* 23.
-- John-Paul Himka, *Ukrainian Nationalists and the Holocaust*.
-- Grzegorz Rossolinski-Liebe, *Stepan Bandera: The Life and Afterlife of a Ukrainian Nationalist*.
+**Corpus evidence (перевірено цим проходом):**
+- Підручник: Гісем, «Історія України», 10 кл., 2018, с. 168 — характеристика
+  інтегрального націоналізму як тоталітарної (авторитарної) ідеології
+  (`mcp__sources__search_text`, chunk `10-klas-istorija-ukrajiny-gisem-2018_s0322`).
+  Стосується **ідеології руху**, не особистих висловлювань Стецька.
 
-**Primary-source documents accessed:**
-- No Soviet case-file ID retrieved. Stetsko's works are identified from ЕСУ; page-verified scans still needed for direct quotations.
+**Розглянуто й відхилено як доказ:**
+- Копія «Мого життєпису» на LiveJournal — анонімний агрегатор без
+  ідентичності документа; не джерело.
+- Вікі-сторінки та публіцистика — не доказ для контроверсійних тверджень.
+
+**Not retrieved:**
+- Академічне/архівне джерело з посторінковими локаторами щодо авторських
+  висловлювань Стецька, зокрема антисемітських.
+- Page-stable сканованих видань його праць.
+- Текст Акта 30 червня 1941 року в публікації з локаторами.
 
 ---
 
 ## Decolonization self-check (run before submitting)
 
-- [x] Ukrainian statehood struggle framed without Russian imperial vocabulary.
-- [x] Nazi-collaboration controversy acknowledged directly.
-- [x] Antisemitic-source problem attributed to scholarship, not hidden.
-- [x] No forbidden Russian transliterations in body prose.
-- [x] Source gaps named instead of filled.
+- [x] Теза «німецька маріонетка» спростована причиною ув'язнення з джерела.
+- [x] Вхід до Львова разом із частинами Вермахту не прихований.
+- [x] «Людина одного дня» розібрана: показано 45 років після 1941-го.
+- [x] Ідеологічний профіль названо словом джерела («ідеолог ОУН»).
+- [x] Антисемітизм: не стверджено й не спростовано без джерела; зафіксовано
+      як обов'язкову роботу окремого проходу.
+- [x] Розмежування від Ярослави Стецько зроблено з окремим джерелом.
+- [x] Жодної цитати без локатора.

@@ -3,62 +3,190 @@
 **Slug:** `stepan-bandera`
 **Block:** G
 **Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Issue:** #4431
+**Researcher:** claude/bio-2def-cohort23
+**Completed:** 2026-07-17
+
+Усі твердження спираються на джерела, відкриті й перевірені цим проходом
+(§10). Тема високоризикова: кожне число подається з атрибуцією, а кожен
+суб'єкт дії названий — особа чи орган. Твердження без джерела не робляться.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Степан Андрійович Бандера.
-- **Pseudonyms / aliases:** Баба, Лис, Сірий; English canonical: Stepan Bandera.
-- **Born:** 1 January 1909 | Staryi Uhryniv, Kalush area, Galicia | Austria-Hungary. ЕСУ and the Internet Encyclopedia of Ukraine (IEU) agree on the date and locality. [T1: ЕСУ — Бандера Степан Андрійович] [T1: IEU — Bandera, Stepan]
-- **Died:** 15 October 1959 | Munich, Federal Republic of Germany | assassinated by KGB agent Bohdan Stashynsky with poison. ЕСУ gives Munich and the date; the Stashynsky trial record summarized in the International Commission of Jurists bulletin names Rebet and Bandera as KGB assassinations by the same agent. [T1: ЕСУ] [T2: ICJ Bulletin no. 15]
-- **Family / education key facts:** Son of Greek Catholic priest Andrii Bandera; educated at the Stryi Ukrainian gymnasium; studied agronomy at Lviv Polytechnic; joined UVO in 1927 and OUN in 1929; became western-Ukrainian OUN regional leader in 1933. [T1: ЕСУ] [T1: IEU]
+- **Full name (UA, canonical):** Степан Андрійович Бандера. [S1]
+- **Born:** 1 січня 1909, с. Старий Угринів (нині Калуського р-ну
+  Івано-Франківської обл.), у родині греко-католицького священника Андрія
+  Бандери. [S1]
+- **Died:** 15 жовтня 1959, Мюнхен; похований на кладовищі Вальдфрідгоф. [S1]
+- **Роль:** політик, визначний діяч українського націоналістичного руху;
+  від квітня 1941 року — провідник ОУН(б). [S1]
+- **Родина:** три брати (Богдан, Василь, Олексій), три сестри (Володимира,
+  Марта, Оксана); 1940 одружився з Ярославою Опарівською (1917–1977); діти
+  Наталя (н. 1941), Андрій (н. 1946), Леся (н. 1948). [S1]
 
-Sources do not create an Old Style/New Style calendar problem for his dates; the date disagreement to flag is not birth/death but public memory after 1991, especially the status of the 2010 Hero of Ukraine decree and its later legal challenge.
+**Хронологія (за [S1], якщо не вказано інше):**
+
+- 1919–1927 — українська гімназія у Стрию; 1927 — вступ до УВО.
+- 1928–1933 — агрономічний факультет Львівської політехніки в Дублянах
+  (не закінчив через арешт); 1929 — член ОУН.
+- Від 1931 — у складі Крайової екзекутиви ОУН на ЗУЗ, очолив референтуру
+  пропаганди. Від січня 1933 — в. о. провідника КЕ ЗУЗ; від червня 1933 —
+  провідник.
+- 1933–1934 — організував низку терактів: замах на віце-консула СРСР у
+  Львові Михайла Голуба (вбито завідувача канцелярії генконсульства
+  Олексія Майлова); вбивства директора Академічної гімназії у Львові Івана
+  Бабія і студента Якова Бачинського; вбивство міністра внутрішніх справ
+  Польщі Броніслава Перацького.
+- Варшавський процес 18.11.1935–13.01.1936; Львівський 25.05–26.06.1936.
+  Бандера — центральна фігура; **узяв на себе моральну відповідальність за
+  теракти підлеглих**. Смертні вироки йому та Роману Мигалю замінено на
+  довічне ув'язнення.
+- 1933–1939 — в'язниці Кельців, Вронок, Бреста; звільнення в середині
+  вересня 1939 в умовах безвладдя в Польщі.
+- Січень 1940 — Рим, зустріч з А. Мельником; вимоги західняків сприйнято
+  як ультиматум і відкинуто.
+- 10.02.1940 — створення Революційного проводу ОУН. 27.09.1940 — головний
+  революційний трибунал ОУН виключив Бандеру з лав ОУН.
+- Квітень 1941 — 2-й великий збір легалізував нову організацію й обрав
+  Бандеру провідником ОУН(б).
+- 22.06.1941 — Український національний комітет у Кракові (113 осіб;
+  представляв основні течії еміграції **за винятком мельниківської ОУН**). [S4]
+- Контакти з керівництвом Абверу → три похідні групи ОУН, батальйони
+  «Нахтігаль» і «Роланд».
+- 30.06.1941 — за дорученням Бандери у Львові проголошено Акт відновлення
+  Української Держави; створено УДП на чолі з Я. Стецьком. Акт зачитано в
+  приміщенні т-ва «Просвіта», площа Ринок, 10. [S1] [S3]
+- Українська Держава 1941 формально діяла з 30 червня до 12 липня 1941;
+  столицею до здобуття Києва ухвалено вважати Львів. [S3]
+- Після 5.07.1941 — виклик до Берліна; **відмовився визнати Акт недійсним**.
+- Середина вересня 1941 — ув'язнення в Берліні; ОУН(б) поставлено поза законом.
+- 1942 — переведення до спецблоку «Целленбау» в концтаборі Заксенгаузен.
+- Серпень 1943 (3-й надзвичайний великий збір ОУН(б)) і липень 1944 (1-й
+  великий збір УГВР) — **заочно не введений** ні до бюро проводу ОУН на
+  українських землях, ні до президії УГВР.
+- Осінь 1944 — звільнення; грудень 1944 — відмова від німецької пропозиції
+  з посиланням на підпорядкування рішенням УГВР.
+- Січень–лютий 1946 — Мюнхен, створення ЗЧ ОУН, які він очолив.
+- 1948–1954 — конфлікт із Закордонним представництвом УГВР (за яким стояли
+  основні сили ОУН і УПА на чолі з Р. Шухевичем). 1950 — склав повноваження;
+  літо 1951 — послав в Україну Мирона Матвієйка (заарештований органами
+  МДБ); травень 1953 — знову очолив ЗЧ ОУН; лютий 1954 — остаточний розкол.
+- 1959 — загинув від рук агента КДБ Богдана Сташинського.
 
 ## 2. Oppression mechanism
 
-- **What happened:** Polish imprisonment; Nazi arrest and Sachsenhausen imprisonment; Soviet KGB assassination in exile.
-- **When:** Polish sentence in 1936 after the Warsaw/Lviv OUN trials; German arrest after the 30 June 1941 proclamation, followed by Sachsenhausen confinement; killing on 15 October 1959.
-- **By whom:** Polish courts/police; German security authorities; Soviet KGB through Bohdan Stashynsky.
-- **Document references:** The dossier did not retrieve a Bandera NKVD/KGB case-file fond number. The KGB assassination is documented through the West German Stashynsky proceedings summarized by the International Commission of Jurists. [T2: ICJ Bulletin no. 15, 1963]
+Бандера — об'єкт репресій **трьох** держав, і їх не можна злити в одну лінію.
 
-The Polish state prosecuted Bandera for OUN-directed political violence, including the assassination of Polish interior minister Bronislaw Pieracki. ЕСУ explicitly says he redirected OUN combat work from robberies toward individual terror against Polish-administration representatives and persons treated as Soviet sympathizers; that fact is included to prevent sanitizing the interwar record. [T1: ЕСУ]
+- **Польща (1934–1939):** засуджений на Варшавському й Львівському
+  процесах; смертний вирок замінено на довічне; в'язниці Кельців, Вронок,
+  Бреста. [S1]
+- **Нацистська Німеччина (1941–1944):** після відмови відкликати Акт
+  30 червня — ув'язнення з середини вересня 1941; з 1942 — «Целленбау» в
+  Заксенгаузені; ОУН(б) поставлено поза законом. [S1]
+- **СРСР (1959):** вбивство агентом КДБ. Обставини встановлені судом:
+  процес над Богданом Сташинським відбувся в Карлсруе перед Третім
+  кримінальним сенатом Федерального суду ФРН 8–19 жовтня 1962; Сташинський
+  зізнався, що 12.10.1957 вбив Лева Ребета, а 15.10.1959 — Бандеру,
+  застосувавши пристрій із синильною кислотою. [S8]
 
-After OUN-B proclaimed restoration of Ukrainian statehood in Lviv on 30 June 1941, German authorities refused to recognize the act. Ukrainian school-source excerpts and IEU agree that Bandera and Yaroslav Stetsko were arrested and interned in Sachsenhausen. This was oppression by a Nazi regime, not evidence that the OUN-B project was democratic or free of collaboration attempts. [T1: IEU] [T2: Ukrainian 10th-grade history textbook RAG]
-
-The Soviet mechanism was assassination abroad. Bohdan Stashynsky testified after defecting that he killed Lev Rebet in 1957 and Bandera in 1959 on KGB orders, using a poison-spray device. That mechanism matters pedagogically because Russian narratives often present Bandera only as a criminal label while erasing that the Soviet state carried out extraterritorial murder against a Ukrainian nationalist opponent. [T2: ICJ Bulletin no. 15]
+**Document reference (перевірено):** ICJ Bulletin no. 15 (1963), розділ
+«THE TRIAL OF BOGDAN STASHYNSKY IN THE FEDERAL REPUBLIC OF GERMANY» —
+ідентичність звірено видобуванням тексту зі сканованого PDF (56 с.). [S8]
+Це англомовний документ: придатний як `reference`, але **не** як learner
+reading — контракт читань вимагає `language: uk`.
 
 ## 3. Major works
 
-- `1940s-1950s` — *Перспективи української революції*, essays and political writings; diaspora edition, published posthumously and used by OUN-B circles.
-- `1950` — "Слово до українських націоналістів-революціонерів за кордоном"; exile political address.
-- `1950s` — articles in *Визвольний шлях* and OUN-B publications; important for ideological register, but page-verified article list still needs Phase 2 checking.
-
-Bandera was primarily an underground organizer and factional leader, not a literary author. The curriculum should treat his writings as political documents, not as belles-lettres.
+- `1978` — **«Перспективи української революції»** (Мюнхен), посмертна
+  збірка ідеологічних і програмних статей. [S1]
+- Статті, промови, інтерв'ю повоєнного періоду: про стан і перспективи
+  української національної революції, вплив зовнішніх чинників, перспективи
+  нової світової війни; наполягав на продовженні збройного спротиву. [S1]
+- **Page-stable сканованого видання його есеїв цим проходом не отримано.**
+  Не додавати довших цитат, доки не звірено друковане видання.
 
 ## 4. Primary-source quotes (>=2 required)
 
-- "Ні на що не здадуться навіть найкращі нагоди..." Source: Ukrainian 10th-grade history textbook excerpt quoting Bandera. The sentence is useful for teaching revolutionary voluntarism, but the full publication source and page should be verified before learner-facing use. [T2: textbook RAG]
-- "Українська самостійна соборна держава" recurs as the OUN-B end-state formula in Banderaite documents and in ЕСУ's summary of his ideology. Treat this as a programmatic phrase rather than a personal aphorism. [T1: ЕСУ]
+**Цим проходом дослівних цитат Бандери з точними локаторами не отримано, і
+вони свідомо не наводяться.** Порожній розділ тут чесніший за
+правдоподібний.
 
-Source gap: a page-stable scanned edition of Bandera's own essays was not retrieved in this pass. Do not add longer direct quotations until a primary edition is checked.
+Виконана перевірка й вилучення:
+
+- Попередня версія досьє наводила фразу «Ні на що не здадуться навіть
+  найкращі нагоди…» з атрибуцією «[T2: textbook RAG]» без видання й
+  сторінки. Цим проходом фразу шукано в корпусі підручників
+  (`mcp__sources__search_text`, subject=istoriya, 2026-07-17) —
+  **відповідника не знайдено**. Непідтверджену цитату **вилучено**.
+- «Українська самостійна соборна держава» — **програмова формула** руху, а
+  не особистий афоризм. ЕІУ описує мету Бандери саме як пошук революційних
+  шляхів боротьби за Українську самостійну соборну державу. [S1] Як цитату
+  особи не подавати.
+
+Застереження про сусідні тексти, які легко переплутати з голосом Бандери:
+у підручнику Гісема (10 кл., 2018, с. 229) наведено слова німецького
+генерала Г. Бергера про Бандеру після зустрічі 1944 року. Це **слова про
+нього**, ще й у переказі підручника, а не первинний локатор його власних
+слів; у розділі цитат не використовувати.
 
 ## 5. Language register
 
-- **Register:** ideological, declarative, conspiratorial-political.
-- **CEFR readiness for full reading:** C1-C2 for authentic essays; B2 only in excerpted, glossed form.
-- **Lexicon notes:** abstract nouns in `-ість`, ideological compounds, interwar nationalist terminology, terms such as `провід`, `революція`, `самостійність`, `соборність`.
-- **Stylistic features:** slogans, antithesis, imperative framing, little narrative scaffolding.
+- **Register:** політико-програмна публіцистика, ідеологічна есеїстика,
+  судова риторика (виступи на процесах).
+- **CEFR readiness:** C1.
+- **Морфологія:** 10 одиниць перевірено через VESUM цим проходом
+  (`mcp__sources__verify_words`, 2026-07-17), знайдено 10/10: `провід`,
+  `провідник`, `націоналізм`, `терор`, `соборність`, `самостійність`,
+  `революція`, `екзекутива`, `підпілля`, `в'язень`. Термін `екзекутива`
+  засвідчений як іменник — кодифікована одиниця, не реконструкція.
+- **Не перевірялося:** наголоси та власні назви (Старий Угринів, Дубляни,
+  Вронки, Заксенгаузен) — VESUM їх не покриває.
 
 ## 6. Contested points
 
-- **What's debated in modern scholarship:** Bandera's personal agency during 1941-44 is narrower than the symbolic role attached to his name. He was imprisoned by Germany for much of the period, so claims that he personally commanded every UPA action are not supportable. At the same time, OUN-B was his faction; its cadres, ideology, and organizational decisions cannot be detached from his leadership line. Rossolinski-Liebe, Himka, Berkhoff/Carynnyk, Rudling, Snyder, and Motyka are appropriate scholarship to use for the fascist/integral-nationalist, Holocaust, and Polish-Ukrainian violence debates.
-- **What gets simplified in popular memory:** Ukrainian memory often compresses him into a symbol of anti-Soviet defiance. That symbol intensified after Russia's 2014 and 2022 aggression; Rating Group's April-May 2022 survey found strongly improved public attitudes toward Bandera compared with 2012. That polling is relevant to memory politics, not proof that interwar OUN ideology became democratic retrospectively. [T2: Rating Group 2022]
-- **Where modern Russian disinformation attacks him:** Russian state narratives use "Bandera" and "Banderite" as elastic slurs for any Ukrainian statehood position, including liberal and Jewish Ukrainians who have no OUN connection. The dossier must call that propaganda out, while also refusing the counter-error of presenting the OUN-B record as clean.
-- **Polish / Jewish / other-perspective considerations:** The Volhynia and Eastern Galicia killings of Polish civilians in 1943-44, and the involvement of OUN-linked networks and militias in anti-Jewish violence during the German occupation, are legitimate historical debates. They are not invented by Russian propaganda. Motyka and Snyder emphasize ethnic-cleansing dynamics against Poles; Himka, Berkhoff/Carynnyk, and Rudling emphasize OUN antisemitism, militia participation, and Holocaust-adjacent violence. The dossier should distinguish: Soviet/KGB murder of Bandera is documented oppression; OUN-B's ideology and wartime civilian-harm record remain serious contested history.
-- **Memory/legal issue:** President Viktor Yushchenko's decree no. 46/2010 awarded Bandera the Hero of Ukraine title, but courts later invalidated the award on citizenship grounds. This should be presented as a memory-politics flashpoint, not as evidence for or against his wartime conduct. [T2: President of Ukraine decree no. 46/2010]
+- **Особиста vs організаційна відповідальність — головна вісь.**
+  Документовано: навесні 1943 року **Крайовий провід ОУН(б) на Волині**
+  ухвалив рішення про вигнання з Волині місцевих поляків; 11–13 липня 1943
+  стався загальний виступ — загони УПА майже одночасно атакували понад 100
+  польських поселень. [S5] Суб'єктом рішення в джерелі є **орган**, а не
+  Бандера особисто.
+- **Але теза «сидів у таборі — отже ні при чому» джерелом не
+  підтверджується.** ЕІУ фіксує, що Бандера «певний час підтримував
+  контакти з членами проводу ОУН(б), впливаючи на політику, тактику й
+  діяльність оунівських орг-цій в окупованій Україні». [S1] Обидві крайні
+  тези хибні; коректно — розрізняти рівні, а не обирати зручний.
+- **Легітимність 1943–1944:** заочно не введений ні до бюро проводу ОУН на
+  українських землях, ні до президії УГВР. [S1] Рух, що носив його ім'я,
+  на той момент не був керований ним особисто.
+- **Числа — тільки з атрибуцією.** За польськими підрахунками, під час
+  Волинської трагедії з польського боку загинуло щонайменше 35 тис. осіб
+  (переважно цивільна сільська людність), з них 18 тис. — із встановленими
+  прізвищами; з українського боку — до кількох тисяч. В Україні подібних
+  підрахунків не проводилося. [S5] За оцінками І. Патриляка, жертвами
+  ширшого конфлікту 1942–1944 стали 13–16 тис. українців і 38–39 тис.
+  поляків. [S6] **Ніколи не подавати ці числа без назви сторони, що рахувала.**
+- **Терор проти українців:** метод, обраний Бандерою 1933 року,
+  спрямовувався в тому числі проти українських діячів, які виступали за
+  співробітництво з владою (вбивство І. Бабія, директора Академічної
+  гімназії). [S1] Це не «радянський наратив», а академічна стаття.
+- **Контакти з Абвером** — документовані. [S1] Замовчати їх означає віддати
+  тему опонентові.
+- **Указ № 46/2010** від 20.01.2010 існує й доступний. [S7] Офіційна база
+  подає примітку «Додатково див. Постанову Донецького окружного
+  адміністративного суду N 2а-1219/10/0570 від 02.04.2010», але **статусу
+  втрати чинності не показує**. [S7] Попередній план стверджував «згодом
+  скасований судом» — це сильніше, ніж дає документ; виправлено.
+- **Соціологія 2022 року:** попередній план посилався на «Rating Group. The
+  Tenth National Survey (2022)» через голу адресу `ratinggroup.ua/`. Гола
+  головна сторінка не доводить конкретного опитування — unsourced
+  precision; посилання **вилучено**, число не стверджується.
+- **Голокост:** цим проходом **не** отримано академічного джерела з
+  локаторами саме про особисту роль Бандери. Тому теза тут не формулюється
+  — ні ствердна, ні заперечна; потрібен окремий прохід із фаховою
+  історіографією. ЕІУ у бібліографії подає, зокрема, Rossoliński-Liebe G.
+  «Stepan Bandera: The Life and Afterlife of a Ukrainian Nationalist:
+  Fascism, Genocide, and Cult» (Stuttgart, 2014) — це **бібліографія ЕІУ**,
+  а не перевірене цим проходом видання. [S1]
 
 ## 7. Cross-track links
 
@@ -73,52 +201,83 @@ Source gap: a page-stable scanned edition of Bandera's own essays was not retrie
   - `curriculum/l2-uk-en/plans/bio/yevhen-konovalets.yaml`
   - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
   - `curriculum/l2-uk-en/plans/bio/dmytro-dontsov.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bandera-specific BIO plan; memory-politics lesson on the 2010 decree and post-2022 polling.
+  - `curriculum/l2-uk-en/plans/bio/yaroslav-stetsko.yaml`
+  - `curriculum/l2-uk-en/plans/bio/andrii-melnyk.yaml`
+- **Candidate cross-track connections (NOT existing files):**
+  - Урок політики пам'яті: указ 2010 року і його примітка як джерело.
 
 ## 8. Naming-canonical
 
 - **Slug:** `stepan-bandera`
 - **EN canonical (BGN/PCGN 2010):** Stepan Bandera
 - **UA canonical:** Степан Андрійович Бандера
-- **Aliases:** Stepan Bandera; Степан Бандера; Баба; Лис; Сірий.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Stepan Andreevich Bandera; Stiepan Bandera; Bandera as a generic ethnic slur.
+- **Forbidden forms:** транслітерації через російське посередництво;
+  «Stefan Bandera» — форма з англомовного бюлетеня 1963 року [S8], у тексті
+  не вживати.
+- **Обережно з похідним «бандерівець»:** у сучасному вжитку це ярлик,
+  відірваний від біографії; не вживати як синонім особи.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons portrait of Stepan Bandera; verify exact license before Phase 4 use.
-- **Backup candidates:** ЕСУ portrait page image; IEU article image if rights allow.
-- **Era-appropriate context image:** President of Ukraine decree no. 46/2010 facsimile or a public-domain OUN trial/context image, only if rights are clear.
+- **Рішення цього проходу: `portrait_fallback` (text-only).** Окремої
+  ліцензії, автора й походження портретного файла **не доведено**; портрет
+  не оголошується й не використовується. Запис — у
+  `wiki/figures/stepan-bandera.sources.yaml`.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- ЕСУ. "Бандера Степан Андрійович." <https://esu.com.ua/article-40247> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Bandera, Stepan." <https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CB%5CA%5CBanderaStepan.htm> | accessed 2026-05-30.
+**Tier 1 (authoritative, перевірені 2026-07-17):**
+- [S1] Кентій А. В. «БАНДЕРА Степан Андрійович». Енциклопедія історії
+  України, Інститут історії України НАН України.
+  <https://www.history.org.ua/?termin=Bandera_S>
+- [S2] «Бандера Степан Андрійович». Енциклопедія Сучасної України.
+  <https://esu.com.ua/article-40247>
+- [S3] Маєвський О. О. «УКРАЇНСЬКА ДЕРЖАВА 1941». ЕІУ.
+  <https://www.history.org.ua/?termin=ukrajinska_derzhava_1941>
+- [S4] Патриляк І. К. «УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ». ЕІУ,
+  Україна—Українці, кн. 2 (2019).
+  <https://www.history.org.ua/?termin=Ukrainske_derzhavne>
+- [S5] Ільюшин І. І. «ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.». ЕІУ, Т. 1 (2003).
+  <https://www.history.org.ua/?termin=Volynska_trahediia>
+- [S6] Бігун І. В., Кентій А. В. «УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА)». ЕІУ,
+  Україна—Українці, кн. 2 (2019).
+  <https://www.history.org.ua/?termin=Ukrainska_povstanska>
 
-**Tier 2 (institutional):**
-- International Commission of Jurists. *Bulletin*, no. 15 (1963), Stashynsky trial summary. <https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf>.
-- President of Ukraine. Decree no. 46/2010, "Про присвоєння С. Бандері звання Герой України." <https://zakon.rada.gov.ua/laws/show/46/2010>.
-- Rating Group. "The Tenth National Survey: Ideological Markers of the War," May 2022. <https://ratinggroup.ua/>.
+**Primary / documentary (перевірені):**
+- [S7] Указ Президента України № 46/2010 від 20.01.2010 «Про присвоєння
+  С. Бандері звання Герой України».
+  <https://zakon.rada.gov.ua/laws/show/46/2010>
+- [S8] Bulletin of the International Commission of Jurists, no. 15 (1963) —
+  розділ про процес Б. Сташинського.
+  <https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf>
 
-**Tier 4 (modern scholarly post-1991):**
-- Grzegorz Rossolinski-Liebe, *Stepan Bandera: The Life and Afterlife of a Ukrainian Nationalist*.
-- John-Paul Himka, *Ukrainian Nationalists and the Holocaust*.
-- Karel Berkhoff and Marco Carynnyk, "The Organization of Ukrainian Nationalists and Its Attitude toward Germans and Jews."
-- Grzegorz Motyka, *From the Volhynian Massacre to Operation Vistula*.
-- Timothy Snyder, "The Causes of Ukrainian-Polish Ethnic Cleansing 1943."
+**Вилучено цим проходом (із причиною):**
+- **Допис у Facebook «RusUkraine.book»** («Бандера — головний герой
+  московської пропаганди…») — авторська публіцистична колонка в соцмережі.
+  Не архівне, не академічне, не музейне й не інституційне джерело; для
+  високоризикової теми не може нести learner reading. Вилучено з плану.
+- **`ratinggroup.ua/`** — гола головна сторінка, наведена як доказ
+  конкретного опитування 2022 року; ідентичності документа не встановлює.
+  Вилучено.
+- **`reading-needed` заглушка** — замінена перевіреними читаннями.
+- **Цитата «Ні на що не здадуться…»** — у корпусі не знайдена; вилучена.
 
-**Primary-source documents accessed:**
-- ICJ Stashynsky trial summary; presidential decree no. 46/2010. No KGB archival fond number retrieved.
+**Not retrieved:**
+- Page-stable видання власних есеїв Бандери.
+- Академічне джерело з локаторами про особисту роль у Голокості.
+- Текст постанови Донецького окружного адміністративного суду
+  N 2а-1219/10/0570 від 02.04.2010.
 
 ---
 
 ## Decolonization self-check (run before submitting)
 
-- [x] No Russocentric framing.
-- [x] Russian-imperial transliterations appear only in forbidden-form field.
-- [x] Ukrainian Revolution / Ukrainian statehood frame used where relevant.
-- [x] Soviet propaganda labels not used as authority.
-- [x] KGB assassination named directly.
-- [x] Place names use modern UA canonical forms in prose.
-- [x] Holocaust and Volhynia controversies acknowledged without Russian-propaganda framing.
+- [x] Радянський міф «німецький агент» спростовано хронологією з джерела,
+      а не риторикою.
+- [x] Дзеркальна агіографія не допущена: терор проти українців, контакти з
+      Абвером і волинське рішення названі прямо.
+- [x] Кожне число подано з атрибуцією сторони, що рахувала.
+- [x] Суб'єкт волинського рішення — орган, як у джерелі; не підмінено особою.
+- [x] Жодної цитати без локатора; непідтверджену цитату вилучено.
+- [x] Жодного вигаданого архівного номера.
+- [x] Ярлик «бандерівець» відокремлено від біографії.

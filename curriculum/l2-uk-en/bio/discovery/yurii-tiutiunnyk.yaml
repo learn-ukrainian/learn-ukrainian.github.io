@@ -1,0 +1,24 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Юрій Тютюнник
+  - ЕІУ Тютюнник Юрій Йосипович генерал-хорунжий Армії УНР
+  - ЕІУ Перший Зимовий похід Армії УНР 1919–1920
+  - ЕІУ Другий Зимовий похід Армії УНР 1921 Базар
+  - Діаспоріана Юрко Тютюник Зимовий похід 1919-20 політичний огляд
+  - IEU Tiutiunnyk Yurii
+direct_sources:
+  - https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
+  - https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/
+  - https://www.history.org.ua/?termin=Pershyj_Zymovyj
+  - https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921
+  - https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Direct-source packet. Власний текст Тютюнника подано як link-only
+  джерело: скан не має текстового шару, тому дослівні цитати з локаторами
+  не наводяться. Довідники розходяться щодо місця народження (ЕІУ —
+  Звенигородщина; IEU — Hlukhiv county, Chernihiv gubernia); розбіжність
+  не усунена й подається як розбіжність. Портрет не оголошено:
+  використано text-only portrait_fallback.

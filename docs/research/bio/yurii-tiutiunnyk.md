@@ -3,59 +3,183 @@
 **Slug:** `yurii-tiutiunnyk`
 **Block:** G
 **Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Issue:** #4431
+**Researcher:** claude/bio-2def-cohort23
+**Completed:** 2026-07-17
+
+Усі твердження нижче спираються на джерела, відкриті й перевірені під час
+цього проходу (див. §10). Твердження, яких джерела не покривають, не
+робляться; розбіжності між довідниками фіксуються як розбіжності.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Юрій Йосипович Тютюнник.
-- **Pseudonyms / aliases:** Юрко Тютюнник; English canonical: Yurii Tiutiunnyk.
-- **Born:** 20 April 1891 | Budyshche, Zvenyhorodka county area, central Ukraine | Russian Empire. IEU and UINP-derived materials agree on 1891 and Budyshche/Budyshcha; use modern Cherkasy-region framing in prose. [T1: IEU — Tiutiunnyk, Yurii] [T2: UINP materials on the Winter Campaign]
-- **Died:** 20 October 1930 | Moscow, USSR | executed by Soviet security organs. UINP materials state that chekists shot him in Moscow; IEU confirms the execution. [T1: IEU] [T2: UINP]
-- **Family / education key facts:** Ukrainian military leader of the Revolution period; served in formations that shifted through the revolutionary war, then joined the UNR Army; became a general-khorunzhyi and a key organizer of insurgent operations, including the Second Winter Campaign. [T1: IEU] [T2: UINP]
+- **Full name (UA, canonical):** Юрій Йосипович Тютюнник. Академічна стаття
+  подає заголовок «ТЮТЮННИК Юрій (Юрко) Йосипович». [S1]
+- **Pseudonyms / aliases:** Юрко Тютюнник (форма, під якою вийшли його
+  друковані праці); криптонім **Юртик** — під ним опубліковано «Звенигородський
+  кіш Вільного козацтва» та «Стихія (зі споминів)» у «ЛНВ» 1922 року. [S1]
+  Англійська канонічна форма: Yurii Tiutiunnyk.
+- **Born:** 20 квітня 1891, с. Будище. [S1]
+- **Died:** 20 жовтня 1930 — страчений за вироком колегії ОДПУ СРСР. [S1] [S5]
+- **Rank:** генерал-хорунжий Армії УНР. [S1] [S4]
 
-Disambiguation: this is the UNR Army general Юрій Йосипович Тютюнник, not the writer Григір Тютюнник already represented at `docs/research/bio/hryhir-tiutiunnyk.md`.
+**Розбіжність щодо місця народження (не усунена цим проходом).** ЕІУ
+локалізує Будище як «нині село Звенигородського р-ну Київ. обл.» [S1];
+IEU подає «Budyshcha, Hlukhiv county, Chernihiv gubernia» [S5]. Це два
+різні регіони. Непрямий аргумент на користь звенигородської локалізації —
+подальша біографія: навесні 1918 року Тютюнника обрали кошовим отаманом
+Вільного козацтва саме на Звенигородщині, і він же автор праці
+«Звенигородський кіш Вільного козацтва» [S1]. Формулювання ЕІУ «Київ. обл.»
+теж проблемне, бо Звенигородський район належить до Черкаської області;
+ймовірно, це відсилання до історичної Київської губернії. **Висновок для
+модуля:** писати «Будище на Звенигородщині» без сучасної обласної
+прив'язки; попередній текст досьє стверджував, що IEU і УІНП «agree on
+Budyshche», — це було хибно і виправлено.
+
+**Ключові віхи (усі за [S1], якщо не вказано інше):**
+
+- Прапорщик царської армії, учасник Першої світової війни, двічі поранений.
+- 1917 — учасник Другого Всеукраїнського військового з'їзду, член УЦР;
+  учасник виступів проти корніловського заколоту й Тимчасового уряду в Києві.
+- Весна 1918 — кошовий отаман Вільного козацтва на Звенигородщині.
+- Літо 1918 — один із керівників Звенигородського збройного повстання проти
+  австро-німецьких військ і гетьманської влади; арешт; звільнення 14 грудня
+  1918 внаслідок протигетьманського повстання.
+- Лютий 1919 — очолив штаб партизанських формувань отамана Н. Григор'єва
+  (1-ша бригада 1-ї Задніпровської дивізії РСЧА), 1-шу бригаду 6-ї
+  Української радянської дивізії; реалізував план визволення Херсона й Одеси
+  від військ Антанти.
+- Травень 1919 — підтримав повстання григор'ївських частин проти радянської
+  влади; 9 травня 1919 вони зайняли Катеринослав; після поразки приєднався
+  до Дієвої армії УНР.
+- Липень–грудень 1919 — командувач Київської групи; з грудня 1919 —
+  помічник командувача Армії УНР.
+- 4–6 грудня 1919 — нарада в Новій Чорториї (Петлюра, В. Тютюнник,
+  Ю. Тютюнник, Омелянович-Павленко, Коновалець) ухвалила перейти до
+  партизанської війни. [S3]
+- 6 грудня 1919 — 6 травня 1920 — Перший Зимовий похід; Ю. Тютюнник (тоді
+  полковник) командував Київською групою. [S1] [S3]
+- Січень 1921 — начальник Партизансько-повстанського штабу; жовтень 1921 —
+  командувач Української повстанської армії (формування доби УНР).
+- 29 жовтня 1921 — виїхав зі Львова до Рівного, завершив формування ядра
+  в 1500 вояків.
+- 4–19 листопада 1921 — Другий Зимовий похід. Волинська група під його
+  командуванням: 216 старшин і 663 козаків, 430 рушниць, 34 кулемети,
+  300 шабель. [S4] Під Базаром загинули бл. 400 вояків, понад 500 полонені,
+  359 розстріляні; сам Тютюнник пробився на польську територію. [S1]
+- 1923 — оперативна комбінація ДПУ УСРР: виведений з-за кордону й
+  заарештований.
+- 1923–1929 — Харків: викладав у Школі червоних старшин, працював у
+  Всеукраїнському державному акціонерному товаристві торгівлі,
+  співробітничав із ВУФКУ.
+- 12 лютого 1929 — другий арешт, вивезення до Москви; грудень 1929 — вирок
+  колегії ОДПУ СРСР до смерті; жовтень 1930 — страта.
 
 ## 2. Oppression mechanism
 
-- **What happened:** GPU/OGPU deception, forced return/collaboration under Soviet control, later arrest and execution.
-- **When:** Lured into Soviet-controlled Ukraine in 1923; executed on 20 October 1930.
-- **By whom:** Soviet Cheka/GPU/OGPU security organs.
-- **Document references:** This pass did not retrieve the archival criminal-case ID. UINP materials state the 1923 deception and the 1930 shooting in Moscow. [T2: UINP] [T1: IEU]
+- **What happened:** оперативна комбінація ДПУ УСРР (1923) вивела Тютюнника
+  з-за кордону на радянську територію, де його заарештували. [S1]
+- **Що далі:** ЕІУ формулює прямо — «співробітникам ДПУ УСРР вдалося
+  використати його у своїх цілях. На їхнє замовлення він описав усе
+  пережите, змалював переважно темними фарбами політ. і військ. діячів
+  Української Народної Республіки, що дало противникові бажаний
+  пропагандистський ефект». [S1]
+- **Фінал:** другий арешт 12 лютого 1929, вивезення до Москви, вирок колегії
+  ОДПУ СРСР у грудні 1929, страта в жовтні 1930. [S1]
+- **Document references:** архівний номер справи цим проходом **не
+  отримано**. ЕІУ у літературі згадує видання «Юрій Тютюнник: від „Двійки“
+  до ГПУ: Документи і матеріали» (К., 2011) та «Бурнашов Г.
+  Генерал-хорунжий Юрій Тютюнник: чекістська „Справа № 39“»
+  (Івано-Франківськ, 1996) — обидва як бібліографію ЕІУ, не як перевірені
+  цим проходом документи. [S1] Номер справи в модулі не стверджувати без
+  прямої перевірки видання.
 
-Tiutiunnyk's case is a classic Soviet counterinsurgency pattern: lure a prominent exile/insurgent leader, use him in propaganda and controlled cultural work, then destroy him once useful. UINP materials note that he appeared in the propaganda film *P.K.P.* (*Pilsudskyi kupyv Petliuru*) playing himself, a fact that must be framed as coerced Soviet exploitation rather than free political conversion unless a source proves otherwise.
+Схема тут — не «зрада», а керована операція: спершу службі потрібен голос
+противника, і лише потім його смерть. Модуль повинен показувати саме цю
+послідовність, бо вона документована формулюванням академічної статті.
 
 ## 3. Major works
 
-- `1920` — operational writing connected to the First Winter Campaign and UNR insurgent planning; source-edition retrieval needed.
-- `1923-1929` — memoir and film-related texts produced under Soviet control; use with caution because the coercive setting matters.
-- `1926` — involvement in the film *P.K.P.*; propaganda artifact, pedagogically useful for media-literacy comparison.
-- `Posthumous` — memoirs and document editions on the Winter Campaigns; use UINP/NAN source editions in Phase 2.
+За переліком праць в ЕІУ [S1]:
+
+- `1922` — **«Зимовий похід»** (Львів). Публічно доступне пізніше видання:
+  «Зимовий похід 1919-20 рр.», частина 1, «Політичний огляд з документами
+  в тексті», 3-тє видання, Видавництво Чарторийських, Ню Йорк. [S2]
+- `1922` — **Юртик Г. «Звенигородський кіш Вільного козацтва»** («ЛНВ», ч. 2).
+- `1922` — **Юртик Г. «Стихія (зі споминів)»** («ЛНВ», ч. 3).
+- `1924` — **«З поляками проти Вкраїни»** (Харків). **Текст радянського
+  періоду; створений після арешту.** Не подавати як вільну авторську позицію.
+- `1928` — співавтор літературного сценарію фільму **«Звенигора»**; як актор
+  грав у фільмі **«ПКП»**. [S1] Датування фільмів цим проходом не
+  перевірялося — рік у модулі не стверджувати.
 
 ## 4. Primary-source quotes (>=2 required)
 
-- "Пілсудський купив Петлюру." Source: title of the Soviet propaganda film in which Tiutiunnyk was made to appear as himself. It is not his free statement; it is a coercive artifact useful for propaganda analysis. [T2: UINP]
-- Source not found for two reliable page-stable quotations from Tiutiunnyk's own memoirs in this pass. Phase 2 should retrieve a source edition before using his voice directly.
+**Цим проходом дослівних цитат з page-stable локаторами не отримано, і вони
+свідомо не наводяться.**
 
-The lack of direct quotes is intentional: Soviet-produced material around Tiutiunnyk is polluted by coercion, and the curriculum should not convert it into his authentic position without documentary control.
+Причина технічна й перевірена: скан «Зимового походу» на «Діаспоріані» —
+101 сторінка без текстового шару (видобування тексту дає 0 слів), тому
+навести дослівний фрагмент із точним номером сторінки неможливо без
+окремої звірки з друкованим примірником. [S2] Візуальна перевірка
+титульного аркуша підтверджує тотожність документа (автор, назва, видання,
+видавництво), але титул — не цитата.
+
+Що зафіксовано замість цитат:
+
+- **Ідентичність документа** «Зимовий похід 1919-20 рр.» (3-тє вид., ч. 1,
+  Вид-во Чарторийських, Ню Йорк) — підтверджена з титульного аркуша. [S2]
+- **Розбіжність датування:** каталожний запис бібліотеки подає 1968, відбиток
+  на титульному аркуші читається як 1966. Рік не стверджувати. [S2]
+
+Назва фільму «ПКП» **не є цитатою Тютюнника** і не може подаватися як його
+висловлювання: це радянський пропагандистський артефакт. Попередня версія
+досьє наводила її в розділі цитат — це виправлено.
 
 ## 5. Language register
 
-- **Register:** military memoir, operational-political, revolutionary-period prose.
-- **CEFR readiness for full reading:** C1; B2 for short excerpts about campaigns.
-- **Lexicon notes:** `отаман`, `повстанський штаб`, `генерал-хорунжий`, `чекісти`, `Зимовий похід`, `Армія УНР`.
-- **Stylistic features:** campaign chronology, military rank vocabulary, compressed revolutionary context.
+- **Register:** військово-мемуарна, оперативно-політична проза доби
+  Української революції.
+- **CEFR readiness:** C1 для повного читання; B2 для коротких уривків
+  про походи.
+- **Lexicon notes:** `генерал-хорунжий`, `кошовий отаман`, `Зимовий похід`,
+  `Партизансько-повстанський штаб`, `оперативна комбінація`, `ДПУ`, `ОДПУ`.
+- **Морфологія:** 12 одиниць перевірено через VESUM цим проходом
+  (`mcp__sources__verify_words`, 2026-07-17), знайдено 12/12: `отаман`,
+  `похід`, `повстанський`, `розстріл`, `в'язниця`, `кошовий`,
+  `генерал-хорунжий`, `старшина`, `шабля`, `оточення`, `замовлення`,
+  `страта`. Термін `генерал-хорунжий` засвідчений як іменник — тобто це
+  кодифікована одиниця, а не реконструкція.
+- **Не перевірялося:** наголоси та власні назви (Будище, Базар, Нова
+  Чортория) — VESUM їх не покриває; у модулі не стверджувати наголос
+  цих назв без окремої перевірки.
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** Tiutiunnyk's post-1923 Soviet period is the difficult point. He was a UNR general and insurgent organizer, but Soviet services lured him back, used him in propaganda, and eventually executed him. A lazy heroic narrative ignores the propaganda collaboration; a lazy Soviet/Russian narrative treats that coerced period as proof that the UNR cause was false. The dossier should frame the 1923-30 period as Soviet coercive management unless a specific document proves voluntary ideological conversion.
-- **What gets simplified in popular memory:** He is sometimes remembered only through the Winter Campaigns and anti-Bolshevik struggle. The film *P.K.P.* and the final Moscow execution complicate that arc and are precisely why he is pedagogically valuable.
-- **Where modern Russian disinformation attacks him:** Russian/Soviet narratives historically used captured Ukrainian leaders to portray the UNR as foreign-manipulated and doomed. The film title itself is a propaganda claim that Petliura was bought by Poland. That should be analyzed as Soviet messaging, not repeated as fact.
-- **Polish / Jewish / other-perspective considerations:** Polish context matters because the UNR-Polish alliance and the Second Winter Campaign are tied to interwar border politics. The dossier should not import OUN/UPA controversies onto Tiutiunnyk; his track is the Ukrainian Revolution, UNR exile, and Soviet security deception.
-- **NPOV-decolonized framing:** Tiutiunnyk should be taught as a Ukrainian revolutionary military leader destroyed by Soviet security organs, with a frank account of his coerced Soviet-period public role. That is more rigorous than either martyr-only memory or Soviet "renegade" framing.
-- **Source-method caution:** Tiutiunnyk is a good dossier for teaching why Soviet-produced autobiography, film, and confession-like materials require context. A student can compare a UNR operational source, a Soviet film artifact, and a later UINP or ЕІУ summary, then ask who controlled the conditions under which each text was made. That makes the Soviet oppression mechanism visible without pretending that every late text bearing his name is equally authentic.
-- **Disambiguation caution:** Do not attach literary expectations from the later writers Hryhir or Hryhorii Tiutiunnyk to this figure. The shared surname is pedagogically risky because learners may already know the prose writer; the UNR general belongs to the military-political track and to Soviet security history, not to the 1960s literary canon.
+- **Що спрощує героїчна пам'ять:** лютий 1919 року, коли Тютюнник очолив
+  штаб формувань у складі Червоної армії, орієнтуючись на боротьбистів. [S1]
+  Це не епізод «зради», а показник того, що його шлях до УНР не був прямим.
+  Досьє, яке це прибирає, працює дзеркально до радянського.
+- **Що спрощує радянська версія:** вона потребує «розкаяного отамана» і
+  спирається на тексти 1923–1929 років, створені під контролем служби. ЕІУ
+  прямо називає замовника цих текстів. [S1]
+- **Межа доказу щодо примусу:** ЕІУ фіксує замовлення й використання, але
+  цим проходом **не** отримано документа, який описував би конкретні форми
+  тиску. Тому формулювати слід так, як дає джерело («на замовлення»,
+  «використати у своїх цілях»), а не додавати непідтверджені деталі про
+  катування чи погрози.
+- **«Звенигора»:** участь Тютюнника у сценарії фільму, що належить до
+  української кінокласики, ускладнює просту схему «пропагандистська
+  стрічка». [S1] Це варто показати, а не оминути.
+- **Розбіжність довідників щодо місця народження** [S1] [S5] — залишається
+  неусуненою; подавати як приклад джерелознавчої обережності.
+- **Disambiguation (критично):** це **не** письменники Григір Тютюнник
+  (`docs/research/bio/hryhir-tiutiunnyk.md`) і Григорій Тютюнник; це **не**
+  Василь Тютюнник, теж військовий діяч УНР — ЕІУ має окрему статтю про
+  нього, і обидва Тютюнники присутні на одній нараді 4–6 грудня 1919 року.
+  [S3] Останнє переплутати найлегше, бо контекст спільний.
+- **«Українська повстанська армія» 1921 року** — формування доби УНР під
+  командуванням Тютюнника [S1]; не ототожнювати з рухом 1940-х років.
 
 ## 7. Cross-track links
 
@@ -70,44 +194,70 @@ The lack of direct quotes is intentional: Soviet-produced material around Tiutiu
   - `curriculum/l2-uk-en/plans/lit-war/unr-war-literature.yaml`
 - **Existing BIO modules (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/bio/symon-petliura.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Yurii Tiutiunnyk; media-literacy lesson on Soviet propaganda film.
+- **Candidate cross-track connections (to create/verify later — NOT existing files):**
+  - Медіаграмотність: порівняння оперативного джерела, радянського фільму
+    та енциклопедичної довідки.
 
 ## 8. Naming-canonical
 
 - **Slug:** `yurii-tiutiunnyk`
 - **EN canonical (BGN/PCGN 2010):** Yurii Tiutiunnyk
 - **UA canonical:** Юрій Йосипович Тютюнник
-- **Aliases:** Юрко Тютюнник; Yurii Tiutiunnyk; Yurko Tiutiunnyk.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Yuri Tyutyunnik; Yuriy Tyutyunnyk; Russian patronymic spellings.
+- **Aliases:** Юрко Тютюнник; Юртик (криптонім) [S1]; Yurko Tiutiunnyk.
+- **Forbidden forms:** Yuri Tyutyunnik; Yuriy Tyutyunnyk; російські
+  транслітерації по батькові.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons/UNR-era portrait of Yurii Tiutiunnyk; verify publication date and license.
-- **Backup candidates:** IEU article image if rights are clear; UINP educational poster image with permission.
-- **Era-appropriate context image:** Winter Campaign map or UNR Army photo, rights permitting.
+- **Рішення цього проходу: `portrait_fallback` (text-only).** Окремої
+  ліцензії, автора та походження портретного файла цим проходом **не
+  доведено**, тому портрет не оголошується й не використовується. Запис
+  зафіксовано в `wiki/figures/yurii-tiutiunnyk.sources.yaml`.
+- Підстава: правило вимагає оголошувати точно ліцензоване зображення лише
+  тоді, коли ліцензія доведена; за відсутності доказу — текстовий fallback.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- Internet Encyclopedia of Ukraine. "Tiutiunnyk, Yurii." <https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm>.
-- ЕІУ entry lead: "ТЮТЮННИК ЮРІЙ ЙОСИПОВИЧ," Institute of History of Ukraine search result.
+**Tier 1 (authoritative, перевірені цим проходом 2026-07-17):**
+- [S1] Папакін Г. В., Сідак В. С. «ТЮТЮННИК Юрій Йосипович». Енциклопедія
+  історії України, Інститут історії України НАН України.
+  <https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR>
+- [S3] Буравченков А. О. «ПЕРШИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1919–1920». ЕІУ.
+  <https://www.history.org.ua/?termin=Pershyj_Zymovyj>
+- [S4] Савченко Г. П. «ДРУГИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1921». ЕІУ, Т. 2
+  (Наукова думка, 2004). <https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921>
 
-**Tier 2 (institutional):**
-- Ukrainian Institute of National Remembrance materials on the Winter Campaigns and Yurii Tiutiunnyk.
+**Primary-voice document (identity verified, quotation not possible):**
+- [S2] Юрко Тютюник. «Зимовий похід 1919-20 рр.», ч. 1: політичний огляд.
+  3-тє вид. Видавництво Чарторийських, Ню Йорк. Електронна бібліотека
+  «Діаспоріана». <https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/>
+  Скан: 101 с., без текстового шару; титул звірено візуально.
 
-**Tier 4 (modern scholarly post-1991):**
-- Studies of the Ukrainian Revolution, UNR Army, and Soviet security operations; Phase 2 should add page-stable monographs.
+**Tier 1 (English, used only as divergence evidence):**
+- [S5] «Tiutiunnyk, Yurii». Internet Encyclopedia of Ukraine (CIUS).
+  <https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm>
 
-**Primary-source documents accessed:**
-- No OGPU case-file ID retrieved; no page-stable memoir quotation retrieved.
+**Джерела, які цим проходом НЕ підтверджені й тому вилучені з обігу:**
+- «UINP materials on the Winter Campaign» — попередня версія досьє
+  посилалася на них як на [T2] без URL і без ідентичності документа.
+  Посилання без ідентичності не є доказом; вилучено.
+- `chtyvo.org.ua` — перевірено 2026-07-17: домен віддає HTTP 200, але
+  подає повідомлення «Завершення проєкту Чтиво» замість тексту (м'який 404).
+  Як джерело для цього досьє не використовується.
+
+**Not retrieved:**
+- Архівний номер справи ОДПУ/ДПУ.
+- Page-stable цитати з власних мемуарів.
+- Роки виходу фільмів «Звенигора» і «ПКП».
 
 ---
 
 ## Decolonization self-check (run before submitting)
 
-- [x] Ukrainian Revolution frame used.
-- [x] Soviet propaganda artifact labeled as propaganda.
-- [x] Disambiguation from Hryhir Tiutiunnyk explicit.
-- [x] No Russian-imperial transliterations in body prose.
-- [x] No invented archival ID.
+- [x] Рамка Української революції, не «громадянської війни».
+- [x] Радянський артефакт названо артефактом; замовника названо.
+- [x] Розмежування від Григора/Григорія Тютюнників **і** від Василя Тютюнника.
+- [x] Немає російсько-імперських транслітерацій у тексті.
+- [x] Немає вигаданого архівного номера.
+- [x] Епізод служби в РСЧА 1919 року не прихований.
+- [x] Жодна цитата не наведена без точного локатора.

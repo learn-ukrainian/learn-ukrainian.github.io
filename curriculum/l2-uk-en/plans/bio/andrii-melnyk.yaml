@@ -109,62 +109,95 @@ persona:
     руху та політику ОУН(м).
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 references:
-- note: Авторитетна енциклопедична стаття про Андрія Мельника.
+- note: >-
+    Академічна стаття; Інститут історії України НАН України (автор — Кот С. І.),
+    ЕІУ Т. 6 (2009). Основне джерело військової біографії.
+  path: https://www.history.org.ua/?termin=Melnyk_A_A
+  title: МЕЛЬНИК Андрій Атанасович (ЕІУ)
+  type: reference
+- note: >-
+    Авторитетна енциклопедична стаття. УВАГА: розходиться з ЕІУ щодо дати
+    німецького арешту (початок 1944 проти «з 1941») і місця смерті
+    (Клерво проти «лікарні м. Кельн»). Обидві розбіжності подавати учневі.
   path: https://esu.com.ua/article-66256
   title: Мельник Андрій Атанасович (ЕСУ)
   type: reference
-- note: Англомовна стаття в Енциклопедії українознавства.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CE%5CMelnykAndrii.htm
-  title: Melnyk, Andrii (IEU)
+- note: >-
+    Джерело факту, що Український національний комітет 1941 року представляв
+    основні течії еміграції за винятком мельниківської ОУН.
+  path: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ (ЕІУ)
   type: reference
-- note: Стаття про ОУН.
-  path: >-
-    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CR%5COrganizationofUkrainianNationalists.htm
-  title: Organization of Ukrainian Nationalists (IEU)
-  type: reference
-- note: Дослідження інтегрального націоналізму та авторитарних тенденцій ОУН.
-  path: The OUN, the UPA and the Holocaust
-  title: Per Anders Rudling. "The OUN, the UPA and the Holocaust"
-  type: reference
-- note: Комплексне дослідження діяльності ОУН.
-  path: Stepan Bandera
-  title: Grzegorz Rossolinski-Liebe. "Stepan Bandera"
+- note: >-
+    Джерело опису римських переговорів січня 1940 року й розколу ОУН.
+    УВАГА: це виклад з бандерівського боку — для мельниківської версії
+    потрібне окреме джерело.
+  path: https://www.history.org.ua/?termin=Bandera_S
+  title: БАНДЕРА Степан Андрійович (ЕІУ)
   type: reference
 readings:
-- title: Мельник Андрій Атанасович
+- title: МЕЛЬНИК Андрій Атанасович
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Melnyk_A_A
   language: uk
-  genre: Енциклопедична стаття / біографічна довідка
-  source_type: reference
-  role: orientation
-  source: Енциклопедія Сучасної України
-  source_url: https://esu.com.ua/article-66256
-  license: copyrighted
-  rights_note: Використовувати як link-only довідку; не хостити повний текст.
   hosting: link-only
-  cefr_min: C1
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Melnyk_A_A
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Простежити шлях від УСС і Армії УНР до УВО, ОУН(м), Заксенгаузена та
-    еміграції.
-  caveats: Довідка має бути доповнена джерелом про ідеологію ОУН(м) і розкол ОУН.
-- title: Українське читання про ОУН(м), розкол ОУН і авторитарну ідеологію
+    Скласти військовий послужний список Мельника до 1929 року — від сотні
+    УСС до начальника штабу Армії УНР — і пояснити, чому біографія, зведена
+    до «опонента Бандери», втрачає чверть століття.
+- title: Мельник Андрій Атанасович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-66256
   language: uk
-  genre: Наукова стаття / історіографічний огляд
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: andrii-melnyk-ounm-critical-ukrainian-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний український науковий або перекладний
-    матеріал про ОУН(м), розкол ОУН та авторитарний словник інтегрального
-    націоналізму.
-  hosting: reading-needed
-  cefr_min: C1
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-66256
+    note: >-
+      Відкрита українськомовна енциклопедична сторінка; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Пояснити різницю між мельниківським і бандерівським крилами без перенесення
-    відповідальності однієї фракції на іншу.
-  caveats: Без такого читання модуль ризикує спростити структуру ОУН до одного табору.
+    Порівняти цю статтю з ЕІУ у двох точках: коли Мельника заарештували
+    німці і де він помер. Записати обидві версії й сформулювати, що саме
+    можна стверджувати, а що — ні.
+- title: БАНДЕРА Степан Андрійович
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Bandera_S
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Bandera_S
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Прочитати опис римських переговорів 1940 року й виписати конкретні
+    пункти суперечки. Врахувати, що це виклад з боку опонента Мельника, і
+    сформулювати, чого в ньому бракує.
+- title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Знайти рядок про склад Українського національного комітету 1941 року й
+    пояснити, що означало для Мельника формулювання «за винятком
+    мельниківської ОУН».
 sequence: 301
 slug: andrii-melnyk
 subtitle: The OUN-M Leader, UNR Army Veteran, and Factional Division

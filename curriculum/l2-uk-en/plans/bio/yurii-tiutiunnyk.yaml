@@ -118,35 +118,79 @@ persona:
     механізми репресій.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 references:
-- note: Авторитетна енциклопедична стаття про життя діяча.
+- note: >-
+    Академічна стаття про діяча; Інститут історії України НАН України
+    (автори — Папакін Г. В., Сідак В. С.).
+  path: https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
+  title: ТЮТЮННИК Юрій Йосипович (ЕІУ)
+  type: reference
+- note: >-
+    Англомовна довідка; використовується як приклад розбіжності довідників
+    щодо місця народження, не як підстава для датування.
   path: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
   title: Tiutiunnyk, Yurii (IEU)
   type: reference
 readings:
-- title: Українське джерельне читання про Юрія Тютюнника і Зимові походи
+- title: ТЮТЮННИК Юрій Йосипович
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
   language: uk
-  genre: Джерельна публікація / історіографічний коментар
-  source_type: primary
-  role: reading-needed
-  source: 'reading-needed: yurii-tiutiunnyk-winter-campaign-source-edition'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільне українське джерельне видання або
-    інституційний матеріал УІНП/ЕІУ з page-stable фрагментом про Зимові походи,
-    повстанський штаб і пастку ДПУ; не використовувати радянський фільм "П.К.П."
-    як голос Тютюнника без контексту примусу.
-  hosting: reading-needed
-  cefr_min: C1
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Порівняти військово-операційне джерело, радянський пропагандистський
-    артефакт і пізнішу історичну довідку, визначаючи, хто контролював умови
-    створення кожного тексту.
-  caveats: >-
-    Досьє прямо фіксує відсутність page-stable цитат із власних мемуарів; модуль
-    не готовий до build, якщо радянські контрольовані тексти подаються як вільна
-    позиція Тютюнника.
+    Скласти хронологію: Звенигородщина й Вільне козацтво, служба в
+    радянських формуваннях 1919 року, Дієва армія УНР, Зимові походи,
+    операція ДПУ 1923 року, страта 1930 року. Окремо позначити, що
+    подано як дію самого Тютюнника, а що — як дію служби щодо нього.
+- title: 'Юрко Тютюник. Зимовий похід 1919-20 рр. Частина 1: політичний огляд'
+  source_name: Електронна бібліотека «Діаспоріана»
+  source_url: https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/
+    note: >-
+      Зовнішнє посилання на сканований примірник; текст не відтворюється і
+      не хоститься в курсі. Скан без текстового шару, тому дослівні цитати
+      з локаторами не наводяться.
+  learner_task: >-
+    Роздивитися титульний аркуш і вихідні дані як джерелознавчу вправу:
+    хто автор, яке це видання, хто видавець — і чому каталожний рік
+    (1968) та відбиток на титулі (читається як 1966) не збігаються.
+- title: ПЕРШИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1919–1920
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Pershyj_Zymovyj
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Pershyj_Zymovyj
+    note: Відкрита українськомовна академічна стаття; повний текст не відтворюється.
+  learner_task: >-
+    Знайти в статті нараду 4–6 грудня 1919 року в Новій Чорториї і
+    пояснити, чому присутність там і Володимира, і Юрія Тютюнників —
+    пастка для читача, який іде за прізвищем.
+- title: ДРУГИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1921
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921
+    note: Відкрита українськомовна академічна стаття; повний текст не відтворюється.
+  learner_task: >-
+    Зіставити склад Волинської групи (216 старшин, 663 козаки, 430
+    рушниць, 34 кулемети, 300 шабель) із розрахунком на масове селянське
+    повстання і сформулювати, у чому був розрив між задумом і силами.
 sequence: 303
 slug: yurii-tiutiunnyk
 subtitle: The UNR General Lured and Destroyed by Soviet State Security

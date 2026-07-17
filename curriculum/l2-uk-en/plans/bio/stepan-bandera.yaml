@@ -119,99 +119,100 @@ persona:
     формування історичної пам'яті.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 references:
+- note: >-
+    Академічна стаття; Інститут історії України НАН України (автор — Кентій А. В.).
+    Основне джерело хронології для цього модуля.
+  path: https://www.history.org.ua/?termin=Bandera_S
+  title: БАНДЕРА Степан Андрійович (ЕІУ)
+  type: reference
 - note: Авторитетна енциклопедична стаття про Степана Бандеру.
   path: https://esu.com.ua/article-40247
   title: Бандера Степан Андрійович (ЕСУ)
   type: reference
-- note: Англомовна стаття в Енциклопедії українознавства.
+- note: >-
+    Англомовна довідкова стаття; дати народження і смерті збігаються з ЕІУ.
+    Англомовна, тому не входить до readings.
   path: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CB%5CA%5CBanderaStepan.htm
   title: Bandera, Stepan (IEU)
   type: reference
-- note: Звіт про процес над агентом КДБ Б. Сташинським щодо вбивства Бандери.
+- note: >-
+    Англомовний бюлетень із розділом про процес над Б. Сташинським
+    (Карлсруе, 8–19 жовтня 1962). Довідка для викладача: документ
+    англомовний, тому не входить до readings.
   path: https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
   title: International Commission of Jurists Bulletin, no. 15 (1963)
   type: reference
-- note: Документ щодо політики пам'яті.
+- note: >-
+    Первинний документ політики пам'яті. Офіційна база подає примітку
+    «Додатково див. Постанову Донецького окружного адміністративного суду
+    N 2а-1219/10/0570 від 02.04.2010», але статусу втрати чинності не
+    показує — скасування не стверджувати.
   path: https://zakon.rada.gov.ua/laws/show/46/2010
-  title: Указ Президента України №46/2010 "Про присвоєння С. Бандері звання Герой України"
-  type: reference
-- note: Соціологічне дослідження ставлення до історичних постатей в умовах війни.
-  path: https://ratinggroup.ua/
-  title: Rating Group. "The Tenth National Survey" (2022)
+  title: Указ Президента України № 46/2010 «Про присвоєння С. Бандері звання Герой України»
   type: reference
 readings:
+- title: БАНДЕРА Степан Андрійович
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Bandera_S
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Bandera_S
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Скласти хронологію й окремо позначити три різні ув'язнення (польське,
+    німецьке, відсутнє радянське) та три різні держави, що переслідували
+    Бандеру. Виписати, де в статті суб'єктом дії є він особисто, а де —
+    орган організації.
 - title: Бандера Степан Андрійович
-  language: uk
-  genre: Енциклопедична стаття / біографічна довідка
-  source_type: reference
-  role: orientation
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-40247
-  license: copyrighted
-  rights_note: Використовувати як link-only довідку; не хостити повний текст.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Скласти хронологію політичної діяльності, польського ув'язнення,
-    Заксенгаузена, еміграції та вбивства КДБ.
-  caveats: Енциклопедична довідка має доповнюватися критичною історіографією про ОУН(б).
-- title: 1909 — народився лідер ОУН Степан Бандера
   language: uk
-  genre: Історичний календар / меморіальний нарис
-  source_type: reference
-  role: supplementary-reading
-  source: Український інститут національної пам'яті
-  source_url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/1/1909-narodyvsya-lider-oun-stepan-bandera
-  license: copyrighted
-  rights_note: Використовувати як link-only матеріал; не хостити повний текст або зображення.
   hosting: link-only
-  cefr_min: C1
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-40247
+    note: >-
+      Відкрита українськомовна енциклопедична сторінка; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Відокремити факти про арешти, Акт 30 червня та Заксенгаузен від мови
-    сучасної політики пам'яті.
-  caveats: Матеріал УІНП має меморіальний кут зору; модуль повинен зберігати критичну дистанцію.
-- title: Бандера — головний герой московської пропаганди. Парадокс, про який в Україні досі бояться говорити
+    Зіставити цю довідку з академічною статтею ЕІУ і знайти місця, де вони
+    формулюють по-різному; сформулювати, що саме змінює різниця формулювань.
+- title: ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Volynska_trahediia
   language: uk
-  genre: Авторська публіцистична колонка / допис у Facebook
-  source_type: source-critical
-  role: source-analysis
-  source: RusUkraine.book (Facebook)
-  source_url: https://www.facebook.com/RusUkraine.book/photos/%D0%B1%D0%B0%D0%BD%D0%B4%D0%B5%D1%80%D0%B0-%D0%B3%D0%BE%D0%BB%D0%BE%D0%B2%D0%BD%D0%B8%D0%B9-%D0%B3%D0%B5%D1%80%D0%BE%D0%B9-%D0%BC%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%BE%D1%97-%D0%BF%D1%80%D0%BE%D0%BF%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B8%D0%BF%D0%B0%D1%80%D0%B0%D0%B4%D0%BE%D0%BA%D1%81-%D0%BF%D1%80%D0%BE-%D1%8F%D0%BA%D0%B8%D0%B9-%D0%B2-%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96-%D0%B4%D0%BE%D1%81%D1%96-%D0%B1%D0%BE/1805086710837567/  # yamllint disable-line rule:line-length
-  license: copyrighted
-  rights_note: >-
-    Використовувати лише як link-only матеріал; не хостити повний текст,
-    зображення або транскрипцію допису.
   hosting: link-only
-  cefr_min: C1
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Volynska_trahediia
+    note: >-
+      Відкрита українськомовна академічна стаття (автор — І. І. Ільюшин);
+      повний текст не відтворюється в курсі.
   learner_task: >-
-    Розділити допис на перевірювані біографічні твердження, історіографічні
-    інтерпретації та сучасні політичні оцінки; першу групу звірити з ЕСУ,
-    ЕІУ та спеціальною історіографією.
-  caveats: >-
-    Публічний допис у Facebook є авторською інтерпретацією, не академічним
-    дослідженням. Він не замінює необхідного критичного читання про ОУН(б),
-    Волинь і Голокост і не знімає політичної та організаційної відповідальності
-    за насильство щодо цивільного населення ні зі Степана Бандери як лідера,
-    ні з організації ОУН(б).
-- title: Критичне українське читання про ОУН(б), Волинь і Голокост
+    Визначити, хто в статті є суб'єктом рішення навесні 1943 року, і
+    виписати кожне число разом зі стороною, що його порахувала. Пояснити,
+    чому «за польськими підрахунками» не те саме, що «загинуло».
+- title: УКРАЇНСЬКА ДЕРЖАВА 1941
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
   language: uk
-  genre: Наукова стаття / історіографічний огляд
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: stepan-bandera-critical-ukrainian-historiography'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти стабільний український науковий або перекладний
-    матеріал про політичне насильство ОУН(б), Волинь і Голокост; не замінювати
-    його англомовними джерелами для learner reading.
-  hosting: reading-needed
-  cefr_min: C1
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Порівняти міфологізований образ Бандери з критичним аналізом відповідальності
-    руху та меж особистого контролю.
-  caveats: Без такого читання модуль не готовий до build через високоризикову тему пам'яті.
+    Відновити хронологію 30 червня — 12 липня 1941 року і пояснити, чому
+    держава, проголошена за дорученням Бандери, протривала менш ніж два
+    тижні.
 sequence: 299
 slug: stepan-bandera
 subtitle: The OUN-B Leader, Political Violence, and the KGB Assassination

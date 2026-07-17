@@ -1,0 +1,66 @@
+# Source registry for wiki/figures/yaroslav-stetsko.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Stetsko_Y_2
+  type: external
+  title: СТЕЦЬКО Ярослав Семенович
+  url: https://www.history.org.ua/?termin=Stetsko_Y_2
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Стасюк О. Й.
+    language: uk
+    verified_on: '2026-07-17'
+    portrait_fallback: >-
+      text-only: стаття не доводить окремої ліцензії, автора та походження
+      портретного файла; зображення не використовується.
+- id: S2
+  file: https://esu.com.ua/article-884618
+  type: external
+  title: Стецько Ярослав Семенович
+  url: https://esu.com.ua/article-884618
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    work: Енциклопедія Сучасної України
+    language: uk
+    verified_on: '2026-07-17'
+    divergence_note: >-
+      подає ув'язнення докладніше, ніж ЕІУ: арешт 1934 з подальшим
+      звільненням за браком доказів, вирок на 5 років на Львівському процесі
+      1936, виїзд за кордон після амністії 1937.
+- id: S3
+  file: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  type: external
+  title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ
+  url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Україна—Українці. Кн. 2 (Наукова думка, 2019)'
+    author: Патриляк І. К.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S4
+  file: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+  type: external
+  title: УКРАЇНСЬКА ДЕРЖАВА 1941
+  url: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Маєвський О. О.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S5
+  file: https://www.history.org.ua/?termin=Stetsko_Y_1
+  type: external
+  title: СТЕЦЬКО Ярослава Йосипівна
+  url: https://www.history.org.ua/?termin=Stetsko_Y_1
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Черченко Ю. А.
+    language: uk
+    verified_on: '2026-07-17'
+    usage_note: >-
+      окрема стаття про дружину — Ярославу Йосипівну Стецько; використовується
+      для розмежування двох різних діячів з тим самим прізвищем.

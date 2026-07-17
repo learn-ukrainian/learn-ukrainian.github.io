@@ -115,74 +115,104 @@ persona:
     аспекти українського визвольного руху.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 references:
-- note: Авторитетна енциклопедична стаття про Ярослава Стецька.
+- note: >-
+    Академічна стаття; Інститут історії України НАН України (автор — Стасюк О. Й.).
+  path: https://www.history.org.ua/?termin=Stetsko_Y_2
+  title: СТЕЦЬКО Ярослав Семенович (ЕІУ)
+  type: reference
+- note: >-
+    Авторитетна енциклопедична стаття; подає ув'язнення 1934–37 докладніше,
+    ніж ЕІУ (арешт 1934 і звільнення за браком доказів, вирок 1936,
+    амністія 1937).
   path: https://esu.com.ua/article-884618
   title: Стецько Ярослав Семенович (ЕСУ)
   type: reference
-- note: Англомовна стаття в Енциклопедії українознавства.
+- note: >-
+    Окрема стаття ЕІУ про дружину — Ярославу Йосипівну Стецько. Потрібна для
+    розмежування двох різних діячів з тим самим прізвищем.
+  path: https://www.history.org.ua/?termin=Stetsko_Y_1
+  title: СТЕЦЬКО Ярослава Йосипівна (ЕІУ)
+  type: reference
+- note: Англомовна довідкова стаття; англомовна, тому не входить до readings.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CT%5CStetskoYaroslav.htm
   title: Stetsko, Yaroslav (IEU)
   type: reference
-- note: Дослідження ставлення ОУН до євреїв через аналіз життєпису Стецька.
-  path: Harvard Ukrainian Studies 23
+- note: >-
+    Рецензована стаття, що аналізує ставлення ОУН до німців і євреїв саме
+    через «Життєпис» Стецька 1941 року. Harvard Ukrainian Studies, т. 23,
+    вип. 3-4 (1999), с. 149–184. Бібліографічний запис звірено в
+    інституційному репозиторії KNAW (NIOD). Англомовна, тому не входить до
+    readings. УВАГА: цим проходом прочитано лише бібліографічний запис, не
+    текст статті — її висновків не переказувати без прямого читання.
+  path: https://pure.knaw.nl/portal/en/publications/the-organization-of-ukrainian-nationalists-and-its-attitude-towar/
   title: >-
-    Karel Berkhoff and Marco Carynnyk. "The Organization of Ukrainian
-    Nationalists and Its Attitude toward Germans and Jews"
-  type: reference
-- note: Комплексне дослідження складних питань Голокосту та українського націоналізму.
-  path: Ukrainian Nationalists and the Holocaust
-  title: John-Paul Himka. "Ukrainian Nationalists and the Holocaust"
+    Berkhoff K. C., Carynnyk M. "The Organization of Ukrainian Nationalists
+    and Its Attitude toward Germans and Jews: Iaroslav Stets'ko's 1941
+    Zhyttiepys"
   type: reference
 readings:
+- title: СТЕЦЬКО Ярослав Семенович
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Stetsko_Y_2
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Stetsko_Y_2
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Виписати три різні ролі Стецька — ідеолог ОУН з 1932 року, голова УДП
+    у 1941-му, президент АБН у 1946–1986 роках — і показати, яка з них
+    зайняла найбільше років життя, а яка найбільше місця в пам'яті.
 - title: Стецько Ярослав Семенович
-  language: uk
-  genre: Енциклопедична стаття / біографічна довідка
-  source_type: reference
-  role: orientation
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-884618
-  license: copyrighted
-  rights_note: Використовувати як link-only довідку; не хостити повний текст.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Виписати етапи підпільної діяльності, Акта 30 червня, ув'язнення та
-    повоєнної роботи в еміграції.
-  caveats: Довідка не закриває контроверсійні тексти 1941 року й потребує критичного читання.
-- title: 1941 — проголошення відновлення Української держави
   language: uk
-  genre: Історичний календар / документальний контекст
-  source_type: reference
-  role: supplementary-reading
-  source: Український інститут національної пам'яті
-  source_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/30/1941-progoloshennya-vidnovlennya-ukrayinskoyi-derzhavy
-  license: copyrighted
-  rights_note: Використовувати як link-only матеріал; не хостити повний текст або зображення.
   hosting: link-only
-  cefr_min: C1
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-884618
+    note: >-
+      Відкрита українськомовна енциклопедична сторінка; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    З'ясувати політичний контекст Акта 30 червня і наслідки його невизнання
-    нацистською владою.
-  caveats: Меморіальний матеріал потребує зіставлення з критичною історіографією.
-- title: Критичне українське читання про тексти Стецька 1941 року
+    Порівняти, як ЕІУ («політв'язень польських тюрем 1934—37») і ця стаття
+    (арешт 1934 зі звільненням за браком доказів, вирок 1936, амністія 1937)
+    описують ті самі роки; пояснити, що втрачає стислий запис.
+- title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
   language: uk
-  genre: Наукова стаття / історіографічний огляд
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: yaroslav-stetsko-1941-critical-ukrainian-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти український або перекладний науковий матеріал про
-    антисемітські твердження й авторитарні елементи у текстах Стецька; не
-    використовувати англомовну статтю як learner reading без винятку.
-  hosting: reading-needed
-  cefr_min: C1
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+    note: >-
+      Відкрита українськомовна академічна стаття (автор — І. К. Патриляк);
+      повний текст не відтворюється в курсі.
   learner_task: >-
-    Розрізнити державницький жест Акта, тактичну співпрацю, антисемітські
-    твердження та пізнішу антикомуністичну риторику.
-  caveats: Без критичного україномовного джерела модуль не готовий до build.
+    Знайти в статті два речення, які треба читати разом: що похідна група
+    увійшла до Львова разом із частинами Вермахту — і що збори вдалося
+    провести через відсутність німецької адміністрації в місті. Пояснити,
+    чому вибір лише одного з них дає неправду.
+- title: СТЕЦЬКО Ярослава Йосипівна
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Stetsko_Y_1
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Stetsko_Y_1
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Встановити, що «Стецько, голова Проводу ОУН» — це двоє різних людей у
+    різні десятиліття, і виписати, хто очолював Провід та АБН у які роки.
 sequence: 300
 slug: yaroslav-stetsko
 subtitle: The 1941 Proclamation, Ideology, and Exile Leadership

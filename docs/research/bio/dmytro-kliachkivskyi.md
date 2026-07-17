@@ -1,61 +1,186 @@
-# Дмитро-Роман Семенович Клячківський — Research Dossier
+# Дмитро Клячківський — Research Dossier
 
 **Slug:** `dmytro-kliachkivskyi`
 **Block:** G
 **Tier:** 4
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Issue:** #4431
+**Researcher:** claude/bio-2def-cohort23
+**Completed:** 2026-07-17
+
+Найчутливіше досьє когорти. Правило цього проходу: **суб'єкт кожної дії —
+той, кого називає джерело**; кожне число — з атрибуцією сторони, що
+рахувала; недоведене називається недоведеним. Розбіжності довідників не
+усуваються вибором зручнішого.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Дмитро-Роман Семенович Клячківський.
-- **Pseudonyms / aliases:** Клим Савур, Охрім, Білаш; English canonical: Dmytro Kliachkivskyi.
-- **Born:** 4 November 1911 | Zbarazh area, Galicia | Austria-Hungary. ЕСУ and IEU/Savur identify him as the UPA commander known as Klym Savur; use ЕСУ for the full Ukrainian name. [T1: ЕСУ — Клячківський Дмитро-Роман Семенович] [T1: IEU — Savur, Klym]
-- **Died:** 12 February 1945 | near Orzhiv/Klevan area, Rivne region | killed in an NKVD/NKGB operation. [T1: ЕСУ] [T4: Patryliak/Motyka references]
-- **Family / education key facts:** Educated in Ukrainian schools in Galicia; joined OUN; became one of the principal OUN-B/UPA commanders in Volhynia and Polissia; remembered as commander of UPA-North. [T1: ЕСУ] [T1: IEU]
+**Ім'я — самé по собі розбіжність:**
 
-No OS/NS discrepancy was found for the death date. The contested point is not the date but command responsibility for anti-Polish violence in Volhynia.
+| Джерело | Форма |
+| --- | --- |
+| ЕІУ [S1] | «КЛЯЧКІВСЬКИЙ **Роман-Дмитро**» (без по батькові) |
+| ЕСУ [S2] | «КЛЯЧКІ́ВСЬКИЙ **Дмитро-Роман Семенович**» |
+
+Slug `dmytro-kliachkivskyi` і назва плану використовують форму «Дмитро
+Клячківський» — вона узгоджується з ЕСУ й з усталеним ужитком. Порядок
+складників імені в модулі **не стверджувати** як єдино правильний.
+
+- **Pseudonyms:** ЕІУ — Охрім, Панас Мосур, Клим Савур, Омелян Кримський,
+  **Блонд** [S1]; ЕСУ — Клим Савур, Панас Мосур, Охрім, **Балаш**, Омелян
+  Кримський, **Блондин** [S2]. Спільні: Клим Савур, Панас Мосур, Охрім,
+  Омелян Кримський.
+- **Born:** 1911, м. Збараж [S1]; ЕСУ уточнює: **04.11.1911**, нині
+  Тернопільської обл. [S2]
+- **Died:** **не встановлено однозначно** — див. розбіжність нижче.
+- **Роль:** військовий діяч; член ОУН(б) від 1940 [S1]; організатор і
+  перший командир УПА (1943) [S1]; член Проводу ОУН і Головного
+  військового штабу УПА [S1].
+
+**Хронологія:**
+
+- Політв'язень **польських** тюрем (1937) і **більшовицьких** в'язниць
+  (1940–41). [S1]
+- Обласний провідник юнацтва ОУН Станіславівщини (1939–40). [S1]
+- Провідник м. Львів (1941). [S1]
+- Крайовий провідник (січень 1943 — листопад 1944). [S1] Територія — див.
+  розбіжність B.
+- **3 травня 1943** — очолив Головну команду УПА. [S4]
+- За ЕСУ: організатор і головний командир УПА **травень–листопад 1943**,
+  з січня 1944 — командувач УПА-Північ. [S2]
+- **26 січня 1944** — після призначення головнокомандувачем УПА
+  Р. Шухевича (Т. Чупринки) очолив УПА-Північ у званні **майора**. [S1]
+- Посмертно підвищений у званні до **полковника** УПА. [S1]
+
+### Розбіжність A — смерть (НЕ усунена; критична)
+
+| Джерело | Дата | Місце |
+| --- | --- | --- |
+| ЕІУ [S1] | **12.11.1944** | у бою з військами НКВС біля **Орлівських хуторів** Клеванського (нині у складі Рівненського) р-ну Рівненської обл. |
+| ЕСУ [S2] | **12.02.1945** | побл. **с. Суськ**, Костопільський р-н, Рівненської обл. |
+
+Різниця — **три місяці й інший район**. Спільне: бій з військами НКВС;
+Рівненщина. **Дату й місце смерті в модулі не стверджувати.** Потрібна
+архівна публікація.
+
+### Розбіжність B — територія провідництва (НЕ усунена; ймовірна друкарська помилка)
+
+| Джерело | Формулювання |
+| --- | --- |
+| ЕІУ, стаття про нього [S1] | крайовий провідник «**Пд.-зх.** укр. земель» |
+| ЕІУ, стаття про УПА [S4] | «провідник ОУН на **Пн.-Зх.** українських землях Д. Клячківський» |
+| ЕСУ [S2] | Крайовий провід ОУН(б) на **Північно-Західних** українських землях (**Волинь і Полісся**) |
+
+Два джерела з трьох (і географія Волині) дають **північно-західні** землі;
+«Пд.-зх.» у [S1] виглядає як помилка набору **всередині тієї самої
+енциклопедії**. У модулі вживати «Північно-Західні українські землі
+(Волинь і Полісся)» з посиланням на [S2]/[S4], а розбіжність показати як
+джерелознавчий приклад — не «мовчки виправляти» ЕІУ.
 
 ## 2. Oppression mechanism
 
-- **What happened:** Soviet security pursuit and killing in the forest near Orzhiv after the return of Soviet power to western Ukraine.
-- **When:** 10-12 February 1945 operation window; death on 12 February 1945.
-- **By whom:** NKVD internal troops and NKGB operative group, according to Ukrainian historical summaries of the Orzhiv operation.
-- **Document references:** This pass did not retrieve the full archival file. Secondary summaries refer to Soviet operational records and later Ukrainian scholarly discussion of the Orzhiv operation. Mark the precise fond/opys/sprava as source not found.
+- **Польща (1937):** політв'язень польських тюрем. [S1]
+- **СРСР (1940–41):** політв'язень більшовицьких в'язниць. [S1]
+- **СРСР (загибель):** загинув у бою з військами НКВС. [S1] [S2] Дата й
+  місце — розбіжність A.
+- Радянська контрповстанська кампанія — контекст, у якому він загинув;
+  масштаб операцій проти УПА документований окремо (див. §6).
 
-Kliachkivskyi's death was a Soviet counterinsurgency killing, not an ordinary battlefield casualty. The mechanism belongs in the dossier because Soviet and later Russian accounts framed UPA as "banditry" while hiding the colonial counterinsurgency context. At the same time, the Soviet source category is dangerous: operational reports can document time, unit, and coercive method, but cannot be treated as authoritative on Ukrainian motives or legitimacy. [T1: ЕСУ] [T2: source-tier policy]
+**Термінологічна засторога:** радянський ярлик «бандит» уживати лише як
+цитовану категорію режиму, з лапками й атрибуцією. Нейтральні означення:
+«командир УПА», «підпілля», «радянська контрповстанська операція».
 
 ## 3. Major works
 
-- `1942-1945` — UPA-North orders and reports attributed to Клим Савур; no page-verified source edition retrieved in this pass.
-- `1943` — command correspondence around Volhynia operations; use only through document editions or scholarship with archival references.
-- `Posthumous` — entries in *Літопис УПА* and Ukrainian security-archive publications; Phase 2 should retrieve stable pages before quotation.
+**Немає.** Клячківський — військовий командир, а не автор текстів. Джерела
+цього проходу не подають жодної його друкованої праці. **Не приписувати**
+йому авторства.
 
-Kliachkivskyi is not a literary figure. His curriculum value is in command documents and how to read contested orders.
+Це важливо ще й тому, що головний спірний «текст», пов'язаний з його
+іменем, — це нібито наказ 1943 року (див. §4 і §6). Досьє не називає його
+працею, бо документа цим проходом не отримано.
 
 ## 4. Primary-source quotes (>=2 required)
 
-Source not found for two page-verified direct quotations from Kliachkivskyi's own writings in retrieved Tier 1/Tier 2 sources. Do not manufacture commands from later polemical websites. Phase 2 should check *Літопис УПА* volumes and HDA SBU document editions before adding quotations.
+**Цим проходом дослівних цитат Клячківського з точними локаторами не
+отримано, і вони свідомо не наводяться.** Для цієї постаті порожній розділ
+цитат — не недолік, а єдина коректна позиція.
 
-One disputed order attributed to him concerning Poles is discussed in Motyka through testimony of Yurii Stelmashchuk, but this dossier does not quote it as Kliachkivskyi's own written order because the source chain is contested and requires archival-page verification. [T4: Motyka]
+Причина принципова. Навколо імені «Клим Савур» існує усталене твердження
+про наказ 1943 року щодо антипольської акції. **Жодне з перевірених цим
+проходом джерел не подає тексту такого наказу, не цитує його й не називає
+Клячківського автором рішення:**
+
+- стаття про нього в ЕІУ [S1] — не згадує ні наказу, ні антипольської
+  акції взагалі;
+- стаття про нього в ЕСУ [S2] — не згадує ні наказу, ні антипольської
+  акції 1943 року;
+- стаття «Волинська трагедія 1943 р.» [S3] — атрибутує рішення **Крайовому
+  проводу ОУН(б) на Волині** як **органу** й **не називає Клячківського**.
+
+Отже, цитувати «наказ Клима Савура» без архівного документа й фахової
+експертизи **заборонено**: це була б вигадана цитата в темі, де вигадана
+цитата має міжнародні наслідки. Питання автентичності й авторства такого
+документа — предмет окремої історіографічної дискусії, для якої цей прохід
+не має джерел.
 
 ## 5. Language register
 
-- **Register:** underground military-administrative.
-- **CEFR readiness for full reading:** C1-C2 for authentic orders; B2 for excerpts with glossing.
-- **Lexicon notes:** `сотня`, `курінь`, `терен`, `провід`, `боївка`, `внутрішні війська`, security-service abbreviations.
-- **Stylistic features:** compressed commands, euphemistic operational vocabulary, chain-of-command references.
+- **Register:** військово-організаційна термінологія підпілля й УПА;
+  адміністративно-територіальна номенклатура 1940-х років.
+- **CEFR readiness:** C1.
+- **Морфологія:** 10 одиниць перевірено через VESUM цим проходом
+  (`mcp__sources__verify_words`, 2026-07-17), знайдено 10/10: `провідник`,
+  `крайовий`, `боївка`, `самооборона`, `наказ`, `майор`, `полковник`,
+  `повстанець`, `чистка`, `вигнання`.
+- **Не перевірялося:** наголоси; власні назви (Збараж, Суськ, Орлівські
+  хутори, Кричильськ, Пшебраже).
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** Kliachkivskyi is one of the most sensitive UPA figures because mainstream Polish and Western scholarship often places him near the center of UPA-North decision-making during the 1943 Volhynia massacres. Motyka argues that the decision for large-scale anti-Polish action in western Volhynia was tied to Kliachkivskyi's command position; Snyder treats the violence as ethnic cleansing in a German-Soviet imperial war zone. Ukrainian scholarship debates command chains, local initiative, Soviet/Nazi manipulation, and the relationship between OUN-B orders and village-level violence. [T4: Motyka] [T4: Snyder]
-- **What gets simplified in popular memory:** Some Ukrainian commemorations present him only as an anti-Soviet commander killed by the NKVD. That is incomplete. Some Polish or Russian narratives present him only as a perpetrator, erasing the Soviet counterinsurgency and the fact that UPA also fought Soviet and German forces. The dossier must keep both dimensions visible.
-- **Where modern Russian disinformation attacks him:** Russian disinformation uses Volhynia to delegitimize all Ukrainian resistance and even present contemporary Ukraine as inherently genocidal. That is propaganda. The response cannot be denial; it must be source-based acknowledgment of civilian killings and command-responsibility debates, with clear separation from current Russian war narratives.
-- **Polish / Jewish / other-perspective considerations:** Polish civilian suffering is central, not optional. The curriculum should use Polish scholarship and survivor-centered material in the Volhynia modules. Jewish perspectives enter through OUN/UPA militia histories and the wider German occupation context, though Kliachkivskyi's most direct dossier controversy is Polish-Ukrainian violence.
-- **NPOV-decolonized framing:** Kliachkivskyi should be taught as an anti-Soviet UPA commander killed by Soviet security forces and as a commander tied by serious scholarship to mass violence against Polish civilians. Neither identity cancels the other.
-- **Evidence caution:** The dossier should separate three evidentiary levels: verified UPA-North command role; scholarly attribution of responsibility for Volhynia decisions; and specific alleged written orders, which require page-stable archival publication before quotation. This prevents both denialist evasions and overconfident claims built on weak source chains.
-- **Language caution:** Avoid the Soviet label "bandit" except as a quoted regime category. Use "UPA commander," "underground," and "Soviet counterinsurgency" for neutral prose.
+- **ГОЛОВНЕ — рівень атрибуції.** Документовано: він очолював структуру
+  ОУН(б) на ПЗУЗ у відповідний час [S2] [S4]; він командував УПА [S1] [S2]
+  [S4]; Крайовий провід ОУН(б) на Волині навесні 1943 року ухвалив рішення
+  про вигнання поляків [S3]; 11–13 липня 1943 року загони УПА майже
+  одночасно атакували понад 100 польських поселень [S3]. **Не встановлено
+  цими джерелами:** що він особисто підписав наказ. Командна
+  відповідальність і авторство наказу — **різні** твердження з **різними**
+  доказами; змішувати їх не можна в жодному напрямі.
+- **Хронологія акцій** [S3]: з лютого 1943 — східні повіти (Сарненський,
+  Костопільський, Рівненський, Здолбунівський); червень — Дубнівський,
+  Кременецький, Луцький; липень — Горохівський, Володимир-Волинський,
+  Ковельський; кінець серпня — Любомльський.
+- **Числа — тільки з атрибуцією** [S3]: за польськими підрахунками з
+  польського боку загинуло **щонайменше 35 тис.** (переважно цивільна
+  сільська людність), з них **18 тис.** із встановленими прізвищами; з
+  українського боку — **до кількох тисяч**. **«В Україні подібних до
+  польських підрахунків не проводилося»** — пряме речення джерела, яке
+  пояснює асиметрію цифр. За оцінками І. Патриляка — 13–16 тис. українців
+  і 38–39 тис. поляків за 1942–44 [S4].
+- **Хто оборонявся:** конфлікт супроводжувався етнічними чистками з обох
+  сторін, але **впродовж усього 1943 року місцеві поляки були стороною, що
+  оборонялася** [S3]. Співвідношення сил: УПА 10–12 тис. на середину 1943
+  (15–20 тис. наприкінці року) проти 1300 польських партизанів і ~3600 осіб
+  у базах самооборони [S3]. Це формулювання українського академічного
+  джерела — його не можна подавати як «польську версію».
+- **Мотиви рішення за джерелом** [S3]: перешкодити планам польських
+  політичних сил повернути повоєнній Польщі західноукраїнські землі;
+  покарати частину місцевих поляків за співпрацю з гітлерівцями та за
+  допомогу радянським партизанам; помста за вбивства українських діячів на
+  Холмщині. Джерело подає це як **обґрунтування рішення**, а не як його
+  виправдання — переказувати саме так.
+- **Історіографічна рамка** [S3]: у польській історіографії події 1943
+  часто трактують лише як антипольську акцію УПА; в українській —
+  наголошують на мотивах і на «діях у відповідь», зокрема проти цивільного
+  українського населення. Обидві рамки назвати, жодну не видавати за
+  нейтральну.
+- **Дві розбіжності довідників** (смерть; територія) — див. §1. Показувати
+  учневі як матеріал.
+- **Радянська контрповстанська кампанія:** підручник (Гісем, 10 кл., 2018,
+  с. 229) подає: з лютого 1944 до 1 січня 1946 радянськими військами й
+  військами НКВС проти УПА проведено понад 39 тис. операцій, убито 110,7
+  тис. осіб, заарештовано 15,9 тис. повстанців і 8,3 тис. членів ОУН
+  (`10-klas-istorija-ukrajiny-gisem-2018_s0441`). Це контекст, не
+  твердження про Клячківського особисто; число подавати з назвою джерела.
 
 ## 7. Cross-track links
 
@@ -70,47 +195,75 @@ One disputed order attributed to him concerning Poles is discussed in Motyka thr
 - **Existing BIO modules (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/bio/roman-shukhevych.yaml`
   - `curriculum/l2-uk-en/plans/bio/vasyl-kuk.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
-  - Bio plan for Kliachkivskyi; document-analysis activity comparing operational reports, Polish testimony, and Ukrainian underground sources.
+  - `curriculum/l2-uk-en/plans/bio/stepan-bandera.yaml`
+- **Candidate cross-track connections (NOT existing files):**
+  - Джерелознавча вправа: орган проти особи як суб'єкт рішення.
 
 ## 8. Naming-canonical
 
 - **Slug:** `dmytro-kliachkivskyi`
 - **EN canonical (BGN/PCGN 2010):** Dmytro Kliachkivskyi
-- **UA canonical:** Дмитро-Роман Семенович Клячківський
-- **Aliases:** Клим Савур; Охрім; Білаш; Klym Savur.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Dmitry Klyachkivsky; Klim Savur as Russian-only spelling; Russian patronymic spellings.
+- **UA:** Дмитро Клячківський; порядок складників імені — розбіжність
+  довідників (див. §1), не стверджувати.
+- **Aliases / псевдоніми:** Клим Савур, Панас Мосур, Охрім, Омелян
+  Кримський (спільні для [S1] [S2]); Блонд [S1] / Блондин [S2]; Балаш [S2].
+- **Forbidden forms:** російські транслітерації (Klyachkivsky, Klim Savur
+  через рос. посередництво).
+- **Обережно:** англомовна довідкова традиція індексує його за псевдонімом
+  («Savur, Klym»), тому пошук за прізвищем може не знаходити статті — це
+  не підстава вважати постать невідомою.
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons photo "Dmytro Klyachkivsky UPA.jpg"; verify source and license.
-- **Backup candidates:** ЕСУ PDF image; UPA archive image if rights are clear.
-- **Era-appropriate context image:** Map of Volhynia/UPA-North area, preferably from a rights-cleared educational source.
+- **Рішення цього проходу: `portrait_fallback` (text-only).** Окремої
+  ліцензії, автора й походження портретного файла **не доведено**; портрет
+  не оголошується. Запис — у `wiki/figures/dmytro-kliachkivskyi.sources.yaml`.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
-- ЕСУ PDF. "Клячківський Дмитро-Роман Семенович." <https://esu.com.ua/pdf/file/8656.pdf> | accessed 2026-05-30.
-- Internet Encyclopedia of Ukraine. "Savur, Klym." <https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CA%5CSavurKlym.htm>.
+**Tier 1 (authoritative, перевірені 2026-07-17):**
+- [S1] Лисенко О. Є. «КЛЯЧКІВСЬКИЙ Роман-Дмитро». Енциклопедія історії
+  України, Т. 4: Ка-Ком (Наукова думка, 2007), Інститут історії України
+  НАН України. <https://www.history.org.ua/?termin=Klyachkivsky_R>
+- [S2] «Клячківський Дмитро-Роман Семенович». Енциклопедія Сучасної
+  України. <https://esu.com.ua/article-8656>
+- [S3] Ільюшин І. І. «ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.». ЕІУ, Т. 1 (2003).
+  <https://www.history.org.ua/?termin=Volynska_trahediia>
+- [S4] Бігун І. В., Кентій А. В. «УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА)». ЕІУ,
+  Україна—Українці, кн. 2 (2019).
+  <https://www.history.org.ua/?termin=Ukrainska_povstanska>
 
-**Tier 2 (institutional):**
-- HDA SBU / Ukrainian source-edition leads noted but not page-retrieved; archival ID remains source not found.
+**Corpus evidence (перевірено цим проходом):**
+- Гісем, «Історія України», 10 кл., 2018, с. 229 — масштаб радянських
+  операцій проти УПА (`mcp__sources__search_text`, chunk
+  `10-klas-istorija-ukrajiny-gisem-2018_s0441`).
 
-**Tier 4 (modern scholarly post-1991):**
-- Grzegorz Motyka, *From the Volhynian Massacre to Operation Vistula*.
-- Timothy Snyder, "The Causes of Ukrainian-Polish Ethnic Cleansing 1943."
-- Ivan Patryliak, studies on OUN/UPA military activity and the Orzhiv operation.
-- Per Anders Rudling, "The OUN, the UPA and the Holocaust."
+**Вилучено цим проходом (із причиною):**
+- `path: From the Volhynian Massacre to Operation Vistula` (Motyka) і
+  `path: The Causes of Ukrainian-Polish Ethnic Cleansing 1943` (Snyder) —
+  **голі назви замість URL**, нерозв'язані цитати; цим проходом не
+  верифіковано. Обидві праці реальні й доречні — повернути лише з
+  перевіреним записом (видання, рік, сторінки).
+- Заглушка `reading-needed` — замінена перевіреними читаннями.
 
-**Primary-source documents accessed:**
-- No page-stable Kliachkivskyi primary order retrieved in this pass.
+**Not retrieved:**
+- Архівна публікація, яка усунула б розбіжність щодо дати й місця смерті.
+- Будь-який документ, що встановлював би авторство наказу 1943 року.
+- Фахова експертиза автентичності документів, приписуваних «Климу Савуру».
 
 ---
 
 ## Decolonization self-check (run before submitting)
 
-- [x] Soviet counterinsurgency named as NKVD/NKGB, not neutralized.
-- [x] Volhynia controversy centered and attributed.
-- [x] Polish civilian perspective explicitly included.
-- [x] No Russian-imperial spellings in body prose.
-- [x] No invented primary quotes or file IDs.
+- [x] Суб'єкт рішення 1943 року — **орган**, як у джерелі; не підмінено особою.
+- [x] Авторство наказу названо **недоведеним**, а не заперечене й не
+      стверджене.
+- [x] Волинське насильство **не** приховане й не euphemized: рішення про
+      вигнання, 100+ поселень, 35 тис. за польськими підрахунками — усе на місці.
+- [x] Кожне число має назву сторони, що рахувала; асиметрія цифр пояснена
+      реченням джерела.
+- [x] «Поляки були стороною, що оборонялася» — подано як формулювання
+      українського академічного джерела.
+- [x] Дві розбіжності довідників показані, жодна не усунена мовчки.
+- [x] Радянський ярлик «бандит» — лише як цитована категорія режиму.
+- [x] Жодної цитати без локатора; «наказ Клима Савура» не цитовано.

@@ -1,0 +1,61 @@
+# Source registry for wiki/figures/dmytro-kliachkivskyi.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Klyachkivsky_R
+  type: external
+  title: КЛЯЧКІВСЬКИЙ Роман-Дмитро
+  url: https://www.history.org.ua/?termin=Klyachkivsky_R
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Т. 4: Ка-Ком (Наукова думка, 2007)'
+    author: Лисенко О. Є.
+    language: uk
+    verified_on: '2026-07-17'
+    portrait_fallback: >-
+      text-only: стаття не доводить окремої ліцензії, автора та походження
+      портретного файла; зображення не використовується.
+    divergence_note: >-
+      подає ім'я як «Роман-Дмитро», смерть 12.11.1944 біля Орлівських хуторів
+      і крайове провідництво «Пд.-зх. укр. земель»; усе це розходиться з [S2],
+      а означення території — ще й зі статтею [S4] тієї самої енциклопедії,
+      яка подає «Пн.-Зх. українські землі».
+- id: S2
+  file: https://esu.com.ua/article-8656
+  type: external
+  title: Клячківський Дмитро-Роман Семенович
+  url: https://esu.com.ua/article-8656
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    work: Енциклопедія Сучасної України
+    language: uk
+    verified_on: '2026-07-17'
+    divergence_note: >-
+      подає ім'я як «Дмитро-Роман Семенович», народження 04.11.1911 і смерть
+      12.02.1945 побл. с. Суськ Костопільського р-ну; дата й місце смерті
+      розходяться з [S1] на три місяці й на інший район.
+- id: S3
+  file: https://www.history.org.ua/?termin=Volynska_trahediia
+  type: external
+  title: ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.
+  url: https://www.history.org.ua/?termin=Volynska_trahediia
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Т. 1: А-В (Наукова думка, 2003)'
+    author: Ільюшин І. І.
+    language: uk
+    verified_on: '2026-07-17'
+    attribution_note: >-
+      стаття атрибутує рішення весни 1943 року Крайовому проводу ОУН(б) на
+      Волині як органу й НЕ називає Клячківського та не подає письмового
+      наказу.
+- id: S4
+  file: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  type: external
+  title: УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА)
+  url: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Україна—Українці. Кн. 2 (Наукова думка, 2019)'
+    author: Бігун І. В., Кентій А. В.
+    language: uk
+    verified_on: '2026-07-17'

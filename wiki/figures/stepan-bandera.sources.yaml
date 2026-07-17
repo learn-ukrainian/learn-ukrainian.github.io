@@ -1,0 +1,99 @@
+# Source registry for wiki/figures/stepan-bandera.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Bandera_S
+  type: external
+  title: БАНДЕРА Степан Андрійович
+  url: https://www.history.org.ua/?termin=Bandera_S
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Кентій А. В.
+    language: uk
+    verified_on: '2026-07-17'
+    portrait_fallback: >-
+      text-only: стаття не доводить окремої ліцензії, автора та походження
+      портретного файла; зображення не використовується.
+- id: S2
+  file: https://esu.com.ua/article-40247
+  type: external
+  title: Бандера Степан Андрійович
+  url: https://esu.com.ua/article-40247
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    work: Енциклопедія Сучасної України
+    language: uk
+    verified_on: '2026-07-17'
+- id: S3
+  file: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+  type: external
+  title: УКРАЇНСЬКА ДЕРЖАВА 1941
+  url: https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Маєвський О. О.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S4
+  file: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  type: external
+  title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ
+  url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Україна—Українці. Кн. 2 (Наукова думка, 2019)'
+    author: Патриляк І. К.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S5
+  file: https://www.history.org.ua/?termin=Volynska_trahediia
+  type: external
+  title: ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.
+  url: https://www.history.org.ua/?termin=Volynska_trahediia
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Т. 1: А-В (Наукова думка, 2003)'
+    author: Ільюшин І. І.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S6
+  file: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  type: external
+  title: УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА)
+  url: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Україна—Українці. Кн. 2 (Наукова думка, 2019)'
+    author: Бігун І. В., Кентій А. В.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S7
+  file: https://zakon.rada.gov.ua/laws/show/46/2010
+  type: external
+  title: Указ Президента України № 46/2010 «Про присвоєння С. Бандері звання Герой України»
+  url: https://zakon.rada.gov.ua/laws/show/46/2010
+  metadata:
+    publisher: Верховна Рада України (законодавство України)
+    document_date: '2010-01-20'
+    language: uk
+    verified_on: '2026-07-17'
+    status_note: >-
+      сторінка подає примітку «Додатково див. Постанову Донецького окружного
+      адміністративного суду N 2а-1219/10/0570 від 02.04.2010», але не показує
+      статусу втрати чинності; тому скасування не стверджується.
+- id: S8
+  file: https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
+  type: external
+  title: 'Bulletin of the International Commission of Jurists, no. 15 (1963): The Trial of Bogdan Stashynsky'
+  url: https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
+  metadata:
+    publisher: International Commission of Jurists
+    language: en
+    verified_on: '2026-07-17'
+    document_identity: >-
+      сканований бюлетень, 56 с.; розділ «THE TRIAL OF BOGDAN STASHYNSKY IN THE
+      FEDERAL REPUBLIC OF GERMANY» звірено через видобування тексту.
+    usage_note: >-
+      англомовний документ; використовується як довідка (reference), не як
+      learner reading, бо контракт читань вимагає української мови.

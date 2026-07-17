@@ -1,0 +1,74 @@
+# Source registry for wiki/figures/yurii-tiutiunnyk.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
+  type: external
+  title: ТЮТЮННИК Юрій Йосипович
+  url: https://www.history.org.ua/?termin=Tiutiunnyk_Yurij_Yurko_Josypovych_vijsk_diiach_UNR
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Папакін Г. В., Сідак В. С.
+    language: uk
+    verified_on: '2026-07-17'
+    portrait_fallback: >-
+      text-only: стаття не доводить окремої ліцензії, автора та походження
+      портретного файла; зображення не використовується.
+- id: S2
+  file: https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/
+  type: external
+  title: 'Юрко Тютюник. Зимовий похід 1919-20 рр. Частина 1: політичний огляд'
+  url: https://diasporiana.org.ua/memuari/5572-tyutyunik-yu-zimoviy-pohid-1919-1920/
+  metadata:
+    publisher: Видавництво Чарторийських (Ню Йорк)
+    hosted_by: Електронна бібліотека «Діаспоріана»
+    author: Юрко Тютюник
+    language: uk
+    edition: 3-тє видання, частина 1
+    verified_on: '2026-07-17'
+    document_identity: >-
+      титульний аркуш сканованого примірника подає: «Юрко Тютюник. Зимовий
+      похід 1919-20 рр. 3-тє видання. Частина 1. Політичний огляд з документами
+      в тексті. Видавництво Чарторийських. Ню Йорк».
+    year_discrepancy: >-
+      каталожний запис бібліотеки подає рік 1968, тоді як відбиток на титульному
+      аркуші сканованого примірника читається як 1966; рік не встановлено
+      однозначно, тому в тексті він не стверджується.
+    quotation_status: >-
+      скан не має текстового шару (0 слів при видобуванні), тому дослівні цитати
+      з page-stable локаторами не наводяться.
+- id: S3
+  file: https://www.history.org.ua/?termin=Pershyj_Zymovyj
+  type: external
+  title: ПЕРШИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1919–1920
+  url: https://www.history.org.ua/?termin=Pershyj_Zymovyj
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Буравченков А. О.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S4
+  file: https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921
+  type: external
+  title: ДРУГИЙ ЗИМОВИЙ ПОХІД АРМІЇ УНР 1921
+  url: https://www.history.org.ua/?termin=Drugy_zymovyj_pokhid_armii_UNR_1921
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Т. 2: Г-Д (Наукова думка, 2004)'
+    author: Савченко Г. П.
+    language: uk
+    verified_on: '2026-07-17'
+- id: S5
+  file: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
+  type: external
+  title: Tiutiunnyk, Yurii
+  url: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine (CIUS)
+    language: en
+    verified_on: '2026-07-17'
+    divergence_note: >-
+      подає місце народження як Budyshcha, Hlukhiv county, Chernihiv gubernia,
+      що розходиться зі звенигородською локалізацією в [S1]; використовується
+      лише як приклад розбіжності довідників, не як підстава для датування.

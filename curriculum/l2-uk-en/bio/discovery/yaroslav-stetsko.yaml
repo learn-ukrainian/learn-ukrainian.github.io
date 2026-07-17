@@ -1,0 +1,29 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Ярослав Стецько
+  - ЕІУ Стецько Ярослав Семенович Стасюк
+  - ЕСУ Стецько Ярослав Семенович
+  - ЕІУ Українське державне правління Патриляк 30 червня 1941
+  - ЕІУ Стецько Ярослава Йосипівна розмежування
+  - Berkhoff Carynnyk Harvard Ukrainian Studies Stetsko 1941 Zhyttiepys
+direct_sources:
+  - https://www.history.org.ua/?termin=Stetsko_Y_2
+  - https://esu.com.ua/article-884618
+  - https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  - https://www.history.org.ua/?termin=Stetsko_Y_1
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Direct-source packet. Вилучено заглушку reading-needed і дві нерозв'язані
+  цитати, що мали голу назву замість URL (Harvard Ukrainian Studies 23;
+  Ukrainian Nationalists and the Holocaust). Першу ідентифіковано точно
+  (Berkhoff — Carynnyk, HUS 23(3-4), 1999, с. 149–184) і повернуто до
+  references із записом репозиторію KNAW; вона англомовна, тому не є
+  learner reading. Прочитано лише бібліографічний запис, не текст статті
+  (ResearchGate віддає 403), тому висновків не переказано і цитат із
+  «Життєпису» не наведено. Питання антисемітизму не стверджується й не
+  заперечується — зафіксовано як обов'язкову роботу окремого проходу.
+  Розмежовано двох діячів на прізвище Стецько (Ярослав Семенович і його
+  дружина Ярослава Йосипівна) за окремими статтями ЕІУ. Портрет не
+  оголошено: text-only portrait_fallback.

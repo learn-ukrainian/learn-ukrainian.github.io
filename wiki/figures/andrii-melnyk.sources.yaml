@@ -1,0 +1,59 @@
+# Source registry for wiki/figures/andrii-melnyk.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Melnyk_A_A
+  type: external
+  title: МЕЛЬНИК Андрій Атанасович
+  url: https://www.history.org.ua/?termin=Melnyk_A_A
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Т. 6: Ла-Мі (Наукова думка, 2009)'
+    author: Кот С. І.
+    language: uk
+    verified_on: '2026-07-17'
+    portrait_fallback: >-
+      text-only: стаття не доводить окремої ліцензії, автора та походження
+      портретного файла; зображення не використовується.
+- id: S2
+  file: https://esu.com.ua/article-66256
+  type: external
+  title: Мельник Андрій Атанасович
+  url: https://esu.com.ua/article-66256
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    work: Енциклопедія Сучасної України
+    language: uk
+    verified_on: '2026-07-17'
+    divergence_note: >-
+      розходиться з [S1] у двох місцях: місце смерті (Клерво, Люксембург —
+      проти «лікарні м. Кельн» у ЕІУ) і німецький арешт (початок 1944 зі
+      звільненням наприкінці того ж року — проти «з 1941 під нім. арештом,
+      з 1944 Заксенгаузен» у ЕІУ).
+- id: S3
+  file: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  type: external
+  title: УКРАЇНСЬКЕ ДЕРЖАВНЕ ПРАВЛІННЯ
+  url: https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: 'Енциклопедія історії України: Україна—Українці. Кн. 2 (Наукова думка, 2019)'
+    author: Патриляк І. К.
+    language: uk
+    verified_on: '2026-07-17'
+    usage_note: >-
+      джерело факту, що Український національний комітет 1941 року
+      представляв основні течії еміграції за винятком мельниківської ОУН.
+- id: S4
+  file: https://www.history.org.ua/?termin=Bandera_S
+  type: external
+  title: БАНДЕРА Степан Андрійович
+  url: https://www.history.org.ua/?termin=Bandera_S
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Кентій А. В.
+    language: uk
+    verified_on: '2026-07-17'
+    usage_note: >-
+      джерело опису римських переговорів січня 1940 року та розколу ОУН
+      з боку бандерівської сторони.

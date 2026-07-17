@@ -113,72 +113,100 @@ persona:
     командування та трагічні сторінки українсько-польських відносин.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 references:
-- note: Авторитетна енциклопедична стаття про Дмитра Клячківського.
-  path: https://esu.com.ua/pdf/file/8656.pdf
+- note: >-
+    Академічна стаття; Інститут історії України НАН України (автор —
+    Лисенко О. Є.), ЕІУ Т. 4 (2007). УВАГА: подає ім'я «Роман-Дмитро»,
+    смерть 12.11.1944 і територію «Пд.-зх. укр. земель» — усе розходиться
+    з ЕСУ, а територія — ще й зі статтею про УПА в тій самій енциклопедії.
+  path: https://www.history.org.ua/?termin=Klyachkivsky_R
+  title: КЛЯЧКІВСЬКИЙ Роман-Дмитро (ЕІУ)
+  type: reference
+- note: >-
+    Авторитетна енциклопедична стаття; подає ім'я «Дмитро-Роман Семенович»,
+    народження 04.11.1911 і смерть 12.02.1945 побл. с. Суськ.
+  path: https://esu.com.ua/article-8656
   title: Клячківський Дмитро-Роман Семенович (ЕСУ)
   type: reference
-- note: Англомовна стаття в Енциклопедії українознавства.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CA%5CSavurKlym.htm
-  title: Savur, Klym (IEU)
+- note: >-
+    Академічна стаття про Волинську трагедію (автор — Ільюшин І. І.).
+    Ключове: атрибутує рішення весни 1943 року Крайовому проводу ОУН(б) на
+    Волині як ОРГАНУ і не називає Клячківського автором; письмового наказу
+    не подає.
+  path: https://www.history.org.ua/?termin=Volynska_trahediia
+  title: ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р. (ЕІУ)
   type: reference
-- note: Польське історичне дослідження українсько-польського конфлікту.
-  path: From the Volhynian Massacre to Operation Vistula
-  title: Grzegorz Motyka. "From the Volhynian Massacre to Operation Vistula"
-  type: reference
-- note: Дослідження причин українсько-польських етнічних чисток.
-  path: The Causes of Ukrainian-Polish Ethnic Cleansing 1943
-  title: Timothy Snyder. "The Causes of Ukrainian-Polish Ethnic Cleansing 1943"
+- note: >-
+    Академічна стаття про УПА (автори — Бігун І. В., Кентій А. В.). Подає
+    дату 3 травня 1943 (Головна команда УПА) і означення території як
+    «Пн.-Зх. українські землі».
+  path: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  title: УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА) (ЕІУ)
   type: reference
 readings:
+- title: КЛЯЧКІВСЬКИЙ Роман-Дмитро
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Klyachkivsky_R
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Klyachkivsky_R
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Виписати все, що стаття говорить про 1943 рік, і перевірити просту річ:
+    чи згадано тут антипольську акцію або наказ узагалі. Зафіксувати
+    відповідь як факт про джерело.
 - title: Клячківський Дмитро-Роман Семенович
-  language: uk
-  genre: Енциклопедична стаття / біографічна довідка
-  source_type: reference
-  role: orientation
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-8656
-  license: copyrighted
-  rights_note: Використовувати як link-only довідку; не хостити повний текст.
-  hosting: link-only
-  cefr_min: C1
-  learner_task: >-
-    Виписати біографічні факти, псевдоніми, командні ролі в УПА-Північ і
-    обставини загибелі.
-  caveats: Довідка має бути доповнена критичним джерелом про Волинь 1943 року.
-- title: Дмитро Клячківський — "Клим Савур"
   language: uk
-  genre: Регіональний біографічний матеріал
-  source_type: reference
-  role: supplementary-reading
-  source: Рівненська обласна універсальна наукова бібліотека
-  source_url: https://libr.rv.ua/ua/virt/221
-  license: copyrighted
-  rights_note: Використовувати як link-only регіональний матеріал; не хостити повний текст або зображення.
   hosting: link-only
-  cefr_min: C1
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-8656
+    note: >-
+      Відкрита українськомовна енциклопедична сторінка; повний текст не
+      відтворюється в курсі.
   learner_task: >-
-    Зіставити регіональний меморіальний наратив із нейтральною енциклопедичною
-    довідкою.
-  caveats: Меморіальний матеріал не закриває питання відповідальності за антипольське насильство.
-- title: Критичне українське читання про Волинь 1943 року і командування УПА-Північ
+    Скласти картку постаті за цією статтею і порівняти з карткою за ЕІУ:
+    ім'я, дата й місце смерті, територія провідництва. Порахувати, у
+    скількох полях довідники не збігаються.
+- title: ВОЛИНСЬКА ТРАГЕДІЯ 1943 Р.
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Volynska_trahediia
   language: uk
-  genre: Наукова стаття / історіографічний огляд
-  source_type: reference
-  role: reading-needed
-  source: 'reading-needed: dmytro-kliachkivskyi-volyn-critical-ukrainian-source'
-  source_url: 'reading-needed'
-  license: unknown
-  rights_note: >-
-    reading-needed: знайти український або перекладний науковий матеріал про
-    Волинь 1943 року, командну роль УПА-Північ і відповідальність за цивільне
-    насильство.
-  hosting: reading-needed
-  cefr_min: C1
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Volynska_trahediia
+    note: >-
+      Відкрита українськомовна академічна стаття (автор — І. І. Ільюшин);
+      повний текст не відтворюється в курсі.
   learner_task: >-
-    Проаналізувати, як історики формулюють відповідальність командування і як
-    відрізняють це від радянської чи російської пропагандистської мови.
-  caveats: Без такого читання модуль не готовий до build через високий ризик спрощення Волині.
+    Підкреслити в статті кожен суб'єкт дії. Відповісти письмово: хто, за
+    цим текстом, ухвалив рішення навесні 1943 року — і чи названо тут
+    прізвище. Потім виписати кожне число разом зі стороною, що його
+    порахувала, і окремо — речення про те, що в Україні подібних
+    підрахунків не проводилося.
+- title: УКРАЇНСЬКА ПОВСТАНСЬКА АРМІЯ (УПА)
+  source_name: Енциклопедія історії України (Інститут історії України НАН України)
+  source_url: https://www.history.org.ua/?termin=Ukrainska_povstanska
+  language: uk
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Ukrainska_povstanska
+    note: >-
+      Відкрита українськомовна академічна стаття; повний текст не
+      відтворюється в курсі.
+  learner_task: >-
+    Знайти, як ця стаття називає територію провідництва Клячківського, і
+    зіставити з формулюванням статті про нього в тій самій енциклопедії.
+    Пояснити, чому дві літери («Пн.» проти «Пд.») змінюють географію.
 sequence: 302
 slug: dmytro-kliachkivskyi
 subtitle: The UPA-North Commander, Anti-Polish Violence, and the Soviet Counterinsurgency

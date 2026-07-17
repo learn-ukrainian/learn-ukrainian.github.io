@@ -1,0 +1,35 @@
+discovered_at: '2026-07-17T00:00:00+00:00'
+error: null
+query_keywords:
+  - Степан Бандера
+  - ЕІУ Бандера Степан Андрійович Кентій
+  - ЕСУ Бандера Степан Андрійович
+  - ЕІУ Волинська трагедія 1943 Ільюшин
+  - ЕІУ Українська Держава 1941 Акт 30 червня
+  - ЕІУ Українське державне правління Патриляк
+  - ЕІУ Українська повстанська армія
+  - Указ Президента України 46/2010 звання Герой України
+  - ICJ Bulletin 1963 trial of Bogdan Stashynsky
+direct_sources:
+  - https://www.history.org.ua/?termin=Bandera_S
+  - https://esu.com.ua/article-40247
+  - https://www.history.org.ua/?termin=Volynska_trahediia
+  - https://www.history.org.ua/?termin=ukrajinska_derzhava_1941
+  - https://www.history.org.ua/?termin=Ukrainske_derzhavne
+  - https://www.history.org.ua/?termin=Ukrainska_povstanska
+  - https://zakon.rada.gov.ua/laws/show/46/2010
+  - https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
+rag_chunks: []
+rag_literary: []
+warning: >-
+  Direct-source packet. Вилучено: допис у Facebook (авторська колонка, не
+  джерело для високоризикової теми), гола адреса ratinggroup.ua як доказ
+  опитування 2022 року (unsourced precision), заглушка reading-needed і
+  непідтверджена цитата «Ні на що не здадуться…» (у корпусі підручників не
+  знайдена). Бюлетень ICJ англомовний — використовується як reference, не
+  як learner reading. Волинське рішення 1943 року подано як рішення
+  Крайового проводу ОУН(б) на Волині, тобто органу, а не особистий наказ;
+  водночас зафіксовано, що ЕІУ подає збереження контактів і впливу Бандери
+  з ув'язнення. Скасування указу 46/2010 не стверджується: офіційна база
+  показує лише примітку про постанову суду. Портрет не оголошено:
+  text-only portrait_fallback.
