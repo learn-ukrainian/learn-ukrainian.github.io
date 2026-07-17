@@ -3064,7 +3064,7 @@ def test_descriptor_pinned_read_does_not_follow_swapped_path(
     real_open = os.open
     swapped = False
 
-    def swapping_open(path, flags, mode=0o777, *, dir_fd=None):
+    def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
         nonlocal swapped
         fd = real_open(path, flags, mode, dir_fd=dir_fd)
         if path == "target.txt" and dir_fd is not None and not swapped:
