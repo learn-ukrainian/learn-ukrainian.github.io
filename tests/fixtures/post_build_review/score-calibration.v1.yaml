@@ -224,10 +224,10 @@ cases:
       documented_semantic_cap: 6.0
 comparability:
   - id: identical-review-identity-is-comparable
-    left: [6.0.3, fixture, fixture-model, high]
-    right: [6.0.3, fixture, fixture-model, high]
+    left: [6.0.4, fixture, fixture-model, high]
+    right: [6.0.4, fixture, fixture-model, high]
     expected: true
   - id: prompt-or-reviewer-identity-drift-is-not-comparable
-    left: [6.0.3, fixture, fixture-model, high]
-    right: [6.0.2, google, gemini-3.1-pro, high]
+    left: [6.0.4, fixture, fixture-model, high]
+    right: [6.0.3, google, gemini-3.1-pro, high]
     expected: false
