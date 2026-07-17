@@ -281,6 +281,49 @@ def _passing_semantic(packet: dict) -> dict:
     }
 
 
+def _force_one_missing_vocabulary(packet: dict, semantic: dict) -> str:
+    """Make one packet lemma missing without depending on live module defects."""
+    coverage = next(
+        item
+        for item in semantic["vocabulary_coverage"]
+        if item["status"] == "INTEGRATED"
+    )
+    lemma = coverage["lemma"]
+    finding_id = "fixture-forced-vocabulary-missing"
+    vocabulary_path = packet["target"]["files"]["vocabulary"]
+    vocabulary_lines = _packet_source_texts(packet)[vocabulary_path].splitlines()
+    vocabulary_line = next(
+        line_number
+        for line_number, text in enumerate(vocabulary_lines, start=1)
+        if re.search(rf"lemma:\s*{re.escape(lemma)}\s*$", text)
+    )
+    coverage.update(
+        {
+            "status": "MISSING",
+            "surface": None,
+            "verification": "no packet surface candidate in learner content or activities",
+            "evidence": [],
+            "finding_id": finding_id,
+        }
+    )
+    semantic["findings"].append(
+        {
+            "id": finding_id,
+            "issue_id": "VOCABULARY_INTEGRATION",
+            "category": "vocabulary",
+            "severity": "medium",
+            "message": f"The target term {lemma} is absent from learner content and activities.",
+            "evidence": "Synthetic source-order coverage found no learner-surface use.",
+            "location": {"location": vocabulary_path, "line": vocabulary_line},
+        }
+    )
+    alignment = semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]
+    alignment["status"] = "FOUND"
+    alignment["finding_ids"].append(finding_id)
+    semantic["verdict"] = "REVISE"
+    return finding_id
+
+
 def _claim_owned_finding_semantic(packet: dict) -> dict:
     semantic = _passing_semantic(packet)
     semantic["verdict"] = "REVISE"
@@ -1887,14 +1930,18 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         assert required in prompt_lower
 
 
-def test_malyshko_regression_exposes_learner_level_meta_leakage() -> None:
-    target = pbr.resolve_target("bio/andrii-malyshko")
+def test_regression_detects_learner_level_meta_leakage_in_stable_fixture() -> None:
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
-
-    findings = pbr.evaluate_mechanical_track_policy(
-        target,
-        policy,
-        size_record={"status": "explicit_override"},
+    findings = pbr.scan_learner_workflow_leakage(
+        {
+            "curriculum/l2-uk-en/bio/fixture/module.md": (
+                "На рівні C1 хронологію варто передавати логічними зв’язками.\n"
+                "Це звичайне learner-facing пояснення без службової мітки.\n"
+                "На рівні C1 корисно зіставити два способи говорити про країну.\n"
+            )
+        },
+        policy["mechanical_checks"]["learner_workflow_leakage"],
+        family="seminar",
     )
 
     leakage = [
@@ -1907,14 +1954,52 @@ def test_malyshko_regression_exposes_learner_level_meta_leakage() -> None:
     assert {finding["severity"] for finding in leakage} == {"medium"}
 
 
-def test_malyshko_regression_exposes_unintegrated_vocabulary_surfaces() -> None:
-    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
-    semantic = _passing_semantic(packet)
-    result = pbr.finalize_review(packet, _raw(semantic))
+def test_regression_exposes_unintegrated_vocabulary_surfaces_hermetically() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [
+                {"line": index, "text": line}
+                for index, line in enumerate(text.splitlines(), start=1)
+            ],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        lemmas = {"рецепції": "рецепція", "оцінку": "оцінка"}
+        return {
+            word: ([{"lemma": lemmas[word]}] if word in lemmas else [])
+            for word in words
+        }
+
+    content = (
+        "Поняття рецепції описує подальше культурне життя твору.\n"
+        "У висновку дайте оцінку наведеній інтерпретації.\n"
+    )
+    vocabulary = "\n".join(
+        f"- lemma: {lemma}"
+        for lemma in (
+            "фронтовий кореспондент",
+            "співавторство",
+            "інституційна роль",
+            "громадянське звернення",
+            "художня деталь",
+            "рецепція",
+            "оцінка",
+        )
+    ) + "\n"
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
     missing = {
-        item["lemma"]
-        for item in result["semantic"]["vocabulary_coverage"]
-        if item["status"] == "MISSING"
+        item["lemma"] for item in candidates["lemmas"] if not item["candidates"]
     }
 
     assert missing == {
@@ -1924,10 +2009,17 @@ def test_malyshko_regression_exposes_unintegrated_vocabulary_surfaces() -> None:
         "громадянське звернення",
         "художня деталь",
     }
-    assert result["semantic_response"]["contract_status"] == "valid"
-    assert result["semantic"]["alignment_audit"]["VOCABULARY_INTEGRATION"][
-        "status"
-    ] == "FOUND"
+    by_lemma = {
+        item["lemma"]: item["candidates"] for item in candidates["lemmas"]
+    }
+    assert {
+        (candidate["surface"], candidate["verification"])
+        for candidate in by_lemma["рецепція"]
+    } == {("рецепції", "VESUM: рецепція=рецепції")}
+    assert {
+        (candidate["surface"], candidate["verification"])
+        for candidate in by_lemma["оцінка"]
+    } == {("оцінку", "VESUM: оцінка=оцінку")}
 
 
 def test_vocabulary_coverage_rejects_stem_collision_and_comment_only_surface() -> None:
@@ -2069,6 +2161,7 @@ def test_finalize_accepts_representative_multi_missing_alignment_evidence(
     malyshko_packet: dict,
 ) -> None:
     semantic = _passing_semantic(malyshko_packet)
+    _force_one_missing_vocabulary(malyshko_packet, semantic)
     semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]["evidence"] = (
         _alignment_evidence(malyshko_packet)
     )
@@ -2086,6 +2179,7 @@ def test_missing_vocabulary_rejects_nonmaterial_severity_and_semantic_pass(
     severity: str,
 ) -> None:
     semantic = _passing_semantic(malyshko_packet)
+    _force_one_missing_vocabulary(malyshko_packet, semantic)
     missing_ids = {
         item["finding_id"]
         for item in semantic["vocabulary_coverage"]
