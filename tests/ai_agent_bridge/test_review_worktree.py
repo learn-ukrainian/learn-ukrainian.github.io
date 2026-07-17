@@ -378,6 +378,77 @@ def _codex_batch_read_calls(
     return calls
 
 
+def _codex_required_read_calls(
+    checkout: review_worktree.ProvisionedReviewWorktree,
+) -> list[dict[str, object]]:
+    direct_calls = _codex_read_calls(checkout)
+    required = review_worktree._required_review_read_paths(checkout.path, checkout.changed_paths)
+    calls: list[dict[str, object]] = []
+    for start in range(0, len(direct_calls), review_worktree.MAX_CODEX_REQUIRED_READ_CHUNKS):
+        batch = direct_calls[start : start + review_worktree.MAX_CODEX_REQUIRED_READ_CHUNKS]
+        first_arguments = batch[0]["arguments"]
+        assert isinstance(first_arguments, dict)
+        start_index = required.index(first_arguments["path"])
+        start_offset = first_arguments["offset"]
+        chunks: list[dict[str, object]] = []
+        next_index = start_index
+        next_offset = start_offset
+        for direct in batch:
+            wrapped = direct["result"]
+            assert isinstance(wrapped, dict)
+            content = wrapped["content"]
+            assert isinstance(content, list)
+            payload = json.loads(content[0]["text"])
+            chunks.append(payload)
+            path_index = required.index(payload["path"])
+            if payload["eof"]:
+                next_index = path_index + 1
+                next_offset = 0
+            else:
+                next_index = path_index
+                next_offset = payload["next_offset"]
+        outer_payload = {
+            "index": start_index,
+            "offset": start_offset,
+            "next_index": next_index,
+            "next_offset": next_offset,
+            "required_path_count": len(required),
+            "eof": next_index == len(required),
+            "chunks": chunks,
+        }
+        wrapped_result = {
+            "content": [
+                {
+                    "type": "text",
+                    "text": json.dumps(outer_payload, separators=(",", ":")),
+                }
+            ],
+            "isError": False,
+        }
+        raw = (
+            '// @exec: {"max_output_tokens":200000}\n'
+            "const r=await tools.mcp__sealed_review__read_required("
+            f"{{index:{start_index},offset:{start_offset}}});text(JSON.stringify(r));"
+        )
+        calls.append(
+            {
+                "name": "exec",
+                "arguments": {"_raw": raw},
+                "result": [
+                    {
+                        "type": "input_text",
+                        "text": "Script completed\nWall time 0.0 seconds\nOutput:\n",
+                    },
+                    {
+                        "type": "input_text",
+                        "text": json.dumps(wrapped_result, separators=(",", ":")),
+                    },
+                ],
+            }
+        )
+    return calls
+
+
 def test_clean_review_requires_complete_hash_bound_tool_reads(tmp_path: Path) -> None:
     checkout = _prompt_evidence_checkout(tmp_path / "read-proof")
     calls = _codex_read_calls(checkout)
@@ -475,7 +546,7 @@ def test_codex_exec_read_trace_accepts_only_canonical_nested_mcp_calls(tmp_path:
     assert proof["covered_path_count"] == 3
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_exec_form" in prompt
-    assert "Use read_protocol.codex_exec_form only" in prompt
+    assert "path-based exec forms are fallback-only" in prompt
 
 
 def test_codex_batch_exec_trace_accepts_bounded_hash_bound_reads(tmp_path: Path) -> None:
@@ -494,6 +565,53 @@ def test_codex_batch_exec_trace_accepts_bounded_hash_bound_reads(tmp_path: Path)
     prompt = checkout.review_prompt_evidence("codex")
     assert "codex_exec_batch_form" in prompt
     assert "Do not run a tool-discovery cell" in prompt
+
+
+def test_codex_required_exec_trace_covers_authoritative_stream(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-required-read-proof")
+    calls = _codex_required_read_calls(checkout)
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="codex",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["covered_path_count"] == 3
+    assert len(calls) == 1
+    prompt = checkout.review_prompt_evidence("codex")
+    assert "codex_required_exec_form" in prompt
+    assert "repeat only with the returned next_index" in prompt
+
+
+@pytest.mark.parametrize(
+    "mutate_raw",
+    [
+        lambda raw: raw.replace("200000", "10000", 1),
+        lambda raw: raw.replace("index:0", "index:1", 1),
+        lambda raw: raw + "notify('forged');",
+    ],
+)
+def test_codex_required_exec_trace_rejects_wrong_state_or_extra_javascript(
+    tmp_path: Path,
+    mutate_raw,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "codex-required-rejected")
+    calls = _codex_required_read_calls(checkout)
+    arguments = calls[0]["arguments"]
+    assert isinstance(arguments, dict)
+    raw = arguments["_raw"]
+    assert isinstance(raw, str)
+    arguments["_raw"] = mutate_raw(raw)
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=calls),
+            engine="codex",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
 
 
 @pytest.mark.parametrize(

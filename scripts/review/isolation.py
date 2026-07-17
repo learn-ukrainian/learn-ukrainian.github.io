@@ -689,16 +689,22 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(sys.argv[1]).resolve(strict=True)
 MAX_CHUNK_BYTES = 64 * 1024
+MAX_REQUIRED_CHUNKS = 6
 MAX_SEARCH_FILE_BYTES = 8 * 1024 * 1024
 MAX_LISTED_FILES = 10000
 
-def safe_path(raw):
+def candidate_path(raw):
     if not isinstance(raw, str) or not raw or "\\" in raw:
         raise ValueError("invalid_path")
     parsed = PurePosixPath(raw)
     if parsed.is_absolute() or any(part in {"", ".", ".."} for part in parsed.parts):
         raise ValueError("invalid_path")
-    path = (ROOT / Path(*parsed.parts)).resolve(strict=True)
+    candidate = ROOT / Path(*parsed.parts)
+    candidate.resolve(strict=False).relative_to(ROOT)
+    return candidate
+
+def safe_path(raw):
+    path = candidate_path(raw).resolve(strict=True)
     path.relative_to(ROOT)
     return path
 
@@ -782,6 +788,71 @@ def read_chunk(raw, offset=0, max_bytes=MAX_CHUNK_BYTES):
     finally:
         os.close(fd)
 
+def required_paths():
+    manifest_path = ".review-bundle/manifest.json"
+    manifest_chunk = read_chunk(manifest_path, 0, MAX_CHUNK_BYTES)
+    if not manifest_chunk["eof"]:
+        raise ValueError("required_manifest_split_required")
+    try:
+        manifest = json.loads(manifest_chunk["content"])
+    except json.JSONDecodeError as exc:
+        raise ValueError("required_manifest_invalid") from exc
+    changed = manifest.get("changed_paths") if isinstance(manifest, dict) else None
+    if not isinstance(changed, list) or not all(isinstance(item, str) for item in changed):
+        raise ValueError("required_manifest_changed_paths_invalid")
+    result = [manifest_path, ".review-bundle/patch.diff"]
+    seen = set(result)
+    for raw in changed:
+        candidate = candidate_path(raw)
+        if candidate.is_symlink():
+            continue
+        if not candidate.exists():
+            continue
+        if not candidate.is_file():
+            raise ValueError("required_path_not_regular")
+        safe_path(raw)
+        if raw in seen:
+            raise ValueError("required_path_duplicate")
+        seen.add(raw)
+        result.append(raw)
+    return result
+
+def read_required(index=0, offset=0):
+    paths = required_paths()
+    if (
+        not isinstance(index, int)
+        or isinstance(index, bool)
+        or not isinstance(offset, int)
+        or isinstance(offset, bool)
+        or index < 0
+        or index > len(paths)
+        or offset < 0
+        or (index == len(paths) and offset != 0)
+    ):
+        raise ValueError("invalid_required_cursor")
+    start_index = index
+    start_offset = offset
+    chunks = []
+    while index < len(paths) and len(chunks) < MAX_REQUIRED_CHUNKS:
+        chunk = read_chunk(paths[index], offset, MAX_CHUNK_BYTES)
+        chunks.append(chunk)
+        if chunk["eof"]:
+            index += 1
+            offset = 0
+        else:
+            if chunk["next_offset"] <= offset:
+                raise ValueError("required_cursor_stalled")
+            offset = chunk["next_offset"]
+    return {
+        "index": start_index,
+        "offset": start_offset,
+        "next_index": index,
+        "next_offset": offset,
+        "required_path_count": len(paths),
+        "eof": index == len(paths),
+        "chunks": chunks,
+    }
+
 def files(prefix=""):
     if prefix:
         base = safe_path(prefix)
@@ -824,6 +895,7 @@ def search_file(raw, query):
 TOOLS = [
     {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
     {"name":"read_file","description":"Read one hash-bound UTF-8 byte chunk. Start at offset 0 and repeat from next_offset until eof=true.","inputSchema":{"type":"object","properties":{"path":{"type":"string"},"offset":{"type":"integer","minimum":0},"max_bytes":{"type":"integer","minimum":1,"maximum":65536}},"required":["path"],"additionalProperties":False}},
+    {"name":"read_required","description":"Read the next six hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0}},"additionalProperties":False}},
     {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
 ]
 
@@ -838,6 +910,8 @@ def call_tool(name, args):
             args.get("offset", 0),
             args.get("max_bytes", MAX_CHUNK_BYTES),
         )
+    elif name == "read_required":
+        payload = read_required(args.get("index", 0), args.get("offset", 0))
     elif name == "search_text":
         query = args.get("query")
         if not isinstance(query, str) or not query:
@@ -1047,6 +1121,15 @@ def _probe_sealed_read_mcp(
                 },
             },
         },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "read_required",
+                "arguments": {"index": 0, "offset": 0},
+            },
+        },
     )
     command = wrap_argv_with_sandbox(
         [str(python_bin), "-I", "-S", str(helper), str(snapshot_root)],
@@ -1073,9 +1156,10 @@ def _probe_sealed_read_mcp(
         responses = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
         listed = {tool["name"] for tool in responses[1]["result"]["tools"]}
         payload = json.loads(responses[2]["result"]["content"][0]["text"])
+        required_payload = json.loads(responses[3]["result"]["content"][0]["text"])
     except (IndexError, KeyError, TypeError, json.JSONDecodeError) as exc:
         raise ReviewIsolationError("sealed_reader_probe_malformed") from exc
-    if {"list_files", "read_file", "search_text"} - listed:
+    if {"list_files", "read_file", "read_required", "search_text"} - listed:
         raise ReviewIsolationError("sealed_reader_probe_tools_missing")
     expected_digest = _file_sha256(manifest)
     if (
@@ -1086,6 +1170,16 @@ def _probe_sealed_read_mcp(
         or payload.get("chunk_bytes", 0) > 1024
     ):
         raise ReviewIsolationError("sealed_reader_probe_read_mismatch")
+    required_chunks = required_payload.get("chunks")
+    if (
+        required_payload.get("index") != 0
+        or required_payload.get("offset") != 0
+        or not isinstance(required_chunks, list)
+        or not required_chunks
+        or required_chunks[0].get("path") != ".review-bundle/manifest.json"
+        or required_chunks[0].get("sha256") != expected_digest
+    ):
+        raise ReviewIsolationError("sealed_reader_probe_required_mismatch")
 
 
 def _file_sha256(path: Path) -> str:

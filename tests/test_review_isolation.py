@@ -703,6 +703,12 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
     snapshot = tmp_path / "snapshot"
     snapshot.mkdir()
     (snapshot / "safe.py").write_text("VALUE = 1\n", encoding="utf-8")
+    bundle = snapshot / ".review-bundle"
+    bundle.mkdir()
+    (bundle / "manifest.json").write_text(
+        json.dumps({"changed_paths": ["safe.py"]}), encoding="utf-8"
+    )
+    (bundle / "patch.diff").write_text("patch evidence\n", encoding="utf-8")
     execution = tmp_path / "exec"
     execution.mkdir(mode=0o700)
     helper = _stage_sealed_read_mcp(execution)
@@ -734,6 +740,15 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
                 "method": "tools/call",
                 "params": {"name": "read_file", "arguments": {"path": "../outside"}},
             },
+            {
+                "jsonrpc": "2.0",
+                "id": 5,
+                "method": "tools/call",
+                "params": {
+                    "name": "read_required",
+                    "arguments": {"index": 0, "offset": 0},
+                },
+            },
         )
     )
     completed = subprocess.run(
@@ -747,11 +762,19 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
     assert {tool["name"] for tool in responses[1]["result"]["tools"]} == {
         "list_files",
         "read_file",
+        "read_required",
         "search_text",
     }
     content = json.loads(responses[2]["result"]["content"][0]["text"])
     assert content["content"] == "VALUE = 1\n"
     assert responses[3]["error"]["message"].startswith("ValueError:invalid_path")
+    required = json.loads(responses[4]["result"]["content"][0]["text"])
+    assert [chunk["path"] for chunk in required["chunks"]] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+        "safe.py",
+    ]
+    assert required["eof"] is True
 
 
 def test_codex_sealed_reader_returns_bounded_hash_bound_chunks(tmp_path: Path) -> None:
@@ -808,7 +831,10 @@ def test_macos_clt_python_runs_sealed_reader_inside_sandbox(tmp_path: Path) -> N
     snapshot = tmp_path / "snapshot"
     bundle = snapshot / ".review-bundle"
     bundle.mkdir(parents=True)
-    (bundle / "manifest.json").write_text('{"schema_version":"fixture"}\n', encoding="utf-8")
+    (bundle / "manifest.json").write_text(
+        '{"schema_version":"fixture","changed_paths":[]}\n', encoding="utf-8"
+    )
+    (bundle / "patch.diff").write_text("", encoding="utf-8")
     reject = tmp_path / "reject"
     reject.mkdir()
     write, execution = _private_review_roots(tmp_path, "clt-python")
