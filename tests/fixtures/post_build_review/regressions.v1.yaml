@@ -1,4 +1,4 @@
-catalog_version: 6.0.2
+catalog_version: 6.0.3
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -395,3 +395,46 @@ regressions:
       class's exact uppercase name as issue_id; keep the specific defect name
       in id and reserve custom issue_id values for findings outside all seven
       classes.
+  - bug_id: integrated-vocabulary-suppressed-cross-bundle-finding
+    responsible_layer: disposition
+    fixed_in_version: 6.0.2
+    version_field: review_protocol_version
+    input: >-
+      Every target lemma has one meaningful learner-facing surface, while the
+      lesson and activities materially substitute or under-reinforce one target
+      term elsewhere in the bundle.
+    expected: >-
+      Keep the occurrence ledger INTEGRATED, accept VOCABULARY_INTEGRATION
+      FOUND with exact evidence, and preserve the fail-closed REVISE verdict.
+  - bug_id: provider-conflated-occurrence-ledger-with-bundle-integration
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.0.3
+    version_field: semantic_prompt_version
+    input: >-
+      A target term has one meaningful learner-facing occurrence but is
+      materially substituted or under-reinforced elsewhere in the bundle.
+    expected: >-
+      Keep the term INTEGRATED in the occurrence ledger, emit a
+      medium-or-higher VOCABULARY_INTEGRATION finding, and return a non-PASS
+      semantic verdict.
+  - bug_id: non-vocabulary-alignment-found-passed-on-low-severity
+    responsible_layer: disposition
+    fixed_in_version: 6.0.2
+    version_field: review_protocol_version
+    input: >-
+      Any non-vocabulary alignment class is FOUND with a low-severity finding
+      while the semantic reviewer returns PASS.
+    expected: >-
+      Reject the semantic response because every categorical FOUND class
+      requires a medium-or-higher finding and a non-PASS semantic verdict;
+      combine_disposition independently returns REVISE for every class.
+  - bug_id: ukrainian-apostrophe-glyph-broke-exact-claim-binding
+    responsible_layer: deterministic_code
+    fixed_in_version: 6.0.2
+    version_field: review_protocol_version
+    input: >-
+      A claim is an exact contiguous statement substring except that the
+      provider emits ASCII apostrophe where the packet uses right single quote.
+    expected: >-
+      Treat only the three Ukrainian apostrophe glyphs ', ’, and ʼ as
+      equivalent while continuing to reject lexical or other punctuation drift.

@@ -752,15 +752,17 @@ INSTRUCTION_OPEN_RE = re.compile(
     r"(?:\b[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|"
     r"^[а-яіїєґ'’\-]{3,}ти\b)"
 )
+UKRAINIAN_APOSTROPHE_TRANSLATION = str.maketrans({"'": "ʼ", "’": "ʼ"})
 
 
 def _normalized_claim_surface(text: str) -> str:
-    """Normalize only whitespace; semantic paraphrases remain distinguishable."""
-    return re.sub(r"\s+", " ", text).strip()
+    """Normalize whitespace and Ukrainian apostrophe glyphs, never wording."""
+    apostrophe_normalized = text.translate(UKRAINIAN_APOSTROPHE_TRANSLATION)
+    return re.sub(r"\s+", " ", apostrophe_normalized).strip()
 
 
 def _claim_surface_is_bound(claim: str, statement: str) -> bool:
-    """Return whether a claim is a verbatim contiguous statement substring."""
+    """Return whether a claim is a contiguous statement substring."""
     return _normalized_claim_surface(claim) in _normalized_claim_surface(statement)
 
 
@@ -2141,6 +2143,33 @@ def _normalize_alignment_audit(
     return normalized
 
 
+def _validate_found_alignment_disposition(
+    alignment_audit: Mapping[str, Mapping[str, Any]],
+    *,
+    verdict: str,
+    known_findings: Mapping[str, Mapping[str, Any]],
+) -> None:
+    """Keep every categorical FOUND audit material and non-PASS."""
+    for audit_class, entry in alignment_audit.items():
+        if entry["status"] != "FOUND":
+            continue
+        if verdict == "PASS":
+            raise ReviewProtocolError(
+                f"{audit_class} FOUND requires semantic REVISE, BLOCK, or INCOMPLETE"
+            )
+        nonmaterial = sorted(
+            finding_id
+            for finding_id in entry["finding_ids"]
+            if known_findings[finding_id].get("severity")
+            not in {"blocker", "high", "medium"}
+        )
+        if nonmaterial:
+            raise ReviewProtocolError(
+                f"{audit_class} FOUND requires medium-or-higher findings: "
+                + ", ".join(nonmaterial)
+            )
+
+
 def _normalize_vocabulary_coverage(
     raw_coverage: object,
     *,
@@ -2481,6 +2510,14 @@ def normalize_semantic_result(
         external_findings=alignment_findings,
         source_lookup=source_lookup,
     )
+    _validate_found_alignment_disposition(
+        alignment_audit,
+        verdict=verdict,
+        known_findings={
+            str(finding["id"]): finding
+            for finding in [*alignment_findings, *findings]
+        },
+    )
     vocabulary_coverage = _normalize_vocabulary_coverage(
         value["vocabulary_coverage"],
         expected_lemmas=expected_vocabulary_lemmas,
@@ -2500,11 +2537,10 @@ def normalize_semantic_result(
         raise ReviewProtocolError(
             "Missing vocabulary coverage requires VOCABULARY_INTEGRATION audit FOUND"
         )
-    coverage_complete = bool(vocabulary_statuses) and vocabulary_statuses <= {"INTEGRATED"}
     empty_not_incomplete = not vocabulary_statuses and verdict != "INCOMPLETE"
-    if (coverage_complete or empty_not_incomplete) and vocabulary_audit["status"] != "CLEAR":
+    if empty_not_incomplete and vocabulary_audit["status"] != "CLEAR":
         raise ReviewProtocolError(
-            "Fully integrated vocabulary coverage requires VOCABULARY_INTEGRATION audit CLEAR"
+            "Empty vocabulary coverage requires VOCABULARY_INTEGRATION audit CLEAR"
         )
 
     coverage = value["claim_coverage"]
@@ -3018,7 +3054,16 @@ def combine_disposition(
     )
     if deterministic_high:
         return {"status": "BLOCK", "reasons": ["high-severity mechanical finding is unresolved"]}
-    if semantic["verdict"] == "REVISE" or severities.intersection({"high", "medium"}):
+    found_alignment = any(
+        entry.get("status") == "FOUND"
+        for entry in semantic.get("alignment_audit", {}).values()
+        if isinstance(entry, Mapping)
+    )
+    if (
+        semantic["verdict"] == "REVISE"
+        or severities.intersection({"high", "medium"})
+        or found_alignment
+    ):
         return {"status": "REVISE", "reasons": ["actionable finding is unresolved"]}
     if "MISSING" in vocabulary_statuses:
         return {"status": "REVISE", "reasons": ["vocabulary integration is incomplete"]}
@@ -3163,6 +3208,11 @@ def _validate_normalized_alignment_vocabulary(
                 f"Alignment audit {audit_class} INCOMPLETE requires a finding and semantic INCOMPLETE"
             )
 
+    _validate_found_alignment_disposition(
+        alignment,
+        verdict=str(semantic["verdict"]),
+        known_findings=known,
+    )
     findings_by_id = {
         str(finding["id"]): finding for finding in semantic_findings
     }
@@ -3216,11 +3266,10 @@ def _validate_normalized_alignment_vocabulary(
         raise ReviewProtocolError(
             "Missing vocabulary coverage requires VOCABULARY_INTEGRATION audit FOUND"
         )
-    coverage_complete = bool(vocabulary_statuses) and vocabulary_statuses <= {"INTEGRATED"}
     empty_not_incomplete = not vocabulary_statuses and semantic["verdict"] != "INCOMPLETE"
-    if (coverage_complete or empty_not_incomplete) and vocabulary_audit["status"] != "CLEAR":
+    if empty_not_incomplete and vocabulary_audit["status"] != "CLEAR":
         raise ReviewProtocolError(
-            "Fully integrated vocabulary coverage requires VOCABULARY_INTEGRATION audit CLEAR"
+            "Empty vocabulary coverage requires VOCABULARY_INTEGRATION audit CLEAR"
         )
 
 

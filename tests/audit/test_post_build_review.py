@@ -1499,6 +1499,31 @@ def test_risk_claim_surface_substitution_fails_closed(
     assert result["combined_disposition"]["status"] == "INCOMPLETE"
 
 
+@pytest.mark.parametrize("provider_apostrophe", ["'", "’", "ʼ"])
+def test_claim_surface_accepts_ukrainian_apostrophe_glyph_equivalence(
+    provider_apostrophe: str,
+) -> None:
+    statement = "Київ стає місцем освіти та літературної кар’єри."
+    claim = f"місцем освіти та літературної кар{provider_apostrophe}єри"
+
+    assert pbr._claim_surface_is_bound(claim, statement) is True
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "місцем освіти та успішної літературної кар'єри",
+        "місцем освіти та літературної кар’єри!",
+        "місцем навчання та літературної кар'єри",
+        "місцем освіти та літературної кар`єри",
+    ],
+)
+def test_claim_surface_rejects_non_apostrophe_drift(claim: str) -> None:
+    statement = "Київ стає місцем освіти та літературної кар’єри."
+
+    assert pbr._claim_surface_is_bound(claim, statement) is False
+
+
 @pytest.mark.parametrize(
     ("statement", "substituted_claim"),
     [
@@ -2830,8 +2855,189 @@ def test_finalize_accepts_representative_multi_missing_alignment_evidence(
     pbr.validate_result(result)
 
 
+def _single_integrated_vocabulary_semantic(
+    packet: dict,
+    *,
+    severity: str,
+    verdict: str,
+) -> tuple[dict, dict]:
+    semantic = _passing_semantic(packet)
+    coverage = copy.deepcopy(
+        next(
+            item
+            for item in semantic["vocabulary_coverage"]
+            if item["status"] == "INTEGRATED"
+        )
+    )
+    semantic["vocabulary_coverage"] = [coverage]
+    semantic["findings"] = [
+        finding
+        for finding in semantic["findings"]
+        if finding.get("issue_id") != "VOCABULARY_INTEGRATION"
+    ]
+    finding_id = "fixture-vocabulary-substitution"
+    location = coverage["evidence"][0]
+    semantic["findings"].append({
+        "id": finding_id,
+        "issue_id": "VOCABULARY_INTEGRATION",
+        "category": "vocabulary",
+        "severity": severity,
+        "message": "A target term appears once but is substituted across activities.",
+        "evidence": (
+            "The occurrence ledger and cross-bundle audit serve distinct purposes."
+        ),
+        "location": {
+            "location": location["location"],
+            "line": location["line"],
+        },
+    })
+    semantic["alignment_audit"]["VOCABULARY_INTEGRATION"].update(
+        {
+            "status": "FOUND",
+            "evidence": copy.deepcopy(coverage["evidence"]),
+            "finding_ids": [finding_id],
+        }
+    )
+    semantic["verdict"] = verdict
+    return semantic, coverage
+
+
+def _patch_single_vocabulary_contract(
+    monkeypatch: pytest.MonkeyPatch,
+    coverage: dict,
+) -> None:
+    monkeypatch.setattr(
+        pbr,
+        "_packet_vocabulary_lemmas",
+        lambda _packet: [coverage["lemma"]],
+    )
+    monkeypatch.setattr(
+        pbr,
+        "_packet_vocabulary_candidates",
+        lambda _packet: {
+            coverage["lemma"]: [
+                (coverage["surface"], coverage["verification"])
+            ]
+        },
+    )
+
+
+def test_finalize_accepts_integrated_vocabulary_with_broader_alignment_finding(
+    bilash_packet: dict,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic, coverage = _single_integrated_vocabulary_semantic(
+        bilash_packet,
+        severity="medium",
+        verdict="REVISE",
+    )
+    _patch_single_vocabulary_contract(monkeypatch, coverage)
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["semantic"]["vocabulary_coverage"][0]["status"] == "INTEGRATED"
+    assert result["semantic"]["alignment_audit"]["VOCABULARY_INTEGRATION"][
+        "status"
+    ] == "FOUND"
+    assert result["combined_disposition"]["status"] != "PASS"
+    pbr.validate_result(result)
+
+
+@pytest.mark.parametrize(
+    ("verdict", "severity", "error_fragment"),
+    [
+        ("PASS", "medium", "FOUND requires semantic REVISE"),
+        ("REVISE", "low", "FOUND requires medium-or-higher findings"),
+    ],
+)
+def test_finalize_rejects_fail_open_integrated_vocabulary_finding(
+    bilash_packet: dict,
+    monkeypatch: pytest.MonkeyPatch,
+    verdict: str,
+    severity: str,
+    error_fragment: str,
+) -> None:
+    semantic, coverage = _single_integrated_vocabulary_semantic(
+        bilash_packet,
+        severity=severity,
+        verdict=verdict,
+    )
+    _patch_single_vocabulary_contract(monkeypatch, coverage)
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert error_fragment in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
+@pytest.mark.parametrize("audit_class", pbr.ALIGNMENT_AUDIT_CLASSES)
+def test_combined_disposition_defends_against_found_alignment_pass(
+    audit_class: str,
+) -> None:
+    deterministic = {
+        "track_audit": {"status": "complete"},
+        "size_policy": {"status": "complete"},
+        "policy_findings": [],
+        "skip_assessments": [],
+    }
+    deterministic["aggregate"] = pbr.aggregate_deterministic(deterministic)
+    semantic = {
+        "verdict": "PASS",
+        "claim_coverage": {
+            "status": "complete",
+            "claims_total": 0,
+            "claims_checked": 0,
+            "claims_supported": 0,
+        },
+        "learner_evidence_ledger": [],
+        "vocabulary_coverage": [{"status": "INTEGRATED"}],
+        "quality_dimensions": {},
+        "alignment_audit": {audit_class: {"status": "FOUND"}},
+    }
+    findings = [{"source": "semantic", "severity": "low"}]
+
+    disposition = pbr.combine_disposition(deterministic, semantic, findings)
+
+    assert disposition["status"] == "REVISE"
+
+
+@pytest.mark.parametrize("audit_class", pbr.ALIGNMENT_AUDIT_CLASSES)
+def test_found_alignment_contract_rejects_pass_and_nonmaterial_finding(
+    audit_class: str,
+) -> None:
+    finding_id = "fixture-alignment-finding"
+    alignment = {
+        audit_class: {
+            "status": "FOUND",
+            "finding_ids": [finding_id],
+        }
+    }
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match=rf"{audit_class} FOUND requires semantic REVISE",
+    ):
+        pbr._validate_found_alignment_disposition(
+            alignment,
+            verdict="PASS",
+            known_findings={finding_id: {"severity": "medium"}},
+        )
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match=rf"{audit_class} FOUND requires medium-or-higher findings",
+    ):
+        pbr._validate_found_alignment_disposition(
+            alignment,
+            verdict="REVISE",
+            known_findings={finding_id: {"severity": "low"}},
+        )
+
+
 @pytest.mark.parametrize("severity", ["low", "info"])
-def test_missing_vocabulary_rejects_nonmaterial_severity_and_semantic_pass(
+def test_missing_vocabulary_rejects_nonmaterial_severity(
     malyshko_packet: dict,
     severity: str,
 ) -> None:
@@ -2846,12 +3052,10 @@ def test_missing_vocabulary_rejects_nonmaterial_severity_and_semantic_pass(
     for finding in semantic["findings"]:
         if finding["id"] in missing_ids:
             finding["severity"] = severity
-    semantic["verdict"] = "PASS"
-
     result = pbr.finalize_review(malyshko_packet, _raw(semantic))
 
     assert result["semantic_response"]["contract_status"] == "invalid"
-    assert "MISSING requires a medium-or-higher finding" in result[
+    assert "VOCABULARY_INTEGRATION FOUND requires medium-or-higher findings" in result[
         "semantic_response"
     ]["error"]
     assert result["combined_disposition"]["status"] == "INCOMPLETE"
@@ -3298,8 +3502,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.2"
-    assert len(rows) == 65
+    assert catalog["catalog_version"] == "6.0.3"
+    assert len(rows) == 69
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3338,6 +3542,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "6.0.0",
         "6.0.1",
         "6.0.2",
+        "6.0.3",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
