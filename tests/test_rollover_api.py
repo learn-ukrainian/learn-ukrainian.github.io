@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 from fastapi.testclient import TestClient
 
 import scripts.api.rollover_router as rollover_router
@@ -118,6 +120,11 @@ def test_rollover_exact_selector_ignores_unrelated_pending_records(monkeypatch):
         source_thread_id="source-other",
     )
     monkeypatch.setattr(rollover_router.registry, "scan_records", lambda _root: ([selected, unrelated], []))
+    monkeypatch.setattr(
+        rollover_router.registry,
+        "utc_now",
+        lambda: datetime(2026, 7, 16, 10, tzinfo=UTC),
+    )
 
     response = client.get("/api/rollovers?source_thread_id=source-api")
 
