@@ -21,7 +21,7 @@ When working with Ukrainian text (plans, content, reviews, code comments), follo
 
    | Question you have | Primary (MCP tool) | Then | Web fallback (§7) |
    | --- | --- | --- | --- |
-   | **Forms / existence / morphology** — does this word exist? what are its tags? | `verify_word`, `verify_words` (VESUM: 415K lemmas, ~6M forms; **empty result = the form does not exist**) | `query_ulif` with `sections=["paradigm"]` for the full declension / conjugation table | vesum.com.ua |
+   | **Forms / existence / morphology** — does this word exist? what are its tags? | `verify_word`, `verify_words` (VESUM: 415K lemmas, ~6M forms; **empty result = the form does not exist (admission)** — when judging text you did not choose, escalate first per step 3) | `query_ulif` with `sections=["paradigm"]` for the full declension / conjugation table | vesum.com.ua |
    | **Spelling** | `query_pravopys` (Правопис 2019) | — | 2019.pravopys.net |
    | **Stress (наголос)** | `query_sum20` — headwords carry the accent (`НОВИ́Й, а́, е́`) | `query_ulif` paradigm | Горох (goroh.pp.ua); a print орфоепічний словник / словник наголосів |
    | **Meaning** | `query_sum20` (СУМ-20 — the modern, post-Soviet baseline) | `search_slovnyk_me` / `query_slovnyk_me`; `search_grinchenko_1907` as the **historical witness** (pre-Soviet attestation) | slovnyk.me; hrinchenko.com |
@@ -35,8 +35,11 @@ When working with Ukrainian text (plans, content, reviews, code comments), follo
 
    1. **Map the question to its facet row** above. Two facets, two rows — run both.
    2. **Call that row's Primary MCP tool first.** Never memory, never web-first: a remembered answer is a guess (§2).
-   3. **A miss is not evidence of absence.** On an empty or thin result, escalate along the row as documented: the **Then** tool, then a full-text sweep of the relevant source (`search_text` / `search_sources`). Escalate unless the row states the miss *is* the verdict — VESUM's empty result is the one such case, and only for form existence.
-   4. **Only after row escalation is exhausted:** the §7 fallback URL, and the claim ships flagged `<!-- VERIFY -->`. Silence from the tools is never authoritative — not for existence, not for absence.
+   3. **A miss is not evidence of absence — what a miss licenses depends on what you are deciding.** On an empty or thin result, escalate along the row: the **Then** tool, then a full-text sweep of the relevant source (`search_text` / `search_sources`). Two purposes, two rules:
+      - **Admission — choosing vocabulary to TEACH in curriculum content.** A VESUM miss *is* operationally final: do not teach an unattested form; pick one VESUM attests. The learner never has to be the test case.
+      - **Judging text you encountered — reviews, russianism / nonexistence verdicts.** A VESUM miss is grounds to **escalate, never to condemn**: split hyphenated and appositive compounds and verify each sub-token, then `query_ulif`, then `query_slovnyk_me`, then corpus attestation via `query_grac`. Only after that escalation is exhausted may absence become a verdict.
+      - The case that falsifies the shortcut: «текст-опора», locative «тексті-опорі» — a legitimate appositive compound, absent from VESUM as a lemma *and* scoring 0 in GRAC, whose sub-tokens «тексті» and «опорі» are both VESUM-attested. A gate that read VESUM-miss as nonexistence false-flagged it (refs #5254). Note which step did the rescuing: the sub-token split, not the corpus — which is why it leads.
+   4. **Only after row escalation is exhausted:** the §7 fallback URL, and the claim ships flagged `<!-- VERIFY -->`. Silence from the tools is never authoritative *against* a form someone actually wrote: condemning needs positive evidence, an empty result is not evidence.
 
    Four things the table encodes that the old single chain got wrong — read them before using it:
 
