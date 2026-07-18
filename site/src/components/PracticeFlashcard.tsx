@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { CHROME_STRINGS } from '../lib/i18n/chrome';
+import type { ChromeLocale } from '../lib/i18n/chrome';
 import type { PracticeRating } from '../lib/lexicon/srs';
 
 export interface PracticeFlashcardData {
@@ -15,6 +17,7 @@ interface PracticeFlashcardProps {
   intervalPreviews: Record<PracticeRating, string>;
   onRate(rating: PracticeRating): void;
   showEnglishSubtitles: boolean;
+  chromeLocale: ChromeLocale;
 }
 
 const RATING_ORDER: PracticeRating[] = ['again', 'hard', 'good', 'easy'];
@@ -25,15 +28,22 @@ export default function PracticeFlashcard({
   intervalPreviews,
   onRate,
   showEnglishSubtitles,
+  chromeLocale,
 }: PracticeFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
+  const [rated, setRated] = useState(false);
 
   useEffect(() => {
     setFlipped(false);
+    setRated(false);
   }, [card.front, card.back]);
+
+  const tapLabel = CHROME_STRINGS[chromeLocale]['practice.tapToFlip'];
+  const rateRecallLabel = CHROME_STRINGS[chromeLocale]['practice.rateRecall'];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (rated) return;
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       // Never steal keys from text-entry controls (typing 'a' must not rate).
       const target = event.target as HTMLElement | null;
@@ -61,11 +71,23 @@ export default function PracticeFlashcard({
                 : null;
       if (!rating) return;
       event.preventDefault();
+      setRated(true);
       onRate(rating);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [flipped, onRate]);
+  }, [flipped, rated, onRate]);
+
+  const handleFlip = () => {
+    if (rated) return;
+    setFlipped((value) => !value);
+  };
+
+  const handleRate = (rating: PracticeRating) => {
+    if (!flipped || rated) return;
+    setRated(true);
+    onRate(rating);
+  };
 
   return (
     <>
@@ -73,24 +95,18 @@ export default function PracticeFlashcard({
         className={`flashcard${flipped ? ' flipped' : ''}`}
         data-activity="flashcard"
         data-flipped={flipped ? 'true' : 'false'}
-        onClick={() => setFlipped((value) => !value)}
+        data-rated={rated ? 'true' : 'false'}
+        onClick={handleFlip}
         onKeyDown={(event) => {
+          if (rated) return;
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
-            setFlipped((value) => !value);
+            handleFlip();
           }
         }}
         role="button"
-        tabIndex={0}
-        aria-label={flipped ? (
-          showEnglishSubtitles
-            ? `${card.back} — натисніть, щоб перевернути / click to flip`
-            : `${card.back} — натисніть, щоб перевернути`
-        ) : (
-          showEnglishSubtitles
-            ? `${card.front} — натисніть, щоб перевернути / click to flip`
-            : `${card.front} — натисніть, щоб перевернути`
-        )}
+        tabIndex={rated ? -1 : 0}
+        aria-label={flipped ? `${card.back} — ${tapLabel}` : `${card.front} — ${tapLabel}`}
       >
         <div className="flashcard-inner">
           <div className="flashcard-front">
@@ -114,8 +130,9 @@ export default function PracticeFlashcard({
       <div
         className="lexicon-rating-bar rating-bar"
         role="group"
-        aria-label={showEnglishSubtitles ? "Оцініть, наскільки легко згадалось / Rate how easy it was to recall" : "Оцініть, наскільки легко згадалось"}
+        aria-label={rateRecallLabel}
         data-revealed={flipped ? 'true' : 'false'}
+        data-locked={rated ? 'true' : 'false'}
       >
         {RATING_ORDER.map((rating, index) => (
           <button
@@ -124,12 +141,9 @@ export default function PracticeFlashcard({
             className="rate-btn"
             data-rate={rating}
             aria-keyshortcuts={String(index + 1)}
-            disabled={!flipped}
-            aria-disabled={!flipped}
-            onClick={() => {
-              if (!flipped) return;
-              onRate(rating);
-            }}
+            disabled={!flipped || rated}
+            aria-disabled={!flipped || rated}
+            onClick={() => handleRate(rating)}
           >
             <span className="rk">{index + 1}</span>
             <span className="rt">

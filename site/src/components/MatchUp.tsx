@@ -26,12 +26,17 @@ export interface MatchUpProps {
    * @schemaDescription Instruction shown to the learner above the activity.
    * @ukrainianText true
    */
-  instruction?: string;
+  instruction?: React.ReactNode;
   /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  /**
+   * @schemaDescription Optional practice-only pair-coding mode.
+   * @ukrainianText false
+   */
+  matchedPairCoding?: 'semantic-four';
   onComplete?: () => void;
   onMatch?: (pairIndex: number, rating: 'again' | 'hard' | 'good') => void;
 }

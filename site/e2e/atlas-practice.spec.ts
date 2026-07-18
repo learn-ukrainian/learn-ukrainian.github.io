@@ -216,3 +216,40 @@ test('HARD-2: Ukrainian setup dashboard shows start and resume CTAs without scro
 
   await assertFirstViewportPracticeCTAs(page, 'uk');
 });
+
+test('practice stress mode renders word-shaped vowel buttons for an N-vowel word', async ({ page }) => {
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.locator('button[data-mode="stress"]').click();
+  const stress = page.locator('[data-testid="practice-stress"]');
+  await expect(stress).toBeVisible();
+  await expect.poll(() => stress.locator('.stress-vowel').count()).toBeGreaterThanOrEqual(2);
+
+  // Selecting a vowel locks the control and shows a verdict marker.
+  const firstVowel = stress.locator('.stress-vowel').first();
+  await firstVowel.click();
+  await expect(firstVowel).toBeDisabled();
+  await expect(stress.locator('[data-testid="practice-stress-verdict"]')).toBeVisible();
+});
+
+test('practice flashcard rating locks the card and waits for explicit next', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.locator('button[data-mode="flashcards"]').click();
+  const card = page.locator('[data-activity="flashcard"]');
+  await expect(card).toBeVisible();
+
+  // Ratings are disabled before the card is flipped.
+  const goodButton = page.locator('[data-rate="good"]');
+  await expect(goodButton).toBeDisabled();
+
+  await card.click();
+  await expect(card).toHaveAttribute('data-flipped', 'true');
+  await expect(goodButton).toBeEnabled();
+
+  await goodButton.click();
+  await expect(card).toHaveAttribute('data-rated', 'true');
+  await expect(goodButton).toBeDisabled();
+  await expect(page.getByTestId('practice-advance-button')).toBeVisible();
+});

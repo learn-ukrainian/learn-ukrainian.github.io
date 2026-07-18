@@ -73,10 +73,67 @@
   content: '';
 }
 
+/* Practice-only semantic-four pair coding.
+   Color families identify a pair, but the visible circled tag is the
+   non-color identity signal (WCAG 1.4.1). */
+.matchUpContainer[data-pair-coding='semantic-four'] .matchItem.matched {
+  --match-pair-bg: var(--lu-state-correct-bg);
+  --match-pair-border: var(--lu-green);
+  --match-pair-fg: var(--lu-text);
+
+  border-color: var(--match-pair-border);
+  background: var(--match-pair-bg);
+  color: var(--match-pair-fg);
+}
+
+.matchUpContainer[data-pair-coding='semantic-four'] .matchItem.matched[data-pair-token='0'] {
+  --match-pair-bg: var(--lu-teal-light);
+  --match-pair-border: var(--lu-teal);
+}
+
+.matchUpContainer[data-pair-coding='semantic-four'] .matchItem.matched[data-pair-token='1'] {
+  --match-pair-bg: var(--lu-orange-light);
+  --match-pair-border: var(--lu-orange);
+}
+
+.matchUpContainer[data-pair-coding='semantic-four'] .matchItem.matched[data-pair-token='2'] {
+  --match-pair-bg: var(--lu-purple-light);
+  --match-pair-border: var(--lu-purple);
+}
+
+.matchUpContainer[data-pair-coding='semantic-four'] .matchItem.matched[data-pair-token='3'] {
+  --match-pair-bg: var(--lu-yellow-light);
+  --match-pair-border: var(--lu-yellow-dark);
+}
+
+.matchColumn:first-child .matchItem.matched.match-pair-coded {
+  box-shadow: inset -4px 0 0 var(--match-pair-border);
+}
+
+.matchColumn:last-child .matchItem.matched.match-pair-coded {
+  box-shadow: inset 4px 0 0 var(--match-pair-border);
+}
+
+.matchPairTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45em;
+  height: 1.45em;
+  margin-inline-start: 0.5em;
+  border: 1.5px solid var(--match-pair-border);
+  border-radius: 999px;
+  background: var(--lu-surface-raised);
+  color: var(--match-pair-border);
+  font-size: 0.82em;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .matchItem.wrong {
   border-color: var(--lu-state-wrong-fg);
   background: var(--lu-state-wrong-bg);
-  animation: shake 0.5s ease;
+  animation: shake 0.24s ease;
 }
 
 @keyframes shake {
@@ -85,20 +142,18 @@
     transform: translateX(0);
   }
 
-  20% {
-    transform: translateX(-8px);
-  }
-
-  40% {
-    transform: translateX(8px);
-  }
-
-  60% {
+  25% {
     transform: translateX(-6px);
   }
 
-  80% {
+  75% {
     transform: translateX(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matchItem.wrong {
+    animation: none;
   }
 }
 

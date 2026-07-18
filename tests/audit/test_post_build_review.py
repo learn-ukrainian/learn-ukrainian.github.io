@@ -331,9 +331,7 @@ def _passing_semantic(packet: dict) -> dict:
     claim_units = [
         unit
         for unit in statements["units"]
-        if set(unit.get("signals") or []).intersection(
-            {"universal_quantifier", "source_attribution"}
-        )
+        if pbr._statement_requires_claim(unit)
     ]
     if not claim_units and statements["units"]:
         claim_units = [statements["units"][0]]
@@ -705,12 +703,43 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
     assert normalized["findings"][0]["issue_id"] == "AWKWARD_PASSIVE_RESULT_STATE"
 
 
-def test_quality_dimension_reuses_supplied_deterministic_finding_id() -> None:
+def test_quality_dimension_reuses_supplied_deterministic_finding_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = pbr.evaluate_mechanical_track_policy
+
+    def with_supplied_finding(
+        target: dict, track_policy: dict, **kwargs: object
+    ) -> list[dict]:
+        findings = original(target, track_policy, **kwargs)
+        content_path = str(target["files"]["content"])
+        repo_root = Path(str(kwargs.get("repo_root", ROOT)))
+        content_lines = (repo_root / content_path).read_text(encoding="utf-8").splitlines()
+        evidence_line = next(
+            index
+            for index, text in enumerate(content_lines, start=1)
+            if len(text.strip()) >= 8
+        )
+        findings.append(
+            {
+                "id": "supplied-deterministic-finding",
+                "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
+                "source": "track_policy",
+                "category": "learner_level_meta_leakage",
+                "severity": "medium",
+                "message": "Synthetic supplied finding for deterministic ID reuse.",
+                "evidence": "Synthetic packet-bound deterministic evidence.",
+                "location": f"{content_path}:{evidence_line}",
+            }
+        )
+        return findings
+
+    monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_supplied_finding)
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     external = next(
         finding
         for finding in pbr._deterministic_findings(packet)
-        if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"
+        if finding["id"] == "supplied-deterministic-finding"
     )
     semantic = _passing_semantic(packet)
     semantic["verdict"] = "REVISE"
@@ -1621,7 +1650,7 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
     with pytest.raises(ValidationError):
         Draft202012Validator(schema).validate(missing)
 
-    risk_unit = next(unit for unit in units if unit["signals"])
+    risk_unit = next(unit for unit in units if pbr._statement_requires_claim(unit))
     dismissed = copy.deepcopy(semantic)
     dismissed["statement_coverage"][risk_unit["id"]] = {
         "classification": "no_checkable_claim",
@@ -1629,6 +1658,55 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
     }
     with pytest.raises(ValidationError):
         Draft202012Validator(schema).validate(dismissed)
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Розрізніть, що встановлює каталог Держкіно.", False),
+        ("Що встановлює каталог Держкіно?", False),
+        ("Каталог Держкіно фіксує 1958 рік.", True),
+        ("Зверніть увагу: каталог Держкіно фіксує 1958 рік.", True),
+        ("Зверніть увагу, що каталог Держкіно фіксує 1958 рік.", True),
+        (
+            "Зверніть увагу, що каталог Держкіно фіксує 1958 рік: порівняйте.",
+            True,
+        ),
+        ("Каталог Держкіно фіксує 1958 рік, порівняйте.", True),
+        ("Зауважте за ЕСУ: порівняйте дві дати.", False),
+    ],
+)
+def test_source_attribution_claim_requirement_respects_speech_act(
+    text: str,
+    expected: bool,
+) -> None:
+    unit = {"text": text, "signals": ["source_attribution"]}
+
+    assert pbr._statement_requires_claim(unit) is expected
+
+
+def test_provider_schema_accepts_nonclaim_source_attribution_instruction(
+    malyshko_packet: dict,
+) -> None:
+    packet = copy.deepcopy(malyshko_packet)
+    units = packet["deterministic"]["statement_inventory"]["units"]
+    instruction = next(unit for unit in units if "source_attribution" in unit["signals"])
+    instruction["text"] = (
+        "Розрізніть, що встановлює каталог Держкіно, а що міг би додати сам фільм."
+    )
+    packet["deterministic"]["statement_inventory"] = pbr._inventory_payload(units)
+
+    semantic = _passing_semantic(packet)
+    coverage = semantic["statement_coverage"][instruction["id"]]
+
+    assert pbr._statement_requires_claim(instruction) is False
+    assert coverage == {"classification": "no_checkable_claim", "claim_ids": []}
+    Draft202012Validator(pbr.semantic_response_schema(packet)).validate(semantic)
+
+    result = pbr.finalize_review(packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["semantic"]["statement_coverage"][instruction["id"]] == coverage
 
 
 @pytest.mark.parametrize("substitution", ["unbound", "drops_quantifier"])
@@ -2403,6 +2481,9 @@ def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
     assert pbr._statement_signals(
         "У кожній версії простежте граматичну особу."
     ) == []
+    assert pbr._statement_signals(
+        "Кожен запис потребує джерела, порівняйте їх."
+    ) == ["universal_quantifier"]
 
 
 @pytest.mark.parametrize(
