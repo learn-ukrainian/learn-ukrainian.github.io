@@ -89,12 +89,15 @@ seminars, curated named-source aliases are compared with learner-visible
 resources; an unmapped configured source produces a material deterministic
 finding, while incidental acronyms do not become extra source labels.
 
-The provider-facing v6 schema deliberately uses a portable strict-output
-subset. In particular, packet-bound arrays use ordinary `items` constraints
-rather than Draft 2020-12 `prefixItems`, which some supported providers reject
-before inference. This transport accommodation does not relax the canonical
-contract: finalization independently enforces exact vocabulary source order and
-exact source-resource sets, and any mismatch produces `INCOMPLETE`.
+The provider-facing v6 schema has explicit transport variants. Codex uses
+`semantic-schema --provider codex`, which stays inside OpenAI Structured Outputs
+limits and supported keywords. It binds the stable object shape, exhaustive
+statement keys, target paths, and valid line ranges without repeating hundreds
+of packet line numbers as enum values. The canonical packet-bound schema still
+revalidates the exact raw bytes before hydration and independently enforces
+eligible evidence lines, exact claim ownership, vocabulary source order, and
+source-resource sets. Any mismatch produces `INCOMPLETE`; transport
+compatibility never weakens the release gate.
 
 For every `FOUND` alignment class other than `VOCABULARY_INTEGRATION`, the
 audit evidence must include each owned finding's exact primary target-file
@@ -120,6 +123,11 @@ Protocol 6.0.6 closes the Codex transport gap: `delegate.py dispatch
 its absolute path through the detached worker, and binds it as `codex exec
 --output-schema`. Prompt-only Codex review is a fail-closed orchestration defect,
 not an acceptable substitute for structured output.
+
+Protocol 6.0.7 closes the provider-compatibility gap exposed by BIO-371. The
+Codex schema generator rejects unsupported composition/property keywords and
+the documented OpenAI limits before inference, prunes unused definitions, and
+keeps packet-sized line and claim enumerations in the canonical local validator.
 
 ## Bug-fix workflow
 

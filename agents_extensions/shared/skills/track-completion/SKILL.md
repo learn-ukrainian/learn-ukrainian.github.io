@@ -114,8 +114,10 @@ Read and follow `$post-build-review` completely for the same target. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
 that invocation. Use its emitted semantic schema when the provider supports
 structured output; prompt-only JSON compliance is not a reliable automation
-boundary. For Codex dispatches, `--output-schema <semantic_schema_path>` is
-mandatory and its absence is `audit_tooling`, not a reason to retry the model.
+boundary. For Codex dispatches, emit the schema with `semantic-schema
+--provider codex`; then `--output-schema <semantic_schema_path>` is mandatory.
+An absent or provider-incompatible schema is `audit_tooling`, not a reason to
+retry the model.
 Record its exact result:
 
 ```bash

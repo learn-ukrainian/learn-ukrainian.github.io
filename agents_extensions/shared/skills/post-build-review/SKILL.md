@@ -61,12 +61,14 @@ artifacts. Report findings; do not fix the module during this invocation.
    packet/result and cannot replace the failed artifact. Allocate a new run
    directory before every retry. Use `apply_patch`, not a shell heredoc, when
    the current agent is the reviewer.
-   When the provider supports schema-constrained structured output, emit the
-   canonical raw-response schema before invoking it:
+   When the provider supports schema-constrained structured output, emit its
+   provider-compatible transport schema before invoking it. For Codex, the
+   provider selector is mandatory:
 
    ```bash
    .venv/bin/python scripts/audit/post_build_review.py semantic-schema \
      --packet <packet_path> \
+     --provider codex \
      --output <semantic_schema_path>
    ```
 
@@ -82,18 +84,23 @@ artifacts. Report findings; do not fix the module during this invocation.
      --output-schema <semantic_schema_path>
    ```
 
-   The dispatcher validates and hashes the schema before spawn, and the Codex
-   adapter validates it again before emitting `codex exec --output-schema`.
+   The generator rejects Codex schemas that exceed OpenAI Structured Outputs
+   limits or use unsupported keywords. The dispatcher validates and hashes the
+   schema before spawn, and the Codex adapter validates it again before
+   emitting `codex exec --output-schema`.
    Preserve the task result file's exact bytes as the semantic response; do
    not extract a JSON object from a provider envelope.
 
    Bind that schema at the provider boundary and redirect its structured text
-   channel directly to `<semantic_response_path>`. The packet binding constrains
-   cited evidence to valid target-file paths and one-based line numbers; the
-   finalizer hydrates the exact Unicode line from the immutable packet. The v6
-   schema also requires all seven alignment classes, every vocabulary lemma,
-   every learner statement, and every detected seminar source attribution, so omitted
-   audit work fails closed instead of disappearing. Keep
+   channel directly to `<semantic_response_path>`. The Codex transport schema
+   constrains cited evidence to target-file paths and valid one-based ranges,
+   while the canonical packet-bound validator rejects short/ineligible lines,
+   wrong claim ownership, and every other relaxed transport-only constraint
+   before hydration. The finalizer then hydrates the exact Unicode line from
+   the immutable packet. The v6 schema also requires all seven alignment
+   classes, every vocabulary lemma, every learner statement, and every detected
+   seminar source attribution, so omitted audit work fails closed instead of
+   disappearing. Keep
    provider envelopes and stderr separate. Schema enforcement is preferred over prompt-only JSON
    compliance; it does not authorize extracting an embedded object from an
    unconstrained prose response.
