@@ -162,10 +162,11 @@ references:
   title: Koliivshchyna rebellion (Internet Encyclopedia of Ukraine)
   type: reference
 - author: упоряд. І. Л. Синяк; гол. ред. В. А. Смолій
-  note: Документальне видання архіву Коша Нової Січі (справи 227–229); первинний корпус.
+  note: Каталожний запис / анотація редагованого документального тому (справи 227–229
+    як вказівник); не первинний документ і не точний локатор окремих актів.
   path: https://resource.history.org.ua/item/0014806
   title: 'Коліївщина: 1768–1769 роки у документальній та мемуарній спадщині. Т. 1'
-  type: primary
+  type: reference
   work: 'Коліївщина: 1768–1769 роки у документальній та мемуарній спадщині, т. 1'
 - note: Дослідницьке досьє з claim boundaries, disputed death tolls і rejected evidence.
   path: docs/research/bio/maksym-zalizniak.md
@@ -270,17 +271,19 @@ readings:
   source_url: https://resource.history.org.ua/item/0014806
   language: uk
   genre: каталог документального видання
-  source_type: primary
-  role: primary-reading
+  source_type: reference
+  role: catalog-reading
   hosting: link-only
-  learner_task: Ознайомитися з анотацією корпусу документів архіву Коша Нової Січі (справи 227–229) і
-    пояснити, чим документний корпус відрізняється від енциклопедичної довідки.
+  learner_task: Ознайомитися з каталожною анотацією редагованого документального тому (вказівник на
+    справи 227–229 архіву Коша) і пояснити, чим каталог/редагований корпус відрізняється від
+    первинного документа та від енциклопедичної довідки.
   rights:
     basis: external-link
     evidence_url: https://resource.history.org.ua/item/0014806
     note: Каталожний запис і PDF на зовнішньому ресурсі; текст у курсі не відтворюється.
-  caveats: Каталог і PDF — вказівник на первинні документи Коша; не підміняти ними всю історію Умані й
-    не копіювати повний текст.
+  caveats: Це каталог/анотація, а не сам первинний документ; PDF — зовнішній вказівник, не доказ
+    точних локаторів чи прав окремих актів. Не підміняти каталогом всю історію Умані й не
+    копіювати повний текст.
 portrait_fallback:
   type: text-only
   license: not-applicable

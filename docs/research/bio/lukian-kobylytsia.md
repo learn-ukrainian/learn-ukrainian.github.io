@@ -123,12 +123,14 @@ learn-ukrainian track materials; Commons = Wikimedia Commons.
 - **Regional-autonomy anchor:** Bukovyna autonomy and proposed attachment to
   Galicia should be taught as 1848 Habsburg politics, not as a simple modern
   nation-state program.
-- **Visual anchor:** Commons `File:Лук'ян_Кобилиця_(Lukian_Kobylytsia).jpg`
-  provides a public-domain old image scan, but source/author are unknown; caption
-  as a historical image, not a verified life portrait.
-- **Monument anchor:** Commons images of the Vyzhnytsia monument support public
-  memory / commemoration lessons; preserve CC BY-SA attribution and avoid
-  treating monument inscriptions as neutral biography.
+- **Visual anchor:** No individual portrait is adopted for curriculum reuse in
+  this packet. Pending exact file-level identity, provenance, and licence
+  evidence, use the text-only portrait fallback (§9). Commons candidate files
+  are not rights-complete here and are not endorsed for use or reuse.
+- **Monument / memory anchor:** Vyzhnytsia monument photographs may later support
+  public-memory lessons only after separate exact file-level rights review; they
+  are not adopted in this packet and must not be treated as biography proof or as
+  licence-cleared visuals.
 
 ## 5. Language register
 
@@ -164,9 +166,10 @@ learn-ukrainian track materials; Commons = Wikimedia Commons.
 - **Death-cause legends:** Some public retellings add torture/poisoning claims.
   Keep them out of learner-facing factual chronology unless a strong source is
   added and the claim is labeled.
-- **Image uncertainty:** Public-domain portrait files are reusable but have
-  unknown author/source. Use monument imagery when the lesson needs an
-  unambiguous modern visual.
+- **Image uncertainty:** No Commons portrait or monument image is rights-complete
+  for packet reuse without exact file-level identity, provenance, and licence
+  evidence. Packet disposition remains text-only (§9); do not endorse PD/CC reuse
+  from category pages or unadopted file mentions.
 
 ## 7. Cross-track links
 

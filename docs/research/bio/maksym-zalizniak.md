@@ -74,8 +74,8 @@
 - **Historical-song anchor:** Existing reading `istorychna-pisnia-maksym-kozak-zalizniak.mdx` offers a FOLK bridge; use it to ask how songs compress violence, grievance, and hero-making.
 - **Comparison set:** Pair Zalizniak with Dovbush and Karmaliuk to compare outlaw / rebel memory, but keep the Uman massacre as a sharper anti-hagiography requirement than in many outlaw-hero biographies.
 - **Place-memory anchor:** Kholodnyi Yar, Motronynskyi Monastery, Medvedivka, Lysianka, Uman, and Nerchinsk create a geography sequence from local uprising to imperial penal exile.
-- **Visual anchor:** Commons portrait `File:Maxim Zalizniak.jpg` is a public-domain reproduction of a late-18th-century portrait from Sumy Art Museum. Caption as historical portrait / attributed image, not verified life likeness.
-- **Landscape-memory anchor:** Commons `File:Maksym Zalizniak Oak Tree-2024.jpg` documents the Zalizniak Oak in Kholodnyi Yar under CC BY 4.0. Use only with attribution and as memory/place, not biography proof.
+- **Visual anchor:** No individual portrait is adopted for curriculum reuse in this packet. Pending exact file-level identity, provenance, and licence evidence, use the text-only portrait fallback (§9). Commons portrait candidates (including Sumy Art Museum attributions) are not rights-complete here and are not endorsed for use or reuse.
+- **Landscape-memory anchor:** Zalizniak Oak / Kholodnyi Yar place images may later support memory/place lessons only after separate exact file-level rights review; they are not adopted in this packet, are not biography proof, and are not licence-endorsed for reuse here.
 
 ## 5. Language register
 
@@ -97,7 +97,7 @@
 - **Russian-imperial myth:** Catherine's supposed support and Russian Orthodox protector role should be treated as political illusion / imperial leverage. The Russian army ultimately crushed the uprising.
 - **Soviet-era bibliography:** Soviet works may be useful historiography, but they tend to over-stabilize the "anti-feudal people's war" frame. Use cautiously and label historiographic period.
 - **Hagiographic school summaries:** School / patriotic biographies often erase Uman or present it only as triumph. Do not use as factual authority.
-- **Image identity:** Commons has multiple Zalizniak images; avoid `File:Maksym_Zalizniak.jpg` where file discussion says it may depict another haidamaka. Prefer `File:Maxim Zalizniak.jpg` with Sumy Art Museum source or memory-landscape images.
+- **Image identity:** Commons has multiple Zalizniak images and at least one identity warning (possible misattribution to another haidamaka). No Commons portrait or oak/memory image is rights-complete for packet reuse without exact file-level identity, provenance, and licence evidence. Packet disposition remains text-only (§9); do not endorse PD/CC reuse from unadopted file mentions.
 
 ## 7. Cross-track links
 
@@ -161,8 +161,10 @@
    — IEU Koliivshchyna rebellion (EN, reference-only). Golden Charter framing;
    killing of nobles, Catholic clergy, Jewish stewards; Russian/Polish repression.
 6. https://resource.history.org.ua/item/0014806 — «Коліївщина… Т. 1: Документи архіву
-   Коша…» catalog (UA). Annotation of CDIAK fond cases 227–229; PDF pointer;
-   primary-document collection, not a substitute encyclopedia narrative.
+   Коша…» catalog (UA). Institutional catalog/annotation of an edited document
+   volume with a CDIAK fond cases 227–229 pointer and PDF link; catalog/reference
+   surface, not itself a primary document and not a substitute encyclopedia
+   narrative.
 
 **Learner readings (strict subset; Ukrainian link-only):** URLs 1, 2, 3, 6.
 
