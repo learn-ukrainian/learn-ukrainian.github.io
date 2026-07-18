@@ -217,25 +217,23 @@ function prepareSiteCopy({ label, sourceSite, lemmaFilesFrom, outDir, nodeModule
     "curriculum-stats.json",
   ]) {
     const dest = join(dataDir, name);
-    if (!existsSync(dest)) {
-      const fallback =
-        name === "lexicon-manifest.json"
-          ? JSON.stringify({ version: "0.1", generated_at: "test", entries: [] })
-          : name.includes("browse-meta")
-            ? JSON.stringify({ total: 0, letterCounts: {}, chipCounts: {} })
-            : name.includes("stats")
-              ? "{}"
-              : "[]";
-      try {
-        // wx: create-only — closes the existsSync→writeFileSync TOCTOU race.
-        writeFileSync(dest, fallback, { flag: "wx" });
-      } catch (err) {
-        if (err && typeof err === "object" && "code" in err && err.code === "EEXIST") {
-          // Another writer created the fixture between existsSync and write.
-          continue;
-        }
-        throw err;
+    const fallback =
+      name === "lexicon-manifest.json"
+        ? JSON.stringify({ version: "0.1", generated_at: "test", entries: [] })
+        : name.includes("browse-meta")
+          ? JSON.stringify({ total: 0, letterCounts: {}, chipCounts: {} })
+          : name.includes("stats")
+            ? "{}"
+            : "[]";
+    try {
+      // Exclusive create — no existsSync→write TOCTOU (CodeQL js/file-system-race).
+      writeFileSync(dest, fallback, { flag: "wx" });
+    } catch (err) {
+      if (err && typeof err === "object" && "code" in err && err.code === "EEXIST") {
+        // Fixture already present — leave it.
+        continue;
       }
+      throw err;
     }
   }
 

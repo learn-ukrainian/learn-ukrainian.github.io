@@ -64,12 +64,22 @@ def test_fail_open_sets_all_declared_outputs_to_true() -> None:
         "Fallback block must emit warning annotation"
     )
 
-    # Check that every declared output is explicitly set to true in the fallback block
-    for output in outputs:
-        pattern = rf'echo "{output}=true"\s+>>\s+"?\$GITHUB_OUTPUT"?'
-        assert re.search(pattern, fallback_content), (
-            f"Fallback block must set '{output}=true' to run everything on failure"
-        )
+    # Fail-open must set every declared output to true. Accept either per-key
+    # `echo "key=true"` lines or a single `emit true ...` call with one true per output
+    # (env-indirection hardening for zizmor/template-injection).
+    ordered = list(action_data.get("outputs", {}).keys())
+    per_key_ok = all(
+        re.search(rf'echo "{output}=true"\s+>>\s+"?\$GITHUB_OUTPUT"?', fallback_content)
+        for output in outputs
+    )
+    emit_trues = re.search(
+        r"emit\s+" + r"\s+".join(["true"] * len(ordered)),
+        fallback_content,
+    )
+    assert per_key_ok or emit_trues, (
+        "Fallback block must set every declared output to true "
+        f"(outputs={sorted(outputs)})"
+    )
 
 
 def test_workflows_only_consume_valid_action_outputs() -> None:
