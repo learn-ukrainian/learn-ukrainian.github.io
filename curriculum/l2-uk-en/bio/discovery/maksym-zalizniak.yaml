@@ -1,0 +1,111 @@
+discovered_at: '2026-07-18T00:00:00+00:00'
+error: null
+query_keywords:
+- 'Максим Залізняк: Коліївщина, Умань і суперечлива пам''ять'
+- Залізняк Максим Ієвлевич Енциклопедія історії України
+- Коліївщина ЕІУ
+- Уманська трагедія 1768 Уманська різанина
+- Zalizniak Maksym Internet Encyclopedia of Ukraine
+- Koliivshchyna rebellion Golden Charter
+- Коліївщина документи архіву Коша Нової Січі
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://www.history.org.ua/?termin=Zaliznyak_M
+- https://www.history.org.ua/?termin=Koliivshchyna
+- https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+- https://resource.history.org.ua/item/0014806
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Zaliznyak_M
+  type: external
+  title: ЗАЛІЗНЯК Максим Ієвлевич
+  url: https://www.history.org.ua/?termin=Zaliznyak_M
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    author: Смолій В.А.
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+- id: S2
+  file: https://www.history.org.ua/?termin=Koliivshchyna
+  type: external
+  title: КОЛІЇВЩИНА
+  url: https://www.history.org.ua/?termin=Koliivshchyna
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    author: Смолій В.А.
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+- id: S3
+  file: https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna
+  type: external
+  title: УМАНСЬКА ТРАГЕДІЯ 1768, Уманська різанина
+  url: https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    author: Смірнов О.В.
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+- id: S4
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+  type: external
+  title: Zalizniak, Maksym
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    author: Borys Krupnytsky
+    language: en
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted-reference-only
+- id: S5
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+  type: external
+  title: Koliivshchyna rebellion
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    language: en
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted-reference-only
+- id: S6
+  file: https://resource.history.org.ua/item/0014806
+  type: external
+  title: 'Коліївщина: 1768–1769 роки у документальній та мемуарній спадщині. Т. 1'
+  url: https://resource.history.org.ua/item/0014806
+  metadata:
+    publisher: Інститут історії України НАН України / ІУАД ім. М.С. Грушевського / ЦДІАК України
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+    note: Catalog page with Ukrainian annotation and full-text PDF link; use as document collection pointer,
+      not as hosted copyrighted text
+rejected_sources:
+- url: https://doi.org/10.2307/3650068
+  http_status: 200
+  verified_on: '2026-07-18'
+  reason: Cambridge/JSTOR abstract-only / paywall; not used for material claims without full-text verification
+- url: https://www.jewishvirtuallibrary.org/uman
+  http_status: 200
+  verified_on: '2026-07-18'
+  reason: English JE-derived memory page; useful orientation for Jewish communal vocabulary but has disputed
+    numbers and a likely 1788 typo; material Uman victim claims grounded in EIU S3 instead
+- url: "https://uk.wikipedia.org/wiki/%D0%9C%D0%B0%D0%BA%D1%81%D0%B8%D0%BC_%\
+    D0%97%D0%B0%D0%BB%D1%96%D0%B7%D0%BD%D1%8F%D0%BA"
+  http_status: null
+  verified_on: '2026-07-18'
+  reason: Orientation only; Wikipedia is not an adopted factual authority
+warning: 'Subject-first discovery for catalog readiness 2026-07-18. Adopted set: three EIU articles (biography,
+  Koliivshchyna, Uman tragedy), two IEU reference articles, and NASU document-collection catalog. Uman
+  massacre of Jewish, Polish, Roman Catholic and Uniate victims is central via EIU S3. Learner readings
+  are Ukrainian EIU + document catalog; IEU is reference-only for English chronology/Golden Charter framing.'

@@ -4,8 +4,8 @@
 **Block:** +77 backfill - Bukovynian peasant politics / Hutsul rights / Habsburg 1848
 **Tier:** 2
 **Issue:** #2535 / BIO +77 readiness gate; BIO #313
-**Researcher:** Codex orchestrator (GPT-5)
-**Completed:** 2026-07-02
+**Researcher:** Codex orchestrator (GPT-5); catalog packet Grok 2026-07-18
+**Completed:** 2026-07-02; catalog-source packet refresh 2026-07-18
 
 **Source acronym legend:** EIU = Encyclopedia of History of Ukraine / Institute of
 History of Ukraine, NASU; IEU = Internet Encyclopedia of Ukraine / Canadian
@@ -123,12 +123,14 @@ learn-ukrainian track materials; Commons = Wikimedia Commons.
 - **Regional-autonomy anchor:** Bukovyna autonomy and proposed attachment to
   Galicia should be taught as 1848 Habsburg politics, not as a simple modern
   nation-state program.
-- **Visual anchor:** Commons `File:Лук'ян_Кобилиця_(Lukian_Kobylytsia).jpg`
-  provides a public-domain old image scan, but source/author are unknown; caption
-  as a historical image, not a verified life portrait.
-- **Monument anchor:** Commons images of the Vyzhnytsia monument support public
-  memory / commemoration lessons; preserve CC BY-SA attribution and avoid
-  treating monument inscriptions as neutral biography.
+- **Visual anchor:** No individual portrait is adopted for curriculum reuse in
+  this packet. Pending exact file-level identity, provenance, and licence
+  evidence, use the text-only portrait fallback (§9). Commons candidate files
+  are not rights-complete here and are not endorsed for use or reuse.
+- **Monument / memory anchor:** Vyzhnytsia monument photographs may later support
+  public-memory lessons only after separate exact file-level rights review; they
+  are not adopted in this packet and must not be treated as biography proof or as
+  licence-cleared visuals.
 
 ## 5. Language register
 
@@ -164,9 +166,10 @@ learn-ukrainian track materials; Commons = Wikimedia Commons.
 - **Death-cause legends:** Some public retellings add torture/poisoning claims.
   Keep them out of learner-facing factual chronology unless a strong source is
   added and the claim is labeled.
-- **Image uncertainty:** Public-domain portrait files are reusable but have
-  unknown author/source. Use monument imagery when the lesson needs an
-  unambiguous modern visual.
+- **Image uncertainty:** No Commons portrait or monument image is rights-complete
+  for packet reuse without exact file-level identity, provenance, and licence
+  evidence. Packet disposition remains text-only (§9); do not endorse PD/CC reuse
+  from category pages or unadopted file mentions.
 
 ## 7. Cross-track links
 
@@ -212,85 +215,70 @@ learn-ukrainian track materials; Commons = Wikimedia Commons.
   `Kobylicza`, or Romanian/German spellings unless discussing source provenance.
   Do not use Russian forms as defaults.
 
-## 9. Image rights
+## 9. Image rights / individual-image disposition
 
-- **Preferred portrait / historical-image candidate:** Commons
-  `File:Лук'ян_Кобилиця_(Lukian_Kobylytsia).jpg`; public domain, unknown date,
-  unknown source/author, scan of old image. Use only with a source-uncertainty
-  caption.
-- **Alternate portrait/art candidate:** Commons `File:Лук`ян_Кобилиця.jpg`;
-  faithful photographic reproduction of a two-dimensional public-domain work of
-  art. Confirm file-level metadata before final use.
-- **Preferred monument candidate:** Commons
-  `File:Пам'ятник_Лук'яну_Кобилиці_у_Вижниці.jpg`; photo by Bukovynka, CC BY-SA
-  4.0, monument number `73-205-0063`.
-- **Alternate monument candidate:** Commons
-  `File:IMG_Пам'ятник_Лук'яну_Кобилиці_1812—1851.jpg`; photo by Vi Ko, CC BY-SA
-  4.0, same Vyzhnytsia monument. Useful for public-memory lessons.
-- **Additional place candidate:** Commons `File:Вижниця_15.jpg`; own work by
-  Yadigshonuff, CC BY-SA 4.0. Use as a contextual monument/place image, not as a
-  portrait.
-- **Category lead:** Commons `Category:Lukian Kobylytsia` contains a small file
-  set; use file-level license pages, not the category alone.
-- **Avoid default:** museum-house social-media photos, school-site portraits,
-  unsourced modern illustrations, YouTube/video frames, and local-news photos
-  without explicit reusable licensing.
+- **Packet disposition (2026-07-18): text-only portrait fallback.** No individual
+  portrait has been proved with all of: exact file identity, subject match,
+  creator/provenance, reusable licence, and licence evidence. A Commons category
+  page, monument photo licence, or institutional page licence is not portrait proof.
+- **Not adopted for packet portrait use:** Commons scans of old images with unknown
+  author/source; Vyzhnytsia monument photographs (memory/place only, not life
+  portrait); museum-house social-media photos; school-site illustrations.
+- **Plan field:** `portrait_fallback.type: text-only` with
+  `disposition: no-portrait-until-rights-verified`.
 
-## 10. Sources used
+## 10. Sources used (adopted set = discovery / plan external refs / wiki registry)
 
-**Tier 1 (authoritative / institutional):**
+**Adopted external URLs (order fixed; verified HTTP 200 on 2026-07-18):**
 
-- Стеблій Ф.І. "КОБИЛИЦЯ Лук'ян." Енциклопедія історії України, Інститут
-  історії України НАН України.
-  https://history.org.ua/?termin=Kobylycya_L. Accessed 2026-07-02.
-- "Kobylytsia, Lukian." Internet Encyclopedia of Ukraine / Canadian Institute of
-  Ukrainian Studies.
-  https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm.
-  Accessed 2026-07-02.
-- "Kobylicza, Lucian." Osterreichisches Biographisches Lexikon 1815-1950.
-  https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml.
-  Accessed 2026-07-02.
-- Ясь О.В. "БУКОВИНСЬКЕ СЕЛЯНСЬКЕ ПОВСТАННЯ 1848-49 РР." Енциклопедія історії
-  України, Інститут історії України НАН України.
-  https://history.org.ua/?termin=Bukovynske_selianske_1848. Accessed 2026-07-02.
-- "Revolution of 1848-9 in the Habsburg monarchy." Internet Encyclopedia of
-  Ukraine / Canadian Institute of Ukrainian Studies.
-  https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CE%5CRevolutionof1848hD79intheHabsburgmonarchy.htm.
-  Accessed 2026-07-02.
+1. https://www.history.org.ua/?termin=Kobylycya_L — Стеблій Ф.І., ЕІУ «КОБИЛИЦЯ Лук'ян»
+   (UA). Birth 1812; Putyla-Storonets; 1839 representative; 1843–44 22 communities;
+   1848 Reichstag; Nov 1848 rising; summer 1849 suppression; Apr 1850 arrest;
+   death 24.10.1851 in Gura Humorului from illness after prison torture; Fedkovych poem.
+2. https://www.history.org.ua/?termin=Bukovynske_selianske_1848 — Ясь О.В., ЕІУ
+   «БУКОВИНСЬКЕ СЕЛЯНСЬКЕ ПОВСТАННЯ 1848–49» (UA). Trigger of forced corvee via
+   "voluntary agreements"; leadership of deputy Kobylytsia; excluded from parliament
+   6 Feb 1849; Austrian troops suppress May 1849.
+3. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+   — Zhukovsky, IEU «Kobylytsia, Lukian» (EN, reference-only for learners). Birth ca
+   1803 (1812 some sources); imprisonments 1842–44 and 1847; autonomy + attachment
+   to Galicia; Hutsul councils; arrest Zhabie Apr 1850; police surveillance Solca;
+   death 24 Oct 1851 Solca (Gura-Humorului variant).
+4. https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml — ÖBL
+   «Kobylicza, Lucian» (DE, reference-only). 1803–1851; Solka; deputy Wiznitz;
+   Anschluss to Ostgalizien; Huzulenkönig legend; police surveillance from 1851.
+   Page marks text CC BY-NC-SA 3.0 AT.
 
-**Tier 2 (archival / scholarly / local institutional / reception):**
+**Learner readings (strict subset of adopted set; Ukrainian link-only):** URLs 1–2 only.
 
-- Державний архів Чернівецької області. "Лук'ян Кобилиця - народний герой
-  Буковини." https://cv.archives.gov.ua/lukian.html. Accessed 2026-07-02.
-- Hrushevsky History Portal. "Кобилиця Лук'ян (1812-1851)."
-  https://hrushevsky.history.org.ua/item/0014316. Accessed 2026-07-02.
-- Resource History. Catalog record: Шевченко Ф. П. `Лук'ян Кобилиця: з історії
-  антифеодальної боротьби селянства Буковини в першій половині XIX ст.`
-  https://resource.history.org.ua/item/0000210. Accessed 2026-07-02.
-- Дім Франка. Record for Ivan Franko, `Лук'ян Кобилиця. Епізод із історії
-  Гуцульщини в першій половині XIX в.`
-  https://dimfranka.lviv.ua/material/%D0%BB%D1%83%D0%BA%D1%8F%D0%BD-%D0%BA%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%8F.
-  Accessed 2026-07-02.
-- Existing learn-ukrainian HIST/BIO surfaces listed in Section 7, verified
-  2026-07-02.
+**Rejected / not adopted (2026-07-18 fetch):**
 
-**Tier 4 (image-rights / media-rights checks):**
+- https://cv.archives.gov.ua/lukian.html — HTTP 403 Access Denied; archival exhibit
+  cannot be verified in-session. Do not ground claims on remembered summary of it.
+- https://dimfranka.lviv.ua/material/лукян-кобилиця — HTTP 502 Bad Gateway; Franko
+  reception page not readable. Franko reception remains bibliographic pointer via
+  EIU literature list, not a verified online reading.
+- Ukrainian Wikipedia article — orientation only; not factual authority.
+- Wikimedia Commons portrait candidates — not rights-complete for individual image
+  disposition (see §9).
 
-- Wikimedia Commons. `Category:Lukian Kobylytsia`.
-  https://commons.wikimedia.org/wiki/Category:Lukian_Kobylytsia. Accessed
-  2026-07-02.
-- Wikimedia Commons. `File:Лук'ян_Кобилиця_(Lukian_Kobylytsia).jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9B%D1%83%D0%BA%27%D1%8F%D0%BD_%D0%9A%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%8F_(Lukian_Kobylytsia).jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Лук`ян_Кобилиця.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9B%D1%83%D0%BA%60%D1%8F%D0%BD_%D0%9A%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%8F.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Пам'ятник_Лук'яну_Кобилиці_у_Вижниці.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%BC%27%D1%8F%D1%82%D0%BD%D0%B8%D0%BA_%D0%9B%D1%83%D0%BA%27%D1%8F%D0%BD%D1%83_%D0%9A%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%96_%D1%83_%D0%92%D0%B8%D0%B6%D0%BD%D0%B8%D1%86%D1%96.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:IMG_Пам'ятник_Лук'яну_Кобилиці_1812—1851.jpg`.
-  https://commons.wikimedia.org/wiki/File:IMG_%D0%9F%D0%B0%D0%BC%27%D1%8F%D1%82%D0%BD%D0%B8%D0%BA_%D0%9B%D1%83%D0%BA%27%D1%8F%D0%BD%D1%83_%D0%9A%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%96_1812%E2%80%941851.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Вижниця_15.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%92%D0%B8%D0%B6%D0%BD%D0%B8%D1%86%D1%8F_15.jpg.
-  Accessed 2026-07-02.
+**Claim boundaries that must not be silently synthesized:**
+
+- Birth year: EIU 1812 vs IEU/ÖBL ca 1803.
+- Death place/cause: EIU Gura Humorului + torture-related illness vs IEU Solca
+  (Gura-Humorului variant) under surveillance vs ÖBL Solka under Polizeiaufsicht.
+- Autonomy language: IEU/ÖBL explicit autonomy/attachment claims; EIU emphasizes
+  peasant petitions to keep Bukovyna within Galicia against Romanian elite
+  separatism demand — related but not identical wording.
+- "Huzulenkönig" is ÖBL/reception label, not a proven formal title.
+
+**Cross-track (Existing plan paths verified 2026-07-18):**
+
+- `curriculum/l2-uk-en/plans/hist/bukovyna-zakarpattia.yaml`
+- `curriculum/l2-uk-en/plans/istorio/bukovyna-mizh-imperiiamy.yaml`
+- `curriculum/l2-uk-en/plans/bio/olha-kobylianska.yaml`
+- `curriculum/l2-uk-en/plans/bio/oleksa-dovbush.yaml` (comparison caution only)
+
+**Catalog surfaces for this slug (packet 2026-07-18):** discovery, plan (readings
+v2), this dossier, `wiki/figures/lukian-kobylytsia.md`,
+`wiki/figures/lukian-kobylytsia.sources.yaml`.

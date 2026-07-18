@@ -1,0 +1,37 @@
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Kobylycya_L
+  type: external
+  title: КОБИЛИЦЯ Лук'ян
+  url: https://www.history.org.ua/?termin=Kobylycya_L
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    language: uk
+    verified_on: '2026-07-18'
+- id: S2
+  file: https://www.history.org.ua/?termin=Bukovynske_selianske_1848
+  type: external
+  title: БУКОВИНСЬКЕ СЕЛЯНСЬКЕ ПОВСТАННЯ 1848-49 РР.
+  url: https://www.history.org.ua/?termin=Bukovynske_selianske_1848
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    language: uk
+    verified_on: '2026-07-18'
+- id: S3
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+  type: external
+  title: Kobylytsia, Lukian
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    language: en
+    verified_on: '2026-07-18'
+- id: S4
+  file: https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml
+  type: external
+  title: Kobylicza, Lucian
+  url: https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml
+  metadata:
+    publisher: Österreichisches Biographisches Lexikon 1815–1950
+    language: de
+    verified_on: '2026-07-18'

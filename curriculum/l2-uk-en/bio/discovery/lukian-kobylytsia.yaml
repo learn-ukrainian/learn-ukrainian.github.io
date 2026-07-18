@@ -1,0 +1,83 @@
+discovered_at: '2026-07-18T00:00:00+00:00'
+error: null
+query_keywords:
+- 'Лук''ян Кобилиця: буковинський селянський провід і Габсбурзький 1848 рік'
+- Кобилиця Лук'ян Енциклопедія історії України
+- Буковинське селянське повстання 1848-49
+- Kobylytsia Lukian Internet Encyclopedia of Ukraine
+- Kobylicza Lucian Österreichisches Biographisches Lexikon
+- дідичі ліси пасовища петиція Рейхстаг
+- Huzulenkönig Солка Гуцульщина
+rag_chunks: []
+rag_literary: []
+source_urls:
+- https://www.history.org.ua/?termin=Kobylycya_L
+- https://www.history.org.ua/?termin=Bukovynske_selianske_1848
+- https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+- https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Kobylycya_L
+  type: external
+  title: КОБИЛИЦЯ Лук'ян
+  url: https://www.history.org.ua/?termin=Kobylycya_L
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    author: Стеблій Ф.І.
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+- id: S2
+  file: https://www.history.org.ua/?termin=Bukovynske_selianske_1848
+  type: external
+  title: БУКОВИНСЬКЕ СЕЛЯНСЬКЕ ПОВСТАННЯ 1848-49 РР.
+  url: https://www.history.org.ua/?termin=Bukovynske_selianske_1848
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    author: Ясь О.В.
+    language: uk
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted
+- id: S3
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+  type: external
+  title: Kobylytsia, Lukian
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKobylytsiaLukian.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    author: Arkadii Zhukovsky
+    language: en
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted-reference-only
+- id: S4
+  file: https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml
+  type: external
+  title: Kobylicza, Lucian
+  url: https://www.biographien.ac.at/oebl/oebl_K/Kobylicza_Lucian_1803_1851.xml
+  metadata:
+    publisher: Österreichisches Biographisches Lexikon 1815–1950
+    language: de
+    http_status: 200
+    verified_on: '2026-07-18'
+    disposition: adopted-reference-only
+    license_note: Text CC BY-NC-SA 3.0 AT on OBL page
+rejected_sources:
+- url: https://cv.archives.gov.ua/lukian.html
+  http_status: 403
+  verified_on: '2026-07-18'
+  reason: Access Denied (Akamai); cannot verify archival exhibit text in this session
+- url: "https://dimfranka.lviv.ua/material/%D0%BB%D1%83%D0%BA%D1%8F%D0%BD-%\
+    D0%BA%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%8F"
+  http_status: 502
+  verified_on: '2026-07-18'
+  reason: Bad Gateway; Franko reception page not readable for adoption
+- url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%86%D1%8F_%D0%9B%D1%83%D0%BA%27%D1%8F%D0%BD
+  http_status: 200
+  verified_on: '2026-07-18'
+  reason: Orientation only; Wikipedia is not an adopted factual authority
+warning: Subject-first discovery for catalog readiness 2026-07-18. Adopted set is EIU biography + EIU
+  1848–49 uprising + IEU + ÖBL. Archive Chernivtsi exhibit and Dim Franka page rejected as inaccessible.
+  Learner readings are Ukrainian EIU only; IEU/ÖBL are reference-only for date/place disagreements.

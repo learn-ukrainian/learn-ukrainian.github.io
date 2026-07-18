@@ -1,0 +1,59 @@
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Zaliznyak_M
+  type: external
+  title: ЗАЛІЗНЯК Максим Ієвлевич
+  url: https://www.history.org.ua/?termin=Zaliznyak_M
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    language: uk
+    verified_on: '2026-07-18'
+- id: S2
+  file: https://www.history.org.ua/?termin=Koliivshchyna
+  type: external
+  title: КОЛІЇВЩИНА
+  url: https://www.history.org.ua/?termin=Koliivshchyna
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    language: uk
+    verified_on: '2026-07-18'
+- id: S3
+  file: https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna
+  type: external
+  title: УМАНСЬКА ТРАГЕДІЯ 1768, Уманська різанина
+  url: https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna
+  metadata:
+    publisher: Енциклопедія історії України, Інститут історії України НАН України
+    language: uk
+    verified_on: '2026-07-18'
+- id: S4
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+  type: external
+  title: Zalizniak, Maksym
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    language: en
+    verified_on: '2026-07-18'
+- id: S5
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+  type: external
+  title: Koliivshchyna rebellion
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+  metadata:
+    publisher: Internet Encyclopedia of Ukraine / CIUS
+    language: en
+    verified_on: '2026-07-18'
+- id: S6
+  file: https://resource.history.org.ua/item/0014806
+  type: external
+  title: 'Коліївщина: 1768–1769 роки у документальній та мемуарній спадщині. Т. 1'
+  url: https://resource.history.org.ua/item/0014806
+  metadata:
+    publisher: Інститут історії України НАН України / ІУАД ім. М.С. Грушевського / ЦДІАК України
+    language: uk
+    verified_on: '2026-07-18'
+    role: catalog-reference
+    note: Institutional catalog/annotation of an edited document volume (CDIAK fond
+      cases 227–229 pointer + PDF link); not itself a primary document; no exact
+      primary-document locators or rights evidence claimed.
