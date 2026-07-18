@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load and validate main-session context profiles for Claude Code routes."""
+"""Load and validate main-session context profiles for interactive routes."""
 
 from __future__ import annotations
 
@@ -53,8 +53,8 @@ def validate_profile(profile: dict[str, Any], *, key: str | None = None) -> list
     elif key is not None and profile_id != key:
         errors.append(f"profile_id {profile_id!r} does not match registry key {key!r}")
 
-    if profile["transport"] not in {"claudex", "native", "unknown"}:
-        errors.append("transport must be claudex, native, or unknown")
+    if profile["transport"] not in {"claudex", "native", "native_codex", "unknown"}:
+        errors.append("transport must be claudex, native, native_codex, or unknown")
     if not isinstance(profile["main_model_id"], str) or not profile["main_model_id"].strip():
         errors.append("main_model_id must be a non-empty string")
 

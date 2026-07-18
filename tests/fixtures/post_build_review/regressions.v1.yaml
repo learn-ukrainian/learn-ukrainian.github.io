@@ -530,3 +530,16 @@ regressions:
       Validate and hash the schema before spawn, forward its absolute path
       through worker tool configuration, bind codex exec --output-schema, and
       fail closed before inference for a missing, malformed, or non-Codex use.
+  - bug_id: codex-provider-schema-exceeded-structured-output-subset
+    responsible_layer: schema
+    fixed_in_version: 6.0.7
+    version_field: review_protocol_version
+    input: >-
+      A packet-bound BIO schema reaches Codex with 3,167 enum values plus
+      unsupported composition and dynamic-property keywords, so the provider
+      completes without an assistant message before semantic review begins.
+    expected: >-
+      Emit a Codex-specific strict transport schema that passes OpenAI limits
+      before inference while the canonical packet-bound finalizer continues to
+      reject ineligible lines, wrong claim ownership, and every relaxed
+      transport-only constraint without repair.

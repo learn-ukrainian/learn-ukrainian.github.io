@@ -1,5 +1,17 @@
 version: 1
 profiles:
+  native_codex:
+    profile_id: native_codex
+    transport: native_codex
+    main_model_id: gpt-5.6-sol
+    model_id_patterns:
+      - '^gpt-5\.6-sol$'
+    main_context_window_tokens: 372000
+    auto_compact_capacity_tokens: 353000
+    cold_start_profile: compact
+    cold_start_budget_tokens: 37200
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
   sol_lead:
     profile_id: sol_lead
     transport: claudex

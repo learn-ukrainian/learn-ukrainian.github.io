@@ -56,6 +56,8 @@ or `luna` (and their full `gpt-5.6-*` model IDs).
 - `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session
 - the canonical `main` checkout as its working root; the launcher does not create or refresh a detached interactive worktree
 - generated Codex config and rollover state bootstrapped before launch
+- an explicit native-Codex context profile, validated against `--model`/`-m`
+  immediately and against the CLI-reported model at `SessionStart`
 - repo subprocess defaults unchanged unless you explicitly override env vars
 
 Override before launch if needed:
@@ -63,6 +65,11 @@ Override before launch if needed:
 ```bash
 CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
 ```
+
+For a repository created with `--separate-git-dir`, Git cannot recover the
+primary checkout path from a linked worktree. In that uncommon layout, set
+`CODEX_CANONICAL_REPO_ROOT=/absolute/path/to/main`; the launcher verifies that
+the path is this repository's root on the `main` branch before using it.
 
 Implementation work still follows `AGENTS.md`: create a scoped dispatch
 worktree instead of editing or committing from the primary checkout. The
