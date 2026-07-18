@@ -59,6 +59,13 @@ eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claud
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
+# Codex uses provider-specific per-epic slots; harness/infra share one alias.
+eq "$(handoff_identity_for_codex_epic atlas)" "codex-atlas" "Codex atlas → codex-atlas"
+eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatka → codex-hramatka"
+eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
+eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
+eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
+
 # --- e2e: --epic harness resolves the infra lane slot (not phantom claude-harness) ---
 epic="$(handoff_epic_from_argv --epic harness --agent infra-orchestrator)"
 eq "$(handoff_identity_for_epic "$epic")" "claude-infra" "e2e: --epic harness → claude-infra"

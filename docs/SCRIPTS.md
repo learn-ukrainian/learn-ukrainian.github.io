@@ -60,6 +60,23 @@ or `luna` (and their full `gpt-5.6-*` model IDs).
   immediately and against the CLI-reported model at `SessionStart`
 - repo subprocess defaults unchanged unless you explicitly override env vars
 
+Bind a Codex session to one epic at launch so SessionStart loads only that
+lane's handoff and rollover namespace:
+
+```bash
+./start-codex.sh --epic hramatka
+./start-codex.sh --epic atlas
+./start-codex.sh --epic harness
+```
+
+`--epic` is launcher-only and is not forwarded to the Codex CLI. It exports the
+binding `SESSION_EPIC` and a provider-specific handoff identity such as
+`codex-hramatka`. SessionStart selects that epic's `CODEX-DRIVER-HANDOFF.md`
+when present and otherwise uses (or initializes) its shared
+`CLAUDE-DRIVER-HANDOFF.md`. Without `--epic`, the existing cold-start rule still
+requires the first user message or lane-assignment fallback to identify the
+session before it touches a queue.
+
 Override before launch if needed:
 
 ```bash
