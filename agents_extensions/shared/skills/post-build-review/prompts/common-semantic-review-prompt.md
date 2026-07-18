@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.6`
+Semantic prompt version: `6.0.7`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -245,6 +245,8 @@ Apply the following anchored rubric within the bands:
   that dimension and its rationale must name the concrete gap to `10.0`.
   A `PASS` score may link only low/info findings; a score below `9.0` is never
   publication-ready and must use `REVISE` or `BLOCK` as its calibrated status.
+  A `BLOCK` score requires at least one linked high- or blocker-severity
+  finding. Medium-only findings cannot justify a score below `6.0`.
   At least one evidence entry for that dimension must repeat one linked
   finding's exact primary locator: the identical repo-relative target path and
   one-based line. Positive evidence elsewhere does not satisfy this relational
@@ -434,8 +436,9 @@ only supported claims.
 
 Every quality-dimension `finding_id` must reference a semantic finding. A
 dimension marked `REVISE` requires a medium/high finding, `BLOCK` requires a
-blocker, and `PASS` cannot reference a material finding. The overall verdict
-must fail closed when any dimension is not `PASS`. Do not repair, clamp,
+high/blocker finding, and `PASS` cannot reference a material finding. A
+medium-only finding cannot support `BLOCK` or a score below `6.0`. The overall
+verdict must fail closed when any dimension is not `PASS`. Do not repair, clamp,
 downgrade, round, reconcile, or otherwise change a score to fit a band.
 Do not emit an orphan semantic finding: every finding must be owned by a
 dimension, alignment-audit entry, vocabulary-coverage entry, claim-ledger,

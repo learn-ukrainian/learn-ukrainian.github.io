@@ -2513,9 +2513,11 @@ def normalize_semantic_result(
             raise ReviewProtocolError(
                 f"Quality dimension {dimension} REVISE requires a high or medium finding"
             )
-        if dimension_status == "BLOCK" and "blocker" not in referenced_severities:
+        if dimension_status == "BLOCK" and not referenced_severities.intersection(
+            {"blocker", "high"}
+        ):
             raise ReviewProtocolError(
-                f"Quality dimension {dimension} BLOCK requires a blocker finding"
+                f"Quality dimension {dimension} BLOCK requires a high or blocker finding"
             )
         if dimension_status == "INCOMPLETE" and not dimension_finding_ids:
             raise ReviewProtocolError(
@@ -3177,9 +3179,9 @@ def _validate_normalized_quality_dimensions(
             raise ReviewProtocolError(
                 f"Quality dimension {dimension} REVISE requires a high or medium finding"
             )
-        if status == "BLOCK" and "blocker" not in severities:
+        if status == "BLOCK" and not severities.intersection({"blocker", "high"}):
             raise ReviewProtocolError(
-                f"Quality dimension {dimension} BLOCK requires a blocker finding"
+                f"Quality dimension {dimension} BLOCK requires a high or blocker finding"
             )
         if status == "INCOMPLETE" and not finding_ids:
             raise ReviewProtocolError(

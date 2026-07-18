@@ -1,4 +1,4 @@
-catalog_version: 6.0.6
+catalog_version: 6.0.7
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -506,3 +506,15 @@ regressions:
       Require the dimension evidence to repeat one linked finding's exact
       target path and line so the numeric gap remains auditable and the
       fail-closed validator can accept the response without repair.
+  - bug_id: high-finding-block-score-rejected-without-literal-blocker
+    responsible_layer: disposition
+    fixed_in_version: 6.0.5
+    version_field: review_protocol_version
+    input: >-
+      A reviewer assigns a dimension score below 6.0, marks the dimension
+      BLOCK, and links an evidence-backed high-severity finding, but no finding
+      uses the literal blocker severity.
+    expected: >-
+      Accept the calibrated BLOCK response and preserve its numeric score;
+      continue to reject a BLOCK dimension supported only by medium-or-lower
+      findings, and keep the categorical combined disposition fail-closed.
