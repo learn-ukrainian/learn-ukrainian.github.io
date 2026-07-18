@@ -705,12 +705,43 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
     assert normalized["findings"][0]["issue_id"] == "AWKWARD_PASSIVE_RESULT_STATE"
 
 
-def test_quality_dimension_reuses_supplied_deterministic_finding_id() -> None:
+def test_quality_dimension_reuses_supplied_deterministic_finding_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = pbr.evaluate_mechanical_track_policy
+
+    def with_supplied_finding(
+        target: dict, track_policy: dict, **kwargs: object
+    ) -> list[dict]:
+        findings = original(target, track_policy, **kwargs)
+        content_path = str(target["files"]["content"])
+        repo_root = Path(str(kwargs.get("repo_root", ROOT)))
+        content_lines = (repo_root / content_path).read_text(encoding="utf-8").splitlines()
+        evidence_line = next(
+            index
+            for index, text in enumerate(content_lines, start=1)
+            if len(text.strip()) >= 8
+        )
+        findings.append(
+            {
+                "id": "supplied-deterministic-finding",
+                "issue_id": "LEARNER_LEVEL_META_LEAKAGE",
+                "source": "track_policy",
+                "category": "learner_level_meta_leakage",
+                "severity": "medium",
+                "message": "Synthetic supplied finding for deterministic ID reuse.",
+                "evidence": "Synthetic packet-bound deterministic evidence.",
+                "location": f"{content_path}:{evidence_line}",
+            }
+        )
+        return findings
+
+    monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_supplied_finding)
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     external = next(
         finding
         for finding in pbr._deterministic_findings(packet)
-        if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"
+        if finding["id"] == "supplied-deterministic-finding"
     )
     semantic = _passing_semantic(packet)
     semantic["verdict"] = "REVISE"
