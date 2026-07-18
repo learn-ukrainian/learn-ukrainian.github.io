@@ -70,9 +70,9 @@
     "api:reload": "npm run api",
     "api:bg": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --reload --log-config scripts/api/logging.json >> logs/api.log 2>&1 & echo \"PID: $!\" | tee -a logs/api.log",
     "api:logs": "tail -f logs/api.log",
-    "build:\u0073tarlight": "npm run build --prefix site",
-    "build:\u0073tarlight:full": "npm run build:full --prefix site",
-    "dev:\u0073tarlight": "npm run dev --prefix site"
+    "build:starlight": "npm run build --prefix site",
+    "build:starlight:full": "npm run build:full --prefix site",
+    "dev:starlight": "npm run dev --prefix site"
   },
   "repository": {
     "type": "git",
@@ -121,6 +121,7 @@
   "overrides": {
     "uuid": "11.1.1",
     "js-yaml": "^4.2.0",
-    "markdown-it": ">=14.2.0"
+    "markdown-it": ">=14.2.0",
+    "adm-zip": "0.6.0"
   }
 }
