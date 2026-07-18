@@ -1,6 +1,19 @@
+"""Export the Word Atlas open dataset shards from lexicon-manifest.json.
+
+Run from the repo root::
+
+    .venv/bin/python scripts/lexicon/export_open_dataset.py --write
+
+Bare invocation and ``--help`` refuse / print usage without writing dataset
+files (``#5393`` sibling guard).
+"""
+
+from __future__ import annotations
+
+import argparse
 import json
-import os
 import shutil
+from collections.abc import Sequence
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -63,7 +76,41 @@ Provenance is tracked per-field where applicable. For full attribution details, 
 """
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
+    """CLI parser for export_open_dataset (``#5393`` argv guard)."""
+    return argparse.ArgumentParser(
+        description=(
+            "Export the Word Atlas open dataset (sharded JSONL + attribution docs) "
+            "from site/src/data/lexicon-manifest.json. "
+            "Use when publishing the open lexicon dataset; "
+            "do NOT use for flag probes — bare invocation must not rewrite dataset files."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  # Print usage without touching any files\n"
+            "  .venv/bin/python scripts/lexicon/export_open_dataset.py --help\n\n"
+            "  # Export open dataset shards\n"
+            "  .venv/bin/python scripts/lexicon/export_open_dataset.py --write\n\n"
+            "Outputs (only with --write):\n"
+            "  data/lexicon-dataset/ATTRIBUTION.md, NOTICE.md, README.md\n"
+            "  data/lexicon-dataset/dataset/*.jsonl  — lemma shards by first letter\n\n"
+            "Exit codes:\n"
+            "  0  success (--help or successful --write)\n"
+            "  2  refused (no --write) or argparse error\n\n"
+            "Related:\n"
+            "  scripts/lexicon/enrich_manifest.py  — produce the enriched manifest first\n"
+            "  issue #5393                        — argv guard sibling"
+        ),
+    )
+
+
+def export_dataset() -> tuple[int, int]:
+    """Write open-dataset shards from the Atlas manifest.
+
+    Returns ``(entry_count, shard_count)``. Side-effecting: creates/replaces
+    files under ``data/lexicon-dataset/``.
+    """
     DATASET_ROOT.mkdir(parents=True, exist_ok=True)
     if DATASET_DIR.exists():
         shutil.rmtree(DATASET_DIR)
@@ -102,8 +149,34 @@ def main() -> None:
             for entry in char_entries:
                 out_f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-    print(f"Exported {len(entries)} entries to {DATASET_DIR.relative_to(PROJECT_ROOT)} across {len(shards)} shards.")
+    return len(entries), len(shards)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse CLI args and export only when ``--write`` is given."""
+    parser = build_parser()
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help=(
+            "Write data/lexicon-dataset/ (replaces dataset/ shards and attribution docs). "
+            "Default: refuse with usage and exit non-zero (no files touched)."
+        ),
+    )
+    args = parser.parse_args(argv)
+    if not args.write:
+        parser.error(
+            "refusing to export the open dataset without --write "
+            "(writes data/lexicon-dataset/; pass --write to proceed)"
+        )
+
+    entry_count, shard_count = export_dataset()
+    print(
+        f"Exported {entry_count} entries to {DATASET_DIR.relative_to(PROJECT_ROOT)} "
+        f"across {shard_count} shards."
+    )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

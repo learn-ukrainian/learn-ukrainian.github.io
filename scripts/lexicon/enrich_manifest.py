@@ -30,11 +30,15 @@ morphology and etymology.
 
 Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 
-    .venv/bin/python scripts/lexicon/enrich_manifest.py
+    .venv/bin/python scripts/lexicon/enrich_manifest.py --write
+
+Bare invocation and ``--help`` refuse / print usage without rewriting the
+gitignored manifest (``#5393``).
 """
 
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import functools
 import html
@@ -6238,7 +6242,60 @@ def enrich() -> tuple[int, int]:
     return enriched, len(entries)
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
+    """CLI parser for enrich_manifest (``#5393`` argv guard)."""
+    return argparse.ArgumentParser(
+        description=(
+            "Enrich the Word Atlas lexicon-manifest.json with source-verified dictionary data "
+            "(VESUM morphology, СУМ definitions, CEFR, synonyms, etymology, etc.). "
+            "Use only when intentionally regenerating the Atlas enrichment layer; "
+            "do NOT use for flag probes or tab-completion — bare invocation must never "
+            "rewrite the gitignored manifest."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  # Print usage without touching any files\n"
+            "  .venv/bin/python scripts/lexicon/enrich_manifest.py --help\n\n"
+            "  # Run full enrichment (rewrites lexicon-manifest.json)\n"
+            "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write\n\n"
+            "Outputs (only with --write):\n"
+            "  site/src/data/lexicon-manifest.json  — rewritten with enrichment blocks\n"
+            "  site/src/data/lexicon-manifest.fingerprint.json  — refreshed fingerprint\n"
+            "  data/lexicon/side/*.sqlite, data/lexicon/runner_work/  — staging side DBs\n\n"
+            "Exit codes:\n"
+            "  0  success (--help or successful --write)\n"
+            "  2  refused (no --write) or argparse error\n\n"
+            "Related:\n"
+            "  scripts/lexicon/build_data_manifest.py  — build bare lemma manifest first\n"
+            "  scripts/lexicon/verify_manifest.py      — pre-promote verification\n"
+            "  issue #5393                            — argv guard / --help must not run enrichment"
+        ),
+    )
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse CLI args and run enrichment only when ``--write`` is given.
+
+    Bare invocation and unknown flags must not call :func:`enrich` or touch
+    ``lexicon-manifest.json`` (``#5393``).
+    """
+    parser = build_parser()
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help=(
+            "Actually run enrichment and rewrite site/src/data/lexicon-manifest.json. "
+            "Default: refuse with usage and exit non-zero (no files touched)."
+        ),
+    )
+    args = parser.parse_args(argv)
+    if not args.write:
+        parser.error(
+            "refusing to run enrichment without --write "
+            "(rewrites site/src/data/lexicon-manifest.json; pass --write to proceed)"
+        )
+
     enriched, total = enrich()
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
@@ -6250,7 +6307,8 @@ def main() -> None:
     print(f"enriched {enriched}/{total} lexicon entries from VESUM + СУМ + Горох/ЕСУМ/Вікісловник/kaikki + slovnyk.me")
     print(f"pronunciation {pronunciation_covered}/{total}")
     print(f"single-word etymology {etymology_covered}/{etymology_total}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
