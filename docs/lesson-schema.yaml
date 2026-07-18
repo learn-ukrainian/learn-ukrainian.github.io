@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: f02c5f4b3e40d3f56b07dad41e0aaefd5e1baba47c5a41a48ecd2e864df9dbc0
+  components_sha256: a51f80e11aad25ba22c8814cea65f9ee7023902a8f375d4e63ff2f745dfaf006
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1691,6 +1691,47 @@ components:
       chromeLocale: <ChromeLocale>
     deprecated: false
     deprecation_reason: null
+  PracticeFormRail:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: source
+        type: PracticeFormRailEntry
+        description: source prop.
+        ukrainian_text: 'false'
+      - name: actual
+        type: PracticeFormRailEntry
+        description: actual prop.
+        ukrainian_text: 'false'
+      - name: verdict
+        type: FormRailVerdict
+        description: verdict prop.
+        ukrainian_text: 'false'
+      - name: chromeLocale
+        type: ChromeLocale
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types:
+      PracticeFormRailEntry:
+      - name: label
+        type: string
+        description: label prop.
+        ukrainian_text: 'false'
+      - name: value
+        type: string
+        description: value prop.
+        ukrainian_text: 'false'
+    example:
+      source: <PracticeFormRailEntry>
+      actual: <PracticeFormRailEntry>
+      verdict: <FormRailVerdict>
+      chromeLocale: <ChromeLocale>
+    deprecated: false
+    deprecation_reason: null
   PracticeSessionSummary:
     tab: lesson
     level_scope: *id001
@@ -1736,6 +1777,33 @@ components:
     example:
       stats: <SessionSummaryStats>
       showEnglishSubtitles: false
+    deprecated: false
+    deprecation_reason: null
+  PracticeStress:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: item
+        type: PracticeStressItem
+        description: item prop.
+        ukrainian_text: 'false'
+      - name: selectedNucleusIndex
+        type: number | null
+        description: selectedNucleusIndex prop.
+        ukrainian_text: 'false'
+      - name: answerLocked
+        type: boolean
+        description: answerLocked prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types: {}
+    example:
+      item: <PracticeStressItem>
+      selectedNucleusIndex: <number | null>
+      answerLocked: false
     deprecated: false
     deprecation_reason: null
   PrimaryReading:

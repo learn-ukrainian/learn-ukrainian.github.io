@@ -3,7 +3,9 @@ import MatchUp from './MatchUp';
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
+import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
 import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
+import PracticeStress from './PracticeStress';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import {
@@ -712,12 +714,6 @@ function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
 }
 
 function drillChoiceOptions(selection: PracticeSelection, showEnglishSubtitles: boolean): ChoiceOption[] | null {
-  if (selection.stress) {
-    return selection.stress.nuclei.map((nucleus) => ({
-      label: nucleus.label,
-      correct: nucleus.index === selection.stress?.stressIndex,
-    }));
-  }
   const selectedSet = classifySet(selection);
   if (selectedSet) {
     return selectedSet.options.map((option) => ({
@@ -1055,6 +1051,10 @@ function LexiconPracticeIsland({
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
+  const [stressSelectedIndex, setStressSelectedIndex] = useState<number | null>(null);
+  const [paradigmSelectedLabel, setParadigmSelectedLabel] = useState<string | null>(null);
+  const [paronymSelectedLabel, setParonymSelectedLabel] = useState<string | null>(null);
+  const [heritageSelectedLabel, setHeritageSelectedLabel] = useState<string | null>(null);
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const [dailySnapshot, setDailySnapshot] = useState<DailyPracticeDeckSnapshot | null>(null);
   const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
@@ -1113,6 +1113,10 @@ function LexiconPracticeIsland({
     setClozeAttemptRecorded(false);
     setHeritageFeedback(null);
     setParonymFeedback(null);
+    setStressSelectedIndex(null);
+    setParadigmSelectedLabel(null);
+    setParonymSelectedLabel(null);
+    setHeritageSelectedLabel(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
     matchedSelectedRatingRef.current = null;
@@ -2130,6 +2134,21 @@ function LexiconPracticeIsland({
     completeSelection(selection, outcome);
   }
 
+  function handleStressSelect(nucleusIndex: number) {
+    if (!selection?.stress || answerLocked) return;
+    setStressSelectedIndex(nucleusIndex);
+    const correct = nucleusIndex === selection.stress.stressIndex;
+    const rating = correct ? 'good' : 'again';
+    const outcome = recordReview(selection, rating);
+    setFeedback({
+      uk: `${selection.stress.unstressed}: ${correct ? 'Правильно' : 'Ще раз'}`,
+      en: `${selection.stress.unstressed}: ${correct ? 'Correct' : 'Again'}`,
+    });
+    setAnswerLocked(true);
+    pendingOutcomeRef.current = outcome;
+    setPendingOutcome(outcome);
+  }
+
   function handleChoice(option: ChoiceOption) {
     if (!selection || answerLocked) return;
     const rating = option.correct ? 'good' : 'again';
@@ -2141,6 +2160,9 @@ function LexiconPracticeIsland({
       ? paronymFeedbackFor(selection.paronym, option)
       : null;
     setAnswerLocked(true);
+    if (selection.paradigm) setParadigmSelectedLabel(option.label);
+    if (selection.paronym) setParonymSelectedLabel(option.label);
+    if (selection.heritage) setHeritageSelectedLabel(option.label);
     setHeritageFeedback(nextHeritageFeedback);
     setParonymFeedback(nextParonymFeedback);
     setFeedback({
@@ -2153,9 +2175,14 @@ function LexiconPracticeIsland({
   }
 
   function submitCloze(value: string, source: 'typed' | 'chip') {
-    if (!selection?.cloze || answerLocked) return;
+    if (!selection?.cloze) return;
     const answer = value.trim();
-    if (!answer) return;
+    if (source === 'chip') {
+      // Suggestions populate the input; only the explicit Check action commits.
+      if (!answerLocked) setClozeInput(answer);
+      return;
+    }
+    if (answerLocked || !answer) return;
     const cloze = selection.cloze;
     const correct = czNorm(answer) === czNorm(cloze.form);
     const caseMiss = isWrongCaseAnswer(answer, selection.lemma, cloze);
@@ -2197,13 +2224,9 @@ function LexiconPracticeIsland({
         textUk: '✗ Не те слово',
         textEn: '✗ Not that word',
       });
-      if (source === 'chip') {
-        // Wrong chip pick is a wrong answer: dwell rather than auto-advance so the
-        // learner can read the correction before «Далі →» / Enter.
-        setAnswerLocked(true);
-        pendingOutcomeRef.current = outcome;
-        setPendingOutcome(outcome);
-      }
+      setAnswerLocked(true);
+      pendingOutcomeRef.current = outcome;
+      setPendingOutcome(outcome);
       return;
     }
 
@@ -2212,15 +2235,7 @@ function LexiconPracticeIsland({
       textUk: '✗ Не те слово',
       textEn: '✗ Not that word',
     });
-    if (source === 'chip') {
-      setAnswerLocked(true);
-      const outcome = {
-        nextUnresolved: new Set(unresolvedCardKeys),
-        nextDeferred: [...deferredLemmas],
-      };
-      pendingOutcomeRef.current = outcome;
-      setPendingOutcome(outcome);
-    }
+    setAnswerLocked(true);
   }
 
   const dueReviews = useMemo(
@@ -2739,9 +2754,14 @@ function LexiconPracticeIsland({
                     clozeFeedback={clozeFeedback}
                     heritageFeedback={heritageFeedback}
                     paronymFeedback={paronymFeedback}
+                    stressSelectedIndex={stressSelectedIndex}
+                    paradigmSelectedLabel={paradigmSelectedLabel}
+                    paronymSelectedLabel={paronymSelectedLabel}
+                    heritageSelectedLabel={heritageSelectedLabel}
                     onClozeInput={setClozeInput}
                     onFlashcardRating={handleFlashcardRating}
                     onChoice={handleChoice}
+                    onStressSelect={handleStressSelect}
                     onMatchingComplete={handleMatchingComplete}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
@@ -2833,9 +2853,14 @@ function PracticeItem({
   clozeFeedback,
   heritageFeedback,
   paronymFeedback,
+  stressSelectedIndex,
+  paradigmSelectedLabel,
+  paronymSelectedLabel,
+  heritageSelectedLabel,
   onClozeInput,
   onFlashcardRating,
   onChoice,
+  onStressSelect,
   onMatchingComplete,
   onMatchingMatch,
   onClozeSubmit,
@@ -2851,9 +2876,14 @@ function PracticeItem({
   clozeFeedback: ClozeFeedback | null;
   heritageFeedback: HeritageFeedback | null;
   paronymFeedback: ParonymFeedback | null;
+  stressSelectedIndex: number | null;
+  paradigmSelectedLabel: string | null;
+  paronymSelectedLabel: string | null;
+  heritageSelectedLabel: string | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
+  onStressSelect(nucleusIndex: number): void;
   onMatchingComplete(): void;
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
@@ -2881,17 +2911,76 @@ function PracticeItem({
     );
   }
 
-  if (selection.mode === 'cloze' && selection.cloze) {
+  if (selection.mode === 'stress' && selection.stress) {
+    const drillPrompt = drillChoicePrompt(selection);
     return (
-      <PracticeCloze
-        selection={selection}
-        input={clozeInput}
-        feedback={clozeFeedback}
-        answerLocked={answerLocked}
-        onInput={onClozeInput}
-        onSubmit={onClozeSubmit}
-        showEnglishSubtitles={showEnglishSubtitles}
-      />
+      <div className="lexicon-stress" data-testid="practice-stress-stage">
+        {drillPrompt ? (
+          <p className="lexicon-choice-prompt mc-q" data-testid="practice-form-prompt">
+            <span lang="uk">
+              {drillPrompt.promptUk}
+              {drillPrompt.subtitleUk ? (
+                <>
+                  {' '}
+                  <span className="mc-descriptor">— {drillPrompt.subtitleUk}</span>
+                </>
+              ) : null}
+            </span>
+            {showEnglishSubtitles ? (
+              <span
+                className="btn-sub"
+                lang="en"
+                style={{
+                  display: 'inline',
+                  fontSize: '0.85em',
+                  fontWeight: 'normal',
+                  color: 'var(--lu-text-muted)',
+                }}
+              >
+                {' '}
+                / {drillPrompt.promptEn}
+                {drillPrompt.subtitleEn ? ` — ${drillPrompt.subtitleEn}` : ''}
+              </span>
+            ) : null}
+          </p>
+        ) : null}
+        <PracticeStress
+          item={selection.stress}
+          selectedNucleusIndex={stressSelectedIndex}
+          answerLocked={answerLocked}
+          onSelect={onStressSelect}
+        />
+      </div>
+    );
+  }
+
+  if (selection.mode === 'cloze' && selection.cloze) {
+    const cloze = selection.cloze;
+    const railVerdict: FormRailVerdict = !clozeFeedback
+      ? 'idle'
+      : clozeFeedback.kind === 'correct'
+        ? 'correct'
+        : 'wrong';
+    return (
+      <div className="lexicon-cloze-wrapper">
+        <PracticeCloze
+          selection={selection}
+          input={clozeInput}
+          feedback={clozeFeedback}
+          answerLocked={answerLocked}
+          onInput={onClozeInput}
+          onSubmit={onClozeSubmit}
+          showEnglishSubtitles={showEnglishSubtitles}
+        />
+        {answerLocked ? (
+          <PracticeFormRail
+            source={{ label: cloze.form, value: selection.lemma.lemma }}
+            actual={{ label: clozeInput, value: clozeInput }}
+            verdict={railVerdict}
+            chromeLocale={chromeLocale}
+          />
+        ) : null}
+      </div>
     );
   }
 
@@ -2901,6 +2990,8 @@ function PracticeItem({
         item={selection.heritage}
         feedback={heritageFeedback}
         answerLocked={answerLocked}
+        selectedLabel={heritageSelectedLabel}
+        chromeLocale={chromeLocale}
         onChoice={onChoice}
         showEnglishSubtitles={showEnglishSubtitles}
       />
@@ -2913,6 +3004,8 @@ function PracticeItem({
         item={selection.paronym}
         feedback={paronymFeedback}
         answerLocked={answerLocked}
+        selectedLabel={paronymSelectedLabel}
+        chromeLocale={chromeLocale}
         onChoice={onChoice}
         showEnglishSubtitles={showEnglishSubtitles}
       />
@@ -2971,6 +3064,14 @@ function PracticeItem({
             </li>
           ))}
         </ul>
+        {selection.mode === 'paradigm' && answerLocked && paradigmSelectedLabel !== null ? (
+          <PracticeFormRail
+            source={{ label: selection.lemma.lemma, value: selection.lemma.lemma }}
+            actual={{ label: paradigmSelectedLabel, value: paradigmSelectedLabel }}
+            verdict={drillOptions.some((o) => o.correct && o.label === paradigmSelectedLabel) ? 'correct' : 'wrong'}
+            chromeLocale={chromeLocale}
+          />
+        ) : null}
       </div>
     );
   }
@@ -3096,12 +3197,16 @@ function PracticeParonym({
   item,
   feedback,
   answerLocked,
+  selectedLabel,
+  chromeLocale,
   onChoice,
   showEnglishSubtitles,
 }: {
   item: PracticeParonymItem;
   feedback: ParonymFeedback | null;
   answerLocked: boolean;
+  selectedLabel: string | null;
+  chromeLocale: 'en' | 'uk';
   onChoice(option: ChoiceOption): void;
   showEnglishSubtitles: boolean;
 }) {
@@ -3150,6 +3255,12 @@ function PracticeParonym({
               <span className="btn-sub" lang="en">/ {feedback.textEn}</span>
             ) : null}
           </p>
+          <PracticeFormRail
+            source={{ label: `${item.lemma} / ${item.confusable}`, value: item.lemma }}
+            actual={{ label: selectedLabel ?? '', value: selectedLabel ?? '' }}
+            verdict={feedback.kind}
+            chromeLocale={chromeLocale}
+          />
           <div style={{ marginTop: '0.4rem' }}>
             <a
               href={atlasLemmaHref(item.lemmaId)}
@@ -3174,18 +3285,22 @@ function PracticeHeritage({
   item,
   feedback,
   answerLocked,
+  selectedLabel,
+  chromeLocale,
   onChoice,
   showEnglishSubtitles,
 }: {
   item: PracticeHeritageItem;
   feedback: HeritageFeedback | null;
   answerLocked: boolean;
+  selectedLabel: string | null;
+  chromeLocale: 'en' | 'uk';
   onChoice(option: ChoiceOption): void;
   showEnglishSubtitles: boolean;
 }) {
   const [before, after] = slotPromptParts(item.prompt);
   const options = heritageOptions(item);
-  const slotText = feedback?.kind === 'correct' ? item.answer : '___';
+  const slotText = feedback?.kind === 'correct' ? (selectedLabel ?? item.answer) : '___';
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
@@ -3236,6 +3351,12 @@ function PracticeHeritage({
               ) : null}
             </p>
           ) : null}
+          <PracticeFormRail
+            source={{ label: item.nativeLemma ?? item.lemma ?? '', value: item.nativeLemma ?? item.lemma ?? '' }}
+            actual={{ label: item.answer, value: item.answer }}
+            verdict={feedback.kind}
+            chromeLocale={chromeLocale}
+          />
           <div style={{ marginTop: '0.4rem' }}>
             <a
               href={atlasLemmaHref(item.lemmaId)}
