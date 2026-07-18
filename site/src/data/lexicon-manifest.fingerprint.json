@@ -1,5 +1,5 @@
 {
-  "fingerprint": "2ed8e1dd5513f94f8245bbdaedfde9da5e76e7ebd2cbe19e6dd1c423d169ee0b",
+  "fingerprint": "4406cb72333c70b3d69ade0aa262dbfb9636809fe3956706bc166501e4cbe978",
   "inputs": {
     "lexicon_code": [
       {
@@ -99,6 +99,10 @@
         "sha256": "4d424621a014a85ea67b8f123e6e0d1fed5726eeea76c0afe0d3d5cd359bebef"
       },
       {
+        "path": "scripts/lexicon/generate_needs_review_ledger.py",
+        "sha256": "6bc9a7fb4977a57e5d39a5a11af13842b8efd1b42ea203c9c0b5647b91079663"
+      },
+      {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
         "sha256": "583f2cfd82892779321bdd91e7127212750f0be7ac430c2bec9512cef71e1084"
       },
@@ -156,7 +160,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "de3e8f0081b37f5210147825147dca6a6236de1c05e6ee361ddce38419552d12"
+        "sha256": "197d9a8c4791be86899a6b35357e97732bb58657222bc01e50598c92a2f6c5cf"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -183,6 +187,10 @@
         "sha256": "c999d218e5b95d28a8debe60dd093a0a90358ffb90419ca3cef317c3300e0431"
       },
       {
+        "path": "scripts/lexicon/triage_needs_review.py",
+        "sha256": "f9f954fdbebca4490702cf3bee46a774c87da23386a26c4634f7b81a7d4c2225"
+      },
+      {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "47df54386fda97fb7b372e8e68f89afb3ac5bd647c5a292a7380f14c5ae1f4b0"
       },
@@ -195,6 +203,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 47
+    "lexicon_code_files": 49
   }
 }

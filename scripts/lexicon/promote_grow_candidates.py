@@ -3,12 +3,19 @@
 
 Phase 2 writes ``data/lexicon/grow_candidates.json`` with a confidence split:
 ``auto_merge`` entries are dictionary-grounded and safe to promote, while
-``needs_review`` entries are held for a human. This script promotes only the
-clean bucket, validates the prospective manifest before writing it, and leaves
-the held set as a local PR-body artifact.  Entries still lacking a learner-English
-anchor remain visible promotion debt: the curation ledger records it, while the
-#5138 publish gate enforces the downstream ``old_gate_no_english_anchor``
-richness-regression backstop against the live baseline.
+``needs_review`` entries are held unless a checksum-bound needs-review ledger
+explicitly approves them (``--needs-review-ledger``). This script promotes the
+clean auto_merge bucket (optionally filtered by ``--approval-ledger``) and any
+ledger-approved held entries with their approved gloss injected as the learner
+anchor.  Entries still lacking a learner-English anchor remain visible promotion
+debt: the curation ledger records it, while the #5138 publish gate enforces the
+downstream ``old_gate_no_english_anchor`` richness-regression backstop against
+the live baseline.
+
+When to use: applying a reviewed grow promotion (auto_merge and/or needs_review
+re-entry) into the live manifest after ledger validation.
+When NOT to use: generating triage decisions (``triage_needs_review.py``) or
+emitting the needs-review decision ledger (``generate_needs_review_ledger.py``).
 """
 
 from __future__ import annotations
@@ -55,6 +62,8 @@ DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.js
 DEFAULT_NEEDS_REVIEW = PROJECT_ROOT / "data" / "lexicon" / "grow_needs_review.json"
 PRIMARY_SOURCE = "content_lexicon_grow"
 APPROVAL_LEDGER_KIND = "atlas_grow_promotion_ledger"
+NEEDS_REVIEW_LEDGER_KIND = "atlas_grow_needs_review_decisions"
+ALLOWED_LEDGER_DECISIONS = frozenset({"approve", "deferred", "reject"})
 _OPTIONAL_CANDIDATE_FIELDS = (
     "heritage_status",
     "enrichment",
@@ -81,6 +90,15 @@ class HeldLemma:
 
 
 @dataclass(frozen=True)
+class HeldRow:
+    """One needs_review row with its candidate entry payload."""
+
+    lemma: str
+    reason: str
+    entry: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
 class PromotionResult:
     candidates_found: bool
     promoted: tuple[str, ...]
@@ -94,6 +112,8 @@ class PromotionResult:
     fingerprint_written: bool
     needs_review_written: bool
     dry_run: bool
+    needs_review_approved: int = 0
+    needs_review_deferred: int = 0
 
 
 class SelfCheckError(RuntimeError):
@@ -111,6 +131,7 @@ def promote_grow_candidates(
     needs_review_path: Path = DEFAULT_NEEDS_REVIEW,
     fingerprint_path: Path = DEFAULT_FINGERPRINT,
     approval_ledger_path: Path | None = None,
+    needs_review_ledger_path: Path | None = None,
     write: bool = False,
     self_check: SelfCheck | None = None,
     fingerprint_writer: FingerprintWriter | None = None,
@@ -122,6 +143,8 @@ def promote_grow_candidates(
     fingerprint_path = _resolve_path(fingerprint_path)
     if approval_ledger_path is not None:
         approval_ledger_path = _resolve_path(approval_ledger_path)
+    if needs_review_ledger_path is not None:
+        needs_review_ledger_path = _resolve_path(needs_review_ledger_path)
     self_check = self_check or verify_prospective_manifest
     fingerprint_writer = fingerprint_writer or _write_fingerprint_sidecar
 
@@ -141,7 +164,8 @@ def promote_grow_candidates(
         )
 
     candidates = _load_candidates(candidates_path)
-    held = tuple(_held_lemmas(candidates.get("needs_review", [])))
+    needs_review_raw = candidates.get("needs_review", [])
+    held_rows = _held_rows(needs_review_raw)
     auto_merge = _candidate_entries(candidates.get("auto_merge", []))
     if approval_ledger_path is not None:
         auto_merge = _approved_candidate_entries(
@@ -149,6 +173,23 @@ def promote_grow_candidates(
             candidates_path=candidates_path,
             approval_ledger_path=approval_ledger_path,
         )
+
+    needs_review_to_promote: list[Mapping[str, Any]] = []
+    needs_review_approved = 0
+    needs_review_deferred = 0
+    if needs_review_ledger_path is not None:
+        approved_entries, held_rows, needs_review_approved, needs_review_deferred = (
+            _approved_needs_review_entries(
+                held_rows,
+                candidates_path=candidates_path,
+                needs_review_ledger_path=needs_review_ledger_path,
+            )
+        )
+        needs_review_to_promote = approved_entries
+    held = tuple(HeldLemma(lemma=row.lemma, reason=row.reason) for row in held_rows)
+
+    promote_queue: list[Mapping[str, Any]] = list(auto_merge) + list(needs_review_to_promote)
+
     manifest = _load_manifest(manifest_path)
     entries = manifest["entries"]
     existing_keys = _manifest_lemma_keys(entries)
@@ -157,7 +198,7 @@ def promote_grow_candidates(
     promoted: list[str] = []
     skipped_existing: list[str] = []
     newly_promoted_entries: list[dict[str, Any]] = []
-    for candidate in auto_merge:
+    for candidate in promote_queue:
         lemma = strip_acute_stress(_candidate_lemma(candidate))
         key = _lemma_key(lemma)
         if key in existing_keys:
@@ -205,6 +246,8 @@ def promote_grow_candidates(
         fingerprint_written=fingerprint_written,
         needs_review_written=needs_review_written,
         dry_run=not write,
+        needs_review_approved=needs_review_approved,
+        needs_review_deferred=needs_review_deferred,
     )
 
 
@@ -262,6 +305,8 @@ def format_summary(result: PromotionResult, *, report: bool = False, candidates_
             f"Promoted: {len(result.promoted)}",
             f"Skipped existing: {len(result.skipped_existing)}",
             f"Held for review: {len(result.held)}",
+            f"Needs-review ledger approve: {result.needs_review_approved}",
+            f"Needs-review ledger deferred: {result.needs_review_deferred}",
             f"Cached learner-English anchors filled: {len(result.cached_anchor_fills)}",
             f"Promoted entries still without learner-English anchor: {len(result.anchorless_promoted)}",
             f"New lemmas_total: {result.lemmas_total}",
@@ -292,20 +337,98 @@ def format_summary(result: PromotionResult, *, report: bool = False, candidates_
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--needs-review", type=Path, default=DEFAULT_NEEDS_REVIEW)
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Promote Atlas grow candidates into the live lexicon manifest. "
+            "Use this after a reviewed auto_merge and/or needs_review ledger is "
+            "ready; do not use it to invent glosses or triage held lemmas."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  # Dry-run auto_merge promotion\n"
+            "  .venv/bin/python scripts/lexicon/promote_grow_candidates.py --dry-run\n"
+            "\n"
+            "  # Promote only ledger-approved auto_merge rows\n"
+            "  .venv/bin/python scripts/lexicon/promote_grow_candidates.py --write \\\n"
+            "    --approval-ledger data/lexicon/grow-triage-ledgers/…-ledger.yaml\n"
+            "\n"
+            "  # Re-enter needs_review via a sha-bound decisions ledger (#5230)\n"
+            "  .venv/bin/python scripts/lexicon/promote_grow_candidates.py --write \\\n"
+            "    --needs-review-ledger data/lexicon/source-inventory-review-decisions/"
+            "…-grow-needs-review-batch-01.yaml\n"
+            "\n"
+            "Outputs (only with --write):\n"
+            "  site/src/data/lexicon-manifest.json           updated when promotions land\n"
+            "  site/src/data/lexicon-manifest.fingerprint.json  refreshed sidecar\n"
+            "  data/lexicon/grow_needs_review.json           remaining held rows\n"
+            "\n"
+            "Exit codes:\n"
+            "  0  success (dry-run or write)\n"
+            "  2  validation/self-check failure; no files written\n"
+            "\n"
+            "Related:\n"
+            "  scripts/lexicon/generate_needs_review_ledger.py  — build needs-review ledger\n"
+            "  scripts/lexicon/triage_needs_review.py           — deterministic held triage\n"
+            "  issue #5230                                     — needs_review re-entry arc\n"
+        ),
+    )
+    parser.add_argument(
+        "--candidates",
+        type=Path,
+        default=DEFAULT_CANDIDATES,
+        help=f"Path to grow_candidates.json (default: {DEFAULT_CANDIDATES})",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=DEFAULT_MANIFEST,
+        help=f"Path to lexicon-manifest.json (default: {DEFAULT_MANIFEST})",
+    )
+    parser.add_argument(
+        "--needs-review",
+        type=Path,
+        default=DEFAULT_NEEDS_REVIEW,
+        help=f"Path for remaining held-review JSON report (default: {DEFAULT_NEEDS_REVIEW})",
+    )
+    parser.add_argument(
+        "--fingerprint",
+        type=Path,
+        default=DEFAULT_FINGERPRINT,
+        help=f"Fingerprint sidecar path (default: {DEFAULT_FINGERPRINT})",
+    )
     parser.add_argument(
         "--approval-ledger",
         type=Path,
-        help=("Require an exact, checksum-bound atlas_grow_promotion_ledger; only its approve decisions are promoted"),
+        help=(
+            "Optional exact, checksum-bound atlas_grow_promotion_ledger; "
+            "only its approve decisions are promoted from auto_merge"
+        ),
+    )
+    parser.add_argument(
+        "--needs-review-ledger",
+        type=Path,
+        help=(
+            "Optional exact, dual-sha-bound atlas_grow_needs_review_decisions ledger; "
+            "only its approve rows are promoted from needs_review (with approved_gloss)"
+        ),
     )
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument("--write", action="store_true", help="Write the manifest and held-review report")
-    mode.add_argument("--dry-run", action="store_true", help="Report what would change without writing")
-    parser.add_argument("--report", action="store_true", help="Print promoted and held lemma details")
+    mode.add_argument(
+        "--write",
+        action="store_true",
+        help="Write the manifest, fingerprint sidecar, and held-review report",
+    )
+    mode.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Report what would change without writing (default behaviour)",
+    )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="Print promoted and held lemma details",
+    )
     return parser
 
 
@@ -319,6 +442,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             needs_review_path=args.needs_review,
             fingerprint_path=args.fingerprint,
             approval_ledger_path=args.approval_ledger,
+            needs_review_ledger_path=args.needs_review_ledger,
             write=args.write,
         )
     except (SelfCheckError, ValueError) as exc:
@@ -360,61 +484,261 @@ def _approved_candidate_entries(
     file by SHA-256.  A stale, partial, or mismatched ledger cannot silently
     broaden promotion.
     """
-    try:
-        payload = yaml.safe_load(approval_ledger_path.read_text(encoding="utf-8"))
-    except OSError as exc:
-        raise ValueError(f"could not read approval ledger: {approval_ledger_path}") from exc
-    except yaml.YAMLError as exc:
-        raise ValueError(f"approval ledger is not valid YAML: {approval_ledger_path}") from exc
-    if not isinstance(payload, Mapping):
-        raise ValueError(f"approval ledger must be a mapping: {approval_ledger_path}")
-    if payload.get("kind") != APPROVAL_LEDGER_KIND:
-        raise ValueError(f"approval ledger kind must be {APPROVAL_LEDGER_KIND!r}: {approval_ledger_path}")
+    payload = load_ledger_mapping(approval_ledger_path, label="approval ledger")
+    require_ledger_kind(payload, APPROVAL_LEDGER_KIND, label="approval ledger")
+    provenance = require_ledger_provenance(payload, label="approval ledger")
+    require_file_sha256(
+        candidates_path,
+        provenance.get("candidates_sha256"),
+        label="approval ledger candidates_sha256",
+        mismatch_message="approval ledger candidate SHA-256 does not match the supplied candidates file",
+    )
+    decision_rows = parse_ledger_decision_rows(
+        payload.get("decisions"),
+        label="approval ledger",
+        allowed_decisions=ALLOWED_LEDGER_DECISIONS,
+    )
+    candidate_by_key = index_by_decision_key(candidates, label="auto-merge candidate")
+    require_exact_decision_coverage(
+        set(candidate_by_key),
+        set(decision_rows),
+        scope_label="auto-merge candidates",
+        ledger_label="approval ledger",
+    )
+    return [
+        candidate
+        for candidate in candidates
+        if decision_rows[_candidate_decision_key(candidate)]["decision"] == "approve"
+    ]
 
+
+def _approved_needs_review_entries(
+    held_rows: Sequence[HeldRow],
+    *,
+    candidates_path: Path,
+    needs_review_ledger_path: Path,
+) -> tuple[list[Mapping[str, Any]], list[HeldRow], int, int]:
+    """Return gloss-injected approve entries + remaining held rows from a bound ledger.
+
+    Fail-closed: kind, candidates_sha256, triage_sha256 presence, exact coverage of
+    the full needs_review set, and decision vocabulary must all validate before any
+    promotion is considered.
+    """
+    payload = load_ledger_mapping(needs_review_ledger_path, label="needs-review ledger")
+    require_ledger_kind(payload, NEEDS_REVIEW_LEDGER_KIND, label="needs-review ledger")
+    provenance = require_ledger_provenance(payload, label="needs-review ledger")
+    require_file_sha256(
+        candidates_path,
+        provenance.get("candidates_sha256"),
+        label="needs-review ledger candidates_sha256",
+        mismatch_message=(
+            "needs-review ledger candidates_sha256 does not match the supplied candidates file"
+        ),
+    )
+    triage_sha = str(provenance.get("triage_sha256") or "").strip()
+    if not triage_sha:
+        raise ValueError("needs-review ledger provenance lacks triage_sha256")
+    if len(triage_sha) != 64 or any(ch not in "0123456789abcdef" for ch in triage_sha.casefold()):
+        raise ValueError("needs-review ledger triage_sha256 must be a 64-char hex digest")
+
+    decision_rows = parse_ledger_decision_rows(
+        payload.get("decisions"),
+        label="needs-review ledger",
+        allowed_decisions=ALLOWED_LEDGER_DECISIONS,
+    )
+    held_by_key = index_held_rows_by_decision_key(held_rows)
+    require_exact_decision_coverage(
+        set(held_by_key),
+        set(decision_rows),
+        scope_label="needs_review candidates",
+        ledger_label="needs-review ledger",
+    )
+
+    approved: list[Mapping[str, Any]] = []
+    remaining_held: list[HeldRow] = []
+    approve_count = 0
+    deferred_count = 0
+    for key, row in held_by_key.items():
+        decision_row = decision_rows[key]
+        decision = decision_row["decision"]
+        if decision == "approve":
+            if decision_row.get("heritage") is True:
+                raise ValueError(f"needs-review ledger approve row must not set heritage=true: {key!r}")
+            gloss = decision_row.get("approved_gloss")
+            if not isinstance(gloss, Mapping):
+                raise ValueError(f"needs-review ledger approve row lacks approved_gloss: {key!r}")
+            text = str(gloss.get("text") or "").strip()
+            source = str(gloss.get("source") or "").strip()
+            if not text:
+                raise ValueError(f"needs-review ledger approved_gloss.text is empty: {key!r}")
+            if not source:
+                raise ValueError(f"needs-review ledger approved_gloss.source is empty: {key!r}")
+            approved.append(inject_approved_gloss(row.entry, {"text": text, "source": source}))
+            approve_count += 1
+        else:
+            # deferred / reject stay held; heritage rows are always deferred by generator.
+            deferred_count += 1
+            remaining_held.append(row)
+
+    # Preserve original needs_review order for held report stability.
+    remaining_keys = {_candidate_decision_key(row.entry) for row in remaining_held}
+    ordered_held = [row for row in held_rows if _candidate_decision_key(row.entry) in remaining_keys]
+    return approved, ordered_held, approve_count, deferred_count
+
+
+def load_ledger_mapping(path: Path, *, label: str) -> Mapping[str, Any]:
+    """Load a YAML ledger as a mapping (shared auto_merge / needs_review helper)."""
+    try:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise ValueError(f"could not read {label}: {path}") from exc
+    except yaml.YAMLError as exc:
+        raise ValueError(f"{label} is not valid YAML: {path}") from exc
+    if not isinstance(payload, Mapping):
+        raise ValueError(f"{label} must be a mapping: {path}")
+    return payload
+
+
+def require_ledger_kind(payload: Mapping[str, Any], kind: str, *, label: str) -> None:
+    if payload.get("kind") != kind:
+        raise ValueError(f"{label} kind must be {kind!r}")
+
+
+def require_ledger_provenance(payload: Mapping[str, Any], *, label: str) -> Mapping[str, Any]:
     provenance = payload.get("provenance")
     if not isinstance(provenance, Mapping):
-        raise ValueError("approval ledger lacks provenance")
-    expected_sha256 = str(provenance.get("candidates_sha256") or "").strip()
-    actual_sha256 = hashlib.sha256(candidates_path.read_bytes()).hexdigest()
-    if expected_sha256 != actual_sha256:
-        raise ValueError("approval ledger candidate SHA-256 does not match the supplied candidates file")
+        raise ValueError(f"{label} lacks provenance")
+    return provenance
 
-    raw_decisions = payload.get("decisions")
+
+def require_file_sha256(
+    path: Path,
+    expected: object,
+    *,
+    label: str,
+    mismatch_message: str,
+) -> str:
+    """Compare path bytes to an expected hex digest; return the actual digest."""
+    expected_sha = str(expected or "").strip()
+    actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+    if not expected_sha:
+        raise ValueError(f"{label} is missing")
+    if expected_sha != actual_sha:
+        raise ValueError(mismatch_message)
+    return actual_sha
+
+
+def parse_ledger_decision_rows(
+    raw_decisions: object,
+    *,
+    label: str,
+    allowed_decisions: frozenset[str] = ALLOWED_LEDGER_DECISIONS,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """Parse decision rows keyed by (lemma_key, pos); fail on duplicates/invalid vocab."""
     if not isinstance(raw_decisions, list):
-        raise ValueError("approval ledger decisions must be a list")
-
-    candidate_by_key: dict[tuple[str, str], Mapping[str, Any]] = {}
-    for candidate in candidates:
-        key = _candidate_decision_key(candidate)
-        if key in candidate_by_key:
-            raise ValueError(f"duplicate auto-merge candidate decision key: {key!r}")
-        candidate_by_key[key] = candidate
-
-    decision_by_key: dict[tuple[str, str], str] = {}
+        raise ValueError(f"{label} decisions must be a list")
+    decision_by_key: dict[tuple[str, str], dict[str, Any]] = {}
     for row in raw_decisions:
         if not isinstance(row, Mapping):
-            raise ValueError("approval ledger decision must be a mapping")
+            raise ValueError(f"{label} decision must be a mapping")
         key = _candidate_decision_key(row)
         if key in decision_by_key:
-            raise ValueError(f"duplicate approval ledger decision key: {key!r}")
+            raise ValueError(f"duplicate {label} decision key: {key!r}")
         decision = str(row.get("decision") or "").strip()
-        if decision not in {"approve", "deferred", "reject"}:
-            raise ValueError(f"invalid approval ledger decision for {key!r}: {decision!r}")
-        decision_by_key[key] = decision
+        if decision not in allowed_decisions:
+            raise ValueError(f"invalid {label} decision for {key!r}: {decision!r}")
+        normalized = dict(row)
+        normalized["decision"] = decision
+        decision_by_key[key] = normalized
+    return decision_by_key
 
-    candidate_keys = set(candidate_by_key)
-    decision_keys = set(decision_by_key)
-    if candidate_keys != decision_keys:
-        missing = sorted(candidate_keys - decision_keys)
-        unexpected = sorted(decision_keys - candidate_keys)
-        details: list[str] = []
-        if missing:
-            details.append(f"missing decisions={len(missing)}")
-        if unexpected:
-            details.append(f"unexpected decisions={len(unexpected)}")
-        raise ValueError(f"approval ledger does not exactly cover auto-merge candidates ({', '.join(details)})")
 
-    return [candidate for candidate in candidates if decision_by_key[_candidate_decision_key(candidate)] == "approve"]
+def index_by_decision_key(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    label: str,
+) -> dict[tuple[str, str], Mapping[str, Any]]:
+    by_key: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for candidate in candidates:
+        key = _candidate_decision_key(candidate)
+        if key in by_key:
+            raise ValueError(f"duplicate {label} decision key: {key!r}")
+        by_key[key] = candidate
+    return by_key
+
+
+def index_held_rows_by_decision_key(held_rows: Sequence[HeldRow]) -> dict[tuple[str, str], HeldRow]:
+    by_key: dict[tuple[str, str], HeldRow] = {}
+    for row in held_rows:
+        key = _candidate_decision_key(row.entry)
+        if key in by_key:
+            raise ValueError(f"duplicate needs_review candidate decision key: {key!r}")
+        by_key[key] = row
+    return by_key
+
+
+def require_exact_decision_coverage(
+    candidate_keys: set[tuple[str, str]],
+    decision_keys: set[tuple[str, str]],
+    *,
+    scope_label: str,
+    ledger_label: str,
+) -> None:
+    if candidate_keys == decision_keys:
+        return
+    missing = sorted(candidate_keys - decision_keys)
+    unexpected = sorted(decision_keys - candidate_keys)
+    details: list[str] = []
+    if missing:
+        details.append(f"missing decisions={len(missing)}")
+    if unexpected:
+        details.append(f"unexpected decisions={len(unexpected)}")
+    raise ValueError(f"{ledger_label} does not exactly cover {scope_label} ({', '.join(details)})")
+
+
+def inject_approved_gloss(
+    candidate: Mapping[str, Any],
+    approved_gloss: Mapping[str, str],
+) -> dict[str, Any]:
+    """Inject ledger-approved gloss as definition/anchor on a needs_review entry.
+
+    Sets top-level ``gloss`` (satisfies the learner-English anchor check) and
+    seeds ``enrichment.meaning`` / ``enrichment.translation`` so the existing
+    anchor-fill short-circuit and attribution pass see a grounded definition.
+    """
+    text = str(approved_gloss.get("text") or "").strip()
+    source = str(approved_gloss.get("source") or "").strip()
+    if not text:
+        raise ValueError("approved_gloss.text must be non-empty")
+    entry = dict(candidate)
+    entry["gloss"] = text
+    enrichment_raw = entry.get("enrichment")
+    enrichment: dict[str, Any] = dict(enrichment_raw) if isinstance(enrichment_raw, Mapping) else {}
+
+    meaning_raw = enrichment.get("meaning")
+    meaning: dict[str, Any] = dict(meaning_raw) if isinstance(meaning_raw, Mapping) else {}
+    definitions = meaning.get("definitions")
+    if not (isinstance(definitions, list) and any(str(item or "").strip() for item in definitions)):
+        meaning["definitions"] = [text]
+        if source:
+            meaning["source"] = source
+        enrichment["meaning"] = meaning
+
+    translation_raw = enrichment.get("translation")
+    translation: dict[str, Any] = dict(translation_raw) if isinstance(translation_raw, Mapping) else {}
+    en_terms = translation.get("en")
+    if not (isinstance(en_terms, list) and any(isinstance(t, str) and t.strip() for t in en_terms)):
+        translation["en"] = [text]
+        if source:
+            translation["source"] = source
+        enrichment["translation"] = translation
+
+    sources = list(enrichment.get("sources") or []) if isinstance(enrichment.get("sources"), list) else []
+    if source and source not in sources:
+        sources.append(source)
+    enrichment["sources"] = sources
+    entry["enrichment"] = enrichment
+    return entry
 
 
 def _candidate_decision_key(candidate: Mapping[str, Any]) -> tuple[str, str]:
@@ -617,18 +941,28 @@ def _json_bytes(payload: object) -> bytes:
 
 
 def _held_lemmas(raw_items: object) -> list[HeldLemma]:
+    return [HeldLemma(lemma=row.lemma, reason=row.reason) for row in _held_rows(raw_items)]
+
+
+def _held_rows(raw_items: object) -> list[HeldRow]:
+    """Parse needs_review payload rows into HeldRow values (entry + reason)."""
     if not isinstance(raw_items, list):
         return []
-    held: list[HeldLemma] = []
+    held: list[HeldRow] = []
     for item in raw_items:
         if not isinstance(item, Mapping):
             continue
-        entry = item.get("entry")
-        lemma = ""
-        if isinstance(entry, Mapping):
-            lemma = str(entry.get("lemma") or "").strip()
-        reason = str(item.get("reason") or "").strip()
-        held.append(HeldLemma(lemma=lemma, reason=reason))
+        entry_raw = item.get("entry")
+        if isinstance(entry_raw, Mapping):
+            entry: Mapping[str, Any] = entry_raw
+        else:
+            # Tolerate bare entry objects (tests / alternate emitters).
+            entry = item
+        lemma = str(entry.get("lemma") or "").strip()
+        if not lemma:
+            continue
+        reason = str(item.get("reason") or entry.get("held_reason") or "").strip()
+        held.append(HeldRow(lemma=lemma, reason=reason, entry=entry))
     return held
 
 

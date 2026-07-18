@@ -1915,14 +1915,23 @@ def _batch_dict_lookup(
     return results
 
 
-def search_definitions(word: str, limit: int = 10) -> list[dict]:
+def search_definitions(
+    word: str,
+    limit: int = 10,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Look up word in СУМ-11 (Ukrainian explanatory dictionary)."""
-    return _dict_lookup("sum11", word, limit)
+    return _dict_lookup("sum11", word, limit, db_path=db_path)
 
 
-def search_definitions_batch(words: list[str]) -> dict[str, list[dict]]:
+def search_definitions_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
     """Return the best СУМ-11 hit for each requested word in batched SQL."""
-    return _batch_dict_lookup("sum11", words, limit=1)
+    return _batch_dict_lookup("sum11", words, limit=1, db_path=db_path)
 
 
 def search_grinchenko_1907(
@@ -1933,6 +1942,247 @@ def search_grinchenko_1907(
 ) -> list[dict]:
     """Look up word in Грінченко (historical dictionary)."""
     return _dict_lookup("grinchenko", word, limit, db_path=db_path)
+
+
+def search_grinchenko_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Return the best Грінченко hit for each requested word in batched SQL."""
+    return _batch_dict_lookup("grinchenko", words, limit=1, db_path=db_path)
+
+
+def search_balla_en_uk_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Return the best Балла EN→UK hit for each requested English headword."""
+    return _batch_dict_lookup("balla_en_uk", words, limit=1, db_path=db_path)
+
+
+def search_dmklinger_uk_en_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Batch-lookup dmklinger UK→EN by stress-normalized exact headword.
+
+    ``dmklinger_uk_en`` stores stressed headwords (e.g. ``робо́та``). Plain
+    equality therefore misses almost everything; strip U+0301 on both sides
+    and match case-insensitively in 400-row chunks (same budget as
+    :func:`_batch_dict_lookup`).
+    """
+    requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
+    results: dict[str, list[dict]] = {word: [] for word in requested}
+    if not requested:
+        return results
+
+    conn = None
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return results
+
+    try:
+        if not _table_columns("dmklinger_uk_en", db_path):
+            return results
+        for start in range(0, len(requested), 400):
+            chunk = requested[start:start + 400]
+            # Query keys are stress-stripped so callers can pass either form.
+            plain_keys = [_strip_combining_acute(word) for word in chunk]
+            values = ", ".join("(?)" for _ in plain_keys)
+            rows = conn.execute(
+                f"""
+                WITH requested(word) AS (VALUES {values}),
+                ranked AS (
+                    SELECT
+                        requested.word AS requested_word,
+                        dictionary.*,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY requested.word
+                            ORDER BY dictionary.word COLLATE NOCASE
+                        ) AS result_order
+                    FROM requested
+                    JOIN dmklinger_uk_en AS dictionary
+                      ON replace(dictionary.word, char(0x301), '')
+                         = requested.word COLLATE NOCASE
+                )
+                SELECT * FROM ranked
+                WHERE result_order <= 1
+                """,
+                plain_keys,
+            ).fetchall()
+            by_plain: dict[str, list[dict]] = {key: [] for key in plain_keys}
+            for row in rows:
+                item = dict(row)
+                plain = item.pop("requested_word")
+                item.pop("result_order", None)
+                by_plain.setdefault(plain, []).append(item)
+            for original, plain in zip(chunk, plain_keys, strict=True):
+                results[original] = list(by_plain.get(plain, []))
+    except sqlite3.OperationalError:
+        return results
+    finally:
+        _close_if_temporary(conn, db_path)
+
+    return results
+
+
+def search_esum_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Exact-lemma ЕСУМ meta hits for many words (no FTS body scan)."""
+    requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
+    results: dict[str, list[dict]] = {word: [] for word in requested}
+    if not requested:
+        return results
+
+    conn = None
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return results
+
+    try:
+        if not _table_columns("esum_etymology_meta", db_path):
+            return results
+        for start in range(0, len(requested), 400):
+            chunk = requested[start:start + 400]
+            values = ", ".join("(?)" for _ in chunk)
+            rows = conn.execute(
+                f"""
+                WITH requested(word) AS (VALUES {values}),
+                ranked AS (
+                    SELECT
+                        requested.word AS requested_word,
+                        meta.id,
+                        meta.lemma,
+                        meta.etymology_text,
+                        meta.cognates,
+                        meta.vol,
+                        meta.page,
+                        meta.source,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY requested.word
+                            ORDER BY meta.vol, meta.page, meta.lemma
+                        ) AS result_order
+                    FROM requested
+                    JOIN esum_etymology_meta AS meta
+                      ON meta.lemma = requested.word COLLATE NOCASE
+                )
+                SELECT * FROM ranked
+                WHERE result_order <= 1
+                """,
+                chunk,
+            ).fetchall()
+            for row in rows:
+                item = dict(row)
+                requested_word = item.pop("requested_word")
+                item.pop("result_order", None)
+                results[requested_word].append(item)
+    except sqlite3.OperationalError:
+        return results
+    finally:
+        _close_if_temporary(conn, db_path)
+
+    return results
+
+
+def search_slovnyk_me_entries_batch(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
+    """Exact ``normalized_word`` hits on curated slovnyk.me entries (batched).
+
+    Missing table → empty hits (production sources.db may not ship the table).
+    Overlap-blocked dictionaries are excluded, matching single-word search.
+    """
+    requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
+    results: dict[str, list[dict]] = {word: [] for word in requested}
+    if not requested:
+        return results
+
+    conn = None
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return results
+
+    try:
+        if not _table_columns("slovnyk_me_entries", db_path):
+            return results
+        blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
+        block_filter = ""
+        block_params: list[object] = []
+        if blocked:
+            block_filter = (
+                f" AND dictionary.dictionary_slug NOT IN "
+                f"({','.join('?' for _ in blocked)})"
+            )
+            block_params = list(blocked)
+
+        for start in range(0, len(requested), 400):
+            chunk = requested[start:start + 400]
+            normalized = [slovnyk_me.normalize_word(word) for word in chunk]
+            # Map normalized form back to original request keys (first wins).
+            originals_by_norm: dict[str, list[str]] = {}
+            for original, norm in zip(chunk, normalized, strict=True):
+                if not norm:
+                    continue
+                originals_by_norm.setdefault(norm, []).append(original)
+            norms = list(originals_by_norm)
+            if not norms:
+                continue
+            values = ", ".join("(?)" for _ in norms)
+            rows = conn.execute(
+                f"""
+                WITH requested(word) AS (VALUES {values}),
+                ranked AS (
+                    SELECT
+                        requested.word AS requested_word,
+                        dictionary.*,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY requested.word
+                            ORDER BY dictionary.id
+                        ) AS result_order
+                    FROM requested
+                    JOIN slovnyk_me_entries AS dictionary
+                      ON dictionary.normalized_word = requested.word
+                    WHERE 1=1{block_filter}
+                )
+                SELECT * FROM ranked
+                WHERE result_order <= 1
+                """,
+                (*norms, *block_params),
+            ).fetchall()
+            by_norm: dict[str, list[dict]] = {norm: [] for norm in norms}
+            for row in rows:
+                item = dict(row)
+                norm = item.pop("requested_word")
+                item.pop("result_order", None)
+                by_norm.setdefault(norm, []).append(
+                    _normalize_slovnyk_row(item, norm)
+                )
+            for norm, originals in originals_by_norm.items():
+                hits = by_norm.get(norm, [])
+                for original in originals:
+                    results[original] = list(hits)
+    except sqlite3.OperationalError:
+        return results
+    finally:
+        _close_if_temporary(conn, db_path)
+
+    return results
+
+
+def _strip_combining_acute(value: str) -> str:
+    """Remove U+0301 combining acute from a dictionary headword or query."""
+    return value.replace("\u0301", "")
 
 
 def _escape_fts5_phrase(term: str) -> str:
@@ -2090,9 +2340,14 @@ def search_esum(
         _close_if_temporary(conn, db_path)
 
 
-def translate_en_uk(word: str, limit: int = 10) -> list[dict]:
+def translate_en_uk(
+    word: str,
+    limit: int = 10,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Look up English→Ukrainian translation in Балла."""
-    return _dict_lookup("balla_en_uk", word, limit)
+    return _dict_lookup("balla_en_uk", word, limit, db_path=db_path)
 
 
 def search_idioms(word: str, limit: int = 10) -> list[dict]:
@@ -2121,14 +2376,23 @@ def search_synonyms(word: str, limit: int = 20) -> list[dict]:
     return (ulif_results + [dict(r) for r in rows])[:limit]
 
 
-def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
+def query_cefr_level(
+    word: str,
+    limit: int = 5,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Look up CEFR level for a word in PULS vocabulary."""
-    return _dict_lookup("puls_cefr", word, limit=limit)
+    return _dict_lookup("puls_cefr", word, limit=limit, db_path=db_path)
 
 
-def query_cefr_levels(words: list[str]) -> dict[str, list[dict]]:
+def query_cefr_levels(
+    words: list[str],
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
     """Return the best PULS CEFR hit for each requested word in batched SQL."""
-    return _batch_dict_lookup("puls_cefr", words, limit=1)
+    return _batch_dict_lookup("puls_cefr", words, limit=1, db_path=db_path)
 
 
 def search_style_guide(

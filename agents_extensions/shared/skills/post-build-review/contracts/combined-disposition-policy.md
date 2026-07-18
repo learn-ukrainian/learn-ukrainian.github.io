@@ -1,6 +1,6 @@
 # Combined disposition policy
 
-Review protocol version: `3.0.0`
+Review protocol version: `3.0.1`
 
 Apply disposition in this order:
 
@@ -16,8 +16,10 @@ Apply disposition in this order:
    non-mechanical medium finding.
 4. `PASS`: deterministic stages completed, all skips were policy-classified,
    semantic coverage completed or is correctly not applicable, all five
-   quality dimensions passed with target-backed evidence, and only low/info
-   findings remain.
+   quality dimensions passed at `9.0` or higher with target-backed evidence,
+   and only low/info improvement-backlog findings remain. A `10.0` dimension
+   additionally requires exceptional positive justification and at least two
+   distinct evidence anchors; absence of findings alone is not perfection.
 
 Semantic `PASS` never overrides deterministic or track-policy findings. A
 declared claim count never substitutes for its atomic ledger. Metadata never

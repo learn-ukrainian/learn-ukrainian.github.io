@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.4`
+Semantic prompt version: `6.0.5`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -202,7 +202,7 @@ those findings genuinely have the same exact locator.
 The review summary must name every material class found. A high-quality
 paragraph or activity never cancels a defect elsewhere. If any class was not
 actually compared, return `INCOMPLETE`. If a semantic dimension is `REVISE`,
-its score must be below `8.0`; `8.0` and above are valid only with `PASS`.
+its score must be below `9.0`; `9.0` and above are valid only with `PASS`.
 
 ## Required quality-dimension coverage
 
@@ -217,25 +217,34 @@ could not be inspected.
 
 For every quality dimension, return the exact raw keys `status`, `score`,
 `score_rationale`, `evidence`, and `finding_ids`. Scores are diagnostic evidence
-inside this result only: they never set readiness, demote a warning, change the
-categorical verdict, or authorize a release. `BLOCK` is this contract's name
+inside this result only: no average or standalone minimum can set readiness,
+demote a warning, change the categorical verdict, or authorize a release. The
+categorical status remains authoritative, and the validator rejects any status
+whose score falls outside its versioned band. `BLOCK` is this contract's name
 for the legacy standing-rule `REJECT`; the quality target remains 9+.
 
-Use these bands exactly: `PASS` `[8.0, 10.0]`, `REVISE` `[6.0, 8.0)`,
+Use these bands exactly: `PASS` `[9.0, 10.0]`, `REVISE` `[6.0, 9.0)`,
 `BLOCK` `[0.0, 6.0)`, and `INCOMPLETE` `null`. Use at most one decimal place.
 Apply the following anchored rubric within the bands:
 
-- Return `10.0` if and only if that dimension has no findings.
-- `9.0`–`9.9` meets the quality target with only bounded, low-severity
-  headroom; `8.0`–`8.9` is release-safe but has a more consequential,
-  concrete low-severity improvement.
-- `7.0`–`7.9` needs one focused material revision while most of the dimension
-  remains strong; `6.0`–`6.9` has a substantial material defect that requires
-  broader revision.
+- `10.0` is exceptional, not the default result of finding nothing. It requires
+  no linked findings, at least two distinct positive evidence anchors, and a
+  positive rationale explaining what makes the dimension exceptional. A
+  rationale based only on the absence of findings or gaps is invalid.
+- `9.0`–`9.9` meets the publication-quality target with only bounded,
+  low-severity or informational headroom. Record that headroom as linked
+  evidence-backed findings; those findings are the non-blocking improvement
+  backlog preserved by a categorical `PASS`.
+- `8.0`–`8.9` remains strong in parts but has a material revision before it is
+  publication-ready. `7.0`–`7.9` needs a focused material revision while most
+  of the dimension remains usable; `6.0`–`6.9` has a substantial material
+  defect that requires broader revision.
 - `4.0`–`5.9` has a blocking defect despite some usable evidence; `0.0`–`3.9`
   is fundamentally unusable, unsafe, or unsupported for that dimension.
 - Every score below `10.0` must link to at least one evidence-backed finding in
   that dimension and its rationale must name the concrete gap to `10.0`.
+  A `PASS` score may link only low/info findings; a score below `9.0` is never
+  publication-ready and must use `REVISE` or `BLOCK` as its calibrated status.
 - Every semantic finding must be referenced by at least one quality dimension,
   contradicted/imprecise/unattested claim, or non-verified learner-evidence
   entry. A `10.0` attests that the dimension has no linked finding; it never
@@ -296,8 +305,8 @@ equal the statuses actually present in that array.
   "quality_dimensions": {
     "pedagogical": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
-      "score": 10.0,
-      "score_rationale": "No pedagogical finding identifies a gap to 10.0.",
+      "score": 9.0,
+      "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
       "evidence": [
         {
           "location": "repo-relative target file",
@@ -305,35 +314,35 @@ equal the statuses actually present in that array.
           "supports": "why this exact line supports the dimension assessment"
         }
       ],
-      "finding_ids": []
+      "finding_ids": ["example-bounded-headroom"]
     },
     "naturalness": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
-      "score": 10.0,
-      "score_rationale": "No naturalness finding identifies a gap to 10.0.",
+      "score": 9.0,
+      "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
       "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports naturalness"}],
-      "finding_ids": []
+      "finding_ids": ["example-bounded-headroom"]
     },
     "decolonization": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
-      "score": 10.0,
-      "score_rationale": "No decolonization finding identifies a gap to 10.0.",
+      "score": 9.0,
+      "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
       "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports decolonization"}],
-      "finding_ids": []
+      "finding_ids": ["example-bounded-headroom"]
     },
     "engagement": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
-      "score": 10.0,
-      "score_rationale": "No engagement finding identifies a gap to 10.0.",
+      "score": 9.0,
+      "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
       "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports engagement"}],
-      "finding_ids": []
+      "finding_ids": ["example-bounded-headroom"]
     },
     "tone": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
-      "score": 10.0,
-      "score_rationale": "No tone finding identifies a gap to 10.0.",
+      "score": 9.0,
+      "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
       "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports tone"}],
-      "finding_ids": []
+      "finding_ids": ["example-bounded-headroom"]
     }
   },
   "alignment_audit": {
@@ -399,12 +408,12 @@ equal the statuses actually present in that array.
   ],
   "findings": [
     {
-      "id": "stable-kebab-id",
-      "issue_id": "STABLE_UPPERCASE_ISSUE_CLASS",
-      "category": "pedagogy|language|activity|factuality|grounding|decolonization|engagement|tone|rights|size|other",
-      "severity": "blocker|high|medium|low|info",
-      "message": "what is wrong and why it matters",
-      "evidence": "exact text plus source/tool support",
+      "id": "example-bounded-headroom",
+      "issue_id": "BOUNDED_NON_MATERIAL_HEADROOM",
+      "category": "other",
+      "severity": "low",
+      "message": "bounded improvement that does not block publication",
+      "evidence": "exact learner-visible text explaining the remaining headroom",
       "location": {"location": "repo-relative target file", "line": 1}
     }
   ]
