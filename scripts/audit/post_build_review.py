@@ -816,6 +816,40 @@ def _statement_signals(text: str) -> list[str]:
     return ["universal_quantifier"]
 
 
+def _statement_requires_claim(unit: Mapping[str, Any]) -> bool:
+    """Return whether a risk signal requires factual-claim coverage.
+
+    Universal-quantifier signals are already limited to claim-bearing statements
+    by ``_statement_signals``. Source-attribution detection is intentionally
+    broader because learner instructions and questions must remain visible in the
+    statement inventory. Those speech acts require explicit non-claim coverage,
+    not a fabricated factual claim. An imperative frame followed by a declarative
+    clause remains claim-bearing (for example, ``Зверніть увагу: за ЕСУ, ...``).
+    """
+    signals = set(unit.get("signals") or [])
+    if "universal_quantifier" in signals:
+        return True
+    if "source_attribution" not in signals:
+        return False
+
+    surface = re.sub(r"^[*_`]+", "", str(unit.get("text") or "")).strip()
+    if surface.endswith("?"):
+        return False
+    instruction = INSTRUCTION_OPEN_RE.search(surface)
+    if instruction is None:
+        return True
+
+    colon = re.search(r"[:：]", surface)
+    if colon is None or instruction.start() > colon.start():
+        return False
+    declarative_tail = surface[colon.end() :].strip()
+    return bool(
+        declarative_tail
+        and not declarative_tail.endswith("?")
+        and INSTRUCTION_OPEN_RE.search(declarative_tail) is None
+    )
+
+
 def build_learner_statement_inventory(
     target_materials: Mapping[str, Mapping[str, Any]],
     *,
@@ -2703,9 +2737,7 @@ def normalize_semantic_result(
                 f"statement coverage {unit_id} no_checkable_claim requires no claim_ids"
             )
         signals = set(statement_units[unit_id].get("signals") or [])
-        if signals.intersection({"universal_quantifier", "source_attribution"}) and (
-            classification != "claims"
-        ):
+        if _statement_requires_claim(statement_units[unit_id]) and classification != "claims":
             raise ReviewProtocolError(
                 f"Risk-signaled statement unit {unit_id} must be classified as claims"
             )
@@ -3346,9 +3378,7 @@ def _validate_v6_statement_source_coverage(
                 f"Stored statement coverage {unit_id} no_checkable_claim owns claims"
             )
         signals = set(statement_units[unit_id].get("signals") or [])
-        if signals.intersection({"universal_quantifier", "source_attribution"}) and (
-            classification != "claims"
-        ):
+        if _statement_requires_claim(statement_units[unit_id]) and classification != "claims":
             raise ReviewProtocolError(
                 f"Stored risk-signaled statement unit {unit_id} is not classified as claims"
             )
@@ -4001,9 +4031,7 @@ def semantic_response_schema(
         risk_statement_ids = [
             str(unit["id"])
             for unit in statement_units
-            if set(unit.get("signals") or []).intersection(
-                {"universal_quantifier", "source_attribution"}
-            )
+            if _statement_requires_claim(unit)
         ]
         statement_coverage_schema: dict[str, Any] = {
             "type": "object",
