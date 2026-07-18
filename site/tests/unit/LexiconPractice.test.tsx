@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LexiconPractice, { nextMatchingPromptIndex } from '@site/src/components/LexiconPractice';
+import LexiconPractice from '@site/src/components/LexiconPractice';
 import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
@@ -2123,7 +2123,7 @@ describe('LexiconPractice', () => {
     };
   }
 
-  test('matching prompt advances in board order and clears after the final match', async () => {
+  test('matching progress updates after each match', async () => {
     const user = userEvent.setup();
     const deck = matchingDeck();
     const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
@@ -2140,17 +2140,78 @@ describe('LexiconPractice', () => {
       return { left, right };
     });
 
-    const initialPrompt = screen.getByText(/Доберіть пару для/);
-    expect(initialPrompt).toHaveTextContent(`«${pairs[0].left}»`);
+    const initialProgress = screen.getByText(/Доберіть пари/);
+    expect(initialProgress).toHaveTextContent('0 з 6');
 
     await user.click(within(leftColumn as HTMLElement).getByRole('button', { name: pairs[0].left }));
     await user.click(pairs[0].right!);
 
     await waitFor(() => {
-      expect(screen.getByText(/Доберіть пару для/)).toHaveTextContent(`«${pairs[1].left}»`);
+      expect(screen.getByText(/Доберіть пари/)).toHaveTextContent('1 з 6');
     });
+  });
 
-    expect(nextMatchingPromptIndex(2, new Set([0, 1, 2]), 3)).toBeNull();
+  test('matching practice opts into semantic-four pair coding', async () => {
+    const user = userEvent.setup();
+    const deck = matchingDeck();
+    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+
+    const leftCol = container.querySelector('[data-activity="match-left-column"]');
+    const rightCol = container.querySelector('[data-activity="match-right-column"]');
+    expect(leftCol).toBeInTheDocument();
+    expect(rightCol).toBeInTheDocument();
+
+    const findLeft = (text: string) => {
+      const btn = within(leftCol as HTMLElement).getAllByRole('button').find((b) => {
+        const tag = b.querySelector('.matchPairTag');
+        const content = tag ? b.textContent?.replace(tag.textContent ?? '', '') : b.textContent;
+        return content?.trim() === text;
+      });
+      if (!btn) throw new Error(`Left tile "${text}" not found`);
+      return btn;
+    };
+    const findRight = (text: string) => {
+      const btn = within(rightCol as HTMLElement).getAllByRole('button').find((b) => {
+        const tag = b.querySelector('.matchPairTag');
+        const content = tag ? b.textContent?.replace(tag.textContent ?? '', '') : b.textContent;
+        return content?.trim() === text;
+      });
+      if (!btn) throw new Error(`Right tile "${text}" not found`);
+      return btn;
+    };
+
+    const firstLeft = within(leftCol as HTMLElement).getAllByRole('button')[0];
+    const selectedLemmaText = firstLeft?.textContent?.replace(firstLeft.querySelector('.matchPairTag')?.textContent ?? '', '').trim() ?? '';
+    const textToGloss: Record<string, string> = {
+      'книга': 'book',
+      'робота': 'work',
+      'місто': 'city',
+      'школа': 'school',
+      'сад': 'garden',
+      'дім': 'house',
+    };
+    const selectedGloss = textToGloss[selectedLemmaText];
+
+    // Match the first distractor and verify the semantic-four tag and token appear.
+    const distractorWords = Object.keys(textToGloss).filter(w => w !== selectedLemmaText);
+    await user.click(findLeft(distractorWords[0]));
+    await user.click(findRight(textToGloss[distractorWords[0]]));
+
+    const matchedLeft = findLeft(distractorWords[0]);
+    const matchedRight = findRight(textToGloss[distractorWords[0]]);
+    expect(matchedLeft).toHaveAttribute('data-pair-coding', 'semantic-four');
+    expect(matchedRight).toHaveAttribute('data-pair-coding', 'semantic-four');
+    expect(matchedLeft.querySelector('.matchPairTag')).toBeInTheDocument();
+    expect(matchedRight.querySelector('.matchPairTag')).toBeInTheDocument();
+    expect(matchedLeft.querySelector('.matchPairTag')).toHaveTextContent('①');
+    expect(matchedRight.querySelector('.matchPairTag')).toHaveTextContent('①');
+
+    // Matching the selected lemma produces the second tag.
+    await user.click(findLeft(selectedLemmaText));
+    await user.click(findRight(selectedGloss));
+    await waitFor(() => {
+      expect(findLeft(selectedLemmaText).querySelector('.matchPairTag')).toHaveTextContent('②');
+    });
   });
 
   test('matching mode rates every matched pair with proper ratings', async () => {
@@ -2176,9 +2237,7 @@ describe('LexiconPractice', () => {
       return btn;
     };
 
-    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
-    const match = instructionText.match(/«([^»]+)»/);
-    const selectedLemmaText = match ? match[1] : '';
+    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
     const textToLemmaId: Record<string, string> = {
       'книга': 'knyha',
@@ -2288,9 +2347,7 @@ describe('LexiconPractice', () => {
       return btn;
     };
 
-    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
-    const match = instructionText.match(/«([^»]+)»/);
-    const selectedLemmaText = match ? match[1] : '';
+    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
     const textToLemmaId: Record<string, string> = {
       'книга': 'knyha',
@@ -2360,9 +2417,7 @@ describe('LexiconPractice', () => {
       return btn;
     };
 
-    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
-    const match = instructionText.match(/«([^»]+)»/);
-    const selectedLemmaText = match ? match[1] : '';
+    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
     const textToLemmaId: Record<string, string> = {
       'книга': 'knyha',
@@ -2461,9 +2516,7 @@ describe('LexiconPractice', () => {
       return btn;
     };
 
-    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
-    const match = instructionText.match(/«([^»]+)»/);
-    const selectedLemmaText = match ? match[1] : '';
+    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
     const textToLemmaId: Record<string, string> = {
       'книга': 'knyha',
@@ -2522,9 +2575,7 @@ describe('LexiconPractice', () => {
       return btn;
     };
 
-    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
-    const match = instructionText.match(/«([^»]+)»/);
-    const selectedLemmaText = match ? match[1] : '';
+    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
     const textToLemmaId: Record<string, string> = {
       'книга': 'knyha',

@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { describe, test, expect, vi } from 'vitest';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MatchUp from '@site/src/components/MatchUp';
 
@@ -21,7 +21,11 @@ function rightTiles(container: HTMLElement) {
 }
 
 function findRightByText(container: HTMLElement, text: string) {
-  const btn = rightTiles(container).find(b => b.textContent?.trim() === text);
+  const btn = rightTiles(container).find((b) => {
+    const tag = b.querySelector('.matchPairTag');
+    const content = tag ? b.textContent?.replace(tag.textContent ?? '', '') : b.textContent;
+    return content?.trim() === text;
+  });
   if (!btn) throw new Error(`right tile "${text}" not found`);
   return btn;
 }
@@ -246,5 +250,155 @@ describe('MatchUp', () => {
 
     const rightTextContents = rightTiles(container).map((b) => b.textContent?.trim());
     expect(new Set(rightTextContents)).toEqual(new Set(['table', 'book', 'window']));
+  });
+
+  describe('practice-only matchedPairCoding="semantic-four"', () => {
+    test('omitted prop leaves default DOM and pair-color attributes', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<MatchUp pairs={pairs} />);
+
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'Meow'));
+
+      const catTile = leftTiles(container)[0];
+      const meowTile = findRightByText(container, 'Meow');
+      expect(catTile).not.toHaveAttribute('data-pair-coding');
+      expect(meowTile).not.toHaveAttribute('data-pair-coding');
+      expect(catTile.querySelector('.matchPairTag')).not.toBeInTheDocument();
+      expect(meowTile.querySelector('.matchPairTag')).not.toBeInTheDocument();
+    });
+
+    test('opted-in board exposes data-pair-coding and visible tags after match', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<MatchUp pairs={pairs} matchedPairCoding="semantic-four" />);
+
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'Meow'));
+
+      const catTile = leftTiles(container)[0];
+      const meowTile = findRightByText(container, 'Meow');
+      expect(catTile).toHaveAttribute('data-pair-coding', 'semantic-four');
+      expect(meowTile).toHaveAttribute('data-pair-coding', 'semantic-four');
+      expect(catTile).toHaveAttribute('data-pair-token', '0');
+      expect(meowTile).toHaveAttribute('data-pair-token', '0');
+      expect(catTile.querySelector('.matchPairTag')).toHaveTextContent('①');
+      expect(meowTile.querySelector('.matchPairTag')).toHaveTextContent('①');
+    });
+
+    test('four-pair board produces four token families and four unique tags', async () => {
+      const user = userEvent.setup();
+      const fourPairs = [
+        { left: 'A', right: 'a' },
+        { left: 'B', right: 'b' },
+        { left: 'C', right: 'c' },
+        { left: 'D', right: 'd' },
+      ];
+      const { container } = render(<MatchUp pairs={fourPairs} matchedPairCoding="semantic-four" />);
+
+      // Match in the order 2, 0, 3, 1 so tag order differs from original index order.
+      await user.click(leftTiles(container)[2]);
+      await user.click(findRightByText(container, 'c'));
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'a'));
+      await user.click(leftTiles(container)[3]);
+      await user.click(findRightByText(container, 'd'));
+      await user.click(leftTiles(container)[1]);
+      await user.click(findRightByText(container, 'b'));
+
+      const tags = new Set<string>();
+      const tokens = new Set<string>();
+      for (const tile of [...leftTiles(container), ...rightTiles(container)]) {
+        const tag = tile.querySelector('.matchPairTag');
+        expect(tag).toBeInTheDocument();
+        tags.add(tag!.textContent ?? '');
+        tokens.add(tile.getAttribute('data-pair-token') ?? '');
+      }
+      expect(Array.from(tags).sort()).toEqual(['①', '②', '③', '④']);
+      expect(tokens).toEqual(new Set(['0', '1', '2', '3']));
+    });
+
+    test('board above four pairs cycles colors but keeps unique tags', async () => {
+      const user = userEvent.setup();
+      const sixPairs = [
+        { left: 'A', right: 'a' },
+        { left: 'B', right: 'b' },
+        { left: 'C', right: 'c' },
+        { left: 'D', right: 'd' },
+        { left: 'E', right: 'e' },
+        { left: 'F', right: 'f' },
+      ];
+      const { container } = render(<MatchUp pairs={sixPairs} matchedPairCoding="semantic-four" />);
+
+      for (let i = 0; i < sixPairs.length; i += 1) {
+        await user.click(leftTiles(container)[i]);
+        await user.click(findRightByText(container, sixPairs[i].right));
+      }
+
+      const tags = new Set<string>();
+      for (const tile of [...leftTiles(container), ...rightTiles(container)]) {
+        const tag = tile.querySelector('.matchPairTag');
+        expect(tag).toBeInTheDocument();
+        tags.add(tag!.textContent ?? '');
+      }
+      expect(tags.size).toBe(6);
+      expect(Array.from(tags).sort()).toEqual(['①', '②', '③', '④', '⑤', '⑥']);
+    });
+
+    test('shuffle does not change original pair identity or rating attribution', async () => {
+      const user = userEvent.setup();
+      const onMatch = vi.fn();
+      const { container } = render(
+        <MatchUp pairs={pairs} matchedPairCoding="semantic-four" onMatch={onMatch} />,
+      );
+
+      await user.click(leftTiles(container)[0]);
+      const meowTile = findRightByText(container, 'Meow');
+      expect(meowTile).toHaveAttribute('data-original-index', '0');
+      await user.click(meowTile);
+
+      expect(onMatch).toHaveBeenCalledTimes(1);
+      expect(onMatch).toHaveBeenCalledWith(0, 'good');
+    });
+
+    test('matched tiles announce pair identity and tag in accessible name', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <MatchUp pairs={pairs} matchedPairCoding="semantic-four" isUkrainian />,
+      );
+
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'Meow'));
+
+      const catTile = leftTiles(container)[0];
+      const meowTile = findRightByText(container, 'Meow');
+      expect(catTile).toHaveAttribute('aria-label', expect.stringContaining('пара ①'));
+      expect(catTile).toHaveAttribute('aria-label', expect.stringContaining('Meow'));
+      expect(meowTile).toHaveAttribute('aria-label', expect.stringContaining('пара ①'));
+      expect(meowTile).toHaveAttribute('aria-label', expect.stringContaining('Cat'));
+    });
+
+    test('wrong match clears after 240ms and never advances the board', async () => {
+      const user = userEvent.setup();
+      const onMatch = vi.fn();
+      const { container } = render(
+        <MatchUp pairs={pairs} matchedPairCoding="semantic-four" onMatch={onMatch} />,
+      );
+
+      await user.click(leftTiles(container)[0]); // Cat
+      await user.click(findRightByText(container, 'Bark')); // wrong
+
+      const catTile = leftTiles(container)[0];
+      const barkTile = findRightByText(container, 'Bark');
+      expect(catTile).toHaveClass('wrong');
+      expect(barkTile).toHaveClass('wrong');
+      expect(onMatch).not.toHaveBeenCalled();
+
+      await waitFor(() => {
+        expect(catTile).not.toHaveClass('wrong');
+        expect(barkTile).not.toHaveClass('wrong');
+      }, { timeout: 500 });
+
+      expect(onMatch).not.toHaveBeenCalled();
+    });
   });
 });
