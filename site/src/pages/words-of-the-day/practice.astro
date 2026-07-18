@@ -25,7 +25,7 @@ const frontmatter = {
   .lexicon-practice-page {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 3.5rem 1.5rem 4.5rem;
+    padding: 1rem 1.5rem 4.5rem;
   }
 
   .lexicon-practice-badge {
@@ -955,104 +955,87 @@ const frontmatter = {
   }
 
   /* K3 practice dashboard (Chunk 2) */
-  .k3-practice-dashboard {
+  :global(.k3-practice-dashboard) {
     display: grid;
-    gap: 1.25rem;
+    gap: 0.4rem;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  @media (min-width: 1000px) {
-    .k3-practice-dashboard {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto 1fr auto;
-      grid-template-areas:
-        "hero words"
-        "stats words"
-        "session words"
-        ". words"
-        "focus modes";
-    }
-    .k3-hero { grid-area: hero; }
-    .k3-stats { grid-area: stats; }
-    .k3-session { grid-area: session; }
-    .k3-words { grid-area: words; }
-    .k3-focus { grid-area: focus; }
-    .k3-modes { grid-area: modes; }
-  }
-
-  .k3-hero h1 {
+  :global(.k3-hero h1) {
     margin: 0;
-    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-size: clamp(1.9rem, 3vw, 2.25rem);
     line-height: 1;
   }
-  .k3-hero-subtitle {
-    margin: 0.5rem 0 0;
+  :global(.k3-hero-subtitle) {
+    margin: 0.35rem 0 0;
     color: var(--lu-text-muted);
     font-size: 1.05rem;
     font-weight: 800;
   }
-  .k3-hero-epigraph {
-    margin: 0.85rem 0 0;
+  :global(.k3-hero-epigraph) {
+    margin: 0.55rem 0 0;
     color: var(--lu-text-muted);
     font-size: 0.92rem;
     font-style: italic;
-    line-height: 1.5;
+    line-height: 1.35;
   }
 
-  .k3-levels {
+  :global(.k3-levels) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
   }
-  .k3-levels-label {
+  :global(.k3-levels-label) {
     font-size: 0.78rem;
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--lu-text-muted);
   }
-  .k3-levels button {
+  :global(.k3-levels button) {
     position: relative;
     min-height: 44px;
     padding: 0 0.85rem;
   }
-  .k3-levels button.active {
+  :global(.k3-levels button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
     color: var(--lu-on-primary);
   }
-  .k3-level-soon {
+  :global(.k3-level-soon) {
     display: block;
     font-size: 0.62rem;
     font-weight: 800;
     text-transform: lowercase;
   }
 
-  .k3-stats {
+  :global(.k3-stats) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
-  .k3-stat {
+  :global(.k3-stat) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.35rem;
-    min-height: 5.5rem;
-    padding: 0.9rem 1rem;
+    gap: 0.2rem;
+    min-height: 3.5rem;
+    padding: 0.5rem 0.75rem;
     border: 1px solid var(--lu-border);
     border-radius: 12px;
     background: var(--lu-surface-raised);
     box-shadow: var(--lu-shadow);
   }
-  .k3-stat-value {
+  :global(.k3-stat-value) {
     color: var(--lu-text);
     font-size: 1.75rem;
     font-weight: 900;
     line-height: 1;
   }
-  .k3-stat-label {
+  :global(.k3-stat-label) {
     color: var(--lu-text-muted);
     font-size: 0.75rem;
     font-weight: 800;
@@ -1060,79 +1043,118 @@ const frontmatter = {
     text-transform: uppercase;
   }
   @media (max-width: 760px) {
-    .k3-stats {
+    :global(.k3-stats) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .k3-session {
+  :global(.k3-session) {
     display: grid;
-    gap: 0.85rem;
-    padding: 1.2rem 1.25rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 14px;
-    background: var(--lu-surface-raised);
-    box-shadow: var(--lu-shadow);
+    gap: 0.35rem;
   }
-  .k3-session-scope {
-    margin: 0;
-    color: var(--lu-text);
-    font-size: 1.05rem;
-    font-weight: 800;
-  }
-  .k3-session-budgets {
+  :global(.k3-session-overview) {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  :global(.k3-session-size) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  :global(.k3-session-label) {
+    color: var(--lu-text-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  :global(.k3-session-scope) {
+    margin: 0;
+    color: var(--lu-text-muted);
+    font-size: 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  :global(.k3-session-budgets) {
+    display: flex;
+    flex-wrap: nowrap;
     gap: 0.5rem;
   }
-  .k3-session-budgets button {
+  :global(.k3-session-budgets button) {
     min-height: 44px;
     padding: 0 0.85rem;
   }
-  .k3-session-budgets button.active {
+  :global(.k3-session-budgets button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
     color: var(--lu-on-primary);
   }
-  .k3-session-primary {
-    min-height: 52px;
+  :global(.k3-session-primary) {
+    min-height: 48px;
+    width: 100%;
     font-size: 1.05rem;
   }
-  .k3-session-resume {
+  :global(.k3-session-resume) {
     justify-self: start;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--lu-text-muted);
+    font-weight: 800;
+    text-decoration: underline;
+  }
+  @media (max-width: 760px) {
+    :global(.k3-session-overview),
+    :global(.k3-session-size) {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    :global(.k3-session-overview) {
+      flex-direction: column;
+    }
+    :global(.k3-session-budgets) {
+      flex-wrap: wrap;
+    }
+    :global(.k3-session-scope) {
+      white-space: normal;
+    }
   }
 
-  .practice-daily-deck {
+  :global(.practice-daily-deck) {
     display: grid;
-    gap: 1rem;
-    padding: 1.2rem 1.25rem;
+    gap: 0.45rem;
+    padding: 0.65rem 0.8rem;
     border: 1px solid var(--lu-border);
     border-radius: 14px;
     background: var(--lu-surface-raised);
     box-shadow: var(--lu-shadow);
   }
-  .daily-deck-header {
+  :global(.daily-deck-header) {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
   }
-  .daily-deck-header h2 {
+  :global(.daily-deck-header h2) {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
-  .daily-deck-position {
+  :global(.daily-deck-position) {
     color: var(--lu-text-muted);
     font-size: 0.9rem;
     font-weight: 800;
   }
-  .daily-deck-preview-shell {
+  :global(.daily-deck-preview-shell) {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
   }
-  .daily-deck-nav {
+  :global(.daily-deck-nav) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1145,33 +1167,45 @@ const frontmatter = {
     font-size: 1.4rem;
     font-weight: 900;
   }
-  .daily-preview-card {
-    min-height: 220px;
+  :global(.daily-preview-card) {
+    min-height: 88px;
     flex: 1 1 auto;
     cursor: pointer;
   }
-  .daily-deck-preview-actions {
+  :global(.daily-deck-preview-actions) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
   }
-  .daily-deck-atlas-link {
+  :global(.daily-deck-atlas-link) {
     color: var(--lu-primary);
     font-weight: 800;
     text-decoration: none;
   }
-  .daily-deck-voice-slot {
+  :global(.daily-deck-voice-slot) {
     color: var(--lu-text-muted);
     font-size: 0.85rem;
   }
-  .daily-deck-details {
+  :global(.daily-deck-example) {
+    margin: 0.45rem 0 0;
+    color: var(--lu-text);
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+  :global(.daily-deck-example-en) {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--lu-text-muted);
+    font-size: 0.88em;
+  }
+  :global(.daily-deck-details) {
     border: 1px solid var(--lu-border);
     border-radius: 10px;
     background: var(--lu-surface);
   }
-  .daily-deck-details summary {
+  :global(.daily-deck-details summary) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1181,11 +1215,11 @@ const frontmatter = {
     cursor: pointer;
     font-weight: 800;
   }
-  .daily-deck-counters {
+  :global(.daily-deck-counters) {
     display: flex;
     gap: 0.5rem;
   }
-  .daily-deck-counters .counter {
+  :global(.daily-deck-counters .counter) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1196,149 +1230,164 @@ const frontmatter = {
     font-size: 0.78rem;
     font-weight: 900;
   }
-  .daily-deck-counters .counter.due {
+  :global(.daily-deck-counters .counter.due) {
     background: var(--lu-yellow-dark);
     color: var(--lu-on-primary);
   }
-  .daily-deck-counters .counter.new {
+  :global(.daily-deck-counters .counter.new) {
     background: var(--lu-blue);
     color: var(--lu-on-primary);
   }
-  .daily-deck-counters .counter.done {
+  :global(.daily-deck-counters .counter.done) {
     background: var(--lu-green);
     color: var(--lu-on-primary);
   }
-  .daily-deck-rows {
+  :global(.daily-deck-rows) {
     margin: 0;
     padding: 0 1rem 1rem;
     list-style: none;
   }
-  .daily-deck-row {
+  :global(.daily-deck-row) {
     border-radius: 8px;
   }
-  .daily-deck-row.state-done {
-    opacity: 0.62;
+  :global(.daily-deck-row.state-done) {
+    background: var(--lu-state-correct-bg);
   }
-  .daily-deck-row.state-done:hover,
-  .daily-deck-row.state-done:focus-within {
-    opacity: 1;
-  }
-  .daily-deck-row-link {
+  :global(.daily-deck-row-link) {
     display: grid;
-    grid-template-columns: auto auto 1fr 1fr auto;
-    align-items: center;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: start;
     gap: 0.75rem;
-    min-height: 48px;
+    min-height: 52px;
     padding: 0.5rem 0.75rem;
     color: var(--lu-text);
     text-decoration: none;
   }
-  .row-marker {
+  :global(.row-marker) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    border: 1px solid var(--row-accent);
+    border-radius: 0.35rem;
+    color: var(--row-accent);
     font-weight: 900;
   }
-  .row-number {
+  :global(.row-number) {
     color: var(--lu-text-muted);
     font-size: 0.85rem;
   }
-  .row-lemma {
+  :global(.row-lemma) {
+    display: block;
     font-weight: 800;
   }
-  .row-gloss {
+  :global(.row-identity) {
+    min-width: 0;
+  }
+  :global(.row-gloss) {
+    display: block;
     color: var(--lu-text-muted);
     font-size: 0.9rem;
   }
-  .row-status {
+  :global(.row-why) {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--lu-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  :global(.row-status) {
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
-  .daily-deck-row.state-due .row-status {
+  :global(.daily-deck-row.state-due .row-status) {
     color: var(--lu-yellow-dark);
   }
-  .daily-deck-row.state-new .row-status {
+  :global(.daily-deck-row.state-new .row-status) {
     color: var(--lu-blue);
   }
-  .daily-deck-row.state-done .row-lemma,
-  .daily-deck-row.state-done .row-gloss,
-  .daily-deck-row.state-done .row-number,
-  .daily-deck-row.state-done .row-status,
-  .daily-deck-row.state-done .row-marker {
-    color: var(--lu-text-muted);
+  :global(.daily-deck-row.state-done .row-lemma) {
+    font-weight: 600;
+  }
+  :global(.daily-deck-row.state-done .row-marker),
+  :global(.daily-deck-row.state-done .row-status) {
+    color: var(--lu-green);
   }
 
-  .k3-focus {
+  :global(.k3-secondary) {
+    display: grid;
+    gap: 1rem;
+  }
+  :global(.k3-focus) {
     display: grid;
     gap: 0.75rem;
-    padding: 1.2rem 1.25rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 14px;
-    background: var(--lu-surface-raised);
-    box-shadow: var(--lu-shadow);
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--lu-border);
   }
-  .k3-focus h2 {
+  :global(.k3-focus h2) {
     margin: 0;
     font-size: 1rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .k3-focus-link {
+  :global(.k3-focus-link) {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     color: var(--lu-text);
     text-decoration: none;
   }
-  .k3-focus-case {
+  :global(.k3-focus-case) {
     color: var(--lu-text-muted);
     font-size: 0.85rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
-  .k3-focus-form {
+  :global(.k3-focus-form) {
     font-size: 1.5rem;
     font-weight: 900;
   }
-  .k3-focus-empty {
+  :global(.k3-focus-empty) {
     min-height: 3.5rem;
   }
 
-  .k3-modes {
+  :global(.k3-modes) {
     display: grid;
     gap: 0.75rem;
-    padding: 1.2rem 1.25rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 14px;
-    background: var(--lu-surface-raised);
-    box-shadow: var(--lu-shadow);
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--lu-border);
   }
-  .k3-modes h2 {
+  :global(.k3-modes h2) {
     margin: 0;
     font-size: 1rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .k3-mode-detail {
+  :global(.k3-mode-detail) {
     min-height: 2.75rem;
     margin: 0;
     color: var(--lu-text-muted);
     font-size: 0.92rem;
     line-height: 1.5;
   }
-  .k3-mode-grid {
+  :global(.k3-mode-grid) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
   @media (min-width: 1000px) {
-    .k3-mode-grid {
+    :global(.k3-mode-grid) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
-  .k3-mode-card {
+  :global(.k3-mode-card) {
     display: flex;
     min-height: 48px;
     flex-direction: column;
@@ -1352,17 +1401,17 @@ const frontmatter = {
     text-align: left;
     cursor: pointer;
   }
-  .k3-mode-card:hover,
-  .k3-mode-card:focus-visible {
+  :global(.k3-mode-card:hover),
+  :global(.k3-mode-card:focus-visible) {
     border-color: var(--lu-primary);
     outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
   }
-  .k3-mode-title {
+  :global(.k3-mode-title) {
     font-size: 1rem;
     font-weight: 900;
   }
-  .k3-mode-step {
+  :global(.k3-mode-step) {
     color: var(--lu-text-muted);
     font-size: 0.72rem;
     font-weight: 900;

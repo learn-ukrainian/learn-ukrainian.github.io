@@ -80,6 +80,13 @@ export interface PracticeLexeme {
   severity: string | null;
   paradigm: PracticeParadigm;
   semanticBucket?: string | null;
+  /**
+   * #5434 example sentence shown on the daily deck back under the gloss.
+   * Absent until the sentence corpus lands — the UI omits the slot quietly.
+   */
+  example?: string | null;
+  /** English rendering of `example` (A1 scaffolding only). */
+  exampleEn?: string | null;
 }
 
 export interface PracticeDeckEntry extends PracticeLexeme {
@@ -492,6 +499,12 @@ export interface DailyPracticeDeckSnapshot {
 export interface DailyPracticeRowState {
   item: DailyPracticeDeckItem;
   state: 'due' | 'new' | 'done';
+  /**
+   * Latest review timestamp (ms) for the lemma, when the review log has one.
+   * Drives the #5432-7 "why this word?" line: due rows show last-seen relative
+   * time, done rows are done today by derivation, new rows have no history.
+   */
+  lastSeenAt: number | null;
 }
 
 export interface SessionScopeStats {
@@ -1865,6 +1878,50 @@ export function uaPlural(
   return forms.many;
 }
 
+/**
+ * Remove generated stress marks (combining acute U+0301) from a display form,
+ * preserving original casing — mirrors `_strip_stress` in the deck generator.
+ * Owner correction 2026-07-18 (#5433): accent glyphs render only for A1
+ * scaffolding; A2+ default surfaces show the bare form. `lemmaPlain` is NOT
+ * reused for this because it is casefolded for matching, not display.
+ */
+export function stripStressMarks(value: string): string {
+  return value.normalize('NFD').replace(/́/g, '').normalize('NFC');
+}
+
+/**
+ * #5432-7 relative last-seen phrase for the daily-row "why this word?" line.
+ * Day boundaries are local midnights (учора = yesterday, not "24h ago").
+ * Returns null when the timestamp is unusable, so the row shows the bare
+ * state line instead of a broken phrase.
+ */
+export function formatLastSeenAgo(
+  lastSeenAt: number,
+  now: Date | number = Date.now(),
+): { uk: string; en: string } | null {
+  const nowTime = toTime(now) ?? Date.now();
+  if (!Number.isFinite(lastSeenAt) || lastSeenAt > nowTime) return null;
+  const midnightNow = localMidnightTimestamp(nowTime);
+  const midnightThen = localMidnightTimestamp(lastSeenAt);
+  const days = Math.max(0, Math.round((midnightNow - midnightThen) / 86_400_000));
+  if (days <= 0) return { uk: 'сьогодні', en: 'today' };
+  if (days === 1) return { uk: 'учора', en: 'yesterday' };
+  if (days < 7) {
+    const dayWord = uaPlural(days, { one: 'день', few: 'дні', many: 'днів' });
+    return { uk: `${days} ${dayWord} тому`, en: `${days} days ago` };
+  }
+  if (days < 31) {
+    const weeks = Math.floor(days / 7);
+    if (weeks <= 1) return { uk: 'тиждень тому', en: 'a week ago' };
+    const weekWord = uaPlural(weeks, { one: 'тиждень', few: 'тижні', many: 'тижнів' });
+    return { uk: `${weeks} ${weekWord} тому`, en: `${weeks} weeks ago` };
+  }
+  const months = Math.floor(days / 30);
+  if (months <= 1) return { uk: 'місяць тому', en: 'a month ago' };
+  const monthWord = uaPlural(months, { one: 'місяць', few: 'місяці', many: 'місяців' });
+  return { uk: `${months} ${monthWord} тому`, en: `${months} months ago` };
+}
+
 export function combinePracticeShards(
   indexShard: PracticeIndexShard,
   lexemeShard: PracticeLexemeShard,
@@ -2574,7 +2631,12 @@ export function deriveDailyPracticeRows(
   const nowTime = toTime(now) ?? Date.now();
   const threshold = Math.max(localMidnightTimestamp(nowTime), snapshot.createdAt);
   const latestByLemma = new Map<string, { review: number; rating: PracticeRating }>();
+  const lastSeenByLemma = new Map<string, number>();
   for (const review of reviews) {
+    const seen = lastSeenByLemma.get(review.lemmaId);
+    if (seen === undefined || review.review > seen) {
+      lastSeenByLemma.set(review.lemmaId, review.review);
+    }
     if (review.review <= threshold) continue;
     const existing = latestByLemma.get(review.lemmaId);
     if (!existing || review.review > existing.review) {
@@ -2594,12 +2656,13 @@ export function deriveDailyPracticeRows(
   const done: DailyPracticeRowState[] = [];
 
   for (const item of snapshot.items) {
+    const lastSeenAt = lastSeenByLemma.get(item.lemmaId) ?? null;
     if (successful.has(item.lemmaId)) {
-      done.push({ item, state: 'done' });
+      done.push({ item, state: 'done', lastSeenAt });
     } else if (item.origin === 'due') {
-      pendingDue.push({ item, state: 'due' });
+      pendingDue.push({ item, state: 'due', lastSeenAt });
     } else {
-      pendingNew.push({ item, state: 'new' });
+      pendingNew.push({ item, state: 'new', lastSeenAt: null });
     }
   }
 

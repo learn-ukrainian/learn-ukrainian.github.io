@@ -72,15 +72,13 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     "utf8",
   );
 
-  test("practice.astro contains the frozen K3 grid with the filler row", () => {
-    expect(practiceSource).toContain(".k3-practice-dashboard {");
-    expect(practiceSource).toContain('grid-area: hero;');
-    expect(practiceSource).toContain('grid-area: stats;');
-    expect(practiceSource).toContain('grid-area: session;');
-    expect(practiceSource).toContain('grid-area: words;');
-    expect(practiceSource).toContain('grid-area: focus;');
-    expect(practiceSource).toContain('grid-area: modes;');
-    expect(practiceSource).toMatch(/"\.\s+words"/);
+  test("practice.astro keeps the frozen K3 setup in one centered column without a filler row", () => {
+    expect(practiceSource).toContain(":global(.k3-practice-dashboard) {");
+    expect(practiceSource).toContain("max-width: 800px;");
+    expect(practiceSource).toContain("margin: 0 auto;");
+    expect(practiceSource).not.toMatch(/grid-template-areas|grid-area\s*:/);
+    expect(dailyDeckSource).toContain("<details");
+    expect(dailyDeckSource).toContain('onToggle={(event) => setDetailsOpen(event.currentTarget.open)}');
   });
 
   test("practice.astro removed the superseded static intro", () => {
@@ -96,7 +94,7 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     }
   });
 
-  test("LexiconPractice renders dashboard areas in the frozen mobile DOM order", () => {
+  test("LexiconPractice renders the frozen single-column DOM order", () => {
     const heroIndex = lexiconPracticeSource.indexOf('className="k3-hero"');
     const statsIndex = lexiconPracticeSource.indexOf('className="k3-stats"');
     const sessionIndex = lexiconPracticeSource.indexOf('className="k3-session"');
@@ -105,9 +103,9 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     const modesIndex = lexiconPracticeSource.indexOf('className="k3-modes"');
     expect(heroIndex).toBeGreaterThan(0);
     expect(statsIndex).toBeGreaterThan(heroIndex);
-    expect(sessionIndex).toBeGreaterThan(statsIndex);
-    expect(wordsIndex).toBeGreaterThan(sessionIndex);
-    expect(focusIndex).toBeGreaterThan(wordsIndex);
+    expect(wordsIndex).toBeGreaterThan(statsIndex);
+    expect(sessionIndex).toBeGreaterThan(wordsIndex);
+    expect(focusIndex).toBeGreaterThan(sessionIndex);
     expect(modesIndex).toBeGreaterThan(focusIndex);
   });
 
