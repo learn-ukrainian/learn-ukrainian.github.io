@@ -177,6 +177,20 @@ async function assertFirstViewportPracticeCTAs(page: Page, locale: 'en' | 'uk'):
   const details = page.getByTestId('practice-daily-details');
   await expect(details).not.toHaveAttribute('open');
   await expect(page.locator('.flashcard.daily-preview-card')).toBeVisible();
+
+  // The one-column visual hierarchy is the actual DOM/tab order, not a CSS
+  // placement trick that would make keyboard navigation disagree with the page.
+  await expect.poll(async () =>
+    page.locator('.k3-practice-dashboard > [data-testid]').evaluateAll(
+      (elements) => elements.map((element) => element.getAttribute('data-testid')),
+    ),
+  ).toEqual([
+    'practice-dashboard-hero',
+    'practice-dashboard-stats',
+    'practice-dashboard-words',
+    'practice-dashboard-session',
+    'practice-dashboard-secondary',
+  ]);
 }
 
 test('HARD-1: English setup dashboard shows start and resume CTAs without scroll at 1366x768', async ({ page, context }) => {
@@ -230,6 +244,15 @@ test('practice stress mode renders word-shaped vowel buttons for an N-vowel word
   await firstVowel.click();
   await expect(firstVowel).toBeDisabled();
   await expect(stress.locator('[data-testid="practice-stress-verdict"]')).toBeVisible();
+});
+
+test('Stress mode remains available after choosing A2', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/words-of-the-day/practice/');
+
+  await page.getByRole('button', { name: 'A2' }).click();
+  await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
+  await expect(page.locator('button[data-mode]')).toHaveCount(11);
 });
 
 test('practice flashcard rating locks the card and waits for explicit next', async ({ page, context }) => {

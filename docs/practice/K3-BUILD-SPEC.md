@@ -16,27 +16,15 @@ copy, interaction rules, layout, icons, colors, or content.
 
 The following requirements are non-negotiable across all chunks:
 
-- The setup dashboard is a two-column grid at widths of `1000px` and above.
-  Its exact desktop row map is:
-
-  ```css
-  grid-template-rows: auto auto auto 1fr auto;
-  grid-template-areas:
-    "hero words"
-    "stats words"
-    "session words"
-    ". words"
-    "focus modes";
-  ```
-
-  The `"."` filler row is deliberate and must remain.
-- At widths below `1000px`, the single DOM order is hero, stats, session CTA,
-  words, focus, modes. CSS reflow must not produce a conflicting keyboard order.
+- The setup dashboard is one centered column at every width. Its DOM and keyboard
+  order is hero, stats, words, session start/resume, then the secondary focus and
+  modes band. The words disclosure grows the page; there is no desktop grid, CSS
+  reordering, or filler row.
 - The primary start/resume CTA is visible without scrolling at `1366x768` in
   both Ukrainian and English chrome. Section 8 defines the two owner HARD tests.
 - The daily set contains 20 unique lemmas. Its rows are ordered pending due,
-  pending new, then completed. Completed rows remain visible and dim to `0.62`.
-  Hover and focus restore a completed row to full opacity. State is always three
+  pending new, then completed. Completed rows remain visible at full opacity with
+  a green finished tint; their why-line uses a neutral readable token. State is always three
   channel: boxed glyph (`✦`, `↻`, `✓`), localized text, and the accepted
   yellow-dark/blue/green semantic color.
 - The words disclosure is a native `<details>` element, closed on initial setup
@@ -48,6 +36,14 @@ The following requirements are non-negotiable across all chunks:
   columns on desktop and an auto-filling two-column layout on mobile. Each card
   contains only title and step label; one shared line shows the hovered or
   focused card's description. Cards have no mode icons.
+- Stress mode remains available at every enabled learner level. On default
+  surfaces (daily preview, row labels, and non-Stress exercise surfaces), display
+  stress marks only for A1 practice; strip them for A2+. Do not add an A2+ absence
+  note for the Stress tile.
+- Daily-deck examples come only from shipped static data: a lexeme `example`
+  field or a cloze record joined by `lemmaId` with its blank filled by the verified
+  form. Omit the example area quietly when neither exists; never fabricate a
+  browser-side sentence or call a serverless runtime.
 - Flashcards use the site's real 3D `.flashcard` pattern. The card itself flips;
   ratings remain disabled before the flip; choosing a rating locks the result;
   the learner advances only through the explicit next control.
@@ -236,12 +232,12 @@ lemma and form both link through the Atlas scheme in section 3.4.
 | `site/src/components/PracticeDailyDeck.tsx` | **NEW** | Render the 3D daily-card preview and the collapsed 20-row `<details>` disclosure, row markers, counters, Atlas links, voice slot, and open-state accessibility. It receives data; it does not select the set. |
 | `site/src/components/PracticeFormRail.tsx` | **NEW** | Render the generalized source-to-actual-form rail and its idle/correct/wrong/calque verdict states for cloze, paradigm, paronym, and heritage only. |
 | `site/src/components/PracticeStress.tsx` | **NEW** | Render arbitrary-length stress choices by iterating the generated `nuclei` positions. It owns no two-vowel special case. |
-| `site/src/components/LexiconPractice.tsx` | CHANGE | Materialize/load the daily set; render the accepted home grid; constrain sessions to the 20 IDs; coordinate mode detail, focus cue, result dwell, explicit next, form rail, level changes, and summary data. |
+| `site/src/components/LexiconPractice.tsx` | CHANGE | Materialize/load the daily set; render the accepted setup dashboard; constrain sessions to the 20 IDs; coordinate mode detail, focus cue, result dwell, explicit next, form rail, level changes, and summary data. |
 | `site/src/components/PracticeFlashcard.tsx` | CHANGE | Keep the real `.flashcard`; add a locked rated state and explicit parent-controlled completion. Prevent flip/rating keyboard handlers after lock. |
 | `site/src/components/PracticeSessionSummary.tsx` | CHANGE | Add the accepted completed/total ratio and closing proverb while retaining next-due formatting and existing actions. |
 | `site/src/components/MatchUp.tsx` | CHANGE | Add the documented optional practice-only pair-coding prop to the lesson-schema shim. |
 | `packages/activity-kit/src/components/MatchUp.tsx` | CHANGE | Implement the optional four-token semantic coding and visible pair tags while preserving the default behavior for all existing lesson consumers. |
-| `site/src/pages/words-of-the-day/practice.astro` | CHANGE | Keep `CourseLayout` and `LexiconPracticeMount`; remove the superseded intro; implement the accepted grid, responsive, state, theme, and contrast styling; stop neutralizing the canonical flashcard front/back. |
+| `site/src/pages/words-of-the-day/practice.astro` | CHANGE | Keep `CourseLayout` and `LexiconPracticeMount`; remove the superseded intro; implement the accepted single-column, responsive, state, theme, and contrast styling; stop neutralizing the canonical flashcard front/back. |
 | `site/src/styles/match-up.css` | CHANGE | Define opt-in semantic pair tokens and matched/focus states without changing default lesson matching. |
 | `site/tests/unit/*.test.*`, `site/e2e/atlas-practice.spec.ts` | CHANGE/NEW CASES | Prove data selection, copy completeness, accessibility, dwell behavior, themes, rails, pair coding, and hard viewport requirements. |
 
@@ -321,11 +317,11 @@ selector, compact modes, and the two owner HARD tests.
 
 **Build brief**
 
-1. Move the setup hero into the React idle dashboard so one grid owner controls
-   the frozen desktop areas and mobile DOM order. Keep `CourseLayout` and
+1. Move the setup hero into the React idle dashboard so one owner controls the
+   frozen single-column DOM order. Keep `CourseLayout` and
    `LexiconPracticeMount` unchanged as the route/hydration boundary.
 2. Load all eligible index cores, materialize the snapshot, and fetch lexeme
-   cores for its represented levels. Render loading/error states in the grid
+   cores for its represented levels. Render loading/error states in the dashboard
    without shifting the CTA below the first viewport.
 3. Render the real level control using the published-level gate already present
    in `site/src/components/LexiconPractice.tsx`; A1–C1 are enabled and C2 is
@@ -339,19 +335,22 @@ selector, compact modes, and the two owner HARD tests.
    collapsed initially. Keep its `n / total` position, previous/next buttons,
    lemma/IPA/part-of-speech/level front, gloss back, and separate “Open in
    Atlas” link. Make each list row a full Atlas link. The speaker is a
-   non-functional but accessible voice slot, not a playback button.
+   non-functional but accessible voice slot, not a playback button. The deck
+   back may show a verified static example from the lexeme or lemma-matched
+   cloze data; it has no placeholder when absent.
 6. Render all 11 `MODE_CARD_ORDER` entries. Use title and step only. Update one
    shared `aria-live="polite"` description line from pointer hover or keyboard
    focus; associate every card with it through `aria-describedby`. On pointer
    leave or blur, restore the accepted Mixed detail text. Relocate the exact
    existing `MODE_META` strings without rewriting them. Do not use icons.
-7. Apply the exact desktop grid, including the `"."` row, and the frozen mobile
-   DOM order. Preserve the canonical flashcard colors by deleting the route-local
-   front/back overrides that neutralize `site/src/styles/lesson.css`.
-8. Keep row opacity at `0.62`. Use a foreground token that passes the composited
-   normal-text contrast threshold in both themes; do not lower the opacity or
-   silently alter the accepted status colors. Restore opacity to `1` on hover and
-   focus.
+7. Use the centered single-column DOM order: hero, stats, words, session start,
+   secondary. The words disclosure grows the page; do not recreate a desktop
+   grid or reorder controls visually. Preserve the canonical flashcard colors by
+   deleting route-local front/back overrides that neutralize
+   `site/src/styles/lesson.css`.
+8. Completed rows are fully opaque with a green finished tint, a green status
+   marker, and a neutral readable why-line. Do not dim finished text, and do not
+   depend on hover or focus to restore contrast.
 9. Preserve the accepted epigraph verbatim as Ukrainian learning content:
    `«Мова — це серце народу: гине мова — гине народ» — Іван Огієнко`. Keep the
    10/20/until-clear session-size controls and scope estimate in the session card.
@@ -359,12 +358,13 @@ selector, compact modes, and the two owner HARD tests.
 **Acceptance**
 
 - HARD-1 and HARD-2 in section 8 pass at exactly `1366x768` with no prior scroll.
-- Desktop computed `grid-template-areas` contains the empty filler row. At
-  `999px`, DOM/tab order is hero, stats, CTA, words, focus, modes.
+- At every viewport, DOM/tab order is hero, stats, words, CTA, secondary; CSS
+  does not create a contradictory visual order.
 - The disclosure begins closed, its 48px summary toggles with pointer and
   keyboard, and `aria-expanded` always equals its open state.
 - The daily preview plus list represent the same unique snapshot IDs. Rows are
-  due/new/done ordered; completing a row dims rather than removes it.
+  due/new/done ordered; completing a row keeps it visible at full opacity with a
+  green finished tint and neutral why-line.
 - Every row and the preview's separate Atlas link use the encoded URL from
   section 3.4; clicking the preview card flips rather than navigates.
 - A1–C1 can be selected; C2 is disabled and labeled “soon” in the active locale.
@@ -373,8 +373,8 @@ selector, compact modes, and the two owner HARD tests.
 - Ukrainian and English chrome each show one locale, not slash-concatenated
   duplicates. The page passes in light, dark, and system theme settings.
 - Automated contrast is at least 4.5:1 for normal row text and 3:1 for state
-  markers/focus indicators after the done-row opacity is composited in both
-  themes.
+  markers/focus indicators in both themes; finished-row contrast is measured on
+  the actual green tint, without opacity compositing.
 
 **Verification**
 
@@ -598,8 +598,8 @@ close the three carry-over fixes.
    nucleus index with `stressIndex`; do not recompute Ukrainian stress from
    spelling.
 7. Apply the carry-over done-row AA check from chunk 2 again after final styling.
-   The frozen `0.62` opacity remains; choose a compliant underlying text token or
-   block the PR and record a designer note rather than weakening the threshold.
+   Finished rows remain fully opaque with the accepted green tint and neutral
+   why-line; verify contrast against that real background in both themes.
 
 **Acceptance**
 
@@ -617,8 +617,8 @@ close the three carry-over fixes.
   forms; the rail remains static.
 - Correct, wrong, and calque remain distinguishable in forced light/dark themes,
   without relying on hue alone.
-- Done-row text/markers still meet 4.5:1/3:1 after opacity compositing in both
-  themes.
+- Done-row text/markers still meet 4.5:1/3:1 against the full-opacity green tint
+  in both themes.
 - No mode advances before the explicit next action.
 
 **Verification**
@@ -687,8 +687,8 @@ under reduced motion and the reset must not move focus unpredictably.
 - Test default, hover, focus-visible, selected, wrong, correct, calque, disabled,
   and done states. Normal text requires WCAG AA 4.5:1; large text and non-text
   state/focus boundaries require 3:1.
-- The dimmed done row is measured after `opacity: 0.62` is composited over the
-  actual theme background. A raw token-to-token calculation is insufficient.
+- The full-opacity finished row is measured against its actual green tint. A raw
+  token-to-token calculation is insufficient.
 - Reduced-motion mode removes unnecessary transitions while retaining the real
   front/back relationship and immediate state change.
 
@@ -742,7 +742,7 @@ mockup, but it does not replace either `1366x768` HARD test.
 
 | Gate | Required proof |
 | --- | --- |
-| Frozen layout | Exact desktop grid including `"."`; mobile DOM/focus order; HARD-1 and HARD-2. |
+| Frozen layout | Centered single-column DOM/focus order; page-growing disclosure; HARD-1 and HARD-2. |
 | Daily 20 | Unique persisted IDs, due/new source counts, stable done state/order, actual denominator for undersized fixtures. |
 | All modes | Exactly the 11 `MODE_CARD_ORDER` modes, compact titles/steps, one shared focus/hover detail line, no icons. |
 | Real flashcard | Canonical `.flashcard` DOM/CSS, card flip, disabled pre-flip ratings, locked rated state, explicit next. |
@@ -750,7 +750,7 @@ mockup, but it does not replace either `1366x768` HARD test.
 | Stress generality | N-vowel/code-point fixtures; no two-vowel assumption. |
 | Pair coding | Four theme tokens plus visible/announced pair tags; default lesson MatchUp unchanged. |
 | Locale | Every new string has uk/en; exclusive active chrome in setup, activity, and summary. |
-| Theme/AA | Light, dark, system, focus/state contrast, composited done-row checks. |
+| Theme/AA | Light, dark, system, focus/state contrast, full-opacity green-tint done-row checks. |
 | Progression | Submit/rate/final-match never auto-advances; explicit next is focused and solely advances. |
 | Copy discipline | No rule narration and no redesigned chrome outside the approved pair inventories. |
 | Schema | Every PR that changes a site component runs generator, schema tests, and generator/prompt-builder Ruff checks. |
@@ -791,7 +791,7 @@ content:
    fields for the rail while the sentence uses its supplied option label. No
    runtime morphological transformation or blanket lowercasing is introduced.
 
-Any later discovery that requires changing frozen copy, layout, opacity, mode
+Any later discovery that requires changing frozen copy, layout, finished-row treatment, mode
 count, progression, or semantic color mapping must be recorded as a new designer
 note and returned to the owner for an explicit decision before implementation.
 

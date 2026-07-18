@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: a51f80e11aad25ba22c8814cea65f9ee7023902a8f375d4e63ff2f745dfaf006
+  components_sha256: 7ee159a8af14c57bbd643ff9340be98c5dd15555e9a75b0243da5f2e2af84b76
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1606,6 +1606,10 @@ components:
         type: ChromeLocale
         description: chromeLocale prop.
         ukrainian_text: 'false'
+      - name: learnerLevel
+        type: CefrLevel
+        description: learnerLevel prop.
+        ukrainian_text: 'false'
       optional: []
     nested_types: {}
     example:
@@ -1614,6 +1618,7 @@ components:
       lexemes: <Map<string, PracticeLexeme>>
       atlasLemmaHref: '<(lemmaId: string) => string>'
       chromeLocale: <ChromeLocale>
+      learnerLevel: <CefrLevel>
     deprecated: false
     deprecation_reason: null
   PracticeErrorBoundary:

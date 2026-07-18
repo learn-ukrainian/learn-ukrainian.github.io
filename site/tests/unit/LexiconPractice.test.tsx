@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LexiconPractice from '@site/src/components/LexiconPractice';
+import LexiconPractice, { addDailyExamples } from '@site/src/components/LexiconPractice';
+import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
 import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
@@ -11,6 +12,8 @@ import {
   loadState,
   saveState,
   type PracticeDeckData,
+  type DailyPracticeDeckSnapshot,
+  type DailyPracticeRowState,
   type PracticeHeritageItem,
   type PracticeParonymItem,
   type PracticeLexeme,
@@ -657,6 +660,86 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('keeps the K3 setup DOM order and Stress mode visible after switching to A2', async () => {
+    const { fn } = mockShardFetch({ A1: 4, A2: 4 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    await screen.findByTestId('practice-daily-deck');
+    const dashboard = container.querySelector('.k3-practice-dashboard')!;
+    expect(
+      Array.from(dashboard.children).map((child) => child.getAttribute('data-testid')),
+    ).toEqual([
+      'practice-dashboard-hero',
+      'practice-dashboard-stats',
+      'practice-dashboard-words',
+      'practice-dashboard-session',
+      'practice-dashboard-secondary',
+    ]);
+
+    await user.click(screen.getByRole('button', { name: 'A2' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: /Наголос/ })).toBeInTheDocument());
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(11);
+  });
+
+  test('renders stress marks and daily examples only on A1 default surfaces', () => {
+    const marked = lexeme('mama', 'ма́ма', 'mother', {
+      nominative: 'ма́ма',
+      accusative: 'ма́му',
+      locative: 'ма́мі',
+    }, { example: 'Мама читає.', exampleEn: 'Mother is reading.' });
+    const snapshot: DailyPracticeDeckSnapshot = {
+      version: 1,
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'test-daily-display',
+      createdAt: NOW.getTime(),
+      items: [{ lemmaId: marked.lemmaId, origin: 'due' }],
+    };
+    const rows: { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } = {
+      pendingDue: [{ item: snapshot.items[0]!, state: 'due', lastSeenAt: NOW.getTime() }],
+      pendingNew: [],
+      done: [],
+    };
+    const props = {
+      snapshot,
+      rows,
+      lexemes: new Map([[marked.lemmaId, marked]]),
+      atlasLemmaHref: (lemmaId: string) => `/lexicon/${lemmaId}/`,
+      chromeLocale: 'uk' as const,
+    };
+    const { rerender } = render(<PracticeDailyDeck {...props} learnerLevel="A1" />);
+
+    expect(screen.getAllByText('ма́ма').length).toBeGreaterThan(0);
+    expect(screen.getByTestId('practice-daily-example')).toHaveTextContent('Мама читає.');
+    expect(screen.getByTestId('practice-daily-example-en')).toHaveTextContent('Mother is reading.');
+    expect(screen.getByTestId('practice-daily-why-mama')).toHaveTextContent('До повторення');
+
+    rerender(<PracticeDailyDeck {...props} learnerLevel="A2" />);
+
+    expect(screen.queryByText('ма́ма')).not.toBeInTheDocument();
+    expect(screen.getAllByText('мама').length).toBeGreaterThan(0);
+    expect(screen.queryByTestId('practice-daily-example-en')).not.toBeInTheDocument();
+  });
+
+  test('uses a lemma-matched cloze sentence only when a lexeme example is absent', () => {
+    const deck = sampleDeck();
+    const explicit = { ...deck.lexemes[1]!, example: 'Verified shipped example.' };
+    const clozeOnly = { ...deck.lexemes[0]! };
+    const enriched = addDailyExamples(
+      new Map([
+        [explicit.lemmaId, explicit],
+        [clozeOnly.lemmaId, clozeOnly],
+      ]),
+      deck.cloze,
+    );
+
+    expect(enriched.get(explicit.lemmaId)?.example).toBe('Verified shipped example.');
+    expect(enriched.get(clozeOnly.lemmaId)?.example).toBe('Я читаю книгу.');
+    expect(enriched.get(clozeOnly.lemmaId)?.exampleEn).toBe('I am reading a book.');
+  });
+
   test('practice render fallback is bilingual', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
