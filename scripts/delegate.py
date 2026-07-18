@@ -87,6 +87,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -297,6 +298,41 @@ def _normalize_worktree_path(raw_path: str) -> Path:
     if not path.is_absolute():
         path = _REPO_ROOT / path
     return path.resolve()
+
+
+def _resolve_output_schema(
+    raw_path: str | None,
+    *,
+    agent: str,
+) -> tuple[str | None, str | None]:
+    """Validate one provider output schema before any worker is spawned.
+
+    The Codex CLI is currently the only native dispatch adapter with a
+    file-backed structured-output flag. Returning an absolute path prevents
+    the detached worker from resolving a relative schema against a different
+    working directory. The SHA is persisted in task state as proof of the
+    exact schema bytes admitted at the dispatch boundary.
+    """
+    if raw_path is None:
+        return None, None
+    if agent != "codex":
+        raise ValueError("--output-schema is supported only with the effective codex agent")
+
+    candidate = Path(raw_path).expanduser()
+    try:
+        resolved = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"output schema does not exist: {candidate}") from exc
+    if not resolved.is_file():
+        raise ValueError(f"output schema is not a regular file: {resolved}")
+    try:
+        payload = resolved.read_bytes()
+        schema = json.loads(payload.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"output schema is not valid UTF-8 JSON: {exc}") from exc
+    if not isinstance(schema, dict):
+        raise ValueError("output schema JSON must be an object")
+    return str(resolved), hashlib.sha256(payload).hexdigest()
 
 
 # ---------------------------------------------------------------------------
@@ -1983,6 +2019,8 @@ def _run_worker(
     initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     keep_worktree: bool = False,
     provider: str | None = None,
+    output_schema_path: str | None = None,
+    output_schema_sha256: str | None = None,
     runtime_tmp_root: str | None = None,
     runtime_tmp_namespace_root: str | None = None,
 ) -> int:
@@ -2052,6 +2090,9 @@ def _run_worker(
             tool_config["max_budget_usd"] = max_budget_usd
         if provider is not None:
             tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
+        if output_schema_path is not None:
+            tool_config["output_schema_path"] = output_schema_path
+            tool_config["output_schema_sha256"] = output_schema_sha256
         tool_config = tool_config or None
         result = runtime_invoke(
             agent,
@@ -2426,6 +2467,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
+    try:
+        output_schema_path, output_schema_sha256 = _resolve_output_schema(
+            getattr(args, "output_schema", None),
+            agent=dispatch_agent,
+        )
+    except ValueError as exc:
+        print(f"❌ invalid --output-schema: {exc}", file=sys.stderr)
+        return 2
+
     if getattr(args, "dry_run", False):
         dry_run_worktree: Path | None = None
         dry_run_branch: str | None = None
@@ -2475,6 +2525,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "worktree_branch": dry_run_branch,
             "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
             "runtime_tmp_root": str(runtime_tmp_root),
+            "output_schema_path": output_schema_path,
+            "output_schema_sha256": output_schema_sha256,
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
             "pid": None,
@@ -2619,6 +2671,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "silence_timeout": silence_timeout,
         "initial_response_timeout": initial_response_timeout,
         "max_budget_usd": max_budget_usd,
+        "output_schema_path": output_schema_path,
+        "output_schema_sha256": output_schema_sha256,
         "pid": None,  # worker fills this
         "status": "spawning",
         "started_at": datetime.now(UTC).isoformat(),
@@ -2700,6 +2754,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         cmd.append("--keep-worktree")
     if max_budget_usd is not None:
         cmd.extend(["--max-budget-usd", str(max_budget_usd)])
+    if output_schema_path is not None:
+        cmd.extend(
+            [
+                "--output-schema",
+                output_schema_path,
+                "--output-schema-sha256",
+                str(output_schema_sha256),
+            ]
+        )
     if args.model:
         cmd.extend(["--model", args.model])
     if getattr(args, "provider", None):
@@ -3239,6 +3302,8 @@ def cmd_worker(args: argparse.Namespace) -> int:
         model=args.model,
         hard_timeout=args.hard_timeout,
         provider=getattr(args, "provider", None),
+        output_schema_path=getattr(args, "output_schema", None),
+        output_schema_sha256=getattr(args, "output_schema_sha256", None),
         silence_timeout=args.silence_timeout,
         max_budget_usd=getattr(args, "max_budget_usd", None),
         effort=args.effort,
@@ -3499,6 +3564,17 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--output-schema",
+        default=None,
+        metavar="FILE",
+        help=(
+            "Bind a JSON Schema to the final response of an effective Codex "
+            "dispatch. The file is parsed before spawn, resolved to an "
+            "absolute path, hashed into task state, and revalidated by the "
+            "Codex adapter before it emits --output-schema."
+        ),
+    )
+    d.add_argument(
         "--research-role",
         default=None,
         metavar="ROLE",
@@ -3627,6 +3703,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     wk.add_argument("--keep-worktree", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
+    wk.add_argument("--output-schema", default=None)
+    wk.add_argument("--output-schema-sha256", default=None)
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.set_defaults(func=cmd_worker)

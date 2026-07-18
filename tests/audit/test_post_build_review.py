@@ -3887,14 +3887,15 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
     assert "--semantic-result" not in text
     assert "post_build_review.py allocate <track/slug>" in text
     assert "--output <packet_path>" in text
+    assert "--output-schema <semantic_schema_path>" in text
     assert "curriculum/l2-uk-en/{track}/audit" not in text
 
 
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.7"
-    assert len(rows) == 77
+    assert catalog["catalog_version"] == "6.0.8"
+    assert len(rows) == 78
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",

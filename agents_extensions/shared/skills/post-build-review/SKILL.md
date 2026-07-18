@@ -70,6 +70,23 @@ artifacts. Report findings; do not fix the module during this invocation.
      --output <semantic_schema_path>
    ```
 
+   A Codex review dispatched through the project runtime must bind that exact
+   file at the provider boundary; omitting the flag is an orchestration defect
+   and must stop before inference:
+
+   ```bash
+   .venv/bin/python scripts/delegate.py dispatch \
+     --agent codex --task-id <unique_review_task_id> \
+     --prompt-file <semantic_prompt_path> --mode read-only \
+     --cwd <exact_review_checkout> --model <model> --effort <effort> \
+     --output-schema <semantic_schema_path>
+   ```
+
+   The dispatcher validates and hashes the schema before spawn, and the Codex
+   adapter validates it again before emitting `codex exec --output-schema`.
+   Preserve the task result file's exact bytes as the semantic response; do
+   not extract a JSON object from a provider envelope.
+
    Bind that schema at the provider boundary and redirect its structured text
    channel directly to `<semantic_response_path>`. The packet binding constrains
    cited evidence to valid target-file paths and one-based line numbers; the
