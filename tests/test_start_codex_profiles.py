@@ -215,6 +215,25 @@ def test_launcher_binds_epic_and_strips_private_flag(tmp_path: Path) -> None:
     assert "Handoff identity: codex-hramatka" in result.stdout
 
 
+def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:
+    values, forwarded, result, primary, _ = _launch(
+        tmp_path,
+        ["--epic=hramatka"],
+    )
+
+    assert values["epic"] == "hramatka"
+    assert values["handoff_agent"] == "codex-hramatka"
+    assert forwarded == [
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--search",
+        "--enable",
+        "multi_agent",
+        "-C",
+        os.fspath(primary),
+    ]
+    assert "Epic assignment: hramatka.epic" in result.stdout
+
+
 def test_launcher_normalizes_equals_form_epic_suffix(tmp_path: Path) -> None:
     values, forwarded, _, _, _ = _launch(
         tmp_path,
