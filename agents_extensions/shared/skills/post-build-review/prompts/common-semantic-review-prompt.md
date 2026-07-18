@@ -1,6 +1,6 @@
 # Common semantic post-build review prompt
 
-Semantic prompt version: `6.0.5`
+Semantic prompt version: `6.0.6`
 
 ## Machine-response contract — read before any source or tool call
 
@@ -245,6 +245,12 @@ Apply the following anchored rubric within the bands:
   that dimension and its rationale must name the concrete gap to `10.0`.
   A `PASS` score may link only low/info findings; a score below `9.0` is never
   publication-ready and must use `REVISE` or `BLOCK` as its calibrated status.
+  At least one evidence entry for that dimension must repeat one linked
+  finding's exact primary locator: the identical repo-relative target path and
+  one-based line. Positive evidence elsewhere does not satisfy this relational
+  requirement. Before returning, compare each sub-`10.0` dimension's
+  `finding_ids` against the findings array and copy a linked finding's
+  `{location, line}` pair into that dimension's evidence.
 - Every semantic finding must be referenced by at least one quality dimension,
   contradicted/imprecise/unattested claim, or non-verified learner-evidence
   entry. A `10.0` attests that the dimension has no linked finding; it never
@@ -311,7 +317,7 @@ equal the statuses actually present in that array.
         {
           "location": "repo-relative target file",
           "line": 1,
-          "supports": "why this exact line supports the dimension assessment"
+          "supports": "why this linked finding line leaves bounded headroom below 10.0"
         }
       ],
       "finding_ids": ["example-bounded-headroom"]
@@ -320,28 +326,28 @@ equal the statuses actually present in that array.
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
       "score": 9.0,
       "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
-      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports naturalness"}],
+      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this linked finding line leaves bounded naturalness headroom below 10.0"}],
       "finding_ids": ["example-bounded-headroom"]
     },
     "decolonization": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
       "score": 9.0,
       "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
-      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports decolonization"}],
+      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this linked finding line leaves bounded decolonization headroom below 10.0"}],
       "finding_ids": ["example-bounded-headroom"]
     },
     "engagement": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
       "score": 9.0,
       "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
-      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports engagement"}],
+      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this linked finding line leaves bounded engagement headroom below 10.0"}],
       "finding_ids": ["example-bounded-headroom"]
     },
     "tone": {
       "status": "PASS|REVISE|BLOCK|INCOMPLETE",
       "score": 9.0,
       "score_rationale": "Publication-ready; the linked low-severity finding records bounded non-material headroom.",
-      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this line supports tone"}],
+      "evidence": [{"location": "repo-relative target file", "line": 1, "supports": "why this linked finding line leaves bounded tone headroom below 10.0"}],
       "finding_ids": ["example-bounded-headroom"]
     }
   },

@@ -1,4 +1,4 @@
-catalog_version: 6.0.5
+catalog_version: 6.0.6
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -495,3 +495,14 @@ regressions:
       Reject the response unless the dimension has no linked findings, cites
       at least two distinct positive evidence anchors, and gives a positive
       exceptional-quality rationale.
+  - bug_id: subperfect-score-omitted-linked-finding-locator
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.0.6
+    version_field: semantic_prompt_version
+    input: >-
+      A reviewer assigns a 9.x score and links a low-severity finding, but the
+      dimension evidence cites only positive anchors elsewhere in the module.
+    expected: >-
+      Require the dimension evidence to repeat one linked finding's exact
+      target path and line so the numeric gap remains auditable and the
+      fail-closed validator can accept the response without repair.

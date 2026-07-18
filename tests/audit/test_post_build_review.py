@@ -984,6 +984,43 @@ def test_minimum_dimension_score_preserves_pass_backlog_without_averaging(
     assert result["combined_disposition"] == baseline["combined_disposition"]
 
 
+def test_subperfect_score_requires_linked_finding_locator_in_dimension_evidence(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    content = bilash_packet["target_materials"]["content"]
+    uncited_line = [
+        line for line in content["lines"] if len(line["text"].strip()) >= 8
+    ][2]
+    semantic["findings"].append(
+        {
+            "id": "unanchored-low-gap",
+            "issue_id": "UNANCHORED_LOW_GAP",
+            "category": "pedagogy",
+            "severity": "low",
+            "message": "A low-severity gap remains outside the cited positive anchors.",
+            "evidence": "Synthetic evidence-backed low gap.",
+            "location": {
+                "location": content["path"],
+                "line": uncited_line["line"],
+            },
+        }
+    )
+    semantic["quality_dimensions"]["pedagogical"].update(
+        {
+            "score": 9.0,
+            "score_rationale": "The linked gap prevents a 10.0 pedagogical score.",
+            "finding_ids": ["unanchored-low-gap"],
+        }
+    )
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "must share an exact locator" in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
 def test_perfect_score_requires_positive_exceptional_rationale(
     bilash_packet: dict,
 ) -> None:
@@ -2690,6 +2727,7 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "must be below `9.0`",
         "`10.0` is exceptional",
         "non-blocking improvement",
+        "identical repo-relative target path and",
         "return the exact repo-relative",
         "at least eight non-whitespace",
         "exact locator belongs to a supplied deterministic",
@@ -3733,8 +3771,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.5"
-    assert len(rows) == 75
+    assert catalog["catalog_version"] == "6.0.6"
+    assert len(rows) == 76
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3777,6 +3815,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "6.0.3",
         "6.0.4",
         "6.0.5",
+        "6.0.6",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"
