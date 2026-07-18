@@ -752,7 +752,21 @@ INSTRUCTION_OPEN_RE = re.compile(
     r"(?:\b[А-Яа-яІіЇїЄєҐґ][а-яіїєґ'’\-]{2,}(?:йте|іть|жте|чте)\b|"
     r"^[а-яіїєґ'’\-]{3,}ти\b)"
 )
+SOURCE_CLAIM_COMPLEMENT_RE = re.compile(
+    r"^(?:зверніть\s+увагу|зауважте|пам['’ʼ]ятайте)\s*,\s*що\b",
+    re.IGNORECASE,
+)
 UKRAINIAN_APOSTROPHE_TRANSLATION = str.maketrans({"'": "ʼ", "’": "ʼ"})
+
+
+def _instruction_open(text: str) -> re.Match[str] | None:
+    """Match an instruction before clause punctuation, not a trailing command."""
+    instruction = INSTRUCTION_OPEN_RE.search(text)
+    if instruction is None:
+        return None
+    if re.search(r"[,.;!?…:：—–]", text[: instruction.start()]):
+        return None
+    return instruction
 
 
 def _normalized_claim_surface(text: str) -> str:
@@ -803,7 +817,7 @@ def _statement_signals(text: str) -> list[str]:
     if universal is None:
         return []
     surface = re.sub(r"^[*_`]+", "", text)
-    instruction = INSTRUCTION_OPEN_RE.search(surface)
+    instruction = _instruction_open(surface)
     if instruction is not None and NEAR_UNIVERSAL_RE.search(text) is None:
         colon = re.search(r"[:：]", surface)
         framed_universal = (
@@ -835,19 +849,19 @@ def _statement_requires_claim(unit: Mapping[str, Any]) -> bool:
     surface = re.sub(r"^[*_`]+", "", str(unit.get("text") or "")).strip()
     if surface.endswith("?"):
         return False
-    instruction = INSTRUCTION_OPEN_RE.search(surface)
+    instruction = _instruction_open(surface)
     if instruction is None:
         return True
 
-    colon = re.search(r"[:：]", surface)
-    if colon is None or instruction.start() > colon.start():
-        return False
-    declarative_tail = surface[colon.end() :].strip()
-    return bool(
-        declarative_tail
-        and not declarative_tail.endswith("?")
-        and INSTRUCTION_OPEN_RE.search(declarative_tail) is None
-    )
+    frame_delimiter = re.search(r"[:：—–]", surface)
+    if frame_delimiter is not None:
+        framed_tail = surface[frame_delimiter.end() :].strip()
+        return bool(
+            framed_tail
+            and not framed_tail.endswith("?")
+            and _instruction_open(framed_tail) is None
+        )
+    return SOURCE_CLAIM_COMPLEMENT_RE.match(surface) is not None
 
 
 def build_learner_statement_inventory(

@@ -1667,6 +1667,8 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
         ("Що встановлює каталог Держкіно?", False),
         ("Каталог Держкіно фіксує 1958 рік.", True),
         ("Зверніть увагу: каталог Держкіно фіксує 1958 рік.", True),
+        ("Зверніть увагу, що каталог Держкіно фіксує 1958 рік.", True),
+        ("Каталог Держкіно фіксує 1958 рік, порівняйте.", True),
         ("Зауважте за ЕСУ: порівняйте дві дати.", False),
     ],
 )
@@ -2475,6 +2477,9 @@ def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
     assert pbr._statement_signals(
         "У кожній версії простежте граматичну особу."
     ) == []
+    assert pbr._statement_signals(
+        "Кожен запис потребує джерела, порівняйте їх."
+    ) == ["universal_quantifier"]
 
 
 @pytest.mark.parametrize(
