@@ -1,4 +1,4 @@
-catalog_version: 6.0.4
+catalog_version: 6.0.5
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -464,3 +464,34 @@ regressions:
     expected: >-
       Tell the reviewer explicitly that CLEAR requires an empty finding_ids
       array and FOUND or INCOMPLETE requires one or more correctly owned IDs.
+  - bug_id: pass-band-admitted-score-below-publication-target
+    responsible_layer: track_policy
+    fixed_in_version: 2.1.0
+    version_field: track_policy_version
+    input: >-
+      A dimension receives 8.0–8.9 while its categorical status remains PASS,
+      even though the documented publication-quality target is 9.0.
+    expected: >-
+      Calibrate PASS to [9.0, 10.0] and REVISE to [6.0, 9.0), preserving the
+      categorical fail-closed disposition rather than introducing an average.
+  - bug_id: no-findings-defaulted-every-dimension-to-perfect
+    responsible_layer: semantic_prompt
+    fixed_in_version: 6.0.5
+    version_field: semantic_prompt_version
+    input: >-
+      The reviewer finds no material defect and copies five 10.0 scores from
+      the response example without identifying exceptional positive evidence.
+    expected: >-
+      Use 9.x PASS examples with a bounded low/info improvement backlog, and
+      reserve 10.0 for explicitly justified exceptional quality.
+  - bug_id: perfect-score-lacked-independent-positive-anchors
+    responsible_layer: disposition
+    fixed_in_version: 6.0.4
+    version_field: review_protocol_version
+    input: >-
+      A dimension claims 10.0 from one generic compliment or from the absence
+      of linked findings.
+    expected: >-
+      Reject the response unless the dimension has no linked findings, cites
+      at least two distinct positive evidence anchors, and gives a positive
+      exceptional-quality rationale.

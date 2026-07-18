@@ -16,6 +16,27 @@ the only readiness gate; keep every post-build-review invocation read-only.
 Never run legacy LLM-QG, a separate deterministic audit, or a legacy content
 review as an operator completion gate.
 
+## Canonical entry paths
+
+New and existing modules use one lifecycle, not separate completion systems:
+
+- An `UNBUILT` module enters at `PLAN_REVIEW_REQUIRED`, advances through the
+  versioned plan/build stages, and then reaches `POST_BUILD_REVIEW_REQUIRED`.
+- A complete existing `BUILT` module enters directly at
+  `POST_BUILD_REVIEW_REQUIRED`; do not rebuild it merely because it already
+  exists. A stale preparation identity routes through the explicit rebuild
+  transition before returning to that same gate.
+- A `PARTIAL` module enters forensic recovery, records one complete build, and
+  then reaches the same post-build gate.
+
+From `POST_BUILD_REVIEW_REQUIRED` onward, every entry path uses the same
+versioned scorer, fail-closed categorical disposition, source-hash invalidation,
+automated repair loop, independent cross-family review, publication, and
+rendered deployment verification. A repair never patches only the review
+artifact: record the owning source change and rerun a fresh canonical review.
+An unchanged existing module with a current PASS remains idempotent and must not
+be rebuilt or republished without a terminal-goal reason.
+
 ## Start or resume
 
 1. Preserve the legacy parity boundary documented below. Post-build review v5
@@ -225,8 +246,8 @@ The repository-backed feature audit has these binding dispositions:
 | Pedagogical, naturalness, decolonization, engagement, tone; scaffolding/leakage canaries; Ukrainian/factual/decolonization/media evidence | ABSORB into post-build prompt v4, schema, strict normalizer, and regression tests |
 | Deterministic surface/activity/vocabulary/resource/route/size checks | ABSORB through post-build preparation; never invoke separately |
 | Author lineage, repairability, freshness, bounded correction, and stability | REPLACE with ledger identities, deterministic owners, fresh review, and `REVIEWER_INSTABILITY` |
-| Schema-bound, evidence-backed in-result diagnostic dimension scores and a reporting-only minimum | ACCEPT; categorical semantic and deterministic gates remain authoritative |
-| Numeric score authority, numeric readiness thresholds, score sidecars, score-based disposition, warning demotion, parser salvage, merged retries, DB/mtime readiness, same-route median independence | REJECT |
+| Schema-bound, evidence-backed in-result diagnostic dimension scores and a reporting-only minimum | ACCEPT; categorical semantic and deterministic gates remain authoritative, with `PASS` calibrated to `9.0+` per dimension |
+| Numeric averages, score sidecars, a minimum-score shortcut around categorical evidence, warning demotion, parser salvage, merged retries, DB/mtime readiness, same-route median independence | REJECT |
 | Canary calibration, cost/circuit experiments, deep-read evaluation, and V7's internal LLM-QG while it remains | RETAIN-EVAL only; none can complete the outer state machine |
 
 Before deprecating separate operator invocation, tests must prove current and

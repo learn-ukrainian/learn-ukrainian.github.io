@@ -113,11 +113,17 @@ manually concatenate or substitute other review prompts.
   the repository.
 - Never let semantic `PASS` override a deterministic blocker/high finding.
 - Treat v6 dimension scores and `minimum_dimension_score` as diagnostic,
-  evidence-backed reporting only. Never use them as readiness thresholds,
-  disposition inputs, score sidecars, or retry-selection criteria.
-- Treat `10.0` as an attestation about findings linked to that dimension, not
-  as evidence that the whole result has no claim or learner-evidence findings.
-  The strict normalizer rejects any finding that has no dimension/ledger owner.
+  evidence-backed reporting. Never average them, use a score sidecar, demote a
+  categorical finding, or select retries from them. The versioned status bands
+  enforce the publication target: a categorical dimension `PASS` is `9.0+`;
+  anything below `9.0` is non-PASS.
+- Treat low/info findings linked to a `9.x` PASS dimension as the preserved,
+  non-blocking improvement backlog. They remain visible in the canonical
+  `findings` ledger and never authorize a material-finding downgrade.
+- Treat `10.0` as exceptional positive evidence, not an attestation inferred
+  from finding absence. It requires no linked findings, two distinct positive
+  evidence anchors, and a rationale that explains exceptional quality. The
+  strict normalizer rejects any finding that has no dimension/ledger owner.
 - Treat `alignment_audit` and `vocabulary_coverage` as required evidence
   ledgers. A prompt claim that a class was checked cannot replace the exact
   seven-class record or the source-order lemma enumeration.
