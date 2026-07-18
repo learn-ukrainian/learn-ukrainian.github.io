@@ -106,12 +106,6 @@ sources:
     locator: explicit vocabulary table 1 row 189
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: випустити
-    pos: verb
-    gloss: To release, to let out (perf)
-    locator: explicit vocabulary table 1 row 206
-    context: Teacher-curated headword; canonicalized from source form «випустути» (spelling fix; perfective
-      to release). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: (чайний) сервіз
     pos: phrase
     gloss: Tea set
@@ -161,12 +155,6 @@ sources:
     locator: explicit vocabulary table 1 row 279
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: пацієнт
-    pos: noun
-    gloss: Patient
-    locator: explicit vocabulary table 1 row 280
-    context: Teacher-curated headword; canonicalized from source form «паціент» (spelling fix ї; patient).
-      Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: сміятися (над)
     pos: phrase
     gloss: To laugh (at)
@@ -179,12 +167,6 @@ sources:
     locator: explicit vocabulary table 1 row 288
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: вручну
-    pos: adverb
-    gloss: Manually
-    locator: explicit vocabulary table 1 row 317
-    context: Teacher-curated headword; canonicalized from source form «вручку» (spelling fix; manually
-      (adv)). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: прийдеться
     pos: verb
     gloss: Will have to do, will be a need (dative before)
@@ -263,12 +245,6 @@ sources:
     locator: explicit vocabulary table 1 row 379
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: приголомшливий
-    pos: adjective
-    gloss: Stunning
-    locator: explicit vocabulary table 1 row 384
-    context: Teacher-curated headword; canonicalized from source form «приголошливий» (spelling fix; stunning).
-      Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: сайт знайомств
     pos: phrase
     gloss: Dating website
