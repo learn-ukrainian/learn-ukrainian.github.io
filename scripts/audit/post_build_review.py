@@ -4315,7 +4315,11 @@ def _normalize_codex_schema_subset(value: object) -> None:
             )
         value["additionalProperties"] = False
         value["required"] = list(properties)
-    for item in value.values():
+    for key, item in value.items():
+        if key in {"properties", "$defs"} and isinstance(item, Mapping):
+            for subschema in item.values():
+                _normalize_codex_schema_subset(subschema)
+            continue
         _normalize_codex_schema_subset(item)
 
 

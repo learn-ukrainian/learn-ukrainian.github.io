@@ -1457,6 +1457,25 @@ def test_codex_schema_fits_openai_strict_subset_and_preserves_raw_contract() -> 
     Draft202012Validator(schema).validate(semantic)
 
 
+def test_codex_schema_normalizer_preserves_property_and_definition_names() -> None:
+    schema = {
+        "$defs": {"if": {"type": "string"}},
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["not", "oneOf"],
+        "properties": {
+            "not": {"type": "string"},
+            "oneOf": {"$ref": "#/$defs/if"},
+        },
+    }
+
+    pbr._normalize_codex_schema_subset(schema)
+
+    assert set(schema["properties"]) == {"not", "oneOf"}
+    assert set(schema["$defs"]) == {"if"}
+    assert schema["required"] == ["not", "oneOf"]
+
+
 def test_codex_schema_keeps_statement_exhaustiveness_and_local_line_binding() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     schema = pbr.codex_semantic_response_schema(packet)
