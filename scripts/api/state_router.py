@@ -1175,7 +1175,7 @@ async def preparation_roster(
             live_repo_root=data_root,
         )
         return preparation_state.build_roster(
-            repo_root=PROJECT_ROOT,
+            repo_root=data_root,
             authority=authority,
             track=track,
         )
@@ -1219,7 +1219,7 @@ async def preparation_module(
             live_repo_root=data_root,
         )
         return preparation_state.build_module_state(
-            repo_root=PROJECT_ROOT,
+            repo_root=data_root,
             authority=authority,
             track=track,
             slug=slug,

@@ -12,7 +12,7 @@ from typing import Any
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
-from scripts.api import preparation_state
+from scripts.api import preparation_state, state_router
 from scripts.api.main import app
 from scripts.api.repository_authority import build_repository_authority, preparation_data_root
 from scripts.orchestration import curriculum_readiness
@@ -470,6 +470,34 @@ def test_repository_authority_reads_immutable_release_manifest(tmp_path: Path) -
         "commit_sha": release_sha,
         "tree_sha256": "f" * 64,
     }
+
+
+def test_release_route_reads_from_the_reported_live_data_checkout(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    release_sha = "e" * 40
+    release = tmp_path / ".runtime/api/releases" / release_sha
+    release.mkdir(parents=True)
+    (release / ".release-manifest.json").write_text(
+        json.dumps({"sha": release_sha, "file_count": 1, "tree_sha256": "f" * 64}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(state_router, "PROJECT_ROOT", release)
+    monkeypatch.setattr(state_router, "LIVE_REPO_ROOT", ROOT)
+
+    response = CLIENT.get("/api/state/preparation?track=a1")
+
+    assert response.status_code == 200
+    data = response.json()
+    VALIDATOR.validate(data)
+    assert data["authority"]["data_checkout"]["root"] == str(ROOT)
+    assert data["authority"]["service_code"] == {
+        "mode": "release",
+        "commit_sha": release_sha,
+        "tree_sha256": "f" * 64,
+    }
+    assert data["tracks"][0]["module_state_counts"]["built"] == 55
 
 
 def test_development_dispatch_worktree_is_reported_as_the_data_checkout(tmp_path: Path) -> None:
