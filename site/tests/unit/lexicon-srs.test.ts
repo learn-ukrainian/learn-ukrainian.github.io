@@ -1,13 +1,19 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { State } from 'ts-fsrs';
 import {
+  DAILY_PRACTICE_DECK_KEY,
+  DAILY_PRACTICE_DECK_SIZE,
   PRACTICE_MODE_DECK_VERSION,
   PRACTICE_MODES,
+  PUBLISHED_PRACTICE_LEVELS,
   MAX_RAW_REVIEW_LOG_ENTRIES,
   SRS_BACKUP_KEY,
   SRS_SETTINGS_KEY,
   SRS_STORAGE_KEY,
+  buildDailyPracticeDeckSnapshot,
   cardKey,
+  countDailyPracticeDone,
+  deriveDailyPracticeRows,
   detectClockJump,
   getDueQueue,
   isPracticeMode,
@@ -15,14 +21,20 @@ import {
   masteredCount,
   parseCardKey,
   rateCard,
+  readDailyPracticeDeckSnapshot,
+  refillDailyPracticeDeckSnapshot,
   saveState,
+  selectDailyPracticeDeckItems,
   selectNextPracticeItem,
   seededAnswerIndex,
   uaPlural,
   validateClozeOptions,
+  writeDailyPracticeDeckSnapshot,
+  type CardState,
   type PracticeClozeItem,
   type PracticeDeckData,
   type PracticeHeritageItem,
+  type PracticeIndexItem,
   type PracticeLexeme,
   type PracticeMode,
   type PracticeSelection,
@@ -392,6 +404,49 @@ function newCardSequence(testDeck: PracticeDeckData, seed: number, count: number
     history.push(selectionHistory(selection));
   }
   return selections;
+}
+
+function dailyIndex(ids: string[], cefr = 'A1'): PracticeIndexItem[] {
+  return ids.map((id, index) => ({
+    lemmaId: id,
+    lemma: id,
+    cefr,
+    modes: ['flashcards', 'matching'],
+    hasCloze: false,
+    clozeIds: [],
+    newOrder: index,
+  }));
+}
+
+function makeCards(records: Record<string, Partial<CardState>>): Map<string, CardState> {
+  const map = new Map<string, CardState>();
+  for (const [key, overrides] of Object.entries(records)) {
+    map.set(key, stateCard(overrides));
+  }
+  return map;
+}
+
+function review(
+  lemmaId: string,
+  rating: ReviewLogEntry['rating'],
+  reviewedAt: number,
+  mode: PracticeMode = 'flashcards',
+): ReviewLogEntry {
+  return {
+    cardKey: cardKey(lemmaId, mode),
+    lemmaId,
+    mode,
+    rating,
+    state: State.Review,
+    due: reviewedAt + DAY_MS,
+    stability: 5,
+    difficulty: 4,
+    elapsed_days: 1,
+    last_elapsed_days: 1,
+    scheduled_days: 1,
+    learning_steps: 0,
+    review: reviewedAt,
+  };
 }
 
 beforeEach(() => {
@@ -1098,5 +1153,218 @@ describe('lexicon SRS facade', () => {
     expect(uaPlural(5)).toBe('правильних');
     expect(uaPlural(11)).toBe('правильних');
     expect(uaPlural(21)).toBe('правильна');
+  });
+});
+
+describe('daily practice deck (K3 chunk 1)', () => {
+  test('selects exactly 20 unique lemmas when enough data exists', () => {
+    const ids = Array.from({ length: 30 }, (_, index) => `w${String(index).padStart(2, '0')}`);
+    const index = dailyIndex(ids);
+    const cards = makeCards({});
+    const items = selectDailyPracticeDeckItems(index, cards, NOW);
+    expect(items).toHaveLength(DAILY_PRACTICE_DECK_SIZE);
+    const uniqueIds = new Set(items.map((item) => item.lemmaId));
+    expect(uniqueIds.size).toBe(DAILY_PRACTICE_DECK_SIZE);
+  });
+
+  test('orders due before new and applies deterministic tie-breakers', () => {
+    const index = dailyIndex(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
+    const cards = makeCards({
+      [cardKey('a', 'flashcards')]: { due: NOW.getTime() - 2 * HOUR_MS, reps: 1, state: State.Review },
+      [cardKey('c', 'flashcards')]: { due: NOW.getTime() - HOUR_MS, reps: 1, state: State.Review },
+      [cardKey('b', 'flashcards')]: { due: NOW.getTime() + HOUR_MS, reps: 1, state: State.Review },
+    });
+    const items = selectDailyPracticeDeckItems(index, cards, NOW);
+    const ids = items.map((item) => item.lemmaId);
+    expect(ids.slice(0, 2)).toEqual(['a', 'c']);
+    expect(items[0]?.origin).toBe('due');
+    expect(items[1]?.origin).toBe('due');
+    // 'b' is reviewed but not due, so it is not eligible.
+    expect(ids).not.toContain('b');
+    for (const item of items.slice(2)) {
+      expect(item.origin).toBe('new');
+    }
+  });
+
+  test('multiple due modes for one lemma consume one daily slot', () => {
+    const index = dailyIndex(['only']);
+    const cards = makeCards({
+      [cardKey('only', 'flashcards')]: { due: NOW.getTime() - HOUR_MS, reps: 1, state: State.Review },
+      [cardKey('only', 'matching')]: { due: NOW.getTime() - 2 * HOUR_MS, reps: 1, state: State.Review },
+    });
+    const items = selectDailyPracticeDeckItems(index, cards, NOW);
+    expect(items).toHaveLength(1);
+    expect(items[0]?.lemmaId).toBe('only');
+    expect(items[0]?.origin).toBe('due');
+  });
+
+  test('reviewed-but-not-due lemmas do not displace due or new candidates', () => {
+    const index = dailyIndex(['due-one', 'reviewed-future', 'new-one']);
+    const cards = makeCards({
+      [cardKey('due-one', 'flashcards')]: { due: NOW.getTime() - HOUR_MS, reps: 1, state: State.Review },
+      [cardKey('reviewed-future', 'flashcards')]: { due: NOW.getTime() + DAY_MS, reps: 1, state: State.Review },
+    });
+    const items = selectDailyPracticeDeckItems(index, cards, NOW);
+    const ids = items.map((item) => item.lemmaId);
+    expect(ids).toEqual(['due-one', 'new-one']);
+  });
+
+  test('uses the actual eligible count as denominator when fewer than 20 lemmas exist', () => {
+    const index = dailyIndex(['a', 'b', 'c']);
+    const cards = makeCards({});
+    const items = selectDailyPracticeDeckItems(index, cards, NOW);
+    expect(items).toHaveLength(3);
+    expect(new Set(items.map((item) => item.lemmaId)).size).toBe(3);
+  });
+
+  test('published levels stay A1 through C1 and C2 is not added', () => {
+    expect(PUBLISHED_PRACTICE_LEVELS).toEqual(['A1', 'A2', 'B1', 'B2', 'C1']);
+  });
+
+  test('a valid snapshot is stable after SRS mutations and page reload', () => {
+    const index = dailyIndex(['a', 'b', 'c', 'd']);
+    const cards = makeCards({});
+    const snapshot = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+    writeDailyPracticeDeckSnapshot(snapshot, localStorage);
+
+    rateCard('a', 'flashcards', 'good', NOW);
+
+    const restored = readDailyPracticeDeckSnapshot(localStorage, '2026-06-23', 'A1', 'v1');
+    expect(restored).toEqual(snapshot);
+    expect(localStorage.getItem(DAILY_PRACTICE_DECK_KEY)).toContain('v1');
+  });
+
+  test('invalidates snapshot on date, level, or deckVersion mismatch', () => {
+    const index = dailyIndex(['a']);
+    const cards = makeCards({});
+    const snapshot = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+    writeDailyPracticeDeckSnapshot(snapshot, localStorage);
+
+    expect(readDailyPracticeDeckSnapshot(localStorage, '2026-06-24', 'A1', 'v1')).toBeNull();
+    expect(readDailyPracticeDeckSnapshot(localStorage, '2026-06-23', 'A2', 'v1')).toBeNull();
+    expect(readDailyPracticeDeckSnapshot(localStorage, '2026-06-23', 'A1', 'v2')).toBeNull();
+  });
+
+  test('corrupt JSON falls back to null without blocking', () => {
+    localStorage.setItem(DAILY_PRACTICE_DECK_KEY, '{not json');
+    expect(readDailyPracticeDeckSnapshot(localStorage, '2026-06-23', 'A1', 'v1')).toBeNull();
+  });
+
+  test('refill drops missing IDs and deterministically replaces them', () => {
+    const index = dailyIndex(['keep', 'fill-a', 'fill-b', 'fill-c']);
+    const cards = makeCards({});
+    const saved = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+    const tampered = {
+      ...saved,
+      items: [
+        { lemmaId: 'keep', origin: 'due' as const },
+        { lemmaId: 'missing', origin: 'new' as const },
+        { lemmaId: 'missing', origin: 'new' as const },
+      ],
+    };
+    const refilled = refillDailyPracticeDeckSnapshot(tampered, index, cards, {
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'v1',
+      now: NOW,
+    });
+    const ids = refilled.items.map((item) => item.lemmaId);
+    expect(ids[0]).toBe('keep');
+    expect(ids).not.toContain('missing');
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.length).toBeLessThanOrEqual(DAILY_PRACTICE_DECK_SIZE);
+    expect(ids).toContain('fill-a');
+  });
+
+  test('refill reuses valid IDs when deck version changes', () => {
+    const index = dailyIndex(['keep', 'fill-a', 'fill-b']);
+    const cards = makeCards({});
+    const saved = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+    const refilled = refillDailyPracticeDeckSnapshot(saved, index, cards, {
+      date: '2026-06-23',
+      level: 'A1',
+      deckVersion: 'v2',
+      now: NOW,
+    });
+    expect(refilled.deckVersion).toBe('v2');
+    expect(refilled.items.map((item) => item.lemmaId)[0]).toBe('keep');
+  });
+
+  test('again moves a completed lemma back to pending due; success moves it back to done', () => {
+    const index = dailyIndex(['a']);
+    const cards = makeCards({
+      [cardKey('a', 'flashcards')]: { due: NOW.getTime() - HOUR_MS, reps: 1, state: State.Review },
+    });
+    const snapshot = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+
+    const t1 = NOW.getTime() + 1 * 60_000;
+    const t2 = NOW.getTime() + 2 * 60_000;
+    const t3 = NOW.getTime() + 3 * 60_000;
+
+    const afterGood = deriveDailyPracticeRows(snapshot, cards, [review('a', 'good', t1)], NOW);
+    expect(afterGood.done).toHaveLength(1);
+    expect(afterGood.pendingDue).toHaveLength(0);
+
+    const afterAgain = deriveDailyPracticeRows(
+      snapshot,
+      cards,
+      [review('a', 'good', t1), review('a', 'again', t2)],
+      NOW,
+    );
+    expect(afterAgain.done).toHaveLength(0);
+    expect(afterAgain.pendingDue).toHaveLength(1);
+
+    const afterSuccess = deriveDailyPracticeRows(
+      snapshot,
+      cards,
+      [review('a', 'good', t1), review('a', 'again', t2), review('a', 'hard', t3)],
+      NOW,
+    );
+    expect(afterSuccess.done).toHaveLength(1);
+    expect(afterSuccess.pendingDue).toHaveLength(0);
+    expect(countDailyPracticeDone(snapshot, [review('a', 'hard', t3)], NOW)).toBe(1);
+  });
+
+  test('deriveDailyPracticeRows groups done rows after pending due and pending new', () => {
+    const index = dailyIndex(['due-one', 'new-one', 'done-one']);
+    const cards = makeCards({
+      [cardKey('due-one', 'flashcards')]: { due: NOW.getTime() - HOUR_MS, reps: 1, state: State.Review },
+    });
+    const snapshot = buildDailyPracticeDeckSnapshot(index, cards, {
+      level: 'A1',
+      deckVersion: 'v1',
+      date: '2026-06-23',
+      now: NOW,
+    });
+    const reviewedAt = NOW.getTime() + 60_000;
+    const rows = deriveDailyPracticeRows(snapshot, cards, [review('done-one', 'good', reviewedAt)], NOW);
+    expect(rows.pendingDue.map((row) => row.item.lemmaId)).toEqual(['due-one']);
+    expect(rows.pendingNew.map((row) => row.item.lemmaId)).toEqual(['new-one']);
+    expect(rows.done.map((row) => row.item.lemmaId)).toEqual(['done-one']);
   });
 });

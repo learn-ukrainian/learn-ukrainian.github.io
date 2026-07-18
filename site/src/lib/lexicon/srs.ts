@@ -8,12 +8,15 @@ import {
   type Grade,
   type RecordLogItem,
 } from 'ts-fsrs';
+import { CEFR_LEVELS, type CefrLevel } from './levels';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
 export const SRS_SETTINGS_KEY = 'lu-lexicon-srs-settings';
 export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
 export const PRACTICE_NEW_CARDS_KEY = 'lu-practice-newcards';
 export const PRACTICE_SESSION_STORAGE_KEY = 'lu-practice-session';
+export const DAILY_PRACTICE_DECK_KEY = 'lu-daily-practice-deck';
+export const DAILY_PRACTICE_DECK_SIZE = 20;
 export const DEFAULT_NEW_PER_SESSION = 8;
 export const DEFAULT_NEW_PER_DAY = 20;
 export const SESSION_CLOSURE_EXTENSION_MAX = 5;
@@ -472,6 +475,25 @@ export interface NewCardsDailyState {
   count: number;
 }
 
+export interface DailyPracticeDeckItem {
+  lemmaId: string;
+  origin: 'due' | 'new';
+}
+
+export interface DailyPracticeDeckSnapshot {
+  version: 1;
+  date: string;
+  level: CefrLevel;
+  deckVersion: string;
+  createdAt: number;
+  items: DailyPracticeDeckItem[];
+}
+
+export interface DailyPracticeRowState {
+  item: DailyPracticeDeckItem;
+  state: 'due' | 'new' | 'done';
+}
+
 export interface SessionScopeStats {
   dueReviews: number;
   plannedNew: number;
@@ -507,7 +529,7 @@ interface PersistedSrsSchemaV4 {
   lastSavedAt?: number;
 }
 
-interface StorageLike {
+export interface StorageLike {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
@@ -1980,7 +2002,7 @@ export function writeNewCardsDailyState(
   }
 }
 
-function todayDateKey(date = new Date()): string {
+export function todayDateKey(date = new Date()): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -2252,4 +2274,342 @@ export function resolveSessionCompletion(options: {
   if (options.unresolvedCount > 0 && options.extensionUsed < maxExtension) return 'extend';
   if (options.unresolvedCount > 0) return 'summary-with-deferred';
   return 'summary';
+}
+
+function dailyPracticeDeckStorageKey(date: string, level: CefrLevel): string {
+  return `${date}:${level}`;
+}
+
+function localMidnightTimestamp(timestamp: number): number {
+  const date = new Date(timestamp);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+}
+
+function isValidDailyPracticeDeckOrigin(value: unknown): value is 'due' | 'new' {
+  return value === 'due' || value === 'new';
+}
+
+function normalizeDailyPracticeDeckSnapshot(
+  value: unknown,
+): DailyPracticeDeckSnapshot | null {
+  if (!value || typeof value !== 'object') return null;
+  const source = value as Record<string, unknown>;
+  if (source.version !== 1) return null;
+  if (typeof source.date !== 'string' || !source.date) return null;
+  if (typeof source.deckVersion !== 'string' || !source.deckVersion) return null;
+  if (typeof source.createdAt !== 'number' || !Number.isFinite(source.createdAt)) return null;
+  const level = source.level;
+  if (typeof level !== 'string' || !CEFR_LEVELS.includes(level as CefrLevel)) return null;
+  const rawItems = source.items;
+  if (!Array.isArray(rawItems) || rawItems.length === 0) return null;
+  const items: DailyPracticeDeckItem[] = [];
+  for (const raw of rawItems) {
+    if (!raw || typeof raw !== 'object') return null;
+    const item = raw as Record<string, unknown>;
+    if (typeof item.lemmaId !== 'string' || !item.lemmaId) return null;
+    if (!isValidDailyPracticeDeckOrigin(item.origin)) return null;
+    items.push({ lemmaId: item.lemmaId, origin: item.origin });
+  }
+  return {
+    version: 1,
+    date: source.date,
+    level: level as CefrLevel,
+    deckVersion: source.deckVersion,
+    createdAt: source.createdAt,
+    items,
+  };
+}
+
+export function validateDailyPracticeDeckSnapshot(
+  value: unknown,
+  date: string,
+  level: CefrLevel,
+  deckVersion: string,
+): DailyPracticeDeckSnapshot | null {
+  const snapshot = normalizeDailyPracticeDeckSnapshot(value);
+  if (!snapshot) return null;
+  if (
+    snapshot.date !== date ||
+    snapshot.level !== level ||
+    snapshot.deckVersion !== deckVersion
+  ) {
+    return null;
+  }
+  const seen = new Set<string>();
+  for (const item of snapshot.items) {
+    if (seen.has(item.lemmaId)) return null;
+    seen.add(item.lemmaId);
+  }
+  return snapshot;
+}
+
+function cefrRank(cefr: string): number {
+  return CEFR_LEVELS.indexOf(cefr as CefrLevel);
+}
+
+export function selectDailyPracticeDeckItems(
+  indexItems: PracticeIndexItem[],
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  now: Date | number = Date.now(),
+): DailyPracticeDeckItem[] {
+  const nowTime = toTime(now) ?? Date.now();
+  const seen = new Set<string>();
+  const dueLemmas: Array<{
+    lemmaId: string;
+    earliestDue: number;
+    cefr: string;
+    newOrder: number;
+  }> = [];
+  const newLemmas: Array<{ lemmaId: string; cefr: string; newOrder: number }> = [];
+
+  for (const item of indexItems) {
+    const { lemmaId, cefr, newOrder, modes } = item;
+    if (seen.has(lemmaId)) continue;
+    seen.add(lemmaId);
+
+    let isDue = false;
+    let earliestDue = Number.POSITIVE_INFINITY;
+    let allNewOrAbsent = true;
+    for (const mode of modes) {
+      if (!isPracticeMode(mode)) continue;
+      const card = cards?.get(cardKey(lemmaId, mode)) ?? null;
+      if (isDueReviewCard(card, nowTime)) {
+        isDue = true;
+        earliestDue = Math.min(earliestDue, card!.due);
+      }
+      if (!isPracticeNewCard(card)) {
+        allNewOrAbsent = false;
+      }
+    }
+
+    if (isDue) {
+      dueLemmas.push({ lemmaId, earliestDue, cefr, newOrder });
+    } else if (allNewOrAbsent) {
+      newLemmas.push({ lemmaId, cefr, newOrder });
+    }
+  }
+
+  dueLemmas.sort((left, right) => {
+    return (
+      left.earliestDue - right.earliestDue ||
+      cefrRank(left.cefr) - cefrRank(right.cefr) ||
+      left.newOrder - right.newOrder ||
+      left.lemmaId.localeCompare(right.lemmaId)
+    );
+  });
+  newLemmas.sort((left, right) => {
+    return (
+      cefrRank(left.cefr) - cefrRank(right.cefr) ||
+      left.newOrder - right.newOrder ||
+      left.lemmaId.localeCompare(right.lemmaId)
+    );
+  });
+
+  const combined: DailyPracticeDeckItem[] = [
+    ...dueLemmas.map((entry) => ({ lemmaId: entry.lemmaId, origin: 'due' as const })),
+    ...newLemmas.map((entry) => ({ lemmaId: entry.lemmaId, origin: 'new' as const })),
+  ];
+  return combined.slice(0, DAILY_PRACTICE_DECK_SIZE);
+}
+
+export function buildDailyPracticeDeckSnapshot(
+  indexItems: PracticeIndexItem[],
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  options: {
+    level: CefrLevel;
+    deckVersion: string;
+    date?: string;
+    now?: Date | number;
+  },
+): DailyPracticeDeckSnapshot {
+  const nowTime = toTime(options.now ?? Date.now()) ?? Date.now();
+  return {
+    version: 1,
+    date: options.date ?? todayDateKey(new Date(nowTime)),
+    level: options.level,
+    deckVersion: options.deckVersion,
+    createdAt: nowTime,
+    items: selectDailyPracticeDeckItems(indexItems, cards, nowTime),
+  };
+}
+
+export function refillDailyPracticeDeckSnapshot(
+  saved: unknown,
+  indexItems: PracticeIndexItem[],
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  options: {
+    date: string;
+    level: CefrLevel;
+    deckVersion: string;
+    now?: Date | number;
+  },
+): DailyPracticeDeckSnapshot {
+  const nowTime = toTime(options.now ?? Date.now()) ?? Date.now();
+  const validated = validateDailyPracticeDeckSnapshot(
+    saved,
+    options.date,
+    options.level,
+    options.deckVersion,
+  );
+  if (!validated) {
+    return buildDailyPracticeDeckSnapshot(indexItems, cards, {
+      level: options.level,
+      deckVersion: options.deckVersion,
+      date: options.date,
+      now: nowTime,
+    });
+  }
+
+  const validIndexIds = new Set(indexItems.map((item) => item.lemmaId));
+  const kept: DailyPracticeDeckItem[] = [];
+  const seen = new Set<string>();
+  for (const item of validated.items) {
+    if (!validIndexIds.has(item.lemmaId)) continue;
+    if (seen.has(item.lemmaId)) continue;
+    seen.add(item.lemmaId);
+    kept.push(item);
+  }
+
+  const remainingSlots = DAILY_PRACTICE_DECK_SIZE - kept.length;
+  if (remainingSlots <= 0) {
+    return {
+      ...validated,
+      createdAt: nowTime,
+      items: kept,
+    };
+  }
+
+  const excluded = new Set(seen);
+  const refill = selectDailyPracticeDeckItems(
+    indexItems.filter((item) => !excluded.has(item.lemmaId)),
+    cards,
+    nowTime,
+  );
+  const refillItems = refill.slice(0, remainingSlots);
+
+  return {
+    version: 1,
+    date: options.date,
+    level: options.level,
+    deckVersion: options.deckVersion,
+    createdAt: nowTime,
+    items: [...kept, ...refillItems],
+  };
+}
+
+interface PersistedDailyPracticeDecks {
+  version: 1;
+  byKey: Record<string, DailyPracticeDeckSnapshot>;
+}
+
+export function readDailyPracticeDeckSnapshot(
+  storage: StorageLike = resolveStorage(),
+  date: string = todayDateKey(),
+  level: CefrLevel = 'A1',
+  deckVersion?: string,
+): DailyPracticeDeckSnapshot | null {
+  try {
+    const raw = storage.getItem(DAILY_PRACTICE_DECK_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    const persisted = parsed as Partial<PersistedDailyPracticeDecks>;
+    if (
+      !persisted ||
+      typeof persisted !== 'object' ||
+      persisted.version !== 1 ||
+      !persisted.byKey ||
+      typeof persisted.byKey !== 'object' ||
+      Array.isArray(persisted.byKey)
+    ) {
+      return null;
+    }
+    const key = dailyPracticeDeckStorageKey(date, level);
+    const candidate = persisted.byKey[key];
+    if (!candidate) return null;
+    if (deckVersion !== undefined) {
+      return validateDailyPracticeDeckSnapshot(candidate, date, level, deckVersion);
+    }
+    return normalizeDailyPracticeDeckSnapshot(candidate);
+  } catch {
+    return null;
+  }
+}
+
+export function writeDailyPracticeDeckSnapshot(
+  snapshot: DailyPracticeDeckSnapshot,
+  storage: StorageLike = resolveStorage(),
+): void {
+  try {
+    const raw = storage.getItem(DAILY_PRACTICE_DECK_KEY);
+    let persisted: PersistedDailyPracticeDecks = { version: 1, byKey: {} };
+    if (raw) {
+      const parsed = JSON.parse(raw) as unknown;
+      const candidate = parsed as Partial<PersistedDailyPracticeDecks>;
+      if (
+        candidate &&
+        typeof candidate === 'object' &&
+        candidate.version === 1 &&
+        candidate.byKey &&
+        typeof candidate.byKey === 'object' &&
+        !Array.isArray(candidate.byKey)
+      ) {
+        persisted = candidate as PersistedDailyPracticeDecks;
+      }
+    }
+    const key = dailyPracticeDeckStorageKey(snapshot.date, snapshot.level);
+    persisted.byKey[key] = snapshot;
+    storage.setItem(DAILY_PRACTICE_DECK_KEY, JSON.stringify(persisted));
+  } catch {
+    // Best-effort persistence.
+  }
+}
+
+export function deriveDailyPracticeRows(
+  snapshot: DailyPracticeDeckSnapshot,
+  cards: ReadonlyMap<string, CardState> | null | undefined,
+  reviews: ReviewLogEntry[],
+  now: Date | number = Date.now(),
+): { pendingDue: DailyPracticeRowState[]; pendingNew: DailyPracticeRowState[]; done: DailyPracticeRowState[] } {
+  const nowTime = toTime(now) ?? Date.now();
+  const threshold = Math.max(localMidnightTimestamp(nowTime), snapshot.createdAt);
+  const latestByLemma = new Map<string, { review: number; rating: PracticeRating }>();
+  for (const review of reviews) {
+    if (review.review <= threshold) continue;
+    const existing = latestByLemma.get(review.lemmaId);
+    if (!existing || review.review > existing.review) {
+      latestByLemma.set(review.lemmaId, { review: review.review, rating: review.rating });
+    }
+  }
+
+  const successful = new Set<string>();
+  for (const [lemmaId, latest] of latestByLemma.entries()) {
+    if (latest.rating !== 'again') {
+      successful.add(lemmaId);
+    }
+  }
+
+  const pendingDue: DailyPracticeRowState[] = [];
+  const pendingNew: DailyPracticeRowState[] = [];
+  const done: DailyPracticeRowState[] = [];
+
+  for (const item of snapshot.items) {
+    if (successful.has(item.lemmaId)) {
+      done.push({ item, state: 'done' });
+    } else if (item.origin === 'due') {
+      pendingDue.push({ item, state: 'due' });
+    } else {
+      pendingNew.push({ item, state: 'new' });
+    }
+  }
+
+  return { pendingDue, pendingNew, done };
+}
+
+export function countDailyPracticeDone(
+  snapshot: DailyPracticeDeckSnapshot,
+  reviews: ReviewLogEntry[],
+  now: Date | number = Date.now(),
+): number {
+  return deriveDailyPracticeRows(snapshot, null, reviews, now).done.length;
 }
