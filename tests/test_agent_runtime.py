@@ -18,6 +18,8 @@ Issue: #1184
 
 from __future__ import annotations
 
+import hashlib
+import json
 import logging
 import os
 import subprocess
@@ -627,6 +629,88 @@ def test_codex_adapter_disable_features_multiple(tmp_path):
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
     assert disable_pairs == ["shell_tool", "browser_use"]
+
+
+def test_codex_adapter_binds_valid_output_schema(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text(
+        json.dumps({"type": "object", "properties": {"status": {"type": "string"}}}),
+        encoding="utf-8",
+    )
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "output_schema_path": str(schema_path),
+            "output_schema_sha256": hashlib.sha256(schema_path.read_bytes()).hexdigest(),
+        },
+    )
+
+    schema_index = plan.cmd.index("--output-schema")
+    assert plan.cmd[schema_index + 1] == str(schema_path)
+
+
+@pytest.mark.parametrize(
+    ("payload", "expected"),
+    [
+        ("not-json", "invalid output schema JSON"),
+        ("[]", "must be an object"),
+    ],
+)
+def test_codex_adapter_rejects_invalid_output_schema(tmp_path, payload, expected):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text(payload, encoding="utf-8")
+
+    with pytest.raises(ValueError, match=expected):
+        CodexAdapter().build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={
+                "output_schema_path": str(schema_path),
+                "output_schema_sha256": hashlib.sha256(schema_path.read_bytes()).hexdigest(),
+            },
+        )
+
+
+def test_codex_adapter_rejects_relative_output_schema_path(tmp_path):
+    with pytest.raises(ValueError, match="must be absolute"):
+        CodexAdapter().build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"output_schema_path": "semantic-schema.json"},
+        )
+
+
+def test_codex_adapter_rejects_output_schema_hash_drift(tmp_path):
+    schema_path = tmp_path / "semantic-schema.json"
+    schema_path.write_text('{"type": "object"}', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="changed after dispatch validation"):
+        CodexAdapter().build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={
+                "output_schema_path": str(schema_path),
+                "output_schema_sha256": "0" * 64,
+            },
+        )
 
 
 def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):

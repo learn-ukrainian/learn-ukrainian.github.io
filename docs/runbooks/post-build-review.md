@@ -108,12 +108,18 @@ seven classes, so prompt guidance and exhaustive finalizer ownership cannot
 contradict one another.
 
 Dimension scores preserve the accepted raw reviewer response after strict
-Decimal-based validation: `PASS` is `[8.0, 10.0]`, `REVISE` is `[6.0, 8.0)`,
+Decimal-based validation: `PASS` is `[9.0, 10.0]`, `REVISE` is `[6.0, 9.0)`,
 `BLOCK` is `[0.0, 6.0)`, and `INCOMPLETE` has a null score/rationale. The
 normalizer never repairs, rounds, clamps, downgrades, or reconciles a score.
 `combine_disposition` consumes categorical semantic/deterministic evidence
 only. A score can be compared only for identical semantic prompt, reviewer
 family, reviewer model, and reviewer effort identities.
+
+Protocol 6.0.6 closes the Codex transport gap: `delegate.py dispatch
+--output-schema` validates and hashes the emitted schema before spawn, carries
+its absolute path through the detached worker, and binds it as `codex exec
+--output-schema`. Prompt-only Codex review is a fail-closed orchestration defect,
+not an acceptable substitute for structured output.
 
 ## Bug-fix workflow
 

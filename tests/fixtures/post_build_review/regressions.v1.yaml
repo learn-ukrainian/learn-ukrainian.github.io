@@ -1,4 +1,4 @@
-catalog_version: 6.0.7
+catalog_version: 6.0.8
 regressions:
   - bug_id: bilash-evening-school-location-role
     responsible_layer: semantic_prompt
@@ -518,3 +518,15 @@ regressions:
       Accept the calibrated BLOCK response and preserve its numeric score;
       continue to reject a BLOCK dimension supported only by medium-or-lower
       findings, and keep the categorical combined disposition fail-closed.
+  - bug_id: codex-dispatch-dropped-provider-output-schema
+    responsible_layer: orchestration
+    fixed_in_version: 6.0.6
+    version_field: review_protocol_version
+    input: >-
+      A canonical Codex semantic review emits a packet-bound JSON Schema, but
+      the detached dispatcher drops that schema before invoking the provider;
+      after a long review the model returns one valid object plus trailing data.
+    expected: >-
+      Validate and hash the schema before spawn, forward its absolute path
+      through worker tool configuration, bind codex exec --output-schema, and
+      fail closed before inference for a missing, malformed, or non-Codex use.

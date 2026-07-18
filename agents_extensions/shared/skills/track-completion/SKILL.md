@@ -114,7 +114,9 @@ Read and follow `$post-build-review` completely for the same target. Allocate a
 new invocation directory every time. Do not repair, normalize, or retry inside
 that invocation. Use its emitted semantic schema when the provider supports
 structured output; prompt-only JSON compliance is not a reliable automation
-boundary. Record its exact result:
+boundary. For Codex dispatches, `--output-schema <semantic_schema_path>` is
+mandatory and its absence is `audit_tooling`, not a reason to retry the model.
+Record its exact result:
 
 ```bash
 .venv/bin/python \
