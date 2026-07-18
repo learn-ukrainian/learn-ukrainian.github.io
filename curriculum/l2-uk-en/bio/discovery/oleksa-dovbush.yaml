@@ -1,0 +1,98 @@
+discovered_at: '2026-07-18T00:00:00+00:00'
+error: null
+query_keywords:
+  - Олекса Довбуш
+  - ЕІУ ДОВБУШ Олекса Васильович Гуржій
+  - ЕІУ ОПРИШКИ Муравський
+  - Локальна історія Ким насправді був Олекса Довбуш Волощук
+  - IEU Dovbush Oleksa
+  - опришки Печеніжин Космач Чорногора
+direct_sources:
+  - https://www.history.org.ua/?termin=Dovbush_O
+  - https://www.history.org.ua/?termin=Opryshky
+  - https://localhistory.org.ua/texts/statti/kim-naspravdi-buv-oleksa-dovbush/
+  - https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDovbushOleksa.htm
+rag_chunks: []
+rag_literary: []
+fetch_disposition:
+  - url: https://www.history.org.ua/?termin=Dovbush_O
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      ЕІУ, т. 2 (Гуржій О. І., 2004): українська біографічна стаття. Автор —
+      Гуржій, не Смолій (редколегія). Базовий фактологічний якір.
+  - url: https://www.history.org.ua/?termin=Opryshky
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      ЕІУ, т. 7 (Муравський О. І., 2010): контекст опришківства XVI–XIX ст.;
+      Довбуш як найвідоміший ватажок; 23.08.1745 — смертельне поранення;
+      2500 королівського війська Потоцького.
+  - url: https://localhistory.org.ua/texts/statti/kim-naspravdi-buv-oleksa-dovbush/
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      Local History, Мирослав Волощук (д-р іст. н.): анти-міфологічна рамка,
+      багатоетнічні жертви, застереження проти «антифеодальної програми»,
+      деталі смерті 23–24.08.1745.
+  - url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDovbushOleksa.htm
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      IEU (CIUS) — англомовна довідка з рецепційним ярликом «Ukrainian Robin
+      Hood»; not learner reading. Death «betrayed by a fellow opryshok» —
+      розбіжність з ЕІУ/LH.
+  - url: https://www.degruyterbrill.com/document/doi/10.1515/fabl.2011.008/html
+    http_status: 202
+    disposition: rejected
+    verified_on: '2026-07-18'
+    note: >-
+      Fabula / De Gruyter — повний текст цим проходом не верифіковано як
+      вільно читаний (порожня/непридатна відповідь); не входить до adopted set.
+  - url: https://uk.wikipedia.org/wiki/Довбуш_Олекса
+    disposition: rejected
+    verified_on: '2026-07-18'
+    note: Wikipedia may orient discovery only; not an adopted factual authority.
+warning: >-
+  Direct-source packet. Adopted external set (order fixed): ЕІУ Довбуш → ЕІУ
+  Опришки → Local History → IEU Dovbush. Розбіжності НЕ зливати: (1) смерть —
+  ЕІУ біо 24.08.1745 / ЕІУ «Опришки» смертельне поранення 23.08.1745 / LH ніч
+  23–24.08 і кровотеча до ранку / IEU «betrayed by a fellow opryshok»; (2)
+  військове переслідування — IEU «up to 2,000» / ЕІУ «Опришки» 2500;
+  (3) «Робін Гуд» — IEU reception shorthand, не біографічний вердикт;
+  (4) LH заперечує «архівно доведену антифеодальну програму». Автор ЕІУ біо —
+  Гуржій О. І. Портрет: text-only portrait_fallback (індивідуальна ліцензія
+  портрета/поштової картки не доведена для reusable individual image).
+topic: Олекса Довбуш — карпатський опришок, насильство рейдів і гуцульська легенда
+objectives:
+  - Пояснити опришківство як гірський соціальний/розбійний феномен XVIII ст.
+  - Відділити документальний запис рейдів і смерті від магічних переказів.
+  - Не етнізувати багатоетнічний список жертв.
+outline:
+  - Походження з Печеніжина й рання діяльність з братом Іваном.
+  - База в Чорногорі, рейди, переслідування коронним військом.
+  - Смерть у Космачі й фольклорна/кінематографічна рецепція.
+keywords:
+  - опришок
+  - Гуцульщина
+  - Покуття
+  - Чорногора
+  - Космач
+vocabulary:
+  - опришок
+  - коморник
+  - орендар
+  - лихвар
+  - переказ
+constraints:
+  - Не перетворювати легенду чи кіно на біографію.
+  - Не подавати «карпатський Робін Гуд» як нейтральний історичний вердикт.
+  - Не згладжувати фізичне насильство, підпали й багатоетнічних жертв.

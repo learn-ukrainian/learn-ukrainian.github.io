@@ -1,270 +1,259 @@
-# Олекса Васильович Довбуш - Research Dossier
+# Олекса Васильович Довбуш — Research Dossier
 
 **Slug:** `oleksa-dovbush`
-**Block:** +77 backfill - Carpathian opryshky / Hutsul folk memory / contested outlaw hero
+**Block:** BIO #4431 Cohort 28A catalog-source packet
 **Tier:** 2
-**Issue:** #2535 / BIO +77 readiness gate; BIO #312
-**Researcher:** Codex orchestrator (GPT-5)
-**Completed:** 2026-07-02
+**Issue:** #4431 / BIO catalog readiness; BIO #312
+**Researcher:** grok / bio-c28a-karmaliuk-dovbush-grok
+**Completed:** 2026-07-18
+**Verified fetch pass:** 2026-07-18
 
-**Source acronym legend:** EIU = Encyclopedia of History of Ukraine / Institute of
-History of Ukraine, NASU; IEU = Internet Encyclopedia of Ukraine / Canadian
-Institute of Ukrainian Studies; LH = Local History; FOLK = existing
-learn-ukrainian FOLK materials; HIST = existing learn-ukrainian HIST materials;
-Commons = Wikimedia Commons.
+**Source acronym legend:** EIU = Encyclopedia of History of Ukraine / Institute
+of History of Ukraine, NASU; IEU = Internet Encyclopedia of Ukraine / CIUS;
+LH = Local History (Локальна історія); FOLK/HIST = existing learn-ukrainian
+track surfaces.
+
+**Adopted external URL set (order fixed; equals discovery + sources.yaml + plan
+external references):**
+
+1. `https://www.history.org.ua/?termin=Dovbush_O` — EIU bio, **Гуржій О. І.**, 2004
+2. `https://www.history.org.ua/?termin=Opryshky` — EIU context, Муравський О. І., 2010
+3. `https://localhistory.org.ua/texts/statti/kim-naspravdi-buv-oleksa-dovbush/` — LH, Волощук
+4. `https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDovbushOleksa.htm` — IEU
+
+Learner `source_url` values are a subset: (1)–(3) only. IEU is English
+reference-only.
+
+**Note on authorship:** the EIU biographical article is by **О. І. Гуржій**,
+not Смолій (Smolii chairs the editorial board). Earlier draft notes that
+attributed the bio to Смолій are corrected here against the live article
+header [S1].
 
 **Acceptance self-check:**
 
 - [x] All 10 sections completed
-- [x] At least 3 Tier 1/Tier 2 institutional, encyclopedia, expert-media, or
-  image-rights sources cited
-- [x] Pressure mechanism framed as Carpathian landlord, rentier, usurer, and
-  frontier-policing power, plus folk-memory contestation; no clean Robin Hood myth
-- [x] At least 2 title / source / visual anchors supplied
-- [x] Cross-track links verified `test -e` / `rg` on 2026-07-02 where marked existing
+- [x] Adopted sources opened; material facts checked against exact text
+- [x] Pressure mechanism framed as Carpathian landlord / rentier / usurer power
+  and Commonwealth crisis; no clean Robin Hood myth
+- [x] Death-date and betrayal disagreements explicit across EIU bio / EIU
+  Opryshky / LH / IEU
 - [x] Naming-canonical policy applied
-- [x] Image-rights policy applied
-- [x] Dossier-only scope observed
+- [x] Image-rights: text-only portrait fallback
+- [x] Same adopted set across discovery / plan / registry / this dossier
 
 ## Decolonization self-check
 
-- [x] No Russocentric framing: Dovbush is not folded into a generic "Slavic
-  bandit" archetype or narrated through later imperial policing categories.
-- [x] Ukrainian / Hutsul agency central: Pokuttia, Hutsul, Prykarpattia, and
-  Carpathian oral-memory contexts remain visible.
-- [x] Polish-Lithuanian Commonwealth landlord, leaseholder, creditor, and
-  military pursuit pressures are named without turning multiethnic victims into
-  ethnic blame.
-- [x] Anti-hagiography: the dossier holds together violence, criminalization,
-  popular sympathy, and later folklore instead of giving a sainted hero story.
+- [x] No Russocentric framing; not a generic "Slavic bandit" police category.
+- [x] Ukrainian / Hutsul / Pokuttia agency and place-memory remain central.
+- [x] Multiethnic victims are taught as a multiethnic social world, not as
+  ethnic blame lists.
+- [x] Anti-hagiography: violence, arson, property seizure, and criminalization
+  stay visible beside popular sympathy and later legend.
 
-## 1. Identity facts
+## 1. Identity facts (source-bound)
 
-- **Canonical learner-facing name:** `Олекса Довбуш`; English `Oleksa Dovbush`.
-  Use `oleksa-dovbush` for the BIO slug.
-- **Variants:** EIU/IEU and image repositories surface `Dovbuš`, `Dovbushchuk`,
-  `Dobosh`, `Dobosz`, and `Dowbusz`. Treat them as search/provenance variants,
-  not separate identities or learner-facing defaults.
-- **Dates:** EIU and IEU give birth year 1700 and death on 24 August 1745. Use
-  `1700-1745` or source-labeled exact death date; avoid calendar-conversion claims
-  unless separately rechecked.
-- **Birthplace:** Pechenizhyn is the best-supported encyclopedia birthplace.
-  Later legend and noncritical retellings sometimes shift the birthplace; label
-  those as folklore or reception if used.
-- **Death:** EIU/IEU place his death at Kosmach. Historical accounts normally
-  identify Stepan Dzvinchuk, husband of Dzvinka, as the killer, while the
-  surrounding story is heavily folklorized.
-- **Core identity:** Ukrainian Carpathian opryshok leader in the 1730s-1740s and
-  a major Hutsul / Pokuttia folk-memory figure.
-- **Early life:** EIU describes Dovbush as coming from a poor `коморник` family
-  and acting with his brother Ivan in 1738-1739 before the brothers split.
+- **Canonical learner-facing name:** `Олекса Довбуш` / `Oleksa Dovbush`.
+  Slug: `oleksa-dovbush`.
+- **Variants:** IEU `Dovbuš`, `Dovbushchuk`; Polish source titles `Dobosz` /
+  `Dowbusz` [S4]. LH notes Hungarian-Wallachian surname ecology (`Dóbos`,
+  `Dobosz`, `Doboszczuk`) as pastoral/Wallachian background, not a separate
+  identity [S3].
+- **Dates:** EIU bio: 1700 – 24.08.1745 [S1]. IEU: same endpoints [S4]. LH:
+  born **близько 1700** [S3]. Prefer `1700–1745` with source-labeled death
+  discussion (see disagreements).
+- **Birthplace:** Pechenizhyn (EIU/IEU/LH) [S1, S3, S4]. LH places it in
+  Kolomyia county, Ruthenian Voivodeship of the Polish-Lithuanian Commonwealth
+  [S3].
+- **Early status:** poor `коморник` family; childhood communal herdsman [S1].
+  LH names father Vasyl Dovbush [S3].
+- **Core identity:** leading Carpathian **опришок** of the 1730s–1740s and a
+  major Hutsul / Pokuttia folk-memory figure [S1, S2, S4].
+- **Death place:** Kosmach (EIU/IEU) [S1, S4]. Killer traditionally Stepan
+  Dzvinchuk (EIU bio; EIU Opryshky) [S1, S2]; LH supplies a thicker night-
+  attack narrative [S3]. IEU instead says betrayed by a fellow opryshok [S4].
 
 ## 2. Oppression / pressure mechanism
 
-- **Mountain social world:** LH places Dovbush inside Carpathian / Vlach pastoral
-  outlaw traditions, poverty, weakening local privileges, legal powerlessness,
-  and Commonwealth crisis conditions.
-- **Landlord and rentier pressure:** EIU describes raids against `пани`,
-  rentiers, and usurers; IEU summarizes targets as landlords, rentiers, usurers,
-  merchants, nobles, and rich Jews. Teach the social-power structure rather than
-  ethnic blame.
-- **Frontier policing:** EIU records crown-hetman Jozef Potocki and Colonel
-  Przeluski pursuing opryshky with military force.
-- **Violence / anti-hagiography:** EIU explicitly includes physical violence,
-  arson, and seizure of property and money. LH stresses that raids affected
-  Polish, Jewish, Armenian, Ruthenian / Ukrainian, and other communities.
-- **Folk-memory pressure:** IEU and existing FOLK/HIST surfaces preserve the
-  admired popular image; LH warns against treating that image as a simple,
-  archive-proven revolutionary program.
+- **Mountain social world:** LH situates Dovbush in Wallachian pastoral outlaw
+  traditions, loss of local privileges, rural impoverishment, foreign military
+  presence, and Commonwealth crisis in the first third of the eighteenth
+  century [S3].
+- **Targets:** EIU bio — raids on `пани`, rentiers (`орендарі`), and usurers
+  (`лихварі`); physical violence in some cases; arson and seizure of property,
+  valuables, and money in others; significant share of booty given to the poor
+  [S1]. IEU — landlords, rentiers, usurers, merchants, nobles, and rich Jews;
+  redistributed to the poor [S4].
+- **Multiethnic harm (LH):** attacks and intimidation affected Polish, Jewish,
+  Armenian, and Ruthenian/Ukrainian communities (surnames such as Dzvinchuk,
+  Didushko, Melnyk) [S3]. Teach power structure, not ethnic guilt.
+- **Anti-feudal overclaim (LH):** explicitly denies a programmatic anti-feudal
+  revolutionary movement — opryshky "could not and would not" change the
+  economic type of the region; raids usually involved several dozen men without
+  a clear political program [S3].
+- **Frontier policing:** EIU bio — crown hetman Józef Potocki and Colonel
+  Przeluski; camp surprise attack with many killed [S1]. EIU Opryshky — about
+  **2500** royal troops sent by great crown hetman J. Potocki in the early
+  1740s peak [S2]. IEU — Polish military expeditions of **up to 2,000** [S4].
+  Keep the 2000/2500 figures source-labeled; do not average them into a fake
+  consensus.
 
-## 3. Major events / historical footprint
+## 3. Major events / historical footprint (chronology with locators)
 
-- **1738-1739 activity with Ivan:** EIU identifies the early phase when Oleksa and
-  his brother Ivan acted together before a quarrel and split.
-- **Chornohora / Mount Stih base:** EIU places Dovbush's band from 1740 in the
-  Chornohora region, using Mount Stih near the Galicia, Moldavia, and Hungary
-  borderlands.
-- **Regional raids:** EIU connects the band with Prykarpattia, Zakarpattia, and
-  Bukovyna, and with 1744-1745 raids around Drohobych, Turka, Solotvyn, Nadvirna,
-  and Rohatyn.
-- **Bohorodchany fortress:** EIU records the capture of Bohorodchany fortress as
-  one of the best-known episodes in the Dovbush cycle.
-- **Death at Kosmach:** Use the Kosmach death account factually and label
-  romantic or magic-bullet motifs as folklore.
-- **Memory geography:** EIU/IEU note that caves, rocks, and other Carpathian
-  places bear Dovbush's name, including Dovbush Rocks as a durable landscape
-  memory anchor.
+1. **1700 / ca. 1700 — birth at Pechenizhyn** [S1, S3, S4].
+2. **1738–1739 — early band with brother Ivan** in Kolomyia-area villages
+   (Chorni Oslavy, Dobrotiv, Pechenizhyn, Verbizhi, Liuchky, Utoropy, Tekuche)
+   [S1]. EIU Opryshky: first actions in Chorni Oslavy and Liuchky; later
+   Utoropy, Tovmachyk, Verbizhi [S2].
+3. **From spring 1739 — split with Ivan.** EIU bio: after a quarrel, acted
+   separately [S1]. EIU Opryshky: Ivan withdrew to western Prykarpattia and
+   formed his own band (dated 1739) [S2].
+4. **Revenge / pressure episodes:** e.g. Voskresyntsi, Verkhnii Yaseniv,
+   Mykulychyn; threats to burn Kuty as a center of rebel executions [S1]. LH
+   also notes the 1740 conflict with the Mykulychyn community [S3].
+5. **From 1740 — Chornohora base on Mount Stih** near the Galicia–Moldavia–
+   Hungary borderlands; raids into Prykarpattia, Zakarpattia, Bukovyna [S1].
+   IEU: Stih peak home base; mainly Hutsul region and Pokuttia, sometimes
+   Podilia [S4].
+6. **Military pursuit** by Potocki / Przeluski; camp surprise [S1, S2, S4].
+7. **1744–1745 bold raids** near Drohobych, Turka, Solotvyn, Nadvirna,
+   Rohatyn; capture of Bohorodchany fortress [S1]. EIU Opryshky: spring 1745
+   actions at Solotvyn, Nadvirna, Rohatyn on Opillia [S2].
+8. **Death at Kosmach — contested micro-chronology:**
+   - EIU bio: died 24.08.1745 by the hand of wealthy peasant S. Dzvinchuk
+     (Dzvinka) in Kosmach [S1].
+   - EIU Opryshky: mortally wounded 23.08.1745 by wealthy peasant S. Dzvinchuk
+     [S2].
+   - LH: night attack on Stefan Dzvinchuk's yard 23–24.08.1745; non-fatal
+     shoulder wound; companions Vasyl Baiurak and Pavlo Orfeniuk fled; Dovbush
+     crawled about 400–500 m and bled to death by morning; also mentions a
+     pre-death interrogation on 24.08.1745 about treasure location [S3].
+   - IEU: d. 24 August 1745; "finally betrayed by a fellow opryshok" [S4].
+   **Do not synthesize** these into one cinematic story. Present as source
+   disagreement; romantic "lover's betrayal" remains folkloric reception unless
+   a stronger primary edition is later adopted.
+9. **Afterlife:** caves, rocks, literature, painting, music, film [S1, S4].
+   Landscape memory (Dovbush Rocks etc.) is reception/place memory, not proof
+   of every legendary deed.
 
 ## 4. Pedagogical anchors
 
-- **Opryshky anchor:** Existing HIST `opryshky` materials ask whether Dovbush was
-  a cruel bandit or a noble avenger. This dossier supplies a source-grounded
-  vocabulary and ethics frame for that question.
-- **Historical-legend anchor:** Existing FOLK `istorychni-perekazy` uses the
-  axe-splitting-rock legend. Treat it as folklore and place memory, not literal
-  biography.
-- **Myth-vs-record anchor:** Pair IEU's Robin Hood-like reception shorthand with
-  EIU's record of raids, violence, arson, military pursuit, and LH's anti-myth
-  framing.
-- **Geography anchor:** Pechenizhyn, Kosmach, Pokuttia, Hutsul region,
-  Chornohora, Mount Stih, Prykarpattia, Zakarpattia, Bukovyna, Bohorodchany, and
-  Dovbush Rocks.
-- **Film/pop-culture caution:** Modern films and school summaries can intensify
-  superhero or romance frames. Use them for reception only after source checking,
-  not as default historical biography.
-- **Visual anchor:** Commons `File:Олекса_Довбуш,_Ярослав_Пстрак.jpg` is a public
-  domain historic postcard portrait by Yaroslav Pstrak; caption as an artwork,
-  not documentary likeness.
-- **Older-print anchor:** Commons `File:Aleksy_Dobosz_grafika_(cropped).jpg` is
-  a 1746 public-domain Polona / National Library of Poland graphic. Preserve the
-  source-title variant while foregrounding `Олекса Довбуш`.
-- **Place-memory anchor:** Commons Dovbush Rocks images such as
-  `File:Скелі_Довбуша_20160510_002.jpg` are useful for landscape memory when
-  file-level CC BY-SA attribution is preserved.
+- **Opryshky definition pair:** EIU Opryshky records both Soviet "social and
+  national-liberation" readings and critical views that deny national/religious
+  motives or treat actions as criminal [S2]. Classroom gold.
+- **Robin Hood vs record:** IEU reception shorthand [S4] vs EIU violence/arson
+  [S1] vs LH anti-program critique and multiethnic victims [S3].
+- **Death-source table:** 23 Aug wound / 24 Aug death / betrayal-by-fellow —
+  forces source discipline.
+- **Geography:** Pechenizhyn, Kosmach, Pokuttia, Hutsul region, Chornohora,
+  Stih, Bohorodchany, Prykarpattia, Zakarpattia, Bukovyna.
+- **Film/pop caution:** modern film and school summaries intensify superhero
+  frames; reception only after source check.
+- **Portrait:** text-only fallback for this packet.
 
 ## 5. Language register
 
-- **Register:** historical biography, Carpathian social resistance, outlawry,
-  folk legend, regional geography, source criticism, and decolonial memory.
-- **CEFR readiness:** B1+/B2 concise biography and map tasks; B2/C1 myth-vs-record
-  comparison; C1/C2 discussion of outlaw heroization, violence, and source ethics.
-- **Core vocabulary:** `опришок`, `ватажок`, `загін`, `Гуцульщина`, `Покуття`,
-  `Чорногора`, `полонина`, `коморник`, `можновладець`, `пан`, `орендар`,
-  `лихвар`, `фортеця`, `рейд`, `переказ`, `легенда`, `народний месник`,
-  `розбійник`, `міфологізація`, `джерело`, `свідчення`, `усна пам'ять`.
-- **Register caution:** `народний месник` and `Робін Гуд` are reception labels,
-  not neutral historical descriptions. Pair them with concrete source language
-  about raids, violence, and community harm.
+- Historical biography, Carpathian social resistance, outlawry, folk legend,
+  regional geography, source criticism.
+- Core vocabulary: `опришок`, `ватажок`, `коморник`, `орендар`, `лихвар`,
+  `Чорногора`, `Покуття`, `Гуцульщина`, `фортеця`, `переказ`, `міфологізація`.
+- Caution: `народний месник` / `Робін Гуд` = reception labels.
 
-## 6. Risks / open questions
+## 6. Risks / open questions / rejected evidence
 
-- **Birthplace / exactness:** Pechenizhyn and 1700 are safest per EIU/IEU. Treat
-  other birthplaces or exact childhood anecdotes as later reception unless a
-  stronger source is added.
-- **Robin Hood shortcut:** IEU uses the comparison and public media repeats it,
-  but the module thesis should stay `historical opryshok leader with a large
-  folkloric afterlife`.
-- **Ethnicized victim lists:** Source victim lists include social, estate,
-  occupational, and ethnic/confessional categories. Use them only to explain a
-  multiethnic social world and avoid stereotype reproduction.
-- **Anti-feudal overclaim:** LH explicitly complicates simple anti-feudal /
-  revolutionary readings. Do not make Dovbush a programmatic modern politician.
-- **Modern film drift:** The 2023 film `Довбуш` and related reception are useful
-  culture-history objects, but should not silently supply motives or plot details.
-- **Image-title variants:** Non-Ukrainian source captions such as `Aleksy Dobosz`
-  are useful provenance data, not learner-facing name policy.
+- **Death narrative disagreement** (see §3.8) — highest factual risk if
+  silently fused.
+- **Troop numbers:** 2,000 (IEU) vs 2,500 (EIU Opryshky).
+- **Robin Hood shortcut** — useful as critique prompt, not thesis.
+- **Ethnicized victim lists** — social/estate/confessional categories only
+  with anti-stereotype framing [S3, S4].
+- **Treasure legends** — LH notes folk "treasures of Dovbush" and conflicting
+  interrogation answers; not biography [S3].
+- **Fabula / De Gruyter** article
+  `https://www.degruyterbrill.com/document/doi/10.1515/fabl.2011.008/html` —
+  **rejected this pass** (HTTP 202 / empty unusable body; full free text not
+  verified). Do not cite for material claims.
+- **Wikipedia** — orientation only; not adopted.
+- **Modern film stills / posters** — not portrait or factual sources.
 
 ## 7. Cross-track links
 
-- **Existing HIST plan surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
+- **Existing HIST plan surfaces (VERIFIED `test -e` 2026-07-18):**
   `curriculum/l2-uk-en/plans/hist/opryshky.yaml`,
   `curriculum/l2-uk-en/plans/hist/bukovyna-zakarpattia.yaml`
-- **Existing HIST discovery surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
+- **Existing HIST discovery surfaces (VERIFIED `test -e` 2026-07-18):**
   `curriculum/l2-uk-en/hist/discovery/opryshky.yaml`,
   `curriculum/l2-uk-en/hist/discovery/bukovyna-zakarpattia.yaml`
-- **Existing FOLK plan surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
+- **Existing FOLK plan surfaces (VERIFIED `test -e` 2026-07-18):**
   `curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml`,
   `curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml`
-- **Existing FOLK module / vocabulary surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
+- **Existing FOLK module / research / wiki (VERIFIED `test -e` 2026-07-18):**
   `curriculum/l2-uk-en/folk/istorychni-pisni/module.md`,
-  `curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml`
-- **Existing FOLK research / wiki surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
   `docs/research/folk/istorychni-perekazy.md`,
-  `docs/research/folk/istorychni-pisni.md`,
   `wiki/folk/historical/istorychni-pisni.md`
-- **Existing BIO index / audit surfaces (VERIFIED `rg` 2026-07-02):**
-  `site/src/content/docs/bio/index.mdx` reserves BIO #312 `oleksa-dovbush`;
-  `docs/audits/bio-readiness-matrix-2026-06-29.md` and
-  `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md` list the gap.
-- **Planned BIO surfaces (ABSENT `test -e` 2026-07-02):**
-  `curriculum/l2-uk-en/plans/bio/oleksa-dovbush.yaml`,
-  `curriculum/l2-uk-en/bio/discovery/oleksa-dovbush.yaml`,
-  `wiki/figures/oleksa-dovbush.md`,
-  `site/src/content/docs/bio/oleksa-dovbush.mdx`,
-  `curriculum/l2-uk-en/bio/oleksa-dovbush/module.md`,
-  `curriculum/l2-uk-en/bio/oleksa-dovbush/activities.yaml`,
-  `curriculum/l2-uk-en/bio/oleksa-dovbush/vocabulary.yaml`,
-  `curriculum/l2-uk-en/bio/oleksa-dovbush/resources.yaml`
+- **Connected BIO plan (this cohort):** `ustym-karmaliuk`.
+- **ABSENT on 2026-07-18 (expected):** built lesson under
+  `curriculum/l2-uk-en/bio/oleksa-dovbush/` (out of catalog-packet scope).
 
 ## 8. Naming / indexing
 
-- **Canonical UA:** `Олекса Довбуш`; fuller form `Олекса Васильович Довбуш`.
+- **Canonical UA:** `Олекса Довбуш`; fuller `Олекса Васильович Довбуш`.
 - **Canonical EN:** `Oleksa Dovbush`.
-- **Search variants:** `Олекса Довбуш`, `Довбуш Олекса Васильович`,
-  `Oleksa Dovbush`, `Oleksa Dovbuš`, `Oleksa Dovbouch`, `Aleksy Dobosz`,
-  `Dobosh`, `Dowbusz`, `опришки`, `Opryshky`, `Скелі Довбуша`, `Dovbush Rocks`,
-  `Богородчани`, `Bohorodchany fortress`, `Степан Дзвінчук`.
-- **Avoid:** Do not default to `Aleksy Dobosz` or other non-Ukrainian
-  source-title variants in learner-facing text. Use them only in source,
-  catalog, or image-rights notes.
+- **Search variants:** `Dovbuš`, `Dobosz`, `Dowbusz`, `опришки`,
+  `Скелі Довбуша`, `Богородчани`, `Степан Дзвінчук`.
+- **Avoid:** defaulting learner text to `Aleksy Dobosz`.
 
-## 9. Image rights
+## 9. Image rights / portrait disposition
 
-- **Preferred portrait/art candidate:** Commons
-  `File:Олекса_Довбуш,_Ярослав_Пстрак.jpg`; historic postcard by Yaroslav
-  Pstrak, public domain on Commons. Use a caption that says artwork/postcard, not
-  documentary portrait.
-- **Older print candidate:** Commons `File:Aleksy_Dobosz_grafika_(cropped).jpg`;
-  1746 graphic via Polona.pl / National Library of Poland, author unknown,
-  public domain. Include the Polish title only as provenance.
-- **Place-memory candidate:** Commons `File:Скелі_Довбуша_20160510_002.jpg`;
-  Dovbush Rocks by TommyGUN, CC BY-SA 4.0. Preserve attribution, license link,
-  and share-alike obligations.
-- **Alternate place candidates:** Commons Dovbush Rocks / Bubnyshche images such
-  as `File:Печерний_комплекс_в_Бубнище_01.jpg` can support landscape-memory
-  lessons after file-level license confirmation.
-- **Memorial candidates:** Commons memorial signs and plaques in Kryvorivnia,
-  Bohorodchany, or Pechenizhyn may serve reception / commemoration lessons after
-  file-level license checks.
-- **Avoid default:** film stills, posters, YouTube frames, stock/tourism photos,
-  school-site illustrations, unsourced portraits, colorized private-collection
-  images, or modern artwork without explicit reusable licensing.
+- **Disposition: text-only portrait fallback** (plan `portrait_fallback`,
+  verified 2026-07-18).
+- Historic postcards, 1746 graphics, and Dovbush Rocks photographs may be
+  rechecked later at **file-level** licence + subject proof; none are shipped
+  as the individual portrait for this packet.
+- Avoid: film stills, tourism stock, school-site art, unsourced "hero" faces.
 
-## 10. Sources used
+## 10. Sources used (adopted + rejected)
 
-**Tier 1 (authoritative / institutional):**
+**Adopted (order fixed):**
 
-- Смолій В.А. "Довбуш Олекса Васильович." Енциклопедія історії України,
-  Інститут історії України НАН України. https://history.org.ua/?termin=Dovbush_O.
-  Accessed 2026-07-02.
-- "Dovbush, Oleksa." Internet Encyclopedia of Ukraine / Canadian Institute of
-  Ukrainian Studies.
-  https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDovbushOleksa.htm.
-  Accessed 2026-07-02.
-- "Opryshoks." Internet Encyclopedia of Ukraine / Canadian Institute of Ukrainian
-  Studies.
-  https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CP%5COpryshoks.htm.
-  Accessed 2026-07-02.
-- Fialkova, L. "Oleksa Dovbush: An Alternative Mythical Biography of the
-  Ukrainian Hero..." Fabula / De Gruyter. https://www.degruyterbrill.com/document/doi/10.1515/fabl.2011.008/html.
-  Accessed 2026-07-02.
-- Національна бібліотека України імені В. І. Вернадського. Catalog record for
-  Hrabovetskyi's monograph `Олекса Довбуш (1700-1745)`.
-  https://irbis-nbuv.gov.ua/ulib/item/UKR0008263. Accessed 2026-07-02.
+1. Гуржій О. І. «ДОВБУШ Олекса Васильович.» ЕІУ, т. 2.
+   https://www.history.org.ua/?termin=Dovbush_O. HTTP 200, 2026-07-18.
+   Locators: 1700–24.08.1745; Pechenizhyn коморник; 1738–39 with Ivan; violence
+   / arson / seizure; spring 1739 split; Chornohora / Stih from 1740;
+   Potocki–Przeluski pursuit; 1744–45 raids; Bohorodchany; death by Dzvinchuk
+   at Kosmach.
+2. Муравський О. І. «ОПРИШКИ.» ЕІУ, т. 7.
+   https://www.history.org.ua/?termin=Opryshky. HTTP 200, 2026-07-18.
+   Locators: definition; Soviet vs critical interpretations; first mention
+   1529; Dovbush as most famous leader; 2500 troops; mortal wounding 23.08.1745.
+3. Волощук М. «Ким насправді був Олекса Довбуш?» Local History.
+   https://localhistory.org.ua/texts/statti/kim-naspravdi-buv-oleksa-dovbush/.
+   HTTP 200, 2026-07-18. Locators: ca. 1700 Pechenizhyn; anti-feudal denial;
+   multiethnic victims; Mykulychyn 1740; death night 23–24.08.1745; Baiurak /
+   Orfeniuk flight; treasure interrogation motif.
+4. «Dovbush, Oleksa.» IEU.
+   https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDovbushOleksa.htm.
+   HTTP 200, 2026-07-18. Locators: Robin Hood label; 30–50 men; target list
+   incl. rich Jews; Stih base; up to 2,000 troops; betrayal by fellow
+   opryshok; cultural afterlife.
 
-**Tier 2 (expert media / local institutional / reception):**
+**Rejected / not adopted:**
 
-- Local History. "Ким насправді був Олекса Довбуш?"
-  https://localhistory.org.ua/texts/statti/kim-naspravdi-buv-oleksa-dovbush/.
-  Accessed 2026-07-02.
-- Ivano-Frankivsk Regional Museum page for the Dovbush museum.
-  https://www.museum.if.ua/museums/r2/69.html. Accessed 2026-07-02.
-- New Eastern Europe. "The infamous Dovbush: a robber of trust."
-  https://neweasterneurope.eu/2024/02/07/the-infamous-dovbush-a-robber-of-trust/.
-  Accessed 2026-07-02.
-- Existing learn-ukrainian HIST/FOLK surfaces listed in Section 7, verified
-  2026-07-02.
+- Fabula / De Gruyter Fialkova article — not freely verifiable this pass.
+- Wikipedia — orientation only.
+- Portrait media without file-level proof — text-only fallback.
 
-**Tier 4 (image-rights / media-rights checks):**
+**Internal non-external reference:** `docs/research/bio/oleksa-dovbush.md`
+(this dossier).
 
-- Wikimedia Commons. `Category:Oleksa Dovbush`.
-  https://commons.wikimedia.org/wiki/Category:Oleksa_Dovbush. Accessed 2026-07-02.
-- Wikimedia Commons. `File:Олекса_Довбуш,_Ярослав_Пстрак.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0_%D0%94%D0%BE%D0%B2%D0%B1%D1%83%D1%88,_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2_%D0%9F%D1%81%D1%82%D1%80%D0%B0%D0%BA.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Aleksy_Dobosz_grafika_(cropped).jpg`.
-  https://commons.wikimedia.org/wiki/File:Aleksy_Dobosz_grafika_(cropped).jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Скелі_Довбуша_20160510_002.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%A1%D0%BA%D0%B5%D0%BB%D1%96_%D0%94%D0%BE%D0%B2%D0%B1%D1%83%D1%88%D0%B0_20160510_002.jpg.
-  Accessed 2026-07-02.
+---
+
+### Rights / reading disposition summary
+
+| URL | Role | Learner reading? | Rights basis |
+| --- | --- | --- | --- |
+| EIU Dovbush | Factual bio core | Yes (link-only, uk) | external-link; evidence_url = source_url |
+| EIU Opryshky | Movement context | Yes (link-only, uk) | external-link; evidence_url = source_url |
+| Local History | Anti-myth expert media | Yes (link-only, uk) | external-link; evidence_url = source_url |
+| IEU Dovbush | Comparative EN reception | No (reference-only) | n/a for readings block |
+
+No copyrighted full text is hosted in-course. All learner readings are link-only.
