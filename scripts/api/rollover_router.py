@@ -14,6 +14,19 @@ from .config import LIVE_REPO_ROOT
 router = APIRouter(tags=["rollovers"])
 
 
+def _client_registry_errors(errors: list | None) -> list[dict[str, str]]:
+    """Return path-only registry errors for HTTP clients (no exception text)."""
+    out: list[dict[str, str]] = []
+    for err in errors or []:
+        if not isinstance(err, dict):
+            continue
+        path = err.get("path")
+        if path is None:
+            continue
+        out.append({"path": str(path), "error": "invalid or unreadable durable source"})
+    return out
+
+
 def collect_rollover_orient_data() -> dict:
     """Compact cold-start projection; full evidence remains on this router."""
     audit = registry.audit_fleet(LIVE_REPO_ROOT)
@@ -28,7 +41,7 @@ def collect_rollover_orient_data() -> dict:
         "generated_at": audit["generated_at"],
         "counts": audit["counts"],
         "actionable": actionable,
-        "errors": audit["errors"],
+        "errors": _client_registry_errors(audit["errors"]),
         "task_identity": {
             "schema_version": identity_snapshot["schema_version"],
             "candidate_count": identity_snapshot["candidate_count"],
@@ -62,7 +75,7 @@ def rollover_audit(
         if not selected:
             raise HTTPException(
                 status_code=404,
-                detail={"error": "exact rollover selector matched no registry entry", "registry_errors": errors},
+                detail={"error": "exact rollover selector matched no registry entry", "registry_errors": _client_registry_errors(errors)},
             )
         if len(selected) > 1:
             raise HTTPException(
@@ -70,7 +83,7 @@ def rollover_audit(
                 detail={
                     "error": "exact rollover selector remains ambiguous",
                     "matches": [registry.candidate_summary(record) for record in selected],
-                    "registry_errors": errors,
+                    "registry_errors": _client_registry_errors(errors),
                 },
             )
         record = selected[0]
@@ -81,7 +94,7 @@ def rollover_audit(
                 detail={
                     "error": "exact rollover selector matched a corrupt durable source",
                     "candidate": registry.candidate_summary(record),
-                    "registry_errors": selected_errors,
+                    "registry_errors": _client_registry_errors(selected_errors),
                 },
             )
         return {
@@ -98,7 +111,7 @@ def rollover_audit(
             "evidence_paths": record.get("evidence_paths", []),
             "blocking_reason": record.get("blocking_reason"),
             "terminal_reason": record.get("terminal_reason"),
-            "registry_errors": errors,
+            "registry_errors": _client_registry_errors(errors),
         }
     audit = registry.audit_fleet(LIVE_REPO_ROOT, stale_hours=stale_hours)
     if agent is not None:
@@ -115,4 +128,5 @@ def rollover_audit(
                 for entry in audit["entries"]
             ),
         }
+    audit = {**audit, "errors": _client_registry_errors(audit.get("errors"))}
     return audit

@@ -74,51 +74,68 @@ runs:
 
     - name: Set outputs and fail open if needed
       id: set-outputs
+      # Pass step outputs via env (not ${{ }} inside `run:`) to satisfy
+      # zizmor/template-injection. Values are boolean path-filter flags.
+      env:
+        FILTER1_OUTCOME: ${{ steps.filter1.outcome }}
+        FILTER2_OUTCOME: ${{ steps.filter2.outcome }}
+        FILTER3_OUTCOME: ${{ steps.filter3.outcome }}
+        F1_CONTENT: ${{ steps.filter1.outputs.content }}
+        F1_FRAMING: ${{ steps.filter1.outputs.framing }}
+        F1_PROMOTE: ${{ steps.filter1.outputs.promote }}
+        F1_CODE: ${{ steps.filter1.outputs.code }}
+        F1_PYTHON: ${{ steps.filter1.outputs.python }}
+        F1_FRONTEND: ${{ steps.filter1.outputs.frontend }}
+        F1_AGENT_CONFIG: ${{ steps.filter1.outputs.agent_config }}
+        F1_LESSON_SCHEMA: ${{ steps.filter1.outputs.lesson_schema }}
+        F1_ATLAS: ${{ steps.filter1.outputs.atlas }}
+        F1_POSTMORTEMS: ${{ steps.filter1.outputs.postmortems }}
+        F2_CONTENT: ${{ steps.filter2.outputs.content }}
+        F2_FRAMING: ${{ steps.filter2.outputs.framing }}
+        F2_PROMOTE: ${{ steps.filter2.outputs.promote }}
+        F2_CODE: ${{ steps.filter2.outputs.code }}
+        F2_PYTHON: ${{ steps.filter2.outputs.python }}
+        F2_FRONTEND: ${{ steps.filter2.outputs.frontend }}
+        F2_AGENT_CONFIG: ${{ steps.filter2.outputs.agent_config }}
+        F2_LESSON_SCHEMA: ${{ steps.filter2.outputs.lesson_schema }}
+        F2_ATLAS: ${{ steps.filter2.outputs.atlas }}
+        F2_POSTMORTEMS: ${{ steps.filter2.outputs.postmortems }}
+        F3_CONTENT: ${{ steps.filter3.outputs.content }}
+        F3_FRAMING: ${{ steps.filter3.outputs.framing }}
+        F3_PROMOTE: ${{ steps.filter3.outputs.promote }}
+        F3_CODE: ${{ steps.filter3.outputs.code }}
+        F3_PYTHON: ${{ steps.filter3.outputs.python }}
+        F3_FRONTEND: ${{ steps.filter3.outputs.frontend }}
+        F3_AGENT_CONFIG: ${{ steps.filter3.outputs.agent_config }}
+        F3_LESSON_SCHEMA: ${{ steps.filter3.outputs.lesson_schema }}
+        F3_ATLAS: ${{ steps.filter3.outputs.atlas }}
+        F3_POSTMORTEMS: ${{ steps.filter3.outputs.postmortems }}
       run: |
-        if [ "${{ steps.filter1.outcome }}" = "success" ]; then
-          echo "content=${{ steps.filter1.outputs.content }}" >> "$GITHUB_OUTPUT"
-          echo "framing=${{ steps.filter1.outputs.framing }}" >> "$GITHUB_OUTPUT"
-          echo "promote=${{ steps.filter1.outputs.promote }}" >> "$GITHUB_OUTPUT"
-          echo "code=${{ steps.filter1.outputs.code }}" >> "$GITHUB_OUTPUT"
-          echo "python=${{ steps.filter1.outputs.python }}" >> "$GITHUB_OUTPUT"
-          echo "frontend=${{ steps.filter1.outputs.frontend }}" >> "$GITHUB_OUTPUT"
-          echo "agent_config=${{ steps.filter1.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
-          echo "lesson_schema=${{ steps.filter1.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
-          echo "atlas=${{ steps.filter1.outputs.atlas }}" >> "$GITHUB_OUTPUT"
-          echo "postmortems=${{ steps.filter1.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
-        elif [ "${{ steps.filter2.outcome }}" = "success" ]; then
-          echo "content=${{ steps.filter2.outputs.content }}" >> "$GITHUB_OUTPUT"
-          echo "framing=${{ steps.filter2.outputs.framing }}" >> "$GITHUB_OUTPUT"
-          echo "promote=${{ steps.filter2.outputs.promote }}" >> "$GITHUB_OUTPUT"
-          echo "code=${{ steps.filter2.outputs.code }}" >> "$GITHUB_OUTPUT"
-          echo "python=${{ steps.filter2.outputs.python }}" >> "$GITHUB_OUTPUT"
-          echo "frontend=${{ steps.filter2.outputs.frontend }}" >> "$GITHUB_OUTPUT"
-          echo "agent_config=${{ steps.filter2.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
-          echo "lesson_schema=${{ steps.filter2.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
-          echo "atlas=${{ steps.filter2.outputs.atlas }}" >> "$GITHUB_OUTPUT"
-          echo "postmortems=${{ steps.filter2.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
-        elif [ "${{ steps.filter3.outcome }}" = "success" ]; then
-          echo "content=${{ steps.filter3.outputs.content }}" >> "$GITHUB_OUTPUT"
-          echo "framing=${{ steps.filter3.outputs.framing }}" >> "$GITHUB_OUTPUT"
-          echo "promote=${{ steps.filter3.outputs.promote }}" >> "$GITHUB_OUTPUT"
-          echo "code=${{ steps.filter3.outputs.code }}" >> "$GITHUB_OUTPUT"
-          echo "python=${{ steps.filter3.outputs.python }}" >> "$GITHUB_OUTPUT"
-          echo "frontend=${{ steps.filter3.outputs.frontend }}" >> "$GITHUB_OUTPUT"
-          echo "agent_config=${{ steps.filter3.outputs.agent_config }}" >> "$GITHUB_OUTPUT"
-          echo "lesson_schema=${{ steps.filter3.outputs.lesson_schema }}" >> "$GITHUB_OUTPUT"
-          echo "atlas=${{ steps.filter3.outputs.atlas }}" >> "$GITHUB_OUTPUT"
-          echo "postmortems=${{ steps.filter3.outputs.postmortems }}" >> "$GITHUB_OUTPUT"
+        emit() {
+          {
+            echo "content=$1"
+            echo "framing=$2"
+            echo "promote=$3"
+            echo "code=$4"
+            echo "python=$5"
+            echo "frontend=$6"
+            echo "agent_config=$7"
+            echo "lesson_schema=$8"
+            echo "atlas=$9"
+            echo "postmortems=${10}"
+          } >> "$GITHUB_OUTPUT"
+        }
+        if [ "$FILTER1_OUTCOME" = "success" ]; then
+          emit "$F1_CONTENT" "$F1_FRAMING" "$F1_PROMOTE" "$F1_CODE" "$F1_PYTHON" \
+            "$F1_FRONTEND" "$F1_AGENT_CONFIG" "$F1_LESSON_SCHEMA" "$F1_ATLAS" "$F1_POSTMORTEMS"
+        elif [ "$FILTER2_OUTCOME" = "success" ]; then
+          emit "$F2_CONTENT" "$F2_FRAMING" "$F2_PROMOTE" "$F2_CODE" "$F2_PYTHON" \
+            "$F2_FRONTEND" "$F2_AGENT_CONFIG" "$F2_LESSON_SCHEMA" "$F2_ATLAS" "$F2_POSTMORTEMS"
+        elif [ "$FILTER3_OUTCOME" = "success" ]; then
+          emit "$F3_CONTENT" "$F3_FRAMING" "$F3_PROMOTE" "$F3_CODE" "$F3_PYTHON" \
+            "$F3_FRONTEND" "$F3_AGENT_CONFIG" "$F3_LESSON_SCHEMA" "$F3_ATLAS" "$F3_POSTMORTEMS"
         else
           echo "::warning::path classification unavailable — running everything"
-          echo "content=true" >> "$GITHUB_OUTPUT"
-          echo "framing=true" >> "$GITHUB_OUTPUT"
-          echo "promote=true" >> "$GITHUB_OUTPUT"
-          echo "code=true" >> "$GITHUB_OUTPUT"
-          echo "python=true" >> "$GITHUB_OUTPUT"
-          echo "frontend=true" >> "$GITHUB_OUTPUT"
-          echo "agent_config=true" >> "$GITHUB_OUTPUT"
-          echo "lesson_schema=true" >> "$GITHUB_OUTPUT"
-          echo "atlas=true" >> "$GITHUB_OUTPUT"
-          echo "postmortems=true" >> "$GITHUB_OUTPUT"
+          emit true true true true true true true true true true
         fi
       shell: bash
