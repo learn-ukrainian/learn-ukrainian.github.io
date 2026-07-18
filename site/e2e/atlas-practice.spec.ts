@@ -65,8 +65,8 @@ test('practice mode switch starts the selected mode without inheriting the unfin
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
   await page.getByRole('button', { name: /Додому/ }).click();
 
-  // An unfinished matching session remains available only through its matching control.
-  await expect(page.locator('button[data-resume-mode="matching"]')).toBeVisible();
+  // The K3 dashboard preserves mode snapshots but exposes only the primary mixed resume CTA.
+  // Switching to a different mode starts fresh instead of inheriting the unfinished session.
   await page.locator('button[data-mode="flashcards"]').click();
 
   await expect(page.locator('[data-activity="flashcard"]')).toBeVisible();
@@ -132,4 +132,87 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
 
   // Mount wrapper is hidden on failure; fallback is swapped in.
   await expect(page.locator('#lexicon-practice-mount')).toHaveAttribute('hidden', '');
+});
+
+async function prepareResumableMixedSession(page: Page): Promise<void> {
+  await page.goto('/words-of-the-day/practice/');
+  // Wait for the idle dashboard to settle and the primary CTA to be actionable.
+  await expect(page.getByTestId('practice-start-session')).toBeVisible();
+  await page.getByTestId('practice-start-session').click();
+  // Confirm the exercise stage rendered.
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  // Return home to persist a resumable mixed snapshot.
+  await page.getByRole('button', { name: /Додому|Home/ }).click();
+  await expect(page.getByTestId('practice-start-session')).toBeVisible();
+}
+
+async function assertFirstViewportPracticeCTAs(page: Page, locale: 'en' | 'uk'): Promise<void> {
+  const start = page.getByTestId('practice-start-session');
+  const resume = page.locator('button[data-resume-mode="mixed"]');
+
+  for (const control of [start, resume]) {
+    await expect(control).toBeVisible();
+    const box = await control.boundingBox();
+    expect(box).not.toBeNull();
+    const top = box!.y;
+    const bottom = box!.y + box!.height;
+    expect(top).toBeGreaterThanOrEqual(0);
+    expect(bottom).toBeLessThanOrEqual(768);
+  }
+
+  // Accessible names must match the active chrome locale only (no slash duplicates).
+  // With a resumable Mixed snapshot, the primary CTA reads "Resume session" and the
+  // secondary control reads "Resume Mixed (N/M)" / "Продовжити «Мікс» (N/M)".
+  if (locale === 'en') {
+    await expect(page.getByRole('button', { name: 'Resume session' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Resume "Mixed"/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Start session|Почати заняття|Продовжити «Мікс»/ })).toHaveCount(0);
+  } else {
+    await expect(page.getByRole('button', { name: 'Продовжити заняття' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Продовжити «Мікс»/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Start session|Resume session|Почати заняття/ })).toHaveCount(0);
+  }
+
+  // The words disclosure begins closed and the 3D preview remains visible.
+  const details = page.getByTestId('practice-daily-details');
+  await expect(details).not.toHaveAttribute('open');
+  await expect(page.locator('.flashcard.daily-preview-card')).toBeVisible();
+}
+
+test('HARD-1: English setup dashboard shows start and resume CTAs without scroll at 1366x768', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/words-of-the-day/practice/');
+  await page.evaluate(() => {
+    window.localStorage.setItem('lu-chrome-locale', 'en');
+    document.documentElement.setAttribute('data-theme', 'light');
+  });
+  await prepareResumableMixedSession(page);
+
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+
+  const scrollY = await page.evaluate(() => window.scrollY);
+  expect(scrollY).toBe(0);
+
+  await assertFirstViewportPracticeCTAs(page, 'en');
+});
+
+test('HARD-2: Ukrainian setup dashboard shows start and resume CTAs without scroll at 1366x768', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/words-of-the-day/practice/');
+  await page.evaluate(() => {
+    window.localStorage.setItem('lu-chrome-locale', 'uk');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  });
+  await prepareResumableMixedSession(page);
+
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+
+  const scrollY = await page.evaluate(() => window.scrollY);
+  expect(scrollY).toBe(0);
+
+  await assertFirstViewportPracticeCTAs(page, 'uk');
 });

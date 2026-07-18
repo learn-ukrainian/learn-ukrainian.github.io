@@ -523,7 +523,9 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice />);
 
     await waitFor(() =>
-      expect(screen.getByLabelText(/1 до повторення/)).toBeInTheDocument(),
+      expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(
+        /1 до повторення/,
+      ),
     );
   });
 
@@ -773,11 +775,10 @@ describe('LexiconPractice', () => {
     });
   });
 
-  test('hides heritage mode card when the loaded deck has no heritage items', () => {
+  test('heritage mode card is present in the K3 grid even when the deck has no heritage items', () => {
     render(<LexiconPractice initialDeck={heritageDeck({ includeItems: false })} />);
 
-    expect(screen.queryByText('Спадщина')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Спадщина/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Спадщина/ })).toBeInTheDocument();
   });
 
   test('heritage feedback renders rationaleUk when present and OMITS the detail line when absent', async () => {
@@ -988,11 +989,10 @@ describe('LexiconPractice', () => {
     });
   });
 
-  test('hides paronym mode card when the loaded deck has no paronym items', () => {
+  test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
     render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 
-    expect(screen.queryByText('Пароніми')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Пароніми/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Пароніми/ })).toBeInTheDocument();
   });
 
   test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {
@@ -1295,27 +1295,36 @@ describe('LexiconPractice', () => {
     expect(screen.getByText(/CC-BY 2.0 FR/)).toBeInTheDocument();
   });
 
-  test('today ring uses review + capped-new denominator, not whole deck', async () => {
+  test('today scope uses review + capped-new denominator, not whole deck', async () => {
     const { fn } = mockShardFetch({ A1: 1150 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     render(<LexiconPractice />);
-    await waitFor(() => expect(screen.getByTestId('practice-today-ring')).toBeInTheDocument());
-    const ring = screen.getByTestId('practice-today-ring');
-    expect(ring.textContent).toMatch(/0\/\d+/);
-    const denominator = Number(ring.textContent?.split('/')[1]);
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-session-scope')).toBeInTheDocument(),
+    );
+    const scope = screen.getByTestId('practice-session-scope');
+    const match = scope.textContent?.match(/0 до повторення \+ (\d+) нових/);
+    expect(match).toBeTruthy();
+    const denominator = Number(match?.[1]);
     expect(denominator).toBeLessThan(1150);
   });
 
-  test("A1 renders English subtitles on session labels; A2 does not when chrome locale is uk", async () => {
+  test("A1 renders English subtitles on chrome labels; A2 does not when chrome locale is uk", async () => {
     document.documentElement.dataset.chromeLocale = "uk";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
     const { unmount } = render(<LexiconPractice />);
-    expect(screen.getByText("Start session")).toBeInTheDocument();
+    expect(screen.getByRole("region")).toHaveAttribute(
+      "aria-label",
+      "Практика слів дня / Words of the Day Practice",
+    );
     unmount();
 
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
     render(<LexiconPractice />);
-    expect(screen.queryByText("Start session")).not.toBeInTheDocument();
+    expect(screen.getByRole("region")).toHaveAttribute(
+      "aria-label",
+      "Практика слів дня",
+    );
   });
 
   test("A2 shows English chrome when data-chrome-locale is en", async () => {
@@ -1329,13 +1338,15 @@ describe('LexiconPractice', () => {
     document.documentElement.dataset.chromeLocale = "uk";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "B1");
     render(<LexiconPractice />);
-    expect(screen.queryByText("Start session")).not.toBeInTheDocument();
+    expect(screen.getByText(/Чергуйте картки/)).toBeInTheDocument();
 
     await act(async () => {
       document.documentElement.dataset.chromeLocale = "en";
     });
     await waitFor(() => {
-      expect(screen.getByText("Start session")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Rotate flashcards, matching, choice/),
+      ).toBeInTheDocument();
     });
   });
 
@@ -1638,7 +1649,7 @@ describe('LexiconPractice', () => {
     await waitFor(() =>
       expect(screen.getByTestId('practice-weak-areas')).toBeInTheDocument(),
     );
-    expect(screen.getByText('Ваші слабкі відмінки')).toBeInTheDocument();
+    expect(screen.getByText('Фокус')).toBeInTheDocument();
     // Chips use Ukrainian case names only — знахідний for accusative.
     expect(screen.getByTestId('practice-weak-chip-accusative')).toHaveTextContent('знахідний');
   });
@@ -1714,12 +1725,11 @@ describe('LexiconPractice', () => {
     expect(snapshot).not.toHaveProperty('focusWeakness');
     expect(raw).not.toContain('focus');
 
-    // Remount from the same storage: the resume path re-enters the session with focus
-    // cleared (beginSession(..., focus=null)), so it starts a working session, not a
-    // stranded focus-filtered one.
+    // A fresh cloze session (via the mode card, since K3 only surfaces mixed resume)
+    // starts with focus cleared, not a stranded focus-filtered one.
     first.unmount();
-    render(<LexiconPractice initialDeck={sampleDeck()} />);
-    await user.click(await screen.findByRole('button', { name: /Продовжити \(0\// }));
+    const { container } = render(<LexiconPractice initialDeck={sampleDeck()} />);
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!);
     expect(await screen.findByTestId('practice-cloze')).toBeInTheDocument();
   });
 
@@ -1743,8 +1753,9 @@ describe('LexiconPractice', () => {
     await screen.findByTestId('practice-matching');
     await user.click(screen.getByRole('button', { name: /Додому/ }));
 
-    // The matching continuation belongs to matching, never to the next mode selected.
-    await screen.findByRole('button', { name: /Продовжити \(0\// });
+    // The matching continuation belongs to matching; selecting a different mode card starts
+    // a fresh session for that mode.
+    await screen.findByTestId('practice-start-session');
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     await waitFor(() =>
@@ -1786,11 +1797,12 @@ describe('LexiconPractice', () => {
       expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
     );
 
-    // Return home to read the today counter (only surfaced on the idle home ring).
+    // Exactly one completion — a double-advance would have recorded two reviews.
+    await waitFor(() => expect(storedState().reviews).toHaveLength(1));
+
+    // Return home and confirm the idle dashboard is still usable.
     await user.click(screen.getByRole('button', { name: /Додому/ }));
-    const ring = await screen.findByTestId('practice-today-ring');
-    // Exactly one completion — a double-advance would have recorded two.
-    expect(Number(ring.textContent?.split('/')[0])).toBe(1);
+    expect(await screen.findByTestId('practice-start-session')).toBeInTheDocument();
   });
 
   // --- Progressive shard loading tests for #4693 ---
@@ -1883,13 +1895,15 @@ describe('LexiconPractice', () => {
 
     await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
 
-    // No double-fetch for heavy lexeme shards (dedup via shardJsonCache); index may be 2 (eager due + core) which pre-existed.
+    // No double-fetch for heavy lexeme shards (dedup via shardJsonCache); index may be 3
+    // (eager due + daily snapshot deckVersion + core session) because the K3 dashboard
+    // builds a versioned daily snapshot independently.
     const counts = requested.reduce<Record<string, number>>((acc, u) => { acc[u] = (acc[u] || 0) + 1; return acc; }, {});
     Object.entries(counts).forEach(([u, c]) => {
       if (u.includes('lexemes')) {
         expect(c).toBeLessThanOrEqual(1);
       } else {
-        expect(c).toBeLessThanOrEqual(2);
+        expect(c).toBeLessThanOrEqual(3);
       }
     });
 
