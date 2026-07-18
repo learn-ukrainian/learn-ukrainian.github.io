@@ -205,7 +205,7 @@ def atomic_write_bytes(path: Path, data: bytes) -> None:
     partial = path.with_name(path.name + ".partial")
     # If a prior partial exists, overwrite from start (rsync-style resume at app layer
     # is: rewrite partial until final hash matches, then rename).
-    fd = os.open(str(partial), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+    fd = os.open(str(partial), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     try:
         with os.fdopen(fd, "wb") as handle:
             handle.write(data)

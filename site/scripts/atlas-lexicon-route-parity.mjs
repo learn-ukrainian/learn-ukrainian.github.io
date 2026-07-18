@@ -226,7 +226,16 @@ function prepareSiteCopy({ label, sourceSite, lemmaFilesFrom, outDir, nodeModule
             : name.includes("stats")
               ? "{}"
               : "[]";
-      writeFileSync(dest, fallback);
+      try {
+        // wx: create-only — closes the existsSync→writeFileSync TOCTOU race.
+        writeFileSync(dest, fallback, { flag: "wx" });
+      } catch (err) {
+        if (err && typeof err === "object" && "code" in err && err.code === "EEXIST") {
+          // Another writer created the fixture between existsSync and write.
+          continue;
+        }
+        throw err;
+      }
     }
   }
 

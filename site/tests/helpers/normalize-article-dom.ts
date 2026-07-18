@@ -48,14 +48,15 @@ const PRESENCE_DATA_ATTRS = new Set([
 ]);
 
 function decodeEntities(text: string): string {
+  // Decode &amp; last so sequences like &amp;lt; are not double-unescaped.
   return text
     .replace(/&#x27;/gi, "'")
     .replace(/&#39;/g, "'")
     .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
 }
 
 function normalizeClassList(value: string | null): string | null {
