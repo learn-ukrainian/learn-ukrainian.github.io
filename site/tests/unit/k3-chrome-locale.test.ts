@@ -57,3 +57,70 @@ describe("atlas dictionary size headline (K3 A2)", () => {
     expect(source).toContain("слів");
   });
 });
+
+describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
+  const practiceSource = readFileSync(
+    resolve(process.cwd(), "src/pages/words-of-the-day/practice.astro"),
+    "utf8",
+  );
+  const lexiconPracticeSource = readFileSync(
+    resolve(process.cwd(), "src/components/LexiconPractice.tsx"),
+    "utf8",
+  );
+  const dailyDeckSource = readFileSync(
+    resolve(process.cwd(), "src/components/PracticeDailyDeck.tsx"),
+    "utf8",
+  );
+
+  test("practice.astro contains the frozen K3 grid with the filler row", () => {
+    expect(practiceSource).toContain(".k3-practice-dashboard {");
+    expect(practiceSource).toContain('grid-area: hero;');
+    expect(practiceSource).toContain('grid-area: stats;');
+    expect(practiceSource).toContain('grid-area: session;');
+    expect(practiceSource).toContain('grid-area: words;');
+    expect(practiceSource).toContain('grid-area: focus;');
+    expect(practiceSource).toContain('grid-area: modes;');
+    expect(practiceSource).toMatch(/"\.\s+words"/);
+  });
+
+  test("practice.astro removed the superseded static intro", () => {
+    expect(practiceSource).not.toContain('<div class="lexicon-practice-intro">');
+    expect(practiceSource).not.toContain('lexicon-practice-intro h1');
+  });
+
+  test("practice.astro no longer neutralizes canonical flashcard colors", () => {
+    const flashcardBlock = practiceSource.match(/:global\(\.lexicon-practice-stage \.flashcard[^}]+\}/g) ?? [];
+    for (const block of flashcardBlock) {
+      expect(block).not.toMatch(/background\s*:\s*[^;]+important/);
+      expect(block).not.toMatch(/border\s*:\s*none/);
+    }
+  });
+
+  test("LexiconPractice renders dashboard areas in the frozen mobile DOM order", () => {
+    const heroIndex = lexiconPracticeSource.indexOf('className="k3-hero"');
+    const statsIndex = lexiconPracticeSource.indexOf('className="k3-stats"');
+    const sessionIndex = lexiconPracticeSource.indexOf('className="k3-session"');
+    const wordsIndex = lexiconPracticeSource.indexOf('className="k3-words"');
+    const focusIndex = lexiconPracticeSource.indexOf('className="k3-focus"');
+    const modesIndex = lexiconPracticeSource.indexOf('className="k3-modes"');
+    expect(heroIndex).toBeGreaterThan(0);
+    expect(statsIndex).toBeGreaterThan(heroIndex);
+    expect(sessionIndex).toBeGreaterThan(statsIndex);
+    expect(wordsIndex).toBeGreaterThan(sessionIndex);
+    expect(focusIndex).toBeGreaterThan(wordsIndex);
+    expect(modesIndex).toBeGreaterThan(focusIndex);
+  });
+
+  test("mode chooser exposes all 11 modes with no icons", () => {
+    expect(lexiconPracticeSource).toContain('MODE_CARD_ORDER.map');
+    expect(lexiconPracticeSource).not.toContain('className="mode-card');
+    expect(lexiconPracticeSource).not.toMatch(/mc-ico|ModeIcon|svg.*mode/i);
+  });
+
+  test("daily deck uses native details with aria-expanded and encoded Atlas links", () => {
+    expect(dailyDeckSource).toContain('<details');
+    expect(dailyDeckSource).toContain('aria-expanded={detailsOpen}');
+    expect(dailyDeckSource).toContain('atlasLemmaHref(row.item.lemmaId)');
+    expect(dailyDeckSource).toContain('atlasLemmaHref(currentLemmaId)');
+  });
+});

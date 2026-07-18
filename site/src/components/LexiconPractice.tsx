@@ -1,15 +1,21 @@
 import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MatchUp from './MatchUp';
+import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
 import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
+import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
+import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import {
   DEFAULT_NEW_PER_DAY,
+  DAILY_PRACTICE_DECK_KEY,
   PUBLISHED_PRACTICE_LEVELS,
   SRS_STORAGE_FULL_WARNING,
+  buildDailyPracticeDeckSnapshot,
   buildSessionPoolConstraintState,
   clearPracticeSessionSnapshots,
   combinePracticeShards,
+  deriveDailyPracticeRows,
   extendWithLowerDecks,
   itemIdPresentInDeck,
   computeSessionScope,
@@ -25,6 +31,8 @@ import {
   parseCardKey,
   previewRatingIntervals,
   rateCard,
+  readDailyPracticeDeckSnapshot,
+  refillDailyPracticeDeckSnapshot,
   resolveSessionCompletion,
   readNewCardsDailyState,
   readPracticeSessionSnapshots,
@@ -33,9 +41,11 @@ import {
   sessionPoolAllowsCandidate,
   uaPlural,
   validateClozeOptions,
+  writeDailyPracticeDeckSnapshot,
   writeNewCardsDailyState,
   writePracticeSessionSnapshot,
   type ChoicePolarity,
+  type DailyPracticeDeckSnapshot,
   type PracticeClozeItem,
   type PracticeDeckData,
   type PracticeHeritageItem,
@@ -126,17 +136,6 @@ const PRACTICE_RETRY_EN = 'Try again';
 const PRACTICE_POOL_MISS_UK = 'Це слово ще не в тренажері.';
 const PRACTICE_POOL_MISS_EN = 'This word is not in the practice pool yet.';
 
-const SESSION_LABELS_A1: Record<string, string> = {
-  startSession: 'Start session',
-  continueSession: 'Continue session',
-  focusPractice: 'Focus practice',
-  budget10: 'Quick (10)',
-  budget20: 'Standard (20)',
-  budgetZero: 'Until clear',
-  newToday: 'New today',
-  dueReviews: 'Due for review',
-};
-
 function makePracticeSessionSeed(): number {
   return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
 }
@@ -156,6 +155,16 @@ const CASE_GLOSSES: Record<string, string> = {
   'середній': 'neuter',
   'рід': 'gender',
   'відмінок': 'case',
+};
+
+const CASE_LABELS_UK: Record<string, string> = {
+  nominative: 'називний',
+  genitive: 'родовий',
+  dative: 'давальний',
+  accusative: 'знахідний',
+  instrumental: 'орудний',
+  locative: 'місцевий',
+  vocative: 'кличний',
 };
 
 function translateGrammarTerm(ukLabel: string): string {
@@ -192,21 +201,6 @@ function translateGrammarTerm(ukLabel: string): string {
   });
 
   return translatedParts.join(', ');
-}
-
-function translateWeaknessLabel(weakness: WeakArea): string {
-  if (weakness.dimension === 'case') {
-    return translateGrammarTerm(weakness.label);
-  }
-  if (weakness.dimension === 'mode') {
-    const modeMeta = MODE_META[weakness.key as VisiblePracticeModeFilter];
-    return modeMeta ? modeMeta.en : weakness.key;
-  }
-  if (weakness.dimension === 'heritage') {
-    if (weakness.key === 'lexical') return 'lexical heritage';
-    if (weakness.key === 'sense_restricted') return 'sense-restricted';
-  }
-  return weakness.key;
 }
 
 function translateStorageWarning(warning: string | null): { uk: string; en: string } | null {
@@ -531,83 +525,6 @@ function cardData(entry: PracticeLexeme) {
     tag: entry.cefr ?? undefined,
     tagColor: heritageTagColor(entry.heritage),
   };
-}
-
-function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
-  if (mode === 'matching') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M8.5 7.5h7" />
-        <path d="M8.5 16.5h7" />
-        <circle cx="5" cy="7.5" r="2" />
-        <circle cx="19" cy="7.5" r="2" />
-        <circle cx="5" cy="16.5" r="2" />
-        <circle cx="19" cy="16.5" r="2" />
-      </svg>
-    );
-  }
-
-  if (mode === 'choice') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M5 6.5h14" />
-        <path d="M5 12h14" />
-        <path d="M5 17.5h8" />
-        <path d="m15.5 16.5 1.7 1.7 3.3-3.9" />
-      </svg>
-    );
-  }
-
-  if (mode === 'cloze') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M4 7h7" />
-        <path d="M15 7h5" />
-        <path d="M4 17h16" />
-        <path d="M12.5 7h1" />
-        <path d="M10 13h4" />
-      </svg>
-    );
-  }
-
-  if (mode === 'paronym') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M9 3H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4" />
-        <path d="M15 21h4a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4" />
-        <path d="M9 10h6" />
-        <path d="M9 14h6" />
-      </svg>
-    );
-  }
-
-  if (mode === 'heritage') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 4 5 7.5v5.2c0 3.9 2.6 6.2 7 7.3 4.4-1.1 7-3.4 7-7.3V7.5L12 4Z" />
-        <path d="M9 12.2 11.1 14l4-4.6" />
-      </svg>
-    );
-  }
-
-  if (mode === 'mixed') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M7 4h8l2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
-        <path d="M15 4v4h4" />
-        <path d="M8 11h8" />
-        <path d="M8 15h5" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <rect x="6" y="5" width="12" height="14" rx="2" />
-      <path d="M9 9h6" />
-      <path d="M9 13h4" />
-    </svg>
-  );
 }
 
 function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
@@ -936,22 +853,6 @@ function sessionScopeIndexForMode(
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
 
-function shouldShowFocusModeCard(
-  practiceMode: VisiblePracticeModeFilter,
-  deck: PracticeDeckData | null,
-  indexForStats: PracticeIndexItem[],
-): boolean {
-  if (practiceMode === 'heritage') {
-    if (deck) return (deck.heritage?.length ?? 0) > 0;
-    return indexForStats.some((item) => item.modes.includes('heritage'));
-  }
-  if (practiceMode === 'paronym') {
-    if (deck) return (deck.paronym?.length ?? 0) > 0;
-    return indexForStats.some((item) => item.modes.includes('paronym'));
-  }
-  return true;
-}
-
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
 function readLearnerLevel(fallback: CefrLevel): CefrLevel {
   if (typeof window === 'undefined') return fallback;
@@ -984,6 +885,11 @@ function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckDa
   const [first, ...rest] = decks;
   const base = { ...first, level };
   return extendWithLowerDecks(base, rest);
+}
+
+/** Encode an Atlas lemma route from the verified lemmaId. */
+function atlasLemmaHref(lemmaId: string): string {
+  return `/lexicon/${encodeURIComponent(lemmaId)}/`;
 }
 
 /** Resolve either a practice item id or the bare lemma that Atlas links provide. */
@@ -1150,6 +1056,10 @@ function LexiconPracticeIsland({
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
+  const [dailySnapshot, setDailySnapshot] = useState<DailyPracticeDeckSnapshot | null>(null);
+  const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
+  const [dailySnapshotLoading, setDailySnapshotLoading] = useState(false);
+  const [hoveredMode, setHoveredMode] = useState<VisiblePracticeModeFilter | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
@@ -1355,6 +1265,97 @@ function LexiconPracticeIsland({
     };
   }, [deck, learnerLevel, shardBaseUrl]);
 
+  // Build or restore the versioned daily 20-lemma snapshot for the idle dashboard.
+  // Loads lexeme cores only for the levels represented in the selected IDs so the
+  // preview rows have verified lemma/gloss/pos data without pulling every shard.
+  useEffect(() => {
+    if (sessionPhase !== 'idle') return;
+    const indexSource = deck?.index ?? dueIndex ?? [];
+    if (indexSource.length === 0) return;
+
+    let cancelled = false;
+    setDailySnapshotLoading(true);
+
+    void (async () => {
+      try {
+        const now = new Date();
+        const dateKey = todayKey(now);
+        const state = loadState();
+
+        // Determine the generated deck version from the available source. When a full
+        // deck is loaded, use its version; otherwise read the first index shard's meta.
+        let deckVersion = deck?.deckVersion ?? '';
+        if (!deckVersion) {
+          const firstLevel = levelsUpTo(learnerLevel)[0];
+          if (firstLevel) {
+            try {
+              const shard = await getShardJson<PracticeIndexShard>(
+                `${shardBaseUrl}/practice-index.${firstLevel}.json`,
+                shardJsonCacheRef.current,
+              );
+              deckVersion = shard.deckVersion ?? '';
+            } catch {
+              deckVersion = '';
+            }
+          }
+        }
+
+        const snapshot =
+          deckVersion
+            ? refillDailyPracticeDeckSnapshot(
+                readDailyPracticeDeckSnapshot(undefined, dateKey, learnerLevel),
+                indexSource,
+                state.cards,
+                { date: dateKey, level: learnerLevel, deckVersion, now },
+              )
+            : buildDailyPracticeDeckSnapshot(indexSource, state.cards, {
+                level: learnerLevel,
+                deckVersion: deckVersion || 'unknown',
+                date: dateKey,
+                now,
+              });
+
+        if (cancelled) return;
+        setDailySnapshot(snapshot);
+        writeDailyPracticeDeckSnapshot(snapshot);
+
+        // Fetch lexeme cores only for levels represented in the snapshot IDs.
+        const representedLevels = new Set(
+          snapshot.items
+            .map((item) => indexSource.find((i) => i.lemmaId === item.lemmaId)?.cefr)
+            .filter((cefr): cefr is string => Boolean(cefr)),
+        );
+        const levelEntries = await Promise.all(
+          Array.from(representedLevels).map(async (level) => {
+            try {
+              const shard = await getShardJson<PracticeLexemeShard>(
+                `${shardBaseUrl}/practice-lexemes.${level}.json`,
+                shardJsonCacheRef.current,
+              );
+              return shard.lexemes ?? [];
+            } catch {
+              return [];
+            }
+          }),
+        );
+
+        if (cancelled) return;
+        const merged = new Map<string, PracticeLexeme>();
+        for (const entry of levelEntries.flat()) {
+          merged.set(entry.lemmaId, entry);
+        }
+        setDailyLexemes(merged);
+      } catch {
+        if (!cancelled) setDailySnapshot(null);
+      } finally {
+        if (!cancelled) setDailySnapshotLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [deck?.index, deck?.deckVersion, dueIndex, learnerLevel, sessionPhase, shardBaseUrl]);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
@@ -2206,6 +2207,46 @@ function LexiconPracticeIsland({
         : null,
     [dailyNewCount, indexForStats, sessionBudget],
   );
+  const dailyRows = useMemo(
+    () =>
+      dailySnapshot
+        ? deriveDailyPracticeRows(dailySnapshot, null, reviewLog, new Date())
+        : { pendingDue: [], pendingNew: [], done: [] },
+    [dailySnapshot, reviewLog],
+  );
+  const focusCue = useMemo(() => {
+    const pending = [...dailyRows.pendingDue, ...dailyRows.pendingNew];
+    if (pending.length === 0) return null;
+
+    const weakCases = weakCaseChips(reviewLog);
+    for (const weakness of weakCases) {
+      for (const row of pending) {
+        const lexeme = dailyLexemes.get(row.item.lemmaId);
+        if (!lexeme) continue;
+        const forms = lexeme.paradigm?.cases?.[weakness.key];
+        const form = forms?.singular ?? forms?.plural ?? '';
+        if (form && form !== lexeme.lemma) {
+          return { lemmaId: row.item.lemmaId, caseLabel: weakness.label, form };
+        }
+      }
+    }
+
+    for (const row of pending) {
+      const lexeme = dailyLexemes.get(row.item.lemmaId);
+      if (!lexeme) continue;
+      const cases = lexeme.paradigm?.cases ?? {};
+      for (const caseKey of Object.keys(cases)) {
+        if (caseKey === 'nominative') continue;
+        const forms = cases[caseKey];
+        const form = forms?.singular ?? forms?.plural ?? '';
+        if (form && form !== lexeme.lemma) {
+          return { lemmaId: row.item.lemmaId, caseLabel: CASE_LABELS_UK[caseKey] ?? caseKey, form };
+        }
+      }
+    }
+
+    return null;
+  }, [dailyLexemes, dailyRows, reviewLog]);
   const todayDenominator = useMemo(
     () =>
       indexForStats.length
@@ -2305,7 +2346,7 @@ function LexiconPracticeIsland({
       )}
 
       {sessionPhase === 'idle' && (
-        <div className="lexicon-practice-home">
+        <>
           {focusedLemmaId && (
             <div
               className="focused-lemma-banner"
@@ -2351,298 +2392,226 @@ function LexiconPracticeIsland({
               </button>
             </div>
           )}
-          <div className="lexicon-practice-progress" role="group" aria-label={showEnglishSubtitles ? "Сьогоднішній прогрес / Today's progress" : "Сьогоднішній прогрес"}>
-            <div
-              className="pstat streak"
-              aria-label={showEnglishSubtitles ? `${streak.current} поспіль / ${streak.current} day streak` : `${streak.current} поспіль`}
-            >
-              <span className="val">🔥 {streak.current}</span>
-              <span className="lab">
-                <span lang="uk">Днів поспіль</span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en">/ Days streak</span>
-                ) : null}
-              </span>
-            </div>
-            <div className="pstat" aria-label={showEnglishSubtitles ? `${dueReviews} до повторення / ${dueReviews} due for review` : `${dueReviews} до повторення`}>
-              <span className="val">{indexForStats.length ? dueReviews : '—'}</span>
-              <span className="lab">
-                <span lang="uk">До повторення</span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en">/ Due for review</span>
-                ) : null}
-              </span>
-              {showEnglishSubtitles ? (
-                <span className="lab-sub" lang="en">{SESSION_LABELS_A1.dueReviews}</span>
-              ) : null}
-            </div>
-            <div className="pstat" aria-label={showEnglishSubtitles ? `Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY} / New today ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}` : `Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}`}>
-              <span className="val">
-                {dailyNewCount}/{DEFAULT_NEW_PER_DAY}
-              </span>
-              <span className="lab">
-                <span lang="uk">Нові сьогодні</span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en">/ New today</span>
-                ) : null}
-              </span>
-              {showEnglishSubtitles ? (
-                <span className="lab-sub" lang="en">{SESSION_LABELS_A1.newToday}</span>
-              ) : null}
-            </div>
-            <div className="pstat today">
-              <div
-                className="ring"
-                role="img"
-                aria-label={showEnglishSubtitles ? `Сьогодні виконано ${completedToday} із ${todayDenominator} / Completed today ${completedToday} of ${todayDenominator}` : `Сьогодні виконано ${completedToday} із ${todayDenominator}`}
-                style={todayRingStyle}
-                data-testid="practice-today-ring"
-              >
-                <b>
-                  {completedToday}/{todayDenominator}
-                </b>
-              </div>
-              <div>
-                <span className="lab">
-                  <span lang="uk">Сьогодні</span>
-                  {showEnglishSubtitles ? (
-                    <span className="btn-sub" lang="en">/ Today</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-          </div>
 
-          <div className="lexicon-practice-session-start">
-            {homeScope ? (
-              <p className="lexicon-session-scope" data-testid="practice-session-scope">
-                <span lang="uk">
-                  {homeScope.dueReviews} до повторення + {homeScope.plannedNew} нових ≈{' '}
-                  {homeScope.estimatedMinutes} хв
-                </span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                    / {homeScope.dueReviews} due + {homeScope.plannedNew} new ≈ {homeScope.estimatedMinutes} min
-                  </span>
-                ) : null}
+          <div className="k3-practice-dashboard">
+            <div className="k3-hero">
+              <h1><ChromeText k="practice.heroTitle" /></h1>
+              <p className="k3-hero-subtitle"><ChromeText k="practice.heroSubtitle" /></p>
+              <p className="k3-hero-epigraph" lang="uk">
+                «Мова — це серце народу: гине мова — гине народ» — Іван Огієнко
               </p>
-            ) : null}
-            <div className="lexicon-session-budgets" role="group" aria-label={showEnglishSubtitles ? "Розмір сесії / Session size" : "Розмір сесії"}>
-              {([10, 20, 'until-zero'] as const).map((budget) => (
-                <button
-                  key={String(budget)}
-                  type="button"
-                  className={sessionBudget === budget ? 'active' : ''}
-                  aria-pressed={sessionBudget === budget}
-                  data-testid={`practice-session-budget-${budget === 'until-zero' ? 'until-zero' : budget}`}
-                  aria-label={
-                    budget === 10
-                      ? (showEnglishSubtitles ? '10 карток на сесію / 10 cards per session' : '10 карток на сесію')
-                      : budget === 20
-                        ? (showEnglishSubtitles ? '20 карток на сесію / 20 cards per session' : '20 карток на сесію')
-                        : (showEnglishSubtitles ? 'до нуля / Until clear' : 'до нуля')
-                  }
-                  onClick={() => setSessionBudget(budget)}
-                >
-                  {budget === 10 ? '10' : budget === 20 ? '20' : (
-                    <>
-                      <span lang="uk">до нуля</span>
-                      {showEnglishSubtitles ? (
-                        <span className="btn-sub" lang="en">/ clear</span>
-                      ) : null}
-                    </>
-                  )}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="btn btn-accent lexicon-session-primary"
-              data-testid="practice-start-session"
-              disabled={loading}
-              onClick={() => {
-                setFocusWeakness(null);
-                void startSession(sessionBudget, 'mixed');
-              }}
-            >
-              <span lang="uk">Почати сесію</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en">{SESSION_LABELS_A1.startSession}</span>
-              ) : null}
-            </button>
-            {resumeSnapshots.mixed ? (
-              <button
-                type="button"
-                className="btn lexicon-session-resume"
-                data-testid="practice-resume-session"
-                data-resume-mode="mixed"
-                onClick={() => void resumeSession('mixed')}
-              >
-                <span lang="uk">
-                  Продовжити сесію «Мікс» ({resumeSnapshots.mixed.completed}/
-                  {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
-                </span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en">
-                    {SESSION_LABELS_A1.continueSession} "Mixed" ({resumeSnapshots.mixed.completed}/
-                    {resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})
-                  </span>
-                ) : null}
-              </button>
-            ) : null}
-          </div>
 
-          <div className="lexicon-practice-levels">
-            <div
-              className="lexicon-practice-levels-row"
-              role="group"
-              aria-label={showEnglishSubtitles ? "Рівень учня — практика охоплює цей рівень і нижчі / Learner level — practice covers this level and lower" : "Рівень учня — практика охоплює цей рівень і нижчі"}
-            >
-              <span className="lexicon-practice-levels-label">
-                <span lang="uk">Рівень</span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en">/ Level</span>
-                ) : null}
-              </span>
-              {CEFR_LEVELS.map((level) => {
-                const published = publishedLevels.has(level);
-                return (
-                  <button
-                    type="button"
-                    key={level}
-                    className={learnerLevel === level ? 'active' : ''}
-                    aria-pressed={learnerLevel === level}
-                    disabled={!published}
-                    title={published ? undefined : (showEnglishSubtitles ? 'скоро / coming soon' : 'скоро')}
-                    onClick={() => void changeLevel(level)}
-                  >
-                    {level}
-                    {!published ? (
-                      <span className="level-soon">
-                        <span lang="uk">скоро</span>
-                        {showEnglishSubtitles ? (
-                          <span className="btn-sub" lang="en">/ soon</span>
-                        ) : null}
-                      </span>
-                    ) : null}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="lexicon-practice-muted lexicon-practice-levels-hint">
-              <span lang="uk">Практика обмежена вашим рівнем і нижчими (накопичувально).</span>
-              {showEnglishSubtitles ? (
-                <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.85em', marginTop: '4px' }}>
-                  / Practice is limited to your level and lower (cumulative).
-                </span>
-              ) : null}
-            </p>
-          </div>
-
-          {weakChips.length > 0 ? (
-            <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
-              <h3>
-                <span lang="uk">Ваші слабкі відмінки</span>
-                {showEnglishSubtitles ? (
-                  <span className="btn-sub" lang="en" style={{ display: 'block', fontSize: '0.7em', fontWeight: 'normal', color: 'var(--lu-text-muted)', marginTop: '2px' }}>
-                    / Your weak cases
-                  </span>
-                ) : null}
-              </h3>
               <div
-                className="lexicon-weak-chips"
+                className="k3-levels"
                 role="group"
-                aria-label={showEnglishSubtitles ? "Ваші слабкі відмінки — почати фокусне тренування / Your weak cases — start focus practice" : "Ваші слабкі відмінки — почати фокусне тренування"}
+                aria-label={CHROME_STRINGS[chromeLocale]['practice.level']}
               >
-                {weakChips.map((weakness) => (
+                <span className="k3-levels-label"><ChromeText k="practice.level" /></span>
+                {CEFR_LEVELS.map((level) => {
+                  const published = publishedLevels.has(level);
+                  return (
+                    <button
+                      type="button"
+                      key={level}
+                      className={learnerLevel === level ? 'active' : ''}
+                      aria-pressed={learnerLevel === level}
+                      disabled={!published}
+                      title={published ? undefined : CHROME_STRINGS[chromeLocale]['practice.c2Soon']}
+                      onClick={() => void changeLevel(level)}
+                    >
+                      {level}
+                      {!published ? (
+                        <span className="k3-level-soon"><ChromeText k="practice.c2Soon" /></span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="k3-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
+              <div className="k3-stat">
+                <span className="k3-stat-value">{dueReviews}</span>
+                <span className="k3-stat-label"><ChromeText k="practice.statusDue" /></span>
+              </div>
+              <div className="k3-stat">
+                <span className="k3-stat-value">{dailyRows.pendingNew.length}</span>
+                <span className="k3-stat-label"><ChromeText k="practice.statusNew" /></span>
+              </div>
+              <div className="k3-stat">
+                <span className="k3-stat-value">{dailyRows.done.length}</span>
+                <span className="k3-stat-label"><ChromeText k="practice.statusDone" /></span>
+              </div>
+              <div className="k3-stat">
+                <span className="k3-stat-value">🔥 {streak.current}</span>
+                <span className="k3-stat-label"><ChromeText k="practice.streak" /></span>
+              </div>
+            </div>
+
+            <div className="k3-session">
+              {homeScope ? (
+                <p className="k3-session-scope" data-testid="practice-session-scope">
+                  <ChromeDual
+                    uk={`${homeScope.dueReviews} до повторення + ${homeScope.plannedNew} нових ≈ ${homeScope.estimatedMinutes} хв`}
+                    en={`${homeScope.dueReviews} due + ${homeScope.plannedNew} new ≈ ${homeScope.estimatedMinutes} min`}
+                  />
+                </p>
+              ) : null}
+              <div
+                className="k3-session-budgets"
+                role="group"
+                aria-label={CHROME_STRINGS[chromeLocale]['practice.sessionTitle']}
+              >
+                {([10, 20, 'until-zero'] as const).map((budget) => (
                   <button
+                    key={String(budget)}
                     type="button"
-                    key={`${weakness.dimension}:${weakness.key}`}
-                    className="lexicon-weak-chip"
-                    data-testid={`practice-weak-chip-${weakness.key}`}
-                    onClick={() => void startWeakAreaFocus(weakness)}
+                    className={sessionBudget === budget ? 'active' : ''}
+                    aria-pressed={sessionBudget === budget}
+                    data-testid={`practice-session-budget-${budget === 'until-zero' ? 'until-zero' : budget}`}
+                    onClick={() => setSessionBudget(budget)}
                   >
-                    <span lang="uk">{weakness.label}</span>
-                    {showEnglishSubtitles ? (
-                      <span className="btn-sub" lang="en">
-                        / {translateWeaknessLabel(weakness)}
-                      </span>
-                    ) : null}
+                    <ChromeText
+                      k={
+                        budget === 10
+                          ? 'practice.sessionSize10'
+                          : budget === 20
+                            ? 'practice.sessionSize20'
+                            : 'practice.sessionSizeUntilZero'
+                      }
+                    />
                   </button>
                 ))}
               </div>
-            </div>
-          ) : null}
-
-          <div className="lexicon-focus-practice">
-            <h3>
-              <span lang="uk">Фокус-практика</span>
-              {showEnglishSubtitles ? (
-                <span className="heading-sub" lang="en">{SESSION_LABELS_A1.focusPractice}</span>
+              <button
+                type="button"
+                className="btn btn-accent k3-session-primary"
+                data-testid="practice-start-session"
+                disabled={loading}
+                onClick={() => {
+                  setFocusWeakness(null);
+                  void startSession(sessionBudget, 'mixed');
+                }}
+              >
+                <ChromeText k={resumeSnapshots.mixed ? 'practice.sessionResume' : 'practice.sessionStart'} />
+              </button>
+              {resumeSnapshots.mixed ? (
+                <button
+                  type="button"
+                  className="btn k3-session-resume"
+                  data-testid="practice-resume-session"
+                  data-resume-mode="mixed"
+                  onClick={() => void resumeSession('mixed')}
+                >
+                  <ChromeDual
+                    uk={`Продовжити «Мікс» (${resumeSnapshots.mixed.completed}/${resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})`}
+                    en={`Resume "Mixed" (${resumeSnapshots.mixed.completed}/${resumeSnapshots.mixed.plannedTotal ?? resumeSnapshots.mixed.budget})`}
+                  />
+                </button>
               ) : null}
-            </h3>
-            <div className="mode-grid mode-grid-focus">
-              {MODE_CARD_ORDER.filter(
-                (practiceMode) =>
-                  practiceMode !== 'mixed' &&
-                  shouldShowFocusModeCard(practiceMode, deck, indexForStats),
-              ).map((practiceMode) => {
-                const meta = MODE_META[practiceMode];
-                const resumeSnapshot = resumeSnapshots[practiceMode];
-                return (
-                  <div className="mode-card-stack" key={practiceMode}>
-                    <button
-                      type="button"
-                      className="mode-card"
-                      data-mode={practiceMode}
-                      data-accent={meta.accent}
-                      onClick={() => void startFocusMode(practiceMode)}
-                    >
-                      <div className="mc-top">
-                        <span className="mc-ico">
-                          <ModeIcon mode={practiceMode} />
-                        </span>
-                        <span>
-                          <span className="mc-title">{meta.title}</span>
-                          {showEnglishSubtitles ? <span className="mc-en" lang="en">{meta.en}</span> : null}
-                        </span>
+            </div>
+
+            <div className="k3-words">
+              {dailySnapshotLoading || !dailySnapshot ? (
+                <div className="practice-daily-deck k3-words-loading" data-testid="practice-daily-deck-loading">
+                  <div className="daily-deck-header">
+                    <h2><ChromeText k="practice.wordsTitle" /></h2>
+                  </div>
+                  <div className="daily-deck-preview-shell">
+                    <div className="flashcard daily-preview-card">
+                      <div className="flashcard-inner">
+                        <div className="flashcard-front">
+                          <span className="flashcard-word">—</span>
+                        </div>
                       </div>
-                      <span className="mc-desc">
-                        <span lang="uk" style={{ display: 'block' }}>{meta.description}</span>
-                        {showEnglishSubtitles && meta.descriptionEn ? (
-                          <span lang="en" style={{ display: 'block', color: 'var(--lu-text-muted)', fontSize: '0.82rem', marginTop: '0.25rem' }}>
-                            {meta.descriptionEn}
-                          </span>
-                        ) : null}
-                      </span>
-                    </button>
-                    {resumeSnapshot ? (
+                    </div>
+                  </div>
+                  <details className="daily-deck-details">
+                    <summary><ChromeText k="practice.showWords" /></summary>
+                  </details>
+                </div>
+              ) : (
+                <PracticeDailyDeck
+                  snapshot={dailySnapshot}
+                  rows={dailyRows}
+                  lexemes={dailyLexemes}
+                  atlasLemmaHref={atlasLemmaHref}
+                  chromeLocale={chromeLocale}
+                />
+              )}
+            </div>
+
+            <div className="k3-focus">
+              <h2><ChromeText k="practice.focusTitle" /></h2>
+              {weakChips.length > 0 ? (
+                <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
+                  <div
+                    className="lexicon-weak-chips"
+                    role="group"
+                    aria-label={CHROME_STRINGS[chromeLocale]['practice.focusTitle']}
+                  >
+                    {weakChips.map((weakness) => (
                       <button
                         type="button"
-                        className="btn mode-card-resume"
-                        data-resume-mode={practiceMode}
-                        onClick={() => void resumeSession(practiceMode)}
+                        key={`${weakness.dimension}:${weakness.key}`}
+                        className="lexicon-weak-chip"
+                        data-testid={`practice-weak-chip-${weakness.key}`}
+                        onClick={() => void startWeakAreaFocus(weakness)}
                       >
-                        <span lang="uk">
-                          Продовжити ({resumeSnapshot.completed}/
-                          {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
-                        </span>
-                        {showEnglishSubtitles ? (
-                          <span className="btn-sub" lang="en">
-                            {SESSION_LABELS_A1.continueSession} ({resumeSnapshot.completed}/
-                            {resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
-                          </span>
-                        ) : null}
+                        {weakness.label}
                       </button>
-                    ) : null}
+                    ))}
                   </div>
-                );
-              })}
+                </div>
+              ) : null}
+              {focusCue ? (
+                <a href={atlasLemmaHref(focusCue.lemmaId)} className="k3-focus-link">
+                  <span className="k3-focus-case">{focusCue.caseLabel}</span>
+                  <span className="k3-focus-form">{focusCue.form}</span>
+                </a>
+              ) : (
+                <span className="k3-focus-empty" aria-hidden="true" />
+              )}
+            </div>
+
+            <div className="k3-modes">
+              <h2><ChromeText k="practice.modesTitle" /></h2>
+              <p id="mode-detail-line" aria-live="polite" className="k3-mode-detail">
+                {chromeLocale === 'uk'
+                  ? MODE_META[hoveredMode ?? 'mixed'].description
+                  : MODE_META[hoveredMode ?? 'mixed'].descriptionEn}
+              </p>
+              <div
+                className="k3-mode-grid"
+                role="group"
+                aria-label={CHROME_STRINGS[chromeLocale]['practice.modesTitle']}
+              >
+                {MODE_CARD_ORDER.map((practiceMode) => {
+                  const meta = MODE_META[practiceMode];
+                  return (
+                    <button
+                      key={practiceMode}
+                      type="button"
+                      className="k3-mode-card"
+                      data-mode={practiceMode}
+                      data-accent={meta.accent}
+                      aria-describedby="mode-detail-line"
+                      onMouseEnter={() => setHoveredMode(practiceMode)}
+                      onMouseLeave={() => setHoveredMode(null)}
+                      onFocus={() => setHoveredMode(practiceMode)}
+                      onBlur={() => setHoveredMode(null)}
+                      onClick={() => void startFocusMode(practiceMode)}
+                    >
+                      <span className="k3-mode-title">{chromeLocale === 'uk' ? meta.title : meta.en}</span>
+                      <span className="k3-mode-step">{chromeLocale === 'uk' ? meta.step : meta.stepEn}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
-
       {loading && (
         <p className="lexicon-practice-muted">
           <span lang="uk">Завантажуємо…</span>
@@ -3149,7 +3118,7 @@ function PracticeParonym({
           </p>
           <div style={{ marginTop: '0.4rem' }}>
             <a
-              href={`/lexicon/${item.lemmaId}/`}
+              href={atlasLemmaHref(item.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Відкрити в Атласі (нова вкладка)"
@@ -3235,7 +3204,7 @@ function PracticeHeritage({
           ) : null}
           <div style={{ marginTop: '0.4rem' }}>
             <a
-              href={`/lexicon/${item.lemmaId}/`}
+              href={atlasLemmaHref(item.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Відкрити в Атласі (нова вкладка)"
@@ -3392,7 +3361,7 @@ function PracticeCloze({
           </p>
           <div style={{ marginTop: '0.4rem' }}>
             <a
-              href={`/lexicon/${selection.lemma.lemmaId}/`}
+              href={atlasLemmaHref(selection.lemma.lemmaId)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Відкрити в Атласі (нова вкладка)"
