@@ -2986,18 +2986,21 @@ function PracticeItem({
         </p>
       );
     }
-    const promptedPair = matchingPromptIndex === null ? null : pairs[matchingPromptIndex] ?? null;
+    const matchedCount = matchedPairIndexesRef.current.size;
+    const totalPairs = pairs.length;
     return (
       <div data-testid="practice-matching">
         <MatchUp
           key={selection.cardKey}
           pairs={pairs}
-          instruction={promptedPair ? (
-            showEnglishSubtitles
-              ? `Доберіть пару для «${promptedPair.left}» / Match the pair for «${promptedPair.left}»`
-              : `Доберіть пару для «${promptedPair.left}»`
-          ) : undefined}
+          instruction={(
+            <ChromeDual
+              uk={`Доберіть пари · ${matchedCount} з ${totalPairs}`}
+              en={`Match pairs · ${matchedCount} of ${totalPairs}`}
+            />
+          )}
           isUkrainian={!showEnglishSubtitles}
+          matchedPairCoding="semantic-four"
           onComplete={onMatchingComplete}
           onMatch={(pairIndex, rating) => {
             matchedPairIndexesRef.current.add(pairIndex);

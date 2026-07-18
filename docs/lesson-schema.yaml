@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: b54868bbd39a28b9884b3aaa5d9707dc94c9e93e5c670a154295e688b0f2b96d
+  components_sha256: f02c5f4b3e40d3f56b07dad41e0aaefd5e1baba47c5a41a48ecd2e864df9dbc0
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1164,7 +1164,7 @@ components:
         ukrainian_text: 'true'
       optional:
       - name: instruction
-        type: string
+        type: jsx
         description: Instruction shown to the learner above the activity.
         ukrainian_text: 'true'
       - name: isUkrainian
@@ -1172,6 +1172,10 @@ components:
         description: UI language flag for Ukrainian labels and feedback.
         ukrainian_text: 'false'
         default: false
+      - name: matchedPairCoding
+        type: '''semantic-four'''
+        description: Optional practice-only pair-coding mode.
+        ukrainian_text: 'false'
       - name: onComplete
         type: () => void
         description: onComplete prop.
@@ -1197,7 +1201,7 @@ components:
     example:
       pairs:
       - <MatchPair>
-      instruction: Приклад
+      instruction: <p>Приклад вмісту.</p>
     deprecated: false
     deprecation_reason: null
   MotifFormula:
