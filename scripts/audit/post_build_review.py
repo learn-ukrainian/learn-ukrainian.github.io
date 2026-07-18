@@ -1656,6 +1656,7 @@ def _validate_quality_dimension_score(
     status: str,
     score: object,
     score_rationale: object,
+    dimension_evidence: Sequence[Mapping[str, Any]],
     referenced_findings: Sequence[Mapping[str, Any]],
 ) -> None:
     """Enforce score/status calibration from structure, never by repairing text."""
@@ -1671,7 +1672,9 @@ def _validate_quality_dimension_score(
             f"{label} and score_rationale are required when the status is {status}"
         )
     decimal_score = _decimal_score(score, label)
-    _nonempty_string(score_rationale, f"Quality dimension {dimension} score_rationale")
+    rationale = _nonempty_string(
+        score_rationale, f"Quality dimension {dimension} score_rationale"
+    )
     lower, upper, includes_upper = QUALITY_DIMENSION_SCORE_BANDS[status]
     if decimal_score < lower or decimal_score > upper or (
         decimal_score == upper and not includes_upper
@@ -1680,10 +1683,24 @@ def _validate_quality_dimension_score(
         raise ReviewProtocolError(
             f"{label} {decimal_score} is inconsistent with {status}; expected [{lower}, {upper}{upper_marker}"
         )
-    if decimal_score == Decimal("10.0") and referenced_findings:
-        raise ReviewProtocolError(
-            f"Quality dimension {dimension} score 10.0 requires no dimension findings"
-        )
+    if decimal_score == Decimal("10.0"):
+        if referenced_findings:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} score 10.0 requires no dimension findings"
+            )
+        distinct_locations = {
+            str(item.get("location") or "").strip()
+            for item in dimension_evidence
+            if str(item.get("location") or "").strip()
+        }
+        if len(distinct_locations) < 2:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} score 10.0 requires two distinct positive evidence anchors"
+            )
+        if re.search(r"\b(exceptional|винятков\w*)\b", rationale, re.IGNORECASE) is None:
+            raise ReviewProtocolError(
+                f"Quality dimension {dimension} score 10.0 requires a positive exceptional-quality rationale"
+            )
     if decimal_score < Decimal("10.0"):
         if not referenced_findings:
             raise ReviewProtocolError(
@@ -2462,6 +2479,7 @@ def normalize_semantic_result(
             status=dimension_status,
             score=raw["score"],
             score_rationale=raw["score_rationale"],
+            dimension_evidence=dimension_evidence,
             referenced_findings=referenced_findings,
         )
         if raw["score"] is not None and Decimal(str(raw["score"])) < Decimal("10.0"):
@@ -3125,6 +3143,7 @@ def _validate_normalized_quality_dimensions(
                 status=status,
                 score=assessment["score"],
                 score_rationale=assessment["score_rationale"],
+                dimension_evidence=assessment["evidence"],
                 referenced_findings=[findings_by_id[finding_id] for finding_id in finding_ids],
             )
         if status != "PASS":
@@ -3470,10 +3489,22 @@ def validate_result(
     validated_versions = {"post-build-review.result.v3", *scored_versions}
     if schema_version not in validated_versions:
         return
+    current_policy = load_track_policy(
+        repo_root / POLICY_PATH.relative_to(PROJECT_ROOT), repo_root=repo_root
+    )
+    current_score_contract = schema_version == CURRENT_RESULT_SCHEMA_VERSION and all(
+        str(result.get(field)) == str(current_policy[field])
+        for field in (
+            "review_protocol_version",
+            "deterministic_contract_version",
+            "semantic_prompt_version",
+            "track_policy_version",
+        )
+    )
     deterministic_findings = _deterministic_findings(result)
     _validate_normalized_quality_dimensions(
         result["semantic"],
-        scores_required=schema_version in scored_versions,
+        scores_required=current_score_contract,
         ownership_required=schema_version in scored_versions,
         external_findings=(
             deterministic_findings

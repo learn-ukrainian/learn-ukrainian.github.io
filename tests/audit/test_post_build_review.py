@@ -24,7 +24,10 @@ REGRESSIONS = FIXTURES / "regressions.v1.yaml"
 CORE_EXEMPLAR = FIXTURES / "core-semantic-exemplar.v1.json"
 SCORE_CALIBRATION = FIXTURES / "score-calibration.v1.yaml"
 SYNTHETIC_PATH = "tests/fixtures/post_build_review.md"
-SYNTHETIC_TEXT = "Synthetic quality-dimension evidence for the review contract.\n"
+SYNTHETIC_TEXT = (
+    "Synthetic quality-dimension evidence for the review contract.\n"
+    "A second independent anchor supports exceptional-score validation.\n"
+)
 
 
 def _synthetic_statement_inventory() -> dict:
@@ -94,36 +97,52 @@ def _finding_location(semantic: dict, dimension: str = "pedagogical") -> object:
 
 
 def _quality_dimensions(packet: dict | None = None) -> dict[str, dict[str, object]]:
-    location = f"{SYNTHETIC_PATH}:1"
-    excerpt = SYNTHETIC_TEXT.rstrip("\n")
+    evidence_rows = [
+        {
+            "location": SYNTHETIC_PATH,
+            "line": line_number,
+            "excerpt": text,
+        }
+        for line_number, text in enumerate(SYNTHETIC_TEXT.splitlines(), start=1)
+    ]
     materials = (packet or {}).get("target_materials", {})
     content_material = materials.get("content") if isinstance(materials, dict) else None
     if isinstance(content_material, dict):
         content_path = content_material["path"]
-        line = next(
-            item for item in content_material["lines"] if len(item["text"].strip()) >= 8
-        )
-        excerpt = line["text"]
-        location = f"{content_path}:{line['line']}"
+        lines = [item for item in content_material["lines"] if len(item["text"].strip()) >= 8][
+            :2
+        ]
+        assert len(lines) == 2
+        evidence_rows = [
+            {
+                "location": content_path,
+                "line": line["line"],
+                "excerpt": line["text"],
+            }
+            for line in lines
+        ]
     packet_bound = isinstance(content_material, dict)
     return {
         dimension: {
             "status": "PASS",
             "score": 10.0,
-            "score_rationale": "No evidence-backed finding identifies a gap to 10.0.",
-            "evidence": ([
+            "score_rationale": (
+                f"Two independent anchors demonstrate exceptional {dimension} quality."
+            ),
+            "evidence": [
                 {
-                    "location": location.rsplit(":", 1)[0],
-                    "line": int(location.rsplit(":", 1)[1]),
+                    **(
+                        {"location": row["location"], "line": row["line"]}
+                        if packet_bound
+                        else {
+                            "location": f"{row['location']}:{row['line']}",
+                            "excerpt": row["excerpt"],
+                        }
+                    ),
                     "supports": f"This line supports the {dimension} assessment.",
                 }
-            ] if packet_bound else [
-                {
-                    "location": location,
-                    "excerpt": excerpt,
-                    "supports": f"This line supports the {dimension} assessment.",
-                }
-            ]),
+                for row in evidence_rows
+            ],
             "finding_ids": [],
         }
         for dimension in pbr.QUALITY_DIMENSIONS
@@ -732,9 +751,9 @@ def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
         "INCOMPLETE": None,
     }
     assert calibration["score_anchors"] == {
-        "10.0": "no dimension findings",
-        "[9.0, 10.0)": "quality target with bounded low-severity headroom",
-        "[8.0, 9.0)": "release-safe with a concrete low-severity improvement",
+        "10.0": "exceptional positive quality with two independent evidence anchors and no findings",
+        "[9.0, 10.0)": "publication target with bounded low-severity improvement backlog",
+        "[8.0, 9.0)": "strong base with a material revision before publication",
         "[7.0, 8.0)": "focused material revision while most of the dimension remains strong",
         "[6.0, 7.0)": "substantial material defect requiring broader revision",
         "[4.0, 6.0)": "blocking defect with some usable evidence",
@@ -795,10 +814,12 @@ def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
 ) -> None:
     prompt = bilash_packet["semantic_prompt"]
 
-    assert "`PASS` `[8.0, 10.0]`" in prompt
-    assert "`REVISE` `[6.0, 8.0)`" in prompt
+    assert "`PASS` `[9.0, 10.0]`" in prompt
+    assert "`REVISE` `[6.0, 9.0)`" in prompt
     assert "`BLOCK` `[0.0, 6.0)`" in prompt
     assert "half-open bands" not in prompt
+    assert prompt.count('"score": 9.0') == len(pbr.QUALITY_DIMENSIONS)
+    assert '"score": 10.0' not in prompt
 
 
 @pytest.mark.parametrize(
@@ -820,7 +841,7 @@ def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
                     },
                 ),
                 semantic["quality_dimensions"]["pedagogical"].update(
-                    {"status": "REVISE", "score": 8.0, "finding_ids": ["band-mismatch"]}
+                    {"status": "REVISE", "score": 9.0, "finding_ids": ["band-mismatch"]}
                 ),
             ),
             "inconsistent with REVISE",
@@ -867,6 +888,31 @@ def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
             "score 10.0 requires no dimension findings",
         ),
         (
+            "below-publication-floor pass",
+            lambda semantic: (
+                _append_finding(
+                    semantic,
+                    {
+                        "id": "below-publication-floor",
+                        "issue_id": "BELOW_PUBLICATION_FLOOR",
+                        "category": "pedagogy",
+                        "severity": "low",
+                        "message": "The dimension remains below the publication target.",
+                        "evidence": "Synthetic evidence-backed headroom.",
+                        "location": _finding_location(semantic),
+                    },
+                ),
+                semantic["quality_dimensions"]["pedagogical"].update(
+                    {
+                        "score": 8.9,
+                        "score_rationale": "The linked gap leaves the dimension below 9.0.",
+                        "finding_ids": ["below-publication-floor"],
+                    }
+                ),
+            ),
+            "inconsistent with PASS",
+        ),
+        (
             "orphan material finding",
             lambda semantic: _append_finding(
                 semantic,
@@ -906,7 +952,7 @@ def test_invalid_dimension_scores_fail_closed_without_repair(
     )
 
 
-def test_minimum_dimension_score_is_reporting_only_not_a_disposition_input(
+def test_minimum_dimension_score_preserves_pass_backlog_without_averaging(
     bilash_packet: dict,
 ) -> None:
     baseline = pbr.finalize_review(
@@ -926,7 +972,7 @@ def test_minimum_dimension_score_is_reporting_only_not_a_disposition_input(
     )
     semantic["quality_dimensions"]["pedagogical"].update(
         {
-            "score": 8.0,
+            "score": 9.0,
             "score_rationale": "The low-severity gap prevents a 10.0 pedagogical score.",
             "finding_ids": ["reporting-only-low-gap"],
         }
@@ -934,8 +980,38 @@ def test_minimum_dimension_score_is_reporting_only_not_a_disposition_input(
 
     result = pbr.finalize_review(bilash_packet, _raw(semantic))
 
-    assert result["minimum_dimension_score"] == 8.0
+    assert result["minimum_dimension_score"] == 9.0
     assert result["combined_disposition"] == baseline["combined_disposition"]
+
+
+def test_perfect_score_requires_positive_exceptional_rationale(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    semantic["quality_dimensions"]["pedagogical"]["score_rationale"] = (
+        "No pedagogical finding identifies a gap to 10.0."
+    )
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "positive exceptional-quality rationale" in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
+
+
+def test_perfect_score_requires_two_distinct_positive_evidence_anchors(
+    bilash_packet: dict,
+) -> None:
+    semantic = _passing_semantic(bilash_packet)
+    semantic["quality_dimensions"]["pedagogical"]["evidence"] = semantic[
+        "quality_dimensions"
+    ]["pedagogical"]["evidence"][:1]
+
+    result = pbr.finalize_review(bilash_packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "two distinct positive evidence anchors" in result["semantic_response"]["error"]
+    assert result["combined_disposition"]["status"] == "INCOMPLETE"
 
 
 def test_minimum_dimension_score_mismatch_fails_even_with_recomputed_key(
@@ -954,6 +1030,32 @@ def test_minimum_dimension_score_mismatch_fails_even_with_recomputed_key(
 
     with pytest.raises(pbr.ReviewProtocolError, match="minimum_dimension_score"):
         pbr.validate_result(result)
+
+
+def test_historical_scored_result_does_not_reapply_current_calibration(
+    bilash_packet: dict,
+) -> None:
+    result = pbr.finalize_review(
+        bilash_packet, _raw(_passing_semantic(bilash_packet))
+    )
+    result.update(
+        {
+            "review_protocol_version": "6.0.3",
+            "semantic_prompt_version": "6.0.4",
+            "track_policy_version": "2.0.1",
+        }
+    )
+    dimension = result["semantic"]["quality_dimensions"]["pedagogical"]
+    dimension["score_rationale"] = "No pedagogical finding identifies a gap to 10.0."
+    dimension["evidence"] = dimension["evidence"][:1]
+    reproducible = {
+        key: copy.deepcopy(result[key]) for key in pbr.REPRODUCIBILITY_FIELDS
+    }
+    result["reproducibility_key"] = pbr.sha256_text(
+        pbr._stable_json(reproducible)
+    )
+
+    pbr.validate_result(result)
 
 
 def test_claim_only_owned_finding_preserves_perfect_dimension_vector(
@@ -1748,12 +1850,16 @@ def test_provider_line_locator_hydrates_exact_unicode_excerpt() -> None:
         if "пам’яті опору" in text
     )
     for dimension in semantic["quality_dimensions"].values():
+        second_anchor = next(
+            item for item in dimension["evidence"] if item["line"] != line
+        )
         dimension["evidence"] = [
             {
                 "location": content_path,
                 "line": line,
                 "supports": "This exact line supports the dimension assessment.",
-            }
+            },
+            second_anchor,
         ]
 
     hydrated = pbr.hydrate_provider_dimension_evidence(semantic, packet)
@@ -1778,12 +1884,16 @@ def test_finalize_accepts_provider_line_locators_and_preserves_exact_excerpt() -
         if "пам’яті опору" in text
     )
     for dimension in semantic["quality_dimensions"].values():
+        second_anchor = next(
+            item for item in dimension["evidence"] if item["line"] != line
+        )
         dimension["evidence"] = [
             {
                 "location": content_path,
                 "line": line,
                 "supports": "This exact line supports the dimension assessment.",
-            }
+            },
+            second_anchor,
         ]
 
     result = pbr.finalize_review(packet, _raw(semantic))
@@ -2577,7 +2687,9 @@ def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
         "VOCABULARY_INTEGRATION",
         "Mandatory seven-class alignment audit",
         "A synonym, reversed phrase, or",
-        "must be below `8.0`",
+        "must be below `9.0`",
+        "`10.0` is exceptional",
+        "non-blocking improvement",
         "return the exact repo-relative",
         "at least eight non-whitespace",
         "exact locator belongs to a supplied deterministic",
@@ -3621,8 +3733,8 @@ def test_skill_forbids_mutating_legacy_paths() -> None:
 def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.0.4"
-    assert len(rows) == 72
+    assert catalog["catalog_version"] == "6.0.5"
+    assert len(rows) == 75
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3644,6 +3756,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "1.9.0",
         "2.0.0",
         "2.0.1",
+        "2.1.0",
         "3.0.0",
         "4.0.0",
         "4.1.2",
@@ -3663,6 +3776,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "6.0.2",
         "6.0.3",
         "6.0.4",
+        "6.0.5",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

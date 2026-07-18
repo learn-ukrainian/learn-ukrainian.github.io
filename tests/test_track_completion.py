@@ -257,6 +257,7 @@ def _result(
             "effort": "high",
             "capabilities": ["text"],
         },
+        "semantic_response": {"raw_sha256": "3" * 64},
         "findings": findings,
         "combined_disposition": {"status": status},
     }
@@ -381,6 +382,82 @@ def test_resolution_covers_core_and_seminar_built_unbuilt_partial(
     assert not ledger_root.exists()
     with pytest.raises(tc.CompletionError, match="not active"):
         tc.inspect_target("retired/ghost", repo_root=repo, config_path=config_path)
+
+
+def test_new_and_existing_modules_converge_on_the_same_post_build_gate(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    _, existing = _start(fake_repo, "a1/core-built")
+    _, new = _start(fake_repo, "a1/core-unbuilt")
+    assert existing["state"] == "POST_BUILD_REVIEW_REQUIRED"
+    assert new["state"] == "PLAN_REVIEW_REQUIRED"
+
+    plan_evidence = tmp_path / "new-plan-review.json"
+    plan_evidence.write_text('{"verdict":"PASS"}\n', encoding="utf-8")
+    _, new = tc.record_plan_review(
+        "a1/core-unbuilt",
+        run_id=new["run"]["run_id"],
+        verdict="PASS",
+        evidence=plan_evidence,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _write_bundle(
+        repo,
+        "a1",
+        "core-unbuilt",
+        "# Новий модуль\n\nЗавершений навчальний текст.\n",
+    )
+    _, new = tc.record_build(
+        "a1/core-unbuilt",
+        run_id=new["run"]["run_id"],
+        author_family="codex",
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    assert new["state"] == "POST_BUILD_REVIEW_REQUIRED"
+
+    existing_snapshot = tc.resolve_target(
+        "a1/core-built", repo_root=repo, config=tc.load_config(config_path)
+    )
+    new_snapshot = tc.resolve_target(
+        "a1/core-unbuilt", repo_root=repo, config=tc.load_config(config_path)
+    )
+    existing_result_path = _result_file(tmp_path, "existing-post-build-pass.json")
+    new_result_path = _result_file(tmp_path, "new-post-build-pass.json")
+    results = {
+        existing_result_path: _result(existing_snapshot, repo, status="PASS"),
+        new_result_path: _result(new_snapshot, repo, status="PASS"),
+    }
+    monkeypatch.setattr(tc, "_load_post_build_result", lambda path: results[path])
+
+    _, existing = tc.record_review(
+        "a1/core-built",
+        run_id=existing["run"]["run_id"],
+        result_path=existing_result_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+    _, new = tc.record_review(
+        "a1/core-unbuilt",
+        run_id=new["run"]["run_id"],
+        result_path=new_result_path,
+        repo_root=repo,
+        config_path=config_path,
+        ledger_root=ledger_root,
+    )
+
+    assert existing["reviews"][-1]["status"] == "PASS"
+    assert new["reviews"][-1]["status"] == "PASS"
+    assert existing["state"] == "AWAITING_PRODUCTION_QG_ARMING"
+    assert new["state"] == "INDEPENDENT_REVIEW_REQUIRED"
+    assert new["author_families"] == ["codex"]
 
 
 def test_certification_config_rejects_retired_track_selector(

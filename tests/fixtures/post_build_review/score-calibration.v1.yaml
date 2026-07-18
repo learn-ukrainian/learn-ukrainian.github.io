@@ -1,31 +1,31 @@
 fixture_version: score-calibration.v1
 score_bands:
-  PASS: "[8.0, 10.0]"
-  REVISE: "[6.0, 8.0)"
+  PASS: "[9.0, 10.0]"
+  REVISE: "[6.0, 9.0)"
   BLOCK: "[0.0, 6.0)"
   INCOMPLETE: null
 score_anchors:
-  "10.0": no dimension findings
-  "[9.0, 10.0)": quality target with bounded low-severity headroom
-  "[8.0, 9.0)": release-safe with a concrete low-severity improvement
+  "10.0": exceptional positive quality with two independent evidence anchors and no findings
+  "[9.0, 10.0)": publication target with bounded low-severity improvement backlog
+  "[8.0, 9.0)": strong base with a material revision before publication
   "[7.0, 8.0)": focused material revision while most of the dimension remains strong
   "[6.0, 7.0)": substantial material defect requiring broader revision
   "[4.0, 6.0)": blocking defect with some usable evidence
   "[0.0, 4.0)": fundamentally unusable, unsafe, or unsupported
 cases:
-  - id: pass-lower-bound-backed-backlog
+  - id: revise-strong-but-below-publication-floor
     dimension: pedagogical
-    verdict: PASS
+    verdict: REVISE
     assessment:
-      status: PASS
+      status: REVISE
       score: 8.0
-      score_rationale: A low-severity pedagogical finding leaves a concrete gap to 10.0.
+      score_rationale: A material pedagogical finding leaves a concrete gap before publication.
     finding:
-      id: low-pedagogy-gap
+      id: material-pedagogy-gap
       issue_id: PEDAGOGICAL_CLARITY_GAP
       category: pedagogy
-      severity: low
-      message: One instruction could clarify its next learner action.
+      severity: medium
+      message: One instruction omits the next learner action required for completion.
       evidence: The task omits an explicit next action.
       location: tests/fixtures/post_build_review:1
     expected:
@@ -55,7 +55,7 @@ cases:
     assessment:
       status: PASS
       score: 10.0
-      score_rationale: No naturalness finding identifies a gap to 10.0.
+      score_rationale: Two independent anchors demonstrate exceptional naturalness across exposition and instructions.
     finding: null
     expected:
       valid: true
@@ -83,8 +83,8 @@ cases:
     verdict: REVISE
     assessment:
       status: REVISE
-      score: 7.9
-      score_rationale: A medium tone finding leaves a narrow but concrete gap to 10.0.
+      score: 8.9
+      score_rationale: A medium tone finding leaves a narrow but material gap before publication.
     finding:
       id: tone-revision
       issue_id: TONE_REGISTER_GAP
@@ -95,7 +95,7 @@ cases:
       location: tests/fixtures/post_build_review:1
     expected:
       valid: true
-      minimum_dimension_score: 7.9
+      minimum_dimension_score: 8.9
   - id: revise-focused-anchor
     dimension: naturalness
     verdict: REVISE
@@ -224,10 +224,10 @@ cases:
       documented_semantic_cap: 6.0
 comparability:
   - id: identical-review-identity-is-comparable
-    left: [6.0.4, fixture, fixture-model, high]
-    right: [6.0.4, fixture, fixture-model, high]
+    left: [6.0.5, fixture, fixture-model, high]
+    right: [6.0.5, fixture, fixture-model, high]
     expected: true
   - id: prompt-or-reviewer-identity-drift-is-not-comparable
-    left: [6.0.4, fixture, fixture-model, high]
-    right: [6.0.3, google, gemini-3.1-pro, high]
+    left: [6.0.5, fixture, fixture-model, high]
+    right: [6.0.4, google, gemini-3.1-pro, high]
     expected: false
