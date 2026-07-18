@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -22,9 +23,26 @@ from typing import Any
 
 import yaml
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+CODE_ROOT = Path(__file__).resolve().parents[2]
+if str(CODE_ROOT) not in sys.path:
+    sys.path.insert(0, str(CODE_ROOT))
+
+
+def _data_repo_root() -> Path:
+    """Keep release code immutable while reading the configured live checkout."""
+    configured = os.environ.get("LEARN_UK_REPO_ROOT")
+    if not configured:
+        return CODE_ROOT
+    candidate = Path(configured).expanduser()
+    if not candidate.is_absolute():
+        raise RuntimeError("LEARN_UK_REPO_ROOT must be an absolute path")
+    resolved = candidate.resolve()
+    if not resolved.is_dir():
+        raise RuntimeError(f"LEARN_UK_REPO_ROOT is not a directory: {resolved}")
+    return resolved
+
+
+PROJECT_ROOT = _data_repo_root()
 
 from scripts.orchestration.prompt_contracts import (
     LifecycleConfigError,
