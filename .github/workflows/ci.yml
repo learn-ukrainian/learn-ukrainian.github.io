@@ -762,11 +762,13 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install --no-deps \
-            --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.11.0 torchvision==0.26.0
           .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
-          .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
+          # Reinstall CPU wheels after the lockfile so PyPI CUDA builds cannot win
+          # (torch>=2.13 default Linux wheels require libcudart.so.13).
+          .venv/bin/python -m pip install --no-deps --force-reinstall \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.13.0 torchvision==0.28.0
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
       - name: Run tests
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')

@@ -96,8 +96,8 @@ _PYTHON_IMAGE = "python:3.12.8-slim-bookworm"
 # PyTorch CPU index instead of PyPI because the default wheel is the
 # CUDA build (~2 GB) and we don't need GPU.
 _TORCH_INDEX_URL = "https://download.pytorch.org/whl/cpu"
-_TORCH_PIN = "torch==2.11.0"
-_TORCHVISION_PIN = "torchvision==0.26.0"
+_TORCH_PIN = "torch==2.13.0"
+_TORCHVISION_PIN = "torchvision==0.28.0"
 
 
 # Host-side directories that MUST NOT be uploaded into the Dagger
@@ -254,6 +254,16 @@ class LearnUkrainianCi:
                 "pip",
                 "install",
                 "--no-deps",
+                "-r",
+                "requirements-lock.txt",
+            ])
+            .with_exec([
+                ".venv/bin/python",
+                "-m",
+                "pip",
+                "install",
+                "--no-deps",
+                "--force-reinstall",
                 "--index-url",
                 _TORCH_INDEX_URL,
                 _TORCH_PIN,
@@ -265,16 +275,8 @@ class LearnUkrainianCi:
                 "pip",
                 "install",
                 "--no-deps",
-                "-r",
-                "requirements-lock.txt",
-            ])
-            .with_exec([
-                ".venv/bin/python",
-                "-m",
-                "pip",
-                "install",
                 "multiprocess==0.70.18",
-                "huggingface-hub==0.36.0",
+                "huggingface-hub==1.24.0",
             ])
         )
 
