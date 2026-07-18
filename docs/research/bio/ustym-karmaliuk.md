@@ -1,292 +1,273 @@
-# Устим Якимович Кармалюк - Research Dossier
+# Устим Якимович Кармалюк — Research Dossier
 
 **Slug:** `ustym-karmaliuk`
-**Block:** +77 backfill - Podilia social resistance / folk memory / historical song
+**Block:** BIO #4431 Cohort 28A catalog-source packet
 **Tier:** 2
-**Issue:** #2535 / BIO +77 readiness gate; BIO #311
-**Researcher:** Codex orchestrator (GPT-5)
-**Completed:** 2026-07-02
+**Issue:** #4431 / BIO catalog readiness; BIO #311
+**Researcher:** grok / bio-c28a-karmaliuk-dovbush-grok
+**Completed:** 2026-07-18
+**Verified fetch pass:** 2026-07-18
 
-**Source acronym legend:** EIU = Encyclopedia of the History of Ukraine / Institute of
-History of Ukraine, NASU; IEU = Internet Encyclopedia of Ukraine / Canadian Institute of
-Ukrainian Studies; NBUV = Vernadsky National Library of Ukraine; VOUNB = Vinnytsia
-Regional Universal Scientific Library; FOLK = existing learn-ukrainian FOLK materials;
+**Source acronym legend:** EIU = Encyclopedia of the History of Ukraine /
+Institute of History of Ukraine, NASU; IEU = Internet Encyclopedia of Ukraine /
+Canadian Institute of Ukrainian Studies; UIZh = Український історичний журнал;
 Commons = Wikimedia Commons.
+
+**Adopted external URL set (order fixed; equals discovery + sources.yaml + plan
+external references):**
+
+1. `https://www.history.org.ua/?termin=Karmalyuk` — EIU, Любченко В. Б., 2007
+2. `https://history.org.ua/JournALL/journal/1997/1/10.pdf` — UIZh 1997 № 1, Любченко
+3. `https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm` — IEU
+
+Learner `source_url` values are a subset: (1) and (2) only. IEU is English
+reference-only.
 
 **Acceptance self-check:**
 
 - [x] All 10 sections completed
-- [x] At least 3 Tier 1/Tier 2 institutional, encyclopedia, library, or image-rights sources cited
-- [x] Pressure mechanism framed as serfdom, Russian imperial military/repressive power,
-  Podilia landlord economy, exile, katorga, and folk-memory contestation; no simplified
-  Robin Hood myth
-- [x] At least 2 title / source / visual anchors supplied
-- [x] Cross-track links verified `test -e` / `rg` on 2026-07-02 where marked existing
+- [x] Adopted sources opened and material facts checked against exact text
+- [x] Pressure mechanism framed as serfdom, Russian imperial recruitment /
+  penal power, Podilia landlord economy, exile, katorga, and folk-memory
+  contestation; no simplified Robin Hood myth
+- [x] Claim boundaries and disagreements explicit (esp. 20 000 figures)
 - [x] Naming-canonical policy applied
-- [x] Image-rights policy applied
-- [x] Dossier-only scope observed
+- [x] Image-rights: text-only portrait fallback
+- [x] Dossier describes the same adopted set as discovery / plan / registry
 
 ## Decolonization self-check
 
-- [x] No Russocentric framing: Karmaliuk is not reduced to a Russian imperial police category
-  such as "bandit" or to a Soviet-only class hero.
-- [x] Ukrainian agency central: Podilia folk memory, Ukrainian historical-song reception,
-  and local social resistance are kept visible.
-- [x] Social oppression is specific: serfdom, landlord coercion, forced recruitment,
-  corporal punishment, Siberian katorga, and Russian imperial policing.
-- [x] Anti-hagiography: the dossier flags contested raids and source tensions; it does not
-  teach Karmaliuk as a clean "Ukrainian Robin Hood."
+- [x] No Russocentric framing: Karmaliuk is not reduced to a Russian imperial
+  police category such as "bandit" or to a Soviet-only class hero.
+- [x] Ukrainian agency central: Podilia social resistance and historical-song
+  reception remain visible.
+- [x] Social oppression is specific: serfdom, landlord coercion, forced
+  recruitment, corporal punishment, Siberian katorga, and imperial policing.
+- [x] Anti-hagiography: contested raids and source tensions are flagged; the
+  dossier does not teach a clean "Ukrainian Robin Hood."
+- [x] Multiethnic participation is social history, not collective ethnic blame.
 
-## 1. Identity
+## 1. Identity facts (source-bound)
 
-- **Canonical learner-facing name:** `Устим Кармалюк` / `Ustym Karmaliuk`. Use
-  `ustym-karmaliuk` for slug and file surfaces.
-- **Name variants:** EIU gives `Кармалюк`, `Кармелюк`, `Карменюк`, and family surname
-  `Карманюк`. NBUV also lists `Кармелюк`; Commons records many transliterations including
-  `Karmaljuk`, `Karmelyuk`, `Karmaluk`, and `Oustym Karmaliouk`.
-- **Patronymic:** `Устим Якимович Кармалюк`.
-- **Dates:** EIU gives 10 March / 27 February 1787 and 22 / 10 October 1835. IEU uses
-  Gregorian 10 March 1787 and 22 October 1835. A Ukrainian historical-journal source on
-  naming / archival variants treats the 27 February old-style entry as baptism evidence,
-  so the exact birth day should be handled cautiously. Use `1787-1835` or source-labeled
-  Gregorian dates for learner-facing chronology.
-- **Birthplace:** EIU says Holovchyntsi, Letychiv county, Podilia voivodeship; now
-  Karmaliukove, Zhmerinka district, Vinnytsia oblast. IEU says Holovchyntsi, now
-  Karmaliukove, Lityn county in its historical-geography phrasing. Treat county labels as
-  source-specific.
-- **Death / burial:** EIU says he was killed from ambush on the night of 22 / 10 October
-  1835 by nobleman F. Rudkovskyi in Shliakhovi Korychyntsi, Letychiv county, Podilia
-  gubernia; EIU's Ukrainian text uses `Рудковським`. EIU identifies the modern village as
-  Voloske, Derazhnia district, Khmelnytskyi oblast. EIU and Commons place burial at
-  Letychiv.
-- **Core identity:** Ukrainian Podilia peasant rebel / folk-memory figure, born a serf,
-  associated with anti-landlord raids and repeated escapes from imperial punishment.
+- **Canonical learner-facing name:** `Устим Кармалюк` / `Ustym Karmaliuk`.
+  Slug: `ustym-karmaliuk`.
+- **Variants:** EIU lists `Кармалюк`, `Кармелюк`, `Карменюк`, and family surname
+  `Карманюк` [S1 / EIU]. UIZh reconstructs the baptismal/family form as
+  **Карманюк** from Holovchyntsi parish registers and treats `Кармалюк` /
+  `Кармелюк` as later folk-literary idealizations [S2 / UIZh, pp. 121–122].
+- **Patronymic:** `Устим Якимович` (EIU). UIZh also documents baptismal name
+  variants (`Савастнян`, `Севастиян`, `Устиян`, `Іустиян`, `Августин`,
+  `Агустин`) [S2].
+- **Dates:** EIU: 10.03 (27.02).1787 – 22(10).10.1835 [S1]. IEU: Gregorian
+  10 March 1787 – 22 October 1835 [S3]. UIZh treats the old-style parish
+  entries as **baptismal** evidence rather than automatic proof of the exact
+  birth day [S2]. Learner-facing default: `1787–1835` or source-labeled
+  Gregorian dates; avoid asserting the exact birth day without the baptism
+  caveat.
+- **Birthplace:** Holovchyntsi, Letychiv county, Podilia (now Karmaliukove,
+  Zhmerynka district, Vinnytsia oblast) per EIU [S1]. IEU phrases historical
+  county as Lityn in its English geography [S3]. Use the village confidently;
+  keep county labels source-specific.
+- **Death / burial:** EIU: killed from ambush on the night of 22(10) October
+  1835 by nobleman F. Rudkovskyi in Shliakhovi Korychyntsi, Letychiv county;
+  modern village Voloske, Derazhnia district, Khmelnytskyi oblast; buried in
+  Letychiv [S1]. IEU: ambush by nobleman Rutkowski [S3]. Keep shooter spelling
+  source-labeled.
+- **Core identity:** Podilia serf-born rebel / outlaw leader whose bands
+  attacked landlords and other targets under Russian imperial serfdom, and a
+  major folk-memory figure already poeticized in life [S1].
 
 ## 2. Oppression / pressure mechanism
 
-- **Serfdom and landlord coercion:** EIU says Karmaliuk was born in a serf family and that
-  landowner Pihlowskyi sent him into military recruitment in 1812. IEU frames the broader
-  context as the highly repressive and commercially profitable stage of serfdom in the
-  Russian Empire.
-- **Forced military service / desertion:** IEU says his landlord sent him into the army in
-  1812; Karmaliuk fled and organized bands with other deserters. This is a coercion story,
-  not a free career choice.
-- **Imperial punishment:** IEU records capture in 1814, a sentence in Kamianets-Podilskyi
-  to 500 blows while running a gauntlet, dispatch to Crimea, and escape. EIU says he was
-  four times sentenced to Siberian katorga and escaped, returning by foot over thousands of
-  versts.
-- **Geography of resistance:** EIU locates his most intensive activity in Lityn and
-  Letychiv counties, with raids also in Balta, Vinnytsia, Mohyliv, Proskuriv counties and
-  partly in Bessarabia. IEU says the peak in 1830-1835 spread into Kyiv, Volhynia, and
-  Bessarabia.
-- **Multiethnic social world:** EIU notes bands made up of serfs, military deserters, minor
-  nobles, and town Jews, and describes Karmaliuk's connections with Jewish townspeople.
-  Teach this as source-bounded social history; avoid ethnicized criminal stereotypes.
-- **Historiographic tension:** IEU emphasizes redistribution of captured goods to village
-  poor; EIU includes attacks on landlord estates, roadside taverns, and wealthy peasants.
-  This tension is the reason modules must avoid a simple Robin Hood frame.
+- **Serfdom and landlord coercion:** Born in a serf family; in 1812 landowner
+  Pihlowskyi sent him into military recruitment [S1, S3]. This is coercion, not
+  a free career choice.
+- **Imperial punishment cycle:** IEU records capture in 1814, a Kamianets-
+  Podilskyi sentence of 500 blows while running a gauntlet, dispatch toward a
+  Crimean military unit, and escape [S3]. EIU states he was four times
+  sentenced to Siberian katorga and escaped on foot over thousands of versts
+  [S1]. Keep 1814 procedural detail IEU-attributed; keep the four-katorga
+  formula EIU/IEU-shared but route-unspecific.
+- **Geography of resistance:** Most intensive activity in Lityn and Letychiv
+  counties; also Balta, Vinnytsia, Mohyliv, Proskuriv counties and partly
+  Bessarabia [S1]. IEU adds peak spread into Kyiv, Volhynia, and Bessarabia in
+  1830–1835 [S3].
+- **Multiethnic social world:** EIU: bands of serfs, military deserters, minor
+  nobles, and town Jews; Karmaliuk often hid among town Jews and moved seized
+  landlord property through those networks while offering protection for
+  services [S1]. Teach as source-bounded social history; **do not** convert
+  into ethnic collective guilt or romanticized "criminal ethnicity."
+- **Historiographic tension (do not silently synthesize):**
+  - EIU: over 1,000 attacks on landlord estates and economies, rural and
+    roadside taverns (`корчми`), and households of wealthy peasants [S1].
+  - IEU: approximately 1,000 raids on landowners' estates; "whatever was
+    captured … was distributed among the village poor" [S3].
+  - EIU "≈20,000": persons who passed through the Haluzynets commission
+    investigation (1833–39) on accusation or suspicion of links with Karmaliuk
+    [S1].
+  - IEU "up to 20,000 peasants": framed as participants in the 1830–1835
+    struggle [S3].
+  These are **different claims**. Never merge "investigation caseload" with
+  "rebel headcount" or "redistribution" with "tavern and wealthy-peasant
+  raids."
 
-## 3. Major events / historical footprint
+## 3. Major events / historical footprint (chronology with locators)
 
-- **1812 recruitment and flight:** The point where landlord coercion, imperial military
-  power, and local resistance converge. Useful for explaining `рекрутчина`, `кріпацтво`,
-  and `втеча`.
-- **1814 punishment / escape cycle:** The Kamianets-Podilskyi sentence and escape from
-  transfer to Crimea become a concrete anchor for corporal punishment and imperial penal
-  geography.
-- **1814-1828 rebellion phase:** IEU describes rebellion in Lityn, Letychiv, and Proskuriv
-  counties, attracting peasants, deserters, and urban poor.
-- **Siberian-katorga cycle:** EIU's "four times sentenced to Siberian katorga" is a compact
-  way to teach exile, forced labor, and return in folk memory.
-- **1830-1835 peak:** IEU says Karmaliuk's struggle reached its height in these years,
-  involved up to 20,000 peasants, and included around 1,000 raids on landlord estates.
-- **Death in ambush:** EIU's death account should be kept factual. Do not reproduce magical
-  bullet / button legends as history; if used, label them clearly as folklore.
-- **Memory after death:** EIU says he was poetized and enveloped in folk-avenger fame
-  already during his life. Existing FOLK surfaces connect his image to `За Сибіром сонце
-  сходить`.
+1. **1787 — birth / baptism layer.** EIU date pair; UIZh parish books of the
+   Holovchyntsi Pokrova church (1781–1799; 1798–1821) with nine Ustym-related
+   entries all under **Карманюк** [S1, S2].
+2. **1812 — forced recruitment and flight.** Pihlowskyi → recruit; desertion;
+   joining a band and becoming its leader [S1, S3].
+3. **1814 — capture / corporal punishment / escape (IEU).** Kamianets sentence;
+   transfer toward Crimea; escape; renewed peasant rebellion spanning much of
+   Lityn, Letychiv, and Proskuriv counties into the 1820s [S3].
+4. **Band activity and targets (EIU).** >1,000 attacks including estates,
+   taverns, wealthy peasants; multiethnic band composition [S1].
+5. **Siberian katorga cycle.** Four sentences and escapes [S1, S3]. Exact routes
+   and intermediate captures are not fully reconstructed in these short
+   encyclopedia articles — do not invent itineraries.
+6. **1830–1835 peak (IEU frame).** Spread beyond Podilia; up to 20,000 peasants
+   (IEU wording); ~1,000 estate raids; troops quartered to quell unrest [S3].
+7. **1833–1839 Haluzynets commission (EIU).** Special investigation of
+   Karmaliuk and associates; ≈20,000 persons under accusation or suspicion [S1].
+8. **22/10 October 1835 — ambush death; burial at Letychiv** [S1, S3].
+9. **Memory after death.** EIU: already poeticized in life as folk avenger;
+   Ukrainian "Robin Hood" of songs, tales, and literature [S1]. IEU names song
+   «Za Sybirom sontse skhodyt'» and literary reception [S3]. Treat song/literature
+   as **reception**, not documentary biography.
 
 ## 4. Pedagogical anchors
 
-- **Historical-song anchor:** `За Сибіром сонце сходить` already exists in the repo as a
-  reading surface and FOLK module resource. Use it to show how first-person song voice
-  turns a contested figure into folk memory. Carry forward the existing FOLK research
-  do-not-quote caveat: verify exact incipit/text against the reading surface before using
-  direct quotation.
-- **Myth-vs-record anchor:** Pair EIU's raids on wealthy peasants / taverns with IEU's
-  redistribution-to-poor synthesis. The learner task can ask what a folk song preserves and
-  what it simplifies.
-- **Imperial-penal vocabulary anchor:** `рекрут`, `каторга`, `Сибір`, `втеча`, `заслання`,
-  `батіг`, `замок`, `корчма`, `поміщик`, `кріпак`.
-- **Geography anchor:** Podilia, Letychiv, Lityn, Kamianets-Podilskyi, Bessarabia, Volhynia,
-  Kyiv region, Siberia. Map work should distinguish historical administrative units from
-  modern oblast/raion names.
-- **Visual anchor:** Commons `File:Karmelyuk.JPG`, a faithful reproduction of Vasyl
-  Tropinin's portrait `Ustim Karmaluk`, public domain because Tropinin died in 1857. Good
-  default, but mention the painting's Russian imperial museum/source chain if image context
-  is discussed.
-- **Alternative visual anchor:** Commons grave and Letychiv monument categories can support
-  memory/place lessons better than a heroic portrait if the module emphasizes commemoration.
-  The specific monument photo `File:Пам'ятник Устиму Кармалюку в смт Летичів.jpg` is a
-  useful CC BY-SA 4.0 candidate for that route.
+- **Myth-vs-record pair:** EIU taverns/wealthy peasants vs IEU redistribution
+  to the poor — the central classroom tension [S1, S3].
+- **Name-critical anchor:** UIZh on `Карманюк` vs folk `Кармалюк` — shows how
+  memory renames a figure [S2].
+- **Numbers discipline:** 1,000 raids (shared order of magnitude) vs two
+  different 20,000 claims [S1, S3].
+- **Imperial-penal vocabulary:** `рекрут`, `каторга`, `Сибір`, `втеча`,
+  `батіг` / gauntlet, `корчма`, `поміщик`, `кріпак`.
+- **Historical-song anchor:** existing FOLK reading `За Сибіром сонце сходить`
+  is a memory surface, not an adopted external factual source in this packet.
+- **Visual / portrait:** **text-only fallback**. Tropinin-attributed Commons
+  files and Letychiv monument/grave photos were **not** adopted as proved
+  individual reusable portraits for this packet (subject identity + file-level
+  licence + provenance not all locked for learner-facing portrait use).
 
 ## 5. Language register
 
-- **Register:** historical biography, folk song, social resistance, imperial legal and
-  punishment vocabulary, local memory, anti-hagiographic comparison.
-- **CEFR readiness:** B1+/B2 short biography and song-context tasks; B2/C1 comparison of
-  historical record vs folk image; C1/C2 historiography and decolonization discussions.
-- **Core vocabulary:** `кріпак`, `кріпацтво`, `поміщик`, `панщина`, `рекрут`, `втеча`,
-  `повстанський загін`, `ватажок`, `гайдамака`, `народний месник`, `корчма`, `маєток`,
-  `заслання`, `каторга`, `Сибір`, `засідка`, `переказ`, `історична пісня`, `фольклор`,
-  `опоетизувати`, `міфологізація`.
-- **Register caution:** Folk-song pathos and Soviet-era class-war phrasing can overrun the
-  historical record. Learner-facing text should keep plain factual wording beside any
-  poetic or legendary phrasing.
+- Historical biography, social resistance, imperial legal/penal vocabulary,
+  folk-song reception, source criticism.
+- CEFR: B1+/B2 short biography; B2/C1 record-vs-memory; C1/C2 historiography.
+- Core vocabulary: `кріпак`, `кріпацтво`, `поміщик`, `рекрутчина`, `ватажок`,
+  `корчма`, `каторга`, `засідка`, `народний месник`, `історична пісня`,
+  `міфологізація`.
+- Caution: `народний месник` and `Робін Гуд` are reception labels. EIU itself
+  uses «Укр. "Робін Гуд"» as cultural shorthand after the biography [S1] — teach
+  it as label, not verdict.
 
-## 6. Risks / open questions
+## 6. Risks / open questions / rejected evidence
 
-- **Birthplace county mismatch:** EIU and IEU phrase historical county affiliation
-  differently. Use birthplace village confidently; avoid overloading learner-facing prose
-  with county labels unless the module teaches historical geography.
-- **Shooter-name spelling:** EIU's page uses `Рудковським`; if a later module uses another
-  spelling such as `Рутковський`, keep the form source-labeled rather than silently
-  normalizing it.
-- **Exact birth-date caution:** The standard 10 March / 27 February 1787 date is common in
-  reference works, but archival discussion treats the old-style entry as baptism evidence
-  rather than direct proof of the exact birth day. Prefer `born in 1787` unless the module
-  needs date-conversion practice.
-- **Robber / rebel / folk hero labels:** `Outlaw`, `rebel`, `haidamaka`, `folk hero`, and
-  `peasant-movement leader` each carry different source politics. Define the label before
-  using it as a verdict.
-- **Robin Hood shortcut:** Existing public summaries often call him a Ukrainian Robin Hood.
-  This can be useful as a comparison prompt but should not be the main claim.
-- **Ethnicity of participants:** EIU's mention of minor nobles and Jews is important for
-  social history, but sensitive. Avoid implying collective ethnic guilt or romanticizing
-  criminal networks.
-- **Soviet-era bibliography:** VOUNB and NBUV point to many Soviet publications and memory
-  practices. Use those as reception/history-of-memory evidence, not automatically as
-  factual authority for every claim.
-- **Image identity uncertainty:** Some Tropinin/Karmaliuk-related files have uncertain
-  captions, e.g. `Elderly Ukrainian peasant by Tropinin.jpg` includes a question mark in
-  the Karmaliuk identification. Prefer `Karmelyuk.JPG` or place/monument imagery unless a
-  module needs to discuss uncertain portrait attribution.
+- **Birth day vs baptism:** prefer year 1787 unless teaching calendar
+  conversion with the UIZh caveat [S2].
+- **County mismatch:** EIU Letychiv vs IEU Lityn phrasing for birthplace
+  geography [S1, S3].
+- **Shooter spelling:** Рудковський (EIU) vs Rutkowski (IEU) [S1, S3].
+- **Robin Hood shortcut:** public and even encyclopedia reception use it; the
+  module thesis stays "contested documentary rebel/outlaw with large folk
+  afterlife."
+- **Soviet class framing:** VOUNB 1986 bibliographic index
+  (`https://library.vn.ua/e-library/katalog/ustim-karmalyuk`, HTTP 200) is
+  **rejected** as factual authority — class-hero reception only.
+- **NBUV catalog** `https://irbis-nbuv.gov.ua/ulib/item/REF0005738` — HTTP
+  **403**, **rejected** (inaccessible).
+- **Wikipedia** — orientation only; not adopted.
+- **Magic-bullet / invulnerability legends** — folklore only if used.
+- **Image identity uncertainty:** some Tropinin-related files carry question
+  marks in captions; not used as portrait authority here.
 
 ## 7. Cross-track links
 
-- **Existing FOLK module surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
-  `curriculum/l2-uk-en/folk/istorychni-pisni/module.md`,
-  `curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml`,
-  `curriculum/l2-uk-en/folk/istorychni-pisni/resources.yaml`
-- **Existing FOLK plan / research surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
+- **Existing FOLK plan surfaces (VERIFIED `test -e` 2026-07-18):**
   `curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml`,
-  `curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml`,
-  `docs/research/folk/istorychni-pisni.md`,
-  `docs/research/folk/istorychni-perekazy.md`,
-  `docs/research/folk/istorychni-reading-catalog.md`,
-  `wiki/folk/historical/istorychni-pisni.md`
-- **Existing site / reading surfaces (VERIFIED `test -e` / `rg` 2026-07-02):**
-  `site/src/content/docs/folk/istorychni-pisni.mdx`,
+  `curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml`
+- **Existing FOLK module / reading surfaces (VERIFIED `test -e` 2026-07-18):**
+  `curriculum/l2-uk-en/folk/istorychni-pisni/module.md`,
   `site/src/content/readings/istorychna-pisnia-za-sybirom.mdx`
-- **Existing BIO index / audit surfaces (VERIFIED `rg` 2026-07-02; do not edit in dossier
-  PR):** `site/src/content/docs/bio/index.mdx` includes BIO #311 `ustym-karmaliuk`;
-  `docs/audits/bio-readiness-matrix-2026-06-29.md` flags contested social resistance, not
-  Robin Hood myth; `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md` lists the
-  Podilia folk-memory figure and serf-born rebel framing.
-- **Future BIO surfaces (not present on 2026-07-02):**
-  `curriculum/l2-uk-en/plans/bio/ustym-karmaliuk.yaml`,
-  `curriculum/l2-uk-en/bio/discovery/ustym-karmaliuk.yaml`,
-  `wiki/figures/ustym-karmaliuk.md`,
-  `site/src/content/docs/bio/ustym-karmaliuk.mdx`,
-  `curriculum/l2-uk-en/bio/ustym-karmaliuk/module.md`,
-  `curriculum/l2-uk-en/bio/ustym-karmaliuk/activities.yaml`,
-  `curriculum/l2-uk-en/bio/ustym-karmaliuk/vocabulary.yaml`,
-  `curriculum/l2-uk-en/bio/ustym-karmaliuk/resources.yaml`.
+- **Existing research / wiki FOLK surfaces (VERIFIED `test -e` 2026-07-18):**
+  `docs/research/folk/istorychni-pisni.md`,
+  `wiki/folk/historical/istorychni-pisni.md`
+- **Connected BIO plan (this cohort):** `oleksa-dovbush` (parallel outlaw /
+  folk-memory pedagogy; different century and region).
+- **ABSENT on 2026-07-18 (expected; not fabricated as existing):**
+  built module under `curriculum/l2-uk-en/bio/ustym-karmaliuk/` (lesson build
+  is out of scope for this catalog packet).
 
-## 8. Naming / transliteration
+## 8. Naming / indexing
 
 - **Slug:** `ustym-karmaliuk`
 - **UA display:** `Устим Кармалюк`
-- **Full UA display when needed:** `Устим Якимович Кармалюк`
+- **Full UA when needed:** `Устим Якимович Кармалюк`
 - **EN display:** `Ustym Karmaliuk`
-- **Source variants:** `Кармелюк`, `Карменюк`, `Карманюк`, `Karmeliuk`, `Karmelyuk`,
-  `Karmaljuk`, `Karmaluk`, `Karmaliuk`, `Oustym Karmaliouk`.
-- **Search variants:** `Устим Кармалюк`, `Устим Кармелюк`, `Кармалюк Устим Якимович`,
-  `Кармелюк Устим Якимович`, `Ustym Karmaliuk`, `Ustym Karmeliuk`, `Ustim Karmaluk`,
-  `За Сибіром сонце сходить`.
-- **Avoid:** Do not default to non-canonical `Устим Кармелюк` spellings when the canonical
-  Ukrainian learner-facing form is available; use those spellings only as source, folk, or
-  search variants.
+- **Source / search variants:** `Кармелюк`, `Карманюк`, `Karmeliuk`,
+  `Karmelyuk`, `Karmaljuk`, `Oustym Karmaliouk`
+- **Avoid:** defaulting learner text to non-canonical `Кармелюк` when the
+  canonical form is available; use variants only in source notes.
 
-## 9. Image rights
+## 9. Image rights / portrait disposition
 
-- **Preferred candidate:** Commons `File:Karmelyuk.JPG`; Vasyl Tropinin, `Ustim Karmaluk`,
-  1820, collection listed as Nizhniy Tagil State Museum of Fine Arts; faithful reproduction
-  of a public-domain two-dimensional artwork. Commons marks the work public domain because
-  the artist died in 1857 and the reproduction is treated as PD-Art.
-- **Attribution/context caution:** The portrait is artistically and institutionally mediated
-  through a Russian imperial / Russian museum chain. It is copyright-safe, but do not treat
-  it as unproblematic eyewitness photography.
-- **Backup candidate:** Commons `File:Elderly Ukrainian peasant by Tropinin.jpg`; public
-  domain, but the title includes `Устим Кармелюк?`, so use only with attribution uncertainty.
-- **Memory/place candidates:** Commons `Category:Grave of Ustym Karmaliuk` and
-  `Category:Monument to Ustym Karmaliuk` contain Letychiv grave/monument files. Check each
-  file-level license before use; category-level presence is not enough.
-- **Specific monument candidate:** Commons `File:Пам'ятник Устиму Кармалюку в смт
-  Летичів.jpg`, photo by `Культура лет.рб`, CC BY-SA 4.0. Useful when a learner surface
-  emphasizes public memory and Letychiv commemoration instead of portrait authority.
-- **Specific grave candidate:** Commons `File:МогилаУстима Кармалюка.jpg`, photo by
-  Aniskov, CC BY-SA 4.0. Useful for commemoration/place context, subject to normal
-  attribution and respectful-use framing.
-- **Avoid by default:** Soviet postal covers, modern book covers, screenshots, school-site
-  illustrations, museum page images, and tourist photos without a clear file-level reusable
-  license.
+- **Disposition: text-only portrait fallback** (plan `portrait_fallback`,
+  verified 2026-07-18).
+- Rationale: packet rules require simultaneous proof of exact individual image,
+  subject, creator/provenance, reusable licence, and licence evidence. Commons
+  Tropinin reproduction (`File:Karmelyuk.JPG`) and Letychiv monument/grave
+  files may be revisited later after file-level checks, but a page-level or
+  institution-level statement is not portrait proof for this ship.
+- Avoid by default: Soviet postal covers, school-site illustrations, screenshots,
+  unsourced "hero" portraits, tourist photos without file-level reuse rights.
 
-## 10. Sources used
+## 10. Sources used (adopted + rejected)
 
-**Tier 1 (authoritative / institutional):**
+**Adopted (authoritative / institutional; order fixed):**
 
-- Любченко В.Б. "КАРМАЛЮК Устим Якимович." Енциклопедія історії України, Т. 4:
-  Ка-Ком. Інститут історії України НАН України. https://history.org.ua/?termin=Karmalyuk.
-  Accessed 2026-07-02.
-- "Karmaliuk, Ustym." Internet Encyclopedia of Ukraine / Canadian Institute of Ukrainian
-  Studies. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm.
-  Accessed 2026-07-02.
-- Національна бібліотека України імені В. І. Вернадського. "Кармалюк Устим Якович"
-  [sic; catalog title uses this patronymic form, while EIU and the dossier use
-  `Якимович`].
-  https://irbis-nbuv.gov.ua/ulib/item/REF0005738. Accessed 2026-07-02.
-- Вінницька обласна універсальна наукова бібліотека імені Валентина Отамановського.
-  "Устим Кармалюк." https://library.vn.ua/e-library/katalog/ustim-karmalyuk. Accessed
-  2026-07-02.
+1. Любченко В. Б. «КАРМАЛЮК Устим Якимович.» Енциклопедія історії України,
+   т. 4. https://www.history.org.ua/?termin=Karmalyuk. Fetched HTTP 200,
+   2026-07-18. Locators: birth/death line; serf birth Holovchyntsi; 1812
+   recruit; band composition; >1000 attacks incl. taverns and wealthy
+   peasants; four Siberian katorgas; death by Rudkovskyi; Haluzynets ≈20k;
+   Robin Hood reception phrase.
+2. Любченко В. Б. «Кармалюк чи Карманюк?» Український історичний журнал,
+   1997, № 1, с. 121–… PDF
+   https://history.org.ua/JournALL/journal/1997/1/10.pdf. Fetched HTTP 200,
+   application/pdf, 2026-07-18. Locators: Holovchyntsi metrics; family name
+   Карманюк; baptismal name variants; critique of folk idealization of the
+   surname.
+3. «Karmaliuk, Ustym.» Internet Encyclopedia of Ukraine.
+   https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm.
+   Fetched HTTP 200, 2026-07-18. Locators: 1812 army; 1814 Kamianets/Crimea;
+   1814–1828 counties; 1830–35 peak; 20,000 peasants; 1,000 raids;
+   redistribution; four Siberia sentences; Rutkowski ambush; song title.
 
-**Tier 2 (bibliography / reception / existing curriculum anchors):**
+**Rejected / not adopted:**
 
-- Київська молодіжна бібліотека. "Устим Кармелюк. Народний месник, ватажок повстанців."
-  https://msmb.org.ua/books/thematic_bibliography/504/. Accessed 2026-07-02.
-- "Кармалюк чи Карманюк?" Український історичний журнал, 1997.
-  https://history.org.ua/JournALL/journal/1997/1/10.pdf. Accessed 2026-07-02.
-- learn-ukrainian FOLK module surfaces for `istorychni-pisni`, `istorychni-perekazy`, and
-  reading `istorychna-pisnia-za-sybirom`, verified locally on 2026-07-02.
+- NBUV `REF0005738` — HTTP 403 (2026-07-18).
+- VOUNB 1986 bibliographic hero pamphlet page — HTTP 200 but Soviet class-
+  reception bibliography, not primary factual authority for claims.
+- Wikipedia — orientation only.
+- Unverified portrait files — text-only fallback.
 
-**Tier 4 (image-rights / navigation only):**
+**Internal non-external references (not part of adopted external URL set):**
 
-- Wikimedia Commons. "Category:Ustym Karmaliuk."
-  https://commons.wikimedia.org/wiki/Category:Ustym_Karmaliuk. Accessed 2026-07-02.
-- Wikimedia Commons. `File:Karmelyuk.JPG`. https://commons.wikimedia.org/wiki/File:Karmelyuk.JPG.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:Elderly Ukrainian peasant by Tropinin.jpg`.
-  https://commons.wikimedia.org/wiki/File:Elderly_Ukrainian_peasant_by_Tropinin.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. "Category:Grave of Ustym Karmaliuk."
-  https://commons.wikimedia.org/wiki/Category:Grave_of_Ustym_Karmaliuk. Accessed
-  2026-07-02.
-- Wikimedia Commons. "Category:Monument to Ustym Karmaliuk."
-  https://commons.wikimedia.org/wiki/Category:Monument_to_Ustym_Karmaliuk. Accessed
-  2026-07-02.
-- Wikimedia Commons. `File:Пам'ятник Устиму Кармалюку в смт Летичів.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%BC%27%D1%8F%D1%82%D0%BD%D0%B8%D0%BA_%D0%A3%D1%81%D1%82%D0%B8%D0%BC%D1%83_%D0%9A%D0%B0%D1%80%D0%BC%D0%B0%D0%BB%D1%8E%D0%BA%D1%83_%D0%B2_%D1%81%D0%BC%D1%82_%D0%9B%D0%B5%D1%82%D0%B8%D1%87%D1%96%D0%B2.jpg.
-  Accessed 2026-07-02.
-- Wikimedia Commons. `File:МогилаУстима Кармалюка.jpg`.
-  https://commons.wikimedia.org/wiki/File:%D0%9C%D0%BE%D0%B3%D0%B8%D0%BB%D0%B0%D0%A3%D1%81%D1%82%D0%B8%D0%BC%D0%B0_%D0%9A%D0%B0%D1%80%D0%BC%D0%B0%D0%BB%D1%8E%D0%BA%D0%B0.jpg.
-  Accessed 2026-07-02.
+- `docs/research/bio/ustym-karmaliuk.md` (this dossier)
+- `site/src/content/readings/istorychna-pisnia-za-sybirom.mdx` (song reception)
+
+---
+
+### Rights / reading disposition summary
+
+| URL | Role | Learner reading? | Rights basis |
+| --- | --- | --- | --- |
+| EIU Karmalyuk | Factual core | Yes (link-only, uk) | external-link; evidence_url = source_url |
+| UIZh PDF 1997 | Name / metrics | Yes (link-only, uk) | external-link; evidence_url = source_url |
+| IEU Karmaliuk | Comparative EN | No (reference-only) | n/a for readings block |
+
+No copyrighted full text is hosted in-course. All learner readings are link-only.

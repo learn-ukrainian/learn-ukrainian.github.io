@@ -1,0 +1,48 @@
+# Source registry for wiki/figures/ustym-karmaliuk.md
+# Referenced inline as [S1], [S2], [S3]
+# Ordering matches discovery.direct_sources and plan external references.
+sources:
+  - id: S1
+    file: https://www.history.org.ua/?termin=Karmalyuk
+    type: external
+    title: КАРМАЛЮК Устим Якимович
+    url: https://www.history.org.ua/?termin=Karmalyuk
+    domain: history.org.ua
+    metadata:
+      publisher: Інститут історії України НАН України
+      work: Енциклопедія історії України, т. 4
+      author: Любченко В. Б.
+      language: uk
+      verified_on: '2026-07-18'
+      portrait_fallback: >-
+        text-only: стаття не доводить окремої reusable ліцензії
+        індивідуального портретного файла.
+  - id: S2
+    file: https://history.org.ua/JournALL/journal/1997/1/10.pdf
+    type: external
+    title: Кармалюк чи Карманюк?
+    url: https://history.org.ua/JournALL/journal/1997/1/10.pdf
+    domain: history.org.ua
+    metadata:
+      publisher: Інститут історії України НАН України
+      work: Український історичний журнал, 1997, № 1
+      author: Любченко В. Б.
+      language: uk
+      verified_on: '2026-07-18'
+      document_identity: >-
+        PDF «Пошуки та знахідки»: метричні книги с. Головчинці;
+        родинне прізвище Карманюк; обережне датування за хрещенням.
+  - id: S3
+    file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm
+    type: external
+    title: Karmaliuk, Ustym
+    url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm
+    domain: encyclopediaofukraine.com
+    metadata:
+      publisher: Internet Encyclopedia of Ukraine (CIUS)
+      language: en
+      verified_on: '2026-07-18'
+      divergence_note: >-
+        IEU: redistribution to village poor; peak 1830–35 «up to 20,000
+        peasants»; 1814 Kamianets sentence and Crimea escape. Not a
+        learner reading (English).

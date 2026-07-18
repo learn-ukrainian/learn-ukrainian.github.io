@@ -1,0 +1,95 @@
+discovered_at: '2026-07-18T00:00:00+00:00'
+error: null
+query_keywords:
+  - Устим Кармалюк
+  - ЕІУ КАРМАЛЮК Устим Якимович Любченко
+  - Український історичний журнал Кармалюк чи Карманюк 1997
+  - IEU Karmaliuk Ustym
+  - Поділля кріпацтво рекрутчина сибірська каторга
+  - За Сибіром сонце сходить історична пісня
+direct_sources:
+  - https://www.history.org.ua/?termin=Karmalyuk
+  - https://history.org.ua/JournALL/journal/1997/1/10.pdf
+  - https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm
+rag_chunks: []
+rag_literary: []
+fetch_disposition:
+  - url: https://www.history.org.ua/?termin=Karmalyuk
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      ЕІУ, т. 4 (Любченко В. Б., 2007): українська біографічна стаття; резолвиться
+      на resource.history.org.ua. Базовий фактологічний якір пакета.
+  - url: https://history.org.ua/JournALL/journal/1997/1/10.pdf
+    http_status: 200
+    content_type: application/pdf
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      УІЖ 1997 № 1, Любченко В. Б. «Кармалюк чи Карманюк?» — відкритий PDF;
+      метричні книги с. Головчинці, родинне прізвище Карманюк, обережне
+      датування хрещення.
+  - url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CA%5CKarmaliukUstym.htm
+    http_status: 200
+    content_type: text/html
+    disposition: adopted
+    verified_on: '2026-07-18'
+    note: >-
+      IEU (CIUS) — англомовна довідка; рамка 1814–1828, пік 1830–1835, redistrib
+      бідноті. Не learner reading (language: en); reference-only у плані.
+  - url: https://irbis-nbuv.gov.ua/ulib/item/REF0005738
+    http_status: 403
+    disposition: rejected
+    verified_on: '2026-07-18'
+    note: NBUV catalog 403 Forbidden — недоступний; не входить до adopted set.
+  - url: https://library.vn.ua/e-library/katalog/ustim-karmalyuk
+    http_status: 200
+    disposition: rejected
+    verified_on: '2026-07-18'
+    note: >-
+      VOUNB — радянський персональний бібліографічний покажчик 1986 («народний
+      герой», класова рамка). Корисний лише як reception; не фактологічний
+      adopted source і не learner reading.
+  - url: https://uk.wikipedia.org/wiki/Кармалюк_Устим_Якимович
+    disposition: rejected
+    verified_on: '2026-07-18'
+    note: >-
+      Wikipedia may orient discovery only; not an adopted factual authority.
+warning: >-
+  Direct-source packet. Adopted external set (order fixed): ЕІУ Кармалюк →
+  УІЖ PDF 1997 → IEU Karmaliuk. Ключова напруга: ЕІУ фіксує напади на маєтки,
+  корчми й заможних селян і «бл. 20 тис. осіб» у слідстві Галузинецької комісії;
+  IEU — redistribution to village poor і «up to 20,000 peasants» у русі 1830–1835.
+  Ці формули НЕ зливати. Родинне прізвище за УІЖ — Карманюк; learner-facing
+  канон — Устим Кармалюк. IEU 1814: 500 ударів у Кам'янці-Подільському + втеча
+  по дорозі до Криму — лише з атрибуцією IEU. Дата народження: ЕІУ 10.03/27.02.1787;
+  УІЖ трактує метричний запис як хрещення — ученьовій прозі обережно «1787».
+  Портрет: text-only portrait_fallback (індивідуальна ліцензія/провенанс портрета
+  не доведено для reusable individual image).
+topic: Устим Кармалюк — подільський кріпак-втікач, імперська кара і народна пам'ять
+objectives:
+  - Реконструювати шлях Кармалюка через кріпацтво, рекрутчину й сибірську каторгу.
+  - Розрізняти документальний запис, слідчі числа й фольклорний «народний месник».
+  - Не зводити соціальний склад загонів до етнічної провини.
+outline:
+  - Кріпацьке походження й рекрутський примус 1812.
+  - Цикл покарань і втеч; географія подільських рейдів.
+  - Слідство, загибель 1835 і пізніша пісенна пам'ять.
+keywords:
+  - кріпацтво
+  - рекрутчина
+  - каторга
+  - Поділля
+  - народний месник
+vocabulary:
+  - кріпак
+  - поміщик
+  - каторга
+  - засідка
+  - корчма
+constraints:
+  - Не подавати ярлик «український Робін Гуд» як нейтральний історичний вердикт.
+  - Не змішувати «20 тис. у слідстві» (ЕІУ) з «20 000 учасників руху» (IEU).
+  - Не перетворювати згадку про містечкових євреїв і дрібну шляхту на колективну провину.
