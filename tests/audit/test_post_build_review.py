@@ -331,9 +331,7 @@ def _passing_semantic(packet: dict) -> dict:
     claim_units = [
         unit
         for unit in statements["units"]
-        if set(unit.get("signals") or []).intersection(
-            {"universal_quantifier", "source_attribution"}
-        )
+        if pbr._statement_requires_claim(unit)
     ]
     if not claim_units and statements["units"]:
         claim_units = [statements["units"][0]]
@@ -1652,7 +1650,7 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
     with pytest.raises(ValidationError):
         Draft202012Validator(schema).validate(missing)
 
-    risk_unit = next(unit for unit in units if unit["signals"])
+    risk_unit = next(unit for unit in units if pbr._statement_requires_claim(unit))
     dismissed = copy.deepcopy(semantic)
     dismissed["statement_coverage"][risk_unit["id"]] = {
         "classification": "no_checkable_claim",
@@ -1660,6 +1658,55 @@ def test_provider_schema_requires_every_statement_and_risk_claim() -> None:
     }
     with pytest.raises(ValidationError):
         Draft202012Validator(schema).validate(dismissed)
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Розрізніть, що встановлює каталог Держкіно.", False),
+        ("Що встановлює каталог Держкіно?", False),
+        ("Каталог Держкіно фіксує 1958 рік.", True),
+        ("Зверніть увагу: каталог Держкіно фіксує 1958 рік.", True),
+        ("Зверніть увагу, що каталог Держкіно фіксує 1958 рік.", True),
+        (
+            "Зверніть увагу, що каталог Держкіно фіксує 1958 рік: порівняйте.",
+            True,
+        ),
+        ("Каталог Держкіно фіксує 1958 рік, порівняйте.", True),
+        ("Зауважте за ЕСУ: порівняйте дві дати.", False),
+    ],
+)
+def test_source_attribution_claim_requirement_respects_speech_act(
+    text: str,
+    expected: bool,
+) -> None:
+    unit = {"text": text, "signals": ["source_attribution"]}
+
+    assert pbr._statement_requires_claim(unit) is expected
+
+
+def test_provider_schema_accepts_nonclaim_source_attribution_instruction(
+    malyshko_packet: dict,
+) -> None:
+    packet = copy.deepcopy(malyshko_packet)
+    units = packet["deterministic"]["statement_inventory"]["units"]
+    instruction = next(unit for unit in units if "source_attribution" in unit["signals"])
+    instruction["text"] = (
+        "Розрізніть, що встановлює каталог Держкіно, а що міг би додати сам фільм."
+    )
+    packet["deterministic"]["statement_inventory"] = pbr._inventory_payload(units)
+
+    semantic = _passing_semantic(packet)
+    coverage = semantic["statement_coverage"][instruction["id"]]
+
+    assert pbr._statement_requires_claim(instruction) is False
+    assert coverage == {"classification": "no_checkable_claim", "claim_ids": []}
+    Draft202012Validator(pbr.semantic_response_schema(packet)).validate(semantic)
+
+    result = pbr.finalize_review(packet, _raw(semantic))
+
+    assert result["semantic_response"]["contract_status"] == "valid"
+    assert result["semantic"]["statement_coverage"][instruction["id"]] == coverage
 
 
 @pytest.mark.parametrize("substitution", ["unbound", "drops_quantifier"])
@@ -2434,6 +2481,9 @@ def test_universal_instruction_remains_excluded_from_claim_signal() -> None:
     assert pbr._statement_signals(
         "У кожній версії простежте граматичну особу."
     ) == []
+    assert pbr._statement_signals(
+        "Кожен запис потребує джерела, порівняйте їх."
+    ) == ["universal_quantifier"]
 
 
 @pytest.mark.parametrize(
