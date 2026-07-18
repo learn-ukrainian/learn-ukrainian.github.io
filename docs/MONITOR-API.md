@@ -108,7 +108,11 @@ curl -s "http://localhost:8765/api/delegate/active"
 curl -s "http://localhost:8765/api/worktrees"
 curl -s "http://localhost:8765/api/comms/inbox?agent=claude-infra"
 
-# 4. Do NOT fetch the full rules payload at cold start. Fetch it on demand before
+# 4. Pull authoritative curriculum state only when selecting a module.
+curl -s "http://localhost:8765/api/state/preparation?track=c1"
+curl -s "http://localhost:8765/api/state/preparation/c1/<slug>"
+
+# 5. Do NOT fetch the full rules payload at cold start. Fetch it on demand before
 # the first dispatch, and again only when the manifest rules hash changes.
 ```
 
@@ -203,9 +207,66 @@ Standard HTTP status codes: `404` for missing resources, `500` for server errors
 
 These are the primary endpoints for understanding pipeline state. All are read-only GETs.
 
+### `GET /api/state/preparation[?track=x]`
+
+Versioned, agent-facing active curriculum authority. This route is distinct
+from legacy pipeline telemetry: it derives its roster only from
+`curriculum.yaml`, classifies the canonical four-file learner bundle, and
+observes learner publication files. It never evaluates preparation across a
+whole track.
+
+```bash
+# All 20 active manifest tracks (inactive plan-only tracks are diagnostics).
+curl -s http://localhost:8765/api/state/preparation | .venv/bin/python -m json.tool
+
+# One-track response, kept below the 5 KB agent budget.
+curl -s "http://localhost:8765/api/state/preparation?track=a1" | .venv/bin/python -m json.tool
+```
+
+The response contract is `agent-preparation-state.v1` (schema:
+`schemas/agent-preparation-state.v1.schema.json`). Component states remain
+orthogonal:
+
+- `module_state_counts`: `unbuilt`, `partial`, `built`, based only on
+  `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml`.
+- `publication_state_counts`: `absent`, `generated`, `published`, where
+  `published` means learner MDX under `site/src/content/docs/` and `generated`
+  means only the legacy direct curriculum Markdown exists.
+- `diagnostics.inactive_plan_tracks`: plans-fallback inventory with
+  `authority: diagnostic-only`; it never contributes to active totals.
+
+Every request recomputes from local files (`cache: none`) and returns a strong
+ETag over the exact stable JSON bytes. `If-None-Match` returns a bodyless `304`.
+Unknown query parameters, duplicate filters, unsafe identifiers, inactive
+fallback tracks, and unknown tracks are rejected rather than silently ignored.
+
+### `GET /api/state/preparation/{track}/{slug}[?evidence=summary|expanded]`
+
+One canonical, fail-closed module preparation decision. The route calls
+`curriculum_readiness.evaluate_preparation()` and passes through its vocabulary
+unchanged: `module_state`, `preparation_state`, `state`, and `next_action`
+(`stop`, `prepare`, `plan`, `build`, or `certify`). It adds only the orthogonal
+learner publication observation and a shared authority envelope.
+
+```bash
+curl -s http://localhost:8765/api/state/preparation/bio/knyahynia-olha | .venv/bin/python -m json.tool
+curl -s "http://localhost:8765/api/state/preparation/a1/sounds-letters-and-hello?evidence=expanded" | .venv/bin/python -m json.tool
+```
+
+Summary mode returns reason codes, owners, preparation identity, compact source
+identities, manifest/profile identities, and the fixed repository identity.
+Expanded mode additionally embeds the already schema-validated canonical
+preparation result and individual bundle/publication source hashes. No response
+contains a `ready` boolean: `next_action` is the sole generation disposition.
+An off-manifest slug returns the canonical stop decision with HTTP `404`.
+Production release snapshots label their linked data root `live_primary`;
+development servers identify a dispatch or other linked worktree explicitly.
+
 ### `GET /api/state/summary`
 
-Full project snapshot — one call replaces 5 bash scripts at session start.
+Legacy pipeline and artifact telemetry snapshot. Use
+`/api/state/preparation`—not this route—for active curriculum membership or a
+generation decision.
 
 ```bash
 curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
@@ -229,12 +290,17 @@ Returns per-track counts:
 - `dossier_done` — discovered dossier/research files, including
   `docs/research/{track}/{slug}.md` seminar dossiers
 - `dossier_docs` / `dossier_curriculum` — split by dossier source
-- `content_done` — modules with lesson content complete in pipeline state
-- `generated_md` — generated curriculum markdown exists on disk
-- `published_mdx` — Starlight MDX exists under
-  `starlight/src/content/docs/{track}/{slug}.mdx`
-- `audit_passing` — `status/*.json` overall == "pass"
+- `content_done` — orchestration content/write phase complete; it does not
+  describe the canonical learner bundle or publication
+- `generated_md` — legacy direct
+  `curriculum/l2-uk-en/{track}/{slug}.md` exists
+- `published_mdx` — learner MDX exists under
+  `site/src/content/docs/{track}/{slug}.mdx`
+- `audit_passing` — generated `status/*.json` overall == "pass"; informational,
+  never preparation authority
 - `audit_stale` — status cache exists but is older than the module source
+- `reviewed` — generated `review/{slug}-review.md` exists; informational,
+  never certification authority
 - `final_review_done` — `review/*-final-review.md` exists
 - `prompt_reviewed` — `/prompt-review` done (`audit/*-prompt-review.md` exists)
 - `content_reviewed` — `/content-review` done (`audit/*-content-review.md` exists)
@@ -551,9 +617,13 @@ Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 
 
 ---
 
-### `GET /api/state/ready-to-build[?track=x]`
+### `GET /api/state/ready-to-build[?track=x]` (deprecated)
 
-Modules where research is complete but content hasn't started. **The build queue.**
+Legacy modules where research/dossier evidence exists but the orchestration
+content phase has not started. These are **research-complete candidates, not a
+generation-ready build queue**. In particular, BIO dossiers do not satisfy the
+BIO manual preparation gates. Migrate generation decisions to the exact module
+route under `/api/state/preparation/{track}/{slug}`.
 
 ```bash
 # All tracks
@@ -563,7 +633,9 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version`. Returns list sorted by track then num.
+Candidate membership and the `count`/`modules` shape remain compatible. The
+response additively labels itself `informational-only`, names its exact legacy
+semantics, and links the replacement.
 
 ---
 
@@ -882,8 +954,8 @@ curl -s http://localhost:8765/api/artifacts/ship-ready | python3 -m json.tool
 # Public site reachability + freshness.
 curl -s http://localhost:8765/api/site/health | python3 -m json.tool
 
-# What's ready to build next (Phase A done, B not started)
-curl -s http://localhost:8765/api/state/ready-to-build
+# Canonical preparation for an exact active module.
+curl -s http://localhost:8765/api/state/preparation/c1/<slug>
 
 # Critical issues to fix
 curl -s "http://localhost:8765/api/state/issues?severity=critical"
@@ -1630,6 +1702,8 @@ wiki, health, and session hints.
 Query params:
 
 - `fresh=true` — invalidate orient-layer caches before gathering (see below).
+- `lean=true` — use the lightweight cold-start preset and omit the heavy
+  `pipeline`, `issues`, and `wiki` sections. An explicit `sections` list wins.
 - `sections=git,runtime` — comma-separated subset of section keys to
   collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
   `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`, `health`,
@@ -1648,7 +1722,15 @@ Query params:
 ```json
 {
   "generated_at": "2026-04-11T00:15:00Z",
-  "git": {"branch": "main", "head": "cb5f47d19"},
+  "git": {
+    "branch": "main",
+    "head": "cb5f47d19",
+    "authority": {
+      "repository": "learn-ukrainian/learn-ukrainian.github.io",
+      "data_checkout": {"role": "live_primary", "root": "/fixed/repo", "branch": "main", "head_sha": "<40-hex>"},
+      "service_code": {"mode": "release", "commit_sha": "<40-hex>", "tree_sha256": "<64-hex>"}
+    }
+  },
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
   "runtime": {"agents": ["claude", "gemini", "codex"]},
   "health": {"api": true, "mcp_rag": false},

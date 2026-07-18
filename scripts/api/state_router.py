@@ -5,7 +5,9 @@ Mounted at /api/state/ in main.py.
 Endpoints:
   GET /api/state/summary              Full project snapshot
   GET /api/state/pipeline/{track}     Per-module pipeline state for one track
-  GET /api/state/ready-to-build       Phase A done, Phase B not started
+  GET /api/state/preparation          Active manifest bundle/publication roster
+  GET /api/state/preparation/{track}/{slug} Canonical one-module preparation
+  GET /api/state/ready-to-build       Deprecated research-complete candidates
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
   GET /api/state/build-status          All-tracks build progress summary
@@ -29,12 +31,13 @@ Performance notes:
 import asyncio
 import json
 import logging
+import re
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 from scripts.analytics.cost_report import CostRecord, load_cost_records
@@ -56,10 +59,16 @@ except ImportError:
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
+from . import preparation_state
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
-from .config import CURRICULUM_ROOT, LEVELS
+from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .lane_health import compute_lane_health
-from .rules_router import rules_hash
+from .repository_authority import (
+    RepositoryAuthorityError,
+    build_repository_authority,
+    preparation_data_root,
+)
+from .rules_router import _matches_etag, rules_hash
 from .session_router import session_hash
 from .state_build import (
     compute_build_stats,
@@ -124,6 +133,42 @@ STATE_RESEARCH_COVERAGE_TTL_S = 300.0
 STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
+_PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
+
+
+def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
+    unknown = sorted(set(request.query_params) - allowed)
+    if unknown:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "UNKNOWN_QUERY_PARAMETER", "parameters": unknown},
+        )
+    duplicates = sorted(key for key in allowed if len(request.query_params.getlist(key)) > 1)
+    if duplicates:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "DUPLICATE_QUERY_PARAMETER", "parameters": duplicates},
+        )
+
+
+def _validate_preparation_selector(value: str, label: str) -> None:
+    if not _PREPARATION_SELECTOR_RE.fullmatch(value):
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INVALID_SELECTOR", "selector": label},
+        )
+
+
+def _preparation_response(request: Request, payload: dict[str, Any], *, status_code: int = 200) -> Response:
+    body, etag_hex = preparation_state.response_document(payload)
+    headers = {
+        "ETag": f'"{etag_hex}"',
+        "Cache-Control": "no-cache",
+        "X-Source-Identity": payload["freshness"]["source_identity"],
+    }
+    if status_code == 200 and _matches_etag(request.headers.get("If-None-Match"), etag_hex):
+        return Response(status_code=304, headers=headers)
+    return Response(content=body, media_type="application/json", status_code=status_code, headers=headers)
 
 
 def _with_state_meta(
@@ -1112,9 +1157,97 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
     )
 
 
-@router.get("/ready-to-build")
+@router.get("/preparation")
+async def preparation_roster(
+    request: Request,
+    track: str | None = Query(None, min_length=1, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]*$"),
+):
+    """Active-manifest learner bundle and publication state, without readiness sweeps."""
+    _validate_preparation_query(request, {"track"})
+
+    def _compute() -> dict[str, Any]:
+        data_root = preparation_data_root(
+            project_root=PROJECT_ROOT,
+            live_repo_root=LIVE_REPO_ROOT,
+        )
+        authority = build_repository_authority(
+            project_root=PROJECT_ROOT,
+            live_repo_root=data_root,
+        )
+        return preparation_state.build_roster(
+            repo_root=PROJECT_ROOT,
+            authority=authority,
+            track=track,
+        )
+
+    try:
+        payload = await asyncio.to_thread(_compute)
+    except preparation_state.InactiveTrackError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INACTIVE_TRACK", "manifest_authority": "fallback-diagnostic-only"},
+        ) from exc
+    except preparation_state.UnknownTrackError as exc:
+        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_TRACK"}) from exc
+    except (preparation_state.PreparationStateError, RepositoryAuthorityError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"code": "PREPARATION_AUTHORITY_UNAVAILABLE"},
+        ) from exc
+    return _preparation_response(request, payload)
+
+
+@router.get("/preparation/{track}/{slug}")
+async def preparation_module(
+    request: Request,
+    track: str,
+    slug: str,
+    evidence: Literal["summary", "expanded"] = Query("summary"),
+):
+    """One fail-closed canonical preparation decision plus orthogonal publication state."""
+    _validate_preparation_query(request, {"evidence"})
+    _validate_preparation_selector(track, "track")
+    _validate_preparation_selector(slug, "slug")
+
+    def _compute() -> dict[str, Any]:
+        data_root = preparation_data_root(
+            project_root=PROJECT_ROOT,
+            live_repo_root=LIVE_REPO_ROOT,
+        )
+        authority = build_repository_authority(
+            project_root=PROJECT_ROOT,
+            live_repo_root=data_root,
+        )
+        return preparation_state.build_module_state(
+            repo_root=PROJECT_ROOT,
+            authority=authority,
+            track=track,
+            slug=slug,
+            expanded=evidence == "expanded",
+        )
+
+    try:
+        payload = await asyncio.to_thread(_compute)
+    except preparation_state.InactiveTrackError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "INACTIVE_TRACK", "manifest_authority": "fallback-diagnostic-only"},
+        ) from exc
+    except preparation_state.UnknownTrackError as exc:
+        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_TRACK"}) from exc
+    except (preparation_state.PreparationStateError, RepositoryAuthorityError) as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"code": "PREPARATION_AUTHORITY_UNAVAILABLE"},
+        ) from exc
+
+    status_code = 404 if payload["manifest_authority"] == "off-manifest" else 200
+    return _preparation_response(request, payload, status_code=status_code)
+
+
+@router.get("/ready-to-build", deprecated=True)
 async def ready_to_build(track: str | None = Query(None)):
-    """Modules where Phase A is complete but Phase B hasn't started."""
+    """Deprecated research-complete candidates; not generation readiness."""
 
     def _compute():
         ready = []
@@ -1142,7 +1275,14 @@ async def ready_to_build(track: str | None = Query(None)):
                             "phase_a_mode": research_phase.get("mode"),
                         }
                     )
-        return {"count": len(ready), "modules": ready}
+        return {
+            "count": len(ready),
+            "modules": ready,
+            "authority": "informational-only",
+            "semantics": "research-complete-candidates-not-generation-readiness",
+            "deprecated": True,
+            "replacement": "/api/state/preparation",
+        }
 
     return await asyncio.to_thread(_compute)
 
