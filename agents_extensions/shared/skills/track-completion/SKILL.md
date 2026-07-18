@@ -162,6 +162,11 @@ reviewer family, exact evidence artifact, and `PASS`. Resolve requested changes,
 record `CHANGES_REQUESTED` with its deterministic `--owner-kind`, resolve the
 repair, and rerun post-build review before trying again.
 
+If only the versioned audit workflow changes while this gate is pending, record
+that exact `audit_tooling` change. The helper requires unchanged learner hashes
+and returns the module to `POST_BUILD_REVIEW_REQUIRED`; stale review evidence
+must never remain authoritative merely because it had already reached this gate.
+
 Record both the process receipt and the strict `independent-review`
 certification artifact. Only the strict current artifact advances to
 `PUBLISH_REQUIRED`.

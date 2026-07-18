@@ -955,7 +955,11 @@ def record_change(
             }
             workflow_only_audit_refresh = (
                 ledger["state"]
-                in {"POST_BUILD_REVIEW_REQUIRED", "AWAITING_PRODUCTION_QG_ARMING"}
+                in {
+                    "POST_BUILD_REVIEW_REQUIRED",
+                    "INDEPENDENT_REVIEW_REQUIRED",
+                    "AWAITING_PRODUCTION_QG_ARMING",
+                }
                 and owner_kind == "audit_tooling"
             )
             if ledger["state"] not in allowed_states and not workflow_only_audit_refresh:
