@@ -1,0 +1,3859 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+  source_family: teacher_lesson
+  extraction_mode: curated_headword
+  title: Private teacher lesson vocabulary - 2026-07-18 bulk new heads
+  locator: local-only explicit vocabulary tables bulk delta vs prior committed inventory
+  notes: 'Derived headword metadata only; raw private lesson material is local-only and not committed.
+    Daily Word, Practice, and cloze remain frozen without explicit surface_admission. Bulk teacher-trust
+    intake: multiword expressions kept as phrase; no AI row review.'
+  headwords:
+  - lemma: вийти з ладу /вихід з ладу
+    pos: phrase
+    gloss: To break down
+    locator: explicit vocabulary table 1 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: присягатися, клястися
+    pos: phrase
+    gloss: To swear (imperf)
+    locator: explicit vocabulary table 1 row 24
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: присягнутися, поклястися
+    pos: phrase
+    gloss: To swear (perf0
+    locator: explicit vocabulary table 1 row 25
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: таракан, тарган
+    pos: phrase
+    gloss: A cockroach
+    locator: explicit vocabulary table 1 row 29
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: правила дорожнього руху (пдр)
+    pos: phrase
+    gloss: Traffic rules
+    locator: explicit vocabulary table 1 row 40
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повідомляти, давати знати
+    pos: phrase
+    gloss: To let someone know (imperf)
+    locator: explicit vocabulary table 1 row 45
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повідомити, дати знати
+    pos: phrase
+    gloss: To let someone know (perf)
+    locator: explicit vocabulary table 1 row 46
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: страховка, страхування
+    pos: phrase
+    gloss: Insurance
+    locator: explicit vocabulary table 1 row 51
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мікрохвильова піч (мікрохвильовка)
+    pos: phrase
+    gloss: A microwave
+    locator: explicit vocabulary table 1 row 60
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: висувати (висунути) ультиматум
+    pos: phrase
+    gloss: To give an ultimatum
+    locator: explicit vocabulary table 1 row 86
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обдурити, обхитрити
+    pos: phrase
+    gloss: To trick (perf)
+    locator: explicit vocabulary table 1 row 122
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дтп (детепе) дорожньо-транспортна пригода
+    pos: phrase
+    gloss: Car accident
+    locator: explicit vocabulary table 1 row 133
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: у шоці з (gen)
+    pos: phrase
+    gloss: Shocked with
+    locator: explicit vocabulary table 1 row 175
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: виставити + instr
+    pos: verb
+    gloss: To make someone look like (perf) (NEGATIVE)
+    locator: explicit vocabulary table 1 row 179
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: виставляти + instr
+    pos: verb
+    gloss: To make someone look like (imperf) (NEGATIVE)
+    locator: explicit vocabulary table 1 row 180
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: dat + терпець урвався (увірвався)
+    pos: phrase
+    gloss: To be out of patience , to be tired of , to be annoyed
+    locator: explicit vocabulary table 1 row 189
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: випустути
+    pos: verb
+    gloss: To release, to let out (perf)
+    locator: explicit vocabulary table 1 row 206
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: (чайний) сервіз
+    pos: phrase
+    gloss: Tea set
+    locator: explicit vocabulary table 1 row 219
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повісити носа
+    pos: phrase
+    gloss: to be sad, to be upset, to lose hope, to fall into despair
+    locator: explicit vocabulary table 1 row 223
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сліпа зона
+    pos: phrase
+    gloss: Blind spot
+    locator: explicit vocabulary table 1 row 234
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: з нуля
+    pos: phrase
+    gloss: From scratch
+    locator: explicit vocabulary table 1 row 244
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: переливати з пустого в порожнє
+    pos: phrase
+    gloss: Repeating the same thing, engaging in unnecessary or meaningless conversations.To engage in
+      unnecessary, futile activities, usually while talking a lot.(to pour something from empty to empty)
+    locator: explicit vocabulary table 1 row 257
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на високому рівні, відмінний
+    pos: phrase
+    gloss: Excellent
+    locator: explicit vocabulary table 1 row 260
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не лізь поперед батька в пекло, не жени коней
+    pos: phrase
+    gloss: Don't jump a gun
+    locator: explicit vocabulary table 1 row 264
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: благополуччя, добробут
+    pos: phrase
+    gloss: Wellbeing
+    locator: explicit vocabulary table 1 row 279
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: паціент
+    pos: noun
+    gloss: Patient
+    locator: explicit vocabulary table 1 row 280
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сміятися (над)
+    pos: phrase
+    gloss: To laugh (at)
+    locator: explicit vocabulary table 1 row 284
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зводити з розуму
+    pos: phrase
+    gloss: To make someone go crazy
+    locator: explicit vocabulary table 1 row 288
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вручку
+    pos: noun
+    gloss: Manually
+    locator: explicit vocabulary table 1 row 317
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прийдеться
+    pos: verb
+    gloss: Will have to do, will be a need (dative before)
+    locator: explicit vocabulary table 1 row 318
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: брати до уваги
+    pos: phrase
+    gloss: To take into consideration
+    locator: explicit vocabulary table 1 row 324
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сонцезахисний крем
+    pos: phrase
+    gloss: sunscreen
+    locator: explicit vocabulary table 1 row 329
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: виступити з промовою
+    pos: phrase
+    gloss: To make a speech
+    locator: explicit vocabulary table 1 row 331
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: блювати, ригати (vulgar)
+    pos: phrase
+    gloss: To throw up
+    locator: explicit vocabulary table 1 row 337
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надмірно стимулювати
+    pos: phrase
+    gloss: Overstimulate
+    locator: explicit vocabulary table 1 row 343
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подати запит на
+    pos: phrase
+    gloss: submit a request for
+    locator: explicit vocabulary table 1 row 348
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повний робочий день
+    pos: phrase
+    gloss: Full time
+    locator: explicit vocabulary table 1 row 373
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вказувати на
+    pos: phrase
+    gloss: To indicate (imperf)
+    locator: explicit vocabulary table 1 row 375
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вказати на
+    pos: phrase
+    gloss: To indicate (perf)
+    locator: explicit vocabulary table 1 row 376
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: брати слухавку
+    pos: phrase
+    gloss: To pick up a call
+    locator: explicit vocabulary table 1 row 377
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: торкатися (кого, чого)
+    pos: phrase
+    gloss: To touch (imperf)
+    locator: explicit vocabulary table 1 row 378
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: доторкнутися (торкнутися) (кого, чого)
+    pos: phrase
+    gloss: To touch (perf)
+    locator: explicit vocabulary table 1 row 379
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: приголошливий
+    pos: noun
+    gloss: Stunning
+    locator: explicit vocabulary table 1 row 384
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сайт знайомств
+    pos: phrase
+    gloss: Dating website
+    locator: explicit vocabulary table 1 row 395
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: близнюки (близнята)
+    pos: phrase
+    gloss: Twins (identical)
+    locator: explicit vocabulary table 1 row 406
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: двійнята (двійня)
+    pos: phrase
+    gloss: Twins (not identical)
+    locator: explicit vocabulary table 1 row 407
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: час пік
+    pos: phrase
+    gloss: Rush hour
+    locator: explicit vocabulary table 1 row 411
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сиротинець, дитбудинок
+    pos: phrase
+    gloss: Orphanage
+    locator: explicit vocabulary table 1 row 417
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: алергія на
+    pos: phrase
+    gloss: Allergy to
+    locator: explicit vocabulary table 1 row 421
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: приклад для наслідування
+    pos: phrase
+    gloss: Role model
+    locator: explicit vocabulary table 1 row 422
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подразнений (body part), роздратований (person)
+    pos: phrase
+    gloss: Irritated
+    locator: explicit vocabulary table 1 row 424
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розміром з (знахідний)
+    pos: phrase
+    gloss: Size of
+    locator: explicit vocabulary table 1 row 425
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: антигістамінні препарати, антигістаміни
+    pos: phrase
+    gloss: Antihistamines
+    locator: explicit vocabulary table 1 row 426
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: державний вихідний
+    pos: phrase
+    gloss: Bank holidays
+    locator: explicit vocabulary table 1 row 427
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: приречений на провал/фіаско
+    pos: phrase
+    gloss: Doomed to failure
+    locator: explicit vocabulary table 1 row 433
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на противагу (давальний)
+    pos: phrase
+    gloss: In contrast to
+    locator: explicit vocabulary table 1 row 439
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: схильність (до)
+    pos: phrase
+    gloss: Inclination
+    locator: explicit vocabulary table 1 row 441
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: трястися від холоду
+    pos: phrase
+    gloss: To shake because of cold
+    locator: explicit vocabulary table 1 row 454
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: від природи
+    pos: phrase
+    gloss: Naturally, by nature
+    locator: explicit vocabulary table 1 row 455
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ахіллове сухожилля
+    pos: phrase
+    gloss: Achilles tendon
+    locator: explicit vocabulary table 1 row 462
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відбиток пальця
+    pos: phrase
+    gloss: Fingerprint
+    locator: explicit vocabulary table 1 row 464
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нервовий зрив
+    pos: phrase
+    gloss: Mental breakdown
+    locator: explicit vocabulary table 1 row 474
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: бути в порядку
+    pos: phrase
+    gloss: To be okay
+    locator: explicit vocabulary table 1 row 485
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: словниковий запас
+    pos: phrase
+    gloss: Vocabulary
+    locator: explicit vocabulary table 1 row 493
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: водійські права
+    pos: phrase
+    gloss: Driver's license
+    locator: explicit vocabulary table 1 row 496
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: веснянки, ластовиння
+    pos: phrase
+    gloss: Freckles
+    locator: explicit vocabulary table 1 row 512
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пишатися (ким? чим?)
+    pos: phrase
+    gloss: To be proud
+    locator: explicit vocabulary table 1 row 520
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: політична кампанія
+    pos: phrase
+    gloss: Political campaign
+    locator: explicit vocabulary table 1 row 525
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ллє як з відра
+    pos: phrase
+    gloss: Pouring down
+    locator: explicit vocabulary table 1 row 526
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гадки не мати
+    pos: phrase
+    gloss: To have no idea; to not grieve, to not worry
+    locator: explicit vocabulary table 1 row 533
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зі страху
+    pos: phrase
+    gloss: In fear
+    locator: explicit vocabulary table 1 row 534
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надзвичайний стан
+    pos: phrase
+    gloss: State of emergency
+    locator: explicit vocabulary table 1 row 538
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: все йде як по маслу
+    pos: phrase
+    gloss: Everything is going smoothly
+    locator: explicit vocabulary table 1 row 539
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зі сторони тата
+    pos: phrase
+    gloss: From dad's side
+    locator: explicit vocabulary table 1 row 545
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: чутливий до
+    pos: phrase
+    gloss: Sensitive to
+    locator: explicit vocabulary table 1 row 547
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вона того ж самого віку
+    pos: phrase
+    gloss: She's the same age
+    locator: explicit vocabulary table 1 row 548
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: наступного тижня
+    pos: phrase
+    gloss: Next week
+    locator: explicit vocabulary table 1 row 555
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: він поведе мене до
+    pos: phrase
+    gloss: He'll lead/take me to
+    locator: explicit vocabulary table 1 row 556
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: це залежить від швидкості
+    pos: phrase
+    gloss: It depends on speed
+    locator: explicit vocabulary table 1 row 560
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: швидкість вбиває
+    pos: phrase
+    gloss: Speed kills
+    locator: explicit vocabulary table 1 row 561
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: новітній, сучасний
+    pos: phrase
+    gloss: State-of-the-art
+    locator: explicit vocabulary table 1 row 567
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: так чи інакше
+    pos: phrase
+    gloss: Anyway
+    locator: explicit vocabulary table 1 row 570
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: верхній шар
+    pos: phrase
+    gloss: Top layer
+    locator: explicit vocabulary table 1 row 572
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: глузувати з
+    pos: phrase
+    gloss: To mock (imperfective)
+    locator: explicit vocabulary table 1 row 581
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поносити (одяг)
+    pos: phrase
+    gloss: To wear for a while (perfective)
+    locator: explicit vocabulary table 1 row 595
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на ногах
+    pos: phrase
+    gloss: On the feet
+    locator: explicit vocabulary table 1 row 600
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сусідство, район
+    pos: phrase
+    gloss: Neighbourhood
+    locator: explicit vocabulary table 1 row 606
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: цільні злаки
+    pos: phrase
+    gloss: Whole graines
+    locator: explicit vocabulary table 1 row 610
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: москітна сітка
+    pos: phrase
+    gloss: Window net
+    locator: explicit vocabulary table 2 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нянька, няня
+    pos: phrase
+    gloss: Nanny
+    locator: explicit vocabulary table 2 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пільга
+    pos: noun
+    gloss: Benefit, priveledge
+    locator: explicit vocabulary table 2 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дрова
+    pos: noun
+    gloss: Firewood
+    locator: explicit vocabulary table 2 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: порода
+    pos: noun
+    gloss: A breed
+    locator: explicit vocabulary table 2 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ладан
+    pos: noun
+    gloss: Incense
+    locator: explicit vocabulary table 2 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зазнати збитків
+    pos: phrase
+    gloss: To suffer losses
+    locator: explicit vocabulary table 2 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пошкодження
+    pos: noun
+    gloss: Damage
+    locator: explicit vocabulary table 2 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: землетрус
+    pos: noun
+    gloss: Earthquake
+    locator: explicit vocabulary table 2 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сарафанне радіо
+    pos: phrase
+    gloss: Word of mouth
+    locator: explicit vocabulary table 2 row 11
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: скупий
+    pos: adjective
+    gloss: Greedy
+    locator: explicit vocabulary table 2 row 12
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: харчовий контейнер, лоток, лоточок
+    pos: phrase
+    gloss: Lunchbox
+    locator: explicit vocabulary table 2 row 13
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загадковий, таємничий
+    pos: phrase
+    gloss: Mysterious
+    locator: explicit vocabulary table 2 row 14
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: лікарняний
+    pos: adjective
+    gloss: Sick leave
+    locator: explicit vocabulary table 2 row 15
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: покійний
+    pos: adjective
+    gloss: Late (dead)
+    locator: explicit vocabulary table 2 row 16
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: засмагати
+    pos: verb
+    gloss: To sunbath (imperf)
+    locator: explicit vocabulary table 2 row 17
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: засмагнути
+    pos: verb
+    gloss: To sunbath (perf)
+    locator: explicit vocabulary table 2 row 18
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: чемний
+    pos: adjective
+    gloss: Polite, respectful
+    locator: explicit vocabulary table 2 row 19
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: посилка
+    pos: noun
+    gloss: A parcel
+    locator: explicit vocabulary table 2 row 20
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: опік
+    pos: verb
+    gloss: Burn
+    locator: explicit vocabulary table 2 row 21
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: багатодітна сім'я
+    pos: phrase
+    gloss: Large family
+    locator: explicit vocabulary table 2 row 22
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: витрати
+    pos: noun
+    gloss: Expenses
+    locator: explicit vocabulary table 2 row 23
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: худий
+    pos: adjective
+    gloss: Skinny
+    locator: explicit vocabulary table 2 row 25
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: наймати
+    pos: verb
+    gloss: To hire (imperf)
+    locator: explicit vocabulary table 2 row 26
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: найняти
+    pos: verb
+    gloss: To hire (perf)
+    locator: explicit vocabulary table 2 row 27
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: посудомийка
+    pos: noun
+    gloss: Dishwasher
+    locator: explicit vocabulary table 2 row 28
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: смуга
+    pos: noun
+    gloss: Lane (road)
+    locator: explicit vocabulary table 2 row 29
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обганяти
+    pos: verb
+    gloss: To overtake (imperf)
+    locator: explicit vocabulary table 2 row 30
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обігнати
+    pos: verb
+    gloss: To overtake (perf)
+    locator: explicit vocabulary table 2 row 31
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гнити
+    pos: verb
+    gloss: To rot (imperf)
+    locator: explicit vocabulary table 2 row 32
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: згнити
+    pos: verb
+    gloss: To rot (perf)
+    locator: explicit vocabulary table 2 row 33
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: грабувати
+    pos: verb
+    gloss: To rob (imperf)
+    locator: explicit vocabulary table 2 row 34
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пограбувати
+    pos: verb
+    gloss: To rob (perf)
+    locator: explicit vocabulary table 2 row 35
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: старший
+    pos: adjective
+    gloss: Senior
+    locator: explicit vocabulary table 2 row 36
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: неповнолітній
+    pos: adjective
+    gloss: Minor
+    locator: explicit vocabulary table 2 row 37
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: викликати залежність
+    pos: phrase
+    gloss: To be addictive
+    locator: explicit vocabulary table 2 row 38
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: залежність
+    pos: noun
+    gloss: Addiction
+    locator: explicit vocabulary table 2 row 39
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ребро
+    pos: noun
+    gloss: Rib
+    locator: explicit vocabulary table 2 row 40
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перелом
+    pos: noun
+    gloss: Breaking of bone
+    locator: explicit vocabulary table 2 row 41
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загострення
+    pos: noun
+    gloss: Aggravation
+    locator: explicit vocabulary table 2 row 42
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: жебракувати
+    pos: verb
+    gloss: To beg (for money)
+    locator: explicit vocabulary table 2 row 43
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: визнавати когось винним
+    pos: phrase
+    gloss: To find someone guilty (imperf)
+    locator: explicit vocabulary table 2 row 44
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: визнати когось винним
+    pos: phrase
+    gloss: To find someone guilty (perf)
+    locator: explicit vocabulary table 2 row 45
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: працювати над
+    pos: phrase
+    gloss: To work on
+    locator: explicit vocabulary table 2 row 46
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дрімати
+    pos: verb
+    gloss: To have a nap
+    locator: explicit vocabulary table 2 row 47
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ймовірність
+    pos: noun
+    gloss: Possibility
+    locator: explicit vocabulary table 2 row 48
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подати сигнал
+    pos: phrase
+    gloss: To signal
+    locator: explicit vocabulary table 2 row 49
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: підвернути ногу
+    pos: phrase
+    gloss: To twist one's ankle (perf)
+    locator: explicit vocabulary table 2 row 50
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кабан
+    pos: noun
+    gloss: boar
+    locator: explicit vocabulary table 2 row 51
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: взяти на роботу
+    pos: phrase
+    gloss: To employ
+    locator: explicit vocabulary table 2 row 52
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перстень
+    pos: noun
+    gloss: Ring
+    locator: explicit vocabulary table 2 row 53
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прем'єр закордонних страв
+    pos: phrase
+    gloss: Foreign affairs minister
+    locator: explicit vocabulary table 2 row 54
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: злочин
+    pos: noun
+    gloss: Crime
+    locator: explicit vocabulary table 2 row 57
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спільник
+    pos: noun
+    gloss: Partner in crime
+    locator: explicit vocabulary table 2 row 58
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: граціозний
+    pos: adjective
+    gloss: Graceful
+    locator: explicit vocabulary table 2 row 59
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перешкода
+    pos: noun
+    gloss: Obstacle
+    locator: explicit vocabulary table 2 row 60
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: довічне ув'язнення
+    pos: phrase
+    gloss: Life sentence
+    locator: explicit vocabulary table 2 row 61
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: підлабузник
+    pos: noun
+    gloss: Bootlicker
+    locator: explicit vocabulary table 2 row 62
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ховати
+    pos: verb
+    gloss: To hide (imperf)
+    locator: explicit vocabulary table 2 row 63
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заховати (сховати)
+    pos: phrase
+    gloss: To hide (perf)
+    locator: explicit vocabulary table 2 row 64
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заражатися
+    pos: verb
+    gloss: To get infected (imperf)
+    locator: explicit vocabulary table 2 row 65
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заразитися
+    pos: verb
+    gloss: To get infected (perf)
+    locator: explicit vocabulary table 2 row 66
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дотичний
+    pos: adjective
+    gloss: Tangent
+    locator: explicit vocabulary table 2 row 67
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сумувати за
+    pos: phrase
+    gloss: To miss
+    locator: explicit vocabulary table 2 row 68
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стежити за
+    pos: phrase
+    gloss: To monitor, to watch over
+    locator: explicit vocabulary table 2 row 69
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гидливий
+    pos: adjective
+    gloss: Squeamish
+    locator: explicit vocabulary table 2 row 70
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поставити запитання
+    pos: phrase
+    gloss: To ask a question (perf)
+    locator: explicit vocabulary table 2 row 71
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ігнорувати
+    pos: verb
+    gloss: To ignore (imperf)
+    locator: explicit vocabulary table 2 row 72
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: проігнорувати
+    pos: verb
+    gloss: To ignore (perf)
+    locator: explicit vocabulary table 2 row 73
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заховати
+    pos: verb
+    gloss: To hide (perf)
+    locator: explicit vocabulary table 2 row 75
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зв'язатися з
+    pos: phrase
+    gloss: To reach, to contact with
+    locator: explicit vocabulary table 2 row 76
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: застрягати
+    pos: verb
+    gloss: To get stuck (imperf)
+    locator: explicit vocabulary table 2 row 77
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: застрягнути
+    pos: verb
+    gloss: To get stuck (perf)
+    locator: explicit vocabulary table 2 row 78
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: як стемніє
+    pos: phrase
+    gloss: When it goes dark/will go dark
+    locator: explicit vocabulary table 2 row 79
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: постувати
+    pos: verb
+    gloss: To fast
+    locator: explicit vocabulary table 2 row 80
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: худоба
+    pos: noun
+    gloss: Livestock
+    locator: explicit vocabulary table 2 row 81
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: хлів
+    pos: noun
+    gloss: Barn with animals
+    locator: explicit vocabulary table 2 row 82
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: доглядати
+    pos: verb
+    gloss: To take care of, to look after (imperf)
+    locator: explicit vocabulary table 2 row 83
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: доглянути
+    pos: verb
+    gloss: To take care of, to look after (perf)
+    locator: explicit vocabulary table 2 row 84
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: частувати
+    pos: verb
+    gloss: To treat (with good food)
+    locator: explicit vocabulary table 2 row 85
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стайня
+    pos: noun
+    gloss: Stable (for horses)
+    locator: explicit vocabulary table 2 row 86
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: померлий
+    pos: adjective
+    gloss: Deceased
+    locator: explicit vocabulary table 2 row 87
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: непорозуміння
+    pos: noun
+    gloss: Misunderstanding
+    locator: explicit vocabulary table 2 row 88
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: напруга
+    pos: noun
+    gloss: Tension
+    locator: explicit vocabulary table 2 row 89
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: багаторічний
+    pos: adjective
+    gloss: long-term
+    locator: explicit vocabulary table 2 row 90
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: посів
+    pos: noun
+    gloss: crops
+    locator: explicit vocabulary table 2 row 92
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: санчата
+    pos: noun
+    gloss: sleigh
+    locator: explicit vocabulary table 2 row 93
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: (імбирний) пряник
+    pos: phrase
+    gloss: gingerbread
+    locator: explicit vocabulary table 2 row 94
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: янголятко
+    pos: noun
+    gloss: A little angel
+    locator: explicit vocabulary table 2 row 95
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сяяти, світити(засяяти, засвітити)
+    pos: phrase
+    gloss: To shine
+    locator: explicit vocabulary table 2 row 96
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кориця
+    pos: noun
+    gloss: Cinamon
+    locator: explicit vocabulary table 2 row 97
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: льодяник
+    pos: noun
+    gloss: Lollypop
+    locator: explicit vocabulary table 2 row 98
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: рити
+    pos: verb
+    gloss: To dig (imperf)
+    locator: explicit vocabulary table 2 row 99
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зарити
+    pos: verb
+    gloss: To dog (perf)
+    locator: explicit vocabulary table 2 row 100
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поховати
+    pos: verb
+    gloss: To bury (perf)
+    locator: explicit vocabulary table 2 row 102
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: річниця
+    pos: noun
+    gloss: Anniversary
+    locator: explicit vocabulary table 2 row 103
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: роковини
+    pos: noun
+    gloss: Anniversary of some bad situation
+    locator: explicit vocabulary table 2 row 104
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: набір
+    pos: noun
+    gloss: A set
+    locator: explicit vocabulary table 2 row 105
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пряжа
+    pos: noun
+    gloss: yarn
+    locator: explicit vocabulary table 2 row 106
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: флешка
+    pos: noun
+    gloss: Usb drive
+    locator: explicit vocabulary table 2 row 107
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: абонемент
+    pos: noun
+    gloss: Subscription (на сервіс) / Season pass (на спорт чи заходи) / Gym membership (у спортзал)
+    locator: explicit vocabulary table 2 row 108
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: віфлієм
+    pos: noun
+    gloss: Bethlehem
+    locator: explicit vocabulary table 2 row 109
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пастух
+    pos: noun
+    gloss: shepherd
+    locator: explicit vocabulary table 2 row 110
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: яловичина
+    pos: noun
+    gloss: Beef
+    locator: explicit vocabulary table 2 row 111
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: свинина
+    pos: noun
+    gloss: Pork
+    locator: explicit vocabulary table 2 row 112
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: телятина
+    pos: noun
+    gloss: veal
+    locator: explicit vocabulary table 2 row 113
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: курятина
+    pos: noun
+    gloss: Chicken meat
+    locator: explicit vocabulary table 2 row 114
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: полювати
+    pos: verb
+    gloss: To hunt
+    locator: explicit vocabulary table 2 row 115
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: скласти (іспит, екзамен)
+    pos: phrase
+    gloss: To do (an exam)
+    locator: explicit vocabulary table 2 row 116
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: знадобитися
+    pos: verb
+    gloss: To be needed (dative before)
+    locator: explicit vocabulary table 2 row 117
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спроба
+    pos: noun
+    gloss: A try
+    locator: explicit vocabulary table 2 row 118
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: бухгалтер
+    pos: noun
+    gloss: Accountant
+    locator: explicit vocabulary table 2 row 119
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: тривалість
+    pos: noun
+    gloss: Duration
+    locator: explicit vocabulary table 2 row 123
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: речовина
+    pos: noun
+    gloss: Material, substance
+    locator: explicit vocabulary table 2 row 124
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спрага
+    pos: noun
+    gloss: Thirst
+    locator: explicit vocabulary table 2 row 125
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: словесно
+    pos: adverb
+    gloss: Verbally
+    locator: explicit vocabulary table 2 row 126
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: непокоїти
+    pos: verb
+    gloss: To worry, to cause concern
+    locator: explicit vocabulary table 2 row 127
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сліпо довіряти
+    pos: phrase
+    gloss: To trust blindly
+    locator: explicit vocabulary table 2 row 128
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: профілактика
+    pos: noun
+    gloss: Prevention
+    locator: explicit vocabulary table 2 row 129
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: позбуватися
+    pos: verb
+    gloss: To get rid of (imperf)
+    locator: explicit vocabulary table 2 row 130
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: позбутися
+    pos: verb
+    gloss: To get rid of (perf)
+    locator: explicit vocabulary table 2 row 131
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надолужити
+    pos: verb
+    gloss: To catch up, to make up for
+    locator: explicit vocabulary table 2 row 132
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зокрема
+    pos: adverb
+    gloss: In particular
+    locator: explicit vocabulary table 2 row 133
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: хибне уявлення
+    pos: phrase
+    gloss: False impression, missconception
+    locator: explicit vocabulary table 2 row 134
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: справляти вплив
+    pos: phrase
+    gloss: To exercise influence
+    locator: explicit vocabulary table 2 row 135
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відточити навички
+    pos: phrase
+    gloss: To master skills
+    locator: explicit vocabulary table 2 row 136
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: незліченний
+    pos: adjective
+    gloss: Countless, innumerable
+    locator: explicit vocabulary table 2 row 137
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перевага
+    pos: noun
+    gloss: Advantage
+    locator: explicit vocabulary table 2 row 138
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: здатний
+    pos: adjective
+    gloss: Capable
+    locator: explicit vocabulary table 2 row 139
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: набувати досвіду
+    pos: phrase
+    gloss: To gain experience
+    locator: explicit vocabulary table 2 row 140
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повсюдний
+    pos: adjective
+    gloss: Ubiquitous
+    locator: explicit vocabulary table 2 row 141
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дозвілля
+    pos: noun
+    gloss: Leisure
+    locator: explicit vocabulary table 2 row 142
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прокачувати мозок
+    pos: phrase
+    gloss: To train brain
+    locator: explicit vocabulary table 2 row 143
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ставити завдання (перед кимось)
+    pos: phrase
+    gloss: To set a task
+    locator: explicit vocabulary table 2 row 144
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: здібності
+    pos: noun
+    gloss: Abilities
+    locator: explicit vocabulary table 2 row 145
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: риса
+    pos: noun
+    gloss: A feature (appearance, character)
+    locator: explicit vocabulary table 2 row 148
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: як інакше
+    pos: phrase
+    gloss: How else
+    locator: explicit vocabulary table 2 row 149
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перебіг чогось
+    pos: phrase
+    gloss: Course
+    locator: explicit vocabulary table 2 row 150
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сюжет
+    pos: noun
+    gloss: Plot
+    locator: explicit vocabulary table 2 row 151
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: головоломка
+    pos: noun
+    gloss: A puzzle, a brain teaser
+    locator: explicit vocabulary table 2 row 152
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: dat + траплятися + щось робити
+    pos: phrase
+    gloss: To happen to do something
+    locator: explicit vocabulary table 2 row 153
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розв'язати таємницю
+    pos: phrase
+    gloss: To uncover mystery
+    locator: explicit vocabulary table 2 row 154
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сюжетні провисання
+    pos: phrase
+    gloss: Plot holes
+    locator: explicit vocabulary table 2 row 155
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стати у пригоді
+    pos: phrase
+    gloss: To come in handy, to be of use
+    locator: explicit vocabulary table 2 row 156
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ухвалювати рішення
+    pos: phrase
+    gloss: To make decisions (imperf)
+    locator: explicit vocabulary table 2 row 157
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ухвалити рішення
+    pos: phrase
+    gloss: To make decisions (perf)
+    locator: explicit vocabulary table 2 row 158
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обробляти інформацію
+    pos: phrase
+    gloss: To process information
+    locator: explicit vocabulary table 2 row 159
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: смалець
+    pos: noun
+    gloss: Lard
+    locator: explicit vocabulary table 2 row 160
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обмін речовин, метаболізм
+    pos: phrase
+    gloss: Metabolism
+    locator: explicit vocabulary table 2 row 161
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: насильство (насильство над кимось)
+    pos: phrase
+    gloss: Violence
+    locator: explicit vocabulary table 2 row 162
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: рідина
+    pos: noun
+    gloss: Liquid
+    locator: explicit vocabulary table 2 row 163
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на ділі
+    pos: phrase
+    gloss: In practice, in reality
+    locator: explicit vocabulary table 2 row 164
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: доводити
+    pos: verb
+    gloss: To prove (imperf)
+    locator: explicit vocabulary table 2 row 165
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: довести
+    pos: verb
+    gloss: To prove (perf)
+    locator: explicit vocabulary table 2 row 166
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: самонавіювання
+    pos: noun
+    gloss: Self-hypnosis, self-suggestion
+    locator: explicit vocabulary table 2 row 167
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: засвоюватися
+    pos: verb
+    gloss: To be assimilated, to be absorbed
+    locator: explicit vocabulary table 2 row 168
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: голитися
+    pos: verb
+    gloss: To shave oneself (imperf)
+    locator: explicit vocabulary table 2 row 170
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поголитися
+    pos: verb
+    gloss: To shave oneself (perf)
+    locator: explicit vocabulary table 2 row 171
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надмірна кількість
+    pos: phrase
+    gloss: Excessive amount
+    locator: explicit vocabulary table 2 row 172
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: травний тракт
+    pos: phrase
+    gloss: Digestive tract
+    locator: explicit vocabulary table 2 row 173
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відійти від
+    pos: phrase
+    gloss: To move away from
+    locator: explicit vocabulary table 2 row 175
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: наявність
+    pos: noun
+    gloss: Availability
+    locator: explicit vocabulary table 2 row 176
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розлад
+    pos: noun
+    gloss: Disorder
+    locator: explicit vocabulary table 2 row 177
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: взаємодія
+    pos: noun
+    gloss: interaction
+    locator: explicit vocabulary table 2 row 178
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дедалі
+    pos: adverb
+    gloss: More and more, increasingly
+    locator: explicit vocabulary table 2 row 179
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: порушення сну
+    pos: phrase
+    gloss: Sleep disturbance
+    locator: explicit vocabulary table 2 row 180
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зневага
+    pos: noun
+    gloss: disregard
+    locator: explicit vocabulary table 2 row 181
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: напружений
+    pos: adjective
+    gloss: tense
+    locator: explicit vocabulary table 2 row 182
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: навичка
+    pos: noun
+    gloss: A skill
+    locator: explicit vocabulary table 2 row 184
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: самооцінка
+    pos: noun
+    gloss: self-esteem
+    locator: explicit vocabulary table 2 row 185
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: забезпечення
+    pos: noun
+    gloss: Provision, ensuring
+    locator: explicit vocabulary table 2 row 186
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дохід
+    pos: noun
+    gloss: Income
+    locator: explicit vocabulary table 2 row 188
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надлишок
+    pos: noun
+    gloss: excess
+    locator: explicit vocabulary table 2 row 189
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: уникати
+    pos: verb
+    gloss: To avoid (imperf)
+    locator: explicit vocabulary table 2 row 190
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: уникнути
+    pos: verb
+    gloss: To avoid (perf)
+    locator: explicit vocabulary table 2 row 191
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ходьба
+    pos: noun
+    gloss: walking
+    locator: explicit vocabulary table 2 row 192
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зневоднення
+    pos: noun
+    gloss: Dehydration
+    locator: explicit vocabulary table 2 row 193
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вплив
+    pos: noun
+    gloss: Impact
+    locator: explicit vocabulary table 2 row 194
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кинути виклик
+    pos: phrase
+    gloss: To challenge
+    locator: explicit vocabulary table 2 row 195
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: начинка
+    pos: noun
+    gloss: Filling
+    locator: explicit vocabulary table 2 row 196
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спалах захворювання
+    pos: phrase
+    gloss: Disease outbreak
+    locator: explicit vocabulary table 2 row 197
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: висипатися
+    pos: verb
+    gloss: To get enough of sleep
+    locator: explicit vocabulary table 2 row 198
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загартуватися
+    pos: verb
+    gloss: To toughen up
+    locator: explicit vocabulary table 2 row 199
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вогнище інфекції
+    pos: phrase
+    gloss: Source of infection
+    locator: explicit vocabulary table 2 row 200
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: карієс
+    pos: noun
+    gloss: cavity
+    locator: explicit vocabulary table 2 row 201
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перебіг хвороби
+    pos: phrase
+    gloss: Course of disease
+    locator: explicit vocabulary table 2 row 202
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сприяти
+    pos: verb
+    gloss: To facilitate
+    locator: explicit vocabulary table 2 row 203
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: приміщення
+    pos: noun
+    gloss: premises
+    locator: explicit vocabulary table 2 row 204
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: раннє дитинство
+    pos: phrase
+    gloss: Early childhood
+    locator: explicit vocabulary table 2 row 205
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: увага
+    pos: noun
+    gloss: Attention
+    locator: explicit vocabulary table 2 row 206
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: довгостроковий
+    pos: adjective
+    gloss: Longterm
+    locator: explicit vocabulary table 2 row 207
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: закономірність
+    pos: noun
+    gloss: Pattern, regularity
+    locator: explicit vocabulary table 2 row 208
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нести в собі
+    pos: phrase
+    gloss: To carry within oneself
+    locator: explicit vocabulary table 2 row 209
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: навколишнє середовище
+    pos: phrase
+    gloss: environment
+    locator: explicit vocabulary table 2 row 210
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гризти
+    pos: verb
+    gloss: To chew, to gnaw
+    locator: explicit vocabulary table 2 row 211
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: балуватися
+    pos: verb
+    gloss: To fool around, to indulge in
+    locator: explicit vocabulary table 2 row 212
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: жертвувати
+    pos: verb
+    gloss: To sacrifice (imperf)
+    locator: explicit vocabulary table 2 row 213
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пожертвувати
+    pos: verb
+    gloss: To sacrifice (perf)
+    locator: explicit vocabulary table 2 row 214
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відбиватися на
+    pos: phrase
+    gloss: To reflect on
+    locator: explicit vocabulary table 2 row 215
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: похапцем
+    pos: adverb
+    gloss: In a hurry, in a great haste (negative result)
+    locator: explicit vocabulary table 2 row 216
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: бути схильним
+    pos: phrase
+    gloss: To predisposed
+    locator: explicit vocabulary table 2 row 217
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обходитися
+    pos: verb
+    gloss: To bypass, to do without (imperf)
+    locator: explicit vocabulary table 2 row 218
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обійтися
+    pos: verb
+    gloss: To bypass, to do without (perf)
+    locator: explicit vocabulary table 2 row 219
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обсяг
+    pos: noun
+    gloss: volume
+    locator: explicit vocabulary table 2 row 220
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відсутність
+    pos: noun
+    gloss: Absence
+    locator: explicit vocabulary table 2 row 221
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: присутність
+    pos: noun
+    gloss: Presence
+    locator: explicit vocabulary table 2 row 222
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нежить
+    pos: noun
+    gloss: runny nose
+    locator: explicit vocabulary table 2 row 223
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: закладений ніс
+    pos: phrase
+    gloss: congested nose
+    locator: explicit vocabulary table 2 row 224
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кліщ
+    pos: noun
+    gloss: Tick
+    locator: explicit vocabulary table 2 row 225
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: блідий
+    pos: adjective
+    gloss: pale
+    locator: explicit vocabulary table 2 row 226
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: млявий
+    pos: adjective
+    gloss: Lethargic
+    locator: explicit vocabulary table 2 row 227
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: долати
+    pos: verb
+    gloss: To overcome (imperf)
+    locator: explicit vocabulary table 2 row 228
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подолати
+    pos: verb
+    gloss: To overcome (perf)
+    locator: explicit vocabulary table 2 row 229
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: внести корективи
+    pos: phrase
+    gloss: To make adjustments
+    locator: explicit vocabulary table 2 row 230
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на кшталт
+    pos: phrase
+    gloss: Such as, like
+    locator: explicit vocabulary table 2 row 231
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: взяти до уваги
+    pos: phrase
+    gloss: To take into account
+    locator: explicit vocabulary table 2 row 233
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: грунтовно
+    pos: noun
+    gloss: Thoroughly, fundamentally
+    locator: explicit vocabulary table 2 row 234
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: далеко не завжди
+    pos: phrase
+    gloss: Not always
+    locator: explicit vocabulary table 2 row 235
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вуглеводи
+    pos: noun
+    gloss: carbs
+    locator: explicit vocabulary table 2 row 236
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: крупа
+    pos: noun
+    gloss: groats
+    locator: explicit vocabulary table 2 row 237
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відповідно
+    pos: adverb
+    gloss: Respectively, accodringly
+    locator: explicit vocabulary table 2 row 239
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: додавати
+    pos: verb
+    gloss: To add (imperf)
+    locator: explicit vocabulary table 2 row 240
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: додати
+    pos: verb
+    gloss: To add (perf)
+    locator: explicit vocabulary table 2 row 241
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: тягати залізо
+    pos: phrase
+    gloss: To lift weights
+    locator: explicit vocabulary table 2 row 242
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нирка
+    pos: noun
+    gloss: A kidney
+    locator: explicit vocabulary table 2 row 243
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: клітковина
+    pos: noun
+    gloss: fiber
+    locator: explicit vocabulary table 2 row 244
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: бажано
+    pos: abbreviation
+    gloss: Preferably
+    locator: explicit vocabulary table 2 row 245
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: схуднення
+    pos: noun
+    gloss: Losing weight
+    locator: explicit vocabulary table 2 row 246
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спорядження
+    pos: noun
+    gloss: Equipment
+    locator: explicit vocabulary table 2 row 247
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: підтягнуте тіло
+    pos: phrase
+    gloss: Toned body
+    locator: explicit vocabulary table 2 row 248
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розбиратися
+    pos: verb
+    gloss: To figure out (imperf)
+    locator: explicit vocabulary table 2 row 249
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розібратися
+    pos: verb
+    gloss: To figure out (perf)
+    locator: explicit vocabulary table 2 row 250
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: запроваджувати
+    pos: verb
+    gloss: To implement (imperf)
+    locator: explicit vocabulary table 2 row 251
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: запровадити
+    pos: verb
+    gloss: To implement (perf)
+    locator: explicit vocabulary table 2 row 252
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: високосний
+    pos: adjective
+    gloss: Leap (year)
+    locator: explicit vocabulary table 2 row 253
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: накопичуватися
+    pos: verb
+    gloss: To accumulate (imperf)
+    locator: explicit vocabulary table 2 row 254
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: накопичитися
+    pos: verb
+    gloss: To accumulate (perf)
+    locator: explicit vocabulary table 2 row 255
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: показник
+    pos: noun
+    gloss: Indicator
+    locator: explicit vocabulary table 2 row 256
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відставати
+    pos: verb
+    gloss: To fall behind
+    locator: explicit vocabulary table 2 row 257
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: родимка
+    pos: noun
+    gloss: mole
+    locator: explicit vocabulary table 2 row 258
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: віддалено
+    pos: adverb
+    gloss: remotely
+    locator: explicit vocabulary table 2 row 259
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мережа
+    pos: noun
+    gloss: network
+    locator: explicit vocabulary table 2 row 260
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розгорнути вебсайт
+    pos: phrase
+    gloss: launch a website
+    locator: explicit vocabulary table 2 row 261
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: комора
+    pos: noun
+    gloss: storeroom
+    locator: explicit vocabulary table 2 row 262
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кишеня
+    pos: noun
+    gloss: pocket
+    locator: explicit vocabulary table 2 row 263
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: складова
+    pos: noun
+    gloss: component
+    locator: explicit vocabulary table 2 row 264
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: застосунок
+    pos: noun
+    gloss: application
+    locator: explicit vocabulary table 2 row 266
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: апаратне забезпечення
+    pos: phrase
+    gloss: hardware
+    locator: explicit vocabulary table 2 row 267
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: капот
+    pos: noun
+    gloss: Hood or bonnet of the car
+    locator: explicit vocabulary table 2 row 268
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: жвавий
+    pos: adjective
+    gloss: lively
+    locator: explicit vocabulary table 2 row 269
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обслуговувати
+    pos: verb
+    gloss: To serve
+    locator: explicit vocabulary table 2 row 270
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: натискати
+    pos: verb
+    gloss: to press (imperf)
+    locator: explicit vocabulary table 2 row 271
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: натиснути
+    pos: verb
+    gloss: To press (perf)
+    locator: explicit vocabulary table 2 row 272
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: майстерня
+    pos: noun
+    gloss: workshop
+    locator: explicit vocabulary table 2 row 273
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: за потреби
+    pos: phrase
+    gloss: If necessary
+    locator: explicit vocabulary table 2 row 274
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розгалужуватися
+    pos: verb
+    gloss: To branch out
+    locator: explicit vocabulary table 2 row 275
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ядро
+    pos: noun
+    gloss: core
+    locator: explicit vocabulary table 2 row 276
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: створювати
+    pos: verb
+    gloss: To create (imperf)
+    locator: explicit vocabulary table 2 row 277
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: створити
+    pos: verb
+    gloss: To create (perf)
+    locator: explicit vocabulary table 2 row 278
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: на відстані витягнутої руки
+    pos: phrase
+    gloss: Within arm's reach
+    locator: explicit vocabulary table 2 row 280
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: очищуватися
+    pos: verb
+    gloss: To clean oneself
+    locator: explicit vocabulary table 2 row 281
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: живлення
+    pos: noun
+    gloss: Power supply
+    locator: explicit vocabulary table 2 row 282
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вкладка
+    pos: noun
+    gloss: tab
+    locator: explicit vocabulary table 2 row 283
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вводити
+    pos: verb
+    gloss: To input
+    locator: explicit vocabulary table 2 row 284
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стежити
+    pos: verb
+    gloss: To keep an eye on, to monitor (imperf)
+    locator: explicit vocabulary table 2 row 286
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: простежити
+    pos: verb
+    gloss: To keep an eye on, to monitor (perf)
+    locator: explicit vocabulary table 2 row 287
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: запит
+    pos: noun
+    gloss: request
+    locator: explicit vocabulary table 2 row 288
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: жорский диск
+    pos: phrase
+    gloss: Hard drive
+    locator: explicit vocabulary table 2 row 289
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: кільце
+    pos: noun
+    gloss: ring
+    locator: explicit vocabulary table 2 row 290
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: важиль
+    pos: noun
+    gloss: lever
+    locator: explicit vocabulary table 2 row 291
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: з самого початку
+    pos: phrase
+    gloss: From the very beginning
+    locator: explicit vocabulary table 2 row 292
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розпізнати запрошення
+    pos: phrase
+    gloss: recognise an invitation
+    locator: explicit vocabulary table 2 row 293
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: надавати перевагу
+    pos: phrase
+    gloss: To prefer (imperf)
+    locator: explicit vocabulary table 2 row 294
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: графічний інтерфейс користувача (гік)
+    pos: phrase
+    gloss: GUI
+    locator: explicit vocabulary table 2 row 295
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: лячно
+    pos: adverb
+    gloss: scary
+    locator: explicit vocabulary table 2 row 296
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: папка
+    pos: noun
+    gloss: A folder
+    locator: explicit vocabulary table 2 row 297
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: попит
+    pos: noun
+    gloss: demand
+    locator: explicit vocabulary table 2 row 298
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: площа
+    pos: noun
+    gloss: square, area terulet
+    locator: explicit vocabulary table 2 row 299
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: периметр
+    pos: noun
+    gloss: Perimeter kerulet
+    locator: explicit vocabulary table 2 row 300
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: рівний
+    pos: adjective
+    gloss: Equal, straight
+    locator: explicit vocabulary table 2 row 301
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прихований
+    pos: adjective
+    gloss: Hidden, concealed
+    locator: explicit vocabulary table 2 row 302
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: співвідношення
+    pos: noun
+    gloss: Ratio, proportion
+    locator: explicit vocabulary table 2 row 303
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: довжина
+    pos: noun
+    gloss: length
+    locator: explicit vocabulary table 2 row 304
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ширина
+    pos: noun
+    gloss: width
+    locator: explicit vocabulary table 2 row 305
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розрахунок
+    pos: noun
+    gloss: calculation
+    locator: explicit vocabulary table 2 row 306
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дорівнювати
+    pos: verb
+    gloss: To be equal to
+    locator: explicit vocabulary table 2 row 307
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: округлений
+    pos: adjective
+    gloss: Rounded off
+    locator: explicit vocabulary table 2 row 308
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спільний
+    pos: adjective
+    gloss: Mutual, common
+    locator: explicit vocabulary table 2 row 309
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: послідовність
+    pos: noun
+    gloss: sequence
+    locator: explicit vocabulary table 2 row 310
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мушля
+    pos: noun
+    gloss: shell
+    locator: explicit vocabulary table 2 row 311
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: порожнеча
+    pos: noun
+    gloss: emptiness
+    locator: explicit vocabulary table 2 row 312
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: галузь
+    pos: noun
+    gloss: Sphere, field
+    locator: explicit vocabulary table 2 row 313
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: конкурентоспроможність
+    pos: noun
+    gloss: Competitiveness
+    locator: explicit vocabulary table 2 row 315
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спроможний
+    pos: adjective
+    gloss: capable
+    locator: explicit vocabulary table 2 row 316
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розгалужена мережа
+    pos: phrase
+    gloss: extensive network
+    locator: explicit vocabulary table 2 row 317
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ватага
+    pos: noun
+    gloss: Gang
+    locator: explicit vocabulary table 2 row 318
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нечиста сила = нечисть
+    pos: phrase
+    gloss: Evil spirits
+    locator: explicit vocabulary table 2 row 319
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: верстви суспільства
+    pos: phrase
+    gloss: Social groups
+    locator: explicit vocabulary table 2 row 320
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: підпорядкувати
+    pos: verb
+    gloss: To subordinate
+    locator: explicit vocabulary table 2 row 321
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пошитись в дурні
+    pos: phrase
+    gloss: To make fool of oneself
+    locator: explicit vocabulary table 2 row 322
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: втратити страх
+    pos: phrase
+    gloss: To lose its fear
+    locator: explicit vocabulary table 2 row 323
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зарозумілий, зухвалий, нахабний
+    pos: phrase
+    gloss: arrogant
+    locator: explicit vocabulary table 2 row 324
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гармидер
+    pos: noun
+    gloss: Mess
+    locator: explicit vocabulary table 2 row 325
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: порушувати правила
+    pos: phrase
+    gloss: To break the rules
+    locator: explicit vocabulary table 2 row 326
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: наврядчи
+    pos: noun
+    gloss: Doubtful, hardly
+    locator: explicit vocabulary table 2 row 327
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: черговий
+    pos: adjective
+    gloss: On duty, yet another
+    locator: explicit vocabulary table 2 row 328
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: споріднена душа
+    pos: phrase
+    gloss: Soulmate, kindred spirit
+    locator: explicit vocabulary table 2 row 329
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стояти на задньому плані
+    pos: phrase
+    gloss: To stay in the background
+    locator: explicit vocabulary table 2 row 330
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: смертний вирок
+    pos: phrase
+    gloss: Death penalty
+    locator: explicit vocabulary table 2 row 331
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: потойбіччя
+    pos: noun
+    gloss: The afterlife
+    locator: explicit vocabulary table 2 row 332
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: знахар
+    pos: noun
+    gloss: Folk healer
+    locator: explicit vocabulary table 2 row 333
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загін
+    pos: noun
+    gloss: Squad, platoon
+    locator: explicit vocabulary table 2 row 334
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дар
+    pos: noun
+    gloss: Talent, gift
+    locator: explicit vocabulary table 2 row 335
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обдарований
+    pos: adjective
+    gloss: talented
+    locator: explicit vocabulary table 2 row 336
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: посада
+    pos: noun
+    gloss: position
+    locator: explicit vocabulary table 2 row 337
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: посадовець
+    pos: noun
+    gloss: Government official
+    locator: explicit vocabulary table 2 row 338
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: історична постать
+    pos: phrase
+    gloss: Historical figure
+    locator: explicit vocabulary table 2 row 339
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: безліч
+    pos: adverb
+    gloss: Countless, endless
+    locator: explicit vocabulary table 2 row 340
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спотворювати
+    pos: verb
+    gloss: To distort (imperf)
+    locator: explicit vocabulary table 2 row 341
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спотворити
+    pos: verb
+    gloss: To distort (perf)
+    locator: explicit vocabulary table 2 row 342
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: струс мозку
+    pos: phrase
+    gloss: concussion
+    locator: explicit vocabulary table 2 row 343
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сприяти розвитку
+    pos: phrase
+    gloss: To promote development
+    locator: explicit vocabulary table 2 row 344
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відсіч
+    pos: noun
+    gloss: repulse
+    locator: explicit vocabulary table 2 row 346
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: укріплення
+    pos: noun
+    gloss: fortification
+    locator: explicit vocabulary table 2 row 347
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: земельні володіння
+    pos: phrase
+    gloss: Land ownership
+    locator: explicit vocabulary table 2 row 348
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: стратити
+    pos: verb
+    gloss: To execute
+    locator: explicit vocabulary table 2 row 349
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: каркати
+    pos: verb
+    gloss: To jinx (imperf)
+    locator: explicit vocabulary table 2 row 350
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: накаркати
+    pos: verb
+    gloss: To jinx (perf)
+    locator: explicit vocabulary table 2 row 351
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: походження
+    pos: noun
+    gloss: Origin
+    locator: explicit vocabulary table 2 row 352
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: земельні угіддя
+    pos: phrase
+    gloss: Agricultural land
+    locator: explicit vocabulary table 2 row 353
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: самосвідомість
+    pos: noun
+    gloss: self-awareness
+    locator: explicit vocabulary table 2 row 354
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не те щоб
+    pos: phrase
+    gloss: It's not like
+    locator: explicit vocabulary table 2 row 355
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вміння, уміння
+    pos: phrase
+    gloss: skill
+    locator: explicit vocabulary table 2 row 356
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загоряти/ засмагати
+    pos: phrase
+    gloss: To get tanned (imperf)
+    locator: explicit vocabulary table 2 row 357
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: загоріти / засмагнути
+    pos: phrase
+    gloss: To get tanned (perf)
+    locator: explicit vocabulary table 2 row 358
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: засмага
+    pos: noun
+    gloss: tan
+    locator: explicit vocabulary table 2 row 359
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подробиці
+    pos: noun
+    gloss: details
+    locator: explicit vocabulary table 2 row 360
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ерудиція
+    pos: noun
+    gloss: erudition
+    locator: explicit vocabulary table 2 row 361
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не дійти одностайної думки
+    pos: phrase
+    gloss: not reach a unanimous opinion
+    locator: explicit vocabulary table 2 row 362
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: доводитися щось робити
+    pos: phrase
+    gloss: to have to do something / be forced to do something
+    locator: explicit vocabulary table 2 row 363
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гострий розум
+    pos: phrase
+    gloss: sharp mind
+    locator: explicit vocabulary table 2 row 364
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: передбачати перебіг подій
+    pos: phrase
+    gloss: to predict the course of events
+    locator: explicit vocabulary table 2 row 365
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вільно володіти мовою
+    pos: phrase
+    gloss: to be fluent in a language
+    locator: explicit vocabulary table 2 row 366
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: талановитий промовець
+    pos: phrase
+    gloss: gifted orator
+    locator: explicit vocabulary table 2 row 367
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: впливати на громадську думку
+    pos: phrase
+    gloss: to influence public opinion
+    locator: explicit vocabulary table 2 row 368
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не образити господаря
+    pos: phrase
+    gloss: not to offend the host
+    locator: explicit vocabulary table 2 row 369
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не прагнути розкоші
+    pos: phrase
+    gloss: not to seek luxury
+    locator: explicit vocabulary table 2 row 370
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розбиратися у чомусь
+    pos: phrase
+    gloss: to be knowledgeable in something / to understand something well
+    locator: explicit vocabulary table 2 row 371
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: найбільше кохання
+    pos: phrase
+    gloss: greatest love
+    locator: explicit vocabulary table 2 row 372
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відповідати за фінанси
+    pos: phrase
+    gloss: to be responsible for finances
+    locator: explicit vocabulary table 2 row 373
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: політична кар'єра
+    pos: phrase
+    gloss: political career
+    locator: explicit vocabulary table 2 row 374
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: суперечлива постать
+    pos: phrase
+    gloss: controversial figure
+    locator: explicit vocabulary table 2 row 375
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: особисте потрясіння
+    pos: phrase
+    gloss: personal shock / trauma
+    locator: explicit vocabulary table 2 row 376
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не змогти оговтатися
+    pos: phrase
+    gloss: to fail to recover / not be able to get over something
+    locator: explicit vocabulary table 2 row 377
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: бути присвяченим комусь
+    pos: phrase
+    gloss: to be dedicated to someone
+    locator: explicit vocabulary table 2 row 378
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відповідно до рішення
+    pos: phrase
+    gloss: according to a decision
+    locator: explicit vocabulary table 2 row 379
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розглядати варіанти
+    pos: phrase
+    gloss: to consider options
+    locator: explicit vocabulary table 2 row 380
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зрештою
+    pos: adverb
+    gloss: eventually / in the end
+    locator: explicit vocabulary table 2 row 381
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: увійти в історію
+    pos: phrase
+    gloss: to go down in history
+    locator: explicit vocabulary table 2 row 382
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: залишити помітний слід
+    pos: phrase
+    gloss: to leave a significant mark
+    locator: explicit vocabulary table 2 row 383
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відіграти важливу роль
+    pos: phrase
+    gloss: to play an important role
+    locator: explicit vocabulary table 2 row 384
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: користуватися авторитетом
+    pos: phrase
+    gloss: to have authority / to be respected
+    locator: explicit vocabulary table 2 row 385
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мати вплив на події
+    pos: phrase
+    gloss: to have an influence on events
+    locator: explicit vocabulary table 2 row 386
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спадкоємець
+    pos: noun
+    gloss: heir
+    locator: explicit vocabulary table 2 row 387
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: смородина
+    pos: noun
+    gloss: blackcurrant
+    locator: explicit vocabulary table 2 row 389
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: порічка (шпоришки – центральні області)
+    pos: phrase
+    gloss: Red/white currant
+    locator: explicit vocabulary table 2 row 390
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повноліття
+    pos: noun
+    gloss: Legal age
+    locator: explicit vocabulary table 2 row 391
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заколот
+    pos: noun
+    gloss: Revolt, uprising
+    locator: explicit vocabulary table 2 row 392
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: під проводом
+    pos: phrase
+    gloss: Under the leadership of
+    locator: explicit vocabulary table 2 row 393
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вщент
+    pos: adverb
+    gloss: Completely, utterly
+    locator: explicit vocabulary table 2 row 394
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: намотати на вус
+    pos: phrase
+    gloss: take note of and remember something useful for the future.
+    locator: explicit vocabulary table 2 row 395
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: присяга
+    pos: noun
+    gloss: oath
+    locator: explicit vocabulary table 2 row 397
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: постригтися в ченці
+    pos: phrase
+    gloss: to take monastic vows
+    locator: explicit vocabulary table 2 row 398
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поплатитися головою
+    pos: phrase
+    gloss: to pay with one's head; to pay the price
+    locator: explicit vocabulary table 2 row 399
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відпустка
+    pos: noun
+    gloss: holidays
+    locator: explicit vocabulary table 2 row 400
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: повстанець
+    pos: noun
+    gloss: rebel
+    locator: explicit vocabulary table 2 row 401
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: всіляко
+    pos: adverb
+    gloss: In every way
+    locator: explicit vocabulary table 2 row 402
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: глухий як тетеря
+    pos: phrase
+    gloss: deaf
+    locator: explicit vocabulary table 2 row 403
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: представник
+    pos: noun
+    gloss: Representative
+    locator: explicit vocabulary table 2 row 404
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відрядження
+    pos: noun
+    gloss: Business trip
+    locator: explicit vocabulary table 2 row 405
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: заручитися підтримкою
+    pos: phrase
+    gloss: To gain support
+    locator: explicit vocabulary table 2 row 406
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: завоювати
+    pos: verb
+    gloss: To conquer (perf)
+    locator: explicit vocabulary table 2 row 407
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обіцянка
+    pos: noun
+    gloss: promise
+    locator: explicit vocabulary table 2 row 408
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: запроданство
+    pos: noun
+    gloss: treachery
+    locator: explicit vocabulary table 2 row 409
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: далекосяжний
+    pos: adjective
+    gloss: far-reaching
+    locator: explicit vocabulary table 2 row 410
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: соратник
+    pos: noun
+    gloss: comrade-in-arms
+    locator: explicit vocabulary table 2 row 411
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: походити з давнього роду
+    pos: phrase
+    gloss: to come from an old noble/family line
+    locator: explicit vocabulary table 2 row 412
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: здобути хорошу освіту
+    pos: phrase
+    gloss: to receive a good education
+    locator: explicit vocabulary table 2 row 413
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: легко знаходити спільну мову з кимось
+    pos: phrase
+    gloss: to get along with someone easily
+    locator: explicit vocabulary table 2 row 417
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: завоювати довіру
+    pos: phrase
+    gloss: to earn someone's trust
+    locator: explicit vocabulary table 2 row 418
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: належати до найближчого оточення
+    pos: phrase
+    gloss: to belong to someone's inner circle
+    locator: explicit vocabulary table 2 row 419
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не взяти до уваги
+    pos: phrase
+    gloss: to fail to take into account
+    locator: explicit vocabulary table 2 row 420
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обрати гетьманом / оголосити гетьманом
+    pos: phrase
+    gloss: to elect as hetman
+    locator: explicit vocabulary table 2 row 421
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: укласти союз
+    pos: phrase
+    gloss: to conclude an alliance
+    locator: explicit vocabulary table 2 row 422
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: шукати підтримки
+    pos: phrase
+    gloss: to seek support
+    locator: explicit vocabulary table 2 row 423
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: утримати владу
+    pos: phrase
+    gloss: to retain power
+    locator: explicit vocabulary table 2 row 424
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: втручатися у справи
+    pos: phrase
+    gloss: to interfere in affairs
+    locator: explicit vocabulary table 2 row 425
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відмовитися від претензій
+    pos: phrase
+    gloss: to renounce claims
+    locator: explicit vocabulary table 2 row 426
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перетворюватися на руїну
+    pos: phrase
+    gloss: to turn into ruins
+    locator: explicit vocabulary table 2 row 427
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: залишити домівку
+    pos: phrase
+    gloss: to leave one's home
+    locator: explicit vocabulary table 2 row 428
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: авторитет значно знизився
+    pos: phrase
+    gloss: authority declined significantly
+    locator: explicit vocabulary table 2 row 429
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розчаруватися в політиці
+    pos: phrase
+    gloss: to become disappointed in a policy
+    locator: explicit vocabulary table 2 row 430
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зректися булави
+    pos: phrase
+    gloss: to abdicate the hetman's mace
+    locator: explicit vocabulary table 2 row 431
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: подальший опір не має сенсу
+    pos: phrase
+    gloss: further resistance makes no sense
+    locator: explicit vocabulary table 2 row 432
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перебувати під владою
+    pos: phrase
+    gloss: to be under the rule of
+    locator: explicit vocabulary table 2 row 435
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дійти висновку
+    pos: phrase
+    gloss: to come to a conclusion
+    locator: explicit vocabulary table 2 row 436
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мати вирішальне значення
+    pos: phrase
+    gloss: to be of crucial importance
+    locator: explicit vocabulary table 2 row 438
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: докласти значних зусиль
+    pos: phrase
+    gloss: to make considerable efforts
+    locator: explicit vocabulary table 2 row 439
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зазнати значних втрат
+    pos: phrase
+    gloss: to suffer heavy losses
+    locator: explicit vocabulary table 2 row 440
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: опинитися в складному становищі
+    pos: phrase
+    gloss: to find oneself in a difficult situation
+    locator: explicit vocabulary table 2 row 441
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: воювати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: страчувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: боротися
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: очолювати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: будувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нападати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: підтримувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 5 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розвивати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: володіти
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: навчатися
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відроджувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: впливати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: фінансувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: досліджувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 6 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: концентруватися
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розслаблятися
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: синтезувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: тренуватися
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: функціонувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: споживати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 26 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вітамін
+    pos: noun
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 28 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: симптом
+    pos: noun
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 28 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: слабкість
+    pos: noun
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 28 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: активність
+    pos: noun
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 28 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: хворіти
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 29 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відновлювати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 29 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: засвоювати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 29 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: знижувати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 29 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вживати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 34 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: взаємодіяти
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 34 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: лунати
+    pos: verb
+    gloss: to resound, to echo
+    locator: explicit vocabulary table 35 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відлуння
+    pos: noun
+    gloss: An echo
+    locator: explicit vocabulary table 35 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: очікування
+    pos: noun
+    gloss: expectation
+    locator: explicit vocabulary table 35 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: передчуття
+    pos: noun
+    gloss: anticipation, premonition
+    locator: explicit vocabulary table 35 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: святкувати
+    pos: verb
+    gloss: to celebrate (imperf)
+    locator: explicit vocabulary table 35 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відсвяткувати
+    pos: verb
+    gloss: To celebrate (perf)
+    locator: explicit vocabulary table 35 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відзначати
+    pos: verb
+    gloss: to commemorate, to celebrate (imperf)
+    locator: explicit vocabulary table 35 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відзначити
+    pos: verb
+    gloss: to commemorate, to celebrate (perf)
+    locator: explicit vocabulary table 35 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: здавна
+    pos: adverb
+    gloss: since ancient times
+    locator: explicit vocabulary table 35 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: згадка
+    pos: noun
+    gloss: mention, reference
+    locator: explicit vocabulary table 35 row 11
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: письмова згадка
+    pos: phrase
+    gloss: written reference
+    locator: explicit vocabulary table 35 row 12
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вшановувати / шанувати
+    pos: phrase
+    gloss: to honor (imperf)
+    locator: explicit vocabulary table 35 row 13
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вшанувати
+    pos: verb
+    gloss: to honor (perf)
+    locator: explicit vocabulary table 35 row 14
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: шанувальник
+    pos: noun
+    gloss: admirer, fan
+    locator: explicit vocabulary table 35 row 15
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: звичай
+    pos: noun
+    gloss: custom
+    locator: explicit vocabulary table 35 row 16
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: традиція
+    pos: noun
+    gloss: tradition
+    locator: explicit vocabulary table 35 row 17
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: переймати (звичай)
+    pos: phrase
+    gloss: to adopt, to take over (imperf)
+    locator: explicit vocabulary table 35 row 18
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: перейняти
+    pos: verb
+    gloss: to adopt, to take over (perf)
+    locator: explicit vocabulary table 35 row 19
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прикрашати
+    pos: verb
+    gloss: to decorate
+    locator: explicit vocabulary table 35 row 20
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прикрасити
+    pos: verb
+    gloss: to decorate
+    locator: explicit vocabulary table 35 row 21
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: напередодні
+    pos: adverb
+    gloss: on the eve of
+    locator: explicit vocabulary table 35 row 22
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: домівка
+    pos: noun
+    gloss: home
+    locator: explicit vocabulary table 35 row 23
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: статки
+    pos: noun
+    gloss: wealth, means
+    locator: explicit vocabulary table 35 row 24
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відповідно до статків
+    pos: phrase
+    gloss: according to one's means
+    locator: explicit vocabulary table 35 row 25
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: витонченість
+    pos: noun
+    gloss: elegance, refinement
+    locator: explicit vocabulary table 35 row 26
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розкіш
+    pos: noun
+    gloss: luxury
+    locator: explicit vocabulary table 35 row 27
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: достаток
+    pos: noun
+    gloss: prosperity
+    locator: explicit vocabulary table 35 row 28
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: середній достаток
+    pos: phrase
+    gloss: middle income
+    locator: explicit vocabulary table 35 row 29
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: саморобний
+    pos: adjective
+    gloss: handmade
+    locator: explicit vocabulary table 35 row 30
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: прикраса
+    pos: noun
+    gloss: decoration
+    locator: explicit vocabulary table 35 row 31
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: солома
+    pos: noun
+    gloss: straw
+    locator: explicit vocabulary table 35 row 32
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: шкаралупа
+    pos: noun
+    gloss: shell
+    locator: explicit vocabulary table 35 row 33
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: фольга
+    pos: noun
+    gloss: foil
+    locator: explicit vocabulary table 35 row 34
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: урочистий
+    pos: adjective
+    gloss: solemn, ceremonial
+    locator: explicit vocabulary table 35 row 35
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: свічка
+    pos: noun
+    gloss: candle
+    locator: explicit vocabulary table 35 row 36
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зберігатися
+    pos: verb
+    gloss: to be preserved
+    locator: explicit vocabulary table 35 row 37
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зберегти
+    pos: verb
+    gloss: to preserve (imperf)
+    locator: explicit vocabulary table 35 row 40
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зберігати
+    pos: verb
+    gloss: to preserve (perf)
+    locator: explicit vocabulary table 35 row 41
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вибір
+    pos: noun
+    gloss: choice
+    locator: explicit vocabulary table 35 row 43
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: гучна вечірка
+    pos: phrase
+    gloss: loud party
+    locator: explicit vocabulary table 35 row 44
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дата святкування
+    pos: phrase
+    gloss: celebration date
+    locator: explicit vocabulary table 35 row 45
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: територія
+    pos: noun
+    gloss: territory
+    locator: explicit vocabulary table 35 row 48
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: переселенець
+    pos: noun
+    gloss: Settler / refugee INSIDE the country
+    locator: explicit vocabulary table 35 row 49
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: передаватися
+    pos: verb
+    gloss: to be passed down (imperf)
+    locator: explicit vocabulary table 35 row 50
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: передатися
+    pos: verb
+    gloss: to be passed down (perf)
+    locator: explicit vocabulary table 35 row 51
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: культурний контекст
+    pos: phrase
+    gloss: cultural context
+    locator: explicit vocabulary table 35 row 52
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: побут
+    pos: noun
+    gloss: everyday life
+    locator: explicit vocabulary table 35 row 53
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: малеча
+    pos: noun
+    gloss: children, kids
+    locator: explicit vocabulary table 35 row 54
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: урочистість
+    pos: noun
+    gloss: solemnity
+    locator: explicit vocabulary table 35 row 55
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: згодом
+    pos: adverb
+    gloss: later, eventually
+    locator: explicit vocabulary table 35 row 56
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: передувати
+    pos: verb
+    gloss: to precede
+    locator: explicit vocabulary table 35 row 57
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вогники
+    pos: noun
+    gloss: christmas lights, lights
+    locator: explicit vocabulary table 35 row 58
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відповідати за
+    pos: phrase
+    gloss: to be responsible for
+    locator: explicit vocabulary table 50 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дякувати за
+    pos: phrase
+    gloss: to thank for
+    locator: explicit vocabulary table 50 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: готуватися до
+    pos: phrase
+    gloss: to prepare for
+    locator: explicit vocabulary table 50 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: чекати на
+    pos: phrase
+    gloss: to wait for
+    locator: explicit vocabulary table 50 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: звертатися до
+    pos: phrase
+    gloss: to turn to / address
+    locator: explicit vocabulary table 50 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: говорити з / із
+    pos: phrase
+    gloss: to speak with
+    locator: explicit vocabulary table 50 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: зосереджуватися назосередитися на
+    pos: phrase
+    gloss: to focus on
+    locator: explicit vocabulary table 50 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: розповідати про
+    pos: phrase
+    gloss: to talk about
+    locator: explicit vocabulary table 50 row 11
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: допомагати кому
+    pos: phrase
+    gloss: to help someone
+    locator: explicit vocabulary table 50 row 12
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: залежати від
+    pos: phrase
+    gloss: to depend on
+    locator: explicit vocabulary table 50 row 13
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: турбуватися про
+    pos: phrase
+    gloss: to worry about
+    locator: explicit vocabulary table 50 row 14
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: домовлятися з
+    pos: phrase
+    gloss: to agree with
+    locator: explicit vocabulary table 50 row 15
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: спостерігати за
+    pos: phrase
+    gloss: to observe
+    locator: explicit vocabulary table 50 row 16
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: звикати до
+    pos: phrase
+    gloss: to get used to
+    locator: explicit vocabulary table 50 row 17
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: що
+    pos: conjunction
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: як
+    pos: adverb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: коли
+    pos: noun
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: чим
+    pos: conjunction
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: хто, який, котрий
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: де, куди, звідки
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 65 row 11
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: привернути увагу, установити контакт
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 2
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: відрекомендувати себе або інших
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 3
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: привітатися, попрощатися
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 4
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: вельми вдячний за увагу.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 5
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: попросити вибачення
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 6
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: привітати
+    pos: verb
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 7
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: нехай ваше життя буде багате на радісні події.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 8
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: у тебе чудовий стиль. ти неперевершений спеціаліст.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 9
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ставити запитання й відповідати на них
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 10
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: скажіть, будь ласка. покажіть, будь ласка.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 11
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: так, це книга. ні, це не зошит, це ручка.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 12
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мені подобається / не подобається. я люблю / не люблю. я віддаю перевагу.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 13
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ходімо дивитися фільм. напиши вправу в зошиті.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 14
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: не смій тут смітити! не торкатися! високий струм!
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 15
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: можна / неможливо
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 17
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: припускаю, що... нехай х = 10, тоді...
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 18
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мені треба / необхідно / потрібно вчитися.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 19
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обґрунтовувати твердження, аргументувати свою думку
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 20
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: '...щоб у майбутньому стати дизайнером ігор. шампунь для сухого волосся.'
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 21
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: чи не бажаєш разом зі мною повечеряти?
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 22
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: поговорімо про... хто може почати? повторіть ще раз дати.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 23
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: а можна я додам...? чи всі висловили свої думки?
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 24
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: я думаю / вважаю / переконаний, що...
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 25
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: рекомендую почати з простого матеріалу. проконсультуйтеся в юриста.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 26
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: олексій міхно – викладач... це доба відродження.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 27
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: лікар – це спеціаліст, який лікує людей.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 28
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: сподіваюся, що в тебе все гаразд. бережи себе.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 29
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: який я радий! мені сумно. співчуваю.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 30
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: я (не)задоволений такою роботою.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 31
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: мені байдуже. мені все одно.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 32
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: дуже прикро, але нічого не вдалося.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 33
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: це книга мого брата. він член пласту.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 34
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: з-під килима, вгорі, внизу, на північному сході, їхати на захід
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 35
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: через два тижні, упродовж року, минулого місяця, торік
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 36
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: через погану погоду ми не пішли у парк.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 37
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: якщо працюватимеш, матимеш кращі результати.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 38
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: по-перше. по-друге. як казав григорій сковорода...
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 39
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: цей будинок вищий, ніж той. вона вища за брата.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 40
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: ти (не)погоджуєшся зі мною? ти за чи проти?
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 41
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: пропоную піти на концерт. на жаль, не можу сьогодні.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 42
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
+  - lemma: обіцяю завтра відповісти на ваш запит.
+    pos: phrase
+    gloss: teacher-lesson headword (gloss pending)
+    locator: explicit vocabulary table 67 row 43
+    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
+      Bulk intake; no AI linguistic review.
