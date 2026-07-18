@@ -18,9 +18,11 @@ Cold start loads all pinned `binding_order` and `negative_constraint` entries,
 then only the last configured `N` other entries. The Monitor API renders this
 digest for every harness. Drivers write through the same source-owned CLI or
 library with an exact stream lease and fencing token. A stale heartbeat permits
-planning, not takeover. Lease transfer occurs only after the existing rollover
-claim, strict-recall, canary, and confirmation receipts pass. `closed` is a
-terminal session state enforced in SQLite and in the command layer.
+planning, never mutation. An intentionally prepared live rollover may transfer
+the lease only after the existing claim, strict-recall, canary, and confirmation
+receipts pass. A crashed session follows a different path: after TTL expiry,
+the successor records heartbeat age and no-live-process proof, force-closes the
+old session, then opens a new session. `closed` is terminal and immutable.
 
 This is a storage layer beneath the existing rollover protocol. It does not
 replace provider task identity, native task creation, canary semantics,
@@ -54,7 +56,7 @@ This design does not:
 | --- | --- | --- |
 | 1 | Accept: pinned entries beat last-N. | `binding_order` and `negative_constraint` are always selected. Explicit supersession labels an old pinned entry inactive but never hides or deletes it. |
 | 2 | Accept: integrate with rollover. | `thread_handoff.py`, the rollover registry, `context_canary.py`, and `thread_handoff_canary.py` continue to own replacement identity and continuity proof. Stream code consumes their exact receipts. |
-| 3 | Accept: one active driver lease. | One mutable lease projection per stream, an increasing fencing token, append-only lease events, and proof-gated transfer. Sessions use `open`, `rolling`, and terminal `closed`. |
+| 3 | Accept with the final takeover clarification: one active driver lease. | One mutable lease projection per stream, an increasing fencing token, append-only lease events, and proof-gated transfer only for an intentional live rollover. Crash recovery force-closes the expired session with proof, then opens a new session. Sessions use `open`, `rolling`, and terminal `closed`. |
 | 4 | Accept: operator window and backups. | An argparse-standard CLI provides `tail`, `dump`, and `grep`; online SQLite snapshots and portable exports are periodic, immutable, verified, and never rotated away. |
 | 5 | Accept: shared stream and Monitor. | Fleet facts live once in `shared:fleet`; epic entries reference shared entry IDs. Monitor resolves references and is the only harness read surface. |
 | 6 | Accept: Claude compatibility is critical. | SessionStart injects the stream digest in the current epic-handoff slot, after any rollover packet. Migration dual-writes before DB authority; file fallback remains available until per-harness acceptance passes. |
@@ -99,9 +101,9 @@ the current closed `source_ref` grammar and confirmation commands intact.
 | Claim replacement | `detect` then exact `resume` | Candidate receives the DB digest in SessionStart and claims only the detected packet. |
 | Prove restored context | `context_canary.py` strict snapshot/questions/score | Snapshot content is selected from pinned-plus-tail DB entries and rendered at the existing reserved path. |
 | Prove replacement process | `thread_handoff_canary.py` | No change. |
-| Confirm successor | `thread_handoff.py confirm-started` | Its exact PASS receipts authorize, but do not themselves perform, stream lease transfer. |
-| Archive/retire predecessor | Task Family Manager and rollover cleanup proofs | Stream lease transfer records the new holder; existing cleanup remains independently gated. |
-| Reconcile stale state | rollover registry `audit`/`reconcile-exact`/proof-gated maintenance | A stale heartbeat is only a signal. Any recovery plan names the exact existing packet or exact recovery preparation command. |
+| Confirm successor | `thread_handoff.py confirm-started` | Its exact PASS receipts authorize, but do not themselves perform, a planned live-rollover transfer. |
+| Archive/retire predecessor | Task Family Manager and rollover cleanup proofs | A planned rollover records the new holder; crash recovery records force-close proof and a separate new-session open. Existing cleanup remains independently gated. |
+| Reconcile stale state | rollover registry `audit`/`reconcile-exact`/proof-gated maintenance | A stale heartbeat is only a signal. Recovery proves heartbeat age and no live holder, force-closes the exact crashed session, and never transfers that session to a successor. |
 
 ## Source layout and runtime location
 
@@ -175,15 +177,17 @@ value. The resulting canonical ID is always `epic:<number>`.
 
 ### Session
 
-A session is one continuous driver lineage within a stream. Native task/thread
-rollovers and an approved interim-driver transfer keep the same `session_id`.
-A later, independent driver run after close opens a new session. Historical
-entries from every session remain part of the stream.
+A session is one continuous driver run within a stream. An intentionally
+prepared native task/thread rollover may keep the same `session_id` because it
+is the current live run's exact proof-gated continuation. A crashed or cleanly
+exited driver run is never continued in place: its session is closed and the
+next driver opens a new session. Historical entries from every session remain
+part of the stream.
 
 States are:
 
 ```text
-                 rollover/takeover prepared
+                    rollover prepared
         +-----------------------------------------+
         |                                         v
       open  <---- exact confirmation + transfer ---- rolling
@@ -198,7 +202,9 @@ States are:
 Allowed transitions are `open -> rolling`, `rolling -> open`, `open -> closed`,
 and proof-gated `rolling -> closed`. The last transition is for an explicitly
 abandoned or terminated rollover after registry reconciliation; it is never a
-timeout shortcut. `closed` is terminal.
+timeout shortcut. A crash recovery uses proof-gated `open -> closed` or
+`rolling -> closed`, followed by a separate new session's initial `open`.
+`closed` has no outgoing edge and is immutable.
 
 ### Entry
 
@@ -820,6 +826,28 @@ Lease acquisition or transfer increments the fencing token. A delayed old
 driver therefore cannot append after transfer even if its process remains
 alive.
 
+### TTL, harness heartbeat, and clean exit
+
+Every active lease has a configured TTL recorded through `heartbeat_at` and
+`expires_at`. The harness, not the model, owns liveness:
+
+- SessionStart/launcher registers an exact runtime instance and schedules the
+  common heartbeat hook through Monitor or the native harness hook surface.
+- Each accepted heartbeat is a fenced compare-and-update transaction that
+  appends a `heartbeat` event, advances projection `version`, and sets
+  `expires_at = accepted_at + ttl`; it cannot change holder identity.
+- Heartbeats stop with the harness process. A clean harness exit invokes the
+  idempotent close hook, which appends final lifecycle events and closes the
+  session while the lease is still valid.
+- If that hook cannot complete, the session becomes eligible for crash
+  recovery only after TTL expiry. The worst-case stale interval is one TTL;
+  there is no permanent lock and no polling loop owned by the model.
+
+Every supported harness exposes the same start, heartbeat, and exit-hook
+contract in phase 1. Provider-specific integrations may choose native hooks or
+Monitor scheduling, but none may rely on a prompt telling the model to renew or
+close its own lease.
+
 ### Initial open
 
 1. Resolve the epic through the authoritative issue-stream registry.
@@ -851,43 +879,47 @@ alive.
    separately decides whether the predecessor task and heartbeat automation
    may be archived or retired.
 
-### Stale-holder recovery
+### Stale-holder crash recovery
 
-Heartbeat expiry alone never transfers a lease. It appends `stale_observed`
-once for the observed lease version and makes a read-only takeover plan
-available.
+Heartbeat expiry alone never transfers or closes a lease. It appends
+`stale_observed` once for the observed lease version and makes a read-only
+force-close plan available.
 
 The plan fails immediately if the session is `closed`. Otherwise:
 
-- If a live prepared/resumed rollover exists, the plan names that exact
-  `(agent, lineage_id, rollover_id)` and emits only the existing detect/resume,
-  strict-recall, canary, and confirmation commands. It never chooses by age or
-  filesystem order.
+- If a live prepared/resumed rollover exists, crash recovery is refused. The
+  plan names that exact `(agent, lineage_id, rollover_id)` and emits only the
+  existing detect/resume, strict-recall, canary, and confirmation commands. It
+  never chooses by age or filesystem order.
 - If rollover state is ambiguous or corrupt, the plan requires rollover
   registry `audit` and `reconcile-exact`. No DB mutation occurs.
 - If no packet exists because the holder died before preparation, an explicit
-  operator recovery plan names the exact predecessor holder and invokes the
-  existing `thread_handoff.py prepare` path with recovery evidence. The stream
-  layer does not mint an alternative claim protocol. The candidate still must
-  pass exact resume, strict recall, canary, and confirmation before transfer.
+  recovery plan names the exact predecessor holder and session. The stream
+  layer reuses the existing canary/claim evidence shape rather than minting a
+  weaker protocol, but the result authorizes force-close, not transfer.
 
-Recovery-prepare authority belongs only to the operator or to the accountable
-stream orchestrator carrying a durable launch/task-identity receipt that sets
-`recovery_takeover=true` and binds the exact stream, predecessor lease
-ID/version, and candidate instance ID. The plan also records the stale-observed
-event, heartbeat age, clean source-checkout binding, rollover audit showing no
-live packet, and proof that the session is not closed. Ordinary drivers cannot
-self-authorize this path.
+Recovery authority belongs only to the operator or to the accountable stream
+orchestrator carrying a durable launch/task-identity receipt that sets
+`recovery_force_close=true` and binds the exact stream, predecessor lease
+ID/version, crashed session, and candidate instance ID. The plan records the
+stale-observed event, heartbeat age beyond the configured TTL, a harness-owned
+no-live-process receipt for the exact holder instance, clean source-checkout
+binding, rollover audit showing no live packet, and proof that the session is
+not already closed. Ordinary drivers cannot self-authorize this path.
 
-`takeover --apply` accepts only the immutable plan digest and the resulting
-existing rollover receipts. A different candidate, holder, lease version,
-session, rollover, or stream invalidates the plan. No unattended timer performs
-this action.
+`session force-close-apply` accepts only the immutable plan digest and those
+exact receipts. A different candidate, holder, lease version, session, process
+identity, or stream invalidates the plan. In one transaction it releases the
+lease and closes the crashed session. Only after commit may the candidate call
+`session open`, which creates a distinct session and advances generation and
+fencing counters. No unattended timer performs either mutation.
 
 ### Close
 
-An ordinary `open -> closed` close requires the current lease/fencing token, no
-unresolved rollover, and an explicit close plan. A `rolling -> closed` close is
+An ordinary `open -> closed` close is invoked automatically by the harness exit
+hook while the current lease/fencing token is valid and no rollover is
+unresolved; the explicit close plan keeps the action idempotent and auditable.
+A `rolling -> closed` close is
 a separate recovery variant: rollover registry reconciliation must prove the
 exact packet abandoned or terminal, no valid replacement owns it, no native
 create is unrecorded, and no heartbeat depends on it. Timeout alone cannot
@@ -982,8 +1014,8 @@ entry bodies with parameterized SQL, not only the tail, and reports truncation.
 
 ```text
 append                         append one typed entry under the exact lease
-session open|close-plan|close-apply
-lease show|heartbeat|transfer-prepare|transfer-apply|takeover-plan|takeover-apply
+session open|close-plan|close-apply|force-close-plan|force-close-apply
+lease show|heartbeat|transfer-prepare|transfer-apply
 migrate inventory|plan|apply|verify
 backup snapshot|export|verify
 audit                          integrity, projection, pin, ref, lease, backup checks
@@ -1074,7 +1106,9 @@ Cut over one stream only after:
 - two successive cold starts for Claude and one non-Claude harness produce the
   expected pinned-plus-tail digest;
 - one real rollover passes exact resume, strict 10/10 recall, challenge canary,
-  confirmation, and stream lease transfer;
+  confirmation, and stream lease transfer for an intentional live rollover;
+- one simulated crash proves TTL expiry plus exact no-live-process evidence,
+  force-closes the predecessor session, and opens a distinct successor session;
 - snapshot restore is tested in a temporary location;
 - the operator approves that stream's evidence.
 
@@ -1130,6 +1164,8 @@ from an empty or guessed stream.
 5. During migration, the dual-write shim keeps the existing epic file current.
 6. Rollover follows existing commands; stream transfer consumes the resulting
    confirmation receipts.
+7. The Claude harness heartbeat renews the lease, and its clean exit hook
+   closes the session without relying on Claude to issue a command.
 
 ### Codex and Task Family Manager
 
@@ -1142,6 +1178,8 @@ from an empty or guessed stream.
    provider-owned SQLite DB.
 4. Task archive/restore and predecessor cleanup remain Task Family Manager
    operations, independent from stream lease transfer.
+5. The Codex harness heartbeat and exit hook implement the same liveness
+   contract as Claude's hooks.
 
 ### Grok, Gemini/AGY, Kimi, and interim stand-ins
 
@@ -1149,11 +1187,14 @@ from an empty or guessed stream.
    agent, actual harness, and exact runtime instance ID.
 2. The harness calls Monitor for the digest and the common CLI for heartbeat
    and writes. No provider-specific handoff parser is needed.
-3. A stand-in either receives a confirmed lease transfer within the open
-   session or opens a new session after close. It never rewrites agent-owned
-   memory because memory is stream-owned.
+3. A stand-in may receive a confirmed lease transfer only for an intentionally
+   prepared live rollover. After a crash it proves the expired holder dead,
+   force-closes that session, and opens a new session. It never rewrites
+   agent-owned memory because memory is stream-owned.
 4. If a harness lacks native task IDs, its exact harness instance ID is the
    holder identity and the rollover fallback receipt records that limitation.
+5. Its harness adapter must expose heartbeat and clean-exit hooks before fleet
+   adoption is accepted; model-authored heartbeat instructions do not qualify.
 
 ### Monitor TUI/operator
 
@@ -1224,7 +1265,7 @@ This is why prevention is a release gate.
 | Binding order scrolls out | Operator intent is lost. | Pinned types bypass `N`; digest tests assert this with more than `N` later entries. |
 | Conflicting pinned orders | Agent chooses a convenient interpretation. | Both render; only explicit `supersedes` changes active status; unresolved conflict is prominent. |
 | Two drivers write concurrently | Split-brain stream history. | `BEGIN IMMEDIATE`, one lease row, increasing fencing token, exact holder tuple, idempotency key. |
-| Dead driver heartbeat expires | Unsafe automatic takeover. | Expiry only appends `stale_observed`; existing rollover/canary proof plus exact plan digest is required. |
+| Dead driver heartbeat expires | Unsafe automatic takeover or permanent lock. | Harness heartbeat bounds staleness to one TTL. Expiry only appends `stale_observed`; exact heartbeat-age and no-live-process proof plus the immutable plan are required to force-close, then the successor opens a new session. |
 | Closed session is reclaimed | Terminal history is rewritten as live. | SQL terminal trigger, one-live-session index, lease closed guard, command-level rejection, regression tests. |
 | File and DB diverge in migration | Claude and interim drivers see different memory. | Hash markers, idempotent imports, visible drift, per-stream cutover gate, verified file fallback. |
 | Shared fact is copied | Epics drift from fleet truth. | `shared:fleet` entry IDs and explicit refs; resolver returns target identity; no copied body in epic entry. |
@@ -1271,18 +1312,24 @@ No implementation chunk starts until the operator accepts this design.
 
 - Add open, heartbeat, close plan/apply, lease projection/event audit, and
   fencing enforcement on append.
+- Add the common harness heartbeat and clean-exit hook surface for every fleet
+  driver, with provider adapters allowed to bind it through native hooks or
+  Monitor scheduling.
 - Add concurrent-writer, stale-heartbeat, projection-rebuild, and closed-session
   adversarial tests.
-- Do not add takeover until ordinary lifecycle is proven.
+- Do not add crash force-close until ordinary lifecycle is proven.
 
-### PR 5: Rollover adapter and proof-gated transfer
+### PR 5: Rollover adapter and proof-gated crash force-close
 
 - Compose existing `thread_handoff` detect/prepare/resume/confirm receipts;
   render DB-selected semantic anchors at the existing reserved packet path.
-- Add transfer-prepare/apply and read-only takeover-plan/apply.
+- Add transfer-prepare/apply for intentional live rollover, read-only
+  force-close-plan, and mutative force-close-apply for an expired crashed
+  session.
 - Test normal rollover, pending-packet recovery, ambiguous registry refusal,
-  stale-only refusal, mismatched receipt refusal, old-token fencing, and
-  independent predecessor-cleanup gating.
+  stale-only refusal, no-live-process proof, distinct successor-session open,
+  mismatched receipt refusal, old-token fencing, and independent
+  predecessor-cleanup gating.
 
 ### PR 6: Legacy inventory, import, and dual-write shim
 
@@ -1318,7 +1365,12 @@ briefs must preserve these measurable gates:
   after transfer;
 - reopening a stream after close advances the retained per-stream generation
   and fencing counters rather than resetting them;
-- a stale heartbeat without rollover/canary proof cannot transfer a lease;
+- harness hooks, not model discipline, renew TTL leases and close every
+  supported fleet driver's clean exit;
+- a stale heartbeat without exact heartbeat-age and no-live-process proof
+  cannot close or transfer a lease;
+- proof-gated crash recovery closes the predecessor and opens a distinct
+  successor session; it never transfers the crashed session;
 - every pinned order/constraint is present after more than `N` later entries;
 - a shared fact is stored once and resolved by exact entry reference;
 - Claude receives rollover first and stream digest in the prior file-handoff
