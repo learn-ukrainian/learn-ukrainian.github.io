@@ -1,121 +1,270 @@
-# Шептицький Климентій (Казимир Марія) — Research Dossier
+# Шептицький Климентій (Казимир-Марія) — Research Dossier
 
 **Slug:** `klymentii-sheptytskyi`
 **Block:** J
 **Tier:** 2
-**Issue:** #2309
-**Researcher:** Codex GPT-5
-**Completed:** 2026-05-30
+**Issue:** #4431
+**Researcher:** Codex GPT-5 (Phase 1) · re-grounded by claude/bio-c3c7-cohort27 (2026-07-17)
+**Completed:** 2026-07-17
+
+> **Re-grounding note (2026-07-17).** Every adopted URL was re-fetched and read
+> before use. The adopted set was reduced to four sources whose URL set is
+> identical across discovery, plan, this dossier and the wiki registry. Claims
+> that the adopted set does not carry were removed and are listed under
+> "Rejected evidence" — including an unsupported case-file reference.
+> Quotations are kept only where a locator was proved by full-text retrieval
+> of the page.
 
 ## 1. Verified facts
 
-- **Full name (UA, canonical):** Климентій Шептицький; secular name Казимир Марія Шептицький. UGCC Synod gives the baptismal name Марія Казимир and the monastic name Климентій. [S1]
-- **Pseudonyms / aliases:** Казимир Шептицький, отець Климентій, архімандрит Климентій, Klymentiy Sheptytsky, Clement Sheptytsky, Kliment Sheptytskyi.
-- **Born:** 1869-11-17 | Прилбичі, Яворівщина, Galicia, Austria-Hungary. UGCC Synod and Ukrainian Wikipedia via `mcp__sources.query_wikipedia` agree on the date and village. [S1] [S5]
-- **Died:** 1951-05-01 | Vladimir Central Prison, Russian SFSR, USSR. UGCC Synod gives 1 May 1951 and says burial occurred at night near the prison wall; Ukrainian Wikipedia gives the same death frame. [S1] [S5]
-- **Family / education key facts:** He was the younger brother of Metropolitan Andrey Sheptytskyi, studied law in Krakow, Munich, and Paris, earned a doctorate in law, served in Austrian political life, and entered the Studite monastic path in 1911-1913. [S1]
+- **Full name (UA, canonical):** Шептицький Климентій. Secular name diverges by
+  source: EIU gives «світське ім'я — Казимир-Марія» [S1]; the UGCC Synod gives
+  «При хрещенні отримав ім'я Марія Казимир» [S2] — same components, different
+  order. Not reconciled.
+- **Born:** 1869-11-17, маєток Прилбичі, «нині село Яворівського p-ну Львів.
+  обл.», into a «знатній польс. родині» [S1]; the Synod gives the same date and
+  village [S2].
+- **Died:** 1951-05-01, «в'язниці з особливо суворим режимом у м. Владимир»,
+  «нині місто в РФ» [S1]. The Synod: «1 травня 1951 р. у Володимирській
+  в'язниці добігло кінця земне життя» [S2]. The Vatican gives the frame
+  «(1869-1951)» [S4].
+- **Education:** «закінчив краківську г-зію Святої Анни (1887)»; «ступінь д-ра
+  права (1892)» [S1]. The Synod dates the gymnasium 1882–1887 [S2].
+- **Political career:** «депутатом австрійс. парламенту (1900—07)», member of
+  the «Держ. ради Австро-Угорщини» [S1]; the Synod: elected «послом до
+  Віденського парламенту» in 1900 [S2].
+- **Offices:** настоятель монастиря студитів у Скнилові (із 1918); ігумен
+  Унівської Свято-Успенської лаври (із 1926); апостольський екзарх Росії і
+  Сибіру (1939); архімандрит монахів Студійського уставу (12 листопада 1944)
+  [S1]. The Vatican title: «Professed Pastor of the Ukrainian Studiti Monks,
+  Archimandrite of the Monastery of Univ» [S4].
+- **Later acts:** rehabilitation 29 травня 1991; Праведник народів світу 1996;
+  блаженний 27 червня 2001 [S1] [S4].
 
 ## 2. Oppression mechanism
 
-- **What happened:** Soviet arrest, MGB interrogation, criminal conviction, imprisonment, and death in prison.
-- **When:** Arrested 1947-06-05 in Univ Lavra; sentenced in March 1948 to eight years; died 1951-05-01. [S1]
-- **By whom:** Soviet MGB/UMGB investigators and prison system.
-- **Document references:** A UGCC Synod article identifies the criminal case as Central Sectoral Archive of the SBU case `74978 ФП`; this dossier cites that retrieved reference and does not invent additional archive numbers. [S3]
-- **Mechanism specifics:** After the Soviet arrest of the UGCC bishops in 1945, Sheptytskyi effectively held together part of the remaining church structure, met clergy, urged them not to accept coerced transfer into Russian Orthodoxy, and sent reports on persecution to Vatican contacts. UGCC Synod reports that intercepted letters to Cardinal Tisserant and Father Korolevsky became evidence against him. [S1]
+- **What happened:** arrest, investigation, extrajudicial sentence,
+  imprisonment, death in prison.
+- **When:** arrested 1947-06-05 in Univ Lavra [S1] [S2] [S3]; died 1951-05-01
+  [S1] [S2].
+- **By whom (sentence):** per EIU the sentence was passed by the «особлива
+  нарада МДБ УРСР» [S1] — an extrajudicial body, not a court. This is the
+  single most important structural fact for the term: the eight-year term was
+  not the outcome of a trial.
+- **What became evidence — source-specific agency conflict (unresolved):**
+  - [S2]: «Тому написав листи до Кард. Тіссерана та о. Королевського про
+    переслідування УГКЦ, але їх перехопило МГБ» — documenting persecution
+    appears as criminalizing material in the Church biography.
+  - [S3]: formal arrest reason — letters of the archimandrite to Rome about
+    persecution of the UGCC in Ukraine, «які перехопило НКВС».
+  - Both formulations are retained; neither agency is selected, harmonized, or
+    generalized to the whole repression sequence. [S1]'s sentencing body
+    (особлива нарада МДБ УРСР) is a separate claim and is not merged with the
+    letter-interception agency.
+- **Burial:** «Поховання відбулося 3 травня о 3 год. ночі на міському
+  кладовищі», and «Віднайти місце поховання о. Климентія наразі не вдалося»
+  [S2]. EIU states the burial place remains unknown [S1]. The adopted sources
+  record the time and a city-cemetery burial and that the location remains
+  unknown / has not been found; **none** of them establishes motive, cause, or
+  that a 3 a.m. burial was «procedure».
 
-The MGB charge was political even though the retrieved UGCC source records his answer that he was a monk and did not conduct political activity. He was moved from Lviv to Kyiv, then to Moscow and Vladimir. The prison chronology is unusually clear in the retrieved UGCC account, but full interrogation transcripts were not retrieved; only the case number and reported questioning are available. [S1] [S3]
+### Sentencing date — recorded, not resolved
 
-- **What survived / what was destroyed:** His letters and monastic instructions survived in published collections and church memory. His burial place remains unidentified in the retrieved sources; UGCC states that the grave has not been found. [S1]
+| Source | Date | Body | Term |
+| --- | --- | --- | --- |
+| EIU [S1] | 28 лютого (1948) | особлива нарада МДБ УРСР | 8 років |
+| UGCC Synod [S2] | «У березні 1948 р.» | not named | 8 років |
 
-## 3. Major works
+The term agrees; the month does not. This dossier does not choose, and does not
+write "early 1948" — that phrasing would fake a knowledge neither source gives.
 
-- `1900-1907` — Austrian parliamentary and public work under his secular name, important background for the later contrast between aristocratic status and monastic obedience.
-- `1911-1913` — entry into monastic life; Studite formation.
-- `1915` — priestly ordination.
-- `1917-1926` — leadership of Studite monastic houses in Lviv and Univ.
-- `1937` — work on the Studite Typikon with Metropolitan Andrey Sheptytskyi, submitted to the Congregation for the Eastern Churches. [S1]
-- `1939` — head of the Ukrainian Catholic Institute of Church Union named for Metropolitan Rutsky; appointed Greek-Catholic exarch in Russia. [S1]
-- `1940` — message *Посліднє слово*, preparing monks for persecution; source text was not retrieved, but UGCC identifies the title and purpose. [S1]
-- `1941-1944` — participation in the Sheptytsky rescue network for Jews during the German occupation; Yad Vashem recognized him as Righteous Among the Nations. [S2]
-- `1945-1947` — letters to Vatican contacts documenting Soviet persecution; intercepted and used in the case. [S1]
-- `1881-1945` — letters to his brother Stanislav and family, published posthumously. [S6]
+## 3. Major works and chronology (per source)
 
-## 4. Primary-source quotes
+- `1900–07` — Austrian parliamentary work under the secular name [S1] [S2].
+- `1911` — entry into monastic life [S1]; the Synod adds that he transferred his
+  фільварок to his nephew Jan that year [S2]. 1911 is entry only — never the
+  tonsure year.
+- `1913` — first monastic tonsure with the name Klymentii [S2]; EIU dates
+  priestly ordination to 1913 [S1].
+- `1915` — hieromonk status [S1]; Synod dates priestly ordination to 1915 [S2].
+  Both ordination accounts are recorded; neither is selected.
+- `1918` / `1926` — Skniliv superior / Univ hegumen [S1].
+- `1939` — apostolic exarch of Russia and Siberia [S1].
+- `1940` (червень) — «У червні 1940 р. він написав послання „Посліднє слово“»
+  [S2]. The text of the послання was not retrieved; only its title, month and
+  existence are attested.
+- `1944-11-12` — archimandrite of the Studite monks [S1]; the Synod dates the
+  Univ archimandrite office to 1944 [S3].
+- `1941–44` — rescue of Jews: EIU calls him «організатором та безпосереднім
+  учасником акцій з порятунку євреїв від Голокосту» [S1]; the Synod states he
+  «давав притулок переслідуваним євреям» at Univ Lavra [S3]. A secular academic
+  reference and the Church's own testimony agree here in wording; independent
+  derivation of one from the other is **not** claimed.
 
-> "З висуненими звинуваченнями я не погоджуюся."
+## 4. Secondary quotations from a 2020 Church biography (located only)
 
-Source: answer to Soviet investigators as quoted in UGCC Synod biography. The line is useful for learners because it shows direct refusal of a criminalized Soviet frame without heroic overstatement. [S1]
+These are **secondary quotations** carried by the 2020 UGCC Synod biography
+[S2] — a Church account of its own martyr, **not** primary-source archival
+utterances, interrogation transcripts, or prison records.
 
-> "Для мене тюремна камера - це монаша келія."
+> «З висуненими звинуваченнями я не погоджуюся»
 
-Source: prison saying preserved in UGCC Synod biography. It is a direct devotional register; curriculum prose should label it as recorded speech, not a stenographic court transcript. [S1]
+Locator: UGCC Synod biography [S2], answer to the investigator's question
+whether he accepted the charges. Genre: secondary quotation from a Church
+biography — **not** an archival transcript. Verified by full-text retrieval
+2026-07-17.
+
+> «Для мене тюремна камера — це монаша келія. Живу так, як жив би в монастирі»
+
+Locator: UGCC Synod biography [S2], concerning the Kyiv prison. Verified by
+full-text retrieval 2026-07-17. Note the exact form: an em dash, and a second
+sentence that earlier drafts omitted. Use as secondary quotation from the
+Church account, never as a stenographic record.
+
+> «Віднайти місце поховання о. Климентія наразі не вдалося»
+
+Locator: UGCC Synod biography [S2]. Useful precisely because the source leaves
+the question open rather than closing it.
+
+**Rejected claim — unsupported case-file reference.** A prior draft of this
+dossier attributed a specific criminal-case reference to a UGCC Synod article.
+Full text retrieval of the adopted Synod page [S2] shows **no case-file
+reference on it**, and none of the four adopted sources supplies one. This is
+not a claim that any particular reference is wrong — it is a statement that
+the adopted set does not prove one, which is a different thing.
 
 ## 5. Language register
 
-- **Register:** Ecclesiastical, monastic, epistolary, and legal-bureaucratic in repression sources.
-- **CEFR readiness for full reading:** B2 for short recorded sayings; C1 for letters and monastic instructions.
-- **Lexicon notes:** `архімандрит`, `студити`, `типікон`, `екзарх`, `МГБ`, `в'язниця`, `Праведник народів світу`.
-- **Stylistic features:** Direct speech is compact and pastoral; institutional biography uses hagiographic vocabulary that should be balanced with case-file caution.
+- **Register:** ecclesiastical/monastic; legal-bureaucratic in the repression
+  layer («особлива нарада», «особливо суворий режим»).
+- **CEFR readiness:** B2 for the recorded sayings; C1 for the EIU entry.
+- **Lexicon:** `архімандрит`, `студити`, `екзарх`, `особлива нарада`, `постриг`,
+  `реабілітація`, `Праведник народів світу`.
+- **Stylistic note:** «Для мене X — це Y» is a renaming construction in the
+  secondary quotation; «живу» is present tense, «жив би» is conditional. The
+  adopted sources do not establish a motive or causal interpretation for the
+  prison-cell saying.
 
 ## 6. Contested points
 
-- **What's debated in modern UA scholarship:** Whether Sheptytskyi should be treated primarily as Andrey Sheptytskyi's helper, as a separate Studite institutional builder, or as a prison martyr. UGCC sources explicitly warn that his contribution still needs fuller study. [S1]
-- **What gets simplified in popular memory:** He is often reduced to "the brother of Andrey" or to one rescue title. Retrieved sources show a longer record: lawyer, parliamentarian, monk, archimandrite, rescuer, and acting church leader after the 1945 arrests.
-- **Where modern Russian disinformation attacks them:** Soviet anti-Catholic framing criminalized Vatican contact and loyalty to the UGCC as anti-Soviet activity. The dossier labels that as a regime charge, not a neutral description.
-- **Polish / Jewish / other-perspective considerations:** Yad Vashem recognition is central: he and Studite collaborators helped hide Jewish children and adults. Polish aristocratic family background is also real and should not be erased into a single ethnic label.
-- **Pedagogical caution:** Do not present prison sayings as court transcripts unless the SBU file is directly consulted. Keep "recorded speech" and "archival transcript" separate.
+- **Sentencing month** — February [S1] vs March [S2]; unresolved above.
+- **Secular name order** — Казимир-Марія [S1] vs Марія Казимир [S2].
+- **Monastic chronology and ordination** — EIU: entry 1911, priestly ordination
+  1913, hieromonk 1915 [S1]. Synod: first tonsure with the name Klymentii 1913,
+  priestly ordination 1915 [S2]. 1911 is entry into monastic life only, never
+  the tonsure year. Both ordination accounts are recorded; neither is selected.
+- **Letter-interception / formal-arrest agency** — [S2] attributes interception
+  of the Tisserant/Korolevskyi letters to **МГБ**; [S3] attributes interception
+  of the letters to Rome / the formal arrest reason to **НКВС**. Both
+  source-specific formulations are kept; neither is selected. [S1]'s
+  «особлива нарада МДБ УРСР» is the sentencing body only — not merged with
+  the interception agency.
+- **"Andrey's brother" reduction** — popular memory reduces him to the
+  metropolitan's helper or to one rescue title; the adopted sources show
+  lawyer, parliamentarian, monk, hegumen, exarch, archimandrite, rescuer.
+- **Righteous Among the Nations** — attributed to EIU's own statement («1996»)
+  [S1]. The Yad Vashem record itself was **not** read (see §10), so the packet
+  never writes "per Yad Vashem" and never treats Yad Vashem as the proof base.
+- **Polish aristocratic origin and Soviet suspicion** — Polish aristocratic
+  origin is real and stated by EIU as a «знатній польс. родині» [S1]; it is a
+  fact of origin, not an explanation of his choices. EIU records Soviet
+  suspicion of Ukrainian nationalism and anti-Soviet activity [S1].
 
 ## 7. Cross-track links
 
-- **Existing ISTORIO modules (VERIFIED present via `test -e`):**
+- **Existing cross-track plans (verified present on this branch):**
   - `curriculum/l2-uk-en/plans/istorio/hreko-katolytska-tserkva.yaml`
   - `curriculum/l2-uk-en/plans/istorio/radianska-antyrelihiyna-polityka.yaml`
   - `curriculum/l2-uk-en/plans/istorio/syntez-relihiina-identychnist.yaml`
-- **Candidate cross-track connections (to create/verify in Phase 2+ -- NOT existing files):**
-  - Bio link to Andrey Sheptytskyi, Yosyf Slipyi, Studite monasticism, rescue of Jews in wartime Lviv, and postwar Soviet liquidation of the UGCC.
-- **Potential LIT additions surfaced by this research:**
-  - A C1 epistolary reading from the published letters to Stanislav Sheptytskyi, if rights and text access are cleared.
+- **Within this cohort (neutral course links only; no arrests, dates,
+  relationships, or “same mechanism” claims asserted from this packet):**
+  ivan-ziatyk, zynovii-kovalyk, teodor-romzha, petro-verhun.
+- **Candidate (NOT existing files; names only):** Andrey Sheptytsky, Yosyf
+  Slipyi, Studite monasticism, wartime rescue in Lviv, postwar liquidation of
+  the UGCC.
 
 ## 8. Naming-canonical
 
 - **Slug:** `klymentii-sheptytskyi`
 - **EN canonical (BGN/PCGN 2010):** Klymentii Sheptytskyi
-- **UA canonical (with patronymic if attested):** Шептицький Климентій; secular name Шептицький Казимир Марія.
-- **Aliases (track these for `aliases:` YAML field):** Казимир Шептицький, отець Климентій, архімандрит Климентій, Klymentiy Sheptytsky, Clement Sheptytsky, Kliment Sheptytskyi, Szeptycki.
-- **Forbidden forms (Russian-imperial transliterations to flag in body text):** Kliment Sheptitskii, Kazimir Sheptitsky (FORBIDDEN except archival metadata).
+- **UA canonical:** Шептицький Климентій; secular Шептицький Казимир-Марія [S1]
+  / Марія Казимир [S2].
+- **Vatican form (for reference only):** «Klymentij Šeptyckyj» [S4].
+- **Aliases:** Казимир Шептицький, отець Климентій, архімандрит Климентій.
+- **Forbidden forms (Russian-imperial transliterations; archival metadata only):**
+  Kliment Sheptitskii, Kazimir Sheptitsky.
 
-## 9. Image candidates
+## 9. Image candidates — disposition: TEXT-ONLY
 
-- **Best PD/CC portrait:** Wikimedia Commons category for Klymentii Sheptytskyi; verify individual file license before use.
-- **Backup candidates:** UGCC Synod portrait used in the 2020 biography page; rights not established in retrieved source.
-- **If no PD/CC portrait exists:** Use a rights-cleared image of Univ Lavra or a Studite memorial plaque.
-- **Era-appropriate context image:** Vladimir Central Prison exterior or UGCC underground memorial image, only with explicit license.
+- **Decision:** `portrait_fallback` — text-only. No image is used.
+- **Why:** no individual file was found whose subject, author/provenance **and**
+  reusable licence are all proved. The live EIU page states that **texts and
+  images** are available under Creative Commons Attribution-ShareAlike
+  (CC BY-SA) [S1]. That is a **page-level** notice: no specific individual
+  image file is selected or identified here, so the notice is not treated as
+  a file-level portrait licence, and disposition remains text-only.
+- **Not accepted:** "Wikimedia Commons category, verify licence before use" and
+  "UGCC Synod portrait, rights not established" — both are deferrals, not
+  dispositions. Neither is used.
 
-## 10. Sources used
+## 10. Sources used — adopted set (4, deduplicated)
 
-**Tier 1 (authoritative):**
-- Vatican, "Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine" | https://www.vatican.va/news_services/liturgy/documents/20010626_beatif_ucraina_en.html | accessed 2026-05-30
+The URL set below is identical in `curriculum/l2-uk-en/bio/discovery/klymentii-sheptytskyi.yaml`,
+`curriculum/l2-uk-en/plans/bio/klymentii-sheptytskyi.yaml` and
+`wiki/figures/klymentii-sheptytskyi.sources.yaml`.
 
-**Tier 2 (institutional):**
-- UGCC Synod, "У цей день, 151 рік тому, народився блаженний свящмч. Климентій Шептицький" | https://synod.ugcc.ua/data/u-tsey-den-151-rik-tomu-narodyvsya-blazhennyy-svyashchmch-klymentiy-sheptytskyy-4472/ | accessed 2026-05-30
-- Yad Vashem Collections, "Sheptytsky Clement" | https://collections.yadvashem.org/en/righteous/4017786 | accessed 2026-05-30
-- UGCC Synod, "о. Юстин Бойко: Про свідомість внутрішньоцерковної міжєпархіяльної єдності..." | https://synod.ugcc.ua/data/otets-yustyn-boyko-pro-svidomist-vnutrishnotserkovnoy-mizheparhiyalnoy-ednosti-peredvoennoy-ugkts-5787/ | accessed 2026-05-30
+- **[S1] EIU** — «ШЕПТИЦЬКИЙ КЛИМЕНТІЙ», Рубльова Н. С., Енциклопедія історії
+  України, Інститут історії України НАН України |
+  https://www.history.org.ua/?termin=Sheptytskyj_Klymentij_ | read 2026-07-17.
+  Ukrainian; learner reading (link-only).
+- **[S2] UGCC Synod** — «У цей день, 151 рік тому, народився блаженний свящмч.
+  Климентій Шептицький» (17 листопада 2020) |
+  https://synod.ugcc.ua/data/u-tsey-den-151-rik-tomu-narodyvsya-blazhennyy-svyashchmch-klymentiy-sheptytskyy-4472/
+  | read 2026-07-17. Ukrainian; learner reading (link-only).
+- **[S3] UGCC Synod** — «27 червня Українська Греко-Католицька Церква вшановує
+  пам'ять новомучеників. Історії святості» (27 червня 2022) |
+  https://synod.ugcc.ua/data/27-chervnya-ukraynska-greko-katolytska-tserkva-vshanovue-pamyat-novomuchenykiv-istoriy-svyatosti-9451/
+  | read 2026-07-17. Ukrainian; learner reading (link-only).
+- **[S4] Holy See** — «Beatifications Ukraine - 26, 27 June 2001» |
+  https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  | read 2026-07-17. English → **reference only, never a learner reading.**
 
-**Tier 3 (encyclopedic):**
-- Ukrainian Wikipedia, "Климентій (Шептицький)," via `mcp__sources.query_wikipedia` | accessed 2026-05-30
+### Rejected / replaced evidence
 
-**Tier 4 (modern scholarly post-1991):**
-- Radio Svoboda, "Листи братів Шептицьких. Вони вміли поєднати непоєднуване" | https://www.radiosvoboda.org/a/28405727.html | accessed 2026-05-30
-
-**Primary-source documents accessed:**
-- Published case number reference `74978 ФП` via UGCC Synod; full SBU file source not found.
+- **Yad Vashem, righteous record 4017786** — dropped. Two retrieval attempts
+  failed: TLS chain verification error on `collections.yadvashem.org`, then a
+  timeout on the `righteous.yadvashem.org` item URL. The record was never read,
+  so it is not adopted and nothing rests on it. The 1996 recognition is carried
+  **as EIU's statement** [S1], with attribution.
+- **«Листи братів Шептицьких»** — dropped. The entry had a bare title instead of
+  a URL and a `reading-needed` placeholder in `source_url`; no stable Ukrainian
+  text of the correspondence was located.
+- **Vatican `/news_services/liturgy/documents/20010626_beatif_ucraina_en.html`**
+  — deduplicated. It returns the same document as the adopted `/saints/` URL;
+  one address retained.
+- **Unsupported case-file reference** — a prior draft's case-file citation is
+  absent from all four adopted sources (see §4).
+- **Ukrainian Wikipedia, Radio Svoboda, UGCC Synod article 5787** — dropped from
+  the source list: not part of the adopted set, and no claim in this packet
+  depends on them.
 
 ---
 
 ## Decolonization self-check
 
-- [x] Soviet charge language labeled as accusation
-- [x] Yad Vashem recognition included without erasing Ukrainian/Polish family context
-- [x] No fabricated case-file details
-- [x] Existing paths verified
-- [x] Russian-imperial transliterations confined to naming metadata
+- [x] Soviet charge language labelled as accusation, never as description
+- [x] Extrajudicial body («особлива нарада») named as such — no "trial" framing
+- [x] Church testimony, secular academic reference, and beatification kept as
+      distinct evidential levels rather than merged into one consensus
+- [x] Sentencing-date divergence recorded, not silently resolved
+- [x] MGB [S2] vs NKVS [S3] letter-interception / formal-arrest formulations
+      both retained; no single agency selected
+- [x] Rescue of Jews stated without turning it into a defence of anyone else
+- [x] Polish family origin retained as origin, not as explanation
+- [x] No fabricated case-file details; case number explicitly rejected
+- [x] Secondary quotations from the 2020 Church biography carry locators; the
+      prison-cell saying verified by full-text retrieval before use; never
+      labelled as primary-source archival quotes
+- [x] 1996 Righteous recognition attributed to EIU [S1], not to unread Yad
+      Vashem
+- [x] Image disposition is a decision (text-only), not a deferral

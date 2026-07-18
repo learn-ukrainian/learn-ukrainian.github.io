@@ -1,0 +1,88 @@
+# Source registry for wiki/figures/klymentii-sheptytskyi.md
+sources:
+- id: S1
+  file: https://www.history.org.ua/?termin=Sheptytskyj_Klymentij_
+  type: external
+  title: ШЕПТИЦЬКИЙ КЛИМЕНТІЙ
+  url: https://www.history.org.ua/?termin=Sheptytskyj_Klymentij_
+  metadata:
+    publisher: Інститут історії України НАН України
+    work: Енциклопедія історії України
+    author: Рубльова Н. С.
+    language: uk
+    verified_on: '2026-07-17'
+    access_note: >-
+      канонічна адреса ?termin= віддає статтю через ланцюг 301-редиректів на
+      resource.history.org.ua/cgi-bin/eiu/history.exe; документ прочитано
+      2026-07-17 саме за цією адресою.
+    licence_note: >-
+      жива сторінка ЕІУ зазначає, що тексти й зображення доступні за Creative
+      Commons Attribution-ShareAlike (CC BY-SA). Це page-level позначка
+      сторінки; окремий портретний файл не обрано й не ідентифіковано, тож
+      page-level notice не перетворюється на file-level claim на портрет.
+    portrait_fallback: >-
+      text-only: окремого портретного файла з доведеним суб'єктом, автором і
+      походженням не обрано й не ідентифіковано; page-level CC BY-SA notice
+      сторінки ЕІУ не є file-level ліцензією на портрет. Зображення не
+      використовується.
+- id: S2
+  file: https://synod.ugcc.ua/data/u-tsey-den-151-rik-tomu-narodyvsya-blazhennyy-svyashchmch-klymentiy-sheptytskyy-4472/
+  type: external
+  title: У цей день, 151 рік тому, народився блаженний свящмч. Климентій Шептицький
+  url: https://synod.ugcc.ua/data/u-tsey-den-151-rik-tomu-narodyvsya-blazhennyy-svyashchmch-klymentiy-sheptytskyy-4472/
+  metadata:
+    publisher: Синод Єпископів Української Греко-Католицької Церкви
+    language: uk
+    published_on: '2020-11-17'
+    verified_on: '2026-07-17'
+    source_role: >-
+      церковне свідчення власної Церкви про свого мученика; подає перебіг
+      слідства, репліку з допиту («З висуненими звинуваченнями я не
+      погоджуюся»), тюремну репліку («Для мене тюремна камера — це монаша
+      келія. Живу так, як жив би в монастирі»), листи до кард. Тіссерана та
+      о. Королевського, які «перехопило МГБ» (формулювання саме [S2] — не
+      узагальнювати на [S3] і не гармонізувати з НКВС), послання «Посліднє
+      слово» (червень 1940) і поховання 3 травня о 3 год. ночі з
+      незнайденою могилою. Використовується як свідчення, а не як
+      незалежний академічний підсумок.
+    absent_claim_note: >-
+      ця сторінка не подає жодного номера кримінальної справи; жодне з
+      чотирьох адоптованих джерел S1–S4 такого номера не наводить.
+- id: S3
+  file: >-
+    https://synod.ugcc.ua/data/27-chervnya-ukraynska-greko-katolytska-tserkva-vshanovue-pamyat-novomuchenykiv-istoriy-svyatosti-9451/
+  type: external
+  title: 27 червня Українська Греко-Католицька Церква вшановує пам'ять новомучеників. Історії святості
+  url: >-
+    https://synod.ugcc.ua/data/27-chervnya-ukraynska-greko-katolytska-tserkva-vshanovue-pamyat-novomuchenykiv-istoriy-svyatosti-9451/
+  metadata:
+    publisher: Синод Єпископів Української Греко-Католицької Церкви
+    language: uk
+    published_on: '2022-06-27'
+    verified_on: '2026-07-17'
+    source_role: >-
+      зведена церковна довідка про новомучеників 2001 року; подає Унівську
+      лавру й переховування євреїв; формальну причину арешту 5 червня 1947
+      р. — листи архімандрита до Риму про переслідування УГКЦ, «які
+      перехопило НКВС» (формулювання саме [S3] — не узагальнювати на [S2]
+      і не гармонізувати з МГБ). Свідчення Церкви про себе.
+- id: S4
+  file: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  type: external
+  title: Beatifications Ukraine - 26, 27 June 2001
+  url: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  metadata:
+    publisher: Holy See (Vatican)
+    language: en
+    verified_on: '2026-07-17'
+    reference_only: >-
+      англомовний документ; використовується лише як референс для акту
+      беатифікації та офіційного титулу, НЕ як учнівське читання (учнівські
+      читання в курсі — тільки українськомовні).
+    document_identity: >-
+      сторінка подає перелік «Mycola Čarneckyj and 24 Companions» і в ньому
+      рядок «Klymentij Šeptyckyj — Professed Pastor of the Ukrainian Studiti
+      Monks, Archimandrite of the Monastery of Univ (1869-1951)».
+    duplicate_note: >-
+      адреса /news_services/liturgy/documents/20010626_beatif_ucraina_en.html
+      віддає той самий документ; у наборі залишено одну адресу (/saints/).

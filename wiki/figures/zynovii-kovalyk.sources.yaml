@@ -1,0 +1,78 @@
+# Source registry for wiki/figures/zynovii-kovalyk.md
+sources:
+- id: S1
+  file: https://esu.com.ua/article-8349
+  type: external
+  title: Ковалик Зеновій
+  url: https://esu.com.ua/article-8349
+  metadata:
+    publisher: Інститут енциклопедичних досліджень НАН України
+    work: 'Енциклопедія Сучасної України: Т. 13 (грудень 2013)'
+    author: Головин Б. П.
+    language: uk
+    verified_on: '2026-07-17'
+    source_role: >-
+      світський академічний довідник; єдине з перевірених джерел, що подає
+      точну дату смерті (26.06.1941, Львів) і посаду «економ» львівського
+      монастиря.
+    name_form_note: >-
+      стаття подає форму імені «Ковалик Зеновій», відмінну і від слуга курсу
+      (zynovii-kovalyk), і від церковного вжитку («Зенон», «Зиновій»), і від
+      ватиканського «Zynovij Kovalyk».
+    portrait_fallback: >-
+      text-only: окремого портретного файла з доведеним суб'єктом, автором,
+      походженням і придатною ліцензією стаття не подає; зображення не
+      використовується.
+- id: S2
+  file: https://old.cssr.lviv.ua/saints/zenon-kovalyk/
+  type: external
+  title: бл. Зенон Ковалик
+  url: https://old.cssr.lviv.ua/saints/zenon-kovalyk/
+  metadata:
+    publisher: Редемптористи Львівської Провінції (Чин Найсвятішого Ізбавителя)
+    language: uk
+    verified_on: '2026-07-17'
+    source_role: >-
+      джерело власного чину про свого члена; подає обставини ув'язнення
+      (шість місяців, двадцять вісім допитів) і спосіб загибелі.
+      Внутрішньоцерковне свідчення — вживається з атрибуцією.
+    agreement_note: >-
+      подає ту саму дату свячень (9 серпня 1932) і ту саму посаду («економ
+      монастиря»), що й ЕСУ. Збіг формулювань зафіксовано, але різні видавці
+      самі собою не доводять незалежних ланцюгів походження фактів.
+- id: S3
+  file: "https://synod.ugcc.ua/data/27-chervnya-ukraynska-greko-\
+    katolytska-tserkva-vshanovue-pamyat-novomuchenykiv-istoriy-\
+    svyatosti-9451/"
+  type: external
+  title: 27 червня Українська Греко-Католицька Церква вшановує пам'ять новомучеників. Історії святості
+  url: "https://synod.ugcc.ua/data/27-chervnya-ukraynska-greko-\
+    katolytska-tserkva-vshanovue-pamyat-novomuchenykiv-istoriy-\
+    svyatosti-9451/"
+  metadata:
+    publisher: Синод Єпископів Української Греко-Католицької Церкви
+    language: uk
+    published_on: '2022-06-27'
+    verified_on: '2026-07-17'
+    source_role: >-
+      зведена церковна довідка про новомучеників 2001 року; подає розміри
+      камери й число в'язнів, арешт «у ніч з 20 на 21 грудня 1940 р.»,
+      працю на Волині та розп'яття на стіні 1941 року.
+    divergence_note: >-
+      подає дату свячень «4 вересня 1932 р.», що розходиться з 9 серпня 1932
+      у [S1] і [S2]; версії не обрано — зафіксовано розклад два проти одного.
+- id: S4
+  file: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  type: external
+  title: Beatifications Ukraine - 26, 27 June 2001
+  url: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
+  metadata:
+    publisher: Holy See (Vatican)
+    language: en
+    verified_on: '2026-07-17'
+    reference_only: >-
+      англомовний документ; референс для акту беатифікації та офіційного
+      титулу, НЕ учнівське читання.
+    document_identity: >-
+      сторінка подає рядок «Zynovij Kovalyk — Professed Pastor of the
+      Congregation of the Most Holy Redeemer (1903-1941)».
