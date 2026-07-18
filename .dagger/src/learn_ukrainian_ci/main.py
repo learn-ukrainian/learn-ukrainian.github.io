@@ -274,6 +274,7 @@ class LearnUkrainianCi:
                 "-m",
                 "pip",
                 "install",
+                "--no-deps",
                 "multiprocess==0.70.18",
                 "huggingface-hub==1.24.0",
             ])
