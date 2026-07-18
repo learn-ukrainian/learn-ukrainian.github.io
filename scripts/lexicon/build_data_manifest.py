@@ -15,24 +15,31 @@ heritage status, paradigm, etc.) are layered on by enrichment.
 
 Reproducer (run from repo root):
 
-    .venv/bin/python -m scripts.lexicon.build_data_manifest
+    .venv/bin/python -m scripts.lexicon.build_data_manifest --write
 
-Writes ``site/src/data/lexicon-manifest.json`` and prints stats.
+Bare invocation and ``--help`` refuse / print usage without writing the
+manifest (``#5393`` sibling guard).
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
+import sys
 import unicodedata
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -614,7 +621,51 @@ def build_manifest() -> dict:
     }
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
+    """CLI parser for build_data_manifest (``#5393`` argv guard)."""
+    return argparse.ArgumentParser(
+        description=(
+            "Build the Word Atlas bare lemma lexicon-manifest.json from curriculum vocabulary. "
+            "Use when rebuilding the Atlas index from taught vocab; "
+            "do NOT use for flag probes — bare invocation must not rewrite the manifest."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  # Print usage without touching any files\n"
+            "  .venv/bin/python scripts/lexicon/build_data_manifest.py --help\n\n"
+            "  # Build and write the bare lemma manifest\n"
+            "  .venv/bin/python scripts/lexicon/build_data_manifest.py --write\n\n"
+            "Outputs (only with --write):\n"
+            "  site/src/data/lexicon-manifest.json  — bare lemma + course-usage index\n\n"
+            "Exit codes:\n"
+            "  0  success (--help or successful --write)\n"
+            "  2  refused (no --write) or argparse error\n\n"
+            "Related:\n"
+            "  scripts/lexicon/enrich_manifest.py  — layer dictionary enrichment after build\n"
+            "  issue #5393                        — argv guard sibling"
+        ),
+    )
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse CLI args and write the bare manifest only when ``--write`` is given."""
+    parser = build_parser()
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help=(
+            "Write site/src/data/lexicon-manifest.json. "
+            "Default: refuse with usage and exit non-zero (no files touched)."
+        ),
+    )
+    args = parser.parse_args(argv)
+    if not args.write:
+        parser.error(
+            "refusing to build/write the lexicon manifest without --write "
+            "(writes site/src/data/lexicon-manifest.json; pass --write to proceed)"
+        )
+
     manifest = build_manifest()
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
     MANIFEST_PATH.write_text(
@@ -627,7 +678,8 @@ def main() -> None:
         f"{stats['lemmas_total']} lemmas across {stats['modules_covered']} modules "
         f"(built={stats['from_built']}, seeds={stats['from_surzhyk_to_avoid'] + stats['from_heritage_status_seed']})."
     )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
