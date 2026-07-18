@@ -35,6 +35,17 @@ Classification = Literal["auto_approve", "review_queue", "reject"]
 VesumLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
 HeritageLookup = Callable[[str], dict[str, Any]]
 
+# Curated human/author/school sources: auto-approve when lemma+pos+gloss are
+# present. No AI row review. Still reject russianism/surzhyk and duplicates.
+CURATED_SOURCE_FAMILIES: frozenset[str] = frozenset(
+    {
+        "teacher_lesson",
+        "ohoiko",
+        "ulp",
+        "textbook",
+    }
+)
+
 
 class AtlasIntakeError(ValueError):
     """A source cannot be safely included in a full-corpus intake."""
@@ -401,6 +412,7 @@ def build_resolved_candidates(
             ledger_keys=ledger_keys,
             committed_inventory_keys=committed_inventory_keys,
             heritage_lookup=heritage_lookup,
+            source_family=source_family,
         )
         candidates.append(
             IntakeCandidate(
@@ -428,6 +440,7 @@ def classify_resolved_candidate(
     ledger_keys: set[str],
     committed_inventory_keys: set[str] | None = None,
     heritage_lookup: HeritageLookup,
+    source_family: str | None = None,
 ) -> tuple[Classification, tuple[str, ...], Mapping[str, Any] | None]:
     lemma_key = _lemma_key(lemma)
     if lemma_key in atlas_keys:
@@ -442,17 +455,35 @@ def classify_resolved_candidate(
         return "review_queue", ("vesum_ambiguous_pos",), None
     if not gloss:
         return "review_queue", ("missing_english_anchor",), None
+
+    curated = bool(source_family and source_family in CURATED_SOURCE_FAMILIES)
     try:
         heritage = heritage_lookup(lemma)
     except Exception:
+        if curated:
+            # Curated sources still publish when POS+gloss exist; heritage soft-fail.
+            return (
+                "auto_approve",
+                ("curated_source_trust", "vesum_unique_lemma_pos", "explicit_english_anchor", "heritage_lookup_failed_soft"),
+                None,
+            )
         return "review_queue", ("heritage_lookup_failed",), None
     classification = normalised_text(heritage.get("classification")) if isinstance(heritage, Mapping) else None
-    if not classification:
-        return "review_queue", ("heritage_unresolved",), None
     if bool(heritage.get("is_russianism")) or classification == "russianism":
         return "reject", ("heritage_russianism",), heritage
     if classification == "surzhyk":
         return "reject", ("heritage_surzhyk",), heritage
+
+    if curated:
+        # Author/teacher/school inventories: no AI review, no strict heritage floor.
+        return (
+            "auto_approve",
+            ("curated_source_trust", "vesum_unique_lemma_pos", "explicit_english_anchor"),
+            heritage if isinstance(heritage, Mapping) else None,
+        )
+
+    if not classification:
+        return "review_queue", ("heritage_unresolved",), None
     if bool(heritage.get("russian_shadow")):
         return "review_queue", ("heritage_russian_shadow",), heritage
     sovietization_risk = heritage.get("sovietization_risk")
