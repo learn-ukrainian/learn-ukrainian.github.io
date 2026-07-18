@@ -1,5 +1,5 @@
 {
-  "fingerprint": "2ed8e1dd5513f94f8245bbdaedfde9da5e76e7ebd2cbe19e6dd1c423d169ee0b",
+  "fingerprint": "f1b11e6ef00173d5a961560befa0b80287b28088102534d22da2067111c6c49b",
   "inputs": {
     "lexicon_code": [
       {
@@ -183,6 +183,10 @@
         "sha256": "c999d218e5b95d28a8debe60dd093a0a90358ffb90419ca3cef317c3300e0431"
       },
       {
+        "path": "scripts/lexicon/triage_needs_review.py",
+        "sha256": "f9f954fdbebca4490702cf3bee46a774c87da23386a26c4634f7b81a7d4c2225"
+      },
+      {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "47df54386fda97fb7b372e8e68f89afb3ac5bd647c5a292a7380f14c5ae1f4b0"
       },
@@ -195,6 +199,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 47
+    "lexicon_code_files": 48
   }
 }
