@@ -1,5 +1,5 @@
 {
-  "fingerprint": "32812a309ed7e2348a87610620fe103e57f32c14c3ca897f25db62910620b5e5",
+  "fingerprint": "153c6974518092aa0e006fea38cc3f329c5eb4d64258c0731b1893d3439f5a33",
   "inputs": {
     "lexicon_code": [
       {
@@ -60,7 +60,11 @@
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "sha256": "cf33abab7c167ecffd40b45d723d817fa8cccbd63e5a3d30e74bda1f76c3a7c2"
+        "sha256": "5d9fd058222d9aa187ff2c506e251b65e0ae80386cf8e4cc6c59e23a7bf9db6f"
+      },
+      {
+        "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
+        "sha256": "2e16a20cf0c92337309e83fbbea6d71185bff5f865d8d200854029391f6bcf2d"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
@@ -207,6 +211,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 50
+    "lexicon_code_files": 51
   }
 }

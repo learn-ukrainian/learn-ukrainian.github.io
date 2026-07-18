@@ -19,6 +19,8 @@ COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/textbook-jsonl-curated-2026-07-19-bulk.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml",
