@@ -1192,16 +1192,67 @@ def test_legacy_qg_sidecar_cannot_advance_completion(fake_repo: tuple[Path, Path
     assert "llm_qg" not in snapshot.observed_files
 
 
-def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
-    fake_repo: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def _advance_built_module_to_pending_review_state(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    pending_state: str,
+) -> tuple[str, dict[str, Any]]:
     repo, config_path, ledger_root = fake_repo
     _, ledger = _start(fake_repo, "bio/seminar-built")
     run_id = ledger["run"]["run_id"]
+    if pending_state == "INDEPENDENT_REVIEW_REQUIRED":
+        workflow = repo / "workflow.txt"
+        workflow.write_text("workflow-before-review\n", encoding="utf-8")
+        _, ledger = tc.record_change(
+            "bio/seminar-built",
+            run_id=run_id,
+            owner_kind="audit_tooling",
+            author_family="codex",
+            summary="Bind the authored module to the pre-review workflow.",
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+        snapshot = tc.resolve_target(
+            "bio/seminar-built",
+            repo_root=repo,
+            config=tc.load_config(config_path),
+        )
+        passing = _result(snapshot, repo, status="PASS")
+        passing["semantic_response"] = {"raw_sha256": "f" * 64}
+        result_path = _result_file(tmp_path, "pending-review-pass.json")
+        monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: passing)
+        _, ledger = tc.record_review(
+            "bio/seminar-built",
+            run_id=run_id,
+            result_path=result_path,
+            repo_root=repo,
+            config_path=config_path,
+            ledger_root=ledger_root,
+        )
+    assert ledger["state"] == pending_state
+    return run_id, ledger
+
+
+@pytest.mark.parametrize(
+    "pending_state",
+    ["POST_BUILD_REVIEW_REQUIRED", "INDEPENDENT_REVIEW_REQUIRED"],
+)
+def test_pending_review_states_accept_workflow_only_audit_tooling_refresh(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    pending_state: str,
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    run_id, ledger = _advance_built_module_to_pending_review_state(
+        fake_repo, tmp_path, monkeypatch, pending_state
+    )
     original_target_hashes = ledger["current_identity"]["target_hashes"]
 
     workflow = repo / "workflow.txt"
-    workflow.write_text("workflow-v2\n", encoding="utf-8")
+    workflow.write_text("workflow-refresh\n", encoding="utf-8")
     _, refreshed = tc.record_change(
         "bio/seminar-built",
         run_id=run_id,
@@ -1220,39 +1271,61 @@ def test_pending_review_accepts_only_workflow_only_audit_tooling_refresh(
     ]
     assert refreshed["history"][-1]["details"]["owner_kind"] == "audit_tooling"
 
-    content = repo / "curriculum/l2-uk-en/bio/seminar-built/module.md"
-    content.write_text(content.read_text(encoding="utf-8") + "Незаписана зміна.\n", encoding="utf-8")
-    workflow.write_text("workflow-v3\n", encoding="utf-8")
 
-    with pytest.raises(tc.CompletionError, match="unchanged target hashes"):
-        tc.record_change(
-            "bio/seminar-built",
-            run_id=run_id,
-            owner_kind="audit_tooling",
-            author_family="codex",
-            summary="Must not disguise learner-surface drift as review tooling.",
-            repo_root=repo,
-            config_path=config_path,
-            ledger_root=ledger_root,
+@pytest.mark.parametrize(
+    "pending_state",
+    ["POST_BUILD_REVIEW_REQUIRED", "INDEPENDENT_REVIEW_REQUIRED"],
+)
+@pytest.mark.parametrize(
+    ("drift_kind", "error"),
+    [
+        ("target", "unchanged target hashes"),
+        ("layout", "unchanged module layout and state"),
+        ("module_state", "unchanged module layout and state"),
+    ],
+)
+def test_pending_review_audit_refresh_rejects_non_workflow_drift(
+    fake_repo: tuple[Path, Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    pending_state: str,
+    drift_kind: str,
+    error: str,
+) -> None:
+    repo, config_path, ledger_root = fake_repo
+    run_id, _ledger = _advance_built_module_to_pending_review_state(
+        fake_repo, tmp_path, monkeypatch, pending_state
+    )
+    (repo / "workflow.txt").write_text("workflow-refresh\n", encoding="utf-8")
+    if drift_kind == "target":
+        content = repo / "curriculum/l2-uk-en/bio/seminar-built/module.md"
+        content.write_text(
+            content.read_text(encoding="utf-8") + "Незаписана зміна.\n",
+            encoding="utf-8",
         )
+    else:
+        changed_value = "flat" if drift_kind == "layout" else "PARTIAL"
+        real_build_identity = tc.build_identity
 
-    real_build_identity = tc.build_identity
+        def drifted_identity(*args: object, **kwargs: object) -> dict[str, Any]:
+            identity = real_build_identity(*args, **kwargs)
+            identity[drift_kind] = changed_value
+            payload = {
+                key: identity[key]
+                for key in ("module_state", "layout", "target_hashes", "workflow_hashes")
+            }
+            identity["sha256"] = tc.sha256_bytes(tc.stable_json(payload).encode("utf-8"))
+            return identity
 
-    def relocated_identity(*args: object, **kwargs: object) -> dict[str, Any]:
-        identity = real_build_identity(*args, **kwargs)
-        identity["layout"] = "flat"
-        payload = {key: identity[key] for key in ("module_state", "layout", "target_hashes", "workflow_hashes")}
-        identity["sha256"] = tc.sha256_bytes(tc.stable_json(payload).encode("utf-8"))
-        return identity
+        monkeypatch.setattr(tc, "build_identity", drifted_identity)
 
-    monkeypatch.setattr(tc, "build_identity", relocated_identity)
-    with pytest.raises(tc.CompletionError, match="unchanged module layout and state"):
+    with pytest.raises(tc.CompletionError, match=error):
         tc.record_change(
             "bio/seminar-built",
             run_id=run_id,
             owner_kind="audit_tooling",
             author_family="codex",
-            summary="Must not disguise a layout migration as review tooling.",
+            summary="Must not disguise non-workflow drift as review tooling.",
             repo_root=repo,
             config_path=config_path,
             ledger_root=ledger_root,
