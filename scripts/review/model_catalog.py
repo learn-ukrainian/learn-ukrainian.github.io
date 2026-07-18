@@ -15,7 +15,7 @@ VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 EXPECTED_SELECTION_ORDER = [
     "independence_and_hard_gates",
-    "task_risk_quality_tier",
+    "review_quality_tier",
     "health_and_quota_within_tier",
     "cost_within_equivalent_fit",
 ]
@@ -168,6 +168,17 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         _require_string(
             candidate.get("invocation"), f"review_candidates.{name}.invocation"
         )
+        profiles = _require_string_list(
+            candidate.get("review_profiles"), f"review_candidates.{name}.review_profiles"
+        )
+        if any(profile != profile.casefold() for profile in profiles):
+            raise ModelCatalogError(
+                f"review_candidates.{name}.review_profiles must use lowercase profile names"
+            )
+        if transport == "cursor" and model_id.casefold() in {"auto", "cursor", "composer"}:
+            raise ModelCatalogError(
+                f"review_candidates.{name} requires a concrete Cursor model id, not {model_id!r}"
+            )
         health_keys = candidate.get("health_keys", [])
         if not isinstance(health_keys, list) or not all(
             isinstance(item, str) and item.strip() for item in health_keys

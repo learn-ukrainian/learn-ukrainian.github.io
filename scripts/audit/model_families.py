@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Canonical model-family vocabulary and normalizers for the route-refusal chain.
+"""Canonical model-family vocabulary and normalizers for reviewer selection.
 
 Single source of truth consumed by BOTH enforcement layers:
 
 * the live reviewer dispatcher (``scripts.audit.llm_reviewer_dispatch``)
 * the Layer-B shadow lineage path (``scripts.audit.layerb_shadow``)
+* the formal code-review resolver (``scripts.review.reviewer_resolver``)
 
 ``Family.UNKNOWN`` is a first-class answer: an unrecognized lineage is UNKNOWN,
 never silently ``None`` and never a raw token smuggled past the gate. The
@@ -27,6 +28,9 @@ Routing decisions codified here (2026-07-17, issue #5385):
 * ``codex`` / ``gpt`` / ``openai`` → ``openai`` (unified; Layer-B previously
   used ``gpt``).
 * ``claude`` / ``anthropic`` / ``opus`` / ``sonnet`` → ``anthropic``.
+* Concrete formal-review model ids additionally resolve to their provider
+  families: ``composer-2.5`` / ``kimi-*`` → ``moonshot``; ``glm-*`` /
+  ``zhipu`` → ``zhipu``; and ``poolside`` / ``laguna`` → ``poolside``.
 """
 
 from __future__ import annotations
@@ -54,6 +58,9 @@ class Family(StrEnum):
     OPENAI = "openai"
     DEEPSEEK = "deepseek"
     XAI = "xai"
+    MOONSHOT = "moonshot"
+    ZHIPU = "zhipu"
+    POOLSIDE = "poolside"
     QWEN = "qwen"
     FIXTURE = FIXTURE_FAMILY
     UNKNOWN = UNKNOWN_FAMILY
@@ -79,13 +86,16 @@ _LINEAGE_FIELDS: tuple[str, ...] = (
 
 # Marker words → family. Matched as whole words (casefolded) so e.g. ``gemmate``
 # is NOT mistaken for ``gemma``. cursor/composer/auto are handled separately
-# because cursor-Auto is UNKNOWN unless a pin overrides it.
+# because cursor-Auto is UNKNOWN unless a concrete pin overrides it.
 _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("deepseek",), Family.DEEPSEEK),
     (("gemma", "gemini", "agy", "google"), Family.GOOGLE),
     (("codex", "openai", "gpt"), Family.OPENAI),
-    (("anthropic", "claude", "opus", "sonnet"), Family.ANTHROPIC),
+    (("anthropic", "claude", "fable", "opus", "sonnet"), Family.ANTHROPIC),
     (("grok", "xai"), Family.XAI),
+    (("composer-2.5", "kimi"), Family.MOONSHOT),
+    (("glm", "zhipu"), Family.ZHIPU),
+    (("poolside", "laguna", "pool"), Family.POOLSIDE),
     (("qwen",), Family.QWEN),
 )
 
@@ -100,6 +110,7 @@ def _compile_family_patterns() -> tuple[tuple[re.Pattern[str], Family], ...]:
 
 _FAMILY_PATTERNS = _compile_family_patterns()
 _CURSOR_PATTERN = re.compile(r"(?:^|[^a-z0-9])(?:cursor|composer|auto)(?:$|[^a-z0-9])")
+_CONCRETE_CURSOR_MODEL_PATTERN = re.compile(r"(?:^|[^a-z0-9])composer-2\.5(?:$|[^a-z0-9])")
 
 
 def normalize_family(value: Any) -> Family:
@@ -107,8 +118,9 @@ def normalize_family(value: Any) -> Family:
 
     The one token→family mapping the whole route-refusal chain consumes.
     Returns ``Family.UNKNOWN`` for empty/unrecognized input and for bare
-    cursor/composer/auto markers (cursor-Auto). Returns ``Family.FIXTURE`` for
-    the fixture sentinels.
+    cursor/composer/auto markers (cursor-Auto). ``composer-2.5`` is an
+    exception because it is a concrete model identity accepted by the formal
+    review policy. Returns ``Family.FIXTURE`` for the fixture sentinels.
     """
 
     if value is None:
@@ -118,10 +130,11 @@ def normalize_family(value: Any) -> Family:
         return Family.UNKNOWN
     if text in _FIXTURE_MARKERS:
         return Family.FIXTURE
-    if _CURSOR_PATTERN.search(text):
+    if _CURSOR_PATTERN.search(text) and not _CONCRETE_CURSOR_MODEL_PATTERN.search(text):
         # cursor-Auto: identity not pinned, so it is not a usable formal-review
         # family. A cursor seat that records a concrete pin resolves through
-        # the pin via ``normalize_lineage_family``.
+        # the pin via ``normalize_lineage_family``. Composer without its 2.5
+        # model identity is equally insufficient.
         return Family.UNKNOWN
     for pattern, family in _FAMILY_PATTERNS:
         if pattern.search(text):

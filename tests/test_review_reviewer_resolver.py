@@ -18,6 +18,7 @@ from scripts.review.reviewer_resolver import (
     POOL,
     QWEN,
     REVIEW_LADDERS,
+    TERRA,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -51,10 +52,9 @@ def test_family_resolution_across_model_and_harness_aliases():
         "deepseek-v4-pro": "deepseek",
         "pool": "poolside",
         "glm-5.2": "zhipu",
-        "qwen/qwen3.6-plus": "alibaba",
+        "qwen/qwen3.6-plus": "qwen",
         "kimi": "moonshot",
         "kimi-code/k3": "moonshot",
-        "composer": "moonshot",
         "composer-2.5": "moonshot",
     }
     for seat, expected_family in cases.items():
@@ -66,6 +66,7 @@ def test_family_resolution_unknown_and_bare_cursor_are_not_fabricated():
     assert resolve_family("some-made-up-seat") == "unknown"
     assert resolve_family("cursor") == "unknown"
     assert resolve_family("cursor-tools") == "unknown"
+    assert resolve_family("composer") == "unknown"
 
 
 def test_cursor_requires_concrete_model_identity():
@@ -102,17 +103,15 @@ def test_unsupported_risk_fails_closed():
     assert "unsupported review risk" in resolution.fail_closed_reason
 
 
-def test_risk_materially_changes_openai_author_route():
-    critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
-    medium = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    low = resolve_reviewer(ResolverInputs(author_model="codex", risk="low"))
+def test_every_formal_review_risk_uses_the_binding_quality_prior():
+    resolutions = [
+        resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
+        for risk in ("critical", "high", "medium", "low")
+    ]
 
-    assert critical.selected.name == "claude-opus-4-8"
-    assert medium.selected.name == "gemini-3.1-pro"
-    assert low.selected.name == "pool"
-    assert critical.selected.family == "anthropic"
-    assert medium.selected.family == "google"
-    assert low.selected.family == "poolside"
+    # Sol is advisory for an OpenAI author, so Fable is the first eligible
+    # formal reviewer at every risk. A low-risk receipt may not jump to Flash.
+    assert [resolution.selected.name for resolution in resolutions] == ["claude-fable-5"] * 4
 
 
 def test_high_risk_anthropic_author_gets_sol_as_formal_gate():
@@ -125,29 +124,29 @@ def test_high_risk_anthropic_author_gets_sol_as_formal_gate():
 
 def test_high_risk_openai_author_gets_claude_and_sol_is_advisory():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
-    assert resolution.selected.name == "claude-opus-4-8"
-    assert resolution.selected.transport == "native_claude"
+    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.transport == "cursor"
     assert [entry.name for entry in resolution.advisory] == ["openai_frontier"]
     assert resolution.advisory[0].status == "advisory_only"
 
 
 def test_high_risk_kimi_author_gets_claude_not_composer():
     resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
-    assert resolution.selected.name == "claude-opus-4-8"
+    assert resolution.selected.name == "openai_frontier"
     composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
     assert composer.status == "excluded"
     assert "same family" in composer.reason
 
 
-def test_medium_risk_uses_frontier_practical_tier_before_economical_models():
+def test_medium_risk_keeps_sol_before_lower_quality_reviewers():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert resolution.selected.name == "gemini-3.1-pro"
+    assert resolution.selected.name == "claude-fable-5"
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
 
 
-def test_low_risk_pool_author_uses_same_quality_gemini_flash():
+def test_low_risk_pool_author_keeps_sol_before_economical_routes():
     resolution = resolve_reviewer(ResolverInputs(author_model="pool", risk="low"))
-    assert resolution.selected.name == "gemini-3.5-flash"
+    assert resolution.selected.name == "openai_frontier"
 
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
@@ -157,18 +156,18 @@ def test_policy_receipt_exposes_catalog_version_date_and_risk():
     assert resolution.resolved_risk == "high"
 
 
-def test_unhealthy_route_is_unavailable_and_falls_within_quality_tier():
+def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="codex",
+            author_model="gemini",
             risk="medium",
-            routing_snapshot={"gemini-3.1-pro": "unhealthy", "grok": "healthy"},
+            routing_snapshot={"codex": "unhealthy", "cursor": "healthy"},
         )
     )
-    assert resolution.selected.name == "grok-4.5"
-    gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
-    assert gemini.status == "excluded"
-    assert "unhealthy" in gemini.reason
+    assert resolution.selected.name == "claude-fable-5"
+    sol = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
+    assert sol.status == "excluded"
+    assert "unhealthy" in sol.reason
 
 
 def test_real_routing_budget_payload_is_normalized_without_crashing():
@@ -183,8 +182,8 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
     )
-    assert resolution.selected.name == "grok-4.5"
-    assert resolution.selected.health == "healthy"
+    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.health is None
 
 
 def test_real_gemini_lane_outage_excludes_agy_candidates():
@@ -197,7 +196,7 @@ def test_real_gemini_lane_outage_excludes_agy_candidates():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot)
     )
-    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.name == "claude-fable-5"
     gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
     assert gemini.health == "unhealthy"
     assert gemini.status == "excluded"
@@ -211,7 +210,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
             routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"},
         )
     )
-    assert unhealthy.selected.name == "grok-4.5"
+    assert unhealthy.selected.name == "claude-fable-5"
 
     invalid = resolve_reviewer(
         ResolverInputs(
@@ -233,8 +232,8 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
             routing_snapshot={"agy": "pre_launch", "grok": "near_cap"},
         )
     )
-    assert pre_launch.selected.name == "gemini-3.1-pro"
-    assert pre_launch.selected.health == "healthy"
+    assert pre_launch.selected.name == "claude-fable-5"
+    assert pre_launch.selected.health is None
 
     unknown = resolve_reviewer(
         ResolverInputs(
@@ -244,22 +243,21 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
-    assert unknown.selected.name == missing.selected.name == "gemini-3.1-pro"
-    assert unknown.substitution_note is None
+    assert unknown.selected.name == missing.selected.name == "claude-fable-5"
+    assert "no eligible candidate" in unknown.substitution_note
 
 
-def test_near_cap_only_breaks_ties_inside_same_quality_rung():
+def test_near_cap_cannot_promote_a_lower_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="codex",
+            author_model="claude",
             risk="medium",
-            routing_snapshot={"agy": "near_cap", "grok": "healthy", "pool": "healthy"},
+            routing_snapshot={"codex": "near_cap", "cursor": "healthy"},
         )
     )
-    assert resolution.selected.name == "grok-4.5"
-    assert resolution.selected.health == "healthy"
-    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
-    assert "by lane health" in resolution.substitution_note
+    assert resolution.selected.name == "openai_frontier"
+    assert resolution.selected.health == "near_cap"
+    assert resolution.substitution_note is None
 
 
 def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
@@ -272,7 +270,7 @@ def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="kimi-code/k3", risk="critical", routing_snapshot=snapshot)
     )
-    assert resolution.selected.name == "gemini-3.1-pro"
+    assert resolution.selected.name == "grok-4.5"
 
 
 def test_missing_health_signal_is_fail_open():
@@ -282,34 +280,50 @@ def test_missing_health_signal_is_fail_open():
     absent = resolve_reviewer(
         ResolverInputs(author_model="codex", risk="low", routing_snapshot=None)
     )
-    assert empty.selected.name == absent.selected.name == "pool"
+    assert empty.selected.name == absent.selected.name == "claude-fable-5"
 
 
 def test_family_exclusion_is_not_mislabeled_as_a_substitution():
     resolution = resolve_reviewer(ResolverInputs(author_model="gemini", risk="medium"))
-    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.name == "openai_frontier"
     assert resolution.substitution_note is None
 
 
-def test_same_rung_unhealthy_route_emits_substitution_receipt():
+def test_health_breaks_ties_only_within_the_same_remaining_quality_rung():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="gemini",
+            author_model="codex",
             risk="medium",
-            routing_snapshot={"grok": "unhealthy"},
+            routing_snapshot={
+                "cursor": "unhealthy",
+                "claude": "unhealthy",
+                "grok": "unhealthy",
+                "agy": "unhealthy",
+                "kimi": "near_cap",
+                "deepseek-v4-pro": "healthy",
+            },
         )
     )
-    assert resolution.selected.name == "kimi-k3"
-    assert "grok-4.5" in resolution.substitution_note
-    assert "unavailable by health" in resolution.substitution_note
+    assert resolution.selected.name == "deepseek-v4-pro"
+    assert resolution.selected.health == "healthy"
+    assert "kimi-k3" in resolution.substitution_note
+    assert "by lane health" in resolution.substitution_note
 
 
 def test_deepseek_receipt_carries_required_silence_timeout():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="gemini",
+            author_model="codex",
             risk="low",
-            routing_snapshot={"pool": "unhealthy"},
+            routing_snapshot={
+                "cursor": "unhealthy",
+                "claude": "unhealthy",
+                "grok": "unhealthy",
+                "agy": "unhealthy",
+                "kimi": "unhealthy",
+                "deepseek-v4-pro": "unhealthy",
+                "pool": "unhealthy",
+            },
         )
     )
     assert resolution.selected.name == "deepseek-v4-flash"
@@ -372,6 +386,16 @@ def test_required_capabilities_and_isolation_fail_closed():
     assert "isolation" in isolation.reason
 
 
+def test_review_profile_is_a_hard_eligibility_filter():
+    result = evaluate_candidate(
+        GROK_4_5,
+        ResolverInputs(author_model="claude", review_profile="content"),
+        author_family="anthropic",
+    )
+    assert result.status == "excluded"
+    assert "profile exclusion" in result.reason
+
+
 def test_custom_ladder_still_supported_for_focused_callers():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="deepseek-v4-pro", risk="medium"),
@@ -390,7 +414,23 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
         assert resolution.selected.family != "openai"
 
 
+def test_binding_quality_prior_matches_issue_5293_order():
+    expected = [
+        "openai_frontier",
+        "claude-fable-5",
+        "claude-opus-4-8",
+        "gpt-5.6-terra",
+        "grok-4.5",
+        "composer-2.5",
+        "glm-5.2",
+        "gemini-3.1-pro",
+    ]
+    for ladder in REVIEW_LADDERS.values():
+        assert [rung[0].name for rung in ladder[:8]] == expected
+
+
 def test_candidate_constants_preserve_expected_identity():
+    assert TERRA.concrete_model == "gpt-5.6-terra"
     assert KIMI_K3.concrete_model == "kimi-code/k3"
     assert KIMI_K3.transport == "native_kimi"
     assert POOL.concrete_model == "poolside/laguna-m.1"

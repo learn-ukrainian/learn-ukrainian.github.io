@@ -24,66 +24,12 @@ from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
+from scripts.audit import model_families
 from scripts.review.model_catalog import VALID_RISKS, load_model_catalog
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 
 # --- family resolution -------------------------------------------------------
-
-# Exact seat/model id -> family. Includes native-CLI names, `-tools` V7 writer/
-# reviewer seat aliases, and Hermes-hosted aliases so the SAME model resolves
-# to the SAME family everywhere it's reachable.
-_FAMILY_BY_EXACT_SEAT: dict[str, str] = {
-    "claude": "anthropic",
-    "claude-tools": "anthropic",
-    "sonnet": "anthropic",
-    "opus": "anthropic",
-    "haiku": "anthropic",
-    "fable": "anthropic",
-    "codex": "openai",
-    "codex-tools": "openai",
-    "openai_frontier": "openai",
-    "gemini": "google",
-    "gemini-tools": "google",
-    "agy": "google",
-    "agy-tools": "google",
-    "gemma": "google",
-    "grok": "xai",
-    "grok-build": "xai",
-    "grok-hermes": "xai",
-    "grok-tools": "xai",
-    "deepseek": "deepseek",
-    "deepseek-tools": "deepseek",
-    "pool": "poolside",
-    "glm": "zhipu",
-    "qwen": "alibaba",
-    "qwen-tools": "alibaba",
-    "kimi": "moonshot",
-    "composer": "moonshot",
-}
-
-# Model-id prefixes, for concrete model strings not covered by the seat table
-# above (e.g. "gpt-5.6-sol", "deepseek-v4-flash", "grok-4.5").
-_FAMILY_BY_MODEL_PREFIX: tuple[tuple[str, str], ...] = (
-    ("claude-", "anthropic"),
-    ("sonnet-", "anthropic"),
-    ("opus-", "anthropic"),
-    ("haiku-", "anthropic"),
-    ("fable-", "anthropic"),
-    ("gpt-", "openai"),
-    ("o1", "openai"),
-    ("o3", "openai"),
-    ("gemini-", "google"),
-    ("gemma-", "google"),
-    ("grok-", "xai"),
-    ("deepseek-", "deepseek"),
-    ("qwen", "alibaba"),
-    ("glm-", "zhipu"),
-    ("kimi-code/", "moonshot"),
-    ("kimi-", "moonshot"),
-    ("composer-", "moonshot"),
-)
-
 
 def resolve_family(seat_or_model: str) -> str:
     """Resolve a seat/CLI-alias/model-id string to its model family.
@@ -97,19 +43,15 @@ def resolve_family(seat_or_model: str) -> str:
         return "unknown"
 
     canonical = normalize_seat(normalized) or normalized
-    if canonical in _FAMILY_BY_EXACT_SEAT:
-        return _FAMILY_BY_EXACT_SEAT[canonical]
 
     if canonical.endswith("-tools"):
         base = tools_writer_runtime_agent(canonical)
-        if base in _FAMILY_BY_EXACT_SEAT:
-            return _FAMILY_BY_EXACT_SEAT[base]
         canonical = base
 
-    for prefix, family in _FAMILY_BY_MODEL_PREFIX:
-        if canonical.startswith(prefix):
-            return family
-    return "unknown"
+    family = model_families.normalize_family(canonical)
+    if family in {model_families.Family.UNKNOWN, model_families.Family.FIXTURE}:
+        return UNKNOWN_AUTHOR_FAMILY
+    return family.value
 
 
 # --- ambiguous-harness / fail-closed author identity --------------------------
@@ -127,17 +69,9 @@ AMBIGUOUS_HARNESS_SEATS: frozenset[str] = frozenset({"cursor", "cursor-tools"})
 # (nothing routes to "cursor" as if it were a vendor) and the fail-closed
 # sentinels below — an override must name a real family or be rejected.
 _VALID_CONCRETE_FAMILIES: frozenset[str] = frozenset(
-    {
-        "anthropic",
-        "openai",
-        "google",
-        "xai",
-        "deepseek",
-        "poolside",
-        "zhipu",
-        "alibaba",
-        "moonshot",
-    }
+    family.value
+    for family in model_families.Family
+    if family not in {model_families.Family.UNKNOWN, model_families.Family.FIXTURE}
 )
 
 # Fail-closed author-identity outcomes: none of these is a real model family,
@@ -217,6 +151,7 @@ class ReviewerCandidate:
     requires_data_egress_policy: str | None = None
     # Hard exclusion regardless of anything else (e.g. cost policy).
     always_excluded_reason: str | None = None
+    review_profiles: frozenset[str] = field(default_factory=lambda: frozenset({"code"}))
     capabilities: frozenset[str] = field(default_factory=frozenset)
     # Domains (review_profile-adjacent, e.g. "folk_content") where this
     # candidate is a hard no per model-assignment.md carve-outs.
@@ -245,6 +180,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
+        review_profiles=frozenset(raw.get("review_profiles", [])),
         capabilities=frozenset(raw.get("capabilities", [])),
         domain_excluded_from=frozenset(raw.get("domain_excluded_from", [])),
         advisory_only_for_author_families=frozenset(
@@ -273,6 +209,7 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 # explicitly imported the old default. Medium is the balanced default risk.
 CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
+TERRA = REVIEW_CANDIDATES["gpt-5.6-terra"]
 GROK_4_5 = REVIEW_CANDIDATES["grok-4.5"]
 KIMI_K3 = REVIEW_CANDIDATES["kimi-k3"]
 DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
@@ -286,7 +223,7 @@ DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]
 # doesn't route code review through them by default.
 QWEN = ReviewerCandidate(
     name="qwen",
-    family="alibaba",
+    family=model_families.Family.QWEN.value,
     concrete_model="qwen3-max",
     route="qwen",
     transport="hermes",
@@ -445,6 +382,12 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    review_profile = inputs.review_profile.strip().casefold()
+    if review_profile not in candidate.review_profiles:
+        return (
+            f"review profile exclusion: {candidate.name} supports "
+            f"{sorted(candidate.review_profiles)}, got {inputs.review_profile!r}"
+        )
     if inputs.domain in candidate.domain_excluded_from:
         return f"hard domain exclusion: {candidate.name} is excluded from {inputs.domain!r} review"
     if (
@@ -668,47 +611,42 @@ def resolve_reviewer(
             selected = promoted
             selected_rung_index = rung_index
 
-    substitution_note = None
+    substitution_notes: list[str] = []
     if selected is not None and selected_rung_index is not None:
-        default_first = active_ladder[0][0] if active_ladder and active_ladder[0] else None
         if selected_rung_index > 0:
-            substitution_note = (
+            substitution_notes.append(
                 f"fell back to {selected.name}: no eligible candidate remained in "
                 f"{selected_rung_index} higher-quality rung(s)"
             )
-        elif default_first is not None and selected.name != default_first.name:
-            selected_rung_names = {candidate.name for candidate in active_ladder[0]}
-            rung_results = [entry for entry in trace if entry.name in selected_rung_names]
-            better_health_than: list[str] = []
-            unavailable = [
-                entry.name
-                for entry in rung_results
-                if entry.status == "excluded"
-                and entry.reason == "lane health is unhealthy — route is operationally unavailable"
-            ]
-            if unavailable:
-                substitution_note = (
-                    f"selected {selected.name}: same-quality route(s) unavailable by health: "
-                    f"{', '.join(unavailable)}"
-                )
-            else:
-                better_health_than = [
-                    entry.name
-                    for entry in rung_results
-                    if entry.status == "eligible"
-                    and _health_rank(selected.health) < _health_rank(entry.health)
-                ]
-            if not substitution_note and better_health_than:
-                substitution_note = (
-                    f"selected {selected.name} over {', '.join(better_health_than)} by lane health "
-                    "within the same quality rung"
-                )
+        selected_rung_names = {candidate.name for candidate in active_ladder[selected_rung_index]}
+        rung_results = [entry for entry in trace if entry.name in selected_rung_names]
+        unavailable = [
+            entry.name
+            for entry in rung_results
+            if entry.status == "excluded"
+            and entry.reason == "lane health is unhealthy — route is operationally unavailable"
+        ]
+        better_health_than = [
+            entry.name
+            for entry in rung_results
+            if entry.status == "eligible" and _health_rank(selected.health) < _health_rank(entry.health)
+        ]
+        if unavailable:
+            substitution_notes.append(
+                f"selected {selected.name}: same-quality route(s) unavailable by health: "
+                f"{', '.join(unavailable)}"
+            )
+        if better_health_than:
+            substitution_notes.append(
+                f"selected {selected.name} over {', '.join(better_health_than)} by lane health "
+                "within the same quality rung"
+            )
 
     return ReviewerResolution(
         selected=selected,
         advisory=tuple(advisory),
         trace=tuple(trace),
-        substitution_note=substitution_note,
+        substitution_note="; ".join(substitution_notes) or None,
         policy_version=_MODEL_CATALOG["schema_version"],
         catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
         resolved_risk=risk,

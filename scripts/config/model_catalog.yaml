@@ -17,13 +17,13 @@ policy:
   quality_first: true
   selection_order:
     - independence_and_hard_gates
-    - task_risk_quality_tier
+    - review_quality_tier
     - health_and_quota_within_tier
     - cost_within_equivalent_fit
   risk_quality_floor:
-    critical: frontier_practical
-    high: frontier_practical
-    medium: strong_efficient
+    critical: economical
+    high: economical
+    medium: economical
     low: economical
   inventory_sources:
     - runtime_registry
@@ -50,7 +50,7 @@ models:
       - https://developers.openai.com/api/docs/guides/latest-model
   gpt-5.6-terra:
     family: openai
-    tier: strong_efficient
+    tier: frontier_practical
     lifecycle: active
     roles: [implementation, investigation, standard_review]
     transports: [native_codex, cursor]
@@ -239,7 +239,7 @@ models:
     sources:
       - https://developers.openai.com/cookbook/articles/gpt-oss/run-vllm
   qwen/qwen3.6-plus:
-    family: alibaba
+    family: qwen
     tier: specialist
     lifecycle: hold
     roles: [explicit_bakeoff_only]
@@ -275,19 +275,29 @@ review_candidates:
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
+    review_profiles: [code, infra]
     capabilities: [code_review]
   openai_frontier:
     model_id: gpt-5.6-sol
     route: codex
     transport: native_codex
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex
+    review_profiles: [code, infra]
     capabilities: [code_review]
     advisory_only_for_author_families: [openai]
+  gpt-5.6-terra:
+    model_id: gpt-5.6-terra
+    route: codex
+    transport: native_codex
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-terra
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   claude-fable-5:
     model_id: claude-fable-5
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
+    review_profiles: [code, infra]
     capabilities: [code_review]
   gemini-3.1-pro:
     model_id: gemini-3.1-pro-high
@@ -295,24 +305,28 @@ review_candidates:
     transport: agy
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high
     health_keys: [gemini]
+    review_profiles: [code, infra]
     capabilities: [code_review]
   grok-4.5:
     model_id: grok-4.5
     route: grok
     transport: native_grok
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.5
+    review_profiles: [code, infra]
     capabilities: [code_review]
   kimi-k3:
     model_id: kimi-code/k3
     route: kimi
     transport: native_kimi
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
+    review_profiles: [code, infra]
     capabilities: [code_review]
   glm-5.2:
     model_id: glm-5.2
     route: glm
     transport: opencode
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
+    review_profiles: [code, infra]
     capabilities: [code_review]
     requires_data_egress_policy: local_interactive
   claude-sonnet-5:
@@ -320,12 +334,14 @@ review_candidates:
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
+    review_profiles: [code, infra]
     capabilities: [code_review]
   deepseek-v4-pro:
     model_id: deepseek-v4-pro
     route: deepseek
     transport: hermes
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-pro
+    review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
     domain_excluded_from: [folk_content]
@@ -334,18 +350,21 @@ review_candidates:
     route: cursor
     transport: cursor
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model composer-2.5
+    review_profiles: [code, infra]
     capabilities: [code_review]
   pool:
     model_id: poolside/laguna-m.1
     route: pool
     transport: opencode
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
+    review_profiles: [code, infra]
     capabilities: [code_review]
   deepseek-v4-flash:
     model_id: deepseek-v4-flash
     route: deepseek
     transport: hermes
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash
+    review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
     domain_excluded_from: [folk_content]
@@ -355,16 +374,25 @@ review_candidates:
     transport: agy
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.5-flash-high
     health_keys: [gemini]
+    review_profiles: [code, infra]
     capabilities: [code_review]
 
 review_ladders:
-  critical: &high_risk_ladder
-    - [claude-opus-4-8, openai_frontier, claude-fable-5]
-    - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
-  high: *high_risk_ladder
-  medium:
-    - [gemini-3.1-pro, grok-4.5, kimi-k3, glm-5.2, claude-sonnet-5, deepseek-v4-pro, composer-2.5]
-    - [pool, gemini-3.5-flash]
-  low:
+  # #5293: a formal review always walks this quality prior after hard filters.
+  # A risk remains recorded in the receipt, but it cannot let a cheap route
+  # leapfrog an eligible higher-quality reviewer.
+  critical: &quality_first_code_review
+    - [openai_frontier]
+    - [claude-fable-5]
+    - [claude-opus-4-8]
+    - [gpt-5.6-terra]
+    - [grok-4.5]
+    - [composer-2.5]
+    - [glm-5.2]
+    - [gemini-3.1-pro]
+    - [kimi-k3, claude-sonnet-5, deepseek-v4-pro]
     - [pool, gemini-3.5-flash]
     - [deepseek-v4-flash]
+  high: *quality_first_code_review
+  medium: *quality_first_code_review
+  low: *quality_first_code_review
