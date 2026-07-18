@@ -1,5 +1,5 @@
 {
-  "fingerprint": "5740b2b32db1d2fef57fc593a676a0aa6414df40bb8c658af2bcd213152cd569",
+  "fingerprint": "2ed8e1dd5513f94f8245bbdaedfde9da5e76e7ebd2cbe19e6dd1c423d169ee0b",
   "inputs": {
     "lexicon_code": [
       {
@@ -28,7 +28,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "5e637c6c6d4a109092a0fe1f71cfb6cad5d016ef2a8e61fe1685bf304c47f25e"
+        "sha256": "7552b0e73fd2fbecba99aff32d8233021c8e15051d26b64707e658841b7718ad"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "6a464f9657b5635934b220f704182e658fe147333dd1177133194112e4f76207"
+        "sha256": "40f4f7e6ca6f6235787a6a8aa15c753b3b5f937a99be61968d0f9f2dfc501577"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -76,7 +76,7 @@
       },
       {
         "path": "scripts/lexicon/export_open_dataset.py",
-        "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
+        "sha256": "73eea9b98d68d6a5105001c4569ec7c0a6f1606f2acf906f27b850c492642a21"
       },
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
