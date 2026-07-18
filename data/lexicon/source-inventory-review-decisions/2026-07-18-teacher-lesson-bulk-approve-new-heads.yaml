@@ -7,8 +7,8 @@ reviewed_at: '2026-07-18'
 source_queue:
   workflow: source_inventory_publish_review_queue.v1
   total_queue_rows: 641
-  approved_in_queue: 631
-  promotion_batch_size: 631
+  approved_in_queue: 641
+  promotion_batch_size: 641
 production_outputs_updated: []
 decisions:
 - lemma: вийти з ладу /вихід з ладу
@@ -219,20 +219,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To be out of patience , to be tired of , to be annoyed
-- lemma: випустути
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 1ccf1b02c0ccfd3c
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 1 row 206
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: (чайний) сервіз
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -338,20 +324,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: Wellbeing
-- lemma: паціент
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 8fee1975308d1ece
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 1 row 280
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: сміятися (над)
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -378,20 +350,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To make someone go crazy
-- lemma: вручку
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 775950417f83641a
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 1 row 317
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: прийдеться
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -561,20 +519,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To touch (perf)
-- lemma: приголошливий
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: a3586b4436c44d20
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 1 row 384
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: сайт знайомств
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -2473,20 +2417,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: noun
   approved_gloss: Subscription (на сервіс) / Season pass (на спорт чи заходи) / Gym membership (у спортзал)
-- lemma: віфлієм
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 198799afa994ac16
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 109
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: пастух
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -3969,20 +3899,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To take into account
-- lemma: грунтовно
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: fdf01a3d69d084fa
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 234
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: далеко не завжди
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -4659,20 +4575,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: noun
   approved_gloss: ring
-- lemma: важиль
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: fac3ec7f01b59924
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 291
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: з самого початку
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -4738,20 +4640,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: adverb
   approved_gloss: scary
-- lemma: папка
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 35397ee46a6340c2
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 297
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: попит
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -5116,20 +5004,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: To break the rules
-- lemma: наврядчи
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 87dc49b93df2a13e
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 327
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: черговий
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -5416,20 +5290,6 @@ decisions:
   decision: approve_for_publish
   approved_pos: verb
   approved_gloss: To jinx (imperf)
-- lemma: накаркати
-  sense_note: single-word form absent from VESUM; held for spelling/attestation check (deterministic gate,
-    not AI review). Teacher inventory row retained.
-  source_inventory:
-    key: 337eb30911376045
-    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
-    locator: explicit vocabulary table 2 row 351
-    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
-    source_family: teacher_lesson
-  evidence_refs:
-  - private teacher-lesson explicit vocabulary table
-  decision: needs_more_evidence
-  review_queue_reasons:
-  - lemma_in_vesum:absent
 - lemma: походження
   sense_note: private teacher-lesson explicit vocabulary table (bulk teacher-trust)
   source_inventory:
@@ -8355,3 +8215,153 @@ decisions:
   decision: approve_for_publish
   approved_pos: phrase
   approved_gloss: teacher-lesson headword (gloss pending)
+- lemma: важіль
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lever
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «важиль» (spelling fix )
+  source_inventory:
+    key: 5a3e54322683c14b
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 291
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: випустити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: To release, to let out (perf)
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «випустути» (spelling f)
+  source_inventory:
+    key: 752062c0793e8758
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 1 row 206
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: вручну
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: Manually
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «вручку» (spelling fix;)
+  source_inventory:
+    key: 7f8f631b94246384
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 1 row 317
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: Віфлеєм
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: Bethlehem
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «віфлієм» (proper noun )
+  source_inventory:
+    key: 46e864745f47688d
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 109
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: ґрунтовно
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: Thoroughly, fundamentally
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «грунтовно» (spelling f)
+  source_inventory:
+    key: f732805463d84c05
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 234
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: навряд чи
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: Doubtful, hardly
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «наврядчи» (split parti)
+  source_inventory:
+    key: 686d7d0b3a387c26
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 327
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: накаркати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: To jinx (perf)
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «накаркати» (SUM11-atte)
+  source_inventory:
+    key: 337eb30911376045
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 351
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: папка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: A folder
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «папка» (SUM11+Грінченк)
+  source_inventory:
+    key: 35397ee46a6340c2
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 2 row 297
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: пацієнт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: Patient
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «паціент» (spelling fix)
+  source_inventory:
+    key: c6f33715c017e421
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 1 row 280
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation
+- lemma: приголомшливий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: Stunning
+  sense_note: private teacher-lesson vocabulary; reapproved after deterministic spelling/canonical fix
+    (Teacher-curated headword; canonicalized from source form «приголошливий» (spelli)
+  source_inventory:
+    key: 0c0d3bd6da68b3f6
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml
+    locator: explicit vocabulary table 1 row 384
+    source_id: private-teacher-lesson-vocabulary-2026-07-18-bulk
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  - VESUM or SUM11/heritage attestation

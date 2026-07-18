@@ -106,12 +106,12 @@ sources:
     locator: explicit vocabulary table 1 row 189
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: випустути
+  - lemma: випустити
     pos: verb
     gloss: To release, to let out (perf)
     locator: explicit vocabulary table 1 row 206
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «випустути» (spelling fix; perfective
+      to release). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: (чайний) сервіз
     pos: phrase
     gloss: Tea set
@@ -161,12 +161,12 @@ sources:
     locator: explicit vocabulary table 1 row 279
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: паціент
+  - lemma: пацієнт
     pos: noun
     gloss: Patient
     locator: explicit vocabulary table 1 row 280
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «паціент» (spelling fix ї; patient).
+      Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: сміятися (над)
     pos: phrase
     gloss: To laugh (at)
@@ -179,12 +179,12 @@ sources:
     locator: explicit vocabulary table 1 row 288
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: вручку
-    pos: noun
+  - lemma: вручну
+    pos: adverb
     gloss: Manually
     locator: explicit vocabulary table 1 row 317
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «вручку» (spelling fix; manually
+      (adv)). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: прийдеться
     pos: verb
     gloss: Will have to do, will be a need (dative before)
@@ -263,12 +263,12 @@ sources:
     locator: explicit vocabulary table 1 row 379
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: приголошливий
-    pos: noun
+  - lemma: приголомшливий
+    pos: adjective
     gloss: Stunning
     locator: explicit vocabulary table 1 row 384
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «приголошливий» (spelling fix; stunning).
+      Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: сайт знайомств
     pos: phrase
     gloss: Dating website
@@ -1145,12 +1145,12 @@ sources:
     locator: explicit vocabulary table 2 row 108
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: віфлієм
+  - lemma: Віфлеєм
     pos: noun
     gloss: Bethlehem
     locator: explicit vocabulary table 2 row 109
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «віфлієм» (proper noun Bethlehem;
+      capital V as VESUM). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: пастух
     pos: noun
     gloss: shepherd
@@ -1835,12 +1835,12 @@ sources:
     locator: explicit vocabulary table 2 row 233
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: грунтовно
-    pos: noun
+  - lemma: ґрунтовно
+    pos: adverb
     gloss: Thoroughly, fundamentally
     locator: explicit vocabulary table 2 row 234
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «грунтовно» (spelling fix ґ; thoroughly).
+      Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: далеко не завжди
     pos: phrase
     gloss: Not always
@@ -2153,12 +2153,12 @@ sources:
     locator: explicit vocabulary table 2 row 290
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: важиль
+  - lemma: важіль
     pos: noun
     gloss: lever
     locator: explicit vocabulary table 2 row 291
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «важиль» (spelling fix і; gloss
+      lever). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: з самого початку
     pos: phrase
     gloss: From the very beginning
@@ -2193,8 +2193,8 @@ sources:
     pos: noun
     gloss: A folder
     locator: explicit vocabulary table 2 row 297
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «папка» (SUM11+Грінченко+ЕСУМ folder;
+      VESUM gap). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: попит
     pos: noun
     gloss: demand
@@ -2363,12 +2363,12 @@ sources:
     locator: explicit vocabulary table 2 row 326
     context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
       Bulk intake; no AI linguistic review.
-  - lemma: наврядчи
-    pos: noun
+  - lemma: навряд чи
+    pos: phrase
     gloss: Doubtful, hardly
     locator: explicit vocabulary table 2 row 327
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «наврядчи» (split particle phrase;
+      doubtful/hardly). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: черговий
     pos: adjective
     gloss: On duty, yet another
@@ -2505,8 +2505,8 @@ sources:
     pos: verb
     gloss: To jinx (perf)
     locator: explicit vocabulary table 2 row 351
-    context: Teacher-curated headword metadata derived from an explicit private lesson vocabulary table.
-      Bulk intake; no AI linguistic review.
+    context: Teacher-curated headword; canonicalized from source form «накаркати» (SUM11-attested colloquial;
+      VESUM gap). Bulk reapprove after deterministic VESUM/spelling fix; no AI review.
   - lemma: походження
     pos: noun
     gloss: Origin
