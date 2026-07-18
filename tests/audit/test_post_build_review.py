@@ -1423,6 +1423,101 @@ def test_semantic_response_schema_matches_raw_contract() -> None:
     Draft202012Validator(schema).validate(exemplar)
 
 
+def test_codex_schema_fits_openai_strict_subset_and_preserves_raw_contract() -> None:
+    with pytest.raises(pbr.ReviewProtocolError, match="requires a packet"):
+        pbr.codex_semantic_response_schema()
+
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    generic = pbr.semantic_response_schema(packet)
+
+    with pytest.raises(
+        pbr.ReviewProtocolError,
+        match="Codex structured-output",
+    ):
+        pbr.validate_codex_output_schema(generic)
+
+    schema = pbr.codex_semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    metrics = pbr._openai_schema_metrics(schema)
+
+    assert metrics["properties"] <= 5_000
+    assert metrics["enum_values"] <= 1_000
+    assert metrics["total_strings"] <= 120_000
+    assert metrics["largest_enum_strings"] <= 15_000
+    assert pbr._openai_schema_nesting_depth(schema) <= 10
+    serialized = json.dumps(schema)
+    assert all(
+        f'"{keyword}"' not in serialized
+        for keyword in pbr.OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS
+    )
+    assert schema["required"] == list(schema["properties"])
+    assert schema["properties"]["vocabulary_coverage"]["items"] == {
+        "$ref": "#/$defs/vocabularyCoverageItem"
+    }
+    Draft202012Validator(schema).validate(semantic)
+
+
+def test_codex_schema_normalizer_preserves_property_and_definition_names() -> None:
+    schema = {
+        "$defs": {"if": {"type": "string"}},
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["not", "oneOf"],
+        "properties": {
+            "not": {"type": "string"},
+            "oneOf": {"$ref": "#/$defs/if"},
+        },
+    }
+
+    pbr._normalize_codex_schema_subset(schema)
+
+    assert set(schema["properties"]) == {"not", "oneOf"}
+    assert set(schema["$defs"]) == {"if"}
+    assert schema["required"] == ["not", "oneOf"]
+
+
+def test_codex_schema_keeps_statement_exhaustiveness_and_local_line_binding() -> None:
+    packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
+    schema = pbr.codex_semantic_response_schema(packet)
+    semantic = _passing_semantic(packet)
+    statement_schema = schema["properties"]["statement_coverage"]
+    units = packet["deterministic"]["statement_inventory"]["units"]
+
+    assert statement_schema["required"] == [unit["id"] for unit in units]
+    risk_unit = next(unit for unit in units if pbr._statement_requires_claim(unit))
+    assert statement_schema["properties"][risk_unit["id"]]["properties"][
+        "classification"
+    ] == {"const": "claims"}
+
+    missing = copy.deepcopy(semantic)
+    missing["statement_coverage"].pop(units[0]["id"])
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(missing)
+
+    content_path = packet["target"]["files"]["content"]
+    content_choice = next(
+        choice
+        for choice in schema["$defs"]["dimensionEvidence"]["anyOf"]
+        if choice["properties"]["location"]["const"] == content_path
+    )
+    assert content_choice["properties"]["line"] == {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": len(packet["target_materials"]["content"]["lines"]),
+    }
+
+    insufficient = copy.deepcopy(semantic)
+    insufficient["quality_dimensions"]["pedagogical"]["evidence"][0] = {
+        "location": content_path,
+        "line": 86,
+        "supports": "This deliberately targets a short structural line.",
+    }
+    Draft202012Validator(schema).validate(insufficient)
+    result = pbr.finalize_review(packet, _raw(insufficient))
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "packet-bound schema" in result["semantic_response"]["error"]
+
+
 def test_provider_schema_rejects_prose_suffixed_vesum_mapping() -> None:
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer())
     schema = pbr.semantic_response_schema(packet)
@@ -3895,7 +3990,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
     rows = catalog["regressions"]
     assert catalog["catalog_version"] == "6.0.8"
-    assert len(rows) == 78
+    assert len(rows) == 79
     assert len({row["bug_id"] for row in rows}) == len(rows)
     assert {row["responsible_layer"] for row in rows} == {
         "deterministic_code",
@@ -3939,6 +4034,7 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
         "6.0.4",
         "6.0.5",
         "6.0.6",
+        "6.0.7",
     }
     null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
     assert null_result["responsible_layer"] == "orchestration"

@@ -4156,6 +4156,361 @@ def semantic_response_schema(
     return provider_schema
 
 
+OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS = frozenset(
+    {
+        "allOf",
+        "oneOf",
+        "not",
+        "if",
+        "then",
+        "else",
+        "dependentRequired",
+        "dependentSchemas",
+        "propertyNames",
+        "patternProperties",
+        "minProperties",
+        "maxProperties",
+        "uniqueItems",
+    }
+)
+
+
+def _codex_provider_locator_schema(
+    packet: Mapping[str, Any] | None,
+    *,
+    allowed_paths: set[str] | None = None,
+) -> dict[str, Any]:
+    """Bind target paths and line ranges without packet-sized line enums."""
+    if packet is None:
+        return {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["location", "line"],
+            "properties": {
+                "location": {"type": "string", "minLength": 1},
+                "line": {"type": "integer", "minimum": 1},
+            },
+        }
+    choices: list[dict[str, Any]] = []
+    for path, material in _packet_materials_by_path(packet).items():
+        if allowed_paths is not None and path not in allowed_paths:
+            continue
+        line_count = len(material["lines"])
+        if not line_count:
+            continue
+        choices.append(
+            {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["location", "line"],
+                "properties": {
+                    "location": {"const": path},
+                    "line": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": line_count,
+                    },
+                },
+            }
+        )
+    if not choices:
+        raise ReviewProtocolError("No target-file evidence locators were found")
+    return {"anyOf": choices}
+
+
+def _codex_provider_dimension_evidence_schema(
+    packet: Mapping[str, Any] | None,
+    *,
+    allowed_paths: set[str] | None = None,
+) -> dict[str, Any]:
+    locator = _codex_provider_locator_schema(packet, allowed_paths=allowed_paths)
+    choices = locator.get("anyOf")
+    if isinstance(choices, list):
+        enriched: list[dict[str, Any]] = []
+        for choice in choices:
+            item = deepcopy(choice)
+            item["required"].append("supports")
+            item["properties"]["supports"] = {"type": "string", "minLength": 8}
+            enriched.append(item)
+        return {"anyOf": enriched}
+    locator["required"].append("supports")
+    locator["properties"]["supports"] = {"type": "string", "minLength": 8}
+    return locator
+
+
+def _codex_provider_vocabulary_evidence_schema(
+    packet: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    if packet is None:
+        return _codex_provider_dimension_evidence_schema(packet)
+    target = packet.get("target")
+    files = target.get("files") if isinstance(target, Mapping) else None
+    if not isinstance(files, Mapping):
+        raise ReviewProtocolError("Semantic packet target must contain files")
+    allowed_paths = {
+        str(files[name]) for name in ("content", "activities") if name in files
+    }
+    if not allowed_paths:
+        raise ReviewProtocolError(
+            "Semantic packet has no learner content or activities for vocabulary evidence"
+        )
+    return _codex_provider_dimension_evidence_schema(
+        packet, allowed_paths=allowed_paths
+    )
+
+
+def _schema_definition_refs(value: object) -> set[str]:
+    refs: set[str] = set()
+    if isinstance(value, list):
+        for item in value:
+            refs.update(_schema_definition_refs(item))
+    elif isinstance(value, Mapping):
+        ref = value.get("$ref")
+        if isinstance(ref, str) and ref.startswith("#/$defs/"):
+            refs.add(ref.removeprefix("#/$defs/"))
+        for key, item in value.items():
+            if key != "$defs":
+                refs.update(_schema_definition_refs(item))
+    return refs
+
+
+def _prune_unused_schema_definitions(schema: dict[str, Any]) -> None:
+    definitions = schema.get("$defs")
+    if not isinstance(definitions, Mapping):
+        return
+    required = _schema_definition_refs(schema)
+    pending = list(required)
+    while pending:
+        name = pending.pop()
+        definition = definitions.get(name)
+        if definition is None:
+            raise ReviewProtocolError(f"Structured-output schema has unknown $ref: {name}")
+        for nested in _schema_definition_refs(definition) - required:
+            required.add(nested)
+            pending.append(nested)
+    schema["$defs"] = {
+        name: deepcopy(definition)
+        for name, definition in definitions.items()
+        if name in required
+    }
+
+
+def _normalize_codex_schema_subset(value: object) -> None:
+    """Translate the canonical transport schema to OpenAI's strict subset."""
+    if isinstance(value, list):
+        for item in value:
+            _normalize_codex_schema_subset(item)
+        return
+    if not isinstance(value, dict):
+        return
+    if "oneOf" in value and "anyOf" not in value:
+        value["anyOf"] = value.pop("oneOf")
+    for keyword in OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS:
+        value.pop(keyword, None)
+    if value.get("type") == "object":
+        properties = value.get("properties")
+        if not isinstance(properties, Mapping):
+            raise ReviewProtocolError(
+                "Codex structured-output objects must declare explicit properties"
+            )
+        value["additionalProperties"] = False
+        value["required"] = list(properties)
+    for key, item in value.items():
+        if key in {"properties", "$defs"} and isinstance(item, Mapping):
+            for subschema in item.values():
+                _normalize_codex_schema_subset(subschema)
+            continue
+        _normalize_codex_schema_subset(item)
+
+
+def _openai_schema_metrics(schema: Mapping[str, Any]) -> dict[str, int]:
+    properties = 0
+    enum_values = 0
+    total_strings = 0
+    largest_enum_strings = 0
+    definitions = schema.get("$defs")
+    if isinstance(definitions, Mapping):
+        total_strings += sum(len(str(name)) for name in definitions)
+    stack: list[object] = [schema]
+    while stack:
+        value = stack.pop()
+        if isinstance(value, Mapping):
+            raw_properties = value.get("properties")
+            if isinstance(raw_properties, Mapping):
+                properties += len(raw_properties)
+                total_strings += sum(len(str(name)) for name in raw_properties)
+            raw_enum = value.get("enum")
+            if isinstance(raw_enum, list):
+                enum_values += len(raw_enum)
+                enum_string_size = sum(
+                    len(item) for item in raw_enum if isinstance(item, str)
+                )
+                total_strings += enum_string_size
+                if len(raw_enum) > 250:
+                    largest_enum_strings = max(
+                        largest_enum_strings, enum_string_size
+                    )
+            raw_const = value.get("const")
+            if isinstance(raw_const, str):
+                total_strings += len(raw_const)
+            stack.extend(value.values())
+        elif isinstance(value, list):
+            stack.extend(value)
+    return {
+        "properties": properties,
+        "enum_values": enum_values,
+        "total_strings": total_strings,
+        "largest_enum_strings": largest_enum_strings,
+    }
+
+
+def _openai_schema_nesting_depth(schema: Mapping[str, Any]) -> int:
+    definitions = schema.get("$defs")
+
+    def visit(value: object, depth: int, refs: frozenset[str]) -> int:
+        if isinstance(value, list):
+            return max((visit(item, depth, refs) for item in value), default=depth)
+        if not isinstance(value, Mapping):
+            return depth
+        ref = value.get("$ref")
+        if isinstance(ref, str) and ref.startswith("#/$defs/"):
+            name = ref.removeprefix("#/$defs/")
+            if name in refs or not isinstance(definitions, Mapping):
+                return depth
+            target = definitions.get(name)
+            if target is None:
+                raise ReviewProtocolError(f"Structured-output schema has unknown $ref: {name}")
+            return visit(target, depth, refs | {name})
+        schema_type = value.get("type")
+        next_depth = depth + (
+            1 if isinstance(schema_type, str) and schema_type in {"object", "array"} else 0
+        )
+        children = [
+            item for key, item in value.items() if key not in {"$defs", "$ref"}
+        ]
+        return max(
+            (visit(item, next_depth, refs) for item in children),
+            default=next_depth,
+        )
+
+    return visit(schema, 0, frozenset())
+
+
+def validate_codex_output_schema(schema: Mapping[str, Any]) -> None:
+    """Fail locally when a schema exceeds OpenAI Structured Outputs limits."""
+    Draft202012Validator.check_schema(schema)
+    forbidden: set[str] = set()
+    stack: list[object] = [schema]
+    while stack:
+        value = stack.pop()
+        if isinstance(value, Mapping):
+            forbidden.update(OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS & value.keys())
+            if value.get("type") == "object":
+                properties = value.get("properties")
+                if not isinstance(properties, Mapping):
+                    raise ReviewProtocolError(
+                        "Codex structured-output objects must declare explicit properties"
+                    )
+                if value.get("additionalProperties") is not False:
+                    raise ReviewProtocolError(
+                        "Codex structured-output objects require additionalProperties=false"
+                    )
+                if set(value.get("required") or []) != set(properties):
+                    raise ReviewProtocolError(
+                        "Codex structured-output object properties must all be required"
+                    )
+            stack.extend(value.values())
+        elif isinstance(value, list):
+            stack.extend(value)
+    if forbidden:
+        raise ReviewProtocolError(
+            "Codex structured-output schema uses unsupported keywords: "
+            + ", ".join(sorted(forbidden))
+        )
+    metrics = _openai_schema_metrics(schema)
+    if metrics["properties"] > 5_000:
+        raise ReviewProtocolError("Codex structured-output schema exceeds 5000 properties")
+    if metrics["enum_values"] > 1_000:
+        raise ReviewProtocolError("Codex structured-output schema exceeds 1000 enum values")
+    if metrics["total_strings"] > 120_000:
+        raise ReviewProtocolError(
+            "Codex structured-output schema exceeds 120000 schema-string characters"
+        )
+    if metrics["largest_enum_strings"] > 15_000:
+        raise ReviewProtocolError(
+            "Codex structured-output schema exceeds the per-enum string limit"
+        )
+    if _openai_schema_nesting_depth(schema) > 10:
+        raise ReviewProtocolError(
+            "Codex structured-output schema exceeds 10 levels of nesting"
+        )
+
+
+def codex_semantic_response_schema(
+    packet: Mapping[str, Any] | None = None,
+    *,
+    repo_root: Path = PROJECT_ROOT,
+) -> dict[str, Any]:
+    """Return an OpenAI-compatible transport schema for the canonical response."""
+    if packet is None:
+        raise ReviewProtocolError("Codex semantic output schema requires a packet")
+    schema = semantic_response_schema(packet, repo_root=repo_root)
+    definitions = schema["$defs"]
+    definitions["dimensionEvidence"] = _codex_provider_dimension_evidence_schema(packet)
+    definitions["vocabularyEvidence"] = _codex_provider_vocabulary_evidence_schema(packet)
+    if "issue_id" not in definitions["finding"]["required"]:
+        definitions["finding"]["required"].append("issue_id")
+    definitions["finding"]["properties"]["location"] = {
+        "anyOf": [{"type": "null"}, _codex_provider_locator_schema(packet)]
+    }
+    vocabulary_lemmas = _packet_vocabulary_lemmas(packet)
+    schema["properties"]["vocabulary_coverage"] = {
+        "type": "array",
+        "items": {"$ref": "#/$defs/vocabularyCoverageItem"},
+        "minItems": len(vocabulary_lemmas),
+        "maxItems": len(vocabulary_lemmas),
+    }
+    statement_units = packet["deterministic"]["statement_inventory"]["units"]
+    statement_properties: dict[str, Any] = {}
+    for unit in statement_units:
+        unit_id = str(unit["id"])
+        if _statement_requires_claim(unit):
+            statement_properties[unit_id] = {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["classification", "claim_ids"],
+                "properties": {
+                    "classification": {"const": "claims"},
+                    "claim_ids": {
+                        "type": "array",
+                        "items": {"$ref": "#/$defs/nonempty"},
+                        "minItems": 1,
+                    },
+                },
+            }
+        else:
+            statement_properties[unit_id] = {
+                "$ref": "#/$defs/statementCoverageEntry"
+            }
+    schema["properties"]["statement_coverage"] = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(statement_properties),
+        "properties": statement_properties,
+    }
+    definitions["claim"]["properties"]["unit_id"] = {
+        "$ref": "#/$defs/nonempty"
+    }
+    definitions["claim"]["properties"]["location"] = {
+        "$ref": "#/$defs/nonempty"
+    }
+    _prune_unused_schema_definitions(schema)
+    _normalize_provider_schema_types(schema)
+    _normalize_codex_schema_subset(schema)
+    validate_codex_output_schema(schema)
+    return schema
+
+
 def _normalize_provider_schema_types(value: object) -> None:
     """Add strict-validator type annotations without changing constraints."""
     if isinstance(value, list):
@@ -4237,6 +4592,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     semantic_schema.add_argument("--packet", type=Path)
     semantic_schema.add_argument("--output", type=Path)
+    semantic_schema.add_argument(
+        "--provider",
+        choices=("generic", "codex"),
+        default="generic",
+        help="Emit the canonical generic schema or the OpenAI Codex strict subset.",
+    )
 
     semantic_prompt = subparsers.add_parser(
         "semantic-prompt",
@@ -4281,8 +4642,13 @@ def main(argv: list[str] | None = None) -> int:
             if args.packet is not None
             else None
         )
+        schema = (
+            codex_semantic_response_schema(packet)
+            if args.provider == "codex"
+            else semantic_response_schema(packet)
+        )
         _write_or_print(
-            semantic_response_schema(packet),
+            schema,
             args.output,
             repo_root=PROJECT_ROOT,
         )
