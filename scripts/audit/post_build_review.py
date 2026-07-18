@@ -852,6 +852,8 @@ def _statement_requires_claim(unit: Mapping[str, Any]) -> bool:
     instruction = _instruction_open(surface)
     if instruction is None:
         return True
+    if SOURCE_CLAIM_COMPLEMENT_RE.match(surface) is not None:
+        return True
 
     frame_delimiter = re.search(r"[:：—–]", surface)
     if frame_delimiter is not None:
@@ -861,7 +863,7 @@ def _statement_requires_claim(unit: Mapping[str, Any]) -> bool:
             and not framed_tail.endswith("?")
             and _instruction_open(framed_tail) is None
         )
-    return SOURCE_CLAIM_COMPLEMENT_RE.match(surface) is not None
+    return False
 
 
 def build_learner_statement_inventory(
