@@ -4,8 +4,8 @@
 **Block:** +77 backfill - Koliivshchyna / haidamaka violence / contested memory
 **Tier:** 2
 **Issue:** #2535 / BIO +77 readiness gate; BIO #314
-**Researcher:** Codex orchestrator (GPT-5)
-**Completed:** 2026-07-02
+**Researcher:** Codex orchestrator (GPT-5); catalog packet Grok 2026-07-18
+**Completed:** 2026-07-02; catalog-source packet refresh 2026-07-18
 
 **Source acronym legend:** EIU = Encyclopedia of History Ukraine / Institute History Ukraine, NASU; IEU = Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies; NASU-IAU = Institute Ukrainian Archaeography and Source Studies / NASU document collection; JVL = Jewish Virtual Library / Encyclopaedia Judaica-derived entry; JE = Jewish Encyclopedia; LH = Local History; HIST / LIT / FOLK / BIO = existing learn-ukrainian track materials; Commons = Wikimedia Commons.
 
@@ -120,60 +120,85 @@
 - **Learner-facing pairing:** `Максим Залізняк (Maksym Zalizniak), leader of the Koliivshchyna rebellion, ca. 1740-after 1768, death unknown`.
 - **Index caution:** Do not conflate with the twentieth-century linguist Andrey / Andrii Zalizniak referenced in OES plan bibliographies.
 
-## 9. Image rights / media candidates
+## 9. Image rights / individual-image disposition
 
-- **Default historical portrait:** Commons `File:Maxim Zalizniak.jpg`; description says portrait of Maksym Zalizniak / Maxym Zheleznyak, late 18th century, Sumy Art Museum; author unknown; Commons marks faithful reproduction of a public-domain two-dimensional artwork. Caption should say `portrait, late eighteenth century, Sumy Art Museum source, not a verified life portrait`.
-- **Alternative local/public-domain image:** English Wikipedia `File:Maksym_Zalizniak_(2).jpg`; scanned from an early 19th-century pamphlet, public domain because copyright expired. Use only after file-level transfer/licensing review because it is not on Commons and has a bot transfer note.
-- **Place-memory image:** Commons `File:Maksym_Zalizniak_Oak_Tree-2024.jpg`; photo of Zalizniak Oak in Kholodnyi Yar, own work by Maxim Gavrilyuk, CC BY 4.0. Good for memory/place lessons with required attribution.
-- **Shevchenko reception option:** Commons `File:Гайдамаки 1886 іл. Сластіон 10.jpg`; public domain on Commons and useful for `Гайдамаки` reception rather than biography.
-- **Reception / Uman option:** Commons `File:Гонта та Залізняк. Умань.PNG`; CC BY-SA 4.0. Requires attribution and share-alike; use as modern illustration/reception, not historical evidence.
-- **Memorial context option:** Commons `File:Koliyivshchyna Mass Grave in Kodnia (Apr 2019) 2.jpg`; CC BY-SA 4.0. Useful for aftermath / repression memory, not Zalizniak portraiture.
-- **Avoid / caution:** Commons `File:Maksym_Zalizniak.jpg` has a file-talk warning that it may not depict Zalizniak but another haidamaka, Khoma of Zhytomyr. Do not use as default portrait unless a later rights/identity check resolves it.
-- **Avoid default:** YouTube thumbnails, school-site illustrations, patriotic posters, Facebook images, AI colorizations, film stills, or modern monument photos without explicit reusable licensing.
+- **Packet disposition (2026-07-18): text-only portrait fallback.** No individual
+  portrait has all of: exact file, subject identity, creator/provenance, reusable
+  licence, and licence evidence proved for curriculum reuse. Commons PD claims or
+  museum inventory mentions are not sufficient alone.
+- **Explicit cautions retained from earlier research:** avoid Commons files with
+  identity warnings (e.g. possible misattribution to another haidamaka); do not use
+  modern patriotic posters, AI colorizations, or YouTube frames.
+- **Place/memory images** (Zalizniak Oak, Kodnia mass grave, Haidamaky illustrations)
+  may be discussed later as memory anchors only after separate rights review; they
+  are not biography portraits and are not approved in this packet.
+- **Plan field:** `portrait_fallback.type: text-only` with
+  `disposition: no-portrait-until-rights-verified`.
 
-## 10. Sources used
+## 10. Sources used (adopted set = discovery / plan external refs / wiki registry)
 
-**Tier 1 (authoritative / institutional):**
+**Adopted external URLs (order fixed; verified HTTP 200 on 2026-07-18):**
 
-- Смолій В.А. "Залізняк Максим Ієвлевич." Енциклопедія історії України, Інститут історії України НАН України. https://www.history.org.ua/?termin=Zaliznyak_M. Accessed 2026-07-02.
-- Смолій В.А. "Коліївщина." Енциклопедія історії України, Інститут історії України НАН України. https://www.history.org.ua/?termin=Koliivshchyna. Accessed 2026-07-02.
-- "Уманська трагедія 1768, Уманська різанина." Енциклопедія історії України, Інститут історії України НАН України. https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna. Accessed 2026-07-02.
-- "Гайдамацький рух." Енциклопедія історії України, Інститут історії України НАН України. https://www.history.org.ua/?termin=Gajdamackij_ruh. Accessed 2026-07-02.
-- "Zalizniak, Maksym." Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm. Accessed 2026-07-02.
-- "Koliivshchyna rebellion." Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm. Accessed 2026-07-02.
-- "Haidamaka uprisings." Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHaidamakauprisings.htm. Accessed 2026-07-02.
-- "Uman." Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CU%5CM%5CUman.htm. Accessed 2026-07-02.
-- Синяк І.Л., упоряд.; Смолій В.А., гол. ред. `Коліївщина: 1768-1769 роки у документальній та мемуарній спадщині. Т. 1: Документи архіву Коша Нової Запорозької Січі`. Інститут історії України НАН України / Інститут української археографії та джерелознавства ім. М.С. Грушевського НАН України / ЦДІАК України, 2019. https://resource.history.org.ua/item/0014806. Accessed 2026-07-02.
+1. https://www.history.org.ua/?termin=Zaliznyak_M — Смолій В.А., ЕІУ «ЗАЛІЗНЯК Максим
+   Ієвлевич» (UA). ca 1740 Medvedivka; Tymoshivka kurin; 1762 artillery assistant;
+   3 Jun/23 May 1768 Kholodnyi Yar leadership; town list; Uman 20–21 Jun; social
+   policy / anti-cruelty claim; arrest 7 Jul/26 Jun 1768; Nerchinsk; death unknown;
+   songs/legends memory.
+2. https://www.history.org.ua/?termin=Koliivshchyna — Смолій В.А., ЕІУ «КОЛІЇВЩИНА»
+   (UA). Multi-factor causes; Bar Confederation trigger; "Golden Charter" illusion;
+   Motronynskyi monastery preparation; Uman night 20–21 Jun; interethnic/religious
+   cruelty alongside attempted civil peace; Krechetnikov suppression; 1769 remnants.
+3. https://www.history.org.ua/?termin=umanska_tragedija_1768_umanska_rizanyna —
+   Смірнов О.В., ЕІУ «УМАНСЬКА ТРАГЕДІЯ 1768, Уманська різанина» (UA). Central
+   episode; Jewish/Roman Catholic/Greek Catholic victims; refugees; Orthodox
+   protectors also killed; Gonta defection; disputed tolls (Polish 12–18k;
+   Zalizniak interrogation ~2k; sejm commission ≤5k preferred; ~3k Jews + others
+   ~4k). **This source makes the massacre non-optional.**
+4. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZalizniakMaksym.htm
+   — Krupnytsky, IEU biography (EN, reference-only for learners). Hetman
+   proclamation; arrest 8 July 1768; life hard labor Nerchinsk; Shevchenko reception.
+5. https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKoliivshchynarebellion.htm
+   — IEU Koliivshchyna rebellion (EN, reference-only). Golden Charter framing;
+   killing of nobles, Catholic clergy, Jewish stewards; Russian/Polish repression.
+6. https://resource.history.org.ua/item/0014806 — «Коліївщина… Т. 1: Документи архіву
+   Коша…» catalog (UA). Annotation of CDIAK fond cases 227–229; PDF pointer;
+   primary-document collection, not a substitute encyclopedia narrative.
 
-**Tier 2 (scholarly / expert context):**
+**Learner readings (strict subset; Ukrainian link-only):** URLs 1, 2, 3, 6.
 
-- Skinner, Barbara. "Borderlands of Faith: Reconsidering the Origins of a Ukrainian Tragedy." `Slavic Review` 64, no. 1 (Spring 2005): 88-116. https://doi.org/10.2307/3650068. Cambridge Core abstract accessed 2026-07-02.
-- "Uman." Jewish Virtual Library / Encyclopaedia Judaica. https://www.jewishvirtuallibrary.org/uman. Accessed 2026-07-02. Use for Jewish memory / community framing; note the page contains a likely 1788 typo for the 1768 event.
-- Rosenthal, Herman; Lipman, J.G. "Haidamacks." Jewish Encyclopedia. https://www.jewishencyclopedia.com/articles/7056-haidamacks. Accessed 2026-07-02. Use as older Jewish historiographic / memory source; language and numbers require contextualization.
-- "Гайдамаки з Мотриного лісу." Локальна історія. https://localhistory.org.ua/texts/statti/gaidamaki-z-motrinogo-lisu/. Accessed 2026-07-02. Use for accessible expert-media synthesis and local place-memory cues, not as sole authority.
+**Rejected / not adopted for material claims (2026-07-18):**
 
-**Tier 3 (learn-ukrainian cross-track materials):**
+- https://doi.org/10.2307/3650068 (Skinner, Slavic Review) — redirect to Cambridge
+  abstract/paywall; full text not verified here. Do not cite detailed Skinner
+  arguments as proved in packet surfaces.
+- https://www.jewishvirtuallibrary.org/uman — English JE-derived page; useful for
+  communal memory orientation and the word "massacre of Uman", but carries disputed
+  high tolls and a likely 1788 typo for 1768. Material victim claims grounded in
+  EIU S3 instead of JVL numbers.
+- Wikipedia — orientation only.
+- Older Russian-imperial labels (`Железняк` etc.) — search aliases only, never
+  learner-facing neutral fact labels.
+
+**Claim boundaries that must not be silently synthesized:**
+
+- Arrest date: EIU 7 Jul (26 Jun) 1768 vs IEU 8 July 1768 — label calendar/source.
+- Death: unknown; "probably Nerchinsk" is IEU probability, not EIU certainty.
+- Responsibility at Uman: joint leadership with Gonta is documented; specific
+  command chains and ruse details come especially from EIU Uman article — do not
+  invent monocausal personal intent beyond sources.
+- Death tolls: never ship an unqualified round number.
+- EIU biography's "opposed cruelty" claim must not erase EIU Uman massacre article.
+- Do not convert Jewish leaseholding/steward roles into collective Jewish guilt.
+- Do not treat Russian imperial troops as neutral liberators.
+
+**Cross-track (Existing plan paths verified 2026-07-18):**
 
 - `curriculum/l2-uk-en/plans/hist/koliivshchyna.yaml`
-- `curriculum/l2-uk-en/hist/discovery/koliivshchyna.yaml`
-- `curriculum/l2-uk-en/plans/hist/beresteyska-uniia.yaml`
-- `curriculum/l2-uk-en/plans/hist/pravoslavna-tserkva-17.yaml`
-- `curriculum/l2-uk-en/plans/hist/rich-pospolyta.yaml`
 - `curriculum/l2-uk-en/plans/lit/haidamaky.yaml`
-- `curriculum/l2-uk-en/lit/discovery/haidamaky.yaml`
-- `curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml`
-- `curriculum/l2-uk-en/folk/istorychni-pisni/module.md`
-- `wiki/periods/koliivshchyna.md`
-- `wiki/literature/works/haidamaky.md`
-- `site/src/content/readings/istorychna-pisnia-maksym-kozak-zalizniak.mdx`
-- `site/src/content/docs/bio/index.mdx`
+- `curriculum/l2-uk-en/plans/bio/ivan-gonta.yaml`
+- `curriculum/l2-uk-en/plans/hist/beresteyska-uniia.yaml`
+- `curriculum/l2-uk-en/plans/hist/rich-pospolyta.yaml`
 
-**Tier 4 (image-rights / media-rights checks):**
-
-- Commons `File:Maxim Zalizniak.jpg`. https://commons.wikimedia.org/wiki/File:Maxim_Zalizniak.jpg. Public-domain reproduction of public-domain two-dimensional artwork; verify file page at use time.
-- Commons `File:Maksym Zalizniak Oak Tree-2024.jpg`. https://commons.wikimedia.org/wiki/File:Maksym_Zalizniak_Oak_Tree-2024.jpg. CC BY 4.0, author Maxim Gavrilyuk; attribution required.
-- English Wikipedia `File:Maksym Zalizniak (2).jpg`. https://en.wikipedia.org/wiki/File:Maksym_Zalizniak_(2).jpg. Public-domain claim; not Commons-hosted as of check, so requires extra review before production use.
-- Commons `File:Гайдамаки 1886 іл. Сластіон 10.jpg`. https://commons.wikimedia.org/wiki/File:%D0%93%D0%B0%D0%B9%D0%B4%D0%B0%D0%BC%D0%B0%D0%BA%D0%B8_1886_%D1%96%D0%BB._%D0%A1%D0%BB%D0%B0%D1%81%D1%82%D1%96%D0%BE%D0%BD_10.jpg. Public-domain reception image; verify file page at use time.
-- Commons `File:Гонта та Залізняк. Умань.PNG`. https://commons.wikimedia.org/wiki/File:%D0%93%D0%BE%D0%BD%D1%82%D0%B0_%D1%82%D0%B0_%D0%97%D0%B0%D0%BB%D1%96%D0%B7%D0%BD%D1%8F%D0%BA._%D0%A3%D0%BC%D0%B0%D0%BD%D1%8C.PNG. CC BY-SA 4.0; attribution and share-alike required.
-- Commons `File:Koliyivshchyna Mass Grave in Kodnia (Apr 2019) 2.jpg`. https://commons.wikimedia.org/wiki/File:Koliyivshchyna_Mass_Grave_in_Kodnia_(Apr_2019)_2.jpg. CC BY-SA 4.0; attribution and share-alike required.
-- Commons `File:Maksym_Zalizniak.jpg` discussion page. https://commons.wikimedia.org/wiki/File_talk:Maksym_Zalizniak.jpg. Identity warning; avoid default portrait.
+**Catalog surfaces for this slug (packet 2026-07-18):** discovery, plan (readings
+v2), this dossier, `wiki/figures/maksym-zalizniak.md`,
+`wiki/figures/maksym-zalizniak.sources.yaml`.
