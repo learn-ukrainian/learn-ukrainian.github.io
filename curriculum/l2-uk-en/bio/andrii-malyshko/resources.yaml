@@ -27,14 +27,6 @@
   role: reference
   url: https://usfa.gov.ua/movie-catalog/lita-molodii-i10747
   notes: Рік виробництва стрічки та дата прем'єри в Україні.
-- title: «Рідна мати моя» з кінофільму «Літа молодії» — каталог НБУВ
-  role: primary-source
-  url: "https://irbis-nbuv.gov.ua/cgi-bin/irbis_vfmf/cgiirbis_64.exe?\
-    C21COM=S&I21DBN=VFMF&P21DBN=VFMF&\
-    S21ALL=%28%3C.%3ET%3D%D0%A0%D0%86%D0%94%D0%9D%D0%90+%D0%9C%D0%90%D0%A2%D0%98+\
-    %D0%9C%D0%9E%D0%AF%3C.%3E%29&S21CNR=20&S21FMT=fullwebr&S21REF=10&\
-    S21SRD=&S21SRW=dz&S21STN=1&Z21ID="
-  notes: Бібліографічні записи нотних видань 1959–1960 років із назвою фільму та іншою назвою пісні.
 - title: «Пісня про рушник» — Андрій Малишко
   role: primary-text
   url: https://www.ukrlib.com.ua/books/printit.php?tid=961
