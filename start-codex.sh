@@ -64,6 +64,47 @@ if [ "$(git -C "$PROJECT_DIR" branch --show-current)" != "main" ]; then
     exit 1
 fi
 
+# `--epic` is a launcher-only lane binding. Codex itself does not know this
+# flag, so consume it before exec while preserving all other argv bytes and
+# ordering. An explicit epic gets a provider-specific handoff namespace; this
+# prevents unrelated Codex epic sessions from sharing one rollover queue.
+FORWARD_ARGS=("$@")
+HANDOFF_IDENTITY_SH="$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+if [ ! -f "$HANDOFF_IDENTITY_SH" ]; then
+    printf 'Error: handoff identity helper is missing: %s\n' "$HANDOFF_IDENTITY_SH" >&2
+    exit 1
+fi
+# shellcheck source=scripts/lib/handoff_identity.sh
+source "$HANDOFF_IDENTITY_SH"
+
+SELECTED_EPIC="$(handoff_epic_from_argv "$@")"
+if [ -z "$SELECTED_EPIC" ] && epic_flag_present "$@"; then
+    printf 'Error: --epic requires a non-empty value (for example: --epic hramatka).\n' >&2
+    exit 1
+fi
+if [ -n "$SELECTED_EPIC" ]; then
+    if ! epic_name_valid "$SELECTED_EPIC"; then
+        printf "Error: invalid --epic name '%s' (use lowercase letters, digits, and inner hyphens).\n" \
+            "$SELECTED_EPIC" >&2
+        exit 1
+    fi
+    HANDOFF_SLOT="$(handoff_identity_for_codex_epic "$SELECTED_EPIC")"
+    if [ -z "$HANDOFF_SLOT" ]; then
+        printf "Error: could not derive a Codex handoff slot for epic '%s'.\n" "$SELECTED_EPIC" >&2
+        exit 1
+    fi
+    export SESSION_EPIC="$SELECTED_EPIC"
+    export SESSION_HANDOFF_AGENT="$HANDOFF_SLOT"
+    FORWARD_ARGS=()
+    while IFS= read -r -d '' FORWARD_ARG; do
+        FORWARD_ARGS+=("$FORWARD_ARG")
+    done < <(strip_epic_from_argv "$@")
+    unset FORWARD_ARG HANDOFF_SLOT
+    printf 'Epic assignment: %s.epic\n' "$SESSION_EPIC"
+    printf 'Handoff identity: %s\n' "$SESSION_HANDOFF_AGENT"
+fi
+unset HANDOFF_IDENTITY_SH SELECTED_EPIC
+
 # Keep generated Codex config and the canonical rollover state ready before
 # replacing this wrapper process with the interactive CLI.
 # PROJECT_DIR is resolved dynamically.
@@ -77,7 +118,7 @@ bootstrap_codex_checkout "$PROJECT_DIR" "$PROJECT_DIR" continue
 # reported by the CLI before trusting the profile.
 SELECTED_MODEL=""
 PREVIOUS_ARG=""
-for arg in "$@"; do
+for arg in "${FORWARD_ARGS[@]}"; do
     case "$arg" in
         --model=*)
             SELECTED_MODEL="${arg#--model=}"
@@ -116,4 +157,4 @@ exec codex \
     --search \
     --enable multi_agent \
     -C "$PROJECT_DIR" \
-    "$@"
+    "${FORWARD_ARGS[@]}"

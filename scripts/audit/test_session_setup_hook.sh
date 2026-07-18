@@ -82,6 +82,7 @@ run_hook() {
   local requested_profile="${6:-native_claude}"
   local supervisor_run_id="${7:-}"
   local supervisor_generation="${8:-}"
+  local session_epic="${9:-}"
 
   printf '%s' "$hook_json" | \
     HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
@@ -103,6 +104,7 @@ run_hook() {
     THREAD_ROLLOVER_PYTHON="$REPO_ROOT/.venv/bin/python" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
     SESSION_HANDOFF_AGENT="$handoff_agent" \
+    SESSION_EPIC="$session_epic" \
     SESSION_HANDOFF_ALLOW_GIT_ROUTER="$allow_git_router" \
     "$HOOK"
 }
@@ -240,6 +242,35 @@ EOF
 output="$(run_hook "$fixture_root")"
 assert_not_contains "$output" "DEFAULT ROUTER BODY SHOULD NOT APPEAR" "router ignored by default"
 assert_not_contains "$output" "WARN: Could not locate latest brief in current.md" "router ignored by default"
+
+# 2b. A Codex epic launch points to its provider-specific driver handoff when
+# present; it must not send the Codex lane to Claude's parallel delta.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/.claude/hramatka-epic"
+printf '# Codex driver handoff\n' > "$fixture_root/.claude/hramatka-epic/CODEX-DRIVER-HANDOFF.md"
+printf '# Claude driver handoff\n' > "$fixture_root/.claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md"
+output="$(run_hook "$fixture_root" 0 codex-hramatka "" "" native_codex "" "" hramatka)"
+assert_contains "$output" "ASSIGNED EPIC: hramatka.epic" "Codex epic assignment"
+assert_contains "$output" "Rollover namespace: codex-hramatka" "Codex epic namespace"
+assert_contains "$output" ".claude/hramatka-epic/CODEX-DRIVER-HANDOFF.md" "Codex epic handoff"
+assert_not_contains "$output" ".claude/hramatka-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex epic handoff"
+
+# 2c. A Codex epic without a provider-specific delta retains the existing
+# shared Claude handoff rather than claiming that no lane state exists.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/.claude/atlas-epic"
+printf '# Shared driver handoff\n' > "$fixture_root/.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md"
+output="$(run_hook "$fixture_root" 0 codex-atlas "" "" native_codex "" "" atlas)"
+assert_contains "$output" ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex shared epic fallback"
+assert_not_contains "$output" ".claude/atlas-epic/CODEX-DRIVER-HANDOFF.md" "Codex shared epic fallback"
+
+# 2d. A brand-new Codex epic initializes the shared lane handoff path rather
+# than creating a provider-only fork that Claude cannot discover.
+setup_fixture "$fixture_root"
+output="$(run_hook "$fixture_root" 0 codex-new-lane "" "" native_codex "" "" new-lane)"
+assert_contains "$output" ".claude/new-lane-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex new epic fallback"
+assert_not_contains "$output" ".claude/new-lane-epic/CODEX-DRIVER-HANDOFF.md" "Codex new epic fallback"
+assert_contains "$output" "No driver handoff exists yet" "Codex new epic fallback"
 
 # 3. Marker path is used when legacy router is explicitly enabled.
 setup_fixture "$fixture_root"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Map a Claude Code `--agent` selection to its cold-start handoff identity
+# Map interactive launcher selections to their cold-start handoff identity
 # (SESSION_HANDOFF_AGENT).
 #
 # WHY: every Claude session launched as plain `claude` defaults to agent
@@ -139,5 +139,19 @@ handoff_identity_for_epic() {
   case "$epic" in
     harness|infra) printf '%s' 'claude-infra' ;;
     *) printf 'claude-%s' "$epic" ;;
+  esac
+}
+
+# handoff_identity_for_codex_epic "<epic-name>"
+# Echo the per-epic Codex rollover slot. Codex needs the same lane separation
+# as Claude, but its namespaces must remain provider-specific so a Codex launch
+# never adopts a Claude packet. The infra alias mirrors the canonical
+# claude-infra convention and avoids inventing parallel harness/infra slots.
+handoff_identity_for_codex_epic() {
+  local epic="${1:-}"
+  [ -n "$epic" ] || return 0
+  case "$epic" in
+    harness|infra) printf '%s' 'codex-infra' ;;
+    *) printf 'codex-%s' "$epic" ;;
   esac
 }

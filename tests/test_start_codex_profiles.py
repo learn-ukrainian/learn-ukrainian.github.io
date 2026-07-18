@@ -7,6 +7,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PROJECT_PYTHON = _REPO_ROOT / ".venv" / "bin" / "python"
 _LAUNCHER_FILES = (
@@ -14,6 +16,7 @@ _LAUNCHER_FILES = (
     Path("scripts/config/context_profiles.yaml"),
     Path("scripts/lib/context_profiles.py"),
     Path("scripts/lib/deploy_extensions.sh"),
+    Path("scripts/lib/handoff_identity.sh"),
     Path("scripts/lib/profile_resolver.sh"),
     Path("scripts/lib/thread_rollover_link.sh"),
 )
@@ -117,6 +120,8 @@ def _launch(
     printf 'main_window=%s\n' "$LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS"
     printf 'reason=%s\n' "$LEARN_UKRAINIAN_RESOLUTION_REASON"
     printf 'trusted=%s\n' "$LEARN_UKRAINIAN_TRUSTED"
+    printf 'epic=%s\n' "${SESSION_EPIC:-}"
+    printf 'handoff_agent=%s\n' "${SESSION_HANDOFF_AGENT:-}"
     printf 'arg=%s\n' "$@"
 } > "$CODEX_LAUNCHER_TEST_CAPTURE"
 """,
@@ -127,6 +132,8 @@ def _launch(
         if name.startswith("LEARN_UKRAINIAN_") or name in {
             "CODEX_CANONICAL_REPO_ROOT",
             "CODEX_SESSION",
+            "SESSION_EPIC",
+            "SESSION_HANDOFF_AGENT",
         }:
             env.pop(name, None)
     env.update(
@@ -176,6 +183,8 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "main_window": "372000",
         "reason": "explicit-profile",
         "trusted": "1",
+        "epic": "",
+        "handoff_agent": "",
     }
     assert forwarded == [
         "--dangerously-bypass-approvals-and-sandbox",
@@ -190,6 +199,60 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "thread-id",
     ]
     assert f"Starting Codex in {primary}" in result.stdout
+
+
+def test_launcher_binds_epic_and_strips_private_flag(tmp_path: Path) -> None:
+    values, forwarded, result, _, _ = _launch(
+        tmp_path,
+        ["--epic", "hramatka", "orchestrate this epic"],
+    )
+
+    assert values["epic"] == "hramatka"
+    assert values["handoff_agent"] == "codex-hramatka"
+    assert forwarded[-1] == "orchestrate this epic"
+    assert "--epic" not in forwarded
+    assert "Epic assignment: hramatka.epic" in result.stdout
+    assert "Handoff identity: codex-hramatka" in result.stdout
+
+
+def test_launcher_normalizes_equals_form_epic_suffix(tmp_path: Path) -> None:
+    values, forwarded, _, _, _ = _launch(
+        tmp_path,
+        ["--epic=atlas.epic", "--model", "gpt-5.6-sol"],
+    )
+
+    assert values["epic"] == "atlas"
+    assert values["handoff_agent"] == "codex-atlas"
+    assert "--epic=atlas.epic" not in forwarded
+
+
+@pytest.mark.parametrize("epic_args", [["--epic"], ["--epic="], ["--epic", "Atlas"]])
+def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
+    tmp_path: Path,
+    epic_args: list[str],
+) -> None:
+    primary, linked = _prepare_repo(tmp_path)
+    home_bin = tmp_path / "home" / ".local" / "bin"
+    started = tmp_path / "codex-started"
+    _write_executable(
+        home_bin / "codex",
+        f"#!/usr/bin/env bash\ntouch {os.fspath(started)!r}\n",
+    )
+    env = os.environ.copy()
+    env.update({"HOME": os.fspath(tmp_path / "home")})
+    for name in (
+        "CODEX_CANONICAL_REPO_ROOT",
+        "SESSION_EPIC",
+        "SESSION_HANDOFF_AGENT",
+    ):
+        env.pop(name, None)
+
+    result = _run([os.fspath(linked / "start-codex.sh"), *epic_args], linked, env=env)
+
+    assert result.returncode != 0
+    assert not started.exists()
+    assert os.fspath(primary) not in result.stdout
+    assert "--epic" in result.stderr
 
 
 def test_launcher_model_mismatch_fails_closed_but_still_starts(tmp_path: Path) -> None:

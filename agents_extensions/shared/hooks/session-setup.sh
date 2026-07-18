@@ -532,14 +532,26 @@ fi
 # Epic assignment banner
 EPIC_BANNER=""
 if [ -n "${SESSION_EPIC:-}" ]; then
+  EPIC_HANDOFF_PATH=".claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"
+  case "$HANDOFF_AGENT" in
+    codex|codex-*)
+      CODEX_EPIC_HANDOFF=".claude/${SESSION_EPIC}-epic/CODEX-DRIVER-HANDOFF.md"
+      if [ -f "$PROJECT_DIR/$CODEX_EPIC_HANDOFF" ]; then
+        EPIC_HANDOFF_PATH="$CODEX_EPIC_HANDOFF"
+      fi
+      unset CODEX_EPIC_HANDOFF
+      ;;
+  esac
   EPIC_BANNER="ASSIGNED EPIC: ${SESSION_EPIC}.epic (binding — from the launch command).
 You are the ${SESSION_EPIC} lane, NOT the main orchestrator. Do not claim or work
-other lanes' queues. Epic driver handoff (load AFTER the thread handoff below, it
-is the lane SSOT): .claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md"
-  if [ ! -f "$PROJECT_DIR/.claude/${SESSION_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md" ]; then
+other lanes' queues. Rollover namespace: ${HANDOFF_AGENT}.
+Epic driver handoff (load AFTER the thread handoff below, it
+is the lane SSOT): $EPIC_HANDOFF_PATH"
+  if [ ! -f "$PROJECT_DIR/$EPIC_HANDOFF_PATH" ]; then
     EPIC_BANNER="$EPIC_BANNER
 (No driver handoff exists yet for this epic — create it at first rollover.)"
   fi
+  unset EPIC_HANDOFF_PATH
 else
   EPIC_BANNER="NO EPIC ASSIGNED (launcher had no --epic flag).
 Do NOT default to 'main orchestrator'. Resolve your lane in this order:
